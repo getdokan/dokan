@@ -477,7 +477,16 @@ class Hooks {
 
         <div class="commission show_if_simple show_if_variable show_if_booking">
             <p class="form-field dimensions_field">
-                <label for="admin_commission"><?php esc_html_e( 'Admin Commission', 'dokan-lite' ); ?></label>
+                <label for="admin_commission">
+                    <?php esc_html_e( 'Admin Commission', 'dokan-lite' ); ?>
+                    <span
+                        class="woocommerce-help-tip"
+                        tabindex="0" for="admin_commission"
+                        aria-label="<?php esc_attr_e( 'When the value is 0, no commissions will be deducted from this vendor.', 'dokan-lite' ); ?>"
+                        data-tip="<?php esc_attr_e( 'When the value is 0, no commissions will be deducted from this vendor.', 'dokan-lite' ); ?>"
+                    ></span>
+                </label>
+
                 <span class="wrapper">
                     <input type="hidden" value="fixed" name="_per_product_admin_commission_type">
                     <input id="admin_commission" class="input-text wc_input_price" type="text" name="_per_product_admin_commission" value="<?php echo $admin_commission; ?>">
