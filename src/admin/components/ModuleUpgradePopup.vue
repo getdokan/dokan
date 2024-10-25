@@ -178,7 +178,7 @@ export default {
                 margin-top: 5px;
 
                 .unlock {
-                    color: #FF5722;
+                    color: #7047EB;
                     font-size: 1rem;
                     font-weight: normal;
                     font-family: "SF Pro Text", sans-serif;
@@ -212,12 +212,12 @@ export default {
                     font-family: "SF Pro Text", sans-serif;
 
                     strong {
-                        color: #ff5722;
+                        color: #7047EB;
                     }
                 }
 
                 .upgrade-button {
-                    background: #FF5722;
+                    background: #7047EB;
                     border-radius: 3px;
                     padding: 10px 18px;
                     font-weight: 400;

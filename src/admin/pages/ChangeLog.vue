@@ -365,7 +365,7 @@ ul {
                     background: none;
                     border-radius: 27px;
                     border: none;
-                    color: #cc7376;
+                    color: #5C626A;
                     display: inline-block;
                     position: relative;
                     transition: all .2s ease;
@@ -376,7 +376,7 @@ ul {
                 }
 
                 .active {
-                    background: #FF5722;
+                    background: #7047EB;
                     border-radius: 30px;
                     position: absolute;
                     top: 0;
@@ -768,7 +768,7 @@ ul {
         width: 40px;
         height: 40px;
         color: #ffffff;
-        background: #ff5722;
+        background: #7047EB;
         border: 0;
         position: fixed;
         right: 10px;
