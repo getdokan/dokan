@@ -993,7 +993,7 @@ export const data = {
             rmaRequests: 'my-account/rma-requests',
             viewRmaRequests: 'my-account/view-rma-requests',
             requestWarranty: 'my-account/request-warranty',
-            vendors: 'my-account/following',
+            followingStores: 'my-account/following',
             supportTickets: 'my-account/support-tickets',
 
             productCustomerPage: 'product',
@@ -1067,6 +1067,7 @@ export const data = {
                 csvExport: 'dashboard/tools/csv-export',
                 auction: 'dashboard/auction',
                 auctionActivity: 'dashboard/auction-activity',
+                auctionProductEdit: (productId: string) => `dashboard/auction/?product_id=${productId}&action=edit`,
                 storeSupport: 'dashboard/support',
 
                 // sub menus
