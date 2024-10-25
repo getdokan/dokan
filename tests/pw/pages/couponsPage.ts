@@ -6,6 +6,7 @@ import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
 import { coupon } from '@utils/interfaces';
 
+// selectors
 const couponsAdmin = selector.admin.marketing;
 const couponsVendor = selector.vendor.vCoupon;
 
@@ -52,11 +53,11 @@ export class CouponsPage extends AdminPage {
     }
 
     // vendor view marketplace coupon
-    async viewMarketPlaceCoupon(marketplaceCoupon: string) {
+    async viewMarketPlaceCoupons(marketplaceCoupon: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
         await this.click(couponsVendor.menus.marketplaceCoupons);
         await this.toBeVisible(couponsVendor.marketPlaceCoupon.marketPlaceCoupon);
-        marketplaceCoupon && (await this.toBeVisible(couponsVendor.marketPlaceCoupon.couponCell(marketplaceCoupon)));
+        if (marketplaceCoupon) await this.toBeVisible(couponsVendor.marketPlaceCoupon.couponCell(marketplaceCoupon));
     }
 
     // update coupon fields

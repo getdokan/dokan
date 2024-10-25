@@ -1,7 +1,8 @@
 import fs from 'fs';
 import { execSync } from 'child_process';
 import { Browser, BrowserContextOptions, Page } from '@playwright/test';
-import open from 'open';
+
+const { LOCAL, SITE_PATH } = process.env;
 
 export const helpers = {
     // replace '_' to space & capitalize first letter of string
@@ -13,6 +14,9 @@ export const helpers = {
 
     // replace '_' to space & capitalize first letter of each word
     replaceAndCapitalizeEachWord: (str: string) => str.replace('_', ' ').replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) => letter.toUpperCase()),
+
+    // replace '_' to space & lowercase first letter of each word
+    replaceAndLowercaseEachWord: (str: string) => str.replace('_', ' ').replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) => letter.toLowerCase()),
 
     // capitalize
     capitalize: (word: string) => word[0]?.toUpperCase() + word.substring(1).toLowerCase(),
@@ -43,16 +47,31 @@ export const helpers = {
     // check if object is empty
     isObjEmpty: (obj: object) => Object.keys(obj).length === 0,
 
-    // opens the url in the default browser
-    openUrl: (url: string) => open(url),
+    // snake-case to camelcase
+    toCamelCase: (str: string): string => str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()),
 
-    // opens test report in the default browser
-    openReport: () => open('playwright-report/html-report/index.html'),
+    // convert string to snake case
+    toSnakeCase: (str: string): string => {
+        return str
+            .replace(/\s+/g, '_') // Replace spaces with underscores
+            .replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`) // Add underscores before capital letters and convert them to lowercase
+            .replace(/__+/g, '_') // Replace multiple underscores with a single one
+            .replace(/^_+|_+$/g, '') // Remove leading and trailing underscores
+            .toLowerCase(); // Ensure the entire string is lowercase
+    },
+
+    // convert string to kebab case
+    kebabCase: (str: string): string => {
+        return str
+            .replace(/([a-z])([A-Z])/g, '$1-$2') // Insert hyphen between lowercase and uppercase letters
+            .replace(/[\s_]+/g, '-') // Replace spaces and underscores with hyphens
+            .toLowerCase(); // Convert the entire string to lowercase
+    },
 
     // string between two tags
     stringBetweenTags: (str: string): string => {
-        const res = str.split(/<p>(.*?)<\/p>/g);
-        return res[1] as string;
+        const match = str.match(/<([^>]+)>(.*?)<\/\1>/);
+        return match ? match[2]! : '';
     },
 
     // escape regex
@@ -86,6 +105,13 @@ export const helpers = {
     currentYear: new Date().getFullYear(),
 
     // current day [2023-06-02]
+    previousDate: (): string => {
+        const result = new Date();
+        result.setDate(result.getDate() - 1);
+        return result.toLocaleDateString('en-CA');
+    },
+
+    // current day [2023-06-02] [YY-MM-DD]
     currentDate: new Date().toLocaleDateString('en-CA'),
 
     // current day [August 22, 2023]
@@ -100,7 +126,7 @@ export const helpers = {
     currentDateTime2: () => new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(',', ''),
 
     // add two input days
-    addDays(date: string | number | Date | null, days: number, format: string): string {
+    addDays(date: string | number | Date | null, days: number, format: string = 'default'): string {
         const result = date ? new Date(date) : new Date();
         result.setDate(result.getDate() + days);
 
@@ -130,18 +156,11 @@ export const helpers = {
 
     // calculate percentage
     percentage(number: number, percentage: number) {
-        // return this.roundToTwo(number * (percentage / 100));
         return number * (percentage / 100);
     },
 
     percentageWithRound(number: number, percentage: number) {
         return this.roundToTwo(number * (percentage / 100));
-        // return number * (percentage / 100);
-    },
-
-    // calculate percentage
-    percentage1(number: number, percentage: number) {
-        return (number * (percentage / 100)).toFixed(2);
     },
 
     // subtotal
@@ -150,11 +169,14 @@ export const helpers = {
         return subtotal.reduce((a, b) => a + b, 0);
     },
 
-    lineItemsToSubtotal(lineItems: object[]) {
-        const arrOfPriceQuantity = lineItems.map(({ price, quantity }) => [price, quantity]);
-        // const arrOfSubtotals = res.map(([price, quantity]) => price * quantity)
-        const subtotal = arrOfPriceQuantity.reduce((sum, [price, quantity]) => sum + price * quantity, 0);
-        return subtotal;
+    lineItemsToSubtotal(lineItems: { price: number; quantity: number }[]) {
+        const subtotal = lineItems.reduce((sum: number, { price, quantity }) => sum + price * quantity, 0);
+        return this.roundToTwo(subtotal);
+    },
+
+    lineItemsToSubtotalWithoutDiscount(lineItems: { subtotal: number }[]) {
+        const subtotalWithoutDiscount = lineItems.reduce((sum: number, { subtotal }) => sum + subtotal, 0);
+        return this.roundToTwo(subtotalWithoutDiscount);
     },
 
     // discount
@@ -289,6 +311,9 @@ export const helpers = {
     readJson(filePath: string) {
         if (fs.existsSync(filePath)) {
             return JSON.parse(this.readFile(filePath));
+        } else {
+            console.log(`File not found: ${filePath}`);
+            return null;
         }
     },
 
@@ -359,20 +384,125 @@ export const helpers = {
         this.writeFile(filePath, JSON.stringify(envData, null, 2));
     },
 
-    // execute command
-    async exeCommand(command: string) {
-        const output = execSync(command, { encoding: 'utf-8' });
-        console.log(output);
+    async createFolder(folderName: string) {
+        try {
+            fs.mkdirSync(folderName);
+            console.log(`Folder '${folderName}' created successfully.`);
+        } catch (error: any) {
+            if (error.code === 'EEXIST') {
+                console.log(`Folder '${folderName}' already exists.`);
+                return;
+            } else {
+                console.error(`Error creating folder '${folderName}':`, error);
+            }
+        }
     },
 
+    // execute command
+    async exeCommand(command: string, directoryPath = process.cwd()) {
+        process.chdir(directoryPath);
+        try {
+            const output = execSync(command, { encoding: 'utf-8' });
+            console.log(output);
+            return output;
+        } catch (error: any) {
+            console.log(error);
+            return error;
+        }
+    },
+
+    // execute wp cli command
+    async exeCommandWpcli(command: string, directoryPath = process.cwd()) {
+        process.chdir(directoryPath);
+        command = LOCAL ? `cd ${SITE_PATH} && ${command}` : `npm run wp-env run tests-cli  ${command}`;
+        // console.log(`Executing command: ${command}`);
+        await this.exeCommand(command);
+    },
+
+    // create a new page
     async createPage(browser: Browser, options?: BrowserContextOptions | undefined) {
         const browserContext = await browser.newContext(options);
         return browserContext.newPage();
     },
 
+    // close pages
     async closePages(pages: Page[]): Promise<void> {
         for (const page of pages) {
             await page.close();
         }
+    },
+
+    // check if cookie is expired
+    isCookieValid(filePath: string) {
+        const cookies = helpers.readJson(filePath);
+        if (!cookies?.cookies) {
+            console.log('No cookies found in the file');
+            return false;
+        }
+        const loginCookie = cookies?.cookies.find((cookie: { name: string }) => cookie.name.startsWith('wordpress_logged_in'));
+        if (!loginCookie) {
+            console.log('No valid login cookie found.');
+            return false;
+        }
+        // console.log(loginCookie);
+        const cookieExpiryDate = new Date(loginCookie.expires * 1000);
+        console.log('expiry:', cookieExpiryDate.toLocaleDateString('en-CA'));
+        const result = cookieExpiryDate > new Date();
+        console.log(result);
+        return result;
+    },
+
+    // rgb (rgb(r, g, b)) to hex (#rrggbb) color
+    rgbToHex(rgb: string): string {
+        const [r, g, b]: number[] = rgb.match(/\d+/g)!.map(Number);
+        return `#${((1 << 24) + (r! << 16) + (g! << 8) + b!).toString(16).slice(1).toUpperCase()}`;
+    },
+
+    // hex (#rrggbb) to rgb (rgb(r, g, b)) color
+    hexToRgb(hex: string): string {
+        const r = parseInt(hex.substring(1, 3), 16);
+        const g = parseInt(hex.substring(3, 5), 16);
+        const b = parseInt(hex.substring(5, 7), 16);
+        return `rgb(${r}, ${g}, ${b})`;
+    },
+
+    // empty object values
+    emptyObjectValues: (obj: { [key: string]: any }) => (Object.keys(obj).forEach(key => (obj[key] = '')), obj),
+
+    // is object
+    isPlainObject: (value: any) => value !== null && typeof value === 'object' && !Array.isArray(value),
+
+    // deep merge arrays
+    deepMergeArrays(targetArray: any[], sourceArray: any[]) {
+        if (targetArray.every((item: any) => item instanceof Object && !Array.isArray(item)) && sourceArray.every(item => item instanceof Object && !Array.isArray(item))) {
+            const mergedArray = [...targetArray];
+            sourceArray.forEach((item: { [key: string]: any }, index: number) => {
+                if (index < mergedArray.length && item instanceof Object && !Array.isArray(item)) {
+                    mergedArray[index] = this.deepMergeObjects(mergedArray[index], item);
+                } else {
+                    mergedArray.push(item);
+                }
+            });
+            return mergedArray;
+        } else {
+            return [...sourceArray];
+        }
+    },
+
+    // deep merge objects
+    deepMergeObjects(target: { [key: string]: any }, source: { [key: string]: any }) {
+        const result = { ...target };
+
+        for (const key of Object.keys(source)) {
+            if (this.isPlainObject(source[key]) && this.isPlainObject(target[key])) {
+                result[key] = this.deepMergeObjects(target[key], source[key]);
+            } else if (Array.isArray(source[key]) && Array.isArray(target[key])) {
+                result[key] = this.deepMergeArrays(target[key], source[key]);
+            } else {
+                result[key] = source[key];
+            }
+        }
+
+        return result;
     },
 };

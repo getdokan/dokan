@@ -30,14 +30,14 @@ test.describe('Vendor SPMV test', () => {
         customer = new SpmvPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'off', enable_min_max_amount: 'off' }); // todo: might exists dokan issue -> min-max field is required on admin product edit
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { enable_min_max_quantity: 'off', enable_min_max_amount: 'off' }); // todo: dokan issue -> min-max field is required on admin product edit
         [, , productName] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
         [, productId, productName2] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
         await apiUtils.addSpmvProductToStore(productId, payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
         await aPage.close();
         await vPage.close();
         await cPage.close();
@@ -51,7 +51,7 @@ test.describe('Vendor SPMV test', () => {
 
     //vendor
 
-    test('vendor SPMV menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view SPMV menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorSpmvRenderProperly();
     });
 

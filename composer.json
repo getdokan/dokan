@@ -14,7 +14,7 @@
     "php": ">=7.4",
     "appsero/client": "^v2.0.2",
     "jakeasmith/http_build_url": "^1",
-    "appsero/updater": "^v1.0.0"
+    "appsero/updater": "^v2.3.0"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "dev-develop",
@@ -23,7 +23,8 @@
     "phpcompatibility/phpcompatibility-wp": "dev-master",
     "phpunit/phpunit": "^9.6",
     "wp-phpunit/wp-phpunit": "dev-master",
-    "yoast/phpunit-polyfills": "^1.0@dev"
+    "yoast/phpunit-polyfills": "^1.0@dev",
+    "brain/monkey": "^2.0"
   },
   "config": {
     "platform": {
@@ -42,6 +43,11 @@
       "includes/functions-dashboard-navigation.php"
     ]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "WeDevs\\Dokan\\Test\\": "tests/php/src"
+    }
+  },
   "scripts": {
     "phpcs": [
       "vendor/bin/phpcs -p -s"
@@ -51,6 +57,12 @@
     ],
     "phpcbf": [
       "vendor/bin/phpcbf -p"
+    ],
+    "test": [
+      "phpunit"
+    ],
+    "test-f": [
+      "phpunit --filter"
     ]
   }
 }

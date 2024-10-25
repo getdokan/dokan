@@ -4,6 +4,204 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.12.6',
+        'released' => '2024-10-24',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Fixed js error on frontend pages.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.5',
+        'released' => '2024-10-16',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Implement order trash and untrash handling for Dokan',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added wordpress native i18n support',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.4',
+        'released' => '2024-10-03',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added `$data` parameter to `dokan_update_vendor` hook.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.3',
+        'released' => '2024-09-30',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added compatibility with RFQ state field ui.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.2',
+        'released' => '2024-09-23',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Product gallery image uploader close button style fix.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fix incorrect sub-order status updates when the main order status changed specifically for cancelled sub-orders.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed vendor coupon validation for various discount item types.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.1',
+        'released' => '2024-08-30',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Resolve fatal error when updating Dokan Lite to 3.12.0 with Dokan Pro 3.9.7.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.0',
+        'released' => '2024-08-29',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Displaying incorrect withdrawal amount when using decimal separator as thousand.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed multiple invoice button for dokan sub-orders.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Ensure accurate stock updates when vendors edit products while sales occur. Thanks @brunomendespereira',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.5',
+        'released' => '2024-08-07',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed data updating issue on Admin color picker settings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed extra slashes issue on store url when translated via WPML.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.4',
+        'released' => '2024-07-10',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Direct links to the relevant settings from vendor progress bar added.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Some deprecation warning resolved.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Shop URL rendered double slash when using WPML on vendor registration.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fatal error in block editor on adding and editing page with customer-migration shortcode.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.3',
+        'released' => '2024-06-10',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Responsive issue on vendor dashboard tabs preview.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.2',
+        'released' => '2024-05-27',
+        'changes'  => [
+            'Improvement'         => [
+                [
+                    'title'       => 'WooCommerce 8.9.1 Compatibility added.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.1',
+        'released' => '2024-05-16',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Action hook `dokan_dashboard_sidebar_start` added.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Action hook `dokan_dashboard_sidebar_end` added.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.0',
+        'released' => '2024-05-10',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'The status of sub-orders does not update to completed if it contains only virtual products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.10.4',
         'released' => '2024-04-25',
         'changes'  => [

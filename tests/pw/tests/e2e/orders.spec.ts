@@ -30,7 +30,7 @@ test.describe('Order functionality test', () => {
 
     // orders
 
-    test('vendor order menu page renders properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view order menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorOrdersRenderProperly();
     });
 
@@ -77,9 +77,13 @@ test.describe('Order functionality test', () => {
     });
 
     test('vendor can add tracking details to order', { tag: ['@lite', '@vendor'] }, async () => {
-        DOKAN_PRO && (await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, { ...dbData.dokan.shippingStatusSettings, enabled: 'off' }));
-        await vendor.addTrackingDetails(orderId, data.orderTrackingDetails);
-        DOKAN_PRO && (await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, { ...dbData.dokan.shippingStatusSettings, enabled: 'on' }));
+        if (DOKAN_PRO) {
+            await dbUtils.updateOptionValue(dbData.dokan.optionName.shippingStatus, { enabled: 'off' });
+            await vendor.addTrackingDetails(orderId, data.orderTrackingDetails);
+            await dbUtils.updateOptionValue(dbData.dokan.optionName.shippingStatus, { enabled: 'on' });
+        } else {
+            await vendor.addTrackingDetails(orderId, data.orderTrackingDetails);
+        }
     });
 
     test('vendor can add shipment to order', { tag: ['@pro', '@vendor'] }, async () => {
@@ -92,7 +96,7 @@ test.describe('Order functionality test', () => {
         await vendor.removeDownloadableProduct(orderId, downloadableProductName);
     });
 
-    test('vendor can perform order bulk action', { tag: ['@lite', '@vendor'] }, async () => {
+    test('vendor can perform bulk action on orders', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.orderBulkAction('completed', orderId);
     });
 });

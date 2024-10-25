@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -12,6 +12,17 @@ const settingsAdmin = selector.admin.dokan.settings;
 export class SettingsPage extends AdminPage {
     constructor(page: Page) {
         super(page);
+    }
+
+    // navigation
+
+    async goToSingleDokanSettings(settingMenu: string, settingTitle: string) {
+        await this.toPass(async () => {
+            await this.goto(data.subUrls.backend.dokan.settings);
+            await this.reload(); //todo: need to resolve: page doesn't reload for having # (fragment identifier) in the url
+            await this.click(settingMenu);
+            await this.toContainText(settingsAdmin.settingTitle, settingTitle, { timeout: 3000 });
+        });
     }
 
     // settings
@@ -32,7 +43,7 @@ export class SettingsPage extends AdminPage {
         // settings field is visible
         await this.toBeVisible(settingsAdmin.fields);
 
-        // settings save Changes is visible
+        // settings save changes is visible
         await this.toBeVisible(settingsAdmin.saveChanges);
     }
 
@@ -48,8 +59,19 @@ export class SettingsPage extends AdminPage {
     // scroll to top settings
     async scrollToTopSettings() {
         await this.goto(data.subUrls.backend.dokan.settings);
-        await this.scrollToBottom();
-        await this.toBeVisible(settingsAdmin.backToTop);
+        // toPass is used to avoid flakiness
+        await this.toPass(async () => {
+            await this.scrollToBottom();
+            const isBackToTopVisible = await this.isVisible(settingsAdmin.backToTop, 1);
+            if (!isBackToTopVisible) {
+                await this.scrollToTop();
+            }
+            // eslint-disable-next-line playwright/prefer-web-first-assertions
+            expect(isBackToTopVisible).toBeTruthy();
+        });
+
+        await this.click(settingsAdmin.backToTop);
+        await this.toBeVisible(settingsAdmin.search.searchBox);
     }
 
     // dokan settings
@@ -63,7 +85,9 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.general.adminAreaAccess);
         await this.clearAndType(settingsAdmin.general.vendorStoreUrl, general.vendorStoreUrl);
         await this.typeFrameSelector(settingsAdmin.general.setupWizardMessageIframe, settingsAdmin.general.setupWizardMessageHtmlBody, general.setupWizardMessage);
-        DOKAN_PRO && (await this.click(settingsAdmin.general.sellingProductTypes(general.sellingProductTypes)));
+        if (DOKAN_PRO) {
+            await this.click(settingsAdmin.general.sellingProductTypes(general.sellingProductTypes));
+        }
 
         // vendor store options
         await this.enableSwitcher(settingsAdmin.general.storeTermsAndConditions);
@@ -84,8 +108,7 @@ export class SettingsPage extends AdminPage {
 
     // admin set dokan selling settings
     async setDokanSellingSettings(selling: dokanSettings['selling']) {
-        await this.goToDokanSettings();
-        await this.click(settingsAdmin.menus.sellingOptions);
+        await this.goToSingleDokanSettings(settingsAdmin.menus.sellingOptions, selling.settingTitle);
 
         // commission settings
         await this.selectByValue(settingsAdmin.selling.commissionType, selling.commissionType);
@@ -109,9 +132,11 @@ export class SettingsPage extends AdminPage {
             await this.enableSwitcher(settingsAdmin.selling.vendorProductReviewStatusChange);
             await this.enableSwitcher(settingsAdmin.selling.guestProductEnquiry);
             await this.enableSwitcher(settingsAdmin.selling.newVendorEnableAuction); // todo: add condition for simple auction plugin enabled
-            await this.enableSwitcher(settingsAdmin.selling.enableMinMaxQuantities);
-            await this.enableSwitcher(settingsAdmin.selling.enableMinMaxAmount);
         }
+
+        // catalog mode
+        await this.enableSwitcher(settingsAdmin.selling.removeAddToCartButton);
+        await this.enableSwitcher(settingsAdmin.selling.hideProductPrice);
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.selling.sellingOptionsSaveChanges);
@@ -196,7 +221,9 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.reverseWithdraw.MakeVendorStatusInactive);
 
         await this.enableSwitcher(settingsAdmin.reverseWithdraw.displayNoticeDuringGracePeriod);
-        DOKAN_PRO && (await this.enableSwitcher(settingsAdmin.reverseWithdraw.sendAnnouncement));
+        if (DOKAN_PRO) {
+            await this.enableSwitcher(settingsAdmin.reverseWithdraw.sendAnnouncement);
+        }
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.reverseWithdraw.reverseWithdrawSaveChanges);
@@ -241,6 +268,24 @@ export class SettingsPage extends AdminPage {
         await this.toHaveValue(settingsAdmin.appearance.googleMapApiKey, appearance.googleMapApiKey);
     }
 
+    // Admin Set Dokan MenuManager Settings
+    async setDokanMenuManagerSettings(menus: string[]) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.menuManager);
+
+        // menuManager Settings
+        for (const menu of menus) {
+            await this.enableSwitcher(settingsAdmin.menuManager.menuSwitcher(menu));
+        }
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+
+        for (const menu of menus) {
+            await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(0, 144, 255)');
+        }
+    }
+
     // Admin Set Dokan Privacy Policy Settings
     async setDokanPrivacyPolicySettings(privacyPolicy: dokanSettings['privacyPolicy']) {
         await this.goToDokanSettings();
@@ -257,19 +302,17 @@ export class SettingsPage extends AdminPage {
     }
 
     // Admin Set Dokan Color Settings
-    async setDokanColorSettings(colors: dokanSettings['colors']) {
+    async setDokanColorSettings(paletteName: string) {
         await this.goToDokanSettings();
         await this.click(settingsAdmin.menus.colors);
 
         // Colors Settings
-        if (colors.paletteChoice === 'pre-defined') {
-            await this.click(settingsAdmin.colors.predefineColorPalette);
-            await this.click(settingsAdmin.colors.colorPalette[colors.colorPalette as keyof typeof settingsAdmin.colors.colorPalette]);
-        }
+        await this.click(settingsAdmin.colors.predefineColorPalette);
+        await this.click(settingsAdmin.colors.predefinedPalette(paletteName));
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.colors.colorsSaveChanges);
-        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, colors.saveSuccessMessage);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.colors.saveSuccessMessage);
     }
 
     // Admin Set Dokan Live Search Settings
@@ -298,6 +341,22 @@ export class SettingsPage extends AdminPage {
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.storeSupport.storeSupportSaveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, storeSupport.saveSuccessMessage);
+    }
+
+    // Admin Set Dokan Vendor Verification Settings
+    async setDokanVendorVerificationSettings(vendorVerification: Pick<dokanSettings['vendorVerification'], 'verifiedIcons' | 'verificationMethods' | 'saveSuccessMessage'>) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.vendorVerification);
+
+        await this.click(settingsAdmin.vendorVerification.verifiedIcon(vendorVerification.verifiedIcons.userCheckSolid));
+        const response = await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(vendorVerification.verificationMethods.nationalId));
+        if (response) {
+            await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage);
+        }
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, vendorVerification.saveSuccessMessage);
     }
 
     // Admin Set Dokan Email Verification Settings
@@ -366,7 +425,7 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.rma.enableCouponRequests);
 
         for (const rmaReason of rma.rmaReasons) {
-            await this.deleteIfExists(settingsAdmin.rma.reasonsForRmaSingle(rmaReason));
+            await this.clickIfVisible(settingsAdmin.rma.reasonsForRmaSingle(rmaReason));
             await this.clearAndType(settingsAdmin.rma.reasonsForRmaInput, rmaReason);
             await this.click(settingsAdmin.rma.reasonsForRmaAdd);
         }
@@ -500,7 +559,7 @@ export class SettingsPage extends AdminPage {
         await this.click(settingsAdmin.menus.productReportAbuse);
 
         // Product Report Abuse Settings
-        await this.deleteIfExists(settingsAdmin.productReportAbuse.reasonsForAbuseReportSingle(productReportAbuse.reasonsForAbuseReport));
+        await this.clickIfVisible(settingsAdmin.productReportAbuse.reasonsForAbuseReportSingle(productReportAbuse.reasonsForAbuseReport));
         await this.clearAndType(settingsAdmin.productReportAbuse.reasonsForAbuseReportInput, productReportAbuse.reasonsForAbuseReport);
         await this.click(settingsAdmin.productReportAbuse.reasonsForAbuseReportAdd);
 

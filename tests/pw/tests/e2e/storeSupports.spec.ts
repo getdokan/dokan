@@ -29,7 +29,7 @@ test.describe('Store Support test (admin)', () => {
 
     //admin
 
-    test('dokan store support menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view store support menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminStoreSupportRenderProperly();
     });
 
@@ -84,7 +84,7 @@ test.describe('Store Support test (admin)', () => {
         await admin.reopenSupportTicket(closedSupportTicketId);
     });
 
-    test('admin can perform store support bulk action', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can perform bulk action on store support tickets', { tag: ['@pro', '@admin'] }, async () => {
         const [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         await admin.storeSupportBulkAction('close', supportTicketId);
     });
@@ -114,7 +114,7 @@ test.describe('Store Support test (customer)', () => {
         await apiUtils.dispose();
     });
 
-    test('customer store support menu page renders properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
+    test('customer can view store support menu page', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.customerStoreSupportRenderProperly();
     });
 
@@ -185,7 +185,7 @@ test.describe('Store Support test (vendor)', () => {
 
     // vendor
 
-    test('vendor store support menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view store support menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorStoreSupportRenderProperly();
     });
 
@@ -202,11 +202,11 @@ test.describe('Store Support test (vendor)', () => {
     });
 
     test('vendor can search support ticket by ticket id', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorSearchSupportTicket('id', supportTicketId);
+        await vendor.vendorSearchSupportTicket(supportTicketId);
     });
 
     test('vendor can search support ticket by ticket title', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorSearchSupportTicket('title', data.storeSupport.title);
+        await vendor.vendorSearchSupportTicket(data.storeSupport.title);
     });
 
     test('vendor can reply to support ticket', { tag: ['@pro', '@vendor'] }, async () => {

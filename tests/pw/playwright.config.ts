@@ -1,7 +1,7 @@
 import { defineConfig, devices, expect } from '@playwright/test';
 import { customExpect } from '@utils/pwMatchers';
 // import 'dotenv/config';
-const { CI, BASE_URL, SLOWMO, ADMIN, ADMIN_PASSWORD } = process.env;
+const { CI, NON_HEADLESS, BASE_URL, SLOWMO, ADMIN, ADMIN_PASSWORD } = process.env;
 
 export default defineConfig({
     testDir: './tests/',
@@ -74,7 +74,7 @@ export default defineConfig({
         /* Emulates 'prefers-colors-scheme' media feature, supported values are 'light', 'dark', 'no-preference' */
         // colorScheme: 'dark' ,
         /* Whether to run tests on headless or non-headless mode */
-        headless: CI ? !!CI : false,
+        headless: !NON_HEADLESS,
         /* Whether to ignore HTTPS errors during navigation. */
         ignoreHTTPSErrors: true,
         /* Record trace only when retrying a test for the first time. */

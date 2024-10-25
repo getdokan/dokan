@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { helpers } from '@utils/helpers';
@@ -27,7 +27,7 @@ export class AbuseReportsPage extends AdminPage {
         await this.multipleElementVisible(abuseReportAdmin.bulkActions);
 
         // filter elements are visible
-        const { filterInput, ...filters } = abuseReportAdmin.filters;
+        const { filterInput, reset, filteredResult, ...filters } = abuseReportAdmin.filters;
         await this.multipleElementVisible(filters);
 
         // abuse report table elements are visible
@@ -46,7 +46,7 @@ export class AbuseReportsPage extends AdminPage {
 
     // filter abuse reports
     async filterAbuseReports(input: string, action: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.abuseReports);
+        await this.goto(data.subUrls.backend.dokan.abuseReports);
 
         switch (action) {
             case 'by-reason':
@@ -55,22 +55,24 @@ export class AbuseReportsPage extends AdminPage {
 
             case 'by-product':
                 await this.click(abuseReportAdmin.filters.filterByProduct);
-                await this.typeAndWaitForResponse(data.subUrls.api.wc.wcProducts, abuseReportAdmin.filters.filterInput, input);
-                await this.pressAndWaitForResponse(data.subUrls.api.dokan.abuseReports, data.key.enter);
+                await this.typeAndWaitForResponse(data.subUrls.api.wc.products, abuseReportAdmin.filters.filterInput, input);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.abuseReports, abuseReportAdmin.filters.filteredResult(input));
                 break;
 
             case 'by-vendor':
                 await this.click(abuseReportAdmin.filters.filterByVendors);
                 await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, abuseReportAdmin.filters.filterInput, input);
-                await this.pressAndWaitForResponse(data.subUrls.api.dokan.abuseReports, data.key.enter);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.abuseReports, abuseReportAdmin.filters.filteredResult(input));
                 break;
 
             default:
                 break;
         }
+        await this.notToHaveText(abuseReportAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(abuseReportAdmin.noRowsFound);
 
-        const count = (await this.getElementText(abuseReportAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        //clear filter
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.abuseReports, abuseReportAdmin.filters.reset);
     }
 
     // abuse report bulk action

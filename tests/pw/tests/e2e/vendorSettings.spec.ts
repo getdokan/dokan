@@ -6,6 +6,8 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
+const { VENDOR_ID } = process.env;
+
 test.describe('Vendor settings test', () => {
     let vendor: VendorSettingsPage;
     let vPage: Page;
@@ -21,35 +23,42 @@ test.describe('Vendor settings test', () => {
 
     test.afterAll(async () => {
         await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
+        await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
         await vPage.close();
         await apiUtils.dispose();
     });
 
     //vendor
 
-    test('vendor store settings menu page renders properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view store settings menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorStoreSettingsRenderProperly();
     });
 
-    test('vendor shipstation settings menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view Shipstation settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorShipstationSettingsRenderProperly();
     });
 
-    test('vendor social profile settings menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view social profile settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorSocialProfileSettingsRenderProperly();
     });
 
-    test('vendor rma settings menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view rma settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorRmaSettingsRenderProperly();
     });
 
-    test('vendor store seo settings menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view store seo settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorStoreSeoSettingsRenderProperly();
     });
 
     // store settings
 
-    // todo: ensure which settings need to reset, and test data should be what
+    test.skip('vendor can set store banner settings', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'banner');
+    });
+
+    test.skip('vendor can set store profile picture settings', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'profile-picture');
+    });
 
     test('vendor can set store basic settings', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'basic');
@@ -59,8 +68,8 @@ test.describe('Vendor settings test', () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'address');
     });
 
-    test('vendor can set company info settings', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.setStoreSettings(data.vendor.vendorInfo, 'company-info');
+    test('vendor can set euCompliance info settings', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'euCompliance');
     });
 
     test('vendor can set map settings', { tag: ['@lite', '@vendor'] }, async () => {
@@ -80,12 +89,9 @@ test.describe('Vendor settings test', () => {
     });
 
     test('vendor can set catalog settings', { tag: ['@lite', '@vendor'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'catalog');
-        // await vendor.resetCatalog();
-
         // disable catalog
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, catalog_mode_hide_add_to_cart_button: 'off', catalog_mode_hide_product_price: 'off' });
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'off', catalog_mode_hide_product_price: 'off' });
     });
 
     test('vendor can set discount settings', { tag: ['@pro', '@vendor'] }, async () => {
@@ -103,7 +109,7 @@ test.describe('Vendor settings test', () => {
     test('vendor can set min-max settings', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'min-max');
         // disable min-max
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'off', enable_min_max_amount: 'off' });
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { enable_min_max_quantity: 'off', enable_min_max_amount: 'off' });
     });
 
     test('vendor can set shipStation settings', { tag: ['@pro', '@vendor'] }, async () => {
@@ -114,8 +120,20 @@ test.describe('Vendor settings test', () => {
         await vendor.setSocialProfile(data.vendor.socialProfileUrls);
     });
 
-    test('vendor can set rma settings', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can set rma settings (no warranty)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setRmaSettings({ ...data.vendor.rma, type: 'no_warranty' });
+    });
+
+    test('vendor can set rma settings (warranty included limited)', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setRmaSettings(data.vendor.rma);
+    });
+
+    test('vendor can set rma settings (warranty included lifetime)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setRmaSettings({ ...data.vendor.rma, length: 'lifetime' });
+    });
+
+    test('vendor can set rma settings (warranty as addon)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setRmaSettings({ ...data.vendor.rma, type: 'addon_warranty' });
     });
 
     test('vendor can set store seo settings', { tag: ['@pro', '@vendor'] }, async () => {

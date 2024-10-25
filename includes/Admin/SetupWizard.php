@@ -515,7 +515,7 @@ class SetupWizard {
                                     <div class="wc-wizard-service-description">
                                         <?php
                                         // translators: %s: withdraw method name
-                                        printf( esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ), dokan_withdraw_get_method_title( $key ) );
+                                        printf( esc_html__( 'Enable %s for your vendor as a withdraw method', 'dokan-lite' ), esc_html( dokan_withdraw_get_method_title( $key ) ) );
                                         ?>
                                     </div>
                                     <div class="dokan-wizard-service-enable">
@@ -732,8 +732,14 @@ class SetupWizard {
 
         $options                          = get_option( 'dokan_withdraw', [] );
         $options['withdraw_methods']      = ! empty( $_POST['withdraw_methods'] ) ? wc_clean( wp_unslash( $_POST['withdraw_methods'] ) ) : [];
-        $options['withdraw_limit']        = ! empty( $_POST['withdraw_limit'] ) ? (float) wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['withdraw_limit'] ) ) ) < 0 ? 0 : wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['withdraw_limit'] ) ) ) : 0;
         $options['withdraw_order_status'] = ! empty( $_POST['withdraw_order_status'] ) ? wc_clean( wp_unslash( $_POST['withdraw_order_status'] ) ) : [];
+
+		if ( ! empty( $_POST['withdraw_limit'] ) ) {
+				$input_limit                = sanitize_text_field( wp_unslash( $_POST['withdraw_limit'] ) );
+				$options['withdraw_limit']  = is_numeric( $input_limit ) && $input_limit >= 0 ? wc_format_decimal( $input_limit ) : 0;
+		} else {
+			$options['withdraw_limit'] = 0;
+		}
 
         /**
          * Filter dokan_withdraw options before saving in setup wizard

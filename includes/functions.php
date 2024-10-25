@@ -106,11 +106,7 @@ function dokan_is_product_author( $product_id = 0 ) {
         $author = get_post_field( 'post_author', $product_id );
     }
 
-    if ( absint( $author ) === apply_filters( 'dokan_is_product_author', dokan_get_current_user_id(), $product_id ) ) {
-        return true;
-    }
-
-    return false;
+    return absint( $author ) === apply_filters( 'dokan_is_product_author', dokan_get_current_user_id(), $product_id );
 }
 
 /**
@@ -136,11 +132,7 @@ function dokan_is_store_page() {
  * @return bool
  */
 function dokan_is_product_edit_page() {
-    if ( get_query_var( 'edit' ) && is_singular( 'product' ) ) {
-        return true;
-    }
-
-    return false;
+    return get_query_var( 'edit' ) && is_singular( 'product' );
 }
 
 /**
@@ -288,6 +280,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_pr
         $exclude_product_types_text = "'" . implode( "', '", esc_sql( $exclude_product_types ) ) . "'";
 
         if ( ! $results ) {
+            // @codingStandardsIgnoreStart
             $results = $wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT p.post_status, COUNT( * ) AS num_posts
@@ -309,6 +302,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_pr
                 ),
                 ARRAY_A
             );
+            // @codingStandardsIgnoreEnd
         }
 
         $post_status = array_keys( dokan_get_post_status() );
@@ -346,7 +340,7 @@ function dokan_count_comments( $post_type, $user_id ) {
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( $counts === false ) {
-        $count = $wpdb->get_results(
+        $count = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "SELECT c.comment_approved, COUNT( * ) AS num_comments
                 FROM $wpdb->comments as c, $wpdb->posts as p
@@ -406,7 +400,7 @@ function dokan_author_pageviews( $seller_id ) {
     $pageview  = Cache::get( $cache_key );
 
     if ( false === $pageview ) {
-        $count = $wpdb->get_row(
+        $count = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "SELECT SUM(meta_value) as pageview
                 FROM {$wpdb->postmeta} AS meta
@@ -838,7 +832,7 @@ function dokan_get_post_status_label_class( $status = '' ) {
  *
  * @param string $status
  *
- * @return string
+ * @return array
  */
 function dokan_get_product_types( $status = '' ) {
     $types = apply_filters(
@@ -1095,11 +1089,11 @@ add_filter( 'manage_edit-product_columns', 'dokan_admin_product_columns' );
  *
  * @param string $option  settings field name
  * @param string $section the section name this field belongs to
- * @param string $default default text if it's not found
+ * @param string $default_value default text if it's not found
  *
  * @return mixed
  */
-function dokan_get_option( $option, $section, $default = '' ) {
+function dokan_get_option( $option, $section, $default_value = '' ) {
     [ $option, $section ] = dokan_admin_settings_rearrange_map( $option, $section );
 
     $options = get_option( $section );
@@ -1108,7 +1102,7 @@ function dokan_get_option( $option, $section, $default = '' ) {
         return $options[ $option ];
     }
 
-    return $default;
+    return $default_value;
 }
 
 /**
@@ -1154,11 +1148,7 @@ function dokan_is_seller_enabled( $user_id ): bool {
 function dokan_is_seller_trusted( $user_id ) {
     $publishing = get_user_meta( $user_id, 'dokan_publishing', true );
 
-    if ( $publishing === 'yes' ) {
-        return true;
-    }
-
-    return false;
+    return $publishing === 'yes';
 }
 
 /**
@@ -1199,7 +1189,11 @@ function dokan_get_store_url( $user_id ) {
 function dokan_get_current_page_url() {
     global $wp;
 
-    return add_query_arg( $_SERVER['QUERY_STRING'], '', home_url( $wp->request ) );
+    if ( ! empty( $_SERVER['QUERY_STRING'] ) ) {
+        return add_query_arg( wc_clean( wp_unslash( $_SERVER['QUERY_STRING'] ) ), '', home_url( $wp->request ) );
+    }
+
+    return home_url( $wp->request );
 }
 
 /**
@@ -1210,11 +1204,7 @@ function dokan_get_current_page_url() {
  * @return bool
  */
 function dokan_is_store_review_page() {
-    if ( get_query_var( 'store_review' ) === 'true' ) {
-        return true;
-    }
-
-    return false;
+    return get_query_var( 'store_review' ) === 'true';
 }
 
 /**
@@ -1481,7 +1471,7 @@ function dokan_get_percentage_of( $this_period = 0, $last_period = 0 ) {
     $this_period = intval( $this_period );
     $last_period = intval( $last_period );
 
-    if ( 0 === $this_period && 0 === $last_period || $this_period === $last_period ) {
+    if ( ( 0 === $this_period && 0 === $last_period ) || $this_period === $last_period ) {
         $class = 'up';
     } elseif ( 0 === $this_period ) {
         $parcent = $last_period * 100;
@@ -2196,7 +2186,7 @@ add_filter( 'woocommerce_email_recipient_low_stock', 'dokan_wc_email_recipient_a
 function dokan_get_products_listing_months_for_vendor( $user_id ) {
     global $wpdb, $wp_locale;
 
-    $months = $wpdb->get_results(
+    $months = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->prepare(
             "SELECT DISTINCT YEAR( post_date ) AS year, MONTH( post_date ) AS month
             FROM $wpdb->posts
@@ -2325,6 +2315,7 @@ function dokan_product_search_by_sku( $where ) {
         $find = wc_clean( $term );
         $like = $wild . $wpdb->esc_like( $find ) . $wild;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $sku_to_id = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key='_sku' AND meta_value LIKE %s", $like ) );
 
         if ( $sku_to_id && count( $sku_to_id ) > 0 ) {
@@ -2394,7 +2385,8 @@ function dokan_get_social_profile_fields() {
  *
  * @since 2.3
  *
- * @param bool verified
+ * @param bool $verified verified
+ * @param bool $required required
  *
  * @return void
  */
@@ -2472,7 +2464,6 @@ function dokan_get_seller_address( $seller_id = 0, $get_array = false ) {
 
         $zip          = isset( $address['zip'] ) ? $address['zip'] : '';
         $country_code = isset( $address['country'] ) ? $address['country'] : '';
-        $state_code   = isset( $address['state'] ) ? $address['state'] : '';
         $state_code   = isset( $address['state'] ) ? ( $address['state'] === 'N/A' ) ? '' : $address['state'] : '';
 
         $country_name = isset( $countries[ $country_code ] ) ? $countries[ $country_code ] : '';

@@ -17,11 +17,14 @@ export class StoreListingPage extends CustomerPage {
     // store list
 
     // store list render properly
-    async storeListRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.storeListing);
-
-        // store list text is visible
-        await this.toBeVisible(storeList.storeListText);
+    async storeListRenderProperly(link?: string) {
+        if (link) {
+            await this.goto(link);
+        } else {
+            await this.gotoUntilNetworkidle(data.subUrls.frontend.storeListing);
+            // store list text is visible
+            await this.toBeVisible(storeList.storeListText);
+        }
 
         // map elements are visible
         if (DOKAN_PRO) {
@@ -60,18 +63,21 @@ export class StoreListingPage extends CustomerPage {
         await this.notToHaveCount(storeList.storeCard.storeCardFooter, 0);
         await this.notToHaveCount(storeList.storeCard.storeAvatar, 0);
         await this.notToHaveCount(storeList.storeCard.visitStore, 0);
-        DOKAN_PRO && (await this.notToHaveCount(storeList.storeCard.followUnFollowButton, 0));
+        if (DOKAN_PRO) {
+            await this.notToHaveCount(storeList.storeCard.followUnFollowButton, 0);
+        }
     }
 
     // sort store
     async sortStores(sortBy: string) {
-        await this.goIfNotThere(data.subUrls.frontend.storeListing);
-        await this.selectByValueAndWaitForResponse(data.subUrls.frontend.storeListing, storeList.filters.sortBy, sortBy);
+        await this.goToStoreList();
+        await this.selectByValueAndWaitForResponseAndLoadState(data.subUrls.frontend.storeListing, storeList.filters.sortBy, sortBy);
+        await this.notToHaveCount(storeList.storeCard.storeCardDiv, 0);
     }
 
     // store view layout
     async storeViewLayout(style: string) {
-        await this.goIfNotThere(data.subUrls.frontend.storeListing);
+        await this.goToStoreList();
 
         switch (style) {
             case 'grid':
@@ -90,7 +96,7 @@ export class StoreListingPage extends CustomerPage {
 
     // search store
     async searchStore(storeName: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.storeListing);
+        await this.goToStoreList();
         await this.click(storeList.filters.filterButton);
         await this.clearAndType(storeList.filters.filterDetails.searchVendor, storeName);
         await this.clickAndWaitForResponse(data.subUrls.frontend.storeListing, storeList.filters.filterDetails.apply);
@@ -99,15 +105,13 @@ export class StoreListingPage extends CustomerPage {
 
     // filter stores
     async filterStores(filterBy: string, value?: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.storeListing);
+        await this.goToStoreList();
         await this.click(storeList.filters.filterButton);
 
         switch (filterBy) {
             case 'by-location':
                 await this.typeAndWaitForResponse(data.subUrls.gmap, storeList.filters.filterDetails.location, value!);
                 await this.click(storeList.mapResultFirst);
-                // await this.press(data.key.arrowDown);
-                // await this.pressAndWaitForResponse(data.subUrls.gmap, data.key.enter);
                 break;
 
             case 'by-category':
@@ -137,7 +141,7 @@ export class StoreListingPage extends CustomerPage {
 
     // stores on map
     async storeOnMap(storeName?: string) {
-        await this.goIfNotThere(data.subUrls.frontend.storeListing);
+        await this.goToStoreList();
         const storePinIsVisible = await this.isVisible(storeList.map.storeOnMap.storePin);
         if (storePinIsVisible) {
             await this.click(storeList.map.storeOnMap.storePin);
@@ -147,7 +151,9 @@ export class StoreListingPage extends CustomerPage {
             await this.toBeVisible(storeList.map.storeOnMap.storeListPopup);
             await this.click(storeList.map.storeOnMap.closePopup);
         }
-        storeName && (await this.toBeVisible(storeList.map.storeOnMap.storeOnList(storeName)));
+        if (storeName) {
+            await this.toBeVisible(storeList.map.storeOnMap.storeOnList(storeName));
+        }
     }
 
     // go to single store from store listing

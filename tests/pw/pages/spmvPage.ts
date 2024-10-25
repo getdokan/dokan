@@ -22,7 +22,9 @@ export class SpmvPage extends VendorPage {
         await this.focus(spmvAdmin.searchVendor);
 
         const alreadyAssigned = await this.isVisible(spmvAdmin.unassignVendor(storeName));
-        alreadyAssigned && (await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.ajax, spmvAdmin.unassignVendor(storeName)));
+        if (alreadyAssigned) {
+            await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.ajax, spmvAdmin.unassignVendor(storeName));
+        }
 
         await this.typeByPageAndWaitForResponse(data.subUrls.ajax, spmvAdmin.searchVendor, storeName);
         await this.toContainText(spmvAdmin.highlightedResult, storeName);
@@ -59,7 +61,7 @@ export class SpmvPage extends VendorPage {
         switch (from) {
             case 'popup':
                 await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-                await this.click(selector.vendor.product.create.addNewProduct);
+                await this.click(selector.vendor.product.addNewProduct);
                 await this.click(spmvVendor.search.toggleBtn);
                 break;
 
@@ -99,7 +101,7 @@ export class SpmvPage extends VendorPage {
     async goToProductEditFromSpmv(productName: string): Promise<void> {
         await this.searchSimilarProduct(productName, 'spmv');
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, spmvVendor.editProduct(productName));
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.toHaveValue(selector.vendor.product.title, productName);
     }
 
     // sort spmv product
@@ -112,15 +114,15 @@ export class SpmvPage extends VendorPage {
     // clone product
     async cloneProduct(productName: string): Promise<void> {
         await this.searchSimilarProduct(productName, 'spmv');
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, spmvVendor.addToStore);
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, spmvVendor.addToStore);
+        await this.toHaveValue(selector.vendor.product.title, productName);
     }
 
     // clone product via sell item button
     async cloneProductViaSellItemButton(productName: string): Promise<void> {
         await this.goToProductDetails(productName);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, spmvVendor.productDetails.sellThisItem);
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.toHaveValue(selector.vendor.product.title, productName);
     }
 
     // view other available vendors
@@ -184,6 +186,7 @@ export class SpmvPage extends VendorPage {
         await this.clickIfVisible(spmvCustomer.otherVendorAvailableTab);
 
         await this.clickAndWaitForLoadState(spmvCustomer.availableVendorDetails.actions.addToCartByVendor(storeName));
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `“${productName}” has been added to your cart.`);
     }
 }

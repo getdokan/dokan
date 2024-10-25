@@ -21,7 +21,7 @@ test.describe('Product subscriptions test', () => {
         customer = new VendorProductSubscriptionPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        const [, productId, productName] = await apiUtils.createProduct(payloads.createSimpleSubscriptionProduct(), payloads.vendorAuth);
+        await apiUtils.createProduct(payloads.createSimpleSubscriptionProduct(), payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
@@ -32,7 +32,7 @@ test.describe('Product subscriptions test', () => {
 
     //vendor
 
-    test('vendor user subscriptions menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view user subscriptions menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorUserSubscriptionsRenderProperly();
     });
 
@@ -49,7 +49,7 @@ test.describe('Product subscriptions test', () => {
     });
 
     test.skip('vendor can view user subscription', { tag: ['@pro', '@vendor'] }, async () => {
-        // await vendor.viewProductSubscription(data.customer.username);
+        await vendor.viewProductSubscription(data.customer.username); // todo:  not implemented yet
     });
 
     // customer

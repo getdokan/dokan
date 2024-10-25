@@ -56,9 +56,6 @@ class Hooks {
         add_action( 'woocommerce_reduce_order_stock', [ $this, 'restore_reduced_order_stock' ] );
 
         add_action( 'woocommerce_reduce_order_stock', [ $this, 'handle_order_notes_for_suborder' ], 99 );
-
-        // Suborder pdf button
-        add_filter( 'dokan_my_account_my_sub_orders_actions', [ $this, 'suborder_pdf_invoice_button' ], 10, 2 );
     }
 
     /**
@@ -93,7 +90,7 @@ class Hooks {
         }
 
         // insert on dokan sync table
-        $wpdb->update(
+        $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->dokan_orders,
             [ 'order_status' => $new_status ],
             [ 'order_id' => $order_id ],
@@ -101,12 +98,17 @@ class Hooks {
             [ '%d' ]
         );
 
-        // if any child orders found, change the orders as well
+        // Update sub-order statuses
         $sub_orders = dokan()->order->get_child_orders( $order_id );
         if ( $sub_orders ) {
             foreach ( $sub_orders as $sub_order ) {
                 if ( is_callable( [ $sub_order, 'update_status' ] ) ) {
-                    $sub_order->update_status( $new_status );
+                    $current_status = $sub_order->get_status();
+                    if ( $this->is_status_change_allowed( $current_status, $new_status ) ) {
+                        $sub_order->update_status( $new_status );
+                    } else {
+                        $this->log_skipped_status_update( $sub_order->get_id(), $current_status, $new_status );
+                    }
                 }
             }
         }
@@ -123,7 +125,7 @@ class Hooks {
         }
 
         // update on vendor-balance table
-        $wpdb->update(
+        $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->dokan_vendor_balance,
             [ 'status' => $new_status ],
             [
@@ -133,6 +135,98 @@ class Hooks {
             [ '%s' ],
             [ '%d', '%s' ]
         );
+    }
+
+    /**
+     * Check if a status change is allowed for a sub-order.
+     *
+     * This method determines whether a sub-order can transition from its current status
+     * to a new status, based on a configurable whitelist of allowed transitions.
+     *
+     * @since 3.12.2
+     *
+     * @param string $current_status The current status of the sub-order (should include 'wc-' prefix).
+     * @param string $new_status     The new status to check (should include 'wc-' prefix).
+     *
+     * @return bool True if the status change is allowed, false otherwise.
+     */
+    private function is_status_change_allowed( string $current_status, string $new_status ): bool {
+        // Ensure both statuses have 'wc-' prefix
+        $current_status = $this->maybe_add_wc_prefix( $current_status );
+        $new_status     = $this->maybe_add_wc_prefix( $new_status );
+
+        // Define the default whitelist of allowed status transitions
+        $default_whitelist = [
+            'wc-pending'    => [ 'any' ],
+            'wc-on-hold'    => [ 'wc-pending', 'wc-on-hold', 'wc-processing', 'wc-completed', 'wc-failed' ],
+            'wc-processing' => [ 'wc-completed', 'wc-failed', 'wc-cancelled', 'wc-refunded' ],
+            'wc-completed'  => [ 'wc-refunded' ],
+            'wc-failed'     => [ 'wc-pending', 'wc-on-hold', 'wc-processing', 'wc-failed', 'wc-cancelled' ],
+            'wc-cancelled'  => [],
+            'wc-refunded'   => [],
+        ];
+
+        /**
+         * Filter the whitelist of allowed status transitions for sub-orders.
+         *
+         * This filter allows developers to customize the whitelist that determines
+         * which status transitions are allowed for sub-orders when the main order
+         * status is updated. By modifying this whitelist, you can control how
+         * sub-order statuses are updated in relation to the main order.
+         *
+         * @since 3.12.2
+         *
+         * @param array $whitelist An associative array where keys are current statuses
+         *                         and values are arrays of allowed new statuses.
+         *                         The special value 'any' allows transition to any status.
+         *
+         * @return array Modified whitelist of allowed status transitions.
+         */
+        $whitelist = apply_filters( 'dokan_sub_order_status_update_whitelist', $default_whitelist );
+
+        // If the current status is not in the whitelist, status change is not allowed
+        if ( ! isset( $whitelist[ $current_status ] ) ) {
+            return false;
+        }
+
+        // If 'any' is allowed for the current status, all transitions are allowed
+        if ( in_array( 'any', $whitelist[ $current_status ], true ) ) {
+            return true;
+        }
+
+        // Check if the new status is in the list of allowed transitions
+        return in_array( $new_status, $whitelist[ $current_status ], true );
+    }
+
+    /**
+     * Ensure a status string has the 'wc-' prefix.
+     *
+     * @since 3.12.2
+     *
+     * @param string $status The status string to check.
+     *
+     * @return string The status string with 'wc-' prefix added if it was missing.
+     */
+    private function maybe_add_wc_prefix( string $status ): string {
+        return strpos( $status, 'wc-' ) === 0 ? $status : 'wc-' . $status;
+    }
+
+    /**
+     * Log a skipped status update for a sub-order.
+     *
+     * This method logs a message to the error log when a status update for a sub-order
+     * is skipped because the status change is not allowed.
+     *
+     * @since 3.12.2
+     *
+     * @param int    $order_id      The ID of the sub-order.
+     * @param string $current_status The current status of the sub-order.
+     * @param string $new_status     The new status that was not allowed.
+     *
+     * @return void
+     */
+    private function log_skipped_status_update( int $order_id, string $current_status, string $new_status ) {
+        dokan_log( sprintf( 'Dokan: Skipped status update for sub-order %d from %s to %s', $order_id, $current_status, $new_status ) );
     }
 
     /**
@@ -168,6 +262,7 @@ class Hooks {
             return;
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $balance_data = $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT 1 FROM $wpdb->dokan_vendor_balance WHERE trn_id = %d AND trn_type = %s AND status = 'approved'",
@@ -182,6 +277,7 @@ class Hooks {
         $seller_id  = dokan_get_seller_id_by_order( $order_id );
         $net_amount = dokan()->commission->get_earning_by_order( $order );
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
         $wpdb->insert(
             $wpdb->dokan_vendor_balance,
             [
@@ -207,7 +303,7 @@ class Hooks {
         );
 
         // update the order table with new refund amount
-        $order_data = $wpdb->get_row(
+        $order_data = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "select * from $wpdb->dokan_orders where order_id = %d",
                 $order_id
@@ -216,7 +312,7 @@ class Hooks {
 
         if ( isset( $order_data->order_total, $order_data->net_amount ) ) {
             // insert on dokan sync table
-            $wpdb->update(
+            $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->dokan_orders,
                 [
                     'order_total' => 0,
@@ -263,10 +359,19 @@ class Hooks {
         // return if any child order is not completed
         $all_complete = true;
 
+        // Exclude manual gateways from auto complete order status update for digital products.
+        $excluded_gateways = apply_filters( 'dokan_excluded_payment_gateways_on_order_status_update', array( 'bacs', 'cheque', 'cod' ) );
+
         foreach ( $sub_orders as $sub_order ) {
+            // if the order is a downloadable and virtual product, then we need to set the status to complete
+            if ( 'processing' === $sub_order->get_status() && $order->is_paid() && ! in_array( $order->get_payment_method(), $excluded_gateways, true ) && ! $sub_order->needs_processing() ) {
+                $sub_order->set_status( 'completed', __( 'Marked as completed because it contains digital products only.', 'dokan-lite' ) );
+                $sub_order->save();
+            }
+
+            // if any child order is not completed, break the loop
             if ( $sub_order->get_status() !== 'completed' ) {
                 $all_complete = false;
-                break;
             }
         }
 
@@ -313,14 +418,20 @@ class Hooks {
         $available_vendors  = [];
         $available_products = [];
 
-        if ( WC()->cart ) {
+        if ( WC()->cart && ! WC()->cart->is_empty() ) {
             foreach ( WC()->cart->get_cart() as $item ) {
                 $product_id           = $item['data']->get_id();
                 $available_vendors[]  = (int) dokan_get_vendor_by_product( $product_id, true );
                 $available_products[] = $product_id;
             }
         } else {
-            foreach ( $discount->get_items() as $item_id => $item ) {
+            foreach ( $discount->get_items() as $item ) {
+                if ( ! isset( $item->product ) || ! $item->product instanceof \WC_Product ) {
+                    continue;
+                }
+
+                $item_id = $item->product->get_id();
+
                 $available_vendors[]  = (int) dokan_get_vendor_by_product( $item_id, true );
                 $available_products[] = $item_id;
             }
@@ -329,7 +440,7 @@ class Hooks {
         $available_vendors = array_unique( $available_vendors );
 
         if ( $coupon->is_type( 'fixed_cart' ) && count( $available_vendors ) > 1 ) {
-            throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
+            throw new Exception( esc_html__( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
         }
 
         // Make sure applied coupon created by admin
@@ -343,7 +454,7 @@ class Hooks {
 
         // A coupon must be bound with a product
         if ( ! dokan()->is_pro_exists() && count( $coupon->get_product_ids() ) === 0 ) {
-            throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
+            throw new Exception( esc_html__( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
         }
 
         $coupon_id = $coupon->get_id();
@@ -438,24 +549,5 @@ class Hooks {
                 $order->add_order_note( __( 'Stock levels reduced:', 'woocommerce' ) . ' ' . $notes_content ); //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
             }
         }
-    }
-
-    /**
-     * PDF Invoices & Packing Slips for WooCommerce plugin integration on suborder section.
-     *
-     * @since 3.8.3
-     *
-     * @param $actions
-     * @param $order
-     *
-     * @return mixed
-     */
-    public function suborder_pdf_invoice_button( $actions, $order ) {
-        $woocommerce_all_actions = apply_filters( 'woocommerce_my_account_my_orders_actions', $actions, $order );
-
-        if ( isset( $woocommerce_all_actions['invoice'] ) ) {
-            $actions['action'] = $woocommerce_all_actions['invoice'];
-        }
-        return $actions;
     }
 }

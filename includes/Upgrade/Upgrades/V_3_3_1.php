@@ -18,15 +18,19 @@ class V_3_3_1 extends DokanUpgrader {
 
         include_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $existing_columns = $wpdb->get_col( "DESC `{$wpdb->prefix}dokan_withdraw`", 0 );
 
         if ( in_array( 'details', $existing_columns, true ) ) {
             return;
         }
 
-        $wpdb->query(
-            "ALTER TABLE `{$wpdb->prefix}dokan_withdraw` ADD COLUMN `details` longtext AFTER `note`" // phpcs:ignore
-        );
+        $table = $wpdb->prefix . 'dokan_withdraw';
+        $column = 'details';
+        $after = 'note';
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQLPlaceholders.UnsupportedIdentifierPlaceholder
+        $wpdb->query( $wpdb->prepare( 'ALTER TABLE %i ADD COLUMN %i longtext AFTER %i', $table, $column, $after ) );
     }
 
     /**
@@ -41,13 +45,16 @@ class V_3_3_1 extends DokanUpgrader {
 
         include_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $existing_columns = $wpdb->get_results( "DESC `{$wpdb->prefix}dokan_refund`" );
 
         foreach ( (array) $existing_columns as $existing_column ) {
             if ( in_array( $existing_column->Field, [ 'item_totals', 'item_tax_totals' ], true ) && 'text' !== $existing_column->Type ) { // phpcs:ignore
-                $wpdb->query(
-                    "ALTER TABLE `{$wpdb->prefix}dokan_refund` MODIFY COLUMN {$existing_column->Field} text" // phpcs:ignore
-                );
+                $table  = $wpdb->prefix . 'dokan_refund';
+                $column = $existing_column->Field; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQLPlaceholders.UnsupportedIdentifierPlaceholder
+                $wpdb->query( $wpdb->prepare( 'ALTER TABLE %i MODIFY COLUMN %i text', $table, $column ) );
             }
         }
     }

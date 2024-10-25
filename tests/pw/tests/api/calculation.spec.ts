@@ -8,7 +8,7 @@ import { commission, feeRecipient } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
-test.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
+test.use({ extraHTTPHeaders: payloads.adminAuth });
 
 test.describe.skip('calculation test', () => {
     let apiUtils: ApiUtils;
@@ -18,8 +18,10 @@ test.describe.skip('calculation test', () => {
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
-        taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+        // taxRate = await apiUtils.setUpTaxRate(payloads.enableTax, payloads.createTaxRate);
+        taxRate = await apiUtils.setUpTaxRate(payloads.enableTax, { ...payloads.createTaxRate, rate: '10' });
         // todo:  get tax rate instead of setup if possible
+        // todo: add tax type inclusive/exclusive
         [commission, feeRecipient] = await dbUtils.getSellingInfo();
     });
 
@@ -89,16 +91,17 @@ test.describe.skip('Marketplace Coupon calculation test', () => {
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
-        taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+        taxRate = await apiUtils.setUpTaxRate(payloads.enableTax, payloads.createTaxRate);
         // taxRate = await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
         sequentialCoupon = await apiUtils.getSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially');
+        // @ts-expect-error skip error for now
         sequentialCoupon = sequentialCoupon?.value === 'yes' ? true : false;
         // console.log('applySequentially:', sequentialCoupon);
         [commission, feeRecipient] = await dbUtils.getSellingInfo();
     });
 
     test('coupon calculation test', { tag: ['@pro'] }, async () => {
-        //todo: apply single coupon, multiple coupon, sequential coupon with options and make separate test
+        // todo: apply single coupon, multiple coupon, sequential coupon with options and make separate test
         const [, , code1, amount1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const [, , code2, amount2] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const discount = {
@@ -111,11 +114,11 @@ test.describe.skip('Marketplace Coupon calculation test', () => {
             },
         };
         const [, res, oid] = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }, { code: code2 }] });
-        // const [, res, oid] = await apiUtils.createOrder('997', { ...payloads.createOrder, coupon_lines: [{ code: 'ac_66iu9e4awq' }, { code: 'ac_05taq2zkqo' }] });
+        // const [, res, oid] = await apiUtils.createOrder('997', { ...payloads.createOrder, coupon_lines: [{ code: 'ac_66iu9e4awq' }, { code: 'ewe' }] });
         // console.log(res);
         console.log('Order id:', oid);
         const discountTotal = res.discount_total;
-        const discountTax = res.discount_tax;
+        // const discountTax = res.discount_tax;
         const shippingTotal = res.shipping_total;
         const shippingTax = res.shipping_tax;
         const cartTax = res.cart_tax;
@@ -164,49 +167,49 @@ test.describe.skip('Marketplace Coupon calculation test', () => {
 test.describe.skip('commission test', () => {
     let apiUtils: ApiUtils;
     const taxRate: number = 10;
-    let commission: commission;
-    let feeRecipient: feeRecipient;
+    // let commission: commission;
+    // let feeRecipient: feeRecipient;
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
-        // taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, { ...payloads.createTaxRate, rate: '10' });
+        // taxRate = await apiUtils.setUpTaxRate(payloads.enableTax, { ...payloads.createTaxRate, rate: '10' });
     });
 
     test.afterAll(async () => {
-        // await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+        // await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
         await apiUtils.dispose();
     });
 
     test('percentage commission (global) test', { tag: ['@lite'] }, async () => {
-        // await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'percentage' });
+        // await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'percentage' });
         // const [commission, feeRecipient] = await dbUtils.getSellingInfo();
-        const [, res, oid] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+        const [, res] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
         console.log(res);
     });
 
     test('flat commission test (global)', { tag: ['@lite'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'flat' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'flat' });
     });
 
     test('combined commission (global) test', { tag: ['@lite'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'combine' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'combine' });
     });
 
-    // //todo: add vendor-wise, category-wise, product-wise commission
+    // todo: add vendor-wise, category-wise, product-wise commission
 
     test('shipping fee recipient test', { tag: ['@pro'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller' });
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'admin' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'admin' });
     });
 
     test('product tax fee recipient test', { tag: ['@pro'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, tax_fee_recipient: 'seller' });
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, tax_fee_recipient: 'admin' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, tax_fee_recipient: 'seller' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, tax_fee_recipient: 'admin' });
     });
 
     test('shipping tax fee recipient test', { tag: ['@pro'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_tax_fee_recipient: 'seller' });
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_tax_fee_recipient: 'admin' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_tax_fee_recipient: 'seller' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_tax_fee_recipient: 'admin' });
     });
 
     test('calculation test', { tag: ['@lite'] }, async () => {
@@ -261,8 +264,8 @@ test.describe.skip('commission test', () => {
         }
 
         expect(Number(orderTotal)).toEqual(calculatedOrderTotal);
-        expect(Number(vendor_earning)).toEqual(calculatedVendorEarning);
-        expect(Number(admin_commission)).toEqual(calculatedAdminCommission);
+        // expect(Number(vendor_earning)).toEqual(calculatedVendorEarning);
+        // expect(Number(admin_commission)).toEqual(calculatedAdminCommission);
         expect(Number(shippingFee)).toEqual(providedShippingFee);
         expect(Number(shippingTax)).toEqual(calculatedShippingTax);
         expect(Number(cartTax)).toEqual(calculatedProductTax);

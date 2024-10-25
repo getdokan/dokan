@@ -50,7 +50,9 @@ class MiscHooks {
 
         if ( $order->get_parent_id() ) {
             global $wpdb;
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->delete( $wpdb->prefix . 'wc_order_product_lookup', [ 'order_id' => $order->get_id() ] );
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->delete( $wpdb->prefix . 'wc_order_stats', [ 'order_id' => $order->get_id() ] );
         }
     }

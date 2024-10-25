@@ -1,34 +1,28 @@
 import { test, Page } from '@playwright/test';
 import { VendorShippingPage } from '@pages/vendorShippingPage';
-// import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
-// import { payloads } from '@utils/payloads';
 
 test.describe('Vendor shipping test', () => {
     let vendor: VendorShippingPage;
     let vPage: Page;
-    // let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new VendorShippingPage(vPage);
-
-        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await vPage.close();
-        // await apiUtils.dispose();
     });
 
     //vendor
 
-    test('vendor shipping settings menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view shipping settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorShippingSettingsRenderProperly();
     });
 
-    test('vendor can set shipping policy', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add shipping policy', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setShippingPolicies(data.vendor.shipping.shippingPolicy);
     });
 
@@ -48,7 +42,7 @@ test.describe('Vendor shipping test', () => {
         await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.tableRateShipping);
     });
 
-    test('vendor can add dokan distance rate shipping', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add distance rate shipping', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.distanceRateShipping);
     });
 
@@ -58,7 +52,7 @@ test.describe('Vendor shipping test', () => {
     });
 
     test('vendor can delete shipping method', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.flatRate, true, true); // todo: add with api v2 settings group
+        await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.flatRate, true, true);
         await vendor.deleteShippingMethod(data.vendor.shipping.shippingMethods.flatRate);
     });
 });

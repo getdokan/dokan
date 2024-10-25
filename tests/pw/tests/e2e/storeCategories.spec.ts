@@ -3,6 +3,10 @@ import { StoreCategoriesPage } from '@pages/storeCategoriesPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
+
+const { VENDOR_ID, VENDOR2_ID } = process.env;
 
 test.describe('Store categories test', () => {
     let admin: StoreCategoriesPage;
@@ -32,7 +36,7 @@ test.describe('Store categories test', () => {
 
     // store categories
 
-    test('admin store category page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view store category page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminStoreCategoryRenderProperly();
     });
 
@@ -63,5 +67,14 @@ test.describe('Store categories test', () => {
         await vendor.vendorUpdateStoreCategory(categoryName);
     });
 
-    // todo: add multi store category tests
+    test('admin can assign store category to vendor (single)', { tag: ['@pro', '@admin'] }, async () => {
+        const [, , categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
+        await admin.assignStoreCategoryToVendor(VENDOR_ID, [categoryName]);
+    });
+
+    test('admin can assign store category to vendor (multiple)', { tag: ['@pro', '@admin'] }, async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { store_category_type: 'multiple' });
+        const [, , category2Name] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
+        await admin.assignStoreCategoryToVendor(VENDOR2_ID, [categoryName, category2Name]);
+    });
 });

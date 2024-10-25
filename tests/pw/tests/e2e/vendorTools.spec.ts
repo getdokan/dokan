@@ -1,15 +1,21 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { VendorToolsPage } from '@pages/vendorToolsPage';
+import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
 test.describe('Vendor tools test', () => {
     let vendor: VendorToolsPage;
     let vPage: Page;
+    let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new VendorToolsPage(vPage);
+
+        apiUtils = new ApiUtils(await request.newContext());
+        await apiUtils.deleteAllProducts('p0_v1', payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
@@ -18,7 +24,7 @@ test.describe('Vendor tools test', () => {
 
     //vendor
 
-    test('vendor tools menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view tools menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorToolsRenderProperly();
     });
 
