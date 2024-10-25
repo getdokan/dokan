@@ -105,7 +105,7 @@ class OrderRefundControllerV3 extends WC_REST_Order_Refunds_Controller {
      * @return WP_REST_Response|WP_Error
      */
     public function delete_item( $request ) {
-        $order_id = (int) $request['id'];
+        $order_id = (int) $request['order_id'];
         $result = $this->check_order_authorization( $order_id );
         if ( is_wp_error( $result ) ) {
             return $result;
