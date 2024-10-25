@@ -161,6 +161,46 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 		return $result;
 	}
 
+	/**
+	 * Method to delete a download permission from the database by ID.
+	 *
+	 * @param int $id permission_id of the download to be deleted.
+     *
+     * @phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	 */
+	public function delete_by( array $data ) {
+		global $wpdb;
+
+        $table_name = $this->get_table_name_with_prefix();
+		$field_format = $this->get_fields_with_format();
+		$field_format[ $this->get_id_field_name() ] = $this->get_id_field_format();
+
+		$where = [];
+
+		foreach ( $data as $key => $value ) {
+			if ( is_array( $value ) ) {
+				// Fill format array based on the number of values and specified format for the key.
+				$placeholders = implode( ',', array_fill( 0, count( $value ), '%s' ) );
+
+				// Generate the WHERE clause securely using $wpdb->prepare() with placeholders.
+				$where[] = $wpdb->prepare( "{$key} IN ({$placeholders})", ...$value );
+			} else {
+				$format = $field_format[ $key ];
+				$where[] = $wpdb->prepare( "{$key} = {$format}", $value );
+			}
+		}
+		$where_clause = implode( ' AND ', $where );
+
+		$result = $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$table_name}
+				WHERE {$where_clause}"
+			)
+		);
+
+		return $result;
+	}
+
     /**
 	 * Create download permission for a user, from an array of data.
 	 * Assumes that all the keys in the passed data are valid.

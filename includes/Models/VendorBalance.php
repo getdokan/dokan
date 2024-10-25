@@ -55,6 +55,23 @@ class VendorBalance extends BaseModel {
 		}
 	}
 
+	/**
+	 * Updates the vendor balance based on a transaction.
+	 *
+	 * @param int    $trn_id   The transaction ID.
+	 * @param string $trn_type The type of transaction. Valid values are
+	 *                         {@see WeDevs\Dokan\Models\VendorBalance::TRN_TYPE_DOKAN_ORDERS},
+	 *                         {@see WeDevs\Dokan\Models\VendorBalance::TRN_TYPE_DOKAN_WITHDRAW},
+	 *                         and {@see WeDevs\Dokan\Models\VendorBalance::TRN_TYPE_DOKAN_REFUND}.
+	 * @param array  $data     The data to update.
+	 *
+	 * @return bool True if updated successfully. False otherwise.
+	 */
+	public static function update_by_transaction( int $trn_id, string $trn_type, array $data ) {
+		$model = new static();
+		return $model->get_data_store()->update_by_transaction( $trn_id, $trn_type, $data );
+	}
+
     /**
      * Gets the vendor ID of the vendor balance.
      *

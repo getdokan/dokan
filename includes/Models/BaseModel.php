@@ -73,6 +73,17 @@ abstract class BaseModel extends WC_Data {
 	}
 
 	/**
+	 * Delete raws from the database.
+	 *
+	 * @param array $data Array of args to delete an object, e.g. `array( 'id' => 1, status => ['draft', 'cancelled'] )` or `array( 'id' => 1, 'status' => 'publish' )`.
+	 * @return bool result
+	 */
+	public static function delete_by( array $data ) {
+		$object = new static();
+		return $object->data_store->delete_by( $data );
+	}
+
+	/**
 	 * Prefix for action and filter hooks on data.
 	 *
 	 * @return string

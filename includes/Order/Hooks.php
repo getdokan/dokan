@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Order;
 
 use Exception;
 use WC_Order;
+use WeDevs\Dokan\Models\VendorBalance;
 
 // don't call the file directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -123,15 +124,10 @@ class Hooks {
         }
 
         // update on vendor-balance table
-        $wpdb->update(
-            $wpdb->dokan_vendor_balance,
-            [ 'status' => $new_status ],
-            [
-                'trn_id'   => $order_id,
-                'trn_type' => 'dokan_orders',
-            ],
-            [ '%s' ],
-            [ '%d', '%s' ]
+        VendorBalance::update_by_transaction(
+            $order_id,
+            VendorBalance::TRN_TYPE_DOKAN_ORDERS,
+            [ 'status' => $new_status ]
         );
     }
 

@@ -87,4 +87,26 @@ class VendorBalanceModelTest extends DokanTestCase {
         $this->assertEquals( $vendor_balance->get_status(), $existing_vendor_balance->get_status() );
         $this->assertEquals( $vendor_balance->get_balance_date()->date_i18n(), $existing_vendor_balance->get_balance_date()->date_i18n() );
     }
+
+    public function test_update_transaction_method() {
+        $vendor_balance = new VendorBalance();
+        $vendor_balance->set_particulars( 'test' );
+        $vendor_balance->set_debit( 100 );
+        $vendor_balance->set_trn_id( 1 );
+        $vendor_balance->set_trn_type( VendorBalance::TRN_TYPE_DOKAN_ORDERS );
+        $vendor_balance->set_vendor_id( 1 );
+        $vendor_balance->set_trn_date( '2020-01-01' );
+        $vendor_balance->set_status( 'wc-pending' );
+        $vendor_balance->set_balance_date( '2020-01-01' );
+        $vendor_balance->save();
+
+        $result = VendorBalance::update_by_transaction(
+            1, VendorBalance::TRN_TYPE_DOKAN_ORDERS, [
+				'debit' => 200,
+			]
+        );
+
+        $updated_vendor_balance = new VendorBalance( $vendor_balance->get_id() );
+        $this->assertEquals( 200, $updated_vendor_balance->get_debit() );
+    }
 }

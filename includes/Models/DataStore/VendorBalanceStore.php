@@ -21,6 +21,30 @@ class VendorBalanceStore extends BaseDataStore {
         ];
     }
 
+	public function update_by_transaction( int $trn_id, string $trn_type, array $data ) {
+		global $wpdb;
+
+		$fields_format = $this->get_fields_with_format();
+		$data_format = [];
+
+		foreach ( $data as $key => $value ) {
+			$data_format[] = $fields_format[ $key ];
+		}
+
+		$result = $wpdb->update(
+            $this->get_table_name_with_prefix(),
+            $data,
+            [
+				'trn_id'   => $trn_id,
+				'trn_type' => $trn_type,
+			],
+			$data_format,
+            [ '%d', '%s' ]
+        );
+
+		return $result;
+	}
+
 	public function get_table_name(): string {
         return 'dokan_vendor_balance';
     }
