@@ -30,7 +30,7 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 	 * @param BaseModel $model The model object containing the data to be inserted.
 	 */
 	public function create( BaseModel &$model ) {
-		$data = $this->get_fields_data( $model );
+		$data = $this->map_model_to_db_data( $model );
 
 		$inserted_id = $this->insert( $data );
 
@@ -43,7 +43,6 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 
 		return $inserted_id;
 	}
-
 
 	/**
      * Method to read a download permission from the database.
@@ -90,7 +89,7 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 			throw new Exception( esc_html( $message ) );
 		}
 
-		$model->set_props( $this->format_raw_data( $raw_item ) );
+		$model->set_props( $this->map_db_raw_to_model_data( $raw_item ) );
 		$model->set_object_read( true );
 
 		return $raw_item;
@@ -104,7 +103,7 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 	public function update( BaseModel &$model ) {
 		global $wpdb;
 
-		$data = $this->get_fields_data( $model );
+		$data = $this->map_model_to_db_data( $model );
 
 		$format = $this->get_fields_format();
 
@@ -189,7 +188,13 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 		return $result ? $wpdb->insert_id : 0;
 	}
 
-	protected function get_fields_data( BaseModel &$model ): array {
+	/**
+	 * Prepare data for saving a BaseModel to the database.
+	 *
+	 * @param BaseModel $model The model to prepare.
+	 * @return array Array of data to save.
+	 */
+	protected function map_model_to_db_data( BaseModel &$model ): array {
 		$data = array();
 
 		foreach ( $this->get_fields() as $db_field_name ) {
@@ -208,6 +213,22 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 
 		return $data;
 	}
+
+	/**
+	 * Maps database raw data to model data.
+	 *
+	 * @param object $raw_data The raw data object retrieved from the database.
+	 * @return array An array of model data mapped from the database fields.
+	 */
+    protected function map_db_raw_to_model_data( $raw_data ): array {
+        $data = array();
+
+        foreach ( $this->get_fields() as $db_field_name ) {
+			$data[ $db_field_name ] = $raw_data->{$db_field_name};
+		}
+
+        return apply_filters( $this->get_hook_prefix() . 'map_db_raw_to_model_data', $data, $raw_data );
+    }
 
 	/**
 	 * Get the date format for a specific database field.
@@ -232,17 +253,11 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 		return $selections;
 	}
 
-
-    protected function format_raw_data( $raw_data ): array {
-        $data = array();
-
-        foreach ( $this->get_fields() as $db_field_name ) {
-			$data[ $db_field_name ] = $raw_data->{$db_field_name};
-		}
-
-        return apply_filters( $this->get_hook_prefix() . 'format_raw_data', $data, $raw_data );
-    }
-
+    /**
+     * Generates a hook prefix.
+     *
+     * @return string The hook prefix.
+     */
     protected function get_hook_prefix(): string {
         global $wpdb;
 
@@ -253,6 +268,11 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
         return "dokan_{$hook_prefix}_";
     }
 
+    /**
+     * Gets the table name with the WordPress table prefix.
+     *
+     * @return string The table name with the WordPress table prefix.
+     */
     protected function get_table_name_with_prefix(): string {
         global $wpdb;
 
@@ -265,11 +285,20 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
         return $table_name;
     }
 
+    /**
+     * Get the name of the id field.
+     *
+     * @return string The name of the id field.
+     */
     protected function get_id_field_name(): string {
         return apply_filters( $this->get_hook_prefix() . 'id_field_name', 'id' ); // 'id';
     }
 
-
+    /**
+     * Gets the format of the id field.
+     *
+     * @return string The format of the id field.
+     */
     protected function get_id_field_format(): string {
         return apply_filters( $this->get_hook_prefix() . 'id_field_format', '%d' ); // 'id';
     }
