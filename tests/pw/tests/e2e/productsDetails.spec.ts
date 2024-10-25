@@ -129,6 +129,7 @@ test.describe('Product details functionality test', () => {
     });
 
     test('vendor can add multi-step product category (last category)', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { product_category_style: 'single' });
         await vendor.addProductCategory(productName1, [data.product.category.multistepCategories.at(-1)!]);
     });
 
@@ -227,6 +228,18 @@ test.describe('Product details functionality test', () => {
         // todo: need a product with downloadable file
         await vendor.addProductDownloadableOptions(productName, data.product.productInfo.downloadableOptions);
         await vendor.removeDownloadableFile(productName, { ...data.product.productInfo.downloadableOptions, downloadLimit: '', downloadExpiry: '' });
+    });
+
+    // product virtual options
+
+    test('vendor can add product virtual option', { tag: ['@lite', '@vendor'] }, async () => {
+        const [, , productName] = await apiUtils.createProduct(payloads.createProductRequiredFields(), payloads.vendorAuth);
+        await vendor.addProductVirtualOption(productName, true);
+    });
+
+    test('vendor can remove product virtual option', { tag: ['@lite', '@vendor'] }, async () => {
+        const [, , productName] = await apiUtils.createProduct({ ...payloads.createProductRequiredFields(), virtual: true }, payloads.vendorAuth);
+        await vendor.addProductVirtualOption(productName, false);
     });
 
     // product inventory options

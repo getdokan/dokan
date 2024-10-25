@@ -568,7 +568,9 @@ export class ProductsPage extends AdminPage {
         await this.toHaveValue(productsVendor.title, productName);
         await this.toHaveValue(productsVendor.price, productPrice);
         await this.toBeChecked(productsVendor.virtual);
-        await this.notToBeVisible(productsVendor.shipping.shippingContainer);
+        if (DOKAN_PRO) {
+            await this.notToBeVisible(productsVendor.shipping.shippingContainer);
+        }
         await this.toContainTextFrameLocator(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, product.description);
     }
 
@@ -1036,6 +1038,26 @@ export class ProductsPage extends AdminPage {
         await this.toHaveValue(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
     }
 
+    // add product virtual option
+    async addProductVirtualOption(productName: string, enable: boolean): Promise<void> {
+        await this.goToProductEdit(productName);
+        if (enable) {
+            await this.check(productsVendor.virtual);
+        } else {
+            await this.focus(productsVendor.virtual);
+            await this.uncheck(productsVendor.virtual);
+        }
+        await this.saveProduct();
+        if (enable) {
+            await this.toBeChecked(productsVendor.virtual);
+            if (DOKAN_PRO) {
+                await this.notToBeVisible(productsVendor.shipping.shippingContainer);
+            }
+        } else {
+            await this.notToBeChecked(productsVendor.virtual);
+        }
+    }
+
     // add product inventory
     async addProductInventory(productName: string, inventory: product['productInfo']['inventory'], choice: string): Promise<void> {
         await this.goToProductEdit(productName);
@@ -1198,7 +1220,8 @@ export class ProductsPage extends AdminPage {
         await this.toHaveValue(productsVendor.shipping.height, shipping.height);
         await this.toHaveSelectedLabel(productsVendor.shipping.shippingClass, shipping.shippingClass);
     }
-    // add product shipping
+
+    // remove product shipping
     async removeProductShipping(productName: string): Promise<void> {
         await this.goToProductEdit(productName);
         await this.uncheck(productsVendor.shipping.requiresShipping);
