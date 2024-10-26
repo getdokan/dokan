@@ -12,7 +12,7 @@ export const dbData = {
             menuManager: 'dokan_menu_manager',
             privacyPolicy: 'dokan_privacy',
             colors: 'dokan_colors',
-            // liveSearch: 'dokan_live_search_setting',
+            liveSearch: 'dokan_live_search_setting',
             storeSupport: 'dokan_store_support_setting',
             // sellerVerification: 'dokan_verification',
             // verificationSMSGateways: 'dokan_verification_sms_gateways',
@@ -781,7 +781,8 @@ export const dbData = {
         },
 
         liveSearchSettings: {
-            live_search_option: 'suggestion_box',
+            live_search_option: 'suggestion_box', // old_live_search,  suggestion_box
+            dashboard_menu_manager: [],
         },
 
         storeSupportSettings: {
@@ -1333,6 +1334,18 @@ export const dbData = {
             wp_inactive_widgets: [],
             'sidebar-store': ['dokan-store-contact-widget-2'],
             'sidebar-1': [],
+            'header-1': [],
+            'footer-1': [],
+            'footer-2': [],
+            'footer-3': [],
+            'footer-4': [],
+            array_version: 3,
+        },
+
+        liveSearch: {
+            wp_inactive_widgets: [],
+            'sidebar-store': [],
+            'sidebar-1': ['dokna_product_search-2'],
             'header-1': [],
             'footer-1': [],
             'footer-2': [],

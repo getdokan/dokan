@@ -2245,21 +2245,21 @@ export const selector = {
                     colorsSaveChanges: '#submit',
                 },
 
-                // Live Search
+                // live search
                 liveSearch: {
                     liveSearchOptions: '#dokan_live_search_setting\\[live_search_option\\]',
                     liveSearchSaveChanges: '#submit',
                 },
 
-                // Store Support
+                // store support
                 storeSupport: {
-                    // Store Support
                     displayOnOrderDetails: '.enabled_for_customer_order .switch',
                     displayOnSingleProductPage: '#dokan_store_support_setting\\[store_support_product_page\\]',
                     supportButtonLabel: '#dokan_store_support_setting\\[support_button_label\\]',
                     storeSupportSaveChanges: '#submit',
                 },
 
+                // vendor verification
                 vendorVerification: {
                     verifiedIcon: (iconName: string) => `//label[@for='dokan_verification[verified_icon][${iconName}]']`,
                     verifiedIconByIcon: (iconName: string) => `//i[@class='${iconName}']//../..`,
@@ -6899,6 +6899,7 @@ export const selector = {
                 viewCart: 'a.added_to_cart',
                 bidNow: '.button.product_type_auction',
             },
+            productTitleByName: (productName: string) => `//h2[@class="woocommerce-loop-product__title" and normalize-space(text())="${productName}"]`,
 
             // Pagination
             pagination: {
@@ -7746,6 +7747,14 @@ export const selector = {
                 deliveryTimeTitle: 'div#dokan-delivery-time-slot-order-details .main strong',
                 storePickupTitle: 'div#dokan-store-location-order-details .main strong',
             },
+        },
+
+        cLiveSearch: {
+            liveSearchWidget: 'div.widget_dokna_product_search',
+            liveSearchInput: 'div.dokan-product-search input[name="s"]',
+            liveSearchCategory: 'div.dokan-product-search select#cat',
+            searchedResult: (productName: string) => `//div[@id="dokan-ajax-search-suggestion-result"]//h3[normalize-space(text())='${productName}']`,
+            searchResultWithCategory: (productName: string, category: string) => `//div[@id="dokan-ajax-search-suggestion-result"]//h3[normalize-space(text())='${productName}']//..//span[normalize-space(text())='${category}']`,
         },
 
         cOrderReceived: {

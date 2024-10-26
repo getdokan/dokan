@@ -299,10 +299,21 @@ export class BasePage {
         return response;
     }
 
+    // type & wait for loadState
+    async typeByPageAndWaitForLoadState(selector: string, text: string, clear = true): Promise<void> {
+        if (clear) await this.clearInputField(selector);
+        await Promise.all([this.waitForLoadState(), this.page.locator(selector).pressSequentially(text, { delay: 200 })]);
+    }
+
     // type & wait for response
-    async typeByPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
+    async typeByPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200, clear = true): Promise<Response> {
+        if (clear) await this.clearInputField(selector);
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).pressSequentially(text, { delay: 200 })]);
         return response;
+    }
+    // type & wait for loadState
+    async typeAndWaitForLoadState(selector: string, text: string): Promise<void> {
+        await Promise.all([this.waitForLoadState(), this.clearAndFill(selector, text)]);
     }
 
     // type & wait for response
@@ -683,7 +694,7 @@ export class BasePage {
 
     // clear input field
     async clearInputField(selector: string): Promise<void> {
-        await this.page.fill(selector, '');
+        await this.page.locator(selector).fill('');
     }
 
     // Or
@@ -821,6 +832,11 @@ export class BasePage {
     // select by number
     async selectByNumber(selector: string, value: number | string): Promise<string[]> {
         return await this.page.selectOption(selector, { index: Number(value) });
+    }
+
+    // select by value and wait for loadState
+    async selectByValueAndWaitForLoadState(selector: string, value: string): Promise<void> {
+        await Promise.all([this.waitForLoadState(), this.page.selectOption(selector, { value })]);
     }
 
     // select by value and wait for response

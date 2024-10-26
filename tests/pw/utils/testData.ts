@@ -2536,6 +2536,11 @@ export const data = {
             username: () => 'customer1',
             username1: 'customer1',
         },
+
+        categories: {
+            uncategorized: 'Uncategorized',
+            clothings: 'clothings',
+        },
     },
 
     status: {
