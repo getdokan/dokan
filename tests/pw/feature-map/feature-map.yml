@@ -483,6 +483,7 @@
           admin can set Dokan email verification settings: true
           admin can set Dokan shipping status settings: true
           admin can set Dokan quote settings: true
+          admin can set Dokan live chat settings: true
           admin can set Dokan rma settings: true
           admin can set Dokan wholesale settings: true
           admin can set Dokan eu compliance settings: true
@@ -759,16 +760,18 @@
 - page: 'Live Chat'
   features:
       admin:
-          admin can set chat provider: false
-          admin can enable chat button on vendor page: false
-          admin can enable chat button on product page: false
+          #  admin can set Dokan live chat settings [duplicate]: true
+          admin can enable chat button on vendor page: true
+          admin can disable chat button on vendor page: true
+          admin can enable chat button on product page (above_tab): true
+          admin can enable chat button on product page (inside_tab): true
+          admin can disable chat button on product page: true
       vendor:
-          #  vendor can set live chat settings [duplicate]: false
-          vendor can set inbox menu page: false
-          vendor can view inbox menu page: false
-          vendor can chat with customer: false
+          #  vendor can set live chat settings [duplicate]: true
+          vendor can view inbox menu page: true
+          vendor can reply to customer message: true
       customer:
-          customer can chat with vendor: false
+          customer can send message to vendor: true
 
 - page: 'Live Search'
   features:
