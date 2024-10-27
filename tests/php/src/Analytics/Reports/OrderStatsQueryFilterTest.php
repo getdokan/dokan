@@ -157,7 +157,7 @@ class OrderStatsQueryFilterTest extends ReportTestCase {
         $this->assertEquals( 1, $report_data->totals->orders_count );
 
         $sub_ord_count = count( $sub_ids );
-        var_dump( $data );
+        // var_dump( $data );
         // Assert dokan order stats totals.
         foreach ( $data as $key => $val ) {
             $this->assertEquals( floatval( $val * $sub_ord_count ), $report_data->totals->{"total_$key"} );
