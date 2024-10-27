@@ -1,16 +1,16 @@
 <?php
 
-namespace WeDevs\Dokan\Test\Analytics\Reports\Stock;
+namespace WeDevs\Dokan\Test\Analytics\Reports;
 
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
  * @group analytics
  */
-class ProductQueryFilterTest extends DokanTestCase {
+class StockProductQueryFilterTest extends DokanTestCase {
     protected $namespace = 'wc-analytics/reports';
 
-    public function tests_stock_reports_are_fetched_with_seller_filter() {
+    public function tests_stock_reports_are_fetched_with_vendor_filter() {
         $seller1_prod_ids = $this->factory()->product->set_seller_id( $this->seller_id1 )
             ->create_many( 5 );
 
@@ -32,7 +32,7 @@ class ProductQueryFilterTest extends DokanTestCase {
         $this->assertCount( count( $seller1_prod_ids ), $data );
     }
 
-    public function tests_stock_reports_are_fetched_without_seller_filter() {
+    public function tests_stock_reports_are_fetched_without_vendor_filter() {
         $seller1_prod_ids = $this->factory()->product->set_seller_id( $this->seller_id1 )
             ->create_many( 5 );
 

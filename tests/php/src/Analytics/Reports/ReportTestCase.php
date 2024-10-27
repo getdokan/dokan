@@ -99,9 +99,9 @@ abstract class ReportTestCase extends DokanTestCase {
         return [
             [
 				[
-					'seller_earning' => random_int( 5, 10 ),
-					'seller_gateway_fee' => random_int( 5, 10 ),
-					'seller_discount' => random_int( 5, 10 ),
+					'vendor_earning' => random_int( 5, 10 ),
+					'vendor_gateway_fee' => random_int( 5, 10 ),
+					'vendor_discount' => random_int( 5, 10 ),
 					'admin_commission' => random_int( 5, 10 ),
 					'admin_gateway_fee' => random_int( 5, 10 ),
 					'admin_discount' => random_int( 5, 10 ),

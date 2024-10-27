@@ -69,7 +69,7 @@ class QueryFilter extends BaseQueryFilter {
      * @return array The modified excluded order IDs.
      */
     public function exclude_order_ids( array $ids, array $query_args, string $field, $context ): array {
-        if ( $context !== 'orders' || ! $this->should_filter_by_seller_id() ) {
+        if ( $context !== 'orders' || ! $this->should_filter_by_vendor_id() ) {
             return $ids;
         }
 
@@ -84,7 +84,7 @@ class QueryFilter extends BaseQueryFilter {
      * @return array The modified select clauses.
      */
     public function add_select_subquery( array $clauses ): array {
-        $clauses[] = ', seller_earning, seller_gateway_fee, seller_discount, admin_commission, admin_gateway_fee, admin_discount, admin_subsidy';
+        $clauses[] = ', vendor_earning, vendor_gateway_fee, vendor_discount, admin_commission, admin_gateway_fee, admin_discount, admin_subsidy';
 
         return array_unique( $clauses );
     }

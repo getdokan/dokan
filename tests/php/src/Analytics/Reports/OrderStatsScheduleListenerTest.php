@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Test\Analytics\Reports\Orders\Stats;
+namespace WeDevs\Dokan\Test\Analytics\Reports;
 
 use Mockery;
 use WeDevs\Dokan\Analytics\Reports\Orders\Stats\ScheduleListener;
@@ -10,7 +10,7 @@ use WeDevs\Dokan\Test\DokanTestCase;
 /**
  * @group analytics
  */
-class ScheduleListenerTest extends DokanTestCase {
+class OrderStatsScheduleListenerTest extends DokanTestCase {
     public function test_woocommerce_analytics_update_order_stats_hook_is_registered() {
         $order_stats_table_listener = dokan_get_container()->get( ScheduleListener::class );
         self::assertNotFalse( has_action( 'woocommerce_analytics_update_order_stats', [ $order_stats_table_listener, 'sync_dokan_order' ] ) );
@@ -22,8 +22,8 @@ class ScheduleListenerTest extends DokanTestCase {
 	 * Method(partial) mocking @see http://docs.mockery.io/en/latest/reference/partial_mocks.html
 	 *
      * @param int $order_id   The order ID.
-     * @param int $seller_id1 The first seller ID.
-     * @param int $seller_id2 The second seller ID.
+     * @param int $vendor_id1 The first seller ID.
+     * @param int $vendor_id2 The second seller ID.
      * @return void
 	 */
 	public function test_dokan_order_states_update_hook_execute_on_order_stats_update() {
@@ -43,8 +43,8 @@ class ScheduleListenerTest extends DokanTestCase {
      * Test the mock class for multi-vendor order statistics.
      *
      * @param int $order_id   The order ID.
-     * @param int $seller_id1 The first seller ID.
-     * @param int $seller_id2 The second seller ID.
+     * @param int $vendor_id1 The first seller ID.
+     * @param int $vendor_id2 The second seller ID.
      * @return void
      */
     public function test_data_is_inserted_in_dokan_order_stats_table() {

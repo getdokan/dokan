@@ -1,5 +1,5 @@
 <?php
-namespace WeDevs\Dokan\Test\Analytics\Reports\Orders;
+namespace WeDevs\Dokan\Test\Analytics\Reports;
 
 use Mockery;
 use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter;
@@ -7,11 +7,11 @@ use WeDevs\Dokan\Test\Analytics\Reports\ReportTestCase;
 
 /**
  * Class OrderStatsTest
- * @group analytics
+ * @group analytics-order
  *
  * Unit tests for Order statistics in the Dokan plugin.
  */
-class QueryFilterTest extends ReportTestCase {
+class OrderQueryFilterTest extends ReportTestCase {
     /**
      *
      * @var QueryFilter
@@ -49,8 +49,8 @@ class QueryFilterTest extends ReportTestCase {
 	 * Method(partial) mocking @see http://docs.mockery.io/en/latest/reference/partial_mocks.html
 	 *
      * @param int $order_id   The order ID.
-     * @param int $seller_id1 The first seller ID.
-     * @param int $seller_id2 The second seller ID.
+     * @param int $vendor_id1 The first seller ID.
+     * @param int $vendor_id2 The second seller ID.
      * @return void
 	 */
 	public function test_filter_hooks_are_applied_for_orders_query() {
@@ -78,7 +78,7 @@ class QueryFilterTest extends ReportTestCase {
             );
         }
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query();
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [], 'orders' );
 
 		$wc_stats_query->get_data();
 	}
@@ -96,7 +96,7 @@ class QueryFilterTest extends ReportTestCase {
 		$this->run_all_pending();
 
         $mocking_methods = [
-            'should_filter_by_seller_id',
+            'should_filter_by_vendor_id',
         ];
 
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
@@ -105,10 +105,10 @@ class QueryFilterTest extends ReportTestCase {
 
         remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
-        $service->shouldReceive( 'should_filter_by_seller_id' )
+        $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnTrue();
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query();
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [], 'orders' );
 
 		$data = $wc_stats_query->get_data();
 
@@ -145,17 +145,17 @@ class QueryFilterTest extends ReportTestCase {
 
         remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
-		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
+		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
 
-        $service->shouldReceive( 'should_filter_by_seller_id' )
+        $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnUsing(
                 function () {
 					return false;
 				}
             );
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query();
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [], 'orders' );
 
 		$data = $wc_stats_query->get_data();
 
@@ -182,15 +182,15 @@ class QueryFilterTest extends ReportTestCase {
 
         remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
-		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
+		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
 
-        $service->shouldReceive( 'should_filter_by_seller_id' )
+        $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnTrue();
 
         $_GET['refunds'] = 'all';
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [ 'refunds' => 'all' ] );
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [ 'refunds' => 'all' ], 'orders' );
 		$data = $wc_stats_query->get_data();
 
         $report_data = $data->data;
@@ -212,15 +212,15 @@ class QueryFilterTest extends ReportTestCase {
 
         remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
-		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
+		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
 
-        $service->shouldReceive( 'should_filter_by_seller_id' )
+        $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnFalse();
 
         $_GET['refunds'] = 'all';
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [ 'refunds' => 'all' ] );
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [ 'refunds' => 'all' ], 'orders' );
 		$data = $wc_stats_query->get_data();
 
         $report_data = $data->data;
@@ -243,15 +243,15 @@ class QueryFilterTest extends ReportTestCase {
 
         remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
-		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
+		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
 
-        $service->shouldReceive( 'should_filter_by_seller_id' )
+        $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnFalse();
 
         $_GET['refunds'] = 'all';
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [ 'refunds' => 'all' ] );
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [ 'refunds' => 'all' ], 'orders' );
 		$data = $wc_stats_query->get_data();
 
         $report_data = $data->data;
@@ -263,7 +263,7 @@ class QueryFilterTest extends ReportTestCase {
         $this->assertEquals( $refund->get_id(), $report_data['order_id'] );
 	}
 
-    public function test_orders_analytics_for_seller_filter_as_a_admin() {
+    public function test_orders_analytics_for_vendor_filter_as_a_admin() {
         $order_id = $this->create_single_vendor_order( $this->seller_id1 );
         $order_id2 = $this->create_single_vendor_order( $this->seller_id2 );
 
@@ -273,7 +273,7 @@ class QueryFilterTest extends ReportTestCase {
 
         wp_set_current_user( $this->admin_id );
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query();
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [], 'orders' );
 
 		$data = $wc_stats_query->get_data();
 
@@ -285,7 +285,7 @@ class QueryFilterTest extends ReportTestCase {
         $this->assertEquals( $order_id, $report_data[0]['order_id'] );
 	}
 
-    public function test_orders_analytics_for_seller_filter_as_a_vendor() {
+    public function test_orders_analytics_for_vendor_filter_as_a_vendor() {
         $order_id = $this->create_single_vendor_order( $this->seller_id1 );
         $order_id2 = $this->create_single_vendor_order( $this->seller_id2 );
 
@@ -296,7 +296,7 @@ class QueryFilterTest extends ReportTestCase {
 
         wp_set_current_user( $this->seller_id2 );
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query();
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [], 'orders' );
 
 		$data = $wc_stats_query->get_data();
 

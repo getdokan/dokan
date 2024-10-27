@@ -105,7 +105,7 @@ class OrderType {
      *
      * @return array List of seller order type constants.
      */
-    public function get_seller_order_types(): array {
+    public function get_vendor_order_types(): array {
         return [
             self::DOKAN_SINGLE_ORDER,
             self::DOKAN_SUBORDER,
@@ -119,7 +119,7 @@ class OrderType {
      *
      * @return array List of admin order type constants (non-refund).
      */
-    public function get_admin_non_refund_order_types(): array {
+    public function get_admin_order_types_excluding_refunds(): array {
         return [
             self::DOKAN_PARENT_ORDER,
             self::DOKAN_SINGLE_ORDER,
@@ -131,7 +131,7 @@ class OrderType {
      *
      * @return array List of seller order type constants (non-refund).
      */
-    public function get_seller_non_refund_order_types(): array {
+    public function get_vendor_order_types_excluding_refunds(): array {
         return [
             self::DOKAN_SINGLE_ORDER,
             self::DOKAN_SUBORDER,
@@ -156,7 +156,7 @@ class OrderType {
      *
      * @return array List of seller refund type constants.
      */
-    public function get_seller_refund_types(): array {
+    public function get_vendor_refund_types(): array {
         return [
             self::DOKAN_SUBORDER_REFUND,
             self::DOKAN_SINGLE_ORDER_REFUND,

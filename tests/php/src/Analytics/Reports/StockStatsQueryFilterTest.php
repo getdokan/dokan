@@ -7,7 +7,7 @@ use WeDevs\Dokan\Test\DokanTestCase;
 /**
  * @group analytics
  */
-class QueryFilterTest extends DokanTestCase {
+class StockStatsQueryFilterTest extends DokanTestCase {
 
     public function tests_stock_stats_report() {
         $seller1_prod_ids = $this->factory()->product
@@ -29,7 +29,7 @@ class QueryFilterTest extends DokanTestCase {
         $this->assertEquals( $total, $data['products'] );
     }
 
-    public function tests_stock_stats_report_by_seller_filter() {
+    public function tests_stock_stats_report_by_vendor_filter() {
         $seller1_prod_ids = $this->factory()->product
             ->set_seller_id( $this->seller_id1 )
             ->create_many( 5 );
