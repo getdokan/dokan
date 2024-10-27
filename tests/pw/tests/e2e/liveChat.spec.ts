@@ -4,6 +4,8 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 
+const { VENDOR_ID } = process.env;
+
 test.describe('Live chat test', () => {
     let vendor: LiveChatPage;
     let customer: LiveChatPage;
@@ -18,7 +20,7 @@ test.describe('Live chat test', () => {
         cPage = await customerContext.newPage();
         customer = new LiveChatPage(cPage);
 
-        // todo: enable vendor live chat
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { live_chat: 'yes' });
     });
 
     test.afterAll(async () => {
