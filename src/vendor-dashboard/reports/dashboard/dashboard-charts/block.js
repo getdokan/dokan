@@ -21,12 +21,6 @@ import ReportChart from "../../analytics/components/report-chart";
 // import './block.scss';
 
 class ChartBlock extends Component {
-  handleChartClick = () => {
-    const { selectedChart } = this.props;
-
-    getHistory().push(this.getChartPath(selectedChart));
-  };
-
   getChartPath(chart) {
     return getNewPath(
       { chart: chart.key },
@@ -46,19 +40,17 @@ class ChartBlock extends Component {
     const LEGEND_HANDLER_FILTER = 'dokan_handle_chart_legends_availability',
       CHART_REDIRECTION_HANDLER_FILTER = 'dokan_handle_chart_redirection';
 
-    const clickHandler = applyFilters(
-        CHART_REDIRECTION_HANDLER_FILTER,
-        () => {}, // default handler
-        selectedChart,
-        this.getChartPath.bind( this ) // Bind this context
-    );
-
     return (
       <div
         role="presentation"
         className="woocommerce-dashboard__chart-block-wrapper"
-        onClick={ clickHandler }
-        // onClick={this.handleChartClick}
+        onClick={ applyFilters(
+          CHART_REDIRECTION_HANDLER_FILTER,
+          () => {}, // default handler
+          selectedChart,
+          getHistory,
+          this.getChartPath
+        ) }
       >
         <Card className="woocommerce-dashboard__chart-block">
           <CardHeader>

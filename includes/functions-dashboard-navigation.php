@@ -1,4 +1,7 @@
 <?php
+
+use WeDevs\Dokan\Dashboard\Templates\Dashboard;
+
 /**
  * Sort navigation menu items by position
  *
@@ -29,7 +32,7 @@ function dokan_get_dashboard_nav(): array {
         'dashboard' => [
             'title'      => __( 'Dashboard', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-tachometer-alt"></i>',
-            'url'        => dokan_get_navigation_url() . '?path=%2Fanalytics%2FOverview',
+            'url'        => dokan_get_navigation_url() . ( Dashboard::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
             'pos'        => 10,
             'permission' => 'dokan_view_overview_menu',
         ],

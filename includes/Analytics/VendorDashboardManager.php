@@ -12,7 +12,6 @@ class VendorDashboardManager implements Hookable {
 
 		// Dummy hook for testing.
 		add_action( 'dokan_dashboard_content_inside_before', [ $this, 'add_dashboard_content' ] );
-		add_action( 'dokan_report_content_inside_before', [ $this, 'add_dashboard_content' ] );
 
 		add_filter( 'woocommerce_rest_product_object_query', [ $this, 'product_query_args' ], 10, 2 );
 
@@ -20,15 +19,18 @@ class VendorDashboardManager implements Hookable {
 		// add_filter( 'woocommerce_rest_report_orders_stats_schema', [ $this, 'revenue_stats_schema' ] );
 
 		add_filter( 'woocommerce_rest_report_sort_performance_indicators', [ $this, 'sort_performance_indicators' ] );
+
+        // Remove coupons from query fields.
+        add_filter( 'woocommerce_analytics_revenue_query_args', [ $this, 'remove_coupons_from_query' ] );
 	}
 
 	// This is dummy function for testing.
 	public function add_dashboard_content() {
-		echo '<div id="dokan-analytics-test"></div>';
+		echo '<div id="dokan-analytics-app"></div>';
 	}
 
-	public function woocommerce_rest_check_permissions( $permission, $context, $int_val, $object ) {
-		if ( ! $permission && in_array( $object, [ 'reports', 'settings' ] ) && $context === 'read' ) {
+	public function woocommerce_rest_check_permissions( $permission, $context, $int_val, $obj ) {
+		if ( ! $permission && in_array( $obj, [ 'reports', 'settings' ], true ) && $context === 'read' ) {
 			$current_user_id = dokan_get_current_user_id();
 			$permission      = dokan_is_user_seller( $current_user_id );
 		}
@@ -70,14 +72,6 @@ class VendorDashboardManager implements Hookable {
 		$parent_menu = 'reports';
 
 		if ( $parent_menu === $nav_key && dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
-//			$submenu_items['report_overview'] = [
-//				'title'      => __( 'Overview', 'dokan-lite' ),
-//				// 'icon'       => '<i class="far fa-credit-card"></i>',
-//				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2FOverview',
-//				'pos'        => 50,
-//				'permission' => 'dokan_view_store_payment_menu',
-//
-//			];
 			$submenu_items['report_products'] = [
 				'title'      => __( 'Products', 'dokan-lite' ),
 				// 'icon'       => '<i class="far fa-credit-card"></i>',
@@ -140,9 +134,24 @@ class VendorDashboardManager implements Hookable {
 		return $reports;
 	}
 
+    /**
+     * Remove coupons from query fields
+     *
+     * @since DOKAN_PRO_SINCE
+     *
+     * @return array
+     */
+    public function remove_coupons_from_query( $args ) {
+        if ( isset( $args['fields'] ) && is_array( $args['fields'] ) ) {
+            $args['fields'] = array_diff( $args['fields'], [ 'coupons', 'coupons_count' ] );
+        }
+
+        return $args;
+    }
+
 	public function revenue_stats_schema( $reports ) {
 		$reports['totals']['properties']['total_seller_earning'] = array(
-			'description' => __( 'Total Seller Earning', 'dokan-lite' ),
+			'description' => __( 'Total new Earning', 'dokan-lite' ),
 			'type'        => 'number',
 			'context'     => array( 'view', 'edit' ),
 			'readonly'    => true,
@@ -151,7 +160,7 @@ class VendorDashboardManager implements Hookable {
 		);
 
 		$reports['totals']['properties']['total_admin_commission'] = array(
-			'description' => __( 'Total Admin Commission', 'dokan-lite' ),
+			'description' => __( 'Total seller Commission', 'dokan-lite' ),
 			'type'        => 'number',
 			'context'     => array( 'view', 'edit' ),
 			'readonly'    => true,

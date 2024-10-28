@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useMemo } from '@wordpress/element';
+import {Fragment, useEffect, useMemo} from '@wordpress/element';
 import { compose } from '@wordpress/compose';
 import { partial } from 'lodash';
 import { Dropdown, Button } from '@wordpress/components';
@@ -29,7 +29,6 @@ import {
 // import './style.scss';
 import defaultSections from './default-sections';
 import Section from './section';
-import ReportFilters from '../analytics/components/report-filters';
 import { dokanConfig } from '../dokan-config.js';
 
 const DASHBOARD_FILTERS_FILTER = 'dokan_analytics_dashboard_report_filters';
@@ -259,18 +258,18 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
             .map( ( section ) => section.key );
 
         return (
-            <>
-                <ReportFilters
-                    report="dashboard"
-                    query={ {
-                        ...query,
-                        seller_id: dokanConfig?.seller_id || '0',
-                    } }
-                    path={ path }
-                    dateQuery={ dateQuery }
-                    isoDateFormat={ isoDateFormat }
-                    filters={ filters }
-                />
+            <Fragment>
+                { applyFilters(
+                    'dokan_analytics_dashboard_before_section_contents',
+                    '',
+                    dokanConfig,
+                    query,
+                    path,
+                    dateQuery,
+                    filters,
+                    isoDateFormat
+                ) }
+
                 { sections.map( ( section, index ) => {
                     if ( section.isVisible ) {
                         return (
@@ -309,7 +308,7 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
                     return null;
                 } ) }
                 { renderAddMore() }
-            </>
+            </Fragment>
         );
     };
 

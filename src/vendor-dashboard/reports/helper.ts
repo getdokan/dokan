@@ -43,6 +43,10 @@ export const shouldBlockNavigation = () => {
             {
                 path     : '/dashboard/',
                 redirect : '/dashboard/?path=%2Fanalytics%2FOverview'
+            },
+            {
+                path     : '/dashboard/reports/',
+                redirect : '/dashboard/reports/?path=%2Fanalytics%2Fproducts'
             }
         ]
     );

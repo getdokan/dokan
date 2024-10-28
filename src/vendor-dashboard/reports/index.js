@@ -23,7 +23,7 @@ import "./seller-filter";
 // const appRoot = document.getElementById("root");
 const settingsGroup = "wc_admin";
 const hydrateUser = getAdminSetting("currentUserData");
-const mountElementId = "dokan-analytics-test";
+const mountElementId = "dokan-analytics-app";
 const appRoot = document.getElementById(mountElementId);
 
 // deriveWpAdminBackgroundColours();

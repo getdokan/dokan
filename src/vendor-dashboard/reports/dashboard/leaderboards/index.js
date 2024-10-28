@@ -187,8 +187,6 @@ export default compose(
             }
         );
 
-        console.log( 'Leader boards', allLeaderboards );
-
         return {
             allLeaderboards,
             getItems,

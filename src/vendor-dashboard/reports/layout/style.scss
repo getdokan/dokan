@@ -334,6 +334,10 @@
     }
 
     .woocommerce-dashboard-section {
+        .woocommerce-section-header {
+            padding: 13px 0;
+        }
+
         .woocommerce-dashboard__dashboard-charts {
             .woocommerce-chart {
                 margin: 0;

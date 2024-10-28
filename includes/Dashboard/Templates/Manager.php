@@ -24,7 +24,7 @@ class Manager {
      */
     public function __construct() {
         $this->container['main']               = new Main();
-//        $this->container['dashboard']          = new Dashboard();
+        $this->container['dashboard']          = new Dashboard();
         $this->container['products']           = new Products();
         $this->container['orders']             = new Orders();
         $this->container['settings']           = new Settings();
