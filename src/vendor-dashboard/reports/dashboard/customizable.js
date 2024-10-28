@@ -9,7 +9,7 @@ import { Dropdown, Button } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
 import { Icon, plusCircleFilled } from '@wordpress/icons';
 import { withSelect } from '@wordpress/data';
-import { H } from '@woocommerce/components';
+import {H, ReportFilters} from '@woocommerce/components';
 import { SETTINGS_STORE_NAME, useUserPreferences } from '@woocommerce/data';
 import { getQuery } from '@woocommerce/navigation';
 import {
@@ -259,16 +259,17 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
 
         return (
             <Fragment>
-                { applyFilters(
-                    'dokan_analytics_dashboard_before_section_contents',
-                    '',
-                    dokanConfig,
-                    query,
-                    path,
-                    dateQuery,
-                    filters,
-                    isoDateFormat
-                ) }
+                <ReportFilters
+                    report="dashboard"
+                    query={ {
+                        ...query,
+                        seller_id: dokanConfig?.seller_id || '0',
+                    } }
+                    path={ path }
+                    dateQuery={ dateQuery }
+                    isoDateFormat={ isoDateFormat }
+                    filters={ filters }
+                />
 
                 { sections.map( ( section, index ) => {
                     if ( section.isVisible ) {
@@ -318,32 +319,69 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
 
     if ( shouldConvert ) {  // Check if conversion should proceed.
         useEffect( () => {
+            // const container = document.querySelector( '.customizable-dashboard' );
+            // if ( ! container ) return;
+            //
+            // // Convert anchors to spans
+            // const convertAnchorsToSpans = () => {
+            //     const anchors = container.getElementsByTagName( 'a' );
+            //     Array.from( anchors ).forEach( anchor => {
+            //         const span = document.createElement( 'span' );
+            //         span.innerHTML = anchor.innerHTML;
+            //         span.className = `${ anchor.className } converted`;
+            //         span.style.cursor = 'pointer';
+            //
+            //         // Custom click handler with filter
+            //         span.onclick = ( event) => event.preventDefault();
+            //         anchor.parentNode.replaceChild( span, anchor );
+            //     });
+            // };
+            //
+            // // Initial conversion
+            // convertAnchorsToSpans();
+            //
+            // // Handle dynamic content
+            // const observer = new MutationObserver( convertAnchorsToSpans );
+            // observer.observe( container, { childList: true, subtree: true } );
+            //
+            // return () => observer.disconnect();
+
             const container = document.querySelector( '.customizable-dashboard' );
             if ( ! container ) return;
 
-            // Convert anchors to spans
-            const convertAnchorsToSpans = () => {
-                const anchors = container.getElementsByTagName( 'a' );
-                Array.from( anchors ).forEach( anchor => {
-                    const span = document.createElement( 'span' );
-                    span.innerHTML = anchor.innerHTML;
-                    span.className = `${ anchor.className } converted`;
-                    span.style.cursor = 'pointer';
+            const interceptClicks = ( event ) => {
+                const link = event.target.closest( 'a' );
 
-                    // Custom click handler with filter
-                    span.onclick = ( event) => event.preventDefault();
-                    anchor.parentNode.replaceChild( span, anchor );
-                });
+                // If not a link or is in filters section, let it behave normally.
+                if ( ! link || link.closest( '.woocommerce-filters' ) ) {
+                    return;
+                }
+
+                // Prevent default and history update for non-filter links
+                event.preventDefault();
+                event.stopPropagation();
             };
 
-            // Initial conversion
-            convertAnchorsToSpans();
+            // Add capture phase event listener to intercept before React's event system
+            container.addEventListener( 'click', interceptClicks, true );
 
-            // Handle dynamic content
-            const observer = new MutationObserver( convertAnchorsToSpans );
-            observer.observe( container, { childList: true, subtree: true } );
+            // For React Router links, intercept before they trigger
+            const handleBeforeUnload = ( event ) => {
+                const activeElement = document.activeElement;
+                if ( activeElement &&
+                    activeElement.closest( '.customizable-dashboard' ) &&
+                    ! activeElement.closest( '.woocommerce-filters' ) ) {
+                    event.preventDefault();
+                    event.returnValue = '';
+                }
+            };
 
-            return () => observer.disconnect();
+            window.addEventListener( 'beforeunload', handleBeforeUnload );
+
+            return () => {
+                container.removeEventListener( 'click', interceptClicks, true );
+                window.removeEventListener( 'beforeunload', handleBeforeUnload );
+            };
         }, [] );
     }
 

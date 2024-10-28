@@ -298,6 +298,12 @@
             button.components-button.woocommerce-dropdown-button {
                 height: 100%;
             }
+
+            .woocommerce-calendar {
+                .CalendarMonthGrid_month__horizontal {
+                    width: 290px;
+                }
+            }
         }
 
         .components-popover {
