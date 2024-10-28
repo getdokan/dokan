@@ -340,7 +340,7 @@ function dokan_count_comments( $post_type, $user_id ) {
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( $counts === false ) {
-        $count = $wpdb->get_results(
+        $count = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "SELECT c.comment_approved, COUNT( * ) AS num_comments
                 FROM $wpdb->comments as c, $wpdb->posts as p
@@ -400,7 +400,7 @@ function dokan_author_pageviews( $seller_id ) {
     $pageview  = Cache::get( $cache_key );
 
     if ( false === $pageview ) {
-        $count = $wpdb->get_row(
+        $count = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "SELECT SUM(meta_value) as pageview
                 FROM {$wpdb->postmeta} AS meta
@@ -2186,7 +2186,7 @@ add_filter( 'woocommerce_email_recipient_low_stock', 'dokan_wc_email_recipient_a
 function dokan_get_products_listing_months_for_vendor( $user_id ) {
     global $wpdb, $wp_locale;
 
-    $months = $wpdb->get_results(
+    $months = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->prepare(
             "SELECT DISTINCT YEAR( post_date ) AS year, MONTH( post_date ) AS month
             FROM $wpdb->posts
@@ -2315,6 +2315,7 @@ function dokan_product_search_by_sku( $where ) {
         $find = wc_clean( $term );
         $like = $wild . $wpdb->esc_like( $find ) . $wild;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $sku_to_id = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key='_sku' AND meta_value LIKE %s", $like ) );
 
         if ( $sku_to_id && count( $sku_to_id ) > 0 ) {

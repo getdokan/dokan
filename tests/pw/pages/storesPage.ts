@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -54,7 +54,9 @@ export class StoresPage extends AdminPage {
 
         // badges acquired elements are visible
         const badgesAcquired = await this.isVisible(vendors.vendorDetails.vendorSummary.badgesAcquired.badgesAcquired);
-        badgesAcquired && (await this.toBeVisible(vendors.vendorDetails.vendorSummary.badgesAcquired.badgesAcquired));
+        if (badgesAcquired) {
+            await this.toBeVisible(vendors.vendorDetails.vendorSummary.badgesAcquired.badgesAcquired);
+        }
 
         // product & revenue elements are visible
         await this.toBeVisible(vendors.vendorDetails.vendorSummary.productRevenue.productRevenueSection);
@@ -255,13 +257,15 @@ export class StoresPage extends AdminPage {
             await this.clearAndType(vendors.editVendor.firstName, vendor.username);
             await this.clearAndType(vendors.editVendor.lastName, vendor.lastname);
             await this.clearAndType(vendors.editVendor.storeName, vendor.vendorInfo.storeName);
-            await this.clearAndType(vendors.editVendor.phoneNumber, vendor.vendorInfo.phone); // todo:  change input after fix
+            await this.clearAndType(vendors.editVendor.phoneNumber, vendor.vendorInfo.phone);
             await this.clearAndType(vendors.editVendor.email, vendor.username + data.vendor.vendorInfo.emailDomain);
-            await this.clearAndType(vendors.editVendor.companyName, vendor.vendorInfo.companyName);
-            await this.clearAndType(vendors.editVendor.companyIdEuidNumber, vendor.vendorInfo.companyId);
-            await this.clearAndType(vendors.editVendor.vatOrTaxNumber, vendor.vendorInfo.vatNumber);
-            await this.clearAndType(vendors.editVendor.nameOfBank, vendor.vendorInfo.bankName);
-            await this.clearAndType(vendors.editVendor.bankIban, vendor.vendorInfo.bankIban);
+            if (DOKAN_PRO) {
+                await this.clearAndType(vendors.editVendor.companyName, vendor.vendorInfo.companyName);
+                await this.clearAndType(vendors.editVendor.companyIdEuidNumber, vendor.vendorInfo.companyId);
+                await this.clearAndType(vendors.editVendor.vatOrTaxNumber, vendor.vendorInfo.vatNumber);
+                await this.clearAndType(vendors.editVendor.nameOfBank, vendor.vendorInfo.bankName);
+                await this.clearAndType(vendors.editVendor.bankIban, vendor.vendorInfo.bankIban);
+            }
 
             // address
             await this.clearAndType(vendors.editVendor.street1, vendor.vendorInfo.street1);
@@ -298,25 +302,22 @@ export class StoresPage extends AdminPage {
             // paypal
             await this.clearAndType(vendors.editVendor.payPalEmail, vendor.vendorInfo.payment.email());
 
-            // todo:  admin commission
-            // todo:  vendor subscription
-
             // other settings
             await this.enableSwitcher(vendors.editVendor.enableSelling);
             await this.enableSwitcher(vendors.editVendor.publishProductDirectly);
             await this.enableSwitcher(vendors.editVendor.makeVendorFeature);
 
             await this.clickAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.editVendor.saveChanges);
-            await this.click(vendors.editVendor.confirmSaveChanges);
+            await this.click(vendors.editVendor.closeUpdateSuccessModal);
         }
     }
 
     // search vendor
     async searchVendor(vendorName: string, neg: boolean = false) {
         await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
-
         await this.clearInputField(vendors.search);
         await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.stores, vendors.search, vendorName);
+        await this.toHaveCount(vendors.numberOfRows, 1);
         await this.toBeVisible(vendors.vendorCell(vendorName));
 
         // negative scenario
@@ -348,28 +349,34 @@ export class StoresPage extends AdminPage {
     async viewVendor(vendorName: string, action: string) {
         await this.searchVendor(vendorName);
 
+        await this.removeAttribute(vendors.vendorRowActions(vendorName), 'class'); // forcing the row actions to be visible, to avoid flakiness
         await this.hover(vendors.vendorRow(vendorName));
 
         switch (action) {
             case 'products':
                 await this.clickAndWaitForLoadState(vendors.vendorProducts(vendorName));
+                await this.notToHaveText(selector.admin.products.numberOfRowsFound, '0 items');
+                await this.notToBeVisible(selector.admin.products.noRowsFound);
                 break;
 
             case 'orders':
                 await this.clickAndWaitForLoadState(vendors.vendorOrders(vendorName));
+                await this.notToHaveText(selector.admin.wooCommerce.orders.numberOfRowsFound, '0 items');
+                await this.notToBeVisible(selector.admin.wooCommerce.orders.noRowsFound);
                 break;
 
             default:
                 break;
         }
-
-        const count = (await this.getElementText(vendors.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
     }
 
     // vendor bulk action
     async vendorBulkAction(action: string, vendorName?: string) {
-        vendorName ? await this.searchVendor(vendorName) : await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
+        if (vendorName) {
+            await this.searchVendor(vendorName);
+        } else {
+            await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
+        }
 
         // ensure row exists
         await this.notToBeVisible(vendors.noRowsFound);

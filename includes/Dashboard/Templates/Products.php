@@ -621,6 +621,8 @@ class Products {
             exit;
         }
 
+        do_action( 'dokan_product_delete', $product_id );
+
         dokan()->product->delete( $product_id, true );
 
         do_action( 'dokan_product_deleted', $product_id );

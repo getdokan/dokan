@@ -3,11 +3,11 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multivendor marketplace, multivendor, multi seller, multi vendor, WooCommerce marketplace, WooCommerce product vendors  
 **Requires at least:** 6.4  
-**Tested up to:** 6.6.1  
+**Tested up to:** 6.6.2  
 **WC requires at least:** 8.0.0  
-**WC tested up to:** 9.1.4  
+**WC tested up to:** 9.3.3  
 **Requires PHP:** 7.4  
-**Stable tag:** 3.11.5  
+**Stable tag:** 3.12.6  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -346,6 +346,38 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.12.6 ( Oct 24, 2024 ) ###
+
+- **fix:** Fixed js error on frontend pages.
+
+### v3.12.5 ( Oct 16, 2024 ) ###
+
+- **fix:** Implement order trash and untrash handling for Dokan
+- **fix:** Added wordpress native i18n support
+
+### v3.12.4 ( Oct 03, 2024 ) ###
+
+- **update:** Added `$data` parameter to `dokan_update_vendor` hook.
+
+### v3.12.3 ( Sep 30, 2024 ) ###
+
+- **update:** Added compatibility with RFQ state field ui.
+
+### v3.12.2 ( Sep 23, 2024 ) ###
+
+- **fix:** Product gallery image uploader close button style fix.
+- **fix:** Fix incorrect sub-order status updates when the main order status changed specifically for cancelled sub-orders.
+- **fix:** Fixed vendor coupon validation for various discount item types.
+
+### v3.12.1 ( Aug 30, 2024 ) ###
+- **fix:** Resolve fatal error when updating Dokan Lite to 3.12.0 with Dokan Pro 3.9.7.
+
+### v3.12.0 ( Aug 29, 2024 ) ###
+
+- **fix:** Displaying incorrect withdrawal amount when using decimal separator as thousand.
+- **fix:** Removed multiple invoice button for dokan sub-orders.
+- **fix:** Ensure accurate stock updates when vendors edit products while sales occur. Thanks @brunomendespereira
 
 ### v3.11.5 ( Aug 7, 2024 ) ###
 

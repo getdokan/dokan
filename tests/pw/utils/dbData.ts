@@ -1,4 +1,4 @@
-const { BASE_URL, GMAP, LICENSE_KEY } = process.env;
+const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY } = process.env;
 
 export const dbData = {
     dokan: {
@@ -58,7 +58,7 @@ export const dbData = {
             enabled_address_on_reg: 'off',
             enable_tc_on_reg: 'on',
             enable_single_seller_mode: 'off',
-            store_category_type: 'multiple', // none, multiple
+            store_category_type: 'single', // none, single, multiple
 
             // product page settings
             product_page_options: '',
@@ -98,11 +98,6 @@ export const dbData = {
                 'order-discount': 'order-discount',
                 'product-discount': 'product-discount',
             },
-
-            // min max settings
-            min_max_sub_section: '',
-            enable_min_max_quantity: 'on',
-            enable_min_max_amount: 'on',
 
             // catalog mode
             catalog_mode_settings: '',
@@ -206,8 +201,8 @@ export const dbData = {
             appearance_options: '',
             store_map: 'on',
             map_api_source: 'google_maps',
-            gmap_api_key: GMAP,
-            mapbox_access_token: '',
+            gmap_api_key: GMAP ?? '',
+            mapbox_access_token: MAPBOX ?? '',
             recaptcha_validation_label: '',
             contact_seller: 'on',
             store_header_template: 'default',
@@ -758,7 +753,7 @@ export const dbData = {
         },
         privacyPolicySettings: {
             enable_privacy: 'on',
-            privacy_page: '2',
+            privacy_page: '',
             privacy_policy: '<p>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]</p>',
         },
 
@@ -1132,6 +1127,7 @@ export const dbData = {
             'product_addon',
             'product_advertising',
             'product_enquiry',
+            'product_qa',
             'product_subscription',
             'rank_math',
             'razorpay',
@@ -1302,6 +1298,52 @@ export const dbData = {
         },
     },
 
+    // widget
+
+    widget: {
+        name: {
+            widgetBlock: 'widget_block',
+            sidebarsWidgets: 'sidebars_widgets',
+        },
+        widgetBlock: {
+            '2': {
+                content: '<!-- wp:search /-->',
+            },
+            '3': {
+                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Recent Posts</h2><!-- /wp:heading --><!-- wp:latest-posts /--></div><!-- /wp:group -->',
+            },
+            '4': {
+                content:
+                    '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Recent Comments</h2><!-- /wp:heading --><!-- wp:latest-comments {"displayAvatar":false,"displayDate":false,"displayExcerpt":false} /--></div><!-- /wp:group -->',
+            },
+            '5': {
+                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Archives</h2><!-- /wp:heading --><!-- wp:archives /--></div><!-- /wp:group -->',
+            },
+            '6': {
+                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Categories</h2><!-- /wp:heading --><!-- wp:categories /--></div><!-- /wp:group -->',
+            },
+            '9': {
+                content: '<!-- wp:legacy-widget /-->',
+            },
+            _multiwidget: 1,
+        },
+
+        // 'dokan-store-contact-widget-2', 'dokan-best-selling-widget-2', 'dokan-category-menu-2', 'dokan-filter-product-2', 'dokan-store-location-2', 'dokan-store-menu-2', 'dokan-store-open-close-widget-2', 'dokan-top-rated-2',
+        sideBarsWidgets: {
+            wp_inactive_widgets: [],
+            'sidebar-store': ['dokan-store-contact-widget-2'],
+            'sidebar-1': [],
+            'header-1': [],
+            'footer-1': [],
+            'footer-2': [],
+            'footer-3': [],
+            'footer-4': [],
+            array_version: 3,
+        },
+
+        emptySideBarsWidgets: { wp_inactive_widgets: [] },
+    },
+
     // test db data
 
     testData: {
@@ -1353,6 +1395,54 @@ export const dbData = {
                 dokan_vat_number: 'dokan_vat_number',
                 dokan_bank_name: 'dokan_bank_name',
                 dokan_bank_iban: 'dokan_bank_iban',
+            },
+
+            catalogMode: {
+                catalog_mode_settings: '',
+                catalog_mode_hide_add_to_cart_button: 'on',
+                catalog_mode_hide_product_price: 'on',
+            },
+
+            reverseWithdrawalFailedActions: {
+                enable_catalog_mode: 'enable_catalog_mode',
+                hide_withdraw_menu: 'hide_withdraw_menu',
+                status_inactive: 'status_inactive',
+            },
+
+            // vendor rma settings
+            rmaSettings: {
+                label: 'Warranty',
+                type: 'no_warranty',
+                policy: 'Refund Policy',
+                reasons: [],
+                length: '',
+                length_value: '',
+                length_duration: '',
+                addon_settings: [],
+            },
+
+            // vendor payment settings
+            paymentSettings: {
+                paypal: {
+                    email: 'paypal@g.com',
+                },
+                bank: {
+                    ac_name: 'accountName',
+                    ac_number: '0123456789',
+                    bank_name: 'bankName',
+                    ac_type: 'personal',
+                    bank_addr: 'bankAddress',
+                    routing_number: '9876543210',
+                    iban: 'QWERTY12345',
+                    swift: 'AZERTY98765',
+                    declaration: 'on',
+                },
+                dokan_custom: {
+                    value: '0123456789QWERTY',
+                },
+                skrill: {
+                    email: 'skrill@g.com',
+                },
             },
         },
     },
