@@ -26,8 +26,6 @@ declare global {
             GMAP: string;
             MAPBOX: string;
             LICENSE_KEY: string;
-            TALKJS_APP_ID: string;
-            TALKJS_APP_SECRET: string;
             DOKAN_PRO: boolean;
             SITE_LANGUAGE: string;
             SITE_TITLE: string;

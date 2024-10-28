@@ -961,12 +961,6 @@ export class BasePage {
         // await locator.pressSequentially(text);
     }
 
-    async clickFrameSelectorAndWaitForResponse(frame: string, subUrl: string, frameSelector: string, code = 200): Promise<Response> {
-        const locator = this.page.frameLocator(frame).locator(frameSelector);
-        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), locator.click()]);
-        return response;
-    }
-
     /**
      * Locator methods [using playwright locator class]
      */
@@ -1543,13 +1537,7 @@ export class BasePage {
         }, options);
     }
 
-    // assert frame element to be visible
-    async toBeVisibleFrameLocator(frame: string, frameSelector: string, options?: { timeout?: number; visible?: boolean } | undefined) {
-        const locator = this.page.frameLocator(frame).locator(frameSelector);
-        await expect(locator).toBeVisible(options);
-    }
-
-    // assert frame element to contain text
+    // assert element to contain text
     async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp, options?: { timeout?: number; intervals?: number[] }): Promise<void> {
         await this.toPass(async () => {
             const locator = this.page.frameLocator(frame).locator(frameSelector);

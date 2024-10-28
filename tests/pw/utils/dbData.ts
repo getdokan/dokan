@@ -1,4 +1,4 @@
-const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, TALKJS_APP_ID, TALKJS_APP_SECRET } = process.env;
+const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY } = process.env;
 
 export const dbData = {
     dokan: {
@@ -20,7 +20,7 @@ export const dbData = {
             // socialApi: 'dokan_social_api',
             shippingStatus: 'dokan_shipping_status_setting',
             quote: 'dokan_quote_settings',
-            liveChat: 'dokan_live_chat',
+            // liveChat: 'dokan_live_chat',
             rma: 'dokan_rma',
             wholesale: 'dokan_wholesale',
             euCompliance: 'dokan_germanized',
@@ -897,16 +897,15 @@ export const dbData = {
         },
 
         liveChatSettings: {
-            enable: 'on',
-            provider: 'talkjs',
+            enable: 'off',
+            provider: 'messenger',
             theme_color: '#0084FF',
-            app_id: TALKJS_APP_ID,
-            app_secret: TALKJS_APP_SECRET,
+            app_id: '',
+            app_secret: '',
             wa_opening_method: 'in_app',
             wa_pre_filled_message: 'Hello {store_name}, I have an enquiry regarding your store at {store_url}',
             chat_button_seller_page: 'on',
-            chat_button_product_page: 'above_tab', // above_tab, inside_tab, dont_show
-            dashboard_menu_manager: [],
+            chat_button_product_page: 'above_tab',
         },
 
         rmaSettings: {
