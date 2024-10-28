@@ -414,6 +414,30 @@ export class SettingsPage extends AdminPage {
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, quote.saveSuccessMessage);
     }
 
+    // Admin Set Dokan live chat Settings
+    async setDokanLiveChatSettings(liveChat: dokanSettings['liveChat']) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.liveChat);
+
+        // liveChat Settings
+        await this.enableSwitcher(settingsAdmin.liveChat.enableLiveChat);
+        await this.click(settingsAdmin.liveChat.chatProvider(liveChat.chatProvider));
+        await this.clearAndType(settingsAdmin.liveChat.talkJsAppId, liveChat.talkJsAppId);
+        await this.clearAndType(settingsAdmin.liveChat.talkJsAppSecret, liveChat.talkJsAppSecret);
+        await this.enableSwitcher(settingsAdmin.liveChat.chatButtonOnVendorPage);
+        await this.selectByValue(settingsAdmin.liveChat.chatButtonOnProductPage, liveChat.chatButtonPosition);
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.liveChat.liveChatSaveChanges);
+
+        await this.toHaveBackgroundColor(settingsAdmin.liveChat.enableLiveChat + '//span', 'rgb(0, 144, 255)');
+        await this.toHaveClass(settingsAdmin.liveChat.chatProvider(liveChat.chatProvider), 'checked');
+        await this.toHaveValue(settingsAdmin.liveChat.talkJsAppId, liveChat.talkJsAppId);
+        await this.toHaveValue(settingsAdmin.liveChat.talkJsAppSecret, liveChat.talkJsAppSecret);
+        await this.toHaveBackgroundColor(settingsAdmin.liveChat.chatButtonOnVendorPage + '//span', 'rgb(0, 144, 255)');
+        await this.toHaveSelectedValue(settingsAdmin.liveChat.chatButtonOnProductPage, liveChat.chatButtonPosition);
+    }
+
     // Admin Set Dokan Rma Settings
     async setDokanRmaSettings(rma: dokanSettings['rma']) {
         await this.goToDokanSettings();

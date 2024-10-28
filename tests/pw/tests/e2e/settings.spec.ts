@@ -95,6 +95,10 @@ test.describe('Settings test', () => {
         await admin.setDokanQuoteSettings(data.dokanSettings.quote);
     });
 
+    test('admin can set Dokan live chat settings', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.setDokanLiveChatSettings(data.dokanSettings.liveChat);
+    });
+
     test('admin can set Dokan rma settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanRmaSettings(data.dokanSettings.rma);
     });
