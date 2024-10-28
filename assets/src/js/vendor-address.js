@@ -7,8 +7,10 @@
         state_select: function () {
             let states_json = wc_country_select_params.countries.replace( /&quot;/g, '"' ),
                 states = $.parseJSON( states_json ),
-                $statebox = $( '#dokan_address_state' ),
-                input_name = $statebox.attr( 'name' ),
+                $statebox = $( '#dokan_address_state' );
+
+            $statebox.addClass( 'wc-enhanced-select' );
+            let input_name = $statebox.attr( 'name' ),
                 input_id = $statebox.attr( 'id' ),
                 input_class = $statebox.attr( 'class' ),
                 value = $statebox.val(),

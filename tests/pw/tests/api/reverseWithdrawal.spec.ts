@@ -2,6 +2,7 @@
 //COVERAGE_TAG: GET /dokan/v1/reverse-withdrawal/stores
 //COVERAGE_TAG: GET /dokan/v1/reverse-withdrawal/stores-balance
 //COVERAGE_TAG: GET /dokan/v1/reverse-withdrawal/transactions
+//COVERAGE_TAG: POST /dokan/v1/reverse-withdrawal/transactions
 //COVERAGE_TAG: GET /dokan/v1/reverse-withdrawal/vendor-due-status
 //COVERAGE_TAG: POST /dokan/v1/reverse-withdrawal/add-to-cart
 
@@ -19,14 +20,14 @@ test.describe('reverse withdrawal api test', () => {
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
 
         const [, , orderId] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, data.order.orderStatus.processing, payloads.vendorAuth);
         await apiUtils.updateOrderStatus(orderId, data.order.orderStatus.completed, payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
         await apiUtils.dispose();
     });
 
@@ -57,6 +58,14 @@ test.describe('reverse withdrawal api test', () => {
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.reverseWithdrawalSchema.reverseWithdrawalTransactionsSchema);
+    });
+
+    test('create a reverse withdrawal transaction', { tag: ['@lite'] }, async () => {
+        const storeId = await apiUtils.getReverseWithdrawalStoreId();
+        const [response, responseBody] = await apiUtils.post(endPoints.createReverseWithdrawalTransactions, { data: { ...payloads.createReverseWithdrawal, vendor_id: storeId }, headers: payloads.adminAuth });
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.reverseWithdrawalSchema.createReverseWithdrawalTransaction);
     });
 
     test('get reverse withdrawal vendor due status', { tag: ['@lite'] }, async () => {
