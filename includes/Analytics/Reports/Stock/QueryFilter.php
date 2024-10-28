@@ -11,7 +11,7 @@ use WP_Query;
  *
  * Filters and modifies WooCommerce analytics queries for Product Stock.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class QueryFilter extends BaseQueryFilter {
     protected $should_removed_where_filter = true;

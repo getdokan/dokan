@@ -7,7 +7,7 @@ use Automattic\WooCommerce\Admin\API\Reports\SqlQuery;
 /**
  * WC SqlQuery class to override the default handling of SQL clauses.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class WcSqlQuery extends SqlQuery {
     /**

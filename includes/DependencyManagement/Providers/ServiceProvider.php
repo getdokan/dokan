@@ -11,7 +11,7 @@ use WeDevs\Dokan\DependencyManagement\BootableServiceProvider;
  * This service provider handles the core services with the Dokan's
  * dependency injection container.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class ServiceProvider extends BootableServiceProvider {
 	/**

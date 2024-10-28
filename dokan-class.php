@@ -23,7 +23,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.11.3';
+    public $version = '3.13.0';
 
     /**
      * Instance of self
@@ -479,7 +479,7 @@ final class WeDevs_Dokan {
     /**
      * Retrieve the container instance.
      *
-     * @since DOKAN_SINCE
+     * @since 3.13.0
      *
      * @return Container
      */
