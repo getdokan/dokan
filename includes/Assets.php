@@ -129,6 +129,9 @@ class Assets {
             wp_localize_script( 'dokan-admin-product', 'dokan_admin_product', $this->admin_product_localize_scripts() );
         }
 
+        // Load admin scripts for analytics.
+        wp_enqueue_script( 'dokan-admin-analytics' );
+
         do_action( 'dokan_enqueue_admin_scripts', $hook );
     }
 
@@ -348,7 +351,7 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-product-style.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product-style.css' ),
             ],
-            'dokan-tailwind' => [
+            'dokan-tailwind'                => [
                 'src'       => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
                 'version'   => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
             ],
@@ -553,6 +556,11 @@ class Assets {
                 'src'     => $asset_url . '/js/dokan-frontend.js',
                 'deps'    => [ 'jquery' ],
                 'version' => filemtime( $asset_path . 'js/dokan-frontend.js' ),
+            ],
+            'dokan-admin-analytics'    => [
+                'src'     => $asset_url . '/src/js/dokan-admin-analytics.js',
+                'deps'    => [ 'wc-admin-app', 'wp-hooks' ],
+                'version' => filemtime( $asset_path . 'src/js/dokan-admin-analytics.js' ),
             ],
         ];
 
