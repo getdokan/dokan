@@ -46,6 +46,8 @@ env:
     CUSTOMER2: customer2
     USER_PASSWORD: 01dokan01
     GMAP: ${{secrets.GMAP}}
+    TALKJS_APP_ID: ${{secrets.TALKJS_APP_ID}}
+    TALKJS_APP_SECRET: ${{secrets.TALKJS_APP_SECRET}}
     BASE_URL: http://localhost:9999
     CI: true
     FORCE_COLOR: 1
