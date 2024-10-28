@@ -1,5 +1,6 @@
 @import "mixins.less";
 @import "tooltip.less";
+@import "variables.less";
 
 .dokan-admin-header {
     background: #fff;
@@ -161,13 +162,13 @@
                             }
 
                             &.active {
-                                color: #7047EB;
+                                color: @dokan-color;
 
                                 .dokan-icon {
                                     background-color: rgba(239, 234, 255, 1);
 
                                     svg path {
-                                        fill: #7047EB;
+                                        fill: @dokan-color;
                                     }
                                 }
 
@@ -175,7 +176,7 @@
                                     content: "";
                                     width: 6px;
                                     height: 6px;
-                                    background-color: #7047EB;
+                                    background-color: @dokan-color;
                                     border-radius: 53px;
                                     margin-left: 10px;
                                 }
@@ -194,13 +195,13 @@
                             }
 
                             &:hover {
-                                color: #7047EB;
+                                color: @dokan-color;
 
                                 .dokan-icon {
                                     background-color: rgba(239, 234, 255, 1);
 
                                     svg path {
-                                        fill:#7047EB;
+                                        fill:@dokan-color;
                                     }
                                 }
                             }

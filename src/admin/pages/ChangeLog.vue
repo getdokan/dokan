@@ -285,6 +285,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "../../../assets/src/less/variables.less";
 .fade-enter-active, .fade-leave-active {
     transition: opacity .3s ease;
 }
@@ -376,7 +377,7 @@ ul {
                 }
 
                 .active {
-                    background: #7047EB;
+                    background: @dokan-color;
                     border-radius: 30px;
                     position: absolute;
                     top: 0;
@@ -467,7 +468,7 @@ ul {
                                 cursor: pointer;
 
                                 &:hover {
-                                    color: #f2624d;
+                                    color: @dokan-color;
                                 }
 
                                 &:last-child {
@@ -475,7 +476,7 @@ ul {
                                 }
 
                                 &.current {
-                                    color: #f2624d;
+                                    color: @dokan-color;
                                     font-weight: bold;
                                     font-family: "SF Pro Text", sans-serif;
                                 }
@@ -768,7 +769,7 @@ ul {
         width: 40px;
         height: 40px;
         color: #ffffff;
-        background: #7047EB;
+        background: @dokan-color;
         border: 0;
         position: fixed;
         right: 10px;
