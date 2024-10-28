@@ -67,6 +67,9 @@ class WcDataStore extends StockStatsDataStore {
 	/**
 	 * Get low stock count (products with stock < low stock amount, but greater than no stock amount).
 	 *
+	 * @phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+     *
+	 *
 	 * @return int Low stock count.
 	 */
 	protected function get_low_stock_count() {
