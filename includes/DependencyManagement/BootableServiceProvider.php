@@ -14,6 +14,8 @@ use WeDevs\Dokan\ThirdParty\Packages\League\Container\ServiceProvider\BootableSe
  * for basic usage details. What this class adds is:
  * Note that `AbstractInterfaceServiceProvider` likely serves as a better base class for service providers
  * tasked with registering classes that implement interfaces.
+ *
+ * @since DOKAN_SINCE
  */
 abstract class BootableServiceProvider extends BaseServiceProvider implements BootableServiceProviderInterface {
 }

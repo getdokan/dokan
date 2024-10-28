@@ -479,7 +479,7 @@ final class WeDevs_Dokan {
     /**
      * Retrieve the container instance.
      *
-     * @since 3.13.0
+     * @since DOKAN_SINCE
      *
      * @return Container
      */

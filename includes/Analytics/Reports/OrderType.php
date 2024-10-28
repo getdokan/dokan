@@ -9,7 +9,7 @@ use WC_Order_Refund;
  *
  * Defines constants and methods to handle different types of Dokan orders and refunds.
  *
- * @package WeDevs\Dokan\Analytics\Reports
+ * @since DOKAN_SINCE
  */
 class OrderType {
     // Order type constants

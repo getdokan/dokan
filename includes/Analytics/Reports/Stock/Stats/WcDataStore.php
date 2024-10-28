@@ -4,6 +4,14 @@ namespace WeDevs\Dokan\Analytics\Reports\Stock\Stats;
 
 use Automattic\WooCommerce\Admin\API\Reports\Stock\Stats\DataStore as StockStatsDataStore;
 
+
+/**
+ * Class QueryFilter
+ *
+ * Filters and modifies WooCommerce analytics queries for Stock Stats.
+ *
+ * @since DOKAN_SINCE
+ */
 class WcDataStore extends StockStatsDataStore {
 	/**
 	 * Get stock counts for the whole store.
