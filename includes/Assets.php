@@ -129,10 +129,8 @@ class Assets {
             wp_localize_script( 'dokan-admin-product', 'dokan_admin_product', $this->admin_product_localize_scripts() );
         }
 
-        $path = ! empty( $_GET['path'] ) ? sanitize_url( wp_unslash( $_GET['path'] ) ) : ''; // phpcs:ignore
-        if ( 'woocommerce_page_wc-admin' === $hook && '/analytics/revenue' === $path ) {
-            wp_enqueue_script( 'dokan-admin-analytics' );
-        }
+        // Load admin scripts for analytics.
+        wp_enqueue_script( 'dokan-admin-analytics' );
 
         do_action( 'dokan_enqueue_admin_scripts', $hook );
     }
@@ -560,7 +558,7 @@ class Assets {
             ],
             'dokan-admin-analytics'    => [
                 'src'     => $asset_url . '/src/js/dokan-admin-analytics.js',
-                'deps'    => [ 'wp-hooks' ],
+                'deps'    => [ 'wc-admin-app', 'wp-hooks' ],
                 'version' => filemtime( $asset_path . 'src/js/dokan-admin-analytics.js' ),
             ],
         ];
