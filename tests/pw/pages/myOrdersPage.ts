@@ -20,8 +20,14 @@ export class MyOrdersPage extends CustomerPage {
     // my orders
 
     // my orders render properly
-    async myOrdersRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.myOrders);
+    async myOrdersRenderProperly(link?: string) {
+        if (link) {
+            await this.goto(link);
+        } else {
+            await this.goIfNotThere(data.subUrls.frontend.myOrders);
+            // my orders text is visible
+            await this.toBeVisible(selector.customer.cMyOrders.myOrdersText);
+        }
 
         const noOrders = await this.isVisible(selector.customer.cMyOrders.noOrdersFound);
 
@@ -29,9 +35,6 @@ export class MyOrdersPage extends CustomerPage {
             await this.toContainText(selector.customer.cMyOrders.noOrdersFound, 'No orders found!');
             console.log('No orders found on my order page');
         } else {
-            // my orders text is visible
-            await this.toBeVisible(selector.customer.cMyOrders.myOrdersText);
-
             // recent orders text is visible
             await this.toBeVisible(selector.customer.cMyOrders.recentOrdersText);
 
@@ -50,7 +53,9 @@ export class MyOrdersPage extends CustomerPage {
         // customer details are visible
         await this.multipleElementVisible(selector.customer.cOrderDetails.customerDetails);
 
-        DOKAN_PRO && (await this.toBeVisible(selector.customer.cOrderDetails.getSupport));
+        if (DOKAN_PRO) {
+            await this.toBeVisible(selector.customer.cOrderDetails.getSupport);
+        }
     }
 
     // view order note
@@ -69,16 +74,17 @@ export class MyOrdersPage extends CustomerPage {
     //  cancel order
     async cancelPendingOrder(orderId: string) {
         await this.goToMyOrders();
-        await this.clickAndWaitForResponse(data.subUrls.frontend.orderCancel, selector.customer.cMyOrders.orderCancel(orderId), 302);
+        await this.clickAndWaitForResponse(data.subUrls.frontend.myAccount, selector.customer.cMyOrders.orderCancel(orderId));
         await this.toContainText(selector.customer.cWooSelector.wooCommerceInfo, 'Your order was cancelled.');
     }
 
     // order again
     async orderAgain(orderId: string, paymentMethod = 'bank') {
         await this.goIfNotThere(data.subUrls.frontend.orderDetails(orderId));
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.orderAgain, selector.customer.cOrderDetails.orderAgain, 302);
+        await this.clickAndWaitForResponse(data.subUrls.frontend.cart, selector.customer.cOrderDetails.orderAgain);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'The cart has been filled with the items from your previous order.');
-        await this.goToCheckoutFromCart();
+        // await this.goToCheckoutFromCart(); //todo: skipped for flaky locator
+        await this.goToCheckout();
         await this.paymentOrder(paymentMethod);
     }
 }

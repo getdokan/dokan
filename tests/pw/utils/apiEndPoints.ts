@@ -123,7 +123,7 @@ export const endPoints = {
     // product reviews
     getAllProductReviews: `${SERVER_URL}/dokan/v1/reviews`,
     getProductReviewSummary: `${SERVER_URL}/dokan/v1/reviews/summary`,
-    updateReview: (reviewId: string) => `${SERVER_URL}/dokan/v1/reviews/${reviewId}`,
+    updateProductReview: (reviewId: string) => `${SERVER_URL}/dokan/v1/reviews/${reviewId}`,
 
     // store reviews
     getStoreReviews: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/reviews`,
@@ -216,6 +216,7 @@ export const endPoints = {
     getAllReverseWithdrawalStores: `${SERVER_URL}/dokan/v1/reverse-withdrawal/stores`,
     getAllReverseWithdrawalStoreBalance: `${SERVER_URL}/dokan/v1/reverse-withdrawal/stores-balance`,
     getAllReverseWithdrawalTransactions: `${SERVER_URL}/dokan/v1/reverse-withdrawal/transactions`,
+    createReverseWithdrawalTransactions: `${SERVER_URL}/dokan/v1/reverse-withdrawal/transactions`,
 
     // modules
     getAllModules: `${SERVER_URL}/dokan/v1/admin/modules`,
@@ -300,6 +301,8 @@ export const endPoints = {
     createDuplicateProduct: (productId: string) => `${SERVER_URL}/dokan/v2/products/${productId}/duplicate`,
 
     getAllProductsV2: `${SERVER_URL}/dokan/v2/products`,
+    getAllLinkedProducts: (productId: string) => `${SERVER_URL}/dokan/v2/products/linked-products?term=${productId}`,
+
     getAllOrdersV2: `${SERVER_URL}/dokan/v2/products`,
 
     // product filter
@@ -364,6 +367,13 @@ export const endPoints = {
 
     //commission
     getCommission: `${SERVER_URL}/dokan/v1/commission`,
+
+    // shipping status
+    getShippingStatus: `${SERVER_URL}/dokan/v1/shipping-status`,
+    getAllShipments: (orderId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}`,
+    createShipment: (orderId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}`,
+    getSingleShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
+    updateShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
 
     wc: {
         // coupons
@@ -443,14 +453,6 @@ export const endPoints = {
         deleteCategory: (categoryId: string) => `${SERVER_URL}/wc/v3/products/categories/${categoryId}`,
         updateBatchCategories: `${SERVER_URL}/wc/v3/products/categories/batch`,
 
-        // product shipping class
-        getAllShippingClasses: `${SERVER_URL}/wc/v3/products/shipping_classes`,
-        getSingleShippingClass: (shippingClassId: string) => `${SERVER_URL}/wc/v3/products/shipping_classes/${shippingClassId}`,
-        createShippingClass: `${SERVER_URL}/wc/v3/products/shipping_classes`,
-        updateShippingClass: (shippingClassId: string) => `${SERVER_URL}/wc/v3/products/shipping_classes/${shippingClassId}`,
-        deleteShippingClass: (shippingClassId: string) => `${SERVER_URL}/wc/v3/products/shipping_classes/${shippingClassId}`,
-        updateBatchShippingClass: `${SERVER_URL}/wc/v3/products/shipping_classes/batch`,
-
         // product tags
         getAllTags: `${SERVER_URL}/wc/v3/products/tags`,
         getSingleTag: (tagId: string) => `${SERVER_URL}/wc/v3/products/tags/${tagId}`,
@@ -508,6 +510,14 @@ export const endPoints = {
         // shipping methods
         getAllShippingMethods: `${SERVER_URL}/wc/v3/shipping_methods`,
         getSingleShippingMethod: (shippingId: string) => `${SERVER_URL}/wc/v3/shipping_methods/${shippingId}`,
+
+        // shipping class
+        getAllShippingClasses: `${SERVER_URL}/wc/v3/products/shipping_classes`,
+        getSingleShippingClass: (shippingClassId: string) => `${SERVER_URL}/wc/v3/products/shipping_classes/${shippingClassId}`,
+        createShippingClass: `${SERVER_URL}/wc/v3/products/shipping_classes`,
+        updateShippingClass: (classId: string) => `${SERVER_URL}/wc/v3/products/shipping_classes/${classId}`,
+        deleteShippingClass: (classId: string) => `${SERVER_URL}/wc/v3/products/shipping_classes/${classId}`,
+        updateBatchShippingClass: `${SERVER_URL}/wc/v3/products/shipping_classes/batch`,
 
         // payment gateways
         getAllPaymentGateways: `${SERVER_URL}/wc/v3/payment_gateways`,

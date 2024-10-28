@@ -2,7 +2,7 @@ import { Page, expect } from '@playwright/test';
 import { VendorPage } from '@pages/vendorPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
-import { vendor, shipping } from '@utils/interfaces';
+import { vendor } from '@utils/interfaces';
 
 // selectors
 const vendorShipping = selector.vendor.vShippingSettings;
@@ -72,6 +72,7 @@ export class VendorShippingPage extends VendorPage {
 
     // vendor add shipping method
     async addShippingMethod(shipping: any, forceAdd = false, skip?: boolean): Promise<void> {
+        // todo: add shipping type
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipping);
         // edit shipping zone
         await this.hover(vendorShipping.shippingZoneCell(shipping.shippingZone));
@@ -168,7 +169,7 @@ export class VendorShippingPage extends VendorPage {
     }
 
     // vendor add shipping method
-    async deleteShippingMethod(shipping: shipping['shippingMethods']['flatRate']): Promise<void> {
+    async deleteShippingMethod(shipping: any): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipping);
 
         // edit shipping zone
@@ -176,9 +177,8 @@ export class VendorShippingPage extends VendorPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, vendorShipping.editShippingZone(shipping.shippingZone));
 
         const noOfMethods = await this.countLocator(vendorShipping.shippingMethodCell(shipping.shippingMethod));
-
         if (noOfMethods > 1) {
-            this.lastLocator(vendorShipping.shippingMethodCell(shipping.shippingMethod)).hover();
+            await this.lastLocator(vendorShipping.shippingMethodCell(shipping.shippingMethod)).hover();
             const deleteMethod = this.lastLocator(vendorShipping.deleteShippingMethod(shipping.shippingMethod));
             await this.clickLocatorAndWaitForResponse(data.subUrls.ajax, deleteMethod);
             await this.toHaveCount(vendorShipping.shippingMethodCell(shipping.shippingMethod), noOfMethods - 1);

@@ -66,17 +66,22 @@ export class StoreSupportsPage extends AdminPage {
     }
 
     // search support ticket
-    async searchSupportTicket(idOrTitle: string, closed?: boolean) {
+    async searchSupportTicket(searchKey: string, closed?: boolean) {
         await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
-        closed && (await this.clickAndWaitForLoadState(storeSupportsAdmin.navTabs.closed)); // go to closed tab
+        if (closed) {
+            // go to closed tab
+            await this.clickAndWaitForLoadState(storeSupportsAdmin.navTabs.closed);
+        }
 
         await this.clearInputField(storeSupportsAdmin.searchTicket);
-        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeSupport, storeSupportsAdmin.searchTicket, idOrTitle);
-        const count = (await this.getElementText(storeSupportsAdmin.numberOfRowsFound))?.split(' ')[0];
-        if (!isNaN(Number(idOrTitle))) {
-            await this.toBeVisible(storeSupportsAdmin.supportTicketCell(idOrTitle));
+        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeSupport, storeSupportsAdmin.searchTicket, searchKey);
+        if (!Number.isNaN(Number(searchKey))) {
+            // searched by id
+            await this.toHaveCount(storeSupportsAdmin.numberOfRows, 1);
+            await this.toBeVisible(storeSupportsAdmin.supportTicketCell(searchKey));
         } else {
-            expect(Number(count)).toBeGreaterThan(0);
+            // searched by title
+            await this.notToHaveCount(storeSupportsAdmin.numberOfRows, 0);
         }
     }
 
@@ -114,9 +119,8 @@ export class StoreSupportsPage extends AdminPage {
             default:
                 break;
         }
-
-        const count = (await this.getElementText(storeSupportsAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToHaveText(storeSupportsAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(storeSupportsAdmin.noRowsFound);
     }
 
     // reply to support ticket
@@ -168,7 +172,7 @@ export class StoreSupportsPage extends AdminPage {
     // store support bulk action
     async storeSupportBulkAction(action: string, supportTicketId?: string) {
         await this.goto(data.subUrls.backend.dokan.storeSupport); // not used ternary -> page need to reload before reflecting api update
-        supportTicketId && (await this.searchSupportTicket(supportTicketId));
+        if (supportTicketId) await this.searchSupportTicket(supportTicketId);
 
         // ensure row exists
         await this.notToBeVisible(storeSupportsAdmin.noRowsFound);
@@ -203,7 +207,7 @@ export class StoreSupportsPage extends AdminPage {
 
     // vendor view support ticket details
     async vendorViewSupportTicketDetails(supportTicketId: string) {
-        await this.vendorSearchSupportTicket('id', supportTicketId);
+        await this.vendorSearchSupportTicket(supportTicketId);
         await this.clickAndWaitForLoadState(storeSupportsVendor.storeSupportLink(supportTicketId));
 
         await this.toBeVisible(storeSupportsVendor.supportTicketDetails.backToTickets);
@@ -220,8 +224,11 @@ export class StoreSupportsPage extends AdminPage {
         // chat reply box elements are visible
         const ticketIsOpen = await this.isVisible(storeSupportsVendor.supportTicketDetails.chatStatus.open);
         const { addReplyText, closeTicketText, ...replyBox } = storeSupportsVendor.supportTicketDetails.replyBox;
-        ticketIsOpen && (await this.toBeVisible(addReplyText));
-        !ticketIsOpen && (await this.multipleElementVisible(closeTicketText));
+        if (ticketIsOpen) {
+            await this.toBeVisible(addReplyText);
+        } else {
+            await this.multipleElementVisible(closeTicketText);
+        }
         await this.multipleElementVisible(replyBox);
     }
 
@@ -255,32 +262,28 @@ export class StoreSupportsPage extends AdminPage {
     }
 
     // vendor search support ticket
-    async vendorSearchSupportTicket(searchBy: string, input: string, closed?: boolean) {
+    async vendorSearchSupportTicket(searchKey: string, closed?: boolean) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.storeSupport);
         if (closed) {
+            // go to closed tab
             await this.clickAndWaitForLoadState(storeSupportsVendor.menus.closedTickets);
         }
 
-        await this.clearAndType(storeSupportsVendor.filters.tickedIdOrKeyword, input);
+        await this.clearAndType(storeSupportsVendor.filters.tickedIdOrKeyword, searchKey);
         await this.clickAndWaitForLoadState(storeSupportsVendor.filters.search);
-
-        switch (searchBy) {
-            case 'id':
-                await this.toBeVisible(storeSupportsVendor.storeSupportCellById(input));
-                break;
-
-            case 'title':
-                await this.notToHaveCount(storeSupportsVendor.storeSupportCellByTitle(input), 0);
-                break;
-
-            default:
-                break;
+        if (!Number.isNaN(Number(searchKey))) {
+            // searched by id
+            await this.toHaveCount(storeSupportsVendor.numberOfRows, 1);
+            await this.toBeVisible(storeSupportsVendor.storeSupportCellById(searchKey));
+        } else {
+            // searched by title
+            await this.notToHaveCount(storeSupportsVendor.numberOfRows, 0);
         }
     }
 
     // vendor reply to support ticket
     async vendorReplySupportTicket(supportTicketId: string, replyMessage: string) {
-        await this.vendorSearchSupportTicket('id', supportTicketId);
+        await this.vendorSearchSupportTicket(supportTicketId);
         await this.clickAndWaitForLoadState(storeSupportsVendor.storeSupportLink(supportTicketId));
         await this.clearAndType(storeSupportsVendor.chatReply, replyMessage);
         await this.clickAndWaitForResponse('wp-comments-post.php', storeSupportsVendor.submitReply, 302);
@@ -288,21 +291,21 @@ export class StoreSupportsPage extends AdminPage {
 
     // vendor close support ticket
     async vendorCloseSupportTicket(supportTicketId: string) {
-        await this.vendorSearchSupportTicket('id', supportTicketId);
+        await this.vendorSearchSupportTicket(supportTicketId);
         await this.click(storeSupportsVendor.closeTicket);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.storeSupport, storeSupportsVendor.confirmCloseTicket);
     }
 
     // vendor reopen support ticket
     async vendorReopenSupportTicket(supportTicketId: string) {
-        await this.vendorSearchSupportTicket('id', supportTicketId, true);
+        await this.vendorSearchSupportTicket(supportTicketId, true);
         await this.click(storeSupportsVendor.reOpenTicket);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.storeSupport, storeSupportsVendor.confirmCloseTicket);
     }
 
     // vendor close support ticket with a reply
     async vendorCloseSupportTicketWithReply(supportTicketId: string, replyMessage: string) {
-        await this.vendorSearchSupportTicket('id', supportTicketId);
+        await this.vendorSearchSupportTicket(supportTicketId);
         await this.clickAndWaitForLoadState(storeSupportsVendor.storeSupportLink(supportTicketId));
         await this.toContainText(storeSupportsVendor.ticketStatus, 'Open');
         await this.selectByValue(storeSupportsVendor.changeStatus, '1');
@@ -313,7 +316,7 @@ export class StoreSupportsPage extends AdminPage {
 
     // vendor reopen support ticket with a reply
     async vendorReopenSupportTicketWithReply(supportTicketId: string, replyMessage: string) {
-        await this.vendorSearchSupportTicket('id', supportTicketId, true);
+        await this.vendorSearchSupportTicket(supportTicketId, true);
         await this.clickAndWaitForLoadState(storeSupportsVendor.storeSupportLink(supportTicketId));
         await this.toContainText(storeSupportsVendor.ticketStatus, 'Closed');
         await this.clearAndType(storeSupportsVendor.chatReply, replyMessage);
@@ -362,9 +365,12 @@ export class StoreSupportsPage extends AdminPage {
 
         // chat reply box elements are visible is ticket is open
         const ticketIsOpen = await this.isVisible(supportsTicketsCustomer.supportTicketDetails.chatStatus.open);
-        ticketIsOpen && (await this.multipleElementVisible(supportsTicketsCustomer.supportTicketDetails.replyBox));
-        // closed ticket elements are visible is ticket is close
-        !ticketIsOpen && (await this.multipleElementVisible(supportsTicketsCustomer.supportTicketDetails.closedTicket));
+        if (ticketIsOpen) {
+            await this.multipleElementVisible(supportsTicketsCustomer.supportTicketDetails.replyBox);
+        } else {
+            // closed ticket elements are visible is ticket is close
+            await this.multipleElementVisible(supportsTicketsCustomer.supportTicketDetails.closedTicket);
+        }
     }
 
     // customer ask for store support
@@ -400,7 +406,9 @@ export class StoreSupportsPage extends AdminPage {
             await this.clickAndWaitForResponse(data.subUrls.ajax, storeSupportsCustomer.login);
         }
         await this.clearAndType(storeSupportsCustomer.subject, getSupport.subject);
-        getSupport.orderId && (await this.selectByValue(storeSupportsCustomer.orderId, getSupport.orderId));
+        if (getSupport.orderId) {
+            await this.selectByValue(storeSupportsCustomer.orderId, getSupport.orderId);
+        }
         await this.clearAndType(storeSupportsCustomer.message, getSupport.message);
         await this.clickAndWaitForResponse(data.subUrls.ajax, storeSupportsCustomer.submit);
         await this.toContainText(selector.customer.cDokanSelector.dokanAlertSuccessMessage, getSupport.supportSubmitSuccessMessage);

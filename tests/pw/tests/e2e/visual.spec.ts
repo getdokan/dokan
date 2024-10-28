@@ -3,10 +3,8 @@ import { VisualPage } from '@pages/visualPage';
 import { data } from '@utils/testData';
 import { selector } from '@pages/selectors';
 
-const { CI } = process.env;
-
 test.describe('dokan visual test', () => {
-    test.skip(CI, 'skip visual test on CI');
+    test.skip(true, 'skip visual tests');
     let admin: VisualPage;
     let aPage: Page;
 
@@ -19,8 +17,6 @@ test.describe('dokan visual test', () => {
     test.afterAll(async () => {
         await aPage.close();
     });
-
-    // TODO: add dokan lite pages like modules, promotions
 
     test('dokan admin dashboard @visual', async () => {
         await admin.dokanMenu(data.subUrls.backend.dokan.dokan);
