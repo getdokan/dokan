@@ -61,11 +61,11 @@ class QueryFilter extends OrdersQueryFilter {
 
         $order_count = "SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END )";
 
-        $column['orders_count']         = "$order_count as orders_count";
-        $column['avg_items_per_order']  = "SUM( {$wc_table_name}.num_items_sold ) / $order_count AS avg_items_per_order";
-        $column['avg_order_value']      = "SUM( {$wc_table_name}.net_total ) / $order_count AS avg_order_value";
-        $column['avg_admin_commission'] = "SUM( {$table_name}.admin_commission ) / $order_count AS avg_admin_commission";
-        $column['avg_vendor_earning']   = "SUM( {$table_name}.vendor_earning ) / $order_count AS avg_vendor_earning";
+        $column['orders_count']         = "{$order_count} as orders_count";
+        $column['avg_items_per_order']  = "SUM( {$wc_table_name}.num_items_sold ) / {$order_count} AS avg_items_per_order";
+        $column['avg_order_value']      = "SUM( {$wc_table_name}.net_total ) / {$order_count} AS avg_order_value";
+        $column['avg_admin_commission'] = "SUM( {$table_name}.admin_commission ) / {$order_count} AS avg_admin_commission";
+        $column['avg_vendor_earning']   = "SUM( {$table_name}.vendor_earning ) / {$order_count} AS avg_vendor_earning";
 
         return $column;
     }
