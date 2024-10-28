@@ -5,7 +5,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 
-test.describe.skip('License test', () => {
+test.describe.skip('Live search test', () => {
     let customer: LiveSearch;
     let cPage: Page;
     let apiUtils: ApiUtils;
@@ -16,7 +16,7 @@ test.describe.skip('License test', () => {
         customer = new LiveSearch(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        await dbUtils.updateOptionValue('sidebars_widgets', dbData.widget.liveSearch); // todo: doesn't work need to fix
+        await apiUtils.updateSidebar(dbData.sidebars['sidebar-1'], { widgets: [dbData.widgets.liveSearch] });
     });
 
     test.afterAll(async () => {

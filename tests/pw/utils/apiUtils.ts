@@ -1763,6 +1763,72 @@ export class ApiUtils {
         return responseBody;
     }
 
+    // widgets
+
+    // get all widgets
+    async getAllWidgets(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getAllWidgets, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
+    }
+
+    // get single widget
+    async getSingleWidget(widgetId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getSingleWidget(widgetId), { headers: auth });
+        return responseBody;
+    }
+
+    // create widget
+    async createWidget(payload: object, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.post(endPoints.wp.createWidget, { data: payload, headers: auth });
+        return [response, responseBody];
+    }
+
+    // update widget
+    async updateWidget(widgetId: string, payload: object, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.put(endPoints.wp.updateWidget(widgetId), { data: payload, headers: auth });
+        return [response, responseBody];
+    }
+
+    // delete widget
+    async deleteWidget(widgetId: string, payload: object, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.post(endPoints.wp.deleteWidget(widgetId), { data: payload, headers: auth });
+        return [response, responseBody];
+    }
+
+    // widget types
+
+    // get all widget types
+    async getAllWidgetTypes(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getAllWidgetTypes, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
+    }
+
+    // get single widget type
+    async getSingleWidgetTypes(pageId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getSingleWidgetType(pageId), { headers: auth });
+        return responseBody;
+    }
+
+    // sidebars
+
+    // get all sidebars
+    async getAllSidebars(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getAllSidebars, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
+    }
+
+    // get single sidebar
+    async getSingleSidebar(sideBarId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getSingleSidebar(sideBarId), { headers: auth });
+        return responseBody;
+    }
+
+    // update sidebar
+    async updateSidebar(sideBarId: string, payload: object, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.post(endPoints.wp.updateSidebar(sideBarId), { data: payload, headers: auth });
+        return [response, responseBody];
+    }
+
     /**
      * woocommerce  api methods
      */
