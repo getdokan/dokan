@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\Analytics\Reports\Coupons\Stats;
 
 use WeDevs\Dokan\Analytics\Reports\Coupons\QueryFilter as OrdersQueryFilter;
-use WeDevs\Dokan\Analytics\Reports\OrderType;
 
 /**
  * Class QueryFilter
@@ -11,7 +10,7 @@ use WeDevs\Dokan\Analytics\Reports\OrderType;
  * Extends the OrdersQueryFilter class to customize WooCommerce Analytics reports
  * for Dokan orders stats by adding additional subqueries and modifying report columns.
  *
- * @package WeDevs\Dokan\Analytics\Reports\Orders\Stats
+ * @since DOKAN_SINCE
  */
 class QueryFilter extends OrdersQueryFilter {
     /**

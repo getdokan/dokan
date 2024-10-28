@@ -6,6 +6,13 @@ use WeDevs\Dokan\Analytics\Reports\BaseQueryFilter;
 use WP_REST_Request;
 use WP_Query;
 
+/**
+ * Class QueryFilter
+ *
+ * Filters and modifies WooCommerce analytics queries for Product Stock.
+ *
+ * @since DOKAN_SINCE
+ */
 class QueryFilter extends BaseQueryFilter {
     protected $should_removed_where_filter = true;
 

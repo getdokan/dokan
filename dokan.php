@@ -46,7 +46,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
-// Load files for loading the WeDevs_Dokan class.
+
+/**
+ * Include file for loading the WeDevs_Dokan class.
+ *
+ * @since DOKAN_SINCE
+ */
 require_once __DIR__ . '/dokan-class.php';
 
 // Define constant for the Plugin file.
@@ -66,6 +71,8 @@ $dokan_container->addServiceProvider( new \WeDevs\Dokan\DependencyManagement\Pro
 
 /**
  * Get the container.
+ *
+ * @since DOKAN_SINCE
  *
  * @return Container The global container instance.
  */

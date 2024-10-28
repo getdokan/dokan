@@ -8,6 +8,8 @@ use WeDevs\Dokan\Contracts\Hookable;
  * Class ScheduleListener
  *
  * Listens to WooCommerce schedule events and triggers Dokan order synchronization and deletion.
+ *
+ * @since DOKAN_SINCE
  */
 class ScheduleListener implements Hookable {
     /**

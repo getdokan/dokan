@@ -10,6 +10,8 @@ use WeDevs\Dokan\Contracts\Hookable;
  * Class QueryFilter
  *
  * Filters and modifies WooCommerce analytics queries for Dokan orders.
+ *
+ * @since DOKAN_SINCE
  */
 abstract class BaseQueryFilter implements Hookable {
     protected $wc_table = 'wc_order_stats';

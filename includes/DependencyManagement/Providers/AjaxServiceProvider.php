@@ -5,6 +5,9 @@ namespace WeDevs\Dokan\DependencyManagement\Providers;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
 class AjaxServiceProvider extends BaseServiceProvider {
+    /**
+     * Tag for services added to the container.
+     */
     public const TAG = 'ajax-service';
 
 	protected $services = [

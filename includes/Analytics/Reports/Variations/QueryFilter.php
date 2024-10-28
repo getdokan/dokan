@@ -8,7 +8,9 @@ use WeDevs\Dokan\Analytics\Reports\OrderType;
 /**
  * Class QueryFilter
  *
- * Filters and modifies WooCommerce analytics queries for Dokan orders.
+ * Filters and modifies WooCommerce analytics queries for variations.
+ *
+ * @since DOKAN_SINCE
  */
 class QueryFilter extends BaseQueryFilter {
     protected $wc_table = 'wc_order_product_lookup';
