@@ -48,6 +48,7 @@ class ServiceProvider extends BootableServiceProvider {
 		$this->getContainer()->addServiceProvider( new CommonServiceProvider() );
 		$this->getContainer()->addServiceProvider( new FrontendServiceProvider() );
 		$this->getContainer()->addServiceProvider( new AjaxServiceProvider() );
+		$this->getContainer()->addServiceProvider( new AnalyticsServiceProvider() );
 	}
 
     /**
