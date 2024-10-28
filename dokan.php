@@ -67,6 +67,8 @@ $dokan_container->addServiceProvider( new \WeDevs\Dokan\DependencyManagement\Pro
 /**
  * Get the container.
  *
+ * @since 3.13.0
+ *
  * @return Container The global container instance.
  */
 function dokan_get_container(): Container {

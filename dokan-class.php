@@ -476,6 +476,13 @@ final class WeDevs_Dokan {
         return $this->db_version_key;
     }
 
+    /**
+     * Retrieve the container instance.
+     *
+     * @since 3.13.0
+     *
+     * @return Container
+     */
     public function get_container(): Container {
 		return dokan_get_container();
     }
