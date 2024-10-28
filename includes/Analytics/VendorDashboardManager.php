@@ -19,9 +19,6 @@ class VendorDashboardManager implements Hookable {
 		// add_filter( 'woocommerce_rest_report_orders_stats_schema', [ $this, 'revenue_stats_schema' ] );
 
 		add_filter( 'woocommerce_rest_report_sort_performance_indicators', [ $this, 'sort_performance_indicators' ] );
-
-        // Remove coupons from query fields.
-        add_filter( 'woocommerce_analytics_revenue_query_args', [ $this, 'remove_coupons_from_query' ] );
 	}
 
 	// This is dummy function for testing.
@@ -133,21 +130,6 @@ class VendorDashboardManager implements Hookable {
 
 		return $reports;
 	}
-
-    /**
-     * Remove coupons from query fields
-     *
-     * @since DOKAN_PRO_SINCE
-     *
-     * @return array
-     */
-    public function remove_coupons_from_query( $args ) {
-        if ( isset( $args['fields'] ) && is_array( $args['fields'] ) ) {
-            $args['fields'] = array_diff( $args['fields'], [ 'coupons', 'coupons_count' ] );
-        }
-
-        return $args;
-    }
 
 	public function revenue_stats_schema( $reports ) {
 		$reports['totals']['properties']['total_seller_earning'] = array(
