@@ -558,9 +558,9 @@ class Assets {
                 'version' => filemtime( $asset_path . 'js/dokan-frontend.js' ),
             ],
             'dokan-admin-analytics'    => [
-                'src'     => $asset_url . '/src/js/dokan-admin-analytics.js',
+                'src'     => $asset_url . '/js/dokan-admin-analytics.js',
                 'deps'    => [ 'wc-admin-app', 'wp-hooks' ],
-                'version' => filemtime( $asset_path . 'src/js/dokan-admin-analytics.js' ),
+                'version' => filemtime( $asset_path . 'js/dokan-admin-analytics.js' ),
             ],
         ];
 
