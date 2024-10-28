@@ -1326,6 +1326,33 @@ export const dbData = {
         'footer-4': 'footer-4',
     },
 
+    sidebarWidgets: {
+        wp_inactive_widgets: [],
+        'sidebar-store': [],
+        'sidebar-1': [],
+        'header-1': [],
+        'footer-1': [],
+        'footer-2': [],
+        'footer-3': [],
+        'footer-4': [],
+        array_version: 3,
+    },
+
+    emptySideBarsWidgets: { wp_inactive_widgets: [] },
+
+    // dokan widgets
+    storeContactFormWidget: {
+        '2': {
+            title: 'Contact Vendor',
+        },
+        _multiwidget: 1,
+    },
+
+    liveSearchWidget: {
+        '2': { title: 'Live Search' },
+        _multiwidget: 1,
+    },
+
     // test db data
 
     testData: {

@@ -5,7 +5,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 
-test.describe.skip('Live search test', () => {
+test.describe('Live search test', () => {
     let customer: LiveSearch;
     let cPage: Page;
     let apiUtils: ApiUtils;
@@ -16,7 +16,9 @@ test.describe.skip('Live search test', () => {
         customer = new LiveSearch(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        await apiUtils.updateSidebar(dbData.sidebars['sidebar-1'], { widgets: [dbData.widgets.liveSearch] });
+
+        await dbUtils.updateOptionValue('widget_dokna_product_search', dbData.liveSearchWidget);
+        await dbUtils.updateOptionValue('sidebars_widgets', { ...dbData.sidebarWidgets, 'sidebar-1': ['dokna_product_search-2'] });
     });
 
     test.afterAll(async () => {
