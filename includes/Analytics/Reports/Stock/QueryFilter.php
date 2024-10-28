@@ -39,12 +39,12 @@ class QueryFilter extends BaseQueryFilter {
     public function add_author_clause( $args, $wp_query ) {
 		global $wpdb;
 
-        $seller_id = $this->get_seller_id();
+        $vendor_id = $this->get_vendor_id();
 
-		if ( $seller_id ) {
+		if ( $vendor_id ) {
 			$args['where'] = $args['where'] . $wpdb->prepare(
                 " AND {$wpdb->posts}.post_author = %d ",
-                $seller_id
+                $vendor_id
 			);
 		}
 

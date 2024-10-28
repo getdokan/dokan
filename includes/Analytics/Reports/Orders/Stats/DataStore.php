@@ -148,13 +148,13 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			'dokan_analytics_update_order_stats_data',
 			array(
 				'order_id'              => $order->get_id(),
-				'seller_id'             => (int) self::get_vendor_id_from_order( $order ),
+				'vendor_id'             => (int) self::get_vendor_id_from_order( $order ),
 				'order_type'            => (int) ( ( new OrderType() )->get_type( $order ) ),
 				// Seller Data
-				'seller_earning'        => $vendor_earning,
-				'seller_gateway_fee'    => $gateway_fee_provider === 'seller' ? $gateway_fee : '0',
-				'seller_shipping_fee'   => $shipping_fee_recipient === 'seller' ? $shipping_fee : '0',
-				'seller_discount'       => $order->get_meta( '_seller_discount' ),
+				'vendor_earning'        => $vendor_earning,
+				'vendor_gateway_fee'    => $gateway_fee_provider === 'seller' ? $gateway_fee : '0',
+				'vendor_shipping_fee'   => $shipping_fee_recipient === 'seller' ? $shipping_fee : '0',
+				'vendor_discount'       => $order->get_meta( '_vendor_discount' ),
 				// Admin Data
 				'admin_commission'      => $admin_earning,
 				'admin_gateway_fee'     => $gateway_fee_provider !== 'seller' ? $gateway_fee : '0',

@@ -1,5 +1,5 @@
 <?php
-namespace WeDevs\Dokan\Test\Analytics\Reports\Products\Stats;
+namespace WeDevs\Dokan\Test\Analytics\Reports;
 
 use Mockery;
 use WeDevs\Dokan\Analytics\Reports\Products\Stats\QueryFilter;
@@ -10,7 +10,7 @@ use WeDevs\Dokan\Test\Analytics\Reports\ReportTestCase;
  * @group analytics
  * Unit tests for Order statistics in the Dokan plugin.
  */
-class QueryFilterTest extends ReportTestCase {
+class ProductStatsQueryFilterTest extends ReportTestCase {
     /**
      *
      * @var QueryFilter
@@ -76,7 +76,7 @@ class QueryFilterTest extends ReportTestCase {
             );
         }
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Products\Stats\Query();
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\GenericQuery( [], 'products-stats' );
 
 		$wc_stats_query->get_data();
 	}
@@ -90,16 +90,16 @@ class QueryFilterTest extends ReportTestCase {
 
 		$this->run_all_pending();
 
-        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
+        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 
         dokan_get_container()->extend( QueryFilter::class )->setConcrete( $filter );
 
-        $filter->shouldReceive( 'should_filter_by_seller_id' )
+        $filter->shouldReceive( 'should_filter_by_vendor_id' )
             ->atLeast()
             ->once()
             ->andReturnTrue();
 
-        $orders_query = new \Automattic\WooCommerce\Admin\API\Reports\Products\Stats\Query( [] );
+        $orders_query = new \Automattic\WooCommerce\Admin\API\Reports\GenericQuery( [], 'products-stats' );
 
 		$report_data = $orders_query->get_data();
 
@@ -132,19 +132,19 @@ class QueryFilterTest extends ReportTestCase {
 
 		$this->run_all_pending();
 
-        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
+        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 
         remove_filter( 'woocommerce_analytics_clauses_where_products_stats_total', [ $this->sut, 'add_where_subquery' ], 30 );
         remove_filter( 'woocommerce_analytics_clauses_where_products_stats_total', [ $this->sut, 'add_where_subquery' ], 30 );
 
         dokan_get_container()->extend( QueryFilter::class )->setConcrete( $filter );
 
-        $filter->shouldReceive( 'should_filter_by_seller_id' )
+        $filter->shouldReceive( 'should_filter_by_vendor_id' )
             ->atLeast()
             ->once()
             ->andReturnFalse();
 
-        $orders_query = new \Automattic\WooCommerce\Admin\API\Reports\Products\Stats\Query( [] );
+        $orders_query = new \Automattic\WooCommerce\Admin\API\Reports\GenericQuery( [], 'products-stats' );
 
 		$report_data = $orders_query->get_data();
 
