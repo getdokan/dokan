@@ -772,8 +772,8 @@
 
 - page: 'Live Search'
   features:
-      admin:
-          #   admin can set Dokan live search settings [duplicate]: true
+      #   admin:
+      #   admin can set Dokan live search settings [duplicate]: true
       customer:
           customer can search product using live search (suggestion box): true
           customer can search product with category using live search (suggestion box): true
