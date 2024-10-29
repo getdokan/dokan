@@ -1,7 +1,6 @@
 <template>
     <div id="dokan-vendor-capabilities">
         <div class="vendor-capabilities-banner" :style="bannerBg">
-<!--            <img :src="bannerImage" :alt="__( 'Dokan Vendor Capabilities Banner', 'dokan-lite' )">-->
             <div class="content">
                 <p class="title">{{ __( 'Vendor Capabilities', 'dokan-lite' ) }}</p>
                 <p>
@@ -153,9 +152,6 @@ export default {
                 backgroundImage: `url(${dokan.urls.assetsUrl}/images/dokan-vendor-capabilities-banner-bg.svg)`,
             };
         },
-        bannerImage() {
-            return `${dokan.urls.assetsUrl}/images/dokan-vendor-capabilities-banner.svg`;
-        }
     },
 }
 </script>

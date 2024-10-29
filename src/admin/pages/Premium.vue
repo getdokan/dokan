@@ -15,7 +15,6 @@
 
         <!--   Vendor Capabilities Banner     -->
         <div class="vendor-capabilities-banner" :style="bannerBg">
-<!--            <img :src="bannerImage" :alt="__( 'Dokan Vendor Capabilities Banner', 'dokan-lite' )">-->
             <div class="content">
                 <p class="title m-0">{{ __( 'Vendor Capabilities', 'dokan-lite' ) }}</p>
                 <p >
@@ -937,9 +936,6 @@ export default {
             return {
                 backgroundImage: `url(${dokan.urls.assetsUrl}/images/dokan-vendor-capabilities-banner-bg.svg)`,
             };
-        },
-        bannerImage() {
-            return `${dokan.urls.assetsUrl}/images/dokan-settings-banner.svg`;
         },
     }
 };
