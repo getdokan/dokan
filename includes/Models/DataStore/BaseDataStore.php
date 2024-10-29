@@ -7,6 +7,11 @@ use Automattic\WooCommerce\Pinterest\API\Base;
 use Exception;
 use WeDevs\Dokan\Models\BaseModel;
 
+/**
+ * Base data store class.
+ *
+ * @since DOKAN_SINCE
+ */
 abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
     protected $selected_columns = [ '*' ];
 
@@ -49,7 +54,7 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
      *
      * @param BaseModel $model BaseModel object.
      *
-     * @phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+     * @phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
      *
      * @throws Exception Throw exception if invalid entity is passed.
      */
@@ -139,9 +144,11 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 	 *
 	 * @param int $id permission_id of the download to be deleted.
      *
-     * @phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+     * @phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	 *
+	 * @return int Number of affected rows.
 	 */
-	public function delete_by_id( $id ) {
+	public function delete_by_id( $id ): int {
 		global $wpdb;
 
         $table_name = $this->get_table_name_with_prefix();
@@ -162,20 +169,107 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 	}
 
 	/**
-	 * Method to delete a download permission from the database by ID.
+	 * Delete raws from the database.
 	 *
-	 * @param int $id permission_id of the download to be deleted.
+	 * @param array $data Array of args to delete an object, e.g. `array( 'id' => 1, status => ['draft', 'cancelled'] )` or `array( 'id' => 1, 'status' => 'publish' )`.
      *
-     * @phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	 * @phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	 *
+	 * @return int Number of affected rows.
 	 */
-	public function delete_by( array $data ) {
+	public function delete_by( array $data ): int {
 		global $wpdb;
 
         $table_name = $this->get_table_name_with_prefix();
-		$field_format = $this->get_fields_with_format();
+
+		$where_clause = $this->prepare_where_clause( $data );
+
+		$result = $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM {$table_name}
+				WHERE {$where_clause}"
+			)
+		);
+
+		if ( $result === false ) {
+			throw new Exception( esc_html__( 'Failed to delete.', 'dokan-lite' ) );
+		}
+
+		return (int) $result;
+	}
+
+	/**
+	 * Updates rows in the database.
+	 *
+	 * @param array $where Array of args to identify the object to be updated, e.g. `array( 'id' => 1, status => ['draft', 'cancelled'] )` or `array( 'id' => 1, 'status' => 'publish' )`.
+	 * @param array $data_to_update Array of args to update the object, e.g. `array( 'status' => 'publish' )`.
+	 *
+	 * @return int Number of affected rows.
+	 */
+	public function update_by( array $where, array $data_to_update ) {
+		global $wpdb;
+
+		$fields_format = $this->get_fields_with_format();
 		$field_format[ $this->get_id_field_name() ] = $this->get_id_field_format();
 
-		$where = [];
+		$data_format = [];
+
+		var_dump( 'Test' );
+
+		foreach ( $data_to_update as $key => $value ) {
+			$data_format[] = $fields_format[ $key ];
+		}
+
+		$where_format[] = [];
+
+		foreach ( $where as $key => $value ) {
+			$where_format[] = $fields_format[ $key ];
+		}
+
+		var_dump(
+			$this->get_table_name_with_prefix(),
+            $data_to_update,
+           	$where,
+			$data_format,
+            $where_format
+		);
+		$result = $wpdb->update(
+            $this->get_table_name_with_prefix(),
+            $data_to_update,
+           	$where,
+			$data_format,
+            $where_format
+        );
+
+		if ( $result === false ) {
+			throw new Exception( esc_html__( 'Failed to update.', 'dokan-lite' ) );
+		}
+		var_dump( $result );
+		return (int) $result;
+	}
+
+	/**
+	 * Prepares a SQL WHERE clause from an associative array of data.
+	 *
+	 * This method takes an array of data where keys are column names and values
+	 * are the values to filter by. It generates a secure SQL WHERE clause using
+	 * prepared statements to protect against SQL injection.
+	 *
+	 * If a value in the data array is an array itself, it generates an IN clause
+	 * with multiple placeholders. Otherwise, it generates a simple equality check.
+	 *
+	 * @param array $data Associative array of column names and values to filter by.
+	 * @return string The generated WHERE clause.
+	 */
+	protected function prepare_where_clause( array $data ): string {
+		global $wpdb;
+
+		$where = [ '1=1' ];
+
+		$field_format = $this->get_fields_with_format();
+
+		// Add ID field format for the WHERE clause.
+		$field_format[ $this->get_id_field_name() ] = $this->get_id_field_format();
 
 		foreach ( $data as $key => $value ) {
 			if ( is_array( $value ) ) {
@@ -189,16 +283,8 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 				$where[] = $wpdb->prepare( "{$key} = {$format}", $value );
 			}
 		}
-		$where_clause = implode( ' AND ', $where );
 
-		$result = $wpdb->query(
-			$wpdb->prepare(
-				"DELETE FROM {$table_name}
-				WHERE {$where_clause}"
-			)
-		);
-
-		return $result;
+		return implode( ' AND ', $where );
 	}
 
     /**

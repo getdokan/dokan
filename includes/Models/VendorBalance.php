@@ -65,11 +65,21 @@ class VendorBalance extends BaseModel {
 	 *                         and {@see WeDevs\Dokan\Models\VendorBalance::TRN_TYPE_DOKAN_REFUND}.
 	 * @param array  $data     The data to update.
 	 *
-	 * @return bool True if updated successfully. False otherwise.
+	 * @return int Number of affected rows.
 	 */
-	public static function update_by_transaction( int $trn_id, string $trn_type, array $data ) {
+	public static function update_by_transaction( int $trn_id, string $trn_type, array $data ): int {
 		$model = new static();
-		return $model->get_data_store()->update_by_transaction( $trn_id, $trn_type, $data );
+		$model = new self();
+
+		//  $model->get_data_store()->update_by(
+		//  [
+		//      'trn_id'   => $trn_id,
+		//      'trn_type' => $trn_type,
+		//  ],
+		//  $data
+        // );
+
+		return $model->data_store->update_by_transaction( $trn_id, $trn_type, $data );
 	}
 
     /**

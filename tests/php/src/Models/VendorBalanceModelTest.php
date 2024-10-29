@@ -5,6 +5,9 @@ namespace WeDevs\Dokan\Test\Models;
 use WeDevs\Dokan\Models\VendorBalance;
 use WeDevs\Dokan\Test\DokanTestCase;
 
+/**
+ * @group data-store
+ */
 class VendorBalanceModelTest extends DokanTestCase {
     /**
      * Indicates if the test is a unit test.

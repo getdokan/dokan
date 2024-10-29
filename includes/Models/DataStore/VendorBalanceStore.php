@@ -5,8 +5,16 @@ namespace WeDevs\Dokan\Models\DataStore;
 use WeDevs\Dokan\Models\BaseModel;
 use WeDevs\Dokan\Models\VendorBalance;
 
+/**
+ * Class VendorBalanceStore
+ *
+ * @since DOKAN_SINCE
+ */
 class VendorBalanceStore extends BaseDataStore {
 
+	/**
+	 * @inheritDoc
+	 */
 	protected function get_fields_with_format(): array {
         return [
 			'vendor_id' => '%d',
@@ -21,6 +29,28 @@ class VendorBalanceStore extends BaseDataStore {
         ];
     }
 
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_table_name(): string {
+        return 'dokan_vendor_balance';
+    }
+
+	/**
+	 * Update vendor balance by transaction.
+	 *
+	 * @since DOKAN_SINCE
+	 *
+	 * @param int   $trn_id   The transaction ID.
+	 * @param string $trn_type The type of transaction. Valid values are
+	 *                         {@see WeDevs\Dokan\Models\VendorBalance::TRN_TYPE_DOKAN_ORDERS},
+	 *                         {@see WeDevs\Dokan\Models\VendorBalance::TRN_TYPE_DOKAN_WITHDRAW},
+	 *                         and {@see WeDevs\Dokan\Models\VendorBalance::TRN_TYPE_DOKAN_REFUND}.
+	 * @param array $data     The data to update.
+	 *
+	 * @return bool True if updated successfully. False otherwise.
+	 */
 	public function update_by_transaction( int $trn_id, string $trn_type, array $data ) {
 		global $wpdb;
 
@@ -45,9 +75,6 @@ class VendorBalanceStore extends BaseDataStore {
 		return $result;
 	}
 
-	public function get_table_name(): string {
-        return 'dokan_vendor_balance';
-    }
 
 	/**
 	 * Used to get perticulars through the get_perticulars method by the DataStore.
