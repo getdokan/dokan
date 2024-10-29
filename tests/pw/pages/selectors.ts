@@ -3967,7 +3967,7 @@ export const selector = {
                 productStatus: '#status',
                 visibility: '#\\_visibility',
                 purchaseNote: '#\\_purchase_note',
-                enableProductReviews: '#\\_enable_reviews',
+                enableProductReviews: '#comment_status',
             },
 
             // Advertise Product
