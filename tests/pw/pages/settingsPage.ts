@@ -359,6 +359,38 @@ export class SettingsPage extends AdminPage {
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, vendorVerification.saveSuccessMessage);
     }
 
+    // Admin Set Dokan SMS Verification Gateways Settings
+    async setDokanSMSVerificationGateWaysSettings(verificationSmsGateways: dokanSettings['verificationSmsGateway']) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.verificationSmsGateways);
+
+        await this.clearAndType(settingsAdmin.verificationSmsGateway.senderName, verificationSmsGateways.senderName);
+        await this.clearAndType(settingsAdmin.verificationSmsGateway.smsText, verificationSmsGateways.smsText);
+        await this.clearAndType(settingsAdmin.verificationSmsGateway.smsSentSuccess, verificationSmsGateways.smsSentSuccess);
+        await this.clearAndType(settingsAdmin.verificationSmsGateway.smsSentError, verificationSmsGateways.smsSentError);
+        await this.click(settingsAdmin.verificationSmsGateway.activeGateway(verificationSmsGateways.activeGateway));
+        await this.enableSwitcher(settingsAdmin.verificationSmsGateway.enableGateway(verificationSmsGateways.activeGateway));
+        await this.click(settingsAdmin.verificationSmsGateway.expandButton);
+
+        // vonage
+        await this.toBeVisible(settingsAdmin.verificationSmsGateway.vonage.apiKey);
+        await this.clearAndType(settingsAdmin.verificationSmsGateway.vonage.apiKey, verificationSmsGateways.vonage.apiKey);
+        await this.clearAndType(settingsAdmin.verificationSmsGateway.vonage.apiSecret, verificationSmsGateways.vonage.apiSecret);
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, verificationSmsGateways.saveSuccessMessage);
+
+        await this.toHaveValue(settingsAdmin.verificationSmsGateway.senderName, verificationSmsGateways.senderName);
+        await this.toHaveValue(settingsAdmin.verificationSmsGateway.smsText, verificationSmsGateways.smsText);
+        await this.toHaveValue(settingsAdmin.verificationSmsGateway.smsSentSuccess, verificationSmsGateways.smsSentSuccess);
+        await this.toHaveValue(settingsAdmin.verificationSmsGateway.smsSentError, verificationSmsGateways.smsSentError);
+        await this.toHaveClass(settingsAdmin.verificationSmsGateway.activeGateway(verificationSmsGateways.activeGateway), 'checked');
+        await this.toHaveBackgroundColor(settingsAdmin.verificationSmsGateway.enableGateway(verificationSmsGateways.activeGateway) + '//span', 'rgb(0, 144, 255)');
+        await this.toHaveValue(settingsAdmin.verificationSmsGateway.vonage.apiKey, verificationSmsGateways.vonage.apiKey);
+        await this.toHaveValue(settingsAdmin.verificationSmsGateway.vonage.apiSecret, verificationSmsGateways.vonage.apiSecret);
+    }
+
     // Admin Set Dokan Email Verification Settings
     async setDokanEmailVerificationSettings(emailVerification: dokanSettings['emailVerification']) {
         await this.goToDokanSettings();
@@ -372,6 +404,25 @@ export class SettingsPage extends AdminPage {
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.emailVerification.emailVerificationSaveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, emailVerification.saveSuccessMessage);
+    }
+
+    // Admin Set Dokan Social Api Settings
+    async setDokanSocialApiSettings(socialApi: dokanSettings['socialApi']) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.socialApi);
+
+        // Social Api Settings
+        await this.enableSwitcher(settingsAdmin.socialApi.enableSocialLogin);
+
+        // Facebook
+        await this.enableSwitcher(settingsAdmin.socialApi.enableSocialApi(socialApi.platform));
+        await this.click(settingsAdmin.socialApi.expandButton(socialApi.platform));
+        await this.clearAndType(settingsAdmin.socialApi.facebook.appId, socialApi.facebook.appId);
+        await this.clearAndType(settingsAdmin.socialApi.facebook.appSecret, socialApi.facebook.appSecret);
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.shippingStatus.shippingStatusSaveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, socialApi.saveSuccessMessage);
     }
 
     // Admin Set Dokan Shipping Status Settings
@@ -400,7 +451,7 @@ export class SettingsPage extends AdminPage {
         await this.goToDokanSettings();
         await this.click(settingsAdmin.menus.quote);
 
-        // Live Search Settings
+        // quote Settings
         await this.enableSwitcher(settingsAdmin.quote.enableQuoteForOutOfStockProducts);
         await this.enableSwitcher(settingsAdmin.quote.enableAjaxAddToQuote);
         await this.enableSwitcher(settingsAdmin.quote.redirectToQuotePage);

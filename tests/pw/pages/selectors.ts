@@ -2315,14 +2315,27 @@ export const selector = {
                 // Verification Sms Gateways
                 verificationSmsGateway: {
                     // Verification Sms Gateways
-                    senderName: '#dokan_verification_sms_gateways\\[sender_name\\]',
-                    smsText: '#dokan_verification_sms_gateways\\[sms_text\\]',
-                    smsSentSuccess: '#dokan_verification_sms_gateways\\[sms_sent_msg\\]',
-                    smsSentError: '#dokan_verification_sms_gateways\\[sms_sent_error\\]',
-                    activeGateway: '#dokan_verification_sms_gateways\\[active_gateway\\]',
-                    // Nexmo
-                    apiKey: '#dokan_verification_sms_gateways\\[nexmo_username\\]',
-                    apiSecret: '#dokan_verification_sms_gateways\\[nexmo_pass\\]',
+                    senderName: 'input#dokan_verification_sms_gateways\\[sender_name\\]',
+                    smsText: 'textarea#dokan_verification_sms_gateways\\[sms_text\\]',
+                    smsSentSuccess: 'textarea#dokan_verification_sms_gateways\\[sms_sent_msg\\]',
+                    smsSentError: 'textarea#dokan_verification_sms_gateways\\[sms_sent_error\\]',
+                    activeGateway: (gateway: string) => `//label[contains(@for,'${gateway}-active_gateway')]`,
+                    enableGateway: (gateway: string) => `//div[@class="${gateway}_details dokan-settings-field-type-social"] //label[@class="switch tips"]`,
+                    expandButton: 'div.expand_btn span.dashicons',
+
+                    // Vonage
+                    vonage: {
+                        apiKey: '//h3[normalize-space(text())="API Key"]/../..//input',
+                        apiSecret: '//h3[normalize-space(text())="API Secret"]/../..//input',
+                    },
+                    // Twilio
+                    twilio: {
+                        fromNumber: '//h3[normalize-space(text())="From Number"]/../..//input',
+                        accountSid: '//h3[normalize-space(text())="Account SID"]/../..//input',
+                        authToken: '//h3[normalize-space(text())="Auth Token"]/../..//input',
+                        SMSCodeTypeNumeric: '//input[@value="numeric"]',
+                        SMSCodeTypeAlphanumeric: '//input[@value="alphanumeric"]',
+                    },
                 },
 
                 // Email Verification
@@ -2336,7 +2349,36 @@ export const selector = {
 
                 // Social API
                 socialApi: {
-                    enableSocialLogin: '#dokan_social_api\\[enabled\\]',
+                    enableSocialLogin: '//label[@for="dokan_social_api[enabled]"]//label[@class="switch tips"]',
+                    enableSocialApi: (platform: string) => `//div[@class="${platform}_details dokan-settings-field-type-social"]//label[@class="switch tips"]`,
+                    expandButton: (platform: string) => `//div[@class="${platform}_details dokan-settings-field-type-social"]//div[@class="expand_btn"]//span`,
+
+                    facebook: {
+                        appId: '//h3[normalize-space(text())="App ID"]/../..//input',
+                        appSecret: '//h3[normalize-space(text())="App Secret"]/../..//input',
+                    },
+
+                    twitter: {
+                        consumerKey: '//h3[normalize-space(text())="Consumer Key"]/../..//input',
+                        consumerSecret: '//h3[normalize-space(text())="Consumer Secret"]/../..//input',
+                    },
+
+                    google: {
+                        clientId: '//h3[normalize-space(text())="Client ID"]/../..//input',
+                        clientSecret: '//h3[normalize-space(text())="Client Secret"]/../..//input',
+                    },
+
+                    linked: {
+                        clientId: '//h3[normalize-space(text())="Client ID"]/../..//input',
+                        clientSecret: '//h3[normalize-space(text())="Client Secret"]/../..//input',
+                    },
+
+                    apple: {
+                        appleServiceId: '//h3[normalize-space(text())="Apple Service ID"]/../..//input',
+                        appleTeamId: '//h3[normalize-space(text())="Apple Team ID"]/../..//input',
+                        appleKeyId: '//h3[normalize-space(text())="Apple Key ID"]/../..//input',
+                        appleKeyContent: '//h3[normalize-space(text())="Apple Key Content (including BEGIN and END lines)"]/../..//textarea',
+                    },
                 },
 
                 // Shipping Status

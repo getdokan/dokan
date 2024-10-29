@@ -477,10 +477,13 @@
           admin can set Dokan page settings [lite]: true
           admin can set Dokan appearance settings [lite]: true
           admin can set Dokan privacy policy settings [lite]: true
-          admin can set Dokan color settings: true
+          admin can set Dokan colors settings: true
+          admin can set Dokan vendor verification settings: true
+          admin can set Dokan verification sms gateways settings: true
           admin can set Dokan live search settings: true
           admin can set Dokan store support settings: true
           admin can set Dokan email verification settings: true
+          admin can set Dokan social api settings: true
           admin can set Dokan shipping status settings: true
           admin can set Dokan quote settings: true
           admin can set Dokan rma settings: true
