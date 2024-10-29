@@ -57,10 +57,26 @@ class QueryFilter extends OrdersQueryFilter {
         }
 
         $table_name = $this->get_dokan_table();
-        $types = $this->get_order_types_for_sql_excluding_refunds();
+        $types      = $this->get_order_types_for_sql_excluding_refunds();
 
-        $order_count = "SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END )";
+        // Calculate refunds to resolve Dokan refund distribution issue.
+        $order_count        = "SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END )";
+        $refunds            = "ABS( SUM( CASE WHEN {$wc_table_name}.net_total < 0 THEN {$wc_table_name}.net_total ELSE 0 END ) )";
 
+        // Calculate coupons to resolve Dokan coupon distribution issue.
+        $coupon_order_count = "SUM( CASE WHEN discount_amount > 0  AND {$wc_table_name}.parent_id > 0 THEN 1 ELSE 0 END )";
+        $coupon             = "SUM( CASE WHEN discount_amount > 0  AND {$wc_table_name}.parent_id > 0 THEN (discount_amount) ELSE 0 END) / $coupon_order_count  + SUM( CASE WHEN discount_amount > 0 AND {$wc_table_name}.parent_id = 0 THEN discount_amount ELSE 0 END )";
+
+        $gross_sales =
+            "( SUM({$wc_table_name}.total_sales )" .
+            " + COALESCE($coupon, 0)" . // SUM() all nulls gives null.
+            " - SUM({$wc_table_name}.tax_total)" .
+            " - SUM({$wc_table_name}.shipping_total)" .
+            " + {$refunds}" .
+            ' ) as gross_sales';
+
+        $column['gross_sales']          = $gross_sales;
+        $column['coupons']              = "{$coupon} AS coupons";
         $column['orders_count']         = "{$order_count} as orders_count";
         $column['avg_items_per_order']  = "SUM( {$wc_table_name}.num_items_sold ) / {$order_count} AS avg_items_per_order";
         $column['avg_order_value']      = "SUM( {$wc_table_name}.net_total ) / {$order_count} AS avg_order_value";
