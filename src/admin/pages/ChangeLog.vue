@@ -327,7 +327,7 @@ ul {
         }
 
         .change-log {
-            background: rgba(223, 0, 0, 0.05);
+            background: rgba(239, 234, 255, 1);
             margin: -15px -20px 0;
 
             &.lite-change-log {
