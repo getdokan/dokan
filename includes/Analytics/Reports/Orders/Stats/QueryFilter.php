@@ -64,7 +64,7 @@ class QueryFilter extends OrdersQueryFilter {
         $refunds            = "ABS( SUM( CASE WHEN {$wc_table_name}.net_total < 0 THEN {$wc_table_name}.net_total ELSE 0 END ) )";
 
         // Calculate coupons to resolve Dokan coupon distribution issue.
-        $coupon_order_count = "COUNT( DISTINCT (CASE WHEN discount_amount > 0  AND {$wc_table_name}.parent_id > 0 THEN  {$wc_table_name}.parent_id END) )";
+        $coupon_order_count = "COUNT( DISTINCT (CASE WHEN discount_amount > 0 AND {$wc_table_name}.parent_id > 0 THEN {$wc_table_name}.parent_id END) )";
         $coupon             = "SUM( CASE WHEN discount_amount > 0  AND {$wc_table_name}.parent_id > 0 THEN (discount_amount) ELSE 0 END ) / $coupon_order_count  + SUM( CASE WHEN discount_amount > 0 AND {$wc_table_name}.parent_id = 0 THEN discount_amount ELSE 0 END )";
 
         $gross_sales =
