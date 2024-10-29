@@ -65,10 +65,10 @@ class QueryFilter extends OrdersQueryFilter {
 
         // Calculate coupons to resolve Dokan coupon distribution issue.
         $coupon_order_count = "SUM( CASE WHEN discount_amount > 0  AND {$wc_table_name}.parent_id > 0 THEN 1 ELSE 0 END )";
-        $coupon             = "SUM( CASE WHEN discount_amount > 0  AND {$wc_table_name}.parent_id > 0 THEN (discount_amount) ELSE 0 END) / $coupon_order_count  + SUM( CASE WHEN discount_amount > 0 AND {$wc_table_name}.parent_id = 0 THEN discount_amount ELSE 0 END )";
+        $coupon             = "SUM( CASE WHEN discount_amount > 0  AND {$wc_table_name}.parent_id > 0 THEN (discount_amount) ELSE 0 END ) / $coupon_order_count  + SUM( CASE WHEN discount_amount > 0 AND {$wc_table_name}.parent_id = 0 THEN discount_amount ELSE 0 END )";
 
         $gross_sales =
-            "( SUM({$wc_table_name}.total_sales )" .
+            "( SUM({$wc_table_name}.total_sales)" .
             " + COALESCE($coupon, 0)" . // SUM() all nulls gives null.
             " - SUM({$wc_table_name}.tax_total)" .
             " - SUM({$wc_table_name}.shipping_total)" .
