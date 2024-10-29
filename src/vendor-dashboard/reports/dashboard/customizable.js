@@ -319,53 +319,20 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
 
     if ( shouldConvert ) {  // Check if conversion should proceed.
         useEffect( () => {
-            // const container = document.querySelector( '.customizable-dashboard' );
-            // if ( ! container ) return;
-            //
-            // // Convert anchors to spans
-            // const convertAnchorsToSpans = () => {
-            //     const anchors = container.getElementsByTagName( 'a' );
-            //     Array.from( anchors ).forEach( anchor => {
-            //         const span = document.createElement( 'span' );
-            //         span.innerHTML = anchor.innerHTML;
-            //         span.className = `${ anchor.className } converted`;
-            //         span.style.cursor = 'pointer';
-            //
-            //         // Custom click handler with filter
-            //         span.onclick = ( event) => event.preventDefault();
-            //         anchor.parentNode.replaceChild( span, anchor );
-            //     });
-            // };
-            //
-            // // Initial conversion
-            // convertAnchorsToSpans();
-            //
-            // // Handle dynamic content
-            // const observer = new MutationObserver( convertAnchorsToSpans );
-            // observer.observe( container, { childList: true, subtree: true } );
-            //
-            // return () => observer.disconnect();
-
             const container = document.querySelector( '.customizable-dashboard' );
             if ( ! container ) return;
 
             const interceptClicks = ( event ) => {
                 const link = event.target.closest( 'a' );
-
-                // If not a link or is in filters section, let it behave normally.
                 if ( ! link || link.closest( '.woocommerce-filters' ) ) {
                     return;
                 }
 
-                // Prevent default and history update for non-filter links
+                // Prevent default and history update for non-filter links.
                 event.preventDefault();
                 event.stopPropagation();
             };
 
-            // Add capture phase event listener to intercept before React's event system
-            container.addEventListener( 'click', interceptClicks, true );
-
-            // For React Router links, intercept before they trigger
             const handleBeforeUnload = ( event ) => {
                 const activeElement = document.activeElement;
                 if ( activeElement &&
@@ -376,6 +343,9 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
                 }
             };
 
+            container.addEventListener( 'click', interceptClicks, true );
+
+            // Hold redirection for active elements.
             window.addEventListener( 'beforeunload', handleBeforeUnload );
 
             return () => {
