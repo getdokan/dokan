@@ -26,6 +26,7 @@ class Assets implements Hookable {
 	 */
 	public function localize_wc_admin_settings( $settings ) {
         $settings['stockStatuses'] = wc_get_product_stock_status_options();
+        $settings['vendorBalance'] = dokan_get_seller_balance( dokan_get_current_user_id(), 2 );
 
         $preload_data           = [];
         $preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', array() );
