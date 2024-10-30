@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Analytics\Reports\Orders\Stats;
 
 use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter as OrdersQueryFilter;
+use WeDevs\Dokan\Analytics\Reports\OrderType;
 
 /**
  * Class QueryFilter
@@ -56,16 +57,19 @@ class QueryFilter extends OrdersQueryFilter {
             return $column;
         }
 
+        global $wpdb;
+
         $table_name = $this->get_dokan_table();
         $types      = $this->get_order_types_for_sql_excluding_refunds();
 
         // Calculate refunds to resolve Dokan refund distribution issue.
-        $order_count        = "SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END )";
-        $refunds            = "ABS( SUM( CASE WHEN {$wc_table_name}.net_total < 0 THEN {$wc_table_name}.net_total ELSE 0 END ) )";
+        $order_count = "SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END )";
+        $refunds     = "ABS( SUM( CASE WHEN {$wc_table_name}.net_total < 0 THEN {$wc_table_name}.net_total ELSE 0 END ) )";
 
         // Calculate coupons to resolve Dokan coupon distribution issue.
-        $coupon_order_count = "COUNT( DISTINCT (CASE WHEN discount_amount > 0 AND {$wc_table_name}.parent_id > 0 THEN {$wc_table_name}.parent_id END) )";
-        $coupon             = "SUM( CASE WHEN discount_amount > 0  AND {$wc_table_name}.parent_id > 0 THEN (discount_amount) ELSE 0 END ) / $coupon_order_count  + SUM( CASE WHEN discount_amount > 0 AND {$wc_table_name}.parent_id = 0 THEN discount_amount ELSE 0 END )";
+        $parent_order_types_str = implode( ',', ( new OrderType() )->get_admin_order_types_excluding_refunds() );
+        $wc_coupon_table        = "{$wpdb->prefix}wc_order_coupon_lookup";
+        $coupon                 = "( Select SUM(discount_amount) FROM {$wc_coupon_table} JOIN {$table_name} ON {$table_name}.order_id = {$wc_coupon_table}.order_id WHERE {$table_name}.order_type IN($parent_order_types_str) )";
 
         $gross_sales =
             "( SUM({$wc_table_name}.total_sales)" .
