@@ -2380,7 +2380,7 @@ export const selector = {
                         appleKeyContent: '//h3[normalize-space(text())="Apple Key Content (including BEGIN and END lines)"]/../..//textarea',
                     },
 
-                    shippingStatusSaveChanges: '#submit',
+                    socialApiSaveChanges: '#submit',
                 },
 
                 // Shipping Status

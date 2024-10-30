@@ -421,7 +421,7 @@ export class SettingsPage extends AdminPage {
         await this.clearAndType(settingsAdmin.socialApi.facebook.appSecret, socialApi.facebook.appSecret);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.socialApi.shippingStatusSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.socialApi.socialApiSaveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, socialApi.saveSuccessMessage);
     }
 

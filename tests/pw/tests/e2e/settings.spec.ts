@@ -88,7 +88,7 @@ test.describe('Settings test', () => {
     test('admin can set Dokan email verification settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanEmailVerificationSettings(data.dokanSettings.emailVerification);
 
-        // reset  settings
+        // reset settings
         await dbUtils.setOptionValue(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
     });
 
