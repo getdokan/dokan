@@ -40,20 +40,6 @@ class QueryFilter extends OrdersQueryFilter {
 
         // Apply Dokan condition for SELECT fields.
         add_filter( 'woocommerce_admin_report_columns', [ $this, 'modify_admin_report_columns' ], 20, 3 );
-
-        // Define Additional Schema Items
-        add_filter( 'woocommerce_rest_report_revenue_stats_schema', [ $this, 'add_additional_fields_schema' ] );
-    }
-
-    public function add_additional_fields_schema( $schema ) {
-		$schema['properties']['totals']['properties']['products'] = array(
-			'description' => __( 'Total Earnings', 'dokan-lite' ),
-			'type'        => 'integer',
-			'context'     => array( 'view', 'edit' ),
-			'readonly'    => true,
-		);
-
-        return $schema;
     }
 
     /**
@@ -71,13 +57,15 @@ class QueryFilter extends OrdersQueryFilter {
         }
 
         $table_name = $this->get_dokan_table();
-        $types = $this->get_non_refund_order_types_to_include();
+        $types = $this->get_order_types_for_sql_excluding_refunds();
 
-        $column['orders_count']         = "SUM( CASE WHEN {$table_name}.order_type IN ($types) THEN 1 ELSE 0 END ) as orders_count";
-        $column['avg_items_per_order']  = "SUM( {$wc_table_name}.num_items_sold ) / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_items_per_order";
-        $column['avg_order_value']      = "SUM( {$wc_table_name}.net_total ) / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_order_value";
-        $column['avg_admin_commission'] = "SUM( {$table_name}.admin_commission ) / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_admin_commission";
-        $column['avg_seller_earning']   = "SUM( {$table_name}.seller_earning ) / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_seller_earning";
+        $order_count = "SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END )";
+
+        $column['orders_count']         = "{$order_count} as orders_count";
+        $column['avg_items_per_order']  = "SUM( {$wc_table_name}.num_items_sold ) / {$order_count} AS avg_items_per_order";
+        $column['avg_order_value']      = "SUM( {$wc_table_name}.net_total ) / {$order_count} AS avg_order_value";
+        $column['avg_admin_commission'] = "SUM( {$table_name}.admin_commission ) / {$order_count} AS avg_admin_commission";
+        $column['avg_vendor_earning']   = "SUM( {$table_name}.vendor_earning ) / {$order_count} AS avg_vendor_earning";
 
         return $column;
     }
@@ -93,9 +81,9 @@ class QueryFilter extends OrdersQueryFilter {
         $table_name = $this->get_dokan_table();
         $types = $this->get_order_and_refund_types_to_include();
 
-        $clauses[] = ', sum(seller_earning) as total_seller_earning, sum(seller_gateway_fee) as total_seller_gateway_fee, sum(seller_discount) as total_seller_discount, sum(admin_commission) as total_admin_commission, sum(admin_gateway_fee) as total_admin_gateway_fee, sum(admin_discount) as total_admin_discount, sum(admin_subsidy) as total_admin_subsidy';
+        $clauses[] = ', sum(vendor_earning) as total_vendor_earning, sum(vendor_gateway_fee) as total_vendor_gateway_fee, sum(vendor_discount) as total_vendor_discount, sum(admin_commission) as total_admin_commission, sum(admin_gateway_fee) as total_admin_gateway_fee, sum(admin_discount) as total_admin_discount, sum(admin_subsidy) as total_admin_subsidy';
         $clauses[] = ", SUM( {$table_name}.admin_commission ) / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_admin_commission";
-        $clauses[] = ", SUM( {$table_name}.seller_earning ) / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_seller_earning";
+        $clauses[] = ", SUM( {$table_name}.vendor_earning ) / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_vendor_earning";
 
         return $clauses;
     }

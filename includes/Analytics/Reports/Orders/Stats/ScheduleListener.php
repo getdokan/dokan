@@ -25,8 +25,7 @@ class ScheduleListener implements Hookable {
      */
     public function register_hooks(): void {
         add_action( 'woocommerce_analytics_update_order_stats', [ $this, 'sync_dokan_order' ] );
-        add_action( 'woocommerce_before_delete_order', [ $this, 'delete_order' ] );
-        add_action( 'delete_post', [ $this, 'delete_order' ] );
+        add_action( 'woocommerce_analytics_delete_order_stats', [ $this, 'delete_order' ] );
     }
 
     /**

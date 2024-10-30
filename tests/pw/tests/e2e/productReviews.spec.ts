@@ -66,8 +66,7 @@ test.describe('Product Reviews test', () => {
         await vendor.updateProductReview('permanently-delete', reviewMessage);
     });
 
-    test.skip('vendor can perform bulk action on product reviews', { tag: ['@pro', '@vendor'] }, async () => {
-        // todo: might cause other tests to fail in parallel
+    test('vendor can perform bulk action on product reviews', { tag: ['@pro', '@vendor', '@serial'] }, async () => {
         await vendor.productReviewsBulkActions('hold');
     });
 });

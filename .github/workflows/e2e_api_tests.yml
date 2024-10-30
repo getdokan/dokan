@@ -52,8 +52,10 @@ env:
     DB_HOST_NAME: localhost
     DB_USER_NAME: root
     DB_USER_PASSWORD: password
+    DB_PORT: 9998
     DATABASE: tests-wordpress
     DB_PREFIX: wp
+
     PR_NUMBER: ${{ github.event.number }}
     SHA: ${{ github.event.pull_request.head.sha }}
     SYSTEM_INFO: ./tests/pw/playwright/systemInfo.json
@@ -112,19 +114,6 @@ jobs:
                       cd tests/pw
                       npm run start:env
 
-            # Grab test db port
-            - name: Get Test DB PORT
-              id: db-port
-              working-directory: tests/pw
-              run: |
-                  echo "DB_PORT=$(docker ps -f ancestor='mariadb:lts' -f name='tests-mysql' --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
-
-            # db port
-            - name: DB PORT
-              working-directory: tests/pw
-              run: |
-                  echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
-
             # Set permalink structure
             - name: Set Permalink structure
               working-directory: tests/pw
@@ -171,29 +160,29 @@ jobs:
             #     npm run pw:deps-only
 
             # Run e2e tests
-            - name: 🧪 Running the e2e tests
+            - name: 🧪 Run e2e tests
               id: e2e-test
               if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 40
               working-directory: tests/pw
               run: |
-                  npm run test:e2e:lite
+                  npm run test:e2e
 
             # Run e2e coverage
-            - name: 🧪 Running e2e coverage
+            - name: 🧪 Run e2e coverage
               if: always() && (steps.e2e-test.outcome == 'success' || steps.e2e-test.outcome == 'failure')
               working-directory: tests/pw
               run: |
-                npm run e2e_coverage
+                npm run test:e2e:coverage
 
-            # Run API tests
-            - name: 🧪 Running the api tests
+            # Run api tests
+            - name: 🧪 Run api tests
               id: api-test
-              if: always() && steps.db-port.outcome == 'success' && ( github.event_name != 'workflow_dispatch'  || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
+              if: always() && steps.wp-env.outcome == 'success' && ( github.event_name != 'workflow_dispatch'  || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 5
               working-directory: tests/pw
               run: |
-                  npm run test:api:lite
+                  npm run test:api
 
             # Prepare test summary
             - name: Prepare test summary
@@ -229,9 +218,9 @@ jobs:
 
             # Backup Database
             - name: Backup Database
-              if: always() && steps.db-port.outcome == 'success'
+              if: always() && steps.wp-env.outcome == 'success'
+              working-directory: tests/pw
               run: |
-                  cd tests/pw
                   npm run wp-env run tests-cli wp db export wp-data/db.sql
 
             # Upload artifacts

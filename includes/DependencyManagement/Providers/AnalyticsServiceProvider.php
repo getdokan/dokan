@@ -9,7 +9,7 @@ use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 use WeDevs\Dokan\ThirdParty\Packages\League\Container\Definition\DefinitionInterface;
 
 class AnalyticsServiceProvider extends BaseServiceProvider {
-	public const TAGS = [ 'analytics-service', 'common-service' ];
+    public const TAGS = [ 'analytics-service', 'common-service' ];
 
 	protected $services = [
         ScheduleListener::class,
@@ -39,34 +39,27 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
      * @return bool True if the service provider can provide the service, false otherwise.
      */
 	public function provides( string $alias ): bool {
-        $is_resolved = in_array( $alias, $this->services, true ) || in_array( $alias, self::TAGS, true );
+        return in_array( $alias, $this->services, true ) || in_array( $alias, self::TAGS, true );
+	}
 
-        if ( $is_resolved ) {
-            return true;
+	/**
+     * Register the classes.
+     */
+	public function register(): void {
+        foreach ( $this->services as $service ) {
+            $definition = $this->getContainer()
+                ->addShared(
+                    $service, function () use ( $service ) {
+						return new $service();
+					}
+                );
+            $this->add_tags( $definition, self::TAGS );
         }
-
-        return parent::provides( $alias );
     }
 
-		/**
-		 * Register the classes.
-		 */
-	public function register(): void {
-		foreach ( $this->services as $service ) {
-			$definition = $this->getContainer()
-			->addShared(
-				$service, function () use ( $service ) {
-					return new $service();
-				}
-			);
-			$this->add_tags( $definition, self::TAGS );
-		}
-        $this->add_with_implements_tags( \WeDevs\Dokan\Analytics\Assets::class );
-	}
-
-	private function add_tags( DefinitionInterface $definition, $tags ) {
-		foreach ( $tags as $tag ) {
+    private function add_tags( DefinitionInterface $definition, $tags ) {
+        foreach ( $tags as $tag ) {
 			$definition = $definition->addTag( $tag );
-		}
-	}
+        }
+    }
 }

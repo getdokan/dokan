@@ -13,23 +13,28 @@
 <div class="reverse-balance-section">
     <div class="reverse-balance">
         <?php
+        $formatted_price = wc_price( abs( $balance ) );
+
         esc_html_e( 'Reverse Pay Balance: ', 'dokan-lite' );
+
         if ( $balance < 0 ) {
-            echo '( ' . wc_price( abs( $balance ) ) . ' )';
+            echo '( ' . wp_kses_post( $formatted_price ) . ' )';
         } else {
-            echo wc_price( $balance );
+            echo wp_kses_post( $formatted_price );
         }
         ?>
     </div>
     <div class="reverse-threshold">
         <?php
         if ( 'by_amount' === $billing_type ) {
-            printf( '<span class="payment-threshold">%s %s</span>', esc_html__( 'Threshold: ', 'dokan-lite' ), wc_price( $threshold ) );
+            printf( '<span class="payment-threshold">%s %s</span>', esc_html__( 'Threshold: ', 'dokan-lite' ), wp_kses_post( wc_price( $threshold ) ) );
         } elseif ( 'by_month' === $billing_type ) {
+            $formatted_payable_amount = wc_price( abs( $payable_amount ) );
+
             printf(
                 '<span class="payable-amount">%s %s</span>',
                 esc_html__( 'Payable Amount: ', 'dokan-lite' ),
-                $payable_amount >= 0 ? wc_price( $payable_amount ) : '( ' . wc_price( abs( $payable_amount ) ) . ' )'
+                $payable_amount >= 0 ? wp_kses_post( $formatted_payable_amount ) : '( ' . wp_kses_post( $formatted_payable_amount ) . ' )'
             );
         }
         ?>

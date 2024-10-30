@@ -2,6 +2,7 @@
     "env": {
         "tests": {
             "port": 9999,
+            "mysqlPort": 9998,
             "core": null,
             "phpVersion": "7.4",
             "plugins": ["WP-API/Basic-Auth", "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip", "../../"],
@@ -10,7 +11,7 @@
                 "WP_DEBUG": "true",
                 "SCRIPT_DEBUG": "true",
                 "WP_DEBUG_LOG": "true",
-                "WP_DEBUG_DISPLAY": "false"
+                "WP_DEBUG_DISPLAY": "true"
             },
             "mappings": {
                 ".htaccess": ".htaccess",

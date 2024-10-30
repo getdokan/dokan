@@ -1,6 +1,5 @@
 <?php
 
-use WeDevs\Dokan\Contracts\Hookable;
 use WeDevs\Dokan\DependencyManagement\Container;
 
 /**
@@ -268,13 +267,6 @@ final class WeDevs_Dokan {
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', [ \WeDevs\Dokan\Install\Installer::class, 'in_plugin_update_message' ] );
 
         add_action( 'widgets_init', [ $this, 'register_widgets' ] );
-
-        // Register Hooks
-        $hooks = $this->get_container()->get( Hookable::class );
-
-		foreach ( $hooks as $hook ) {
-			$hook->register_hooks();
-		}
     }
 
     /**

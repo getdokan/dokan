@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { helpers } from '@utils/helpers';
@@ -36,18 +36,19 @@ export class RefundsPage extends AdminPage {
     }
 
     // search refund request
-    async searchRefundRequests(orderOrStore: string) {
+    async searchRefundRequests(searchKey: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.refunds);
 
         await this.clearInputField(refundsAdmin.search);
 
-        await this.typeAndWaitForResponse(data.subUrls.api.dokan.refunds, refundsAdmin.search, String(orderOrStore));
-        const count = (await this.getElementText(refundsAdmin.numberOfRowsFound))?.split(' ')[0];
-        if (!isNaN(Number(orderOrStore))) {
-            await this.toBeVisible(refundsAdmin.refundCell(orderOrStore));
-            expect(Number(count)).toBe(1);
+        await this.typeAndWaitForResponse(data.subUrls.api.dokan.refunds, refundsAdmin.search, String(searchKey));
+        if (!Number.isNaN(Number(searchKey))) {
+            // searched by orderId
+            await this.toHaveCount(refundsAdmin.numberOfRows, 1);
+            await this.toBeVisible(refundsAdmin.refundCell(searchKey));
         } else {
-            expect(Number(count)).toBeGreaterThan(0);
+            // searched by store
+            await this.notToHaveCount(refundsAdmin.numberOfRows, 0);
         }
     }
 
