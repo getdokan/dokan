@@ -61,13 +61,14 @@ class QueryFilter extends OrdersQueryFilter {
         }
 
         $dokan_table_name = $this->get_dokan_table();
+        $order_types = $this->get_order_types_for_sql_excluding_refunds();
         $types = implode( ',', ( new OrderType() )->get_vendor_order_types() );
         // $types = $this->get_order_types_for_sql_excluding_refunds();
 
         $parent_order_types_str = implode( ',', ( new OrderType() )->get_admin_order_types_excluding_refunds() );
         $refund_order_types_str = implode( ',', ( new OrderType() )->get_vendor_refund_types() );
 
-        $order_count = "SUM( CASE WHEN {$dokan_table_name}.order_type IN($types) THEN 1 ELSE 0 END )";
+        $order_count = "SUM( CASE WHEN {$dokan_table_name}.order_type IN($order_types) THEN 1 ELSE 0 END )";
 
         $coupon = "SUM(CASE WHEN {$dokan_table_name}.order_type IN($parent_order_types_str) THEN discount_amount END)";
 
