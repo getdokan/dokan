@@ -2379,6 +2379,8 @@ export const selector = {
                         appleKeyId: '//h3[normalize-space(text())="Apple Key ID"]/../..//input',
                         appleKeyContent: '//h3[normalize-space(text())="Apple Key Content (including BEGIN and END lines)"]/../..//textarea',
                     },
+
+                    shippingStatusSaveChanges: '#submit',
                 },
 
                 // Shipping Status

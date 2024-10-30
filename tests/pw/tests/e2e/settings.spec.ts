@@ -82,11 +82,12 @@ test.describe('Settings test', () => {
     });
 
     test('admin can set Dokan verification sms gateways settings', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.setDokanSMSVerificationGateWaysSettings(data.dokanSettings.verificationSmsGateway);
+        await admin.setDokanSMSVerificationGatewaysSettings(data.dokanSettings.verificationSmsGateway);
     });
 
     test('admin can set Dokan email verification settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanEmailVerificationSettings(data.dokanSettings.emailVerification);
+
         // reset  settings
         await dbUtils.setOptionValue(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
     });

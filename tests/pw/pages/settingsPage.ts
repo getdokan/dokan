@@ -360,7 +360,7 @@ export class SettingsPage extends AdminPage {
     }
 
     // Admin Set Dokan SMS Verification Gateways Settings
-    async setDokanSMSVerificationGateWaysSettings(verificationSmsGateways: dokanSettings['verificationSmsGateway']) {
+    async setDokanSMSVerificationGatewaysSettings(verificationSmsGateways: dokanSettings['verificationSmsGateway']) {
         await this.goToDokanSettings();
         await this.click(settingsAdmin.menus.verificationSmsGateways);
 
@@ -421,7 +421,7 @@ export class SettingsPage extends AdminPage {
         await this.clearAndType(settingsAdmin.socialApi.facebook.appSecret, socialApi.facebook.appSecret);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.shippingStatus.shippingStatusSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.socialApi.shippingStatusSaveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, socialApi.saveSuccessMessage);
     }
 
