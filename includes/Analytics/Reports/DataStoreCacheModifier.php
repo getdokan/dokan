@@ -40,7 +40,7 @@ class DataStoreCacheModifier implements Hookable {
      * @return array
      */
     public function add_query_param( array $params ): array {
-        $params['seller_id'] = dokan()->get_container()->get( QueryFilter::class )->get_seller_id();
+        $params['seller_id'] = dokan()->get_container()->get( QueryFilter::class )->get_vendor_id();
         return $params;
     }
 }

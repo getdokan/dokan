@@ -11,7 +11,7 @@ class VendorDashboardManager implements Hookable {
 		add_filter( 'dokan_dashboard_nav_submenu', [ $this, 'add_report_submenu' ], 10, 2 );
 
 		// Dummy hook for testing.
-		add_action( 'dokan_report_content_inside_before', [ $this, 'add_dashboard_content' ] );
+		add_action( 'dokan_dashboard_content_inside_before', [ $this, 'add_dashboard_content' ] );
 
 		add_filter( 'woocommerce_rest_product_object_query', [ $this, 'product_query_args' ], 10, 2 );
 
