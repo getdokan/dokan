@@ -133,7 +133,7 @@ final class WeDevs_Dokan {
      * @return string
      */
     public function plugin_path() {
-        return untrailingslashit( plugin_dir_path( __FILE__ ) );
+        return untrailingslashit( plugin_dir_path( DOKAN_FILE ) );
     }
 
     /**
@@ -202,7 +202,7 @@ final class WeDevs_Dokan {
      * @uses load_plugin_textdomain()
      */
     public function localization_setup() {
-        load_plugin_textdomain( 'dokan-lite', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+        load_plugin_textdomain( 'dokan-lite', false, dirname( plugin_basename( DOKAN_FILE ) ) . '/languages/' );
     }
 
     /**
@@ -215,7 +215,7 @@ final class WeDevs_Dokan {
         defined( 'DOKAN_DIR' ) || define( 'DOKAN_DIR', __DIR__ );
         defined( 'DOKAN_INC_DIR' ) || define( 'DOKAN_INC_DIR', __DIR__ . '/includes' );
         defined( 'DOKAN_LIB_DIR' ) || define( 'DOKAN_LIB_DIR', __DIR__ . '/lib' );
-        defined( 'DOKAN_PLUGIN_ASSEST' ) || define( 'DOKAN_PLUGIN_ASSEST', plugins_url( 'assets', __FILE__ ) );
+        defined( 'DOKAN_PLUGIN_ASSEST' ) || define( 'DOKAN_PLUGIN_ASSEST', plugins_url( 'assets', DOKAN_FILE ) );
 
         // give a way to turn off loading styles and scripts from parent theme
         defined( 'DOKAN_LOAD_STYLE' ) || define( 'DOKAN_LOAD_STYLE', true );
@@ -231,8 +231,8 @@ final class WeDevs_Dokan {
      */
     public function declare_woocommerce_feature_compatibility() {
         if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
-            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
+            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', DOKAN_FILE, true );
+            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', DOKAN_FILE, true );
         }
     }
 
@@ -263,7 +263,7 @@ final class WeDevs_Dokan {
 
         add_action( 'plugins_loaded', [ $this, 'after_plugins_loaded' ] );
 
-        add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), [ $this, 'plugin_action_links' ] );
+        add_filter( 'plugin_action_links_' . plugin_basename( DOKAN_FILE ), [ $this, 'plugin_action_links' ] );
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', [ \WeDevs\Dokan\Install\Installer::class, 'in_plugin_update_message' ] );
 
         add_action( 'widgets_init', [ $this, 'register_widgets' ] );
