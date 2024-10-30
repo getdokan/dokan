@@ -15,12 +15,12 @@ export class LiveChatPage extends BasePage {
         super(page);
     }
 
-    async gotoSingleStore(storeName: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
+    async gotoSingleStore(storeName: string, force = false): Promise<void> {
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle', force);
     }
 
-    async goToProductDetails(productName: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+    async goToProductDetails(productName: string, force = false): Promise<void> {
+        await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)), 'domcontentloaded', force);
     }
 
     // vendor
@@ -49,7 +49,7 @@ export class LiveChatPage extends BasePage {
 
     // customer send message to vendor customer
     async sendMessageToVendor(storename: string, message: string): Promise<void> {
-        await this.gotoSingleStore(storename);
+        await this.gotoSingleStore(storename, true);
         await this.click(singleStoreCustomer.storeTabs.chatNow);
         await this.toBeVisible(liveChatCustomer.liveChatIframe);
         await this.typeFrameSelector(liveChatCustomer.liveChatIframe, liveChatCustomer.chatTextBox, message);
@@ -58,7 +58,7 @@ export class LiveChatPage extends BasePage {
     }
 
     async viewLiveChatButtonOnStore(storename: string, disable = false) {
-        await this.gotoSingleStore(storename);
+        await this.gotoSingleStore(storename, true);
         if (!disable) {
             await this.toBeVisible(singleStoreCustomer.storeTabs.chatNow);
         } else {
@@ -67,7 +67,7 @@ export class LiveChatPage extends BasePage {
     }
 
     async viewLiveChatButtonOnProduct(productName: string, option: string) {
-        await this.goToProductDetails(productName);
+        await this.goToProductDetails(productName, true);
 
         switch (option) {
             case 'above-tab':

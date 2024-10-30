@@ -31,16 +31,16 @@ test.describe('Live chat test', () => {
     // admin
 
     test('admin can enable chat button on vendor page', { tag: ['@pro', '@admin'] }, async () => {
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.liveChat, { chat_button_product_page: 'on' });
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.liveChat, { chat_button_seller_page: 'on' });
         await customer.viewLiveChatButtonOnStore(data.predefined.vendorInfo.shopName);
     });
 
     test('admin can disable chat button on vendor page', { tag: ['@pro', '@admin'] }, async () => {
-        test.skip(true, 'Has Dokan Issues');
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.liveChat, { chat_button_product_page: 'off' });
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.liveChat, { chat_button_seller_page: 'off' });
         await customer.viewLiveChatButtonOnStore(data.predefined.vendorInfo.shopName, true);
+
         // reset
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.liveChat, { chat_button_product_page: 'on' });
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.liveChat, { chat_button_seller_page: 'on' });
     });
 
     test('admin can enable chat button on product page (above_tab)', { tag: ['@pro', '@admin'] }, async () => {
@@ -49,13 +49,11 @@ test.describe('Live chat test', () => {
     });
 
     test('admin can enable chat button on product page (inside_tab)', { tag: ['@pro', '@admin'] }, async () => {
-        test.skip(true, 'Has Dokan Issues');
         await dbUtils.updateOptionValue(dbData.dokan.optionName.liveChat, { chat_button_product_page: 'inside_tab' });
         await customer.viewLiveChatButtonOnProduct(data.predefined.simpleProduct.product1.name, 'inside-tab');
     });
 
     test('admin can disable chat button on product page', { tag: ['@pro', '@admin'] }, async () => {
-        test.skip(true, 'Has Dokan Issues');
         await dbUtils.updateOptionValue(dbData.dokan.optionName.liveChat, { chat_button_product_page: 'dont_show' });
         await customer.viewLiveChatButtonOnProduct(data.predefined.simpleProduct.product1.name, 'dont-show');
     });
