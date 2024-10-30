@@ -400,7 +400,7 @@ class Init {
 
         $section->add_field(
             Elements::SKU, [
-                'title'       => '<abbr title="' . esc_attr__( 'Stock Keeping Unit', 'dokan-lite' ) . '">' . esc_html__( 'SKU', 'dokan-lite' ) . '</abbr>',
+                'title'       => sprintf( '%s <span>(%s)</span>', esc_html__( 'SKU', 'dokan-lite' ), esc_html__( 'Stock Keeping Unit', 'dokan-lite' ) ),
                 'description' => __( 'SKU refers to a Stock-keeping unit, a unique identifier for each distinct product and service that can be purchased.', 'dokan-lite' ),
                 'placeholder' => __( 'Enter product SKU', 'dokan-lite' ),
                 'field_type'  => 'text',
