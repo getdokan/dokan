@@ -57,6 +57,17 @@ class Dashboard {
     }
 
     /**
+     * Check if analytics is enabled.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function is_analytics_enabled(): bool {
+        return 'yes' === get_option( Analytics::TOGGLE_OPTION_NAME, 'no' );
+    }
+
+    /**
      * Get big counter widget in dashboard
      *
      * @since 2.4

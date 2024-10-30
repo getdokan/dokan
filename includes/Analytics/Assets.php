@@ -36,6 +36,7 @@ class Assets implements Hookable {
 	 * @return array
 	 */
 	public function localize_wc_admin_settings( $settings ) {
+        $settings['vendorBalance']      = dokan_get_seller_balance( dokan_get_current_user_id(), 2 );
         $settings['stockStatuses']      = wc_get_product_stock_status_options();
         $settings['isAnalyticsEnabled'] = $this->is_analytics_enabled();
 

@@ -433,6 +433,21 @@
                 margin: 0 8px;
             }
         }
+
+        .dokan-analytics-vendor-earning-section {
+            width: 100%;
+            text-align: right;
+
+            .vendor-earning-title {
+                margin: 0;
+            }
+
+            .vendor-earning {
+                color: #f05025;
+                font-size: 20px;
+                font-weight: 700;
+            }
+        }
     }
 }
 
