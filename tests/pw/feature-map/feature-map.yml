@@ -505,7 +505,7 @@
           admin can check for duplicate orders: true
           admin can set Dokan setup wizard [lite]: true
           admin can regenerate variable product variations author IDs: true
-          admin can import dummy data: false
+          admin can import dummy data: true
           admin can clear dummy data: true
           admin can test distance matrix API: true
 
@@ -598,7 +598,7 @@
           vendor can approve product review: true
           vendor can restore trashed product review: true
           vendor can permanently-delete product review: true
-          vendor can perform bulk action on product reviews: false
+          vendor can perform bulk action on product reviews: true
 
 - page: 'MenuManager'
   features:
