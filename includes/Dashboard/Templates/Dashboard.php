@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Dashboard\Templates;
 
+use Automattic\WooCommerce\Internal\Admin\Analytics;
+
 /**
  * Dokan Template Dashboard Class
  *
@@ -45,6 +47,17 @@ class Dashboard {
         if ( ! dokan_is_seller_enabled( $this->user_id ) ) {
             dokan_seller_not_enabled_notice();
         }
+    }
+
+    /**
+     * Check if analytics is enabled.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function is_analytics_enabled(): bool {
+        return 'yes' === get_option( Analytics::TOGGLE_OPTION_NAME, 'no' );
     }
 
     /**

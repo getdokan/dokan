@@ -140,8 +140,12 @@ class VendorDashboardManager implements Hookable {
 	}
 
 	public function revenue_stats_schema( $reports ) {
+        $is_vendor_dashboard = dokan_is_seller_dashboard();
+
 		$reports['totals']['properties']['total_seller_earning'] = array(
-			'description' => __( 'Total Seller Earning', 'dokan-lite' ),
+			'description' => $is_vendor_dashboard
+                ? __( 'Total Earning', 'dokan-lite' )
+                : __( 'Total Vendor Earning', 'dokan-lite' ),
 			'type'        => 'number',
 			'context'     => array( 'view', 'edit' ),
 			'readonly'    => true,
@@ -150,7 +154,9 @@ class VendorDashboardManager implements Hookable {
 		);
 
 		$reports['totals']['properties']['total_admin_commission'] = array(
-			'description' => __( 'Total Admin Commission', 'dokan-lite' ),
+			'description' => $is_vendor_dashboard
+                ? __( 'Total Admin Commission', 'dokan-lite' )
+                : __( 'Total Commission', 'dokan-lite' ),
 			'type'        => 'number',
 			'context'     => array( 'view', 'edit' ),
 			'readonly'    => true,
