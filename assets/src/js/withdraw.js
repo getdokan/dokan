@@ -252,13 +252,15 @@
             let withdrawMethod = $( "[name='withdraw_method'][id='withdraw-method']" ).val();
             let withdrawAmount = $( "[name='withdraw_amount'][id='withdraw-amount']" ).val();
 
+            let { chargePercentage, chargeFixed } = $(
+                "select[name='withdraw_method'][id='withdraw-method'] option:selected"
+            ).data();
+
             withdrawAmount = accounting.unformat(
                 withdrawAmount,
                 dokan.mon_decimal_point
             );
-            let { chargePercentage, chargeFixed } = $(
-                "select[name='withdraw_method'][id='withdraw-method'] option:selected"
-            ).data();
+
             let chargeAmount = 0;
             let chargeText = '';
 
@@ -266,6 +268,7 @@
                 chargeText += Dokan_Withdraw.formatMoney( chargeFixed );
                 chargeAmount += chargeFixed;
             }
+
             if ( chargePercentage ) {
                 let percentageAmount = chargePercentage / 100 * withdrawAmount;
                 chargeAmount += percentageAmount;

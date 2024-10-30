@@ -10,6 +10,8 @@ use WeDevs\Dokan\Contracts\Hookable;
  * Class QueryFilter
  *
  * Filters and modifies WooCommerce analytics queries for Dokan orders.
+ *
+ * @since DOKAN_SINCE
  */
 abstract class BaseQueryFilter implements Hookable {
     protected $wc_table = 'wc_order_stats';
@@ -54,7 +56,7 @@ abstract class BaseQueryFilter implements Hookable {
 		$clauses[] = "AND {$dokan_order_state_table}.order_type in ( $order_types ) ";
 
 		$clauses = $this->add_where_subquery_for_refund( $clauses );
-		$clauses = $this->add_where_subquery_for_seller_filter( $clauses );
+		$clauses = $this->add_where_subquery_for_vendor_filter( $clauses );
 
 		return array_unique( $clauses );
 	}
@@ -84,7 +86,7 @@ abstract class BaseQueryFilter implements Hookable {
      *
      * @return bool True if the query should be filtered by seller ID, false otherwise.
      */
-	public function should_filter_by_seller_id(): bool {
+	public function should_filter_by_vendor_id(): bool {
 		return true;
 	}
 
@@ -96,8 +98,8 @@ abstract class BaseQueryFilter implements Hookable {
 	protected function get_order_and_refund_types_to_include(): string {
 		$order_type = new OrderType();
 
-		if ( $this->should_filter_by_seller_id() ) {
-			return implode( ',', $order_type->get_seller_order_types() );
+		if ( $this->should_filter_by_vendor_id() ) {
+			return implode( ',', $order_type->get_vendor_order_types() );
 		}
 
 		return implode( ',', $order_type->get_admin_order_types() );
@@ -111,8 +113,8 @@ abstract class BaseQueryFilter implements Hookable {
 	protected function get_refund_types_to_include(): string {
 		$order_type = new OrderType();
 
-		if ( $this->should_filter_by_seller_id() ) {
-			return implode( ',', $order_type->get_seller_refund_types() );
+		if ( $this->should_filter_by_vendor_id() ) {
+			return implode( ',', $order_type->get_vendor_refund_types() );
 		}
 
 		return implode( ',', $order_type->get_admin_refund_types() );
@@ -127,14 +129,14 @@ abstract class BaseQueryFilter implements Hookable {
      *
      * @return string The refund types to include.
      */
-	protected function get_non_refund_order_types_to_include(): string {
+	protected function get_order_types_for_sql_excluding_refunds(): string {
 		$order_type = new OrderType();
 
-		if ( $this->should_filter_by_seller_id() ) {
-			return implode( ',', $order_type->get_seller_non_refund_order_types() );
+		if ( $this->should_filter_by_vendor_id() ) {
+			return implode( ',', $order_type->get_vendor_order_types_excluding_refunds() );
 		}
 
-		return implode( ',', $order_type->get_admin_non_refund_order_types() );
+		return implode( ',', $order_type->get_admin_order_types_excluding_refunds() );
 	}
 
 	/**
@@ -144,10 +146,10 @@ abstract class BaseQueryFilter implements Hookable {
      *
      * @return array The modified where clauses.
      */
-	protected function add_where_subquery_for_seller_filter( array $clauses ): array {
-		$seller_id = $this->get_seller_id();
+	protected function add_where_subquery_for_vendor_filter( array $clauses ): array {
+		$vendor_id = $this->get_vendor_id();
 
-		if ( ! $seller_id ) {
+		if ( ! $vendor_id ) {
 			return $clauses;
 		}
 
@@ -155,7 +157,7 @@ abstract class BaseQueryFilter implements Hookable {
 
 		global $wpdb;
 
-		$clauses[] = $wpdb->prepare( "AND {$dokan_order_state_table}.seller_id = %s", $seller_id ); //phpcs:ignore
+		$clauses[] = $wpdb->prepare( "AND {$dokan_order_state_table}.vendor_id = %s", $vendor_id ); //phpcs:ignore
 
 		return $clauses;
 	}
@@ -165,7 +167,7 @@ abstract class BaseQueryFilter implements Hookable {
 	 *
 	 * @return int
 	 */
-	public function get_seller_id() {
+	public function get_vendor_id() {
 		if ( ! is_user_logged_in() ) {
 			return 0;
 		}
@@ -174,6 +176,6 @@ abstract class BaseQueryFilter implements Hookable {
 			return dokan_get_current_user_id();
 		}
 
-		return (int) ( wp_unslash( $_GET['sellers'] ?? ( $_GET['seller_id'] ?? 0 ) ) ); // phpcs:ignore
+		return (int) ( wp_unslash( $_GET['sellers'] ?? 0 ) ); // phpcs:ignore
 	}
 }

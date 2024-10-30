@@ -15,7 +15,7 @@ test.describe('Menu Manager test', () => {
     });
 
     test.afterAll(async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
         await aPage.close();
     });
 
@@ -23,8 +23,6 @@ test.describe('Menu Manager test', () => {
 
     test('admin can deactivate menu', { tag: ['@pro', '@admin'] }, async () => {
         await admin.updateMenuStatus('Analytics', 'deactivate', 'analytics');
-        //reset
-        // await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
     });
 
     test('admin can activate menu', { tag: ['@pro', '@admin'] }, async () => {
@@ -34,8 +32,6 @@ test.describe('Menu Manager test', () => {
 
     test('admin can rename menu', { tag: ['@pro', '@admin'] }, async () => {
         await admin.renameMenu('Withdraw', 'Withdraws');
-        //reset
-        // await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
     });
 
     test("admin can't rename menu with more than 45 characters", { tag: ['@pro', '@admin'] }, async () => {
@@ -65,5 +61,5 @@ test.describe('Menu Manager test', () => {
 async function updateMenuStatusByDB(key: string, value: string) {
     const menuManagerSettings = JSON.parse(JSON.stringify(dbData.dokan.menuManagerSettings));
     menuManagerSettings.dashboard_menu_manager.left_menus[key as keyof typeof menuManagerSettings.dashboard_menu_manager.left_menus].is_switched_on = value;
-    await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, menuManagerSettings);
+    await dbUtils.setOptionValue(dbData.dokan.optionName.menuManager, menuManagerSettings);
 }

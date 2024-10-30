@@ -3,12 +3,13 @@
 namespace WeDevs\Dokan\Analytics\Reports\Products;
 
 use WeDevs\Dokan\Analytics\Reports\BaseQueryFilter;
-use WeDevs\Dokan\Analytics\Reports\OrderType;
 
 /**
  * Class QueryFilter
  *
- * Filters and modifies WooCommerce analytics queries for Dokan orders.
+ * Filters and modifies WooCommerce analytics queries for Dokan Products.
+ *
+ * @since DOKAN_SINCE
  */
 class QueryFilter extends BaseQueryFilter {
     protected $wc_table = 'wc_order_product_lookup';

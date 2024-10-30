@@ -7,7 +7,9 @@ use WeDevs\Dokan\Analytics\Reports\BaseQueryFilter;
 /**
  * Class QueryFilter
  *
- * Filters and modifies WooCommerce analytics queries for Dokan orders.
+ * Filters and modifies WooCommerce analytics queries for Categories.
+ *
+ * @since DOKAN_SINCE
  */
 class QueryFilter extends BaseQueryFilter {
     protected $wc_table = 'wc_order_product_lookup';
@@ -23,7 +25,6 @@ class QueryFilter extends BaseQueryFilter {
      * @return void
      */
     public function register_hooks(): void {
-        //woocommerce_analytics_clauses_
         // add_filter( 'woocommerce_analytics_clauses_join_products', [ $this, 'add_join_subquery' ] );
         add_filter( 'woocommerce_analytics_clauses_join_categories_subquery', [ $this, 'add_join_subquery' ] );
         add_filter( 'woocommerce_analytics_clauses_where_categories_subquery', [ $this, 'add_where_subquery' ], 30 );

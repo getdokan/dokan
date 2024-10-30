@@ -5,6 +5,11 @@ namespace WeDevs\Dokan\Analytics\Reports\Coupons\Stats;
 use Automattic\WooCommerce\Admin\API\Reports\Coupons\Stats\DataStore as OrdersStateDataStore;
 use WeDevs\Dokan\Analytics\Reports\WcSqlQuery;
 
+/**
+ * WC DataStore class to override the default handling of SQL clauses.
+ *
+ * @since DOKAN_SINCE
+ */
 class WcDataStore extends OrdersStateDataStore {
 	/**
 	 * Override the $total_query and $interval_query properties to customize query behavior.

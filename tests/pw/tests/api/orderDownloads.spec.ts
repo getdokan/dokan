@@ -7,6 +7,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { schemas } from '@utils/schemas';
+import { data } from '@utils/testData';
 
 test.describe('order downloads api test', () => {
     let apiUtils: ApiUtils;
@@ -16,7 +17,7 @@ test.describe('order downloads api test', () => {
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
-        const [responseBody] = await apiUtils.uploadMedia('../../tests/pw/utils/sampleData/avatar.png', payloads.mimeTypes.png, payloads.adminAuth); // todo: update image path
+        const [responseBody] = await apiUtils.uploadMedia(data.image.avatar, payloads.mimeTypes.png, payloads.adminAuth);
         const downloads = [
             {
                 id: String(responseBody.id),

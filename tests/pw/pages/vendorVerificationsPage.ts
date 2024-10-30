@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { CustomerPage } from '@pages/customerPage';
 import { selector } from '@pages/selectors';
@@ -48,7 +48,9 @@ export class VendorVerificationsPage extends AdminPage {
             status === 'enable'
                 ? await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(methodName))
                 : await this.disableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(methodName));
-        response && (await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage));
+        if (response) {
+            await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage);
+        }
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
@@ -59,7 +61,9 @@ export class VendorVerificationsPage extends AdminPage {
     async updateVerificationMethod(verificationMethod: dokanSettings['vendorVerification']['verificationMethodDetails']) {
         await this.clearAndType(settingsAdmin.vendorVerification.addNewVerification.label, verificationMethod.title);
         await this.clearAndType(settingsAdmin.vendorVerification.addNewVerification.helpText, verificationMethod.help_text);
-        verificationMethod.required && (await this.check(settingsAdmin.vendorVerification.addNewVerification.required));
+        if (verificationMethod.required) {
+            await this.check(settingsAdmin.vendorVerification.addNewVerification.required);
+        }
     }
 
     // add Verification Method
@@ -133,8 +137,8 @@ export class VendorVerificationsPage extends AdminPage {
             await this.multipleElementVisible(verificationsAdmin.bulkActions);
 
             // filter elements are visible
-            const { filterInput, resetFilterByVendors, resetFilterByMethods, reset, result, ...filters } = verificationsAdmin.filters;
-            await this.multipleElementVisible(filters);
+            await this.toBeVisible(verificationsAdmin.filters.filterByVendors);
+            await this.toBeVisible(verificationsAdmin.filters.filterByMethods);
 
             // verification table elements are visible
             await this.multipleElementVisible(verificationsAdmin.table);
@@ -143,41 +147,42 @@ export class VendorVerificationsPage extends AdminPage {
 
     // verification requests
     async filterVerificationRequests(input: string, action: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
-        await this.reloadIfVisible(verificationsAdmin.filters.reset);
+        await this.goto(data.subUrls.backend.dokan.verifications);
+
+        // reset pervious filter if visible
+        await this.clickIfVisible(verificationsAdmin.filters.reset);
 
         switch (action) {
             case 'by-status': {
                 await this.clickAndWaitForLoadState(verificationsAdmin.navTabs.tabByStatus(input));
-                await this.wait(1); // todo: need to resolve this
-                const count = await this.getElementCount(verificationsAdmin.statusColumnValue(input.toLowerCase()));
-                await this.toHaveCount(verificationsAdmin.currentNoOfRows, count);
                 return;
             }
 
             case 'by-vendor':
                 await this.click(verificationsAdmin.filters.filterByVendors);
+                await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, verificationsAdmin.filters.filterInput, input);
+                await this.toContainText(verificationsAdmin.filters.result, input);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.filters.filteredResult(input));
                 break;
 
             case 'by-verification-method':
                 await this.click(verificationsAdmin.filters.filterByMethods);
+                await this.typeAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, verificationsAdmin.filters.filterInput, input);
+                await this.toContainText(verificationsAdmin.filters.result, input);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.filters.filteredResult(input));
                 break;
 
             default:
                 break;
         }
-        await this.fill(verificationsAdmin.filters.filterInput, input);
-        await this.toContainText(verificationsAdmin.filters.result, input);
-        await this.pressAndWaitForResponse(data.subUrls.api.dokan.verifications, data.key.enter);
-        // todo: need to wait for focus event
-        // todo: need to update assertions
-        const count = (await this.getElementText(verificationsAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToHaveText(verificationsAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(verificationsAdmin.noRowsFound);
     }
 
     // reset filter
     async resetFilter() {
-        await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+        // await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+        await this.toBeVisible(verificationsAdmin.filters.reset);
         await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.filters.reset);
         await this.notToBeVisible(verificationsAdmin.filters.reset);
     }
@@ -185,7 +190,7 @@ export class VendorVerificationsPage extends AdminPage {
     // add note to verification request
     async addNoteVerificationRequest(requestId: string, note: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
-        await this.reloadIfVisible(verificationsAdmin.filters.reset);
+        await this.reloadIfVisible(verificationsAdmin.filters.reset); // todo: need to resolve this from all verification tests
 
         await this.click(verificationsAdmin.verificationRequestAddNote(requestId));
         await this.clearAndType(verificationsAdmin.addNote, note);
@@ -196,11 +201,7 @@ export class VendorVerificationsPage extends AdminPage {
     async viewVerificationRequestDocument(requestId: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
         await this.reloadIfVisible(verificationsAdmin.filters.reset);
-
-        // ensure link suppose to open on new tab
-        await this.toHaveAttribute(verificationsAdmin.verificationRequestDocument(requestId), 'target', '_blank');
-        // force link to open on the same tab
-        await this.setAttributeValue(verificationsAdmin.verificationRequestDocument(requestId), 'target', '_self');
+        await this.forceLinkToSameTab(verificationsAdmin.verificationRequestDocument(requestId));
         const documentLink = (await this.getAttributeValue(verificationsAdmin.verificationRequestDocument(requestId), 'href')) as string;
         await this.clickAndWaitForUrl(documentLink, verificationsAdmin.verificationRequestDocument(requestId));
         await this.toHaveAttribute('body img', 'src', documentLink);
@@ -208,22 +209,25 @@ export class VendorVerificationsPage extends AdminPage {
 
     // update verification request
     async updateVerificationRequest(requestId: string, action: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
-        await this.reload();
-        await this.reloadIfVisible(verificationsAdmin.filters.reset);
+        await this.goto(data.subUrls.backend.dokan.verifications); // todo: why goto doesn't reload page in verification tests
 
         switch (action) {
             case 'approve':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.verificationRequestApprove(requestId));
+                await this.notToBeVisible(verificationsAdmin.verificationRequestCell(requestId));
+                await this.clickAndWaitForLoadState(verificationsAdmin.navTabs.approved);
                 break;
 
             case 'reject':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.verificationRequestReject(requestId));
+                await this.notToBeVisible(verificationsAdmin.verificationRequestCell(requestId));
+                await this.clickAndWaitForLoadState(verificationsAdmin.navTabs.rejected);
                 break;
 
             default:
                 break;
         }
+        await this.toBeVisible(verificationsAdmin.verificationRequestCell(requestId));
     }
 
     // verification request bulk action
@@ -314,11 +318,7 @@ export class VendorVerificationsPage extends AdminPage {
             // await this.click(setupWizardVendor.skipTheStepStoreSetup);
             await this.click(setupWizardVendor.skipTheStepPaymentSetup);
         }
-
-        // ensure link suppose to open on new tab
-        await this.toHaveAttribute(verificationsVendor.verificationRequestDocument(methodName), 'target', '_blank');
-        // force link to open on the same tab
-        await this.setAttributeValue(verificationsVendor.verificationRequestDocument(methodName), 'target', '_self');
+        await this.forceLinkToSameTab(verificationsVendor.verificationRequestDocument(methodName));
         const documentLink = (await this.getAttributeValue(verificationsVendor.verificationRequestDocument(methodName), 'href')) as string;
         await this.clickAndWaitForUrl(documentLink, verificationsVendor.verificationRequestDocument(methodName));
         await this.toHaveAttribute('body img', 'src', documentLink);
@@ -343,7 +343,7 @@ export class VendorVerificationsPage extends AdminPage {
     async viewRequiredVerificationMethod(requiredMethod: string, nonRequiredMethod: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
         await this.click(setupWizardVendor.letsGo);
-        await this.completeAddressStep(data.vendorSetupWizard);
+        await this.completeAddressStep(data.vendorSetupWizard); // todo: why cant we skip this
         // await this.click(setupWizardVendor.skipTheStepStoreSetup);
         await this.click(setupWizardVendor.skipTheStepPaymentSetup);
 

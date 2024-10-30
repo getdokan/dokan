@@ -5,6 +5,11 @@ namespace WeDevs\Dokan\Analytics\Reports\Taxes\Stats;
 use Automattic\WooCommerce\Admin\API\Reports\Taxes\Stats\DataStore as TaxesStateDataStore;
 use WeDevs\Dokan\Analytics\Reports\WcSqlQuery;
 
+/**
+ * WC DataStore class to override the default handling of SQL clauses.
+ *
+ * @since DOKAN_SINCE
+ */
 class WcDataStore extends TaxesStateDataStore {
 	/**
 	 * Override the $total_query and $interval_query properties to customize query behavior.

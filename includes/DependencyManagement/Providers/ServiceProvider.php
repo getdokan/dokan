@@ -4,8 +4,20 @@ namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\DependencyManagement\BootableServiceProvider;
 
+/**
+ * ServiceProvider Class
+ *
+ * Manages the registration and booting of Dokan's core services within the container.
+ * This service provider handles the core services with the Dokan's
+ * dependency injection container.
+ *
+ * @since DOKAN_SINCE
+ */
 class ServiceProvider extends BootableServiceProvider {
-	public const TAG = 'container-service';
+	/**
+     * Tag for services added to the container.
+     */
+    public const TAG = 'container-service';
 
 	protected $services = [
 		'product_block'       => \WeDevs\Dokan\Blocks\ProductBlock::class,

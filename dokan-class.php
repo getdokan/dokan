@@ -270,7 +270,7 @@ final class WeDevs_Dokan {
         add_action( 'widgets_init', [ $this, 'register_widgets' ] );
 
         // Register Hooks
-        $hooks = $this->get_container()->get( Hookable::class );
+		$hooks = $this->get_container()->get( Hookable::class );
 
 		foreach ( $hooks as $hook ) {
 			$hook->register_hooks();
@@ -484,6 +484,13 @@ final class WeDevs_Dokan {
         return $this->db_version_key;
     }
 
+    /**
+     * Retrieve the container instance.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return Container
+     */
     public function get_container(): Container {
 		return dokan_get_container();
     }

@@ -2,11 +2,8 @@ import { test as setup, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
-import { data } from '@utils/testData';
 
-const { CI, LOCAL, DOKAN_PRO, BASE_URL } = process.env;
-
-setup.describe('setup test environment', () => {
+setup.describe('add users', () => {
     let apiUtils: ApiUtils;
 
     setup.beforeAll(async () => {
@@ -35,19 +32,5 @@ setup.describe('setup test environment', () => {
     setup('add vendor2', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth);
         helpers.createEnvVar('VENDOR2_ID', sellerId);
-    });
-
-    setup('dokan pro enabled or not', { tag: ['@lite'] }, async () => {
-        setup.skip(LOCAL, 'Skip on Local testing');
-        let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
-        if (res) {
-            res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
-        }
-        DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
-    });
-
-    setup('get test environment info', { tag: ['@lite'] }, async () => {
-        const [, systemInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
-        helpers.writeFile(data.systemInfo, JSON.stringify(systemInfo));
     });
 });

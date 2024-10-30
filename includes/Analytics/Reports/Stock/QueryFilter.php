@@ -6,6 +6,13 @@ use WeDevs\Dokan\Analytics\Reports\BaseQueryFilter;
 use WP_REST_Request;
 use WP_Query;
 
+/**
+ * Class QueryFilter
+ *
+ * Filters and modifies WooCommerce analytics queries for Product Stock.
+ *
+ * @since DOKAN_SINCE
+ */
 class QueryFilter extends BaseQueryFilter {
     protected $should_removed_where_filter = true;
 
@@ -39,12 +46,12 @@ class QueryFilter extends BaseQueryFilter {
     public function add_author_clause( $args, $wp_query ) {
 		global $wpdb;
 
-        $seller_id = $this->get_seller_id();
+        $vendor_id = $this->get_vendor_id();
 
-		if ( $seller_id ) {
+		if ( $vendor_id ) {
 			$args['where'] = $args['where'] . $wpdb->prepare(
                 " AND {$wpdb->posts}.post_author = %d ",
-                $seller_id
+                $vendor_id
 			);
 		}
 

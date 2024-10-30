@@ -61,13 +61,13 @@ if ( $user_orders ) {
                                 . esc_url( wp_nonce_url( add_query_arg( [ 'order_id' => $order->get_id() ], dokan_get_navigation_url( 'orders' ) ), 'dokan_view_order' ) )
                                 . '"><strong>'
                                 // translators: 1) order number
-                                . sprintf( __( 'Order %s', 'dokan-lite' ), esc_attr( $order->get_order_number() ) ) . '</strong></a>';
+                                . sprintf( esc_html__( 'Order %s', 'dokan-lite' ), esc_attr( $order->get_order_number() ) ) . '</strong></a>';
                             ?>
                         <?php } else { ?>
                             <?php
                             echo '<strong>'
                                 // translators: 1) order number
-                                . sprintf( __( 'Order %s', 'dokan-lite' ), esc_attr( $order->get_order_number() ) )
+                                . sprintf( esc_html__( 'Order %s', 'dokan-lite' ), esc_attr( $order->get_order_number() ) )
                                 . '</strong>';
                             ?>
                         <?php } ?>
@@ -75,13 +75,13 @@ if ( $user_orders ) {
                         <button type="button" class="toggle-row"></button>
                     </td>
                     <td class="dokan-order-total" data-title="<?php esc_attr_e( 'Order Total', 'dokan-lite' ); ?>">
-                        <?php echo $order->get_formatted_order_total(); ?>
+                        <?php echo wp_kses_post( $order->get_formatted_order_total() ); ?>
                     </td>
                     <td class="dokan-order-earning" data-title="<?php esc_attr_e( 'Earning', 'dokan-lite' ); ?>">
                         <?php echo wp_kses_post( wc_price( dokan()->commission->get_earning_by_order( $order ) ) ); ?>
                     </td>
                     <td class="dokan-order-status" data-title="<?php esc_attr_e( 'Status', 'dokan-lite' ); ?>">
-                        <?php echo '<span class="dokan-label dokan-label-' . dokan_get_order_status_class( $order->get_status() ) . '">' . dokan_get_order_status_translated( $order->get_status() ) . '</span>'; ?>
+                        <?php echo '<span class="dokan-label dokan-label-' . esc_attr( dokan_get_order_status_class( $order->get_status() ) ) . '">' . esc_html( dokan_get_order_status_translated( $order->get_status() ) ) . '</span>'; ?>
                     </td>
                     <td class="dokan-order-customer" data-title="<?php esc_attr_e( 'Customer', 'dokan-lite' ); ?>">
                         <?php
@@ -114,7 +114,7 @@ if ( $user_orders ) {
                     </td>
                     <?php if ( function_exists( 'dokan_get_order_shipment_current_status' ) && 'on' === $allow_shipment && $wc_shipping_enabled ) : ?>
                         <td class="dokan-order-shipping-status" data-title="<?php esc_attr_e( 'Shipping Status', 'dokan-lite' ); ?>">
-                            <?php echo dokan_get_order_shipment_current_status( $order->get_id() ); ?>
+                            <?php echo wp_kses_post( dokan_get_order_shipment_current_status( $order->get_id() ) ); ?>
                         </td>
                     <?php endif; ?>
                     <?php do_action( 'dokan_order_listing_row_before_action_field', $order ); ?>
@@ -156,7 +156,7 @@ if ( $user_orders ) {
 
                             foreach ( $actions as $action ) { // phpcs:ignore
                                 $icon = ( isset( $action['icon'] ) ) ? $action['icon'] : '';
-                                printf( '<a class="dokan-btn dokan-btn-default dokan-btn-sm tips" href="%s" data-toggle="tooltip" data-placement="top" title="%s">%s</a> ', esc_url( $action['url'] ), esc_attr( $action['name'] ), $icon );
+                                printf( '<a class="dokan-btn dokan-btn-default dokan-btn-sm tips" href="%s" data-toggle="tooltip" data-placement="top" title="%s">%s</a> ', esc_url( $action['url'] ), esc_attr( $action['name'] ), wp_kses_post( $icon ) );
                             }
 
                             do_action( 'woocommerce_admin_order_actions_end', $order );
@@ -179,7 +179,7 @@ if ( $user_orders ) {
     if ( $num_of_pages > 1 ) {
         echo '<div class="pagination-wrap">';
         echo "<ul class='pagination'>\n\t<li>";
-        echo join( "</li>\n\t<li>", $page_links );
+        echo wp_kses_post( join( "</li>\n\t<li>", $page_links ) );
         echo "</li>\n</ul>\n";
         echo '</div>';
     }
