@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { CustomerPage } from '@pages/customerPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -8,6 +8,7 @@ import { reverseWithdraw, date } from '@utils/interfaces';
 // selectors
 const reverseWithdrawAdmin = selector.admin.dokan.reverseWithdraw;
 const reverseWithdrawVendor = selector.vendor.vReverseWithdrawal;
+const vendorDashboard = selector.vendor.vDashboard;
 
 export class ReverseWithdrawsPage extends CustomerPage {
     constructor(page: Page) {
@@ -38,7 +39,7 @@ export class ReverseWithdrawsPage extends CustomerPage {
         await this.multipleElementVisible(reverseWithdrawAdmin.reverseWithdrawFactCards);
 
         // filter elements are visible
-        const { filterInput, clearFilter, filteredResult, ...filters } = reverseWithdrawAdmin.filters;
+        const { filterInput, clearFilterCrossButton, filteredResult, ...filters } = reverseWithdrawAdmin.filters;
         await this.multipleElementVisible(filters);
 
         // reverse withdraw table elements are visible
@@ -47,14 +48,22 @@ export class ReverseWithdrawsPage extends CustomerPage {
 
     // filter reverse withdraws
     async filterReverseWithdraws(vendorName: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.reverseWithdraws);
+        await this.goto(data.subUrls.backend.dokan.reverseWithdraws);
 
-        await this.clickIfVisible(reverseWithdrawAdmin.filters.clearFilter);
+        //await this.clickAndWaitForResponse(data.subUrls.api.dokan.reverseWithdraws, reverseWithdrawAdmin.filters.clearFilter);
 
         await this.click(reverseWithdrawAdmin.filters.filterByStore);
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.reverseWithdraws, reverseWithdrawAdmin.filters.filterInput, vendorName);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.reverseWithdraws, reverseWithdrawAdmin.filters.filteredResult(vendorName));
         await this.toBeVisible(reverseWithdrawAdmin.reverseWithdrawCell(vendorName));
+    }
+
+    // clear filter reverse withdraws
+    async clearFilterReverseWithdraws(vendorName: string) {
+        await this.filterReverseWithdraws(vendorName);
+        await this.toBeVisible(reverseWithdrawAdmin.filters.clearFilterCrossButton);
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.reverseWithdraws, reverseWithdrawAdmin.filters.clearFilter);
+        await this.notToBeVisible(reverseWithdrawAdmin.filters.clearFilterCrossButton);
     }
 
     // add new reverse withdrawal
@@ -111,19 +120,24 @@ export class ReverseWithdrawsPage extends CustomerPage {
     }
 
     // reverse withdraw notice render properly
-    async vendorViewReverseWithdrawalNotice() {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.reverseWithdrawal);
+    async vendorViewReverseWithdrawalNotice(gracePeriod?: string) {
+        await this.goto(data.subUrls.frontend.vDashboard.reverseWithdrawal);
 
-        await this.toBeVisible(reverseWithdrawVendor.reverseWithdrawalNotice.noticeText);
-        // const noticeText = await this.getElementText(reverseWithdrawVendor.reverseWithdrawalNotice.noticeText);
+        await this.notToHaveCount(reverseWithdrawVendor.reverseWithdrawalNotice.noticeText, 0);
 
-        // expect(noticeText).toContain('Your products add to cart will be hidden. Hence users will not be able to purchase any of your products.');
-        // expect(noticeText).toContain('Withdraw menu will be hidden. Hence you will not be able to make any withdraw request from your account.');
-        // expect(noticeText).toContain('Your account will be disabled for selling. Hence you will no longer be able to sell any products.');
-
-        // expect(noticeText).toContain('Your products add to cart button has been temporarily hidden. Hence users are not able to purchase any of your products');
-        // expect(noticeText).toContain('Withdraw menu has been temporarily hidden. Hence you are not able to make any withdrawal requests from your account.');
-        // expect(noticeText).toContain('Kindly pay your due to start selling again.');
+        if (gracePeriod == 'grace-period') {
+            const noticeText = await this.getElementText(reverseWithdrawVendor.reverseWithdrawalNotice.noticeTextGracePeriod);
+            // while in grace period
+            expect(noticeText).toContain('Your products add to cart will be hidden. Hence users will not be able to purchase any of your products.');
+            expect(noticeText).toContain('Withdraw menu will be hidden. Hence you will not be able to make any withdraw request from your account.');
+            expect(noticeText).toContain('Your account will be disabled for selling. Hence you will no longer be able to sell any products.');
+        } else {
+            const noticeText = await this.getElementText(reverseWithdrawVendor.reverseWithdrawalNotice.noticeTextAfterGracePeriod);
+            // after grace period
+            expect(noticeText).toContain('Your products add to cart button has been temporarily hidden. Hence users are not able to purchase any of your products');
+            expect(noticeText).toContain('Withdraw menu has been temporarily hidden. Hence you are not able to make any withdrawal requests from your account.');
+            expect(noticeText).toContain('Kindly pay your due to start selling again.');
+        }
     }
 
     // view reverse withdraw announcement
@@ -142,6 +156,24 @@ export class ReverseWithdrawsPage extends CustomerPage {
         await this.setAttributeValue(reverseWithdrawVendor.filters.endDateInput, 'value', inputValue.endDate);
         await this.clickAndWaitForLoadState(reverseWithdrawVendor.filters.filter);
         await this.notToHaveCount(reverseWithdrawVendor.numberOfRowsFound, 3);
+    }
+
+    // vendor can't withdraw when reverse withdrawal rule applied
+    async vendorCantWithdraw() {
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(vendorDashboard.menus.primary.withdraw);
+    }
+
+    // vendor status is inactive when reverse withdrawal rule applied
+    async vendorStatusInactive() {
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toContainText(vendorDashboard.dokanNotice, 'Error! Your account is not enabled for selling, please contact the admin');
+    }
+
+    // vendor product in catalog mode when reverse withdrawal rule applied
+    async vendorProductsInCatalogMode(storeName: string) {
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.notToHaveCount(selector.customer.cSingleStore.productCard.readMore, 0);
     }
 
     // pay reverse pay balance

@@ -1,14 +1,11 @@
 import { test as setup, expect, request } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
-import { WpPage } from '@pages/wpPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { CI, LOCAL, DOKAN_PRO, BASE_URL } = process.env;
-
-setup.describe('authenticate users & set permalink', () => {
+setup.describe('add & authenticate users', () => {
     let apiUtils: ApiUtils;
 
     setup.beforeAll(async () => {
@@ -22,13 +19,6 @@ setup.describe('authenticate users & set permalink', () => {
     setup('authenticate admin', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
-    });
-
-    setup.skip('admin set WpSettings', { tag: ['@lite'] }, async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        const wpPage = new WpPage(page);
-        await loginPage.adminLogin(data.admin);
-        await wpPage.setPermalinkSettings(data.wpSettings.permalink);
     });
 
     setup('enable admin selling status', { tag: ['@lite'] }, async () => {
@@ -74,19 +64,5 @@ setup.describe('authenticate users & set permalink', () => {
     setup('authenticate vendor2', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.vendor.vendor2, data.auth.vendor2AuthFile);
-    });
-
-    setup('dokan pro enabled or not', { tag: ['@lite'] }, async () => {
-        setup.skip(LOCAL, 'Skip on Local testing');
-        let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
-        if (res) {
-            res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
-        }
-        DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
-    });
-
-    setup('get test environment info', { tag: ['@lite'] }, async () => {
-        const [, systemInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
-        helpers.writeFile(data.systemInfo, JSON.stringify(systemInfo));
     });
 });

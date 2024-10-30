@@ -1,7 +1,4 @@
 <?php
-/**
- * API\Reports\Orders\Stats\DataStore class file.
- */
 
 namespace WeDevs\Dokan\Analytics\Reports\Orders\Stats;
 
@@ -9,14 +6,15 @@ defined( 'ABSPATH' ) || exit;
 
 use Automattic\WooCommerce\Admin\API\Reports\DataStore as ReportsDataStore;
 use Automattic\WooCommerce\Admin\API\Reports\DataStoreInterface;
-use Automattic\WooCommerce\Admin\API\Reports\Cache as ReportsCache;
 use Automattic\WooCommerce\Admin\API\Reports\Customers\DataStore as CustomersDataStore;
 use Automattic\WooCommerce\Utilities\OrderUtil;
 use Exception;
 use WeDevs\Dokan\Analytics\Reports\OrderType;
 
 /**
- * API\Reports\Orders\Stats\DataStore.
+ * Dokan Orders stats data synchronizer.
+ *
+ * @since DOKAN_SINCE
  */
 class DataStore extends ReportsDataStore implements DataStoreInterface {
 	/**
@@ -83,10 +81,6 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	 * @return int|bool Returns -1 if order won't be processed, or a boolean indicating processing success.
 	 */
 	public static function sync_order( $post_id ) {
-		if ( ! OrderUtil::is_order( $post_id, array( 'shop_order', 'shop_order_refund' ) ) ) {
-			return -1;
-		}
-
 		$order = wc_get_order( $post_id );
 		if ( ! $order ) {
 			return -1;
@@ -106,17 +100,39 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$table_name = self::get_db_table_name();
 
 		if ( ! $order->get_id() || ! $order->get_date_created() ) {
+			dokan_log( 'Dokan Analytics Order not found: ' . $order->get_id() );
+
 			return -1;
 		}
 
-		$vendor_earning = (float) dokan()->commission->get_earning_by_order( $order );
-		$admin_earning = (float) dokan()->commission->get_earning_by_order( $order, 'admin' );
+		// Following values are applicable for Refund Order.
+		$vendor_earning = 0;
+		$admin_earning = 0;
 
-		$gateway_fee = $order->get_meta( 'dokan_gateway_fee' );
-		$gateway_fee_provider = $order->get_meta( 'dokan_gateway_fee_paid_by' );
+		$gateway_fee = 0;
+		$gateway_fee_provider = '';
 
 		$shipping_fee = $order->get_shipping_total();
-		$shipping_fee_recipient = $order->get_meta( 'shipping_fee_recipient' );
+		$shipping_fee_recipient = '';
+
+		// Override the values if order is a shop order.
+		switch ( $order->get_type() ) {
+			case 'shop_order':
+				$vendor_earning = (float) dokan()->commission->get_earning_by_order( $order );
+				$admin_earning = (float) dokan()->commission->get_earning_by_order( $order, 'admin' );
+
+				$gateway_fee = $order->get_meta( 'dokan_gateway_fee' );
+				$gateway_fee_provider = $order->get_meta( 'dokan_gateway_fee_paid_by' );
+				$shipping_fee_recipient = $order->get_meta( 'shipping_fee_recipient' );
+				break;
+
+			case 'shop_order_refund':
+				$parent_order = wc_get_order( $order->get_parent_id() );
+				$shipping_fee_recipient = $parent_order->get_meta( 'shipping_fee_recipient' );
+				break;
+			default:
+				break;
+		}
 
 		/**
 		 * Filters order stats data.
@@ -124,19 +140,19 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		 * @param array $data Data written to order stats lookup table.
 		 * @param WC_Order $order  Order object.
 		 *
-		 * @since 4.0.0
+		 * @since DOKAN_SINCE
 		 */
 		$data = apply_filters(
 			'dokan_analytics_update_order_stats_data',
 			array(
 				'order_id'              => $order->get_id(),
-				'seller_id'             => (int) $order->get_meta( '_dokan_vendor_id' ),
+				'vendor_id'             => (int) self::get_vendor_id_from_order( $order ),
 				'order_type'            => (int) ( ( new OrderType() )->get_type( $order ) ),
 				// Seller Data
-				'seller_earning'        => $vendor_earning,
-				'seller_gateway_fee'    => $gateway_fee_provider === 'seller' ? $gateway_fee : '0',
-				'seller_shipping_fee'   => $shipping_fee_recipient === 'seller' ? $shipping_fee : '0',
-				'seller_discount'       => $order->get_meta( '_seller_discount' ),
+				'vendor_earning'        => $vendor_earning,
+				'vendor_gateway_fee'    => $gateway_fee_provider === 'seller' ? $gateway_fee : '0',
+				'vendor_shipping_fee'   => $shipping_fee_recipient === 'seller' ? $shipping_fee : '0',
+				'vendor_discount'       => $order->get_meta( '_vendor_discount' ),
 				// Admin Data
 				'admin_commission'      => $admin_earning,
 				'admin_gateway_fee'     => $gateway_fee_provider !== 'seller' ? $gateway_fee : '0',
@@ -206,10 +222,36 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		 * @param int $order_id Order ID.
 		 * @param int $customer_id Customer ID.
 		 *
-		 * @since 4.0.0
+		 * @since DOKAN_SINCE
 		 */
 		do_action( 'dokan_analytics_delete_order_stats', $order_id, $customer_id );
+	}
 
-		ReportsCache::invalidate();
+	/**
+	 * Gets the vendor ID associated with an order.
+	 *
+	 * @param \WC_Order $order Order object.
+	 *
+	 * @return int Vendor ID.
+	 */
+	protected static function get_vendor_id_from_order( $order ) {
+		$order_type = ( new OrderType() )->get_type( $order );
+
+		switch ( $order_type ) {
+			case OrderType::DOKAN_SUBORDER:
+			case OrderType::DOKAN_SINGLE_ORDER:
+				$vendor_id = $order->get_meta( '_dokan_vendor_id' );
+				break;
+			case OrderType::DOKAN_SUBORDER_REFUND:
+			case OrderType::DOKAN_SINGLE_ORDER_REFUND:
+				$parent_order = wc_get_order( $order->get_parent_id() );
+				$vendor_id    = $parent_order->get_meta( '_dokan_vendor_id' );
+				break;
+			default:
+				$vendor_id = 0;
+				break;
+		}
+
+		return (int) $vendor_id;
 	}
 }

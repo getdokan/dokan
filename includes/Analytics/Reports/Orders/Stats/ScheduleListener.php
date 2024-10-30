@@ -8,6 +8,8 @@ use WeDevs\Dokan\Contracts\Hookable;
  * Class ScheduleListener
  *
  * Listens to WooCommerce schedule events and triggers Dokan order synchronization and deletion.
+ *
+ * @since DOKAN_SINCE
  */
 class ScheduleListener implements Hookable {
     /**
@@ -25,8 +27,7 @@ class ScheduleListener implements Hookable {
      */
     public function register_hooks(): void {
         add_action( 'woocommerce_analytics_update_order_stats', [ $this, 'sync_dokan_order' ] );
-        add_action( 'woocommerce_before_delete_order', [ $this, 'delete_order' ] );
-        add_action( 'delete_post', [ $this, 'delete_order' ] );
+        add_action( 'woocommerce_analytics_delete_order_stats', [ $this, 'delete_order' ] );
     }
 
     /**

@@ -4,6 +4,13 @@ namespace WeDevs\Dokan\Analytics\Reports\Taxes\Stats;
 
 use WeDevs\Dokan\Analytics\Reports\Taxes\QueryFilter as TaxesQueryFilter;
 
+/**
+ * Class QueryFilter
+ *
+ * Filters and modifies WooCommerce analytics queries for Tax Stats.
+ *
+ * @since DOKAN_SINCE
+ */
 class QueryFilter extends TaxesQueryFilter {
 	protected $context = 'taxes_stats';
 
@@ -37,7 +44,7 @@ class QueryFilter extends TaxesQueryFilter {
 		}
 
 		$table_name = $this->get_dokan_table();
-		$types = $this->get_non_refund_order_types_to_include();
+		$types = $this->get_order_types_for_sql_excluding_refunds();
 
 		$column['orders_count'] = "SUM( CASE WHEN {$table_name}.order_type IN ($types) THEN 1 ELSE 0 END ) as orders_count";
 

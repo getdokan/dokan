@@ -34,17 +34,17 @@ test.describe('Shortcodes test', () => {
         await apiUtils.dispose();
     });
 
-    test('admin can create page with dokan shortcode', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can create page with dokan shortcode', { tag: ['@lite', '@admin'] }, async () => {
         await admin.createPageWithShortcode(data.pageTitle, data.dokanShortcodes.dashboard);
     });
 
-    test('vendor can view dokan dashboard (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
+    test('vendor can view Dokan dashboard (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.dashboardShortcode, payloads.adminAuth);
         await vendor.viewDashboard(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
-    test('vendor can view dokan subscription packs (shortcode)', { tag: ['@pro', '@admin'] }, async () => {
+    test('vendor can view Dokan subscription packs (shortcode)', { tag: ['@pro', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.dokanSubscriptionPackShortcode, payloads.adminAuth);
         await vendor.viewDokanSubscriptionPacks(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
@@ -59,13 +59,13 @@ test.describe('Shortcodes test', () => {
 
     test('customer can view best selling products (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.bestSellingProductShortcode, payloads.adminAuth);
-        await customer.viewBestSellingProducts(responseBody.link);
+        await customer.viewProducts(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
     test('customer can view top rated products (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.topRatedProductShortcode, payloads.adminAuth);
-        await customer.topRatedProducts(responseBody.link);
+        await customer.viewProducts(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 

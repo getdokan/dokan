@@ -25,6 +25,8 @@ const {
     LICENSE_KEY,
 } = process.env;
 
+const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
+
 interface user {
     username: string;
     password: string;
@@ -39,6 +41,17 @@ export { admin, user };
 
 export const data = {
     systemInfo: 'playwright/systemInfo.json',
+
+    header: {
+        userAuth: (username: string, password: string = USER_PASSWORD) => {
+            return { extraHTTPHeaders: { Authorization: basicAuth(username, password) } };
+        },
+
+        adminAuth: { extraHTTPHeaders: { Authorization: basicAuth(ADMIN, ADMIN_PASSWORD) } },
+        vendorAuth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR, ADMIN_PASSWORD) } },
+        vendor2Auth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR2, ADMIN_PASSWORD) } },
+        customerAuth: { extraHTTPHeaders: { Authorization: basicAuth(CUSTOMER, ADMIN_PASSWORD) } },
+    },
 
     auth: {
         adminAuthFile: 'playwright/.auth/adminStorageState.json',
@@ -74,6 +87,7 @@ export const data = {
 
     // keyboard key
     key: {
+        escape: 'Escape',
         arrowDown: 'ArrowDown',
         enter: 'Enter',
         home: 'Home',
@@ -140,15 +154,15 @@ export const data = {
         },
 
         name: {
-            simple: () => `${faker.commerce.productName()} (Simple)`,
-            variable: () => `${faker.commerce.productName()} (Variable)`,
-            external: () => `${faker.commerce.productName()} (External)`,
-            grouped: () => `${faker.commerce.productName()} (Grouped)`,
-            simpleSubscription: () => `${faker.commerce.productName()} (Simple Subscription)`,
-            variableSubscription: () => `${faker.commerce.productName()} (Variable Subscription)`,
+            simple: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
+            variable: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Variable)`,
+            external: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (External)`,
+            grouped: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Grouped)`,
+            simpleSubscription: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple Subscription)`,
+            variableSubscription: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Variable Subscription)`,
             dokanSubscription: { nonRecurring: () => `Dokan Subscription_${faker.string.alpha({ length: 5, casing: 'upper' })} (Product Pack)` },
-            booking: () => `${faker.commerce.productName()} (Booking)`,
-            auction: () => `${faker.commerce.productName()} (Auction)`,
+            booking: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Booking)`,
+            auction: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Auction)`,
         },
 
         price: {
@@ -165,10 +179,10 @@ export const data = {
 
         category: {
             unCategorized: 'Uncategorized',
-            clothings: 'Clothings',
-            randomCategory1: () => faker.commerce.productAdjective(),
+            clothings: 'clothings',
             randomCategory: () => `category_${faker.string.alpha(5)}`,
-            categories: faker.helpers.arrayElement(['Electronic Devices', 'Electronic Accessories', 'Men"s Fashion', 'Clothings', 'Women"s Fashion']),
+            categories: ['clothings', 'electronics'],
+            multistepCategories: ['gadgets', 'Wearables', 'smartwatches', 'fitness-trackers'],
         },
 
         store: {
@@ -195,25 +209,27 @@ export const data = {
 
         simple: {
             productType: 'simple',
-            productName: () => `${faker.commerce.productName()} (Simple)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: `${VENDOR}store`,
             status: 'publish',
             stockStatus: false,
             editProduct: '',
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
         downloadable: {
             productType: 'simple',
-            productName: () => `${faker.commerce.productName()} (Downloadable)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Downloadable)`,
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: `${VENDOR}store`,
             status: 'publish',
             stockStatus: false,
             editProduct: '',
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
 
             downloadableOptions: {
@@ -226,19 +242,20 @@ export const data = {
 
         virtual: {
             productType: 'simple',
-            productName: () => `${faker.commerce.productName()} (Virtual)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Virtual)`,
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: `${VENDOR}store`,
             status: 'publish',
             stockStatus: false,
             editProduct: '',
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
         variable: {
             productType: 'variable',
-            productName: () => `${faker.commerce.productName()} (Variable)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Variable)`,
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: `${VENDOR}store`,
@@ -250,24 +267,37 @@ export const data = {
                 linkAllVariation: 'link_all_variations',
                 variableRegularPrice: 'variable_regular_price',
             },
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
         external: {
             productType: 'external',
-            productName: () => `${faker.commerce.productName()} (External)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (External)`,
             productUrl: '/product/p1_v1-simple/',
             buttonText: 'Buy product',
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: `${VENDOR}store`,
             status: 'publish',
+            description: 'test description',
+            saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
+        },
+
+        grouped: {
+            productType: 'grouped',
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Grouped)`,
+            groupedProducts: ['p1_v1 (simple)'],
+            category: 'Uncategorized',
+            storeName: `${VENDOR}store`,
+            status: 'publish',
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
         simpleSubscription: {
             productType: 'subscription',
-            productName: () => `${faker.commerce.productName()} (Simple Subscription)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple Subscription)`,
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             subscriptionPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
@@ -278,12 +308,13 @@ export const data = {
             subscriptionTrialPeriod: 'day', // 'day', 'week', 'month', 'year'
             storeName: `${VENDOR}store`,
             status: 'publish',
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
         variableSubscription: {
             productType: 'variable-subscription',
-            productName: () => `${faker.commerce.productName()} (Variable Subscription)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Variable Subscription)`,
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             subscriptionPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
@@ -300,6 +331,7 @@ export const data = {
                 linkAllVariation: 'link_all_variations',
                 variableRegularPrice: 'variable_regular_price',
             },
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
@@ -314,10 +346,11 @@ export const data = {
             expireAfterDays: '-1',
             storeName: `${VENDOR}store`,
             status: 'publish',
+            description: 'test description',
         },
 
         booking: {
-            productName: () => `${faker.commerce.productName()} (Booking)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Booking)`,
             name: '',
             productType: 'booking',
             category: 'Uncategorized',
@@ -346,7 +379,7 @@ export const data = {
 
         // Auction
         auction: {
-            productName: () => `${faker.commerce.productName()} (Auction)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Auction)`,
             name: '',
             productType: 'auction',
             category: 'Uncategorized',
@@ -404,9 +437,82 @@ export const data = {
         },
 
         productInfo: {
+            title: `${faker.commerce.productName()}_${faker.string.nanoid(5)}`,
+
+            permalink: `_${faker.string.nanoid(10)}`,
+
+            price: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
+
+            discount: {
+                regularPrice: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }),
+                discountPrice: '10',
+                startDate: helpers.currentDate,
+                endDate: helpers.addDays(helpers.currentDateTime, 2),
+            },
+
+            tags: {
+                tags: ['accessories'],
+                randomTags: [faker.string.nanoid(5)],
+            },
+
+            images: {
+                cover: 'utils/sampleData/avatar.png',
+                gallery: ['utils/sampleData/avatar.png'],
+            },
+
             description: {
                 shortDescription: 'test short description',
                 description: 'test long description',
+            },
+
+            downloadableOptions: {
+                fileName: 'avatar',
+                fileUrl: 'utils/sampleData/avatar.png',
+                downloadLimit: '100',
+                downloadExpiry: '365',
+            },
+
+            otherOptions: {
+                status: 'draft', // publish,
+                visibility: 'hidden', // visible, catalog, search, hidden
+                purchaseNote: 'test purchase note',
+                enableReview: true,
+            },
+
+            inventory: () => ({
+                sku: faker.string.nanoid(10),
+                stockStatus: 'outofstock', // instock, outofstock, onbackorder
+                stockManagement: true,
+                stockQuantity: '100',
+                lowStockThreshold: '10',
+                backorders: 'notify', // no, notify, yes
+                oneQuantity: true,
+            }),
+
+            geolocation: 'NYC, NY, USA',
+
+            shipping: {
+                weight: '10',
+                length: '20',
+                width: '30',
+                height: '40',
+                shippingClass: 'heavy',
+            },
+
+            tax: {
+                status: 'taxable', // taxable, shipping, none
+                class: 'zero-rate', // reduced-rate, zero-rate
+            },
+
+            linkedProducts: {
+                upSells: ['p1_v1 (simple)'],
+                crossSells: ['p1_v1 (simple)'],
+            },
+
+            attribute: {
+                attributeName: 'sizes',
+                randomAttributeName: faker.string.nanoid(7),
+                attributeTerm: faker.string.nanoid(5),
             },
 
             euCompliance: {
@@ -423,33 +529,35 @@ export const data = {
                 optionalMiniDescription: 'test mini description',
             },
 
+            addon: {
+                type: 'multiple_choice', // 'multiple_choice', 'checkbox', 'custom_text', 'custom_textarea', 'file_upload', 'custom_price', 'input_multiplier', 'heading'
+                displayAs: 'select', // 'select', 'radiobutton', 'images'
+                title: `Test Add-on Title_${faker.string.nanoid(10)}`,
+                formatTitle: 'label', // 'label', 'heading', 'hide'
+                addDescription: 'Add-on description',
+                enterAnOption: 'Option 1',
+                optionPriceType: 'flat_fee', // 'flat_fee', 'quantity_based', 'percentage_based'
+                optionPriceInput: '30',
+            },
+
             amountDiscount: {
                 minimumOrderAmount: '200',
                 discountPercentage: '10',
             },
 
             quantityDiscount: {
-                minimumQuantity: '10',
-                discountPercentage: '10',
+                minimumQuantity: '100',
+                discountPercentage: '10,00', // todo: handle in test assertion pass number and convert to string with 2 decimal with woo decimal separator
             },
 
             wholesaleOption: {
                 wholesalePrice: '90',
-                minimumWholesaleQuantity: '10',
+                minimumQuantity: '10',
             },
 
             minMax: {
                 minimumProductQuantity: '1',
                 maximumProductQuantity: '20',
-                minimumAmount: '10',
-                maximumAmount: '1000000',
-                category: 'Uncategorized',
-            },
-
-            otherOptions: {
-                productStatus: 'draft', // publish,
-                visibility: 'hidden', // visible, catalog, search, hidden
-                purchaseNote: 'test purchase note',
             },
         },
     },
@@ -605,56 +713,41 @@ export const data = {
     shipping: {
         enableShipping: 'Ship to all countries you sell to',
         disableShipping: 'Disable shipping & shipping calculations',
-        shippingZone: 'US',
 
-        shippingMethods: {
-            methods: faker.helpers.arrayElement(['flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping', 'dokan_vendor_shipping']),
+        zone: () => ({
+            zoneName: faker.string.alpha(3).toUpperCase(),
+            zoneRegion: 'United States (US)',
+            saveSuccessMessage: 'Your settings have been saved.',
+        }),
+
+        methods: {
             flatRate: {
-                shippingZone: 'US',
-                shippingCountry: 'United States (US)',
-                selectShippingMethod: 'flat_rate',
-                shippingMethod: 'Flat rate',
-                taxStatus: 'taxable', // 'none
+                selectMethodName: 'flat_rate',
+                methodName: 'Flat rate',
+                taxStatus: 'taxable', // 'none', 'taxable'
                 shippingCost: '20',
             },
 
             freeShipping: {
-                shippingZone: 'US',
-                shippingCountry: 'United States (US)',
-                selectShippingMethod: 'free_shipping',
-                shippingMethod: 'Free shipping',
-                freeShippingRequires: 'min_amount', // 'coupon', 'min_amount', 'either', 'both'
+                selectMethodName: 'free_shipping',
+                methodName: 'Free shipping',
+                freeShippingRequires: 'both', // 'coupon', 'min_amount', 'either', 'both'
                 freeShippingMinimumOrderAmount: '200',
             },
 
-            localPickup: {
-                shippingZone: 'US',
-                shippingCountry: 'United States (US)',
-                selectShippingMethod: 'local_pickup',
-                shippingMethod: 'Local pickup',
-                taxStatus: 'taxable', // 'none
-                shippingCost: '20',
-            },
-
             tableRateShipping: {
-                shippingZone: 'US',
-                shippingCountry: 'United States (US)',
-                selectShippingMethod: 'dokan_table_rate_shipping',
-                shippingMethod: 'Vendor Table Rate',
+                selectMethodName: 'dokan_table_rate_shipping',
+                methodName: 'Vendor Table Rate',
             },
 
             distanceRateShipping: {
-                shippingZone: 'US',
-                shippingCountry: 'United States (US)',
-                selectShippingMethod: 'dokan_distance_rate_shipping',
-                shippingMethod: 'Vendor Distance Rate',
+                selectMethodName: 'dokan_distance_rate_shipping',
+                methodName: 'Vendor Distance Rate',
             },
 
             vendorShipping: {
-                shippingZone: 'US',
-                shippingCountry: 'United States (US)',
-                selectShippingMethod: 'dokan_vendor_shipping',
-                shippingMethod: 'Vendor Shipping',
+                selectMethodName: 'dokan_vendor_shipping',
+                methodName: 'Vendor Shipping',
                 taxStatus: 'taxable', // 'none
             },
         },
@@ -666,9 +759,9 @@ export const data = {
     payment: {
         saveSuccessMessage: 'Your settings have been saved.',
         currency: {
-            dollar: 'United States (US) dollar ($)',
-            euro: 'Euro (€)',
-            rupee: 'Indian rupee (₹)',
+            dollar: 'United States (US) dollar ($) — USD',
+            euro: 'Euro (€) — EUR',
+            rupee: 'Indian rupee (₹) — INR',
             currencyOptions: {
                 thousandSeparator: ',',
                 decimalSeparator: ',',
@@ -686,7 +779,6 @@ export const data = {
             title: 'Dokan Credit card (Stripe)',
             description: 'Pay with your credit card via Stripe.',
             displayNoticeInterval: '7',
-            stripeCheckoutLocale: 'English',
             testPublishableKey: 'pk_test_',
             testSecretKey: 'sk_test_',
             testClientId: 'ca_',
@@ -876,6 +968,11 @@ export const data = {
                 addCoupon: 'wp-admin/post-new.php?post_type=shop_coupon',
                 orders: 'wp-admin/edit.php?post_type=shop_order',
                 settings: 'wp-admin/admin.php?page=wc-settings',
+                taxSettings: 'wp-admin/admin.php?page=wc-settings&tab=tax',
+                shippingSettings: 'wp-admin/admin.php?page=wc-settings&tab=shipping',
+                shippingZone: (zoneId: string) => `wp-admin/admin.php?page=wc-settings&tab=shipping&zone_id=${zoneId}`,
+                paymentSettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout',
+                accountSettings: 'wp-admin/admin.php?page=wc-settings&tab=account',
             },
         },
 
@@ -910,10 +1007,13 @@ export const data = {
             addToCart: '?wc-ajax=add_to_cart',
             applyCoupon: '?wc-ajax=apply_coupon',
             removeCoupon: '?wc-ajax=remove_coupon',
+            refreshedFragment: '?wc-ajax=get_refreshed_fragments',
             placeOrder: '?wc-ajax=checkout',
             billingAddress: 'my-account/edit-address/billing',
             shippingAddress: 'my-account/edit-address/shipping',
+            editAddress: 'my-account/edit-address',
             shippingAddressCheckout: 'wc-ajax=update_order_review',
+            bookedDayBlocks: '?wc-ajax=wc_bookings_find_booked_day_blocks',
             editAccountCustomer: 'my-account/edit-account',
             becomeVendor: 'my-account/account-migration',
             productDetails: (productName: string) => `product/${productName}`,
@@ -972,6 +1072,7 @@ export const data = {
                 // sub menus
                 settingsStore: 'dashboard/settings/store',
                 settingsAddon: 'dashboard/settings/product-addon',
+                settingsAddonEdit: (addonId: string) => `dashboard/settings/product-addon/?edit=${addonId}`,
                 settingsPayment: 'dashboard/settings/payment',
                 // payment settings
                 paypal: 'dashboard/settings/payment-manage-paypal',
@@ -1006,6 +1107,7 @@ export const data = {
                 logs: 'dokan/v1/admin/logs',
                 announcements: 'dokan/v1/announcement',
                 dummyData: 'dokan/v1/dummy-data',
+                dummyDataImport: 'dokan/v1/dummy-data/import',
                 refunds: 'dokan/v1/refunds',
                 modules: 'dokan/v1/admin/modules',
                 storeReviews: 'dokan/v1/store-reviews',
@@ -1030,6 +1132,7 @@ export const data = {
                 orders: 'wc/v3/orders',
                 customers: 'wc/v3/customers',
                 store: 'wc/store',
+                paymentGateways: 'wc/v3/payment_gateways',
             },
         },
     },
@@ -1107,8 +1210,8 @@ export const data = {
             nanoid: faker.string.nanoid(10),
 
             // shop details
-            banner: 'tests/e2e/utils/sampleData/banner.png',
-            profilePicture: 'tests/e2e/utils/sampleData/avatar.png',
+            banner: 'utils/sampleData/banner.png',
+            profilePicture: 'utils/sampleData/avatar.png',
             storeName: `${VENDOR}store`,
             productsPerPage: '12',
             mapLocation: 'New York',
@@ -1307,7 +1410,6 @@ export const data = {
 
         payment: {
             methodName: '',
-            // email: () => faker.internet.email(),
             email: () => `${faker.person.firstName('male')}@email.com`,
             bankAccountName: 'accountName',
             bankAccountType: faker.helpers.arrayElement(['personal', 'business']),
@@ -1351,6 +1453,7 @@ export const data = {
             youtube: 'https://www.youtube.com/',
             instagram: 'https://www.instagram.com/',
             flickr: 'https://www.flickr.com/',
+            threads: 'https://www.threads.net/',
             saveSuccessMessage: 'Your information has been saved successfully',
         },
 
@@ -1358,10 +1461,15 @@ export const data = {
         rma: {
             label: 'Warranty',
             type: 'included_warranty', // 'no_warranty', 'included_warranty', 'addon_warranty'
-            rmaLength: 'lifetime', // 'limited', 'lifetime'
+            length: 'limited', // 'limited', 'lifetime'
             lengthValue: '1',
             lengthDuration: 'weeks', // 'days', 'weeks', 'months', 'years'
-            refundPolicyHtmlBody: 'Refund Policy Vendor',
+            addon: {
+                cost: '10',
+                durationLength: '1',
+                durationType: 'months', // 'days','weeks', 'months', 'years'
+            },
+            refundPolicy: 'Refund Policy Vendor',
             saveSuccessMessage: 'Settings saved successfully',
         },
 
@@ -1371,8 +1479,10 @@ export const data = {
             metaKeywords: 'test meta keywords',
             facebookTitle: 'test facebook title',
             facebookDescription: 'test facebook description',
+            facebookImage: 'utils/sampleData/avatar.png',
             twitterTitle: 'test twitter title',
             twitterDescription: 'test twitter description',
+            twitterImage: 'utils/sampleData/avatar.png',
         },
 
         withdraw: {
@@ -1430,7 +1540,9 @@ export const data = {
     customer: {
         username: CUSTOMER,
         password: USER_PASSWORD,
-        lastname: `${CUSTOMER} ln`,
+        lastname: 'ln',
+        fullName: `${CUSTOMER} c1`,
+        email: `${CUSTOMER}@email.com`,
 
         customer2: {
             username: CUSTOMER2,
@@ -1482,10 +1594,11 @@ export const data = {
                 zipCode: '10003',
                 country: 'United States (US)',
                 state: 'New York',
-                email: `${CUSTOMER}@yopmail.com`,
+                email: `${CUSTOMER}@email.com`,
                 phone: '0123456789',
             },
             shipping: {
+                email: `${CUSTOMER}@email.com`,
                 firstName: CUSTOMER,
                 lastName: 'c1',
                 companyName: faker.company.name(),
@@ -1620,11 +1733,20 @@ export const data = {
         quoteRule: () => ({
             title: `test rule_${faker.string.nanoid(10)}`,
             userRole: 'customer',
-            product: 'p1_v1 (simple)',
-            category: 'Uncategorized',
-            hidePrice: '1',
+            applyOnAllProducts: false,
+            specificProducts: true,
+            includeProducts: 'p1_v1 (simple)',
+            // excludeProducts: 'p1_v2 (simple)',
+            specificCategories: false,
+            categories: ['Uncategorized'],
+            specificVendors: false,
+            includeVendors: 'vendor1store',
+            excludeVendors: 'vendor2store',
+            // expireLimit: '20', // todo: fix after api is updated
+            hidePrice: true,
             hidePriceText: 'Price is hidden',
-            hideAddToCartButton: 'keep_and_add_new', // replace, keep_and_add_new
+            hideAddToCartButton: true,
+            keepBothCartQuoteButton: true,
             customButtonLabel: 'Add to quote',
             order: '0',
         }),
@@ -1635,16 +1757,19 @@ export const data = {
         },
 
         quote: () => ({
+            id: '',
             title: `test quote_${faker.string.nanoid(10)}`,
             user: CUSTOMER,
             fullName: 'Jhon Doe',
-            email: `${CUSTOMER}@yopmail.com`,
+            email: `${CUSTOMER}@email.com`,
             companyName: 'abc',
             phoneNumber: '0123456789',
-            product: 'p1_v1 (simple)',
+            vendor: `${VENDOR2}store`,
+            product: 'p1_v2 (simple)',
             quantity: '5',
             offerPrice: '80',
             offerProductQuantity: '10',
+            shippingCost: '20',
         }),
 
         trashedQuote: {
@@ -1659,20 +1784,33 @@ export const data = {
         vendorUpdateQuote: {
             productName: '',
             offeredPrice: '80',
-            quantity: '20',
+            shippingCost: '20',
+            reply: 'test reply',
         },
 
         customerQuoteProduct: {
             productName: '',
             offeredPrice: '30',
             quantity: '20',
+            shippingCost: '',
+            expectedDelivery: helpers.addDays(helpers.currentDateTime, 2),
+            additionalMessage: 'test quote message',
         },
 
         guest: () => ({
             fullName: faker.person.fullName({ sex: 'male' }),
             email: `${faker.person.firstName('male')}@email.com`,
-            companyName: faker.company.name(),
             phoneNumber: faker.phone.number(),
+
+            address: {
+                country: 'United States (US)',
+                countrySelectValue: 'US',
+                stateSelectValue: 'NY',
+                city: 'New York',
+                postCode: '10006',
+                addressLine1: 'abc street',
+                addressLine2: 'xyz street',
+            },
         }),
     },
 
@@ -1721,13 +1859,13 @@ export const data = {
     },
 
     //  question answers
-    questionAnswers: {
-        question: 'test question',
-        editQuestion: 'edited test question',
-        answer: 'test answer',
-        editAnswer: 'edited test answer',
-        user: {
-            username: CUSTOMER,
+    questionAnswers: () => ({
+        question: `test question_${faker.string.nanoid(5)}`,
+        editQuestion: `edited test question_${faker.string.nanoid(5)}`,
+        answer: `test answer_${faker.string.nanoid(5)}`,
+        editAnswer: `edited test answer_${faker.string.nanoid(5)}`,
+        guest: {
+            username: CUSTOMER2,
             password: USER_PASSWORD,
         },
 
@@ -1735,7 +1873,7 @@ export const data = {
             byVendor: `${VENDOR}store`,
             byProduct: 'p1_v1 (simple)',
         },
-    },
+    }),
 
     // announcement
     announcement: {
@@ -1870,10 +2008,35 @@ export const data = {
         wholesaleCapabilityActivate: 'Wholesale capability activate',
     },
 
+    // vendor staff
+    vendorStaff: {
+        basicMenu: ['dokan_view_product_menu', 'dokan_view_order_menu', 'dokan_view_coupon_menu'],
+        basicMenuNames: ['products', 'orders', 'coupons'],
+        menus: [
+            'dokan_view_overview_menu',
+            'dokan_view_product_menu',
+            'dokan_view_order_menu',
+            'dokan_view_coupon_menu',
+            'dokan_view_report_menu',
+            'dokan_view_review_menu',
+            'dokan_view_withdraw_menu',
+            'dokan_view_store_settings_menu',
+            'dokan_view_store_payment_menu',
+            'dokan_view_store_shipping_menu',
+            'dokan_view_store_social_menu',
+            'dokan_view_store_seo_menu',
+            'dokan_view_booking_menu',
+            'dokan_view_tools_menu',
+            'dokan_view_auction_menu',
+            'dokan_view_store_verification_menu',
+        ],
+    },
+
     // dokan settings
     dokanSettings: {
-        // General Settings
+        // general settings
         general: {
+            settingTitle: 'General Settings',
             vendorStoreUrl: 'store',
             setupWizardMessage: "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than two minutes.",
             sellingProductTypes: 'both', // 'both', 'physical', 'digital'
@@ -1882,8 +2045,9 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Selling Options Settings
+        // selling options settings
         selling: {
+            settingTitle: 'Selling Option Settings',
             commissionType: 'percentage', // 'flat', 'percentage', 'combine'
             adminCommission: '10',
             shippingFeeRecipient: 'seller', // 'seller', 'admin'
@@ -1894,8 +2058,9 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Withdraw
+        // withdraw
         withdraw: {
+            settingTitle: 'Withdraw Settings',
             customMethodName: 'Bksh',
             customMethodType: 'Phone',
             charge: {
@@ -1917,16 +2082,18 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Reverse withdraw
+        // reverse withdraw
         reverseWithdraw: {
+            settingTitle: 'Reverse Withdrawal Settings',
             billingType: 'by_amount', // 'by_month'
             reverseBalanceThreshold: '21',
             gracePeriod: '7',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Pages
+        // pages
         page: {
+            settingTitle: 'Site and Store Page Settings',
             dashboard: 'Dashboard',
             myOrders: 'My Orders',
             storeListing: 'Store List',
@@ -1934,8 +2101,9 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Appearance
+        // appearance
         appearance: {
+            settingTitle: 'Appearance Settings',
             mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
             googleMapApiKey: GMAP,
             mapBoxApiKey: MAPBOX,
@@ -1944,8 +2112,38 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // menuManager
+        menuManager: {
+            menus: [
+                'Products',
+                'Orders',
+                'Request Quotes',
+                'Coupons',
+                'Reports',
+                'Delivery Time',
+                'Reviews',
+                'Withdraw',
+                'Reverse Withdrawal',
+                'Badge',
+                'Product Q&A',
+                'Return Request',
+                'Staff',
+                'Followers',
+                // 'Subscription',
+                'Booking',
+                'Announcements',
+                'Analytics',
+                'Tools',
+                'Auction',
+                'Support',
+            ],
+            settingTitle: 'Menu Manager Settings',
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // privacy policy
         privacyPolicy: {
+            settingTitle: 'Privacy Settings',
             privacyPage: '2', // '2', '3', '4', '5', '6', '7', '8', '9', '10'
             privacyPolicyContent: 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -1953,6 +2151,7 @@ export const data = {
 
         // colors
         colors: {
+            settingTitle: 'Colors Settings',
             paletteChoice: 'pre-defined',
             colorPalette: 'default',
             predefinedPalette: {
@@ -2020,24 +2219,28 @@ export const data = {
 
         // shipping status
         shippingStatus: {
+            settingTitle: 'Shipping Status Settings',
             customShippingStatus: 'Test shipping status',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // quote
         quote: {
+            settingTitle: 'Quote Settings',
             decreaseOfferedPrice: '0',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // live search
         liveSearch: {
+            settingTitle: 'Live Search Settings',
             liveSearchOption: 'suggestion_box', // suggestion_box, old_live_search
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // Store support
         storeSupport: {
+            settingTitle: 'Store Support Settings',
             displayOnSingleProductPage: 'above_tab', // 'above_tab', 'inside_tab', 'dont_show'
             supportButtonLabel: 'Get Support',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2045,6 +2248,7 @@ export const data = {
 
         // Vendor Verification
         vendorVerification: {
+            settingTitle: 'Vendor Verification Settings',
             verifiedIcons: {
                 circleSolid: 'check_circle_solid',
                 circleRegular: 'check_circle_regular',
@@ -2096,6 +2300,7 @@ export const data = {
 
         // Email verification
         emailVerification: {
+            settingTitle: 'Email Verification Settings',
             registrationNotice: 'Please check your email and complete email verification to login.',
             loginNotice: 'Please check your email and complete email verification to login.',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2103,6 +2308,7 @@ export const data = {
 
         // Rma Settings
         rma: {
+            settingTitle: 'RMA Settings',
             orderStatus: 'wc-processing', // 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'
             rmaReasons: ['Defective', 'Wrong Product', 'Other'],
             refundPolicyHtmlBody: 'Refund Policy',
@@ -2111,17 +2317,20 @@ export const data = {
 
         // Wholesale
         wholesale: {
+            settingTitle: 'Wholesale Settings',
             whoCanSeeWholesalePrice: 'all', // 'all', 'wholesale_customer'
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // EuCompliance
         euCompliance: {
+            settingTitle: 'EU Compliance Settings',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // delivery time
         deliveryTime: {
+            settingTitle: 'Delivery Time Settings',
             deliveryDateLabel: 'Delivery Date',
             deliveryBlockedBuffer: '0',
             deliveryBoxInfo: 'This store needs %DAY% day(s) to process your delivery request',
@@ -2136,6 +2345,7 @@ export const data = {
 
         // Product advertising
         productAdvertising: {
+            settingTitle: 'Product Advertisement Settings',
             noOfAvailableSlot: '100',
             expireAfterDays: '10',
             advertisementCost: '15',
@@ -2144,6 +2354,7 @@ export const data = {
 
         // Geolocation Settings
         geolocation: {
+            settingTitle: 'Geolocation Settings',
             locationMapPosition: 'top', // 'top', 'left', 'right'
             showMap: 'all', // 'all', 'store_listing', 'shop'
             radiusSearchUnit: 'km', // 'km', 'miles'
@@ -2156,12 +2367,14 @@ export const data = {
 
         // Product report abuse
         productReportAbuse: {
+            settingTitle: 'Product Report Abuse Settings',
             reasonsForAbuseReport: 'This product is fake',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // Spmv Settings
         spmv: {
+            settingTitle: 'SPMV Settings',
             sellItemButtonText: 'Sell This Item',
             availableVendorDisplayAreaTitle: 'Other Available Vendor',
             availableVendorSectionDisplayPosition: 'below_tabs', // 'below_tabs', 'inside_tabs', 'after_tabs'
@@ -2171,6 +2384,7 @@ export const data = {
 
         // Vendor Subscription Settings
         vendorSubscription: {
+            settingTitle: 'Vendor Subscription Settings',
             displayPage: 'Sample Page', // '2', '4', '5', '6', '8', '9', '10', '11', '15', '-1'
             noOfDays: '2',
             productStatus: 'draft', // 'publish', 'pending', 'draft'
@@ -2184,7 +2398,7 @@ export const data = {
 
     storeContactData: {
         name: CUSTOMER,
-        email: `${CUSTOMER}@yopmail.com`,
+        email: `${CUSTOMER}@email.com`,
         message: 'Test Message',
     },
 
@@ -2230,7 +2444,7 @@ export const data = {
 
     bookings: {
         startDate: new Date(),
-        endDate: helpers.futureDate(new Date(), 5), // future date must be less than maximum duration
+        endDate: helpers.futureDate(new Date(), 1), // future date must be less than maximum duration
     },
 
     uniqueId: {
@@ -2359,7 +2573,7 @@ export const data = {
             WP_DEBUG: true,
             SCRIPT_DEBUG: true,
             WP_DEBUG_LOG: true,
-            WP_DEBUG_DISPLAY: false,
+            WP_DEBUG_DISPLAY: true,
         },
 
         // site info
@@ -2379,7 +2593,7 @@ export const data = {
 
         // plugins
         plugins: {
-            basicAuth: 'Basic-Auth-master',
+            basicAuth: 'Basic-Auth',
             woocommerce: 'woocommerce',
             dokan: 'dokan',
             dokanLite: 'dokan-lite',
@@ -2393,21 +2607,30 @@ export const data = {
 
     // command
     commands: {
-        resetSite: `cd ${SITE_PATH} && wp db reset --yes`,
-        createConfig: (db: any) => `cd ${SITE_PATH} && wp config create --dbhost="${db.dbHost}" --dbname="${db.dbName}" --dbuser="${db.dbUserName}" --dbpass="${db.dbPassword}"  --dbprefix="${db.dbTablePrefix}" --force`,
-        setConfig: (key: string, value: string) => `cd ${SITE_PATH} && wp config set ${key} ${value} --add`,
-        setDebugConfig: (key: string, value: boolean) => `cd ${SITE_PATH} && wp config set ${key} ${value} --add --raw`,
-        installWp: (core: any) => `cd ${SITE_PATH} && wp core install --locale="${core.language}" --url="${core.url}" --title="${core.title}" --admin_user="${core.admin}" --admin_password="${core.password}" --admin_email="${core.email}"`,
-        installTheme: (theme: string) => `cd ${SITE_PATH} && wp theme install ${theme} --activate`,
-        installPlugin: (plugin: string) => `cd ${SITE_PATH} && wp plugin install ${plugin} --activate --force`,
-        activatePlugin: (plugin: string, skipPlugins?: string) => `cd ${SITE_PATH} && wp plugin activate ${plugin} --skip-plugins=${skipPlugins}`,
-        activateTheme: (theme: string) => `cd ${SITE_PATH} && wp theme activate ${theme}`,
-        permalinkLocal: `cd ${SITE_PATH} && wp rewrite structure /%postname%/ && wp rewrite flush`,
+        wpcli: {
+            resetSite: `wp db reset --yes`,
+            downloadWp: `wp core download --locale=en_US --force`,
+            createConfig: (db: any) => `wp config create --dbhost="${db.dbHost}" --dbname="${db.dbName}" --dbuser="${db.dbUserName}" --dbpass="${db.dbPassword}"  --dbprefix="${db.dbTablePrefix}" --force`,
+            dropDb: `wp db drop --yes`,
+            createDb: `wp db create`,
+            cleanDb: `wp db clean --yes`,
+            setConfig: (key: string, value: string) => `wp config set ${key} ${value} --add`,
+            setDebugConfig: (key: string, value: boolean) => `wp config set ${key} ${value} --add --raw`,
+            installWp: (core: any) => `wp core install --locale="${core.language}" --url="${core.url}" --title="${core.title}" --admin_user="${core.admin}" --admin_password="${core.password}" --admin_email="${core.email}"`,
+            installTheme: (theme: string) => `wp theme install ${theme} --activate`,
+            installPlugin: (plugin: string) => `wp plugin install ${plugin} --activate --force`,
+            activatePlugin: (plugin: string) => `wp plugin activate ${plugin}`,
+            activateTheme: (theme: string) => `wp theme activate ${theme}`,
+            rewritePermalink: `wp rewrite structure /%postname%/`,
+        },
+        makePath: (path: string) => `mkdir -p ${path}`,
+        deleteFolder: (path: string) => `rm -rf ${path}`,
         removeLiteRequired: `cd ${SITE_PATH}/wp-content/plugins/dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php`,
-        cloneDokanPro: "git clone -b test_utils https://github.com/getdokan/dokan-pro.git && cd dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php",
-        buildPlugin: 'composer i --no-dev && composer du -o && npm i && npm run build',
-        permalinkWpEnv: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
-        activateThemeWpEnv: 'npm run wp-env run tests-cli wp theme activate storefront',
+        cloneBasicAuth: (path: string) => `cd ${path} && git clone https://github.com/WP-API/Basic-Auth.git`,
+        cloneDokanLite: (path: string) => `cd ${path} && git clone -b develop https://github.com/getdokan/dokan.git`,
+        cloneDokanPro: (path: string) => `cd ${path} && git clone -b test_utils https://github.com/getdokan/dokan-pro.git`,
+        checkoutToDevelop: (path: string) => `cd ${path} && git checkout develop`,
+        buildPlugin: (path: string) => `cd ${path} && composer i --no-dev && composer du -o && npm i && npm run build`,
     },
 
     cssStyle: {

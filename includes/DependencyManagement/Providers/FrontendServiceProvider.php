@@ -5,6 +5,9 @@ namespace WeDevs\Dokan\DependencyManagement\Providers;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
 class FrontendServiceProvider extends BaseServiceProvider {
+    /**
+     * Tag for services added to the container.
+     */
     public const TAG = 'frontend-service';
 
 	protected $services = [
