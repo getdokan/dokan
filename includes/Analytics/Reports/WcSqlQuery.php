@@ -4,6 +4,11 @@ namespace WeDevs\Dokan\Analytics\Reports;
 
 use Automattic\WooCommerce\Admin\API\Reports\SqlQuery;
 
+/**
+ * WC SqlQuery class to override the default handling of SQL clauses.
+ *
+ * @since DOKAN_SINCE
+ */
 class WcSqlQuery extends SqlQuery {
     /**
      * Update the default value of $handling from "unfiltered" to an empty string,

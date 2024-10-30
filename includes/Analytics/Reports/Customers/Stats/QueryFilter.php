@@ -4,6 +4,11 @@ namespace WeDevs\Dokan\Analytics\Reports\Customers\Stats;
 
 use WeDevs\Dokan\Analytics\Reports\Customers\QueryFilter as CustomersQueryFilter;
 
+/**
+ * Class QueryFilter
+ *
+ * @since DOKAN_SINCE
+ */
 class QueryFilter extends CustomersQueryFilter {
 	protected $context = 'customers_stats';
 

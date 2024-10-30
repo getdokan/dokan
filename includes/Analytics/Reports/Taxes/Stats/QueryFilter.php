@@ -4,6 +4,13 @@ namespace WeDevs\Dokan\Analytics\Reports\Taxes\Stats;
 
 use WeDevs\Dokan\Analytics\Reports\Taxes\QueryFilter as TaxesQueryFilter;
 
+/**
+ * Class QueryFilter
+ *
+ * Filters and modifies WooCommerce analytics queries for Tax Stats.
+ *
+ * @since DOKAN_SINCE
+ */
 class QueryFilter extends TaxesQueryFilter {
 	protected $context = 'taxes_stats';
 

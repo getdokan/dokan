@@ -1,7 +1,4 @@
 <?php
-/**
- * API\Reports\Orders\Stats\DataStore class file.
- */
 
 namespace WeDevs\Dokan\Analytics\Reports\Orders\Stats;
 
@@ -9,14 +6,15 @@ defined( 'ABSPATH' ) || exit;
 
 use Automattic\WooCommerce\Admin\API\Reports\DataStore as ReportsDataStore;
 use Automattic\WooCommerce\Admin\API\Reports\DataStoreInterface;
-use Automattic\WooCommerce\Admin\API\Reports\Cache as ReportsCache;
 use Automattic\WooCommerce\Admin\API\Reports\Customers\DataStore as CustomersDataStore;
 use Automattic\WooCommerce\Utilities\OrderUtil;
 use Exception;
 use WeDevs\Dokan\Analytics\Reports\OrderType;
 
 /**
- * API\Reports\Orders\Stats\DataStore.
+ * Dokan Orders stats data synchronizer.
+ *
+ * @since DOKAN_SINCE
  */
 class DataStore extends ReportsDataStore implements DataStoreInterface {
 	/**

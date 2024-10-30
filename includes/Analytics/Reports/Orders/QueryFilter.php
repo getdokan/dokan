@@ -9,6 +9,8 @@ use WeDevs\Dokan\Analytics\Reports\OrderType;
  * Class QueryFilter
  *
  * Filters and modifies WooCommerce analytics queries for Dokan orders.
+ *
+ * @since DOKAN_SINCE
  */
 class QueryFilter extends BaseQueryFilter {
     /**

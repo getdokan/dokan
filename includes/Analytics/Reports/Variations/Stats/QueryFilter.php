@@ -4,6 +4,13 @@ namespace WeDevs\Dokan\Analytics\Reports\Variations\Stats;
 
 use WeDevs\Dokan\Analytics\Reports\Variations\QueryFilter as ProductsQueryFilter;
 
+/**
+ * Class QueryFilter
+ *
+ * Filters and modifies WooCommerce analytics queries for variations.
+ *
+ * @since DOKAN_SINCE
+ */
 class QueryFilter extends ProductsQueryFilter {
 	protected $context = 'variations_stats';
 

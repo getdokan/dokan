@@ -9,6 +9,9 @@ use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 use WeDevs\Dokan\ThirdParty\Packages\League\Container\Definition\DefinitionInterface;
 
 class AnalyticsServiceProvider extends BaseServiceProvider {
+    /**
+     * Tags for services added to the container.
+     */
     public const TAGS = [ 'analytics-service', 'common-service' ];
 
 	protected $services = [
