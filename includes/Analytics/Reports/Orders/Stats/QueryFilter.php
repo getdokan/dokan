@@ -61,7 +61,8 @@ class QueryFilter extends OrdersQueryFilter {
         }
 
         $dokan_table_name = $this->get_dokan_table();
-        $types = $this->get_order_types_for_sql_excluding_refunds();
+        $types = implode( ',', ( new OrderType() )->get_vendor_order_types() );
+        // $types = $this->get_order_types_for_sql_excluding_refunds();
 
         $parent_order_types_str = implode( ',', ( new OrderType() )->get_admin_order_types_excluding_refunds() );
         $refund_order_types_str = implode( ',', ( new OrderType() )->get_vendor_refund_types() );
