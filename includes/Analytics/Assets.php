@@ -2,21 +2,31 @@
 
 namespace WeDevs\Dokan\Analytics;
 
+use Automattic\WooCommerce\Internal\Admin\Analytics;
 use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Contracts\Hookable;
 
 class Assets implements Hookable {
 	public function register_hooks(): void {
+        if ( ! $this->is_analytics_enabled() ) {
+            return;
+        }
+
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_all_scripts' ], 8 );
 
-		if ( ! is_admin() ) {
-			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
-		}
+        if ( ! is_admin() ) {
+            add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
+        }
+
 		add_filter( 'woocommerce_admin_shared_settings', [ $this, 'localize_wc_admin_settings' ] );
 
 		( new VendorDashboardManager() )->register_hooks();
         ( new Reports\DataStoreCacheModifier() )->register_hooks();
 	}
+
+    public function is_analytics_enabled(): bool {
+        return 'yes' === get_option( Analytics::TOGGLE_OPTION_NAME, 'no' );
+    }
 
 	/**
 	 * Localize WC admin settings.
@@ -25,8 +35,9 @@ class Assets implements Hookable {
 	 * @return array
 	 */
 	public function localize_wc_admin_settings( $settings ) {
-        $settings['stockStatuses'] = wc_get_product_stock_status_options();
-        $settings['vendorBalance'] = dokan_get_seller_balance( dokan_get_current_user_id(), 2 );
+        $settings['vendorBalance']      = dokan_get_seller_balance( dokan_get_current_user_id(), 2 );
+        $settings['stockStatuses']      = wc_get_product_stock_status_options();
+        $settings['isAnalyticsEnabled'] = $this->is_analytics_enabled();
 
         $preload_data           = [];
         $preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', array() );

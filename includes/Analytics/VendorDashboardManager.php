@@ -11,6 +11,7 @@ class VendorDashboardManager implements Hookable {
 		add_filter( 'dokan_dashboard_nav_submenu', [ $this, 'add_report_submenu' ], 10, 2 );
 
 		// Dummy hook for testing.
+		add_filter( 'dokan_product_listing_template_render', [ $this, 'control_product_listing_render' ] );
 		add_action( 'dokan_dashboard_content_inside_before', [ $this, 'add_dashboard_content' ] );
 
 		add_filter( 'woocommerce_rest_product_object_query', [ $this, 'product_query_args' ], 10, 2 );
@@ -21,13 +22,28 @@ class VendorDashboardManager implements Hookable {
 		add_filter( 'woocommerce_rest_report_sort_performance_indicators', [ $this, 'sort_performance_indicators' ] );
 	}
 
+    /**
+     * Determine whether to hide the product listing on the analytics report page.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool $render Whether to render the product listing.
+     *
+     * @return bool True to hide product listing on analytics report page, original $render otherwise.
+     */
+    public function control_product_listing_render( bool $render ): bool {
+        $path = isset( $_GET['path'] ) ? sanitize_text_field( wp_unslash( $_GET['path'] ) ) : ''; // phpcs:ignore
+
+        return $path !== '/analytics/products' ? $render : true;
+    }
+
 	// This is dummy function for testing.
 	public function add_dashboard_content() {
 		echo '<div id="dokan-analytics-test"></div>';
 	}
 
-	public function woocommerce_rest_check_permissions( $permission, $context, $int_val, $object ) {
-		if ( ! $permission && in_array( $object, [ 'reports', 'settings' ] ) && $context === 'read' ) {
+	public function woocommerce_rest_check_permissions( $permission, $context, $int_val, $obj ) {
+		if ( ! $permission && in_array( $obj, [ 'reports', 'settings' ], true ) && $context === 'read' ) {
 			$current_user_id = dokan_get_current_user_id();
 			$permission      = dokan_is_user_seller( $current_user_id );
 		}
@@ -144,8 +160,8 @@ class VendorDashboardManager implements Hookable {
 
 		$reports['totals']['properties']['total_seller_earning'] = array(
 			'description' => $is_vendor_dashboard
-                ? __( 'Total Earning', 'dokan-lite' )
-                : __( 'Total Vendor Earning', 'dokan-lite' ),
+                ? esc_html__( 'Total Earning', 'dokan-lite' )
+                : esc_html__( 'Total Vendor Earning', 'dokan-lite' ),
 			'type'        => 'number',
 			'context'     => array( 'view', 'edit' ),
 			'readonly'    => true,
@@ -155,8 +171,8 @@ class VendorDashboardManager implements Hookable {
 
 		$reports['totals']['properties']['total_admin_commission'] = array(
 			'description' => $is_vendor_dashboard
-                ? __( 'Total Admin Commission', 'dokan-lite' )
-                : __( 'Total Commission', 'dokan-lite' ),
+                ? esc_html__( 'Total Admin Commission', 'dokan-lite' )
+                : esc_html__( 'Total Commission', 'dokan-lite' ),
 			'type'        => 'number',
 			'context'     => array( 'view', 'edit' ),
 			'readonly'    => true,
