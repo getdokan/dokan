@@ -8,8 +8,10 @@ const VendorEarning = ({ isEmbedded, query }) => {
     return (
         <Fill name='woocommerce_header_item'>
             <div className='dokan-analytics-vendor-earning-section'>
-                <h4 className='vendor-earning-title'>{__('Your Balance', 'dokan-lite')}</h4>
-                <span className='vendor-earning' dangerouslySetInnerHTML={{__html: vendorBalance}}/>
+                <h4 className='vendor-earning-title'>
+                    {__('Balance: ', 'dokan-lite')}
+                    <span className='vendor-earning' dangerouslySetInnerHTML={{__html: vendorBalance}}/>
+                </h4>
             </div>
         </Fill>
     );

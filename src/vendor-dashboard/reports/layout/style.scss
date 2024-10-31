@@ -439,13 +439,15 @@
             text-align: right;
 
             .vendor-earning-title {
-                margin: 0;
-            }
+                gap: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
 
-            .vendor-earning {
-                color: #f05025;
-                font-size: 20px;
-                font-weight: 700;
+                .vendor-earning {
+                    color: #f05025;
+                    font-weight: 700;
+                }
             }
         }
     }
