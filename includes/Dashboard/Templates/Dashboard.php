@@ -52,10 +52,6 @@ class Dashboard {
         }
     }
 
-    public static function is_analytics_enabled(): bool {
-        return 'yes' === get_option( Analytics::TOGGLE_OPTION_NAME, 'no' );
-    }
-
     /**
      * Check if analytics is enabled.
      *
