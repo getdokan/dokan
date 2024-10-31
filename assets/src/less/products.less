@@ -469,17 +469,7 @@
 
   .dokan-shipping-container {
     .dokan-shipping-dimention-options {
-      margin-bottom: 20px;
-
-      input {
-        width: 23.3%;
-        float: left;
-        margin-right: 2%;
-
-        &#_height {
-          margin-right: 0;
-        }
-      }
+      margin-bottom: 5px;
 
       .dokan-form-group {
         width: 23.3%;
@@ -487,6 +477,27 @@
         margin-right: 2%;
 
         &#dokan-form-group-height {
+          margin-right: 0;
+        }
+
+        input {
+          &.dokan-form-control {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      input {
+        &.dokan-form-control {
+          float: left;
+          width: 23.3%;
+          margin-right: 2%;
+          margin-bottom: 15px;
+        }
+
+        &#_height {
           margin-right: 0;
         }
       }
