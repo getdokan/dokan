@@ -950,7 +950,7 @@ export const payloads = {
         ],
     }),
 
-    createBookableProduct: () => ({
+    createBookableProductRequiredFields: () => ({
         name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Bookable)`,
         status: 'publish',
         featured: true,
@@ -976,6 +976,34 @@ export const payloads = {
         // min_date_unit            : 'day',
         // max_date_value           : 11,
         // max_date_unit            : 'month'
+    }),
+
+    createBookableProduct: () => ({
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Bookable)`,
+        // status: 'publish',
+        // featured: true,
+        // description: '<p>test description</p>',
+        // short_description: '<p>test short description</p>',
+        // categories: [{}],
+        // duration_type: 'customer',
+        // duration_unit: 'day',
+        // duration: 1,
+        // min_duration: 1,
+        // max_duration: 10,
+        // calendar_display_mode: 'always_visible',
+        // enable_range_picker: true,
+        // requires_confirmations: false,
+        // can_be_cancelled: false,
+        // default_date_availability: 'available',
+        // block_cost: 5,
+        // cost: 10,
+        // has_persons: false,
+        // has_resources: false,
+        // qty: 100,
+        // // min_date_value           : 10,
+        // // min_date_unit            : 'day',
+        // // max_date_value           : 11,
+        // // max_date_unit            : 'month'
     }),
 
     createBookingResource: () => ({

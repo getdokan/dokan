@@ -1054,6 +1054,7 @@ export const data = {
                 followers: 'dashboard/followers',
                 booking: 'dashboard/booking',
                 addBookingProduct: 'dashboard/booking/new-product',
+                bookingProductEdit: (productId: string) => `dashboard/booking/edit/?product_id=${productId}`,
                 addBooking: 'dashboard/booking/add-booking',
                 manageBooking: 'dashboard/booking/my-bookings',
                 bookingCalendar: 'dashboard/booking/calendar',
