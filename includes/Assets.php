@@ -1037,6 +1037,30 @@ class Assets {
                 'update_settings'                          => __( 'Update Settings', 'dokan-lite' ),
                 'search_downloadable_products_nonce'       => wp_create_nonce( 'search-downloadable-products' ),
                 'search_downloadable_products_placeholder' => __( 'Please enter 3 or more characters', 'dokan-lite' ),
+                // Todo: Variation related i18n strings will be moved to the Dokan Pro Assets class after releasing product form manager module.
+                // Variation related i18n, file: product-variation.js
+                'add_variation_nonce'                 => wp_create_nonce( 'add-variation' ),
+                'link_variation_nonce'                => wp_create_nonce( 'link-variations' ),
+                'delete_variations_nonce'             => wp_create_nonce( 'delete-variations' ),
+                'load_variations_nonce'               => wp_create_nonce( 'load-variations' ),
+                'save_variations_nonce'               => wp_create_nonce( 'save-variations' ),
+                'bulk_edit_variations_nonce'          => wp_create_nonce( 'bulk-edit-variations' ),
+                /* translators: %d: max linked variation. */
+                'i18n_link_all_variations'            => esc_js( sprintf( __( 'Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run).', 'dokan-lite' ), defined( 'WC_MAX_LINKED_VARIATIONS' ) ? WC_MAX_LINKED_VARIATIONS : 50 ) ),
+                'i18n_enter_a_value'                  => esc_js( __( 'Enter a value', 'dokan-lite' ) ),
+                'i18n_enter_menu_order'               => esc_js( __( 'Variation menu order (determines position in the list of variations)', 'dokan-lite' ) ),
+                'i18n_enter_a_value_fixed_or_percent' => esc_js( __( 'Enter a value (fixed or %)', 'dokan-lite' ) ),
+                'i18n_delete_all_variations'          => esc_js( __( 'Are you sure you want to delete all variations? This cannot be undone.', 'dokan-lite' ) ),
+                'i18n_last_warning'                   => esc_js( __( 'Last warning, are you sure?', 'dokan-lite' ) ),
+                'i18n_variation_added'                => esc_js( __( 'Variation added', 'dokan-lite' ) ),
+                'i18n_variations_added'               => esc_js( __( 'Variations added', 'dokan-lite' ) ),
+                'i18n_no_variations_added'            => esc_js( __( 'No variations added', 'dokan-lite' ) ),
+                'i18n_remove_variation'               => esc_js( __( 'Are you sure you want to remove this variation?', 'dokan-lite' ) ),
+                'i18n_scheduled_sale_start'           => esc_js( __( 'Sale start date (YYYY-MM-DD format or leave blank)', 'dokan-lite' ) ),
+                'i18n_scheduled_sale_end'             => esc_js( __( 'Sale end date (YYYY-MM-DD format or leave blank)', 'dokan-lite' ) ),
+                'i18n_edited_variations'              => esc_js( __( 'Save changes before changing page?', 'dokan-lite' ) ),
+                'i18n_variation_count_single'         => esc_js( __( '%qty% variation', 'dokan-lite' ) ),
+                'i18n_variation_count_plural'         => esc_js( __( '%qty% variations', 'dokan-lite' ) ),
             ];
 
             $default_args = array_merge( $default_args, $custom_args );
