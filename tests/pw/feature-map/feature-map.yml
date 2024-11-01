@@ -691,7 +691,6 @@
           vendor can't add already added auction product attribute: true
           vendor can create auction product attribute term: true
           vendor can remove auction product attribute term: true
-          vendor can remove auction product attribute term: true
           vendor can add auction product geolocation (individual): true
           vendor can update auction product geolocation (individual): true
           vendor can remove auction product geolocation (individual): true
