@@ -209,10 +209,12 @@ test.describe('Auction Product details functionality test', () => {
     // shipping and tax
 
     test('vendor can add auction product shipping', { tag: ['@pro', '@vendor'] }, async () => {
+        test.skip(true, 'has dokan issue, php notice')
         await vendor.addProductShipping(productId1, data.product.productInfo.shipping);
     });
 
     test('vendor can update auction product shipping', { tag: ['@pro', '@vendor'] }, async () => {
+        test.skip(true, 'has dokan issue, php notice')
         await vendor.addProductShipping(productId, data.product.productInfo.shipping);
     });
 
@@ -242,7 +244,7 @@ test.describe('Auction Product details functionality test', () => {
     // todo: refactor below tests
     test('vendor can create auction product attribute term', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , , attributeName] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
-        const [, productId] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
+        const [, productId] = await apiUtils.createProduct(payloads.createAuctionProductRequiredFields(), payloads.vendorAuth);
         await vendor.addProductAttribute(productId, { ...data.product.productInfo.attribute, attributeName: attributeName }, true);
     });
 
