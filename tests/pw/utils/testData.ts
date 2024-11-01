@@ -23,6 +23,10 @@ const {
     GMAP,
     MAPBOX,
     LICENSE_KEY,
+    VONAGE_API_KEY,
+    VONAGE_API_SECRET,
+    FB_APP_ID,
+    FB_APP_SECRET,
 } = process.env;
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
@@ -2217,6 +2221,17 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // social api
+        socialApi: {
+            settingTitle: 'Social Settings',
+            platform: 'facebook',
+            facebook: {
+                appId: FB_APP_ID,
+                appSecret: FB_APP_SECRET,
+            },
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // shipping status
         shippingStatus: {
             settingTitle: 'Shipping Status Settings',
@@ -2293,6 +2308,22 @@ export const data = {
                 twitter: 'twitter_app_details',
                 google: 'google_details',
                 linkedin: 'linkedin_details',
+            },
+
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
+        // Verification Sms Gateways
+        verificationSmsGateway: {
+            settingTitle: 'Verification SMS Gateways Settings',
+            senderName: 'weDevs Team',
+            smsText: 'Your verification code is: %CODE%',
+            smsSentSuccess: 'SMS sent. Please enter your verification code',
+            smsSentError: 'Unable to send sms. Contact admin',
+            activeGateway: 'nexmo', // nexmo, twilio
+            vonage: {
+                apiKey: VONAGE_API_KEY,
+                apiSecret: VONAGE_API_SECRET,
             },
 
             saveSuccessMessage: 'Setting has been saved successfully.',

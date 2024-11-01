@@ -65,7 +65,7 @@ test.describe('Settings test', () => {
         await admin.setDokanPrivacyPolicySettings({ ...data.dokanSettings.privacyPolicy, privacyPage: privacyPolicySettings.privacyPage });
     });
 
-    test('admin can set Dokan color settings', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can set Dokan colors settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanColorSettings(data.dokanSettings.colors.predefinedPalette.tree);
     });
 
@@ -81,10 +81,19 @@ test.describe('Settings test', () => {
         await admin.setDokanVendorVerificationSettings(data.dokanSettings.vendorVerification);
     });
 
+    test('admin can set Dokan verification sms gateways settings', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.setDokanSMSVerificationGatewaysSettings(data.dokanSettings.verificationSmsGateway);
+    });
+
     test('admin can set Dokan email verification settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanEmailVerificationSettings(data.dokanSettings.emailVerification);
-        // reset  settings
+
+        // reset settings
         await dbUtils.setOptionValue(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
+    });
+
+    test('admin can set Dokan social api settings', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.setDokanSocialApiSettings(data.dokanSettings.socialApi);
     });
 
     test('admin can set Dokan shipping status settings', { tag: ['@pro', '@admin'] }, async () => {
