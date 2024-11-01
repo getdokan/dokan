@@ -40,7 +40,6 @@ const entryPoint = {
   ],
   'helper': './assets/src/js/helper.js',
   'dokan-frontend': './assets/src/js/dokan-frontend.js',
-  'dokan-admin-analytics': './assets/src/js/dokan-admin-analytics.js',
 
   'style': '/assets/src/less/style.less',
   'rtl': '/assets/src/less/rtl.less',

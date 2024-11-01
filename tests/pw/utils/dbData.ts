@@ -12,7 +12,7 @@ export const dbData = {
             menuManager: 'dokan_menu_manager',
             privacyPolicy: 'dokan_privacy',
             colors: 'dokan_colors',
-            // liveSearch: 'dokan_live_search_setting',
+            liveSearch: 'dokan_live_search_setting',
             storeSupport: 'dokan_store_support_setting',
             // sellerVerification: 'dokan_verification',
             // verificationSMSGateways: 'dokan_verification_sms_gateways',
@@ -781,7 +781,8 @@ export const dbData = {
         },
 
         liveSearchSettings: {
-            live_search_option: 'suggestion_box',
+            live_search_option: 'suggestion_box', // old_live_search,  suggestion_box
+            dashboard_menu_manager: [],
         },
 
         storeSupportSettings: {
@@ -1299,50 +1300,58 @@ export const dbData = {
         },
     },
 
-    // widget
+    // widgets & sidebars
 
-    widget: {
-        name: {
-            widgetBlock: 'widget_block',
-            sidebarsWidgets: 'sidebars_widgets',
-        },
-        widgetBlock: {
-            '2': {
-                content: '<!-- wp:search /-->',
-            },
-            '3': {
-                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Recent Posts</h2><!-- /wp:heading --><!-- wp:latest-posts /--></div><!-- /wp:group -->',
-            },
-            '4': {
-                content:
-                    '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Recent Comments</h2><!-- /wp:heading --><!-- wp:latest-comments {"displayAvatar":false,"displayDate":false,"displayExcerpt":false} /--></div><!-- /wp:group -->',
-            },
-            '5': {
-                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Archives</h2><!-- /wp:heading --><!-- wp:archives /--></div><!-- /wp:group -->',
-            },
-            '6': {
-                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Categories</h2><!-- /wp:heading --><!-- wp:categories /--></div><!-- /wp:group -->',
-            },
-            '9': {
-                content: '<!-- wp:legacy-widget /-->',
-            },
-            _multiwidget: 1,
-        },
+    widgets: {
+        bestSelling: 'dokan-best-selling-widget-2',
+        category: 'dokan-category-menu-2',
+        filter: 'dokan-filter-product-2',
+        liveSearch: 'dokna_product_search-2',
+        storeContactForm: 'dokan-store-contact-widget-2',
+        storeLocation: 'dokan-store-location-2',
+        storeMenu: 'dokan-store-menu-2',
+        storeOpenClose: 'dokan-store-open-close-widget-2',
+        topRated: 'dokan-top-rated-2',
 
-        // 'dokan-store-contact-widget-2', 'dokan-best-selling-widget-2', 'dokan-category-menu-2', 'dokan-filter-product-2', 'dokan-store-location-2', 'dokan-store-menu-2', 'dokan-store-open-close-widget-2', 'dokan-top-rated-2',
-        sideBarsWidgets: {
-            wp_inactive_widgets: [],
-            'sidebar-store': ['dokan-store-contact-widget-2'],
-            'sidebar-1': [],
-            'header-1': [],
-            'footer-1': [],
-            'footer-2': [],
-            'footer-3': [],
-            'footer-4': [],
-            array_version: 3,
-        },
+        // emptySideBarsWidgets: { wp_inactive_widgets: [] },
+    },
 
-        emptySideBarsWidgets: { wp_inactive_widgets: [] },
+    sidebars: {
+        wp_inactive_widgets: 'wp_inactive_widgets',
+        'sidebar-store': 'sidebar-store',
+        'sidebar-1': 'sidebar-1',
+        'header-1': 'header-1',
+        'footer-1': 'footer-1',
+        'footer-2': 'footer-2',
+        'footer-3': 'footer-3',
+        'footer-4': 'footer-4',
+    },
+
+    sidebarWidgets: {
+        wp_inactive_widgets: [],
+        'sidebar-store': [],
+        'sidebar-1': [],
+        'header-1': [],
+        'footer-1': [],
+        'footer-2': [],
+        'footer-3': [],
+        'footer-4': [],
+        array_version: 3,
+    },
+
+    emptySideBarsWidgets: { wp_inactive_widgets: [] },
+
+    // dokan widgets
+    storeContactFormWidget: {
+        '2': {
+            title: 'Contact Vendor',
+        },
+        _multiwidget: 1,
+    },
+
+    liveSearchWidget: {
+        '2': { title: 'Live Search' },
+        _multiwidget: 1,
     },
 
     // test db data

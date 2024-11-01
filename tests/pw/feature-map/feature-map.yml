@@ -477,10 +477,13 @@
           admin can set Dokan page settings [lite]: true
           admin can set Dokan appearance settings [lite]: true
           admin can set Dokan privacy policy settings [lite]: true
-          admin can set Dokan color settings: true
+          admin can set Dokan colors settings: true
+          admin can set Dokan vendor verification settings: true
+          admin can set Dokan verification sms gateways settings: true
           admin can set Dokan live search settings: true
           admin can set Dokan store support settings: true
           admin can set Dokan email verification settings: true
+          admin can set Dokan social api settings: true
           admin can set Dokan shipping status settings: true
           admin can set Dokan quote settings: true
           admin can set Dokan live chat settings: true
@@ -503,7 +506,7 @@
           admin can check for duplicate orders: true
           admin can set Dokan setup wizard [lite]: true
           admin can regenerate variable product variations author IDs: true
-          admin can import dummy data: false
+          admin can import dummy data: true
           admin can clear dummy data: true
           admin can test distance matrix API: true
 
@@ -596,7 +599,7 @@
           vendor can approve product review: true
           vendor can restore trashed product review: true
           vendor can permanently-delete product review: true
-          vendor can perform bulk action on product reviews: false
+          vendor can perform bulk action on product reviews: true
 
 - page: 'MenuManager'
   features:
@@ -775,12 +778,13 @@
 
 - page: 'Live Search'
   features:
-      admin:
-          admin can set live search options: false
-          admin can add live search widget: false
+      #   admin:
+      #   admin can set Dokan live search settings [duplicate]: true
       customer:
-          customer can search product using live search - suggestion box: false
-          customer can search product using live search - autoload content: false
+          customer can search product using live search (suggestion box): true
+          customer can search product with category using live search (suggestion box): true
+          customer can search product using live search (autoload content): true
+          customer can search product with category using live search (autoload content): true
 
 - page: 'MangoPay'
   features:
