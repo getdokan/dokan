@@ -44,7 +44,7 @@ function HistoricalDataPeriodSelector( {
         return (
             <div className="woocommerce-settings-historical-data__column">
                 <div className="woocommerce-settings-historical-data__column-label">
-                    { __( 'Beginning on', 'dokan' ) }
+                    { __( 'Beginning on', 'dokan-lite' ) }
                 </div>
                 <DatePicker
                     date={ momentDate.isValid() ? momentDate.toDate() : null }
@@ -65,7 +65,7 @@ function HistoricalDataPeriodSelector( {
         <div className="woocommerce-settings-historical-data__columns">
             <div className="woocommerce-settings-historical-data__column">
                 <SelectControl
-                    label={ __( 'Import historical data', 'dokan' ) }
+                    label={ __( 'Import historical data', 'dokan-lite' ) }
                     value={ value.label }
                     disabled={ disabled }
                     onChange={ onSelectChange }

@@ -39,9 +39,9 @@ class ProductsReport extends Component {
     const label =
       isSingleProductView && isSingleProductVariable
         ? /* translators: %d: number of variations */
-          __("%d variations", 'dokan')
+          __("%d variations", 'dokan-lite')
         : /* translators: %d: number of products */
-          __("%d products", 'dokan');
+          __("%d products", 'dokan-lite');
 
     return {
       compareObject,

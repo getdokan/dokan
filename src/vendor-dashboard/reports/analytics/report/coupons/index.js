@@ -25,7 +25,7 @@ class CouponsReport extends Component {
 
         const mode = isCompareView ? 'item-comparison' : 'time-comparison';
         /* translators: %d: number of coupons */
-        const itemsLabel = __( '%d coupons', 'dokan' );
+        const itemsLabel = __( '%d coupons', 'dokan-lite' );
 
         return {
             itemsLabel,

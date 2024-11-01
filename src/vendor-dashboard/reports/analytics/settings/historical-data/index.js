@@ -23,7 +23,7 @@ class HistoricalData extends Component {
     constructor() {
         super( ...arguments );
 
-        this.dateFormat = __( 'MM/DD/YYYY', 'dokan' );
+        this.dateFormat = __( 'MM/DD/YYYY', 'dokan-lite' );
         this.intervalId = -1;
         this.lastImportStopTimestamp = 0;
         this.cacheNeedsClearing = true;

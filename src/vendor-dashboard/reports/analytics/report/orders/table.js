@@ -31,7 +31,7 @@ class OrdersReportTable extends Component {
   getHeadersContent() {
     return [
       {
-        label: __("Date", 'dokan'),
+        label: __("Date", 'dokan-lite'),
         key: "date",
         required: true,
         defaultSort: true,
@@ -39,61 +39,61 @@ class OrdersReportTable extends Component {
         isSortable: true,
       },
       {
-        label: __("Order #", 'dokan'),
-        screenReaderLabel: __("Order Number", 'dokan'),
+        label: __("Order #", 'dokan-lite'),
+        screenReaderLabel: __("Order Number", 'dokan-lite'),
         key: "order_number",
         required: true,
       },
       {
-        label: __("Status", 'dokan'),
+        label: __("Status", 'dokan-lite'),
         key: "status",
         required: false,
         isSortable: false,
       },
       {
-        label: __("Customer", 'dokan'),
+        label: __("Customer", 'dokan-lite'),
         key: "customer_id",
         required: false,
         isSortable: false,
       },
       {
-        label: __("Customer type", 'dokan'),
+        label: __("Customer type", 'dokan-lite'),
         key: "customer_type",
         required: false,
         isSortable: false,
       },
       {
-        label: __("Product(s)", 'dokan'),
-        screenReaderLabel: __("Products", 'dokan'),
+        label: __("Product(s)", 'dokan-lite'),
+        screenReaderLabel: __("Products", 'dokan-lite'),
         key: "products",
         required: false,
         isSortable: false,
       },
       {
-        label: __("Items sold", 'dokan'),
+        label: __("Items sold", 'dokan-lite'),
         key: "num_items_sold",
         required: false,
         isSortable: true,
         isNumeric: true,
       },
       {
-        label: __("Coupon(s)", 'dokan'),
-        screenReaderLabel: __("Coupons", 'dokan'),
+        label: __("Coupon(s)", 'dokan-lite'),
+        screenReaderLabel: __("Coupons", 'dokan-lite'),
         key: "coupons",
         required: false,
         isSortable: false,
       },
       {
-        label: __("Net sales", 'dokan'),
-        screenReaderLabel: __("Net sales", 'dokan'),
+        label: __("Net sales", 'dokan-lite'),
+        screenReaderLabel: __("Net sales", 'dokan-lite'),
         key: "net_total",
         required: true,
         isSortable: true,
         isNumeric: true,
       },
       {
-        label: __("Attribution", 'dokan'),
-        screenReaderLabel: __("Attribution", 'dokan'),
+        label: __("Attribution", 'dokan-lite'),
+        screenReaderLabel: __("Attribution", 'dokan-lite'),
         key: "attribution",
         required: false,
         isSortable: false,
@@ -197,7 +197,7 @@ class OrdersReportTable extends Component {
             formattedProducts.map((product) => ({
               label: sprintf(
                 /* translators: 1: quantity, 2: product name */
-                __("%1$s× %2$s", 'dokan'),
+                __("%1$s× %2$s", 'dokan-lite'),
                 product.quantity,
                 product.label
               ),
@@ -208,7 +208,7 @@ class OrdersReportTable extends Component {
             .map(({ quantity, label }) =>
               sprintf(
                 /* translators: %1$s: quantity, %2$s: product name */
-                __("%1$s× %2$s", 'dokan'),
+                __("%1$s× %2$s", 'dokan-lite'),
                 quantity,
                 label
               )
@@ -251,27 +251,27 @@ class OrdersReportTable extends Component {
     const currency = getCurrencyConfig();
     return [
       {
-        label: _n("Order", "Orders", ordersCount, 'dokan'),
+        label: _n("Order", "Orders", ordersCount, 'dokan-lite'),
         value: formatValue(currency, "number", ordersCount),
       },
       {
-        label: _n(" Customer", " Customers", totalCustomers, 'dokan'),
+        label: _n(" Customer", " Customers", totalCustomers, 'dokan-lite'),
         value: formatValue(currency, "number", totalCustomers),
       },
       {
-        label: _n("Product", "Products", products, 'dokan'),
+        label: _n("Product", "Products", products, 'dokan-lite'),
         value: formatValue(currency, "number", products),
       },
       {
-        label: _n("Item sold", "Items sold", numItemsSold, 'dokan'),
+        label: _n("Item sold", "Items sold", numItemsSold, 'dokan-lite'),
         value: formatValue(currency, "number", numItemsSold),
       },
       {
-        label: _n("Coupon", "Coupons", couponsCount, 'dokan'),
+        label: _n("Coupon", "Coupons", couponsCount, 'dokan-lite'),
         value: formatValue(currency, "number", couponsCount),
       },
       {
-        label: __("net sales", 'dokan'),
+        label: __("net sales", 'dokan-lite'),
         value: formatAmount(netRevenue),
       },
     ];
@@ -317,7 +317,7 @@ class OrdersReportTable extends Component {
         tableQuery={{
           extended_info: true,
         }}
-        title={__("Orders", 'dokan')}
+        title={__("Orders", 'dokan-lite')}
         columnPrefsKey="orders_report_columns"
         filters={filters}
         advancedFilters={advancedFilters}

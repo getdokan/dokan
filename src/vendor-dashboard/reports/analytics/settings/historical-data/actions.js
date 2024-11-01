@@ -55,7 +55,7 @@ function HistoricalDataActions( {
         );
         const errorMessage = __(
             'There was a problem rebuilding your report data.',
-            'dokan'
+            'dokan-lite'
         );
 
         const importStarted = true;
@@ -68,7 +68,7 @@ function HistoricalDataActions( {
         const path = '/wc-analytics/reports/import/cancel';
         const errorMessage = __(
             'There was a problem stopping your current import.',
-            'dokan'
+            'dokan-lite'
         );
         makeQuery( path, errorMessage );
     };
@@ -77,7 +77,7 @@ function HistoricalDataActions( {
         const path = '/wc-analytics/reports/import/delete';
         const errorMessage = __(
             'There was a problem deleting your previous data.',
-            'dokan'
+            'dokan-lite'
         );
         makeQuery( path, errorMessage );
 
@@ -106,17 +106,17 @@ function HistoricalDataActions( {
                         isPrimary
                         onClick={ onStopImport }
                     >
-                        { __( 'Stop Import', 'dokan' ) }
+                        { __( 'Stop Import', 'dokan-lite' ) }
                     </Button>
                     <div className="woocommerce-setting__help woocommerce-settings-historical-data__action-help">
                         { __(
                             'Imported data will not be lost if the import is stopped.',
-                            'dokan'
+                            'dokan-lite'
                         ) }
                         <br />
                         { __(
                             'Navigating away from this page will not affect the import.',
-                            'dokan'
+                            'dokan-lite'
                         ) }
                     </div>
                 </Fragment>
@@ -132,12 +132,12 @@ function HistoricalDataActions( {
                             onClick={ onStartImport }
                             disabled={ importDisabled }
                         >
-                            { __( 'Start', 'dokan' ) }
+                            { __( 'Start', 'dokan-lite' ) }
                         </Button>
                         <Button isSecondary onClick={ deletePreviousData }>
                             { __(
                                 'Delete Previously Imported Data',
-                                'dokan'
+                                'dokan-lite'
                             ) }
                         </Button>
                     </Fragment>
@@ -151,7 +151,7 @@ function HistoricalDataActions( {
                         onClick={ onStartImport }
                         disabled={ importDisabled }
                     >
-                        { __( 'Start', 'dokan' ) }
+                        { __( 'Start', 'dokan-lite' ) }
                     </Button>
                 </Fragment>
             );
@@ -162,7 +162,7 @@ function HistoricalDataActions( {
                 'error',
                 __(
                     'Something went wrong with the importation process.',
-                    'dokan'
+                    'dokan-lite'
                 )
             );
         }
@@ -171,10 +171,10 @@ function HistoricalDataActions( {
         return (
             <Fragment>
                 <Button isSecondary onClick={ reimportData }>
-                    { __( 'Re-import Data', 'dokan' ) }
+                    { __( 'Re-import Data', 'dokan-lite' ) }
                 </Button>
                 <Button isSecondary onClick={ deletePreviousData }>
-                    { __( 'Delete Previously Imported Data', 'dokan' ) }
+                    { __( 'Delete Previously Imported Data', 'dokan-lite' ) }
                 </Button>
             </Fragment>
         );

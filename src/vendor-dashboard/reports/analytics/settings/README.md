@@ -13,7 +13,7 @@ addFilter( 'dokan_analytics_analytics_settings', 'wc-example/my-setting', settin
 		...settings,
 		{
             name: 'custom_setting',
-            label: __( 'Custom setting:', 'dokan' ),
+            label: __( 'Custom setting:', 'dokan-lite' ),
             inputType: 'text',
             helpText: __( 'Help text to describe what the setting does.' ),
             defaultValue: 'Default value',

@@ -21,7 +21,7 @@ class TaxesReport extends Component {
         const isCompareTaxView = query.filter === 'compare-taxes';
         const mode = isCompareTaxView ? 'item-comparison' : 'time-comparison';
         /* translators: %d: number of taxes */
-        const itemsLabel = __( '%d taxes', 'dokan' );
+        const itemsLabel = __( '%d taxes', 'dokan-lite' );
 
         return {
             itemsLabel,

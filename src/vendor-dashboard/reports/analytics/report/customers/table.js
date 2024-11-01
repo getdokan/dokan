@@ -37,69 +37,69 @@ function CustomersReportTable({
   const getHeadersContent = () => {
     return [
       {
-        label: __("Name", 'dokan'),
+        label: __("Name", 'dokan-lite'),
         key: "name",
         required: true,
         isLeftAligned: true,
         isSortable: true,
       },
       {
-        label: __("Username", 'dokan'),
+        label: __("Username", 'dokan-lite'),
         key: "username",
         hiddenByDefault: true,
       },
       {
-        label: __("Last active", 'dokan'),
+        label: __("Last active", 'dokan-lite'),
         key: "date_last_active",
         defaultSort: true,
         isSortable: true,
       },
       {
-        label: __("Date registered", 'dokan'),
+        label: __("Date registered", 'dokan-lite'),
         key: "date_registered",
         isSortable: true,
       },
       {
-        label: __("Email", 'dokan'),
+        label: __("Email", 'dokan-lite'),
         key: "email",
       },
       {
-        label: __("Orders", 'dokan'),
+        label: __("Orders", 'dokan-lite'),
         key: "orders_count",
         isSortable: true,
         isNumeric: true,
       },
       {
-        label: __("Total spend", 'dokan'),
+        label: __("Total spend", 'dokan-lite'),
         key: "total_spend",
         isSortable: true,
         isNumeric: true,
       },
       {
-        label: __("AOV", 'dokan'),
-        screenReaderLabel: __("Average order value", 'dokan'),
+        label: __("AOV", 'dokan-lite'),
+        screenReaderLabel: __("Average order value", 'dokan-lite'),
         key: "avg_order_value",
         isNumeric: true,
       },
       {
-        label: __("Country / Region", 'dokan'),
+        label: __("Country / Region", 'dokan-lite'),
         key: "country",
         isSortable: true,
       },
       {
-        label: __("City", 'dokan'),
+        label: __("City", 'dokan-lite'),
         key: "city",
         hiddenByDefault: true,
         isSortable: true,
       },
       {
-        label: __("Region", 'dokan'),
+        label: __("Region", 'dokan-lite'),
         key: "state",
         hiddenByDefault: true,
         isSortable: true,
       },
       {
-        label: __("Postal code", 'dokan'),
+        label: __("Postal code", 'dokan-lite'),
         key: "postcode",
         hiddenByDefault: true,
         isSortable: true,
@@ -233,7 +233,7 @@ function CustomersReportTable({
     const currency = getCurrencyConfig();
     return [
       {
-        label: _n("customer", "customers", customersCount, 'dokan'),
+        label: _n("customer", "customers", customersCount, 'dokan-lite'),
         value: formatValue(currency, "number", customersCount),
       },
       {
@@ -241,16 +241,16 @@ function CustomersReportTable({
           "Average order",
           "Average orders",
           avgOrdersCount,
-          'dokan'
+          'dokan-lite'
         ),
         value: formatValue(currency, "number", avgOrdersCount),
       },
       {
-        label: __("Average lifetime spend", 'dokan'),
+        label: __("Average lifetime spend", 'dokan-lite'),
         value: formatAmount(avgTotalSpend),
       },
       {
-        label: __("Average order value", 'dokan'),
+        label: __("Average order value", 'dokan-lite'),
         value: formatAmount(avgAvgOrderValue),
       },
     ];
@@ -272,10 +272,10 @@ function CustomersReportTable({
       itemIdField="id"
       query={query}
       labels={{
-        placeholder: __("Search by customer name", 'dokan'),
+        placeholder: __("Search by customer name", 'dokan-lite'),
       }}
       searchBy="customers"
-      title={__("Customers", 'dokan')}
+      title={__("Customers", 'dokan-lite')}
       columnPrefsKey="customers_report_columns"
       filters={filters}
       advancedFilters={advancedFilters}

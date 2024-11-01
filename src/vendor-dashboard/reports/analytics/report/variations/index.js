@@ -25,7 +25,7 @@ const getChartMeta = ( { query } ) => {
     return {
         compareObject: 'variations',
         /* translators: %d: number of variations */
-        itemsLabel: __( '%d variations', 'dokan' ),
+        itemsLabel: __( '%d variations', 'dokan-lite' ),
         mode: isCompareView ? 'item-comparison' : 'time-comparison',
     };
 };

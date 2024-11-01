@@ -32,9 +32,9 @@ class CategoriesReport extends Component {
                 : 'time-comparison';
         const itemsLabel = isSingleCategoryView
             ? /* translators: %d: number of products */
-              __( '%d products', 'dokan' )
+              __( '%d products', 'dokan-lite' )
             : /* translators: %d: number of categories */
-              __( '%d categories', 'dokan' );
+              __( '%d categories', 'dokan-lite' );
 
         return {
             isSingleCategoryView,

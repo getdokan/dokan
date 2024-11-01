@@ -43,19 +43,19 @@ class VariationsReportTable extends Component {
   getHeadersContent() {
     return [
       {
-        label: __("Product / Variation title", 'dokan'),
+        label: __("Product / Variation title", 'dokan-lite'),
         key: "name",
         required: true,
         isLeftAligned: true,
       },
       {
-        label: __("SKU", 'dokan'),
+        label: __("SKU", 'dokan-lite'),
         key: "sku",
         hiddenByDefault: true,
         isSortable: true,
       },
       {
-        label: __("Items sold", 'dokan'),
+        label: __("Items sold", 'dokan-lite'),
         key: "items_sold",
         required: true,
         defaultSort: true,
@@ -63,28 +63,28 @@ class VariationsReportTable extends Component {
         isNumeric: true,
       },
       {
-        label: __("Net sales", 'dokan'),
-        screenReaderLabel: __("Net sales", 'dokan'),
+        label: __("Net sales", 'dokan-lite'),
+        screenReaderLabel: __("Net sales", 'dokan-lite'),
         key: "net_revenue",
         required: true,
         isSortable: true,
         isNumeric: true,
       },
       {
-        label: __("Orders", 'dokan'),
+        label: __("Orders", 'dokan-lite'),
         key: "orders_count",
         isSortable: true,
         isNumeric: true,
       },
       manageStock === "yes"
         ? {
-            label: __("Status", 'dokan'),
+            label: __("Status", 'dokan-lite'),
             key: "stock_status",
           }
         : null,
       manageStock === "yes"
         ? {
-            label: __("Stock", 'dokan'),
+            label: __("Stock", 'dokan-lite'),
             key: "stock",
             isNumeric: true,
           }
@@ -131,7 +131,7 @@ class VariationsReportTable extends Component {
       return [
         {
           display: deleted ? (
-            name + " " + __("(Deleted)", 'dokan')
+            name + " " + __("(Deleted)", 'dokan-lite')
           ) : (
             <Link href={editPostLink} type="wp-admin">
               {name}
@@ -167,7 +167,7 @@ class VariationsReportTable extends Component {
                 lowStockAmount
               ) ? (
                 <Link href={editPostLink} type="wp-admin">
-                  {_x("Low", "Indication of a low quantity", 'dokan')}
+                  {_x("Low", "Indication of a low quantity", 'dokan-lite')}
                 </Link>
               ) : (
                 stockStatuses[stockStatus]
@@ -212,7 +212,7 @@ class VariationsReportTable extends Component {
             "variation sold",
             "variations sold",
             variationsCount,
-            'dokan'
+            'dokan-lite'
           ),
           variationsCount,
           query
@@ -220,15 +220,15 @@ class VariationsReportTable extends Component {
         value: formatValue(currency, "number", variationsCount),
       },
       {
-        label: _n("item sold", "items sold", itemsSold, 'dokan'),
+        label: _n("item sold", "items sold", itemsSold, 'dokan-lite'),
         value: formatValue(currency, "number", itemsSold),
       },
       {
-        label: __("net sales", 'dokan'),
+        label: __("net sales", 'dokan-lite'),
         value: formatAmount(netRevenue),
       },
       {
-        label: _n("orders", "orders", ordersCount, 'dokan'),
+        label: _n("orders", "orders", ordersCount, 'dokan-lite'),
         value: formatValue(currency, "number", ordersCount),
       },
     ];
@@ -241,9 +241,9 @@ class VariationsReportTable extends Component {
     const labels = {
       helpText: __(
         "Check at least two variations below to compare",
-        'dokan'
+        'dokan-lite'
       ),
-      placeholder: __("Search by variation name or SKU", 'dokan'),
+      placeholder: __("Search by variation name or SKU", 'dokan-lite'),
     };
 
     return (
@@ -282,7 +282,7 @@ class VariationsReportTable extends Component {
          */
         title={applyFilters(
           EXPERIMENTAL_VARIATIONS_REPORT_TABLE_TITLE_FILTER,
-          __("Variations", 'dokan'),
+          __("Variations", 'dokan-lite'),
           query
         )}
         columnPrefsKey="variations_report_columns"

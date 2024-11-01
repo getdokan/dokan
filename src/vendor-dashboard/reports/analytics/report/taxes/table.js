@@ -26,35 +26,35 @@ class TaxesReportTable extends Component {
     getHeadersContent() {
         return [
             {
-                label: __( 'Tax code', 'dokan' ),
+                label: __( 'Tax code', 'dokan-lite' ),
                 key: 'tax_code',
                 required: true,
                 isLeftAligned: true,
                 isSortable: true,
             },
             {
-                label: __( 'Rate', 'dokan' ),
+                label: __( 'Rate', 'dokan-lite' ),
                 key: 'rate',
                 isSortable: true,
                 isNumeric: true,
             },
             {
-                label: __( 'Total tax', 'dokan' ),
+                label: __( 'Total tax', 'dokan-lite' ),
                 key: 'total_tax',
                 isSortable: true,
             },
             {
-                label: __( 'Order tax', 'dokan' ),
+                label: __( 'Order tax', 'dokan-lite' ),
                 key: 'order_tax',
                 isSortable: true,
             },
             {
-                label: __( 'Shipping tax', 'dokan' ),
+                label: __( 'Shipping tax', 'dokan-lite' ),
                 key: 'shipping_tax',
                 isSortable: true,
             },
             {
-                label: __( 'Orders', 'dokan' ),
+                label: __( 'Orders', 'dokan-lite' ),
                 key: 'orders_count',
                 required: true,
                 defaultSort: true,
@@ -143,23 +143,23 @@ class TaxesReportTable extends Component {
         const currency = getCurrencyConfig();
         return [
             {
-                label: _n( 'tax code', 'tax codes', taxesCodes, 'dokan' ),
+                label: _n( 'tax code', 'tax codes', taxesCodes, 'dokan-lite' ),
                 value: formatValue( currency, 'number', taxesCodes ),
             },
             {
-                label: __( 'total tax', 'dokan' ),
+                label: __( 'total tax', 'dokan-lite' ),
                 value: formatAmount( totalTax ),
             },
             {
-                label: __( 'order tax', 'dokan' ),
+                label: __( 'order tax', 'dokan-lite' ),
                 value: formatAmount( orderTax ),
             },
             {
-                label: __( 'shipping tax', 'dokan' ),
+                label: __( 'shipping tax', 'dokan-lite' ),
                 value: formatAmount( shippingTax ),
             },
             {
-                label: _n( 'order', 'orders', ordersCount, 'dokan' ),
+                label: _n( 'order', 'orders', ordersCount, 'dokan-lite' ),
                 value: formatValue( currency, 'number', ordersCount ),
             },
         ];
@@ -189,7 +189,7 @@ class TaxesReportTable extends Component {
                 tableQuery={ {
                     orderby: query.orderby || 'tax_rate_id',
                 } }
-                title={ __( 'Taxes', 'dokan' ) }
+                title={ __( 'Taxes', 'dokan-lite' ) }
                 columnPrefsKey="taxes_report_columns"
                 filters={ filters }
                 advancedFilters={ advancedFilters }

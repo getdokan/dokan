@@ -30,14 +30,14 @@ class CategoriesReportTable extends Component {
     getHeadersContent() {
         return [
             {
-                label: __( 'Category', 'dokan' ),
+                label: __( 'Category', 'dokan-lite' ),
                 key: 'category',
                 required: true,
                 isSortable: true,
                 isLeftAligned: true,
             },
             {
-                label: __( 'Items sold', 'dokan' ),
+                label: __( 'Items sold', 'dokan-lite' ),
                 key: 'items_sold',
                 required: true,
                 defaultSort: true,
@@ -45,19 +45,19 @@ class CategoriesReportTable extends Component {
                 isNumeric: true,
             },
             {
-                label: __( 'Net sales', 'dokan' ),
+                label: __( 'Net sales', 'dokan-lite' ),
                 key: 'net_revenue',
                 isSortable: true,
                 isNumeric: true,
             },
             {
-                label: __( 'Products', 'dokan' ),
+                label: __( 'Products', 'dokan-lite' ),
                 key: 'products_count',
                 isSortable: true,
                 isNumeric: true,
             },
             {
-                label: __( 'Orders', 'dokan' ),
+                label: __( 'Orders', 'dokan-lite' ),
                 key: 'orders_count',
                 isSortable: true,
                 isNumeric: true,
@@ -143,7 +143,7 @@ class CategoriesReportTable extends Component {
                     'Category',
                     'Categories',
                     totalResults,
-                    'dokan'
+                    'dokan-lite'
                 ),
                 value: formatValue( currency, 'number', totalResults ),
             },
@@ -152,16 +152,16 @@ class CategoriesReportTable extends Component {
                     'Item sold',
                     'Items sold',
                     itemsSold,
-                    'dokan'
+                    'dokan-lite'
                 ),
                 value: formatValue( currency, 'number', itemsSold ),
             },
             {
-                label: __( 'Net sales', 'dokan' ),
+                label: __( 'Net sales', 'dokan-lite' ),
                 value: formatAmount( netRevenue ),
             },
             {
-                label: _n( 'Order', 'Orders', ordersCount, 'dokan' ),
+                label: _n( 'Order', 'Orders', ordersCount, 'dokan-lite' ),
                 value: formatValue( currency, 'number', ordersCount ),
             },
         ];
@@ -173,9 +173,9 @@ class CategoriesReportTable extends Component {
         const labels = {
             helpText: __(
                 'Check at least two categories below to compare',
-                'dokan'
+                'dokan-lite'
             ),
-            placeholder: __( 'Search by category name', 'dokan' ),
+            placeholder: __( 'Search by category name', 'dokan-lite' ),
         };
 
         return (
@@ -200,7 +200,7 @@ class CategoriesReportTable extends Component {
                     order: query.order || 'desc',
                     extended_info: true,
                 } }
-                title={ __( 'Categories', 'dokan' ) }
+                title={ __( 'Categories', 'dokan-lite' ) }
                 columnPrefsKey="categories_report_columns"
                 filters={ filters }
                 advancedFilters={ advancedFilters }

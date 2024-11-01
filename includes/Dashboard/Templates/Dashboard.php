@@ -31,7 +31,7 @@ class Dashboard {
 
         add_action( 'dokan_dashboard_content_inside_before', [ $this, 'show_seller_dashboard_notice' ], 10 );
 
-        if ( ! self::is_analytics_enabled() ) {
+        if ( ! dokan_is_analytics_enabled() ) {
             add_action( 'dokan_dashboard_left_widgets', [ $this, 'get_big_counter_widgets' ], 10 );
             add_action( 'dokan_dashboard_left_widgets', [ $this, 'get_orders_widgets' ], 15 );
             add_action( 'dokan_dashboard_left_widgets', [ $this, 'get_products_widgets' ], 20 );
@@ -50,17 +50,6 @@ class Dashboard {
         if ( ! dokan_is_seller_enabled( $this->user_id ) ) {
             dokan_seller_not_enabled_notice();
         }
-    }
-
-    /**
-     * Check if analytics is enabled.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    public static function is_analytics_enabled(): bool {
-        return 'yes' === get_option( Analytics::TOGGLE_OPTION_NAME, 'no' );
     }
 
     /**

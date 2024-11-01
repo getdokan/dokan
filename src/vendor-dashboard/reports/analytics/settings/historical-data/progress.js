@@ -6,13 +6,13 @@ import { isNil } from 'lodash';
 
 function HistoricalDataProgress( { label, progress, total } ) {
     /* translators: %s: label */
-    const labelText = sprintf( __( 'Imported %(label)s', 'dokan' ), {
+    const labelText = sprintf( __( 'Imported %(label)s', 'dokan-lite' ), {
         label,
     } );
 
     const labelCounters = ! isNil( total )
         ? /* translators: 1: progress, 2: total */
-          sprintf( __( '%(progress)s of %(total)s', 'dokan' ), {
+          sprintf( __( '%(progress)s of %(total)s', 'dokan-lite' ), {
               progress: progress || 0,
               total,
           } )

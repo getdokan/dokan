@@ -33,21 +33,21 @@ const { addCesSurveyForAnalytics } = dispatch(CES_STORE_KEY);
 export const charts = applyFilters(CATEGORY_REPORT_CHARTS_FILTER, [
   {
     key: "items_sold",
-    label: __("Items sold", 'dokan'),
+    label: __("Items sold", 'dokan-lite'),
     order: "desc",
     orderby: "items_sold",
     type: "number",
   },
   {
     key: "net_revenue",
-    label: __("Net sales", 'dokan'),
+    label: __("Net sales", 'dokan-lite'),
     order: "desc",
     orderby: "net_revenue",
     type: "currency",
   },
   {
     key: "orders_count",
-    label: __("Orders", 'dokan'),
+    label: __("Orders", 'dokan-lite'),
     order: "desc",
     orderby: "orders_count",
     type: "number",
@@ -69,18 +69,18 @@ export const advancedFilters = applyFilters(
     title: _x(
       "Categories match <select/> filters",
       "A sentence describing filters for Categories. See screen shot for context: https://cloudup.com/cSsUY9VeCVJ",
-      'dokan'
+      'dokan-lite'
     ),
   }
 );
 
 const filterValues = [
   {
-    label: __("All categories", 'dokan'),
+    label: __("All categories", 'dokan-lite'),
     value: "all",
   },
   {
-    label: __("Single category", 'dokan'),
+    label: __("Single category", 'dokan-lite'),
     value: "select_category",
     chartMode: "item-comparison",
     subFilters: [
@@ -94,15 +94,15 @@ const filterValues = [
           param: "categories",
           getLabels: getCategoryLabels,
           labels: {
-            placeholder: __("Type to search for a category", 'dokan'),
-            button: __("Single Category", 'dokan'),
+            placeholder: __("Type to search for a category", 'dokan-lite'),
+            button: __("Single Category", 'dokan-lite'),
           },
         },
       },
     ],
   },
   {
-    label: __("Comparison", 'dokan'),
+    label: __("Comparison", 'dokan-lite'),
     value: "compare-categories",
     chartMode: "item-comparison",
     settings: {
@@ -112,11 +112,11 @@ const filterValues = [
       labels: {
         helpText: __(
           "Check at least two categories below to compare",
-          'dokan'
+          'dokan-lite'
         ),
-        placeholder: __("Search for categories to compare", 'dokan'),
-        title: __("Compare Categories", 'dokan'),
-        update: __("Compare", 'dokan'),
+        placeholder: __("Search for categories to compare", 'dokan-lite'),
+        title: __("Compare Categories", 'dokan-lite'),
+        update: __("Compare", 'dokan-lite'),
       },
       onClick: addCesSurveyForAnalytics,
     },
@@ -125,7 +125,7 @@ const filterValues = [
 
 if (Object.keys(advancedFilters.filters).length) {
   filterValues.push({
-    label: __("Advanced filters", 'dokan'),
+    label: __("Advanced filters", 'dokan-lite'),
     value: "advanced",
   });
 }
@@ -142,7 +142,7 @@ if (Object.keys(advancedFilters.filters).length) {
  */
 export const filters = applyFilters(CATEGORY_REPORT_FILTERS_FILTER, [
   {
-    label: __("Show", 'dokan'),
+    label: __("Show", 'dokan-lite'),
     staticParams: ["chartType", "paged", "per_page"],
     param: "filter",
     showFilters: () => true,

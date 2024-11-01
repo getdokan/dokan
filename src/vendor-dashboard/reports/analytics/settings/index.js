@@ -35,7 +35,7 @@ const Settings = ({ createNotice, query }) => {
       if (isDirty) {
         event.returnValue = __(
           "You have unsaved changes. If you proceed, they will be lost.",
-            'dokan'
+            'dokan-lite'
         );
         return event.returnValue;
       }
@@ -54,14 +54,14 @@ const Settings = ({ createNotice, query }) => {
       if (!settingsError) {
         createNotice(
           "success",
-          __("Your settings have been successfully saved.", 'dokan')
+          __("Your settings have been successfully saved.", 'dokan-lite')
         );
       } else {
         createNotice(
           "error",
           __(
             "There was an error saving your settings. Please try again.",
-              'dokan'
+              'dokan-lite'
           )
         );
       }
@@ -75,7 +75,7 @@ const Settings = ({ createNotice, query }) => {
       window.confirm(
         __(
           "Are you sure you want to reset all settings to default values?",
-          'dokan'
+          'dokan-lite'
         )
       )
     ) {
@@ -121,7 +121,7 @@ const Settings = ({ createNotice, query }) => {
 
   return (
     <Fragment>
-      <SectionHeader title={__("Analytics settings", 'dokan')} />
+      <SectionHeader title={__("Analytics settings", 'dokan-lite')} />
       <div className="woocommerce-settings__wrapper">
         {Object.keys(config).map((setting) => (
           <Setting
@@ -134,10 +134,10 @@ const Settings = ({ createNotice, query }) => {
         ))}
         <div className="woocommerce-settings__actions">
           <Button isSecondary onClick={resetDefaults}>
-            {__("Reset defaults", 'dokan')}
+            {__("Reset defaults", 'dokan-lite')}
           </Button>
           <Button isPrimary isBusy={isRequesting} onClick={saveChanges}>
-            {__("Save settings", 'dokan')}
+            {__("Save settings", 'dokan-lite')}
           </Button>
         </div>
       </div>

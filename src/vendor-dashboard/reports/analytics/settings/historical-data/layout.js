@@ -40,7 +40,7 @@ class HistoricalDataLayout extends Component {
 
     return (
       <Fragment>
-        <SectionHeader title={__("Import historical data", 'dokan')} />
+        <SectionHeader title={__("Import historical data", 'dokan-lite')} />
         <div className="woocommerce-settings__wrapper">
           <div className="woocommerce-setting">
             <div className="woocommerce-setting__input">
@@ -48,7 +48,7 @@ class HistoricalDataLayout extends Component {
                 {__(
                   "This tool populates historical analytics data by processing customers " +
                     "and orders created prior to activating WooCommerce Admin.",
-                  'dokan'
+                  'dokan-lite'
                 )}
               </span>
               {status !== "finished" && (
@@ -63,12 +63,12 @@ class HistoricalDataLayout extends Component {
                     checked={skipChecked}
                   />
                   <HistoricalDataProgress
-                    label={__("Registered Customers", 'dokan')}
+                    label={__("Registered Customers", 'dokan-lite')}
                     progress={customersProgress}
                     total={customersTotal}
                   />
                   <HistoricalDataProgress
-                    label={__("Orders and Refunds", 'dokan')}
+                    label={__("Orders and Refunds", 'dokan-lite')}
                     progress={ordersProgress}
                     total={ordersTotal}
                   />

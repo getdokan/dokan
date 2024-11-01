@@ -81,7 +81,7 @@ export class Leaderboard extends Component {
                         <EmptyTable>
                             { __(
                                 'No data recorded for the selected time period.',
-                                'dokan'
+                                'dokan-lite'
                             ) }
                         </EmptyTable>
                     </CardBody>

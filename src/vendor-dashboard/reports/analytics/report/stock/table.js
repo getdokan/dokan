@@ -19,9 +19,9 @@ import { getAdminSetting } from "./../../../utils/admin-settings";
 import { mapToDashboardRoute } from "../../../helper";
 
 const stockStatuses = getAdminSetting( 'stockStatuses', {
-    'instock'     : __( 'In stock', 'dokan' ),
-    'outofstock'  : __( 'Out of stock', 'dokan' ),
-    'onbackorder' : __( 'On backorder', 'dokan' )
+    'instock'     : __( 'In stock', 'dokan-lite' ),
+    'outofstock'  : __( 'Out of stock', 'dokan-lite' ),
+    'onbackorder' : __( 'On backorder', 'dokan-lite' )
 });
 
 class StockReportTable extends Component {
@@ -36,25 +36,25 @@ class StockReportTable extends Component {
   getHeadersContent() {
     return [
       {
-        label: __("Product / Variation", 'dokan'),
+        label: __("Product / Variation", 'dokan-lite'),
         key: "title",
         required: true,
         isLeftAligned: true,
         isSortable: true,
       },
       {
-        label: __("SKU", 'dokan'),
+        label: __("SKU", 'dokan-lite'),
         key: "sku",
         isSortable: true,
       },
       {
-        label: __("Status", 'dokan'),
+        label: __("Status", 'dokan-lite'),
         key: "stock_status",
         isSortable: true,
         defaultSort: true,
       },
       {
-        label: __("Stock", 'dokan'),
+        label: __("Stock", 'dokan-lite'),
         key: "stock_quantity",
         isSortable: true,
       },
@@ -100,7 +100,7 @@ class StockReportTable extends Component {
         lowStockAmount
       ) ? (
         <Link href={editProductLink} type="wp-admin">
-          {_x("Low", "Indication of a low quantity", 'dokan')}
+          {_x("Low", "Indication of a low quantity", 'dokan-lite')}
         </Link>
       ) : (
         <Link href={editProductLink} type="wp-admin">
@@ -128,7 +128,7 @@ class StockReportTable extends Component {
                 "number",
                 stockQuantity
               )
-            : __("N/A", 'dokan'),
+            : __("N/A", 'dokan-lite'),
           value: stockQuantity,
         },
       ];
@@ -146,23 +146,23 @@ class StockReportTable extends Component {
     const currency = this.context.getCurrencyConfig();
     return [
       {
-        label: _n("Product", "Products", products, 'dokan'),
+        label: _n("Product", "Products", products, 'dokan-lite'),
         value: formatValue(currency, "number", products),
       },
       {
-        label: __("Out of stock", 'dokan'),
+        label: __("Out of stock", 'dokan-lite'),
         value: formatValue(currency, "number", outofstock),
       },
       {
-        label: __("Low stock", 'dokan'),
+        label: __("Low stock", 'dokan-lite'),
         value: formatValue(currency, "number", lowstock),
       },
       {
-        label: __("On backorder", 'dokan'),
+        label: __("On backorder", 'dokan-lite'),
         value: formatValue(currency, "number", onbackorder),
       },
       {
-        label: __("In stock", 'dokan'),
+        label: __("In stock", 'dokan-lite'),
         value: formatValue(currency, "number", instock),
       },
     ];
@@ -190,7 +190,7 @@ class StockReportTable extends Component {
           order: query.order || "asc",
           type: query.type || "all",
         }}
-        title={__("Stock", 'dokan')}
+        title={__("Stock", 'dokan-lite')}
         filters={filters}
         advancedFilters={advancedFilters}
       />

@@ -31,7 +31,7 @@ const DOWLOADS_REPORT_ADVANCED_FILTERS_FILTER =
 export const charts = applyFilters(DOWLOADS_REPORT_CHARTS_FILTER, [
   {
     key: "download_count",
-    label: __("Downloads", 'dokan'),
+    label: __("Downloads", 'dokan-lite'),
     type: "number",
   },
 ]);
@@ -48,14 +48,14 @@ export const charts = applyFilters(DOWLOADS_REPORT_CHARTS_FILTER, [
  */
 export const filters = applyFilters(DOWLOADS_REPORT_FILTERS_FILTER, [
   {
-    label: __("Show", 'dokan'),
+    label: __("Show", 'dokan-lite'),
     staticParams: ["chartType", "paged", "per_page"],
     param: "filter",
     showFilters: () => true,
     filters: [
-      { label: __("All downloads", 'dokan'), value: "all" },
+      { label: __("All downloads", 'dokan-lite'), value: "all" },
       {
-        label: __("Advanced filters", 'dokan'),
+        label: __("Advanced filters", 'dokan-lite'),
         value: "advanced",
       },
     ],
@@ -78,29 +78,29 @@ export const advancedFilters = applyFilters(
     title: _x(
       "Downloads match <select/> filters",
       "A sentence describing filters for Downloads. See screen shot for context: https://cloudup.com/ccxhyH2mEDg",
-      'dokan'
+      'dokan-lite'
     ),
     filters: {
       product: {
         labels: {
-          add: __("Product", 'dokan'),
-          placeholder: __("Search", 'dokan'),
-          remove: __("Remove product filter", 'dokan'),
-          rule: __("Select a product filter match", 'dokan'),
+          add: __("Product", 'dokan-lite'),
+          placeholder: __("Search", 'dokan-lite'),
+          remove: __("Remove product filter", 'dokan-lite'),
+          rule: __("Select a product filter match", 'dokan-lite'),
           /* translators: A sentence describing a Product filter. See screen shot for context: https://cloudup.com/ccxhyH2mEDg */
-          title: __("<title>Product</title> <rule/> <filter/>", 'dokan'),
-          filter: __("Select product", 'dokan'),
+          title: __("<title>Product</title> <rule/> <filter/>", 'dokan-lite'),
+          filter: __("Select product", 'dokan-lite'),
         },
         rules: [
           {
             value: "includes",
             /* translators: Sentence fragment, logical, "Includes" refers to products including a given product(s). Screenshot for context: https://cloudup.com/ccxhyH2mEDg */
-            label: _x("Includes", "products", 'dokan'),
+            label: _x("Includes", "products", 'dokan-lite'),
           },
           {
             value: "excludes",
             /* translators: Sentence fragment, logical, "Excludes" refers to products excluding a products(s). Screenshot for context: https://cloudup.com/ccxhyH2mEDg */
-            label: _x("Excludes", "products", 'dokan'),
+            label: _x("Excludes", "products", 'dokan-lite'),
           },
         ],
         input: {
@@ -111,27 +111,27 @@ export const advancedFilters = applyFilters(
       },
       customer: {
         labels: {
-          add: __("Username", 'dokan'),
-          placeholder: __("Search customer username", 'dokan'),
-          remove: __("Remove customer username filter", 'dokan'),
-          rule: __("Select a customer username filter match", 'dokan'),
+          add: __("Username", 'dokan-lite'),
+          placeholder: __("Search customer username", 'dokan-lite'),
+          remove: __("Remove customer username filter", 'dokan-lite'),
+          rule: __("Select a customer username filter match", 'dokan-lite'),
           /* translators: A sentence describing a customer username filter. See screen shot for context: https://cloudup.com/ccxhyH2mEDg */
           title: __(
             "<title>Username</title> <rule/> <filter />",
-            'dokan'
+            'dokan-lite'
           ),
-          filter: __("Select customer username", 'dokan'),
+          filter: __("Select customer username", 'dokan-lite'),
         },
         rules: [
           {
             value: "includes",
             /* translators: Sentence fragment, logical, "Includes" refers to customer usernames including a given username(s). Screenshot for context: https://cloudup.com/ccxhyH2mEDg */
-            label: _x("Includes", "customer usernames", 'dokan'),
+            label: _x("Includes", "customer usernames", 'dokan-lite'),
           },
           {
             value: "excludes",
             /* translators: Sentence fragment, logical, "Excludes" refers to customer usernames excluding a given username(s). Screenshot for context: https://cloudup.com/ccxhyH2mEDg */
-            label: _x("Excludes", "customer usernames", 'dokan'),
+            label: _x("Excludes", "customer usernames", 'dokan-lite'),
           },
         ],
         input: {
@@ -142,24 +142,24 @@ export const advancedFilters = applyFilters(
       },
       order: {
         labels: {
-          add: __("Order #", 'dokan'),
-          placeholder: __("Search order number", 'dokan'),
-          remove: __("Remove order number filter", 'dokan'),
-          rule: __("Select a order number filter match", 'dokan'),
+          add: __("Order #", 'dokan-lite'),
+          placeholder: __("Search order number", 'dokan-lite'),
+          remove: __("Remove order number filter", 'dokan-lite'),
+          rule: __("Select a order number filter match", 'dokan-lite'),
           /* translators: A sentence describing a order number filter. See screen shot for context: https://cloudup.com/ccxhyH2mEDg */
-          title: __("<title>Order #</title> <rule/> <filter/>", 'dokan'),
-          filter: __("Select order number", 'dokan'),
+          title: __("<title>Order #</title> <rule/> <filter/>", 'dokan-lite'),
+          filter: __("Select order number", 'dokan-lite'),
         },
         rules: [
           {
             value: "includes",
             /* translators: Sentence fragment, logical, "Includes" refers to order numbers including a given order(s). Screenshot for context: https://cloudup.com/ccxhyH2mEDg */
-            label: _x("Includes", "order numbers", 'dokan'),
+            label: _x("Includes", "order numbers", 'dokan-lite'),
           },
           {
             value: "excludes",
             /* translators: Sentence fragment, logical, "Excludes" refers to order numbers excluding a given order(s). Screenshot for context: https://cloudup.com/ccxhyH2mEDg */
-            label: _x("Excludes", "order numbers", 'dokan'),
+            label: _x("Excludes", "order numbers", 'dokan-lite'),
           },
         ],
         input: {
@@ -176,27 +176,27 @@ export const advancedFilters = applyFilters(
       },
       ip_address: {
         labels: {
-          add: __("IP Address", 'dokan'),
-          placeholder: __("Search IP address", 'dokan'),
-          remove: __("Remove IP address filter", 'dokan'),
-          rule: __("Select an IP address filter match", 'dokan'),
+          add: __("IP Address", 'dokan-lite'),
+          placeholder: __("Search IP address", 'dokan-lite'),
+          remove: __("Remove IP address filter", 'dokan-lite'),
+          rule: __("Select an IP address filter match", 'dokan-lite'),
           /* translators: A sentence describing a order number filter. See screen shot for context: https://cloudup.com/ccxhyH2mEDg */
           title: __(
             "<title>IP Address</title> <rule/> <filter/>",
-            'dokan'
+            'dokan-lite'
           ),
-          filter: __("Select IP address", 'dokan'),
+          filter: __("Select IP address", 'dokan-lite'),
         },
         rules: [
           {
             value: "includes",
             /* translators: Sentence fragment, logical, "Includes" refers to IP addresses including a given address(s). Screenshot for context: https://cloudup.com/ccxhyH2mEDg */
-            label: _x("Includes", "IP addresses", 'dokan'),
+            label: _x("Includes", "IP addresses", 'dokan-lite'),
           },
           {
             value: "excludes",
             /* translators: Sentence fragment, logical, "Excludes" refers to IP addresses excluding a given address(s). Screenshot for context: https://cloudup.com/ccxhyH2mEDg */
-            label: _x("Excludes", "IP addresses", 'dokan'),
+            label: _x("Excludes", "IP addresses", 'dokan-lite'),
           },
         ],
         input: {
