@@ -157,7 +157,7 @@ class OrderEventListener {
     private function log_db_update( int $order_id, string $status, bool $orders_updated, bool $balance_updated ): void {
         dokan_log(
             sprintf(
-                '[Order Sync] Update to order #%d (Status: %s) in Dokan tables. Orders: %s, Balance: %s',
+                '[Order Sync] Update to order #%d (Status: %s) in Dokan tables. Orders: %s, Vendor Balance: %s',
                 $order_id,
                 $status,
                 $orders_updated === false ? 'Failed' : 'OK',
