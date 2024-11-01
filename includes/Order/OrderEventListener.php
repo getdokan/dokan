@@ -79,7 +79,7 @@ class OrderEventListener {
         }
 
         // Update Dokan orders table
-        $orders_updated = $wpdb->update(
+        $wpdb->update(
             $wpdb->prefix . 'dokan_orders',
             array( 'order_status' => $previous_status ),
             array( 'order_id' => $order_id ),
@@ -88,7 +88,7 @@ class OrderEventListener {
         );
 
         // Update Dokan vendor balance table
-        $balance_updated = $wpdb->update(
+        $wpdb->update(
             $wpdb->prefix . 'dokan_vendor_balance',
             array( 'status' => $previous_status ),
             array(
@@ -98,8 +98,6 @@ class OrderEventListener {
             array( '%s' ),
             array( '%d', '%s' )
         );
-
-        $this->log_db_update( $order_id, $previous_status, $orders_updated, $balance_updated );
     }
 
     /**
@@ -140,28 +138,6 @@ class OrderEventListener {
                 '[Order Sync] Order #%d %s by System',
                 $order_id,
                 $action_message
-            )
-        );
-    }
-
-    /**
-     * Log database update status.
-     *
-     * @param int    $order_id       The order ID
-     * @param string $status         The order status
-     * @param bool   $orders_updated Orders table update status
-     * @param bool   $balance_updated Balance table update status
-     *
-     * @return void
-     */
-    private function log_db_update( int $order_id, string $status, bool $orders_updated, bool $balance_updated ): void {
-        dokan_log(
-            sprintf(
-                '[Order Sync] Update to order #%d (Status: %s) in Dokan tables. Orders: %s, Vendor Balance: %s',
-                $order_id,
-                $status,
-                $orders_updated === false ? 'Failed' : 'OK',
-                $balance_updated === false ? 'Failed' : 'OK'
             )
         );
     }
