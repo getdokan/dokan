@@ -31,8 +31,8 @@ class OrderEventListener {
             return;
         }
 
-        $this->update_order_status( $order, $wpdb, $order_id );
-        $this->log_order_action( 'trashed', $order_id );
+        $this->process_order_status( $order, $wpdb, $order_id );
+        $this->log_message( 'trashed', $order_id );
     }
 
     /**
@@ -54,8 +54,8 @@ class OrderEventListener {
             return;
         }
 
-        $this->update_order_status( $order, $wpdb, $order_id );
-        $this->log_order_action( 'restored', $order_id );
+        $this->process_order_status( $order, $wpdb, $order_id );
+        $this->log_message( 'restored', $order_id );
     }
 
     /**
@@ -72,7 +72,7 @@ class OrderEventListener {
      *
      * @return void
      */
-    protected function update_order_status( WC_Order $order, \wpdb $wpdb, int $order_id ): void {
+    protected function process_order_status( WC_Order $order, \wpdb $wpdb, int $order_id ): void {
         $previous_status = $order->get_status( 'edit' );
         if ( strpos( $previous_status, 'wc-' ) === false ) {
             $previous_status = 'wc-' . $previous_status;
@@ -112,7 +112,7 @@ class OrderEventListener {
      *
      * @return void
      */
-    private function log_order_action( string $action, int $order_id ) {
+    private function log_message( string $action, int $order_id ) {
         $user_id = dokan_get_current_user_id();
         if ( $user_id ) {
             $user = get_user_by( 'id', $user_id );
