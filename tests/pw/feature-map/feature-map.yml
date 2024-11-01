@@ -775,12 +775,13 @@
 
 - page: 'Live Search'
   features:
-      admin:
-          admin can set live search options: false
-          admin can add live search widget: false
+      #   admin:
+      #   admin can set Dokan live search settings [duplicate]: true
       customer:
-          customer can search product using live search - suggestion box: false
-          customer can search product using live search - autoload content: false
+          customer can search product using live search (suggestion box): true
+          customer can search product with category using live search (suggestion box): true
+          customer can search product using live search (autoload content): true
+          customer can search product with category using live search (autoload content): true
 
 - page: 'MangoPay'
   features:
