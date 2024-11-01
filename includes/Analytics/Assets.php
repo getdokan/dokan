@@ -116,6 +116,5 @@ class Assets implements Hookable {
 			]
 		);
         wp_enqueue_style( 'vendor_analytics_style' );
-		wp_enqueue_style( 'wc-chunks-9966-style', plugins_url( 'woocommerce/assets/client/admin/chunks/9966.style.css' ), array(), filemtime( WP_PLUGIN_DIR . '/woocommerce/assets/client/admin/chunks/9966.style.css' ) );
 	}
 }

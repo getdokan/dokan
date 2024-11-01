@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "./../stylesheets/abstracts/index";
 @import "./../stylesheets/custom";
 
@@ -355,6 +357,44 @@
 
             .components-input-control__backdrop {
                 border: none;
+            }
+        }
+
+        // @see: /woocommerce/assets/client/admin/chunks/9966.style.css
+        .woocommerce-dashboard__columns {
+            display: grid;
+            grid-template-columns: calc(50% - 12px) calc(50% - 12px);
+            grid-column-gap: 24px;
+
+            > div {
+                @for $i from 1 through 14 {
+                    &:nth-child(#{$i}) {
+                        @if $i % 2 == 0 {
+                            grid-column: 2 / 3;
+                        } @else {
+                            grid-column: 1 / 2;
+                        }
+
+                        // Using math.div() for proper division
+                        $row-start: math.div($i + 1, 2);
+                        grid-row: #{$row-start} / #{$row-start + 1};
+
+                        @media (max-width: 960px) {
+                            grid-column: 1 / 2;
+                            grid-row: #{$i} / #{$i + 1};
+                        }
+                    }
+                }
+            }
+
+            .components-card {
+                .woocommerce-ellipsis-menu__toggle {
+                    padding: 0;
+                }
+            }
+
+            @media (max-width: 960px) {
+                grid-template-columns: 100%;
             }
         }
     }
