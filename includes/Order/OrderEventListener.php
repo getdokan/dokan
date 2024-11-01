@@ -78,8 +78,8 @@ class OrderEventListener {
             $previous_status = 'wc-' . $previous_status;
         }
 
-        // Update Dokan tables
-        $wpdb->update(
+        // Update Dokan orders table
+        $orders_updated = $wpdb->update(
             $wpdb->prefix . 'dokan_orders',
             array( 'order_status' => $previous_status ),
             array( 'order_id' => $order_id ),
@@ -87,7 +87,8 @@ class OrderEventListener {
             array( '%d' )
         );
 
-        $wpdb->update(
+        // Update Dokan vendor balance table
+        $balance_updated = $wpdb->update(
             $wpdb->prefix . 'dokan_vendor_balance',
             array( 'status' => $previous_status ),
             array(
@@ -97,34 +98,55 @@ class OrderEventListener {
             array( '%s' ),
             array( '%d', '%s' )
         );
+
+        // Log only if there's an issue with the updates
+        if ( false === $orders_updated || false === $balance_updated ) {
+            dokan_log(
+                sprintf(
+                    '[Order Sync Error] Failed to update order #%d (Status: %s) in Dokan tables. Orders: %s, Balance: %s',
+                    $order_id,
+                    $previous_status,
+                    $orders_updated === false ? 'Failed' : 'OK',
+                    $balance_updated === false ? 'Failed' : 'OK'
+                )
+            );
+        }
     }
 
     /**
      * Log the order action.
      *
-     * This method logs the action performed on the order (e.g., trashed, restored) along with
-     * the user details who performed the action.
+     * This method logs the order status synchronization and the action performed,
+     * including user details who initiated the action.
      *
      * @since DOKAN_SINCE
      *
-     * @param string $action The action performed on the order (e.g., 'trashed', 'restored').
-     * @param int $order_id The ID of the order.
+     * @param string $action   The action performed on the order (e.g., 'trashed', 'restored')
+     * @param int    $order_id The ID of the order
      *
      * @return void
      */
-    private function log_message( string $action, int $order_id ) {
+    private function log_message( string $action, int $order_id ): void {
         $user_id = dokan_get_current_user_id();
+        $action_message = $action === 'trashed' ? 'moved to trash' : 'restored from trash';
+
         if ( $user_id ) {
             $user = get_user_by( 'id', $user_id );
-            $user_name = sprintf( '%s %s', $user->first_name, $user->last_name );
+
+            // Check if first name and last name are set, otherwise use username
+            $user_name = trim( sprintf( '%s %s', $user->first_name, $user->last_name ) );
+            if ( empty( $user_name ) ) {
+                $user_name = $user->user_login;
+            }
+
             $user_role = implode( ', ', $user->roles );
             $user_ip = WC_Geolocation::get_ip_address();
 
             dokan_log(
                 sprintf(
-                    'Order %d has been %s in Dokan order and vendor balance tables by %s (%s) from IP: %s.',
+                    '[Order Status Sync] WooCommerce order %s (ID: %d) by %s (%s) from IP: %s. Order status synchronized in Dokan order and vendor balance tables also.',
+                    $action_message,
                     $order_id,
-                    $action,
                     $user_name,
                     $user_role,
                     $user_ip
@@ -133,9 +155,9 @@ class OrderEventListener {
         } else {
             dokan_log(
                 sprintf(
-                    'Order %d has been %s in Dokan order and vendor balance tables by System (system).',
-                    $order_id,
-                    $action
+                    '[Order Status Sync] WooCommerce order %s (ID: %d) by System. Order status synchronized in Dokan order and vendor balance tables also.',
+                    $action_message,
+                    $order_id
                 )
             );
         }
