@@ -380,6 +380,10 @@ test.describe('Product details functionality test', () => {
         await vendor.addProductAttribute(productName1, data.product.productInfo.attribute);
     });
 
+    test("vendor can't add already added product attribute", { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.cantAddAlreadyAddedAttribute(productName, data.product.productInfo.attribute.attributeName);
+    });
+
     // todo: refactor below tests
     test('vendor can create product attribute term', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , , attributeName] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
@@ -401,8 +405,6 @@ test.describe('Product details functionality test', () => {
         const [, , productName] = await apiUtils.createProduct({ ...payloads.createProduct(), attributes: [attributes] }, payloads.vendorAuth);
         await vendor.removeProductAttributeTerm(productName, attributeName, attributeTerm2);
     });
-
-    // todo: vendor cant add already added attribute
 
     // discount options
 

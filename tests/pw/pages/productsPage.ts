@@ -1336,6 +1336,13 @@ export class ProductsPage extends AdminPage {
         await this.toBeVisible(productsVendor.attribute.savedAttribute(attribute.attributeName));
     }
 
+    // cant add added attribute
+    async cantAddAlreadyAddedAttribute(productName: string, attributeName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.toBeVisible(productsVendor.attribute.savedAttribute(attributeName));
+        await this.toHaveAttribute(productsVendor.attribute.disabledAttribute(attributeName), 'disabled', 'disabled');
+    }
+
     // remove product attribute
     async removeProductAttribute(productName: string, attribute: string): Promise<void> {
         await this.goToProductEdit(productName);

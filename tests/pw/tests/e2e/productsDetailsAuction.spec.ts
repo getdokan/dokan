@@ -13,9 +13,7 @@ test.describe('Auction Product details functionality test', () => {
     let vendor: AuctionsPage;
     let vPage: Page;
     let apiUtils: ApiUtils;
-    let productName: string; // has all fields
     let productId: string; // has all fields
-    let productName1: string; // has only required fields
     let productId1: string; // has only required fields
 
     test.beforeAll(async ({ browser }) => {
@@ -24,28 +22,12 @@ test.describe('Auction Product details functionality test', () => {
         vendor = new AuctionsPage(vPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        // // product with only required fields
-        // [, , productName1] = await apiUtils.createProduct(payloads.createProductRequiredFields(), payloads.vendorAuth);
-        // // product with all fields
-        // // const [, , mediaUrl] = await apiUtils.uploadMedia(data.image.avatar, payloads.mimeTypes.png, payloads.vendorAuth);
-        // // [productResponseBody, productId, productName] = await apiUtils.createProductWc({ ...payloads.createProductAllFields(), images: [{ src: mediaUrl }, { src: mediaUrl }] }, payloads.vendorAuth); // todo: mediaUrl is not working on git action
-        // [productResponseBody, productId, productName] = await apiUtils.createProductWc(payloads.createProductAllFields(), payloads.vendorAuth);
-        // await apiUtils.updateProduct(
-        //     productId,
-        //     {
-        //         meta_data: [
-        //             { key: '_product_addons', value: [payloads.createProductAddon()] },
-        //             { key: '_product_addons_exclude_global', value: '1' },
-        //         ],
-        //     },
-        //     payloads.vendorAuth,
-        // );
 
         // product with only required fields
-        [, productId1, productName1] = await apiUtils.createProduct(payloads.createAuctionProductRequiredFields(), payloads.vendorAuth);
+        [, productId1] = await apiUtils.createProduct(payloads.createAuctionProductRequiredFields(), payloads.vendorAuth);
 
         // product with all fields
-        [, productId, productName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
+        [, productId] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth); //todo: need to add all fields
     });
 
     test.afterAll(async () => {
@@ -96,55 +78,55 @@ test.describe('Auction Product details functionality test', () => {
         await vendor.cantAddCategory(productId, data.product.category.multistepCategories.at(-2)!);
     });
 
-    // // product tags
+    // product tags
 
-    // test('vendor can add auction product tags', { tag: ['@pro', '@vendor'] }, async () => {
-    //     await vendor.addProductTags(productId1, data.product.productInfo.tags.tags);
-    // });
+    test('vendor can add auction product tags', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductTags(productId1, data.product.productInfo.tags.tags);
+    });
 
-    // test('vendor can remove auction product tags', { tag: ['@pro', '@vendor'] }, async () => {
-    //     await vendor.removeProductTags(productId, data.product.productInfo.tags.tags);
-    // });
+    test('vendor can remove auction product tags', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.removeProductTags(productId, data.product.productInfo.tags.tags);
+    });
 
-    // test('vendor can create auction product tags', { tag: ['@pro', '@vendor'] }, async () => {
-    // await vendor.addProductTags(productId, data.product.productInfo.tags.randomTags);
-    // });
+    test('vendor can create auction product tags', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductTags(productId, data.product.productInfo.tags.randomTags, true);
+    });
 
     // product cover image
 
-    // test.only('vendor can add auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
-    //     await vendor.addProductCoverImage(productId1, data.product.productInfo.images.cover);
-    // });
+    test('vendor can add auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductCoverImage(productId1, data.product.productInfo.images.cover);
+    });
 
-    // test.only('vendor can update auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
-    //     // todo: need a product with cover image
-    //     await vendor.addProductCoverImage(productId, data.product.productInfo.images.cover);
-    //     await vendor.addProductCoverImage(productId, data.product.productInfo.images.cover, true);
-    // });
+    test('vendor can update auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
+        // todo: need a product with cover image
+        await vendor.addProductCoverImage(productId, data.product.productInfo.images.cover);
+        await vendor.addProductCoverImage(productId, data.product.productInfo.images.cover, true);
+    });
 
-    // test.only('vendor can remove auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
-    //     // todo: need a product with cover image
-    //     await vendor.addProductCoverImage(productId, data.product.productInfo.images.cover, true);
-    //     await vendor.removeProductCoverImage(productName);
-    // });
+    test('vendor can remove auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
+        // todo: need a product with cover image
+        await vendor.addProductCoverImage(productId, data.product.productInfo.images.cover, true);
+        await vendor.removeProductCoverImage(productId);
+    });
 
-    // // product gallery image
+    // product gallery image
 
-    test.only('vendor can add auction product gallery image', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add auction product gallery image', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addProductGalleryImages(productId1, data.product.productInfo.images.gallery);
     });
 
-    // test('vendor can update auction product gallery image', { tag: ['@pro', '@vendor'] }, async () => {
-    //     // todo: need a product with gallery images
-    //     await vendor.addProductGalleryImages(productId, data.product.productInfo.images.gallery);
-    //     await vendor.addProductGalleryImages(productId, data.product.productInfo.images.gallery, true);
-    // });
+    test('vendor can update auction product gallery image', { tag: ['@pro', '@vendor'] }, async () => {
+        // todo: need a product with gallery images
+        await vendor.addProductGalleryImages(productId, data.product.productInfo.images.gallery);
+        await vendor.addProductGalleryImages(productId, data.product.productInfo.images.gallery, true);
+    });
 
-    // test('vendor can remove auction product gallery image', { tag: ['@pro', '@vendor'] }, async () => {
-    //     // todo: need a product with gallery images
-    //     await vendor.addProductGalleryImages(productId, data.product.productInfo.images.gallery, true);
-    //     await vendor.removeProductGalleryImages(productName);
-    // });
+    test('vendor can remove auction product gallery image', { tag: ['@pro', '@vendor'] }, async () => {
+        // todo: need a product with gallery images
+        await vendor.addProductGalleryImages(productId, data.product.productInfo.images.gallery, true);
+        await vendor.removeProductGalleryImages(productId);
+    });
 
     // product short description
 
@@ -194,6 +176,10 @@ test.describe('Auction Product details functionality test', () => {
     test('vendor can remove product virtual option', { tag: ['@lite', '@vendor'] }, async () => {
         const [, productId] = await apiUtils.createProduct({ ...payloads.createAuctionProductRequiredFields(), virtual: true }, payloads.vendorAuth);
         await vendor.addProductVirtualOption(productId, false);
+    });
+
+    test('vendor can update product general options', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductGeneralOption(productId1, { ...data.product.auction, itemCondition: 'used', auctionType: 'reverse' });
     });
 
     // product inventory options
@@ -249,6 +235,10 @@ test.describe('Auction Product details functionality test', () => {
         await vendor.addProductAttribute(productId1, data.product.productInfo.attribute);
     });
 
+    test("vendor can't add already added auction product attribute", { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.cantAddAlreadyAddedAttribute(productId, data.product.productInfo.attribute.attributeName);
+    });
+
     // todo: refactor below tests
     test('vendor can create auction product attribute term', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , , attributeName] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
@@ -271,8 +261,6 @@ test.describe('Auction Product details functionality test', () => {
         await vendor.removeProductAttributeTerm(productId, attributeName, attributeTerm2);
     });
 
-    // todo: vendor cant add already added attribute
-
     // geolocation
 
     test('vendor can add auction product geolocation (individual)', { tag: ['@pro', '@vendor'] }, async () => {
@@ -293,6 +281,8 @@ test.describe('Auction Product details functionality test', () => {
         test.slow();
         await vendor.addProductAddon(productId1, data.product.productInfo.addon);
     });
+
+    // todo: add update product addon test in all product edit test files
 
     test('vendor can import auction product addon', { tag: ['@pro', '@vendor'] }, async () => {
         const addon = payloads.createProductAddon();

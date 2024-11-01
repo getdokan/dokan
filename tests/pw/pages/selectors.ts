@@ -3844,7 +3844,9 @@ export const selector = {
             // tags
             tags: {
                 tagInput: '//select[@id="product_tag_edit"]/..//input[@class="select2-search__field"] | //select[@id="product_tag[]"]/..//input[@class="select2-search__field"]', // todo: remove previous when pr merged
-                searchedTag: (tagName: string) => `//li[@class="select2-results__option select2-results__option--highlighted" and normalize-space(text())="${tagName}"]`,
+                searchedTag: (tagName: string) => `//li[contains(@class,"select2-results__option") and contains(@id, "select2-product_tag-result") and normalize-space(text())="${tagName}"]`,
+                nonCreatedTag: (tagName: string) => `//li[@class="select2-results__option select2-results__option--highlighted" and normalize-space(text())="${tagName}"]`,
+
                 selectedTags: (tagName: string) => `//li[@class="select2-selection__choice" and contains(., "${tagName}")]`,
                 removeSelectedTags: (tagName: string) => `//li[@class="select2-selection__choice" and contains(., "${tagName}")]//span[@class="select2-selection__choice__remove"]`,
             },
@@ -3854,9 +3856,9 @@ export const selector = {
                 // cover
                 cover: 'a.dokan-feat-image-btn',
                 uploadImageText: '//a[normalize-space(text())="Upload a product cover image"]',
-                coverImageDiv: 'div.dokan-new-product-featured-img',
+                coverImageDiv: 'div.dokan-new-product-featured-img, div.dokan-feat-image-upload', // second one is for auction product
                 removeFeatureImage: 'a.dokan-remove-feat-image',
-                uploadedFeatureImage: 'div.dokan-new-product-featured-img img',
+                uploadedFeatureImage: 'div.dokan-new-product-featured-img img, div.dokan-feat-image-upload img', // second one is for auction product
 
                 // gallery
                 gallery: 'a.add-product-images',
@@ -4016,8 +4018,9 @@ export const selector = {
 
             // attribute
             attribute: {
-                customAttribute: '#predefined_attribute',
+                customAttribute: 'select#predefined_attribute',
                 addAttribute: 'a.add_new_attribute',
+                disabledAttribute: (attribute: string) => `//select[@id="predefined_attribute"]//option[normalize-space(text())='${attribute}']`,
                 visibleOnTheProductPage: '//input[contains(@name, "attribute_visibility")]',
                 usedForVariations: '//input[contains(@name, "attribute_variation")]',
 
@@ -5680,14 +5683,14 @@ export const selector = {
                 // general options
                 itemCondition: '#\\_auction_item_condition',
                 auctionType: '#\\_auction_type',
-                enableProxyBiddingForThisAuctionProduct: '.dokan-form-group > .checkbox > label',
+                enableProxyBidding: 'input#_auction_proxy',
                 startPrice: '#\\_auction_start_price',
                 bidIncrement: '#\\_auction_bid_increment',
                 reservedPrice: '#\\_auction_reserved_price',
                 buyItNowPrice: '#\\_regular_price',
                 auctionStartDate: '#\\_auction_dates_from',
                 auctionEndDate: '#\\_auction_dates_to',
-                enableAutomaticRelistingForThisAuction: '#\\_auction_automatic_relist',
+                enableAutomaticRelisting: '#\\_auction_automatic_relist',
                 relistIfFailAfterNHours: '#\\_auction_relist_fail_time',
                 relistIfNotPaidAfterNHours: '#\\_auction_relist_not_paid_time',
                 relistAuctionDurationInH: '#\\_auction_relist_duration',

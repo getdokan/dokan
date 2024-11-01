@@ -1014,7 +1014,25 @@ export const payloads = {
         purchasable: true,
         virtual: false,
         downloadable: false,
-        categories: [{}],
+        // categories
+        categories: [
+            {},
+            // {
+            //     id: CATEGORY_ID,
+            // },
+        ],
+        // tags
+        tags: [{ id: TAG_ID }],
+        attributes: [
+            {
+                id: ATTRIBUTE_ID,
+                name: 'sizes',
+                position: 0,
+                visible: true,
+                variation: true,
+                options: ['s', 'l', 'm'],
+            },
+        ],
         meta_data: [
             {
                 key: '_auction_item_condition',
@@ -1054,30 +1072,30 @@ export const payloads = {
             // 	key  : '_auction_bid_count',
             // 	value: '0'
             // },
-            // {
-            // 	key  : '_auction_proxy',
-            // 	value: '0'
-            // },
+            {
+                key: '_auction_proxy',
+                value: 'yes',
+            },
             // {
             // 	key  : '_auction_sealed',
             // 	value: 'no'
             // },
-            // {
-            // 	key  : '_auction_automatic_relist',
-            // 	value: 'no'
-            // },
-            // {
-            // 	key  : '_auction_relist_fail_time',
-            // 	value: ''
-            // },
-            // {
-            // 	key  : '_auction_relist_not_paid_time',
-            // 	value: ''
-            // },
-            // {
-            // 	key  : '_auction_relist_duration',
-            // 	value: ''
-            // },
+            {
+                key: '_auction_automatic_relist',
+                value: 'yes',
+            },
+            {
+                key: '_auction_relist_fail_time',
+                value: '4',
+            },
+            {
+                key: '_auction_relist_not_paid_time',
+                value: '5',
+            },
+            {
+                key: '_auction_relist_duration',
+                value: '6',
+            },
             // {
             // 	key  : '_auction_extend_enable',
             // 	value: 'no'
@@ -1099,9 +1117,10 @@ export const payloads = {
         // price: '2000',
         // regular_price: '2000',
         purchasable: true,
-        virtual: false,
-        downloadable: false,
+        // virtual: false,
+        // downloadable: false,
         categories: [{}],
+        tags: [{}],
         meta_data: [
             {
                 key: '_auction_item_condition',
