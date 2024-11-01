@@ -835,8 +835,8 @@ export class BasePage {
     }
 
     // select by value and wait for loadState
-    async selectByValueAndWaitForLoadState(selector: string, value: string): Promise<void> {
-        await Promise.all([this.waitForLoadState(), this.page.selectOption(selector, { value })]);
+    async selectByValueAndWaitForLoadState(selector: string, value: string, state: 'load' | 'domcontentloaded' | 'networkidle' = 'domcontentloaded'): Promise<void> {
+        await Promise.all([this.waitForLoadState(state), this.page.selectOption(selector, { value })]);
     }
 
     // select by value and wait for response

@@ -1791,7 +1791,7 @@ export class ApiUtils {
 
     // delete widget
     async deleteWidget(widgetId: string, payload: object, auth?: auth): Promise<[APIResponse, responseBody]> {
-        const [response, responseBody] = await this.post(endPoints.wp.deleteWidget(widgetId), { data: payload, headers: auth });
+        const [response, responseBody] = await this.delete(endPoints.wp.deleteWidget(widgetId), { data: payload, headers: auth });
         return [response, responseBody];
     }
 
@@ -1804,8 +1804,8 @@ export class ApiUtils {
     }
 
     // get single widget type
-    async getSingleWidgetTypes(pageId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.wp.getSingleWidgetType(pageId), { headers: auth });
+    async getSingleWidgetTypes(widgetTypeId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getSingleWidgetType(widgetTypeId), { headers: auth });
         return responseBody;
     }
 
@@ -1818,14 +1818,14 @@ export class ApiUtils {
     }
 
     // get single sidebar
-    async getSingleSidebar(sideBarId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.wp.getSingleSidebar(sideBarId), { headers: auth });
+    async getSingleSidebar(sidebarId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getSingleSidebar(sidebarId), { headers: auth });
         return responseBody;
     }
 
     // update sidebar
-    async updateSidebar(sideBarId: string, payload: object, auth?: auth): Promise<[APIResponse, responseBody]> {
-        const [response, responseBody] = await this.post(endPoints.wp.updateSidebar(sideBarId), { data: payload, headers: auth });
+    async updateSidebar(sidebarId: string, payload: object, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.post(endPoints.wp.updateSidebar(sidebarId), { data: payload, headers: auth });
         return [response, responseBody];
     }
 
