@@ -209,12 +209,12 @@ test.describe('Auction Product details functionality test', () => {
     // shipping and tax
 
     test('vendor can add auction product shipping', { tag: ['@pro', '@vendor'] }, async () => {
-        test.skip(true, 'has dokan issue, php notice')
+        test.skip(true, 'has dokan issue, php notice');
         await vendor.addProductShipping(productId1, data.product.productInfo.shipping);
     });
 
     test('vendor can update auction product shipping', { tag: ['@pro', '@vendor'] }, async () => {
-        test.skip(true, 'has dokan issue, php notice')
+        test.skip(true, 'has dokan issue, php notice');
         await vendor.addProductShipping(productId, data.product.productInfo.shipping);
     });
 
