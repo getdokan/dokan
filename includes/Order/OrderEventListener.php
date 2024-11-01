@@ -32,7 +32,7 @@ class OrderEventListener {
         }
 
         $this->process_order_status( $order, $wpdb, $order_id );
-        $this->log_message( 'trashed', $order_id );
+        $this->log_status_change( 'trashed', $order_id );
     }
 
     /**
@@ -99,65 +99,70 @@ class OrderEventListener {
             array( '%d', '%s' )
         );
 
-        // Log only if there's an issue with the updates
-        if ( false === $orders_updated || false === $balance_updated ) {
-            dokan_log(
-                sprintf(
-                    '[Order Sync Error] Failed to update order #%d (Status: %s) in Dokan tables. Orders: %s, Balance: %s',
-                    $order_id,
-                    $previous_status,
-                    $orders_updated === false ? 'Failed' : 'OK',
-                    $balance_updated === false ? 'Failed' : 'OK'
-                )
-            );
-        }
+        $this->log_db_update( $order_id, $previous_status, $orders_updated, $balance_updated );
     }
 
     /**
-     * Log the order action.
+     * Log order status change events.
      *
-     * This method logs the order status synchronization and the action performed,
-     * including user details who initiated the action.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $action   The action performed on the order (e.g., 'trashed', 'restored')
-     * @param int    $order_id The ID of the order
+     * @param string $action   The action performed (trashed/restored)
+     * @param int    $order_id The order ID
      *
      * @return void
      */
-    private function log_message( string $action, int $order_id ): void {
+    private function log_status_change( string $action, int $order_id ): void {
         $user_id = dokan_get_current_user_id();
         $action_message = $action === 'trashed' ? 'moved to trash' : 'restored from trash';
 
         if ( $user_id ) {
             $user = get_user_by( 'id', $user_id );
 
-            // Check if first name and last name are set, otherwise use username
             $user_name = trim( sprintf( '%s %s', $user->first_name, $user->last_name ) );
             if ( empty( $user_name ) ) {
                 $user_name = $user->user_login;
             }
 
-            $user_role = implode( ', ', $user->roles );
-            $user_ip = WC_Geolocation::get_ip_address();
-
             dokan_log(
                 sprintf(
-                    '[Order Status Sync] WooCommerce order %s (ID: %d) by %s (%s) from IP: %s. Order status synchronized in Dokan order and vendor balance tables also.',
-                    $action_message,
+                    '[Order Sync] Order #%d %s by %s (%s) from IP: %s',
                     $order_id,
+                    $action_message,
                     $user_name,
-                    $user_role,
-                    $user_ip
+                    implode( ', ', $user->roles ),
+                    WC_Geolocation::get_ip_address()
                 )
             );
-        } else {
+            return;
+        }
+
+        dokan_log(
+            sprintf(
+                '[Order Sync] Order #%d %s by System',
+                $order_id,
+                $action_message
+            )
+        );
+    }
+
+    /**
+     * Log database update status.
+     *
+     * @param int    $order_id       The order ID
+     * @param string $status         The order status
+     * @param bool   $orders_updated Orders table update status
+     * @param bool   $balance_updated Balance table update status
+     *
+     * @return void
+     */
+    private function log_db_update( int $order_id, string $status, bool $orders_updated, bool $balance_updated ): void {
+        if ( false === $orders_updated || false === $balance_updated ) {
             dokan_log(
                 sprintf(
-                    '[Order Status Sync] WooCommerce order %s (ID: %d) by System. Order status synchronized in Dokan order and vendor balance tables also.',
-                    $action_message,
-                    $order_id
+                    '[Order Sync Error] Failed to update order #%d (Status: %s) in Dokan tables. Orders: %s, Balance: %s',
+                    $order_id,
+                    $status,
+                    $orders_updated === false ? 'Failed' : 'OK',
+                    $balance_updated === false ? 'Failed' : 'OK'
                 )
             );
         }
