@@ -87,7 +87,7 @@ class VendorDashboardManager implements Hookable {
 		if ( $parent_menu === $nav_key && dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
 			$submenu_items['report_products'] = [
 				'title'      => __( 'Products', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
+                'icon'       => '<i class="fa-solid fa-box"></i>',
 				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2Fproducts',
 				'pos'        => 50,
 				'permission' => 'dokan_view_store_payment_menu',
@@ -95,7 +95,7 @@ class VendorDashboardManager implements Hookable {
 			];
 			$submenu_items['report_revenue'] = [
 				'title'      => __( 'Revenue', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
+                'icon'       => '<i class="fa-solid fa-chart-column"></i>',
 				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2Frevenue',
 				'pos'        => 50,
 				'permission' => 'dokan_view_store_payment_menu',
@@ -104,7 +104,7 @@ class VendorDashboardManager implements Hookable {
 
 			$submenu_items['report_orders'] = [
 				'title'      => __( 'Orders', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
+                'icon'       => '<i class="fa-solid fa-cart-shopping"></i>',
 				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2Forders',
 				'pos'        => 50,
 				'permission' => 'dokan_view_store_payment_menu',
@@ -112,7 +112,7 @@ class VendorDashboardManager implements Hookable {
 
 			$submenu_items['report_variations'] = [
 				'title'      => __( 'Variations', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
+                'icon'       => '<i class="fa-solid fa-boxes-stacked"></i>',
 				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2Fvariations',
 				'pos'        => 50,
 				'permission' => 'dokan_view_store_payment_menu',
@@ -120,7 +120,7 @@ class VendorDashboardManager implements Hookable {
 
 			$submenu_items['report_categories'] = [
 				'title'      => __( 'Categories', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
+                'icon'       => '<i class="fa-solid fa-bars-staggered"></i>',
 				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2Fcategories',
 				'pos'        => 50,
 				'permission' => 'dokan_view_store_payment_menu',
@@ -128,7 +128,7 @@ class VendorDashboardManager implements Hookable {
 
 			$submenu_items['report_stock'] = [
 				'title'      => __( 'Stock', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
+                'icon'       => '<i class="fa-solid fa-boxes-packing"></i>',
 				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2Fstock',
 				'pos'        => 50,
 				'permission' => 'dokan_view_store_payment_menu',
