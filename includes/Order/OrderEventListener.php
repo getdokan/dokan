@@ -55,7 +55,7 @@ class OrderEventListener {
         }
 
         $this->process_order_status( $order, $wpdb, $order_id );
-        $this->log_message( 'restored', $order_id );
+        $this->log_status_change( 'restored', $order_id );
     }
 
     /**
