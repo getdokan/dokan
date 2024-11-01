@@ -168,17 +168,17 @@ test.describe('Auction Product details functionality test', () => {
 
     // product virtual options
 
-    test('vendor can add product virtual option', { tag: ['@lite', '@vendor'] }, async () => {
+    test('vendor can add product virtual option', { tag: ['@pro', '@vendor'] }, async () => {
         const [, productId] = await apiUtils.createProduct(payloads.createAuctionProductRequiredFields(), payloads.vendorAuth);
         await vendor.addProductVirtualOption(productId, true);
     });
 
-    test('vendor can remove product virtual option', { tag: ['@lite', '@vendor'] }, async () => {
+    test('vendor can remove product virtual option', { tag: ['@pro', '@vendor'] }, async () => {
         const [, productId] = await apiUtils.createProduct({ ...payloads.createAuctionProductRequiredFields(), virtual: true }, payloads.vendorAuth);
         await vendor.addProductVirtualOption(productId, false);
     });
 
-    test('vendor can update product general options', { tag: ['@lite', '@vendor'] }, async () => {
+    test('vendor can update product general options', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addProductGeneralOption(productId1, { ...data.product.auction, itemCondition: 'used', auctionType: 'reverse' });
     });
 

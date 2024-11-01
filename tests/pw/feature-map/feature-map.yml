@@ -651,6 +651,56 @@
           vendor can view auction activity page: true
           vendor can filter auction activity: true
           vendor can search auction activity: true
+          vendor can update auction product title: true
+          vendor can update auction product category (single): true
+          vendor can add auction product category (multiple): true
+          vendor can remove auction product category (multiple): true
+          vendor can add multi-step auction product category (last category): true
+          vendor can add multi-step auction product category (any category): true
+          vendor can't add multi-step product category (any category): true
+          vendor can add auction product tags: true
+          vendor can remove auction product tags: true
+          vendor can create auction product tags: true
+          vendor can add auction product cover image: true
+          vendor can update auction product cover image: true
+          vendor can remove auction product cover image: true
+          vendor can add auction product gallery image: true
+          vendor can update auction product gallery image: true
+          vendor can remove auction product gallery image: true
+          vendor can add auction product short description: true
+          vendor can update auction product short description: true
+          vendor can remove auction product short description: true
+          vendor can update auction product description: true
+          vendor can add auction product downloadable options: true
+          vendor can update auction product downloadable options: true
+          vendor can remove auction product downloadable file: true
+          vendor can add product virtual option: true
+          vendor can remove product virtual option: true
+          vendor can update product general options: true
+          vendor can add auction product inventory options (SKU): true
+          vendor can update auction product inventory options (SKU): true
+          vendor can remove auction product inventory options (SKU): true
+          vendor can add auction product other options (product status): true
+          vendor can add auction product other options (visibility): true
+          vendor can add auction product shipping: true
+          vendor can update auction product shipping: true
+          vendor can remove auction product shipping: true
+          vendor can add auction product tax: true
+          vendor can add auction product tax (with tax class): true
+          vendor can add auction product attribute: true
+          vendor can't add already added auction product attribute: true
+          vendor can create auction product attribute term: true
+          vendor can remove auction product attribute term: true
+          vendor can remove auction product attribute term: true
+          vendor can add auction product geolocation (individual): true
+          vendor can update auction product geolocation (individual): true
+          vendor can remove auction product geolocation (individual): true
+          vendor can add product addon: true
+          vendor can update product addon: false
+          vendor can import auction product addon: true
+          vendor can export auction product addon: true
+          vendor can remove auction product addon: true
+
       customer:
           customer can bid auction product: true
           customer can buy auction product with buy it now price: false

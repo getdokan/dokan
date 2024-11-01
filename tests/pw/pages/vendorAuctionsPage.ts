@@ -329,9 +329,9 @@ export class AuctionsPage extends VendorPage {
         for (const tag of tags) {
             await this.clearAndType(auctionProductsVendor.auction.tags.tagInput, tag);
             if (create) {
-                await this.click(productsVendor.tags.nonCreatedTag(tag));
+                await this.click(auctionProductsVendor.auction.tags.nonCreatedTag(tag));
             } else {
-                await this.click(productsVendor.tags.searchedTag(tag));
+                await this.click(auctionProductsVendor.auction.tags.searchedTag(tag));
             }
             await this.toBeVisible(auctionProductsVendor.auction.tags.selectedTags(tag));
         }
