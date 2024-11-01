@@ -26,6 +26,10 @@ declare global {
             GMAP: string;
             MAPBOX: string;
             LICENSE_KEY: string;
+            VONAGE_API_KEY: string;
+            VONAGE_API_SECRET: string;
+            FB_APP_ID: string;
+            FB_APP_SECRET: string;
             DOKAN_PRO: boolean;
             SITE_LANGUAGE: string;
             SITE_TITLE: string;

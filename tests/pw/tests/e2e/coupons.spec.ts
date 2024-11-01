@@ -40,7 +40,7 @@ test.describe('Coupons test', () => {
         await apiUtils.dispose();
     });
 
-    test.skip('admin can add marketplace coupon', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can add marketplace coupon', { tag: ['@pro', '@admin'] }, async () => {
         await admin.addMarketplaceCoupon({ ...data.coupon, title: data.coupon.couponTitle() });
     });
 
@@ -51,7 +51,7 @@ test.describe('Coupons test', () => {
     });
 
     test('vendor can view marketPlace coupons', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        test.skip(true, 'Has dokan issues')
+        test.skip(true, 'Has dokan issues');
         await vendor.viewMarketPlaceCoupons(marketplaceCouponCode);
     });
 
@@ -80,7 +80,7 @@ test.describe('Coupons test', () => {
     });
 
     test('customer can buy product with coupon', { tag: ['@pro', '@customer'] }, async () => {
-        test.slow()
+        test.slow();
         await customer.buyProductWithCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
     });
 });
