@@ -36,7 +36,7 @@ export class LiveChatPage extends BasePage {
         await this.toBeVisibleFrameLocator(liveChatVendor.liveChatIframe, liveChatVendor.sendButton);
     }
 
-    // vendor send message to vendor customer
+    // vendor send message to customer
     async sendMessageToCustomer(chatPerson: string, message: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.inbox);
         await this.clickFrameSelector(liveChatVendor.liveChatIframe, liveChatVendor.chatPerson(chatPerson));
@@ -47,7 +47,7 @@ export class LiveChatPage extends BasePage {
 
     // customer
 
-    // customer send message to vendor customer
+    // customer send message to vendor
     async sendMessageToVendor(storename: string, message: string): Promise<void> {
         await this.gotoSingleStore(storename, true);
         await this.click(singleStoreCustomer.storeTabs.chatNow);
@@ -57,7 +57,8 @@ export class LiveChatPage extends BasePage {
         await this.toBeVisibleFrameLocator(liveChatCustomer.liveChatIframe, liveChatCustomer.sentMessage(message));
     }
 
-    async viewLiveChatButtonOnStore(storename: string, disable = false) {
+    // view chat button on vendor page
+    async viewLiveChatButtonOnStore(storename: string, disable = false): Promise<void> {
         await this.gotoSingleStore(storename, true);
         if (!disable) {
             await this.toBeVisible(singleStoreCustomer.storeTabs.chatNow);
@@ -66,7 +67,8 @@ export class LiveChatPage extends BasePage {
         }
     }
 
-    async viewLiveChatButtonOnProduct(productName: string, option: string) {
+    // view chat button on product page
+    async viewLiveChatButtonOnProduct(productName: string, option: 'above-tab' | 'inside-tab' | 'dont-show'): Promise<void> {
         await this.goToProductDetails(productName, true);
 
         switch (option) {

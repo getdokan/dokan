@@ -25,6 +25,7 @@ test.describe('Live chat test', () => {
 
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.liveChat, dbData.dokan.liveChatSettings);
+        await vPage.close();
         await cPage.close();
     });
 

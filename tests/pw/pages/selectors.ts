@@ -2418,7 +2418,6 @@ export const selector = {
                 // Live Chat
                 liveChat: {
                     enableLiveChat: '//label[@for="dokan_live_chat[enable]"]',
-
                     chatProvider: (provider: string) => `//label[contains(@for,'${provider}-provider')]`,
 
                     // Fb
