@@ -107,22 +107,22 @@ test.describe('Auction Product details functionality test', () => {
     // });
 
     // test('vendor can create auction product tags', { tag: ['@pro', '@vendor'] }, async () => {
-    //     await vendor.addProductTags(productId, data.product.productInfo.tags.randomTags);
+    // await vendor.addProductTags(productId, data.product.productInfo.tags.randomTags);
     // });
 
-    // // product cover image
+    // product cover image
 
-    // test('vendor can add auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
+    // test.only('vendor can add auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
     //     await vendor.addProductCoverImage(productId1, data.product.productInfo.images.cover);
     // });
 
-    // test('vendor can update auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
+    // test.only('vendor can update auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
     //     // todo: need a product with cover image
     //     await vendor.addProductCoverImage(productId, data.product.productInfo.images.cover);
     //     await vendor.addProductCoverImage(productId, data.product.productInfo.images.cover, true);
     // });
 
-    // test('vendor can remove auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
+    // test.only('vendor can remove auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
     //     // todo: need a product with cover image
     //     await vendor.addProductCoverImage(productId, data.product.productInfo.images.cover, true);
     //     await vendor.removeProductCoverImage(productName);
@@ -130,9 +130,9 @@ test.describe('Auction Product details functionality test', () => {
 
     // // product gallery image
 
-    // test('vendor can add auction product gallery image', { tag: ['@pro', '@vendor'] }, async () => {
-    //     await vendor.addProductGalleryImages(productId1, data.product.productInfo.images.gallery);
-    // });
+    test.only('vendor can add auction product gallery image', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductGalleryImages(productId1, data.product.productInfo.images.gallery);
+    });
 
     // test('vendor can update auction product gallery image', { tag: ['@pro', '@vendor'] }, async () => {
     //     // todo: need a product with gallery images
@@ -147,6 +147,7 @@ test.describe('Auction Product details functionality test', () => {
     // });
 
     // product short description
+
     test('vendor can add auction product short description', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addProductShortDescription(productId1, data.product.productInfo.description.shortDescription);
     });
@@ -165,22 +166,23 @@ test.describe('Auction Product details functionality test', () => {
         await vendor.addProductDescription(productId, data.product.productInfo.description.description);
     });
 
-    // // product downloadable options
+    // product downloadable options
 
-    // test('vendor can add auction product downloadable options', { tag: ['@pro', '@vendor'] }, async () => {
-    //     await vendor.addProductDownloadableOptions(productId1, data.product.productInfo.downloadableOptions);
-    // });
+    test('vendor can add auction product downloadable options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductDownloadableOptions(productId1, data.product.productInfo.downloadableOptions);
+    });
 
-    // test('vendor can update auction product downloadable options', { tag: ['@pro', '@vendor'] }, async () => {
-    //     // todo: need a product with downloadable file
-    //     await vendor.addProductDownloadableOptions(productId, data.product.productInfo.downloadableOptions);
-    // });
+    test('vendor can update auction product downloadable options', { tag: ['@pro', '@vendor'] }, async () => {
+        // todo: need a product with downloadable file
+        await vendor.addProductDownloadableOptions(productId, data.product.productInfo.downloadableOptions);
+    });
 
-    // test('vendor can remove auction product downloadable file', { tag: ['@pro', '@vendor'] }, async () => {
-    //     // todo: need a product with downloadable file
-    //     await vendor.addProductDownloadableOptions(productId, data.product.productInfo.downloadableOptions);
-    //     await vendor.removeDownloadableFile(productId, { ...data.product.productInfo.downloadableOptions, downloadLimit: '', downloadExpiry: '' });
-    // });
+    test('vendor can remove auction product downloadable file', { tag: ['@pro', '@vendor'] }, async () => {
+        // todo: need a product with downloadable file
+        test.skip(true, 'Has Dokan Issue download limit & expiry doesnt reset');
+        await vendor.addProductDownloadableOptions(productId, data.product.productInfo.downloadableOptions);
+        await vendor.removeDownloadableFile(productId, { ...data.product.productInfo.downloadableOptions, downloadLimit: '', downloadExpiry: '' });
+    });
 
     // product virtual options
 

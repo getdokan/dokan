@@ -311,6 +311,65 @@ export class AuctionsPage extends VendorPage {
         }
     }
 
+    // add product cover image
+    async addProductCoverImage(productName: string, coverImage: string, removePrevious: boolean = false): Promise<void> {
+        await this.goToAuctionProductEditById(productName);
+        // remove previous cover image
+        if (removePrevious) {
+            await this.hover(productsVendor.image.coverImageDiv);
+            await this.click(productsVendor.image.removeFeatureImage);
+            await this.toBeVisible(productsVendor.image.uploadImageText);
+        }
+        await this.click(productsVendor.image.cover);
+        await this.uploadMedia(coverImage);
+        await this.saveProduct();
+        await this.toHaveAttribute(productsVendor.image.uploadedFeatureImage, 'src', /.+/); // Ensures 'src' has any non-falsy value
+        await this.notToBeVisible(productsVendor.image.uploadImageText);
+    }
+
+    // remove product cover image
+    async removeProductCoverImage(productName: string): Promise<void> {
+        await this.goToAuctionProductEditById(productName);
+        await this.hover(productsVendor.image.coverImageDiv);
+        await this.click(productsVendor.image.removeFeatureImage);
+        await this.saveProduct();
+        await this.toHaveAttribute(productsVendor.image.uploadedFeatureImage, 'src', /^$/);
+        await this.toBeVisible(productsVendor.image.uploadImageText);
+    }
+
+    // add product gallery images
+    async addProductGalleryImages(productName: string, galleryImages: string[], removePrevious: boolean = false): Promise<void> {
+        await this.goToAuctionProductEditById(productName);
+        // remove previous gallery images
+        if (removePrevious) {
+            const imageCount = await this.getElementCount(productsVendor.image.uploadedGalleryImage);
+            for (let i = 0; i < imageCount; i++) {
+                await this.hover(productsVendor.image.galleryImageDiv);
+                await this.click(productsVendor.image.removeGalleryImage);
+            }
+            await this.toHaveCount(productsVendor.image.uploadedGalleryImage, 0);
+        }
+
+        for (const galleryImage of galleryImages) {
+            await this.click(productsVendor.image.gallery);
+            await this.uploadMedia(galleryImage);
+        }
+        await this.saveProduct();
+        await this.toHaveCount(productsVendor.image.uploadedGalleryImage, galleryImages.length);
+    }
+
+    // remove product gallery images
+    async removeProductGalleryImages(productName: string): Promise<void> {
+        await this.goToAuctionProductEditById(productName);
+        const imageCount = await this.getElementCount(productsVendor.image.uploadedGalleryImage);
+        for (let i = 0; i < imageCount; i++) {
+            await this.hover(productsVendor.image.galleryImageDiv);
+            await this.click(productsVendor.image.removeGalleryImage);
+        }
+        await this.saveProduct();
+        await this.toHaveCount(productsVendor.image.uploadedGalleryImage, 0);
+    }
+
     // add product short description
     async addProductShortDescription(productName: string, shortDescription: string): Promise<void> {
         await this.goToAuctionProductEditById(productName);
@@ -325,6 +384,38 @@ export class AuctionsPage extends VendorPage {
         await this.typeFrameSelector(auctionProductsVendor.auction.descriptionIframe, auctionProductsVendor.auction.descriptionHtmlBody, description);
         await this.saveProduct();
         await this.toContainTextFrameLocator(auctionProductsVendor.auction.descriptionIframe, auctionProductsVendor.auction.descriptionHtmlBody, description);
+    }
+
+    // add product downloadable options
+    async addProductDownloadableOptions(productName: string, downloadableOption: product['productInfo']['downloadableOptions']): Promise<void> {
+        await this.goToAuctionProductEditById(productName);
+        await this.check(productsVendor.downloadable);
+        await this.click(productsVendor.downloadableOptions.addFile);
+        await this.clearAndType(productsVendor.downloadableOptions.fileName, downloadableOption.fileName);
+        await this.click(productsVendor.downloadableOptions.chooseFile);
+        await this.uploadMedia(downloadableOption.fileUrl);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.downloadable);
+        await this.toHaveValue(productsVendor.downloadableOptions.fileName, downloadableOption.fileName);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
+    }
+
+    // remove product downloadable files
+    async removeDownloadableFile(productName: string, downloadableOption: product['productInfo']['downloadableOptions']): Promise<void> {
+        await this.goToAuctionProductEditById(productName);
+        const fileCount = await this.getElementCount(productsVendor.downloadableOptions.deleteFile);
+        for (let i = 0; i < fileCount; i++) {
+            await this.clickFirstLocator(productsVendor.downloadableOptions.deleteFile);
+        }
+        await this.clearAndType(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
+        await this.saveProduct();
+        await this.notToBeVisible(productsVendor.downloadableOptions.deleteFile);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
     }
 
     // add product virtual option
