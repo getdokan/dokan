@@ -23,6 +23,12 @@ const {
     GMAP,
     MAPBOX,
     LICENSE_KEY,
+    VONAGE_API_KEY,
+    VONAGE_API_SECRET,
+    FB_APP_ID,
+    FB_APP_SECRET,
+    TALKJS_APP_ID,
+    TALKJS_APP_SECRET,
 } = process.env;
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
@@ -1004,10 +1010,10 @@ export const data = {
             storeListingSort: 'store-listing/?stores_orderby',
             cart: 'cart',
             checkout: 'checkout',
-            addToCart: '?wc-ajax=add_to_cart',
-            applyCoupon: '?wc-ajax=apply_coupon',
-            removeCoupon: '?wc-ajax=remove_coupon',
-            refreshedFragment: '?wc-ajax=get_refreshed_fragments',
+            addToCart: 'wc-ajax=add_to_cart',
+            applyCoupon: 'wc-ajax=apply_coupon',
+            removeCoupon: 'wc-ajax=remove_coupon',
+            refreshedFragment: 'wc-ajax=get_refreshed_fragments',
             placeOrder: '?wc-ajax=checkout',
             billingAddress: 'my-account/edit-address/billing',
             shippingAddress: 'my-account/edit-address/shipping',
@@ -1024,6 +1030,7 @@ export const data = {
             quoteDetails: (quotId: string) => `my-account/request-a-quote/${quotId}`,
             supportTicketDetails: (ticketId: string) => `my-account/support-tickets/${ticketId}`,
             productSubscriptionDetails: (subscriptionId: string) => `my-account/view-subscription/${subscriptionId}`,
+            talkjs: 'app.talkjs.com/api',
 
             productReview: 'wp-comments-post.php',
             submitSupport: 'wp-comments-post.php',
@@ -1067,6 +1074,7 @@ export const data = {
                 csvExport: 'dashboard/tools/csv-export',
                 auction: 'dashboard/auction',
                 auctionActivity: 'dashboard/auction-activity',
+                inbox: 'dashboard/inbox',
                 auctionProductEdit: (productId: string) => `dashboard/auction/?product_id=${productId}&action=edit`,
                 storeSupport: 'dashboard/support',
 
@@ -1075,6 +1083,7 @@ export const data = {
                 settingsAddon: 'dashboard/settings/product-addon',
                 settingsAddonEdit: (addonId: string) => `dashboard/settings/product-addon/?edit=${addonId}`,
                 settingsPayment: 'dashboard/settings/payment',
+
                 // payment settings
                 paypal: 'dashboard/settings/payment-manage-paypal',
                 bankTransfer: 'dashboard/settings/payment-manage-bank',
@@ -1288,6 +1297,10 @@ export const data = {
             amountDiscount: {
                 minimumOrderAmount: '200',
                 discountPercentage: '10',
+            },
+
+            liveChat: {
+                pageId: '',
             },
 
             minMax: {
@@ -2218,6 +2231,17 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // social api
+        socialApi: {
+            settingTitle: 'Social Settings',
+            platform: 'facebook',
+            facebook: {
+                appId: FB_APP_ID,
+                appSecret: FB_APP_SECRET,
+            },
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // shipping status
         shippingStatus: {
             settingTitle: 'Shipping Status Settings',
@@ -2299,11 +2323,37 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // Verification Sms Gateways
+        verificationSmsGateway: {
+            settingTitle: 'Verification SMS Gateways Settings',
+            senderName: 'weDevs Team',
+            smsText: 'Your verification code is: %CODE%',
+            smsSentSuccess: 'SMS sent. Please enter your verification code',
+            smsSentError: 'Unable to send sms. Contact admin',
+            activeGateway: 'nexmo', // nexmo, twilio
+            vonage: {
+                apiKey: VONAGE_API_KEY,
+                apiSecret: VONAGE_API_SECRET,
+            },
+
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // Email verification
         emailVerification: {
             settingTitle: 'Email Verification Settings',
             registrationNotice: 'Please check your email and complete email verification to login.',
             loginNotice: 'Please check your email and complete email verification to login.',
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
+        // live chat
+        liveChat: {
+            settingTitle: 'Live Chat Settings',
+            chatProvider: 'talkjs', // messenger, talkjs, tawkto, whatsapp
+            talkJsAppId: TALKJS_APP_ID,
+            talkJsAppSecret: TALKJS_APP_SECRET,
+            chatButtonPosition: 'above_tab', // above_tab, inside_tab, dont_show
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
@@ -2451,6 +2501,7 @@ export const data = {
     uniqueId: {
         uuid: faker.string.uuid(),
         nanoId: faker.string.nanoid(10),
+        nanoIdRandom: () => faker.string.nanoid(10),
     },
 
     // predefined  test data
@@ -2536,6 +2587,11 @@ export const data = {
             lastName: () => 'c1',
             username: () => 'customer1',
             username1: 'customer1',
+        },
+
+        categories: {
+            uncategorized: 'Uncategorized',
+            clothings: 'clothings',
         },
     },
 

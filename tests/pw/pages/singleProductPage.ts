@@ -21,7 +21,7 @@ export class SingleProductPage extends CustomerPage {
         await this.goToProductDetails(productName);
 
         // basic details are visible
-        const { viewCart, euComplianceData, productAddedSuccessMessage, productWithQuantityAddedSuccessMessage, ...productDetails } = singleProductCustomer.productDetails;
+        const { viewCart, chatNow, euComplianceData, productAddedSuccessMessage, productWithQuantityAddedSuccessMessage, ...productDetails } = singleProductCustomer.productDetails;
         await this.multipleElementVisible(productDetails);
 
         // description elements are visible

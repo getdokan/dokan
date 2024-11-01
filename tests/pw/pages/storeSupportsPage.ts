@@ -424,7 +424,7 @@ export class StoreSupportsPage extends AdminPage {
         await this.toBeVisible(supportsTicketsCustomer.supportTicketDetails.orderReference.orderReferenceLink(orderId));
     }
 
-    // customer send message to  support ticket
+    // customer send message to support ticket
     async sendMessageToSupportTicket(supportTicketId: string, supportTicket: customer['supportTicket']): Promise<void> {
         const message = supportTicket.message();
         await this.goIfNotThere(data.subUrls.frontend.supportTicketDetails(supportTicketId));

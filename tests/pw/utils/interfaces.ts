@@ -815,6 +815,10 @@ export interface vendor {
             discountPercentage: string;
         };
 
+        liveChat: {
+            pageId: string;
+        };
+
         minMax: {
             minimumProductQuantity: string;
             maximumProductQuantity: string;
@@ -1616,6 +1620,19 @@ export interface dokanSettings {
         saveSuccessMessage: string;
     };
 
+    // social api
+    socialApi: {
+        settingTitle: string;
+        platform: string;
+
+        facebook: {
+            appId: string;
+            appSecret: string;
+        };
+
+        saveSuccessMessage: string;
+    };
+
     // shipping status
     shippingStatus: {
         settingTitle: string;
@@ -1684,11 +1701,37 @@ export interface dokanSettings {
         saveSuccessMessage: string;
     };
 
+    // Verification Sms Gateways
+    verificationSmsGateway: {
+        settingTitle: string;
+        senderName: string;
+        smsText: string;
+        smsSentSuccess: string;
+        smsSentError: string;
+        activeGateway: string;
+        saveSuccessMessage: string;
+
+        vonage: {
+            apiKey: string;
+            apiSecret: string;
+        };
+    };
+
     // Email verification
     emailVerification: {
         settingTitle: string;
         registrationNotice: string;
         loginNotice: string;
+        saveSuccessMessage: string;
+    };
+
+    // Rma Settings
+    liveChat: {
+        settingTitle: string;
+        chatProvider: string;
+        talkJsAppId: string;
+        talkJsAppSecret: string;
+        chatButtonPosition: string;
         saveSuccessMessage: string;
     };
 

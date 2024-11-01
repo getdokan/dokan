@@ -108,6 +108,10 @@ setup.describe('setup woocommerce settings', () => {
         helpers.createEnvVar('TAG_ID', tagId);
     });
 
+    setup('disable woocommerce task list reminder bar', { tag: ['@lite'] }, async () => {
+        await dbUtils.setOptionValue('woocommerce_task_list_reminder_bar_hidden', 'yes', false);
+    });
+
     setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {
         await dbUtils.updateOptionValue('theme_mods_storefront', { storefront_sticky_add_to_cart: false });
     });
@@ -227,6 +231,10 @@ setup.describe('setup dokan settings', () => {
 
     setup('admin set dokan quote settings', { tag: ['@pro'] }, async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.quote, dbData.dokan.quoteSettings);
+    });
+
+    setup('admin set dokan live chat settings', { tag: ['@pro'] }, async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.liveChat, dbData.dokan.liveChatSettings);
     });
 
     setup('admin set dokan rma settings', { tag: ['@pro'] }, async () => {
