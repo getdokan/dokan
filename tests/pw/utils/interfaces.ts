@@ -815,6 +815,10 @@ export interface vendor {
             discountPercentage: string;
         };
 
+        liveChat: {
+            pageId: string;
+        };
+
         minMax: {
             minimumProductQuantity: string;
             maximumProductQuantity: string;
@@ -1718,6 +1722,16 @@ export interface dokanSettings {
         settingTitle: string;
         registrationNotice: string;
         loginNotice: string;
+        saveSuccessMessage: string;
+    };
+
+    // Rma Settings
+    liveChat: {
+        settingTitle: string;
+        chatProvider: string;
+        talkJsAppId: string;
+        talkJsAppSecret: string;
+        chatButtonPosition: string;
         saveSuccessMessage: string;
     };
 

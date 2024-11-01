@@ -30,6 +30,8 @@ declare global {
             VONAGE_API_SECRET: string;
             FB_APP_ID: string;
             FB_APP_SECRET: string;
+            TALKJS_APP_ID: string;
+            TALKJS_APP_SECRET: string;
             DOKAN_PRO: boolean;
             SITE_LANGUAGE: string;
             SITE_TITLE: string;

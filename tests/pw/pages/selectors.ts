@@ -2417,25 +2417,22 @@ export const selector = {
 
                 // Live Chat
                 liveChat: {
-                    enableLiveChat: '#dokan_live_chat\\[enable\\]',
-                    chatProviderFacebookMessenger: '#dokan_live_chat\\[provider\\]\\[messenger\\]',
-                    chatProviderTalkJs: '#dokan_live_chat\\[provider\\]\\[talkjs\\]',
-                    chatProviderTawkTo: '#dokan_live_chat\\[provider\\]\\[tawkto\\]',
-                    chatProviderWhatsApp: '#dokan_live_chat\\[provider\\]\\[whatsapp\\]',
+                    enableLiveChat: '//label[@for="dokan_live_chat[enable]"]',
+                    chatProvider: (provider: string) => `//label[contains(@for,'${provider}-provider')]`,
 
                     // Fb
-                    messengerColor: '.button > span',
+                    messengerColor: 'div.color-picker-container span.dashicons',
 
                     // Talkjs
-                    talkJsAppId: '#dokan_live_chat\\[app_id\\]',
-                    talkJsAppSecret: '#dokan_live_chat\\[app_secret\\]',
+                    talkJsAppId: 'input#dokan_live_chat\\[app_id\\]',
+                    talkJsAppSecret: 'input#dokan_live_chat\\[app_secret\\]',
 
                     // Whatsapp
-                    openingPattern: '#dokan_live_chat\\[wa_opening_method\\]',
-                    preFilledMessage: '#dokan_live_chat\\[wa_pre_filled_message\\]',
+                    openingPattern: 'select#dokan_live_chat\\[wa_opening_method\\]',
+                    preFilledMessage: 'textarea#dokan_live_chat\\[wa_pre_filled_message\\]',
 
                     // Chat Button
-                    chatButtonOnVendorPage: '#dokan_live_chat\\[chat_button_seller_page\\]',
+                    chatButtonOnVendorPage: '//label[@for="dokan_live_chat[chat_button_seller_page]"]',
                     chatButtonOnProductPage: '#dokan_live_chat\\[chat_button_product_page\\]',
                     liveChatSaveChanges: '#submit',
                 },
@@ -5913,7 +5910,7 @@ export const selector = {
             },
         },
 
-        // Settings
+        // settings
         vSettings: {
             store: '.store > a',
             addons: '.product-addon > a',
@@ -5927,12 +5924,25 @@ export const selector = {
             storeSEO: '.seo > a',
         },
 
-        // Store Settings
+        // inbox
+        vInbox: {
+            chatPersons: 'div#hub',
+            chatPerson: (personName: string) => `//div[@class="ConversationListItem__conversation-name" and normalize-space(text())="${personName}"]/../../..`,
+            liveChatIframe: '(//iframe[@name="____talkjs__chat__ui_internal"])[last()]',
+            liveChatLauncher: 'a#__talkjs_launcher',
+
+            chatBox: 'div#chat-box',
+            chatTextBox: '//div[@role="textbox"]',
+            sendButton: 'button.send-button',
+            sentMessage: (message: string) => `//div[@id="chat-box"]//span[@class="EntityTreeRenderer" and normalize-space(text())="${message}"]`,
+        },
+
+        // store settings
         vStoreSettings: {
             settingsText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 
-            // Wp Image Upload
+            // wp image upload
             wpUploadFiles: '#menu-item-upload',
             uploadedMedia: '.attachment-preview',
             selectFiles: '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@class="browser button button-hero"]',
@@ -5950,7 +5960,7 @@ export const selector = {
             uploadedProfilePicture: 'div#dokan-profile-picture-wrapper div.gravatar-wrap',
             removeProfilePictureImage: '.dokan-close.dokan-remove-gravatar-image',
 
-            // Basic Store Info
+            // basic store Info
             storeName: '#dokan_store_name',
             phoneNo: '#setting_phone',
 
@@ -5967,7 +5977,7 @@ export const selector = {
             editLocation: '.store-pickup-location-edit-btn',
             locationName: '#store-location-name-input',
 
-            // Address
+            // address
             address: {
                 street: '#dokan_address\\[street_1\\]',
                 street2: '#dokan_address\\[street_2\\]',
@@ -5980,7 +5990,7 @@ export const selector = {
                 deleteSaveLocation: '.store-pickup-location-delete-btn',
             },
 
-            // Company Info
+            // company info
             companyInfo: {
                 companyName: '#settings_dokan_company_name',
                 companyId: '#settings_dokan_company_id_number',
@@ -5989,18 +5999,18 @@ export const selector = {
                 bankIban: '#setting_bank_iban',
             },
 
-            // Email
+            // email
             email: '//label[contains(text(), "Email")]/..//input[@type="checkbox"]',
 
-            // Map
+            // map
             map: '#dokan-map-add',
 
-            // Terms and Conditions
+            // terms and conditions
             termsAndConditions: '//label[contains(text(), "Terms and Conditions")]/..//input[@type="checkbox"]',
             termsAndConditionsIframe: '#dokan_tnc_text iframe',
             termsAndConditionsHtmlBody: '#tinymce',
 
-            // Store Opening Closing Time
+            // store opening closing time
             storeOpeningClosingTime: '#dokan-store-time-enable',
 
             // lite locators
@@ -6021,7 +6031,7 @@ export const selector = {
             storeOpenNotice: '//input[@name="dokan_store_open_notice"]',
             storeCloseNotice: '//input[@name="dokan_store_close_notice"]',
 
-            // Vacation
+            // vacation
             goToVacation: '#dokan-seller-vacation-activate',
             closingStyle: 'label .form-control',
             setVacationMessageInstantly: '//textarea[@id="dokan-seller-vacation-message" and @name="setting_vacation_message"]',
@@ -6043,21 +6053,24 @@ export const selector = {
             hideProductPrice: 'input#catalog_mode_hide_product_price',
             enableRequestQuoteSupport: 'input#catalog_mode_request_a_quote_support',
 
-            // Discount
+            // discount
             enableStoreWideDiscount: '#lbl_setting_minimum_quantity',
             minimumOrderAmount: '#setting_minimum_order_amount',
             percentage: '#setting_order_percentage',
 
-            // Biography
+            // biography
             biographyIframe: '#wp-vendor_biography-wrap iframe',
             biographyHtmlBody: '#tinymce',
 
-            // Store Support
+            // store support
             showSupportButtonInStore: '#support_checkbox',
             showSupportButtonInSingleProduct: '#support_checkbox_product',
             supportButtonText: '#dokan_support_btn_name',
 
-            // Min-Max
+            // live chat
+            liveChat: 'input#live_chat',
+
+            // min-max
             minMax: {
                 minimumAmountToPlaceAnOrder: 'input#min_amount_to_order',
                 maximumAmountToPlaceAnOrder: 'input#max_amount_to_order',
@@ -6962,6 +6975,7 @@ export const selector = {
                 price: '//div[@class="summary entry-summary"]//p[@class="price"]',
                 quantity: 'div.quantity input.qty',
                 addToCart: 'button.single_add_to_cart_button',
+                chatNow: 'button.dokan-live-chat',
                 viewCart: '.woocommerce .woocommerce-message > .button',
                 category: '.product_meta .posted_in',
 
@@ -7310,9 +7324,10 @@ export const selector = {
 
             // Store Tabs
             storeTabs: {
-                follow: '.dokan-follow-store-button',
+                follow: 'button.dokan-follow-store-button',
                 getSupport: 'button.dokan-store-support-btn',
-                share: '.dokan-share-btn',
+                chatNow: 'button.dokan-live-chat',
+                share: 'button.dokan-share-btn',
 
                 products: '//div[@class="dokan-store-tabs"]//a[contains(text(),"Products")]',
                 toc: '//div[@class="dokan-store-tabs"]//a[contains(text(),"Terms and Conditions")]',
@@ -7799,6 +7814,16 @@ export const selector = {
             liveSearchCategory: 'div.dokan-product-search select#cat',
             searchedResult: (productName: string) => `//div[@id="dokan-ajax-search-suggestion-result"]//h3[normalize-space(text())='${productName}']`,
             searchResultWithCategory: (productName: string, category: string) => `//div[@id="dokan-ajax-search-suggestion-result"]//h3[normalize-space(text())='${productName}']//..//span[normalize-space(text())='${category}']`,
+        },
+
+        cLiveChat: {
+            liveChatIframe: '(//div[ contains(@id, "__talkjs_popup_container") and not (@style="display: none;") ]//iframe[@name="____talkjs__chat__ui_internal"])[last()]',
+            // liveChatIframe: '(//iframe[@name="____talkjs__chat__ui_internal"])[last()]',
+            liveChatLauncher: 'a#__talkjs_launcher',
+            chatBox: 'div#chat-box',
+            chatTextBox: '//div[@role="textbox"]',
+            sendButton: 'button.send-button',
+            sentMessage: (message: string) => `//span[@class="EntityTreeRenderer" and normalize-space(text())="${message}"]`,
         },
 
         cOrderReceived: {
