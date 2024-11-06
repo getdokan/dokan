@@ -51,30 +51,30 @@ test.describe('Product QA functionality test', () => {
     });
 
     test('admin can filter questions by vendor', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.filterQuestions(data.questionAnswers.filter.byVendor, 'by-vendor');
+        await admin.filterQuestions(data.questionAnswers().filter.byVendor, 'by-vendor');
     });
 
     test('admin can filter questions by product', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.filterQuestions(data.questionAnswers.filter.byProduct, 'by-product');
+        await admin.filterQuestions(data.questionAnswers().filter.byProduct, 'by-product');
     });
 
     test('admin can edit question', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.editQuestion(questionId, data.questionAnswers);
+        await admin.editQuestion(questionId, data.questionAnswers());
     });
 
     test('admin can answer to question', { tag: ['@pro', '@admin'] }, async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await admin.answerQuestion(questionId, data.questionAnswers);
+        await admin.answerQuestion(questionId, data.questionAnswers());
     });
 
     test('admin can edit answer', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.editAnswer(questionId, data.questionAnswers);
+        await admin.editAnswer(questionId, data.questionAnswers());
     });
 
     test('admin can delete answer', { tag: ['@pro', '@admin'] }, async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: questionId }, payloads.adminAuth);
-        await admin.deleteAnswer(questionId);
+        const [, , answer] = await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: questionId }, payloads.adminAuth);
+        await admin.deleteAnswer(questionId, answer);
     });
 
     test('admin can edit(hide) question visibility', { tag: ['@pro', '@admin'] }, async () => {
@@ -83,7 +83,7 @@ test.describe('Product QA functionality test', () => {
 
     test('admin can edit(show) question visibility', { tag: ['@pro', '@admin'] }, async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await apiUtils.updateProductQuestion(questionId, payloads.updateProductQuestion(), payloads.adminAuth);
+        await apiUtils.updateProductQuestion(questionId, { status: 'hidden' }, payloads.adminAuth);
         await admin.editQuestionVisibility(questionId, 'show');
     });
 
@@ -113,11 +113,11 @@ test.describe('Product QA functionality test', () => {
 
     test('vendor can answer to question', { tag: ['@pro', '@vendor'] }, async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await vendor.vendorAnswerQuestion(questionId, data.questionAnswers);
+        await vendor.vendorAnswerQuestion(questionId, data.questionAnswers());
     });
 
     test('vendor can edit answer', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorEditAnswer(questionId, data.questionAnswers);
+        await vendor.vendorEditAnswer(questionId, data.questionAnswers());
     });
 
     test('vendor can delete a answer', { tag: ['@pro', '@vendor'] }, async () => {
@@ -134,17 +134,17 @@ test.describe('Product QA functionality test', () => {
     // customer
 
     test('customer can search question', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.searchQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers);
+        await customer.searchQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers());
     });
 
     test('customer can post question', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers);
+        await customer.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers());
     });
 
     // guest
 
-    test('guest customer need to signIn/signUp post question', { tag: ['@pro', '@guest'] }, async ({ page }) => {
+    test('guest customer need to signIn/signUp to post question', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         const guest = new ProductQAPage(page);
-        await guest.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers, true);
+        await guest.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers(), true);
     });
 });

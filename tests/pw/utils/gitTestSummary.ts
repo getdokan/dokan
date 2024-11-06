@@ -1,4 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs');
 const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT, API_COVERAGE, E2E_COVERAGE } = process.env;
 
@@ -52,7 +54,7 @@ const addList = core => {
     core.summary.clear();
     const pluginDetails = core.summary.addDetails('Plugins: ', pluginList).stringify();
     core.summary.clear();
-    return core.summary.addList([envInfo.wpVersion, envInfo.phpVersion, envInfo.mysqlVersion, String(envInfo.wpDebugMode), envInfo.theme, pluginDetails]).stringify();
+    return core.summary.addList([envInfo.os, envInfo.browser, envInfo.wpVersion, envInfo.phpVersion, envInfo.mysqlVersion, String(envInfo.wpDebugMode), envInfo.theme, pluginDetails]).stringify();
 };
 
 const addSummaryFooter = (core, list) => {

@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -57,7 +57,7 @@ export class ProductAdvertisingPage extends AdminPage {
 
     // add new product advertisement
     async addNewProductAdvertisement(advertising: productAdvertisement) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+        await this.goto(data.subUrls.backend.dokan.productAdvertising);
 
         await this.click(productAdvertisingAdmin.addNewProductAdvertising);
 
@@ -79,16 +79,19 @@ export class ProductAdvertisingPage extends AdminPage {
     }
 
     // search advertised product
-    async searchAdvertisedProduct(productOrOrder: string | number) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+    async searchAdvertisedProduct(searchKey: string | number) {
+        await this.goto(data.subUrls.backend.dokan.productAdvertising);
 
         await this.clearInputField(productAdvertisingAdmin.search);
 
-        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.search, String(productOrOrder));
-        if (typeof productOrOrder != 'number') {
-            await this.toBeVisible(productAdvertisingAdmin.advertisedProductCell(productOrOrder));
+        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.search, String(searchKey));
+        await this.toHaveCount(productAdvertisingAdmin.numberOfRows, 1);
+        if (typeof searchKey != 'number') {
+            // searched by product
+            await this.toBeVisible(productAdvertisingAdmin.advertisedProductCell(searchKey));
         } else {
-            await this.toBeVisible(productAdvertisingAdmin.advertisedProductOrderIdCell(productOrOrder));
+            // searched by orderId
+            await this.toBeVisible(productAdvertisingAdmin.advertisedProductOrderIdCell(searchKey));
         }
     }
 
@@ -111,9 +114,8 @@ export class ProductAdvertisingPage extends AdminPage {
             default:
                 break;
         }
-
-        const count = (await this.getElementText(productAdvertisingAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToHaveText(productAdvertisingAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(productAdvertisingAdmin.noRowsFound);
 
         // clear filter
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.filters.clearFilter);

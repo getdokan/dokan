@@ -72,13 +72,13 @@ const productSchema = z.object({
     price: z.string(),
     regular_price: z.string(),
     sale_price: z.string().optional(),
-    date_on_sale_from: z.null(),
-    date_on_sale_from_gmt: z.null(),
-    date_on_sale_to: z.null(),
-    date_on_sale_to_gmt: z.null(),
+    date_on_sale_from: z.string().nullable(),
+    date_on_sale_from_gmt: z.string().nullable(),
+    date_on_sale_to: z.string().nullable(),
+    date_on_sale_to_gmt: z.string().nullable(),
     on_sale: z.boolean(),
     purchasable: z.boolean(),
-    total_sales: z.number(),
+    total_sales: z.string().or(z.number()),
     virtual: z.boolean(),
     downloadable: z.boolean(),
     downloads: z.array(z.unknown()),
@@ -93,7 +93,7 @@ const productSchema = z.object({
     backorders: z.string(),
     backorders_allowed: z.boolean(),
     backordered: z.boolean(),
-    low_stock_amount: z.string().optional(),
+    low_stock_amount: z.string().or(z.number()).optional(),
     sold_individually: z.boolean(),
     weight: z.string().optional(),
     dimensions: productDimensionsSchema,
@@ -127,6 +127,73 @@ const productSchema = z.object({
     sales_display_price: z.string().optional(),
     barcode: z.string().optional(),
     _links: linksSchema,
+});
+
+const linkedProductSchema = z.object({
+    id: z.string().or(z.number()),
+    name: z.string(),
+    slug: z.string(),
+    date_created: z.object({
+        date: z.coerce.date(),
+        timezone_type: z.number(),
+        timezone: z.string(),
+    }),
+    date_modified: z.object({
+        date: z.coerce.date(),
+        timezone_type: z.number(),
+        timezone: z.string(),
+    }),
+    status: z.string(),
+    featured: z.boolean(),
+    catalog_visibility: z.string(),
+    description: z.string(),
+    short_description: z.string(),
+    sku: z.string().optional(),
+    global_unique_id: z.string().optional(),
+    price: z.string(),
+    regular_price: z.string(),
+    sale_price: z.string().optional(),
+    date_on_sale_from: z.string().nullable(),
+    date_on_sale_to: z.string().nullable(),
+    total_sales: z.string().or(z.number()),
+    virtual: z.boolean(),
+    downloadable: z.boolean(),
+    downloads: z.array(z.unknown()),
+    download_limit: z.number(),
+    download_expiry: z.number(),
+    external_url: z.string().optional(),
+    button_text: z.string().optional(),
+    tax_status: z.string(),
+    tax_class: z.string().optional(),
+    manage_stock: z.boolean(),
+    stock_quantity: z.number().nullable(),
+    backorders: z.string(),
+    low_stock_amount: z.string().or(z.number()).optional(),
+    sold_individually: z.boolean(),
+    weight: z.string().optional(),
+    shipping_class: z.string().optional(),
+    shipping_class_id: z.string().or(z.number()),
+    reviews_allowed: z.boolean(),
+    average_rating: z.string().regex(/^\d+(\.\d+)?$/),
+    upsell_ids: z.array(z.unknown()),
+    cross_sell_ids: z.array(z.unknown()),
+    parent_id: z.string().or(z.number()).optional(),
+    purchase_note: z.string().optional(),
+    attributes: z.array(productAttributeSchema).or(
+        z.object({
+            pa_sizes: z.any(),
+        }),
+    ),
+    default_attributes: z.array(z.unknown()),
+    menu_order: z.number(),
+    meta_data: z.array(productMetaDataSchema).optional(),
+    stock_status: z.string().optional(),
+    has_options: z.boolean().optional(),
+    post_password: z.string().optional(),
+    tax_amount: z.string().optional(),
+    regular_display_price: z.string().optional(),
+    sales_display_price: z.string().optional(),
+    barcode: z.string().optional(),
 });
 
 const productVariationSchema = z.object({
@@ -251,16 +318,17 @@ const paymentSchema = z
     .or(z.array(z.any()));
 
 const storeOpenClose = z.object({
-    enabled: z.boolean(),
+    enabled: z.boolean().or(z.string()),
     time: z
         .object({
-            enabled: z.boolean().optional(),
+            enabled: z.boolean().or(z.string()).optional(),
             time: z.any().optional(),
             status: z.string().optional(),
             opening_time: z.array(z.string()).optional(),
             closing_time: z.array(z.string()).optional(),
         })
-        .or(z.array(z.any())),
+        .or(z.any())
+        .optional(),
     open_notice: z.string(),
     close_notice: z.string(),
 });
@@ -906,7 +974,7 @@ const abuseReportSchema = z.object({
             id: z.string().or(z.number()),
             name: z.string(),
             email: z.string().email(),
-            admin_url: z.string().url(),
+            admin_url: z.string().url().nullable(),
         })
         .optional(),
     description: z.string(),
@@ -973,11 +1041,11 @@ const quoteRuleSchema = z.object({
 
 const quoteRequestSchema = z.object({
     id: z.string().or(z.number()).optional(),
-    title: z.string(),
-    customer_name: z.string(),
-    customer_email: z.string(),
     status: z.string(),
     created_at: z.string(),
+    order_url: z.any(),
+    store_name: z.string(),
+    customer_name: z.string(),
     _links: linksSchema,
 });
 
@@ -1316,7 +1384,7 @@ const shipmentSchema = z.object({
     order_id: z.number().or(z.string()),
     shipping_provider: z.string(),
     shipping_provider_label: z.string(),
-    shipping_status: z.string(),
+    shipped_status: z.string(),
     shipping_status_label: z.string(),
     shipment_description: z.array(
         z.object({
@@ -1601,7 +1669,18 @@ export const schemas = {
             delete: z.array(attributeSchema).optional(),
         }),
         setDefaultAttributeSchema: z.boolean(),
-        updateProductAttributeSchema: z.boolean(),
+        updateProductAttributeSchema: z.array(
+            z.object({
+                id: z.number(),
+                name: z.string(),
+                slug: z.string(),
+                visible: z.boolean(),
+                variation: z.boolean(),
+                taxonomy: z.boolean(),
+                all_terms: z.array(categorySchema),
+                options: z.array(categorySchema),
+            }),
+        ),
     },
 
     // attribute terms schema
@@ -1623,6 +1702,7 @@ export const schemas = {
     productsSchema: {
         productSchema: productSchema,
         productsSchema: z.array(productSchema),
+        linkedProductsSchema: z.array(linkedProductSchema),
         productSummarySchema: z.object({
             post_counts: z.object({
                 publish: z.number().optional(),
@@ -1754,7 +1834,7 @@ export const schemas = {
                 stock_status: z.string(),
                 manage_stock: z.boolean(),
                 stock_quantity: z.null().optional(),
-                low_stock_amount: z.string(),
+                low_stock_amount: z.string().or(z.number()).optional(),
                 backorders: z.string(),
                 sold_individually: z.boolean(),
             }),
@@ -1823,13 +1903,8 @@ export const schemas = {
                 .optional(),
             order_min_max: z
                 .object({
-                    product_wise_activation: z.string(),
                     min_quantity: z.string().or(z.number()),
                     max_quantity: z.string().or(z.number()),
-                    min_amount: z.string().or(z.number()),
-                    max_amount: z.string().or(z.number()),
-                    _donot_count: z.string().or(z.number()),
-                    ignore_from_cat: z.string().or(z.number()),
                 })
                 .optional(),
             linked: z
@@ -2160,12 +2235,14 @@ export const schemas = {
     // reverse withdraws schema
     reverseWithdrawalSchema: {
         transactionTypesSchema: z.array(transactionTypeSchema),
+
         reverseWithdrawalStoresSchema: z.array(
             z.object({
                 id: z.string().or(z.number()),
                 name: z.string(),
             }),
         ),
+
         reverseWithdrawalStoreBalanceSchema: z.array(
             z.object({
                 store_name: z.string(),
@@ -2177,6 +2254,7 @@ export const schemas = {
                 _links: linksSchema,
             }),
         ),
+
         reverseWithdrawalTransactionsSchema: z.array(
             z.object({
                 id: z.string().or(z.number()),
@@ -2193,6 +2271,11 @@ export const schemas = {
                 _links: linksSchema,
             }),
         ),
+
+        createReverseWithdrawalTransaction: z.object({
+            trn_id: z.string().or(z.number()),
+        }),
+
         reverseWithdrawalVendorDueStatusSchema: z.object({
             status: z.boolean(),
             due_date: z.string(),

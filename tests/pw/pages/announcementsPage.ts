@@ -73,6 +73,7 @@ export class AnnouncementsPage extends AdminPage {
     // edit announcement
     async editAnnouncement(announcement: announcement) {
         await this.goto(data.subUrls.backend.dokan.announcements);
+        await this.toBeVisible(announcementsAdmin.announcementCell(announcement.title));
         await this.hover(announcementsAdmin.announcementCell(announcement.title));
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, announcementsAdmin.announcementEdit(announcement.title));
         await this.updateAnnouncementFields(announcement);
@@ -80,7 +81,6 @@ export class AnnouncementsPage extends AdminPage {
 
     // update announcement
     async updateAnnouncement(announcementTitle: string, action: string) {
-        // await this.goto(data.subUrls.backend.dokan.announcements);
         await this.goIfNotThere(data.subUrls.backend.dokan.announcements);
 
         switch (action) {

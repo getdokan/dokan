@@ -33,7 +33,9 @@ test.describe('setup local site', () => {
     test('install theme', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.installTheme(data.installWp.themes.storefront));
     });
+});
 
+test.describe.skip('setup dokan test site', () => {
     test('install plugin (woocommece)', { tag: ['@pro'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(data.installWp.plugins.woocommerce));
     });
@@ -104,5 +106,9 @@ test.describe('setup local site', () => {
     test('install plugin (woocommerce booking)', { tag: ['@pro'] }, async () => {
         const pluginPath = `${SITE_PATH}/wp-content/plugins/dokan-pro/tests/plugins/woocommerce-bookings.zip`;
         await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(pluginPath));
+    });
+
+    test('checkout dokan pro to develop branch', { tag: ['@pro'] }, async () => {
+        await helpers.exeCommandWpcli(data.commands.checkoutToDevelop(`${SITE_PATH}/wp-content/plugins/dokan-pro`));
     });
 });

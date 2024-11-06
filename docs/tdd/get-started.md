@@ -129,6 +129,16 @@ class SampleTest extends DokanTestCase {
         $response = $this->post_request( 'route', $request_params );
         $data  = $response->get_data();
         $status_code = $response->get_status();
+
+        // PUT request
+        $response = $this->put_request( 'route', $update_params );
+        $data  = $response->get_data();
+        $status_code = $response->get_status();
+
+        // DELETE request
+        $response = $this->delete_request( 'route', $delete_params );
+        $data  = $response->get_data();
+        $status_code = $response->get_status();
     }
 }
 ```

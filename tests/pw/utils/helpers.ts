@@ -15,6 +15,9 @@ export const helpers = {
     // replace '_' to space & capitalize first letter of each word
     replaceAndCapitalizeEachWord: (str: string) => str.replace('_', ' ').replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) => letter.toUpperCase()),
 
+    // replace '_' to space & lowercase first letter of each word
+    replaceAndLowercaseEachWord: (str: string) => str.replace('_', ' ').replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) => letter.toLowerCase()),
+
     // capitalize
     capitalize: (word: string) => word[0]?.toUpperCase() + word.substring(1).toLowerCase(),
 
@@ -43,13 +46,32 @@ export const helpers = {
 
     // check if object is empty
     isObjEmpty: (obj: object) => Object.keys(obj).length === 0,
-    // snakecase to camelcase
+
+    // snake-case to camelcase
     toCamelCase: (str: string): string => str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()),
+
+    // convert string to snake case
+    toSnakeCase: (str: string): string => {
+        return str
+            .replace(/\s+/g, '_') // Replace spaces with underscores
+            .replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`) // Add underscores before capital letters and convert them to lowercase
+            .replace(/__+/g, '_') // Replace multiple underscores with a single one
+            .replace(/^_+|_+$/g, '') // Remove leading and trailing underscores
+            .toLowerCase(); // Ensure the entire string is lowercase
+    },
+
+    // convert string to kebab case
+    kebabCase: (str: string): string => {
+        return str
+            .replace(/([a-z])([A-Z])/g, '$1-$2') // Insert hyphen between lowercase and uppercase letters
+            .replace(/[\s_]+/g, '-') // Replace spaces and underscores with hyphens
+            .toLowerCase(); // Convert the entire string to lowercase
+    },
 
     // string between two tags
     stringBetweenTags: (str: string): string => {
-        const res = str.split(/<p>(.*?)<\/p>/g);
-        return res[1] as string;
+        const match = str.match(/<([^>]+)>(.*?)<\/\1>/);
+        return match ? match[2]! : '';
     },
 
     // escape regex
@@ -89,7 +111,7 @@ export const helpers = {
         return result.toLocaleDateString('en-CA');
     },
 
-    // current day [2023-06-02]
+    // current day [2023-06-02] [YY-MM-DD]
     currentDate: new Date().toLocaleDateString('en-CA'),
 
     // current day [August 22, 2023]
@@ -104,7 +126,7 @@ export const helpers = {
     currentDateTime2: () => new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(',', ''),
 
     // add two input days
-    addDays(date: string | number | Date | null, days: number, format: string): string {
+    addDays(date: string | number | Date | null, days: number, format: string = 'default'): string {
         const result = date ? new Date(date) : new Date();
         result.setDate(result.getDate() + days);
 
@@ -289,6 +311,9 @@ export const helpers = {
     readJson(filePath: string) {
         if (fs.existsSync(filePath)) {
             return JSON.parse(this.readFile(filePath));
+        } else {
+            console.log(`File not found: ${filePath}`);
+            return null;
         }
     },
 
@@ -407,6 +432,26 @@ export const helpers = {
         }
     },
 
+    // check if cookie is expired
+    isCookieValid(filePath: string) {
+        const cookies = helpers.readJson(filePath);
+        if (!cookies?.cookies) {
+            console.log('No cookies found in the file');
+            return false;
+        }
+        const loginCookie = cookies?.cookies.find((cookie: { name: string }) => cookie.name.startsWith('wordpress_logged_in'));
+        if (!loginCookie) {
+            console.log('No valid login cookie found.');
+            return false;
+        }
+        // console.log(loginCookie);
+        const cookieExpiryDate = new Date(loginCookie.expires * 1000);
+        console.log('expiry:', cookieExpiryDate.toLocaleDateString('en-CA'));
+        const result = cookieExpiryDate > new Date();
+        console.log(result);
+        return result;
+    },
+
     // rgb (rgb(r, g, b)) to hex (#rrggbb) color
     rgbToHex(rgb: string): string {
         const [r, g, b]: number[] = rgb.match(/\d+/g)!.map(Number);
@@ -420,6 +465,12 @@ export const helpers = {
         const b = parseInt(hex.substring(5, 7), 16);
         return `rgb(${r}, ${g}, ${b})`;
     },
+
+    // empty object values
+    emptyObjectValues: (obj: { [key: string]: any }) => (Object.keys(obj).forEach(key => (obj[key] = '')), obj),
+
+    // is object
+    isPlainObject: (value: any) => value !== null && typeof value === 'object' && !Array.isArray(value),
 
     // deep merge arrays
     deepMergeArrays(targetArray: any[], sourceArray: any[]) {
@@ -443,7 +494,7 @@ export const helpers = {
         const result = { ...target };
 
         for (const key of Object.keys(source)) {
-            if (source[key] instanceof Object && target[key] instanceof Object) {
+            if (this.isPlainObject(source[key]) && this.isPlainObject(target[key])) {
                 result[key] = this.deepMergeObjects(target[key], source[key]);
             } else if (Array.isArray(source[key]) && Array.isArray(target[key])) {
                 result[key] = this.deepMergeArrays(target[key], source[key]);

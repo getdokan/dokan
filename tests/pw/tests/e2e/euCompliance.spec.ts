@@ -100,7 +100,7 @@ test.describe('EU Compliance test', () => {
     });
 
     test('admin can hide vendors EU compliance data from single store page', { tag: ['@pro', '@admin'] }, async () => {
-        const [previousSettings] = await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, dbData.testData.dokan.hideVendorEuInfo);
+        const [previousSettings] = await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { hide_vendor_info: dbData.testData.dokan.hideVendorEuInfo });
         await admin.hideEuComplianceVendor(data.predefined.vendorStores.vendor1);
         // reset
         await dbUtils.setOptionValue(dbData.dokan.optionName.appearance, previousSettings);
@@ -127,6 +127,10 @@ test.describe('EU Compliance test', () => {
 
     test.skip('vendor can update product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
         await productsPage.addProductEuCompliance(euProductName, data.product.productInfo.euCompliance);
+    });
+
+    test.skip('vendor can remove product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
+        await productsPage.addProductEuCompliance(productName, { ...data.product.productInfo.euCompliance, productUnits: '', basePriceUnits: '', freeShipping: false, regularUnitPrice: '', saleUnitPrice: '', optionalMiniDescription: '' });
     });
 
     // customer
