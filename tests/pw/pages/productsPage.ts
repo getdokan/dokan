@@ -962,12 +962,7 @@ export class ProductsPage extends AdminPage {
         await this.goToProductEdit(productName);
         // remove previous gallery images
         if (removePrevious) {
-            const imageCount = await this.getElementCount(productsVendor.image.uploadedGalleryImage);
-            for (let i = 0; i < imageCount; i++) {
-                await this.hover(productsVendor.image.galleryImageDiv);
-                await this.click(productsVendor.image.removeGalleryImage);
-            }
-            await this.toHaveCount(productsVendor.image.uploadedGalleryImage, 0);
+            await this.removeGalleryImages();
         }
 
         for (const galleryImage of galleryImages) {
@@ -979,13 +974,19 @@ export class ProductsPage extends AdminPage {
     }
 
     // remove product gallery images
-    async removeProductGalleryImages(productName: string): Promise<void> {
-        await this.goToProductEdit(productName);
+    async removeGalleryImages(): Promise<void> {
         const imageCount = await this.getElementCount(productsVendor.image.uploadedGalleryImage);
         for (let i = 0; i < imageCount; i++) {
             await this.hover(productsVendor.image.galleryImageDiv);
             await this.click(productsVendor.image.removeGalleryImage);
         }
+        await this.toHaveCount(productsVendor.image.uploadedGalleryImage, 0);
+    }
+
+    // remove product gallery images
+    async removeProductGalleryImages(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.removeGalleryImages();
         await this.saveProduct();
         await this.toHaveCount(productsVendor.image.uploadedGalleryImage, 0);
     }
