@@ -37,6 +37,8 @@ export default {
 </script>
 
 <style lang="css" lang="less">
+@import "../../../assets/src/less/variables.less";
+
 .cta-section {
     background-repeat: no-repeat;
     background-position: center center;
@@ -69,7 +71,7 @@ export default {
     }
 
     .btn {
-        background-color: #A244FF;
+        background-color: @dokan-dark-purple;
         color: #FFFFFF;
         font-size: 1.2rem;
         line-height: 1.538em;
@@ -77,11 +79,11 @@ export default {
         border-radius: 14px;
         text-decoration: none;
         display: inline-flex;
-        padding: 16.05px 45.167px;
+        padding: 1rem 2.8rem;
         align-items: center;
 
         &:hover {
-            box-shadow: 2.736px 7.518px 20px 0 rgba(0,0,0,.15);
+            box-shadow: 3px 7px 20px 0 rgba(0,0,0,.15);
         }
         p {
             color: #FFF;
@@ -91,8 +93,8 @@ export default {
             line-height: normal;
         }
         svg {
-            width: 37.232px;
-            height: 30.243px;
+            width: 2.5rem;
+            height: 1.8rem;
         }
     }
 }

@@ -259,7 +259,7 @@ export default {
         .vendor-capabilities-banner {
             display: flex;
             align-items: center;
-            padding:50px;
+            padding: 50px;
             height: auto;
             border-radius: 9px;
             background-position: center;

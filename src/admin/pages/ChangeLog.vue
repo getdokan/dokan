@@ -366,7 +366,7 @@ ul {
                     background: none;
                     border-radius: 27px;
                     border: none;
-                    color: #5C626A;
+                    color: @dokan-gray;
                     display: inline-block;
                     position: relative;
                     transition: all .2s ease;
@@ -636,7 +636,7 @@ ul {
                     p {
                         font-weight: 400;
                         font-size: 13px;
-                        color: #5C626A;
+                        color: @dokan-gray;
                         font-family: "SF Pro Text", sans-serif;
                     }
 

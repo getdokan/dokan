@@ -1655,70 +1655,7 @@ export default {
 
         }
 
-        //.cta-section {
-        //    //background-image: -moz-linear-gradient( 15deg, rgb(255,125,144) 0%, rgb(255,173,111) 100%);
-        //    //background-image: -webkit-linear-gradient( 15deg, rgb(255,125,144) 0%, rgb(255,173,111) 100%);
-        //    //background-image: -ms-linear-gradient( 15deg, rgb(255,125,144) 0%, rgb(255,173,111) 100%);
-        //    //background-image: linear-gradient( 15deg, rgb(255,125,144) 0%, rgb(255,173,111) 100%);
-        //    background-repeat: no-repeat;
-        //    background-position: center center;
-        //    background-size: cover;
-        //    text-align: center;
-        //    padding: 35px 75px 40px;
-        //    color: #fff;
-        //
-        //    img {
-        //        max-width: 100%;
-        //        box-shadow: 0px 3px 70px 0px rgba(126, 17, 0, 0.35);
-        //    }
-        //
-        //    h2 {
-        //        font-size: 30px;
-        //        color: #fff;
-        //        font-weight: 400;
-        //        line-height: 1.333em;
-        //        text-align: center;
-        //        margin: 10px 0;
-        //        text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.31);
-        //    }
-        //
-        //    p {
-        //        font-size: 16px;
-        //        line-height: 1.5em;
-        //        font-weight: 300;
-        //        margin: 10px 0 30px;
-        //    }
-        //
-        //    .btn {
-        //        background-color: #A244FF;
-        //        color: #FFFFFF;
-        //        font-size: 16px;
-        //        line-height: 1.538em;
-        //        font-weight: 300;
-        //        border-radius: 14px;
-        //        text-decoration: none;
-        //        display: inline-flex;
-        //        padding: 16.05px 45.167px;
-        //      align-items: center;
-        //        gap: 10.037px;
-        //
-        //        &:hover {
-        //            box-shadow: 2.736px 7.518px 20px 0 rgba(0,0,0,.15);
-        //        }
-        //        p{
-        //            color: #FFF;
-        //            font-size: 24px;
-        //            font-style: normal;
-        //            font-weight: 600;
-        //            line-height: normal;
-        //        }
-        //        svg {
-        //            margin-left: 1rem;
-        //            width: 37.232px;
-        //            height: 30.243px;
-        //        }
-        //    }
-        //}
+
     }
 
 </style>
