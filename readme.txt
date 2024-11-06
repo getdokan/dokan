@@ -347,7 +347,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
-= v3.13.0 ( Oct 28, 2024 ) =
+= v3.13.0 ( Nov 06, 2024 ) =
 
 - **feat:** Replaced the Dokan array container with the League Container, ensuring backward compatibility for seamless performance and enhanced flexibility.
 - **feat:** Updated Dokan to be fully compatible with WooCommerce Analytics Reports
