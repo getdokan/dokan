@@ -1,20 +1,19 @@
 # Copyright (c) 2024 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.12.6\n"
+"Project-Id-Version: Dokan 3.13.0\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-24T07:08:11+00:00\n"
+"POT-Creation-Date: 2024-11-06T03:51:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: dokan-lite\n"
 
 #. Plugin Name of the plugin
-#: dokan.php
 #: includes/Admin/AdminBar.php:44
 #: includes/Admin/Menu.php:43
 #: includes/Customizer.php:56
@@ -23,48 +22,19 @@ msgid "Dokan"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: dokan.php
 msgid "https://dokan.co/wordpress/"
 msgstr ""
 
 #. Description of the plugin
-#: dokan.php
 msgid "An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs."
 msgstr ""
 
 #. Author of the plugin
-#: dokan.php
 msgid "weDevs"
 msgstr ""
 
 #. Author URI of the plugin
-#: dokan.php
 msgid "https://dokan.co/"
-msgstr ""
-
-#. translators: 1: Required PHP Version 2: Running php version
-#: dokan.php:203
-msgid "The Minimum PHP Version Requirement for <b>Dokan</b> is %1$s. You are Running PHP %2$s"
-msgstr ""
-
-#: dokan.php:512
-msgid "Get Pro"
-msgstr ""
-
-#: dokan.php:515
-#: includes/Admin/AdminBar.php:81
-#: includes/Admin/Menu.php:68
-#: includes/Dashboard/Templates/Settings.php:60
-#: includes/Dashboard/Templates/Settings.php:67
-#: includes/functions-dashboard-navigation.php:58
-#: assets/js/vue-admin.js:2
-msgid "Settings"
-msgstr ""
-
-#: dokan.php:516
-#: templates/admin-header.php:63
-#: assets/js/vue-admin.js:2
-msgid "Documentation"
 msgstr ""
 
 #. translators: 1) interval period
@@ -147,6 +117,15 @@ msgstr ""
 #: includes/Admin/AdminBar.php:72
 #: includes/Admin/Menu.php:60
 msgid "PRO Features"
+msgstr ""
+
+#: includes/Admin/AdminBar.php:81
+#: includes/Admin/Menu.php:68
+#: includes/Dashboard/Templates/Settings.php:60
+#: includes/Dashboard/Templates/Settings.php:67
+#: includes/functions-dashboard-navigation.php:58
+#: assets/js/vue-admin.js:2
+msgid "Settings"
 msgstr ""
 
 #: includes/Admin/AdminBar.php:136
@@ -7763,6 +7742,11 @@ msgstr ""
 
 #: templates/admin-header.php:55
 msgid "Community"
+msgstr ""
+
+#: templates/admin-header.php:63
+#: assets/js/vue-admin.js:2
+msgid "Documentation"
 msgstr ""
 
 #: templates/admin-header.php:72

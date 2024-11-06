@@ -8,7 +8,7 @@ use WeDevs\Dokan\Analytics\Reports\WcSqlQuery;
 /**
  * WC DataStore class to override the default handling of SQL clauses.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class WcDataStore extends TaxesStateDataStore {
 	/**
