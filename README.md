@@ -7,7 +7,7 @@
 **WC requires at least:** 8.0.0  
 **WC tested up to:** 9.3.3  
 **Requires PHP:** 7.4  
-**Stable tag:** 3.12.6  
+**Stable tag:** 3.13.0  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -346,6 +346,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.13.0 ( Nov 06, 2024 ) ###
+
+- **feat:** Replaced the Dokan array container with the League Container, ensuring backward compatibility for seamless performance and enhanced flexibility.
+- **feat:** Updated Dokan to be fully compatible with WooCommerce Analytics Reports
 
 ### v3.12.6 ( Oct 24, 2024 ) ###
 

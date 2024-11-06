@@ -620,5 +620,21 @@ export const endPoints = {
         createCustomPost: (postType: string) => `${SERVER_URL}/wp/v2/${postType}`,
         updatePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
         deletePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
+
+        // widgets
+        getAllWidgets: `${SERVER_URL}/wp/v2/widgets`,
+        getSingleWidget: (widgetId: string) => `${SERVER_URL}/wp/v2/widgets/${widgetId}`,
+        createWidget: `${SERVER_URL}/wp/v2/widgets`,
+        updateWidget: (widgetId: string) => `${SERVER_URL}/wp/v2/widgets/${widgetId}`,
+        deleteWidget: (widgetId: string) => `${SERVER_URL}/wp/v2/widgets/${widgetId}`,
+
+        // widget types
+        getAllWidgetTypes: `${SERVER_URL}/wp/v2/widget-types`,
+        getSingleWidgetType: (widgetId: string) => `${SERVER_URL}/wp/v2/widget-types/${widgetId}`,
+
+        // sidebars
+        getAllSidebars: `${SERVER_URL}/wp/v2/sidebars`,
+        getSingleSidebar: (sideBarId: string) => `${SERVER_URL}/wp/v2/sidebars/${sideBarId}`,
+        updateSidebar: (sideBarId: string) => `${SERVER_URL}/wp/v2/sidebars/${sideBarId}`,
     },
 };

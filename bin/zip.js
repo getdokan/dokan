@@ -15,6 +15,7 @@ const pluginFiles = [
     'CHANGELOG.md',
     'readme.txt',
     'dokan.php',
+    'dokan-class.php',
     'uninstall.php',
     'composer.json',
 ];
