@@ -22,6 +22,7 @@
 //COVERAGE_TAG: POST /dokan/v2/products
 //COVERAGE_TAG: PUT /dokan/v2/products/(?P<id>[\d]+)
 //COVERAGE_TAG: DELETE /dokan/v2/products/(?P<id>[\d]+)
+//COVERAGE_TAG: GET /dokan/v2/products/linked-products
 
 import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
@@ -29,11 +30,13 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { schemas } from '@utils/schemas';
 
-const versions = ['v1', 'v2'];
+const { PRODUCT_ID } = process.env;
 
+let apiUtils: ApiUtils;
+
+const versions = ['v1', 'v2'];
 for (const version of versions) {
     test.describe(`product api test ${version}`, () => {
-        let apiUtils: ApiUtils;
         let productId: string;
 
         test.beforeAll(async () => {
@@ -137,3 +140,11 @@ for (const version of versions) {
         });
     });
 }
+
+test('get all linked products', { tag: ['@pro', '@v2'] }, async () => {
+    apiUtils = new ApiUtils(await request.newContext());
+    const [response, responseBody] = await apiUtils.get(endPoints.getAllLinkedProducts(PRODUCT_ID));
+    expect(response.ok()).toBeTruthy();
+    expect(responseBody).toBeTruthy();
+    expect(responseBody).toMatchSchema(schemas.productsSchema.linkedProductsSchema);
+});

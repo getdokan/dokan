@@ -26,6 +26,7 @@ export class TaxPage extends AdminPage {
         } else {
             await this.uncheck(woocommerceSettings.general.enableTaxes);
         }
+        await this.removeAttribute(generalSettings.generalSaveChanges, 'disabled');
         await this.click(generalSettings.generalSaveChanges);
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, data.tax.saveSuccessMessage);
     }

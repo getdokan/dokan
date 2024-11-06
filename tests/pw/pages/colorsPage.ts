@@ -53,7 +53,7 @@ export class ColorsPage extends AdminPage {
 
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
 
-        // asertions
+        // assertions
 
         // convert hex to rgb
         Object.keys(paletteValues).forEach(key => {
@@ -61,19 +61,19 @@ export class ColorsPage extends AdminPage {
         });
 
         // button color
-        const beforHover = await this.getElementCssStyle(settingsVendor.updateSettingsTop);
+        const beforeHover = await this.getElementCssStyle(settingsVendor.updateSettingsTop);
         // hovered button color
         await this.hover(settingsVendor.updateSettingsTop);
         const afterHover = await this.getElementCssStyle(settingsVendor.updateSettingsTop);
         // sidebar color
-        const dashboardSidebarMenuText = await this.getElementColor(dashboardVendor.menus.dashboard);
+        const dashboardSidebarMenuText = await this.getElementColor(dashboardVendor.menus.primary.dashboard);
         const dashboardSidebarBackground = await this.getElementBackgroundColor(dashboardVendor.menus.menus);
         const dashboardSidebarActiveMenuBackground = await this.getElementBackgroundColor(dashboardVendor.menus.activeMenu);
-        const dashboardSidebarActiveHoverMenuText = await this.getElementColor(dashboardVendor.menus.settings);
+        const dashboardSidebarActiveHoverMenuText = await this.getElementColor(dashboardVendor.menus.primary.settings);
 
-        expect(beforHover.color).toEqual(paletteValues.buttonText);
-        expect(beforHover.backgroundColor).toEqual(paletteValues.buttonBackground);
-        expect(beforHover.borderColor).toEqual(paletteValues.buttonBorder);
+        expect(beforeHover.color).toEqual(paletteValues.buttonText);
+        expect(beforeHover.backgroundColor).toEqual(paletteValues.buttonBackground);
+        expect(beforeHover.borderColor).toEqual(paletteValues.buttonBorder);
         expect(afterHover.color).toEqual(paletteValues.buttonHoverText);
         expect(afterHover.backgroundColor).toEqual(paletteValues.buttonHoverBackground);
         expect(afterHover.borderColor).toEqual(paletteValues.buttonHoverBorder);

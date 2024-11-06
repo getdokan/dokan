@@ -1,4 +1,4 @@
-import { Page, expect, test } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { BasePage } from '@pages/basePage';
 import { LoginPage } from '@pages/loginPage';
 import { CustomerPage } from '@pages/customerPage';
@@ -15,6 +15,7 @@ const setupWizardVendor = selector.vendor.vSetup;
 const productsVendor = selector.vendor.product;
 const ordersVendor = selector.vendor.orders;
 const verificationsVendor = selector.vendor.vVerificationSettings;
+const vendorDashboard = selector.vendor.vDashboard;
 
 export class VendorPage extends BasePage {
     constructor(page: Page) {
@@ -50,7 +51,7 @@ export class VendorPage extends BasePage {
         await this.searchProduct(productName);
         await this.hover(productsVendor.productCell(productName));
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.editProduct(productName));
-        await this.toHaveValue(productsVendor.edit.title, productName);
+        await this.toHaveValue(productsVendor.title, productName);
     }
 
     // open vendor registration form
@@ -101,12 +102,22 @@ export class VendorPage extends BasePage {
         }
         await this.clearAndType(registrationVendor.phone, vendorInfo.phoneNumber);
         await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions);
+
+        // add subscription pack if enabled
         const subscriptionPackIsVisible = await this.isVisible(registrationVendor.subscriptionPack);
-        subscriptionPackIsVisible && (await this.selectByLabel(registrationVendor.subscriptionPack, data.predefined.vendorSubscription.nonRecurring));
-        setupWizardData.setupWizardEnabled
-            ? await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, registrationVendor.register)
-            : await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, registrationVendor.register);
+        if (subscriptionPackIsVisible) {
+            await this.selectByLabel(registrationVendor.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
+        }
+
+        // complete setup wizard if enabled
+        if (setupWizardData.setupWizardEnabled) {
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, registrationVendor.register);
+        } else {
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, registrationVendor.register);
+        }
+
         const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
+
         if (registrationErrorIsVisible) {
             const hasError = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registration.registrationErrorMessage);
             if (hasError) {
@@ -114,8 +125,8 @@ export class VendorPage extends BasePage {
                 return;
             }
         }
-        subscriptionPackIsVisible && (await this.customer.placeOrder('bank', false, true, false));
-        setupWizardData.setupWizardEnabled && (await this.vendorSetupWizard(setupWizardData));
+        if (subscriptionPackIsVisible) await this.customer.placeOrder('bank', false, true, false);
+        if (setupWizardData.setupWizardEnabled) await this.vendorSetupWizard(setupWizardData);
     }
 
     // vendor setup wizard
@@ -199,7 +210,7 @@ export class VendorPage extends BasePage {
         } else {
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, setupWizardVendor.notRightNow);
         }
-        await this.toBeVisible(selector.vendor.vDashboard.menus.dashboard);
+        await this.toBeVisible(vendorDashboard.menus.primary.dashboard);
     }
 
     // vendor account details render properly
@@ -236,7 +247,7 @@ export class VendorPage extends BasePage {
     // get total vendor earnings
     async getTotalVendorEarning(): Promise<number> {
         await this.goToVendorDashboard();
-        return helpers.price((await this.getElementText(selector.vendor.vDashboard.atAGlance.earningValue)) as string);
+        return helpers.price((await this.getElementText(vendorDashboard.atAGlance.earningValue)) as string);
     }
 
     // get order details vendor
@@ -302,11 +313,8 @@ export class VendorPage extends BasePage {
     // visit store
     async visitStore(storeName: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.dashboard);
-        // ensure page suppose to open on new tab
-        await this.toHaveAttribute(selector.vendor.vDashboard.menus.visitStore, 'target', '_blank');
-        // force page to open on the same tab
-        await this.setAttributeValue(selector.vendor.vDashboard.menus.visitStore, 'target', '_self');
-        await this.click(selector.vendor.vDashboard.menus.visitStore);
+        await this.forceLinkToSameTab(vendorDashboard.menus.primary.visitStore);
+        await this.click(vendorDashboard.menus.primary.visitStore);
         await expect(this.page).toHaveURL(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)) + '/');
     }
 
@@ -329,13 +337,17 @@ export class VendorPage extends BasePage {
         await this.toHaveCount(ordersVendor.numberOfRowsFound, 1);
     }
 
-    async buyProductAdvertising(productName: string) {
-        await this.searchProduct(productName);
-        const advertisementStatus = await this.hasColor(productsVendor.advertisementStatus(productName), 'rgb(255, 99, 71)');
-        if (advertisementStatus) {
-            console.log('Product advertisement is currently ongoing.');
-            test.skip();
-            // throw new Error('Product advertisement is currently ongoing.');
+    // buy product advertisement
+    async buyProductAdvertising(productName: string, productType: string, testPage?: any) {
+        if (!testPage) {
+            await this.searchProduct(productName);
+        } else {
+            const page = new testPage(this.page);
+            if (productType === 'booking') {
+                await page.searchBookingProduct(productName);
+            } else {
+                await page.searchAuctionProduct(productName);
+            }
         }
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.buyAdvertisement(productName));
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.confirmAction);
@@ -344,16 +356,31 @@ export class VendorPage extends BasePage {
         return orderId;
     }
 
-    // vendor set banner and profile picture settings
-    async bannerAndProfilePictureSettings(banner: string, profilePicture: string): Promise<void> {
-        // todo:  fix banner and profile update
-        // upload banner and profile picture
-        await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.bannerImage, selector.vendor.vStoreSettings.removeBannerImage);
-        await this.click(selector.vendor.vStoreSettings.banner);
-        await this.wpUploadFile(banner);
-
-        await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.profilePictureImage, selector.vendor.vStoreSettings.removeProfilePictureImage);
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vStoreSettings.profilePicture);
-        await this.wpUploadFile(profilePicture);
+    // assert product advertisement is bought
+    async assertProductAdvertisementIsBought(productName: string, productType: string, testPage?: any) {
+        let page;
+        if (!testPage) {
+            await this.searchProduct(productName);
+        } else {
+            page = new testPage(this.page);
+            if (productType === 'booking') {
+                await page.searchBookingProduct(productName);
+            } else {
+                await page.searchAuctionProduct(productName);
+            }
+        }
+        await this.toHaveColor(productsVendor.advertisementStatus(productName), 'rgb(240, 80, 37)'); //todo: grab it from test data, it could be any color
+        if (!testPage) {
+            await this.goToProductEdit(productName);
+        } else {
+            page = new testPage(this.page);
+            if (productType === 'booking') {
+                await page.goToBookingProductEdit(productName);
+            } else {
+                await page.goToAuctionProductEdit(productName);
+            }
+        }
+        await this.toBeChecked(productsVendor.advertisement.advertiseThisProduct);
+        await this.toBeVisible(productsVendor.advertisement.advertisementIsBought);
     }
 }

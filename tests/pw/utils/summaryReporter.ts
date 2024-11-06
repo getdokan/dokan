@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { FullConfig, FullResult, Reporter, Suite, TestCase, TestError, TestResult, TestStep } from '@playwright/test/reporter';
 import fs from 'fs';
@@ -59,13 +60,13 @@ export default class summaryReport implements Reporter {
     onStepEnd(test: TestCase, result: TestResult, step: TestStep): void {}
 
     onStdOut(chunk: string | Buffer, test: void | TestCase, result: void | TestResult): void {
-        console.log(chunk);
+        // console.log(chunk);
     }
 
     onStdErr(chunk: string | Buffer, test: void | TestCase, result: void | TestResult): void {}
 
     onError?(error: TestError): void {
-        console.log(error);
+        // console.log(error);
     }
 
     onTestEnd(test: TestCase, result: TestResult): void {

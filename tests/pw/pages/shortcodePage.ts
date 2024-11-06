@@ -26,15 +26,23 @@ export class ShortcodePage extends AdminPage {
     myOrdersPage = new MyOrdersPage(this.page);
     requestForQuotationsPage = new RequestForQuotationsPage(this.page);
 
+    async closeBlockEditorModal() {
+        try {
+            await this.toBeVisible(selector.admin.pages.blockEditorModal, { timeout: 5000 });
+            await this.click(selector.admin.pages.closeModal);
+            console.log('Modal is visible');
+        } catch (error) {
+            /* empty */
+        }
+    }
+
     // create a page with shortcode
     async createPageWithShortcode(pageTitle: string, shortcode: string) {
-        await this.goto(data.subUrls.backend.addNewPage, 'domcontentloaded');
-        const isModalVisible = await this.isVisible(selector.admin.pages.closeModal);
-        if (isModalVisible) {
-            await this.click(selector.admin.pages.closeModal);
-        }
+        await this.goto(data.subUrls.backend.addNewPage);
+        await this.closeBlockEditorModal();
 
-        await this.clearAndType(selector.admin.pages.addTitle, pageTitle);
+        await this.click(selector.admin.pages.addTitle);
+        await this.type(selector.admin.pages.addTitle, pageTitle);
         await this.click(selector.admin.pages.contentPlaceholder);
         await this.clearAndType(selector.admin.pages.addContent, shortcode);
 

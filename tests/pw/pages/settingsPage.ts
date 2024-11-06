@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -12,6 +12,17 @@ const settingsAdmin = selector.admin.dokan.settings;
 export class SettingsPage extends AdminPage {
     constructor(page: Page) {
         super(page);
+    }
+
+    // navigation
+
+    async goToSingleDokanSettings(settingMenu: string, settingTitle: string) {
+        await this.toPass(async () => {
+            await this.goto(data.subUrls.backend.dokan.settings);
+            await this.reload(); //todo: need to resolve: page doesn't reload for having # (fragment identifier) in the url
+            await this.click(settingMenu);
+            await this.toContainText(settingsAdmin.settingTitle, settingTitle, { timeout: 3000 });
+        });
     }
 
     // settings
@@ -48,8 +59,19 @@ export class SettingsPage extends AdminPage {
     // scroll to top settings
     async scrollToTopSettings() {
         await this.goto(data.subUrls.backend.dokan.settings);
-        await this.scrollToBottom();
-        await this.toBeVisible(settingsAdmin.backToTop);
+        // toPass is used to avoid flakiness
+        await this.toPass(async () => {
+            await this.scrollToBottom();
+            const isBackToTopVisible = await this.isVisible(settingsAdmin.backToTop, 1);
+            if (!isBackToTopVisible) {
+                await this.scrollToTop();
+            }
+            // eslint-disable-next-line playwright/prefer-web-first-assertions
+            expect(isBackToTopVisible).toBeTruthy();
+        });
+
+        await this.click(settingsAdmin.backToTop);
+        await this.toBeVisible(settingsAdmin.search.searchBox);
     }
 
     // dokan settings
@@ -86,8 +108,7 @@ export class SettingsPage extends AdminPage {
 
     // admin set dokan selling settings
     async setDokanSellingSettings(selling: dokanSettings['selling']) {
-        await this.goToDokanSettings();
-        await this.click(settingsAdmin.menus.sellingOptions);
+        await this.goToSingleDokanSettings(settingsAdmin.menus.sellingOptions, selling.settingTitle);
 
         // commission settings
         await this.selectByValue(settingsAdmin.selling.commissionType, selling.commissionType);
@@ -111,8 +132,6 @@ export class SettingsPage extends AdminPage {
             await this.enableSwitcher(settingsAdmin.selling.vendorProductReviewStatusChange);
             await this.enableSwitcher(settingsAdmin.selling.guestProductEnquiry);
             await this.enableSwitcher(settingsAdmin.selling.newVendorEnableAuction); // todo: add condition for simple auction plugin enabled
-            await this.enableSwitcher(settingsAdmin.selling.enableMinMaxQuantities);
-            await this.enableSwitcher(settingsAdmin.selling.enableMinMaxAmount);
         }
 
         // catalog mode
@@ -249,6 +268,24 @@ export class SettingsPage extends AdminPage {
         await this.toHaveValue(settingsAdmin.appearance.googleMapApiKey, appearance.googleMapApiKey);
     }
 
+    // Admin Set Dokan MenuManager Settings
+    async setDokanMenuManagerSettings(menus: string[]) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.menuManager);
+
+        // menuManager Settings
+        for (const menu of menus) {
+            await this.enableSwitcher(settingsAdmin.menuManager.menuSwitcher(menu));
+        }
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+
+        for (const menu of menus) {
+            await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(0, 144, 255)');
+        }
+    }
+
     // Admin Set Dokan Privacy Policy Settings
     async setDokanPrivacyPolicySettings(privacyPolicy: dokanSettings['privacyPolicy']) {
         await this.goToDokanSettings();
@@ -322,6 +359,38 @@ export class SettingsPage extends AdminPage {
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, vendorVerification.saveSuccessMessage);
     }
 
+    // Admin Set Dokan SMS Verification Gateways Settings
+    async setDokanSMSVerificationGatewaysSettings(verificationSmsGateways: dokanSettings['verificationSmsGateway']) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.verificationSmsGateways);
+
+        await this.clearAndType(settingsAdmin.verificationSmsGateway.senderName, verificationSmsGateways.senderName);
+        await this.clearAndType(settingsAdmin.verificationSmsGateway.smsText, verificationSmsGateways.smsText);
+        await this.clearAndType(settingsAdmin.verificationSmsGateway.smsSentSuccess, verificationSmsGateways.smsSentSuccess);
+        await this.clearAndType(settingsAdmin.verificationSmsGateway.smsSentError, verificationSmsGateways.smsSentError);
+        await this.click(settingsAdmin.verificationSmsGateway.activeGateway(verificationSmsGateways.activeGateway));
+        await this.enableSwitcher(settingsAdmin.verificationSmsGateway.enableGateway(verificationSmsGateways.activeGateway));
+        await this.click(settingsAdmin.verificationSmsGateway.expandButton);
+
+        // vonage
+        await this.toBeVisible(settingsAdmin.verificationSmsGateway.vonage.apiKey);
+        await this.clearAndType(settingsAdmin.verificationSmsGateway.vonage.apiKey, verificationSmsGateways.vonage.apiKey);
+        await this.clearAndType(settingsAdmin.verificationSmsGateway.vonage.apiSecret, verificationSmsGateways.vonage.apiSecret);
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, verificationSmsGateways.saveSuccessMessage);
+
+        await this.toHaveValue(settingsAdmin.verificationSmsGateway.senderName, verificationSmsGateways.senderName);
+        await this.toHaveValue(settingsAdmin.verificationSmsGateway.smsText, verificationSmsGateways.smsText);
+        await this.toHaveValue(settingsAdmin.verificationSmsGateway.smsSentSuccess, verificationSmsGateways.smsSentSuccess);
+        await this.toHaveValue(settingsAdmin.verificationSmsGateway.smsSentError, verificationSmsGateways.smsSentError);
+        await this.toHaveClass(settingsAdmin.verificationSmsGateway.activeGateway(verificationSmsGateways.activeGateway), 'checked');
+        await this.toHaveBackgroundColor(settingsAdmin.verificationSmsGateway.enableGateway(verificationSmsGateways.activeGateway) + '//span', 'rgb(0, 144, 255)');
+        await this.toHaveValue(settingsAdmin.verificationSmsGateway.vonage.apiKey, verificationSmsGateways.vonage.apiKey);
+        await this.toHaveValue(settingsAdmin.verificationSmsGateway.vonage.apiSecret, verificationSmsGateways.vonage.apiSecret);
+    }
+
     // Admin Set Dokan Email Verification Settings
     async setDokanEmailVerificationSettings(emailVerification: dokanSettings['emailVerification']) {
         await this.goToDokanSettings();
@@ -335,6 +404,25 @@ export class SettingsPage extends AdminPage {
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.emailVerification.emailVerificationSaveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, emailVerification.saveSuccessMessage);
+    }
+
+    // Admin Set Dokan Social Api Settings
+    async setDokanSocialApiSettings(socialApi: dokanSettings['socialApi']) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.socialApi);
+
+        // Social Api Settings
+        await this.enableSwitcher(settingsAdmin.socialApi.enableSocialLogin);
+
+        // Facebook
+        await this.enableSwitcher(settingsAdmin.socialApi.enableSocialApi(socialApi.platform));
+        await this.click(settingsAdmin.socialApi.expandButton(socialApi.platform));
+        await this.clearAndType(settingsAdmin.socialApi.facebook.appId, socialApi.facebook.appId);
+        await this.clearAndType(settingsAdmin.socialApi.facebook.appSecret, socialApi.facebook.appSecret);
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.socialApi.socialApiSaveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, socialApi.saveSuccessMessage);
     }
 
     // Admin Set Dokan Shipping Status Settings
@@ -363,7 +451,7 @@ export class SettingsPage extends AdminPage {
         await this.goToDokanSettings();
         await this.click(settingsAdmin.menus.quote);
 
-        // Live Search Settings
+        // quote Settings
         await this.enableSwitcher(settingsAdmin.quote.enableQuoteForOutOfStockProducts);
         await this.enableSwitcher(settingsAdmin.quote.enableAjaxAddToQuote);
         await this.enableSwitcher(settingsAdmin.quote.redirectToQuotePage);
@@ -375,6 +463,30 @@ export class SettingsPage extends AdminPage {
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.quote.quoteSaveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, quote.saveSuccessMessage);
+    }
+
+    // Admin Set Dokan live chat Settings
+    async setDokanLiveChatSettings(liveChat: dokanSettings['liveChat']) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.liveChat);
+
+        // liveChat Settings
+        await this.enableSwitcher(settingsAdmin.liveChat.enableLiveChat);
+        await this.click(settingsAdmin.liveChat.chatProvider(liveChat.chatProvider));
+        await this.clearAndType(settingsAdmin.liveChat.talkJsAppId, liveChat.talkJsAppId);
+        await this.clearAndType(settingsAdmin.liveChat.talkJsAppSecret, liveChat.talkJsAppSecret);
+        await this.enableSwitcher(settingsAdmin.liveChat.chatButtonOnVendorPage);
+        await this.selectByValue(settingsAdmin.liveChat.chatButtonOnProductPage, liveChat.chatButtonPosition);
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.liveChat.liveChatSaveChanges);
+
+        await this.toHaveBackgroundColor(settingsAdmin.liveChat.enableLiveChat + '//span', 'rgb(0, 144, 255)');
+        await this.toHaveClass(settingsAdmin.liveChat.chatProvider(liveChat.chatProvider), 'checked');
+        await this.toHaveValue(settingsAdmin.liveChat.talkJsAppId, liveChat.talkJsAppId);
+        await this.toHaveValue(settingsAdmin.liveChat.talkJsAppSecret, liveChat.talkJsAppSecret);
+        await this.toHaveBackgroundColor(settingsAdmin.liveChat.chatButtonOnVendorPage + '//span', 'rgb(0, 144, 255)');
+        await this.toHaveSelectedValue(settingsAdmin.liveChat.chatButtonOnProductPage, liveChat.chatButtonPosition);
     }
 
     // Admin Set Dokan Rma Settings

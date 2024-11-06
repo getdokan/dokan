@@ -25,7 +25,7 @@ export class LoginPage extends BasePage {
 
         // logout if other user is already logged in
         if (user.username !== currentUser && currentUser !== undefined) {
-            // TODO : got undefined for using storage.json
+            // todo : got undefined for using storage.json
             // else if ((user.username !== currentUser) || (currentUser === undefined)) {
             await this.logoutFrontend();
         }
@@ -33,6 +33,9 @@ export class LoginPage extends BasePage {
         // login user
         await this.clearAndType(selector.frontend.username, user.username);
         await this.clearAndType(selector.frontend.userPassword, user.password);
+        if (storageState) {
+            await this.check(selector.frontend.rememberMe);
+        }
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.myAccount, selector.frontend.logIn, 302);
         if (storageState) {
             await this.page.context().storageState({ path: storageState });
@@ -43,12 +46,12 @@ export class LoginPage extends BasePage {
 
     // user login backend
     async loginBackend(user: user, url: string = data.subUrls.backend.login, storageState?: string): Promise<void> {
-        await this.goIfNotThere(url);
+        await this.gotoUntilNetworkidle(url);
         const emailField = await this.isVisible(selector.backend.email);
         if (emailField) {
             await this.clearAndType(selector.backend.email, user.username);
             await this.clearAndType(selector.backend.password, user.password);
-            await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.login, selector.backend.login, 302);
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.adminDashboard, selector.backend.login);
             if (storageState) {
                 await this.page.context().storageState({ path: storageState });
             }

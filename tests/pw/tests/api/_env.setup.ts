@@ -30,7 +30,7 @@ setup.describe('setup woocommerce settings', () => {
         await apiUtils.setUpTaxRate(payloads.enableTax, payloads.createTaxRate);
     });
 
-    setup('add shipping methods', { tag: ['@lite'] }, async () => {
+    setup('add shipping zone, methods and class', { tag: ['@lite'] }, async () => {
         // delete previous shipping zones
         const allShippingZoneIds = (await apiUtils.getAllShippingZones()).map((a: { id: string }) => a.id);
 
@@ -44,7 +44,8 @@ setup.describe('setup woocommerce settings', () => {
         // create shipping zone, location and method
         const [, zoneId] = await apiUtils.createShippingZone(payloads.createShippingZone);
         await apiUtils.addShippingZoneLocation(zoneId, payloads.addShippingZoneLocation);
-        await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
+        const [, methodId] = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
+        await apiUtils.updateShippingZoneMethod(zoneId, methodId, payloads.addShippingMethodFlatRateCost);
         await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
 
         if (DOKAN_PRO) {
@@ -52,6 +53,9 @@ setup.describe('setup woocommerce settings', () => {
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanDistanceRateShipping);
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanVendorShipping);
         }
+
+        // shipping class
+        await apiUtils.createShippingClass(payloads.createShippingClass);
     });
 
     setup('add payments', { tag: ['@lite'] }, async () => {
@@ -68,20 +72,39 @@ setup.describe('setup woocommerce settings', () => {
         // }
     });
 
-    setup('add categories and attributes', { tag: ['@lite'] }, async () => {
-        // delete previous categories and attributes
+    setup('add categories', { tag: ['@lite'] }, async () => {
+        // delete previous categories
         await apiUtils.updateBatchCategories('delete', []);
-        await apiUtils.updateBatchAttributes('delete', []);
 
         // create category
         const [, categoryId] = await apiUtils.createCategory(payloads.createCategory);
         helpers.createEnvVar('CATEGORY_ID', categoryId);
+
+        // create another category
+        await apiUtils.createCategory(payloads.createCategoryElectronics);
+
+        // create multi-step category
+        await apiUtils.createMultiStepCategory(payloads.createMultiStepCategory);
+    });
+
+    setup('add attributes', { tag: ['@lite'] }, async () => {
+        // delete previous attributes
+        await apiUtils.updateBatchAttributes('delete', []);
 
         // create attribute, attribute term
         const [, attributeId] = await apiUtils.createAttribute({ name: 'sizes' });
         await apiUtils.createAttributeTerm(attributeId, { name: 's' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'l' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
+    });
+
+    setup('add tags', { tag: ['@lite'] }, async () => {
+        // delete previous tags
+        await apiUtils.updateBatchTags('delete', []);
+
+        // create tag
+        const [, tagId] = await apiUtils.createTag(payloads.createTag);
+        helpers.createEnvVar('TAG_ID', tagId);
     });
 });
 

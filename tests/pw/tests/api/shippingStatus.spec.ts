@@ -1,8 +1,10 @@
 //COVERAGE_TAG: GET /dokan/v1/shipping-status
-//COVERAGE_TAG: GET /dokan/v1/shipping-status/orders/(?P<order_id>[\\d]+)
-//COVERAGE_TAG: POST /dokan/v1/shipping-status/orders/(?P<order_id>[\\d]+)
-//COVERAGE_TAG: GET /dokan/v1/shipping-status/orders/(?P<order_id>[\\d]+)/shipment/(?P<id>[\\d]+)
-//COVERAGE_TAG: PUT /dokan/v1/shipping-status/orders/(?P<order_id>[\\d]+)/shipment/(?P<id>[\\d]+)
+//COVERAGE_TAG: GET /dokan/v1/shipping-status/orders/(?P<order_id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/shipping-status/orders/(?P<order_id>[\d]+)
+//COVERAGE_TAG: GET /dokan/v1/shipping-status/orders/(?P<order_id>[\d]+)/shipment/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/shipping-status/orders/(?P<order_id>[\d]+)/shipment/(?P<id>[\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/shipping-status/orders/(?P<order_id>[\d]+)/shipment/(?P<id>[\d]+)
+// delete method doesn't exists on dokan
 
 import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
@@ -10,16 +12,18 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { schemas } from '@utils/schemas';
 
+const { PRODUCT_ID } = process.env;
+
 test.describe('shipping status test', () => {
-    test.skip(true, 'feature not merged yet');
     let apiUtils: ApiUtils;
     let orderId: string;
+    let lineItemId: string;
     let shipmentId: string;
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
-        const [, responseBody, oId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
-        const lineItemId = responseBody.line_items[0].id;
+        const [, responseBody, oId] = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, line_items: [{ product_id: PRODUCT_ID, quantity: 10 }] });
+        lineItemId = responseBody.line_items[0].id;
         [, orderId, shipmentId] = await apiUtils.createShipment(oId, { ...payloads.createShipment, item_id: [lineItemId], item_qty: { [lineItemId]: 1 } });
     });
 
@@ -42,9 +46,6 @@ test.describe('shipping status test', () => {
     });
 
     test('create shipment', { tag: ['@pro'] }, async () => {
-        const [, orderResponseBody, orderId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
-        const lineItemId = orderResponseBody.line_items[0].id;
-
         const [response, responseBody] = await apiUtils.post(endPoints.createShipment(orderId), { data: { ...payloads.createShipment, item_id: [lineItemId], item_qty: { [lineItemId]: 1 } } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

@@ -69,4 +69,6 @@ test.describe.skip('Plugin functionality test', () => {
     test.skip('delete Dokan lite plugin', { tag: ['@lite', '@admin', '@serial'] }, async () => {
         await admin.activatePlugin(data.plugin.pluginName.dokanLite);
     });
+
+    //todo: replace (one zip with another) plugin test
 });

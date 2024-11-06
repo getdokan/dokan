@@ -73,6 +73,15 @@ export class AuctionsPage extends VendorPage {
 
     // vendor
 
+    // go to auction product edit
+    async goToAuctionProductEdit(productName: string): Promise<void> {
+        await this.searchAuctionProduct(productName);
+        await this.removeAttribute(auctionProductsVendor.rowActions(productName), 'class'); // forcing the row actions to be visible, to avoid flakiness
+        await this.hover(auctionProductsVendor.productCell(productName));
+        await this.clickAndWaitForLoadState(auctionProductsVendor.edit(productName));
+        await this.toHaveValue(auctionProductsVendor.auction.productName, productName);
+    }
+
     // update auction product fields
     async updateAuctionProductFields(product: product['auction']) {
         await this.clearAndType(auctionProductsVendor.auction.productName, product.name);
@@ -101,9 +110,7 @@ export class AuctionsPage extends VendorPage {
 
     // edit auction product
     async editAuctionProduct(product: product['auction']) {
-        await this.searchAuctionProduct(product.name);
-        await this.hover(auctionProductsVendor.productCell(product.name));
-        await this.clickAndWaitForLoadState(auctionProductsVendor.edit(product.name));
+        await this.goToAuctionProductEdit(product.name);
         await this.updateAuctionProductFields(product);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auction, auctionProductsVendor.auction.updateAuctionProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
