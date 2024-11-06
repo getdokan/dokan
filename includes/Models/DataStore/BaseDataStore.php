@@ -201,7 +201,7 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 	/**
 	 * Updates rows in the database.
 	 *
-	 * @param array $where Array of args to identify the object to be updated, e.g. `array( 'id' => 1, status => ['draft', 'cancelled'] )` or `array( 'id' => 1, 'status' => 'publish' )`.
+	 * @param array $where Array of args to identify the object to be updated, e.g. `array( 'id' => 1, 'status' => 'draft' )`.
 	 * @param array $data_to_update Array of args to update the object, e.g. `array( 'status' => 'publish' )`.
 	 *
 	 * @return int Number of affected rows.
@@ -214,25 +214,16 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 
 		$data_format = [];
 
-		var_dump( 'Test' );
-
 		foreach ( $data_to_update as $key => $value ) {
 			$data_format[] = $fields_format[ $key ];
 		}
 
-		$where_format[] = [];
+		$where_format = [];
 
 		foreach ( $where as $key => $value ) {
 			$where_format[] = $fields_format[ $key ];
 		}
 
-		var_dump(
-			$this->get_table_name_with_prefix(),
-            $data_to_update,
-           	$where,
-			$data_format,
-            $where_format
-		);
 		$result = $wpdb->update(
             $this->get_table_name_with_prefix(),
             $data_to_update,
@@ -244,7 +235,7 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 		if ( $result === false ) {
 			throw new Exception( esc_html__( 'Failed to update.', 'dokan-lite' ) );
 		}
-		var_dump( $result );
+
 		return (int) $result;
 	}
 
