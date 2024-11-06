@@ -38,10 +38,6 @@ export default {
 
 <style lang="css" lang="less">
 .cta-section {
-    //background-image: -moz-linear-gradient( 15deg, rgb(255,125,144) 0%, rgb(255,173,111) 100%);
-    //background-image: -webkit-linear-gradient( 15deg, rgb(255,125,144) 0%, rgb(255,173,111) 100%);
-    //background-image: -ms-linear-gradient( 15deg, rgb(255,125,144) 0%, rgb(255,173,111) 100%);
-    //background-image: linear-gradient( 15deg, rgb(255,125,144) 0%, rgb(255,173,111) 100%);
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -87,7 +83,7 @@ export default {
         &:hover {
             box-shadow: 2.736px 7.518px 20px 0 rgba(0,0,0,.15);
         }
-        p{
+        p {
             color: #FFF;
             font-size: 24px;
             font-style: normal;
