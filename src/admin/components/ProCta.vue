@@ -4,8 +4,8 @@
             <img :src="thumbnail" alt="Dokan Lite">
         </div>
         <div class="content-area">
-            <h2 style="color: #FFC700">{{ __( 'Convinced?', 'dokan-lite' ) }}</h2>
-            <p style="max-width: 335px; margin: 0 auto 1rem auto; ">{{ __( 'With all the advance features you get it’s hard to resist buying Dokan Pro.', 'dokan-lite' ) }}</p>
+            <h2 >{{ __( 'Convinced?', 'dokan-lite' ) }}</h2>
+            <p style=" ">{{ __( 'With all the advance features you get it’s hard to resist buying Dokan Pro.', 'dokan-lite' ) }}</p>
             <a :href="url" class="btn gap-4" target="_blank">
                 <p class='flex !m-0'>
                     {{ __( 'Upgrade to Pro', 'dokan-lite' ) }}
@@ -56,7 +56,7 @@ export default {
 
     h2 {
         font-size: 30px;
-        color: #fff;
+        color: #FFC700;
         font-weight: 400;
         line-height: 1.333em;
         text-align: center;
@@ -68,7 +68,8 @@ export default {
         font-size: 16px;
         line-height: 1.5em;
         font-weight: 300;
-        margin: 10px 0 30px;
+        max-width: 335px;
+        margin: 0 auto 1rem auto;
     }
 
     .btn {
