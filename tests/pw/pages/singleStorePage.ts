@@ -30,7 +30,7 @@ export class SingleStorePage extends CustomerPage {
             await this.toBeVisible(singleStoreCustomer.storeTabs.products);
             // await this.toBeVisible(singleStoreCustomer.storeTabs.toc); // todo: need vendor toc
         } else {
-            const { toc, ...storeTabs } = singleStoreCustomer.storeTabs;
+            const { toc, chatNow, ...storeTabs } = singleStoreCustomer.storeTabs;
             await this.multipleElementVisible(storeTabs);
 
             // eu compliance data is visible

@@ -105,12 +105,12 @@ final class WeDevs_Dokan {
      * @return object Class Instance
      */
     public function __get( $prop ) {
-        if ( $this->get_container()->has( $prop ) ) {
-            return $this->get_container()->get( $prop );
-        }
-
         if ( array_key_exists( $prop, $this->legacy_container ) ) {
             return $this->legacy_container[ $prop ];
+        }
+
+        if ( $this->get_container()->has( $prop ) ) {
+            return $this->get_container()->get( $prop );
         }
     }
 

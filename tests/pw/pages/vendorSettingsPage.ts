@@ -236,6 +236,10 @@ export class VendorSettingsPage extends VendorPage {
                 await this.storeSupportSettings(vendorInfo.supportButtonText);
                 break;
 
+            case 'liveChat':
+                await this.liveChatSettings(vendorInfo.liveChat);
+                break;
+
             case 'min-max':
                 await this.minMaxSettings(vendorInfo.minMax);
                 break;
@@ -421,6 +425,11 @@ export class VendorSettingsPage extends VendorPage {
             await this.check(settingsVendor.showSupportButtonInSingleProduct);
             await this.clearAndType(settingsVendor.supportButtonText, supportButtonText);
         }
+    }
+
+    // vendor set liveChat settings
+    async liveChatSettings(liveChat: vendor['vendorInfo']['liveChat']): Promise<void> {
+        await this.check(settingsVendor.liveChat);
     }
 
     // vendor set minmax settings
