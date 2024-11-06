@@ -10,12 +10,6 @@ use WeDevs\Dokan\Test\DokanTestCase;
  * @group data-store
  */
 class VendorBalanceModelTest extends DokanTestCase {
-    /**
-     * Indicates if the test is a unit test.
-     *
-     * @var bool
-     */
-    protected $is_unit_test = true;
 
     public function test_save_method() {
         $vendor_balance = new VendorBalance();
@@ -112,5 +106,17 @@ class VendorBalanceModelTest extends DokanTestCase {
 
         $updated_vendor_balance = new VendorBalance( $vendor_balance->get_id() );
         $this->assertEquals( 200, $updated_vendor_balance->get_debit() );
+    }
+
+    public function test_dokan_sync_insert_order_function() {
+        $order_id = $this->create_single_vendor_order( $this->seller_id1 );
+
+        $this->assertDatabaseHas(
+            'dokan_vendor_balance', [
+                'trn_id' => $order_id,
+                'trn_type' => VendorBalance::TRN_TYPE_DOKAN_ORDERS,
+                'vendor_id' => $this->seller_id1,
+            ]
+        );
     }
 }

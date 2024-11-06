@@ -1,6 +1,7 @@
 <?php
 
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Models\VendorBalance;
 
 /**
  * Dokan get seller amount from order total
@@ -267,31 +268,15 @@ function dokan_sync_insert_order( $order_id ) {
         ]
     );
 
-    $wpdb->insert(
-        $wpdb->prefix . 'dokan_vendor_balance',
-        [
-            'vendor_id'    => $seller_id,
-            'trn_id'       => $order_id,
-            'trn_type'     => 'dokan_orders',
-            'perticulars'  => 'New order',
-            'debit'        => $net_amount,
-            'credit'       => 0,
-            'status'       => $order_status,
-            'trn_date'     => dokan_current_datetime()->format( 'Y-m-d H:i:s' ),
-            'balance_date' => dokan_current_datetime()->modify( "+ $threshold_day days" )->format( 'Y-m-d H:i:s' ),
-        ],
-        [
-            '%d',
-            '%d',
-            '%s',
-            '%s',
-            '%f',
-            '%f',
-            '%s',
-            '%s',
-            '%s',
-        ]
-    );
+    $vendor_balance = new VendorBalance();
+    $vendor_balance->set_vendor_id( $seller_id );
+    $vendor_balance->set_trn_id( $order_id );
+    $vendor_balance->set_trn_type( VendorBalance::TRN_TYPE_DOKAN_ORDERS );
+    $vendor_balance->set_particulars( 'New order' );
+    $vendor_balance->set_debit( $net_amount );
+    $vendor_balance->set_trn_date( dokan_current_datetime()->format( 'Y-m-d H:i:s' ) );
+    $vendor_balance->set_balance_date( dokan_current_datetime()->modify( "+ $threshold_day days" )->format( 'Y-m-d H:i:s' ) );
+    $vendor_balance->save();
 }
 
 /**
