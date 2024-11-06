@@ -69,17 +69,14 @@ class VendorBalance extends BaseModel {
 	 */
 	public static function update_by_transaction( int $trn_id, string $trn_type, array $data ): int {
 		$model = new static();
-		$model = new self();
 
-		//  $model->get_data_store()->update_by(
-		//  [
-		//      'trn_id'   => $trn_id,
-		//      'trn_type' => $trn_type,
-		//  ],
-		//  $data
-        // );
-
-		return $model->data_store->update_by_transaction( $trn_id, $trn_type, $data );
+		return $model->get_data_store()->update_by(
+            [
+				'trn_id'   => $trn_id,
+				'trn_type' => $trn_type,
+            ],
+            $data
+        );
 	}
 
     /**

@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Test\Models;
 use WeDevs\Dokan\Models\VendorBalance;
 use WeDevs\Dokan\Test\DokanTestCase;
 
+
 /**
  * @group data-store
  */
