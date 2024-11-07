@@ -8,7 +8,7 @@ use WeDevs\Dokan\Contracts\Hookable;
 
 class Assets implements Hookable {
 	public function register_hooks(): void {
-        if ( ! $this->is_analytics_enabled() ) {
+        if ( ! dokan_is_analytics_enabled() ) {
             return;
         }
 
@@ -24,10 +24,6 @@ class Assets implements Hookable {
         ( new Reports\DataStoreCacheModifier() )->register_hooks();
 	}
 
-    public function is_analytics_enabled(): bool {
-        return 'yes' === get_option( Analytics::TOGGLE_OPTION_NAME, 'no' );
-    }
-
 	/**
 	 * Localize WC admin settings.
 	 *
@@ -37,7 +33,7 @@ class Assets implements Hookable {
 	public function localize_wc_admin_settings( $settings ) {
         $settings['vendorBalance']      = dokan_get_seller_balance( dokan_get_current_user_id(), 2 );
         $settings['stockStatuses']      = wc_get_product_stock_status_options();
-        $settings['isAnalyticsEnabled'] = $this->is_analytics_enabled();
+        $settings['isAnalyticsEnabled'] = dokan_is_analytics_enabled();
 
         $preload_data           = [];
         $preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', array() );
@@ -120,6 +116,5 @@ class Assets implements Hookable {
 			]
 		);
         wp_enqueue_style( 'vendor_analytics_style' );
-		wp_enqueue_style( 'wc-chunks-9966-style', plugins_url( 'woocommerce/assets/client/admin/chunks/9966.style.css' ), array(), filemtime( WP_PLUGIN_DIR . '/woocommerce/assets/client/admin/chunks/9966.style.css' ) );
 	}
 }

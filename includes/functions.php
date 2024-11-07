@@ -2,6 +2,7 @@
 
 use WeDevs\Dokan\Cache;
 use WeDevs\Dokan\Utilities\OrderUtil;
+use Automattic\WooCommerce\Internal\Admin\Analytics;
 
 /**
  * Dokan Admin menu position
@@ -160,6 +161,17 @@ function dokan_is_seller_dashboard() {
     }
 
     return false;
+}
+
+/**
+ * Check if analytics is enabled.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return bool
+ */
+function dokan_is_analytics_enabled(): bool {
+    return 'yes' === get_option( Analytics::TOGGLE_OPTION_NAME, 'no' );
 }
 
 /**
