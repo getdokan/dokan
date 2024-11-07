@@ -49,7 +49,6 @@ export default class Section extends Component {
   render() {
     const { component: SectionComponent, ...props } = this.props;
     const { titleInput } = this.state;
-    console.log("dfasfd props", props);
 
     return (
       <div className="woocommerce-dashboard-section">

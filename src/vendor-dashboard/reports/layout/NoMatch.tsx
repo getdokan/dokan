@@ -50,7 +50,7 @@ const NoMatch: React.FC = () => {
                     <Text>
                         { __(
                             'Sorry, you are not allowed to access this page.',
-                            'woocommerce'
+                            'dokan-lite'
                         ) }
                     </Text>
                 </CardBody>

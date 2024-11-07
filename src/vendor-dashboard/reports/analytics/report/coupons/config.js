@@ -31,14 +31,14 @@ const { addCesSurveyForAnalytics } = dispatch(CES_STORE_KEY);
 export const charts = applyFilters(COUPON_REPORT_CHARTS_FILTER, [
   {
     key: "orders_count",
-    label: __("Discounted orders", "woocommerce"),
+    label: __("Discounted orders", 'dokan-lite'),
     order: "desc",
     orderby: "orders_count",
     type: "number",
   },
   {
     key: "amount",
-    label: __("Amount", "woocommerce"),
+    label: __("Amount", 'dokan-lite'),
     order: "desc",
     orderby: "amount",
     type: "currency",
@@ -60,15 +60,15 @@ export const advancedFilters = applyFilters(
     title: _x(
       "Coupons match <select/> filters",
       "A sentence describing filters for Coupons. See screen shot for context: https://cloudup.com/cSsUY9VeCVJ",
-      "woocommerce"
+      'dokan-lite'
     ),
   }
 );
 
 const filterValues = [
-  { label: __("All coupons", "woocommerce"), value: "all" },
+  { label: __("All coupons", 'dokan-lite'), value: "all" },
   {
-    label: __("Single coupon", "woocommerce"),
+    label: __("Single coupon", 'dokan-lite'),
     value: "select_coupon",
     chartMode: "item-comparison",
     subFilters: [
@@ -82,26 +82,26 @@ const filterValues = [
           param: "coupons",
           getLabels: getCouponLabels,
           labels: {
-            placeholder: __("Type to search for a coupon", "woocommerce"),
-            button: __("Single Coupon", "woocommerce"),
+            placeholder: __("Type to search for a coupon", 'dokan-lite'),
+            button: __("Single Coupon", 'dokan-lite'),
           },
         },
       },
     ],
   },
   {
-    label: __("Comparison", "woocommerce"),
+    label: __("Comparison", 'dokan-lite'),
     value: "compare-coupons",
     settings: {
       type: "coupons",
       param: "coupons",
       getLabels: getCouponLabels,
       labels: {
-        title: __("Compare Coupon Codes", "woocommerce"),
-        update: __("Compare", "woocommerce"),
+        title: __("Compare Coupon Codes", 'dokan-lite'),
+        update: __("Compare", 'dokan-lite'),
         helpText: __(
           "Check at least two coupon codes below to compare",
-          "woocommerce"
+          'dokan-lite'
         ),
       },
       onClick: addCesSurveyForAnalytics,
@@ -111,7 +111,7 @@ const filterValues = [
 
 if (Object.keys(advancedFilters.filters).length) {
   filterValues.push({
-    label: __("Advanced filters", "woocommerce"),
+    label: __("Advanced filters", 'dokan-lite'),
     value: "advanced",
   });
 }
@@ -128,7 +128,7 @@ if (Object.keys(advancedFilters.filters).length) {
  */
 export const filters = applyFilters(COUPON_REPORT_FILTERS_FILTER, [
   {
-    label: __("Show", "woocommerce"),
+    label: __("Show", 'dokan-lite'),
     staticParams: ["chartType", "paged", "per_page"],
     param: "filter",
     showFilters: () => true,

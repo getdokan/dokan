@@ -37,21 +37,21 @@ const { addCesSurveyForAnalytics } = dispatch(CES_STORE_KEY);
 export const charts = applyFilters(VARIATIONS_REPORT_CHARTS_FILTER, [
   {
     key: "items_sold",
-    label: __("Items sold", "woocommerce"),
+    label: __("Items sold", 'dokan-lite'),
     order: "desc",
     orderby: "items_sold",
     type: "number",
   },
   {
     key: "net_revenue",
-    label: __("Net sales", "woocommerce"),
+    label: __("Net sales", 'dokan-lite'),
     order: "desc",
     orderby: "net_revenue",
     type: "currency",
   },
   {
     key: "orders_count",
-    label: __("Orders", "woocommerce"),
+    label: __("Orders", 'dokan-lite'),
     order: "desc",
     orderby: "orders_count",
     type: "number",
@@ -70,18 +70,18 @@ export const charts = applyFilters(VARIATIONS_REPORT_CHARTS_FILTER, [
  */
 export const filters = applyFilters(VARIATIONS_REPORT_FILTERS_FILTER, [
   {
-    label: __("Show", "woocommerce"),
+    label: __("Show", 'dokan-lite'),
     staticParams: ["chartType", "paged", "per_page"],
     param: "filter-variations",
     showFilters: () => true,
     filters: [
       {
-        label: __("All variations", "woocommerce"),
+        label: __("All variations", 'dokan-lite'),
         chartMode: "item-comparison",
         value: "all",
       },
       {
-        label: __("Single variation", "woocommerce"),
+        label: __("Single variation", 'dokan-lite'),
         value: "select_variation",
         subFilters: [
           {
@@ -95,16 +95,16 @@ export const filters = applyFilters(VARIATIONS_REPORT_FILTERS_FILTER, [
               labels: {
                 placeholder: __(
                   "Type to search for a variation",
-                  "woocommerce"
+                  'dokan-lite'
                 ),
-                button: __("Single variation", "woocommerce"),
+                button: __("Single variation", 'dokan-lite'),
               },
             },
           },
         ],
       },
       {
-        label: __("Comparison", "woocommerce"),
+        label: __("Comparison", 'dokan-lite'),
         chartMode: "item-comparison",
         value: "compare-variations",
         settings: {
@@ -114,17 +114,17 @@ export const filters = applyFilters(VARIATIONS_REPORT_FILTERS_FILTER, [
           labels: {
             helpText: __(
               "Check at least two variations below to compare",
-              "woocommerce"
+              'dokan-lite'
             ),
-            placeholder: __("Search for variations to compare", "woocommerce"),
-            title: __("Compare Variations", "woocommerce"),
-            update: __("Compare", "woocommerce"),
+            placeholder: __("Search for variations to compare", 'dokan-lite'),
+            title: __("Compare Variations", 'dokan-lite'),
+            update: __("Compare", 'dokan-lite'),
           },
           onClick: addCesSurveyForAnalytics,
         },
       },
       {
-        label: __("Advanced filters", "woocommerce"),
+        label: __("Advanced filters", 'dokan-lite'),
         value: "advanced",
       },
     ],
@@ -145,33 +145,33 @@ export const advancedFilters = applyFilters(
     title: _x(
       "Variations match <select/> filters",
       "A sentence describing filters for Variations. See screen shot for context: https://cloudup.com/cSsUY9VeCVJ",
-      "woocommerce"
+      'dokan-lite'
     ),
     filters: {
       attribute: {
         allowMultiple: true,
         labels: {
-          add: __("Product attribute", "woocommerce"),
-          placeholder: __("Search product attributes", "woocommerce"),
-          remove: __("Remove product attribute filter", "woocommerce"),
-          rule: __("Select a product attribute filter match", "woocommerce"),
+          add: __("Product attribute", 'dokan-lite'),
+          placeholder: __("Search product attributes", 'dokan-lite'),
+          remove: __("Remove product attribute filter", 'dokan-lite'),
+          rule: __("Select a product attribute filter match", 'dokan-lite'),
           /* translators: A sentence describing a Product filter. See screen shot for context: https://cloudup.com/cSsUY9VeCVJ */
           title: __(
             "<title>Product attribute</title> <rule/> <filter/>",
-            "woocommerce"
+            'dokan-lite'
           ),
-          filter: __("Select product attributes", "woocommerce"),
+          filter: __("Select product attributes", 'dokan-lite'),
         },
         rules: [
           {
             value: "is",
             /* translators: Sentence fragment, logical, "Is" refers to searching for product variations matching a chosen attribute. Screenshot for context: https://cloudup.com/cSsUY9VeCVJ */
-            label: _x("Is", "product attribute", "woocommerce"),
+            label: _x("Is", "product attribute", 'dokan-lite'),
           },
           {
             value: "is_not",
             /* translators: Sentence fragment, logical, "Is Not" refers to searching for product variations that don\'t match a chosen attribute. Screenshot for context: https://cloudup.com/cSsUY9VeCVJ */
-            label: _x("Is Not", "product attribute", "woocommerce"),
+            label: _x("Is Not", "product attribute", 'dokan-lite'),
           },
         ],
         input: {
@@ -180,27 +180,27 @@ export const advancedFilters = applyFilters(
       },
       category: {
         labels: {
-          add: __("Product category", "woocommerce"),
-          placeholder: __("Search product categories", "woocommerce"),
-          remove: __("Remove product category filter", "woocommerce"),
-          rule: __("Select a product category filter match", "woocommerce"),
+          add: __("Product category", 'dokan-lite'),
+          placeholder: __("Search product categories", 'dokan-lite'),
+          remove: __("Remove product category filter", 'dokan-lite'),
+          rule: __("Select a product category filter match", 'dokan-lite'),
           /* translators: A sentence describing a Category filter. See screen shot for context: https://cloudup.com/cSsUY9VeCVJ */
           title: __(
             "<title>Product category</title> <rule/> <filter/>",
-            "woocommerce"
+            'dokan-lite'
           ),
-          filter: __("Select product categories", "woocommerce"),
+          filter: __("Select product categories", 'dokan-lite'),
         },
         rules: [
           {
             value: "includes",
             /* translators: Sentence fragment, logical, "Includes" refers to variations including a given category. Screenshot for context: https://cloudup.com/cSsUY9VeCVJ */
-            label: _x("Includes", "categories", "woocommerce"),
+            label: _x("Includes", "categories", 'dokan-lite'),
           },
           {
             value: "excludes",
             /* translators: Sentence fragment, logical, "Excludes" refers to variations excluding a given category. Screenshot for context: https://cloudup.com/cSsUY9VeCVJ */
-            label: _x("Excludes", "categories", "woocommerce"),
+            label: _x("Excludes", "categories", 'dokan-lite'),
           },
         ],
         input: {
@@ -211,24 +211,24 @@ export const advancedFilters = applyFilters(
       },
       product: {
         labels: {
-          add: __("Product", "woocommerce"),
-          placeholder: __("Search products", "woocommerce"),
-          remove: __("Remove product filter", "woocommerce"),
-          rule: __("Select a product filter match", "woocommerce"),
+          add: __("Product", 'dokan-lite'),
+          placeholder: __("Search products", 'dokan-lite'),
+          remove: __("Remove product filter", 'dokan-lite'),
+          rule: __("Select a product filter match", 'dokan-lite'),
           /* translators: A sentence describing a Product filter. See screen shot for context: https://cloudup.com/cSsUY9VeCVJ */
-          title: __("<title>Product</title> <rule/> <filter/>", "woocommerce"),
-          filter: __("Select products", "woocommerce"),
+          title: __("<title>Product</title> <rule/> <filter/>", 'dokan-lite'),
+          filter: __("Select products", 'dokan-lite'),
         },
         rules: [
           {
             value: "includes",
             /* translators: Sentence fragment, logical, "Includes" refers to orders including a given product(s). Screenshot for context: https://cloudup.com/cSsUY9VeCVJ */
-            label: _x("Includes", "products", "woocommerce"),
+            label: _x("Includes", "products", 'dokan-lite'),
           },
           {
             value: "excludes",
             /* translators: Sentence fragment, logical, "Excludes" refers to orders excluding a given product(s). Screenshot for context: https://cloudup.com/cSsUY9VeCVJ */
-            label: _x("Excludes", "products", "woocommerce"),
+            label: _x("Excludes", "products", 'dokan-lite'),
           },
         ],
         input: {

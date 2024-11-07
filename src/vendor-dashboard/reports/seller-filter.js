@@ -1,5 +1,5 @@
-import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
+import { addFilter } from '@wordpress/hooks';
 import { dokanConfig } from './dokan-config';
 
 const addSellerFilters = ( filters ) => {
@@ -33,12 +33,9 @@ const reportsToFilterBySeller = [
 ];
 
 for ( let i = 0; i < reportsToFilterBySeller.length; i++ ) {
-    console.log(
-        `dokan_analytics_${ reportsToFilterBySeller[ i ] }_report_filters`
-    );
     addFilter(
         `dokan_analytics_${ reportsToFilterBySeller[ i ] }_report_filters`,
-        'dokan',
+        'dokan-lite',
         addSellerFilters
     );
 }

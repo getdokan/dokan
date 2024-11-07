@@ -28,7 +28,7 @@ import { CurrencyContext } from '@woocommerce/currency';
  * Internal dependencies
  */
 import ReportTable from '../../components/report-table';
-import { getAdminSetting } from 'reports/utils/admin-settings';
+import { getAdminSetting } from './../../../utils/admin-settings';
 import { dokanConfig } from '../../../dokan-config';
 
 const EMPTY_ARRAY = [];
