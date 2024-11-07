@@ -49,24 +49,24 @@
     "license": "ISC",
     "devDependencies": {
         "@types/js-yaml": "^4.0.9",
-        "@types/node": "^22.7.8",
-        "@typescript-eslint/eslint-plugin": "^8.11.0",
-        "@typescript-eslint/parser": "^8.11.0",
+        "@types/node": "^22.9.0",
+        "@typescript-eslint/eslint-plugin": "^8.13.0",
+        "@typescript-eslint/parser": "^8.13.0",
         "eslint": "8.57",
         "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-playwright": "^1.8.3",
+        "eslint-plugin-playwright": "^2.0.1",
         "js-yaml": "^4.1.0",
-        "npm-check-updates": "^17.1.4",
+        "npm-check-updates": "^17.1.10",
         "prettier": "^3.3.3",
-        "tslib": "^2.8.0",
-        "typescript": "^5.5.4"
+        "tslib": "^2.8.1",
+        "typescript": "^5.6.3"
     },
     "dependencies": {
-        "@faker-js/faker": "^9.0.3",
+        "@faker-js/faker": "^9.2.0",
         "@playwright/test": "1.48",
-        "@wordpress/env": "^10.10.0",
+        "@wordpress/env": "^10.11.0",
         "dotenv": "^16.4.5",
-        "mysql2": "^3.11.3",
+        "mysql2": "^3.11.4",
         "php-serialize": "^5.0.1",
         "zod": "^3.23.8"
     }
