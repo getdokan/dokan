@@ -1119,6 +1119,7 @@ export const data = {
                 abuseReports: 'dokan/v1/abuse-reports',
                 logs: 'dokan/v1/admin/logs',
                 announcements: 'dokan/v1/announcement',
+                deliveryTime: 'dokan/v1/delivery-time',
                 dummyData: 'dokan/v1/dummy-data',
                 dummyDataImport: 'dokan/v1/dummy-data/import',
                 refunds: 'dokan/v1/refunds',

@@ -7803,9 +7803,9 @@ export const selector = {
             delivery: '//div[@class="dokan-store-location-selector"]//div[@data-selector="delivery"]',
             storePickup: '//div[@class="dokan-store-location-selector"]//div[@data-selector="store-pickup"]',
 
-            deliveryTimeInput: '//input[@class="delivery-time-date-picker form-control input"]',
+            deliveryTimeInput: 'input.delivery-time-date-picker.input',
             deliveryTimeInputHidden: '//input[@class="delivery-time-date-picker flatpickr-input"]',
-            deliveryDate: (date: string) => `//div[contains(@class,"flatpickr-calendar")]//div[@class="dayContainer"]//span[contains(@class,"flatpickr-day") and @aria-label="${date}"]`,
+            deliveryDate: (date: string) => `//div[contains(@class,"flatpickr-calendar animate open")]//div[@class="dayContainer"]//span[contains(@class,"flatpickr-day") and @aria-label="${date}"]`,
 
             timePicker: 'select.delivery-time-slot-picker',
             locationPicker: 'select.delivery-store-location-picker',
