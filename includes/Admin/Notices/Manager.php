@@ -142,8 +142,8 @@ class Manager {
                 'priority'          => 1,
                 'show_close_button' => true,
                 'type'              => 'info',
-                'title'             => __( 'New Dokan Logo!', 'dokan-lite' ),
-                'description'       => __( 'Introducing the new freshly designed Dokan Logo. Keep an eye on your admin dashboard!!', 'dokan-lite' ),
+                'title'             => __( 'Dokan came up with a new look!', 'dokan-lite' ),
+                'description'       => __( 'A new rebranded look is introduced in the entire platform. Check the updated visuals in different places.', 'dokan-lite' ),
                 'ajax_data'         => [
                     'action' => 'dismiss_dokan_admin_logo_update_notice',
                     'nonce'  => wp_create_nonce( 'dismiss_dokan_admin_logo_update_notice_nonce' ),
