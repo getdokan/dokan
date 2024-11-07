@@ -640,3 +640,22 @@ function dokan_store_product_catalog_orderby() {
 
     return $orderby_options;
 }
+
+/**
+ * Check if product listing should be rendered.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return bool
+ */
+function dokan_should_skip_product_listing_render(): bool {
+
+    /**
+     * Filter to control product listing template rendering.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool $should_render Whether to render the product listing template.
+     */
+    return apply_filters( 'dokan_product_listing_template_render', false );
+}

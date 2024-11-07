@@ -13,7 +13,7 @@ import {
     WooHeaderPageTitle,
 } from '@woocommerce/admin-layout';
 import { getSetting } from '@woocommerce/settings';
-import { Text, useSlot } from '@woocommerce/experimental';
+import { useSlot } from '@woocommerce/experimental';
 import { getScreenFromPath, isWCAdmin } from '@woocommerce/navigation';
 
 /**
@@ -128,10 +128,7 @@ export const Header = ( { sections, isEmbedded = false, query } ) => {
                     fillProps={ { isEmbedded, query } }
                 />
 
-                <Text
-                    className={ `woocommerce-layout__header-heading woocommerce-layout__header-left-align` }
-                    as="h1"
-                >
+                <h3 className={ `entry-title` }>
                     { decodeEntities(
                         hasPageTitleFills ? (
                             <WooHeaderPageTitle.Slot
@@ -141,7 +138,7 @@ export const Header = ( { sections, isEmbedded = false, query } ) => {
                             pageTitle
                         )
                     ) }
-                </Text>
+                </h3>
 
                 { /* {showLaunchYourStoreStatus && <LaunchYourStoreStatus />} */ }
 
