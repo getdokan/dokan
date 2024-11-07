@@ -74,4 +74,10 @@ trait DBAssertionTrait {
 
         $this->assertEquals( $count, $rows_count, "No rows found in `$table` for given data " . json_encode( $data ) );
     }
+
+    public function assertDatabaseMissing( string $table, array $data = [] ): void {
+        $rows_count = $this->getDatabaseCount( $table, $data );
+
+        $this->assertGreaterThanOrEqual( 0, $rows_count, "{$rows_count} rows found in `$table` for given data " . json_encode( $data ) );
+    }
 }
