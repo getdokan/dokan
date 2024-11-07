@@ -164,14 +164,26 @@ function dokan_is_seller_dashboard() {
 }
 
 /**
- * Check if analytics is enabled.
+ * Check if analytics is enabled for the current seller.
+ *
+ * This checks if the seller is enabled and the analytics toggle option is set to "yes".
  *
  * @since DOKAN_SINCE
  *
- * @return bool
+ * @return bool True if analytics is enabled, false otherwise.
  */
 function dokan_is_analytics_enabled(): bool {
-    return 'yes' === get_option( Analytics::TOGGLE_OPTION_NAME, 'no' );
+    $is_seller_enabled    = dokan_is_seller_enabled( dokan_get_current_user_id() );
+    $is_analytics_enabled = 'yes' === get_option( Analytics::TOGGLE_OPTION_NAME, 'no' );
+
+    /**
+     * Filter to modify the analytics enabled status for the current seller.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool $is_enabled Whether analytics is enabled for the current seller.
+     */
+    return apply_filters( 'dokan_is_analytics_enabled', ( $is_seller_enabled && $is_analytics_enabled ) );
 }
 
 /**
