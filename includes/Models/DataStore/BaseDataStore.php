@@ -149,19 +149,7 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 	 * @return int Number of affected rows.
 	 */
 	public function delete_by_id( $id ): int {
-		global $wpdb;
-
-        $table_name = $this->get_table_name_with_prefix();
-        $id_field_name = $this->get_id_field_name();
-        $format = $this->get_id_field_format();
-
-		$result = $wpdb->query(
-			$wpdb->prepare(
-				"DELETE FROM {$table_name}
-				WHERE $id_field_name = $format",
-				$id
-			)
-		);
+		$result = $this->delete_by( [ $this->get_id_field_name() => $id ] );
 
         do_action( $this->get_hook_prefix() . 'deleted', $id, $result );
 
@@ -185,10 +173,8 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 		$where_clause = $this->prepare_where_clause( $data );
 
 		$result = $wpdb->query(
-			$wpdb->prepare(
-				"DELETE FROM {$table_name}
+            "DELETE FROM {$table_name}
 				WHERE {$where_clause}"
-			)
 		);
 
 		if ( $result === false ) {
@@ -329,6 +315,16 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 		}
 
 		return $data;
+	}
+
+
+
+	/**
+	 * Read meta data for the given model. Generally, We may not need this method.
+	 *
+	 * @param BaseModel $model The model for which to read meta data.
+	 */
+	public function read_meta( BaseModel &$model ): void {
 	}
 
 	/**
