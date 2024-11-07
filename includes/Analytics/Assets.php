@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Analytics;
 
-use Automattic\WooCommerce\Internal\Admin\Analytics;
 use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Contracts\Hookable;
 
