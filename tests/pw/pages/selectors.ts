@@ -5166,9 +5166,9 @@ export const selector = {
                 // General Booking Options
                 bookingDurationType: '#\\_wc_booking_duration_type',
                 bookingDuration: 'input#\\_wc_booking_duration',
+                bookingDurationUnit: '#\\_wc_booking_duration_unit',
                 bookingDurationMin: 'input#\\_wc_booking_min_duration',
                 bookingDurationMax: 'input#\\_wc_booking_max_duration',
-                bookingDurationUnit: '#\\_wc_booking_duration_unit',
 
                 calendarDisplayMode: '#\\_wc_booking_calendar_display_mode',
 
@@ -5200,7 +5200,7 @@ export const selector = {
                 maximumBookingWindowIntoTheFutureDateUnit: '#\\_wc_booking_max_date_unit',
                 requireABufferPeriodOfMonthsBetweenBookings: '#\\_wc_booking_buffer_period',
                 adjacentBuffering: '#\\_wc_booking_apply_adjacent_buffer',
-                allDatesAre: '#\\_wc_booking_default_date_availability',
+                allDatesAvailability: '#\\_wc_booking_default_date_availability',
                 checkRulesAgainst: '#\\_wc_booking_check_availability_against',
                 restrictStartAndEndDays: '#dokan_booking_has_restricted_days_field',
                 sunday: '#\\_wc_booking_restricted_days\\[0\\]',
@@ -5239,34 +5239,38 @@ export const selector = {
                 // Extra Options
 
                 // Has Persons
-                hasPersons: '#\\_wc_booking_has_persons',
-                minPersons: '#\\_wc_booking_min_persons_group',
-                maxPersons: '#\\_wc_booking_max_persons_group',
-                multiplyAllCostsByPersonCount: '#\\_wc_booking_person_cost_multiplier',
-                countPersonsAsBookings: '#\\_wc_booking_person_qty_multiplier',
-                enablePersonTypes: '#\\_wc_booking_has_person_types',
+                hasPersons: 'input#\\_wc_booking_has_persons',
+                minPersons: 'div#bookings_persons #\\_wc_booking_min_persons_group',
+                maxPersons: 'div#bookings_persons #\\_wc_booking_max_persons_group',
+                multiplyAllCostsByPersonCount: 'div#bookings_persons #\\_wc_booking_person_cost_multiplier',
+                countPersonsAsBookings: 'div#bookings_persons #\\_wc_booking_person_qty_multiplier',
+                enablePersonTypes: 'div#bookings_persons #\\_wc_booking_has_person_types',
 
                 // Add Person
-                addPersonType: '.add_person',
-                personTypeName: '//label[contains(text(),"Person Type Name:")]/..//input',
-                personBaseCost: '//label[contains(text(),"Base Cost:")]/..//input',
-                personBlockCost: '//label[contains(text(),"Block Cost:")]/..//input',
-                description: '.person_description',
-                min: '//label[contains(text(),"Min:")]/..//input',
-                max: '//label[contains(text(),"Max:")]/..//input',
-                unlink: '.unlink_booking_person', // invokes default js alert
+                addPersonType: 'button.add_person',
+                person: {
+                    typeName: '//div[@id="bookings_persons"]//label[contains(text(),"Person Type Name:")]/..//input',
+                    baseCost: '//div[@id="bookings_persons"]//label[contains(text(),"Base Cost:")]/..//input',
+                    blockCost: '//div[@id="bookings_persons"]//label[contains(text(),"Block Cost:")]/..//input',
+                    description: 'input.person_description',
+                    min: '//div[@id="bookings_persons"]//label[contains(text(),"Min:")]/..//input',
+                    max: '//div[@id="bookings_persons"]//label[contains(text(),"Max:")]/..//input',
+                },
+                unlink: 'button.unlink_booking_person', // invokes default js alert
+                remove: 'button.remove_booking_person',
+                confirmRemove: 'button.swal2-confirm',
 
                 // Has Resources
-                hasResources: '#\\_wc_booking_has_resources',
+                hasResources: 'input#\\_wc_booking_has_resources',
 
                 // Add Resource
-                label: '#\\_wc_booking_resource_label',
-                resourcesAre: '#\\_wc_booking_resources_assignment',
-                addResourceId: '.add_resource_id',
-                addResource: '.add_resource',
-                resourceBaseCost: '//label[contains(text(),"Base Cost:")]/..//input',
-                resourceBlockCost: '//label[contains(text(),"Block Cost:")]/..//input',
-                removeResource: '.remove_booking_resource.button', // invokes default js alert
+                label: 'div#bookings_resources input#\\_wc_booking_resource_label',
+                resourcesAllocation: 'div#bookings_resources select#\\_wc_booking_resources_assignment',
+                addResourceId: 'div#bookings_resources select.add_resource_id',
+                addResource: 'button.add_resource',
+                resourceBaseCost: '//div[@id="bookings_resources"]//label[contains(text(),"Base Cost:")]/..//input',
+                resourceBlockCost: '//div[@id="bookings_resources"]//label[contains(text(),"Block Cost:")]/..//input',
+                removeResource: 'button.remove_booking_resource', // invokes default js alert
 
                 // Short Description
                 shortDescriptionIframe: '.dokan-product-short-description iframe',

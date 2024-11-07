@@ -354,19 +354,53 @@ export const data = {
             name: '',
             productType: 'booking',
             category: 'Uncategorized',
-            bookingDurationType: 'customer', // 'fixed', 'customer'
-            bookingDuration: '2',
-            bookingDurationMin: '1',
-            bookingDurationMax: '20',
-            bookingDurationUnit: 'day', // 'month', 'day', 'hour', 'minute'
+            duration: {
+                bookingDurationType: 'customer', // 'fixed', 'customer'
+                bookingDuration: '2',
+                bookingDurationUnit: 'day', // 'month', 'day', 'hour', 'minute'
+                bookingDurationMin: '1',
+                bookingDurationMax: '20',
+            },
             calendarDisplayMode: 'always_visible', // '', 'always_visible'
-            maxBookingsPerBlock: '5',
-            minimumBookingWindowIntoTheFutureDate: '0',
-            minimumBookingWindowIntoTheFutureDateUnit: 'month',
-            maximumBookingWindowIntoTheFutureDate: '5',
-            maximumBookingWindowIntoTheFutureDateUnit: 'month',
-            baseCost: '20',
-            blockCost: '10',
+            availability: {
+                maxBookingsPerBlock: '5',
+                minimumBookingWindowIntoTheFutureDate: '0',
+                minimumBookingWindowIntoTheFutureDateUnit: 'month', // 'month', 'week', 'day', 'hour',
+                maximumBookingWindowIntoTheFutureDate: '5',
+                maximumBookingWindowIntoTheFutureDateUnit: 'month',
+                requireABufferPeriodOfMonthsBetweenBookings: '1',
+                allDatesAvailability: 'available', // 'available', 'non-available'
+                checkRulesAgainst: 'start', // 'start'
+            },
+            costs: {
+                baseCost: '5',
+                blockCost: '10',
+                displayCost: '15',
+            },
+
+            extraOptions: {
+                // persons
+                minPersons: '1',
+                maxPersons: '5',
+                person: {
+                    typeName: 'children',
+                    baseCost: '5',
+                    blockCost: '5',
+                    description: '1-5 years old',
+                    min: '1',
+                    max: '5',
+                },
+
+                // resource
+                label: 'test resource label',
+                resourcesAllocation: 'customer', // 'customer', 'automatic'
+                addResourceId: '427', //todo: need actual resource id
+                resource: {
+                    baseCost: '5',
+                    blockCost: '5',
+                },
+            },
+
             storeName: `${VENDOR}store`,
             saveSuccessMessage: 'Success! The product has been saved successfully.',
 

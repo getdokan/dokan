@@ -30,14 +30,14 @@ export class BookingPage extends VendorPage {
         await this.clearAndType(bookingProductsAdmin.product.productName, product.productName());
         await this.selectByValue(bookingProductsAdmin.product.productType, product.productType);
         await this.click(bookingProductsAdmin.product.general);
-        await this.selectByValue(bookingProductsAdmin.product.bookingDurationType, product.bookingDurationType);
-        await this.clearAndType(bookingProductsAdmin.product.bookingDurationMax, product.bookingDurationMax);
+        await this.selectByValue(bookingProductsAdmin.product.bookingDurationType, product.duration.bookingDurationType);
+        await this.clearAndType(bookingProductsAdmin.product.bookingDurationMax, product.duration.bookingDurationMax);
         await this.selectByValue(bookingProductsAdmin.product.calendarDisplayMode, product.calendarDisplayMode);
 
         // Costs
         await this.click(bookingProductsAdmin.product.bookingCosts);
-        await this.clearAndType(bookingProductsAdmin.product.baseCost, product.baseCost);
-        await this.clearAndType(bookingProductsAdmin.product.blockCost, product.blockCost);
+        await this.clearAndType(bookingProductsAdmin.product.baseCost, product.costs.baseCost);
+        await this.clearAndType(bookingProductsAdmin.product.blockCost, product.costs.blockCost);
 
         // Category
         await this.click(bookingProductsAdmin.product.category(product.category));
@@ -154,23 +154,23 @@ export class BookingPage extends VendorPage {
     async updateBookingProductFields(product: product['booking']) {
         await this.clearAndType(bookingProductsVendor.booking.productName, product.name);
         // await this.addProductCategory(product.category);
-        // general booking options
-        await this.selectByValue(bookingProductsVendor.booking.bookingDurationType, product.bookingDurationType);
-        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMin, product.bookingDurationMin);
-        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMax, product.bookingDurationMax);
-        await this.selectByValue(bookingProductsVendor.booking.bookingDurationUnit, product.bookingDurationUnit);
+        // booking duration options
+        await this.selectByValue(bookingProductsVendor.booking.bookingDurationType, product.duration.bookingDurationType);
+        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMin, product.duration.bookingDurationMin);
+        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMax, product.duration.bookingDurationMax);
+        await this.selectByValue(bookingProductsVendor.booking.bookingDurationUnit, product.duration.bookingDurationUnit);
         // calendar display mode
         await this.selectByValue(bookingProductsVendor.booking.calendarDisplayMode, product.calendarDisplayMode);
         await this.check(bookingProductsVendor.booking.enableCalendarRangePicker);
         // availability
-        await this.clearAndType(bookingProductsVendor.booking.maxBookingsPerBlock, product.maxBookingsPerBlock);
-        await this.clearAndType(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDate, product.minimumBookingWindowIntoTheFutureDate);
-        await this.selectByValue(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDateUnit, product.minimumBookingWindowIntoTheFutureDateUnit);
-        await this.clearAndType(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDate, product.maximumBookingWindowIntoTheFutureDate);
-        await this.selectByValue(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDateUnit, product.maximumBookingWindowIntoTheFutureDateUnit);
+        await this.clearAndType(bookingProductsVendor.booking.maxBookingsPerBlock, product.availability.maxBookingsPerBlock);
+        await this.clearAndType(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDate, product.availability.minimumBookingWindowIntoTheFutureDate);
+        await this.selectByValue(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDateUnit, product.availability.minimumBookingWindowIntoTheFutureDateUnit);
+        await this.clearAndType(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDate, product.availability.maximumBookingWindowIntoTheFutureDate);
+        await this.selectByValue(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDateUnit, product.availability.maximumBookingWindowIntoTheFutureDateUnit);
         // costs
-        await this.clearAndType(bookingProductsVendor.booking.baseCost, product.baseCost);
-        await this.clearAndType(bookingProductsVendor.booking.blockCost, product.blockCost);
+        await this.clearAndType(bookingProductsVendor.booking.baseCost, product.costs.baseCost);
+        await this.clearAndType(bookingProductsVendor.booking.blockCost, product.costs.blockCost);
         // todo: add more fields
     }
 
@@ -693,6 +693,163 @@ export class BookingPage extends VendorPage {
         await this.saveProduct();
         await this.toHaveSelectedValue(productsVendor.tax.status, tax.status);
         if (hasClass) await this.toHaveSelectedValue(productsVendor.tax.class, tax.class);
+    }
+
+    // add product duration
+    async addProductDuration(productName: string, duration: product['booking']['duration']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.selectByValue(bookingProductsVendor.booking.bookingDurationType, duration.bookingDurationType);
+        await this.clearAndType(bookingProductsVendor.booking.bookingDuration, duration.bookingDuration);
+        await this.selectByValue(bookingProductsVendor.booking.bookingDurationUnit, duration.bookingDurationUnit);
+        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMin, duration.bookingDurationMin);
+        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMax, duration.bookingDurationMax);
+
+        await this.saveProduct();
+
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.bookingDurationType, duration.bookingDurationType);
+        await this.toHaveValue(bookingProductsVendor.booking.bookingDuration, duration.bookingDuration);
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.bookingDurationUnit, duration.bookingDurationUnit);
+        await this.toHaveValue(bookingProductsVendor.booking.bookingDurationMin, duration.bookingDurationMin);
+        await this.toHaveValue(bookingProductsVendor.booking.bookingDurationMax, duration.bookingDurationMax);
+    }
+
+    // add product basic options
+    async addProductBasicOptions(productName: string, product: product['booking']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.selectByValue(bookingProductsVendor.booking.calendarDisplayMode, product.calendarDisplayMode);
+        await this.check(bookingProductsVendor.booking.enableCalendarRangePicker);
+        await this.check(bookingProductsVendor.booking.requiresConfirmation);
+        await this.check(bookingProductsVendor.booking.canBeCancelled);
+
+        await this.saveProduct();
+
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.calendarDisplayMode, product.calendarDisplayMode);
+        await this.toBeChecked(bookingProductsVendor.booking.enableCalendarRangePicker);
+        await this.toBeChecked(bookingProductsVendor.booking.requiresConfirmation);
+        await this.toBeChecked(bookingProductsVendor.booking.canBeCancelled);
+    }
+
+    // add product availability options
+    async addProductAvailability(productName: string, availability: product['booking']['availability']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.clearAndType(bookingProductsVendor.booking.maxBookingsPerBlock, availability.maxBookingsPerBlock);
+        await this.clearAndType(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDate, availability.minimumBookingWindowIntoTheFutureDate);
+        await this.selectByValue(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDateUnit, availability.minimumBookingWindowIntoTheFutureDateUnit);
+        await this.clearAndType(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDate, availability.maximumBookingWindowIntoTheFutureDate);
+        await this.selectByValue(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDateUnit, availability.maximumBookingWindowIntoTheFutureDateUnit);
+        await this.clearAndType(bookingProductsVendor.booking.requireABufferPeriodOfMonthsBetweenBookings, availability.requireABufferPeriodOfMonthsBetweenBookings);
+        await this.check(bookingProductsVendor.booking.adjacentBuffering);
+        await this.selectByValue(bookingProductsVendor.booking.allDatesAvailability, availability.allDatesAvailability);
+        await this.selectByValue(bookingProductsVendor.booking.checkRulesAgainst, availability.checkRulesAgainst);
+
+        await this.saveProduct();
+
+        await this.toHaveValue(bookingProductsVendor.booking.maxBookingsPerBlock, availability.maxBookingsPerBlock);
+        await this.toHaveValue(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDate, availability.minimumBookingWindowIntoTheFutureDate);
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDateUnit, availability.minimumBookingWindowIntoTheFutureDateUnit);
+        await this.toHaveValue(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDate, availability.maximumBookingWindowIntoTheFutureDate);
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDateUnit, availability.maximumBookingWindowIntoTheFutureDateUnit);
+        await this.toHaveValue(bookingProductsVendor.booking.requireABufferPeriodOfMonthsBetweenBookings, availability.requireABufferPeriodOfMonthsBetweenBookings);
+        await this.toBeChecked(bookingProductsVendor.booking.adjacentBuffering);
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.allDatesAvailability, availability.allDatesAvailability);
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.checkRulesAgainst, availability.checkRulesAgainst);
+    }
+
+    // add product costs
+    async addProductCosts(productName: string, costs: product['booking']['costs']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.clearAndType(bookingProductsVendor.booking.baseCost, costs.baseCost);
+        await this.clearAndType(bookingProductsVendor.booking.blockCost, costs.blockCost);
+        await this.clearAndType(bookingProductsVendor.booking.displayCost, costs.displayCost);
+        await this.saveProduct();
+        await this.toHaveValue(bookingProductsVendor.booking.baseCost, costs.baseCost);
+        await this.toHaveValue(bookingProductsVendor.booking.blockCost, costs.blockCost);
+        await this.toHaveValue(bookingProductsVendor.booking.displayCost, costs.displayCost);
+    }
+
+    // add product extra options
+
+    // persons
+    async addProductPersons(productName: string, extraOptions: product['booking']['extraOptions']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.focus(bookingProductsVendor.booking.hasPersons);
+        await this.check(bookingProductsVendor.booking.hasPersons);
+        await this.clearAndType(bookingProductsVendor.booking.minPersons, extraOptions.minPersons);
+        await this.clearAndType(bookingProductsVendor.booking.maxPersons, extraOptions.maxPersons);
+        await this.check(bookingProductsVendor.booking.multiplyAllCostsByPersonCount);
+        await this.check(bookingProductsVendor.booking.countPersonsAsBookings);
+        await this.saveProduct();
+        await this.toBeChecked(bookingProductsVendor.booking.hasPersons);
+        await this.toHaveValue(bookingProductsVendor.booking.minPersons, extraOptions.minPersons);
+        await this.toHaveValue(bookingProductsVendor.booking.maxPersons, extraOptions.maxPersons);
+        await this.toBeChecked(bookingProductsVendor.booking.multiplyAllCostsByPersonCount);
+        await this.toBeChecked(bookingProductsVendor.booking.countPersonsAsBookings);
+    }
+
+    // add person type
+    async addProductPersonType(productName: string, extraOptions: product['booking']['extraOptions']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.focus(bookingProductsVendor.booking.hasPersons);
+        await this.check(bookingProductsVendor.booking.hasPersons);
+        await this.check(bookingProductsVendor.booking.enablePersonTypes);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, bookingProductsVendor.booking.addPersonType);
+        await this.clearAndType(bookingProductsVendor.booking.person.typeName, extraOptions.person.typeName);
+        await this.clearAndType(bookingProductsVendor.booking.person.baseCost, extraOptions.person.baseCost);
+        await this.clearAndType(bookingProductsVendor.booking.person.blockCost, extraOptions.person.blockCost);
+        await this.clearAndType(bookingProductsVendor.booking.person.description, extraOptions.person.description);
+        await this.clearAndType(bookingProductsVendor.booking.person.min, extraOptions.person.min);
+        await this.clearAndType(bookingProductsVendor.booking.person.max, extraOptions.person.max);
+
+        await this.saveProduct();
+
+        await this.toBeChecked(bookingProductsVendor.booking.hasPersons);
+        await this.toBeChecked(bookingProductsVendor.booking.enablePersonTypes);
+        await this.toHaveValue(bookingProductsVendor.booking.person.typeName, extraOptions.person.typeName);
+        await this.toHaveValue(bookingProductsVendor.booking.person.baseCost, extraOptions.person.baseCost);
+        await this.toHaveValue(bookingProductsVendor.booking.person.blockCost, extraOptions.person.blockCost);
+        await this.toHaveValue(bookingProductsVendor.booking.person.description, extraOptions.person.description);
+        await this.toHaveValue(bookingProductsVendor.booking.person.min, extraOptions.person.min);
+        await this.toHaveValue(bookingProductsVendor.booking.person.max, extraOptions.person.max);
+    }
+
+    // remove product person
+    async removeProductPersonType(productName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.focus(bookingProductsVendor.booking.remove);
+        await this.click(bookingProductsVendor.booking.remove);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, bookingProductsVendor.booking.confirmRemove);
+        await this.notToBeVisible(bookingProductsVendor.booking.remove); //todo: replace with person id
+    }
+
+    // resources
+
+    // add product resource
+    async addProductResources(productName: string, extraOptions: product['booking']['extraOptions']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.focus(bookingProductsVendor.booking.hasResources);
+        await this.check(bookingProductsVendor.booking.hasResources);
+        await this.clearAndType(bookingProductsVendor.booking.label, extraOptions.label);
+        await this.selectByValue(bookingProductsVendor.booking.resourcesAllocation, extraOptions.resourcesAllocation);
+        await this.selectByValue(bookingProductsVendor.booking.addResourceId, extraOptions.addResourceId);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, bookingProductsVendor.booking.addResource);
+        await this.clearAndType(bookingProductsVendor.booking.resourceBaseCost, extraOptions.resource.baseCost);
+        await this.clearAndType(bookingProductsVendor.booking.resourceBlockCost, extraOptions.resource.blockCost);
+
+        await this.saveProduct();
+
+        await this.toBeChecked(bookingProductsVendor.booking.hasResources);
+        await this.toHaveValue(bookingProductsVendor.booking.label, extraOptions.label);
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.resourcesAllocation, extraOptions.resourcesAllocation);
+        await this.toHaveValue(bookingProductsVendor.booking.resourceBaseCost, extraOptions.resource.baseCost);
+        await this.toHaveValue(bookingProductsVendor.booking.resourceBlockCost, extraOptions.resource.blockCost);
+    }
+
+    // remove product resource
+    async removeProductResource(productName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.focus(bookingProductsVendor.booking.removeResource);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, bookingProductsVendor.booking.removeResource);
+        await this.notToBeVisible(bookingProductsVendor.booking.removeResource); //todo: replace with resource id
     }
 
     // add product linked products

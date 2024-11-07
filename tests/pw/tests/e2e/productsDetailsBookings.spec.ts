@@ -24,28 +24,12 @@ test.describe('Booking Product details functionality test', () => {
         vendor = new BookingPage(vPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        // // product with only required fields
-        // [, , productName1] = await apiUtils.createProduct(payloads.createProductRequiredFields(), payloads.vendorAuth);
-        // // product with all fields
-        // // const [, , mediaUrl] = await apiUtils.uploadMedia(data.image.avatar, payloads.mimeTypes.png, payloads.vendorAuth);
-        // // [productResponseBody, productId, productName] = await apiUtils.createProductWc({ ...payloads.createProductAllFields(), images: [{ src: mediaUrl }, { src: mediaUrl }] }, payloads.vendorAuth); // todo: mediaUrl is not working on git action
-        // [productResponseBody, productId, productName] = await apiUtils.createProductWc(payloads.createProductAllFields(), payloads.vendorAuth);
-        // await apiUtils.updateProduct(
-        //     productId,
-        //     {
-        //         meta_data: [
-        //             { key: '_product_addons', value: [payloads.createProductAddon()] },
-        //             { key: '_product_addons_exclude_global', value: '1' },
-        //         ],
-        //     },
-        //     payloads.vendorAuth,
-        // );
 
         // product with only required fields
         [, productId1, productName1] = await apiUtils.createBookableProduct(payloads.createBookableProductRequiredFields(), payloads.vendorAuth);
 
         // product with all fields
-        [, productId, productName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
+        [, productId, productName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth); //todo: need to add all fields
     });
 
     test.afterAll(async () => {
@@ -245,6 +229,85 @@ test.describe('Booking Product details functionality test', () => {
 
     test('vendor can add booking product tax (with tax class)', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addProductTax(productId1, data.product.productInfo.tax, true);
+    });
+
+    // booking duration
+
+    test('vendor can add booking product duration', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductDuration(productId1, data.product.booking.duration);
+    });
+
+    test('vendor can update booking product duration', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductDuration(productId1, { bookingDurationType: 'customer', bookingDuration: '3', bookingDurationUnit: 'month', bookingDurationMin: '2', bookingDurationMax: '30' });
+    });
+
+    test('vendor can add booking product basic options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductBasicOptions(productId1, data.product.booking);
+    });
+
+    // availability
+
+    test('vendor can add booking product availability', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductAvailability(productId1, data.product.booking.availability);
+    });
+
+    test('vendor can update booking product availability', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductAvailability(productId1, {
+            maxBookingsPerBlock: '10',
+            minimumBookingWindowIntoTheFutureDate: '1',
+            minimumBookingWindowIntoTheFutureDateUnit: 'week',
+            maximumBookingWindowIntoTheFutureDate: '10',
+            maximumBookingWindowIntoTheFutureDateUnit: 'week',
+            requireABufferPeriodOfMonthsBetweenBookings: '2',
+            allDatesAvailability: 'non-available',
+            checkRulesAgainst: 'start',
+        });
+    });
+
+    // costs
+
+    test('vendor can add booking product costs', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductCosts(productId1, data.product.booking.costs);
+    });
+
+    test('vendor can update booking product costs', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductCosts(productId, { baseCost: '10', blockCost: '20', displayCost: '30' });
+    });
+
+    test('vendor can remove booking product costs', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductCosts(productId, { baseCost: '0', blockCost: '0', displayCost: '0' });
+    });
+
+    // extra options
+
+    test('vendor can add booking product extra options (persons)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductPersons(productId1, data.product.booking.extraOptions);
+    });
+
+    test('vendor can add booking product extra options (person type)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductPersonType(productId, data.product.booking.extraOptions);
+    });
+
+    test('vendor can update booking product extra options (person type)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductPersonType(productId, data.product.booking.extraOptions);
+    });
+
+    test('vendor can remove booking product extra options (person type)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductPersons(productId, data.product.booking.extraOptions);
+        await vendor.removeProductPersonType(productId);
+    });
+
+    test('vendor can add booking product extra options (resource)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductResources(productId1, data.product.booking.extraOptions);
+    });
+
+    test('vendor can update booking product extra options (resource)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductResources(productId, data.product.booking.extraOptions);
+    });
+
+    test('vendor can remove booking product extra options (resource)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductResources(productId, data.product.booking.extraOptions);
+        await vendor.removeProductResource(productId);
     });
 
     // attribute
