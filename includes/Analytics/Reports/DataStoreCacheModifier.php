@@ -8,7 +8,7 @@ use WeDevs\Dokan\Contracts\Hookable;
 /**
  * DataStoreCacheModifier class
  *
- * @since DOKAN_LITE_SINCE
+ * @since DOKAN_SINCE
  */
 class DataStoreCacheModifier implements Hookable {
 

@@ -37,7 +37,13 @@ class VendorDashboardManager implements Hookable {
         return $path !== '/analytics/products' ? $render : true;
     }
 
-	// This is dummy function for testing.
+	/**
+     * Add a dummy content to the dashboard.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
 	public function add_dashboard_content() {
 		echo '<div id="dokan-analytics-app"></div>';
 	}
