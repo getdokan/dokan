@@ -132,9 +132,10 @@ export const Controller = ({ ...props }) => {
       }
 
       if (prevProps.match.url !== props.match.url) {
-        doAction( 'dokan_analytics_route_handler', props.match.url );
         window.document.documentElement.scrollTop = 0;
       }
+
+      doAction( 'dokan_analytics_route_handler', props.match.url );
     }
   }, [props, prevProps]);
 
