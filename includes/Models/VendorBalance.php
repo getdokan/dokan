@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Models;
 
 use WeDevs\Dokan\Models\DataStore\VendorBalanceStore;
+use WeDevs\Dokan\Cache;
 
 class VendorBalance extends BaseModel {
 	const TRN_TYPE_DOKAN_ORDERS = 'dokan_orders';
@@ -96,7 +97,7 @@ class VendorBalance extends BaseModel {
      * @return void
      */
     public function set_vendor_id( int $id ) {
-		return $this->set_prop( 'vendor_id', $id );
+		$this->set_prop( 'vendor_id', $id );
 	}
 
 	/**
@@ -116,7 +117,7 @@ class VendorBalance extends BaseModel {
      * @return void
      */
     public function set_trn_id( int $id ) {
-		return $this->set_prop( 'trn_id', $id );
+		$this->set_prop( 'trn_id', $id );
 	}
 
     /**
@@ -138,7 +139,7 @@ class VendorBalance extends BaseModel {
      * @return void
      */
     public function set_trn_type( string $type ) {
-		return $this->set_prop( 'trn_type', $type );
+		$this->set_prop( 'trn_type', $type );
 	}
 
     /**
@@ -158,7 +159,7 @@ class VendorBalance extends BaseModel {
 	 * @return void
 	 */
     public function set_particulars( string $note ) {
-		return $this->set_prop( 'perticulars', $note );
+		$this->set_prop( 'perticulars', $note );
 	}
 
     /**
@@ -168,7 +169,7 @@ class VendorBalance extends BaseModel {
 	 * @return void
 	 */
     protected function set_perticulars( string $note ) {
-		return $this->set_particulars( $note );
+		$this->set_particulars( $note );
 	}
 
     /**
@@ -188,7 +189,7 @@ class VendorBalance extends BaseModel {
 	 * @return void
 	 */
     public function set_debit( float $amount ) {
-		return $this->set_prop( 'debit', $amount );
+		$this->set_prop( 'debit', $amount );
 	}
 
     /**
@@ -208,7 +209,7 @@ class VendorBalance extends BaseModel {
 	 * @return void
 	 */
     public function set_credit( float $amount ) {
-		return $this->set_prop( 'credit', $amount );
+		$this->set_prop( 'credit', $amount );
 	}
 
 	/**
@@ -228,7 +229,7 @@ class VendorBalance extends BaseModel {
 	 * @return void
 	 */
 	public function set_status( string $status ) {
-		return $this->set_prop( 'status', $status );
+		$this->set_prop( 'status', $status );
 	}
 
 	/**
@@ -248,7 +249,7 @@ class VendorBalance extends BaseModel {
 	 * @return void
 	 */
     public function set_trn_date( string $date ) {
-		return $this->set_date_prop( 'trn_date', $date );
+		$this->set_date_prop( 'trn_date', $date );
 	}
 
     /**
@@ -268,6 +269,28 @@ class VendorBalance extends BaseModel {
 	 * @return void
 	 */
     public function set_balance_date( string $date ) {
-		return $this->set_date_prop( 'balance_date', $date );
+		$this->set_date_prop( 'balance_date', $date );
+	}
+
+	/**
+	 * Get the total balance of a vendor at a given date.
+	 *
+	 * @param int    $vendor_id The vendor id.
+	 * @param string $on_date    Date in Y-m-d format. If not provided, current date is used.
+	 *
+	 * @return float The total balance of the vendor at the given date.
+	 */
+	public static function get_total_balance_by_vendor( $vendor_id, $on_date = null ) {
+		$on_date     = $on_date && strtotime( $on_date ) ? dokan_current_datetime()->modify( $on_date ) : dokan_current_datetime();
+        $cache_group = "seller_order_data_{$vendor_id}";
+        $cache_key   = "seller_earnings_{$vendor_id}_{$on_date->format('Y_m_d')}";
+        $earning     = Cache::get( $cache_key, $cache_group );
+
+        if ( false === $earning ) {
+			$earning = ( new static() )->get_data_store()->get_total_balance( $vendor_id, $on_date );
+            Cache::set( $cache_key, $earning, $cache_group );
+        }
+
+		return $earning;
 	}
 }

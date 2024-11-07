@@ -2,9 +2,10 @@
 
 namespace WeDevs\Dokan\Test\Models;
 
+use Mockery;
 use WeDevs\Dokan\Models\VendorBalance;
 use WeDevs\Dokan\Test\DokanTestCase;
-
+use WeDevs\DokanPro\Modules\DeliveryTime\StorePickup\Vendor;
 
 /**
  * @group data-store
@@ -110,13 +111,72 @@ class VendorBalanceModelTest extends DokanTestCase {
 
     public function test_dokan_sync_insert_order_function() {
         $order_id = $this->create_single_vendor_order( $this->seller_id1 );
+        // Clear data that were created by create_single_vendor_order
+        dokan()->order->delete_seller_order( $order_id, $this->seller_id1 );
 
-        $this->assertDatabaseHas(
+        $this->assertDatabaseMissing(
             'dokan_vendor_balance', [
+                'trn_id' => $order_id,
+            ]
+        );
+
+        $order_service = Mockery::mock( '\WeDevs\Dokan\Order\Manager[is_order_already_synced]' );
+        $order_service->shouldReceive( 'is_order_already_synced' )->andReturn( false );
+        dokan()->get_container()->extend( 'order' )->setConcrete( $order_service );
+        // Resync the order.
+        dokan_sync_insert_order( $order_id );
+
+        // Check if balance is created for the order
+        $this->assertDatabaseCount(
+            'dokan_vendor_balance', 1, [
                 'trn_id' => $order_id,
                 'trn_type' => VendorBalance::TRN_TYPE_DOKAN_ORDERS,
                 'vendor_id' => $this->seller_id1,
             ]
         );
+    }
+
+    public function test_get_total_balance_by_vendor_method() {
+
+        $trn_id = 1;
+
+        $vendor_balance = new VendorBalance();
+        $vendor_balance->set_particulars( 'test' );
+        $vendor_balance->set_debit( 100 );
+        $vendor_balance->set_status( 'wc-completed' );
+        $vendor_balance->set_trn_id( $trn_id++ );
+        $vendor_balance->set_trn_type( VendorBalance::TRN_TYPE_DOKAN_ORDERS );
+        $vendor_balance->set_vendor_id( $this->seller_id1 );
+        $vendor_balance->set_trn_date( '2020-01-01' );
+        $vendor_balance->set_balance_date( '2020-01-01' );
+        $vendor_balance->save();
+
+        $vendor_balance->set_id( 0 );
+        $vendor_balance->set_debit( 0 );
+
+        $vendor_balance_2 = clone $vendor_balance;
+        $vendor_balance_2->set_trn_id( $trn_id++ );
+        $vendor_balance_2->set_debit( 60 );
+        $vendor_balance_2->save();
+
+        $vendor_balance_refund = clone $vendor_balance;
+        $vendor_balance_refund->set_trn_id( $trn_id++ );
+        $vendor_balance_refund->set_trn_type( VendorBalance::TRN_TYPE_DOKAN_REFUND );
+        $vendor_balance_refund->set_status( 'approved' );
+        $vendor_balance_refund->set_credit( 20 );
+        $vendor_balance_refund->save();
+
+        $vendor_balance_withdraw = clone $vendor_balance;
+        $vendor_balance_withdraw->set_trn_id( $trn_id++ );
+        $vendor_balance_withdraw->set_trn_type( VendorBalance::TRN_TYPE_DOKAN_WITHDRAW );
+        $vendor_balance_withdraw->set_status( 'approved' );
+        $vendor_balance_withdraw->set_credit( 30 );
+        $vendor_balance_withdraw->save();
+
+        $total_balance = VendorBalance::get_total_balance_by_vendor(
+            $this->seller_id1
+        );
+        // 100 + 60 - 20 - 30 = 110
+        $this->assertGreaterThan( 110, $total_balance );
     }
 }
