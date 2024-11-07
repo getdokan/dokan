@@ -7,7 +7,7 @@ use WeDevs\Dokan\Analytics\Reports\Products\QueryFilter as ProductsQueryFilter;
 /**
  * Filters and modifies WooCommerce analytics queries for Dokan Products Stats.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class QueryFilter extends ProductsQueryFilter {
 	protected $context = 'products_stats';
