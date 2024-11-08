@@ -4,7 +4,9 @@ namespace WeDevs\Dokan;
 
 use WC_Order;
 use WC_Product;
+use WeDevs\Dokan\Models\VendorBalance;
 use WeDevs\Dokan\ProductCategory\Helper;
+use WeDevs\DokanPro\Modules\DeliveryTime\StorePickup\Vendor;
 use WP_Error;
 use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayPalGateway;
 
@@ -97,15 +99,10 @@ class Commission {
                 [ '%d' ]
             );
 
-            $wpdb->update(
-                $wpdb->dokan_vendor_balance,
-                [ 'debit' => (float) $net_amount ],
-                [
-                    'trn_id'   => $tmp_order->get_id(),
-                    'trn_type' => 'dokan_orders',
-                ],
-                [ '%f' ],
-                [ '%d', '%s' ]
+            VendorBalance::update_by_transaction(
+                $tmp_order->get_id(),
+                'dokan_orders',
+                [ 'debit' => (float) $net_amount ]
             );
 
             $tmp_order->update_meta_data( 'dokan_gateway_fee', $gateway_fee );

@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Vendor;
 use Automattic\WooCommerce\Utilities\NumberUtil;
 use WC_Order;
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Models\VendorBalance;
 use WeDevs\Dokan\Product\ProductCache;
 use WP_Error;
 use WP_Query;
@@ -786,40 +787,7 @@ class Vendor {
      * @return float|string float if formatted is false, string otherwise
      */
     public function get_earnings( $formatted = true, $on_date = '' ) {
-        global $wpdb;
-
-        $on_date     = $on_date && strtotime( $on_date ) ? dokan_current_datetime()->modify( $on_date ) : dokan_current_datetime();
-        $cache_group = "seller_order_data_{$this->get_id()}";
-        $cache_key   = "seller_earnings_{$this->get_id()}_{$on_date->format('Y_m_d')}";
-        $earning     = Cache::get( $cache_key, $cache_group );
-        $on_date     = $on_date->format( 'Y-m-d H:i:s' );
-
-        if ( false === $earning ) {
-            $status = dokan_withdraw_get_active_order_status_in_comma();
-            $debit_balance = $wpdb->get_var(
-                $wpdb->prepare(
-                    "SELECT SUM(debit) AS earnings
-                    FROM {$wpdb->prefix}dokan_vendor_balance
-                    WHERE
-                        vendor_id = %d AND DATE(balance_date) <= %s AND status IN ($status) AND trn_type = 'dokan_orders'",
-                    $this->id, $on_date
-                )
-            );
-
-            $credit_balance = $wpdb->get_var(
-                $wpdb->prepare(
-                    "SELECT SUM(credit) AS earnings
-                    FROM {$wpdb->prefix}dokan_vendor_balance
-                    WHERE
-                        vendor_id = %d AND DATE(balance_date) <= %s AND trn_type = %s AND status = %s",
-                    $this->id, $on_date, 'dokan_refund', 'approved'
-                )
-            );
-
-            $earning = floatval( $debit_balance - $credit_balance );
-
-            Cache::set( $cache_key, $earning, $cache_group );
-        }
+        $earning = VendorBalance::get_total_balance_by_vendor( $this->id, $on_date );
 
         if ( $formatted ) {
             return apply_filters( 'dokan_get_formatted_seller_earnings', wc_price( $earning ), $this->id );
