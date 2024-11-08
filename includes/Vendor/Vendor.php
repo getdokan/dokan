@@ -87,14 +87,12 @@ class Vendor {
      */
     public function __construct( $vendor = null ) {
         if ( is_numeric( $vendor ) ) {
-
-            $the_user = get_user_by( 'id', $vendor );;
+            $the_user = get_user_by( 'id', $vendor );
 
             if ( $the_user ) {
                 $this->id   = $the_user->ID;
                 $this->data = $the_user;
             }
-
         } elseif ( is_a( $vendor, 'WP_User' ) ) {
             $this->id   = $vendor->ID;
             $this->data = $vendor;
@@ -117,13 +115,13 @@ class Vendor {
      */
     public function __call( $name, $param ) {
         if ( strpos( $name, 'get_' ) === 0 ) {
-            $function_name  = str_replace('get_', '', $name );
+            $function_name = str_replace( 'get_', '', $name );
 
             if ( empty( $this->shop_data ) ) {
                 $this->popluate_store_data();
             }
 
-            return ! empty( $this->shop_data[$function_name] ) ? $this->shop_data[$function_name] : null;
+            return ! empty( $this->shop_data[ $function_name ] ) ? $this->shop_data[ $function_name ] : null;
         }
     }
 
@@ -214,7 +212,7 @@ class Vendor {
      * @return boolean
      */
     public function is_featured() {
-        return 'yes' == get_user_meta( $this->id, 'dokan_feature_seller', true );
+        return 'yes' === get_user_meta( $this->id, 'dokan_feature_seller', true );
     }
 
     /**
@@ -226,7 +224,10 @@ class Vendor {
         $defaults = array(
             'store_name'              => '',
             'social'                  => array(),
-            'payment'                 => array( 'paypal' => array( 'email' ), 'bank' => array() ),
+            'payment'                 => array(
+				'paypal' => array( 'email' ),
+				'bank' => array(),
+			),
             'phone'                   => '',
             'show_email'              => 'no',
             'address'                 => array(),
@@ -240,7 +241,7 @@ class Vendor {
             'store_seo'               => array(),
             'dokan_store_time_enabled' => 'no',
             'dokan_store_open_notice'  => '',
-            'dokan_store_close_notice' => ''
+            'dokan_store_close_notice' => '',
         );
 
         if ( ! $this->id ) {
@@ -251,7 +252,7 @@ class Vendor {
         $shop_info = get_user_meta( $this->id, 'dokan_profile_settings', true );
         $shop_info = is_array( $shop_info ) ? $shop_info : array();
         $shop_info = wp_parse_args( $shop_info, $defaults );
-        $shop_info['address'] = empty( $shop_info['address'] ) ? []: $shop_info['address']; // Empty vendor address save issue fix
+        $shop_info['address'] = empty( $shop_info['address'] ) ? [] : $shop_info['address']; // Empty vendor address save issue fix
 
         $this->shop_data = apply_filters( 'dokan_vendor_shop_data', $shop_info, $this );
     }
@@ -426,7 +427,10 @@ class Vendor {
      * @return array
      */
     public function get_location() {
-        $default  = array( 'lat' => 0, 'long' => 0 );
+        $default  = array(
+			'lat' => 0,
+			'long' => 0,
+		);
         $location = $this->get_info_part( 'location' );
 
         if ( $location ) {
@@ -608,7 +612,7 @@ class Vendor {
      */
     public function get_store_categories( $best_selling = false ) {
         $transient_group = "seller_product_data_{$this->get_id()}";
-        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'get_store_categories_' . wpml_get_current_language() . '_' . $this->get_id()  : 'get_store_categories_' . $this->get_id();
+        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'get_store_categories_' . wpml_get_current_language() . '_' . $this->get_id() : 'get_store_categories_' . $this->get_id();
         if ( $best_selling ) {
             $transient_key = function_exists( 'wpml_get_current_language' ) ? 'get_best_selling_categories_' . wpml_get_current_language() . '_' . $this->get_id() : 'get_best_selling_categories_' . $this->get_id();
         }
@@ -635,7 +639,6 @@ class Vendor {
                             $category_commision      = get_term_meta( $term->term_id, 'per_category_admin_commission', true );
                             $category_icon           = get_term_meta( $term->term_id, 'dokan_cat_icon', true );
                             $category_icon_color     = get_term_meta( $term->term_id, 'dokan_cat_icon_color', true );
-
 
                             // get category image url
                             if ( $thumbnail_id ) {
@@ -684,9 +687,9 @@ class Vendor {
      *
      * @return array|mixed
      */
-    public function get_vendor_used_terms_list( $vendor_id, $taxonomy ){
+    public function get_vendor_used_terms_list( $vendor_id, $taxonomy ) {
         $transient_group = "seller_taxonomy_widget_data_{$this->get_id()}";
-        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'product_taxonomy_'. $taxonomy .'_' . wpml_get_current_language() : 'product_taxonomy_'. $taxonomy;
+        $transient_key = function_exists( 'wpml_get_current_language' ) ? 'product_taxonomy_' . $taxonomy . '_' . wpml_get_current_language() : 'product_taxonomy_' . $taxonomy;
 
         // get the author's posts
         $products = $this->get_published_products();
@@ -787,7 +790,7 @@ class Vendor {
      * @return float|string float if formatted is false, string otherwise
      */
     public function get_earnings( $formatted = true, $on_date = '' ) {
-        $earning = VendorBalance::get_total_balance_by_vendor( $this->id, $on_date );
+        $earning = VendorBalance::get_total_earning_by_vendor( $this->id, $on_date );
 
         if ( $formatted ) {
             return apply_filters( 'dokan_get_formatted_seller_earnings', wc_price( $earning ), $this->id );
@@ -817,7 +820,6 @@ class Vendor {
         $cache_key     = "seller_balance_{$seller_id}_{$on_date->format( 'Y_m_d' )}";
         $earning       = Cache::get( $cache_key, $cache_group );
         $on_date       = $on_date->format( 'Y-m-d H:i:s' );
-
 
         if ( false === $earning ) {
             $status = dokan_withdraw_get_active_order_status_in_comma();
@@ -863,18 +865,23 @@ class Vendor {
     public function get_rating() {
         global $wpdb;
 
-        $result = $wpdb->get_row( $wpdb->prepare(
-            "SELECT AVG(cm.meta_value) as average, COUNT(wc.comment_ID) as count FROM $wpdb->posts p
+        $result = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT AVG(cm.meta_value) as average, COUNT(wc.comment_ID) as count FROM $wpdb->posts p
             INNER JOIN $wpdb->comments wc ON p.ID = wc.comment_post_ID
             LEFT JOIN $wpdb->commentmeta cm ON cm.comment_id = wc.comment_ID
             WHERE p.post_author = %d AND p.post_type = 'product' AND p.post_status = 'publish'
             AND ( cm.meta_key = 'rating' OR cm.meta_key IS NULL) AND wc.comment_approved = 1
-            ORDER BY wc.comment_post_ID", $this->id ) );
+            ORDER BY wc.comment_post_ID", $this->id
+            )
+        );
 
-        $rating_value = apply_filters( 'dokan_seller_rating_value', array(
-            'rating' => number_format( (float) $result->average, 2 ),
-            'count'  => (int) $result->count
-        ), $this->id );
+        $rating_value = apply_filters(
+            'dokan_seller_rating_value', array(
+				'rating' => number_format( (float) $result->average, 2 ),
+				'count'  => (int) $result->count,
+            ), $this->id
+        );
 
         return $rating_value;
     }
@@ -892,9 +899,9 @@ class Vendor {
         if ( ! $rating['count'] ) {
             $html = __( 'No ratings found yet!', 'dokan-lite' );
         } else {
-            $long_text   = _n( '%s rating from %d review', '%s rating from %d reviews', $rating['count'], 'dokan-lite' );
-            $text        = sprintf( __( 'Rated %s out of %d', 'dokan-lite' ), $rating['rating'], number_format( 5 ) );
-            $width       = ( $rating['rating']/5 ) * 100;
+            $long_text   = _n( '%1$s rating from %2$d review', '%1$s rating from %2$d reviews', $rating['count'], 'dokan-lite' );
+            $text        = sprintf( __( 'Rated %1$s out of %2$d', 'dokan-lite' ), $rating['rating'], number_format( 5 ) );
+            $width       = ( $rating['rating'] / 5 ) * 100;
             $review_text = sprintf( $long_text, $rating['rating'], $rating['count'] );
 
             if ( function_exists( 'dokan_get_review_url' ) ) {
@@ -1426,12 +1433,12 @@ class Vendor {
             $this->popluate_store_data();
         }
 
-        if ( ! isset( $this->shop_data[ 'payment' ][ $paypal ][ $prop ] ) ) {
-            $this->shop_data[ 'payment' ][ $paypal ][ $prop ] = null;
+        if ( ! isset( $this->shop_data['payment'][ $paypal ][ $prop ] ) ) {
+            $this->shop_data['payment'][ $paypal ][ $prop ] = null;
         }
 
-        if ( $value !== $this->shop_data[ 'payment' ][ $paypal ][ $prop ] || ( isset( $this->changes[ 'payment' ] ) && array_key_exists( $prop, $this->changes[ 'payment' ] ) ) ) {
-            $this->changes[ 'payment' ][ $paypal ][ $prop ] = $value;
+        if ( $value !== $this->shop_data['payment'][ $paypal ][ $prop ] || ( isset( $this->changes['payment'] ) && array_key_exists( $prop, $this->changes['payment'] ) ) ) {
+            $this->changes['payment'][ $paypal ][ $prop ] = $value;
         }
     }
 
@@ -1450,12 +1457,12 @@ class Vendor {
             $this->popluate_store_data();
         }
 
-        if ( ! isset( $this->shop_data[ 'dokan_store_time' ][ $prop ] ) ) {
-            $this->shop_data[ 'dokan_store_time' ][ $prop ] = null;
+        if ( ! isset( $this->shop_data['dokan_store_time'][ $prop ] ) ) {
+            $this->shop_data['dokan_store_time'][ $prop ] = null;
         }
 
-        if ( $value !== $this->shop_data[ 'dokan_store_time' ][ $prop ] || ( isset( $this->changes[ 'dokan_store_time' ] ) && array_key_exists( $prop, $this->changes[ 'dokan_store_time' ] ) ) ) {
-            $this->changes[ 'dokan_store_time' ][ $prop ] = $value;
+        if ( $value !== $this->shop_data['dokan_store_time'][ $prop ] || ( isset( $this->changes['dokan_store_time'] ) && array_key_exists( $prop, $this->changes['dokan_store_time'] ) ) ) {
+            $this->changes['dokan_store_time'][ $prop ] = $value;
         }
     }
 

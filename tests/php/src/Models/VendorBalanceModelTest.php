@@ -136,8 +136,7 @@ class VendorBalanceModelTest extends DokanTestCase {
         );
     }
 
-    public function test_get_total_balance_by_vendor_method() {
-
+    public function test_get_total_earning_by_vendor_method() {
         $trn_id = 1;
 
         $vendor_balance = new VendorBalance();
@@ -173,7 +172,7 @@ class VendorBalanceModelTest extends DokanTestCase {
         $vendor_balance_withdraw->set_credit( 30 );
         $vendor_balance_withdraw->save();
 
-        $total_balance = VendorBalance::get_total_balance_by_vendor(
+        $total_balance = VendorBalance::get_total_earning_by_vendor(
             $this->seller_id1
         );
         // 100 + 60 - 20 - 30 = 110

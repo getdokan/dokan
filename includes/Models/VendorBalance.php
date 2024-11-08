@@ -273,21 +273,26 @@ class VendorBalance extends BaseModel {
 	}
 
 	/**
-	 * Get the total balance of a vendor at a given date.
+	 * Calculates and retrieves the total earnings of a vendor up to a specific date.
 	 *
-	 * @param int    $vendor_id The vendor id.
-	 * @param string $on_date    Date in Y-m-d format. If not provided, current date is used.
+	 * This calculation includes:
+	 *    - The sum of completed order amounts
+	 *    - Minus the sum of refunded amounts
+	 *    - Ignores/Excludes any withdrawals from the total earnings
 	 *
-	 * @return float The total balance of the vendor at the given date.
+	 * @param int    $vendor_id The unique identifier for the vendor.
+	 * @param string $on_date   Optional date in 'Y-m-d' format to calculate earnings up to. Defaults to the current date if not provided.
+	 *
+	 * @return float The vendor's total earnings up to the specified date.
 	 */
-	public static function get_total_balance_by_vendor( $vendor_id, $on_date = null ) {
+	public static function get_total_earning_by_vendor( $vendor_id, $on_date = null ) {
 		$on_date     = $on_date && strtotime( $on_date ) ? dokan_current_datetime()->modify( $on_date ) : dokan_current_datetime();
         $cache_group = "seller_order_data_{$vendor_id}";
         $cache_key   = "seller_earnings_{$vendor_id}_{$on_date->format('Y_m_d')}";
         $earning     = Cache::get( $cache_key, $cache_group );
 
         if ( false === $earning ) {
-			$earning = ( new static() )->get_data_store()->get_total_balance( $vendor_id, $on_date );
+			$earning = ( new static() )->get_data_store()->get_total_earning_by_vendor( $vendor_id, $on_date );
             Cache::set( $cache_key, $earning, $cache_group );
         }
 

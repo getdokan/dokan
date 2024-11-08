@@ -56,7 +56,7 @@ class VendorBalanceStore extends BaseDataStore {
 	 * @param DateTimeImmutable $balance_date
 	 * @return float
 	 */
-	public function get_total_balance( $vendor_id, DateTimeImmutable $balance_date ): float {
+	public function get_total_earning_by_vendor( $vendor_id, DateTimeImmutable $balance_date ): float {
 		global $wpdb;
 
 		$on_date = $balance_date->format( 'Y-m-d' );
