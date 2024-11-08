@@ -137,7 +137,6 @@ class VendorBalanceModelTest extends DokanTestCase {
     }
 
     public function test_get_total_earning_by_vendor_method() {
-
         $trn_id = 1;
 
         $vendor_balance = new VendorBalance();
