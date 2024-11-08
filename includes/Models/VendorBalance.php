@@ -280,14 +280,14 @@ class VendorBalance extends BaseModel {
 	 *
 	 * @return float The total balance of the vendor at the given date.
 	 */
-	public static function get_total_balance_by_vendor( $vendor_id, $on_date = null ) {
+	public static function get_total_earning_by_vendor( $vendor_id, $on_date = null ) {
 		$on_date     = $on_date && strtotime( $on_date ) ? dokan_current_datetime()->modify( $on_date ) : dokan_current_datetime();
         $cache_group = "seller_order_data_{$vendor_id}";
         $cache_key   = "seller_earnings_{$vendor_id}_{$on_date->format('Y_m_d')}";
         $earning     = Cache::get( $cache_key, $cache_group );
 
         if ( false === $earning ) {
-			$earning = ( new static() )->get_data_store()->get_total_balance( $vendor_id, $on_date );
+			$earning = ( new static() )->get_data_store()->get_earning_balance( $vendor_id, $on_date );
             Cache::set( $cache_key, $earning, $cache_group );
         }
 
