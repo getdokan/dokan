@@ -188,7 +188,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     /**
                      * Render the contents after view product button.
                      *
-                     * @since DOKAN_SINCE
+                     * @since 3.13.1
                      *
                      * @param \WC_Product $product
                      */
