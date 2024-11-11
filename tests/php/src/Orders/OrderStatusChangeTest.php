@@ -8,12 +8,6 @@ use WeDevs\Dokan\Test\DokanTestCase;
  * @group order-status
  */
 class OrderStatusChangeTest extends DokanTestCase {
-    protected $is_unit_test = true;
-
-    public function setUp(): void {
-        parent::setUp();
-        $this->setup_users();
-    }
 
     /**
      * Test standard status transitions that should be allowed
@@ -48,6 +42,15 @@ class OrderStatusChangeTest extends DokanTestCase {
      * @param string $to The status to transition to
      */
     public function test_custom_status_transitions( string $from, string $to ) {
+        add_filter(
+            'wc_order_statuses', function ( $statuses ) {
+				$statuses['wc-checkout-draft'] = _x( 'Checkout Draft', 'Order status', 'dokan-lite' );
+				$statuses['wc-delivered'] = _x( 'Delivered', 'Order status', 'dokan-lite' );
+
+				return $statuses;
+			}
+        );
+
         $this->verify_status_transition( $from, $to, true );
     }
 
@@ -80,6 +83,13 @@ class OrderStatusChangeTest extends DokanTestCase {
      * @param string $to The status to transition to
      */
     public function test_pending_to_any_status( string $from, string $to ) {
+        add_filter(
+            'wc_order_statuses', function ( $statuses ) {
+            $statuses['wc-checkout-draft'] = _x( 'Checkout Draft', 'Order status', 'dokan-lite' );
+
+            return $statuses;
+        }
+        );
         $this->verify_status_transition( $from, $to, true );
     }
 
@@ -230,11 +240,13 @@ class OrderStatusChangeTest extends DokanTestCase {
         return [
             [ 'pending', 'checkout-draft' ],
             [ 'checkout-draft', 'processing' ],
+            [ 'checkout-draft', 'delivered' ],
         ];
     }
 
     public function tearDown(): void {
         parent::tearDown();
         remove_all_filters( 'dokan_sub_order_status_update_whitelist' );
+        remove_all_filters( 'wc_order_statuses' );
     }
 }
