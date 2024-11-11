@@ -51,7 +51,7 @@ export class ColorsPage extends AdminPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.colors.colorsSaveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.colors.saveSuccessMessage);
 
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore, 'networkidle');
 
         // assertions
 
