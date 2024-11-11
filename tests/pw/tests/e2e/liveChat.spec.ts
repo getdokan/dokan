@@ -63,7 +63,7 @@ test.describe('Live chat test', () => {
 
     // vendor
 
-    test.only('vendor can view inbox menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view inbox menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorInboxRenderProperly();
     });
 
