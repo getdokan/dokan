@@ -36,6 +36,8 @@ class OrderStatusChangeTest extends DokanTestCase {
     /**
      * Test custom status transitions
      *
+     * @see \Automattic\WooCommerce\Blocks\Domain\Services\DraftOrders
+     *
      * @dataProvider custom_status_transitions
      *
      * @param string $from The initial status
@@ -77,6 +79,8 @@ class OrderStatusChangeTest extends DokanTestCase {
     /**
      * Test the 'any' status transition rule for pending orders
      *
+     * @see \Automattic\WooCommerce\Blocks\Domain\Services\DraftOrders
+     *
      * @dataProvider pending_to_any_status
      *
      * @param string $from The initial status
@@ -85,10 +89,10 @@ class OrderStatusChangeTest extends DokanTestCase {
     public function test_pending_to_any_status( string $from, string $to ) {
         add_filter(
             'wc_order_statuses', function ( $statuses ) {
-            $statuses['wc-checkout-draft'] = _x( 'Checkout Draft', 'Order status', 'dokan-lite' );
+				$statuses['wc-checkout-draft'] = _x( 'Checkout Draft', 'Order status', 'dokan-lite' );
 
-            return $statuses;
-        }
+				return $statuses;
+			}
         );
         $this->verify_status_transition( $from, $to, true );
     }
