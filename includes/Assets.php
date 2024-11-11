@@ -355,7 +355,7 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-product-style.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product-style.css' ),
             ],
-            'dokan-tailwind' => [
+            'dokan-tailwind'                => [
                 'src'       => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
                 'version'   => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
             ],
@@ -375,17 +375,18 @@ class Assets {
         $suffix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
         $asset_url      = DOKAN_PLUGIN_ASSEST;
         $asset_path     = DOKAN_DIR . '/assets/';
-        $bootstrap_deps = [ 'dokan-vue-vendor', 'dokan-i18n-jed', 'wp-hooks' ];
+        $bootstrap_deps = [ 'dokan-vue-vendor', 'wp-i18n', 'wp-hooks' ];
 
         $scripts = [
             'jquery-tiptip'             => [
                 'src'  => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
                 'deps' => [ 'jquery' ],
             ],
-            'dokan-i18n-jed'            => [
-                'src'  => $asset_url . '/vendors/i18n/jed.js',
-                'deps' => [ 'jquery' ],
-            ],
+            // Remove `dokan-i18n-jed` in next release.
+			'dokan-i18n-jed'            => [
+				'src'  => $asset_url . '/vendors/i18n/jed.js',
+				'deps' => [ 'jquery', 'wp-i18n' ],
+			],
             'dokan-accounting'          => [
                 'src'  => WC()->plugin_url() . '/assets/js/accounting/accounting.min.js',
                 'deps' => [ 'jquery' ],
@@ -479,23 +480,23 @@ class Assets {
             ],
             'dokan-admin'               => [
                 'src'     => $asset_url . '/js/dokan-admin.js',
-                'deps'    => [ 'jquery', 'dokan-i18n-jed' ],
+                'deps'    => [ 'jquery', 'wp-i18n' ],
                 'version' => filemtime( $asset_path . 'js/dokan-admin.js' ),
             ],
             'dokan-vendor-registration' => [
                 'src'     => $asset_url . '/js/vendor-registration.js',
-                'deps'    => [ 'dokan-form-validate', 'jquery', 'speaking-url', 'dokan-i18n-jed' ],
+                'deps'    => [ 'dokan-form-validate', 'jquery', 'speaking-url', 'wp-i18n' ],
                 'version' => filemtime( $asset_path . 'js/vendor-registration.js' ),
             ],
             'dokan-script'              => [
                 'src'     => $asset_url . '/js/dokan.js',
-                'deps'    => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'moment', 'dokan-date-range-picker', 'dokan-accounting' ],
+                'deps'    => [ 'imgareaselect', 'customize-base', 'customize-model', 'wp-i18n', 'jquery-tiptip', 'moment', 'dokan-date-range-picker', 'dokan-accounting' ],
                 'version' => filemtime( $asset_path . 'js/dokan.js' ),
             ],
             'dokan-vue-vendor'          => [
                 'src'     => $asset_url . '/js/vue-vendor.js',
                 'version' => filemtime( $asset_path . 'js/vue-vendor.js' ),
-                'deps'    => [ 'dokan-i18n-jed', 'dokan-tinymce-plugin', 'dokan-chart' ],
+                'deps'    => [ 'wp-i18n', 'dokan-tinymce-plugin', 'dokan-chart' ],
             ],
             'dokan-vue-bootstrap'       => [
                 'src'     => $asset_url . '/js/vue-bootstrap.js',
@@ -504,23 +505,23 @@ class Assets {
             ],
             'dokan-vue-admin'           => [
                 'src'     => $asset_url . '/js/vue-admin.js',
-                'deps'    => [ 'jquery', 'jquery-ui-datepicker', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'selectWoo' ],
+                'deps'    => [ 'jquery', 'jquery-ui-datepicker', 'wp-i18n', 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'selectWoo' ],
                 'version' => filemtime( $asset_path . 'js/vue-admin.js' ),
             ],
             'dokan-vue-frontend'        => [
                 'src'     => $asset_url . '/js/vue-frontend.js',
-                'deps'    => [ 'jquery', 'dokan-i18n-jed', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
+                'deps'    => [ 'jquery', 'wp-i18n', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
                 'version' => filemtime( $asset_path . 'js/vue-frontend.js' ),
             ],
 
             'dokan-login-form-popup'   => [
                 'src'     => $asset_url . '/js/login-form-popup.js',
-                'deps'    => [ 'dokan-modal', 'dokan-i18n-jed' ],
+                'deps'    => [ 'dokan-modal', 'wp-i18n' ],
                 'version' => filemtime( $asset_path . 'js/login-form-popup.js' ),
             ],
             'dokan-sweetalert2'        => [
                 'src'     => $asset_url . '/vendors/sweetalert2/sweetalert2.all.min.js',
-                'deps'    => [ 'dokan-modal', 'dokan-i18n-jed' ],
+                'deps'    => [ 'dokan-modal', 'wp-i18n' ],
                 'version' => filemtime( $asset_path . 'vendors/sweetalert2/sweetalert2.all.min.js' ),
             ],
             'dokan-util-helper'        => [
@@ -645,7 +646,11 @@ class Assets {
 
         $localize_data = array_merge( $localize_script, $vue_localize_script );
 
+        // Remove `dokan-i18n-jed` in next release.
         wp_localize_script( 'dokan-i18n-jed', 'dokan', $localize_data );
+        wp_localize_script( 'dokan-util-helper', 'dokan', $localize_data );
+		//        wp_localize_script( 'dokan-vue-bootstrap', 'dokan', $localize_data );
+		//        wp_localize_script( 'dokan-script', 'dokan', $localize_data );
 
         // localized vendor-registration script
         wp_localize_script(
@@ -1093,6 +1098,7 @@ class Assets {
             $version   = isset( $script['version'] ) ? $script['version'] : DOKAN_PLUGIN_VERSION;
 
             wp_register_script( $handle, $script['src'], $deps, $version, $in_footer );
+            wp_set_script_translations( $handle, 'dokan-lite', plugin_dir_path( DOKAN_FILE ) . 'languages' );
         }
     }
 
@@ -1172,7 +1178,6 @@ class Assets {
                 'showPromoBanner'                   => empty( Helper::dokan_get_promo_notices() ),
                 'hasNewVersion'                     => Helper::dokan_has_new_version(),
                 'proVersion'                        => dokan()->is_pro_exists() ? dokan_pro()->version : '',
-                'i18n'                              => [ 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite', DOKAN_DIR . '/languages/' ) ],
                 'urls'                              => [
                     'adminRoot'         => admin_url(),
                     'siteUrl'           => home_url( '/' ),

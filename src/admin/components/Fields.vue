@@ -1,7 +1,7 @@
 <template>
     <div :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
         <template v-if="'sub_section' === fieldData.type">
-            <div class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <h3 class="sub-section-title">{{ fieldData.label }}</h3>
                 <p class="sub-section-description">
                     {{ fieldData.description }}
@@ -10,7 +10,7 @@
         </template>
 
         <template v-if="containCommonFields( fieldData.type )">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
@@ -43,7 +43,7 @@
         </template>
 
         <template v-if="'number' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
@@ -136,7 +136,7 @@
         </template>
 
         <template v-if="'textarea' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
@@ -162,7 +162,7 @@
         </template>
 
         <template v-if="'switcher' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
@@ -182,7 +182,7 @@
         </template>
 
         <template v-if="'multicheck' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field multicheck_fields">
@@ -205,7 +205,7 @@
         </template>
 
         <template v-if="'select' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
@@ -247,7 +247,7 @@
         </template>
 
         <template v-if="'file' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field add_files">
@@ -271,7 +271,7 @@
         </template>
 
         <template v-if="'color' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
@@ -291,7 +291,7 @@
         </template>
 
         <template v-if="'html' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
@@ -302,7 +302,7 @@
         </template>
 
         <template v-if="'warning' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <div class="field_data">
                         <h3 scope="row" class="field_heading dokan-setting-warning error">
@@ -311,6 +311,8 @@
                                 {{ fieldData.label }}
                             </span>
                             <span class="field_desc" v-html="fieldData.desc"></span>
+                            <a v-if="fieldData.scroll_into_view" class="dokan-setting-warning-link" @click.prevent="scrollIntoField( fieldData.scroll_to_field, fieldData.scroll_to_section )" href="#">{{ fieldData.scroll_to_label }} <i class="dashicons dashicons-admin-links"></i></a>
+                            <a v-else-if="fieldData.external_link" class="dokan-setting-warning-link" :href="fieldData.link_url">{{ fieldData.link_text }} <i class="dashicons dashicons-admin-links"></i></a>
                         </h3>
                     </div>
                 </fieldset>
@@ -318,7 +320,7 @@
         </template>
 
         <template v-if="'radio' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="radio_fields">
@@ -337,7 +339,7 @@
         </template>
 
         <template v-if="'wpeditor' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
@@ -351,7 +353,7 @@
         </template>
 
         <template v-if="'repeatable' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field repeatable_fields">
@@ -379,7 +381,7 @@
         </template>
 
         <template v-if="'radio_image' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
@@ -410,7 +412,7 @@
         </template>
 
         <template v-if="'gmap' === fieldData.type && ! hideMap">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
@@ -438,7 +440,7 @@
         </template>
 
         <template v-if="'social' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <label class="social-switch-wraper" v-if="fieldData.enable_status">
@@ -705,6 +707,10 @@
         },
 
         methods: {
+            scrollIntoField( fieldId, sectionId ) {
+                this.scrollToSettingField( fieldId, sectionId );
+            },
+
             formatDokanRadioData( options ) {
               let data = [];
               Object.keys( options ).map( item => {
@@ -1252,6 +1258,21 @@
 
                 span {
                     margin-top: 6px !important;
+                }
+            }
+
+            a.dokan-setting-warning-link {
+                display: block;
+                margin-top: 8px;
+                text-decoration: none;
+
+                &:hover, &:active, &:focus {
+                    outline: none;
+                    box-shadow: none;
+                }
+
+                i.dashicons {
+                    font-size: 18px;
                 }
             }
 

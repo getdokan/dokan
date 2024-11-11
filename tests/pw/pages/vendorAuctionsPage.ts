@@ -76,6 +76,7 @@ export class AuctionsPage extends VendorPage {
     // go to auction product edit
     async goToAuctionProductEdit(productName: string): Promise<void> {
         await this.searchAuctionProduct(productName);
+        await this.removeAttribute(auctionProductsVendor.rowActions(productName), 'class'); // forcing the row actions to be visible, to avoid flakiness
         await this.hover(auctionProductsVendor.productCell(productName));
         await this.clickAndWaitForLoadState(auctionProductsVendor.edit(productName));
         await this.toHaveValue(auctionProductsVendor.auction.productName, productName);

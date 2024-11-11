@@ -2,7 +2,34 @@ import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import 'dotenv/config';
 
-const { ADMIN, ADMIN_PASSWORD, VENDOR, VENDOR2, CUSTOMER, CUSTOMER2, USER_PASSWORD, CATEGORY_ID, SITE_PATH, BASE_URL, SITE_LANGUAGE, SITE_TITLE, ADMIN_EMAIL, DB_HOST_NAME, DATABASE, DB_USER_NAME, DB_USER_PASSWORD, DB_PREFIX, GMAP, MAPBOX, LICENSE_KEY } = process.env;
+const {
+    ADMIN,
+    ADMIN_PASSWORD,
+    VENDOR,
+    VENDOR2,
+    CUSTOMER,
+    CUSTOMER2,
+    USER_PASSWORD,
+    SITE_PATH,
+    BASE_URL,
+    SITE_LANGUAGE,
+    SITE_TITLE,
+    ADMIN_EMAIL,
+    DB_HOST_NAME,
+    DATABASE,
+    DB_USER_NAME,
+    DB_USER_PASSWORD,
+    DB_PREFIX,
+    GMAP,
+    MAPBOX,
+    LICENSE_KEY,
+    VONAGE_API_KEY,
+    VONAGE_API_SECRET,
+    FB_APP_ID,
+    FB_APP_SECRET,
+    TALKJS_APP_ID,
+    TALKJS_APP_SECRET,
+} = process.env;
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
@@ -538,16 +565,6 @@ export const data = {
                 minimumProductQuantity: '1',
                 maximumProductQuantity: '20',
             },
-
-            commission: {
-                commissionType: 'fixed', // 'fixed','category_based'  [category commission will only be applicable to dokan subscription product]
-                commissionPercentage: '2',
-                commissionFixed: '2',
-                commissionCategory: {
-                    allCategory: true, // true for all category, false for specific category
-                    category: 'All Categories',
-                },
-            },
         },
     },
 
@@ -831,39 +848,6 @@ export const data = {
         },
     },
 
-    // commission [for all dokan setup wizard, dokan selling settings, dokan subscription product]
-    commission: {
-        fixed: {
-            commissionType: 'fixed', // 'fixed','category_based'
-            commissionPercentage: '10',
-            commissionFixed: '10',
-            commissionCategory: {
-                allCategory: true, // true for all category, false for specific category
-                category: 'All Categories',
-            },
-        },
-
-        allCategory: {
-            commissionType: 'category_based', // 'fixed','category_based'
-            commissionPercentage: '5',
-            commissionFixed: '5',
-            commissionCategory: {
-                allCategory: true, // true for all category, false for specific category
-                category: 'All Categories',
-            },
-        },
-
-        specficCategory: {
-            commissionType: 'category_based', // 'fixed','category_based'
-            commissionPercentage: '2',
-            commissionFixed: '2',
-            commissionCategory: {
-                allCategory: false, // true for all category, false for specific category
-                category: CATEGORY_ID,
-            },
-        },
-    },
-
     // Dokan Setup Wizard
     dokanSetupWizard: {
         vendorStoreURL: 'store',
@@ -872,15 +856,8 @@ export const data = {
         mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
         googleMapApiKey: GMAP,
         sellingProductTypes: 'sell_both', // 'physical', 'digital', 'sell_both',
-        commission: {
-            commissionType: 'fixed', // 'fixed','category_based'
-            commissionPercentage: '10',
-            commissionFixed: '0',
-            commissionCategory: {
-                allCategory: true, // true for all category, false for specific category
-                category: 'All Categories',
-            },
-        },
+        commissionType: 'percentage', // 'flat','percentage' 'combine',
+        adminCommission: '10',
         minimumWithdrawLimit: '5',
     },
 
@@ -1033,10 +1010,10 @@ export const data = {
             storeListingSort: 'store-listing/?stores_orderby',
             cart: 'cart',
             checkout: 'checkout',
-            addToCart: '?wc-ajax=add_to_cart',
-            applyCoupon: '?wc-ajax=apply_coupon',
-            removeCoupon: '?wc-ajax=remove_coupon',
-            refreshedFragment: '?wc-ajax=get_refreshed_fragments',
+            addToCart: 'wc-ajax=add_to_cart',
+            applyCoupon: 'wc-ajax=apply_coupon',
+            removeCoupon: 'wc-ajax=remove_coupon',
+            refreshedFragment: 'wc-ajax=get_refreshed_fragments',
             placeOrder: '?wc-ajax=checkout',
             billingAddress: 'my-account/edit-address/billing',
             shippingAddress: 'my-account/edit-address/shipping',
@@ -1053,6 +1030,7 @@ export const data = {
             quoteDetails: (quotId: string) => `my-account/request-a-quote/${quotId}`,
             supportTicketDetails: (ticketId: string) => `my-account/support-tickets/${ticketId}`,
             productSubscriptionDetails: (subscriptionId: string) => `my-account/view-subscription/${subscriptionId}`,
+            talkjs: 'app.talkjs.com/api',
 
             productReview: 'wp-comments-post.php',
             submitSupport: 'wp-comments-post.php',
@@ -1096,6 +1074,7 @@ export const data = {
                 csvExport: 'dashboard/tools/csv-export',
                 auction: 'dashboard/auction',
                 auctionActivity: 'dashboard/auction-activity',
+                inbox: 'dashboard/inbox',
                 storeSupport: 'dashboard/support',
 
                 // sub menus
@@ -1103,6 +1082,7 @@ export const data = {
                 settingsAddon: 'dashboard/settings/product-addon',
                 settingsAddonEdit: (addonId: string) => `dashboard/settings/product-addon/?edit=${addonId}`,
                 settingsPayment: 'dashboard/settings/payment',
+
                 // payment settings
                 paypal: 'dashboard/settings/payment-manage-paypal',
                 bankTransfer: 'dashboard/settings/payment-manage-bank',
@@ -1139,7 +1119,6 @@ export const data = {
                 dummyDataImport: 'dokan/v1/dummy-data/import',
                 refunds: 'dokan/v1/refunds',
                 modules: 'dokan/v1/admin/modules',
-                multistepCategories: 'dokan/v1/products/multistep-categories',
                 storeReviews: 'dokan/v1/store-reviews',
                 productAdvertising: 'dokan/v1/product_adv',
                 wholesaleRegister: 'dokan/v1/wholesale/register',
@@ -1252,17 +1231,6 @@ export const data = {
             // address fields enable flag (on vendor registration)
             addressFieldsEnabled: false,
 
-            // commission
-            commission: {
-                commissionType: 'fixed', // 'fixed','category_based'
-                commissionPercentage: '5',
-                commissionFixed: '5',
-                commissionCategory: {
-                    allCategory: true, // true for all category, false for specific category
-                    category: 'All Categories',
-                },
-            },
-
             // subscription pack
             vendorSubscriptionPack: 'Dokan_Subscription_Non_recurring',
 
@@ -1328,6 +1296,10 @@ export const data = {
             amountDiscount: {
                 minimumOrderAmount: '200',
                 discountPercentage: '10',
+            },
+
+            liveChat: {
+                pageId: '',
             },
 
             minMax: {
@@ -2089,15 +2061,8 @@ export const data = {
         // selling options settings
         selling: {
             settingTitle: 'Selling Option Settings',
-            commission: {
-                commissionType: 'fixed', // 'fixed','category_based'
-                commissionPercentage: '10',
-                commissionFixed: '10',
-                commissionCategory: {
-                    allCategory: true, // true for all category, false for specific category
-                    category: 'All Categories',
-                },
-            },
+            commissionType: 'percentage', // 'flat', 'percentage', 'combine'
+            adminCommission: '10',
             shippingFeeRecipient: 'seller', // 'seller', 'admin'
             productTaxFeeRecipient: 'seller', // 'seller', 'admin'
             shippingTaxFeeRecipient: 'seller', // 'seller', 'admin'
@@ -2265,6 +2230,17 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // social api
+        socialApi: {
+            settingTitle: 'Social Settings',
+            platform: 'facebook',
+            facebook: {
+                appId: FB_APP_ID,
+                appSecret: FB_APP_SECRET,
+            },
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // shipping status
         shippingStatus: {
             settingTitle: 'Shipping Status Settings',
@@ -2346,11 +2322,37 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // Verification Sms Gateways
+        verificationSmsGateway: {
+            settingTitle: 'Verification SMS Gateways Settings',
+            senderName: 'weDevs Team',
+            smsText: 'Your verification code is: %CODE%',
+            smsSentSuccess: 'SMS sent. Please enter your verification code',
+            smsSentError: 'Unable to send sms. Contact admin',
+            activeGateway: 'nexmo', // nexmo, twilio
+            vonage: {
+                apiKey: VONAGE_API_KEY,
+                apiSecret: VONAGE_API_SECRET,
+            },
+
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // Email verification
         emailVerification: {
             settingTitle: 'Email Verification Settings',
             registrationNotice: 'Please check your email and complete email verification to login.',
             loginNotice: 'Please check your email and complete email verification to login.',
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
+        // live chat
+        liveChat: {
+            settingTitle: 'Live Chat Settings',
+            chatProvider: 'talkjs', // messenger, talkjs, tawkto, whatsapp
+            talkJsAppId: TALKJS_APP_ID,
+            talkJsAppSecret: TALKJS_APP_SECRET,
+            chatButtonPosition: 'above_tab', // above_tab, inside_tab, dont_show
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
@@ -2498,6 +2500,7 @@ export const data = {
     uniqueId: {
         uuid: faker.string.uuid(),
         nanoId: faker.string.nanoid(10),
+        nanoIdRandom: () => faker.string.nanoid(10),
     },
 
     // predefined  test data
@@ -2583,6 +2586,11 @@ export const data = {
             lastName: () => 'c1',
             username: () => 'customer1',
             username1: 'customer1',
+        },
+
+        categories: {
+            uncategorized: 'Uncategorized',
+            clothings: 'clothings',
         },
     },
 

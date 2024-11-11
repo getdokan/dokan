@@ -84,6 +84,7 @@ const updatedConfig = {
   },
 
   plugins: [
+      ...defaultConfig.plugins,
     new MiniCssExtractPlugin(
       {
         filename: ( { chunk } ) => {

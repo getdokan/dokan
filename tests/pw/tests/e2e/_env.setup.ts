@@ -44,7 +44,8 @@ setup.describe('setup woocommerce settings', () => {
         // create shipping zone, location and method
         const [, zoneId] = await apiUtils.createShippingZone(payloads.createShippingZone);
         await apiUtils.addShippingZoneLocation(zoneId, payloads.addShippingZoneLocation);
-        await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
+        const [, methodId] = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
+        await apiUtils.updateShippingZoneMethod(zoneId, methodId, payloads.addShippingMethodFlatRateCost);
         await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
 
         if (DOKAN_PRO) {
@@ -105,6 +106,10 @@ setup.describe('setup woocommerce settings', () => {
         // create tag
         const [, tagId] = await apiUtils.createTag(payloads.createTag);
         helpers.createEnvVar('TAG_ID', tagId);
+    });
+
+    setup('disable woocommerce task list reminder bar', { tag: ['@lite'] }, async () => {
+        await dbUtils.setOptionValue('woocommerce_task_list_reminder_bar_hidden', 'yes', false);
     });
 
     setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {
@@ -226,6 +231,10 @@ setup.describe('setup dokan settings', () => {
 
     setup('admin set dokan quote settings', { tag: ['@pro'] }, async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.quote, dbData.dokan.quoteSettings);
+    });
+
+    setup('admin set dokan live chat settings', { tag: ['@pro'] }, async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.liveChat, dbData.dokan.liveChatSettings);
     });
 
     setup('admin set dokan rma settings', { tag: ['@pro'] }, async () => {

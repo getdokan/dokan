@@ -46,52 +46,53 @@
                         </div>
                     </div>
 
-                    <div class="metabox-holder  d-xs:w-full">
-                        <fieldset class="settings-header" v-for="section in settingSections" v-if="currentTab === section.id">
-                            <div class="settings-content">
-                                <h2 class="settings-title font-bold">{{ section.settings_title }}</h2>
-                                <p class="settings-description">{{ section.settings_description }}</p>
-                            </div>
-                            <div v-if="section.document_link" class="settings-document-button">
-                                <a :href="section.document_link" target="_blank" class="doc-link">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
-                            </div>
-                        </fieldset>
-                        <template v-for="(fields, index) in settingFields" v-if="isLoaded">
-                            <div :id="index" class="group" v-if="currentTab === index" :key="index">
-                                <form method="post" action="options.php">
-                                    <input type="hidden" name="option_page" :value="index">
-                                    <input type="hidden" name="action" value="update">
-                                    <div class="form-table">
-                                        <div class="dokan-settings-fields">
-                                            <Fields
-                                                v-for="(field, fieldId) in fields"
-                                                :section-id="index"
-                                                :id="fieldId"
-                                                :field-data="field"
-                                                :field-value="settingValues[index]"
-                                                :all-settings-values="settingValues"
-                                                @openMedia="showMedia"
-                                                :key="fieldId"
-                                                :errors="errors"
-                                                :validationErrors="validationErrors"
-                                                :toggle-loading-state="toggleLoadingState"
-                                                :dokanAssetsUrl="dokanAssetsUrl" />
-                                        </div>
+                <div class="metabox-holder">
+                    <fieldset class="settings-header" v-for="section in settingSections" v-if="currentTab === section.id">
+                        <div class="settings-content">
+                            <h2 class="settings-title font-bold">{{ section.settings_title }}</h2>
+                            <p class="settings-description">{{ section.settings_description }}</p>
+                        </div>
+                        <div v-if="section.document_link" class="settings-document-button">
+                            <a :href="section.document_link" target="_blank" class="doc-link">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
+                        </div>
+                    </fieldset>
+                    <template v-for="(fields, index) in settingFields" v-if="isLoaded">
+                        <div :id="index" class="group" v-if="currentTab === index" :key="index">
+                            <form method="post" action="options.php">
+                                <input type="hidden" name="option_page" :value="index">
+                                <input type="hidden" name="action" value="update">
+                                <div class="form-table">
+                                    <div class="dokan-settings-fields">
+                                        <Fields
+                                            :ref="fieldId"
+                                            v-for="(field, fieldId) in fields"
+                                            :section-id="index"
+                                            :id="fieldId"
+                                            :field-data="field"
+                                            :field-value="settingValues[index]"
+                                            :all-settings-values="settingValues"
+                                            @openMedia="showMedia"
+                                            :key="fieldId"
+                                            :errors="errors"
+                                            :validationErrors="validationErrors"
+                                            :toggle-loading-state="toggleLoadingState"
+                                            :dokanAssetsUrl="dokanAssetsUrl" />
                                     </div>
-                                    <p class="submit">
-                                        <input
-                                            type="submit"
-                                            name="submit"
-                                            id="submit"
-                                            class="button button-primary"
-                                            :value="__( 'Save Changes', 'dokan-lite' )"
-                                            @click.prevent="saveSettings( settingValues[index], index )"
-                                            :disabled="disableSubmit"
-                                        >
-                                    </p>
-                                </form>
-                            </div>
-                        </template>
+                                </div>
+                                <p class="submit">
+                                    <input
+                                        type="submit"
+                                        name="submit"
+                                        id="submit"
+                                        class="button button-primary"
+                                        :value="__( 'Save Changes', 'dokan-lite' )"
+                                        @click.prevent="saveSettings( settingValues[index], index )"
+                                        :disabled="disableSubmit"
+                                    >
+                                </p>
+                            </form>
+                        </div>
+                    </template>
 
                         <div ref='backToTop' @click="scrollToTop" class='back-to-top tips' :title="__( 'Back to top', 'dokan-lite' )" v-tooltip="__( 'Back to top', 'dokan-lite' )">
                             <img :src="dokanAssetsUrl + '/images/up-arrow.svg'" :alt="__( 'Dokan Back to Top Button', 'dokan-lite' )" />
@@ -178,9 +179,7 @@
 
         methods: {
             changeTab( section ) {
-                var activetab = '';
                 this.currentTab = section.id;
-                this.requiredFields = [];
 
                 this.$refs.settingsWrapper.scrollIntoView({ behavior: 'smooth' });
                 if ( typeof( localStorage ) != 'undefined' ) {
@@ -602,6 +601,25 @@
                 }
             });
 
+            // Scroll into specific setting field.
+            this.$root.$on( 'scrollToSettingField', ( fieldId = '', sectionId = '' ) => {
+                if ( sectionId ) {
+                    let section = dokan.settings_sections.find( item => item.id === sectionId );
+
+                    if ( section ) {
+                        this.changeTab( section );
+                    }
+                }
+
+                this.$nextTick( () => {
+                    if ( this.$refs[fieldId] && Array.isArray( this.$refs[fieldId] ) ) {
+                        this.$refs[fieldId].forEach( item => {
+                            item.$el && item.$el.scrollIntoView( { behavior: 'smooth' } );
+                        } );
+                    }
+                });
+            });
+
             this.settingSections = dokan.settings_sections;
             this.settingFields   = dokan.settings_fields;
             window.addEventListener( 'scroll', this.handleScroll );
@@ -650,7 +668,7 @@
         }
 
         div.nav-tab-wrapper {
-            //width: 340px;
+            width: 340px;
             padding: 14px 16px 30px 24px;
             overflow: hidden;
             background: #F9FAFB;
@@ -1049,7 +1067,7 @@
     @media only screen and (max-width: 430px) {
         .dokan-settings-wrap {
             .nav-tab-wrapper {
-                //width: 60%;
+                width: 60%;
                 padding: 10px 12px 15px 12px;
 
                 .nav-tab {
@@ -1078,7 +1096,7 @@
             }
 
             .metabox-holder {
-                //width: 40%;
+                width: 40%;
 
                 .settings-header {
                     display: block;
@@ -1111,7 +1129,7 @@
     @media only screen and (max-width: 768px) {
         .dokan-settings-wrap {
             .nav-tab-wrapper {
-                //width: 35% !important;
+                width: 35% !important;
 
                 .nav-tab {
                     .nav-content {
@@ -1127,7 +1145,7 @@
             }
 
             .metabox-holder {
-                //width: 65%;
+                width: 65%;
 
                 .settings-header {
                     .settings-content {
