@@ -60,6 +60,10 @@ export class ColorsPage extends AdminPage {
             paletteValues[key as keyof paletteValues] = helpers.hexToRgb(paletteValues[key as keyof paletteValues]);
         });
 
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore, 'networkidle');
+
+        // assertions
+
         // button color
         const beforeHover = await this.getElementCssStyle(settingsVendor.updateSettingsTop);
         // hovered button color

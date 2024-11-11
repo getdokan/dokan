@@ -659,6 +659,33 @@ export class SettingsPage extends AdminPage {
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, spmv.saveSuccessMessage);
     }
 
+    // Admin Set Dokan printful Settings
+    async setDokanPrintfulSettings(printful: dokanSettings['printful']) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.printful);
+
+        // connect to printful
+        await this.click(settingsAdmin.printful.expandButton);
+        await this.clearAndType(settingsAdmin.printful.clientId, printful.clientId);
+        await this.clearAndType(settingsAdmin.printful.secretKey, printful.secretKey);
+
+        // size guide settings
+        await this.clearAndType(settingsAdmin.printful.sizeGuidePopupTitle, printful.popupTitle);
+        await this.clearAndType(settingsAdmin.printful.sizeGuideButtonText, printful.sizeGuideButtonText);
+        await this.selectByValue(settingsAdmin.printful.primaryMeasurementUnit, printful.primaryMeasurementUnit);
+
+        // set color values
+        for (let i = 0; i < printful.optionNames.length; i++) {
+            await this.click(settingsAdmin.printful.openColorPicker(printful.optionNames[i] as string));
+            await this.clearAndType(settingsAdmin.printful.colorInput, printful.optionValues[i] as string);
+            await this.click(settingsAdmin.printful.saveColor);
+        }
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorSubscriptions.vendorSubscriptionSaveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, printful.saveSuccessMessage);
+    }
+
     // Admin Set Dokan Vendor Subscription Settings
     async setDokanVendorSubscriptionSettings(subscription: dokanSettings['vendorSubscription']) {
         await this.goToDokanSettings();

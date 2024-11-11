@@ -495,6 +495,7 @@
           admin can set Dokan geolocation settings: true
           admin can set Dokan product report abuse settings: true
           admin can set Dokan SPMV settings: true
+          admin can set Dokan printful settings: true
           admin can set Dokan vendor subscription settings: true
 
 - page: 'Tools'
@@ -801,6 +802,22 @@
   features:
       admin:
           admin can add Paypal Marketplace payment method: false
+
+- page: 'Printful'
+  features:
+      #   admin:
+      # admin can set Dokan Printful settings: true [duplicate]: true
+      vendor:
+          vendor can view printful menu page: true
+          vendor can connect printful account: true
+          vendor can disconnect printful account: true
+          vendor can enable printful shipping: true
+          vendor can enable marketplace shipping: true
+          vendor can enable both printful and marketplace shipping: true
+      customer:
+          customer can purchase printful product: false
+          customer can purchase printful product with printful shipping: false
+          customer can purchase printful product with marketplace shipping: false
 
 - page: 'Product Addon'
   features:

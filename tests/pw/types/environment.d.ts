@@ -32,6 +32,8 @@ declare global {
             FB_APP_SECRET: string;
             TALKJS_APP_ID: string;
             TALKJS_APP_SECRET: string;
+            PRINTFUL_APP_ID: string;
+            PRINTFUL_APP_SECRET: string;
             DOKAN_PRO: boolean;
             SITE_LANGUAGE: string;
             SITE_TITLE: string;

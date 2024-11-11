@@ -2014,6 +2014,7 @@ export const selector = {
                     productAdvertising: '//div[@class="nav-title" and contains(text(),"Product Advertising")]',
                     geolocation: '//div[@class="nav-title" and contains(text(),"Geolocation")]',
                     productReportAbuse: '//div[@class="nav-title" and contains(text(),"Product Report Abuse")]',
+                    printful: '//div[@class="nav-title" and contains(text(),"Printful")]',
                     singleProductMultiVendor: '//div[@class="nav-title" and contains(text(),"Single Product MultiVendor")]',
                     vendorSubscription: '//div[@class="nav-title" and contains(text(),"Vendor Subscription")]',
                     vendorAnalytics: '//div[@class="nav-title" and contains(text(),"Vendor Analytics")]',
@@ -2542,6 +2543,22 @@ export const selector = {
                     availableVendorSectionDisplayPosition: '#dokan_spmv\\[available_vendor_list_position\\]',
                     showSpmvProducts: '#dokan_spmv\\[show_order\\]',
                     singleProductMultiVendorSaveChanges: '#submit',
+                },
+
+                // printful
+                printful: {
+                    expandButton: 'div#dokan_printful span.dashicons-arrow-down-alt2.active-social-expend-btn',
+                    clientId: '//h3[normalize-space(text())="Client ID"]/../..//input',
+                    secretKey: '//h3[normalize-space(text())="Secret key"]/../..//input',
+
+                    sizeGuidePopupTitle: 'input#dokan_printful\\[popup_title\\]',
+                    sizeGuideButtonText: 'input#dokan_printful\\[size_guide_button_text\\]',
+                    primaryMeasurementUnit: 'select#dokan_printful\\[primary_measurement_unit\\]', // inches, centimetre
+
+                    // Size Guide Popup Text Color, Size Guide Popup Background Color, Size Guide Tab Background Color, Size Guide Active Tab Background Color, Size Guide Button Text Color
+                    openColorPicker: (optionName: string) => `//h3[normalize-space(text())='${optionName}']//..//..//button[@class='button color-picker-button']`,
+                    colorInput: 'input.hex-input',
+                    saveColor: 'button.dashicons-saved',
                 },
 
                 // Vendor Subscription
@@ -5912,16 +5929,17 @@ export const selector = {
 
         // settings
         vSettings: {
-            store: '.store > a',
-            addons: '.product-addon > a',
-            payment: '.payment > a',
-            verification: '.verification > a',
-            deliveryTime: '.delivery-time > a',
-            shipping: '.shipping > a',
-            shipStation: '.shipstation > a',
-            socialProfile: '.social > a',
-            rma: '.rma > a',
-            storeSEO: '.seo > a',
+            store: 'li.store > a',
+            addons: 'li.product-addon > a',
+            payment: 'li.payment > a',
+            verification: 'li.verification > a',
+            deliveryTime: 'li.delivery-time > a',
+            shipping: 'li.shipping > a',
+            shipStation: 'li.shipstation > a',
+            socialProfile: 'li.social > a',
+            rma: 'li.rma > a',
+            printful: 'li.printful a',
+            storeSEO: 'li.seo > a',
         },
 
         // inbox
@@ -6530,6 +6548,19 @@ export const selector = {
             rmaPolicyHtmlBody: '#tinymce',
             saveChanges: '#dokan-store-rma-form-submit',
             updateSettingsSuccessMessage: '.dokan-alert.dokan-alert-success',
+        },
+
+        // Printful settings
+        vPrintfulSettings: {
+            connectToPrintful: 'button#dokan-pro-connect-printful-btn',
+            authorize: '//a[normalize-space()="Authorize"]',
+            disconnectToPrintful: 'button#dokan-pro-disconnect-printful-btn',
+            confirmDisconnect: 'button.swal2-confirm',
+            disconnectSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="Disconnecting from Printful Successfully"]',
+            printfulShipping: '//input[@id="dokan-pro-printful-enable-shipping-toggle"]//..',
+            marketplaceShipping: '//input[@id="dokan-pro-printful-enable-rates-toggle"]//..',
+            printfulShippingSettingsSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="Printful shipping enable input data updated successfully"]',
+            marketplaceShippingSettingsSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="Printful enable marketplace rates input data updated successfully"]',
         },
 
         // Store Seo Settings
