@@ -932,10 +932,7 @@ class Manager {
             $parent_order->update_meta_data( '_dokan_vendor_id', $seller_id );
             $parent_order->save();
 
-            // if the request is made from rest api then insert the order data to the sync table
-            if ( defined( 'REST_REQUEST' ) ) {
-                do_action( 'dokan_checkout_update_order_meta', $parent_order_id, $seller_id );
-            }
+            do_action( 'dokan_checkout_update_order_meta', $parent_order_id, $seller_id );
 
             return;
         }

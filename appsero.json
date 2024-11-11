@@ -31,6 +31,11 @@
         "package.json",
         ".php_cs",
         ".babelrc",
-        ".editorconfig"
+        ".editorconfig",
+        ".eslintrc",
+        "postcss.config.js",
+        "webpack.config.js",
+        "tailwind.config.js",
+        ".prettierrc.js"
     ]
 }

@@ -1763,6 +1763,72 @@ export class ApiUtils {
         return responseBody;
     }
 
+    // widgets
+
+    // get all widgets
+    async getAllWidgets(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getAllWidgets, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
+    }
+
+    // get single widget
+    async getSingleWidget(widgetId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getSingleWidget(widgetId), { headers: auth });
+        return responseBody;
+    }
+
+    // create widget
+    async createWidget(payload: object, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.post(endPoints.wp.createWidget, { data: payload, headers: auth });
+        return [response, responseBody];
+    }
+
+    // update widget
+    async updateWidget(widgetId: string, payload: object, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.put(endPoints.wp.updateWidget(widgetId), { data: payload, headers: auth });
+        return [response, responseBody];
+    }
+
+    // delete widget
+    async deleteWidget(widgetId: string, payload: object, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.delete(endPoints.wp.deleteWidget(widgetId), { data: payload, headers: auth });
+        return [response, responseBody];
+    }
+
+    // widget types
+
+    // get all widget types
+    async getAllWidgetTypes(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getAllWidgetTypes, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
+    }
+
+    // get single widget type
+    async getSingleWidgetTypes(widgetTypeId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getSingleWidgetType(widgetTypeId), { headers: auth });
+        return responseBody;
+    }
+
+    // sidebars
+
+    // get all sidebars
+    async getAllSidebars(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getAllSidebars, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
+    }
+
+    // get single sidebar
+    async getSingleSidebar(sidebarId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wp.getSingleSidebar(sidebarId), { headers: auth });
+        return responseBody;
+    }
+
+    // update sidebar
+    async updateSidebar(sidebarId: string, payload: object, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.post(endPoints.wp.updateSidebar(sidebarId), { data: payload, headers: auth });
+        return [response, responseBody];
+    }
+
     /**
      * woocommerce  api methods
      */
@@ -2094,16 +2160,35 @@ export class ApiUtils {
         return responseBody;
     }
 
+    // get single shipping zone method
+    async getSingleShippingZoneMethod(zoneId: string, methodId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.getSingleShippingZoneMethod(zoneId, methodId), { headers: auth });
+        return responseBody;
+    }
+
+    // add shipping zone method
+    async addShippingZoneMethod(zoneId: string, zoneMethod: object, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.wc.addShippingZoneMethod(zoneId), { data: zoneMethod, headers: auth });
+        const methodId = String(responseBody?.id);
+        return [responseBody, methodId];
+    }
+
+    // update shipping zone method
+    async updateShippingZoneMethod(zoneId: string, methodId: string, zoneMethod: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.wc.updateShippingZoneMethod(zoneId, methodId), { data: zoneMethod, headers: auth });
+        return responseBody;
+    }
+
+    // delete shipping zone method
+    async deleteShippingZoneMethod(zoneId: string, methodId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.wc.deleteShippingZoneMethod(zoneId, methodId), { params: payloads.paramsForceDelete, headers: auth });
+        return responseBody;
+    }
+
     // shipping method exist or not
     async shippingMethodExistOrNot(zoneId: string, methodName: string, auth?: auth): Promise<responseBody> {
         const allShippingMethods = (await this.getAllShippingZoneMethods(zoneId, auth)).map((a: { method_id: string }) => a.method_id);
         return allShippingMethods.includes(methodName);
-    }
-
-    // add shipping zone method
-    async addShippingZoneMethod(zoneId: string, zoneMethod: object, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.post(endPoints.wc.addShippingZoneMethod(zoneId), { data: zoneMethod, headers: auth });
-        return responseBody;
     }
 
     // get all shipping classes

@@ -680,7 +680,7 @@ export class ProductsPage extends AdminPage {
         await this.hover(productsVendor.productCell(productName));
         await this.clickAndWaitForLoadState(productsVendor.view(productName));
         await expect(this.page).toHaveURL(data.subUrls.frontend.productDetails(helpers.slugify(productName)) + '/');
-        const { quantity, addToCart, viewCart, euComplianceData, productAddedSuccessMessage, productWithQuantityAddedSuccessMessage, ...productDetails } = selector.customer.cSingleProduct.productDetails;
+        const { quantity, addToCart, viewCart, chatNow, euComplianceData, productAddedSuccessMessage, productWithQuantityAddedSuccessMessage, ...productDetails } = selector.customer.cSingleProduct.productDetails;
         await this.multipleElementVisible(productDetails);
     }
 
@@ -749,6 +749,7 @@ export class ProductsPage extends AdminPage {
     // quick edit product
     async quickEditProduct(product: product['simple']): Promise<void> {
         await this.searchProduct(product.editProduct);
+        await this.removeAttribute(productsVendor.rowActions(product.editProduct), 'class'); // forcing the row actions to be visible, to avoid flakiness
         await this.hover(productsVendor.productCell(product.editProduct));
         await this.click(productsVendor.quickEdit(product.editProduct));
 
@@ -1569,7 +1570,7 @@ export class ProductsPage extends AdminPage {
         await this.goToProductEdit(productName);
         await this.clearAndType(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
         await this.clearAndType(productsVendor.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
-        await this.press('Escape'); // to trigger validation
+        await this.press('Tab'); // to trigger validation
         await this.toHaveValue(productsVendor.minMax.maximumQuantity, minMaxOption.minimumProductQuantity);
         await this.saveProduct();
         await this.toHaveValue(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
