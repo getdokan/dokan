@@ -22,7 +22,7 @@ class Init {
      * @return void
      */
     public function __construct() {
-        add_action( 'init', [ $this, 'init_form_fields' ], 5 );
+        add_action( 'init', [ $this, 'init_form_fields' ], 10 );
     }
 
     /**
