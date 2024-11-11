@@ -1910,9 +1910,9 @@ export const data = {
     modules: {
         noModuleMessage: 'No modules found.',
         moduleStats: {
-            totalModules: 39,
-            modulesVideoLink: 17,
-            productManagement: 14,
+            totalModules: 40,
+            modulesVideoLink: 19,
+            productManagement: 15,
             integration: 6,
             uiUx: 2,
             shipping: 3,
