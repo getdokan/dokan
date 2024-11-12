@@ -149,51 +149,10 @@ class OrderStatusChangeTest extends DokanTestCase {
      * Create test order with initial status
      */
     private function create_order( string $status ) {
-        $order_id = $this->create_multi_vendor_order(
-            [
-				'item_fee_list' => [
-					[
-						'name' => 'Extra Charge',
-						'amount' => 10,
-					],
-				],
-				'shipping_item_list' => [
-					[
-						'name' => 'Shipping Fee 1',
-						'amount' => 15,
-						'seller_id' => $this->seller_id1,
-					],
-					[
-						'name' => 'Shipping Fee 2',
-						'amount' => 5,
-						'seller_id' => $this->seller_id2,
-					],
-				],
-				'status'      => $status,
-				'customer_id' => $this->customer_id,
-				'line_items'  => array(
-					array(
-						'product' => [
-							'name' => 'Test Product 1',
-							'regular_price' => 5,
-							'price' => 5,
-							'seller_id' => $this->seller_id1,
-						],
-						'quantity'   => 3,
-					),
-					array(
-						'product' => [
-							'name' => 'Test Product 2',
-							'regular_price' => 10,
-							'price' => 10,
-							'seller_id' => $this->seller_id2,
-						],
-						'quantity'   => 2,
-					),
-				),
+        $params = $this->get_multi_vendor_order_data();
+        $params['status'] = $status;
 
-			]
-        );
+        $order_id = $this->create_multi_vendor_order( $params );
 
         return wc_get_order( $order_id );
     }
