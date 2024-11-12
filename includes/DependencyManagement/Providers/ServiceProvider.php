@@ -36,6 +36,7 @@ class ServiceProvider extends BootableServiceProvider {
         'withdraw'            => \WeDevs\Dokan\Withdraw\Manager::class,
         'dashboard'           => \WeDevs\Dokan\Dashboard\Manager::class,
         'commission'          => \WeDevs\Dokan\Commission::class,
+        'fees'                => \WeDevs\Dokan\Fees::class,
         'customizer'          => \WeDevs\Dokan\Customizer::class,
         'upgrades'            => \WeDevs\Dokan\Upgrade\Manager::class,
         'product_sections'    => \WeDevs\Dokan\ProductSections\Manager::class,
