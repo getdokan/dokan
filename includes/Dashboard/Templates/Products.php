@@ -421,11 +421,6 @@ class Products {
 
             $field_name = sanitize_key( $field->get_name() );
 
-            // Skip the "Sale from" and "Sale to" date fields if "Discount Schedule" is disabled.
-            if ( in_array( $field->get_id(), [ ProductFormElements::DATE_ON_SALE_FROM, ProductFormElements::DATE_ON_SALE_TO ], true ) && empty( $_POST['is_discount_schedule_enabled'] ) ) {
-                continue;
-            }
-
             // Skip all of the "Downloads" section fields if "Downloadable" field disabled.
             $downloadable_fields = array_keys( ProductFormFactory::get_fields_by_type( '', 'downloadable' ) );
             if ( in_array( $field->get_id(), $downloadable_fields, true ) && isset( $_POST['_downloadable'] ) && 'no' === $_POST['_downloadable'] ) {
@@ -547,18 +542,22 @@ class Products {
             do_action( 'dokan_before_product_updated', $product, $props, $meta_data );
         }
 
+        $postdata = wp_unslash( $_POST ); // phpcs:ignore
+
         // add product meta data
         foreach ( $meta_data as $meta_key => $meta_value ) {
             $product->add_meta_data( $meta_key, $meta_value, true );
+
+            unset( $postdata[ $meta_key ] );
         }
 
         // save product
         $product->save();
 
         if ( $is_new_product ) {
-            do_action( 'dokan_new_product_added', $product_id, [] );
+            do_action( 'dokan_new_product_added', $product_id, $postdata );
         } else {
-            do_action( 'dokan_product_updated', $product_id, [] );
+            do_action( 'dokan_product_updated', $product_id, $postdata );
         }
 
         $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_edit_product_url( $product_id ), $product_id );

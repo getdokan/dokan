@@ -353,7 +353,7 @@ class Init {
         $section->add_field(
             Elements::DOWNLOADABLE, [
                 'title'                 => __( 'Downloadable', 'dokan-lite' ),
-                'description'           => __( 'Virtual products are intangible and are not shipped.', 'dokan-lite' ),
+                'description'           => __( 'Downloadable products give access to a file upon purchase.', 'dokan-lite' ),
                 'field_type'            => 'checkbox',
                 'name'                  => '_downloadable',
                 'additional_properties' => [
@@ -368,7 +368,7 @@ class Init {
         $section->add_field(
             Elements::VIRTUAL, [
                 'title'                 => __( 'Virtual', 'dokan-lite' ),
-                'description'           => __( 'Downloadable products give access to a file upon purchase.', 'dokan-lite' ),
+                'description'           => __( 'Virtual products are intangible and are not shipped.', 'dokan-lite' ),
                 'field_type'            => 'checkbox',
                 'name'                  => '_virtual',
                 'additional_properties' => [
