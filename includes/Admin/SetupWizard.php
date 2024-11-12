@@ -269,16 +269,14 @@ class SetupWizard {
             <meta name="viewport" content="width=device-width"/>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
             <title><?php esc_html_e( 'Dokan &rsaquo; Setup Wizard', 'dokan-lite' ); ?></title>
-            <?php wp_print_scripts(); ?>
             <?php
+            wp_print_scripts();
             wp_enqueue_emoji_styles();
             do_action( 'admin_print_styles' );
-            ?>
-            <?php
             wp_enqueue_admin_bar_header_styles();
             do_action( 'admin_head' );
+            do_action( 'dokan_setup_wizard_styles' );
             ?>
-            <?php do_action( 'dokan_setup_wizard_styles' ); ?>
         </head>
         <body class="wc-setup dokan-admin-setup-wizard wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : ''; ?>">
         <?php
