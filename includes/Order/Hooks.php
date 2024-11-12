@@ -125,10 +125,12 @@ class Hooks {
             return;
         }
 
+        $vendor_balance_model = dokan()->get_container()->get( VendorBalance::class );
+
         // update on vendor-balance table
-        VendorBalance::update_by_transaction(
+        $vendor_balance_model->update_by_transaction(
             $order_id,
-            VendorBalance::TRN_TYPE_DOKAN_ORDERS,
+            $vendor_balance_model::TRN_TYPE_DOKAN_ORDERS,
             [ 'status' => $new_status ]
         );
     }
@@ -150,7 +152,6 @@ class Hooks {
         // Ensure both statuses have 'wc-' prefix
         $current_status = $this->maybe_add_wc_prefix( $current_status );
         $new_status     = $this->maybe_add_wc_prefix( $new_status );
-
         // Define the default whitelist of allowed status transitions
         $default_whitelist = [
             'wc-pending'    => [ 'any' ],

@@ -790,7 +790,9 @@ class Vendor {
      * @return float|string float if formatted is false, string otherwise
      */
     public function get_earnings( $formatted = true, $on_date = '' ) {
-        $earning = VendorBalance::get_total_earning_by_vendor( $this->id, $on_date );
+        $vendor_balance_model = dokan()->get_container()->get( VendorBalance::class );
+
+        $earning = $vendor_balance_model->get_total_earning_by_vendor( $this->id, $on_date );
 
         if ( $formatted ) {
             return apply_filters( 'dokan_get_formatted_seller_earnings', wc_price( $earning ), $this->id );

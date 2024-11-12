@@ -99,7 +99,9 @@ class Commission {
                 [ '%d' ]
             );
 
-            VendorBalance::update_by_transaction(
+            $vendor_balance_model = dokan()->get_container()->get( VendorBalance::class );
+
+            $vendor_balance_model->update_by_transaction(
                 $tmp_order->get_id(),
                 'dokan_orders',
                 [ 'debit' => (float) $net_amount ]

@@ -270,10 +270,11 @@ function dokan_sync_insert_order( $order_id ) {
         ]
     );
 
-    $vendor_balance = new VendorBalance();
+    $vendor_balance = dokan()->get_container()->get( VendorBalance::class );
+
     $vendor_balance->set_vendor_id( $seller_id );
     $vendor_balance->set_trn_id( $order_id );
-    $vendor_balance->set_trn_type( VendorBalance::TRN_TYPE_DOKAN_ORDERS );
+    $vendor_balance->set_trn_type( $vendor_balance::TRN_TYPE_DOKAN_ORDERS );
     $vendor_balance->set_particulars( 'New order' );
     $vendor_balance->set_debit( $net_amount );
     $vendor_balance->set_trn_date( dokan_current_datetime()->format( 'Y-m-d H:i:s' ) );
