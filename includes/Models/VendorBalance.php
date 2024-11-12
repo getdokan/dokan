@@ -49,7 +49,7 @@ class VendorBalance extends BaseModel {
 	public function __construct( int $id = 0 ) {
 		parent::__construct( $id );
 		$this->set_id( $id );
-		$this->data_store = apply_filters( $this->get_hook_prefix() . 'data_store', new VendorBalanceStore() );
+		$this->data_store = apply_filters( $this->get_hook_prefix() . 'data_store', dokan()->get_container()->get( VendorBalanceStore::class ) );
 
 		if ( $this->get_id() > 0 ) {
 			$this->data_store->read( $this );
