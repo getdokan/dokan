@@ -225,7 +225,7 @@ export class WithdrawsPage extends AdminPage {
     // vendor add auto withdraw disbursement schedule
     async addAutoWithdrawDisbursementSchedule(withdraw: vendor['withdraw']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.withdraw);
-        await this.enableSwitcherDisbursement(withdrawsVendor.autoWithdrawDisbursement.enableSchedule);
+        await this.enableSwitcherVendorDashboard(withdrawsVendor.autoWithdrawDisbursement.enableSchedule);
         await this.click(withdrawsVendor.autoWithdrawDisbursement.editSchedule);
         await this.selectByValue(withdrawsVendor.autoWithdrawDisbursement.preferredPaymentMethod, withdraw.preferredPaymentMethod);
         await this.click(withdrawsVendor.autoWithdrawDisbursement.preferredSchedule(withdraw.preferredSchedule));
