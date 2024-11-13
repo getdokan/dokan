@@ -411,7 +411,7 @@ class Hooks {
 
         wc_print_notice( __( 'As this is your own product, the "Add to Cart" button has been removed. Please visit as a guest to view it.', 'dokan-lite' ), 'notice' );
     }
-  
+
     /**
      * Filter the recipients of the product review notification.
      *

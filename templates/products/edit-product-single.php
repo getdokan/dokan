@@ -148,10 +148,31 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     } else {
                         esc_html_e( 'Edit Product', 'dokan-lite' );
                     }
+
+                    /**
+                     * Render the contents before product edit status label.
+                     *
+                     * @since DOKAN_PRO_SINCE
+                     *
+                     * @param \WC_Product $product
+                     */
+                    do_action( 'dokan_before_product_edit_status_label', $product );
                     ?>
+
                     <span class="dokan-label <?php echo esc_attr( dokan_get_post_status_label_class( $post->post_status ) ); ?> dokan-product-status-label">
                         <?php echo esc_html( dokan_get_post_status( $post->post_status ) ); ?>
                     </span>
+
+                    <?php
+                    /**
+                     * Render the contents after product edit status label.
+                     *
+                     * @since DOKAN_PRO_SINCE
+                     *
+                     * @param \WC_Product $product
+                     */
+                    do_action( 'dokan_after_product_edit_status_label', $product );
+                    ?>
 
                     <?php if ( $post->post_status === 'publish' ) : ?>
                         <span class="dokan-right">
@@ -162,6 +183,17 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     <?php if ( $_visibility === 'hidden' ) : ?>
                         <span class="dokan-right dokan-label dokan-label-default dokan-product-hidden-label"><i class="far fa-eye-slash"></i> <?php esc_html_e( 'Hidden', 'dokan-lite' ); ?></span>
                     <?php endif; ?>
+
+                    <?php
+                    /**
+                     * Render the contents after view product button.
+                     *
+                     * @since 3.13.1
+                     *
+                     * @param \WC_Product $product
+                     */
+                    do_action( 'dokan_edit_product_after_view_product_button', $product );
+                    ?>
                 </h1>
             </header><!-- .entry-header -->
 

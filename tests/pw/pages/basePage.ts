@@ -299,10 +299,21 @@ export class BasePage {
         return response;
     }
 
+    // type & wait for loadState
+    async typeByPageAndWaitForLoadState(selector: string, text: string, clear = true): Promise<void> {
+        if (clear) await this.clearInputField(selector);
+        await Promise.all([this.waitForLoadState(), this.page.locator(selector).pressSequentially(text, { delay: 200 })]);
+    }
+
     // type & wait for response
-    async typeByPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
+    async typeByPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200, clear = true): Promise<Response> {
+        if (clear) await this.clearInputField(selector);
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).pressSequentially(text, { delay: 200 })]);
         return response;
+    }
+    // type & wait for loadState
+    async typeAndWaitForLoadState(selector: string, text: string): Promise<void> {
+        await Promise.all([this.waitForLoadState(), this.clearAndFill(selector, text)]);
     }
 
     // type & wait for response
@@ -683,7 +694,7 @@ export class BasePage {
 
     // clear input field
     async clearInputField(selector: string): Promise<void> {
-        await this.page.fill(selector, '');
+        await this.page.locator(selector).fill('');
     }
 
     // Or
@@ -823,6 +834,11 @@ export class BasePage {
         return await this.page.selectOption(selector, { index: Number(value) });
     }
 
+    // select by value and wait for loadState
+    async selectByValueAndWaitForLoadState(selector: string, value: string, state: 'load' | 'domcontentloaded' | 'networkidle' = 'domcontentloaded'): Promise<void> {
+        await Promise.all([this.waitForLoadState(state), this.page.selectOption(selector, { value })]);
+    }
+
     // select by value and wait for response
     async selectByValueAndWaitForResponse(subUrl: string, selector: string, value: string, code = 200): Promise<Response> {
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.selectOption(selector, { value })]);
@@ -959,6 +975,12 @@ export class BasePage {
         const locator = this.page.frameLocator(frame).locator(frameSelector);
         await locator.fill(text);
         // await locator.pressSequentially(text);
+    }
+
+    async clickFrameSelectorAndWaitForResponse(frame: string, subUrl: string, frameSelector: string, code = 200): Promise<Response> {
+        const locator = this.page.frameLocator(frame).locator(frameSelector);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), locator.click()]);
+        return response;
     }
 
     /**
@@ -1537,7 +1559,13 @@ export class BasePage {
         }, options);
     }
 
-    // assert element to contain text
+    // assert frame element to be visible
+    async toBeVisibleFrameLocator(frame: string, frameSelector: string, options?: { timeout?: number; visible?: boolean } | undefined) {
+        const locator = this.page.frameLocator(frame).locator(frameSelector);
+        await expect(locator).toBeVisible(options);
+    }
+
+    // assert frame element to contain text
     async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp, options?: { timeout?: number; intervals?: number[] }): Promise<void> {
         await this.toPass(async () => {
             const locator = this.page.frameLocator(frame).locator(frameSelector);
