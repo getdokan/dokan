@@ -1811,6 +1811,24 @@ export interface dokanSettings {
         saveSuccessMessage: string;
     };
 
+    // printful Settings
+    printful: {
+        settingTitle: string;
+        clientId: string;
+        secretKey: string;
+        popupTitle: string;
+        popupTextColor: string;
+        popupBackgroundColor: string;
+        tabBackgroundColor: string;
+        activeTabBackgroundColor: string;
+        sizeGuideButtonText: string;
+        buttonTextColor: string;
+        primaryMeasurementUnit: string;
+        optionNames: string[];
+        optionValues: string[];
+        saveSuccessMessage: string;
+    };
+
     // Vendor Subscription Settings
     vendorSubscription: {
         settingTitle: string;

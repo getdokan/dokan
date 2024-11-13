@@ -29,6 +29,8 @@ const {
     FB_APP_SECRET,
     TALKJS_APP_ID,
     TALKJS_APP_SECRET,
+    PRINTFUL_APP_ID,
+    PRINTFUL_APP_SECRET,
 } = process.env;
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
@@ -1082,6 +1084,8 @@ export const data = {
                 settingsAddon: 'dashboard/settings/product-addon',
                 settingsAddonEdit: (addonId: string) => `dashboard/settings/product-addon/?edit=${addonId}`,
                 settingsPayment: 'dashboard/settings/payment',
+                settingsPrintful: 'dashboard/settings/printful',
+                printful: 'https://www.printful.com/oauth/authorize',
 
                 // payment settings
                 paypal: 'dashboard/settings/payment-manage-paypal',
@@ -1910,9 +1914,9 @@ export const data = {
     modules: {
         noModuleMessage: 'No modules found.',
         moduleStats: {
-            totalModules: 39,
-            modulesVideoLink: 17,
-            productManagement: 14,
+            totalModules: 40,
+            modulesVideoLink: 19,
+            productManagement: 15,
             integration: 6,
             uiUx: 2,
             shipping: 3,
@@ -1945,6 +1949,7 @@ export const data = {
             'spmv',
             'store_reviews',
             'stripe',
+            'printful',
             'product_advertising',
             'product_subscription',
             'vendor_analytics',
@@ -2429,6 +2434,23 @@ export const data = {
             availableVendorDisplayAreaTitle: 'Other Available Vendor',
             availableVendorSectionDisplayPosition: 'below_tabs', // 'below_tabs', 'inside_tabs', 'after_tabs'
             showSpmvProducts: 'show_all', // 'show_all', 'min_price', 'max_price', 'top_rated_vendor'
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
+        printful: {
+            settingTitle: 'Printful Settings',
+            clientId: PRINTFUL_APP_ID,
+            secretKey: PRINTFUL_APP_SECRET,
+            popupTitle: 'Size Guide',
+            popupTextColor: '#000000',
+            popupBackgroundColor: '#FFFFFF',
+            tabBackgroundColor: '#EEEEEE',
+            activeTabBackgroundColor: '#DDDDDD',
+            sizeGuideButtonText: 'Size Guide',
+            buttonTextColor: '#1064A9',
+            primaryMeasurementUnit: 'inches', // inches, centimetre
+            optionNames: ['Size Guide Popup Text Color', 'Size Guide Popup Background Color', 'Size Guide Tab Background Color', 'Size Guide Active Tab Background Color', 'Size Guide Button Text Color'],
+            optionValues: ['#000000', '#FFFFFF', '#EEEEEE', '#DDDDDD', '#1064A9'],
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 

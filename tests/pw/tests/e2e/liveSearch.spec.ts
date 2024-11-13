@@ -1,6 +1,5 @@
-import { test, Page, request } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { LiveSearch } from '@pages/liveSearchPage';
-import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
@@ -8,14 +7,11 @@ import { dbData } from '@utils/dbData';
 test.describe('Live search test', () => {
     let customer: LiveSearch;
     let cPage: Page;
-    let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new LiveSearch(cPage);
-
-        apiUtils = new ApiUtils(await request.newContext());
 
         await dbUtils.updateOptionValue('widget_dokna_product_search', dbData.liveSearchWidget);
         await dbUtils.updateOptionValue('sidebars_widgets', { ...dbData.sidebarWidgets, 'sidebar-1': ['dokna_product_search-2'] });
