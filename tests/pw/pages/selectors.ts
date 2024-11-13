@@ -2547,7 +2547,7 @@ export const selector = {
 
                 // printful
                 printful: {
-                    expandButton: 'div#dokan_printful span.dashicons-arrow-down-alt2.active-social-expend-btn',
+                    expandButton: 'div#dokan_printful div.app span.dashicons-arrow-down-alt2',
                     clientId: '//h3[normalize-space(text())="Client ID"]/../..//input',
                     secretKey: '//h3[normalize-space(text())="Secret key"]/../..//input',
 
