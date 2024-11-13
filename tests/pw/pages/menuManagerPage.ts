@@ -31,7 +31,7 @@ export class MenuManagerPage extends BasePage {
         switch (action) {
             case 'activate':
                 await this.enableSwitcher(settingsAdmin.menuManager.menuSwitcher(menu));
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
                 await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(0, 144, 255)');
                 //assertion
                 await this.goto(data.subUrls.frontend.vDashboard.dashboard);
@@ -42,7 +42,7 @@ export class MenuManagerPage extends BasePage {
 
             case 'deactivate':
                 await this.disableSwitcher(settingsAdmin.menuManager.menuSwitcher(menu));
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
                 await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(215, 218, 221)');
                 //assertion
                 await this.goto(data.subUrls.frontend.vDashboard.dashboard);
@@ -64,7 +64,7 @@ export class MenuManagerPage extends BasePage {
         await this.click(settingsAdmin.menuManager.menuEdit(currentMenu));
         await this.clearAndType(settingsAdmin.menuManager.menuNameInput, newMenu);
         await this.click(settingsAdmin.menuManager.menuNameConfirm);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toBeVisible(settingsAdmin.menuManager.menuEdit(newMenu));
 
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
@@ -106,7 +106,7 @@ export class MenuManagerPage extends BasePage {
         const initialTargetIndex = await this.getLocatorIndex(settingsAdmin.menuManager.menuParent, settingsAdmin.menuManager.menuGrabber(target));
 
         await this.dragToTargetLocator(settingsAdmin.menuManager.menuGrabber(source), settingsAdmin.menuManager.menuGrabber(target));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
 
         const newSourceIndex = await this.getLocatorIndex(settingsAdmin.menuManager.menuParent, settingsAdmin.menuManager.menuGrabber(source));
         const newTargetIndex = await this.getLocatorIndex(settingsAdmin.menuManager.menuParent, settingsAdmin.menuManager.menuGrabber(target));
@@ -129,7 +129,7 @@ export class MenuManagerPage extends BasePage {
         // reset
         await this.click(settingsAdmin.menuManager.resetAll);
         await this.click(settingsAdmin.menuManager.confirmReset);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
 
         await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(0, 144, 255)');
     }

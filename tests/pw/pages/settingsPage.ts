@@ -102,7 +102,7 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.general.enableMoreProductsTab);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.general.generalSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, general.saveSuccessMessage);
     }
 
@@ -139,7 +139,7 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.selling.hideProductPrice);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.selling.sellingOptionsSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toHaveValue(settingsAdmin.selling.adminCommission, selling.adminCommission);
     }
 
@@ -199,7 +199,7 @@ export class SettingsPage extends AdminPage {
         }
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.withdraw.withdrawSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toHaveValue(settingsAdmin.withdraw.minimumWithdrawAmount, withdraw.minimumWithdrawAmount);
     }
 
@@ -226,7 +226,7 @@ export class SettingsPage extends AdminPage {
         }
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.reverseWithdraw.reverseWithdrawSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toHaveValue(settingsAdmin.reverseWithdraw.reverseBalanceThreshold, reverseWithdraw.reverseBalanceThreshold);
     }
 
@@ -241,7 +241,7 @@ export class SettingsPage extends AdminPage {
         await this.selectByLabel(settingsAdmin.page.termsAndConditions, page.termsAndConditions);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.page.pageSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, page.saveSuccessMessage);
     }
 
@@ -264,7 +264,7 @@ export class SettingsPage extends AdminPage {
         }
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.appearance.appearanceSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toHaveValue(settingsAdmin.appearance.googleMapApiKey, appearance.googleMapApiKey);
     }
 
@@ -279,7 +279,7 @@ export class SettingsPage extends AdminPage {
         }
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
 
         for (const menu of menus) {
             await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(0, 144, 255)');
@@ -297,7 +297,7 @@ export class SettingsPage extends AdminPage {
         await this.typeFrameSelector(settingsAdmin.privacyPolicy.privacyPolicyIframe, settingsAdmin.privacyPolicy.privacyPolicyHtmlBody, privacyPolicy.privacyPolicyContent);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.privacyPolicy.privacyPolicySaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, privacyPolicy.saveSuccessMessage);
     }
 
@@ -311,7 +311,7 @@ export class SettingsPage extends AdminPage {
         await this.click(settingsAdmin.colors.predefinedPalette(paletteName));
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.colors.colorsSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.colors.saveSuccessMessage);
     }
 
@@ -324,7 +324,7 @@ export class SettingsPage extends AdminPage {
         await this.selectByValue(settingsAdmin.liveSearch.liveSearchOptions, liveSearch.liveSearchOption);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.liveSearch.liveSearchSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, liveSearch.saveSuccessMessage);
     }
 
@@ -339,7 +339,7 @@ export class SettingsPage extends AdminPage {
         await this.clearAndType(settingsAdmin.storeSupport.supportButtonLabel, storeSupport.supportButtonLabel);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.storeSupport.storeSupportSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, storeSupport.saveSuccessMessage);
     }
 
@@ -355,7 +355,7 @@ export class SettingsPage extends AdminPage {
         }
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, vendorVerification.saveSuccessMessage);
     }
 
@@ -378,7 +378,7 @@ export class SettingsPage extends AdminPage {
         await this.clearAndType(settingsAdmin.verificationSmsGateway.vonage.apiSecret, verificationSmsGateways.vonage.apiSecret);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, verificationSmsGateways.saveSuccessMessage);
 
         await this.toHaveValue(settingsAdmin.verificationSmsGateway.senderName, verificationSmsGateways.senderName);
@@ -402,7 +402,7 @@ export class SettingsPage extends AdminPage {
         await this.clearAndType(settingsAdmin.emailVerification.loginNotice, emailVerification.loginNotice);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.emailVerification.emailVerificationSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, emailVerification.saveSuccessMessage);
     }
 
@@ -421,7 +421,7 @@ export class SettingsPage extends AdminPage {
         await this.clearAndType(settingsAdmin.socialApi.facebook.appSecret, socialApi.facebook.appSecret);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.socialApi.socialApiSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, socialApi.saveSuccessMessage);
     }
 
@@ -442,7 +442,7 @@ export class SettingsPage extends AdminPage {
         await this.click(settingsAdmin.shippingStatus.customShippingStatusAdd);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.shippingStatus.shippingStatusSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, shippingStatus.saveSuccessMessage);
     }
 
@@ -461,7 +461,7 @@ export class SettingsPage extends AdminPage {
         // await this.enableSwitcher(settingsAdmin.quote.enableQuoteConverterDisplay);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.quote.quoteSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, quote.saveSuccessMessage);
     }
 
@@ -479,7 +479,7 @@ export class SettingsPage extends AdminPage {
         await this.selectByValue(settingsAdmin.liveChat.chatButtonOnProductPage, liveChat.chatButtonPosition);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.liveChat.liveChatSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
 
         await this.toHaveBackgroundColor(settingsAdmin.liveChat.enableLiveChat + '//span', 'rgb(0, 144, 255)');
         await this.toHaveClass(settingsAdmin.liveChat.chatProvider(liveChat.chatProvider), 'checked');
@@ -508,7 +508,7 @@ export class SettingsPage extends AdminPage {
         await this.typeFrameSelector(settingsAdmin.rma.refundPolicyIframe, settingsAdmin.rma.refundPolicyHtmlBody, rma.refundPolicyHtmlBody);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.rma.rmaSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, rma.saveSuccessMessage);
     }
 
@@ -523,7 +523,7 @@ export class SettingsPage extends AdminPage {
         await this.disableSwitcher(settingsAdmin.wholesale.needApprovalForCustomer);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.wholesale.wholesaleSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, wholesale.saveSuccessMessage);
     }
 
@@ -547,7 +547,7 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.euCompliance.vendorsWillBeAbleToOverrideInvoiceNumber);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.euCompliance.euComplianceFieldsSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, euCompliance.saveSuccessMessage);
     }
 
@@ -579,7 +579,7 @@ export class SettingsPage extends AdminPage {
         }
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.deliveryTime.deliveryTimeSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, deliveryTime.saveSuccessMessage);
     }
 
@@ -599,7 +599,7 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.productAdvertising.outOfStockVisibility);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.productAdvertising.productAdvertisingSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, productAdvertising.saveSuccessMessage);
     }
 
@@ -624,7 +624,7 @@ export class SettingsPage extends AdminPage {
         await this.click(settingsAdmin.geolocation.mapResultFirst);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.geolocation.geolocationSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, geolocation.saveSuccessMessage);
     }
 
@@ -639,7 +639,7 @@ export class SettingsPage extends AdminPage {
         await this.click(settingsAdmin.productReportAbuse.reasonsForAbuseReportAdd);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.productReportAbuse.productReportAbuseSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, productReportAbuse.saveSuccessMessage);
     }
 
@@ -655,7 +655,7 @@ export class SettingsPage extends AdminPage {
         await this.selectByValue(settingsAdmin.spmv.showSpmvProducts, spmv.showSpmvProducts);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.spmv.singleProductMultiVendorSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, spmv.saveSuccessMessage);
     }
 
@@ -682,7 +682,7 @@ export class SettingsPage extends AdminPage {
         }
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorSubscriptions.vendorSubscriptionSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, printful.saveSuccessMessage);
     }
 
@@ -704,7 +704,7 @@ export class SettingsPage extends AdminPage {
         await this.clearAndType(settingsAdmin.vendorSubscriptions.alertEmailBody, subscription.alertEmailBody);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorSubscriptions.vendorSubscriptionSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, subscription.saveSuccessMessage);
     }
 
@@ -717,7 +717,7 @@ export class SettingsPage extends AdminPage {
         await this.disableSwitcher(settingsAdmin.vendorSubscriptions.enableProductSubscription);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorSubscriptions.vendorSubscriptionSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, subscription.saveSuccessMessage);
     }
 }

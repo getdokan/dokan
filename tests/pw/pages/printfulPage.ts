@@ -27,7 +27,7 @@ export class PrintfulPage extends VendorPage {
         await this.toBeVisible(vendorPrintful.disconnectToPrintful);
     }
 
-    // connect to printful
+    // disconnect from printful
     async disconnectPrintful(): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsPrintful);
         await this.click(vendorPrintful.disconnectToPrintful);

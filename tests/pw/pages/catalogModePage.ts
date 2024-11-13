@@ -27,7 +27,7 @@ export class CatalogModePage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.selling.hideProductPrice);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.selling.sellingOptionsSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
 
         await this.switcherHasColor(settingsAdmin.selling.removeAddToCartButton, data.colorCode.blue);
         await this.switcherHasColor(settingsAdmin.selling.hideProductPrice, data.colorCode.blue);
