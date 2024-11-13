@@ -12,7 +12,7 @@ export class HelpPage extends AdminPage {
 
     // help render properly
     async adminHelpRenderProperly() {
-        await this.goIfNotThere(data.subUrls.backend.dokan.help);
+        await this.goIfNotThere(data.subUrls.backend.dokan.help, 'networkidle');
 
         // help text is visible
         await this.toBeVisible(selector.admin.dokan.help.helpText);

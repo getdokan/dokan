@@ -399,6 +399,9 @@ export const data = {
             buyItNowPrice: () => faker.finance.amount({ min: 900, max: 1000, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             startDate: helpers.currentDateTime,
             endDate: helpers.addDays(helpers.currentDateTime, 20, 'full'),
+            relistIfFailAfterNHours: '1',
+            relistIfNotPaidAfterNHours: '2',
+            relistAuctionDurationInH: '3',
             storeName: `${VENDOR}store`,
             // saveSuccessMessage: '× Success! The product has been updated successfully. View Product →',
             saveSuccessMessage: 'Success! The product has been updated successfully.',
@@ -1001,7 +1004,7 @@ export const data = {
             rmaRequests: 'my-account/rma-requests',
             viewRmaRequests: 'my-account/view-rma-requests',
             requestWarranty: 'my-account/request-warranty',
-            vendors: 'my-account/following',
+            followingStores: 'my-account/following',
             supportTickets: 'my-account/support-tickets',
 
             productCustomerPage: 'product',
@@ -1077,6 +1080,7 @@ export const data = {
                 auction: 'dashboard/auction',
                 auctionActivity: 'dashboard/auction-activity',
                 inbox: 'dashboard/inbox',
+                auctionProductEdit: (productId: string) => `dashboard/auction/?product_id=${productId}&action=edit`,
                 storeSupport: 'dashboard/support',
 
                 // sub menus
@@ -1119,6 +1123,7 @@ export const data = {
                 abuseReports: 'dokan/v1/abuse-reports',
                 logs: 'dokan/v1/admin/logs',
                 announcements: 'dokan/v1/announcement',
+                deliveryTime: 'dokan/v1/delivery-time',
                 dummyData: 'dokan/v1/dummy-data',
                 dummyDataImport: 'dokan/v1/dummy-data/import',
                 refunds: 'dokan/v1/refunds',

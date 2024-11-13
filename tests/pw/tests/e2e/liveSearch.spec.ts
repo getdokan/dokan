@@ -15,10 +15,10 @@ test.describe('Live search test', () => {
 
         await dbUtils.updateOptionValue('widget_dokna_product_search', dbData.liveSearchWidget);
         await dbUtils.updateOptionValue('sidebars_widgets', { ...dbData.sidebarWidgets, 'sidebar-1': ['dokna_product_search-2'] });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.liveSearch, dbData.dokan.liveSearchSettings);
     });
 
     test.afterAll(async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.liveSearch, dbData.dokan.liveSearchSettings);
         await cPage.close();
     });
 

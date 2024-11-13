@@ -230,4 +230,13 @@ export const dbUtils = {
         const queryUpdate = `UPDATE ${dbPrefix}_dokan_request_quote_rules SET rule_contents = ? WHERE id = ?`;
         await dbUtils.dbQuery(queryUpdate, [serialize(newRuleContent), quoted]);
     },
+
+    async followVendor(followerId: string, vendorId: string) {
+        const currentTime = helpers.currentDateTimeFullFormat;
+        const query = `INSERT INTO ${dbPrefix}_dokan_follow_store_followers (vendor_id, follower_id, followed_at)
+            SELECT ?, ?, ?
+            WHERE NOT EXISTS (  SELECT 1 FROM ${dbPrefix}_dokan_follow_store_followers WHERE vendor_id = ? AND follower_id = ? );`;
+        const res = await dbUtils.dbQuery(query, [vendorId, followerId, currentTime, vendorId, followerId]);
+        return res;
+    },
 };

@@ -289,6 +289,9 @@ export interface product {
         startDate: string;
         endDate: string;
         storeName: string;
+        relistIfFailAfterNHours: string;
+        relistIfNotPaidAfterNHours: string;
+        relistAuctionDurationInH: string;
         saveSuccessMessage: string;
     };
 
