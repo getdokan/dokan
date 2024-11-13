@@ -152,14 +152,6 @@ protected function get_updated_at( Department $model, $context = 'edit' ): strin
 
 To customize the name and format of the ID field in the database, override the `get_id_field_name` and `get_id_field_format` methods. By default, the ID field is set to `id` and format is `%d`.
 
-
-
-
-
-
-
-
-
 ## Uses of Models
 
 ### Create a New Record
