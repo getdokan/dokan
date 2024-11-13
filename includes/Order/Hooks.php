@@ -184,9 +184,9 @@ class Hooks {
          */
         $whitelist = apply_filters( 'dokan_sub_order_status_update_whitelist', $default_whitelist );
 
-        // If the current status is not in the whitelist, status change is not allowed
-        if ( ! isset( $whitelist[ $current_status ] ) ) {
-            return false;
+        // Allow any status change if the current status is not in the whitelist or the new status is not allowed
+        if ( ! array_key_exists( $current_status, $whitelist ) || ! array_key_exists( $new_status, $whitelist ) ) {
+            return true;
         }
 
         // If 'any' is allowed for the current status, all transitions are allowed

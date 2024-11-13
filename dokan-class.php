@@ -23,7 +23,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.12.6';
+    public $version = '3.13.1';
 
     /**
      * Instance of self
@@ -105,12 +105,12 @@ final class WeDevs_Dokan {
      * @return object Class Instance
      */
     public function __get( $prop ) {
-        if ( $this->get_container()->has( $prop ) ) {
-            return $this->get_container()->get( $prop );
-        }
-
         if ( array_key_exists( $prop, $this->legacy_container ) ) {
             return $this->legacy_container[ $prop ];
+        }
+
+        if ( $this->get_container()->has( $prop ) ) {
+            return $this->get_container()->get( $prop );
         }
     }
 
@@ -479,7 +479,7 @@ final class WeDevs_Dokan {
     /**
      * Retrieve the container instance.
      *
-     * @since DOKAN_SINCE
+     * @since 3.13.0
      *
      * @return Container
      */

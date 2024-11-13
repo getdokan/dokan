@@ -149,6 +149,8 @@
           vendor can add product downloadable options [lite]: true
           vendor can update product downloadable options [lite]: true
           vendor can remove product downloadable file [lite]: true
+          vendor can add product virtual option [lite]: true
+          vendor can remove product virtual option [lite]: true
           vendor can add product inventory options (SKU) [lite]: true
           vendor can update product inventory options (SKU) [lite]: true
           vendor can remove product inventory options (SKU) [lite]: true
@@ -161,6 +163,7 @@
           vendor can add product other options (product status) [lite]: true
           vendor can add product other options (visibility) [lite]: true
           vendor can add product other options (purchase note) [lite]: true
+          vendor can update product other options (purchase note) [lite]: true
           vendor can remove product other options (purchase note) [lite]: true
           vendor can add product other options (product review) [lite]: true
           vendor can remove product other options (product review) [lite]: true
@@ -286,7 +289,7 @@
           customer can view store open-close time on single store [lite]: false
           customer can search product on single store [lite]: true
           customer can sort products on single store [lite]: true
-          customer can view store terms and conditions [lite]: false
+          customer can view store terms and conditions [lite]: true
           customer can share store: true
 
 - page: 'Store Appearance'
@@ -477,12 +480,16 @@
           admin can set Dokan page settings [lite]: true
           admin can set Dokan appearance settings [lite]: true
           admin can set Dokan privacy policy settings [lite]: true
-          admin can set Dokan color settings: true
+          admin can set Dokan colors settings: true
+          admin can set Dokan vendor verification settings: true
+          admin can set Dokan verification sms gateways settings: true
           admin can set Dokan live search settings: true
           admin can set Dokan store support settings: true
           admin can set Dokan email verification settings: true
+          admin can set Dokan social api settings: true
           admin can set Dokan shipping status settings: true
           admin can set Dokan quote settings: true
+          admin can set Dokan live chat settings: true
           admin can set Dokan rma settings: true
           admin can set Dokan wholesale settings: true
           admin can set Dokan eu compliance settings: true
@@ -491,6 +498,7 @@
           admin can set Dokan geolocation settings: true
           admin can set Dokan product report abuse settings: true
           admin can set Dokan SPMV settings: true
+          admin can set Dokan printful settings: true
           admin can set Dokan vendor subscription settings: true
 
 - page: 'Tools'
@@ -502,7 +510,7 @@
           admin can check for duplicate orders: true
           admin can set Dokan setup wizard [lite]: true
           admin can regenerate variable product variations author IDs: true
-          admin can import dummy data: false
+          admin can import dummy data: true
           admin can clear dummy data: true
           admin can test distance matrix API: true
 
@@ -595,7 +603,7 @@
           vendor can approve product review: true
           vendor can restore trashed product review: true
           vendor can permanently-delete product review: true
-          vendor can perform bulk action on product reviews: false
+          vendor can perform bulk action on product reviews: true
 
 - page: 'MenuManager'
   features:
@@ -644,6 +652,55 @@
           vendor can view auction activity page: true
           vendor can filter auction activity: true
           vendor can search auction activity: true
+          vendor can update auction product title: true
+          vendor can update auction product category (single): true
+          vendor can add auction product category (multiple): true
+          vendor can remove auction product category (multiple): true
+          vendor can add multi-step auction product category (last category): true
+          vendor can add multi-step auction product category (any category): true
+          vendor can't add multi-step product category (any category): true
+          vendor can add auction product tags: true
+          vendor can remove auction product tags: true
+          vendor can create auction product tags: true
+          vendor can add auction product cover image: true
+          vendor can update auction product cover image: true
+          vendor can remove auction product cover image: true
+          vendor can add auction product gallery image: true
+          vendor can update auction product gallery image: true
+          vendor can remove auction product gallery image: true
+          vendor can add auction product short description: true
+          vendor can update auction product short description: true
+          vendor can remove auction product short description: true
+          vendor can update auction product description: true
+          vendor can add auction product downloadable options: true
+          vendor can update auction product downloadable options: true
+          vendor can remove auction product downloadable file: true
+          vendor can add product virtual option: true
+          vendor can remove product virtual option: true
+          vendor can update product general options: true
+          vendor can add auction product inventory options (SKU): true
+          vendor can update auction product inventory options (SKU): true
+          vendor can remove auction product inventory options (SKU): true
+          vendor can add auction product other options (product status): true
+          vendor can add auction product other options (visibility): true
+          vendor can add auction product shipping: true
+          vendor can update auction product shipping: true
+          vendor can remove auction product shipping: true
+          vendor can add auction product tax: true
+          vendor can add auction product tax (with tax class): true
+          vendor can add auction product attribute: true
+          vendor can't add already added auction product attribute: true
+          vendor can create auction product attribute term: true
+          vendor can remove auction product attribute term: true
+          vendor can add auction product geolocation (individual): true
+          vendor can update auction product geolocation (individual): true
+          vendor can remove auction product geolocation (individual): true
+          vendor can add product addon: true
+          vendor can update product addon: false
+          vendor can import auction product addon: true
+          vendor can export auction product addon: true
+          vendor can remove auction product addon: true
+
       customer:
           customer can bid auction product: true
           customer can buy auction product with buy it now price: false
@@ -667,8 +724,8 @@
           vendor can change view style of delivery time calendar: true
           vendor can update delivery time on order details: false
       customer:
-          customer can buy product with delivery time: false
-          customer can buy product with store pickup: false
+          customer can buy product with delivery time: true
+          customer can buy product with store pickup: true
 
 - page: 'Elementor'
   features:
@@ -723,7 +780,7 @@
           vendor can view followers: true
       customer:
           customer can view followed vendors menu page: true
-          customer can view followed vendors: false
+          customer can view followed vendors: true
           customer can follow store on store list page: true
           customer can follow store on single store: true
           customer can unfollow store on store list page: true
@@ -759,25 +816,28 @@
 - page: 'Live Chat'
   features:
       admin:
-          admin can set chat provider: false
-          admin can enable chat button on vendor page: false
-          admin can enable chat button on product page: false
+          #  admin can set Dokan live chat settings [duplicate]: true
+          admin can enable chat button on vendor page: true
+          admin can disable chat button on vendor page: true
+          admin can enable chat button on product page (above_tab): true
+          admin can enable chat button on product page (inside_tab): true
+          admin can disable chat button on product page: true
       vendor:
-          #  vendor can set live chat settings [duplicate]: false
-          vendor can set inbox menu page: false
-          vendor can view inbox menu page: false
-          vendor can chat with customer: false
+          #  vendor can set live chat settings [duplicate]: true
+          vendor can view inbox menu page: true
+          vendor can reply to customer message: true
       customer:
-          customer can chat with vendor: false
+          customer can send message to vendor: true
 
 - page: 'Live Search'
   features:
-      admin:
-          admin can set live search options: false
-          admin can add live search widget: false
+      #   admin:
+      #   admin can set Dokan live search settings [duplicate]: true
       customer:
-          customer can search product using live search - suggestion box: false
-          customer can search product using live search - autoload content: false
+          customer can search product using live search (suggestion box): true
+          customer can search product with category using live search (suggestion box): true
+          customer can search product using live search (autoload content): true
+          customer can search product with category using live search (autoload content): true
 
 - page: 'MangoPay'
   features:
@@ -794,6 +854,22 @@
   features:
       admin:
           admin can add Paypal Marketplace payment method: false
+
+- page: 'Printful'
+  features:
+      #   admin:
+      # admin can set Dokan Printful settings: true [duplicate]: true
+      vendor:
+          vendor can view printful menu page: true
+          vendor can connect printful account: true
+          vendor can disconnect printful account: true
+          vendor can enable printful shipping: true
+          vendor can enable marketplace shipping: true
+          vendor can enable both printful and marketplace shipping: true
+      customer:
+          customer can purchase printful product: false
+          customer can purchase printful product with printful shipping: false
+          customer can purchase printful product with marketplace shipping: false
 
 - page: 'Product Addon'
   features:

@@ -7,7 +7,7 @@ use WeDevs\Dokan\Analytics\Reports\Customers\QueryFilter as CustomersQueryFilter
 /**
  * Class QueryFilter
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class QueryFilter extends CustomersQueryFilter {
 	protected $context = 'customers_stats';

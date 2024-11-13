@@ -9,7 +9,7 @@ use WeDevs\Dokan\Analytics\Reports\Taxes\QueryFilter as TaxesQueryFilter;
  *
  * Filters and modifies WooCommerce analytics queries for Tax Stats.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class QueryFilter extends TaxesQueryFilter {
 	protected $context = 'taxes_stats';

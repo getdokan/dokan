@@ -129,6 +129,7 @@ test.describe('Product details functionality test', () => {
     });
 
     test('vendor can add multi-step product category (last category)', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { product_category_style: 'single' });
         await vendor.addProductCategory(productName1, [data.product.category.multistepCategories.at(-1)!]);
     });
 
@@ -229,6 +230,18 @@ test.describe('Product details functionality test', () => {
         await vendor.removeDownloadableFile(productName, { ...data.product.productInfo.downloadableOptions, downloadLimit: '', downloadExpiry: '' });
     });
 
+    // product virtual options
+
+    test('vendor can add product virtual option', { tag: ['@lite', '@vendor'] }, async () => {
+        const [, , productName] = await apiUtils.createProduct(payloads.createProductRequiredFields(), payloads.vendorAuth);
+        await vendor.addProductVirtualOption(productName, true);
+    });
+
+    test('vendor can remove product virtual option', { tag: ['@lite', '@vendor'] }, async () => {
+        const [, , productName] = await apiUtils.createProduct({ ...payloads.createProductRequiredFields(), virtual: true }, payloads.vendorAuth);
+        await vendor.addProductVirtualOption(productName, false);
+    });
+
     // product inventory options
 
     test('vendor can add product inventory options (SKU)', { tag: ['@lite', '@vendor'] }, async () => {
@@ -279,6 +292,10 @@ test.describe('Product details functionality test', () => {
 
     test('vendor can add product other options (purchase note)', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.addProductOtherOptions(productName1, data.product.productInfo.otherOptions, 'purchaseNote');
+    });
+
+    test('vendor can update product other options (purchase note)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName, data.product.productInfo.otherOptions, 'purchaseNote');
     });
 
     test('vendor can remove product other options (purchase note)', { tag: ['@lite', '@vendor'] }, async () => {
@@ -363,6 +380,10 @@ test.describe('Product details functionality test', () => {
         await vendor.addProductAttribute(productName1, data.product.productInfo.attribute);
     });
 
+    test("vendor can't add already added product attribute", { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.cantAddAlreadyAddedAttribute(productName, data.product.productInfo.attribute.attributeName);
+    });
+
     // todo: refactor below tests
     test('vendor can create product attribute term', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , , attributeName] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
@@ -384,8 +405,6 @@ test.describe('Product details functionality test', () => {
         const [, , productName] = await apiUtils.createProduct({ ...payloads.createProduct(), attributes: [attributes] }, payloads.vendorAuth);
         await vendor.removeProductAttributeTerm(productName, attributeName, attributeTerm2);
     });
-
-    // todo: vendor cant add already added attribute
 
     // discount options
 

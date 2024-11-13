@@ -3,7 +3,7 @@
  * Plugin Name: Dokan
  * Plugin URI: https://dokan.co/wordpress/
  * Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
- * Version: 3.12.6
+ * Version: 3.13.1
  * Author: weDevs
  * Author URI: https://dokan.co/
  * Text Domain: dokan-lite
@@ -50,7 +50,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 /**
  * Include file for loading the WeDevs_Dokan class.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 require_once __DIR__ . '/dokan-class.php';
 
@@ -72,7 +72,7 @@ $dokan_container->addServiceProvider( new \WeDevs\Dokan\DependencyManagement\Pro
 /**
  * Get the container.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  *
  * @return Container The global container instance.
  */

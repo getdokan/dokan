@@ -324,6 +324,9 @@ export interface product {
         startDate: string;
         endDate: string;
         storeName: string;
+        relistIfFailAfterNHours: string;
+        relistIfNotPaidAfterNHours: string;
+        relistAuctionDurationInH: string;
         saveSuccessMessage: string;
     };
 
@@ -848,6 +851,10 @@ export interface vendor {
         amountDiscount: {
             minimumOrderAmount: string;
             discountPercentage: string;
+        };
+
+        liveChat: {
+            pageId: string;
         };
 
         minMax: {
@@ -1651,6 +1658,19 @@ export interface dokanSettings {
         saveSuccessMessage: string;
     };
 
+    // social api
+    socialApi: {
+        settingTitle: string;
+        platform: string;
+
+        facebook: {
+            appId: string;
+            appSecret: string;
+        };
+
+        saveSuccessMessage: string;
+    };
+
     // shipping status
     shippingStatus: {
         settingTitle: string;
@@ -1719,11 +1739,37 @@ export interface dokanSettings {
         saveSuccessMessage: string;
     };
 
+    // Verification Sms Gateways
+    verificationSmsGateway: {
+        settingTitle: string;
+        senderName: string;
+        smsText: string;
+        smsSentSuccess: string;
+        smsSentError: string;
+        activeGateway: string;
+        saveSuccessMessage: string;
+
+        vonage: {
+            apiKey: string;
+            apiSecret: string;
+        };
+    };
+
     // Email verification
     emailVerification: {
         settingTitle: string;
         registrationNotice: string;
         loginNotice: string;
+        saveSuccessMessage: string;
+    };
+
+    // Rma Settings
+    liveChat: {
+        settingTitle: string;
+        chatProvider: string;
+        talkJsAppId: string;
+        talkJsAppSecret: string;
+        chatButtonPosition: string;
         saveSuccessMessage: string;
     };
 
@@ -1800,6 +1846,24 @@ export interface dokanSettings {
         availableVendorDisplayAreaTitle: string;
         availableVendorSectionDisplayPosition: string;
         showSpmvProducts: string;
+        saveSuccessMessage: string;
+    };
+
+    // printful Settings
+    printful: {
+        settingTitle: string;
+        clientId: string;
+        secretKey: string;
+        popupTitle: string;
+        popupTextColor: string;
+        popupBackgroundColor: string;
+        tabBackgroundColor: string;
+        activeTabBackgroundColor: string;
+        sizeGuideButtonText: string;
+        buttonTextColor: string;
+        primaryMeasurementUnit: string;
+        optionNames: string[];
+        optionValues: string[];
         saveSuccessMessage: string;
     };
 

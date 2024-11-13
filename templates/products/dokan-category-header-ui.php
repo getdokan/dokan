@@ -46,7 +46,7 @@ if ( count( $chosen_cat ) < 1 ) {
         </div>
     <?php endforeach; ?>
 </span>
-<?php if ( ! $is_single ) : ?>
+<?php if ( dokan()->is_pro_exists() && ! $is_single ) : ?>
     <div class="dokan-form-group dokan-add-more-single-cat-container">
         <div class="dokan-single-cat-add-btn" data-selectfor="<?php echo esc_attr( $from ); ?>">
             <span><?php esc_html_e( '+ Add new category', 'dokan-lite' ); ?></span>
