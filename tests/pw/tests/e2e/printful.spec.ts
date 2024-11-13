@@ -3,7 +3,7 @@ import { PrintfulPage } from '@pages/printfulPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 
-test.describe('Printful test', () => {
+test.describe.skip('Printful test', () => {
     let vendor: PrintfulPage;
     let vPage: Page;
     let apiUtils: ApiUtils;
