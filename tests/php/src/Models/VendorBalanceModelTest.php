@@ -5,7 +5,6 @@ namespace WeDevs\Dokan\Test\Models;
 use Mockery;
 use WeDevs\Dokan\Models\VendorBalance;
 use WeDevs\Dokan\Test\DokanTestCase;
-use WeDevs\DokanPro\Modules\DeliveryTime\StorePickup\Vendor;
 
 /**
  * @group data-store
@@ -136,46 +135,100 @@ class VendorBalanceModelTest extends DokanTestCase {
         );
     }
 
-    public function test_get_total_earning_by_vendor_method() {
+    /**
+     * @dataProvider get_data_for_total_earning_by_vendor_method
+     *
+     * @return void
+     */
+    public function test_get_total_earning_by_vendor_method( $earings_data, $vendor_wise_earnings ) {
         $trn_id = 1;
+        // var_dump( $earings_data );
 
-        $vendor_balance = new VendorBalance();
-        $vendor_balance->set_particulars( 'test' );
-        $vendor_balance->set_debit( 100 );
-        $vendor_balance->set_status( 'wc-completed' );
-        $vendor_balance->set_trn_id( $trn_id++ );
-        $vendor_balance->set_trn_type( VendorBalance::TRN_TYPE_DOKAN_ORDERS );
-        $vendor_balance->set_vendor_id( $this->seller_id1 );
-        $vendor_balance->set_trn_date( '2020-01-01' );
-        $vendor_balance->set_balance_date( '2020-01-01' );
-        $vendor_balance->save();
+        foreach ( $earings_data as $earning_data ) {
+            $vendor_balance = new VendorBalance();
+            $vendor_balance->set_particulars( 'test' );
+            $vendor_balance->set_debit( $earning_data['debit'] ?? 0 );
+            $vendor_balance->set_credit( $earning_data['credit'] ?? 0 );
+            $vendor_balance->set_status( $earning_data['status'] );
+            $vendor_balance->set_trn_id( $earning_data['trn_id'] );
+            $vendor_balance->set_trn_type( $earning_data['trn_type'] );
+            $vendor_balance->set_vendor_id( $earning_data['vendor_id'] ?? $this->seller_id1 );
+            $vendor_balance->set_trn_date( '2020-01-01' );
+            $vendor_balance->set_balance_date( '2020-01-01' );
+            $vendor_balance->save();
+        }
 
-        $vendor_balance->set_id( 0 );
-        $vendor_balance->set_debit( 0 );
+        foreach ( $vendor_wise_earnings as $vendor_id => $vendor_earnings ) {
+			$total_balance = VendorBalance::get_total_earning_by_vendor(
+                $vendor_id
+			);
 
-        $vendor_balance_2 = clone $vendor_balance;
-        $vendor_balance_2->set_trn_id( $trn_id++ );
-        $vendor_balance_2->set_debit( 60 );
-        $vendor_balance_2->save();
+            $this->assertEquals( $vendor_earnings, $total_balance );
+        }
+    }
 
-        $vendor_balance_refund = clone $vendor_balance;
-        $vendor_balance_refund->set_trn_id( $trn_id++ );
-        $vendor_balance_refund->set_trn_type( VendorBalance::TRN_TYPE_DOKAN_REFUND );
-        $vendor_balance_refund->set_status( 'approved' );
-        $vendor_balance_refund->set_credit( 20 );
-        $vendor_balance_refund->save();
+    public function get_data_for_total_earning_by_vendor_method() {
+        $seller_id1 = 3;
+        $seller_id2 = 4;
 
-        $vendor_balance_withdraw = clone $vendor_balance;
-        $vendor_balance_withdraw->set_trn_id( $trn_id++ );
-        $vendor_balance_withdraw->set_trn_type( VendorBalance::TRN_TYPE_DOKAN_WITHDRAW );
-        $vendor_balance_withdraw->set_status( 'approved' );
-        $vendor_balance_withdraw->set_credit( 30 );
-        $vendor_balance_withdraw->save();
+        return [
+            [
+				[
+					[
+						'trn_id' => 1,
+						'trn_type' => VendorBalance::TRN_TYPE_DOKAN_ORDERS,
+						'vendor_id' => $seller_id1,
+						'debit' => 100,
+						'status' => 'wc-completed',
+						'trn_date' => '2020-01-01',
+						'balance_date' => '2020-01-01',
+					],
+					[
+						'trn_id' => 2,
+						'trn_type' => VendorBalance::TRN_TYPE_DOKAN_ORDERS,
+						'vendor_id' => $seller_id1,
+						'debit' => 60,
+						'status' => 'wc-completed',
+						'trn_date' => '2020-01-01',
+						'balance_date' => '2020-01-01',
+					],
+					[
+						'trn_id' => 3,
+						'trn_type' => VendorBalance::TRN_TYPE_DOKAN_REFUND,
+						'vendor_id' => $seller_id1,
+						'credit' => 20,
+						'status' => 'approved',
+						'trn_date' => '2020-01-01',
+						'balance_date' => '2020-01-01',
+					],
+					[
+						'trn_id' => 4,
+						'trn_type' => VendorBalance::TRN_TYPE_DOKAN_WITHDRAW,
+						'vendor_id' => $seller_id1,
+						'credit' => 30,
+						'status' => 'approved',
+						'trn_date' => '2020-01-01',
+						'balance_date' => '2020-01-01',
+					],
 
-        $total_balance = VendorBalance::get_total_earning_by_vendor(
-            $this->seller_id1
-        );
-        // 100 + 60 - 20 - 30 = 110
-        $this->assertGreaterThan( 110, $total_balance );
+                    // Another Sellers
+                    [
+                        'trn_id' => 5,
+                        'trn_type' => VendorBalance::TRN_TYPE_DOKAN_ORDERS,
+                        'vendor_id' => $seller_id2,
+                        'debit' => 100,
+                        'status' => 'wc-completed',
+                        'trn_date' => '2020-01-01',
+                        'balance_date' => '2020-01-01',
+                    ],
+				],
+
+				[
+                    // Earing = debit of completed orders - refund amount.
+					$seller_id1 => 140,   // 100 + 60 - 20 = 140
+					$seller_id2 => 100,
+                ],
+			],
+        ];
     }
 }
