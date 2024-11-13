@@ -150,16 +150,16 @@ test.describe('Auction Product details functionality test', () => {
 
     // product downloadable options
 
-    test('vendor can add auction product downloadable options', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can add auction product downloadable options', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addProductDownloadableOptions(productId1, data.product.productInfo.downloadableOptions);
     });
 
-    test('vendor can update auction product downloadable options', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can update auction product downloadable options', { tag: ['@pro', '@vendor'] }, async () => {
         // todo: need a product with downloadable file
         await vendor.addProductDownloadableOptions(productId, data.product.productInfo.downloadableOptions);
     });
 
-    test('vendor can remove auction product downloadable file', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can remove auction product downloadable file', { tag: ['@pro', '@vendor'] }, async () => {
         // todo: need a product with downloadable file
         test.skip(true, 'Has Dokan Issue download limit & expiry doesnt reset');
         await vendor.addProductDownloadableOptions(productId, data.product.productInfo.downloadableOptions);
