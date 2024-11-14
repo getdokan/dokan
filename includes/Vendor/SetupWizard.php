@@ -73,35 +73,21 @@ class SetupWizard extends DokanSetupWizard {
         $this->store_id   = dokan_get_current_user_id();
         $this->store_info = dokan_get_store_info( $this->store_id );
 
-        $steps = [
-            'introduction' => [
-                'name'    => __( 'Introduction', 'dokan-lite' ),
-                'view'    => [ $this, 'dokan_setup_introduction' ],
-                'handler' => '',
-            ],
-            'store'        => [
-                'name'    => __( 'Store', 'dokan-lite' ),
-                'view'    => [ $this, 'dokan_setup_store' ],
-                'handler' => [ $this, 'dokan_setup_store_save' ],
-            ],
-            'payment'      => [
-                'name'    => __( 'Payment', 'dokan-lite' ),
-                'view'    => [ $this, 'dokan_setup_payment' ],
-                'handler' => [ $this, 'dokan_setup_payment_save' ],
-            ],
-            'next_steps'   => [
-                'name'    => __( 'Ready!', 'dokan-lite' ),
-                'view'    => [ $this, 'dokan_setup_ready' ],
-                'handler' => '',
-            ],
-        ];
+        // Setup wizard steps
+        $this->set_steps();
 
-        $this->steps = apply_filters( 'dokan_seller_wizard_steps', $steps );
-        $this->step  = current( array_keys( $this->steps ) );
+        // If payment step is accessed but no active methods exist, redirect to next step
+        if ( isset( $_GET['step'] ) && 'payment' === $_GET['step'] ) {
+            $active_methods = dokan_withdraw_get_active_methods();
+            if ( empty( $active_methods ) ) {
+                wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
+                exit;
+            }
+        }
 
         // get step from url
         if ( isset( $_GET['_admin_sw_nonce'], $_GET['step'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_admin_sw_nonce'] ) ), 'dokan_admin_setup_wizard_nonce' ) ) {
-            $this->step = sanitize_key( wp_unslash( $_GET['step'] ) );
+            $this->step = sanitize_key( $_GET['step'] ) ?? current( array_keys( $this->steps ) );
         }
 
         if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) { // WPCS: CSRF ok.
@@ -520,12 +506,9 @@ class SetupWizard extends DokanSetupWizard {
         if ( empty( $dokan_settings['address']['country'] ) ) {
             $is_valid_form = false;
             $_POST['error_address[country]'] = 'error';
-        }
-        else {
-            if ( ( isset( $states[ $dokan_settings['address']['country'] ] ) && count( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) || ( ! isset( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) ) ) ) {
+        } elseif ( ( isset( $states[ $dokan_settings['address']['country'] ] ) && count( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) || ( ! isset( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) ) ) ) {
                 $is_valid_form = false;
                 $_POST['error_address[state]'] = 'error';
-            }
         }
 
         if ( ! $is_valid_form ) {
@@ -607,12 +590,16 @@ class SetupWizard extends DokanSetupWizard {
                 'swift'          => $bank['swift'],
             ];
 
-            $user_bank_data = array_filter( $dokan_settings['payment']['bank'], function( $item ) { return ! empty( $item ); } );
+            $user_bank_data = array_filter(
+                $dokan_settings['payment']['bank'], function ( $item ) {
+					return ! empty( $item );
+				}
+            );
             $require_fields = array_keys( dokan_bank_payment_required_fields() );
 
             $has_bank_information = true;
             foreach ( $require_fields as $require_field ) {
-                if( empty( $user_bank_data[ $require_field ] ) ) {
+                if ( empty( $user_bank_data[ $require_field ] ) ) {
                     $_POST[ 'error_' . $require_field ] = 'error';
                     $has_bank_information = false;
                 }
@@ -665,5 +652,88 @@ class SetupWizard extends DokanSetupWizard {
             </p>
         </div>
         <?php
+    }
+
+    /**
+     * Gets the URL for the next step in the wizard
+     *
+     * Handles special logic to skip the payment step if no withdrawal methods
+     * are active, preventing users from accessing an empty payment step
+     *
+     * @since 2.9.27
+     *
+     * @return string The URL for the next step
+     */
+    public function get_next_step_link(): string
+    {
+        $keys = array_keys( $this->steps );
+        $step = array_search( $this->step, $keys, true );
+        $next_step = $keys[ $step + 1 ];
+
+        // If next step is payment but there are no active methods, skip to the following step
+        if ( 'payment' === $next_step ) {
+            $active_methods = dokan_withdraw_get_active_methods();
+            if ( empty( $active_methods ) ) {
+                $next_step = $keys[ $step + 2 ];
+            }
+        }
+
+        return add_query_arg(
+            [
+				'step' => $next_step,
+				'_admin_sw_nonce' => wp_create_nonce( 'dokan_admin_setup_wizard_nonce' ),
+			]
+        );
+    }
+
+    /**
+     * Sets up the wizard steps
+     *
+     * Defines the steps for the setup wizard, conditionally including
+     * the payment step only if active withdrawal methods exist
+     *
+     * @since 2.9.27
+     *
+     * @return void
+     */
+    protected function set_steps() {
+        $steps = [
+            'introduction' => [
+                'name'    => __( 'Introduction', 'dokan-lite' ),
+                'view'    => [ $this, 'dokan_setup_introduction' ],
+                'handler' => '',
+            ],
+            'store'        => [
+                'name'    => __( 'Store', 'dokan-lite' ),
+                'view'    => [ $this, 'dokan_setup_store' ],
+                'handler' => [ $this, 'dokan_setup_store_save' ],
+            ],
+        ];
+
+        // Only add payment step if there are active withdrawal methods
+        $active_methods = dokan_withdraw_get_active_methods();
+        if ( ! empty( $active_methods ) ) {
+            $steps['payment'] = [
+                'name'    => __( 'Payment', 'dokan-lite' ),
+                'view'    => [ $this, 'dokan_setup_payment' ],
+                'handler' => [ $this, 'dokan_setup_payment_save' ],
+            ];
+        }
+
+        $steps['next_steps'] = [
+            'name'    => __( 'Ready!', 'dokan-lite' ),
+            'view'    => [ $this, 'dokan_setup_ready' ],
+            'handler' => '',
+        ];
+
+        /**
+         * Filter the seller wizard steps
+         *
+         * @since 2.9.27
+         *
+         * @param array $steps Array of wizard steps
+         */
+        $this->steps = apply_filters( 'dokan_seller_wizard_steps', $steps );
+        $this->step  = current( array_keys( $this->steps ) );
     }
 }
