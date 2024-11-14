@@ -95,7 +95,7 @@ export class CommissionPage extends AdminPage {
         await this.addCommission(commission);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.selling.sellingOptionsSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
 
         // assert values
         await this.assertCommission(commission);

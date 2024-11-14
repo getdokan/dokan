@@ -143,7 +143,8 @@ export class SettingsPage extends AdminPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toHaveValue(settingsAdmin.selling.percentage, selling.commission.commissionPercentage);
         await this.toHaveValue(settingsAdmin.selling.percentage, selling.commission.commissionFixed);
-      
+    }
+
     // Admin Set Dokan Withdraw Settings
     async setDokanWithdrawSettings(withdraw: dokanSettings['withdraw']) {
         await this.goToDokanSettings();
