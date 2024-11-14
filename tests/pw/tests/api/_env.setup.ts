@@ -108,6 +108,43 @@ setup.describe('setup woocommerce settings', () => {
     });
 });
 
+setup.describe('setup user settings', () => {
+    setup.use({ extraHTTPHeaders: payloads.adminAuth });
+
+    let apiUtils: ApiUtils;
+
+    setup.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    setup.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    // Vendor Details
+    setup('add vendor1 product', { tag: ['@lite'] }, async () => {
+        // delete previous store products with predefined name if any
+        await apiUtils.deleteAllProducts(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
+        // create store product
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name }, payloads.vendorAuth);
+        helpers.createEnvVar('PRODUCT_ID', productId);
+    });
+
+    setup('add vendor2 product', { tag: ['@lite'] }, async () => {
+        // delete previous store products with predefined name if any
+        await apiUtils.deleteAllProducts(data.predefined.vendor2.simpleProduct.product1.name, payloads.vendor2Auth);
+        // create store product
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name }, payloads.vendor2Auth);
+        helpers.createEnvVar('PRODUCT_ID_V2', productId);
+    });
+
+    setup('add vendor1 coupon', { tag: ['@pro'] }, async () => {
+        // create store coupon
+        const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string }) => o.id);
+        await apiUtils.createCoupon(allProductIds, payloads.createCoupon1, payloads.vendorAuth);
+    });
+});
+
 setup.describe('setup dokan settings', () => {
     let apiUtils: ApiUtils;
 

@@ -28,8 +28,8 @@ test.describe.serial('commission calculation test', () => {
 
     test.skip('calculation (debug)', { tag: ['@lite'] }, async () => {
         const orderId = '4100';
-        const [orderResponse, orderResponsebody] = await apiUtils.getSingleOrder(orderId);
-        await assertOrderCalculation([orderResponse, orderResponsebody, orderId]);
+        const [orderResponse, orderResponseBody] = await apiUtils.getSingleOrder(orderId);
+        await assertOrderCalculation([orderResponse, orderResponseBody, orderId]);
     });
 
     test('global commission fixed (only percentage)', { tag: ['@lite'] }, async () => {
@@ -285,7 +285,7 @@ test.describe.serial('commission calculation test', () => {
     });
 });
 
-test.describe.serial('fee receipient calculation test', () => {
+test.describe.serial('fee recipient calculation test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -300,7 +300,7 @@ test.describe.serial('fee receipient calculation test', () => {
         await apiUtils.dispose();
     });
 
-    test('fee receipient: shippingFee=seller, shippingTax=seller, productTax=seller', { tag: ['@lite'] }, async () => {
+    test('fee recipient: shippingFee=seller, shippingTax=seller, productTax=seller', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller', tax_fee_recipient: 'seller', shipping_tax_fee_recipient: 'seller' });
 
@@ -309,7 +309,7 @@ test.describe.serial('fee receipient calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('fee receipient: shippingFee=seller, shippingTax=seller, productTax=admin', { tag: ['@lite'] }, async () => {
+    test('fee recipient: shippingFee=seller, shippingTax=seller, productTax=admin', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller', tax_fee_recipient: 'seller', shipping_tax_fee_recipient: 'admin' });
 
@@ -318,7 +318,7 @@ test.describe.serial('fee receipient calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('fee receipient: shippingFee=seller, shippingTax=admin, productTax=seller', { tag: ['@lite'] }, async () => {
+    test('fee recipient: shippingFee=seller, shippingTax=admin, productTax=seller', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller', tax_fee_recipient: 'admin', shipping_tax_fee_recipient: 'seller' });
 
@@ -327,7 +327,7 @@ test.describe.serial('fee receipient calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('fee receipient: shippingFee=seller, shippingTax=admin, productTax=admin', { tag: ['@lite'] }, async () => {
+    test('fee recipient: shippingFee=seller, shippingTax=admin, productTax=admin', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller', tax_fee_recipient: 'admin', shipping_tax_fee_recipient: 'admin' });
 
@@ -336,7 +336,7 @@ test.describe.serial('fee receipient calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('fee receipient: shippingFee=admin, shippingTax=seller, productTax=seller', { tag: ['@lite'] }, async () => {
+    test('fee recipient: shippingFee=admin, shippingTax=seller, productTax=seller', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'admin', tax_fee_recipient: 'seller', shipping_tax_fee_recipient: 'seller' });
 
@@ -345,7 +345,7 @@ test.describe.serial('fee receipient calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('fee receipient: shippingFee=admin, shippingTax=seller, productTax=admin', { tag: ['@lite'] }, async () => {
+    test('fee recipient: shippingFee=admin, shippingTax=seller, productTax=admin', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'admin', tax_fee_recipient: 'seller', shipping_tax_fee_recipient: 'admin' });
 
@@ -354,7 +354,7 @@ test.describe.serial('fee receipient calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('fee receipient: shippingFee=admin, shippingTax=admin, productTax=seller', { tag: ['@lite'] }, async () => {
+    test('fee recipient: shippingFee=admin, shippingTax=admin, productTax=seller', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'admin', tax_fee_recipient: 'admin', shipping_tax_fee_recipient: 'seller' });
 
@@ -363,7 +363,7 @@ test.describe.serial('fee receipient calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('fee receipient: shippingFee=admin, shippingTax=admin, productTax=admin', { tag: ['@lite'] }, async () => {
+    test('fee recipient: shippingFee=admin, shippingTax=admin, productTax=admin', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'admin', tax_fee_recipient: 'admin', shipping_tax_fee_recipient: 'admin' });
 
@@ -404,7 +404,7 @@ test.describe.serial('marketplace coupon calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('marketplace coupon: multiple coupon nonsequential', { tag: ['@lite'] }, async () => {
+    test('marketplace coupon: multiple coupon non-sequential', { tag: ['@lite'] }, async () => {
         const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const [, , code2] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });

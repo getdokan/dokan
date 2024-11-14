@@ -158,8 +158,8 @@ export const helpers = {
     },
 
     // calculate percentage
-    percentage(number: number, percentage: number) {
-        return number * (percentage / 100);
+    percentage(number: number, rate: number) {
+        return number * (rate / 100);
     },
 
     percentageWithRound(number: number, percentage: number) {
@@ -183,7 +183,7 @@ export const helpers = {
     },
 
     lineItemsToCartTax(taxRate: number, lineItems: { price: number; quantity: number }[]) {
-        const totalTax = lineItems.reduce((sum: number, { price, quantity }) => sum + this.tax(taxRate, price * quantity), 0);
+        const totalTax = lineItems.reduce((sum: number, { price, quantity }) => sum + this.tax(price * quantity, taxRate), 0);
         return this.roundToTwo(totalTax);
     },
 
@@ -200,7 +200,7 @@ export const helpers = {
             const lineItemTotal = price * quantity;
             const commission = this.percentage(Number(lineItemTotal), Number(commissionRate)) + Number(additionalFee);
             subtotal += lineItemTotal;
-            subtotalTax += this.tax(taxRate, lineItemTotal);
+            subtotalTax += this.tax(lineItemTotal, taxRate);
             subtotalCommission += commission;
             subtotalEarning += lineItemTotal - commission;
         }
@@ -218,7 +218,7 @@ export const helpers = {
         for (const { price, quantity } of lineItems) {
             const lineItemTotal = price * quantity;
             subtotal += lineItemTotal;
-            totalTax += this.tax(taxRate, lineItemTotal);
+            totalTax += this.tax(lineItemTotal, taxRate);
         }
 
         const results = [subtotal, totalTax].map(this.roundToTwo);
@@ -233,7 +233,7 @@ export const helpers = {
         for (const { price, quantity, subtotal } of lineItems) {
             const lineItemTotal = price * quantity;
             subtotalWithDiscount += lineItemTotal;
-            totalTax += this.tax(taxRate, lineItemTotal);
+            totalTax += this.tax(lineItemTotal, taxRate);
             subtotalWithoutDiscount += subtotal;
         }
 
@@ -248,8 +248,8 @@ export const helpers = {
         lineItems.forEach((item: any) => {
             item.meta_data.forEach((meta: any) => {
                 if (meta.key === 'dokan_commission_meta') {
-                    totalAdminCommission += meta.value.admin_commission;
-                    totalVendorEarning += meta.value.vendor_earning;
+                    totalAdminCommission += Number(meta.value.admin_commission);
+                    totalVendorEarning += Number(meta.value.vendor_earning);
                 }
             });
         });
@@ -259,8 +259,8 @@ export const helpers = {
     },
 
     // tax
-    tax(rate: number, amount: number) {
-        const tax = this.percentage(Number(rate), Number(amount));
+    tax(amount: number, rate: number) {
+        const tax = this.percentage(Number(amount), Number(rate));
         return this.roundToTwo(tax);
     },
 
@@ -280,7 +280,7 @@ export const helpers = {
         }
 
         couponLines.forEach(coupon => {
-            // only for debuging
+            // only for debugging
             if (!coupon.discount_type) {
                 //get coupon details from single order
                 const couponMeta = JSON.parse(coupon.meta_data[0].value);
@@ -299,7 +299,7 @@ export const helpers = {
     },
 
     // calculate commission or earning
-    commissionOrEarning(type: string, productcommissionOrEarning: number = 0, productTax: number = 0, shippingTax: number = 0, shippingFee: number = 0, gatewayDetails: any, feeRecipient: any) {
+    commissionOrEarning(type: string, productCommissionOrEarning: number = 0, productTax: number = 0, shippingTax: number = 0, shippingFee: number = 0, gatewayDetails: any, feeRecipient: any) {
         if (type === 'commission') {
             if (feeRecipient.taxFeeRecipient === 'seller') productTax = 0;
             if (feeRecipient.shippingTaxFeeRecipient === 'seller') shippingTax = 0;
@@ -312,9 +312,9 @@ export const helpers = {
             if (gatewayDetails.gatewayFeeGiver === 'admin') gatewayDetails.gatewayFee = 0;
         }
 
-        // console.log('productcommissionOrEarning', productcommissionOrEarning, 'productTax', productTax, 'shippingTax', shippingTax, 'shippingFee', shippingFee);
+        // console.log('productCommissionOrEarning', productCommissionOrEarning, 'productTax', productTax, 'shippingTax', shippingTax, 'shippingFee', shippingFee);
 
-        let commissionOrEarning = Number(productcommissionOrEarning) - Number(gatewayDetails.gatewayFee) + Number(productTax) + Number(shippingTax) + Number(shippingFee);
+        let commissionOrEarning = Number(productCommissionOrEarning) - Number(gatewayDetails.gatewayFee) + Number(productTax) + Number(shippingTax) + Number(shippingFee);
         commissionOrEarning = this.roundToTwo(commissionOrEarning);
         return commissionOrEarning;
     },
