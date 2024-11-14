@@ -140,7 +140,7 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.selling.hideProductPrice);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.selling.sellingOptionsSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toHaveValue(settingsAdmin.selling.percentage, selling.commission.commissionPercentage);
         await this.toHaveValue(settingsAdmin.selling.percentage, selling.commission.commissionFixed);
     }
