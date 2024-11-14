@@ -93,7 +93,10 @@ export const helpers = {
         ),
 
     // price as string
-    priceString: (num: number, choice: string): string => (choice === 'US' ? Number(num).toLocaleString('es-US') : Number(num).toLocaleString('es-ES')),
+    priceString: (num: number, choice: 'US' | 'ES'): string => (choice === 'US' ? Number(num).toLocaleString('es-US') : Number(num).toLocaleString('es-ES')),
+
+    // price as string with decimal
+    priceStringWithDecimal: (num: number, choice: string): string => (choice === 'US' ? Number(num).toLocaleString('es-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : Number(num).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
 
     // remove dollar sign
     removeCurrencySign: (str: string): string => str.replace(/[^\d\-.,\\s]/g, ''),
@@ -155,8 +158,8 @@ export const helpers = {
     },
 
     // calculate percentage
-    percentage(number: number, percentage: number) {
-        return number * (percentage / 100);
+    percentage(number: number, rate: number) {
+        return number * (rate / 100);
     },
 
     percentageWithRound(number: number, percentage: number) {
@@ -179,105 +182,141 @@ export const helpers = {
         return this.roundToTwo(subtotalWithoutDiscount);
     },
 
-    // discount
-    discount(subTotal: number, discount: any) {
-        let discount_total = 0;
-        switch (discount.type) {
-            case 'coupon':
-                {
-                    switch (discount.coupon.type) {
-                        case 'percentage':
-                            for (const rate of discount.coupon.amount) {
-                                if (discount.coupon.applySequentially) {
-                                    const discount = this.percentageWithRound(Number(subTotal), Number(rate));
-                                    subTotal -= discount;
-                                    discount_total += discount;
-                                } else {
-                                    discount_total += this.percentageWithRound(Number(subTotal), Number(rate));
-                                }
-                            }
-                            break;
+    lineItemsToCartTax(taxRate: number, lineItems: { price: number; quantity: number }[]) {
+        const totalTax = lineItems.reduce((sum: number, { price, quantity }) => sum + this.tax(price * quantity, taxRate), 0);
+        return this.roundToTwo(totalTax);
+    },
 
-                        case 'fixed':
-                            discount_total = Number(subTotal - discount.amount);
-                            break;
+    lineItemsToSalesMetrics(lineItems: any, taxRate: number): number[] {
+        let subtotal = 0;
+        let subtotalTax = 0;
+        let subtotalCommission = 0;
+        let subtotalEarning = 0;
 
-                        default:
-                            break;
-                    }
+        for (const { price, quantity, meta_data } of lineItems) {
+            const commissionRate = meta_data.find((item: { key: string }) => item.key === '_dokan_commission_rate').value;
+            const additionalFee = meta_data.find((item: { key: string }) => item.key === '_dokan_additional_fee').value;
+
+            const lineItemTotal = price * quantity;
+            const commission = this.percentage(Number(lineItemTotal), Number(commissionRate)) + Number(additionalFee);
+            subtotal += lineItemTotal;
+            subtotalTax += this.tax(lineItemTotal, taxRate);
+            subtotalCommission += commission;
+            subtotalEarning += lineItemTotal - commission;
+        }
+
+        // console.log('subtotal:', subtotal, 'subtotalTax:', subtotalTax, 'subtotalCommission:', subtotalCommission, 'subtotalEarning:', subtotalEarning);
+
+        const results = [subtotal, subtotalTax, subtotalCommission, subtotalEarning].map(this.roundToTwo);
+        return results;
+    },
+
+    lineItemsToSubtotalAndTax(taxRate: number, lineItems: { price: number; quantity: number; subtotal: number }[]) {
+        let subtotal = 0;
+        let totalTax = 0;
+
+        for (const { price, quantity } of lineItems) {
+            const lineItemTotal = price * quantity;
+            subtotal += lineItemTotal;
+            totalTax += this.tax(lineItemTotal, taxRate);
+        }
+
+        const results = [subtotal, totalTax].map(this.roundToTwo);
+        return results;
+    },
+
+    lineItemsToSubtotalAndTaxAndDiscount(taxRate: number, lineItems: { price: number; quantity: number; subtotal: number }[]) {
+        let subtotalWithDiscount = 0;
+        let subtotalWithoutDiscount = 0;
+        let totalTax = 0;
+
+        for (const { price, quantity, subtotal } of lineItems) {
+            const lineItemTotal = price * quantity;
+            subtotalWithDiscount += lineItemTotal;
+            totalTax += this.tax(lineItemTotal, taxRate);
+            subtotalWithoutDiscount += subtotal;
+        }
+
+        const results = [subtotalWithDiscount, totalTax, subtotalWithoutDiscount].map(this.roundToTwo);
+        return results;
+    },
+
+    lineItemsToCommissionAndEarning(lineItems: any) {
+        let totalAdminCommission = 0;
+        let totalVendorEarning = 0;
+
+        lineItems.forEach((item: any) => {
+            item.meta_data.forEach((meta: any) => {
+                if (meta.key === 'dokan_commission_meta') {
+                    totalAdminCommission += Number(meta.value.admin_commission);
+                    totalVendorEarning += Number(meta.value.vendor_earning);
                 }
+            });
+        });
 
-                break;
-
-            case 'amount_discount':
-                break;
-
-            case 'quantity_discount':
-                break;
-
-            default:
-                break;
-        }
-        return this.roundToTwo(discount_total);
+        const results = [totalAdminCommission, totalVendorEarning].map(this.roundToTwo);
+        return results;
     },
 
-    // product tax
-    productTax(taxRate: number, subtotal: number) {
-        const productTax = this.percentage(Number(subtotal), Number(taxRate));
-        return this.roundToTwo(productTax);
+    // tax
+    tax(amount: number, rate: number) {
+        const tax = this.percentage(Number(amount), Number(rate));
+        return this.roundToTwo(tax);
     },
 
-    // product tax
-    shippingTax(taxRate: number, shippingFee = 0) {
-        const shippingTax = this.percentage(Number(shippingFee), Number(taxRate));
-        return this.roundToTwo(shippingTax);
+    // gateway details
+    getGatewayDetails(responseBody: any) {
+        const gatewayFee = responseBody.meta_data.find((item: { key: string }) => item.key === 'dokan_gateway_fee')?.value ?? 0;
+        const gatewayFeeGiver = responseBody.meta_data.find((item: { key: string }) => item.key === 'dokan_gateway_fee_paid_by')?.value ?? 'seller';
+        return { gatewayFee: Number(gatewayFee), gatewayFeeGiver: gatewayFeeGiver };
     },
 
-    // order total
-    orderTotal(subtotal: number, productTax = 0, shippingTax = 0, shippingFee = 0) {
-        const orderTotal = Number(subtotal) + Number(productTax) + Number(shippingTax) + Number(shippingFee);
-        return this.roundToTwo(orderTotal);
-    },
+    // calculate discount
+    calculateDiscount(subtotal: number, couponLines: any[], applySequentially: boolean) {
+        let totalDiscount = 0;
 
-    // calculate admin commission
-    adminCommission(subTotal: number, commission: any, productTax = 0, shippingTax = 0, shippingFee = 0, gatewayFee = 0, feeRecipient: any, gatewayFeeGiver = 'seller') {
-        let subTotalCommission = 0;
-
-        switch (commission.type) {
-            case 'percentage':
-                subTotalCommission = this.percentage(Number(subTotal), Number(commission.amount));
-                break;
-
-            case 'flat':
-                subTotalCommission = Number(commission.amount);
-                break;
-
-            case 'combine':
-                subTotalCommission = this.percentage(Number(subTotal), Number(commission.amount)) + Number(commission.additionalAmount);
-                break;
-
-            default:
-                break;
+        if (!couponLines) {
+            return totalDiscount;
         }
 
-        productTax = feeRecipient.taxFeeRecipient === 'seller' ? 0 : productTax;
-        shippingTax = feeRecipient.shippingTaxFeeRecipient === 'seller' ? 0 : shippingTax;
-        shippingFee = feeRecipient.shippingFeeRecipient === 'seller' ? 0 : shippingFee;
-        gatewayFee = gatewayFeeGiver === 'seller' ? 0 : gatewayFee;
+        couponLines.forEach(coupon => {
+            // only for debugging
+            if (!coupon.discount_type) {
+                //get coupon details from single order
+                const couponMeta = JSON.parse(coupon.meta_data[0].value);
+                coupon.discount_type = couponMeta[2];
+                coupon.nominal_amount = couponMeta[3];
+            }
 
-        const adminCommission = subTotalCommission - Number(gatewayFee) + Number(productTax) + Number(shippingTax) + Number(shippingFee);
-        return this.roundToTwo(adminCommission);
+            const discountAmount = coupon.discount_type === 'percent' ? this.percentage(Number(subtotal), Number(coupon.nominal_amount)) : Number(coupon.nominal_amount);
+            totalDiscount = this.roundToTwo(totalDiscount + discountAmount);
+            if (applySequentially) {
+                subtotal = this.roundToTwo(subtotal - discountAmount);
+            }
+        });
+
+        return this.roundToTwo(totalDiscount);
     },
 
-    // calculate vendor earning
-    vendorEarning(subTotal: number, commission: number, productTax = 0, shippingTax = 0, shippingFee = 0, gatewayFee = 0, feeRecipient: any, gatewayFeeGiver = 'seller') {
-        productTax = feeRecipient.taxFeeRecipient !== 'seller' ? 0 : productTax;
-        shippingTax = feeRecipient.shippingTaxFeeRecipient !== 'seller' ? 0 : shippingTax;
-        shippingFee = feeRecipient.shippingFeeRecipient !== 'seller' ? 0 : shippingFee;
-        gatewayFee = gatewayFeeGiver !== 'seller' ? 0 : gatewayFee;
+    // calculate commission or earning
+    commissionOrEarning(type: string, productCommissionOrEarning: number = 0, productTax: number = 0, shippingTax: number = 0, shippingFee: number = 0, gatewayDetails: any, feeRecipient: any) {
+        if (type === 'commission') {
+            if (feeRecipient.taxFeeRecipient === 'seller') productTax = 0;
+            if (feeRecipient.shippingTaxFeeRecipient === 'seller') shippingTax = 0;
+            if (feeRecipient.shippingFeeRecipient === 'seller') shippingFee = 0;
+            if (gatewayDetails.gatewayFeeGiver === 'seller') gatewayDetails.gatewayFee = 0;
+        } else if (type === 'earning') {
+            if (feeRecipient.taxFeeRecipient === 'admin') productTax = 0;
+            if (feeRecipient.shippingTaxFeeRecipient === 'admin') shippingTax = 0;
+            if (feeRecipient.shippingFeeRecipient === 'admin') shippingFee = 0;
+            if (gatewayDetails.gatewayFeeGiver === 'admin') gatewayDetails.gatewayFee = 0;
+        }
 
-        const vendorEarning = Number(subTotal) - Number(commission) - Number(gatewayFee) + Number(productTax) + Number(shippingTax) + Number(shippingFee);
-        return this.roundToTwo(vendorEarning);
+        // console.log('productCommissionOrEarning', productCommissionOrEarning, 'productTax', productTax, 'shippingTax', shippingTax, 'shippingFee', shippingFee);
+
+        let commissionOrEarning = Number(productCommissionOrEarning) - Number(gatewayDetails.gatewayFee) + Number(productTax) + Number(shippingTax) + Number(shippingFee);
+        commissionOrEarning = this.roundToTwo(commissionOrEarning);
+        return commissionOrEarning;
     },
 
     // string to slug

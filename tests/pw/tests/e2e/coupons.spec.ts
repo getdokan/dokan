@@ -51,7 +51,6 @@ test.describe('Coupons test', () => {
     });
 
     test('vendor can view marketPlace coupons', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        test.skip(true, 'Has dokan issues');
         await vendor.viewMarketPlaceCoupons(marketplaceCouponCode);
     });
 

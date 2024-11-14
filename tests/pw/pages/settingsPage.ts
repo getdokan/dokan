@@ -3,6 +3,7 @@ import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { dokanSettings } from '@utils/interfaces';
+import { helpers } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
 
@@ -111,8 +112,9 @@ export class SettingsPage extends AdminPage {
         await this.goToSingleDokanSettings(settingsAdmin.menus.sellingOptions, selling.settingTitle);
 
         // commission settings
-        await this.selectByValue(settingsAdmin.selling.commissionType, selling.commissionType);
-        await this.clearAndType(settingsAdmin.selling.adminCommission, selling.adminCommission);
+        await this.selectByValue(settingsAdmin.selling.commissionType, selling.commission.commissionType);
+        await this.clearAndType(settingsAdmin.selling.percentage, selling.commission.commissionPercentage);
+        await this.clearAndType(settingsAdmin.selling.fixed, selling.commission.commissionFixed);
         await this.click(settingsAdmin.selling.shippingFeeRecipient(selling.shippingFeeRecipient));
         await this.click(settingsAdmin.selling.productTaxFeeRecipient(selling.productTaxFeeRecipient));
         await this.click(settingsAdmin.selling.shippingTaxFeeRecipient(selling.shippingTaxFeeRecipient));
@@ -140,7 +142,8 @@ export class SettingsPage extends AdminPage {
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
-        await this.toHaveValue(settingsAdmin.selling.adminCommission, selling.adminCommission);
+        await this.toHaveValue(settingsAdmin.selling.percentage, helpers.priceStringWithDecimal(Number(selling.commission.commissionPercentage), 'ES'));
+        await this.toHaveValue(settingsAdmin.selling.fixed, helpers.priceStringWithDecimal(Number(selling.commission.commissionFixed), 'ES'));
     }
 
     // Admin Set Dokan Withdraw Settings

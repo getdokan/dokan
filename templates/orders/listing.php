@@ -78,7 +78,17 @@ if ( $user_orders ) {
                         <?php echo wp_kses_post( $order->get_formatted_order_total() ); ?>
                     </td>
                     <td class="dokan-order-earning" data-title="<?php esc_attr_e( 'Earning', 'dokan-lite' ); ?>">
-                        <?php echo wp_kses_post( wc_price( dokan()->commission->get_earning_by_order( $order ) ) ); ?>
+                        <?php
+                            echo wp_kses_post(
+                                wc_price(
+                                    dokan()->commission->get_earning_by_order( $order ),
+                                    [
+                                        'currency' => $order->get_currency(),
+                                        'decimals' => wc_get_price_decimals() + 2,
+                                    ]
+                                )
+                            );
+                        ?>
                     </td>
                     <td class="dokan-order-status" data-title="<?php esc_attr_e( 'Status', 'dokan-lite' ); ?>">
                         <?php echo '<span class="dokan-label dokan-label-' . esc_attr( dokan_get_order_status_class( $order->get_status() ) ) . '">' . esc_html( dokan_get_order_status_translated( $order->get_status() ) ) . '</span>'; ?>

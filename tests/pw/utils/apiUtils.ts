@@ -896,6 +896,7 @@ export class ApiUtils {
     // create customer
     async createCustomer(payload: any, auth?: auth): Promise<[responseBody, string]> {
         const [response, responseBody] = await this.post(endPoints.wc.createCustomer, { data: payload, headers: auth }, false);
+
         let customerId: string;
         if (responseBody.code) {
             expect(response.status()).toBe(400);

@@ -8,7 +8,6 @@ import { schemas } from '@utils/schemas';
 const { PRODUCT_ID } = process.env;
 
 test.describe('commission api test', () => {
-    test.skip(true, 'feature not merged yet');
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {

@@ -273,12 +273,42 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                                     <?php do_action( 'dokan_product_edit_after_title', $post, $post_id ); ?>
 
+                                    <div class="dokan-form-group">
+                                        <?php
+                                        $data = Helper::get_saved_products_category( $post_id );
+                                        $data['from'] = 'edit_product';
+
+                                        dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
+                                        ?>
+                                    </div>
+
                                     <div class="show_if_simple dokan-clearfix show_if_external">
 
                                         <div class="dokan-form-group dokan-clearfix dokan-price-container">
 
                                             <div class="content-half-part regular-price">
-                                                <label for="_regular_price" class="form-label"><?php esc_html_e( 'Price', 'dokan-lite' ); ?></label>
+                                                <label for="_regular_price" class="form-label"><?php esc_html_e( 'Price', 'dokan-lite' ); ?>
+                                                    <span
+                                                        class="vendor-earning simple-product"
+                                                        data-commission="<?php echo esc_attr( dokan()->commission->get_earning_by_product( $post_id ) ); ?>"
+                                                        data-product-id="<?php echo esc_attr( $post_id ); ?>">
+                                                            ( <?php esc_html_e( ' You Earn : ', 'dokan-lite' ); ?><?php echo esc_html( get_woocommerce_currency_symbol() ); ?>
+                                                                <span class="vendor-price">
+                                                                    <?php
+                                                                    echo wp_kses_post(
+                                                                        wc_price(
+                                                                            dokan()->commission->get_earning_by_product( $post_id ),
+                                                                            [
+                                                                                'currency' => get_woocommerce_currency_symbol(),
+                                                                                'decimals' => wc_get_price_decimals() + 2,
+                                                                            ]
+                                                                        )
+                                                                    );
+                                                                    ?>
+                                                                </span>
+                                                            )
+                                                    </span>
+                                                </label>
                                                 <div class="dokan-input-group">
                                                     <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
                                                     <?php
@@ -343,14 +373,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                     </div>
 
                                     <div class="dokan-form-group">
-                                    <?php
-                                        do_action( 'dokan_product_edit_after_pricing', $post, $post_id );
-
-                                        $data = Helper::get_saved_products_category( $post_id );
-                                        $data['from'] = 'edit_product';
-
-                                        dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
-                                    ?>
+                                    <?php do_action( 'dokan_product_edit_after_pricing', $post, $post_id ); ?>
                                     </div>
 
                                     <div class="dokan-form-group">

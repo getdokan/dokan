@@ -29,7 +29,7 @@ export class AuctionsPage extends VendorPage {
         // Name
         await this.clearAndType(auctionProductsAdmin.product.productName, product.productName());
         await this.selectByValue(auctionProductsAdmin.product.productType, product.productType);
-        await this.click(auctionProductsAdmin.product.auction);
+        await this.click(auctionProductsAdmin.product.subMenus.auction);
         await this.selectByValue(auctionProductsAdmin.product.itemCondition, product.itemCondition);
         await this.selectByValue(auctionProductsAdmin.product.auctionType, product.auctionType);
         await this.clearAndType(auctionProductsAdmin.product.startPrice, product.regularPrice());
