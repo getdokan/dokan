@@ -93,7 +93,10 @@ export const helpers = {
         ),
 
     // price as string
-    priceString: (num: number, choice: string): string => (choice === 'US' ? Number(num).toLocaleString('es-US') : Number(num).toLocaleString('es-ES')),
+    priceString: (num: number, choice: 'US' | 'ES'): string => (choice === 'US' ? Number(num).toLocaleString('es-US') : Number(num).toLocaleString('es-ES')),
+
+    // price as string with decimal
+    priceStringWithDecimal: (num: number, choice: string): string => (choice === 'US' ? Number(num).toLocaleString('es-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : Number(num).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
 
     // remove dollar sign
     removeCurrencySign: (str: string): string => str.replace(/[^\d\-.,\\s]/g, ''),

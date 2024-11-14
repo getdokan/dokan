@@ -3,6 +3,7 @@ import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { dokanSettings } from '@utils/interfaces';
+import { helpers } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
 
@@ -141,8 +142,8 @@ export class SettingsPage extends AdminPage {
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
-        await this.toHaveValue(settingsAdmin.selling.percentage, selling.commission.commissionPercentage);
-        await this.toHaveValue(settingsAdmin.selling.percentage, selling.commission.commissionFixed);
+        await this.toHaveValue(settingsAdmin.selling.percentage, helpers.priceStringWithDecimal(Number(selling.commission.commissionPercentage), 'ES'));
+        await this.toHaveValue(settingsAdmin.selling.fixed, helpers.priceStringWithDecimal(Number(selling.commission.commissionFixed), 'ES'));
     }
 
     // Admin Set Dokan Withdraw Settings

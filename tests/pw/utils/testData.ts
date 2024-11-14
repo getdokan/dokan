@@ -2137,7 +2137,7 @@ export const data = {
             commission: {
                 commissionType: 'fixed', // 'fixed','category_based'
                 commissionPercentage: '10',
-                commissionFixed: '10',
+                commissionFixed: '0',
                 commissionCategory: {
                     allCategory: true, // true for all category, false for specific category
                     category: 'All Categories',
