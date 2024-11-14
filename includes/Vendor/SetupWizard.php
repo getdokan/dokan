@@ -87,7 +87,7 @@ class SetupWizard extends DokanSetupWizard {
 
         // get step from url
         if ( isset( $_GET['_admin_sw_nonce'], $_GET['step'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_admin_sw_nonce'] ) ), 'dokan_admin_setup_wizard_nonce' ) ) {
-            $this->step = sanitize_key( $_GET['step'] ) ?? current( array_keys( $this->steps ) );
+            $this->step = sanitize_key( wp_unslash( $_GET['step'] ) ) ?? current( array_keys( $this->steps ) );
         }
 
         if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) { // WPCS: CSRF ok.
@@ -664,8 +664,7 @@ class SetupWizard extends DokanSetupWizard {
      *
      * @return string The URL for the next step
      */
-    public function get_next_step_link(): string
-    {
+    public function get_next_step_link(): string {
         $keys = array_keys( $this->steps );
         $step = array_search( $this->step, $keys, true );
         $next_step = $keys[ $step + 1 ];
