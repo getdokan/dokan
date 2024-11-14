@@ -18,7 +18,7 @@ export class ProductAdvertisingPage extends AdminPage {
     async recreateProductAdvertisementPaymentViaSettingsSave() {
         await this.goToDokanSettings();
         await this.click(selector.admin.dokan.settings.menus.productAdvertising);
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.productAdvertising.productAdvertisingSaveChanges);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.saveChanges);
         await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, 'Setting has been saved successfully.');
     }
 

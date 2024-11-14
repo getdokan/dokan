@@ -102,21 +102,21 @@ export class VendorDeliveryTimePage extends CustomerPage {
     // customer
 
     // place order with delivery time and store pickup
-    async placeOrderWithDeliverTimeStorePickup(deliveryType: string, deliveryTime: deliveryTime, paymentMethod = 'bank') {
+    async placeOrderWithDeliverTimeStorePickup(deliveryType: 'delivery-time' | 'store-pickup', deliveryTime: deliveryTime, paymentMethod = 'bank') {
         await this.goToCheckout();
 
         switch (deliveryType) {
             case 'delivery-time':
                 await this.click(deliveryTimeCustomer.delivery);
                 await this.click(deliveryTimeCustomer.deliveryTimeInput);
-                await this.clickAndWaitForResponse(data.subUrls.ajax, deliveryTimeCustomer.deliveryDate(deliveryTime.date));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.deliveryTime, deliveryTimeCustomer.deliveryDate(deliveryTime.date));
                 await this.selectByNumber(deliveryTimeCustomer.timePicker, 1);
                 break;
 
             case 'store-pickup':
                 await this.click(deliveryTimeCustomer.storePickup);
                 await this.click(deliveryTimeCustomer.deliveryTimeInput);
-                await this.clickAndWaitForResponse(data.subUrls.ajax, deliveryTimeCustomer.deliveryDate(deliveryTime.date));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.deliveryTime, deliveryTimeCustomer.deliveryDate(deliveryTime.date));
                 await this.selectByNumber(deliveryTimeCustomer.timePicker, 1);
                 await this.selectByNumber(deliveryTimeCustomer.locationPicker, 1);
                 break;

@@ -31,7 +31,7 @@ export class FollowStorePage extends CustomerPage {
     // customer
 
     async customerFollowedVendorsRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.vendors);
+        await this.goIfNotThere(data.subUrls.frontend.followingStores);
 
         const noVendorsFound = await this.isVisible(selector.customer.cVendors.noVendorFound);
         if (noVendorsFound) {
@@ -40,6 +40,12 @@ export class FollowStorePage extends CustomerPage {
         }
 
         await this.notToHaveCount(selector.customer.cVendors.storeCard.storeCardDiv, 0);
+    }
+
+    // customer view followed vendors
+    async customerViewFollowedVendors(storeName: string) {
+        await this.goIfNotThere(data.subUrls.frontend.followingStores, 'domcontentloaded', true);
+        await this.toBeVisible(selector.customer.cVendors.followedStore(storeName));
     }
 
     // follow vendor

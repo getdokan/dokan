@@ -3,6 +3,7 @@ import { LiveChatPage } from '@pages/liveChatPage';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
+import { helpers } from '@utils/helpers';
 
 const { VENDOR_ID } = process.env;
 
@@ -21,6 +22,7 @@ test.describe('Live chat test', () => {
         customer = new LiveChatPage(cPage);
 
         await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { live_chat: 'yes' });
+        await helpers.exeCommandWpcli(data.commands.wpcli.rewritePermalink);
     });
 
     test.afterAll(async () => {

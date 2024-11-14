@@ -289,6 +289,9 @@ export interface product {
         startDate: string;
         endDate: string;
         storeName: string;
+        relistIfFailAfterNHours: string;
+        relistIfNotPaidAfterNHours: string;
+        relistAuctionDurationInH: string;
         saveSuccessMessage: string;
     };
 
@@ -1810,6 +1813,24 @@ export interface dokanSettings {
         availableVendorDisplayAreaTitle: string;
         availableVendorSectionDisplayPosition: string;
         showSpmvProducts: string;
+        saveSuccessMessage: string;
+    };
+
+    // printful Settings
+    printful: {
+        settingTitle: string;
+        clientId: string;
+        secretKey: string;
+        popupTitle: string;
+        popupTextColor: string;
+        popupBackgroundColor: string;
+        tabBackgroundColor: string;
+        activeTabBackgroundColor: string;
+        sizeGuideButtonText: string;
+        buttonTextColor: string;
+        primaryMeasurementUnit: string;
+        optionNames: string[];
+        optionValues: string[];
         saveSuccessMessage: string;
     };
 

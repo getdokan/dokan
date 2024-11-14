@@ -1739,11 +1739,20 @@ export class BasePage {
         }
     }
 
-    // admin enable switcher , if enabled then Skip : vendor dashboard disbursements
-    async enableSwitcherDisbursement(selector: string): Promise<void> {
+    // vendor enable switcher , if enabled then Skip : vendor dashboard (disbursements, printful)
+    async enableSwitcherVendorDashboard(selector: string): Promise<void> {
         selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
         const value = await this.getElementBackgroundColor(selector);
         if (!value.includes('rgb(33, 150, 243)')) {
+            await this.click(selector);
+        }
+    }
+
+    // vendor disable switcher , if enabled then Skip : vendor dashboard (disbursements, printful)
+    async disableSwitcherVendorDashboard(selector: string): Promise<void> {
+        selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
+        const value = await this.getElementBackgroundColor(selector);
+        if (value.includes('rgb(33, 150, 243)')) {
             await this.click(selector);
         }
     }

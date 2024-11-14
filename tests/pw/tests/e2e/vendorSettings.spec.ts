@@ -6,7 +6,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { VENDOR_ID } = process.env;
+const { DOKAN_PRO, VENDOR_ID } = process.env;
 
 test.describe('Vendor settings test', () => {
     let vendor: VendorSettingsPage;
@@ -23,7 +23,7 @@ test.describe('Vendor settings test', () => {
 
     test.afterAll(async () => {
         await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
-        await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
+        if (DOKAN_PRO) await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
         await vPage.close();
         await apiUtils.dispose();
     });
@@ -90,6 +90,7 @@ test.describe('Vendor settings test', () => {
 
     test('vendor can set catalog settings', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'catalog');
+        
         // disable catalog
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'off', catalog_mode_hide_product_price: 'off' });
     });
