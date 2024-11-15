@@ -5229,7 +5229,13 @@ export const selector = {
                 accommodationBooking: '#\\_is_dokan_accommodation',
                 productCategory: '#select2-product_cat-container',
                 productCategoryInput: '.select2-search--dropdown > .select2-search__field',
-                tags: '.select2-search__field',
+                // tags
+                tags: {
+                    tagInput: '//select[@id="product_tag"]/..//input[@class="select2-search__field"]',
+                    searchedTag: (tagName: string) => `//li[@class="select2-results__option select2-results__option--highlighted" and normalize-space(text())="${tagName}"]`,
+                    selectedTags: (tagName: string) => `//li[@class="select2-selection__choice" and contains(., "${tagName}")]`,
+                    removeSelectedTags: (tagName: string) => `//li[@class="select2-selection__choice" and contains(., "${tagName}")]//span[@class="select2-selection__choice__remove"]`,
+                },
 
                 // Accommodation Booking Options
                 minimumNumberOfNightsAllowedInABooking: '#\\_wc_booking_min_duration',

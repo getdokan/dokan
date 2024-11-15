@@ -396,13 +396,14 @@ export class BookingPage extends VendorPage {
     async addProductTags(productName: string, tags: string[]): Promise<void> {
         await this.goToBookingProductEditById(productName);
         for (const tag of tags) {
-            await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.tags.tagInput, tag);
-            await this.click(productsVendor.tags.searchedTag(tag));
-            await this.toBeVisible(productsVendor.tags.selectedTags(tag));
+            await this.clearAndType(bookingProductsVendor.booking.tags.tagInput, tag);
+            await this.toBeVisible(bookingProductsVendor.booking.tags.searchedTag(tag));
+            await this.click(bookingProductsVendor.booking.tags.searchedTag(tag));
+            await this.toBeVisible(bookingProductsVendor.booking.tags.selectedTags(tag));
         }
         await this.saveProduct();
         for (const tag of tags) {
-            await this.toBeVisible(productsVendor.tags.selectedTags(tag));
+            await this.toBeVisible(bookingProductsVendor.booking.tags.selectedTags(tag));
         }
     }
 
@@ -947,6 +948,13 @@ export class BookingPage extends VendorPage {
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.saveAttribute);
         await this.saveProduct();
         await this.toBeVisible(productsVendor.attribute.savedAttribute(attribute.attributeName));
+    }
+
+    // can't add already added attribute
+    async cantAddAlreadyAddedAttribute(productName: string, attributeName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.toBeVisible(productsVendor.attribute.savedAttribute(attributeName));
+        await this.toHaveAttribute(productsVendor.attribute.disabledAttribute(attributeName), 'disabled', 'disabled');
     }
 
     // remove product attribute

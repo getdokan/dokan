@@ -242,7 +242,7 @@ test.describe('Auction Product details functionality test', () => {
     });
 
     // todo: refactor below tests
-    
+
     test('vendor can create auction product attribute term', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , , attributeName] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
         const [, productIdFull] = await apiUtils.createProduct(payloads.createAuctionProductRequiredFields(), payloads.vendorAuth);
