@@ -30,7 +30,7 @@ class Settings {
         add_action( 'dokan_before_saving_settings', [ $this, 'set_withdraw_limit_value_validation' ], 10, 2 );
         add_filter( 'dokan_admin_localize_script', [ $this, 'add_admin_settings_nonce' ] );
         add_action( 'wp_ajax_dokan_refresh_admin_settings_field_options', [ $this, 'refresh_admin_settings_field_options' ] );
-        add_filter( 'dokan_get_settings_values', [ $this, 'format_price_values' ], 12, 2 );
+        add_filter( 'dokan_save_settings_value', [ $this, 'validate_fixed_price_values' ], 12, 2 );
         add_filter( 'dokan_get_settings_values', [ $this, 'set_withdraw_limit_gateways' ], 20, 2 );
         add_filter( 'dokan_settings_general_site_options', [ $this, 'add_dokan_data_clear_setting' ], 310 );
     }
@@ -61,21 +61,24 @@ class Settings {
     }
 
     /**
-     * Format price values for price settings
+     * Validate price values for saving fixed price settings.
      *
-     * @since 1.0.0
+     * @since DOKAN_SINCE
      *
-     * @param $option_name
-     * @param $option_values
+     * @param string  $option_name
+     * @param array $option_values
      *
-     * @return void
+     * @return array
      */
-    public function format_price_values( $option_values, $option_name ) {
-        if ( 'dokan_selling' === $option_name ) {
-            if ( isset( $option_values['commission_type'] ) && 'flat' === $option_values['commission_type'] ) {
-                $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_localized_price( $option_values['admin_percentage'] ) : 0;
-            } else {
-                $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_localized_decimal( $option_values['admin_percentage'] ) : 0;
+    public function validate_fixed_price_values( $option_values, $option_name ) {
+        $clickable_types = [ 'flat', 'fixed' ];
+
+        if ( 'dokan_selling' === $option_name && isset( $option_values['commission_type'] ) && in_array( $option_values['commission_type'], $clickable_types, true ) ) {
+            $admin_percentage       = (float) $option_values['admin_percentage'];
+            $saved_admin_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', '' );
+
+            if ( $admin_percentage < 0 || $admin_percentage > 100 ) {
+                $option_values['admin_percentage'] = $saved_admin_percentage;
             }
         }
 

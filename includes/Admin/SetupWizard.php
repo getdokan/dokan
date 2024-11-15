@@ -94,7 +94,7 @@ class SetupWizard {
         wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup.css', [ 'wc-setup' ], DOKAN_PLUGIN_VERSION );
 
         wp_enqueue_script(
-        'dokan-vue-bootstrap',
+            'dokan-vue-bootstrap',
             DOKAN_PLUGIN_ASSEST . '/js/vue-bootstrap.js',
             [ 'dokan-vue-vendor', 'dokan-i18n-jed', 'wp-hooks' ],
             DOKAN_PLUGIN_VERSION,
@@ -554,9 +554,14 @@ class SetupWizard {
     public function dokan_setup_commission_save() {
         check_admin_referer( 'dokan-setup' );
 
+        $dokan_commission_percentage = isset( $_POST['dokan_commission_percentage'] ) ? (float) wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['dokan_commission_percentage'] ) ) ) : 0;
+        if ( $dokan_commission_percentage < 0 || $dokan_commission_percentage > 100 ) {
+            $dokan_commission_percentage = 0;
+        }
+
         $options                                     = get_option( 'dokan_selling', [] );
         $options['commission_type']                  = isset( $_POST['dokan_commission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_type'] ) ) : 'fixed';
-        $options['admin_percentage']                 = isset( $_POST['dokan_commission_percentage'] ) ? wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['dokan_commission_percentage'] ) ) ) : 0;
+        $options['admin_percentage']                 = $dokan_commission_percentage;
         $options['additional_fee']                   = isset( $_POST['dokan_commission_flat'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_flat'] ) ) : 0;
         $options['commission_category_based_values'] = isset( $_POST['dokan_commission_category_based'] ) ? wc_clean( json_decode( sanitize_text_field( wp_unslash( $_POST['dokan_commission_category_based'] ) ), true ) ) : [];
 
