@@ -996,7 +996,26 @@ export const payloads = {
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
-        categories: [{}],
+        // categories
+        categories: [
+            {},
+            // {
+            //     id: CATEGORY_ID,
+            // },
+        ],
+        // tags
+        tags: [{ id: TAG_ID }],
+        // attributes
+        attributes: [
+            {
+                id: ATTRIBUTE_ID,
+                name: 'sizes',
+                position: 0,
+                visible: true,
+                variation: true,
+                options: ['s', 'l', 'm'],
+            },
+        ],
         duration_type: 'customer',
         duration_unit: 'day',
         duration: 1,
@@ -1064,6 +1083,7 @@ export const payloads = {
         ],
         // tags
         tags: [{ id: TAG_ID }],
+        // attributes
         attributes: [
             {
                 id: ATTRIBUTE_ID,

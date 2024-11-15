@@ -54,8 +54,8 @@ test.describe('Product details functionality test', () => {
     // product title
 
     test('vendor can update product title', { tag: ['@lite', '@vendor'] }, async () => {
-        const [, , productNameFull] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        await vendor.addProductTitle(productNameFull, data.product.productInfo.title);
+        const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        await vendor.addProductTitle(productName, data.product.productInfo.title);
     });
 
     // product permalink
@@ -101,13 +101,13 @@ test.describe('Product details functionality test', () => {
     });
 
     test('vendor can remove product discount price', { tag: ['@lite', '@vendor'] }, async () => {
-        const [, , productNameFull] = await apiUtils.createProduct({ ...payloads.createDiscountProduct(), date_on_sale_from: '', date_on_sale_to: '' }, payloads.vendorAuth);
-        await vendor.removeDiscount(productNameFull);
+        const [, , productName] = await apiUtils.createProduct({ ...payloads.createDiscountProduct(), date_on_sale_from: '', date_on_sale_to: '' }, payloads.vendorAuth);
+        await vendor.removeDiscount(productName);
     });
 
     test('vendor can remove product discount schedule', { tag: ['@lite', '@vendor'] }, async () => {
-        const [, , productNameFull] = await apiUtils.createProduct(payloads.createDiscountProduct(), payloads.vendorAuth);
-        await vendor.removeDiscount(productNameFull, true);
+        const [, , productName] = await apiUtils.createProduct(payloads.createDiscountProduct(), payloads.vendorAuth);
+        await vendor.removeDiscount(productName, true);
     });
 
     // product category
@@ -124,8 +124,8 @@ test.describe('Product details functionality test', () => {
     test('vendor can remove product category (multiple)', { tag: ['@pro', '@vendor'] }, async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { product_category_style: 'multiple' });
         const uncategorizedId = await apiUtils.getCategoryId('Uncategorized', payloads.adminAuth);
-        const [, , productNameFull] = await apiUtils.createProduct({ ...payloads.createProduct(), categories: [{ id: uncategorizedId }, { id: CATEGORY_ID }] }, payloads.vendorAuth); // need multiple categories
-        await vendor.removeProductCategory(productNameFull, [data.product.category.clothings]);
+        const [, , productName] = await apiUtils.createProduct({ ...payloads.createProduct(), categories: [{ id: uncategorizedId }, { id: CATEGORY_ID }] }, payloads.vendorAuth); // need multiple categories
+        await vendor.removeProductCategory(productName, [data.product.category.clothings]);
     });
 
     test('vendor can add multi-step product category (last category)', { tag: ['@lite', '@vendor'] }, async () => {
@@ -233,13 +233,13 @@ test.describe('Product details functionality test', () => {
     // product virtual options
 
     test('vendor can add product virtual option', { tag: ['@lite', '@vendor'] }, async () => {
-        const [, , productNameFull] = await apiUtils.createProduct(payloads.createProductRequiredFields(), payloads.vendorAuth);
-        await vendor.addProductVirtualOption(productNameFull, true);
+        const [, , productName] = await apiUtils.createProduct(payloads.createProductRequiredFields(), payloads.vendorAuth);
+        await vendor.addProductVirtualOption(productName, true);
     });
 
     test('vendor can remove product virtual option', { tag: ['@lite', '@vendor'] }, async () => {
-        const [, , productNameFull] = await apiUtils.createProduct({ ...payloads.createProductRequiredFields(), virtual: true }, payloads.vendorAuth);
-        await vendor.addProductVirtualOption(productNameFull, false);
+        const [, , productName] = await apiUtils.createProduct({ ...payloads.createProductRequiredFields(), virtual: true }, payloads.vendorAuth);
+        await vendor.addProductVirtualOption(productName, false);
     });
 
     // product inventory options
@@ -385,25 +385,26 @@ test.describe('Product details functionality test', () => {
     });
 
     // todo: refactor below tests
+
     test('vendor can create product attribute term', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , , attributeName] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
-        const [, , productNameFull] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        await vendor.addProductAttribute(productNameFull, { ...data.product.productInfo.attribute, attributeName: attributeName }, true);
+        const [, , productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        await vendor.addProductAttribute(productId, { ...data.product.productInfo.attribute, attributeName: attributeName }, true);
     });
 
     test('vendor can remove product attribute', { tag: ['@pro', '@vendor'] }, async () => {
         const [, attributeId, , attributeName, attributeTerm] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
         const attributes = { id: attributeId, name: attributeName, options: [attributeTerm] };
-        const [, , productNameFull] = await apiUtils.createProduct({ ...payloads.createProduct(), attributes: [attributes] }, payloads.vendorAuth);
-        await vendor.removeProductAttribute(productNameFull, attributeName);
+        const [, , productId] = await apiUtils.createProduct({ ...payloads.createProduct(), attributes: [attributes] }, payloads.vendorAuth);
+        await vendor.removeProductAttribute(productId, attributeName);
     });
 
     test('vendor can remove product attribute term', { tag: ['@pro', '@vendor'] }, async () => {
         const [, attributeId, , attributeName, attributeTerm] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
         const [, , , , attributeTerm2] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
         const attributes = { id: attributeId, name: attributeName, options: [attributeTerm, attributeTerm2] };
-        const [, , productNameFull] = await apiUtils.createProduct({ ...payloads.createProduct(), attributes: [attributes] }, payloads.vendorAuth);
-        await vendor.removeProductAttributeTerm(productNameFull, attributeName, attributeTerm2);
+        const [, , productId] = await apiUtils.createProduct({ ...payloads.createProduct(), attributes: [attributes] }, payloads.vendorAuth);
+        await vendor.removeProductAttributeTerm(productId, attributeName, attributeTerm2);
     });
 
     // discount options
@@ -463,13 +464,13 @@ test.describe('Product details functionality test', () => {
     });
 
     test('vendor can export product addon', { tag: ['@pro', '@vendor'] }, async () => {
-        const [responseBody, , productNameFull] = await apiUtils.createProductWithAddon(payloads.createProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
-        await vendor.exportAddon(productNameFull, serialize(apiUtils.getMetaDataValue(responseBody.meta_data, '_product_addons')));
+        const [responseBody, , productName] = await apiUtils.createProductWithAddon(payloads.createProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
+        await vendor.exportAddon(productName, serialize(apiUtils.getMetaDataValue(responseBody.meta_data, '_product_addons')));
     });
 
     test('vendor can remove product addon', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, , productNameFull, addonNames] = await apiUtils.createProductWithAddon(payloads.createProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
-        await vendor.removeAddon(productNameFull, addonNames[0] as string);
+        const [, , productId, addonNames] = await apiUtils.createProductWithAddon(payloads.createProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
+        await vendor.removeAddon(productId, addonNames[0] as string);
     });
 
     // rma options

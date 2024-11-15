@@ -41,8 +41,8 @@ test.describe('Auction Product details functionality test', () => {
     // product title
 
     test('vendor can update auction product title', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, productIdFull] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
-        await vendor.addProductTitle(productIdFull, data.product.productInfo.title);
+        const [, productId] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
+        await vendor.addProductTitle(productId, data.product.productInfo.title);
     });
 
     // product category
@@ -59,8 +59,8 @@ test.describe('Auction Product details functionality test', () => {
     test('vendor can remove auction product category (multiple)', { tag: ['@pro', '@vendor'] }, async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { product_category_style: 'multiple' });
         const uncategorizedId = await apiUtils.getCategoryId('Uncategorized', payloads.adminAuth);
-        const [, productIdFull] = await apiUtils.createProduct({ ...payloads.createAuctionProduct(), categories: [{ id: uncategorizedId }, { id: CATEGORY_ID }] }, payloads.vendorAuth); // need multiple categories
-        await vendor.removeProductCategory(productIdFull, [data.product.category.clothings]);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createAuctionProduct(), categories: [{ id: uncategorizedId }, { id: CATEGORY_ID }] }, payloads.vendorAuth); // need multiple categories
+        await vendor.removeProductCategory(productId, [data.product.category.clothings]);
     });
 
     test('vendor can add multi-step auction product category (last category)', { tag: ['@pro', '@vendor'] }, async () => {
@@ -161,7 +161,7 @@ test.describe('Auction Product details functionality test', () => {
 
     test.skip('vendor can remove auction product downloadable file', { tag: ['@pro', '@vendor'] }, async () => {
         // todo: need a product with downloadable file
-        test.skip(true, 'Has Dokan Issue download limit & expiry doesnt reset');
+        test.skip(true, 'Has Dokan Issue download limit & expiry does not reset');
         await vendor.addProductDownloadableOptions(productIdFull, data.product.productInfo.downloadableOptions);
         await vendor.removeDownloadableFile(productIdFull, { ...data.product.productInfo.downloadableOptions, downloadLimit: '', downloadExpiry: '' });
     });
@@ -169,13 +169,13 @@ test.describe('Auction Product details functionality test', () => {
     // product virtual options
 
     test('vendor can add product virtual option', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, productIdFull] = await apiUtils.createProduct(payloads.createAuctionProductRequiredFields(), payloads.vendorAuth);
-        await vendor.addProductVirtualOption(productIdFull, true);
+        const [, productId] = await apiUtils.createProduct(payloads.createAuctionProductRequiredFields(), payloads.vendorAuth);
+        await vendor.addProductVirtualOption(productId, true);
     });
 
     test('vendor can remove product virtual option', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, productIdFull] = await apiUtils.createProduct({ ...payloads.createAuctionProductRequiredFields(), virtual: true }, payloads.vendorAuth);
-        await vendor.addProductVirtualOption(productIdFull, false);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createAuctionProductRequiredFields(), virtual: true }, payloads.vendorAuth);
+        await vendor.addProductVirtualOption(productId, false);
     });
 
     test('vendor can update product general options', { tag: ['@pro', '@vendor'] }, async () => {
@@ -245,23 +245,23 @@ test.describe('Auction Product details functionality test', () => {
 
     test('vendor can create auction product attribute term', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , , attributeName] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
-        const [, productIdFull] = await apiUtils.createProduct(payloads.createAuctionProductRequiredFields(), payloads.vendorAuth);
-        await vendor.addProductAttribute(productIdFull, { ...data.product.productInfo.attribute, attributeName: attributeName }, true);
+        const [, productId] = await apiUtils.createProduct(payloads.createAuctionProductRequiredFields(), payloads.vendorAuth);
+        await vendor.addProductAttribute(productId, { ...data.product.productInfo.attribute, attributeName: attributeName }, true);
     });
 
     test('vendor can remove auction product attribute', { tag: ['@pro', '@vendor'] }, async () => {
         const [, attributeId, , attributeName, attributeTerm] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
         const attributes = { id: attributeId, name: attributeName, options: [attributeTerm] };
-        const [, productIdFull] = await apiUtils.createProduct({ ...payloads.createAuctionProduct(), attributes: [attributes] }, payloads.vendorAuth);
-        await vendor.removeProductAttribute(productIdFull, attributeName);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createAuctionProduct(), attributes: [attributes] }, payloads.vendorAuth);
+        await vendor.removeProductAttribute(productId, attributeName);
     });
 
     test('vendor can remove auction product attribute term', { tag: ['@pro', '@vendor'] }, async () => {
         const [, attributeId, , attributeName, attributeTerm] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
         const [, , , , attributeTerm2] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
         const attributes = { id: attributeId, name: attributeName, options: [attributeTerm, attributeTerm2] };
-        const [, productIdFull] = await apiUtils.createProduct({ ...payloads.createAuctionProduct(), attributes: [attributes] }, payloads.vendorAuth);
-        await vendor.removeProductAttributeTerm(productIdFull, attributeName, attributeTerm2);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createAuctionProduct(), attributes: [attributes] }, payloads.vendorAuth);
+        await vendor.removeProductAttributeTerm(productId, attributeName, attributeTerm2);
     });
 
     // geolocation
@@ -293,12 +293,12 @@ test.describe('Auction Product details functionality test', () => {
     });
 
     test('vendor can export auction product addon', { tag: ['@pro', '@vendor'] }, async () => {
-        const [responseBody, productIdFull] = await apiUtils.createProductWithAddon(payloads.createAuctionProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
-        await vendor.exportAddon(productIdFull, serialize(apiUtils.getMetaDataValue(responseBody.meta_data, '_product_addons')));
+        const [responseBody, productId] = await apiUtils.createProductWithAddon(payloads.createAuctionProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
+        await vendor.exportAddon(productId, serialize(apiUtils.getMetaDataValue(responseBody.meta_data, '_product_addons')));
     });
 
     test('vendor can remove auction product addon', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, productIdFull, , addonNames] = await apiUtils.createProductWithAddon(payloads.createAuctionProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
-        await vendor.removeAddon(productIdFull, addonNames[0] as string);
+        const [, productId, , addonNames] = await apiUtils.createProductWithAddon(payloads.createAuctionProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
+        await vendor.removeAddon(productId, addonNames[0] as string);
     });
 });
