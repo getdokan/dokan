@@ -331,6 +331,23 @@
           admin can view vendor orders [lite]: true
           admin can perform bulk action on vendors [lite]: true
 
+- page: 'Commission'
+  features:
+      admin:
+          admin can set commission on Dokan setup wizard (fixed) [lite]: true
+          admin can set commission on Dokan setup wizard (category based) [lite]: true
+          admin can set commission on Dokan setup wizard (specific category based) [lite]: true
+          admin can set commission on Dokan selling settings (fixed) [lite]: true
+          admin can set commission on Dokan selling settings (category based) [lite]: true
+          admin can set commission on Dokan selling settings (specific category based) [lite]: true
+          admin can set commission for vendor (fixed) [lite]: true
+          admin can set commission for vendor (category based) [lite]: true
+          admin can set commission for vendor (specific category based) [lite]: true
+          admin can set commission for a product (fixed) [lite]: true
+          admin can set commission to Dokan subscription product (fixed): true
+          admin can set commission to Dokan subscription product (category based): true
+          admin can set commission to Dokan subscription product (specific category based): true
+
 - page: 'Withdraw'
   features:
       admin:
