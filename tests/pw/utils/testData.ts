@@ -29,6 +29,8 @@ const {
     FB_APP_SECRET,
     TALKJS_APP_ID,
     TALKJS_APP_SECRET,
+    PRINTFUL_APP_ID,
+    PRINTFUL_APP_SECRET,
 } = process.env;
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
@@ -397,6 +399,9 @@ export const data = {
             buyItNowPrice: () => faker.finance.amount({ min: 900, max: 1000, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             startDate: helpers.currentDateTime,
             endDate: helpers.addDays(helpers.currentDateTime, 20, 'full'),
+            relistIfFailAfterNHours: '1',
+            relistIfNotPaidAfterNHours: '2',
+            relistAuctionDurationInH: '3',
             storeName: `${VENDOR}store`,
             // saveSuccessMessage: '× Success! The product has been updated successfully. View Product →',
             saveSuccessMessage: 'Success! The product has been updated successfully.',
@@ -999,7 +1004,7 @@ export const data = {
             rmaRequests: 'my-account/rma-requests',
             viewRmaRequests: 'my-account/view-rma-requests',
             requestWarranty: 'my-account/request-warranty',
-            vendors: 'my-account/following',
+            followingStores: 'my-account/following',
             supportTickets: 'my-account/support-tickets',
 
             productCustomerPage: 'product',
@@ -1075,6 +1080,7 @@ export const data = {
                 auction: 'dashboard/auction',
                 auctionActivity: 'dashboard/auction-activity',
                 inbox: 'dashboard/inbox',
+                auctionProductEdit: (productId: string) => `dashboard/auction/?product_id=${productId}&action=edit`,
                 storeSupport: 'dashboard/support',
 
                 // sub menus
@@ -1082,6 +1088,8 @@ export const data = {
                 settingsAddon: 'dashboard/settings/product-addon',
                 settingsAddonEdit: (addonId: string) => `dashboard/settings/product-addon/?edit=${addonId}`,
                 settingsPayment: 'dashboard/settings/payment',
+                settingsPrintful: 'dashboard/settings/printful',
+                printful: 'https://www.printful.com/oauth/authorize',
 
                 // payment settings
                 paypal: 'dashboard/settings/payment-manage-paypal',
@@ -1115,6 +1123,7 @@ export const data = {
                 abuseReports: 'dokan/v1/abuse-reports',
                 logs: 'dokan/v1/admin/logs',
                 announcements: 'dokan/v1/announcement',
+                deliveryTime: 'dokan/v1/delivery-time',
                 dummyData: 'dokan/v1/dummy-data',
                 dummyDataImport: 'dokan/v1/dummy-data/import',
                 refunds: 'dokan/v1/refunds',
@@ -1910,9 +1919,9 @@ export const data = {
     modules: {
         noModuleMessage: 'No modules found.',
         moduleStats: {
-            totalModules: 39,
-            modulesVideoLink: 17,
-            productManagement: 14,
+            totalModules: 40,
+            modulesVideoLink: 19,
+            productManagement: 15,
             integration: 6,
             uiUx: 2,
             shipping: 3,
@@ -1945,6 +1954,7 @@ export const data = {
             'spmv',
             'store_reviews',
             'stripe',
+            'printful',
             'product_advertising',
             'product_subscription',
             'vendor_analytics',
@@ -2429,6 +2439,23 @@ export const data = {
             availableVendorDisplayAreaTitle: 'Other Available Vendor',
             availableVendorSectionDisplayPosition: 'below_tabs', // 'below_tabs', 'inside_tabs', 'after_tabs'
             showSpmvProducts: 'show_all', // 'show_all', 'min_price', 'max_price', 'top_rated_vendor'
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
+        printful: {
+            settingTitle: 'Printful Settings',
+            clientId: PRINTFUL_APP_ID,
+            secretKey: PRINTFUL_APP_SECRET,
+            popupTitle: 'Size Guide',
+            popupTextColor: '#000000',
+            popupBackgroundColor: '#FFFFFF',
+            tabBackgroundColor: '#EEEEEE',
+            activeTabBackgroundColor: '#DDDDDD',
+            sizeGuideButtonText: 'Size Guide',
+            buttonTextColor: '#1064A9',
+            primaryMeasurementUnit: 'inches', // inches, centimetre
+            optionNames: ['Size Guide Popup Text Color', 'Size Guide Popup Background Color', 'Size Guide Tab Background Color', 'Size Guide Active Tab Background Color', 'Size Guide Button Text Color'],
+            optionValues: ['#000000', '#FFFFFF', '#EEEEEE', '#DDDDDD', '#1064A9'],
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 

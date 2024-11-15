@@ -1014,7 +1014,113 @@ export const payloads = {
         purchasable: true,
         virtual: false,
         downloadable: false,
+        // categories
+        categories: [
+            {},
+            // {
+            //     id: CATEGORY_ID,
+            // },
+        ],
+        // tags
+        tags: [{ id: TAG_ID }],
+        attributes: [
+            {
+                id: ATTRIBUTE_ID,
+                name: 'sizes',
+                position: 0,
+                visible: true,
+                variation: true,
+                options: ['s', 'l', 'm'],
+            },
+        ],
+        meta_data: [
+            {
+                key: '_auction_item_condition',
+                value: 'new',
+            },
+            {
+                key: '_auction_type',
+                value: 'normal',
+            },
+
+            {
+                key: '_auction_start_price',
+                value: '10', // faker.finance.amount({min:10, max:20, dec:2}),
+            },
+            {
+                key: '_auction_bid_increment',
+                value: '20',
+            },
+            {
+                key: '_auction_reserved_price',
+                value: '30',
+            },
+            {
+                key: '_auction_dates_from',
+                value: helpers.currentDateTime,
+            },
+            {
+                key: '_auction_dates_to',
+                value: helpers.addDays(helpers.currentDateTime, 20, 'full'),
+            },
+            {
+                key: '_auction_has_started',
+                value: '1',
+            },
+
+            // {
+            // 	key  : '_auction_bid_count',
+            // 	value: '0'
+            // },
+            {
+                key: '_auction_proxy',
+                value: 'yes',
+            },
+            // {
+            // 	key  : '_auction_sealed',
+            // 	value: 'no'
+            // },
+            {
+                key: '_auction_automatic_relist',
+                value: 'yes',
+            },
+            {
+                key: '_auction_relist_fail_time',
+                value: '4',
+            },
+            {
+                key: '_auction_relist_not_paid_time',
+                value: '5',
+            },
+            {
+                key: '_auction_relist_duration',
+                value: '6',
+            },
+            // {
+            // 	key  : '_auction_extend_enable',
+            // 	value: 'no'
+            // },
+            // {
+            // 	key  : '_auction_last_activity',
+            // 	value: '1693755727'
+            // },
+        ],
+    }),
+
+    createAuctionProductRequiredFields: () => ({
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Auction)`,
+        type: 'auction',
+        status: 'publish',
+        // featured: true,
+        // description: 'test description',
+        // short_description: 'test short description',
+        // price: '2000',
+        // regular_price: '2000',
+        purchasable: true,
+        // virtual: false,
+        // downloadable: false,
         categories: [{}],
+        tags: [{}],
         meta_data: [
             {
                 key: '_auction_item_condition',

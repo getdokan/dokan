@@ -48,22 +48,23 @@ export class ColorsPage extends AdminPage {
         }
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.colors.colorsSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.colors.saveSuccessMessage);
-
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
-
-        // assertions
 
         // convert hex to rgb
         Object.keys(paletteValues).forEach(key => {
             paletteValues[key as keyof paletteValues] = helpers.hexToRgb(paletteValues[key as keyof paletteValues]);
         });
 
+        // assertions
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore, 'networkidle');
+
+        // assertions
+
         // button color
         const beforeHover = await this.getElementCssStyle(settingsVendor.updateSettingsTop);
         // hovered button color
-        await this.hover(settingsVendor.updateSettingsTop);
+        await this.addAttributeValue(settingsVendor.updateSettingsTop, 'class', 'active');
         const afterHover = await this.getElementCssStyle(settingsVendor.updateSettingsTop);
         // sidebar color
         const dashboardSidebarMenuText = await this.getElementColor(dashboardVendor.menus.primary.dashboard);
