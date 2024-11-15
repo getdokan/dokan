@@ -1722,8 +1722,8 @@ export class BasePage {
     // enable switch or checkbox: dokan setup wizard
     async enableSwitcherSetupWizard(selector: string): Promise<void> {
         const value = await this.getPseudoElementStyles(selector, 'before', 'background-color');
-        // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
-        if (!value.includes('rgb(251, 203, 196)') && !value.includes('rgb(242, 98, 77)')) {
+        // rgb(201, 186, 248) for switcher & rgb(112, 71, 235) for checkbox
+        if (!value.includes('rgb(201, 186, 248)') && !value.includes('rgb(112, 71, 235)')) {
             if (selector.includes('withdraw_methods')) selector += '/..';
             await this.click(selector);
         }
@@ -1732,8 +1732,8 @@ export class BasePage {
     // disable switch or checkbox: dokan setup wizard
     async disableSwitcherSetupWizard(selector: string): Promise<void> {
         const value = await this.getPseudoElementStyles(selector, 'before', 'background-color');
-        // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
-        if (value.includes('rgb(251, 203, 196)') || value.includes('rgb(242, 98, 77)')) {
+        // rgb(201, 186, 248) for switcher & rgb(112, 71, 235) for checkbox
+        if (value.includes('rgb(201, 186, 248)') || value.includes('rgb(112, 71, 235)')) {
             if (selector.includes('withdraw_methods')) selector += '/..';
             await this.click(selector);
         }

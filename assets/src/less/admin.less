@@ -1,5 +1,6 @@
 @import "mixins.less";
 @import "tooltip.less";
+@import "variables.less";
 
 .dokan-admin-header {
     background: #fff;
@@ -12,6 +13,7 @@
 
     .dokan-admin-header-logo {
         display: flex;
+        align-items: center;
 
         img {
             height: 25px;
@@ -160,13 +162,13 @@
                             }
 
                             &.active {
-                                color: #dd452c;
+                                color: @dokan-color;
 
                                 .dokan-icon {
-                                    background-color: rgba(221, 69, 44, 0.15);
+                                    background-color: @dokan-light-purple;
 
                                     svg path {
-                                        fill: #f1634c;
+                                        fill: @dokan-color;
                                     }
                                 }
 
@@ -174,7 +176,7 @@
                                     content: "";
                                     width: 6px;
                                     height: 6px;
-                                    background-color: #dd452c;
+                                    background-color: @dokan-color;
                                     border-radius: 53px;
                                     margin-left: 10px;
                                 }
@@ -193,13 +195,13 @@
                             }
 
                             &:hover {
-                                color: #dd452c;
+                                color: @dokan-color;
 
                                 .dokan-icon {
-                                    background-color: rgba(221, 69, 44, 0.15);
+                                    background-color: @dokan-light-gray;
 
                                     svg path {
-                                        fill: #f1634c;
+                                        fill:@dokan-color;
                                     }
                                 }
                             }
