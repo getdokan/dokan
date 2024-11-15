@@ -585,6 +585,7 @@ export class AuctionsPage extends VendorPage {
         await this.toBeVisible(productsVendor.attribute.savedAttribute(attribute.attributeName));
     }
 
+    // can't add already added attribute
     async cantAddAlreadyAddedAttribute(productName: string, attributeName: string): Promise<void> {
         await this.goToAuctionProductEditById(productName);
         await this.toBeVisible(productsVendor.attribute.savedAttribute(attributeName));
