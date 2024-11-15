@@ -1,4 +1,4 @@
-const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, TALKJS_APP_ID, TALKJS_APP_SECRET, PRINTFUL_APP_ID, PRINTFUL_APP_SECRET } = process.env;
+const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, CATEGORY_ID, TALKJS_APP_ID, TALKJS_APP_SECRET, PRINTFUL_APP_ID, PRINTFUL_APP_SECRET } = process.env;
 
 export const dbData = {
     dokan: {
@@ -45,8 +45,7 @@ export const dbData = {
             admin_access: 'on', // vendor edit product test needs it to disable
             custom_store_url: 'store',
             setup_wizard_logo_url: '',
-            setup_wizard_message:
-                '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.<strong></p>',
+            setup_wizard_message: '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.<strong></p>',
             disable_welcome_wizard: 'off',
             global_digital_mode: 'sell_both',
             enable_shipstation_logging: 'off',
@@ -70,9 +69,30 @@ export const dbData = {
         sellingSettings: {
             // commission
             selling_capabilities: '',
-            commission_type: 'percentage',
+            commission_type: 'fixed', // 'fixed', 'category_based'
             admin_percentage: '10',
-            shipping_fee_recipient: 'seller',
+            additional_fee: '0',
+            commission_fixed_values: '',
+            commission_category_based_values: {
+                all: {
+                    percentage: '5',
+                    flat: '5',
+                },
+                items: {
+                    [CATEGORY_ID]: {
+                        percentage: '5',
+                        flat: '5',
+                    },
+                    // '27': {
+                    //     percentage: '5',
+                    //     flat: '5',
+                    // },
+                },
+            },
+
+            // fee recipient
+            'fee-recipients': '',
+            shipping_fee_recipient: 'seller', // 'seller', 'admin'
             tax_fee_recipient: 'seller',
             shipping_tax_fee_recipient: 'seller',
 
@@ -1384,8 +1404,7 @@ export const dbData = {
                 setup_wizard_logo_url: '',
                 setup_wizard_message:
                     '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.</strong> Test wizard message.</p>',
-                setup_wizard_message_without_html:
-                    'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It’s completely optional and shouldn’t take longer than two minutes. Test wizard message.',
+                setup_wizard_message_without_html: 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It’s completely optional and shouldn’t take longer than two minutes. Test wizard message.',
                 disable_welcome_wizard: 'off',
                 global_digital_mode: 'sell_both',
                 enable_shipstation_logging: 'off',

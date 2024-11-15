@@ -5,8 +5,10 @@ namespace WeDevs\Dokan\Product;
 use WC_Product;
 use WC_Product_Download;
 use WeDevs\Dokan\Cache;
-use WP_Query;
+use WeDevs\Dokan\Commission\Model\Setting;
+use WeDevs\Dokan\Commission\Settings\Product;
 use WP_Error;
+use WP_Query;
 
 /**
  * Product manager Class
@@ -713,5 +715,56 @@ class Manager {
         remove_filter( 'posts_clauses', [ 'WC_Shortcodes', 'order_by_rating_post_clauses' ] );
 
         return $products;
+    }
+
+    /**
+     * Validate product id (if it's a variable product, return it's parent id)
+     *
+     * Moved from \WeDevs\Dokan\Commission() ( commission.php file ) in version DOKAN_SINCE
+     *
+     * @since  2.9.21
+     *
+     * @param int $product_id
+     *
+     * @return int
+     */
+    public function validate_product_id( $product_id ) {
+        $product = $this->get( $product_id );
+        if ( ! $product ) {
+            return 0;
+        }
+
+        $parent_id = $product->get_parent_id();
+
+        return $parent_id ? $parent_id : $product_id;
+    }
+
+    /**
+     * Returns product commission settings data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Setting
+     */
+    public function get_commission_settings( $product_id = 0 ) {
+        $settings = new Product( $product_id );
+
+        return $settings->get();
+    }
+
+    /**
+     * Saves and returns product commission settings data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Setting
+     */
+    public function save_commission_settings( $product_id, $commission ) {
+        $data['percentage'] = isset( $commission['percentage'] ) ? $commission['percentage'] : '';
+        $data['type']       = isset( $commission['type'] ) ? $commission['type'] : '';
+        $data['flat']       = isset( $commission['flat'] ) ? $commission['flat'] : '';
+
+        $setting = new Product( $product_id );
+        return $setting->save( $data );
     }
 }

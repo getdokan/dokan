@@ -627,6 +627,18 @@ export const payloads = {
             // 	key  : '_overwrite_shipping',
             // 	value: 'no'
             // },
+            // {
+            //     key: '_per_product_admin_commission_type',
+            //     value: 'fixed',
+            // },
+            // {
+            //     key: '_per_product_admin_commission',
+            //     value: '50',
+            // },
+            // {
+            //     key: '_per_product_admin_additional_fee',
+            //     value: '5',
+            // },
         ],
     }),
 
@@ -3743,9 +3755,22 @@ export const payloads = {
         bank_name: '',
         bank_iban: '',
         categories: [{}],
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
         admin_commission: '',
-        admin_additional_fee: '0.00',
-        admin_commission_type: 'flat',
+        admin_additional_fee: '',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
     }),
 
     // always revert vendor settings to this after altering in tests
@@ -3961,9 +3986,23 @@ export const payloads = {
                 slug: 'uncategorized',
             },
         ],
+
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
         admin_commission: '',
         admin_additional_fee: '',
-        admin_commission_type: '',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
     },
 
     createStore2: {
@@ -4088,9 +4127,23 @@ export const payloads = {
                 slug: 'uncategorized',
             },
         ],
+
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
         admin_commission: '',
         admin_additional_fee: '',
-        admin_commission_type: '',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
     },
 
     createStore3: {
@@ -4215,9 +4268,22 @@ export const payloads = {
                 // slug: 'uncategorized'
             },
         ],
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
         admin_commission: '',
         admin_additional_fee: '',
-        admin_commission_type: '',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
     },
 
     createCustomer1: {
@@ -4658,6 +4724,69 @@ export const payloads = {
         shipped_status: 'ss_pickedup', // ss_delivered, ss_cancelled, ss_proceccing, ss_ready_for_pickup, ss_pickedup (has more options)
         shipped_date: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString(),
     },
+
+    vendorwiseCommission: {
+        admin_commission_type: 'fixed', // fixed, category_based
+        admin_commission: '5',
+        admin_additional_fee: '5',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
+    },
+
+    productCommissionOnlyPercent: [
+        {
+            key: '_per_product_admin_commission_type',
+            value: 'fixed',
+        },
+        {
+            key: '_per_product_admin_commission',
+            value: '10',
+        },
+        {
+            key: '_per_product_admin_additional_fee',
+            value: '0',
+        },
+    ],
+
+    productCommissionOnlyFixed: [
+        {
+            key: '_per_product_admin_commission_type',
+            value: 'fixed',
+        },
+        {
+            key: '_per_product_admin_commission',
+            value: '0',
+        },
+        {
+            key: '_per_product_admin_additional_fee',
+            value: '10',
+        },
+    ],
+
+    productCommissionBothPercentageAndFixed: [
+        {
+            key: '_per_product_admin_commission_type',
+            value: 'fixed',
+        },
+        {
+            key: '_per_product_admin_commission',
+            value: '10',
+        },
+        {
+            key: '_per_product_admin_additional_fee',
+            value: '10',
+        },
+    ],
 
     // shortcodes
 

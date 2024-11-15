@@ -232,10 +232,7 @@ export class BasePage {
 
     // click & wait for response with response type
     async clickAndWaitForResponseWithType(subUrl: string, selector: string, requestType: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.request().method().toLowerCase() == requestType.toLowerCase() && resp.status() === code),
-            this.page.locator(selector).click(),
-        ]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.request().method().toLowerCase() == requestType.toLowerCase() && resp.status() === code), this.page.locator(selector).click()]);
         return response;
     }
 
@@ -337,6 +334,12 @@ export class BasePage {
     // type & wait for load state
     async pressAndWaitForLoadState(key: string): Promise<void> {
         await Promise.all([this.waitForLoadState(), this.press(key)]);
+    }
+
+    // select & wait for response
+    async selectAndWaitForResponse(subUrl: string, selector: string, value: string, code = 200): Promise<Response> {
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.selectByValue(selector, value)]);
+        return response;
     }
 
     // type & wait for response

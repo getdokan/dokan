@@ -90,7 +90,7 @@ test.describe('Vendor settings test', () => {
 
     test('vendor can set catalog settings', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'catalog');
-        
+
         // disable catalog
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'off', catalog_mode_hide_product_price: 'off' });
     });

@@ -29,13 +29,13 @@ export class BookingPage extends VendorPage {
         // Name
         await this.clearAndType(bookingProductsAdmin.product.productName, product.productName());
         await this.selectByValue(bookingProductsAdmin.product.productType, product.productType);
-        await this.click(bookingProductsAdmin.product.general);
+        await this.click(bookingProductsAdmin.product.subMenus.general);
         await this.selectByValue(bookingProductsAdmin.product.bookingDurationType, product.duration.bookingDurationType);
         await this.clearAndType(bookingProductsAdmin.product.bookingDurationMax, product.duration.bookingDurationMax);
         await this.selectByValue(bookingProductsAdmin.product.calendarDisplayMode, product.calendarDisplayMode);
 
         // Costs
-        await this.click(bookingProductsAdmin.product.bookingCosts);
+        await this.click(bookingProductsAdmin.product.subMenus.bookingCosts);
         await this.clearAndType(bookingProductsAdmin.product.baseCost, product.costs.baseCost);
         await this.clearAndType(bookingProductsAdmin.product.blockCost, product.costs.blockCost);
 

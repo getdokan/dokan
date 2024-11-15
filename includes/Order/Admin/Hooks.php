@@ -55,6 +55,9 @@ class Hooks {
         add_filter( 'woocommerce_order_item_display_meta_value', [ $this, 'change_order_item_display_meta_value' ], 10, 2 );
         add_filter( 'woocommerce_reports_get_order_report_query', [ $this, 'admin_order_reports_remove_parents' ] );
         add_filter( 'post_class', [ $this, 'admin_shop_order_row_classes' ], 10, 3 );
+
+        // Add commission meta-box in order details page.
+        add_action( 'add_meta_boxes', [ $this, 'add_commission_metabox_and_related_orders_in_order_details_page' ], 10, 2 );
     }
 
     /**
@@ -89,9 +92,10 @@ class Hooks {
         }
 
         $column_to_insert = [
-            'seller'     => __( 'Vendor', 'dokan-lite' ),
-            'wc_actions' => __( 'Actions', 'dokan-lite' ),
-            'suborder'   => __( 'Sub Order', 'dokan-lite' ),
+            'admin_commission' => __( 'Commission', 'dokan-lite' ),
+            'seller'           => __( 'Vendor', 'dokan-lite' ),
+            'wc_actions'       => __( 'Actions', 'dokan-lite' ),
+            'suborder'         => __( 'Sub Order', 'dokan-lite' ),
         ];
         $columns          = dokan_array_insert_after( $existing_columns, $column_to_insert );
 
@@ -120,7 +124,7 @@ class Hooks {
             return;
         }
 
-        if ( ! in_array( $col, [ 'order_number', 'suborder', 'seller' ], true ) ) {
+        if ( ! in_array( $col, [ 'order_number', 'suborder', 'seller', 'admin_commission' ], true ) ) {
             return;
         }
 
@@ -154,6 +158,21 @@ class Hooks {
                     $output = esc_html__( '(no name)', 'dokan-lite' );
                 }
 
+                break;
+
+            case 'admin_commission':
+                if ( '1' === $order->get_meta( 'has_sub_order', true ) ) {
+                    $output = '--';
+                } else {
+                    $commission = dokan()->commission->get_earning_by_order( $order->get_id(), 'admin' );
+                    /**
+                     * In case of refund, we are not excluding gateway fee; in case of stripe full/partial refund net amount can be negative
+                     */
+                    if ( $commission < 0 ) {
+                        $commission = 0;
+                    }
+                    $output = wc_price( $commission );
+                }
                 break;
         }
 
@@ -512,5 +531,128 @@ class Hooks {
         if ( $typenow === 'shop_order' ) {
             echo '<button class="toggle-sub-orders button show">' . esc_html__( 'Toggle Sub-orders', 'dokan-lite' ) . '</button>';
         }
+    }
+
+    /**
+     * Add dokan commission meta-box in woocommerce order details page
+     * and add suborders or related sibling orders in meta-box.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function add_commission_metabox_and_related_orders_in_order_details_page( $post_type, $post ) {
+        $screen = OrderUtil::get_order_admin_screen();
+
+        if ( $screen !== $post_type ) {
+            return;
+        }
+
+        $order         = dokan()->order->get( OrderUtil::get_post_or_order_id( $post ) );
+        $has_sub_order = '1' === $order->get_meta( 'has_sub_order', true );
+
+        // Check if the screen is order details page and if it is a child order.
+        if ( ! $has_sub_order ) {
+            add_meta_box(
+                'dokan_commission_box',
+                __( 'Commissions', 'dokan-lite' ),
+                [ $this, 'commission_meta_box' ],
+                $screen,
+                'normal',
+                'core'
+            );
+        }
+
+        // If the order has is a parent order or a child order, avoid those order that has no parent order or child order.
+        if ( $has_sub_order || ! empty( $order->get_parent_id() ) ) {
+            $title = $has_sub_order ? __( 'Sub orders', 'dokan-lite' ) : __( 'Related orders', 'dokan-lite' );
+
+            add_meta_box(
+                'dokan_sub_or_related_orders',
+                $title,
+                [ $this, 'sub_or_related_orders_meta_box' ],
+                $screen,
+                'normal',
+                'core'
+            );
+        }
+    }
+
+    /**
+     * Dokan order commission meta-box body.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_Post|WC_Order $post_or_order
+     *
+     * @return void
+     */
+    public function commission_meta_box( $post_or_order ) {
+        global $wpdb;
+        $order = dokan()->order->get( OrderUtil::get_post_or_order_id( $post_or_order ) );
+
+        $data = $wpdb->get_row(
+            $wpdb->prepare( "SELECT order_total,net_amount FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order->get_id() )
+        );
+
+        $order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
+        $net_amount = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;
+
+        $total_commission     = (float) $order_total - (float) $net_amount;
+        $all_commission_types = array_merge( dokan_commission_types(), dokan()->commission->get_legacy_commission_types() );
+
+        dokan_get_template_part(
+            'orders/commission-meta-box-html', '', [
+                'order'                => $order,
+                'data'                 => $data,
+                'total_commission'     => $total_commission,
+                'all_commission_types' => $all_commission_types,
+            ]
+        );
+    }
+
+    /**
+     * Content of suborder or related order meta-box.
+     *
+     * @param $post_or_order
+     *
+     * @return void
+     */
+    public function sub_or_related_orders_meta_box( $post_or_order ) {
+        $order = dokan()->order->get( OrderUtil::get_post_or_order_id( $post_or_order ) );
+        $parent_order  = new WC_Order();
+        $has_sub_order = '1' === $order->get_meta( 'has_sub_order', true );
+
+        if ( $has_sub_order ) {
+            $orders_to_render = dokan()->order->get_child_orders( $order->get_id() );
+        } else {
+            $orders_to_render = dokan()->order->all(
+                [
+                    'parent' => $order->get_parent_id(),
+                    'limit'  => -1,
+                    'type'   => 'shop_order',
+                ]
+            );
+
+            $parent_order = dokan()->order->get( $order->get_parent_id() );
+
+            $orders_to_render = array_filter(
+                $orders_to_render,
+                function ( $item ) use ( $order ) {
+                    return $item->get_id() !== $order->get_id();
+                }
+            );
+
+            array_unshift( $orders_to_render, $parent_order );
+        }
+
+        dokan_get_template_part(
+            'orders/sub-order-related-order-meta-box-html', '', array(
+                'order'            => $order,
+                'parent_order'     => $parent_order,
+                'has_sub_order'    => $has_sub_order,
+                'orders_to_render' => $orders_to_render,
+            )
+        );
     }
 }
