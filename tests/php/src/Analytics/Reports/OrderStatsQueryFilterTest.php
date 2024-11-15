@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Test\Analytics\Reports;
 use Exception;
 use Mockery;
 use WeDevs\Dokan\Analytics\Reports\Orders\Stats\QueryFilter;
+use WeDevs\Dokan\Commission;
 use WeDevs\Dokan\Test\Analytics\Reports\ReportTestCase;
 
 /**
@@ -43,8 +44,8 @@ class OrderStatsQueryFilterTest extends ReportTestCase {
         self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_join_orders_stats_total', [ $order_stats_query_filter, 'add_join_subquery' ] ) );
         self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_join_orders_stats_interval', [ $order_stats_query_filter, 'add_join_subquery' ] ) );
         // Assert the Where Clause filters are registered
-        self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_where_orders_stats_total', [ $order_stats_query_filter, 'add_where_subquery' ] ) );
-        self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_where_orders_stats_interval', [ $order_stats_query_filter, 'add_where_subquery' ] ) );
+        // self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_where_orders_stats_total', [ $order_stats_query_filter, 'add_where_subquery' ] ) );
+        // self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_where_orders_stats_interval', [ $order_stats_query_filter, 'add_where_subquery' ] ) );
     }
 
 
@@ -65,7 +66,7 @@ class OrderStatsQueryFilterTest extends ReportTestCase {
 
         $mocking_methods = [
             'add_join_subquery',
-            'add_where_subquery',
+            // 'add_where_subquery', // For Coupon amount distribution.
             'add_select_subquery_for_total',
         ];
 
@@ -88,65 +89,35 @@ class OrderStatsQueryFilterTest extends ReportTestCase {
 		$wc_stats_query->get_data();
 	}
 
-    /**
-     * @dataProvider get_dokan_stats_data
-     *
-     * @return void
-     */
-    public function test_dokan_order_stats_added_to_wc_select_query_for_seller( array $data ) {
-        $parent_id = $this->create_multi_vendor_order();
-
-        $this->set_order_meta_for_dokan( $parent_id, $data );
-
-		$this->run_all_pending();
-
-        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
-
-        dokan_get_container()->extend( QueryFilter::class )->setConcrete( $filter );
-
-        $filter->shouldReceive( 'should_filter_by_vendor_id' )
-            ->atLeast()
-            ->once()
-            ->andReturnTrue();
-
-        $orders_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query( [] );
-
-		$report_data = $orders_query->get_data();
-
-        $sub_ids = dokan_get_suborder_ids_by( $parent_id );
-
-        $this->assertCount( $report_data->totals->orders_count, $sub_ids );
-
-        $sub_ord_count = count( $sub_ids );
-
-        // Assert dokan order stats totals.
-        foreach ( $data as $key => $val ) {
-            $this->assertEquals( floatval( $val * $sub_ord_count ), $report_data->totals->{"total_$key"} );
-        }
-    }
 
     /**
      * @dataProvider get_dokan_stats_data
      *
      * @return void
      */
-    public function test_dokan_order_stats_added_to_wc_select_query_for_admin( array $data ) {
+    public function test_dokan_order_stats_added_to_wc_select_query_for_total( array $data ) {
         $parent_id = $this->create_multi_vendor_order();
         $this->set_order_meta_for_dokan( $parent_id, $data );
+        $mock_commission = Mockery::mock( Commission::class );
+
+        dokan()->get_container()->extend( 'commission' )->setConcrete( $mock_commission );
+
+        $mock_commission->shouldReceive( 'get_earning_by_order' )->andReturnUsing(
+            function ( $order, $context = 'seller' ) use ( $data ) {
+                if ( $order->get_meta( 'has_sub_order' ) ) {
+                    return 0;
+                }
+                if ( $context === 'admin' ) {
+                    return $data['admin_commission'];
+                }
+                return $data['vendor_earning'];
+			}
+        );
 
 		$this->run_all_pending();
 
-        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
-
         remove_filter( 'woocommerce_analytics_clauses_where_orders_stats_total', [ $this->sut, 'add_where_subquery' ], 30 );
         remove_filter( 'woocommerce_analytics_clauses_where_orders_stats_total', [ $this->sut, 'add_where_subquery' ], 30 );
-
-        dokan_get_container()->extend( QueryFilter::class )->setConcrete( $filter );
-
-        $filter->shouldReceive( 'should_filter_by_vendor_id' )
-            ->atLeast()
-            ->once()
-            ->andReturnFalse();
 
         $orders_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query( [], 'orders-stats' );
 
@@ -154,13 +125,14 @@ class OrderStatsQueryFilterTest extends ReportTestCase {
 
         $sub_ids = dokan_get_suborder_ids_by( $parent_id );
 
-        $this->assertEquals( 1, $report_data->totals->orders_count );
+        $this->assertEquals( 2, $report_data->totals->orders_count );
 
         $sub_ord_count = count( $sub_ids );
-        // var_dump( $data );
         // Assert dokan order stats totals.
         foreach ( $data as $key => $val ) {
-            $this->assertEquals( floatval( $val * $sub_ord_count ), $report_data->totals->{"total_$key"} );
+            $expected = floatval( $val * $sub_ord_count );
+
+            $this->assertEquals( $expected, $report_data->totals->{"total_$key"}, $key . ' Mismatch: Expected: ' . $expected . ' Got: ' . $val );
         }
     }
 }

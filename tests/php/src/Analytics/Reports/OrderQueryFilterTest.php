@@ -3,6 +3,7 @@ namespace WeDevs\Dokan\Test\Analytics\Reports;
 
 use Mockery;
 use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter;
+use WeDevs\Dokan\Commission;
 use WeDevs\Dokan\Test\Analytics\Reports\ReportTestCase;
 
 /**
@@ -92,6 +93,21 @@ class OrderQueryFilterTest extends ReportTestCase {
 		$order_id = $this->create_multi_vendor_order();
 
         $this->set_order_meta_for_dokan( $order_id, $expected_data );
+        $mock_commission = Mockery::mock( Commission::class );
+
+        dokan()->get_container()->extend( 'commission' )->setConcrete( $mock_commission );
+
+        $mock_commission->shouldReceive( 'get_earning_by_order' )->andReturnUsing(
+            function ( $order, $context = 'seller' ) use ( $expected_data ) {
+                if ( $order->get_meta( 'has_sub_order' ) ) {
+                    return 0;
+                }
+                if ( $context === 'admin' ) {
+                    return $expected_data['admin_commission'];
+                }
+                return $expected_data['vendor_earning'];
+			}
+        );
 
 		$this->run_all_pending();
 
@@ -120,12 +136,21 @@ class OrderQueryFilterTest extends ReportTestCase {
 
         foreach ( $sub_ids as $index => $s_id ) {
             $sub_order = wc_get_order( $s_id );
-            $order_data = $report_data[ $index ];
+            $order_data = array_reduce(
+                $report_data, function ( $carry, $item ) use ( $s_id ) {
+					if ( $item['order_id'] === $s_id ) {
+						$carry = $item;
+					}
+
+                    return $carry;
+				}, null
+            );
 
             $this->assertEquals( $s_id, $order_data['order_id'] );
             $this->assertEquals( floatval( $sub_order->get_total() ), $order_data['total_sales'] );
 
             foreach ( $expected_data as $key => $val ) {
+                // var_dump()
                 $this->assertEquals( $val, $order_data[ $key ] );
             }
         }
