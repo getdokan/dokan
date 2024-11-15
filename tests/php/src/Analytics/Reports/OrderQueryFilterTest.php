@@ -150,7 +150,6 @@ class OrderQueryFilterTest extends ReportTestCase {
             $this->assertEquals( floatval( $sub_order->get_total() ), $order_data['total_sales'] );
 
             foreach ( $expected_data as $key => $val ) {
-                // var_dump()
                 $this->assertEquals( $val, $order_data[ $key ] );
             }
         }

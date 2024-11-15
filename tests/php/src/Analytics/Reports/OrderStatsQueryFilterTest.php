@@ -66,7 +66,7 @@ class OrderStatsQueryFilterTest extends ReportTestCase {
 
         $mocking_methods = [
             'add_join_subquery',
-            // 'add_where_subquery', // For Coupon amount distribution.
+            // 'add_where_subquery', // For Coupon amount distribution to sub-orders issue.
             'add_select_subquery_for_total',
         ];
 
