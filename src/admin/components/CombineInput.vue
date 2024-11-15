@@ -78,19 +78,29 @@ import Debounce from "debounce";
         watch: {
             value: {
                 handler(newVal, oldVal) {
-                    let percentage = newVal.percentage;
+                    let newPercentage = this.validatePercentage( newVal.percentage );
+                    let oldPercentage = this.validatePercentage( oldVal.percentage );
 
-                    if ( ! percentage || '' === percentage || Number( percentage ) < 0 || Number( percentage ) > 100 ) {
-                        percentage = oldVal.percentage;
+                    console.log(newPercentage, oldPercentage);
+
+                    if ( ! newPercentage || '' === newPercentage || Number( newPercentage ) < 0 || Number( newPercentage ) > 100 ) {
+                        newPercentage = oldPercentage;
                     }
 
                     this.fixed = this.formatPositiveValue( newVal.fixed );
-                    this.percentage = this.formatPositiveValue( percentage );
+                    this.percentage = this.formatPositiveValue( newPercentage );
                 },
                 deep: true
             }
         },
         methods: {
+            validatePercentage( percentage ) {
+                if ( Number( percentage ) < 0 || Number( percentage ) > 100 ) {
+                    percentage = '';
+                }
+
+                return percentage;
+            },
             onInput: Debounce( function() {
                 let self = this;
                 let data = {
