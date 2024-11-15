@@ -8,6 +8,7 @@ const pluginFiles = [
     'templates/**/*',
     'src/**/*',
     'dokan.php',
+    'dokan-class.php',
     'uninstall.php',
 ];
 

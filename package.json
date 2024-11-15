@@ -1,6 +1,6 @@
 {
   "name": "dokan",
-  "version": "3.12.5",
+  "version": "3.13.1",
   "description": "A WordPress marketplace plugin",
   "author": "weDevs",
   "license": "GPL",
@@ -11,7 +11,7 @@
     "build": "wp-scripts build --progress",
     "packages-update": "wp-scripts packages-update",
     "version": "node bin/version-replace",
-    "makepot": "wp i18n make-pot --domain='dokan-lite' --include='assets/js,deprecated,includes,lib,templates,dokan.php' . --headers='{\"Report-Msgid-Bugs-To\":\"https://dokan.co/contact/\"}' --file-comment=\"Copyright (c) $(date +'%Y') weDevs Pte. Ltd. All Rights Reserved.\" languages/dokan-lite.pot",
+    "makepot": "wp i18n make-pot --domain='dokan-lite' --include='assets/js,deprecated,includes,lib,templates,dokan.php,dokan-class.php' . --headers='{\"Report-Msgid-Bugs-To\":\"https://dokan.co/contact/\"}' --file-comment=\"Copyright (c) $(date +'%Y') weDevs Pte. Ltd. All Rights Reserved.\" languages/dokan-lite.pot",
     "readme": "wp-readme-to-md",
     "clean-files": "node bin/clean-useless-files",
     "zip": "node bin/zip",

@@ -23,6 +23,14 @@ const {
     GMAP,
     MAPBOX,
     LICENSE_KEY,
+    VONAGE_API_KEY,
+    VONAGE_API_SECRET,
+    FB_APP_ID,
+    FB_APP_SECRET,
+    TALKJS_APP_ID,
+    TALKJS_APP_SECRET,
+    PRINTFUL_APP_ID,
+    PRINTFUL_APP_SECRET,
 } = process.env;
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
@@ -391,6 +399,9 @@ export const data = {
             buyItNowPrice: () => faker.finance.amount({ min: 900, max: 1000, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             startDate: helpers.currentDateTime,
             endDate: helpers.addDays(helpers.currentDateTime, 20, 'full'),
+            relistIfFailAfterNHours: '1',
+            relistIfNotPaidAfterNHours: '2',
+            relistAuctionDurationInH: '3',
             storeName: `${VENDOR}store`,
             // saveSuccessMessage: '× Success! The product has been updated successfully. View Product →',
             saveSuccessMessage: 'Success! The product has been updated successfully.',
@@ -993,7 +1004,7 @@ export const data = {
             rmaRequests: 'my-account/rma-requests',
             viewRmaRequests: 'my-account/view-rma-requests',
             requestWarranty: 'my-account/request-warranty',
-            vendors: 'my-account/following',
+            followingStores: 'my-account/following',
             supportTickets: 'my-account/support-tickets',
 
             productCustomerPage: 'product',
@@ -1004,10 +1015,10 @@ export const data = {
             storeListingSort: 'store-listing/?stores_orderby',
             cart: 'cart',
             checkout: 'checkout',
-            addToCart: '?wc-ajax=add_to_cart',
-            applyCoupon: '?wc-ajax=apply_coupon',
-            removeCoupon: '?wc-ajax=remove_coupon',
-            refreshedFragment: '?wc-ajax=get_refreshed_fragments',
+            addToCart: 'wc-ajax=add_to_cart',
+            applyCoupon: 'wc-ajax=apply_coupon',
+            removeCoupon: 'wc-ajax=remove_coupon',
+            refreshedFragment: 'wc-ajax=get_refreshed_fragments',
             placeOrder: '?wc-ajax=checkout',
             billingAddress: 'my-account/edit-address/billing',
             shippingAddress: 'my-account/edit-address/shipping',
@@ -1024,6 +1035,7 @@ export const data = {
             quoteDetails: (quotId: string) => `my-account/request-a-quote/${quotId}`,
             supportTicketDetails: (ticketId: string) => `my-account/support-tickets/${ticketId}`,
             productSubscriptionDetails: (subscriptionId: string) => `my-account/view-subscription/${subscriptionId}`,
+            talkjs: 'app.talkjs.com/api',
 
             productReview: 'wp-comments-post.php',
             submitSupport: 'wp-comments-post.php',
@@ -1067,6 +1079,8 @@ export const data = {
                 csvExport: 'dashboard/tools/csv-export',
                 auction: 'dashboard/auction',
                 auctionActivity: 'dashboard/auction-activity',
+                inbox: 'dashboard/inbox',
+                auctionProductEdit: (productId: string) => `dashboard/auction/?product_id=${productId}&action=edit`,
                 storeSupport: 'dashboard/support',
 
                 // sub menus
@@ -1074,6 +1088,9 @@ export const data = {
                 settingsAddon: 'dashboard/settings/product-addon',
                 settingsAddonEdit: (addonId: string) => `dashboard/settings/product-addon/?edit=${addonId}`,
                 settingsPayment: 'dashboard/settings/payment',
+                settingsPrintful: 'dashboard/settings/printful',
+                printful: 'https://www.printful.com/oauth/authorize',
+
                 // payment settings
                 paypal: 'dashboard/settings/payment-manage-paypal',
                 bankTransfer: 'dashboard/settings/payment-manage-bank',
@@ -1106,6 +1123,7 @@ export const data = {
                 abuseReports: 'dokan/v1/abuse-reports',
                 logs: 'dokan/v1/admin/logs',
                 announcements: 'dokan/v1/announcement',
+                deliveryTime: 'dokan/v1/delivery-time',
                 dummyData: 'dokan/v1/dummy-data',
                 dummyDataImport: 'dokan/v1/dummy-data/import',
                 refunds: 'dokan/v1/refunds',
@@ -1287,6 +1305,10 @@ export const data = {
             amountDiscount: {
                 minimumOrderAmount: '200',
                 discountPercentage: '10',
+            },
+
+            liveChat: {
+                pageId: '',
             },
 
             minMax: {
@@ -1897,9 +1919,9 @@ export const data = {
     modules: {
         noModuleMessage: 'No modules found.',
         moduleStats: {
-            totalModules: 39,
-            modulesVideoLink: 17,
-            productManagement: 14,
+            totalModules: 40,
+            modulesVideoLink: 19,
+            productManagement: 15,
             integration: 6,
             uiUx: 2,
             shipping: 3,
@@ -1932,6 +1954,7 @@ export const data = {
             'spmv',
             'store_reviews',
             'stripe',
+            'printful',
             'product_advertising',
             'product_subscription',
             'vendor_analytics',
@@ -2217,6 +2240,17 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // social api
+        socialApi: {
+            settingTitle: 'Social Settings',
+            platform: 'facebook',
+            facebook: {
+                appId: FB_APP_ID,
+                appSecret: FB_APP_SECRET,
+            },
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // shipping status
         shippingStatus: {
             settingTitle: 'Shipping Status Settings',
@@ -2298,11 +2332,37 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // Verification Sms Gateways
+        verificationSmsGateway: {
+            settingTitle: 'Verification SMS Gateways Settings',
+            senderName: 'weDevs Team',
+            smsText: 'Your verification code is: %CODE%',
+            smsSentSuccess: 'SMS sent. Please enter your verification code',
+            smsSentError: 'Unable to send sms. Contact admin',
+            activeGateway: 'nexmo', // nexmo, twilio
+            vonage: {
+                apiKey: VONAGE_API_KEY,
+                apiSecret: VONAGE_API_SECRET,
+            },
+
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // Email verification
         emailVerification: {
             settingTitle: 'Email Verification Settings',
             registrationNotice: 'Please check your email and complete email verification to login.',
             loginNotice: 'Please check your email and complete email verification to login.',
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
+        // live chat
+        liveChat: {
+            settingTitle: 'Live Chat Settings',
+            chatProvider: 'talkjs', // messenger, talkjs, tawkto, whatsapp
+            talkJsAppId: TALKJS_APP_ID,
+            talkJsAppSecret: TALKJS_APP_SECRET,
+            chatButtonPosition: 'above_tab', // above_tab, inside_tab, dont_show
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
@@ -2382,6 +2442,23 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        printful: {
+            settingTitle: 'Printful Settings',
+            clientId: PRINTFUL_APP_ID,
+            secretKey: PRINTFUL_APP_SECRET,
+            popupTitle: 'Size Guide',
+            popupTextColor: '#000000',
+            popupBackgroundColor: '#FFFFFF',
+            tabBackgroundColor: '#EEEEEE',
+            activeTabBackgroundColor: '#DDDDDD',
+            sizeGuideButtonText: 'Size Guide',
+            buttonTextColor: '#1064A9',
+            primaryMeasurementUnit: 'inches', // inches, centimetre
+            optionNames: ['Size Guide Popup Text Color', 'Size Guide Popup Background Color', 'Size Guide Tab Background Color', 'Size Guide Active Tab Background Color', 'Size Guide Button Text Color'],
+            optionValues: ['#000000', '#FFFFFF', '#EEEEEE', '#DDDDDD', '#1064A9'],
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // Vendor Subscription Settings
         vendorSubscription: {
             settingTitle: 'Vendor Subscription Settings',
@@ -2450,6 +2527,7 @@ export const data = {
     uniqueId: {
         uuid: faker.string.uuid(),
         nanoId: faker.string.nanoid(10),
+        nanoIdRandom: () => faker.string.nanoid(10),
     },
 
     // predefined  test data
@@ -2535,6 +2613,11 @@ export const data = {
             lastName: () => 'c1',
             username: () => 'customer1',
             username1: 'customer1',
+        },
+
+        categories: {
+            uncategorized: 'Uncategorized',
+            clothings: 'clothings',
         },
     },
 

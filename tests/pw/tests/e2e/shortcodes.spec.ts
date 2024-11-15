@@ -3,6 +3,8 @@ import { ShortcodePage } from '@pages/shortcodePage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 
 test.describe('Shortcodes test', () => {
     let admin: ShortcodePage;
@@ -45,9 +47,13 @@ test.describe('Shortcodes test', () => {
     });
 
     test('vendor can view Dokan subscription packs (shortcode)', { tag: ['@pro', '@admin'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.vendorSubscription, { enable_pricing: 'on' });
         const [responseBody, pageId] = await apiUtils.createPage(payloads.dokanSubscriptionPackShortcode, payloads.adminAuth);
         await vendor.viewDokanSubscriptionPacks(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
+
+        // reset settings
+        await dbUtils.setOptionValue(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
     });
 
     test('guest user can view vendor registration form (shortcode)', { tag: ['@lite', '@admin'] }, async ({ page }) => {

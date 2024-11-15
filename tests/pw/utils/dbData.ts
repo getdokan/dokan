@@ -1,4 +1,4 @@
-const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY } = process.env;
+const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, TALKJS_APP_ID, TALKJS_APP_SECRET, PRINTFUL_APP_ID, PRINTFUL_APP_SECRET } = process.env;
 
 export const dbData = {
     dokan: {
@@ -12,7 +12,7 @@ export const dbData = {
             menuManager: 'dokan_menu_manager',
             privacyPolicy: 'dokan_privacy',
             colors: 'dokan_colors',
-            // liveSearch: 'dokan_live_search_setting',
+            liveSearch: 'dokan_live_search_setting',
             storeSupport: 'dokan_store_support_setting',
             // sellerVerification: 'dokan_verification',
             // verificationSMSGateways: 'dokan_verification_sms_gateways',
@@ -20,7 +20,7 @@ export const dbData = {
             // socialApi: 'dokan_social_api',
             shippingStatus: 'dokan_shipping_status_setting',
             quote: 'dokan_quote_settings',
-            // liveChat: 'dokan_live_chat',
+            liveChat: 'dokan_live_chat',
             rma: 'dokan_rma',
             wholesale: 'dokan_wholesale',
             euCompliance: 'dokan_germanized',
@@ -29,6 +29,7 @@ export const dbData = {
             geolocation: 'dokan_geolocation',
             productReportAbuse: 'dokan_report_abuse',
             spmv: 'dokan_spmv',
+            printful: 'dokan_printful',
             vendorSubscription: 'dokan_product_subscription',
             // vendorAnalytics:
             dokanActiveModules: 'dokan_pro_active_modules',
@@ -781,7 +782,8 @@ export const dbData = {
         },
 
         liveSearchSettings: {
-            live_search_option: 'suggestion_box',
+            live_search_option: 'suggestion_box', // old_live_search,  suggestion_box
+            dashboard_menu_manager: [],
         },
 
         storeSupportSettings: {
@@ -897,15 +899,16 @@ export const dbData = {
         },
 
         liveChatSettings: {
-            enable: 'off',
-            provider: 'messenger',
+            enable: 'on',
+            provider: 'talkjs',
             theme_color: '#0084FF',
-            app_id: '',
-            app_secret: '',
+            app_id: TALKJS_APP_ID ?? '',
+            app_secret: TALKJS_APP_SECRET ?? '',
             wa_opening_method: 'in_app',
             wa_pre_filled_message: 'Hello {store_name}, I have an enquiry regarding your store at {store_url}',
             chat_button_seller_page: 'on',
-            chat_button_product_page: 'above_tab',
+            chat_button_product_page: 'above_tab', // above_tab, inside_tab, dont_show
+            dashboard_menu_manager: [],
         },
 
         rmaSettings: {
@@ -1082,6 +1085,22 @@ export const dbData = {
             show_order: 'show_all',
         },
 
+        printful: {
+            app: '',
+            size_guide_sub_section: '',
+            popup_title: 'Size Guide',
+            popup_text_color: '#000000',
+            popup_bg_color: '#FFFFFF',
+            tab_bg_color: '#EEEEEE',
+            active_tab_bg_color: '#DDDDDD',
+            size_guide_button_text: 'Size Guide',
+            button_text_color: '#1064A9',
+            primary_measurement_unit: 'inches',
+            app_id: PRINTFUL_APP_ID ?? '',
+            app_secret: PRINTFUL_APP_SECRET ?? '',
+            dashboard_menu_manager: [],
+        },
+
         vendorSubscriptionSettings: {
             subscription_pack: '2',
             enable_pricing: 'off',
@@ -1124,6 +1143,7 @@ export const dbData = {
             'moip',
             'order_min_max',
             'paypal_marketplace',
+            'printful',
             'product_addon',
             'product_advertising',
             'product_enquiry',
@@ -1298,50 +1318,58 @@ export const dbData = {
         },
     },
 
-    // widget
+    // widgets & sidebars
 
-    widget: {
-        name: {
-            widgetBlock: 'widget_block',
-            sidebarsWidgets: 'sidebars_widgets',
-        },
-        widgetBlock: {
-            '2': {
-                content: '<!-- wp:search /-->',
-            },
-            '3': {
-                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Recent Posts</h2><!-- /wp:heading --><!-- wp:latest-posts /--></div><!-- /wp:group -->',
-            },
-            '4': {
-                content:
-                    '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Recent Comments</h2><!-- /wp:heading --><!-- wp:latest-comments {"displayAvatar":false,"displayDate":false,"displayExcerpt":false} /--></div><!-- /wp:group -->',
-            },
-            '5': {
-                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Archives</h2><!-- /wp:heading --><!-- wp:archives /--></div><!-- /wp:group -->',
-            },
-            '6': {
-                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Categories</h2><!-- /wp:heading --><!-- wp:categories /--></div><!-- /wp:group -->',
-            },
-            '9': {
-                content: '<!-- wp:legacy-widget /-->',
-            },
-            _multiwidget: 1,
-        },
+    widgets: {
+        bestSelling: 'dokan-best-selling-widget-2',
+        category: 'dokan-category-menu-2',
+        filter: 'dokan-filter-product-2',
+        liveSearch: 'dokna_product_search-2',
+        storeContactForm: 'dokan-store-contact-widget-2',
+        storeLocation: 'dokan-store-location-2',
+        storeMenu: 'dokan-store-menu-2',
+        storeOpenClose: 'dokan-store-open-close-widget-2',
+        topRated: 'dokan-top-rated-2',
 
-        // 'dokan-store-contact-widget-2', 'dokan-best-selling-widget-2', 'dokan-category-menu-2', 'dokan-filter-product-2', 'dokan-store-location-2', 'dokan-store-menu-2', 'dokan-store-open-close-widget-2', 'dokan-top-rated-2',
-        sideBarsWidgets: {
-            wp_inactive_widgets: [],
-            'sidebar-store': ['dokan-store-contact-widget-2'],
-            'sidebar-1': [],
-            'header-1': [],
-            'footer-1': [],
-            'footer-2': [],
-            'footer-3': [],
-            'footer-4': [],
-            array_version: 3,
-        },
+        // emptySideBarsWidgets: { wp_inactive_widgets: [] },
+    },
 
-        emptySideBarsWidgets: { wp_inactive_widgets: [] },
+    sidebars: {
+        wp_inactive_widgets: 'wp_inactive_widgets',
+        'sidebar-store': 'sidebar-store',
+        'sidebar-1': 'sidebar-1',
+        'header-1': 'header-1',
+        'footer-1': 'footer-1',
+        'footer-2': 'footer-2',
+        'footer-3': 'footer-3',
+        'footer-4': 'footer-4',
+    },
+
+    sidebarWidgets: {
+        wp_inactive_widgets: [],
+        'sidebar-store': [],
+        'sidebar-1': [],
+        'header-1': [],
+        'footer-1': [],
+        'footer-2': [],
+        'footer-3': [],
+        'footer-4': [],
+        array_version: 3,
+    },
+
+    emptySideBarsWidgets: { wp_inactive_widgets: [] },
+
+    // dokan widgets
+    storeContactFormWidget: {
+        '2': {
+            title: 'Contact Vendor',
+        },
+        _multiwidget: 1,
+    },
+
+    liveSearchWidget: {
+        '2': { title: 'Live Search' },
+        _multiwidget: 1,
     },
 
     // test db data

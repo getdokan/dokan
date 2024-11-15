@@ -74,18 +74,6 @@ export const dbUtils = {
         return [currentMetaValue, newMetaValue];
     },
 
-    // insert option value
-    async insertOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
-        optionValue = serializeData && !isSerialized(optionValue as string) ? serialize(optionValue) : optionValue;
-        const query = `
-                INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
-                VALUES (NULL, ?, ?, 'yes')
-                ON DUPLICATE KEY UPDATE option_value = ?;
-            `;
-        const res = await dbUtils.dbQuery(query, [optionName, optionValue, optionValue]);
-        return res;
-    },
-
     // get option value
     async getOptionValue(optionName: string): Promise<any> {
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = ?;`;
@@ -97,7 +85,6 @@ export const dbUtils = {
     // set option value
     async setOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
         optionValue = serializeData && !isSerialized(optionValue as string) ? serialize(optionValue) : optionValue;
-        // const query = `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
         const query = `
                 INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
                 VALUES (NULL, ?, ?, 'yes')
@@ -111,8 +98,6 @@ export const dbUtils = {
     async updateOptionValue(optionName: string, updatedSettings: object | string, serializeData?: boolean): Promise<[any, any]> {
         const currentSettings = await this.getOptionValue(optionName);
         const newSettings = typeof updatedSettings === 'object' ? helpers.deepMergeObjects(currentSettings, updatedSettings) : updatedSettings;
-        // console.log('currentSettings:', currentSettings);
-        // console.log('newSettings:', newSettings);
         await this.setOptionValue(optionName, newSettings, serializeData);
         return [currentSettings, newSettings];
     },
@@ -244,5 +229,14 @@ export const dbUtils = {
 
         const queryUpdate = `UPDATE ${dbPrefix}_dokan_request_quote_rules SET rule_contents = ? WHERE id = ?`;
         await dbUtils.dbQuery(queryUpdate, [serialize(newRuleContent), quoted]);
+    },
+
+    async followVendor(followerId: string, vendorId: string) {
+        const currentTime = helpers.currentDateTimeFullFormat;
+        const query = `INSERT INTO ${dbPrefix}_dokan_follow_store_followers (vendor_id, follower_id, followed_at)
+            SELECT ?, ?, ?
+            WHERE NOT EXISTS (  SELECT 1 FROM ${dbPrefix}_dokan_follow_store_followers WHERE vendor_id = ? AND follower_id = ? );`;
+        const res = await dbUtils.dbQuery(query, [vendorId, followerId, currentTime, vendorId, followerId]);
+        return res;
     },
 };
