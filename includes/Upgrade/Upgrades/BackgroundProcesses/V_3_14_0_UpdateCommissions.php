@@ -11,7 +11,7 @@ use WP_Term;
  *
  * @since DOKAN_SINCE
  */
-class V_4_0_0_UpdateCommissions extends DokanBackgroundProcesses {
+class V_3_14_0_UpdateCommissions extends DokanBackgroundProcesses {
 
     /**
      * Update commission data.

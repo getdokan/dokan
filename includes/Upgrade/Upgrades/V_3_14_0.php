@@ -4,9 +4,9 @@ namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
 use WeDevs\Dokan\Commission\Formula\Fixed;
-use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_4_0_0_UpdateCommissions;
+use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_3_14_0_UpdateCommissions;
 
-class V_4_0_0 extends DokanUpgrader {
+class V_3_14_0 extends DokanUpgrader {
 
     /**
      * Update global commission settings.
@@ -35,7 +35,7 @@ class V_4_0_0 extends DokanUpgrader {
     public static function update_global_category_commission_types() {
         $has_categories = true;
         $page_number    = 1;
-        $processor      = new V_4_0_0_UpdateCommissions();
+        $processor      = new V_3_14_0_UpdateCommissions();
 
         while ( $has_categories ) {
             $args = [
@@ -75,7 +75,7 @@ class V_4_0_0 extends DokanUpgrader {
     public static function update_category_commission_of_vendors() {
         $page_number = 1;
         $has_vendors = true;
-        $processor   = new V_4_0_0_UpdateCommissions();
+        $processor   = new V_3_14_0_UpdateCommissions();
 
         while ( $has_vendors ) {
             $vendors = dokan()->vendor->all(
@@ -110,7 +110,7 @@ class V_4_0_0 extends DokanUpgrader {
     public static function update_category_commission_of_products() {
         $page_number  = 1;
         $has_products = true;
-        $processor    = new V_4_0_0_UpdateCommissions();
+        $processor    = new V_3_14_0_UpdateCommissions();
 
         while ( $has_products ) {
             $products = dokan()->product->all(
