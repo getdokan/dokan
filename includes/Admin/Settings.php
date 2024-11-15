@@ -63,7 +63,7 @@ class Settings {
     /**
      * Validate price values for saving fixed price settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param string  $option_name
      * @param array $option_values

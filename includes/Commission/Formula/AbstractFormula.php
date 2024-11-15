@@ -8,14 +8,14 @@ use WeDevs\Dokan\Commission\Model\Setting;
  * Interface class for commission calculator.
  * Extend this class to make a commission calculator.
  *
- * @since DOKAN_SINCE
+ * @since 3.14.0
  */
 abstract class AbstractFormula {
 
     /**
      * Commission setting.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var \WeDevs\Dokan\Commission\Model\Setting $settings
      */
@@ -36,7 +36,7 @@ abstract class AbstractFormula {
     /**
      * Sets the setting.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param \WeDevs\Dokan\Commission\Model\Setting $setting
      *
@@ -51,7 +51,7 @@ abstract class AbstractFormula {
     /**
      * Returns the commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -64,7 +64,7 @@ abstract class AbstractFormula {
      *
      * @param float|int $amount
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return AbstractFormula
      */
@@ -79,7 +79,7 @@ abstract class AbstractFormula {
      *
      * @param int $quantity
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return AbstractFormula
      */
@@ -92,7 +92,7 @@ abstract class AbstractFormula {
     /**
      * Returns the total amount on which the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float|int
      */
@@ -103,7 +103,7 @@ abstract class AbstractFormula {
     /**
      * Returns the total quantity on which the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int
      */
@@ -114,7 +114,7 @@ abstract class AbstractFormula {
     /**
      * Calculate the commission here and set the commission values.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param $total_amount
      *
@@ -127,7 +127,7 @@ abstract class AbstractFormula {
     /**
      * Returns admin commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -136,7 +136,7 @@ abstract class AbstractFormula {
     /**
      * Returns vendor earning.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -145,7 +145,7 @@ abstract class AbstractFormula {
     /**
      * Returns applied commission parameters.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array<string, mixed>
      */
@@ -154,7 +154,7 @@ abstract class AbstractFormula {
     /**
      * Returns applied commission source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -163,7 +163,7 @@ abstract class AbstractFormula {
     /**
      * Returns per item admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -172,7 +172,7 @@ abstract class AbstractFormula {
     /**
      * Returns the quantity for which the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int
      */
@@ -181,7 +181,7 @@ abstract class AbstractFormula {
     /**
      * Returns if the commission is applicable or not.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */

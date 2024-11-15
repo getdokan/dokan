@@ -11,7 +11,7 @@ class V_3_14_0 extends DokanUpgrader {
     /**
      * Update global commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -28,7 +28,7 @@ class V_3_14_0 extends DokanUpgrader {
     /**
      * Update global category commisions.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -68,7 +68,7 @@ class V_3_14_0 extends DokanUpgrader {
     /**
      * Update vendor comission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -103,7 +103,7 @@ class V_3_14_0 extends DokanUpgrader {
     /**
      * Update product commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */

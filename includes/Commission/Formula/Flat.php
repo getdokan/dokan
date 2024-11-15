@@ -9,7 +9,7 @@ class Flat extends AbstractFormula {
     /**
      * Commission type source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'flat';
 
@@ -18,14 +18,14 @@ class Flat extends AbstractFormula {
      *
      * @var int|float $flat_commission
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     protected $flat_commission = 0;
 
     /**
      * Per item admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $per_item_admin_commission
      */
@@ -34,7 +34,7 @@ class Flat extends AbstractFormula {
     /**
      * Admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $admin_commission
      */
@@ -43,7 +43,7 @@ class Flat extends AbstractFormula {
     /**
      * Total vendor earning amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $vendor_earning
      */
@@ -52,7 +52,7 @@ class Flat extends AbstractFormula {
     /**
      * Total items quantity, on it the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int $items_total_quantity
      */
@@ -61,7 +61,7 @@ class Flat extends AbstractFormula {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      */
@@ -72,7 +72,7 @@ class Flat extends AbstractFormula {
     /**
      * Calculating the flat commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -105,7 +105,7 @@ class Flat extends AbstractFormula {
     /**
      * Get commission date parameters.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */
@@ -119,7 +119,7 @@ class Flat extends AbstractFormula {
     /**
      * Returns commission source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -130,7 +130,7 @@ class Flat extends AbstractFormula {
     /**
      * Returns if a flat commission is applicable or not.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -141,7 +141,7 @@ class Flat extends AbstractFormula {
     /**
      * Returns admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -152,7 +152,7 @@ class Flat extends AbstractFormula {
     /**
      * Returns vendor earning amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -163,7 +163,7 @@ class Flat extends AbstractFormula {
     /**
      * Returns per item admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -174,7 +174,7 @@ class Flat extends AbstractFormula {
     /**
      * Returns the quantity on which the commission has been calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int
      */

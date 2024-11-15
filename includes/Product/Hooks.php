@@ -461,7 +461,7 @@ class Hooks {
 
     /**
      * Add per product commission options
-     * Moved from dokan pro in version DOKAN_SINCE
+     * Moved from dokan pro in version 3.14.0
      *
      * @since 2.4.12
      *
@@ -517,7 +517,7 @@ class Hooks {
 
     /**
      * Save per product commission options
-     *  Moved from dokan pro in version DOKAN_SINCE
+     *  Moved from dokan pro in version 3.14.0
      *
      * @since 2.4.12
      *

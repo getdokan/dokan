@@ -9,14 +9,14 @@ use WP_Term;
 /**
  * Update category commission data.
  *
- * @since DOKAN_SINCE
+ * @since 3.14.0
  */
 class V_3_14_0_UpdateCommissions extends DokanBackgroundProcesses {
 
     /**
      * Update commission data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param WP_Term $terms
      *
@@ -45,7 +45,7 @@ class V_3_14_0_UpdateCommissions extends DokanBackgroundProcesses {
     /**
      * Update global category commissions.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param WP_Term[] $terms
      *
@@ -77,7 +77,7 @@ class V_3_14_0_UpdateCommissions extends DokanBackgroundProcesses {
     /**
      * Update vendor commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param \WeDevs\Dokan\Vendor\Vendor[] $vendors
      *
@@ -104,7 +104,7 @@ class V_3_14_0_UpdateCommissions extends DokanBackgroundProcesses {
     /**
      * Update product commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param \WP_Post[] $posts
      *

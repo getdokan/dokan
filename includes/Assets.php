@@ -1217,7 +1217,7 @@ class Assets {
     /**
      * Admin vue localized scripts
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */

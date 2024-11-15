@@ -14,14 +14,14 @@ class OrderItem extends AbstractStrategy {
     /**
      * Order item commission strategy source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'order_item';
 
     /**
      * Order item id.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var mixed|string $order_item_id
      */
@@ -30,7 +30,7 @@ class OrderItem extends AbstractStrategy {
     /**
      * Total price amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|mixed $total_amount
      */
@@ -39,7 +39,7 @@ class OrderItem extends AbstractStrategy {
     /**
      * Total order quantity.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|mixed $total_quantity
      */
@@ -48,7 +48,7 @@ class OrderItem extends AbstractStrategy {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param int|string $order_item_id
      * @param int|float  $total_amount
@@ -65,7 +65,7 @@ class OrderItem extends AbstractStrategy {
     /**
      * Returns order item strategy source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -76,7 +76,7 @@ class OrderItem extends AbstractStrategy {
     /**
      * Returns order item commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -95,7 +95,7 @@ class OrderItem extends AbstractStrategy {
     /**
      * Save order item commission meta data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param string    $type
      * @param int|float $percentage
