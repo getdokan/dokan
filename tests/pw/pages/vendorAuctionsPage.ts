@@ -328,12 +328,18 @@ export class AuctionsPage extends VendorPage {
         await this.goToAuctionProductEditById(productName);
         for (const tag of tags) {
             await this.clearAndType(auctionProductsVendor.auction.tags.tagInput, tag);
-            if (create) {
-                await this.click(auctionProductsVendor.auction.tags.nonCreatedTag(tag));
-            } else {
-                await this.click(auctionProductsVendor.auction.tags.searchedTag(tag));
-            }
+            await this.toBeVisible(auctionProductsVendor.auction.tags.searchedTag(tag));
+            await this.click(auctionProductsVendor.auction.tags.searchedTag(tag));
             await this.toBeVisible(auctionProductsVendor.auction.tags.selectedTags(tag));
+
+            // todo: remove below lines if the behavior is actually changed
+            // await this.clearAndType(auctionProductsVendor.auction.tags.tagInput, tag);
+            // if (create) {
+            //     await this.click(auctionProductsVendor.auction.tags.nonCreatedTag(tag));
+            // } else {
+            //     await this.click(auctionProductsVendor.auction.tags.searchedTag(tag));
+            // }
+            // await this.toBeVisible(auctionProductsVendor.auction.tags.selectedTags(tag));
         }
         await this.saveProduct();
 

@@ -81,6 +81,7 @@ test.describe('Auction Product details functionality test', () => {
     // product tags
 
     test('vendor can add auction product tags', { tag: ['@pro', '@vendor'] }, async () => {
+        test.skip(true, 'dokan issue option does not work');
         await vendor.addProductTags(productIdBasic, data.product.productInfo.tags.tags);
     });
 

@@ -86,12 +86,10 @@ test.describe('Booking Product details functionality test', () => {
     });
 
     test('vendor can remove booking product tags', { tag: ['@pro', '@vendor'] }, async () => {
-        test.skip(true, 'dokan issue option does not work');
         await vendor.removeProductTags(productIdFull, data.product.productInfo.tags.tags);
     });
 
     test('vendor can create booking product tags', { tag: ['@pro', '@vendor'] }, async () => {
-        test.skip(true, 'dokan issue option does not work');
         await vendor.addProductTags(productIdFull, data.product.productInfo.tags.randomTags);
     });
 
