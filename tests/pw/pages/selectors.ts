@@ -692,8 +692,8 @@ export const selector = {
                     expandedCategories: '(//i[contains(@class,"far fa-minus-square")]/..)[1]',
                     categoryPercentage: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='percentage_commission']`,
                     categoryFixed: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='fixed_commission']`,
-                    categoryPercentageById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='percentage_commission']`,
-                    categoryFixedById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='fixed_commission']`,
+                    categoryPercentageById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='percentage_commission']`,
+                    categoryFixedById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='fixed_commission']`,
 
                     // Edit Options
                     cancelEdit: '//div[contains(@class, "action-links footer")]//button[contains(text(),"Cancel")]',
@@ -2072,8 +2072,8 @@ export const selector = {
                     expandedCategories: '(//i[contains(@class,"far fa-minus-square")]/..)[1]',
                     categoryPercentage: (category: string) => `//p[contains(text(),'${category}')]/../..//input[@id='percentage_commission']`,
                     categoryFixed: (category: string) => `//p[contains(text(),'${category}')]/../..//input[@id='fixed_commission']`,
-                    categoryPercentageById: (category: string) => `//p[contains(text(),'(${category})')]/../..//input[@id='percentage_commission']`,
-                    categoryFixedById: (category: string) => `//p[contains(text(),'(${category})')]/../..//input[@id='fixed_commission']`,
+                    categoryPercentageById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='percentage_commission']`,
+                    categoryFixedById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='fixed_commission']`,
                     shippingFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-shipping_fee_recipient')]`,
                     productTaxFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-tax_fee_recipient')]`,
                     shippingTaxFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-shipping_tax_fee_recipient')]`,
@@ -2628,8 +2628,8 @@ export const selector = {
                 expandedCategories: '(//i[contains(@class,"far fa-minus-square")]/..)[1]',
                 categoryPercentage: (category: string) => `//p[text()='${category}']/../..//input[@id='percentage_commission']`,
                 categoryFixed: (category: string) => `//p[text()='${category}']/../..//input[@id='fixed_commission']`,
-                categoryPercentageById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='percentage_commission']`,
-                categoryFixedById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='fixed_commission']`,
+                categoryPercentageById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='percentage_commission']`,
+                categoryFixedById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='fixed_commission']`,
 
                 // Withdraw
                 payPal: '//label[@for="withdraw_methods[paypal]" and @class="switch-label"]',
@@ -3159,8 +3159,8 @@ export const selector = {
                     expandedCategories: '(//i[contains(@class,"far fa-minus-square")]/..)[1]',
                     categoryPercentage: (category: string) => `//p[text()='${category}']/../..//input[@id='percentage_commission']`,
                     categoryFixed: (category: string) => `//p[text()='${category}']/../..//input[@id='fixed_commission']`,
-                    categoryPercentageById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='percentage_commission']`,
-                    categoryFixedById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='fixed_commission']`,
+                    categoryPercentageById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='percentage_commission']`,
+                    categoryFixedById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='fixed_commission']`,
                 },
 
                 // Vendor

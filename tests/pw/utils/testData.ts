@@ -608,8 +608,8 @@ export const data = {
 
             commission: {
                 commissionType: 'fixed', // 'fixed','category_based'  [category commission will only be applicable to dokan subscription product]
-                commissionPercentage: '2',
-                commissionFixed: '2',
+                commissionPercentage: helpers.priceStringWithDecimal(2, 'ES'),
+                commissionFixed: helpers.priceStringWithDecimal(2, 'ES'),
                 commissionCategory: {
                     allCategory: true, // true for all category, false for specific category
                     category: 'All Categories',
@@ -902,8 +902,8 @@ export const data = {
     commission: {
         fixed: {
             commissionType: 'fixed', // 'fixed','category_based'
-            commissionPercentage: '10',
-            commissionFixed: '10',
+            commissionPercentage: helpers.priceStringWithDecimal(10, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(0, 'ES'),
             commissionCategory: {
                 allCategory: true, // true for all category, false for specific category
                 category: 'All Categories',
@@ -912,18 +912,18 @@ export const data = {
 
         allCategory: {
             commissionType: 'category_based', // 'fixed','category_based'
-            commissionPercentage: '5',
-            commissionFixed: '5',
+            commissionPercentage: helpers.priceStringWithDecimal(5, 'US'), // todo: change to ES when issue is fixed
+            commissionFixed: helpers.priceStringWithDecimal(5, 'US'), // todo: change to ES when issue is fixed
             commissionCategory: {
                 allCategory: true, // true for all category, false for specific category
                 category: 'All Categories',
             },
         },
 
-        specficCategory: {
+        specificCategory: {
             commissionType: 'category_based', // 'fixed','category_based'
-            commissionPercentage: '2',
-            commissionFixed: '2',
+            commissionPercentage: helpers.priceStringWithDecimal(2, 'US'), // todo: change to ES when issue is fixed
+            commissionFixed: helpers.priceStringWithDecimal(2, 'US'), // todo: change to ES when issue is fixed
             commissionCategory: {
                 allCategory: false, // true for all category, false for specific category
                 category: CATEGORY_ID,
@@ -941,8 +941,8 @@ export const data = {
         sellingProductTypes: 'sell_both', // 'physical', 'digital', 'sell_both',
         commission: {
             commissionType: 'fixed', // 'fixed','category_based'
-            commissionPercentage: '10',
-            commissionFixed: '0',
+            commissionPercentage: helpers.priceStringWithDecimal(10, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(0, 'ES'),
             commissionCategory: {
                 allCategory: true, // true for all category, false for specific category
                 category: 'All Categories',
@@ -1330,8 +1330,8 @@ export const data = {
             // commission
             commission: {
                 commissionType: 'fixed', // 'fixed','category_based'
-                commissionPercentage: '5',
-                commissionFixed: '5',
+                commissionPercentage: helpers.priceStringWithDecimal(5, 'ES'),
+                commissionFixed: helpers.priceStringWithDecimal(5, 'ES'),
                 commissionCategory: {
                     allCategory: true, // true for all category, false for specific category
                     category: 'All Categories',
@@ -2171,8 +2171,8 @@ export const data = {
             settingTitle: 'Selling Option Settings',
             commission: {
                 commissionType: 'fixed', // 'fixed','category_based'
-                commissionPercentage: '10',
-                commissionFixed: '0',
+                commissionPercentage: helpers.priceStringWithDecimal(10, 'ES'),
+                commissionFixed: helpers.priceStringWithDecimal(0, 'ES'),
                 commissionCategory: {
                     allCategory: true, // true for all category, false for specific category
                     category: 'All Categories',

@@ -101,7 +101,7 @@ export default defineConfig({
         /* api request headers */
         extraHTTPHeaders: {
             Accept: '*/*',
-            Authorization: 'Basic ' + Buffer.from(ADMIN + ':' + ADMIN_PASSWORD).toString('base64'),
+            // Authorization: 'Basic ' + Buffer.from(ADMIN + ':' + ADMIN_PASSWORD).toString('base64'),
         },
     },
 
