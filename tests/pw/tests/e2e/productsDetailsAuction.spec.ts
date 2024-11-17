@@ -90,7 +90,8 @@ test.describe('Auction Product details functionality test', () => {
     });
 
     test('vendor can create auction product tags', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.addProductTags(productIdFull, data.product.productInfo.tags.randomTags, true);
+        // await vendor.addProductTags(productIdFull, data.product.productInfo.tags.randomTags, true);
+        await vendor.addProductTags(productIdFull, data.product.productInfo.tags.randomTags);
     });
 
     // product cover image

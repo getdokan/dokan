@@ -324,7 +324,8 @@ export class AuctionsPage extends VendorPage {
     }
 
     // add product tags
-    async addProductTags(productName: string, tags: string[], create = false): Promise<void> {
+    async addProductTags(productName: string, tags: string[]): Promise<void> {
+        // async addProductTags(productName: string, tags: string[], create = false): Promise<void> {
         await this.goToAuctionProductEditById(productName);
         for (const tag of tags) {
             await this.clearAndType(auctionProductsVendor.auction.tags.tagInput, tag);

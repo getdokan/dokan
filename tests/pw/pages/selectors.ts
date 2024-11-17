@@ -5222,11 +5222,11 @@ export const selector = {
 
             // Create Booking Product
             booking: {
-                viewProduct: '.view-product',
+                viewProduct: 'a.view-product',
                 productName: '#post_title',
-                ProductImage: '.dokan-feat-image-btn',
-                virtual: '#\\_virtual',
-                accommodationBooking: '#\\_is_dokan_accommodation',
+                ProductImage: 'a.dokan-feat-image-btn',
+                virtual: 'input#\\_virtual',
+                accommodationBooking: 'input#\\_is_dokan_accommodation',
                 productCategory: '#select2-product_cat-container',
                 productCategoryInput: '.select2-search--dropdown > .select2-search__field',
                 // tags
@@ -5238,10 +5238,10 @@ export const selector = {
                 },
 
                 // Accommodation Booking Options
-                minimumNumberOfNightsAllowedInABooking: '#\\_wc_booking_min_duration',
-                maximumNumberOfNightsAllowedInABooking: '#\\_wc_booking_max_duration',
-                checkInTime: '#\\_dokan_accommodation_checkin_time',
-                checkOutTime: '#\\_dokan_accommodation_checkout_time',
+                minimumNumberOfNightsAllowed: 'input#\\_wc_booking_min_duration',
+                maximumNumberOfNightsAllowed: 'input#\\_wc_booking_max_duration',
+                checkInTime: 'input#\\_dokan_accommodation_checkin_time',
+                checkOutTime: 'input#\\_dokan_accommodation_checkout_time',
 
                 // General Booking Options
                 bookingDurationType: '#\\_wc_booking_duration_type',
@@ -5712,7 +5712,7 @@ export const selector = {
                 // tags
                 tags: {
                     tagInput: '//div[@class="dokan-form-group dokan-auction-tags"]//input[@class="select2-search__field"]',
-                     // todo: remove below lines if the behavior is actually changed
+                    // todo: remove below lines if the behavior is actually changed
                     // searchedTag: (tagName: string) => `//li[contains(@class,"select2-results__option") and contains(@id, "select2-product_tag-result") and normalize-space(text())="${tagName}"]`,
                     // nonCreatedTag: (tagName: string) => `//li[@class="select2-results__option select2-results__option--highlighted" and normalize-space(text())="${tagName}"]`,
                     searchedTag: (tagName: string) => `//li[@class="select2-results__option select2-results__option--highlighted" and normalize-space(text())="${tagName}"]`,

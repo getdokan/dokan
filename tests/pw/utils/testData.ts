@@ -363,6 +363,12 @@ export const data = {
             name: '',
             productType: 'booking',
             category: 'Uncategorized',
+            accommodationBookingOptions: {
+                minimumNumberOfNightsAllowed: '1',
+                maximumNumberOfNightsAllowed: '5',
+                checkInTime: '12:00 am',
+                checkOutTime: '12:00 am',
+            },
             duration: {
                 bookingDurationType: 'customer', // 'fixed', 'customer'
                 bookingDuration: '2',

@@ -252,7 +252,12 @@ export interface product {
         name: string;
         productType: string;
         category: string;
-
+        accommodationBookingOptions: {
+            minimumNumberOfNightsAllowed: string;
+            maximumNumberOfNightsAllowed: string;
+            checkInTime: string;
+            checkOutTime: string;
+        };
         duration: {
             bookingDurationType: string;
             bookingDuration: string;

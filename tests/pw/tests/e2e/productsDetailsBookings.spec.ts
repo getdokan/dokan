@@ -45,6 +45,24 @@ test.describe('Booking Product details functionality test', () => {
         await vendor.addProductTitle(productId, data.product.productInfo.title);
     });
 
+    // product virtual options
+
+    test('vendor can add booking product accommodation booking option', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, productId] = await apiUtils.createProduct(payloads.createBookableProductRequiredFields(), payloads.vendorAuth);
+        await vendor.addProductAccommodationBookingOptions(productId, data.product.booking.accommodationBookingOptions);
+    });
+
+    test('vendor can update booking product accommodation booking option', { tag: ['@pro', '@vendor'] }, async () => {
+        test.skip(true, 'need min & max duration'); // todo: need to add min & max duration
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createBookableProductWithAccommodation() }, payloads.vendorAuth);
+        await vendor.addProductAccommodationBookingOptions(productId, { minimumNumberOfNightsAllowed: '1', maximumNumberOfNightsAllowed: '5', checkInTime: '1:00 am', checkOutTime: '1:00 am' });
+    });
+
+    test('vendor can remove booking product accommodation booking option', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createBookableProductWithAccommodation() }, payloads.vendorAuth);
+        await vendor.removeProductAccommodationBookingOptions(productId);
+    });
+
     // product category
 
     test('vendor can update booking product category (single)', { tag: ['@pro', '@vendor'] }, async () => {
@@ -73,7 +91,7 @@ test.describe('Booking Product details functionality test', () => {
         await vendor.addProductCategory(productIdFull, [data.product.category.multistepCategories.at(-2)!]);
     });
 
-    test("vendor can't add multi-step product category (any category)", { tag: ['@pro', '@vendor'] }, async () => {
+    test("vendor can't add multi-step booking product category (any category)", { tag: ['@pro', '@vendor'] }, async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { dokan_any_category_selection: 'off' });
         await vendor.cantAddCategory(productIdFull, data.product.category.multistepCategories.at(-2)!);
     });
@@ -150,55 +168,55 @@ test.describe('Booking Product details functionality test', () => {
 
     // product virtual options
 
-    test('vendor can add product virtual option', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add booking product virtual option', { tag: ['@pro', '@vendor'] }, async () => {
         const [, productId] = await apiUtils.createProduct(payloads.createBookableProductRequiredFields(), payloads.vendorAuth);
         await vendor.addProductVirtualOption(productId, true);
     });
 
-    test('vendor can remove product virtual option', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can remove booking product virtual option', { tag: ['@pro', '@vendor'] }, async () => {
         const [, productId] = await apiUtils.createProduct({ ...payloads.createBookableProductRequiredFields(), virtual: true }, payloads.vendorAuth);
         await vendor.addProductVirtualOption(productId, false);
     });
 
     // product inventory options
 
-    test('vendor can add product inventory options (SKU)', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add booking product inventory options (SKU)', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addProductInventory(productIdBasic, data.product.productInfo.inventory(), 'sku');
     });
 
-    test('vendor can update product inventory options (SKU)', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can update booking product inventory options (SKU)', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addProductInventory(productIdFull, data.product.productInfo.inventory(), 'sku');
     });
 
-    test('vendor can remove product inventory options (SKU)', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can remove booking product inventory options (SKU)', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addProductInventory(productIdFull, { ...data.product.productInfo.inventory(), sku: '' }, 'sku');
     });
 
-    test('vendor can add product inventory options (stock status)', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add booking product inventory options (stock status)', { tag: ['@pro', '@vendor'] }, async () => {
         test.skip(true, 'dokan issue option does not work');
         await vendor.addProductInventory(productIdBasic, data.product.productInfo.inventory(), 'stock-status');
     });
 
-    test('vendor can add product inventory options (stock management)', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add booking product inventory options (stock management)', { tag: ['@pro', '@vendor'] }, async () => {
         test.skip(true, 'dokan issue option does not work');
         await vendor.addProductInventory(productIdBasic, data.product.productInfo.inventory(), 'stock-management');
     });
 
-    test('vendor can update product inventory options (stock management)', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can update booking product inventory options (stock management)', { tag: ['@pro', '@vendor'] }, async () => {
         test.skip(true, 'dokan issue option does not work');
         await vendor.addProductInventory(productIdBasic, data.product.productInfo.inventory(), 'stock-management');
     });
 
-    test('vendor can remove product inventory options (stock management)', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can remove booking product inventory options (stock management)', { tag: ['@pro', '@vendor'] }, async () => {
         test.skip(true, 'dokan issue option does not work');
         await vendor.removeProductInventory(productIdFull);
     });
 
-    test('vendor can add product inventory options (allow single quantity)', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add booking product inventory options (allow single quantity)', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addProductInventory(productIdBasic, data.product.productInfo.inventory(), 'one-quantity');
     });
 
-    test('vendor can remove product inventory options (allow single quantity)', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can remove booking product inventory options (allow single quantity)', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addProductInventory(productIdFull, { ...data.product.productInfo.inventory(), oneQuantity: false }, 'one-quantity');
     });
 
@@ -366,7 +384,7 @@ test.describe('Booking Product details functionality test', () => {
 
     // addon
 
-    test('vendor can add product addon', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add booking product addon', { tag: ['@pro', '@vendor'] }, async () => {
         test.slow();
         await vendor.addProductAddon(productIdBasic, data.product.productInfo.addon);
     });
@@ -377,12 +395,12 @@ test.describe('Booking Product details functionality test', () => {
     });
 
     test('vendor can export booking product addon', { tag: ['@pro', '@vendor'] }, async () => {
-        const [responseBody, productId] = await apiUtils.createProductWithAddon(payloads.createAuctionProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
+        const [responseBody, productId] = await apiUtils.createProductWithAddon(payloads.createBookableProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
         await vendor.exportAddon(productId, serialize(apiUtils.getMetaDataValue(responseBody.meta_data, '_product_addons')));
     });
 
     test('vendor can remove booking product addon', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, productId, , addonNames] = await apiUtils.createProductWithAddon(payloads.createAuctionProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
+        const [, productId, , addonNames] = await apiUtils.createProductWithAddon(payloads.createBookableProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
         await vendor.removeAddon(productId, addonNames[0] as string);
     });
 });

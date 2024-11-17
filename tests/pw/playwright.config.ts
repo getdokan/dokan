@@ -1,7 +1,7 @@
 import { defineConfig, devices, expect } from '@playwright/test';
 import { customExpect } from '@utils/pwMatchers';
 // import 'dotenv/config';
-const { CI, NON_HEADLESS, BASE_URL, SLOWMO, ADMIN, ADMIN_PASSWORD } = process.env;
+const { CI, NON_HEADLESS, BASE_URL, SLOWMO } = process.env;
 
 export default defineConfig({
     testDir: './tests/',

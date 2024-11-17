@@ -334,6 +334,36 @@ export class BookingPage extends VendorPage {
         await this.toHaveValue(bookingProductsVendor.booking.productName, title);
     }
 
+    // add product accommodation booking options
+    async addProductAccommodationBookingOptions(productName: string, accommodationBookingOptions: product['booking']['accommodationBookingOptions']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.check(bookingProductsVendor.booking.accommodationBooking);
+        await this.clearAndType(bookingProductsVendor.booking.minimumNumberOfNightsAllowed, accommodationBookingOptions.minimumNumberOfNightsAllowed);
+        await this.clearAndType(bookingProductsVendor.booking.maximumNumberOfNightsAllowed, accommodationBookingOptions.maximumNumberOfNightsAllowed);
+        await this.clearAndType(bookingProductsVendor.booking.checkInTime, accommodationBookingOptions.checkInTime);
+        await this.clearAndType(bookingProductsVendor.booking.checkOutTime, accommodationBookingOptions.checkOutTime);
+
+        await this.saveProduct();
+        await this.toBeChecked(bookingProductsVendor.booking.accommodationBooking);
+        await this.toHaveValue(bookingProductsVendor.booking.minimumNumberOfNightsAllowed, accommodationBookingOptions.minimumNumberOfNightsAllowed);
+        await this.toHaveValue(bookingProductsVendor.booking.maximumNumberOfNightsAllowed, accommodationBookingOptions.maximumNumberOfNightsAllowed);
+        await this.toHaveValue(bookingProductsVendor.booking.checkInTime, accommodationBookingOptions.checkInTime);
+        await this.toHaveValue(bookingProductsVendor.booking.checkOutTime, accommodationBookingOptions.checkOutTime);
+    }
+
+    // remove product accommodation booking options
+    async removeProductAccommodationBookingOptions(productName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.uncheck(bookingProductsVendor.booking.accommodationBooking);
+
+        await this.saveProduct();
+        await this.notToBeChecked(bookingProductsVendor.booking.accommodationBooking);
+        await this.notToBeVisible(bookingProductsVendor.booking.minimumNumberOfNightsAllowed);
+        await this.notToBeVisible(bookingProductsVendor.booking.maximumNumberOfNightsAllowed);
+        await this.notToBeVisible(bookingProductsVendor.booking.checkInTime);
+        await this.notToBeVisible(bookingProductsVendor.booking.checkOutTime);
+    }
+
     // vendor add product category
     async vendorAddProductCategory(category: string, multiple: boolean, neg?: boolean): Promise<void> {
         if (!multiple) {
