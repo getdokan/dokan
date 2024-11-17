@@ -17,11 +17,14 @@ export class CommissionPage extends AdminPage {
 
     // add commission
     async addCommission(commission: commission) {
-        await this.selectByValue(setupWizardAdmin.commissionType, commission.commissionType);
         if (commission.commissionType === 'fixed') {
+            await this.selectByValue(setupWizardAdmin.commissionType, commission.commissionType);
+
             await this.clearAndType(setupWizardAdmin.percentage, commission.commissionPercentage);
             await this.clearAndType(setupWizardAdmin.fixed, commission.commissionFixed);
         } else {
+            await this.selectByValueAndWaitForResponse(data.subUrls.api.dokan.multistepCategories, setupWizardAdmin.commissionType, commission.commissionType);
+
             if (commission.commissionCategory.allCategory) {
                 await this.clearAndType(setupWizardAdmin.categoryPercentage(commission.commissionCategory.category), commission.commissionPercentage);
                 await this.clearAndType(setupWizardAdmin.categoryFixed(commission.commissionCategory.category), commission.commissionFixed);
@@ -84,7 +87,13 @@ export class CommissionPage extends AdminPage {
 
         // assert values
         await this.goToDokanSettings();
-        await this.click(settingsAdmin.menus.sellingOptions);
+
+        if (commission.commissionType === 'fixed') {
+            await this.click(settingsAdmin.menus.sellingOptions);
+        } else {
+            await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.multistepCategories, settingsAdmin.menus.sellingOptions);
+        }
+
         await this.assertCommission(commission);
     }
 

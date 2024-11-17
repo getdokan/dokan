@@ -3,12 +3,12 @@ import { CommissionPage } from '@pages/commissionPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
-// import { dbUtils } from '@utils/dbUtils';
-// import { dbData } from '@utils/dbData';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 
 // const { DOKAN_PRO } = process.env;
 
-test.describe.only('Commission test', () => {
+test.describe('Commission test', () => {
     let admin: CommissionPage;
     let aPage: Page;
     let apiUtils: ApiUtils;
@@ -22,6 +22,8 @@ test.describe.only('Commission test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
 
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+
         // if (DOKAN_PRO) {
         // enable dokan subscription
         // await dbUtils.updateOptionValue(dbData.dokan.optionName.vendorSubscription, { ...dbData.dokan.vendorSubscriptionSettings, enable_pricing: 'on', enable_subscription_pack_in_reg: 'on' });
@@ -34,6 +36,7 @@ test.describe.only('Commission test', () => {
         // if (DOKAN_PRO) {
         // await dbUtils.updateOptionValue(dbData.dokan.optionName.vendorSubscription, { ...dbData.dokan.vendorSubscriptionSettings, enable_pricing: 'off', enable_subscription_pack_in_reg: 'off' });
         // }
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
         await aPage.close();
         await apiUtils.dispose();
     });
@@ -47,7 +50,6 @@ test.describe.only('Commission test', () => {
     });
 
     test('admin can set commission on Dokan setup wizard (specific category based)', { tag: ['@lite', '@admin'] }, async () => {
-        te
         await admin.setCommissionOnDokanSetupWizard(data.commission.specificCategory);
     });
 
