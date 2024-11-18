@@ -161,8 +161,10 @@
                 this.commission.all = this.value.all;
             }
 
-            if ( typeof this.value === 'object' && this.value.hasOwnProperty( 'items' ) &&  typeof this.value.items === 'object') {
+            if ( typeof this.value === 'object' && this.value.hasOwnProperty( 'items' ) && ! Array.isArray( this.value.items ) ) {
                 this.commission.items = this.value.items;
+            } else {
+                this.commission.items = {};
             }
 
             dokan.api.get('/products/multistep-categories').then( data => {
