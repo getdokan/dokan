@@ -20,11 +20,16 @@ test.describe('Diagnostic notice test', () => {
         await aPage.close();
     });
 
-    test('admin can view Dokan diagnostic notice', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
+    test('admin can view Dokan diagnostic notice', { tag: ['@lite', '@admin'] }, async () => {
         await admin.dokanDiagnosticNoticeRenderProperly(data.diagnosticNotice);
     });
 
-    test('admin can allow Dokan diagnostic tracking', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
+    test('admin can allow Dokan diagnostic tracking', { tag: ['@lite', '@admin'] }, async () => {
         await admin.allowDiagnosticTracking();
+    });
+
+    test('admin can disallow Dokan diagnostic tracking [lite]', { tag: ['@lite', '@admin'] }, async () => {
+        await dbUtils.deleteOptionRow(['dokan_tracking_notice', 'dokan_allow_tracking']);
+        await admin.disallowDiagnosticTracking();
     });
 });

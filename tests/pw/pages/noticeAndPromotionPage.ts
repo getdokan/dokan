@@ -86,8 +86,15 @@ export class NoticeAndPromotionPage extends AdminPage {
 
     // allow diagnostic tracking
     async allowDiagnosticTracking() {
-        await this.gotoUntilNetworkidle(data.subUrls.backend.adminDashboard);
+        await this.goIfNotThere(data.subUrls.backend.adminDashboard, 'networkidle');
         await this.clickAndWaitForResponse(data.subUrls.backend.diagnosticNotice, selector.admin.dokan.diagnostic.allowCollectData, 302);
+        await this.notToBeVisible(selector.admin.dokan.diagnostic.noticeDiv);
+    }
+
+    // allow diagnostic tracking
+    async disallowDiagnosticTracking() {
+        await this.goIfNotThere(data.subUrls.backend.adminDashboard, 'networkidle');
+        await this.clickAndWaitForLoadState(selector.admin.dokan.diagnostic.disallowCollectData);
         await this.notToBeVisible(selector.admin.dokan.diagnostic.noticeDiv);
     }
 }

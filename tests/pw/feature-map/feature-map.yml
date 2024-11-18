@@ -347,6 +347,7 @@
           admin can set commission to Dokan subscription product (fixed): true
           admin can set commission to Dokan subscription product (category based): true
           admin can set commission to Dokan subscription product (specific category based): true
+          admin can view commission meta-box on order details [lite]: true
 
 - page: 'Withdraw'
   features:
@@ -411,6 +412,13 @@
       customer:
           customer can contact vendor [lite]: true
           customer can navigate to Dokan privacy policy [lite]: true
+
+- page: 'Diagnostic Notice'
+  features:
+      admin:
+          admin can view Dokan diagnostic notice [lite]: true
+          admin can allow Dokan diagnostic tracking [lite]: true
+          admin can disallow Dokan diagnostic tracking [lite]: true
 
 - page: 'Notice And Promotion'
   features:

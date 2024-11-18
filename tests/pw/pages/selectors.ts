@@ -240,6 +240,7 @@ export const selector = {
             diagnostic: {
                 noticeDiv: '//a[@class="dokan-insights-data-we-collect"]/../..',
                 allowCollectData: '//a[@class="dokan-insights-data-we-collect"]/../..//a[normalize-space()="Allow"]',
+                disallowCollectData: '//a[@class="dokan-insights-data-we-collect"]/../..//a[normalize-space()="No thanks"]',
                 paragraph1: '(//a[@class="dokan-insights-data-we-collect"]/../..//p)[1]',
                 paragraph2: '//a[@class="dokan-insights-data-we-collect"]/../..//p[@class="description"]',
             },
