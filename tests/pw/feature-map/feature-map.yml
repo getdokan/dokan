@@ -2,15 +2,15 @@
   features:
       admin:
           admin can install Dokan plugin [lite]: false
-          admin can activate Dokan plugin [lite]: false
-          admin can deactivate Dokan plugin [lite]: false
-          admin can deactivate Dokan plugin with deactivate reason [lite]: false
-          admin can delete Dokan plugin [lite]: false
+          admin can activate Dokan plugin [lite]: true
+          admin can deactivate Dokan plugin [lite]: true
+          admin can deactivate Dokan plugin with deactivate reason [lite]: true
+          admin can delete Dokan plugin [lite]: true
           admin can install Dokan pro plugin: false
-          admin can activate Dokan pro plugin: false
-          admin can deactivate Dokan pro plugin: false
-          admin can deactivate Dokan pro plugin with deactivate reason: false
-          admin can delete Dokan pro plugin: false
+          admin can activate Dokan pro plugin: true
+          admin can deactivate Dokan pro plugin: true
+          admin can deactivate Dokan pro plugin with deactivate reason: true
+          admin can delete Dokan pro plugin: true
 
 - page: 'Tax'
   features:
@@ -380,7 +380,7 @@
       admin:
           admin can view reverse withdrawal menu page [lite]: true
           admin can filter reverse withdrawal by store [lite]: true
-          admin can filter reverse withdrawal by date [lite]: false
+          #   admin can filter reverse withdrawal by date [lite]: false
           admin can clear reverse withdrawal filters: true
           admin can add reverse withdrawal [lite]: true
       vendor:
@@ -468,7 +468,7 @@
           vendor can set vacation settings: true
           vendor can set discount settings: true
           vendor can set biography settings: true
-          vendor can set live chat settings: false
+          vendor can set live chat settings: true
           vendor can set store support settings: true
           vendor can set social profile settings: true
           vendor can set rma settings (no warranty): true
@@ -542,7 +542,7 @@
 - page: 'coupons'
   features:
       admin:
-          admin can add marketplace coupon: false
+          admin can add marketplace coupon: true
       vendor:
           vendor can view coupons menu page: true
           vendor can view marketPlace coupons: true
@@ -605,7 +605,7 @@
           admin can trash announcement: true
           admin can restore announcement: true
           admin can permanently delete announcement: true
-          admin can perform bulk action on announcements: false
+          admin can perform bulk action on announcements: true
       vendor:
           vendor can view announcements menu page: true
           vendor can view announcement details: true
@@ -646,10 +646,10 @@
   features:
       admin:
           admin can view license menu page: true
-          admin can't activate license with incorrect key: false
-          admin can activate license: false
+          admin can't activate license with incorrect key: true
+          admin can activate license: true
           admin can refresh license: true
-          admin can deactivate license: false
+          admin can deactivate license: true
 
 - page: 'Modules'
   features:
@@ -728,7 +728,7 @@
 
       customer:
           customer can bid auction product: true
-          customer can buy auction product with buy it now price: false
+          customer can buy auction product with buy it now price: true
 
 - page: 'Color Scheme Customizer'
   features:
@@ -878,7 +878,7 @@
 - page: 'PayPal Marketplace'
   features:
       admin:
-          admin can add Paypal Marketplace payment method: false
+          admin can add Paypal Marketplace payment method: true
 
 - page: 'Printful'
   features:
@@ -936,7 +936,7 @@
           #   admin can filter advertised product by calendar: false
           admin can expire advertised product: true
           admin can delete advertised product: true
-          admin can perform bulk action on product advertisements: false
+          admin can perform bulk action on product advertisements: true
       vendor:
           vendor can buy product advertising (product list page): true
           vendor can buy product advertising (product edit page): false
@@ -985,18 +985,18 @@
   features:
       vendor:
           vendor can view user subscriptions menu page: true
-          vendor can view product subscription details: false
-          vendor can filter user subscriptions by customer: false
-          vendor can filter user subscriptions by date: false
-          vendor can view user subscription: false
+          vendor can view product subscription details: true
+          vendor can filter user subscriptions by customer: true
+          vendor can filter user subscriptions by date: true
+          vendor can view user subscription: true
       customer:
-          customer can view product subscription details: false
-          customer can cancel subscription: false
-          customer can reactivate subscription: false
-          customer can change address of subscription: false
-          customer can change payment of subscription: false
-          customer can renew subscription: false
-          customer can buy product subscription: false
+          customer can view product subscription details: true
+          customer can cancel subscription: true
+          customer can reactivate subscription: true
+          customer can change address of subscription: true
+          customer can change payment of subscription: true
+          customer can renew subscription: true
+          customer can buy product subscription: true
 
 - page: 'Rank Math SEO'
   features:
@@ -1084,8 +1084,8 @@
           admin can search seller badge: true
           admin can create seller badge: true
           admin can edit seller badge: true
-          admin can filter vendors by seller badge: false
-          admin can view seller badge vendors: false
+          admin can filter vendors by seller badge: true
+          admin can view seller badge vendors: true
           admin can view seller badges acquired by vendor: true
           admin can update seller badge status: true
           admin can delete seller badge: true
@@ -1235,7 +1235,7 @@
           admin can filter subscribed vendors by subscription pack: true
           admin can cancel subscription (immediately): true
           admin can cancel subscription (end of the current period): true
-          admin can reactive recurring subscription (has active period ): false
+          admin can reactive recurring subscription (has active period): false
           admin can perform bulk action on subscribed vendors: true
           admin can assign non recurring subscription pack to vendor: true
       vendor:
