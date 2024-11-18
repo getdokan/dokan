@@ -169,4 +169,12 @@ export class CommissionPage extends AdminPage {
         await this.click(productsAdmin.product.subMenus.commission);
         await this.assertCommission(commission);
     }
+
+    // view commission metabox
+    async viewCommissionMetaBox(orderId: string) {
+        await this.gotoUntilNetworkidle(data.subUrls.backend.orderDetails(orderId));
+
+        // metabox elements are visible
+        await this.multipleElementVisible(selector.admin.wooCommerce.orders.commissionMetaBox);
+    }
 }

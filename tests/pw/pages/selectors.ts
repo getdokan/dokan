@@ -2979,6 +2979,13 @@ export const selector = {
                 //table
                 numberOfRowsFound: '(//span[@class="displaying-num"])[1]',
                 noRowsFound: '//td[normalize-space(text())="No items found."]',
+
+                commissionMetaBox: {
+                    metaBoxDiv: 'div#dokan_commission_box',
+                    commissionsText: '//h2[normalize-space()="Commissions"]',
+                    orderItemInfo: 'div#dokan_commission_box table.woocommerce_order_items',
+                    orderTotalInfo: 'div#dokan_commission_box div.wc-order-totals-items',
+                },
             },
         },
 

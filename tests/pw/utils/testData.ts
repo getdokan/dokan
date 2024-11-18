@@ -1009,6 +1009,7 @@ export const data = {
             adminLogout: 'wp-login.php?action=logout',
             adminDashboard: 'wp-admin',
             diagnosticNotice: 'dokan_tracker_optin=true',
+            orderDetails: (orderId: string) => `wp-admin/admin.php?page=wc-orders&action=edit&id=${orderId}`,
             pages: 'wp-admin/edit.php?post_type=page',
             addNewPage: 'wp-admin/post-new.php?post_type=page',
             user: 'wp-admin/user-edit.php',
