@@ -216,6 +216,9 @@ class SetupWizard extends DokanSetupWizard {
         $country_obj = new WC_Countries();
         $countries   = $country_obj->get_allowed_countries();
         $states      = $country_obj->states;
+
+        $request_data = wc_clean( wp_unslash( $_POST ) ); // phpcs:ignore
+
         ?>
         <h1><?php esc_attr_e( 'Store Setup', 'dokan-lite' ); ?></h1>
         <form method="post" class="dokan-seller-setup-form">
@@ -232,7 +235,7 @@ class SetupWizard extends DokanSetupWizard {
                         <input type="text" id="address[street_1]" name="address[street_1]" value="<?php echo esc_attr( $address_street1 ); ?>"/>
                         <span class="error-container">
                             <?php
-                            if ( ! empty( $_POST['error_address[street_1]'] ) ) { // phpcs:ignore
+                            if ( ! empty( $request_data['error_address[street_1]'] ) ) {
                                 echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
                             }
                             ?>
@@ -321,7 +324,7 @@ class SetupWizard extends DokanSetupWizard {
                         <input type="text" id="calc_shipping_state" name="address[state]" value="<?php echo esc_attr( $address_state ); ?>" / placeholder="<?php esc_attr_e( 'State Name', 'dokan-lite' ); ?>">
                         <span class="error-container">
                             <?php
-                            if ( ! empty( $_POST['error_address[state]'] ) ) { // phpcs:ignore
+                            if ( ! empty( $request_data['error_address[state]'] ) ) {
                                 echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
                             }
                             ?>
