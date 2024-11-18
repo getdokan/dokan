@@ -22,7 +22,7 @@ if ( count( $chosen_cat ) < 1 ) {
 <div class="dokan-form-group dokan-new-cat-ui-title">
     <label for="chosen_product_cat" class="form-label">
         <?php esc_html_e( 'Category', 'dokan-lite' ); ?>
-        <?php echo wp_kses_post( $required_symbol ); ?>
+        <?php echo wp_kses_post( $required_symbol ?? '' ); ?>
     </label>
 </div>
 <?php endif; ?>
