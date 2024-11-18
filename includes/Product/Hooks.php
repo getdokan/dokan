@@ -539,15 +539,19 @@ class Hooks {
             update_post_meta( $post_id, '_per_product_admin_commission_type', $commission_type );
         }
 
-        if ( isset( $_POST['_per_product_admin_commission'] ) && 0 <= $_POST['_per_product_admin_commission'] && 100 >= $_POST['_per_product_admin_commission'] ) { // phpcs:ignore
-            $admin_commission = ( '' === $_POST['_per_product_admin_commission'] ) ? '' : sanitize_text_field( $_POST['_per_product_admin_commission'] ); // phpcs:ignore
+        if ( isset( $_POST['_per_product_admin_commission'] ) ) { // phpcs:ignore
+            $_per_product_admin_commission = wc_format_decimal( sanitize_text_field( $_POST['_per_product_admin_commission'] ) ); // phpcs:ignore
+
+            if ( 0 <= $_per_product_admin_commission && 100 >= $_per_product_admin_commission ) {
+                $admin_commission = ( '' === $_POST['_per_product_admin_commission'] ) ? '' : $_per_product_admin_commission; // phpcs:ignore
+            }
         }
 
         if ( isset( $_POST['_per_product_admin_additional_fee'] ) ) { // phpcs:ignore
             $additional_fee = ( '' === $_POST['_per_product_admin_additional_fee'] ) ? '' : sanitize_text_field( $_POST['_per_product_admin_additional_fee'] ); // phpcs:ignore
         }
 
-        update_post_meta( $post_id, '_per_product_admin_commission', wc_format_decimal( $admin_commission ) );
+        update_post_meta( $post_id, '_per_product_admin_commission', $admin_commission );
         update_post_meta( $post_id, '_per_product_admin_additional_fee', wc_format_decimal( $additional_fee ) );
     }
 }
