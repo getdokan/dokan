@@ -1324,5 +1324,73 @@
           vendor can delete booking resource: true
           vendor can add booking for guest customer: true
           vendor can add booking for existing customer: true
+          vendor can update booking product title: true
+          vendor can add booking product accommodation booking option: true
+          vendor can update booking product accommodation booking option: true
+          vendor can remove booking product accommodation booking option: true
+          vendor can update booking product category (single): true
+          vendor can add booking product category (multiple): true
+          vendor can remove booking product category (multiple): true
+          vendor can add multi-step booking product category (last category): true
+          vendor can add multi-step booking product category (any category): true
+          vendor can't add multi-step booking product category (any category): true
+          vendor can add booking product tags: true
+          vendor can remove booking product tags: true
+          vendor can create booking product tags: true
+          vendor can add booking product cover image: true
+          vendor can update booking product cover image: true
+          vendor can remove booking product cover image: true
+          vendor can add booking product gallery image: true
+          vendor can update booking product gallery image: true
+          vendor can remove booking product gallery image: true
+          vendor can add booking product short description: true
+          vendor can update booking product short description: true
+          vendor can remove booking product short description: true
+          vendor can update booking product description: true
+          vendor can add booking product virtual option: true
+          vendor can remove booking product virtual option: true
+          vendor can add booking product inventory options (SKU): true
+          vendor can update booking product inventory options (SKU): true
+          vendor can remove booking product inventory options (SKU): true
+          vendor can add booking product inventory options (stock status): true
+          vendor can add booking product inventory options (stock management): true
+          vendor can update booking product inventory options (stock management): true
+          vendor can remove booking product inventory options (stock management): true
+          vendor can add booking product inventory options (allow single quantity): true
+          vendor can remove booking product inventory options (allow single quantity): true
+          vendor can add booking product other options (product status): true
+          vendor can add booking product other options (visibility): true
+          vendor can add booking product shipping: true
+          vendor can update booking product shipping: true
+          vendor can remove booking product shipping: true
+          vendor can add booking product tax: true
+          vendor can add booking product tax (with tax class): true
+          vendor can add booking product duration: true
+          vendor can update booking product duration: true
+          vendor can add booking product basic options: true
+          vendor can add booking product availability: true
+          vendor can update booking product availability: true
+          vendor can add booking product costs: true
+          vendor can update booking product costs: true
+          vendor can remove booking product costs: true
+          vendor can add booking product extra options (persons): true
+          vendor can add booking product extra options (person type): true
+          vendor can update booking product extra options (person type): true
+          vendor can remove booking product extra options (person type): true
+          vendor can add booking product extra options (resource): true
+          vendor can update booking product extra options (resource): true
+          vendor can remove booking product extra options (resource): true
+          vendor can add booking product attribute: true
+          vendor can't add already added booking product attribute: true
+          vendor can create booking product attribute term: true
+          vendor can remove booking product attribute: true
+          vendor can remove booking product attribute term: true
+          vendor can add booking product geolocation (individual): true
+          vendor can update booking product geolocation (individual): true
+          vendor can remove booking product geolocation (individual): true
+          vendor can add booking product addon: true
+          vendor can import booking product addon: true
+          vendor can export booking product addon: true
+          vendor can remove booking product addon: true
       customer:
           customer can buy bookable product: true

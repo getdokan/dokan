@@ -324,16 +324,23 @@ export class AuctionsPage extends VendorPage {
     }
 
     // add product tags
-    async addProductTags(productName: string, tags: string[], create = false): Promise<void> {
+    async addProductTags(productName: string, tags: string[]): Promise<void> {
+        // async addProductTags(productName: string, tags: string[], create = false): Promise<void> {
         await this.goToAuctionProductEditById(productName);
         for (const tag of tags) {
             await this.clearAndType(auctionProductsVendor.auction.tags.tagInput, tag);
-            if (create) {
-                await this.click(auctionProductsVendor.auction.tags.nonCreatedTag(tag));
-            } else {
-                await this.click(auctionProductsVendor.auction.tags.searchedTag(tag));
-            }
+            await this.toBeVisible(auctionProductsVendor.auction.tags.searchedTag(tag));
+            await this.click(auctionProductsVendor.auction.tags.searchedTag(tag));
             await this.toBeVisible(auctionProductsVendor.auction.tags.selectedTags(tag));
+
+            // todo: remove below lines if the behavior is actually changed
+            // await this.clearAndType(auctionProductsVendor.auction.tags.tagInput, tag);
+            // if (create) {
+            //     await this.click(auctionProductsVendor.auction.tags.nonCreatedTag(tag));
+            // } else {
+            //     await this.click(auctionProductsVendor.auction.tags.searchedTag(tag));
+            // }
+            // await this.toBeVisible(auctionProductsVendor.auction.tags.selectedTags(tag));
         }
         await this.saveProduct();
 
@@ -585,6 +592,7 @@ export class AuctionsPage extends VendorPage {
         await this.toBeVisible(productsVendor.attribute.savedAttribute(attribute.attributeName));
     }
 
+    // can't add already added attribute
     async cantAddAlreadyAddedAttribute(productName: string, attributeName: string): Promise<void> {
         await this.goToAuctionProductEditById(productName);
         await this.toBeVisible(productsVendor.attribute.savedAttribute(attributeName));
