@@ -358,7 +358,7 @@
           admin can filter withdrawal requests by cancelled status: true
           admin can filter withdrawal requests by vendor [lite]: true
           admin can filter withdrawal requests by payment methods [lite]: true
-          admin can filter withdrawal requests by date: false
+          #   admin can filter withdrawal requests by date: false
           admin can clear withdrawal request filters: false
           admin can export withdrawal requests [lite]: true
           admin can add note to withdrawal request [lite]: true
@@ -446,7 +446,7 @@
           customer can view top rated products (shortcode): true
           customer can view customer migration form (shortcode): true
           customer can view geolocation filter form (shortcode): true
-          customer can view advertised products (shortcode): false
+          customer can view advertised products (shortcode): true
           customer can view stores (shortcode): true
           customer can view my orders (shortcode): true
           customer can view request for quote (shortcode): true
