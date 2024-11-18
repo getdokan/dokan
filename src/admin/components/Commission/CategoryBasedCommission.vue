@@ -19,7 +19,7 @@
             <div class='flex flex-row'>
                 <div class='flex flex-row w-1/2 items-center min-h-[3rem] border-0 !border-r-[1px] !border-b-[1px] border-[#e9e9ea] border-solid pl-[5px]'>
                     <button type='button' class='p-1 d-xs:pl-1 md:pl-4 bg-transparent bg-co border-none cursor-pointer' @click='()=>allCategroyEnabled = !allCategroyEnabled'>
-                        <i class="far" :class='! allCategroyEnabled ? "fa-minus-square text-black" : "fa-plus-square text-[#F05025]"'></i>
+                        <i class="far" :class='! allCategroyEnabled ? "fa-minus-square text-black" : "fa-plus-square text-[#4C19E6]"'></i>
                     </button>
                     <p class='d-xs:text-[8px] sm:text-[14px] !m-0'>{{__( 'All Categories', 'dokan-lite' )}}</p>
                 </div>
