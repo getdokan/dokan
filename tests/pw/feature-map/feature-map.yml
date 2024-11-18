@@ -314,12 +314,12 @@
           customer can view stores on map: true
           customer can go to single store from store list [lite]: true
 
-- page: 'Stores'
+- page: 'Vendors'
   features:
       admin:
           admin can view vendors menu page [lite]: true
-          admin can filter vendors by pending status: false
-          admin can filter vendors by approved status: false
+          admin can filter vendors by status (pending): true
+          admin can filter vendors by status (approved): true
           admin can search vendors [lite]: true
           admin can view vendor details: true
           admin can disable vendor's selling capability [lite]: true

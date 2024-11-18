@@ -441,7 +441,7 @@ export const selector = {
 
                 // Nav Tabs
                 navTabs: {
-                    cancelled: '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
+                    all: '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
                     approved: '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
                     pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
                 },
