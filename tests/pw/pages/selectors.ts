@@ -237,6 +237,13 @@ export const selector = {
                 sliderNext: '.slide-notice .next',
             },
 
+            diagnostic: {
+                noticeDiv: '//a[@class="dokan-insights-data-we-collect"]/../..',
+                allowCollectData: '//a[@class="dokan-insights-data-we-collect"]/../..//a[normalize-space()="Allow"]',
+                paragraph1: '(//a[@class="dokan-insights-data-we-collect"]/../..//p)[1]',
+                paragraph2: '//a[@class="dokan-insights-data-we-collect"]/../..//p[@class="description"]',
+            },
+
             // promo banner
             promoBanner: {
                 promoBanner: '.dokan-promo-banner',

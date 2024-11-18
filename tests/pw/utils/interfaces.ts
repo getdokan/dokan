@@ -25,6 +25,11 @@ export interface adminDashboard {
     };
 }
 
+export interface diagnosticNotice {
+    paragraph1: string;
+    paragraph2: string;
+}
+
 export interface bookings {
     startDate: Date;
     endDate: Date;

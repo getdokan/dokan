@@ -128,6 +128,12 @@ export const data = {
         saveSuccessMessage: 'Your settings have been saved.',
     },
 
+    diagnosticNotice: {
+        paragraph1: 'Want to help make Dokan Multivendor Marketplace even more awesome? Allow Dokan Multivendor Marketplace to collect diagnostic data and usage information. (what we collect)',
+        paragraph2:
+            'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and URL, Your name and email address. We are using Appsero to collect your data. Learn more about how Appsero collects and handle your data.',
+    },
+
     // Product
     product: {
         publishSuccessMessage: 'Product published. ',
@@ -1002,6 +1008,7 @@ export const data = {
             adminLogin: 'wp-admin',
             adminLogout: 'wp-login.php?action=logout',
             adminDashboard: 'wp-admin',
+            diagnosticNotice: 'dokan_tracker_optin=true',
             pages: 'wp-admin/edit.php?post_type=page',
             addNewPage: 'wp-admin/post-new.php?post_type=page',
             user: 'wp-admin/user-edit.php',
