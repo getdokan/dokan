@@ -4,7 +4,7 @@ import { customExpect } from '@utils/pwMatchers';
 const { CI, NON_HEADLESS, BASE_URL, SLOWMO } = process.env;
 
 export default defineConfig({
-    testDir: './tests/',
+    testDir: 'tests',
     testMatch: /.*\.spec\.ts/,
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
     outputDir: 'playwright/test-artifacts/',
