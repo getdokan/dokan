@@ -20,6 +20,7 @@ export class CouponsPage extends AdminPage {
     // add marketplace coupon
     async addMarketplaceCoupon(coupon: coupon) {
         await this.goIfNotThere(data.subUrls.backend.wc.addCoupon);
+        await this.setElementCssStyle('div.woocommerce-layout__header', 'display', 'none'); //todo: remove this when woocommerce header can be disabled
 
         await this.clearAndType(couponsAdmin.addNewCoupon.couponCode, coupon.title);
         await this.clearAndType(couponsAdmin.addNewCoupon.couponDescription, coupon.description);
@@ -30,7 +31,6 @@ export class CouponsPage extends AdminPage {
         await this.check(couponsAdmin.addNewCoupon.enableForAllVendors);
         await this.check(couponsAdmin.addNewCoupon.showOnStores);
         await this.check(couponsAdmin.addNewCoupon.notifyVendors);
-        await this.scrollToTop();
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, couponsAdmin.addNewCoupon.publish);
         await this.toContainText(couponsAdmin.addNewCoupon.publishSuccessMessage, 'Coupon updated.');
     }

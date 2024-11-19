@@ -247,11 +247,13 @@ class Hooks {
             return;
         }
 
+        do_action( 'dokan_product_bulk_delete', $products );
         foreach ( $products as $product_id ) {
             if ( dokan_is_product_author( $product_id ) ) {
                 dokan()->product->delete( $product_id, true );
             }
         }
+        do_action( 'dokan_product_bulk_deleted', $products );
 
         wp_safe_redirect( add_query_arg( [ 'message' => 'product_deleted' ], dokan_get_navigation_url( 'products' ) ) );
         exit;
@@ -409,7 +411,7 @@ class Hooks {
 
         wc_print_notice( __( 'As this is your own product, the "Add to Cart" button has been removed. Please visit as a guest to view it.', 'dokan-lite' ), 'notice' );
     }
-  
+
     /**
      * Filter the recipients of the product review notification.
      *

@@ -44,7 +44,8 @@ setup.describe('setup woocommerce settings', () => {
         // create shipping zone, location and method
         const [, zoneId] = await apiUtils.createShippingZone(payloads.createShippingZone);
         await apiUtils.addShippingZoneLocation(zoneId, payloads.addShippingZoneLocation);
-        await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
+        const [, methodId] = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
+        await apiUtils.updateShippingZoneMethod(zoneId, methodId, payloads.addShippingMethodFlatRateCost);
         await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
 
         if (DOKAN_PRO) {

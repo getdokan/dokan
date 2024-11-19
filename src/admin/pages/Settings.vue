@@ -58,6 +58,7 @@
                                 <div class="form-table">
                                     <div class="dokan-settings-fields">
                                         <Fields
+                                            :ref="fieldId"
                                             v-for="(field, fieldId) in fields"
                                             :section-id="index"
                                             :id="fieldId"
@@ -170,9 +171,7 @@
 
         methods: {
             changeTab( section ) {
-                var activetab = '';
                 this.currentTab = section.id;
-                this.requiredFields = [];
 
                 this.$refs.settingsWrapper.scrollIntoView({ behavior: 'smooth' });
                 if ( typeof( localStorage ) != 'undefined' ) {
@@ -581,6 +580,25 @@
                         }
                     });
                 }
+            });
+
+            // Scroll into specific setting field.
+            this.$root.$on( 'scrollToSettingField', ( fieldId = '', sectionId = '' ) => {
+                if ( sectionId ) {
+                    let section = dokan.settings_sections.find( item => item.id === sectionId );
+
+                    if ( section ) {
+                        this.changeTab( section );
+                    }
+                }
+
+                this.$nextTick( () => {
+                    if ( this.$refs[fieldId] && Array.isArray( this.$refs[fieldId] ) ) {
+                        this.$refs[fieldId].forEach( item => {
+                            item.$el && item.$el.scrollIntoView( { behavior: 'smooth' } );
+                        } );
+                    }
+                });
             });
 
             this.settingSections = dokan.settings_sections;

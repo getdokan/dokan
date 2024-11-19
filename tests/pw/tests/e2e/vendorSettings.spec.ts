@@ -106,6 +106,10 @@ test.describe('Vendor settings test', () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'store-support');
     });
 
+    test('vendor can set live chat settings', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'liveChat');
+    });
+
     test('vendor can set min-max settings', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'min-max');
         // disable min-max

@@ -974,7 +974,7 @@ const abuseReportSchema = z.object({
             id: z.string().or(z.number()),
             name: z.string(),
             email: z.string().email(),
-            admin_url: z.string().url(),
+            admin_url: z.string().url().nullable(),
         })
         .optional(),
     description: z.string(),

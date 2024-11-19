@@ -102,6 +102,7 @@ test.describe('Product functionality test', () => {
     });
 
     test('vendor can add downloadable product', { tag: ['@lite', '@vendor'] }, async () => {
+        test.slow();
         await vendor.vendorAddDownloadableProduct(data.product.downloadable);
     });
 

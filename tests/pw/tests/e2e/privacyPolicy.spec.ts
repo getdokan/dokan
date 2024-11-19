@@ -15,12 +15,15 @@ test.describe('Privacy Policy & Store Contact form test', () => {
         cPage = await customerContext.newPage();
         customer = new PrivacyPolicyPage(cPage);
         apiUtils = new ApiUtils(await request.newContext());
+
+        // await dbUtils.updateOptionValue('widget_dokan-store-contact-widget', dbData.storeContactFormWidget);
+        // await dbUtils.updateOptionValue('sidebars_widgets', { ...dbData.sidebarWidgets, 'sidebar-store': ['dokan-store-contact-widget-2'] });
     });
 
     test.afterAll(async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.privacyPolicy, { enable_privacy: 'on' });
         await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { contact_seller: 'on' });
-        await dbUtils.setOptionValue('sidebars_widgets', dbData.widget.emptySideBarsWidgets);
+        await dbUtils.setOptionValue('sidebars_widgets', dbData.emptySideBarsWidgets); // todo: remove in future
         await cPage.close();
         await apiUtils.dispose();
     });
