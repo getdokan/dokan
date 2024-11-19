@@ -76,15 +76,6 @@ class SetupWizard extends DokanSetupWizard {
         // Setup wizard steps
         $this->set_steps();
 
-        // If payment step is accessed but no active methods exist, redirect to next step
-        if ( isset( $_GET['step'] ) && 'payment' === $_GET['step'] ) {
-            $active_methods = dokan_withdraw_get_active_methods();
-            if ( empty( $active_methods ) ) {
-                wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
-                exit;
-            }
-        }
-
         // get step from url
         if ( isset( $_GET['_admin_sw_nonce'], $_GET['step'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_admin_sw_nonce'] ) ), 'dokan_admin_setup_wizard_nonce' ) ) {
             $this->current_step = sanitize_key( wp_unslash( $_GET['step'] ) ) ?? current( array_keys( $this->steps ) );
@@ -532,6 +523,11 @@ class SetupWizard extends DokanSetupWizard {
     public function dokan_setup_payment() {
         $methods    = dokan_withdraw_get_active_methods();
         $store_info = $this->store_info;
+        // If payment step is accessed but no active methods exist, redirect to next step
+        if ( 'payment' === $this->current_step && empty( $methods ) ) {
+                wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
+                exit; }
+
         ?>
         <h1><?php esc_html_e( 'Payment Setup', 'dokan-lite' ); ?></h1>
         <form method="post" id='dokan-seller-payment-setup-form' novalidate>
@@ -670,13 +666,14 @@ class SetupWizard extends DokanSetupWizard {
         ++$step;
 
         // If next step is payment but there are no active methods, skip to the following step
-        if ( 'payment' === $keys[ $step ] && empty( dokan_withdraw_get_active_methods() ) ) {
+        if ( 'payment' === ( $keys[ $step ] ?? '' ) && empty( dokan_withdraw_get_active_methods() ) ) {
             ++$step;
         }
 		$next_step = $keys[ $step ] ?? '';
+        $next_step = apply_filters( 'dokan_seller_wizard_next_step', $next_step, $this->current_step, $this->steps );
         return add_query_arg(
             [
-				'step' => apply_filters( 'dokan_seller_wizard_next_step', $next_step, $this->current_step, $this->steps ),
+				'step' => $next_step,
 				'_admin_sw_nonce' => wp_create_nonce( 'dokan_admin_setup_wizard_nonce' ),
 			]
         );
