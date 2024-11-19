@@ -479,8 +479,10 @@ class SetupWizard extends DokanSetupWizard {
         $dokan_settings['location']     = isset( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '';
         $dokan_settings['find_address'] = isset( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : '';
         $dokan_settings['show_email']   = isset( $_POST['show_email'] ) ? 'yes' : 'no';
-
-        // Validating fileds.
+        $country = $dokan_settings['address']['country'];
+        $state = $dokan_settings['address']['state'];
+        $country_has_states = isset( $states[ $country ] ) && count( $states[ $country ] ) > 0;
+		$state_is_empty = empty( $state );        // Validating fileds.
         $is_valid_form = true;
         if ( empty( $dokan_settings['address']['street_1'] ) ) {
             $is_valid_form = false;
@@ -497,9 +499,9 @@ class SetupWizard extends DokanSetupWizard {
         if ( empty( $dokan_settings['address']['country'] ) ) {
             $is_valid_form = false;
             $_POST['error_address[country]'] = 'error';
-        } elseif ( ( isset( $states[ $dokan_settings['address']['country'] ] ) && count( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) || ( ! isset( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) ) ) ) {
-                $is_valid_form = false;
-                $_POST['error_address[state]'] = 'error';
+        } elseif ( ( $country_has_states && $state_is_empty ) || ( ! $country_has_states && $state_is_empty ) ) {
+            $is_valid_form = false;
+            $_POST['error_address[state]'] = 'error';
         }
 
         if ( ! $is_valid_form ) {
