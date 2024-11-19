@@ -436,7 +436,7 @@
 - page: 'Shortcode'
   features:
       admin:
-          admin can create page with Dokan shortcode: false
+          admin can create page with Dokan shortcode: true
       vendor:
           vendor can view Dokan dashboard (shortcode): true
           vendor can view Dokan subscription packs (shortcode): true
@@ -815,10 +815,16 @@
   features:
       admin:
           #   admin can set Dokan geolocation settings [duplicate]: false
-          admin can set map location position: false
-          admin can set where to display store map: false
-          admin can enable filters before location map: false
-          admin can enable product location tab on single product page: false
+          admin can set map location position (top): true
+          admin can set map location position (left): true
+          admin can set map location position (right): true
+          admin can set map display page (all): true
+          admin can set map display page (store_listing): true
+          admin can set map display page (shop): true
+          admin can enable filters before location map: true
+          admin can disable filters before location map: true
+          admin can enable product location tab on single product page: true
+          admin can disable product location tab on single product page: true
           admin can set map radius search unit and distance: false
           admin can set map zoom level: false
           admin can set map default location: false
@@ -833,8 +839,8 @@
       #   customer can view map on shop page [duplicate]: false
       #   customer can view map on store list page [duplicate]: false
       #   customer can view map on single product page [duplicate]: false
-      #   customer can view product location on map [duplicate]: false
-      #   customer can view store location on map [duplicate]: false
+      #   customer can view product location  [duplicate]: false
+      #   customer can view store location  [duplicate]: false
       #   customer can use filters on shop page [duplicate]: false
       #   customer can use filters on store list page [duplicate]: false
 

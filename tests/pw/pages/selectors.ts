@@ -7012,6 +7012,7 @@ export const selector = {
 
             // Filter
             filters: {
+                filterDiv: 'form.dokan-geolocation-location-filters',
                 searchProduct: 'input.dokan-form-control[placeholder="Search Products"]',
                 location: '.location-address input',
                 selectCategory: '#product_cat',
@@ -7268,7 +7269,7 @@ export const selector = {
             storeListText: '//h1[normalize-space()="Store List"]',
 
             map: {
-                locationMap: '#dokan-geolocation-locations-map',
+                locationMap: 'div#dokan-geolocation-locations-map',
                 map: '//button[normalize-space()="Map"]',
                 satellite: '//button[normalize-space()="Satellite"]',
                 fullScreenToggle: '//button[@title="Toggle fullscreen view"]',
