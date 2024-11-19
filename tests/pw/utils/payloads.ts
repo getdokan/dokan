@@ -4943,4 +4943,11 @@ export const payloads = {
         content: '[dokan-request-quote]',
         status: 'publish',
     },
+
+    // product advertisement  shortcode
+    productAdvertisementShortcode: {
+        title: 'Advertised-products',
+        content: '[dokan_product_advertisement]',
+        status: 'publish',
+    },
 };

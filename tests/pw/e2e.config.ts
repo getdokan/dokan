@@ -5,7 +5,7 @@ const { CI, NON_HEADLESS, BASE_URL, SLOWMO, NO_SETUP, DOKAN_PRO } = process.env;
 
 export default defineConfig({
     /* test directory */
-    testDir: './tests/e2e',
+    testDir: 'tests/e2e',
     /* Include tests based on the pattern */
     grep: [/@lite/, /@liteOnly/, /@pro/],
     /* Exclude tests based on the pattern */

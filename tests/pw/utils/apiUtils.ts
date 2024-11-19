@@ -261,6 +261,12 @@ export class ApiUtils {
         return responseBody;
     }
 
+    // update store status
+    async updateStoreStatus(storeId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.updateStoreStatus(storeId), { data: payload, headers: auth });
+        return responseBody;
+    }
+
     // delete all stores
     async deleteAllStores(auth?: auth): Promise<responseBody> {
         const allStores = await this.getAllStores(auth);

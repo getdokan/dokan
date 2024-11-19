@@ -90,8 +90,9 @@ test.describe('Auction Product test', () => {
         await customer.bidAuctionProduct(auctionProductName);
     });
 
-    test.skip('customer can buy auction product with buy it now price', { tag: ['@pro', '@customer'] }, async () => {
-        const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth); // todo: buy it now price is not saved by api
+    test('customer can buy auction product with buy it now price', { tag: ['@pro', '@customer'] }, async () => {
+        test.skip(true, 'buy it now price is not saved by api'); // todo: buy it now price is not saved by api
+        const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         await customer.buyAuctionProduct(auctionProductName);
     });
 });

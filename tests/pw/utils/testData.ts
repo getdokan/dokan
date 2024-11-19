@@ -128,6 +128,12 @@ export const data = {
         saveSuccessMessage: 'Your settings have been saved.',
     },
 
+    diagnosticNotice: {
+        paragraph1: 'Want to help make Dokan Multivendor Marketplace even more awesome? Allow Dokan Multivendor Marketplace to collect diagnostic data and usage information. (what we collect)',
+        paragraph2:
+            'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and URL, Your name and email address. We are using Appsero to collect your data. Learn more about how Appsero collects and handle your data.',
+    },
+
     // Product
     product: {
         publishSuccessMessage: 'Product published. ',
@@ -909,7 +915,7 @@ export const data = {
         fixed: {
             commissionType: 'fixed', // 'fixed','category_based'
             commissionPercentage: helpers.priceStringWithDecimal(10, 'ES'),
-            commissionFixed: helpers.priceStringWithDecimal(0, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(10, 'ES'),
             commissionCategory: {
                 allCategory: true, // true for all category, false for specific category
                 category: 'All Categories',
@@ -918,8 +924,8 @@ export const data = {
 
         allCategory: {
             commissionType: 'category_based', // 'fixed','category_based'
-            commissionPercentage: helpers.priceStringWithDecimal(5, 'US'), // todo: change to ES when issue is fixed
-            commissionFixed: helpers.priceStringWithDecimal(5, 'US'), // todo: change to ES when issue is fixed
+            commissionPercentage: helpers.priceStringWithDecimal(5, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(5, 'ES'),
             commissionCategory: {
                 allCategory: true, // true for all category, false for specific category
                 category: 'All Categories',
@@ -928,8 +934,8 @@ export const data = {
 
         specificCategory: {
             commissionType: 'category_based', // 'fixed','category_based'
-            commissionPercentage: helpers.priceStringWithDecimal(2, 'US'), // todo: change to ES when issue is fixed
-            commissionFixed: helpers.priceStringWithDecimal(2, 'US'), // todo: change to ES when issue is fixed
+            commissionPercentage: helpers.priceStringWithDecimal(2, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(2, 'ES'),
             commissionCategory: {
                 allCategory: false, // true for all category, false for specific category
                 category: CATEGORY_ID,
@@ -1002,6 +1008,8 @@ export const data = {
             adminLogin: 'wp-admin',
             adminLogout: 'wp-login.php?action=logout',
             adminDashboard: 'wp-admin',
+            diagnosticNotice: 'dokan_tracker_optin=true',
+            orderDetails: (orderId: string) => `wp-admin/admin.php?page=wc-orders&action=edit&id=${orderId}`,
             pages: 'wp-admin/edit.php?post_type=page',
             addNewPage: 'wp-admin/post-new.php?post_type=page',
             user: 'wp-admin/user-edit.php',
@@ -1016,6 +1024,10 @@ export const data = {
 
             dokan: {
                 setupWizard: 'wp-admin/admin.php?page=dokan-setup',
+                setupWizardStore: 'wp-admin/admin.php?page=dokan-setup&step=store',
+                setupWizardSelling: 'wp-admin/admin.php?page=dokan-setup&step=selling',
+                setupWizardCommission: 'wp-admin/admin.php?page=dokan-setup&step=commission',
+                setupWizardWithdraw: 'wp-admin/admin.php?page=dokan-setup&step=withdraw',
                 dokan: 'wp-admin/admin.php?page=dokan#',
 
                 // only lite
