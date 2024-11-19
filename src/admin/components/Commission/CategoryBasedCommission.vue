@@ -66,7 +66,7 @@
                         <i class="far" :class='openRows.includes( Number( item.term_id ) ) ? "fa-minus-square text-black" : "fa-plus-square"'></i>
                     </button>
                     <p class='d-xs:text-[8px] sm:text-[14px] text-black !m-0'>
-                        <span :title='item.name'>{{ item.name }}</span>
+                        <span :title='item.name' v-html="item.name"></span>
                         <span class='d-xs:text-[6px] sm:text-[12px] text-gray-500' :title='__( "Category ID", "dokan" )'>#{{ item.term_id }}</span>
                     </p>
                 </div>
@@ -284,7 +284,7 @@
                 }
 
                 this.emitComponentChange( JSON.parse( JSON.stringify( this.commission ) ) )
-            }, 500 ),
+            }, 700 ),
 
             handleAllCategoryInput: Debounce( function( value, commission_type, oldValue = '' ) {
                 if ( 'percentage' === commission_type ) {
@@ -296,7 +296,7 @@
                 this.$set(this.commission, 'items', {});
 
                 this.emitComponentChange( JSON.parse( JSON.stringify( this.commission ) ) )
-            }, 500 ),
+            }, 700 ),
 
             deleteDuplicateCategories( items ) {
                 let self = this;
@@ -371,7 +371,7 @@
                     return value;
                 }
 
-                return accounting.unformat(value, dokan.currency.decimal);
+                return String( accounting.unformat(value, dokan.currency.decimal) );
             },
 
             formatValue: ( value ) => {
