@@ -252,7 +252,7 @@ class SetupWizard extends DokanSetupWizard {
                         <input type="text" id="address[street_2]" name="address[street_2]" value="<?php echo esc_attr( $address_street2 ); ?>"/>
                         <span class="error-container">
                             <?php
-                            if ( ! empty( $_POST['error_address[street_2]'] ) ) { // phpcs:ignore
+                            if ( ! empty( $request_data['error_address[street_2]'] ) ) {
                                 echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
                             }
                             ?>
@@ -270,7 +270,7 @@ class SetupWizard extends DokanSetupWizard {
                         <input type="text" id="address[city]" name="address[city]" value="<?php echo esc_attr( $address_city ); ?>"/>
                         <span class="error-container">
                             <?php
-                            if ( ! empty( $_POST['error_address[city]'] ) ) { // phpcs:ignore
+                            if ( ! empty( $request_data['error_address[city]'] ) ) {
                                 echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
                             }
                             ?>
@@ -287,7 +287,7 @@ class SetupWizard extends DokanSetupWizard {
                     <input type="text" id="address[zip]" name="address[zip]" value="<?php echo esc_attr( $address_zip ); ?>"/>
                     <span class="error-container">
                         <?php
-                        if ( ! empty( $_POST['error_address[zip]'] ) ) { // phpcs:ignore
+                        if ( ! empty( $request_data['error_address[zip]'] ) ) {
                             echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
                         }
                         ?>
@@ -306,7 +306,7 @@ class SetupWizard extends DokanSetupWizard {
                         </select>
                         <span class="error-container">
                             <?php
-                            if ( ! empty( $_POST['error_address[country]'] ) ) { // phpcs:ignore
+                            if ( ! empty( $request_data['error_address[country]'] ) ) {
                                 echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
                             }
                             ?>
