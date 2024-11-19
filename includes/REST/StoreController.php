@@ -131,6 +131,24 @@ class StoreController extends WP_REST_Controller {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'check_store_availability' ],
                     'permission_callback' => '__return_true',
+                    'args' => [
+                        'store_slug' => [
+                            'required' => false,
+                            'type' => 'string',
+                            'description' => __('Slug of the store to check availability.', 'dokan-lite'),
+                        ],
+                        'username' => [
+                            'required' => false,
+                            'type' => 'string',
+                            'description' => __('Username to check availability.', 'dokan-lite'),
+                        ],
+                        'email' => [
+                            'required' => false,
+                            'type' => 'string',
+                            'description' => __('Email address to check availability.', 'dokan-lite'),
+                            'format' => 'email',
+                        ],
+                    ],
                 ],
             ]
         );
