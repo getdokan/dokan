@@ -915,7 +915,7 @@ export const data = {
         fixed: {
             commissionType: 'fixed', // 'fixed','category_based'
             commissionPercentage: helpers.priceStringWithDecimal(10, 'ES'),
-            commissionFixed: helpers.priceStringWithDecimal(0, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(10, 'ES'),
             commissionCategory: {
                 allCategory: true, // true for all category, false for specific category
                 category: 'All Categories',
@@ -924,8 +924,8 @@ export const data = {
 
         allCategory: {
             commissionType: 'category_based', // 'fixed','category_based'
-            commissionPercentage: helpers.priceStringWithDecimal(5, 'US'), // todo: change to ES when issue is fixed
-            commissionFixed: helpers.priceStringWithDecimal(5, 'US'), // todo: change to ES when issue is fixed
+            commissionPercentage: helpers.priceStringWithDecimal(5, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(5, 'ES'),
             commissionCategory: {
                 allCategory: true, // true for all category, false for specific category
                 category: 'All Categories',
@@ -934,8 +934,8 @@ export const data = {
 
         specificCategory: {
             commissionType: 'category_based', // 'fixed','category_based'
-            commissionPercentage: helpers.priceStringWithDecimal(2, 'US'), // todo: change to ES when issue is fixed
-            commissionFixed: helpers.priceStringWithDecimal(2, 'US'), // todo: change to ES when issue is fixed
+            commissionPercentage: helpers.priceStringWithDecimal(2, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(2, 'ES'),
             commissionCategory: {
                 allCategory: false, // true for all category, false for specific category
                 category: CATEGORY_ID,
@@ -1024,6 +1024,10 @@ export const data = {
 
             dokan: {
                 setupWizard: 'wp-admin/admin.php?page=dokan-setup',
+                setupWizardStore: 'wp-admin/admin.php?page=dokan-setup&step=store',
+                setupWizardSelling: 'wp-admin/admin.php?page=dokan-setup&step=selling',
+                setupWizardCommission: 'wp-admin/admin.php?page=dokan-setup&step=commission',
+                setupWizardWithdraw: 'wp-admin/admin.php?page=dokan-setup&step=withdraw',
                 dokan: 'wp-admin/admin.php?page=dokan#',
 
                 // only lite

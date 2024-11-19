@@ -78,7 +78,6 @@ test.describe('Commission test', () => {
     });
 
     test('admin can set commission for a product (fixed)', { tag: ['@lite', '@admin'] }, async () => {
-        test.skip(true, 'dokan issue, decimal separator , becomes .');
         const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         await admin.setCommissionForProduct(productId, data.commission.fixed);
     });
