@@ -7010,6 +7010,11 @@ export const selector = {
                 },
             },
 
+            radiusSearch: {
+                radiusUnit: 'span.dokan-range-slider-value',
+                slider: 'input.dokan-range-slider',
+            },
+
             // Filter
             filters: {
                 filterDiv: 'form.dokan-geolocation-location-filters',
