@@ -375,6 +375,14 @@ export const endPoints = {
     getSingleShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
     updateShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
 
+    // shipstation
+    getShipstationCredential: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/credentials/${vendorId}`,
+    createShipstationCredential: `${SERVER_URL}/dokan/v1/shipstation/credentials/create`,
+    deleteShipstationCredential: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/credentials/${vendorId}`,
+    getShipstationOrderStatusSettings: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/order-statuses/${vendorId}`,
+    createShipstationOrderStatusSettings: `${SERVER_URL}/dokan/v1/shipstation/order-statuses`,
+    deleteShipstationOrderStatusSettings: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/order-statuses/${vendorId}`,
+
     wc: {
         // coupons
         getAllCoupons: `${SERVER_URL}/wc/v3/coupons`,

@@ -3,7 +3,7 @@ import { ShipstationPage } from '@pages/shipstationPage';
 import { data } from '@utils/testData';
 
 test.describe('Shipstation test', () => {
-    test.skip(true, 'merge after pr is merged');
+    test.skip(true, 'remove after pr is merged');
     let vendor: ShipstationPage;
     let vPage: Page;
 

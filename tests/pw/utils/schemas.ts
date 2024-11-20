@@ -2954,4 +2954,19 @@ export const schemas = {
         shipmentSchema: shipmentSchema,
         shipmentsSchema: z.array(shipmentSchema),
     },
+
+    // shipstation schema
+    shipstationSchema: {
+        shipstationCredentialSchema: z.object({
+            key_id: z.string().or(z.number()),
+            consumer_key: z.string(),
+            consumer_secret: z.string(),
+        }),
+
+        shipstationOrderStatusSettingSchema: z.object({
+            vendor_id: z.string().or(z.number()),
+            export_statuses: z.array(z.string()),
+            shipped_status: z.string(),
+        }),
+    },
 };

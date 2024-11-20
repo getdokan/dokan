@@ -4872,6 +4872,18 @@ export const payloads = {
         },
     ],
 
+    // shipstation
+
+    createCredential: {
+        vendor_id: '',
+    },
+
+    shipstationOrderStatusSettings: {
+        vendor_id: '',
+        export_statuses: ['wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled'],
+        shipped_status: 'wc-completed',
+    },
+
     // shortcodes
 
     // dokan dashboard shortcode
