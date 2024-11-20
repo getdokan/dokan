@@ -43,13 +43,19 @@ export class BasePage {
     }
 
     // goto subUrl
-    async goto(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }): Promise<void> {
+    async goto(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }, force = false): Promise<void> {
         await this.page.goto(subPath, options);
+        if (force) {
+            await this.reload();
+        }
     }
 
     // goto subUrl until networkidle
-    async gotoUntilNetworkidle(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'networkidle' }): Promise<void> {
+    async gotoUntilNetworkidle(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'networkidle' }, force = false): Promise<void> {
         await this.goto(subPath, options);
+        if (force) {
+            await this.reload();
+        }
     }
 
     // go forward
@@ -232,10 +238,7 @@ export class BasePage {
 
     // click & wait for response with response type
     async clickAndWaitForResponseWithType(subUrl: string, selector: string, requestType: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.request().method().toLowerCase() == requestType.toLowerCase() && resp.status() === code),
-            this.page.locator(selector).click(),
-        ]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.request().method().toLowerCase() == requestType.toLowerCase() && resp.status() === code), this.page.locator(selector).click()]);
         return response;
     }
 
@@ -337,6 +340,12 @@ export class BasePage {
     // type & wait for load state
     async pressAndWaitForLoadState(key: string): Promise<void> {
         await Promise.all([this.waitForLoadState(), this.press(key)]);
+    }
+
+    // select & wait for response
+    async selectAndWaitForResponse(subUrl: string, selector: string, value: string, code = 200): Promise<Response> {
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.selectByValue(selector, value)]);
+        return response;
     }
 
     // type & wait for response
@@ -1719,8 +1728,8 @@ export class BasePage {
     // enable switch or checkbox: dokan setup wizard
     async enableSwitcherSetupWizard(selector: string): Promise<void> {
         const value = await this.getPseudoElementStyles(selector, 'before', 'background-color');
-        // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
-        if (!value.includes('rgb(251, 203, 196)') && !value.includes('rgb(242, 98, 77)')) {
+        // rgb(201, 186, 248) for switcher & rgb(112, 71, 235) for checkbox
+        if (!value.includes('rgb(201, 186, 248)') && !value.includes('rgb(112, 71, 235)')) {
             if (selector.includes('withdraw_methods')) selector += '/..';
             await this.click(selector);
         }
@@ -1729,18 +1738,27 @@ export class BasePage {
     // disable switch or checkbox: dokan setup wizard
     async disableSwitcherSetupWizard(selector: string): Promise<void> {
         const value = await this.getPseudoElementStyles(selector, 'before', 'background-color');
-        // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
-        if (value.includes('rgb(251, 203, 196)') || value.includes('rgb(242, 98, 77)')) {
+        // rgb(201, 186, 248) for switcher & rgb(112, 71, 235) for checkbox
+        if (value.includes('rgb(201, 186, 248)') || value.includes('rgb(112, 71, 235)')) {
             if (selector.includes('withdraw_methods')) selector += '/..';
             await this.click(selector);
         }
     }
 
-    // admin enable switcher , if enabled then Skip : vendor dashboard disbursements
-    async enableSwitcherDisbursement(selector: string): Promise<void> {
+    // vendor enable switcher , if enabled then Skip : vendor dashboard (disbursements, printful)
+    async enableSwitcherVendorDashboard(selector: string): Promise<void> {
         selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
         const value = await this.getElementBackgroundColor(selector);
         if (!value.includes('rgb(33, 150, 243)')) {
+            await this.click(selector);
+        }
+    }
+
+    // vendor disable switcher , if enabled then Skip : vendor dashboard (disbursements, printful)
+    async disableSwitcherVendorDashboard(selector: string): Promise<void> {
+        selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
+        const value = await this.getElementBackgroundColor(selector);
+        if (value.includes('rgb(33, 150, 243)')) {
             await this.click(selector);
         }
     }

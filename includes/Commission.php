@@ -4,9 +4,15 @@ namespace WeDevs\Dokan;
 
 use WC_Order;
 use WC_Product;
+use WeDevs\Dokan\Commission\Calculator;
+use WeDevs\Dokan\Commission\Settings\DefaultSetting;
+use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
+use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
+use WeDevs\Dokan\Commission\Strategies\OrderItem;
+use WeDevs\Dokan\Commission\Strategies\Product;
+use WeDevs\Dokan\Commission\Strategies\Vendor;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WP_Error;
-use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayPalGateway;
 
 /**
  * Dokan Commission Class
@@ -43,21 +49,9 @@ class Commission {
     public $quantity = 0;
 
     /**
-     * Class constructor
-     *
-     * @since  2.9.21
-     *
-     * @return void
-     */
-    public function __construct() {
-        add_filter( 'woocommerce_order_item_get_formatted_meta_data', [ $this, 'hide_extra_data' ] );
-        add_action( 'woocommerce_order_status_changed', [ $this, 'calculate_gateway_fee' ], 100 );
-        add_action( 'woocommerce_thankyou_ppec_paypal', [ $this, 'calculate_gateway_fee' ] );
-        add_action( 'woocommerce_paypal_payments_order_captured', [ $this, 'calculate_gateway_fee' ], 99 );
-    }
-
-    /**
      * Calculate gateway fee
+     *
+     * @deprecated DOKAN_SINCE Use dokan()->fees->calculate_gateway_fee insted.
      *
      * @since 2.9.21
      *
@@ -66,88 +60,14 @@ class Commission {
      * @return void
      */
     public function calculate_gateway_fee( $order_id ) {
-        global $wpdb;
-        $order          = wc_get_order( $order_id );
-        $processing_fee = $this->get_processing_fee( $order );
-
-        if ( ! $processing_fee ) {
-            return;
-        }
-
-        foreach ( $this->get_all_order_to_be_processed( $order ) as $tmp_order ) {
-            $gateway_fee_added = $tmp_order->get_meta( 'dokan_gateway_fee' );
-            $vendor_earning    = $this->get_earning_from_order_table( $tmp_order->get_id() );
-
-            if ( is_null( $vendor_earning ) || $gateway_fee_added ) {
-                continue;
-            }
-
-            $gateway_fee = wc_format_decimal( ( $processing_fee / $order->get_total() ) * $tmp_order->get_total() );
-
-            // Ensure sub-orders also get the correct payment gateway fee (if any)
-            $gateway_fee = apply_filters( 'dokan_get_processing_gateway_fee', $gateway_fee, $tmp_order, $order );
-            $net_amount = $vendor_earning - $gateway_fee;
-            $net_amount = apply_filters( 'dokan_orders_vendor_net_amount', $net_amount, $vendor_earning, $gateway_fee, $tmp_order, $order );
-
-            $wpdb->update(
-                $wpdb->dokan_orders,
-                [ 'net_amount' => (float) $net_amount ],
-                [ 'order_id' => $tmp_order->get_id() ],
-                [ '%f' ],
-                [ '%d' ]
-            );
-
-            $wpdb->update(
-                $wpdb->dokan_vendor_balance,
-                [ 'debit' => (float) $net_amount ],
-                [
-                    'trn_id'   => $tmp_order->get_id(),
-                    'trn_type' => 'dokan_orders',
-                ],
-                [ '%f' ],
-                [ '%d', '%s' ]
-            );
-
-            $tmp_order->update_meta_data( 'dokan_gateway_fee', $gateway_fee );
-            $tmp_order->save();
-
-            if ( apply_filters( 'dokan_commission_log_gateway_fee_to_order_note', true, $tmp_order ) ) {
-                // translators: %s: Geteway fee
-                $tmp_order->add_order_note( sprintf( __( 'Payment gateway processing fee %s', 'dokan-lite' ), wc_format_decimal( $gateway_fee, 2 ) ) );
-            }
-            //remove cache for seller earning
-            $cache_key = "get_earning_from_order_table_{$tmp_order->get_id()}_seller";
-            Cache::delete( $cache_key );
-
-            // remove cache for seller earning
-            $cache_key = "get_earning_from_order_table_{$tmp_order->get_id()}_admin";
-            Cache::delete( $cache_key );
-        }
-    }
-
-    /**
-     * Hide extra meta data
-     *
-     * @since  2.9.21
-     *
-     * @param array
-     *
-     * @return array
-     */
-    public function hide_extra_data( $formatted_meta ) {
-        $meta_to_hide = [ '_dokan_commission_rate', '_dokan_commission_type', '_dokan_additional_fee' ];
-
-        foreach ( $formatted_meta as $key => $meta ) {
-            if ( in_array( $meta->key, $meta_to_hide, true ) ) {
-                unset( $formatted_meta[ $key ] );
-            }
-        }
-
-        return $formatted_meta;
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->fees->calculate_gateway_fee()' );
+        dokan()->fees->calculate_gateway_fee( $order_id );
     }
 
     /**
      * Set order id
+     *
+     * @deprecated DOKAN_SINCE
      *
      * @since  2.9.21
      *
@@ -156,11 +76,14 @@ class Commission {
      * @return void
      */
     public function set_order_id( $id ) {
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE' );
         $this->order_id = $id;
     }
 
     /**
      * Set order line item id
+     *
+     * @deprecated DOKAN_SINCE
      *
      * @since 3.8.0
      *
@@ -169,33 +92,42 @@ class Commission {
      * @return void
      */
     public function set_order_item_id( $item_id ) {
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE' );
         $this->order_item_id = absint( $item_id );
     }
 
     /**
      * Get order id
      *
+     * @deprecated DOKAN_SINCE
+     *
      * @since  2.9.21
      *
      * @return int
      */
     public function get_order_id() {
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE' );
         return $this->order_id;
     }
 
     /**
      * Get order line item id
      *
+     * @deprecated DOKAN_SINCE
+     *
      * @since 3.8.0
      *
      * @return int
      */
     public function get_order_item_id() {
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE' );
         return $this->order_item_id;
     }
 
     /**
      * Set order quantity
+     *
+     * @deprecated DOKAN_SINCE
      *
      * @since  2.9.21
      *
@@ -204,17 +136,21 @@ class Commission {
      * @return void
      */
     public function set_order_qunatity( $number ) {
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE' );
         $this->quantity = $number;
     }
 
     /**
      * Get order quantity
      *
+     * @deprecated DOKAN_SINCE
+     *
      * @since  2.9.21
      *
      * @return int
      */
     public function get_order_qunatity() {
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE' );
         return $this->quantity;
     }
 
@@ -242,10 +178,17 @@ class Commission {
         $vendor_id     = (int) dokan_get_vendor_by_product( $product, true );
         $product_id    = $product->get_id();
 
-        $earning = $this->calculate_commission( $product_id, $product_price, $vendor_id );
-        $earning = 'admin' === $context ? $product_price - $earning : $earning;
+        $commission = $this->get_commission(
+            [
+                'product_id'     => $product_id,
+                'total_amount'   => $product_price,
+                'total_quantity' => 1,
+                'vendor_id'      => $vendor_id,
+            ]
+        );
 
-        return apply_filters( 'dokan_get_earning_by_product', $earning, $product, $context );
+        $commission_or_earning = 'admin' === $context ? $commission->get_admin_commission() : $commission->get_vendor_earning();
+        return apply_filters( 'dokan_get_earning_by_product', $commission_or_earning, $product, $context );
     }
 
     /**
@@ -255,7 +198,7 @@ class Commission {
      * @since  3.7.19 Shipping tax recipient support added.
      *
      * @param int|WC_Order $order Order.
-     * @param string       $context
+     * @param string       $context Accepted values are `admin`, `seller`
      *
      * @return float|void|WP_Error|null on failure
      */
@@ -282,197 +225,55 @@ class Commission {
             return apply_filters( 'dokan_order_admin_commission', $saved_fee, $order );
         }
 
-        // Set user passed `order_id`
-        $this->set_order_id( $order->get_id() );
-
         // get earning from order table
-        $earning = $this->get_earning_from_order_table( $order->get_id(), $context );
-        if ( ! is_null( $earning ) ) {
-            return $earning;
+        $earning_or_commission = $this->get_earning_from_order_table( $order->get_id(), $context );
+        if ( ! is_null( $earning_or_commission ) ) {
+            return $earning_or_commission;
         }
 
-        $earning   = 0;
+        $earning_or_commission   = 0;
         $vendor_id = (int) $order->get_meta( '_dokan_vendor_id' );
 
         foreach ( $order->get_items() as $item_id => $item ) {
-            // Set user passed `order_id` so that we can track if any commission_rate has been saved previously.
-            // Specially on order table `re-generation`.
-            $this->set_order_item_id( $item->get_id() );
-
-            // Set line item quantity so that we can use it later in the `\WeDevs\Dokan\Commission::prepare_for_calculation()` method
-            $this->set_order_qunatity( $item->get_quantity() );
-
             $product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
             $refund     = $order->get_total_refunded_for_item( $item_id );
 
             if ( dokan_is_admin_coupon_applied( $order, $vendor_id, $product_id ) ) {
-                $earning += dokan_pro()->coupon->get_earning_by_admin_coupon( $order, $item, $context, $item->get_product(), $vendor_id, $refund );
+                $earning_or_commission += dokan_pro()->coupon->get_earning_by_admin_coupon( $order, $item, $context, $item->get_product(), $vendor_id, $refund );
             } else {
                 $item_price = apply_filters( 'dokan_earning_by_order_item_price', $item->get_total(), $item, $order );
                 $item_price = $refund ? $item_price - $refund : $item_price;
 
-                $item_earning = $this->calculate_commission( $product_id, $item_price, $vendor_id );
-                $item_earning = 'admin' === $context ? $item_price - $item_earning : $item_earning;
-                $earning      += $item_earning;
+                $item_earning_or_commission = $this->get_commission(
+                    [
+                        'order_item_id' => $item->get_id(),
+                        'product_id' => $product_id,
+                        'total_amount' => $item_price,
+                        'total_quantity' => $item->get_quantity(),
+                        'vendor_id' => $vendor_id,
+                    ],
+                    true
+                );
+                $item_earning_or_commission = 'admin' === $context ? $item_earning_or_commission->get_admin_commission() : $item_earning_or_commission->get_vendor_earning();
+                $earning_or_commission      += $item_earning_or_commission;
             }
-
-            // reset order item id to zero
-            $this->set_order_item_id( 0 );
-            // set order quantity to zero
-            $this->set_order_qunatity( 0 );
         }
 
-        // reset order id to zero, we don't need this value anymore
-        $this->set_order_id( 0 );
-
-        if ( $context === $this->get_shipping_fee_recipient( $order ) ) {
-            $earning += wc_format_decimal( floatval( $order->get_shipping_total() ) ) - $order->get_total_shipping_refunded();
+        if ( $context === dokan()->fees->get_shipping_fee_recipient( $order ) ) {
+            $earning_or_commission += $order->get_shipping_total() - $order->get_total_shipping_refunded();
         }
 
-        if ( $context === $this->get_tax_fee_recipient( $order->get_id() ) ) {
-            $earning += ( ( $order->get_total_tax() - $order->get_total_tax_refunded() ) - ( $order->get_shipping_tax() - $this->get_total_shipping_tax_refunded( $order ) ) );
+        if ( $context === dokan()->fees->get_tax_fee_recipient( $order->get_id() ) ) {
+            $earning_or_commission += ( ( $order->get_total_tax() - $order->get_total_tax_refunded() ) - ( $order->get_shipping_tax() - dokan()->fees->get_total_shipping_tax_refunded( $order ) ) );
         }
 
-        if ( $context === $this->get_shipping_tax_fee_recipient( $order ) ) {
-            $earning += ( $order->get_shipping_tax() - $this->get_total_shipping_tax_refunded( $order ) );
+        if ( $context === dokan()->fees->get_shipping_tax_fee_recipient( $order ) ) {
+            $earning_or_commission += ( $order->get_shipping_tax() - dokan()->fees->get_total_shipping_tax_refunded( $order ) );
         }
 
-        $earning = apply_filters_deprecated( 'dokan_order_admin_commission', [ $earning, $order, $context ], '2.9.21', 'dokan_get_earning_by_order' );
+        $earning_or_commission = apply_filters_deprecated( 'dokan_order_admin_commission', [ $earning_or_commission, $order, $context ], '2.9.21', 'dokan_get_earning_by_order' );
 
-        return apply_filters( 'dokan_get_earning_by_order', $earning, $order, $context );
-    }
-
-    /**
-     * Get global rate
-     *
-     * @since  2.9.21
-     *
-     * @return float
-     */
-    public function get_global_rate() {
-        return $this->validate_rate( dokan_get_option( 'admin_percentage', 'dokan_selling', 0 ) );
-    }
-
-    /**
-     * Get vendor wise commission rate
-     *
-     * @since  2.9.21
-     *
-     * @param int $vendor_id
-     *
-     * @return float
-     */
-    public function get_vendor_wise_rate( $vendor_id ) {
-        return $this->validate_rate( get_user_meta( $vendor_id, 'dokan_admin_percentage', true ) );
-    }
-
-    /**
-     * Get product wise commission rate
-     *
-     * @since  2.9.21
-     *
-     * @param int $product_id
-     *
-     * @return float
-     */
-    public function get_product_wise_rate( $product_id ) {
-        return $this->validate_rate( get_post_meta( $this->validate_product_id( $product_id ), '_per_product_admin_commission', true ) );
-    }
-
-    /**
-     * Validate product id (if it's a variable product, return it's parent id)
-     *
-     * @since  2.9.21
-     *
-     * @param int $product_id
-     *
-     * @return int
-     */
-    public function validate_product_id( $product_id ) {
-        $product = wc_get_product( $product_id );
-        if ( ! $product ) {
-            return 0;
-        }
-
-        $parent_id = $product->get_parent_id();
-
-        return $parent_id ? $parent_id : $product_id;
-    }
-
-    /**
-     * Get category wise commission rate
-     *
-     * @since  2.9.21
-     *
-     * @param int $product_id
-     *
-     * @return float
-     */
-    public function get_category_wise_rate( $product_id ) {
-        $terms = Helper::get_product_chosen_category( $this->validate_product_id( $product_id ) );
-
-        // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
-        if ( ! is_array( $terms ) || empty( $terms ) || count( $terms ) > 1 || ! Helper::product_category_selection_is_single() ) {
-            return null;
-        }
-
-        $term_id = $terms[0];
-        $rate    = ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_commission', true );
-
-        return $this->validate_rate( $rate );
-    }
-
-    /**
-     * Get global commission type
-     *
-     * @since  2.9.21
-     *
-     * @return string
-     */
-    public function get_global_type() {
-        return dokan_get_option( 'commission_type', 'dokan_selling', 'percentage' );
-    }
-
-    /**
-     * Get vendor wise commission type
-     *
-     * @since  2.9.21
-     *
-     * @param int $vendor_id
-     *
-     * @return string
-     */
-    public function get_vendor_wise_type( $vendor_id ) {
-        return get_user_meta( $vendor_id, 'dokan_admin_percentage_type', true );
-    }
-
-    /**
-     * Get category wise commission type
-     *
-     * @since  2.9.21
-     *
-     * @param int $product_id
-     *
-     * @return string
-     */
-    public function get_category_wise_type( $product_id ) {
-        $terms   = get_the_terms( $this->validate_product_id( $product_id ), 'product_cat' );
-        $term_id = $terms[0]->term_id;
-
-        return ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_commission_type', true );
-    }
-
-    /**
-     * Get product wise commission type
-     *
-     * @since  2.9.21
-     *
-     * @param int $product_id
-     *
-     * @return string
-     */
-    public function get_product_wise_type( $product_id ) {
-        return get_post_meta( $this->validate_product_id( $product_id ), '_per_product_admin_commission_type', true );
+        return apply_filters( 'dokan_get_earning_by_order', $earning_or_commission, $order, $context );
     }
 
     /**
@@ -493,195 +294,25 @@ class Commission {
     }
 
     /**
-     * Get global earning
+     * Get vendor wise additional rate
+     *
+     * @deprecated DOKAN_SINCE Use dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_percentage() insted
      *
      * @since  2.9.21
      *
-     * @param float $product_price
+     * @param int $vendor_id
      *
      * @return float|null on failure
      */
-    public function get_global_earning( $product_price ) {
-        return $this->prepare_for_calculation( __FUNCTION__, null, $product_price );
-    }
-
-    /**
-     * Get vendor wise earning
-     *
-     * @since  2.9.21
-     *
-     * @param int   $vendor_id
-     * @param float $product_price
-     *
-     * @return float|null on failure
-     */
-    public function get_vendor_wise_earning( $vendor_id, $product_price ) {
-        return $this->prepare_for_calculation( __FUNCTION__, $vendor_id, $product_price );
-    }
-
-    /**
-     * Get category wise earning
-     *
-     * @since  2.9.21
-     *
-     * @param int   $product_id
-     * @param float $product_price
-     *
-     * @return float|null on failure
-     */
-    public function get_category_wise_earning( $product_id, $product_price ) {
-        if ( ! dokan()->is_pro_exists() ) {
-            return null;
-        }
-
-        return $this->prepare_for_calculation( __FUNCTION__, $product_id, $product_price );
-    }
-
-    /**
-     * Get product wise earning
-     *
-     * @since  2.9.21
-     *
-     * @param int $product_id
-     * @param int $product_price
-     *
-     * @return float|null on failure
-     */
-    public function get_product_wise_earning( $product_id, $product_price ) {
-        if ( ! dokan()->is_pro_exists() ) {
-            return null;
-        }
-
-        return $this->prepare_for_calculation( __FUNCTION__, $product_id, $product_price );
-    }
-
-    /**
-     * Prepare for calculation
-     *
-     * @since  2.9.21
-     *
-     * @param callable $callable
-     * @param int      $product_id
-     * @param float    $product_price
-     *
-     * @return float | null on failure
-     */
-    public function prepare_for_calculation( $callable, $product_id = 0, $product_price = 0 ) {
-        do_action( 'dokan_before_prepare_for_calculation', $callable, $product_id, $product_price, $this );
-
-        // If an order has been purchased previously, calculate the earning with the previously stated commission rate.
-        // It's important cause commission rate may get changed by admin during the order table `re-generation`.
-        $commission_rate = $this->get_order_item_id() ? wc_get_order_item_meta( $this->get_order_item_id(), '_dokan_commission_rate', true ) : null;
-        $commission_type = $this->get_order_item_id() ? wc_get_order_item_meta( $this->get_order_item_id(), '_dokan_commission_type', true ) : null;
-        $additional_fee  = $this->get_order_item_id() ? wc_get_order_item_meta( $this->get_order_item_id(), '_dokan_additional_fee', true ) : null;
-
-        if ( empty( $commission_rate ) ) { // this is the first time we are calculating commission for this order
-            // Set default value as null
-            $commission_rate = null;
-            $commission_type = null;
-            $additional_fee  = null;
-
-            $func_rate = str_replace( 'earning', 'rate', $callable );
-            $func_type = str_replace( 'earning', 'type', $callable );
-            $func_fee  = str_replace( 'earning', 'additional_fee', $callable );
-
-            // get[product,category,vendor,global]_wise_rate
-            if ( is_callable( [ $this, $func_rate ] ) ) {
-                $commission_rate = $this->$func_rate( $product_id );
-            }
-
-            if ( is_null( $commission_rate ) ) {
-                return $commission_rate;
-            }
-
-            // get[product,category,vendor,global]_wise_type
-            if ( is_callable( [ $this, $func_type ] ) ) {
-                $commission_type = $this->$func_type( $product_id );
-            }
-
-            // get[product,category,vendor,global]_wise_additional_fee
-            if ( is_callable( [ $this, $func_fee ] ) ) {
-                $additional_fee = $this->$func_fee( $product_id );
-            }
-
-            // Saving applied commission rates and types for current order item in order item meta.
-            wc_add_order_item_meta( $this->get_order_item_id(), '_dokan_commission_rate', $commission_rate );
-            wc_add_order_item_meta( $this->get_order_item_id(), '_dokan_commission_type', $commission_type );
-            wc_add_order_item_meta( $this->get_order_item_id(), '_dokan_additional_fee', $additional_fee );
-        }
-
-        /**
-         * If dokan pro doesn't exist but combine commission is found in database due to it was active before
-         * Then make the commission type 'flat'. We are making it flat cause when commission type is there in database
-         * But in option field, looks like flat commission is selected.
-         *
-         * @since 3.0.0
-         */
-        if ( ! dokan()->is_pro_exists() && 'combine' === $commission_type ) {
-            $commission_type = 'flat';
-        }
-
-        $earning = null;
-
-        if ( 'flat' === $commission_type ) {
-            if ( (int) $this->get_order_qunatity() > 1 ) {
-                $commission_rate *= apply_filters( 'dokan_commission_multiply_by_order_quantity', $this->get_order_qunatity() );
-            }
-
-            // If `_dokan_item_total` returns value non-falsy value, it means the request is comming from the `order refund requst`.
-            // As it's `flat` fee, So modify `commission rate` to the correct amount to get refunded. (commission_rate/item_total)*product_price.
-            $item_total = 0;
-            if ( $this->get_order_id() ) {
-                $order      = wc_get_order( $this->get_order_id() );
-                $item_total = $order->get_meta( '_dokan_item_total', true );
-            }
-
-            if ( $item_total ) {
-                $commission_rate = ( $commission_rate / $item_total ) * $product_price;
-            }
-
-            $earning = $product_price - $commission_rate;
-        } elseif ( 'percentage' === $commission_type ) {
-            $earning = ( $product_price * $commission_rate ) / 100;
-            $earning = $product_price - $earning;
-
-            // vendor will get 100 percent if commission rate > 100
-            if ( $commission_rate > 100 ) {
-                $earning = $product_price;
-            }
-        }
-
-        return apply_filters( 'dokan_prepare_for_calculation', $earning, $commission_rate, $commission_type, $additional_fee, $product_price, $this->get_order_id() );
-    }
-
-    /**
-     * Get product wise additional fee
-     *
-     * @since  2.9.21
-     *
-     * @param int $product_id
-     *
-     * @return float|null on failure
-     */
-    public function get_product_wise_additional_fee( $product_id ) {
-        return $this->validate_rate( get_post_meta( $this->validate_product_id( $product_id ), '_per_product_admin_additional_fee', true ) );
-    }
-
-    /**
-     * Get global wise additional fee
-     *
-     * @since  2.9.21
-     *
-     * @param int $product_id
-     *
-     * @return float|null on failure
-     */
-    public function get_global_additional_fee() {
-        return $this->validate_rate( dokan_get_option( 'additional_fee', 'dokan_selling', 0 ) );
+    public function get_vendor_wise_rate( $vendor_id ) {
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_percentage()' );
+        return dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_percentage();
     }
 
     /**
      * Get vendor wise additional fee
+     *
+     * @deprecated DOKAN_SINCE Use dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_flat() instead
      *
      * @since  2.9.21
      *
@@ -690,29 +321,24 @@ class Commission {
      * @return float|null on failure
      */
     public function get_vendor_wise_additional_fee( $vendor_id ) {
-        return $this->validate_rate( get_user_meta( $vendor_id, 'dokan_admin_additional_fee', true ) );
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_flat()' );
+        return dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_flat();
     }
 
     /**
-     * Get category wise additional fee
+     * Get vendor wise additional type
+     *
+     * @deprecated DOKAN_SINCE Use dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_type() instead
      *
      * @since  2.9.21
      *
-     * @param int $product_id
+     * @param int $vendor_id
      *
      * @return float|null on failure
      */
-    public function get_category_wise_additional_fee( $product_id ) {
-        $terms = get_the_terms( $this->validate_product_id( $product_id ), 'product_cat' );
-
-        if ( empty( $terms ) ) {
-            return null;
-        }
-
-        $term_id = $terms[0]->term_id;
-        $rate    = ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_additional_fee', true );
-
-        return $this->validate_rate( $rate );
+    public function get_vendor_wise_type( $vendor_id ) {
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_type()' );
+        return dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_type();
     }
 
     /**
@@ -755,6 +381,8 @@ class Commission {
     /**
      * Get shipping fee recipient
      *
+     * @deprecated DOKAN_SINCE Use dokan()->fees->get_shipping_fee_recipient() instead
+     *
      * @since  2.9.21
      * @since  3.4.1 introduced the shipping fee recipient hook
      *
@@ -763,29 +391,15 @@ class Commission {
      * @return string
      */
     public function get_shipping_fee_recipient( $order ) {
-        if ( is_numeric( $order ) ) {
-            $order = wc_get_order( $order );
-        }
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->fees->get_shipping_fee_recipient()' );
 
-        if ( ! $order ) {
-            return new WP_Error( 'invalid-order-object', __( 'Please provide a valid order object.', 'dokan-lite' ) );
-        }
-
-        $saved_shipping_recipient = $order->get_meta( 'shipping_fee_recipient', true );
-
-        if ( $saved_shipping_recipient ) {
-            $shipping_recipient = $saved_shipping_recipient;
-        } else {
-            $shipping_recipient = apply_filters( 'dokan_shipping_fee_recipient', dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' ), $order->get_id() );
-            $order->update_meta_data( 'shipping_fee_recipient', $shipping_recipient );
-            $order->save();
-        }
-
-        return $shipping_recipient;
+        return dokan()->fees->get_shipping_fee_recipient( $order );
     }
 
     /**
      * Get tax fee recipient
+     *
+     * @deprecated DOKAN_SINCE Use dokan()->fees->get_tax_fee_recipient() instead
      *
      * @since  2.9.21
      * @since  3.4.1 introduced the tax fee recipient hook
@@ -795,29 +409,15 @@ class Commission {
      * @return string|WP_Error
      */
     public function get_tax_fee_recipient( $order ) {
-        if ( is_numeric( $order ) ) {
-            $order = wc_get_order( $order );
-        }
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->fees->get_tax_fee_recipient()' );
 
-        if ( ! $order ) {
-            return new WP_Error( 'invalid-order-object', __( 'Please provide a valid order object.', 'dokan-lite' ) );
-        }
-
-        $saved_tax_recipient = $order->get_meta( 'tax_fee_recipient', true );
-
-        if ( $saved_tax_recipient ) {
-            $tax_recipient = $saved_tax_recipient;
-        } else {
-            $tax_recipient = apply_filters( 'dokan_tax_fee_recipient', dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' ), $order->get_id() );
-            $order->update_meta_data( 'tax_fee_recipient', $tax_recipient );
-            $order->save();
-        }
-
-        return $tax_recipient;
+        return dokan()->fees->get_tax_fee_recipient( $order );
     }
 
     /**
      * Get shipping tax fee recipient.
+     *
+     * @deprecated DOKAN_SINCE Use dokan()->fees->get_shipping_tax_fee_recipient() instead
      *
      * @since 3.7.19
      *
@@ -826,24 +426,14 @@ class Commission {
      * @return string
      */
     public function get_shipping_tax_fee_recipient( $order ): string {
-        // get saved tax recipient
-        $saved_shipping_tax_recipient = $order->get_meta( 'shipping_tax_fee_recipient', true );
-        if ( ! empty( $saved_shipping_tax_recipient ) ) {
-            return $saved_shipping_tax_recipient;
-        }
-
-        $default_tax_fee_recipient = $this->get_tax_fee_recipient( $order->get_id() ); // this is needed for backward compatibility
-        $shipping_tax_recipient    = dokan_get_option( 'shipping_tax_fee_recipient', 'dokan_selling', $default_tax_fee_recipient );
-        $shipping_tax_recipient    = apply_filters( 'dokan_shipping_tax_fee_recipient', $shipping_tax_recipient, $order->get_id() );
-
-        $order->update_meta_data( 'shipping_tax_fee_recipient', $shipping_tax_recipient, true );
-        $order->save();
-
-        return $shipping_tax_recipient;
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->fees->get_shipping_tax_fee_recipient()' );
+        return dokan()->fees->get_shipping_tax_fee_recipient( $order );
     }
 
     /**
      * Get total shipping tax refunded for the order.
+     *
+     * @deprecated DOKAN_SINCE Use dokan()->fees->get_total_shipping_tax_refunded() instead
      *
      * @since 3.7.19
      *
@@ -852,22 +442,15 @@ class Commission {
      * @return float
      */
     public function get_total_shipping_tax_refunded( WC_Order $order ): float {
-        $tax_refunded = 0.0;
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->fees->get_total_shipping_tax_refunded()' );
 
-        foreach ( $order->get_items( 'shipping' ) as $item_id => $item ) {
-            /**
-             * @var \WC_Order_Item_Shipping $item Shipping item.
-             */
-            foreach ( $item->get_taxes()['total'] as $tax_id => $tax_amount ) {
-                $tax_refunded += $order->get_tax_refunded_for_item( $item->get_id(), $tax_id, 'shipping' );
-            }
-        }
-
-        return $tax_refunded;
+        return dokan()->fees->get_total_shipping_tax_refunded( $order );
     }
 
     /**
      * Get processing fee
+     *
+     * @deprecated DOKAN_SINCE Use dokan()->fees->get_processing_fee instead.
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -876,21 +459,9 @@ class Commission {
      * @return float
      */
     public function get_processing_fee( $order ) {
-        $processing_fee = 0;
-        $payment_method  = $order->get_payment_method();
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->fees->get_processing_fee' );
 
-        if ( 'paypal' === $payment_method ) {
-            $processing_fee = $order->get_meta( 'PayPal Transaction Fee' );
-        } elseif ( 'ppec_paypal' === $payment_method && defined( 'PPEC_FEE_META_NAME_NEW' ) ) {
-            $processing_fee = $order->get_meta( PPEC_FEE_META_NAME_NEW );
-        } elseif ( 'ppcp-gateway' === $payment_method && class_exists( PayPalGateway::class ) ) {
-            $breakdown = $order->get_meta( PayPalGateway::FEES_META_KEY );
-            if ( is_array( $breakdown ) && isset( $breakdown['paypal_fee'] ) && is_array( $breakdown['paypal_fee'] ) ) {
-                $processing_fee = $breakdown['paypal_fee']['value'];
-            }
-        }
-
-        return apply_filters( 'dokan_get_processing_fee', $processing_fee, $order );
+        return dokan()->fees->get_processing_fee( $order );
     }
 
     /**
@@ -916,6 +487,9 @@ class Commission {
 
     /**
      * Calculate commission (commission priority [1.product, 2.category, 3.vendor, 4.global] wise)
+     * I this function the calculation was written for vendor perspective it is deprecated now it is recomanded to use `get_commission` method it works fo admin perspective.
+     *
+     * @deprecated DOKAN_SINCE Use get_commission() instead.
      *
      * @since  2.9.21
      *
@@ -926,30 +500,121 @@ class Commission {
      * @return float
      */
     public function calculate_commission( $product_id, $product_price, $vendor_id = null ) {
-        $product_wise_earning = $this->get_product_wise_earning( $product_id, $product_price );
+        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'get_commission' );
 
-        if ( ! is_null( $product_wise_earning ) ) {
-            return $product_wise_earning;
+        $commission_data = $this->get_commission(
+            [
+                'order_item_id'  => $this->get_order_item_id(),
+                'total_amount'   => $product_price,
+                'total_quantity' => $this->get_order_qunatity(),
+                'product_id'     => $product_id,
+                'vendor_id'      => $vendor_id,
+            ],
+            true
+        );
+
+        $parameters       = $commission_data->get_parameters() ?? [];
+        $percentage       = $parameters['percentage'] ?? 0;
+        $flat             = $parameters['flat'] ?? 0;
+
+        return apply_filters(
+            'dokan_after_commission_calculation',
+            $commission_data->get_vendor_earning() ?? 0,
+            $percentage, $commission_data->get_type() ?? 'none',
+            $flat,
+            $product_price,
+            $this->get_order_id()
+        );
+    }
+
+    /**
+     * Returns all the commission types that ware in dokan. These types were existed before dokan lite version DOKAN_SINCE
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_legacy_commission_types() {
+        return [
+            'combine'    => __( 'Combine', 'dokan-lite' ),
+            'percentage' => __( 'Percentage', 'dokan-lite' ),
+            'flat'       => __( 'Flat', 'dokan-lite' ),
+        ];
+    }
+
+    /**
+     * Returns commission (commission priority [1.Order item if exists. 2.product, 3.vendor, 4.global] wise)
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args {
+     *     Accepted arguments are below.
+     *
+     *     @type int       $order_item_id  Order item id. Default ''. Accepted values numbers.
+     *     @type float|int $total_amount   The amount on which the commission will be calculated. Default 0. Accepted values numbers.
+     *                                     Ff you want to calculate for order line item the $total_amount should be total line item amount and
+     *                                     $total_quantity should be total line item quantity. EX: for product item apple with cost $100 then $total_amount = 500, $total_quantity = 5
+     *                                     or if you want to calculate for product price the $total_amount should be the product price and $total_quantity should be 1
+     *                                     EX: for product apple with cost $100 then $total_amount = 100, $total_quantity = 1
+     *     @type int       $total_quantity This is the total quantity that represents the $total_amounts item units. Default 1. Accepted values numbers.
+     *                                     Please read $total_amount doc above to understand clearly.
+     *     @type int       $product_id     Product id. Default 0. Accepted values numbers.
+     *     @type int       $vendor_id      Vendor id. Default ''. Accepted values numbers.
+     *     @type int       $category_id    Product category id. Default 0'. Accepted values numbers.
+     * }
+     * @param boolean $auto_save If true, it will save the calculated commission automatically to the given `$order_item_id`. Default 'false`. Accepted values boolean.
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Commission
+     */
+    public function get_commission( $args = [], $auto_save = false ) {
+        $order_item_id  = ! empty( $args['order_item_id'] ) ? $args['order_item_id'] : '';
+        $total_amount   = ! empty( $args['total_amount'] ) ? $args['total_amount'] : 0;
+        $total_quantity = ! empty( $args['total_quantity'] ) ? $args['total_quantity'] : 1;
+        $product_id     = ! empty( $args['product_id'] ) ? $args['product_id'] : 0;
+        $vendor_id      = ! empty( $args['vendor_id'] ) ? $args['vendor_id'] : '';
+        $category_id    = ! empty( $args['category_id'] ) ? $args['category_id'] : 0;
+
+        // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
+		if ( ! empty( $product_id ) && empty( $category_id ) ) {
+            $product_categories = Helper::get_saved_products_category( $product_id );
+            $chosen_categories  = $product_categories['chosen_cat'];
+            $category_id        = reset( $chosen_categories );
+            $category_id        = $category_id ? $category_id : 0;
         }
 
-        $category_wise_earning = $this->get_category_wise_earning( $product_id, $product_price );
+        if ( ! empty( $product_id ) && empty( $total_amount ) ) {
+            $product = dokan()->product->get( $product_id );
 
-        if ( ! is_null( $category_wise_earning ) ) {
-            return $category_wise_earning;
+            // If product price is empty the setting the price as 0
+            $total_amount = $product && $product->get_price() && ! empty( $product->get_price() ) ? $product->get_price() : 0;
         }
 
-        $vendor_wise_earning = $this->get_vendor_wise_earning( $vendor_id, $product_price );
+        $order_item_strategy = new OrderItem( $order_item_id, $total_amount, $total_quantity );
 
-        if ( ! is_null( $vendor_wise_earning ) ) {
-            return $vendor_wise_earning;
+        $strategies = [
+            $order_item_strategy,
+            new Product( $product_id ),
+            new Vendor( $vendor_id, $category_id ),
+            new GlobalStrategy( $category_id ),
+            new DefaultStrategy(),
+        ];
+
+        $context = new Calculator( $strategies );
+        $commission_data = $context->calculate_commission( $total_amount, $total_quantity );
+
+        if ( ! empty( $order_item_id ) && $auto_save && $commission_data->get_source() !== $order_item_strategy::SOURCE ) {
+            $parameters       = $commission_data->get_parameters() ?? [];
+            $percentage       = $parameters['percentage'] ?? 0;
+            $flat             = $parameters['flat'] ?? 0;
+
+            $order_item_strategy->save_line_item_commission_to_meta(
+                $commission_data->get_type() ?? DefaultSetting::TYPE,
+                $percentage,
+                $flat,
+                $commission_data->get_data()
+            );
         }
 
-        $global_earning = $this->get_global_earning( $product_price );
-
-        if ( ! is_null( $global_earning ) ) {
-            return $global_earning;
-        }
-
-        return $product_price;
+        return $commission_data;
     }
 }

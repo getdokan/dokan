@@ -72,58 +72,17 @@
             </div>
         </template>
 
-        <template v-if="'price' === fieldData.type && allSettingsValues.dokan_selling && 'combine' !== allSettingsValues.dokan_selling.commission_type">
-            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <fieldset>
+        <template v-if="'commission_fixed' === fieldData.type">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <fieldset class='flex justify-between'>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
-                    <div class="field">
-                        <label :for="sectionId + '[' + fieldData.name + ']'">
-                            <input type="text" :min="fieldData.min" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
-                                :class="{ wc_input_decimal: allSettingsValues.dokan_selling.commission_type=='percentage', 'wc_input_price': allSettingsValues.dokan_selling.commission_type=='flat' }"
-                                :name="sectionId + '[' + fieldData.name + ']'"
-                                :value="fieldValue[fieldData.name]"
-                                @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
-                            />
-                        </label>
-                    </div>
-                </fieldset>
-                <p v-if="hasError( fieldData.name )" class="dokan-error">
-                    {{ getError( fieldData.label ) }}
-                </p>
-                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
-                  {{ getValidationErrorMessage( fieldData.name ) }}
-                </p>
-            </div>
-        </template>
-
-        <template v-if="'combine' === fieldData.type && haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
-            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <fieldset>
-                    <FieldHeading :fieldData="fieldData"></FieldHeading>
-                    <div class="field combine_fields">
-                        <div class="percent_fee">
-                            <input
-                                type="text"
-                                class="wc_input_decimal regular-text medium"
-                                :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'"
-                                :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'"
-                                :value="fieldValue[fieldData.fields.percent_fee.name]"
-                                @input="event => inputValueHandler( fieldData.fields.percent_fee.name, event.target.value, fieldValue[fieldData.fields.percent_fee.name] )"
-                            />
-                            {{ '%' }}
-                        </div>
-                        <div class="fixed_fee">
-                            {{ '+' }}
-                            <input
-                                type="text"
-                                class="wc_input_price regular-text medium"
-                                :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'"
-                                :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'"
-                                :value="fieldValue[fieldData.fields.fixed_fee.name]"
-                                @input="event => inputValueHandler( fieldData.fields.fixed_fee.name, event.target.value, fieldValue[fieldData.fields.fixed_fee.name] )"
-                            />
-                        </div>
-                    </div>
+                      <combine-input
+                        :value="{
+                            fixed: fieldData.fields ? fieldValue[fieldData.fields.fixed_fee.name] : '',
+                            percentage: fieldData.fields ? fieldValue[fieldData.fields.percent_fee.name] : ''
+                        }"
+                        v-on:change='data => commissionUpdated( data )'
+                      />
                 </fieldset>
                 <p class="dokan-error combine-commission" v-if="hasError( fieldData.fields.percent_fee.name ) && hasError( fieldData.fields.fixed_fee.name )">
                     {{ __( 'Both percentage and fixed fee is required.', 'dokan-lite' ) }}
@@ -135,6 +94,45 @@
                     {{ getError( fieldData.fields.fixed_fee.label ) }}
                 </p>
             </div>
+        </template>
+
+        <template v-if="'category_based_commission' === fieldData.type">
+            <div class="field_contents p-0" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <fieldset class="pt-4 pb-0 pl-5 pr-5">
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
+                </fieldset>
+                <div class="p-4 pl-5 pr-5">
+                    <category-based-commission
+                        :value="watchCategoryCommission"
+                        @change="onCategoryUpdate"
+                    />
+                </div>
+
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+            </div>
+        </template>
+
+        <template  v-if="'yes' === fieldData.dokan_pro_commission">
+            <component
+                :key="fieldData.type"
+                :sectionId="sectionId"
+                :fieldData="fieldData"
+                :is="settingsComponent"
+                :fieldValue="fieldValue"
+                :id="id"
+                :allSettingsValues="allSettingsValues"
+                :dokanAssetsUrl="dokanAssetsUrl"
+                :errors="errors"
+                :assetsUrl="dokanAssetsUrl"
+                :validationErrors="validationErrors"
+                :toggleLoadingState="toggleLoadingState"
+                @some-event="thisSomeEvent"
+                v-for="( settingsComponent, index ) in commissionFieldComponents"/>
         </template>
 
         <template v-if="'textarea' === fieldData.type">
@@ -511,8 +509,9 @@
     import FieldHeading from './FieldHeading.vue';
     import SecretInput from './SecretInput.vue';
     import WithdrawCharges from './Fields/WithdrawCharges.vue'
+    import CombineInput from "admin/components/CombineInput.vue";
+    import CategoryBasedCommission from "admin/components/Commission/CategoryBasedCommission.vue";
     import DokanRadioGroup from "admin/components/DokanRadioGroup.vue";
-
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -522,7 +521,9 @@
         name: 'Fields',
 
         components: {
-          DokanRadioGroup,
+            CategoryBasedCommission,
+            CombineInput,
+            DokanRadioGroup,
             Mapbox,
             Switches,
             TextEditor,
@@ -548,6 +549,7 @@
                 singleColorPicker     : { default: this.fieldData.default, label: '', show_pallete: false },
                 yourStringTimeValue   : '',
                 customFieldComponents : dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
+                commissionFieldComponents : dokan.hooks.applyFilters( 'getDokanCommissionFieldComponents', [] ),
                 multiCheckValues      : {},
             }
         },
@@ -566,14 +568,6 @@
                     this.checked = value;
                 }
             });
-        },
-
-        watch: {
-            fieldValue: {
-                handler() {
-                },
-                deep: true,
-            }
         },
 
         computed: {
@@ -689,6 +683,16 @@
                 }
 
                 return true;
+            },
+
+            watchCategoryCommission() {
+                let data =  JSON.parse( JSON.stringify( this.fieldValue[this.fieldData.name] ) );
+
+                if ( window._.isEmpty( data ) ) {
+                    return {};
+                }
+
+                return data;
             },
         },
 
@@ -820,7 +824,6 @@
                 return 'on';
             },
 
-
             thisSomeEvent(value) {
                 console.log('hello priting...', value);
             },
@@ -940,6 +943,22 @@
                 const hexPattern = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 
                 this.fieldData[ key ] = hexPattern.test( value ) ? value : defaultValue;
+            },
+
+            commissionUpdated( data ) {
+                if (isNaN( data.fixed )) {
+                    data.fixed = this.fieldValue[this.fieldData.fields.fixed_fee.name] ?? '';
+                }
+                if (isNaN( data.percentage )) {
+                    data.percentage = this.fieldValue[this.fieldData.fields.percent_fee.name] ?? '';
+                }
+
+                this.fieldValue[this.fieldData.fields.percent_fee.name] = data.percentage;
+                this.fieldValue[this.fieldData.fields.fixed_fee.name] = data.fixed;
+            },
+
+            onCategoryUpdate(data) {
+                this.fieldValue[this.fieldData.name] = data;
             },
         },
     };

@@ -627,6 +627,18 @@ export const payloads = {
             // 	key  : '_overwrite_shipping',
             // 	value: 'no'
             // },
+            // {
+            //     key: '_per_product_admin_commission_type',
+            //     value: 'fixed',
+            // },
+            // {
+            //     key: '_per_product_admin_commission',
+            //     value: '50',
+            // },
+            // {
+            //     key: '_per_product_admin_additional_fee',
+            //     value: '5',
+            // },
         ],
     }),
 
@@ -950,7 +962,7 @@ export const payloads = {
         ],
     }),
 
-    createBookableProduct: () => ({
+    createBookableProductRequiredFields: () => ({
         name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Bookable)`,
         status: 'publish',
         featured: true,
@@ -964,7 +976,7 @@ export const payloads = {
         max_duration: 10,
         calendar_display_mode: 'always_visible',
         enable_range_picker: true,
-        requires_confirmations: false,
+        requires_confirmation: false,
         can_be_cancelled: false,
         default_date_availability: 'available',
         block_cost: 5,
@@ -976,6 +988,118 @@ export const payloads = {
         // min_date_unit            : 'day',
         // max_date_value           : 11,
         // max_date_unit            : 'month'
+    }),
+
+    createBookableProduct: () => ({
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Bookable)`,
+        status: 'publish',
+        featured: true,
+        description: '<p>test description</p>',
+        short_description: '<p>test short description</p>',
+        // categories
+        categories: [
+            {},
+            // {
+            //     id: CATEGORY_ID,
+            // },
+        ],
+        // tags
+        tags: [{ id: TAG_ID }],
+        // attributes
+        attributes: [
+            {
+                id: ATTRIBUTE_ID,
+                name: 'sizes',
+                position: 0,
+                visible: true,
+                variation: true,
+                options: ['s', 'l', 'm'],
+            },
+        ],
+        duration_type: 'customer',
+        duration_unit: 'day',
+        duration: 1,
+        min_duration: 1,
+        max_duration: 10,
+        calendar_display_mode: 'always_visible',
+        enable_range_picker: true,
+        requires_confirmation: false,
+        can_be_cancelled: false,
+        default_date_availability: 'available',
+        block_cost: 5,
+        cost: 10,
+        display_cost: '15',
+        has_persons: false,
+        has_resources: false,
+        qty: 100,
+        // min_date_value           : 10,
+        // min_date_unit            : 'day',
+        // max_date_value           : 11,
+        // max_date_unit            : 'month'
+    }),
+
+    createBookableProductWithAccommodation: () => ({
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Bookable)`,
+        status: 'publish',
+        featured: true,
+        description: '<p>test description</p>',
+        short_description: '<p>test short description</p>',
+        // categories
+        categories: [
+            {},
+            // {
+            //     id: CATEGORY_ID,
+            // },
+        ],
+        // tags
+        tags: [{ id: TAG_ID }],
+        // attributes
+        attributes: [
+            {
+                id: ATTRIBUTE_ID,
+                name: 'sizes',
+                position: 0,
+                visible: true,
+                variation: true,
+                options: ['s', 'l', 'm'],
+            },
+        ],
+        duration_type: 'customer',
+        duration_unit: 'day',
+        duration: 1,
+        min_duration: 1,
+        max_duration: 10,
+        // min_duration: 88,
+        // max_duration: 89,
+        calendar_display_mode: 'always_visible',
+        enable_range_picker: true,
+        requires_confirmation: false,
+        can_be_cancelled: false,
+        default_date_availability: 'available',
+        block_cost: 5,
+        cost: 10,
+        display_cost: '15',
+        has_persons: false,
+        has_resources: false,
+        qty: 100,
+        // min_date_value           : 10,
+        // min_date_unit            : 'day',
+        // max_date_value           : 11,
+        // max_date_unit            : 'month'
+        meta_data: [
+            {
+                key: '_dokan_is_accommodation_booking',
+                value: 'yes',
+            },
+            {
+                key: '_dokan_accommodation_checkin_time',
+                value: '12:00 am',
+            },
+            {
+                key: '_dokan_accommodation_checkout_time',
+                value: '12:00 am',
+            },
+        ],
     }),
 
     createBookingResource: () => ({
@@ -1014,7 +1138,114 @@ export const payloads = {
         purchasable: true,
         virtual: false,
         downloadable: false,
+        // categories
+        categories: [
+            {},
+            // {
+            //     id: CATEGORY_ID,
+            // },
+        ],
+        // tags
+        tags: [{ id: TAG_ID }],
+        // attributes
+        attributes: [
+            {
+                id: ATTRIBUTE_ID,
+                name: 'sizes',
+                position: 0,
+                visible: true,
+                variation: true,
+                options: ['s', 'l', 'm'],
+            },
+        ],
+        meta_data: [
+            {
+                key: '_auction_item_condition',
+                value: 'new',
+            },
+            {
+                key: '_auction_type',
+                value: 'normal',
+            },
+
+            {
+                key: '_auction_start_price',
+                value: '10', // faker.finance.amount({min:10, max:20, dec:2}),
+            },
+            {
+                key: '_auction_bid_increment',
+                value: '20',
+            },
+            {
+                key: '_auction_reserved_price',
+                value: '30',
+            },
+            {
+                key: '_auction_dates_from',
+                value: helpers.currentDateTime,
+            },
+            {
+                key: '_auction_dates_to',
+                value: helpers.addDays(helpers.currentDateTime, 20, 'full'),
+            },
+            {
+                key: '_auction_has_started',
+                value: '1',
+            },
+
+            // {
+            // 	key  : '_auction_bid_count',
+            // 	value: '0'
+            // },
+            {
+                key: '_auction_proxy',
+                value: 'yes',
+            },
+            // {
+            // 	key  : '_auction_sealed',
+            // 	value: 'no'
+            // },
+            {
+                key: '_auction_automatic_relist',
+                value: 'yes',
+            },
+            {
+                key: '_auction_relist_fail_time',
+                value: '4',
+            },
+            {
+                key: '_auction_relist_not_paid_time',
+                value: '5',
+            },
+            {
+                key: '_auction_relist_duration',
+                value: '6',
+            },
+            // {
+            // 	key  : '_auction_extend_enable',
+            // 	value: 'no'
+            // },
+            // {
+            // 	key  : '_auction_last_activity',
+            // 	value: '1693755727'
+            // },
+        ],
+    }),
+
+    createAuctionProductRequiredFields: () => ({
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Auction)`,
+        type: 'auction',
+        status: 'publish',
+        // featured: true,
+        // description: 'test description',
+        // short_description: 'test short description',
+        // price: '2000',
+        // regular_price: '2000',
+        purchasable: true,
+        // virtual: false,
+        // downloadable: false,
         categories: [{}],
+        tags: [{}],
         meta_data: [
             {
                 key: '_auction_item_condition',
@@ -3608,9 +3839,22 @@ export const payloads = {
         bank_name: '',
         bank_iban: '',
         categories: [{}],
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
         admin_commission: '',
-        admin_additional_fee: '0.00',
-        admin_commission_type: 'flat',
+        admin_additional_fee: '',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
     }),
 
     // always revert vendor settings to this after altering in tests
@@ -3826,9 +4070,23 @@ export const payloads = {
                 slug: 'uncategorized',
             },
         ],
+
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
         admin_commission: '',
         admin_additional_fee: '',
-        admin_commission_type: '',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
     },
 
     createStore2: {
@@ -3953,9 +4211,23 @@ export const payloads = {
                 slug: 'uncategorized',
             },
         ],
+
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
         admin_commission: '',
         admin_additional_fee: '',
-        admin_commission_type: '',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
     },
 
     createStore3: {
@@ -4080,9 +4352,22 @@ export const payloads = {
                 // slug: 'uncategorized'
             },
         ],
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
         admin_commission: '',
         admin_additional_fee: '',
-        admin_commission_type: '',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
     },
 
     createCustomer1: {
@@ -4524,6 +4809,69 @@ export const payloads = {
         shipped_date: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString(),
     },
 
+    vendorwiseCommission: {
+        admin_commission_type: 'fixed', // fixed, category_based
+        admin_commission: '5',
+        admin_additional_fee: '5',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
+    },
+
+    productCommissionOnlyPercent: [
+        {
+            key: '_per_product_admin_commission_type',
+            value: 'fixed',
+        },
+        {
+            key: '_per_product_admin_commission',
+            value: '10',
+        },
+        {
+            key: '_per_product_admin_additional_fee',
+            value: '0',
+        },
+    ],
+
+    productCommissionOnlyFixed: [
+        {
+            key: '_per_product_admin_commission_type',
+            value: 'fixed',
+        },
+        {
+            key: '_per_product_admin_commission',
+            value: '0',
+        },
+        {
+            key: '_per_product_admin_additional_fee',
+            value: '10',
+        },
+    ],
+
+    productCommissionBothPercentageAndFixed: [
+        {
+            key: '_per_product_admin_commission_type',
+            value: 'fixed',
+        },
+        {
+            key: '_per_product_admin_commission',
+            value: '10',
+        },
+        {
+            key: '_per_product_admin_additional_fee',
+            value: '10',
+        },
+    ],
+
     // shortcodes
 
     // dokan dashboard shortcode
@@ -4593,6 +4941,13 @@ export const payloads = {
     requestQuoteShortcode: {
         title: 'Request-quote',
         content: '[dokan-request-quote]',
+        status: 'publish',
+    },
+
+    // product advertisement  shortcode
+    productAdvertisementShortcode: {
+        title: 'Advertised-products',
+        content: '[dokan_product_advertisement]',
         status: 'publish',
     },
 };

@@ -3,8 +3,9 @@ import { FollowStorePage } from '@pages/followStorePage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
 
-const { VENDOR_ID, VENDOR2_ID } = process.env;
+const { CUSTOMER_ID, VENDOR_ID, VENDOR2_ID } = process.env;
 
 test.describe('Follow stores functionality test', () => {
     let vendor: FollowStorePage;
@@ -36,6 +37,11 @@ test.describe('Follow stores functionality test', () => {
 
     test('customer can view followed vendors menu page', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.customerFollowedVendorsRenderProperly();
+    });
+
+    test('customer can view followed vendors', { tag: ['@pro', '@customer'] }, async () => {
+        await dbUtils.followVendor(CUSTOMER_ID, VENDOR_ID);
+        await customer.customerViewFollowedVendors(data.predefined.vendorStores.vendor1);
     });
 
     test('customer can follow store on store list page', { tag: ['@pro', '@customer'] }, async () => {

@@ -1,4 +1,4 @@
-const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, TALKJS_APP_ID, TALKJS_APP_SECRET } = process.env;
+const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, CATEGORY_ID, TALKJS_APP_ID, TALKJS_APP_SECRET, PRINTFUL_APP_ID, PRINTFUL_APP_SECRET } = process.env;
 
 export const dbData = {
     dokan: {
@@ -29,6 +29,7 @@ export const dbData = {
             geolocation: 'dokan_geolocation',
             productReportAbuse: 'dokan_report_abuse',
             spmv: 'dokan_spmv',
+            printful: 'dokan_printful',
             vendorSubscription: 'dokan_product_subscription',
             // vendorAnalytics:
             dokanActiveModules: 'dokan_pro_active_modules',
@@ -44,8 +45,7 @@ export const dbData = {
             admin_access: 'on', // vendor edit product test needs it to disable
             custom_store_url: 'store',
             setup_wizard_logo_url: '',
-            setup_wizard_message:
-                '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.<strong></p>',
+            setup_wizard_message: '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.<strong></p>',
             disable_welcome_wizard: 'off',
             global_digital_mode: 'sell_both',
             enable_shipstation_logging: 'off',
@@ -69,9 +69,30 @@ export const dbData = {
         sellingSettings: {
             // commission
             selling_capabilities: '',
-            commission_type: 'percentage',
+            commission_type: 'fixed', // 'fixed', 'category_based'
             admin_percentage: '10',
-            shipping_fee_recipient: 'seller',
+            additional_fee: '0',
+            commission_fixed_values: '',
+            commission_category_based_values: {
+                all: {
+                    percentage: '5',
+                    flat: '5',
+                },
+                items: {
+                    [CATEGORY_ID]: {
+                        percentage: '5',
+                        flat: '5',
+                    },
+                    // '27': {
+                    //     percentage: '5',
+                    //     flat: '5',
+                    // },
+                },
+            },
+
+            // fee recipient
+            'fee-recipients': '',
+            shipping_fee_recipient: 'seller', // 'seller', 'admin'
             tax_fee_recipient: 'seller',
             shipping_tax_fee_recipient: 'seller',
 
@@ -901,8 +922,8 @@ export const dbData = {
             enable: 'on',
             provider: 'talkjs',
             theme_color: '#0084FF',
-            app_id: TALKJS_APP_ID,
-            app_secret: TALKJS_APP_SECRET,
+            app_id: TALKJS_APP_ID ?? '',
+            app_secret: TALKJS_APP_SECRET ?? '',
             wa_opening_method: 'in_app',
             wa_pre_filled_message: 'Hello {store_name}, I have an enquiry regarding your store at {store_url}',
             chat_button_seller_page: 'on',
@@ -1018,10 +1039,10 @@ export const dbData = {
         },
 
         geolocationSettings: {
-            show_locations_map: 'top',
-            show_location_map_pages: 'all',
-            show_filters_before_locations_map: 'on',
-            show_product_location_in_wc_tab: 'on',
+            show_locations_map: 'top', // top, left, right
+            show_location_map_pages: 'all', // all, store_listing, shop
+            show_filters_before_locations_map: 'on', // on, off
+            show_product_location_in_wc_tab: 'on', // on, off
             distance_unit: 'km',
             distance_min: '0',
             distance_max: '10',
@@ -1084,6 +1105,22 @@ export const dbData = {
             show_order: 'show_all',
         },
 
+        printful: {
+            app: '',
+            size_guide_sub_section: '',
+            popup_title: 'Size Guide',
+            popup_text_color: '#000000',
+            popup_bg_color: '#FFFFFF',
+            tab_bg_color: '#EEEEEE',
+            active_tab_bg_color: '#DDDDDD',
+            size_guide_button_text: 'Size Guide',
+            button_text_color: '#1064A9',
+            primary_measurement_unit: 'inches',
+            app_id: PRINTFUL_APP_ID ?? '',
+            app_secret: PRINTFUL_APP_SECRET ?? '',
+            dashboard_menu_manager: [],
+        },
+
         vendorSubscriptionSettings: {
             subscription_pack: '2',
             enable_pricing: 'off',
@@ -1126,6 +1163,7 @@ export const dbData = {
             'moip',
             'order_min_max',
             'paypal_marketplace',
+            'printful',
             'product_addon',
             'product_advertising',
             'product_enquiry',
@@ -1366,8 +1404,7 @@ export const dbData = {
                 setup_wizard_logo_url: '',
                 setup_wizard_message:
                     '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.</strong> Test wizard message.</p>',
-                setup_wizard_message_without_html:
-                    'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It’s completely optional and shouldn’t take longer than two minutes. Test wizard message.',
+                setup_wizard_message_without_html: 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It’s completely optional and shouldn’t take longer than two minutes. Test wizard message.',
                 disable_welcome_wizard: 'off',
                 global_digital_mode: 'sell_both',
                 enable_shipstation_logging: 'off',

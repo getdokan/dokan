@@ -237,7 +237,7 @@ export class VendorSettingsPage extends VendorPage {
                 break;
 
             case 'liveChat':
-                await this.liveChatSettings(vendorInfo.liveChat);
+                await this.liveChatSettings();
                 break;
 
             case 'min-max':
@@ -428,7 +428,7 @@ export class VendorSettingsPage extends VendorPage {
     }
 
     // vendor set liveChat settings
-    async liveChatSettings(liveChat: vendor['vendorInfo']['liveChat']): Promise<void> {
+    async liveChatSettings(): Promise<void> {
         await this.check(settingsVendor.liveChat);
     }
 

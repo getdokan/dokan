@@ -40,6 +40,11 @@ class Hooks {
         // Init Product Cache Class
         new VendorStoreInfo();
         new ProductCache();
+
+        // Product commission
+        add_action( 'woocommerce_product_options_advanced', array( $this, 'add_per_product_commission_options' ), 15 );
+        add_action( 'woocommerce_process_product_meta_simple', array( $this, 'save_per_product_commission_options' ), 15 );
+        add_action( 'woocommerce_process_product_meta_variable', array( $this, 'save_per_product_commission_options' ), 15 );
     }
 
     /**
@@ -452,5 +457,97 @@ class Hooks {
         }
 
         return $filtered_emails;
+    }
+
+    /**
+     * Add per product commission options
+     * Moved from dokan pro in version DOKAN_SINCE
+     *
+     * @since 2.4.12
+     *
+     * @return void
+     */
+    public function add_per_product_commission_options() {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        $product          = wc_get_product( get_the_ID() );
+        $admin_commission = $product->get_meta( '_per_product_admin_commission' );
+        $additional_fee   = $product->get_meta( '_per_product_admin_additional_fee' );
+        ?>
+
+        <div class="commission show_if_simple show_if_variable show_if_booking">
+            <p class="form-field dimensions_field">
+                <label for="admin_commission">
+                    <?php esc_html_e( 'Admin Commission', 'dokan-lite' ); ?>
+                    <span
+                        class="woocommerce-help-tip"
+                        tabindex="0" for="admin_commission"
+                        aria-label="<?php esc_attr_e( 'When the value is 0, no commissions will be deducted from this vendor.', 'dokan-lite' ); ?>"
+                        data-tip="<?php esc_attr_e( 'When the value is 0, no commissions will be deducted from this vendor.', 'dokan-lite' ); ?>"
+                    ></span>
+                </label>
+
+                <span class="wrapper">
+                    <input type="hidden" value="fixed" name="_per_product_admin_commission_type">
+                    <input id="admin_commission" class="input-text wc_input_price" type="text" name="_per_product_admin_commission" value="<?php echo $admin_commission; ?>">
+                    <span class="additional_fee">
+                        <?php echo esc_html( '% &nbsp;&nbsp; +' ); ?>
+                        <input class="input-text wc_input_price" type="text" name="_per_product_admin_additional_fee" value="<?php echo wc_format_localized_price( $additional_fee ); ?>">
+                    </span>
+                    <span class="combine-commission-description"></span>
+                </span>
+            </p>
+        </div>
+
+        <style type="text/css">
+            .commission .wrapper input {
+                width: 60px;
+                float: none;
+            }
+            span.combine-commission-description {
+                margin-left: 5px;
+                font-size: 13px;
+                font-style: italic;
+            }
+        </style>
+        <?php
+    }
+
+    /**
+     * Save per product commission options
+     *  Moved from dokan pro in version DOKAN_SINCE
+     *
+     * @since 2.4.12
+     *
+     * @param  integer $post_id
+     *
+     * @return void
+     */
+    public static function save_per_product_commission_options( $post_id ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        $commission_type  = '';
+        $admin_commission = '';
+        $additional_fee   = '';
+
+        if ( isset( $_POST['_per_product_admin_commission_type'] ) ) { // phpcs:ignore
+            $commission_type = ! empty( $_POST['_per_product_admin_commission_type'] ) ? sanitize_text_field( $_POST['_per_product_admin_commission_type'] ) : 'percentage'; // phpcs:ignore
+            update_post_meta( $post_id, '_per_product_admin_commission_type', $commission_type );
+        }
+
+        if ( isset( $_POST['_per_product_admin_commission'] ) ) { // phpcs:ignore
+            $admin_commission = ( '' === $_POST['_per_product_admin_commission'] ) ? '' : sanitize_text_field( $_POST['_per_product_admin_commission'] ); // phpcs:ignore
+        }
+
+        if ( isset( $_POST['_per_product_admin_additional_fee'] ) ) { // phpcs:ignore
+            $additional_fee = ( '' === $_POST['_per_product_admin_additional_fee'] ) ? '' : sanitize_text_field( $_POST['_per_product_admin_additional_fee'] ); // phpcs:ignore
+        }
+
+        update_post_meta( $post_id, '_per_product_admin_commission', wc_format_decimal( $admin_commission ) );
+        update_post_meta( $post_id, '_per_product_admin_additional_fee', wc_format_decimal( $additional_fee ) );
     }
 }
