@@ -13,6 +13,7 @@
         "site:reset": "NO_SETUP=false npm run site:setup && npm run env:setup",
         "site:setup": "npx playwright test --project=local_site_setup --config=e2e.config.ts",
         "env:setup": "npx playwright test --project=e2e_setup --config=e2e.config.ts",
+        "auth:setup": "npx playwright test --project=auth_setup --config=e2e.config.ts",
         "test:api": "npx playwright test --project=api_tests --config=api.config.ts",
         "test:e2e": "npx playwright test --project=e2e_tests --config=e2e.config.ts",
         "test:api:pro": "DOKAN_PRO=true npx playwright test --project=api_tests --config=api.config.ts",

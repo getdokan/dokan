@@ -1246,6 +1246,7 @@ export const data = {
                 productQuestionsBulkActions: 'dokan/v1/product-questions/bulk_action',
                 productAnswers: 'dokan/v1/product-answers',
                 subscriptions: 'dokan/v1/subscription',
+                shipstation: 'dokan/v1/shipstation',
                 verifications: 'dokan/v1/verification-requests',
                 verificationMethods: 'dokan/v1/verification-methods',
             },

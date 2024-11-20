@@ -1105,6 +1105,9 @@
 - page: 'ShipStation Integration'
   features:
       vendor:
+          #  vendor can view Shipstation settings menu page: true
+          vendor can generate shipStation credentials: true
+          vendor can revoke shipStation credentials: true
           vendor can set shipStation settings: true
 
 - page: 'Single Product Multiple Vendor (SPMV)'

@@ -80,8 +80,13 @@ export class VendorSettingsPage extends VendorPage {
         // visit store link is visible
         await this.toBeVisible(settingsShipStation.visitStore);
 
-        // authentication key is visible
-        await this.toBeVisible(settingsShipStation.authenticationKey);
+        const isCredentialsGenerated = await this.isVisible(settingsShipStation.revokeCredentials);
+
+        if (isCredentialsGenerated) {
+            await this.multipleElementVisible(settingsShipStation.credentials);
+        } else {
+            await this.toBeVisible(settingsShipStation.generateCredentials);
+        }
 
         // export order statuses is visible
         await this.toBeVisible(settingsShipStation.exportOrderStatusesInput);
@@ -442,22 +447,23 @@ export class VendorSettingsPage extends VendorPage {
     async setShipStation(shipStation: vendor['shipStation']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipstation);
 
+        // export order statuses
         const allStatus = await this.getMultipleElementTexts(settingsShipStation.selectedStatus);
-        const statusIsSelected = allStatus.includes('×' + shipStation.status);
+        const statusIsSelected = allStatus.includes(`×${shipStation.status}`);
         if (!statusIsSelected) {
             await this.clearAndType(settingsShipStation.exportOrderStatusesInput, shipStation.status);
             await this.toContainText(settingsShipStation.result, shipStation.status);
             await this.press(data.key.enter);
         }
 
-        // await this.click(settingsShipStation.shippedOrderStatusDropdown);
-        // await this.clearAndType(settingsShipStation.shippedOrderStatusInput, shipStation.status);// todo: need to fix -> locator issue
-        // await this.toContainText(settingsShipStation.result, shipStation.status);
-        // await this.press(data.key.enter);
+        // shipped order status
+        await this.click(settingsShipStation.shippedOrderStatusDropdown);
+        await this.clearAndType(settingsShipStation.shippedOrderStatusInput, shipStation.status);
+        await this.toContainText(settingsShipStation.result, shipStation.status);
+        await this.press(data.key.enter);
 
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, settingsShipStation.saveChanges);
-        await this.toContainText(settingsShipStation.saveSuccessMessage, 'Your changes has been updated!');
-        await this.click(settingsShipStation.successOk);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.shipstation, settingsShipStation.saveChanges, 201);
+        await this.toBeVisible(settingsShipStation.saveSuccessMessage);
     }
 
     // vendor set social profile settings
