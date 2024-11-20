@@ -582,7 +582,15 @@ class Commission {
             $category_id        = $category_id ? $category_id : 0;
         }
 
-        if ( ! empty( $product_id ) && empty( $total_amount ) ) {
+        /**
+         * If the $total_amount is empty and $order_item_id is empty then we will calculate the commission based on the product price.
+         * There is a case where the $total_amount is empty and $order_item_id is empty but the $product_id is not empty
+         * In this case, we will calculate the commission based on the product price.
+         * Also there is an issue when 100% coupon is applied see the below link for more details
+         *
+         * @see https://github.com/getdokan/dokan/pull/2440#issuecomment-2488159960
+         */
+        if ( ! empty( $product_id ) && empty( $total_amount ) && empty( $order_item_id ) ) {
             $product = dokan()->product->get( $product_id );
 
             // If product price is empty the setting the price as 0
