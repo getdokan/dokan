@@ -78,10 +78,13 @@ class SetupWizard extends DokanSetupWizard {
 
         // get step from url
         if ( isset( $_GET['_admin_sw_nonce'], $_GET['step'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_admin_sw_nonce'] ) ), 'dokan_admin_setup_wizard_nonce' ) ) {
-            $this->current_step = sanitize_key( wp_unslash( $_GET['step'] ) ) ?? current( array_keys( $this->steps ) );
+            $this->current_step = sanitize_key( wp_unslash( $_GET['step'] ) ) ?? $this->get_first_step();
         }
 
-        if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->current_step ]['handler'] ) ) { // WPCS: CSRF ok.
+        if ( ! isset( $this->steps[ $this->current_step ]['handler'] ) ) {
+            $this->current_step = $this->get_first_step();
+        }
+        if ( ! empty( $_POST['save_step'] ) ) { // WPCS: CSRF ok.
             call_user_func( $this->steps[ $this->current_step ]['handler'] );
         }
 
@@ -166,7 +169,7 @@ class SetupWizard extends DokanSetupWizard {
         <p><?php esc_attr_e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the Store!', 'dokan-lite' ); ?></p>
         <p class="wc-setup-actions step">
             <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next lets-go-btn dokan-btn-theme"><?php esc_attr_e( 'Let\'s Go!', 'dokan-lite' ); ?></a>
-            <a href="<?php echo esc_url( $dashboard_url ); ?>" class="button button-large not-right-now-btn dokan-btn-theme"><?php esc_attr_e( 'Not right now', 'dokan-lite' ); ?></a>
+            <a href="<?php echo esc_url( $dashboard_url ); ?>" class="button button-large not-right-now-btn dokan-btn-secondary dokan-btn-theme"><?php esc_attr_e( 'Not right now', 'dokan-lite' ); ?></a>
         </p>
         <?php
         do_action( 'dokan_seller_wizard_introduction', $this );
@@ -729,6 +732,10 @@ class SetupWizard extends DokanSetupWizard {
          * @param array $steps Array of wizard steps
          */
         $this->steps = apply_filters( 'dokan_seller_wizard_steps', $steps );
-        $this->current_step  = current( array_keys( $this->steps ) );
+        $this->current_step  = $this->get_first_step();
+    }
+
+    protected function get_first_step() {
+        return current( array_keys( $this->steps ) );
     }
 }
