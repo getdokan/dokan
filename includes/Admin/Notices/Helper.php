@@ -10,6 +10,12 @@ use WeDevs\Dokan\Cache;
  * @sience 3.3.3
  */
 class Helper {
+	private static array $scope_type_mapping = [
+		'global' => [ 'alert', 'warning', 'database' ],
+		'local'  => [ 'dokan', 'success', 'info', 'alert' ],
+		'promo'  => [ 'promo' ],
+		'all'    => [], // Empty array means all types are allowed
+	];
 
     /**
      * This method will display notices only under Dokan menu and all of its sub-menu pages
@@ -18,13 +24,15 @@ class Helper {
      *
      * @return array | void
      */
-    public static function dokan_get_admin_notices() {
+    public static function dokan_get_admin_notices( $notice_scope = 'all' ) {
         $notices = apply_filters( 'dokan_admin_notices', [] );
 
         if ( empty( $notices ) ) {
             return $notices;
         }
+        $allowed_types = self::$scope_type_mapping[ $notice_scope ] ?? [];
 
+        $notices = self::filter_notices_by_type( $notices, $allowed_types );
         uasort( $notices, [ self::class, 'dokan_sort_notices_by_priority' ] );
 
         return array_values( $notices );
@@ -154,5 +162,25 @@ class Helper {
         }
 
         return -1;
+    }
+
+    /**
+     * Filter notices by allowed types
+     *
+     * @param array $notices
+     * @param array $allowed_types
+     *
+     * @return array
+     */
+    private static function filter_notices_by_type( array $notices, array $allowed_types ): array {
+        if ( ! empty( $allowed_types ) ) {
+            $notices = array_filter(
+                $notices, function ( $notice ) use ( $allowed_types ) {
+					return in_array( $notice['type'], $allowed_types, true );
+				}
+            );
+        }
+
+        return $notices;
     }
 }

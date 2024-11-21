@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\REST;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WP_REST_Response;
 use WP_REST_Server;
+use WP_REST_Request;
 use WeDevs\Dokan\Abstracts\DokanRESTAdminController;
 
 /**
@@ -36,6 +37,13 @@ class AdminNoticeController extends DokanRESTAdminController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'dokan_get_admin_notices' ],
                     'permission_callback' => [ $this, 'check_permission' ],
+                    'args'                => [
+                        'type' => [
+                            'description' => __( 'Type of notices', 'dokan-lite' ),
+                            'scope'        => 'string',
+                            'required'    => false,
+                        ],
+                    ],
                 ],
             ]
         );
@@ -53,11 +61,13 @@ class AdminNoticeController extends DokanRESTAdminController {
 
     /**
      * Get dokan specific notices
+     * @param WP_REST_Request $request
      *
      * @return WP_REST_Response
      */
-    public function dokan_get_admin_notices() {
+    public function dokan_get_admin_notices( WP_REST_Request $request ) {
         $notices = Helper::dokan_get_admin_notices();
+        $notice_scope = $request->get_param( 'scope' );
 
         return rest_ensure_response( $notices );
     }

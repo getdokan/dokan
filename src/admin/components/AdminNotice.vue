@@ -62,6 +62,10 @@ export default {
             type: Number,
             default: 5000
         },
+        scope: {
+            type: String,
+            default: 'all'
+        }
     },
 
     data() {
@@ -83,7 +87,7 @@ export default {
     methods: {
         fetch() {
             $.ajax( {
-                url: `${dokan_promo.rest.root}${dokan_promo.rest.version}/admin/notices/${this.endpoint}`,
+                url: `${dokan_promo.rest.root}${dokan_promo.rest.version}/admin/notices/${this.endpoint}?scope=${this.scope}`,
                 method: 'get',
                 beforeSend: function ( xhr ) {
                     xhr.setRequestHeader( 'X-WP-Nonce', dokan_promo.rest.nonce );
