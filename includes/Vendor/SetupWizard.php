@@ -484,8 +484,9 @@ class SetupWizard extends DokanSetupWizard {
         $dokan_settings['show_email']   = isset( $_POST['show_email'] ) ? 'yes' : 'no';
         $country = $dokan_settings['address']['country'] ?? '';
         $state = $dokan_settings['address']['state'] ?? '';
-        $country_has_states = isset( $states[ $country ] ) && count( $states[ $country ] ) > 0;
-		$state_is_empty = empty( $state );        // Validating fileds.
+        $state_not_exists = ! isset( $states[ $country ] ); // If state not exists for the country array then user must provide the state name
+        $country_has_states = is_array( $states[ $country ] ) && count( $states[ $country ] ) > 0; // If country has states  more than 0 then user must provide the state name
+		$state_is_empty = empty( $state );
         $is_valid_form = true;
         if ( empty( $dokan_settings['address']['street_1'] ) ) {
             $is_valid_form = false;
@@ -502,7 +503,7 @@ class SetupWizard extends DokanSetupWizard {
         if ( empty( $dokan_settings['address']['country'] ) ) {
             $is_valid_form = false;
             $_POST['error_address[country]'] = 'error';
-        } elseif ( ( $country_has_states && $state_is_empty ) || ( ! $country_has_states && $state_is_empty ) ) {
+        } elseif ( ( $country_has_states && $state_is_empty ) || ( $state_not_exists && $state_is_empty ) ) {
             $is_valid_form = false;
             $_POST['error_address[state]'] = 'error';
         }
@@ -531,7 +532,8 @@ class SetupWizard extends DokanSetupWizard {
         // If payment step is accessed but no active methods exist, redirect to next step
         if ( 'payment' === $this->current_step && empty( $methods ) ) {
                 wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
-                exit; }
+                exit;
+        }
 
         ?>
         <h1><?php esc_html_e( 'Payment Setup', 'dokan-lite' ); ?></h1>
