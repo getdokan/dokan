@@ -97,26 +97,26 @@ class V_3_14_0_UpdateCommissions extends DokanBackgroundProcesses {
      */
     private function update_vendors_settings( $vendors ) {
         foreach ( $vendors as $vendor ) {
-            $commission          = $vendor->get_commission_settings();
+            $commission = $vendor->get_commission_settings();
+
             $commission_type_old = $commission->get_type();
             $commission->set_type( Fixed::SOURCE );
 
-            $commission_type = $commission->get_type();
-            $flat            = $commission->get_flat();
-            $percentage      = $commission->get_percentage();
+            $percentage = $commission->get_percentage();
 
             if ( Flat::SOURCE === $commission_type_old ) {
-                $percentage = 0;
-                $flat       = $percentage;
+                $commission->set_percentage( 0 );
+                $commission->set_flat( $percentage );
             } elseif ( Percentage::SOURCE === $commission_type_old ) {
-                $flat = 0;
+                $commission->set_percentage( $percentage );
+                $commission->set_flat( 0 );
             }
 
             $vendor->save_commission_settings(
                 [
-                    'type'                 => $commission_type,
-                    'flat'                 => $flat,
-                    'percentage'           => $percentage,
+                    'type'                 => $commission->get_type(),
+                    'flat'                 => $commission->get_flat(),
+                    'percentage'           => $commission->get_percentage(),
                     'category_commissions' => $commission->get_category_commissions(),
                 ]
             );
@@ -141,23 +141,19 @@ class V_3_14_0_UpdateCommissions extends DokanBackgroundProcesses {
             $commission_type_old = $commission->get_type();
             $commission->set_type( Fixed::SOURCE );
 
-            $commission_type = $commission->get_type();
-            $flat            = $commission->get_flat();
-            $percentage      = $commission->get_percentage();
-
             if ( Flat::SOURCE === $commission_type_old ) {
-                $percentage = 0;
-                $flat       = $percentage;
+                $commission->set_flat( $commission->get_percentage() );
+                $commission->set_percentage( 0 );
             } elseif ( Percentage::SOURCE === $commission_type_old ) {
-                $flat = 0;
+                $commission->set_flat( 0 );
             }
 
             dokan()->product->save_commission_settings(
                 $post->ID,
                 [
-                    'type'       => $commission_type,
-                    'percentage' => $percentage,
-                    'flat'       => $flat,
+                    'type'       => $commission->get_type(),
+                    'percentage' => $commission->get_percentage(),
+                    'flat'       => $commission->get_flat(),
                 ]
             );
         }
