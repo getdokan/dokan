@@ -24,13 +24,13 @@ class Helper {
      *
      * @return array | void
      */
-    public static function dokan_get_admin_notices( $notice_scope = 'all' ) {
+    public static function dokan_get_admin_notices( $notice_context = 'all' ) {
         $notices = apply_filters( 'dokan_admin_notices', [] );
 
         if ( empty( $notices ) ) {
             return $notices;
         }
-        $allowed_types = apply_filters( 'dokan_admin_notices_scope', self::$scope_type_mapping[ $notice_scope ] ) ?? [];
+        $allowed_types = apply_filters( 'dokan_admin_notices_scope', self::$scope_type_mapping[ $notice_context ] ) ?? [];
 
         $notices = self::filter_notices_by_type( $notices, $allowed_types );
         uasort( $notices, [ self::class, 'dokan_sort_notices_by_priority' ] );

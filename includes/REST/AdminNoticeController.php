@@ -67,8 +67,8 @@ class AdminNoticeController extends DokanRESTAdminController {
      * @return WP_REST_Response
      */
     public function dokan_get_admin_notices( WP_REST_Request $request ) {
-        $notice_scope = $request->get_param( 'context' );
-        $notices = Helper::dokan_get_admin_notices( $notice_scope );
+        $notice_context = $request->get_param( 'context' );
+        $notices = Helper::dokan_get_admin_notices( $notice_context );
 
         return rest_ensure_response( $notices );
     }
