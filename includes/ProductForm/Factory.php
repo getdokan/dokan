@@ -106,7 +106,7 @@ class Factory {
      * @return Field[] list of registered fields.
      */
     public static function get_fields(): array {
-        return self::$form_fields;
+        return apply_filters( 'dokan_product_form_fields', self::$form_fields );
     }
 
     /**

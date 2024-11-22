@@ -610,7 +610,7 @@ class Assets {
             'currency_format'              => esc_attr( str_replace( [ '%1$s', '%2$s' ], [ '%s', '%v' ], get_woocommerce_price_format() ) ), // For accounting JS
             'round_at_subtotal'            => get_option( 'woocommerce_tax_round_at_subtotal', 'no' ),
             'product_types'                => apply_filters( 'dokan_product_types', [ 'simple' ] ),
-            'product_form_fields'        => apply_filters( 'dokan_product_form_fields', $this->get_product_fields() ),
+            'product_form_fields'          => $this->get_product_fields(),
             'loading_img'                  => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce'   => wp_create_nonce( 'dokan_store_product_search_nonce' ),
             'i18n_download_permission'     => __( 'Are you sure you want to revoke access to this download?', 'dokan-lite' ),
