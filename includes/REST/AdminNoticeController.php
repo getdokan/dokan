@@ -38,10 +38,11 @@ class AdminNoticeController extends DokanRESTAdminController {
                     'callback'            => [ $this, 'dokan_get_admin_notices' ],
                     'permission_callback' => [ $this, 'check_permission' ],
                     'args'                => [
-                        'type' => [
-                            'description' => __( 'Type of notices', 'dokan-lite' ),
-                            'context'        => 'string',
+                        'context' => [
+                            'description' => __( 'Notice context', 'dokan-lite' ),
+                            'type'        => 'string',
                             'required'    => false,
+                            'default'     => 'all',
                         ],
                     ],
                 ],
