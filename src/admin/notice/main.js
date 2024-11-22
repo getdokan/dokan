@@ -1,6 +1,5 @@
 import App from './App.vue';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import $ from 'jquery';
+const { jQuery: $ } = window;
 import Vue from 'vue';
 
 if ( $( '#dokan-admin-notices' ).length ) {
