@@ -10,12 +10,6 @@ use WeDevs\Dokan\Cache;
  * @sience 3.3.3
  */
 class Helper {
-	private static array $scope_type_mapping = [
-		'global' => [ 'alert', 'warning', 'database' ],
-		'local'  => [ 'dokan', 'success', 'info', 'alert' ],
-		'promo'  => [ 'promo' ],
-		'all'    => [], // Empty array means all types are allowed
-	];
 
     /**
      * This method will display notices only under Dokan menu and all of its sub-menu pages
@@ -24,15 +18,14 @@ class Helper {
      *
      * @return array | void
      */
-    public static function dokan_get_admin_notices( $notice_context = 'all' ) {
+    public static function dokan_get_admin_notices( $notice_scope = 'local' ) {
         $notices = apply_filters( 'dokan_admin_notices', [] );
 
         if ( empty( $notices ) ) {
             return $notices;
         }
-        $allowed_types = apply_filters( 'dokan_admin_notices_scope', self::$scope_type_mapping[ $notice_context ] ) ?? [];
 
-        $notices = self::filter_notices_by_type( $notices, $allowed_types );
+        $notices = self::filter_notices_by_scope( $notices, $notice_scope );
         uasort( $notices, [ self::class, 'dokan_sort_notices_by_priority' ] );
 
         return array_values( $notices );
@@ -168,19 +161,19 @@ class Helper {
      * Filter notices by allowed types
      *
      * @param array $notices
-     * @param array $allowed_types
+     * @param string $allowed_scope
      *
      * @return array
      */
-    private static function filter_notices_by_type( array $notices, array $allowed_types ): array {
-        if ( ! empty( $allowed_types ) ) {
-            $notices = array_filter(
-                $notices, function ( $notice ) use ( $allowed_types ) {
-					return in_array( $notice['type'], $allowed_types, true );
-				}
-            );
+    private static function filter_notices_by_scope( array $notices, string $allowed_scope = '' ): array {
+        if ( 'local' === $allowed_scope || empty( $allowed_scope ) ) {
+            return $notices;
         }
 
-        return $notices;
+        return array_filter(
+            $notices, function ( $notice ) use ( $allowed_scope ) {
+				return $notice['scope'] === $allowed_scope;
+			}
+        );
     }
 }

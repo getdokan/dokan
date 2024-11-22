@@ -5,7 +5,7 @@ import AdminNotice from "admin/components/AdminNotice.vue";
 
 <template>
     <AdminNotice
-        context="global"
+        scope="global"
         :interval="10000"
         endpoint="admin"
     />

@@ -38,7 +38,7 @@ class AdminNoticeController extends DokanRESTAdminController {
                     'callback'            => [ $this, 'dokan_get_admin_notices' ],
                     'permission_callback' => [ $this, 'check_permission' ],
                     'args'                => [
-                        'context' => [
+                        'scope' => [
                             'description' => __( 'Notice context', 'dokan-lite' ),
                             'type'        => 'string',
                             'required'    => false,
@@ -67,8 +67,8 @@ class AdminNoticeController extends DokanRESTAdminController {
      * @return WP_REST_Response
      */
     public function dokan_get_admin_notices( WP_REST_Request $request ) {
-        $notice_context = $request->get_param( 'context' );
-        $notices = Helper::dokan_get_admin_notices( $notice_context );
+        $notice_context = $request->get_param( 'scope' );
+        $notices        = Helper::dokan_get_admin_notices( $notice_context );
 
         return rest_ensure_response( $notices );
     }
