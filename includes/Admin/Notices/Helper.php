@@ -30,7 +30,7 @@ class Helper {
         if ( empty( $notices ) ) {
             return $notices;
         }
-        $allowed_types = self::$scope_type_mapping[ $notice_scope ] ?? [];
+        $allowed_types = apply_filters( 'dokan_admin_notices_scope', self::$scope_type_mapping[ $notice_scope ] ) ?? [];
 
         $notices = self::filter_notices_by_type( $notices, $allowed_types );
         uasort( $notices, [ self::class, 'dokan_sort_notices_by_priority' ] );

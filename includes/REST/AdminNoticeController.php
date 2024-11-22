@@ -40,7 +40,7 @@ class AdminNoticeController extends DokanRESTAdminController {
                     'args'                => [
                         'type' => [
                             'description' => __( 'Type of notices', 'dokan-lite' ),
-                            'scope'        => 'string',
+                            'context'        => 'string',
                             'required'    => false,
                         ],
                     ],
@@ -66,8 +66,8 @@ class AdminNoticeController extends DokanRESTAdminController {
      * @return WP_REST_Response
      */
     public function dokan_get_admin_notices( WP_REST_Request $request ) {
-        $notices = Helper::dokan_get_admin_notices();
-        $notice_scope = $request->get_param( 'scope' );
+        $notice_scope = $request->get_param( 'context' );
+        $notices = Helper::dokan_get_admin_notices( $notice_scope );
 
         return rest_ensure_response( $notices );
     }
