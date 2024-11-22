@@ -4,6 +4,8 @@ namespace WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses;
 
 use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
 use WeDevs\Dokan\Commission\Formula\Fixed;
+use WeDevs\Dokan\Commission\Formula\Flat;
+use WeDevs\Dokan\Commission\Formula\Percentage;
 use WP_Term;
 
 /**
@@ -61,10 +63,20 @@ class V_3_14_0_UpdateCommissions extends DokanBackgroundProcesses {
             $commission           = get_term_meta( $term->term_id, 'per_category_admin_commission', true );
 
             if ( ! empty( $commission_type ) ) {
-                $category_commission['items'][ $term->term_id ] = [
+                $category_commission_item = [
                     'flat'       => $admin_additional_fee,
                     'percentage' => $commission,
                 ];
+
+                if ( Flat::SOURCE === $commission_type ) {
+                    $category_commission_item['percentage'] = 0;
+                    $category_commission_item['flat'] = $commission;
+                } elseif ( Percentage::SOURCE === $commission_type ) {
+                    $category_commission_item['percentage'] = $commission;
+                    $category_commission_item['flat'] = 0;
+                }
+
+                $category_commission['items'][ $term->term_id ] = $category_commission_item;
             }
         }
 
@@ -85,14 +97,26 @@ class V_3_14_0_UpdateCommissions extends DokanBackgroundProcesses {
      */
     private function update_vendors_settings( $vendors ) {
         foreach ( $vendors as $vendor ) {
-            $commission = $vendor->get_commission_settings();
+            $commission          = $vendor->get_commission_settings();
+            $commission_type_old = $commission->get_type();
             $commission->set_type( Fixed::SOURCE );
+
+            $commission_type = $commission->get_type();
+            $flat            = $commission->get_flat();
+            $percentage      = $commission->get_percentage();
+
+            if ( Flat::SOURCE === $commission_type_old ) {
+                $percentage = 0;
+                $flat       = $percentage;
+            } elseif ( Percentage::SOURCE === $commission_type_old ) {
+                $flat = 0;
+            }
 
             $vendor->save_commission_settings(
                 [
-                    'percentage'           => $commission->get_percentage(),
-                    'type'                 => $commission->get_type(),
-                    'flat'                 => $commission->get_flat(),
+                    'type'                 => $commission_type,
+                    'flat'                 => $flat,
+                    'percentage'           => $percentage,
                     'category_commissions' => $commission->get_category_commissions(),
                 ]
             );
@@ -113,14 +137,27 @@ class V_3_14_0_UpdateCommissions extends DokanBackgroundProcesses {
     private function update_products_settings( $posts ) {
         foreach ( $posts as $post ) {
             $commission = dokan()->product->get_commission_settings( $post->ID );
+
+            $commission_type_old = $commission->get_type();
             $commission->set_type( Fixed::SOURCE );
+
+            $commission_type = $commission->get_type();
+            $flat            = $commission->get_flat();
+            $percentage      = $commission->get_percentage();
+
+            if ( Flat::SOURCE === $commission_type_old ) {
+                $percentage = 0;
+                $flat       = $percentage;
+            } elseif ( Percentage::SOURCE === $commission_type_old ) {
+                $flat = 0;
+            }
 
             dokan()->product->save_commission_settings(
                 $post->ID,
                 [
-                    'percentage' => $commission->get_percentage(),
-                    'type'       => $commission->get_type(),
-                    'flat'       => $commission->get_flat(),
+                    'type'       => $commission_type,
+                    'percentage' => $percentage,
+                    'flat'       => $flat,
                 ]
             );
         }

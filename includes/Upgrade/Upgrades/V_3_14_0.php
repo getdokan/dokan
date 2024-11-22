@@ -4,6 +4,8 @@ namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
 use WeDevs\Dokan\Commission\Formula\Fixed;
+use WeDevs\Dokan\Commission\Formula\Flat;
+use WeDevs\Dokan\Commission\Formula\Percentage;
 use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_3_14_0_UpdateCommissions;
 
 class V_3_14_0 extends DokanUpgrader {
@@ -16,11 +18,21 @@ class V_3_14_0 extends DokanUpgrader {
      * @return void
      */
     public static function update_global_commission_type() {
-        $options         = get_option( 'dokan_selling', [] );
-        $commission_type = isset( $options['commission_type'] ) ? $options['commission_type'] : Fixed::SOURCE;
+        $options = get_option( 'dokan_selling', [] );
+
+        $commission_type  = isset( $options['commission_type'] ) ? $options['commission_type'] : Fixed::SOURCE;
+        $admin_percentage = isset( $options['admin_percentage'] ) ? $options['admin_percentage'] : 0;
 
         if ( in_array( $commission_type, array_keys( dokan()->commission->get_legacy_commission_types() ), true ) ) {
             $options['commission_type'] = Fixed::SOURCE;
+
+            if ( Flat::SOURCE === $commission_type ) {
+                $options['admin_percentage'] = 0;
+                $options['additional_fee'] = $admin_percentage;
+            } elseif ( Percentage::SOURCE === $commission_type ) {
+                $options['admin_percentage'] = $admin_percentage;
+                $options['additional_fee'] = 0;
+            }
             update_option( 'dokan_selling', $options );
         }
     }
