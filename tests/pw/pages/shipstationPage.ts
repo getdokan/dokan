@@ -6,15 +6,15 @@ import { data } from '@utils/testData';
 // selectors
 const settingsShipStation = selector.vendor.vShipStationSettings;
 
-export class ShipstationPage extends VendorPage {
+export class ShipStationPage extends VendorPage {
     constructor(page: Page) {
         super(page);
     }
 
     // generate shipStation credentials
     async generateShipStationCredentials() {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipstation);
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.shipstation, settingsShipStation.generateCredentials, 201);
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipStation);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.shipStation, settingsShipStation.generateCredentials, 201);
         await this.toBeVisible(settingsShipStation.generateSuccessMessage);
 
         await this.toBeVisible(settingsShipStation.revokeCredentials);
@@ -23,10 +23,10 @@ export class ShipstationPage extends VendorPage {
 
     // revoke shipStation credentials
     async revokeShipStationCredentials() {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipstation);
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipStation);
 
         await this.click(settingsShipStation.revokeCredentials);
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.shipstation, settingsShipStation.confirmRevoke);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.shipStation, settingsShipStation.confirmRevoke);
         await this.toBeVisible(settingsShipStation.revokeSuccessMessage);
 
         await this.toBeVisible(settingsShipStation.generateCredentials);

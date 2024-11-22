@@ -70,9 +70,9 @@ export class VendorSettingsPage extends VendorPage {
         await this.toBeVisible(settingsVendor.updateSettings);
     }
 
-    // vendor shipstation render properly
-    async vendorShipstationSettingsRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipstation);
+    // vendor ShipStation render properly
+    async vendorShipStationSettingsRenderProperly() {
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipStation);
 
         // shipStation text is visible
         await this.toBeVisible(settingsShipStation.shipStationText);
@@ -443,9 +443,9 @@ export class VendorSettingsPage extends VendorPage {
         await this.clearAndType(settingsVendor.minMax.maximumAmountToPlaceAnOrder, minMax.maximumAmount);
     }
 
-    // vendor set Shipstation settings
+    // vendor set ShipStation settings
     async setShipStation(shipStation: vendor['shipStation']): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipstation);
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipStation);
 
         // export order statuses
         const allStatus = await this.getMultipleElementTexts(settingsShipStation.selectedStatus);
@@ -462,7 +462,7 @@ export class VendorSettingsPage extends VendorPage {
         await this.toContainText(settingsShipStation.result, shipStation.status);
         await this.press(data.key.enter);
 
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.shipstation, settingsShipStation.saveChanges, 201);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.shipStation, settingsShipStation.saveChanges, 201);
         await this.toBeVisible(settingsShipStation.saveSuccessMessage);
     }
 

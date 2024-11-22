@@ -1534,26 +1534,26 @@ export class ApiUtils {
     }
 
     /**
-     * shipstation methods
+     * ShipStation methods
      */
 
-    async createShipstationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.post(endPoints.createShipstationCredential, { data: { vendor_id: vendorId }, headers: auth });
+    async createShipStationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.createShipStationCredential, { data: { vendor_id: vendorId }, headers: auth });
         return responseBody;
     }
 
-    async deleteShipstationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.delete(endPoints.deleteShipstationCredential(vendorId), { headers: auth });
+    async deleteShipStationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteShipStationCredential(vendorId), { headers: auth });
         return responseBody;
     }
 
-    async createShipstationOrderStatusSettings(payload: object, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.post(endPoints.createShipstationOrderStatusSettings, { data: payload, headers: auth });
+    async createShipStationOrderStatusSettings(payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.createShipStationOrderStatusSettings, { data: payload, headers: auth });
         return responseBody;
     }
 
-    async deleteShipstationOrderStatusSettings(vendorId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.delete(endPoints.deleteShipstationOrderStatusSettings(vendorId), { headers: auth });
+    async deleteShipStationOrderStatusSettings(vendorId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteShipStationOrderStatusSettings(vendorId), { headers: auth });
         return responseBody;
     }
 

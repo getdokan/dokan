@@ -365,7 +365,7 @@ export const endPoints = {
     updateVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
     deleteVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
 
-    //commission
+    // commission
     getCommission: `${SERVER_URL}/dokan/v1/commission`,
 
     // shipping status
@@ -375,13 +375,13 @@ export const endPoints = {
     getSingleShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
     updateShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
 
-    // shipstation
-    getShipstationCredential: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/credentials/${vendorId}`,
-    createShipstationCredential: `${SERVER_URL}/dokan/v1/shipstation/credentials/create`,
-    deleteShipstationCredential: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/credentials/${vendorId}`,
-    getShipstationOrderStatusSettings: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/order-statuses/${vendorId}`,
-    createShipstationOrderStatusSettings: `${SERVER_URL}/dokan/v1/shipstation/order-statuses`,
-    deleteShipstationOrderStatusSettings: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/order-statuses/${vendorId}`,
+    // ShipStation
+    getShipStationCredential: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/credentials/${vendorId}`,
+    createShipStationCredential: `${SERVER_URL}/dokan/v1/shipstation/credentials/create`,
+    deleteShipStationCredential: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/credentials/${vendorId}`,
+    getShipStationOrderStatusSettings: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/order-statuses/${vendorId}`,
+    createShipStationOrderStatusSettings: `${SERVER_URL}/dokan/v1/shipstation/order-statuses`,
+    deleteShipStationOrderStatusSettings: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/order-statuses/${vendorId}`,
 
     wc: {
         // coupons

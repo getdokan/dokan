@@ -2955,15 +2955,15 @@ export const schemas = {
         shipmentsSchema: z.array(shipmentSchema),
     },
 
-    // shipstation schema
-    shipstationSchema: {
-        shipstationCredentialSchema: z.object({
+    // ShipStation schema
+    shipStationSchema: {
+        shipStationCredentialSchema: z.object({
             key_id: z.string().or(z.number()),
             consumer_key: z.string(),
             consumer_secret: z.string(),
         }),
 
-        shipstationOrderStatusSettingSchema: z.object({
+        shipStationOrderStatusSettingSchema: z.object({
             vendor_id: z.string().or(z.number()),
             export_statuses: z.array(z.string()),
             shipped_status: z.string(),

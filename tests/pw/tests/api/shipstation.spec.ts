@@ -13,7 +13,7 @@ import { schemas } from '@utils/schemas';
 
 const { VENDOR_ID } = process.env;
 
-test.describe('shipstation api test', () => {
+test.describe('ShipStation api test', () => {
     test.skip(true, 'remove after pr is merged');
     let apiUtils: ApiUtils;
 
@@ -25,45 +25,45 @@ test.describe('shipstation api test', () => {
         await apiUtils.dispose();
     });
 
-    test('create Shipstation credential', { tag: ['@pro'] }, async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createShipstationCredential, { data: { vendor_id: VENDOR_ID } });
+    test('create ShipStation credential', { tag: ['@pro'] }, async () => {
+        const [response, responseBody] = await apiUtils.post(endPoints.createShipStationCredential, { data: { vendor_id: VENDOR_ID } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.shipstationSchema.shipstationCredentialSchema);
+        expect(responseBody).toMatchSchema(schemas.shipStationSchema.shipStationCredentialSchema);
     });
 
-    test('get Shipstation credential', { tag: ['@pro'] }, async () => {
-        const [response, responseBody] = await apiUtils.get(endPoints.getShipstationCredential(VENDOR_ID));
+    test('get ShipStation credential', { tag: ['@pro'] }, async () => {
+        const [response, responseBody] = await apiUtils.get(endPoints.getShipStationCredential(VENDOR_ID));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.shipstationSchema.shipstationCredentialSchema);
+        expect(responseBody).toMatchSchema(schemas.shipStationSchema.shipStationCredentialSchema);
     });
 
-    test('delete Shipstation credential', { tag: ['@pro'] }, async () => {
-        const [response, responseBody] = await apiUtils.delete(endPoints.deleteShipstationCredential(VENDOR_ID));
+    test('delete ShipStation credential', { tag: ['@pro'] }, async () => {
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteShipStationCredential(VENDOR_ID));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.shipstationSchema.shipstationCredentialSchema);
+        expect(responseBody).toMatchSchema(schemas.shipStationSchema.shipStationCredentialSchema);
     });
 
-    test('create Shipstation order status settings', { tag: ['@pro'] }, async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createShipstationOrderStatusSettings, { data: { ...payloads.shipstationOrderStatusSettings, vendor_id: VENDOR_ID } });
+    test('create ShipStation order status settings', { tag: ['@pro'] }, async () => {
+        const [response, responseBody] = await apiUtils.post(endPoints.createShipStationOrderStatusSettings, { data: { ...payloads.shipStationOrderStatusSettings, vendor_id: VENDOR_ID } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.shipstationSchema.shipstationOrderStatusSettingSchema);
+        expect(responseBody).toMatchSchema(schemas.shipStationSchema.shipStationOrderStatusSettingSchema);
     });
 
-    test('get Shipstation order status settings', { tag: ['@pro'] }, async () => {
-        const [response, responseBody] = await apiUtils.get(endPoints.getShipstationOrderStatusSettings(VENDOR_ID));
+    test('get ShipStation order status settings', { tag: ['@pro'] }, async () => {
+        const [response, responseBody] = await apiUtils.get(endPoints.getShipStationOrderStatusSettings(VENDOR_ID));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.shipstationSchema.shipstationOrderStatusSettingSchema);
+        expect(responseBody).toMatchSchema(schemas.shipStationSchema.shipStationOrderStatusSettingSchema);
     });
 
-    test('delete Shipstation order status settings', { tag: ['@pro'] }, async () => {
-        const [response, responseBody] = await apiUtils.delete(endPoints.deleteShipstationOrderStatusSettings(VENDOR_ID));
+    test('delete ShipStation order status settings', { tag: ['@pro'] }, async () => {
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteShipStationOrderStatusSettings(VENDOR_ID));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.shipstationSchema.shipstationOrderStatusSettingSchema);
+        expect(responseBody).toMatchSchema(schemas.shipStationSchema.shipStationOrderStatusSettingSchema);
     });
 });
