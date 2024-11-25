@@ -39,10 +39,12 @@ class AdminNoticeController extends DokanRESTAdminController {
                     'permission_callback' => [ $this, 'check_permission' ],
                     'args'                => [
                         'scope' => [
-                            'description' => __( 'Notice context', 'dokan-lite' ),
+                            'description' => __( 'Choose notice scope: "local" displays only on Dokan pages, "global" displays across the entire site.', 'dokan-lite' ),
                             'type'        => 'string',
+                            'enum'        => [ 'local', 'global' ],
                             'required'    => false,
                             'default'     => '',
+                            'sanitize_callback' => 'sanitize_text_field',
                         ],
                     ],
                 ],
@@ -68,21 +70,20 @@ class AdminNoticeController extends DokanRESTAdminController {
      */
     public function dokan_get_admin_notices( WP_REST_Request $request ) {
         $notice_scope = $request->get_param( 'scope' );
-        $notice_scope = $notice_scope ?? 'local';
+        $notice_scope = ! empty( $notice_scope ) ? $notice_scope : 'local';
 
         $notices = Helper::dokan_get_admin_notices();
-        $notices = array_map(
-            function ( $notice ) {
-                $notice['scope'] = $notice['scope'] ?? 'local';
-
-                return $notice;
-            }, $notices
-        );
 
         // Filter notices by scope
-        $filtered_notices = $this->filter_notices_by_scope( $notices, $notice_scope );
+        $filter_notices = array_filter(
+            $notices,
+            function ( $notice ) use ( $notice_scope ) {
+                return $notice['scope'] === ( $notice_scope ?? 'local' );
+            }
+        );
+        $filter_notices = array_values( $filter_notices );
 
-        return rest_ensure_response( $filtered_notices );
+        return rest_ensure_response( $filter_notices );
     }
 
     /**
@@ -94,27 +95,5 @@ class AdminNoticeController extends DokanRESTAdminController {
         $notices = Helper::dokan_get_promo_notices();
 
         return rest_ensure_response( $notices );
-    }
-
-    /**
-     * Filter notices by allowed types
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $notices
-     * @param string $allowed_scope
-     *
-     * @return array
-     */
-    private function filter_notices_by_scope( array $notices, string $allowed_scope = '' ): array {
-        if ( empty( $allowed_scope ) ) {
-            return $notices;
-        }
-
-        return array_filter(
-            $notices, function ( $notice ) use ( $allowed_scope ) {
-				return $notice['scope'] === $allowed_scope;
-			}
-        );
     }
 }
