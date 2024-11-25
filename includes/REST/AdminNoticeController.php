@@ -42,7 +42,7 @@ class AdminNoticeController extends DokanRESTAdminController {
                             'description' => __( 'Notice context', 'dokan-lite' ),
                             'type'        => 'string',
                             'required'    => false,
-                            'default'     => 'all',
+                            'default'     => '',
                         ],
                     ],
                 ],
@@ -68,9 +68,21 @@ class AdminNoticeController extends DokanRESTAdminController {
      */
     public function dokan_get_admin_notices( WP_REST_Request $request ) {
         $notice_scope = $request->get_param( 'scope' );
-        $notices        = Helper::dokan_get_admin_notices( $notice_scope );
+        $notice_scope = $notice_scope ?? 'local';
 
-        return rest_ensure_response( $notices );
+        $notices = Helper::dokan_get_admin_notices();
+        $notices = array_map(
+            function ( $notice ) {
+                $notice['scope'] = $notice['scope'] ?? 'local';
+
+                return $notice;
+            }, $notices
+        );
+
+        // Filter notices by scope
+        $filtered_notices = self::filter_notices_by_scope( $notices, $notice_scope );
+
+        return rest_ensure_response( $filtered_notices );
     }
 
     /**
@@ -82,5 +94,25 @@ class AdminNoticeController extends DokanRESTAdminController {
         $notices = Helper::dokan_get_promo_notices();
 
         return rest_ensure_response( $notices );
+    }
+
+    /**
+     * Filter notices by allowed types
+     *
+     * @param array $notices
+     * @param string $allowed_scope
+     *
+     * @return array
+     */
+    private static function filter_notices_by_scope( array $notices, string $allowed_scope = '' ): array {
+        if ( empty( $allowed_scope ) ) {
+            return $notices;
+        }
+
+        return array_filter(
+            $notices, function ( $notice ) use ( $allowed_scope ) {
+				return $notice['scope'] === $allowed_scope;
+			}
+        );
     }
 }

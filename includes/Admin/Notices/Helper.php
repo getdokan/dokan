@@ -18,14 +18,13 @@ class Helper {
      *
      * @return array | void
      */
-    public static function dokan_get_admin_notices( $notice_scope = 'local' ) {
+    public static function dokan_get_admin_notices() {
         $notices = apply_filters( 'dokan_admin_notices', [] );
 
         if ( empty( $notices ) ) {
             return $notices;
         }
 
-        $notices = self::filter_notices_by_scope( $notices, $notice_scope );
         uasort( $notices, [ self::class, 'dokan_sort_notices_by_priority' ] );
 
         return array_values( $notices );
@@ -155,25 +154,5 @@ class Helper {
         }
 
         return -1;
-    }
-
-    /**
-     * Filter notices by allowed types
-     *
-     * @param array $notices
-     * @param string $allowed_scope
-     *
-     * @return array
-     */
-    private static function filter_notices_by_scope( array $notices, string $allowed_scope = '' ): array {
-        if ( 'local' === $allowed_scope || empty( $allowed_scope ) ) {
-            return $notices;
-        }
-
-        return array_filter(
-            $notices, function ( $notice ) use ( $allowed_scope ) {
-				return $notice['scope'] === $allowed_scope;
-			}
-        );
     }
 }
