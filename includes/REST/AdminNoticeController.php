@@ -78,9 +78,7 @@ class AdminNoticeController extends DokanRESTAdminController {
         $filter_notices = array_filter(
             $notices,
             function ( $notice ) use ( $notice_scope ) {
-                $notice['scope'] = $notice['scope'] ?? 'local';
-
-                return $notice['scope'] === $notice_scope;
+                return $notice_scope === ( $notice['scope'] ?? 'local' );
             }
         );
         $filter_notices = array_values( $filter_notices );
