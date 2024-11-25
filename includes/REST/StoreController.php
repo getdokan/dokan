@@ -86,7 +86,7 @@ class StoreController extends WP_REST_Controller {
                         ],
                         'show_email' => [
                             'required'    => false,
-                            'type'        => 'string', // Updated from boolean
+                            'type'        => 'string',
                             'description' => __( 'Whether to show the store email publicly.', 'dokan-lite' ),
                         ],
                         'address' => [
@@ -94,7 +94,7 @@ class StoreController extends WP_REST_Controller {
                             'type'        => 'array',
                             'description' => __( 'Address details of the store.', 'dokan-lite' ),
                         ],
-                        'location' => [ // Newly added
+                        'location' => [
                             'required'    => false,
                             'type'        => 'string',
                             'description' => __( 'Geographical location of the store.', 'dokan-lite' ),
@@ -116,7 +116,7 @@ class StoreController extends WP_REST_Controller {
                         ],
                         'enable_tnc' => [
                             'required'    => false,
-                            'type'        => 'string', // Updated from boolean
+                            'type'        => 'string',
                             'description' => __( 'Enable Terms and Conditions for the store.', 'dokan-lite' ),
                         ],
                         'store_tnc' => [
@@ -126,7 +126,7 @@ class StoreController extends WP_REST_Controller {
                         ],
                         'show_min_order_discount' => [
                             'required'    => false,
-                            'type'        => 'string', // Updated from boolean
+                            'type'        => 'string',
                             'description' => __( 'Whether to show minimum order discount information.', 'dokan-lite' ),
                         ],
                         'store_seo' => [
@@ -308,6 +308,32 @@ class StoreController extends WP_REST_Controller {
                     'methods'             => WP_REST_Server::EDITABLE,
                     'callback'            => [ $this, 'batch_update' ],
                     'permission_callback' => [ $this, 'permission_check_for_manageable_part' ],
+                    'args'                => [
+                        'approved' => [
+                            'type'        => 'array',
+                            'required'    => false,
+                            'items'       => [
+                                'type' => 'integer',
+                            ],
+                            'description' => __( 'List of vendor IDs to approve.', 'dokan-lite' ),
+                        ],
+                        'pending'  => [
+                            'type'        => 'array',
+                            'required'    => false,
+                            'items'       => [
+                                'type' => 'integer',
+                            ],
+                            'description' => __( 'List of vendor IDs to set as pending.', 'dokan-lite' ),
+                        ],
+                        'delete'   => [
+                            'type'        => 'array',
+                            'required'    => false,
+                            'items'       => [
+                                'type' => 'integer',
+                            ],
+                            'description' => __( 'List of vendor IDs to delete.', 'dokan-lite' ),
+                        ],
+                    ],
                 ],
             ]
         );
