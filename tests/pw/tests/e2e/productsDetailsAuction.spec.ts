@@ -190,7 +190,7 @@ test.describe('Auction Product details functionality test', () => {
 
     test('vendor can update product relist options', { tag: ['@pro', '@vendor'] }, async () => {
         test.skip(true, 'not implemented yet');
-        await vendor.addProductGeneralOption(productIdFull, data.product.auction);
+        await vendor.addProductRelistingOption(productIdFull, { ...data.product.auction, relistIfFailAfterNHours: '5', relistIfNotPaidAfterNHours: '6', relistAuctionDurationInH: '7' });
     });
 
     // product inventory options

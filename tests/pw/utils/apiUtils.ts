@@ -1534,7 +1534,7 @@ export class ApiUtils {
     }
 
     /**
-     * ShipStation methods
+     * ShipStation api methods
      */
 
     async createShipStationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
