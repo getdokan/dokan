@@ -23,8 +23,15 @@ class Update_Product_Commission {
      */
     const PROCESS_BATCH_HOOK = 'process_product_batch';
 
+    /**
+     *
+     * @since DOKAN_PRO_SINCE
+     */
+    const PROCESS_ITEM_HOOK = 'process_product_item';
+
     public function init_hooks() {
         add_action( self::PROCESS_BATCH_HOOK, [ $this, 'process_batch' ], 10, 2 );
+        add_action( self::PROCESS_ITEM_HOOK, [ $this, 'process_single_product' ], 10, 1 );
     }
 
     /**
@@ -61,7 +68,7 @@ class Update_Product_Commission {
         $products = $this->get_products_batch( $offset );
 
         foreach ( $products as $product ) {
-            $this->process_single_product( $product );
+            $this->schedule_item( $product->get_id() );
         }
 
         // Calculate next offset
@@ -88,7 +95,16 @@ class Update_Product_Commission {
             self::PROCESS_BATCH_HOOK, [
 				$offset,
 				$total_products,
-			], 'product_processing'
+			],
+            'dokan_updater_product_processing'
+        );
+    }
+
+    private function schedule_item( $item ) {
+        WC()->queue()->add(
+            self::PROCESS_ITEM_HOOK,
+            [ $item ],
+            'dokan_updater_product_item_processing'
         );
     }
 
@@ -137,21 +153,12 @@ class Update_Product_Commission {
      *
      * @since DOKAN_PRO_SINCE
      *
-     * @param WC_Product $product
+     * @param int $product
      *
      * @return void
      */
-    protected function process_single_product( $product ) {
-        // Example processing - customize this based on your needs
-        error_log(
-            sprintf(
-                'Processing product #%d: %s',
-                $product->get_id(),
-                $product->get_name()
-            )
-        );
-
-        $commission = dokan()->product->get_commission_settings( $product->get_id() );
+    public function process_single_product( $product_id ) {
+        $commission = dokan()->product->get_commission_settings( $product_id );
 
         $commission_type_old = $commission->get_type();
         $commission->set_type( Fixed::SOURCE );
@@ -164,7 +171,7 @@ class Update_Product_Commission {
         }
 
         dokan()->product->save_commission_settings(
-            $product->get_id(),
+            $product_id,
             [
                 'type'       => $commission->get_type(),
                 'percentage' => $commission->get_percentage(),

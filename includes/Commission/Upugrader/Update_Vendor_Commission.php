@@ -16,12 +16,19 @@ class Update_Vendor_Commission {
     const PROCESS_BATCH_HOOK = 'process_vendor_batch';
 
     /**
+     *
+     * @since DOKAN_PRO_SINCE
+     */
+    const PROCESS_ITEM_HOOK = 'process_vendor_item';
+
+    /**
      * Initialize the processor
      *
      * @since DOKAN_PRO_SINCE
      */
     public function init_hooks() {
         add_action( self::PROCESS_BATCH_HOOK, [ $this, 'process_batch' ], 10, 1 );
+        add_action( self::PROCESS_ITEM_HOOK, [ $this, 'process_single_vendor' ], 10, 1 );
     }
 
     /**
@@ -51,7 +58,7 @@ class Update_Vendor_Commission {
 
         if ( ! empty( $vendors ) ) {
             foreach ( $vendors as $vendor ) {
-                $this->process_single_vendor( $vendor );
+                $this->schedule_item( $vendor->get_id() );
             }
 
             // Schedule next batch since we have vendors in this batch
@@ -72,7 +79,15 @@ class Update_Vendor_Commission {
         WC()->queue()->add(
             self::PROCESS_BATCH_HOOK,
             [ $page_number ],
-            'vendor_processing'
+            'dokan_updater_vendor_processing'
+        );
+    }
+
+    private function schedule_item( $item ) {
+        WC()->queue()->add(
+            self::PROCESS_ITEM_HOOK,
+            [ $item ],
+            'dokan_updater_vendor_item_processing'
         );
     }
 
@@ -83,7 +98,7 @@ class Update_Vendor_Commission {
      *
      * @param int $page_number Page number to fetch
      *
-     * @return array Array of vendor objects
+     * @return \WeDevs\Dokan\Vendor\Vendor[] Array of vendor objects
      */
     protected function get_vendors_batch( $page_number ) {
         return dokan()->vendor->all(
@@ -103,15 +118,8 @@ class Update_Vendor_Commission {
      *
      * @return void
      */
-    protected function process_single_vendor( $vendor ) {
-        error_log(
-            sprintf(
-                'Processing vendor #%d: %s',
-                $vendor->get_id(),
-                $vendor->get_shop_name()
-            )
-        );
-
+    public function process_single_vendor( $vendor_id ) {
+        $vendor = dokan()->vendor->get( $vendor_id );
         $commission = $vendor->get_commission_settings();
 
         $commission_type_old = $commission->get_type();

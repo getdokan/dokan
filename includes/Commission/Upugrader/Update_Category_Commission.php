@@ -22,10 +22,17 @@ class Update_Category_Commission {
     const PROCESS_BATCH_HOOK = 'process_category_batch';
 
     /**
+     *
+     * @since DOKAN_PRO_SINCE
+     */
+    const PROCESS_ITEM_HOOK = 'process_category_item';
+
+    /**
      * Initialize the processor
      */
     public function init_hooks() {
         add_action( self::PROCESS_BATCH_HOOK, [ $this, 'process_batch' ], 10, 1 );
+        add_action( self::PROCESS_ITEM_HOOK, [ $this, 'process_single_category' ], 10, 1 );
     }
 
     /**
@@ -55,7 +62,7 @@ class Update_Category_Commission {
 
         if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
             foreach ( $categories as $category ) {
-                $this->process_single_category( $category );
+                $this->schedule_cat_item( $category->term_id );
             }
 
             // Schedule next batch since we have categories in this batch
@@ -76,7 +83,15 @@ class Update_Category_Commission {
         WC()->queue()->add(
             self::PROCESS_BATCH_HOOK,
             [ $page_number ],
-            'category_processing'
+            'dokan_updater_category_processing'
+        );
+    }
+
+    private function schedule_cat_item( $term ) {
+        WC()->queue()->add(
+            self::PROCESS_ITEM_HOOK,
+            [ $term ],
+            'dokan_updater_category_item_processing'
         );
     }
 
@@ -107,25 +122,17 @@ class Update_Category_Commission {
      *
      * @since DOKAN_PRO_SINCE
      *
-     * @param WP_Term $term Category term object
+     * @param int $term Category term object
      *
      * @return void
      */
-    protected function process_single_category( $term ) {
-        error_log(
-            sprintf(
-                'Processing category #%d: %s',
-                $term->term_id,
-                $term->name
-            )
-        );
-
+    public function process_single_category( $term_id ) {
         $dokan_selling       = get_option( 'dokan_selling', [] );
         $category_commission = dokan_get_option( 'commission_category_based_values', 'dokan_selling', [] );
 
-        $commission_type      = get_term_meta( $term->term_id, 'per_category_admin_commission_type', true );
-        $admin_additional_fee = get_term_meta( $term->term_id, 'per_category_admin_additional_fee', true );
-        $commission           = get_term_meta( $term->term_id, 'per_category_admin_commission', true );
+        $commission_type      = get_term_meta( $term_id, 'per_category_admin_commission_type', true );
+        $admin_additional_fee = get_term_meta( $term_id, 'per_category_admin_additional_fee', true );
+        $commission           = get_term_meta( $term_id, 'per_category_admin_commission', true );
 
         if ( ! empty( $commission_type ) ) {
             $category_commission_item = [
@@ -141,7 +148,7 @@ class Update_Category_Commission {
                 $category_commission_item['flat'] = 0;
             }
 
-            $category_commission['items'][ $term->term_id ] = $category_commission_item;
+            $category_commission['items'][ $term_id ] = $category_commission_item;
         }
 
         $dokan_selling['commission_category_based_values'] = $category_commission;
