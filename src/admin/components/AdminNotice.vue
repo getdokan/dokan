@@ -94,6 +94,9 @@ export default {
                     xhr.setRequestHeader( 'X-WP-Nonce', dokan_promo.rest.nonce );
                 },
             } ).done( response => {
+                if ( ! Array.isArray( response ) ){
+                    response = Object.entries( response ).map( ( [ id, data ] ) => ( { id, ...data } ) );
+                }
                 this.notices = response.filter( notice => notice.description || notice.title );
                 this.startAutoSlide();
             });

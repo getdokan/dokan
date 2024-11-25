@@ -80,7 +80,7 @@ class AdminNoticeController extends DokanRESTAdminController {
         );
 
         // Filter notices by scope
-        $filtered_notices = self::filter_notices_by_scope( $notices, $notice_scope );
+        $filtered_notices = $this->filter_notices_by_scope( $notices, $notice_scope );
 
         return rest_ensure_response( $filtered_notices );
     }
@@ -99,12 +99,14 @@ class AdminNoticeController extends DokanRESTAdminController {
     /**
      * Filter notices by allowed types
      *
+     * @since DOKAN_SINCE
+     *
      * @param array $notices
      * @param string $allowed_scope
      *
      * @return array
      */
-    private static function filter_notices_by_scope( array $notices, string $allowed_scope = '' ): array {
+    private function filter_notices_by_scope( array $notices, string $allowed_scope = '' ): array {
         if ( empty( $allowed_scope ) ) {
             return $notices;
         }

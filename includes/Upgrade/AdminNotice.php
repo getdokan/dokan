@@ -39,6 +39,7 @@ class AdminNotice {
             'title'             => __( 'Dokan Data Update Required', 'dokan-lite' ),
             'description'       => __( 'We need to update your install to the latest version', 'dokan-lite' ),
             'priority'          => 1,
+            'scope'             => 'global',
             'actions'           => [
                 [
                     'type'            => 'primary',
