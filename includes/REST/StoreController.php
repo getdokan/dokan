@@ -52,6 +52,99 @@ class StoreController extends WP_REST_Controller {
                     'methods'             => WP_REST_Server::CREATABLE,
                     'callback'            => [ $this, 'create_store' ],
                     'permission_callback' => [ $this, 'permission_check_for_manageable_part' ],
+                    'args'                => [
+                        'user_login' => [
+                            'required'    => false,
+                            'type'        => 'string',
+                            'description' => __( 'The username for the store owner. If not provided, it will be auto-generated.', 'dokan-lite' ),
+                        ],
+                        'email' => [
+                            'required'    => true,
+                            'type'        => 'string',
+                            'format'      => 'email',
+                            'description' => __( 'The email address for the store owner.', 'dokan-lite' ),
+                        ],
+                        'store_name' => [
+                            'required'    => true,
+                            'type'        => 'string',
+                            'description' => __( 'The name of the store.', 'dokan-lite' ),
+                        ],
+                        'social' => [
+                            'required'    => false,
+                            'type'        => 'array',
+                            'description' => __( 'An array of social media details for the store.', 'dokan-lite' ),
+                        ],
+                        'payment' => [
+                            'required'    => false,
+                            'type'        => 'array',
+                            'description' => __( 'Payment details for the store. E.g., PayPal or bank details.', 'dokan-lite' ),
+                        ],
+                        'phone' => [
+                            'required'    => false,
+                            'type'        => 'string',
+                            'description' => __( 'The contact phone number for the store.', 'dokan-lite' ),
+                        ],
+                        'show_email' => [
+                            'required'    => false,
+                            'type'        => 'string', // Updated from boolean
+                            'description' => __( 'Whether to show the store email publicly.', 'dokan-lite' ),
+                        ],
+                        'address' => [
+                            'required'    => false,
+                            'type'        => 'array',
+                            'description' => __( 'Address details of the store.', 'dokan-lite' ),
+                        ],
+                        'location' => [ // Newly added
+                            'required'    => false,
+                            'type'        => 'string',
+                            'description' => __( 'Geographical location of the store.', 'dokan-lite' ),
+                        ],
+                        'banner_id' => [
+                            'required'    => false,
+                            'type'        => 'integer',
+                            'description' => __( 'ID of the banner image for the store.', 'dokan-lite' ),
+                        ],
+                        'icon' => [
+                            'required'    => false,
+                            'type'        => 'string',
+                            'description' => __( 'URL of the icon image for the store.', 'dokan-lite' ),
+                        ],
+                        'gravatar_id' => [
+                            'required'    => false,
+                            'type'        => 'integer',
+                            'description' => __( 'ID of the gravatar image for the store.', 'dokan-lite' ),
+                        ],
+                        'enable_tnc' => [
+                            'required'    => false,
+                            'type'        => 'string', // Updated from boolean
+                            'description' => __( 'Enable Terms and Conditions for the store.', 'dokan-lite' ),
+                        ],
+                        'store_tnc' => [
+                            'required'    => false,
+                            'type'        => 'string',
+                            'description' => __( 'Terms and Conditions text for the store.', 'dokan-lite' ),
+                        ],
+                        'show_min_order_discount' => [
+                            'required'    => false,
+                            'type'        => 'string', // Updated from boolean
+                            'description' => __( 'Whether to show minimum order discount information.', 'dokan-lite' ),
+                        ],
+                        'store_seo' => [
+                            'required'    => false,
+                            'type'        => 'array',
+                            'description' => __( 'SEO metadata for the store.', 'dokan-lite' ),
+                        ],
+                        'store_open_close' => [
+                            'required'    => false,
+                            'type'        => 'array',
+                            'description' => __( 'Opening and closing times for the store.', 'dokan-lite' ),
+                        ],
+                        'notify_vendor' => [
+                            'required'    => false,
+                            'type'        => 'boolean',
+                            'description' => __( 'Whether to notify the vendor after creation.', 'dokan-lite' ),
+                        ],
+                    ],
                 ],
             ]
         );
@@ -135,17 +228,17 @@ class StoreController extends WP_REST_Controller {
                         'store_slug' => [
                             'required' => false,
                             'type' => 'string',
-                            'description' => __('Slug of the store to check availability.', 'dokan-lite'),
+                            'description' => __( 'Slug of the store to check availability.', 'dokan-lite' ),
                         ],
                         'username' => [
                             'required' => false,
                             'type' => 'string',
-                            'description' => __('Username to check availability.', 'dokan-lite'),
+                            'description' => __( 'Username to check availability.', 'dokan-lite' ),
                         ],
                         'email' => [
                             'required' => false,
                             'type' => 'string',
-                            'description' => __('Email address to check availability.', 'dokan-lite'),
+                            'description' => __( 'Email address to check availability.', 'dokan-lite' ),
                             'format' => 'email',
                         ],
                     ],
