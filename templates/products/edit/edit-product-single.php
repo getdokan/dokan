@@ -124,7 +124,6 @@ do_action( 'dokan_dashboard_wrap_before', $post, $product->get_id() );
                      */
                     do_action( 'dokan_before_product_edit_status_label', $product );
                     ?>
-                    ?>
                     <span class="dokan-label <?php echo esc_attr( dokan_get_post_status_label_class( $product->get_status() ) ); ?> dokan-product-status-label">
                         <?php echo esc_html( dokan_get_post_status( $product->get_status() ) ); ?>
                     </span>
