@@ -235,10 +235,6 @@ export class AuctionsPage extends VendorPage {
         await this.removeAttribute(auctionProductsVendor.auction.auctionEndDate, 'readonly');
         await this.clearAndType(auctionProductsVendor.auction.auctionStartDate, generalOption.startDate);
         await this.clearAndType(auctionProductsVendor.auction.auctionEndDate, generalOption.endDate);
-        await this.check(auctionProductsVendor.auction.enableAutomaticRelisting);
-        await this.clearAndType(auctionProductsVendor.auction.relistIfFailAfterNHours, generalOption.relistIfFailAfterNHours);
-        await this.clearAndType(auctionProductsVendor.auction.relistIfNotPaidAfterNHours, generalOption.relistIfNotPaidAfterNHours);
-        await this.clearAndType(auctionProductsVendor.auction.relistAuctionDurationInH, generalOption.relistAuctionDurationInH);
 
         await this.saveProduct();
 
@@ -251,6 +247,18 @@ export class AuctionsPage extends VendorPage {
         await this.toHaveValue(auctionProductsVendor.auction.buyItNowPrice, buyItNowPrice);
         await this.toHaveValue(auctionProductsVendor.auction.auctionStartDate, generalOption.startDate);
         await this.toHaveValue(auctionProductsVendor.auction.auctionEndDate, generalOption.endDate);
+    }
+
+    // add product Relist option
+    async addProductRelistingOption(productName: string, generalOption: product['auction']) {
+        await this.goToAuctionProductEditById(productName);
+        await this.check(auctionProductsVendor.auction.enableAutomaticRelisting);
+        await this.clearAndType(auctionProductsVendor.auction.relistIfFailAfterNHours, generalOption.relistIfFailAfterNHours);
+        await this.clearAndType(auctionProductsVendor.auction.relistIfNotPaidAfterNHours, generalOption.relistIfNotPaidAfterNHours);
+        await this.clearAndType(auctionProductsVendor.auction.relistAuctionDurationInH, generalOption.relistAuctionDurationInH);
+
+        await this.saveProduct();
+
         await this.toBeChecked(auctionProductsVendor.auction.enableAutomaticRelisting);
         await this.toHaveValue(auctionProductsVendor.auction.relistIfFailAfterNHours, generalOption.relistIfFailAfterNHours);
         await this.toHaveValue(auctionProductsVendor.auction.relistIfNotPaidAfterNHours, generalOption.relistIfNotPaidAfterNHours);

@@ -3575,7 +3575,7 @@ export const payloads = {
         reportAbuse: 'report_abuse',
         rma: 'rma',
         sellerVacation: 'seller_vacation',
-        shipstation: 'shipstation',
+        shipStation: 'shipstation',
         auction: 'auction',
         spmv: 'spmv',
         storeReviews: 'store_reviews',
@@ -4871,6 +4871,18 @@ export const payloads = {
             value: '10',
         },
     ],
+
+    // ShipStation
+
+    createCredential: {
+        vendor_id: '',
+    },
+
+    shipStationOrderStatusSettings: {
+        vendor_id: '',
+        export_statuses: ['wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled'],
+        shipped_status: 'wc-completed',
+    },
 
     // shortcodes
 

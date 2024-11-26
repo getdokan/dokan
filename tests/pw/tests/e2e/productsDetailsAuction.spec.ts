@@ -184,6 +184,15 @@ test.describe('Auction Product details functionality test', () => {
         await vendor.addProductGeneralOption(productIdBasic, { ...data.product.auction, itemCondition: 'used', auctionType: 'reverse' });
     });
 
+    test('vendor can enable product relist options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductRelistingOption(productIdBasic, data.product.auction);
+    });
+
+    test('vendor can update product relist options', { tag: ['@pro', '@vendor'] }, async () => {
+        test.skip(true, 'not implemented yet');
+        await vendor.addProductRelistingOption(productIdFull, { ...data.product.auction, relistIfFailAfterNHours: '5', relistIfNotPaidAfterNHours: '6', relistAuctionDurationInH: '7' });
+    });
+
     // product inventory options
 
     test('vendor can add auction product inventory options (SKU)', { tag: ['@pro', '@vendor'] }, async () => {

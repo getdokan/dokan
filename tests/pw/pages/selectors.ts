@@ -6545,7 +6545,18 @@ export const selector = {
             shipStationText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 
-            authenticationKey: '//label[normalize-space()="Authentication Key"]/..//code',
+            generateCredentials: 'button#dokan-shipstation-generate-credentials-btn',
+            generateSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="API credentials generated successfully."]',
+            revokeCredentials: 'button#dokan-shipstation-revoke-credentials-btn',
+            confirmRevoke: 'button.swal2-confirm',
+            revokeSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="API credentials revoked successfully."]',
+
+            credentials: {
+                authenticationKey: '//label[normalize-space()="Authentication Key"]/..//code',
+                consumerKey: '//label[normalize-space()="Consumer Key"]/..//code',
+                consumerSecret: '//label[normalize-space()="Consumer Secret"]/..//code',
+            },
+
             selectedStatus: '//label[@for="dokan-shipstation-export-statuses"]/..//li[@class="select2-selection__choice"]',
             exportOrderStatusesInput: '//label[normalize-space()="Export Order Statuses"]/..//span[@class="select2-selection select2-selection--multiple"]//input[@class="select2-search__field"]',
             shippedOrderStatusDropdown: '.select2-selection__arrow',
@@ -6553,8 +6564,7 @@ export const selector = {
             result: '.select2-results__option.select2-results__option--highlighted',
 
             saveChanges: '#dokan-store-shipstation-form-submit',
-            saveSuccessMessage: '#swal2-html-container',
-            successOk: '.swal2-confirm',
+            saveSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="Settings saved successfully."]',
         },
 
         // social profile settings
