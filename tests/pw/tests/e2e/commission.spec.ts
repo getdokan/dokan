@@ -101,4 +101,7 @@ test.describe('Commission test', () => {
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.onhold, payloads.vendorAuth);
         await admin.viewCommissionMetaBox(orderId);
     });
+
+    // todo: admin can view commission on  product list, order list, and order details, sub order details on parent order
+    // todo: vendor can view earning on product list, product details, order list, and order details
 });
