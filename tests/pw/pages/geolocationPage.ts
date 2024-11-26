@@ -97,4 +97,32 @@ export class GeolocationPage extends AdminPage {
                 break;
         }
     }
+
+    // view map radius unit and distance
+    async viewMapRadiusSearchUnitAndDistance(unit: 'km' | 'miles', distance: { min: string; max: string }): Promise<void> {
+        await this.gotoUntilNetworkidle(data.subUrls.frontend.shop);
+
+        switch (unit) {
+            case 'km':
+                await this.toContainText(selector.customer.cShop.radiusSearch.radiusUnit, `Radius ${distance.max}km`);
+                break;
+
+            case 'miles':
+                await this.toContainText(selector.customer.cShop.radiusSearch.radiusUnit, `Radius ${distance.max}miles`);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    async slideMapRadiusBar(slideUnit: string): Promise<void> {
+        await this.gotoUntilNetworkidle(data.subUrls.frontend.shop);
+        await this.focus(selector.customer.cShop.radiusSearch.slider);
+        await this.setAttributeValue(selector.customer.cShop.radiusSearch.slider, 'value', '0');
+        for (let i = 0; i < Number(slideUnit); i++) {
+            await this.press('ArrowRight');
+        }
+        await this.toHaveValue(selector.customer.cShop.radiusSearch.slider, slideUnit);
+    }
 }

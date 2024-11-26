@@ -63,11 +63,11 @@ test.describe.skip('Plugin functionality test', () => {
     });
 
     test.skip('admin can delete Dokan pro plugin', { tag: ['@pro', '@admin', '@serial'] }, async () => {
-        await admin.activatePlugin(data.plugin.pluginName.dokanLite);
+        // await admin.deletePlugin(data.plugin.pluginName.dokanLite);
     });
 
     test.skip('admin can delete Dokan plugin', { tag: ['@lite', '@admin', '@serial'] }, async () => {
-        await admin.activatePlugin(data.plugin.pluginName.dokanLite);
+        // await admin.deletePlugin(data.plugin.pluginName.dokanLite);
     });
 
     //todo: replace (one zip with another) plugin test
