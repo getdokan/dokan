@@ -20,6 +20,7 @@ class Update_Category_Commission {
      * @since DOKAN_PRO_SINCE
      */
     const PROCESS_BATCH_HOOK = 'process_category_batch';
+    const PROCESS_BATCH_HOOK_CREATOR = 'process_category_batch_creator';
 
     /**
      *
@@ -31,8 +32,9 @@ class Update_Category_Commission {
      * Initialize the processor
      */
     public function init_hooks() {
-        add_action( self::PROCESS_BATCH_HOOK, [ $this, 'process_batch' ], 10, 1 );
-        add_action( self::PROCESS_ITEM_HOOK, [ $this, 'process_single_category' ], 10, 1 );
+        add_action( self::PROCESS_BATCH_HOOK_CREATOR, [ $this, 'process_batch_creator' ] );
+        add_action( self::PROCESS_BATCH_HOOK, [ $this, 'process_batch' ] );
+        add_action( self::PROCESS_ITEM_HOOK, [ $this, 'process_single_category' ] );
     }
 
     /**
@@ -43,8 +45,37 @@ class Update_Category_Commission {
      * @return void
      */
     public function start_processing() {
-        // Schedule the first batch with page 1
-        $this->schedule_next_batch( 1 );
+        WC()->queue()->add(
+            self::PROCESS_BATCH_HOOK_CREATOR,
+            [],
+            'dokan_updater_category_processing_creator'
+        );
+    }
+
+    /**
+     * Batch queue creator.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function process_batch_creator() {
+        // Get total number of products
+        $total = $this->category_count();
+
+        if ( is_wp_error( $total ) || $total === 0 ) {
+            return;
+        }
+
+        $total = $total + 50;
+        $offset = 0;
+
+        do {
+            $this->schedule_next_batch( $offset );
+
+            // Calculate next offset
+            $offset = $offset + self::BATCH_SIZE;
+        } while ( $offset < $total );
     }
 
     /**
@@ -56,17 +87,14 @@ class Update_Category_Commission {
      *
      * @return void
      */
-    public function process_batch( $page_number ) {
+    public function process_batch( $offset ) {
         // Get categories for this batch
-        $categories = $this->get_categories_batch( $page_number );
+        $categories = $this->get_categories_batch( $offset );
 
         if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
             foreach ( $categories as $category ) {
                 $this->schedule_cat_item( $category->term_id );
             }
-
-            // Schedule next batch since we have categories in this batch
-            $this->schedule_next_batch( $page_number + 1 );
         }
     }
 
@@ -79,14 +107,23 @@ class Update_Category_Commission {
      *
      * @return void
      */
-    protected function schedule_next_batch( $page_number ) {
+    protected function schedule_next_batch( $offset ) {
         WC()->queue()->add(
             self::PROCESS_BATCH_HOOK,
-            [ $page_number ],
+            [ $offset ],
             'dokan_updater_category_processing'
         );
     }
 
+    /**
+     * Schedule a category item for processing.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $term
+     *
+     * @return void
+     */
     private function schedule_cat_item( $term ) {
         WC()->queue()->add(
             self::PROCESS_ITEM_HOOK,
@@ -104,17 +141,34 @@ class Update_Category_Commission {
      *
      * @return array Array of term objects
      */
-    protected function get_categories_batch( $page_number ) {
+    protected function get_categories_batch( $offset ) {
         $args = [
             'taxonomy'   => 'product_cat',
             'number'     => self::BATCH_SIZE,
             'orderby'    => 'name',
             'order'      => 'ASC',
             'hide_empty' => false,
-            'offset'     => ( $page_number - 1 ) * self::BATCH_SIZE,
+            'offset'     => $offset,
         ];
 
         return get_terms( $args );
+    }
+
+    /**
+     * Get the total number of categories
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return int[]|string|string[]|\WP_Error|\WP_Term[]
+     */
+    protected function category_count() {
+        return get_terms(
+            array(
+				'taxonomy' => 'product_cat',
+				'hide_empty' => false,
+				'fields' => 'count',
+            )
+        );
     }
 
     /**

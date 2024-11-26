@@ -22,6 +22,7 @@ class Update_Product_Commission {
      * @since DOKAN_PRO_SINCE
      */
     const PROCESS_BATCH_HOOK = 'process_product_batch';
+    const PROCESS_BATCH_HOOK_CREATOR = 'process_product_batch_creator';
 
     /**
      *
@@ -30,8 +31,9 @@ class Update_Product_Commission {
     const PROCESS_ITEM_HOOK = 'process_product_item';
 
     public function init_hooks() {
+        add_action( self::PROCESS_BATCH_HOOK_CREATOR, [ $this, 'process_batch_creator' ] );
         add_action( self::PROCESS_BATCH_HOOK, [ $this, 'process_batch' ], 10, 2 );
-        add_action( self::PROCESS_ITEM_HOOK, [ $this, 'process_single_product' ], 10, 1 );
+        add_action( self::PROCESS_ITEM_HOOK, [ $this, 'process_single_product' ] );
     }
 
     /**
@@ -42,15 +44,37 @@ class Update_Product_Commission {
      * @return void
      */
     public function start_processing() {
+        WC()->queue()->add(
+            self::PROCESS_BATCH_HOOK_CREATOR,
+            [],
+            'dokan_updater_product_processing_creator'
+        );
+    }
+
+    /**
+     * Batch queue creator.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function process_batch_creator() {
         // Get total number of products
         $total_products = $this->get_total_products();
+        $total_products = $total_products + 50;
 
         if ( $total_products === 0 ) {
             return;
         }
 
-        // Schedule the first batch
-        $this->schedule_next_batch( 0, $total_products );
+        $offset = 0;
+
+        do {
+            $this->schedule_next_batch( $offset, $total_products );
+
+            // Calculate next offset
+            $offset = $offset + self::BATCH_SIZE;
+        } while ( $offset < $total_products );
     }
 
     /**
@@ -69,14 +93,6 @@ class Update_Product_Commission {
 
         foreach ( $products as $product ) {
             $this->schedule_item( $product->get_id() );
-        }
-
-        // Calculate next offset
-        $next_offset = $offset + self::BATCH_SIZE;
-
-        // If there are more products to process, schedule the next batch
-        if ( $next_offset < $total_products ) {
-            $this->schedule_next_batch( $next_offset, $total_products );
         }
     }
 
@@ -100,6 +116,15 @@ class Update_Product_Commission {
         );
     }
 
+    /**
+     * Schedule a single product for processing.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $item
+     *
+     * @return void
+     */
     private function schedule_item( $item ) {
         WC()->queue()->add(
             self::PROCESS_ITEM_HOOK,
@@ -138,12 +163,13 @@ class Update_Product_Commission {
      */
     protected function get_total_products() {
         $args = [
-            'status' => 'publish',
-            'limit' => -1,
+            'status' => 'any',
+            'limit'  => -1,
             'return' => 'ids',
         ];
 
         $products = wc_get_products( $args );
+
         return count( $products );
     }
 

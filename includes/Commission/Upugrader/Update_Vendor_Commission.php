@@ -7,19 +7,17 @@ use WeDevs\Dokan\Commission\Formula\Flat;
 use WeDevs\Dokan\Commission\Formula\Percentage;
 
 class Update_Vendor_Commission {
-
     /**
-     * The hook name for processing batches
-     *
-     * @since DOKAN_PRO_SINCE
+     * Hook names for processing
      */
+    const PROCESS_BATCH_HOOK_CREATOR = 'process_vendor_batch_creator';
     const PROCESS_BATCH_HOOK = 'process_vendor_batch';
+    const PROCESS_ITEM_HOOK = 'process_vendor_item';
 
     /**
-     *
-     * @since DOKAN_PRO_SINCE
+     * Batch size
      */
-    const PROCESS_ITEM_HOOK = 'process_vendor_item';
+    const BATCH_SIZE = 10;
 
     /**
      * Initialize the processor
@@ -27,8 +25,9 @@ class Update_Vendor_Commission {
      * @since DOKAN_PRO_SINCE
      */
     public function init_hooks() {
-        add_action( self::PROCESS_BATCH_HOOK, [ $this, 'process_batch' ], 10, 1 );
-        add_action( self::PROCESS_ITEM_HOOK, [ $this, 'process_single_vendor' ], 10, 1 );
+        add_action( self::PROCESS_BATCH_HOOK_CREATOR, [ $this, 'process_batch_creator' ], 10, 2 );
+        add_action( self::PROCESS_BATCH_HOOK, [ $this, 'process_batch' ], 10, 2 );
+        add_action( self::PROCESS_ITEM_HOOK, [ $this, 'process_single_vendor' ] );
     }
 
     /**
@@ -39,8 +38,34 @@ class Update_Vendor_Commission {
      * @return void
      */
     public function start_processing() {
-        // Schedule the first batch with page 1
-        $this->schedule_next_batch( 1 );
+        WC()->queue()->add(
+            self::PROCESS_BATCH_HOOK_CREATOR,
+            [],
+            'dokan_updater_vendor_processing_creator'
+        );
+    }
+
+    /**
+     * Batch queue creator.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function process_batch_creator() {
+        $counts      = dokan_get_seller_status_count();
+        $total_items = $counts['total'];
+        $max_pages   = ceil( $total_items / self::BATCH_SIZE );
+        $max_pages = $max_pages + 5;
+
+        for ( $page = 1; $page <= $max_pages; $page++ ) {
+            // Schedule the current page for batch processing
+            WC()->queue()->add(
+                self::PROCESS_BATCH_HOOK,
+                [ $page, $max_pages ],
+                'dokan_updater_vendor_processing'
+            );
+        }
     }
 
     /**
@@ -49,46 +74,18 @@ class Update_Vendor_Commission {
      * @since DOKAN_PRO_SINCE
      *
      * @param int $page_number Current page number
+     * @param int $max_pages   Total number of pages
      *
      * @return void
      */
-    public function process_batch( $page_number ) {
-        // Get vendors for this batch
+    public function process_batch( $page_number, $max_pages ) { // phpcs:ignore
         $vendors = $this->get_vendors_batch( $page_number );
 
         if ( ! empty( $vendors ) ) {
             foreach ( $vendors as $vendor ) {
                 $this->schedule_item( $vendor->get_id() );
             }
-
-            // Schedule next batch since we have vendors in this batch
-            $this->schedule_next_batch( $page_number + 1 );
         }
-    }
-
-    /**
-     * Schedule the next batch of vendors
-     *
-     * @since DOKAN_PRO_SINCE
-     *
-     * @param int $page_number Next page number to process
-     *
-     * @return void
-     */
-    protected function schedule_next_batch( $page_number ) {
-        WC()->queue()->add(
-            self::PROCESS_BATCH_HOOK,
-            [ $page_number ],
-            'dokan_updater_vendor_processing'
-        );
-    }
-
-    private function schedule_item( $item ) {
-        WC()->queue()->add(
-            self::PROCESS_ITEM_HOOK,
-            [ $item ],
-            'dokan_updater_vendor_item_processing'
-        );
     }
 
     /**
@@ -104,44 +101,91 @@ class Update_Vendor_Commission {
         return dokan()->vendor->all(
             [
 				'paged'  => $page_number,
+				'number' => self::BATCH_SIZE,
 			]
         );
     }
 
     /**
-     * Process a single vendor
-     * Customize this method based on what you need to do with each vendor
+     * Schedule an individual vendor for processing
      *
      * @since DOKAN_PRO_SINCE
      *
-     * @param \WeDevs\Dokan\Vendor\Vendor $vendor Vendor object
+     * @param int $vendor_id
+     *
+     * @return void
+     */
+    private function schedule_item( $vendor_id ) {
+        WC()->queue()->add(
+            self::PROCESS_ITEM_HOOK,
+            [ $vendor_id ],
+            'dokan_updater_vendor_item_processing'
+        );
+    }
+
+    /**
+     * Process a single vendor
+     *
+     * @since DOKAN_PRO_SINCE
+     *
+     * @param int $vendor_id Vendor ID
      *
      * @return void
      */
     public function process_single_vendor( $vendor_id ) {
-        $vendor = dokan()->vendor->get( $vendor_id );
-        $commission = $vendor->get_commission_settings();
+        try {
+            $vendor     = dokan()->vendor->get( $vendor_id );
+            $commission = $vendor->get_commission_settings();
 
-        $commission_type_old = $commission->get_type();
-        $commission->set_type( Fixed::SOURCE );
+            $commission_type_old = $commission->get_type();
+            $commission->set_type( Fixed::SOURCE );
 
-        $percentage = $commission->get_percentage();
+            $percentage = $commission->get_percentage();
 
-        if ( Flat::SOURCE === $commission_type_old ) {
-            $commission->set_percentage( 0 );
-            $commission->set_flat( $percentage );
-        } elseif ( Percentage::SOURCE === $commission_type_old ) {
-            $commission->set_percentage( $percentage );
-            $commission->set_flat( 0 );
+            if ( Flat::SOURCE === $commission_type_old ) {
+                $commission->set_percentage( 0 );
+                $commission->set_flat( $percentage );
+            } elseif ( Percentage::SOURCE === $commission_type_old ) {
+                $commission->set_percentage( $percentage );
+                $commission->set_flat( 0 );
+            }
+
+            $vendor->save_commission_settings(
+                [
+					'type'                 => $commission->get_type(),
+					'flat'                 => $commission->get_flat(),
+					'percentage'           => $commission->get_percentage(),
+					'category_commissions' => $commission->get_category_commissions(),
+				]
+            );
+
+            // Log success
+            $this->log_vendor_update( $vendor_id, true );
+        } catch ( \Exception $e ) {
+            // Log error
+            $this->log_vendor_update( $vendor_id, false, $e->getMessage() );
         }
+    }
 
-        $vendor->save_commission_settings(
-            [
-                'type'                 => $commission->get_type(),
-                'flat'                 => $commission->get_flat(),
-                'percentage'           => $commission->get_percentage(),
-                'category_commissions' => $commission->get_category_commissions(),
-            ]
+    /**
+     * Log vendor update status
+     *
+     * @since DOKAN_PRO_SINCE
+     *
+     * @param int    $vendor_id
+     * @param bool   $success
+     * @param string $error_message
+     *
+     * @return void
+     */
+    private function log_vendor_update( $vendor_id, $success, $error_message = '' ) {
+        $log_key = 'dokan_commission_upgrade_vendor_' . $vendor_id;
+        update_option(
+            $log_key, [
+				'status'        => $success ? 'success' : 'error',
+				'error_message' => $error_message,
+				'timestamp'     => current_time( 'mysql' ),
+			]
         );
     }
 
@@ -153,6 +197,7 @@ class Update_Vendor_Commission {
      * @return bool
      */
     public function is_processing() {
-        return WC()->queue()->get_next( self::PROCESS_BATCH_HOOK ) !== null;
+        return WC()->queue()->get_next( self::PROCESS_BATCH_HOOK ) !== null
+                || WC()->queue()->get_next( self::PROCESS_ITEM_HOOK ) !== null;
     }
 }
