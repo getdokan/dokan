@@ -4,6 +4,24 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.13.1',
+        'released' => '2024-11-11',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Compatibility with the Printful Integration Module added',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Improved logic to ensure the `add new category` button only appears when appropriate conditions are met, enhancing user experience.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.13.0',
         'released' => '2024-11-06',
         'changes'  => [
