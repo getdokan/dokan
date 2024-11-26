@@ -46,4 +46,26 @@ export class VendorDashboardPage extends VendorPage {
             await this.multipleElementVisible(vendorDashboard.announcement);
         }
     }
+
+    // vendor dashboard menus render properly
+    async vendorDashboardMenusRenderProperly() {
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.dashboard);
+
+        await this.toBeVisible(vendorDashboard.menus.menus);
+
+        // menus elements are visible
+        if (DOKAN_PRO) {
+            const { inbox, subscription, wepos, ...menus } = vendorDashboard.menus.primary;
+            await this.multipleElementVisible(menus);
+        } else {
+            await this.toBeVisible(vendorDashboard.menus.primary.dashboard);
+            await this.toBeVisible(vendorDashboard.menus.primary.products);
+            await this.toBeVisible(vendorDashboard.menus.primary.orders);
+            await this.toBeVisible(vendorDashboard.menus.primary.withdraw);
+            await this.toBeVisible(vendorDashboard.menus.primary.reverseWithdrawal);
+            await this.toBeVisible(vendorDashboard.menus.primary.settings);
+            await this.toBeVisible(vendorDashboard.menus.primary.visitStore);
+            await this.toBeVisible(vendorDashboard.menus.primary.editAccount);
+        }
+    }
 }

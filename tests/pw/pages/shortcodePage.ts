@@ -41,7 +41,8 @@ export class ShortcodePage extends AdminPage {
         await this.goto(data.subUrls.backend.addNewPage);
         await this.closeBlockEditorModal();
 
-        await this.clearAndType(selector.admin.pages.addTitle, pageTitle);
+        await this.click(selector.admin.pages.addTitle);
+        await this.type(selector.admin.pages.addTitle, pageTitle);
         await this.click(selector.admin.pages.contentPlaceholder);
         await this.clearAndType(selector.admin.pages.addContent, shortcode);
 

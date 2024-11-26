@@ -46,7 +46,7 @@ export class SettingPage extends AdminPage {
 
     async disableVendorSetupWizardSetting() {
         await this.vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, setupWizardEnabled: false, choice: false });
-        await this.toBeVisible(selector.vendor.vDashboard.menus.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.dashboard);
     }
 
     async setStoreTermsAndConditions(status: string) {

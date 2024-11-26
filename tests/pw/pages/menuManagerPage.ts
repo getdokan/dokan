@@ -5,10 +5,17 @@ import { data } from '@utils/testData';
 
 // selectors
 const settingsAdmin = selector.admin.dokan.settings;
+const vendorDashboard = selector.vendor.vDashboard;
 
 export class MenuManagerPage extends BasePage {
     constructor(page: Page) {
         super(page);
+    }
+
+    // navigation
+    async goToMenuManagerSettings() {
+        await this.goIfNotThere(data.subUrls.backend.dokan.settings);
+        await this.click(settingsAdmin.menus.menuManager);
     }
 
     // save settings
@@ -28,7 +35,7 @@ export class MenuManagerPage extends BasePage {
                 await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(0, 144, 255)');
                 //assertion
                 await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-                await this.toBeVisible((selector.vendor.vDashboard.menus as any)[menuLink]);
+                await this.toBeVisible((vendorDashboard.menus.primary as any)[menuLink]);
                 await this.goto((data.subUrls.frontend.vDashboard as any)[menuLink]);
                 await this.notToBeVisible(settingsAdmin.menuManager.noPermissionNotice);
                 break;
@@ -39,7 +46,7 @@ export class MenuManagerPage extends BasePage {
                 await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(215, 218, 221)');
                 //assertion
                 await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-                await this.notToBeVisible((selector.vendor.vDashboard.menus as any)[menuLink]);
+                await this.notToBeVisible((vendorDashboard.menus.primary as any)[menuLink]);
                 await this.goto((data.subUrls.frontend.vDashboard as any)[menuLink]);
                 await this.toBeVisible(settingsAdmin.menuManager.noPermissionNotice);
                 break;
@@ -51,8 +58,7 @@ export class MenuManagerPage extends BasePage {
 
     // rename menu
     async renameMenu(currentMenu: string, newMenu: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.settings);
-        await this.click(settingsAdmin.menus.menuManager);
+        await this.goToMenuManagerSettings();
 
         //rename
         await this.click(settingsAdmin.menuManager.menuEdit(currentMenu));
@@ -62,12 +68,11 @@ export class MenuManagerPage extends BasePage {
         await this.toBeVisible(settingsAdmin.menuManager.menuEdit(newMenu));
 
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        await this.toBeVisible(selector.vendor.vDashboard.menus.menuByText(newMenu));
+        await this.toBeVisible(vendorDashboard.menus.menuByText(newMenu));
     }
 
     async cantRenameMenuBeyondLimit(currentMenu: string, newMenu: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.settings);
-        await this.click(settingsAdmin.menus.menuManager);
+        await this.goToMenuManagerSettings();
 
         //rename
         await this.click(settingsAdmin.menuManager.menuEdit(currentMenu));
@@ -80,16 +85,14 @@ export class MenuManagerPage extends BasePage {
     }
 
     async cantRenameMenu(menu: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.settings);
-        await this.click(settingsAdmin.menus.menuManager);
+        await this.goToMenuManagerSettings();
         await this.disableSwitcher(settingsAdmin.menuManager.menuSwitcher(menu));
         await this.notToBeVisible(settingsAdmin.menuManager.menuEdit(menu));
     }
 
     // dashboard cant be altered
     async cantAlterMenu(menu: string, isSubmenu?: boolean) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.settings);
-        await this.click(settingsAdmin.menus.menuManager);
+        await this.goToMenuManagerSettings();
         if (isSubmenu) await this.click(settingsAdmin.menuManager.settingsSubMenu);
 
         await this.hasClass(settingsAdmin.menuManager.menuGrabber(menu), 'not-sortable');
@@ -98,8 +101,7 @@ export class MenuManagerPage extends BasePage {
 
     // reorderMenu
     async reorderMenu(source: string, target: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.settings);
-        await this.click(settingsAdmin.menus.menuManager);
+        await this.goToMenuManagerSettings();
         const initialSourceIndex = await this.getLocatorIndex(settingsAdmin.menuManager.menuParent, settingsAdmin.menuManager.menuGrabber(source));
         const initialTargetIndex = await this.getLocatorIndex(settingsAdmin.menuManager.menuParent, settingsAdmin.menuManager.menuGrabber(target));
 
@@ -113,8 +115,8 @@ export class MenuManagerPage extends BasePage {
         expect(newTargetIndex).toEqual(initialSourceIndex);
 
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        const sourceIndexDashboard = await this.getLocatorIndex(selector.vendor.vDashboard.menuParent, selector.vendor.vDashboard.menus.menuByText(source) + '/..');
-        const targetIndexDashboard = await this.getLocatorIndex(selector.vendor.vDashboard.menuParent, selector.vendor.vDashboard.menus.menuByText(target) + '/..');
+        const sourceIndexDashboard = await this.getLocatorIndex(vendorDashboard.menuParent, vendorDashboard.menus.menuByText(source) + '/..');
+        const targetIndexDashboard = await this.getLocatorIndex(vendorDashboard.menuParent, vendorDashboard.menus.menuByText(target) + '/..');
 
         expect(sourceIndexDashboard).toEqual(newSourceIndex);
         expect(targetIndexDashboard).toEqual(newTargetIndex);
@@ -122,8 +124,7 @@ export class MenuManagerPage extends BasePage {
 
     // reset menu manager settings
     async resetMenuManagerSettings(menu: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.settings);
-        await this.click(settingsAdmin.menus.menuManager);
+        await this.goToMenuManagerSettings();
 
         // reset
         await this.click(settingsAdmin.menuManager.resetAll);

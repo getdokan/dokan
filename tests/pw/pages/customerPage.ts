@@ -45,6 +45,10 @@ export class CustomerPage extends BasePage {
         await this.goIfNotThere(data.subUrls.frontend.storeListing);
     }
 
+    async gotoSingleStore(storeName: string): Promise<void> {
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
+    }
+
     async goToProductDetails(productName: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
     }
@@ -121,7 +125,7 @@ export class CustomerPage extends BasePage {
 
         // skip vendor setup wizard
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, selector.vendor.vSetup.notRightNow);
-        await this.toBeVisible(selector.vendor.vDashboard.menus.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.dashboard);
     }
 
     // customer add customer details
@@ -228,11 +232,10 @@ export class CustomerPage extends BasePage {
         if (addonIsVisible) await this.selectByNumber(selector.customer.cSingleProduct.productAddon.addOnSelect, 1);
         if (quantity) await this.clearAndType(selector.customer.cSingleProduct.productDetails.quantity, String(quantity));
         await this.clickAndWaitForResponse(data.subUrls.frontend.productCustomerPage, selector.customer.cSingleProduct.productDetails.addToCart);
-        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         if (!quantity) {
-            await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `“${productName}” has been added to your cart.`);
+            await this.toBeVisible(selector.customer.cSingleProduct.productDetails.productAddedSuccessMessage(productName));
         } else {
-            await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `${quantity} × “${productName}” have been added to your cart.`);
+            await this.toBeVisible(selector.customer.cSingleProduct.productDetails.productWithQuantityAddedSuccessMessage(productName, quantity));
         }
     }
 

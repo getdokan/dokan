@@ -178,7 +178,7 @@ $field_class     = dokan_is_seller_dashboard() ? 'dokan-w5' : '';
                         $required_attr = 'required';
                     }
                     ?>
-                    <select <?php echo esc_attr( $required_attr ); ?> <?php echo esc_attr( $disabled ); ?> name="dokan_address[state]" class="dokan-form-control" id="dokan_address_state">
+                    <select <?php echo esc_attr( $required_attr ); ?> <?php echo esc_attr( $disabled ); ?> name="dokan_address[state]" class="dokan-form-control wc-enhanced-select" id="dokan_address_state">
                         <?php dokan_state_dropdown( $states[ $address_country ], $address_state ); ?>
                     </select>
                 <?php } ?>

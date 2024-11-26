@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { VendorPage } from '@pages/vendorPage';
 import { CustomerPage } from '@pages/customerPage';
 import { LoginPage } from '@pages/loginPage';
@@ -105,7 +105,7 @@ export class VendorSubscriptionsPage extends VendorPage {
         await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.subscriptions, adminSubscriptions.bulkActions.applyAction);
     }
 
-    // assign suscription pack to vendor
+    // assign subscription pack to vendor
     async assignSubscriptionPack(sellerId: string, subscriptionPack: string) {
         await this.goto(data.subUrls.backend.dokan.vendorDetailsEdit(sellerId));
         await this.click(vendors.editVendor.assignSubscriptionPackDropdown);

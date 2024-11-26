@@ -98,19 +98,9 @@ test.describe('attribute api test', () => {
         const payload = {
             attributes: [
                 {
-                    all_terms: [
-                        {
-                            label: attributeTerm.name,
-                            slug: attributeTerm.slug,
-                            taxonomy: attribute.slug,
-                            value: attributeTerm.id,
-                        },
-                    ],
                     id: attribute.id,
                     name: attribute.name,
                     options: [attributeTerm.name],
-                    slug: attribute.slug,
-                    taxonomy: true,
                     variation: false,
                     visible: true,
                 },

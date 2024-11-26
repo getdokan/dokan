@@ -56,12 +56,16 @@ test.describe('Settings test', () => {
         await admin.setDokanAppearanceSettings(data.dokanSettings.appearance);
     });
 
+    test('admin can set Dokan menu manager settings', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.setDokanMenuManagerSettings(data.dokanSettings.menuManager.menus);
+    });
+
     test('admin can set Dokan privacy policy settings', { tag: ['@lite', '@admin'] }, async () => {
         const privacyPolicySettings = await dbUtils.getOptionValue(dbData.dokan.optionName.privacyPolicy);
         await admin.setDokanPrivacyPolicySettings({ ...data.dokanSettings.privacyPolicy, privacyPage: privacyPolicySettings.privacyPage });
     });
 
-    test('admin can set Dokan color settings', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can set Dokan colors settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanColorSettings(data.dokanSettings.colors.predefinedPalette.tree);
     });
 
@@ -77,10 +81,19 @@ test.describe('Settings test', () => {
         await admin.setDokanVendorVerificationSettings(data.dokanSettings.vendorVerification);
     });
 
+    test('admin can set Dokan verification sms gateways settings', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.setDokanSMSVerificationGatewaysSettings(data.dokanSettings.verificationSmsGateway);
+    });
+
     test('admin can set Dokan email verification settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanEmailVerificationSettings(data.dokanSettings.emailVerification);
-        // reset  settings
+
+        // reset settings
         await dbUtils.setOptionValue(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
+    });
+
+    test('admin can set Dokan social api settings', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.setDokanSocialApiSettings(data.dokanSettings.socialApi);
     });
 
     test('admin can set Dokan shipping status settings', { tag: ['@pro', '@admin'] }, async () => {
@@ -89,6 +102,10 @@ test.describe('Settings test', () => {
 
     test('admin can set Dokan quote settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanQuoteSettings(data.dokanSettings.quote);
+    });
+
+    test('admin can set Dokan live chat settings', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.setDokanLiveChatSettings(data.dokanSettings.liveChat);
     });
 
     test('admin can set Dokan rma settings', { tag: ['@pro', '@admin'] }, async () => {

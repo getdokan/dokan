@@ -129,6 +129,10 @@ test.describe('EU Compliance test', () => {
         await productsPage.addProductEuCompliance(euProductName, data.product.productInfo.euCompliance);
     });
 
+    test.skip('vendor can remove product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
+        await productsPage.addProductEuCompliance(productName, { ...data.product.productInfo.euCompliance, productUnits: '', basePriceUnits: '', freeShipping: false, regularUnitPrice: '', saleUnitPrice: '', optionalMiniDescription: '' });
+    });
+
     // customer
 
     test('customer can add EU Compliance data on billing address', { tag: ['@pro', '@customer'] }, async () => {

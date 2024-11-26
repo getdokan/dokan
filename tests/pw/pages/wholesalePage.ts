@@ -8,10 +8,10 @@ import { helpers } from '@utils/helpers';
 import { customer } from '@utils/interfaces';
 
 // selectors
-const wholesaleCustomersAdmin = selector.admin.dokan.wholesaleCustomer;
+const wholesaleAdmin = selector.admin.dokan.wholesaleCustomer;
 const userInfo = selector.admin.users.userInfo;
 
-export class WholesaleCustomersPage extends AdminPage {
+export class WholesalePage extends AdminPage {
     constructor(page: Page) {
         super(page);
     }
@@ -26,35 +26,35 @@ export class WholesaleCustomersPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.wholeSaleCustomer);
 
         // wholesale customer text is visible
-        await this.toBeVisible(wholesaleCustomersAdmin.wholesaleCustomerText);
+        await this.toBeVisible(wholesaleAdmin.wholesaleCustomerText);
 
         // nav tabs are visible
-        await this.multipleElementVisible(wholesaleCustomersAdmin.navTabs);
+        await this.multipleElementVisible(wholesaleAdmin.navTabs);
 
         // bulk action elements are visible
-        await this.multipleElementVisible(wholesaleCustomersAdmin.bulkActions);
+        await this.multipleElementVisible(wholesaleAdmin.bulkActions);
 
         // search wholesale customer input is visible
-        await this.toBeVisible(wholesaleCustomersAdmin.search);
+        await this.toBeVisible(wholesaleAdmin.search);
 
         // wholesale customer table elements are visible
-        await this.multipleElementVisible(wholesaleCustomersAdmin.table);
+        await this.multipleElementVisible(wholesaleAdmin.table);
     }
 
     // search wholesale customer
     async searchWholesaleCustomer(wholesaleCustomer: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.wholeSaleCustomer);
-        await this.clearInputField(wholesaleCustomersAdmin.search);
-        await this.typeAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleCustomersAdmin.search, wholesaleCustomer);
-        await this.toHaveCount(wholesaleCustomersAdmin.numberOfRows, 1);
-        await this.toBeVisible(wholesaleCustomersAdmin.wholesaleCustomerCell(wholesaleCustomer));
+        await this.clearInputField(wholesaleAdmin.search);
+        await this.typeAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleAdmin.search, wholesaleCustomer);
+        await this.toHaveCount(wholesaleAdmin.numberOfRows, 1);
+        await this.toBeVisible(wholesaleAdmin.wholesaleCustomerCell(wholesaleCustomer));
     }
 
     // edit wholesale customer
     async editWholesaleCustomer(wholesaleCustomer: customer) {
         await this.searchWholesaleCustomer(wholesaleCustomer.username);
-        await this.hover(wholesaleCustomersAdmin.wholesaleCustomerCell(wholesaleCustomer.username));
-        await this.clickAndWaitForLoadState(wholesaleCustomersAdmin.wholesaleCustomerEdit(wholesaleCustomer.username));
+        await this.hover(wholesaleAdmin.wholesaleCustomerCell(wholesaleCustomer.username));
+        await this.clickAndWaitForLoadState(wholesaleAdmin.wholesaleCustomerEdit(wholesaleCustomer.username));
 
         // basic info
         await this.selectByValue(userInfo.role, wholesaleCustomer.customerInfo.role);
@@ -111,10 +111,9 @@ export class WholesaleCustomersPage extends AdminPage {
     // view wholesale customer orders
     async viewWholesaleCustomerOrders(wholesaleCustomer: string) {
         await this.searchWholesaleCustomer(wholesaleCustomer);
-        await this.hover(wholesaleCustomersAdmin.wholesaleCustomerCell(wholesaleCustomer));
-        await this.clickAndWaitForLoadState(wholesaleCustomersAdmin.wholesaleCustomerOrders(wholesaleCustomer));
+        await this.hover(wholesaleAdmin.wholesaleCustomerCell(wholesaleCustomer));
+        await this.clickAndWaitForLoadState(wholesaleAdmin.wholesaleCustomerOrders(wholesaleCustomer));
         await this.notToBeVisible(selector.admin.wooCommerce.orders.noRowsFound);
-        
     }
 
     // update wholesale customer
@@ -123,16 +122,16 @@ export class WholesaleCustomersPage extends AdminPage {
 
         switch (action) {
             case 'enable':
-                await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleCustomersAdmin.statusSlider(wholesaleCustomer));
+                await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleAdmin.statusSlider(wholesaleCustomer));
                 break;
 
             case 'disable':
-                await this.disableSwitcherAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleCustomersAdmin.statusSlider(wholesaleCustomer));
+                await this.disableSwitcherAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleAdmin.statusSlider(wholesaleCustomer));
                 break;
 
             case 'delete':
-                await this.hover(wholesaleCustomersAdmin.wholesaleCustomerCell(wholesaleCustomer));
-                await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleCustomersAdmin.wholesaleCustomerRemove(wholesaleCustomer));
+                await this.hover(wholesaleAdmin.wholesaleCustomerCell(wholesaleCustomer));
+                await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleAdmin.wholesaleCustomerRemove(wholesaleCustomer));
                 break;
 
             default:
@@ -149,11 +148,11 @@ export class WholesaleCustomersPage extends AdminPage {
         }
 
         // ensure row exists
-        await this.notToBeVisible(wholesaleCustomersAdmin.noRowsFound);
+        await this.notToBeVisible(wholesaleAdmin.noRowsFound);
 
-        await this.click(wholesaleCustomersAdmin.bulkActions.selectAll);
-        await this.selectByValue(wholesaleCustomersAdmin.bulkActions.selectAction, action);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleCustomersAdmin.bulkActions.applyAction);
+        await this.click(wholesaleAdmin.bulkActions.selectAll);
+        await this.selectByValue(wholesaleAdmin.bulkActions.selectAction, action);
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleAdmin.bulkActions.applyAction);
     }
 
     // customer request to become wholesale customer
@@ -180,13 +179,25 @@ export class WholesaleCustomersPage extends AdminPage {
     }
 
     // view wholesale price
-    async viewWholeSalePrice(productName: string) {
+    async viewWholeSalePrice(productName: string, canView = true, productDetails = true) {
+        await this.goto(data.subUrls.frontend.shop); // to ensure db changes are reflected
         await this.customerPage.searchProduct(productName);
-        await this.toBeVisible(selector.customer.cWholesale.shop.wholesalePrice);
-        await this.toBeVisible(selector.customer.cWholesale.shop.wholesaleAmount);
+        if (canView) {
+            await this.toBeVisible(selector.customer.cWholesale.shop.wholesalePrice);
+            await this.toBeVisible(selector.customer.cWholesale.shop.wholesaleAmount);
+        } else {
+            await this.notToBeVisible(selector.customer.cWholesale.shop.wholesalePrice);
+            await this.notToBeVisible(selector.customer.cWholesale.shop.wholesaleAmount);
+        }
 
-        await this.customerPage.goToProductDetails(productName);
-        await this.toBeVisible(selector.customer.cWholesale.singleProductDetails.wholesaleInfo);
+        if (productDetails) {
+            await this.customerPage.goToProductDetails(productName);
+            if (canView) {
+                await this.toBeVisible(selector.customer.cWholesale.singleProductDetails.wholesaleInfo);
+            } else {
+                await this.notToBeVisible(selector.customer.cWholesale.singleProductDetails.wholesaleInfo);
+            }
+        }
     }
 
     // assert wholesale price

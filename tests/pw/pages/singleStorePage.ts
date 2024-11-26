@@ -19,7 +19,7 @@ export class SingleStorePage extends CustomerPage {
     // single store render properly
     async singleStoreRenderProperly(storeName: string) {
         // todo: update for other layouts
-        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.gotoSingleStore(storeName);
 
         // store profile elements are visible
         const { verifiedIcon, verifiedIconByIcon, euComplianceData, ...storeProfile } = singleStoreCustomer.storeProfile;
@@ -30,7 +30,7 @@ export class SingleStorePage extends CustomerPage {
             await this.toBeVisible(singleStoreCustomer.storeTabs.products);
             // await this.toBeVisible(singleStoreCustomer.storeTabs.toc); // todo: need vendor toc
         } else {
-            const { toc, ...storeTabs } = singleStoreCustomer.storeTabs;
+            const { toc, chatNow, ...storeTabs } = singleStoreCustomer.storeTabs;
             await this.multipleElementVisible(storeTabs);
 
             // eu compliance data is visible
@@ -59,13 +59,14 @@ export class SingleStorePage extends CustomerPage {
 
     // sort products on single store
     async singleStoreSortProducts(storeName: string, sortBy: string) {
-        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
-        await this.selectByValueAndWaitForResponse(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), singleStoreCustomer.sortBy, sortBy);
+        await this.gotoSingleStore(storeName);
+        await this.selectByValueAndWaitForResponseAndLoadState(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), singleStoreCustomer.sortBy, sortBy);
+        await this.notToHaveCount(singleStoreCustomer.productCard.card, 0);
     }
 
     // search product on single store
     async singleStoreSearchProduct(storeName: string, productName: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.gotoSingleStore(storeName);
         await this.clearAndType(singleStoreCustomer.search.input, productName);
         await this.clickAndWaitForResponse(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), singleStoreCustomer.search.button);
         await this.toContainText(singleStoreCustomer.productCard.productTitle, productName);
@@ -73,7 +74,7 @@ export class SingleStorePage extends CustomerPage {
 
     // store open close
     async storeOpenCloseTime(storeName: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.gotoSingleStore(storeName);
         await this.hover(singleStoreCustomer.storeTime.storeTimeDropDown);
 
         await this.toBeVisible(singleStoreCustomer.storeTime.storeTimeDiv);
@@ -85,19 +86,16 @@ export class SingleStorePage extends CustomerPage {
 
     // store terms and condition
     async storeTermsAndCondition(storeName: string, toc: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.gotoSingleStore(storeName);
         await this.clickAndWaitForResponse(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), singleStoreCustomer.storeTabs.toc);
         await this.toContainText(singleStoreCustomer.toc.tocContent, toc);
     }
 
     // store share
     async storeShare(storeName: string, site: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.gotoSingleStore(storeName);
         await this.click(singleStoreCustomer.storeTabs.share);
-        // ensure page suppose to open on new tab
-        await this.toHaveAttribute(singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms], 'target', '_blank');
-        // force page to open on the same tab
-        await this.setAttributeValue(singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms], 'target', '_self');
+        await this.forceLinkToSameTab(singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms]);
         await this.clickAndWaitForUrl(new RegExp('.*' + site + '.*'), singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms]);
     }
 }
