@@ -50,6 +50,7 @@ class Manager {
         add_filter( 'dokan_admin_notices', [ $this, 'show_permalink_setting_notice' ] );
         add_filter( 'dokan_admin_notices', [ $this, 'show_admin_logo_update_notice' ] );
         add_action( 'wp_ajax_dismiss_dokan_admin_logo_update_notice', [ $this, 'dismiss_dokan_admin_logo_update_notice' ] );
+        add_filter( 'dokan_admin_notices', [ $this, 'show_admin_commission_notice' ] );
     }
 
     /**
@@ -188,5 +189,24 @@ class Manager {
         // Dismiss dokan admin logo notice.
         update_option( $option_name, 'yes' );
         wp_send_json_success();
+    }
+
+    public function show_admin_commission_notice( $notices ) {
+        if (
+            version_compare( DOKAN_PLUGIN_VERSION, '3.14.0', '>=' ) &&
+            defined( 'DOKAN_PRO_PLUGIN_VERSION' ) &&
+            version_compare( DOKAN_PRO_PLUGIN_VERSION, '3.14.0', '<' )
+        ) {
+            $notices[] = [
+                'priority'          => 1,
+                'show_close_button' => false,
+                'type'              => 'alert',
+                'scope'             => 'global',
+                'title'             => __( 'Upgrade to Dokan Pro Latest Version', 'dokan-lite' ),
+                'description'       => __( 'Your Dokan Lite version is updated to the latest version but you are still using the Dokan pro old version. Upgrade to Dokan Pro Latest version to enable the new features.', 'dokan-lite' ),
+            ];
+        }
+
+        return $notices;
     }
 }
