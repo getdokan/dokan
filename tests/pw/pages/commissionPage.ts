@@ -22,26 +22,26 @@ export class CommissionPage extends AdminPage {
             // await this.selectByValue(setupWizardAdmin.commissionType, commission.commissionType);
 
             await this.clearAndType(setupWizardAdmin.percentage, commission.commissionPercentage);
-            await this.wait(0.5); //todo: need to resolve
+            await this.wait(1); //todo: need to resolve
             await this.clearAndType(setupWizardAdmin.fixed, commission.commissionFixed);
-            await this.wait(0.5);
+            await this.wait(1);
         } else {
             // await this.selectByValueAndWaitForResponse(data.subUrls.api.dokan.multistepCategories, setupWizardAdmin.commissionType, commission.commissionType);
 
             if (commission.commissionCategory.allCategory) {
                 await this.clearAndType(setupWizardAdmin.categoryPercentage(commission.commissionCategory.category), commission.commissionPercentage);
-                await this.wait(0.5);
+                await this.wait(1);
                 await this.clearAndType(setupWizardAdmin.categoryFixed(commission.commissionCategory.category), commission.commissionFixed);
-                await this.wait(0.5);
+                await this.wait(1);
             } else {
                 const categoryExpanded = await this.isVisible(setupWizardAdmin.expandedCategories);
                 if (!categoryExpanded) {
                     await this.click(setupWizardAdmin.expandCategories);
                 }
                 await this.clearAndType(setupWizardAdmin.categoryPercentageById(commission.commissionCategory.category), commission.commissionPercentage);
-                await this.wait(0.5);
+                await this.wait(1);
                 await this.clearAndType(setupWizardAdmin.categoryFixedById(commission.commissionCategory.category), commission.commissionFixed);
-                await this.wait(0.5);
+                await this.wait(1);
             }
         }
     }
@@ -124,7 +124,7 @@ export class CommissionPage extends AdminPage {
 
     // set commission for vendor
     async setCommissionForVendor(sellerId: string, commission: commission) {
-        await this.goto(data.subUrls.backend.dokan.vendorDetailsEdit(sellerId));
+        await this.gotoUntilNetworkidle(data.subUrls.backend.dokan.vendorDetailsEdit(sellerId));
 
         await this.selectByValue(vendors.editVendor.commissionType, commission.commissionType);
 
@@ -141,14 +141,14 @@ export class CommissionPage extends AdminPage {
 
     // set commission to product
     async setCommissionForProduct(productId: string, commission: commission) {
-        await this.goto(data.subUrls.backend.wc.productDetails(productId));
+        await this.gotoUntilNetworkidle(data.subUrls.backend.wc.productDetails(productId));
 
         // add commission
         await this.click(productsAdmin.product.subMenus.advanced);
         await this.clearAndType(productsAdmin.product.advanced.commissionPercentage, commission.commissionPercentage);
-        await this.wait(0.5);
+        await this.wait(1);
         await this.clearAndType(productsAdmin.product.advanced.commissionFixed, commission.commissionFixed);
-        await this.wait(0.5);
+        await this.wait(1);
 
         // update product
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, productsAdmin.product.publish);
