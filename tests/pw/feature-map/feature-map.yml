@@ -684,7 +684,7 @@
           vendor can't bid own product: true
           vendor can add auction product: true
           vendor can view auction product: true
-          vendor can duplicate auction product: false
+          vendor can duplicate auction product: true
           vendor can permanently delete auction product: true
           vendor can edit auction product: true
           vendor can update auction product title: true
@@ -760,13 +760,28 @@
       admin:
           admin can enable delivery time module: false
           admin can disable delivery time module: false
+          admin can allow vendor to override delivery time settings: false
+          admin can set delivery support options: false
+          admin can set delivery date label: false
+          admin can set delivery blocked buffer: false
+          admin can set delivery time slot: false
+          admin can set delivery order per slot: false
+          admin can set delivery box info: false
+          admin can require delivery date and time: false
+          admin can set delivery days: false
           admin can update delivery time on order details: false
       vendor:
           vendor can view delivery time menu page: true
+          vendor can change view style of delivery time calendar: true
+          vendor can filter delivery time: true
+          vendor can view delivery time orders on calendar: false
           vendor can view delivery time settings menu page: true
           vendor can set delivery time settings: true
-          vendor can filter delivery time: true
-          vendor can change view style of delivery time calendar: true
+          vendor can set delivery support options: false
+          vendor can set delivery blocked buffer: false
+          vendor can set delivery time slot: false
+          vendor can set delivery order per slot: false
+          vendor can set delivery days: false
           vendor can update delivery time on order details: false
       customer:
           customer can buy product with delivery time: true
