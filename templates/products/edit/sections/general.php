@@ -330,9 +330,7 @@ if ( is_wp_error( $section ) ) {
                         <a class="close dokan-remove-feat-image">&times;</a>
                         <?php if ( $feat_image_id ) : ?>
                             <?php
-                            // todo: need to change this with $product->get_image()
-                            echo wp_get_attachment_image(
-                                $feat_image_id,
+                            echo $product->get_image(
                                 apply_filters( 'single_product_large_thumbnail_size', 'shop_single' ),
                                 [
                                     'height' => '',
