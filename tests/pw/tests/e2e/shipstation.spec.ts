@@ -1,5 +1,5 @@
 import { test, Page } from '@playwright/test';
-import { ShipStationPage } from '@pages/shipPage';
+import { ShipStationPage } from '@pages/shipStationPage';
 import { data } from '@utils/testData';
 
 test.describe('ShipStation test', () => {
