@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 
-const { DOKAN_PRO, PRODUCT_ID } = process.env;
+const { PRODUCT_ID } = process.env;
 
 test.describe('Commission test', () => {
     let admin: CommissionPage;

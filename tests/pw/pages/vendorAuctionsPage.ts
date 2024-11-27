@@ -149,6 +149,16 @@ export class AuctionsPage extends VendorPage {
         await this.toBeVisible(auctionProductsVendor.productCell(productName));
     }
 
+    // duplicate auction product
+    async duplicateAuctionProduct(productName: string) {
+        await this.searchAuctionProduct(productName);
+        await this.removeAttribute(auctionProductsVendor.rowActions(productName), 'class'); // forcing the row actions to be visible, to avoid flakiness
+        await this.hover(auctionProductsVendor.productCell(productName));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auction, auctionProductsVendor.duplicate(productName), 302);
+        await this.toBeVisible(auctionProductsVendor.duplicateSuccessMessage);
+        await this.toBeVisible(auctionProductsVendor.productCell(productName + ' (Copy)'));
+    }
+
     // delete auction product
     async deleteAuctionProduct(productName: string) {
         await this.searchAuctionProduct(productName);

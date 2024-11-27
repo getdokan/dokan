@@ -223,14 +223,14 @@ export const selector = {
 
             // dokan promotion
             promotion: {
-                promotion: '.dokan-notice-slides .dokan-promotion',
-                message: '.dokan-promotion .dokan-message',
+                promotion: 'div.dokan-notice-slides div.dokan-promotion',
+                message: 'div.dokan-promotion div.dokan-message',
             },
 
             // dokan notice
             notice: {
-                noticeDiv: '.dokan-admin-notices',
-                noticeDiv1: '.dokan-admin-notice.dokan-alert',
+                noticeDiv: 'div.dokan-admin-notices',
+                noticeDiv1: '//div[@class="dokan-admin-notices"]//div[contains(@class,"dokan-admin-notice")and not(contains(@class,"dokan-promotion"))]',
                 closeNotice: '.close-notice',
                 slider: '.slide-notice',
                 sliderPrev: '.slide-notice .prev',
@@ -5708,6 +5708,8 @@ export const selector = {
             edit: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="edit"]`,
             permanentlyDelete: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="delete"]`,
             view: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="view"]`,
+            duplicate: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="duplicate"]`,
+            duplicateSuccessMessage: '//div[contains(@class,"dokan-alert dokan-alert-success")]//strong[normalize-space(text())="Product successfully duplicated"]',
 
             confirmDelete: '.swal2-confirm',
             cancelDelete: '.swal2-cancel',
