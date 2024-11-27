@@ -220,13 +220,13 @@ export const dbData = {
 
         appearanceSettings: {
             appearance_options: '',
-            store_map: 'on',
-            map_api_source: 'google_maps',
+            store_map: 'on', // 'on', 'off'
+            map_api_source: 'google_maps', // google_maps, mapbox
             gmap_api_key: GMAP ?? '',
             mapbox_access_token: MAPBOX ?? '',
             recaptcha_validation_label: '',
             contact_seller: 'on',
-            store_header_template: 'default',
+            store_header_template: 'default', // default, layout1, layout2, layout3
             store_banner_width: '625',
             store_banner_height: '300',
             store_open_close: 'on',

@@ -294,10 +294,26 @@
 
 - page: 'Store Appearance'
   features:
-      customer:
-          store map is disabled on store sidebar [lite]: true
-          store open-close time is disabled store sidebar [lite]: true
-          vendor info is disabled on single store page [lite]: false
+      admin:
+          admin can enable store map on store sidebar [lite]: true
+          admin can disable store map on store sidebar [lite]: true
+          admin can set map api source (Google Maps) [lite]: true
+          admin can set map api source (Mapbox) [lite]: true
+          admin can set Google reCAPTCHA Validation [lite]: false
+          admin can enable store contact form on store sidebar [lite]: true
+          admin can disable store contact form on store sidebar [lite]: true
+          admin can set store header template (default) [lite]: true
+          admin can set store header template (layout1) [lite]: true
+          admin can set store header template (layout2) [lite]: true
+          admin can set store header template (layout3) [lite]: true
+          admin can enable store open-close time on store sidebar [lite]: true
+          admin can disable store open-close time on store sidebar [lite]: true
+          admin can enable store sidebar from theme [lite]: false
+          admin can disable store sidebar from theme [lite]: false
+          admin can enable vendor info on single store page [lite]: true
+          admin can disable vendor info on single store page [lite]: true
+          admin can enable dokan fontawesome library [lite]: false
+          admin can disable dokan fontawesome library [lite]: false
 
 - page: 'Store List'
   features:
@@ -651,7 +667,7 @@
           admin can refresh license: true
           admin can deactivate license: true
 
-- page: 'Feature lock'
+- page: 'Feature Lock'
   features:
       admin:
           admin can view license expiration notice: false

@@ -6022,6 +6022,7 @@ export const selector = {
 
             // banner and profile picture
             banner: '.dokan-banner .dokan-banner-drag',
+            bannerHelpText: 'div.dokan-banner p.help-block',
             bannerImage: '//div[@class="image-wrap"]//img[@class="dokan-banner-img"]',
             uploadedBanner: 'div#dokan-profile-picture-wrapper div.gravatar-wrap',
             removeBannerImage: '.close.dokan-remove-banner-image',
@@ -7375,25 +7376,24 @@ export const selector = {
 
             // Store Profile Summary
             storeProfile: {
+                storeProfileInfoBox: 'div.profile-info-box',
                 storeProfileSummary: '.dokan-single-store .profile-info-summery',
 
-                storeBanner: '.profile-info-img',
+                storeBanner: 'div.profile-info-img',
 
-                profileInfoHead: '.profile-info-head',
-                profileImage: '.profile-img.profile-img-circle',
-                storeName: '.profile-info-head .store-name',
+                profileInfoHead: 'div.profile-info-head',
+                profileImage: 'div.profile-img.profile-img-circle',
+                storeName: 'div.profile-info-head h1.store-name',
                 verifiedIcon: '//div[@data-original-title="Verified"]',
                 verifiedIconByIcon: (icon: string) => `//div[@data-original-title="Verified"]//i[@class="${icon}"]`,
 
-                profileInfo: '.profile-info',
-                storeInfo: '.dokan-store-info',
-                storeAddress: '.dokan-store-address',
-                storePhone: '.dokan-store-phone',
-                storeEmail: '.dokan-store-email',
-                // storeRating: '.dokan-store-rating',
-                // storeOpenClose: '.dokan-store-open-close',
-                storeSocial: '.store-social',
-
+                profileInfo: 'div.profile-info',
+                storeInfo: 'ul.dokan-store-info',
+                storeAddress: 'li.dokan-store-address',
+                storePhone: 'li.dokan-store-phone',
+                storeEmail: 'li.dokan-store-email',
+                // storeRating: 'li.dokan-store-rating',
+                // storeOpenClose: 'li.dokan-store-open-close',
                 euComplianceData: {
                     companyName: 'li.dokan-company-name',
                     companyId: 'li.dokan-company-id-number',
@@ -7401,6 +7401,8 @@ export const selector = {
                     bankName: 'li.dokan-bank-name',
                     bankIban: 'li.dokan-bank-iban',
                 },
+
+                storeSocial: 'ul.store-social',
             },
 
             // Store open close time
@@ -7533,7 +7535,13 @@ export const selector = {
                 privacyPolicy: 'div.dokan-privacy-policy-text p',
                 privacyPolicyLink: 'a.dokan-privacy-policy-link',
             },
-            storeMap: 'div#dokan-store-location',
+
+            storeMap: {
+                storeMap: 'div#dokan-store-location',
+                googleMap: '//div[@id="dokan-store-location"]//a[contains(@href,"https://maps.google.com/")]',
+                mapbox: '//div[@id="dokan-store-location"]//a[@href="https://www.mapbox.com/"]',
+            },
+
             storeOpenCloseTime: 'div.dokan-store-open-close',
         },
 

@@ -637,6 +637,12 @@ export const data = {
         reviewMessage: () => faker.string.nanoid(10),
     },
 
+    // store banner
+    storeBanner: {
+        width: '625',
+        height: '300',
+    },
+
     // store list
     storeList: {
         sort: 'most_recent',
