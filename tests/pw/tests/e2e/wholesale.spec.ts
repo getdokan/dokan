@@ -149,7 +149,7 @@ test.describe('Wholesale test (customer)', () => {
         await cPage.close();
     });
 
-    test('All users can see wholesale price', { tag: ['@pro', '@customer'] }, async () => {
+    test('all users can see wholesale price', { tag: ['@pro', '@customer'] }, async () => {
         test.skip(true, '@todo fix this test');
         await admin.viewWholeSalePrice(productName);
     });

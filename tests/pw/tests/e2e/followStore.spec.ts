@@ -64,6 +64,8 @@ test.describe('Follow stores functionality test', () => {
         await customer.followUnfollowStore(data.predefined.vendorStores.vendor2, 'Follow', data.predefined.vendorStores.followFromSingleStore);
     });
 
+    // todo: parameterize above tests also update feature-map
+
     //vendor
 
     test('vendor can view followers menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {

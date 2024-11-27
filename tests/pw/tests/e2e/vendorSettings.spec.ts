@@ -35,6 +35,7 @@ test.describe('Vendor settings test', () => {
     });
 
     test('vendor can view ShipStation settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+        test.skip(true, 'pr not merged yet');
         await vendor.vendorShipStationSettingsRenderProperly();
     });
 
@@ -119,6 +120,7 @@ test.describe('Vendor settings test', () => {
     });
 
     test('vendor can set ShipStation settings', { tag: ['@pro', '@vendor'] }, async () => {
+        test.skip(true, 'pr not merged yet');
         await vendor.setShipStation(data.vendor.shipStation);
     });
 
