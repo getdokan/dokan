@@ -651,6 +651,15 @@
           admin can refresh license: true
           admin can deactivate license: true
 
+- page: 'Feature lock'
+  features:
+      admin:
+          admin can view license expiration notice: false
+          admin can view expired license notice: false
+          admin can view license renewal prompt after license expired: false
+          admin can't enable module after license expired: false
+          admin can't alter pro settings after license expired: false
+
 - page: 'Modules'
   features:
       admin:
@@ -1102,7 +1111,8 @@
       admin:
           admin can enable Rank Math SEO module: false
           admin can disable Rank Math SEO module: false
-          no test is written for rank math seo module: false
+      vendor:
+          vendor can view rank math seo options on product edit page: false
 
 - page: 'Razorpay'
   features:
@@ -1140,8 +1150,15 @@
 - page: 'Request for Quotation'
   features:
       admin:
-          admin can enable RFQ  module: false
+          admin can enable RFQ module: false
           admin can disable RFQ module: false
+          admin can add RFQ shortcode: false
+          admin can enable quote for out of stock products: false
+          admin can enable ajax Add to quote: false
+          admin can set quote redirect settings: false
+          admin can set offered price: false
+          admin can enable customer can convert quote to order: false
+          admin can enable quote converter display: false
       quote rules:
           admin can view quote rules menu page: true
           admin can add quote rule: true
@@ -1154,25 +1171,44 @@
           admin can view quotes menu page: true
           admin can add quote: true
           admin can edit quote: true
+          admin can update quote: false
           admin can trash quote: true
           admin can restore quote: true
           admin can permanently delete quote: true
           admin can approve quote: true
+          admin can reject quote: false
+          admin can reopen quote: false
           admin can convert quote to order: true
           admin can perform quote bulk actions: true
+          admin can filter quote requests by status: false
+          admin can filter quote requests by date: false
+          admin can filter quote requests by customer: false
+          admin can reset quote filter: false
+          admin can add quote shipping cost on order: false
+          admin can remove quote shipping cost on order: false
       vendor:
           vendor can view request quotes menu page: true
           vendor can view request quote details: true
+          vendor can search quote: false
+          vendor can filter quote by status: false
           vendor can update quote request: true
           vendor can approve quote request: true
+          vendor can reject quote request: false
+          vendor can reopen quote request: false
+          vendor can delete quote request: false
           vendor can convert quote request to order: true
+          vendor can enable rfq when catalog mode is enabled: false
       customer:
           customer can view request for quote menu page: true
           customer can view requested quote page: true
           customer can view requested quote details: true
+          customer can clear quote cart: false
           customer can update quote request: true
+          customer can accept quote request: false
+          customer can cancel quote request: false
           customer can pay for order converted from quote request: true
           customer can quote product: true
+          customer can filter quotes by status: false
       guest:
           guest customer can quote product: true
 
@@ -1191,6 +1227,7 @@
       customer:
           customer can view return request menu page: true
           customer can request warranty: true
+          customer can request warranty (replace): false
           customer can send rma message: true
 
 - page: 'Seller Badge'
@@ -1215,6 +1252,15 @@
           vendor can view badge acquired congratulation popup message action: true
           vendor can search seller badge: true
           vendor can filter seller badges: true
+
+- page: 'Seller Vacation'
+  features:
+      admin:
+          admin can enable seller vacation module: false
+          admin can disable seller vacation module: false
+      vendor:
+          vendor can add vacation (instant): false
+          vendor can add vacation (datewise): false
 
 - page: 'ShipStation Integration'
   features:
@@ -1357,6 +1403,9 @@
       vendor:
           vendor can add table rate shipping: true
           vendor can add distance rate shipping: true
+      customer:
+          customer can purchase product using table rate shipping: false
+          customer can purchase product using distance rate shipping: false
 
 - page: 'Vendor Analytics'
   features:
