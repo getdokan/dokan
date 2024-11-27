@@ -108,10 +108,10 @@
                     />
                 </div>
 
-                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                <p v-if="hasError( fieldData.name )" class="dokan-error pt-0 pl-5 pb-5 m-0">
                     {{ getError( fieldData.label ) }}
                 </p>
-                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error pl-5 pb-5">
                     {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
             </div>
