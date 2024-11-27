@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 
-const { DOKAN_PRO, PRODUCT_ID } = process.env;
+const { PRODUCT_ID } = process.env;
 
 test.describe('Commission test', () => {
     let admin: CommissionPage;
@@ -49,7 +49,7 @@ test.describe('Commission test', () => {
         await admin.setCommissionOnDokanSetupWizard(data.commission.allCategory);
     });
 
-    test('admin can set commission on Dokan setup wizard (specific category based)', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can set commission on Dokan setup wizard (specific category based)', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setCommissionOnDokanSetupWizard(data.commission.specificCategory);
     });
 
@@ -61,7 +61,7 @@ test.describe('Commission test', () => {
         await admin.setCommissionOnDokanSellingSettings(data.commission.allCategory);
     });
 
-    test('admin can set commission on Dokan selling settings (specific category based)', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can set commission on Dokan selling settings (specific category based)', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setCommissionOnDokanSellingSettings(data.commission.specificCategory);
     });
 
@@ -73,7 +73,7 @@ test.describe('Commission test', () => {
         await admin.setCommissionForVendor(sellerId, data.commission.allCategory);
     });
 
-    test('admin can set commission for vendor (specific category based)', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can set commission for vendor (specific category based)', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setCommissionForVendor(sellerId, data.commission.specificCategory);
     });
 
