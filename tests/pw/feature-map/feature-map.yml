@@ -792,7 +792,6 @@
       admin:
           admin can enable Elementor module: false
           admin can disable Elementor module: false
-          no test is written for elementor module (out of scope): false
 
 - page: 'EU Compliance Fields'
   features:
@@ -923,9 +922,18 @@
 - page: 'MangoPay'
   features:
       admin:
-          admin can enable Mangopay module: false
-          admin can disable Mangopay module: false
-          admin can add Mangopay payment method: true
+          admin can enable MangoPay module: false
+          admin can disable MangoPay module: false
+          admin can add MangoPay payment method: true
+          admin can remove MangoPay payment method: false
+          admin can view MangoPay notes on order details: false
+          admin can refund order using MangoPay payment method: false
+      vendor:
+          vendor can add MangoPay payment method: false
+          vendor can remove MangoPay payment method: false
+          admin can refund order using MangoPay payment method: false
+      customer:
+          customer can buy product using MangoPay payment method: false
 
 - page: 'Min Max Quantities'
   features:
@@ -935,13 +943,25 @@
       vendor:
           vendor can add product min-max options: true
           vendor can set min-max settings: true
+      customer:
+          customer can buy product following min-max quantities rule: false
+          customer can buy product following min-max amount rule: false
 
 - page: 'PayPal Marketplace'
   features:
       admin:
           admin can enable PayPal Marketplace module: false
-          admin can disable PayPal Marketplace  module: false
-          admin can add Paypal Marketplace payment method: true
+          admin can disable PayPal Marketplace module: false
+          admin can add PayPal Marketplace payment method: true
+          admin can remove PayPal Marketplace payment method: false
+          admin can view PayPal Marketplace notes on order details: false
+          admin can refund order using PayPal Marketplace payment method: false
+      vendor:
+          vendor can add PayPal Marketplace payment method: false
+          vendor can remove PayPal Marketplace payment method: false
+          admin can refund order using PayPal Marketplace payment method: false
+      customer:
+          customer can buy product using PayPal Marketplace payment method: false
 
 - page: 'Printful'
   features:
@@ -974,6 +994,7 @@
           vendor can export global product addon field: true
           vendor can remove product addon field: true
           vendor can add product addon: true
+          vendor can update product addon: false
           vendor can import product addon: true
           vendor can export product addon: true
           vendor can remove product addon: true
@@ -1089,6 +1110,15 @@
           admin can enable Razorpay module: false
           admin can disable Razorpay module: false
           admin can add Razorpay payment method: true
+          admin can remove Razorpay payment method: false
+          admin can view Razorpay notes on order details: false
+          admin can refund order using Razorpay payment method: false
+      vendor:
+          vendor can add Razorpay payment method: false
+          vendor can remove Razorpay payment method: false
+          admin can refund order using Razorpay payment method: false
+      customer:
+          customer can buy product using Razorpay payment method: false
 
 - page: 'Report Abuse'
   features:
@@ -1288,16 +1318,34 @@
 - page: 'Stripe Connect'
   features:
       admin:
-          admin can enable stripe connect module: false
-          admin can disable stripe connect module: false
-          admin can add stripe payment method: true
+          admin can enable Stripe Connect module: false
+          admin can disable Stripe Connect module: false
+          admin can add Stripe Connect payment method: true
+          admin can remove Stripe Connect payment method: false
+          admin can view Stripe Connect notes on order details: false
+          admin can refund order using Stripe Connect payment method: false
+      vendor:
+          vendor can add Stripe Connect payment method: false
+          vendor can remove Stripe Connect payment method: false
+          admin can refund order using Stripe Connect payment method: false
+      customer:
+          customer can buy product using Stripe Connect payment method: false
 
 - page: 'Stripe Express'
   features:
       admin:
-          admin can enable stripe express  module: false
-          admin can disable stripe express module: false
-          admin can add Strip Express payment method: true
+          admin can enable Stripe Express module: false
+          admin can disable Stripe Express module: false
+          admin can add Stripe Express payment method: true
+          admin can remove Stripe Express payment method: false
+          admin can view Stripe Express notes on order details: false
+          admin can refund order using Stripe Express payment method: false
+      vendor:
+          vendor can add Stripe Express payment method: false
+          vendor can remove Stripe Express payment method: false
+          admin can refund order using Stripe Express payment method: false
+      customer:
+          customer can buy product using Stripe Express payment method: false
 
 - page: 'Table Rate Shipping'
   features:
@@ -1420,7 +1468,7 @@
           admin can view wholesale customer orders: true
           admin can delete wholesale customer: true
           admin can perform bulk action on wholesale customers: true
-          All users can see wholesale price: true
+          all users can see wholesale price: true
       vendor:
           vendor can create wholesale product: true
       customer:
