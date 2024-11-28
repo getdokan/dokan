@@ -33,6 +33,10 @@ setup.describe('add & authenticate users', () => {
 
     setup('add vendor1', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth, true);
+        // add open-close time
+        await apiUtils.updateStore(sellerId, payloads.storeOpenClose, payloads.adminAuth);
+        // add review
+        await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.customerAuth);
         helpers.createEnvVar('VENDOR_ID', sellerId);
     });
 
@@ -43,6 +47,10 @@ setup.describe('add & authenticate users', () => {
 
     setup('add vendor2', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth, true);
+        // add open-close time
+        await apiUtils.updateStore(sellerId, payloads.storeOpenClose, payloads.adminAuth);
+        // add review
+        await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.customerAuth);
         helpers.createEnvVar('VENDOR2_ID', sellerId);
     });
 
