@@ -1,9 +1,48 @@
 <div class="dokan-admin-header">
-    <div class="dokan-admin-header-logo">
-        <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . '/images/dokan-logo.png' ); ?>" alt="Dokan Logo"/>
-        <span class="dokan-admin-header-version">v<?php echo esc_html( DOKAN_PLUGIN_VERSION ); ?></span>
-    </div>
+    <div class="dokan-admin-header-content">
 
+        <div class="dokan-admin-logo-wrap">
+        <!-- Logo Section -->
+        <div class="dokan-admin-header-logo">
+            <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . '/images/dokan-logo.png' ); ?>" alt="Dokan Logo"/>
+        </div>
+
+        <!-- Version Tags Section -->
+        <div class="dokan-version-tags">
+            <?php
+            // Always show Lite version
+            $lite_version = DOKAN_PLUGIN_VERSION;
+            ?>
+            <span class="version-tag lite">
+                Lite: <?php echo esc_html( $lite_version ); ?>
+            </span>
+
+            <?php
+            // Show Pro version if installed
+            if ( dokan()->is_pro_exists() && dokan_pro()->license->is_valid() ) {
+                $pro_version = DOKAN_PRO_PLUGIN_VERSION;
+                $license_plan = dokan_pro()->license->get_plan();
+                ?>
+                <span class="version-tag pro">
+                    Pro <?php echo esc_html( $license_plan ); ?>: <?php echo esc_html( $pro_version ); ?>
+                </span>
+                <?php
+            } else {
+                // Show upgrade button if Pro not installed
+                $upgrade_url = 'https://dokan.co/wordpress/pricing/';
+                ?>
+                <a target="_blank" href="<?php echo esc_url( $upgrade_url ); ?>" class="upgrade-button">
+                    Upgrade
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3.33331 8H12.6666" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M8 3.33337L12.6667 8.00004L8 12.6667" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <?php
+            }
+            ?>
+        </div>
+        </div>
     <div class="dokan-admin-header-menu">
         <div class="menu-item">
             <div class="menu-icon">
@@ -108,5 +147,6 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </div>

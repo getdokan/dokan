@@ -4,32 +4,75 @@
 
 .dokan-admin-header {
     background: #fff;
-    padding: 15px 15px 15px 22px;
-    margin: 0 0 0 -20px;
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    padding: 16px 24px;
+    margin: 20px 20px 0 2px;
+    border-radius: 8px;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.06);
 
+    .dokan-admin-header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+   .dokan-admin-logo-wrap {
+       display: flex;
     .dokan-admin-header-logo {
         display: flex;
         align-items: center;
 
         img {
-            height: 25px;
+            height: 32px;
             width: auto;
             margin-right: 12px;
         }
+    }
 
-        span {
-            color: #F1634C;
-            background: #FFF4F2;
-            padding: 4px 12px;
-            font-size: 12px;
+    .dokan-version-tags {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 24px;
+
+        .version-tag {
+            padding: 8px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 20px;
             font-weight: 500;
             font-family: "SF Pro Text", sans-serif;
-            border: 1px solid rgba(241, 99, 76, 0.2);
-            border-radius: 93px;
+
+            &.lite {
+                background: #FF9B5366;
+                color: #995C00;
+            }
+
+            &.pro {
+                background: #D8D8FE;
+                color: @dokan-color;
+            }
+        }
+    }
+    }
+    .upgrade-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #6C5CE7;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background: #5849c4;
+            color: white;
+        }
+
+        svg {
+            margin-left: 4px;
         }
     }
 
@@ -57,21 +100,6 @@
                 cursor: pointer;
                 transition: all .2s ease;
 
-                .notification-count {
-                    position: absolute;
-                    top: -5px;
-                    right: -5px;
-                    width: 15px;
-                    height: 15px;
-                    padding: 1px;
-                    background-color: #ff5a40;
-                    border-radius: 53px;
-                    color: #fff;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
                 .whats-new-pointer {
                     position: absolute;
                     top: 0;
@@ -81,7 +109,7 @@
                     background-color: #ff5a40;
                     border-radius: 53px;
                     border: 2px solid #fff;
-                  box-sizing: content-box;
+                    box-sizing: content-box;
                 }
 
                 &:hover {
@@ -137,10 +165,10 @@
                     }
 
                     h3 {
-                          margin: 0;
-                          font-weight: bold;
-                          font-size: 18px;
-                          font-family: "SF Pro Text", sans-serif;
+                        margin: 0;
+                        font-weight: bold;
+                        font-size: 18px;
+                        font-family: "SF Pro Text", sans-serif;
                     }
 
                     .list-item {
@@ -158,7 +186,7 @@
                             margin-bottom: 10px;
 
                             &:last-child {
-                              margin-bottom: 0;
+                                margin-bottom: 0;
                             }
 
                             &.active {
@@ -201,7 +229,7 @@
                                     background-color: @dokan-light-gray;
 
                                     svg path {
-                                        fill:@dokan-color;
+                                        fill: @dokan-color;
                                     }
                                 }
                             }
@@ -217,6 +245,29 @@
     }
 }
 
+// Responsive styles
+@media screen and (max-width: 782px) {
+    .dokan-admin-header {
+        margin: 10px 10px 0 2px;
+        padding: 12px 16px;
+
+        .dokan-admin-header-content {
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .dokan-version-tags {
+            margin: 12px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .upgrade-button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+}
 .dokan-dashboard {
     .post-box-container {
         width: 49%;
