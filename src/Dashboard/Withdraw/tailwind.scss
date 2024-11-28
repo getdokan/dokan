@@ -1,0 +1,39 @@
+.withdraw-wraper {
+    button:focus,
+    .menu-toggle:hover,
+    button:hover,
+    .button:hover,
+    .ast-custom-button:hover,
+    input[type=reset]:hover,
+    input[type=reset]:focus,
+    input#submit:hover,
+    input#submit:focus,
+    input[type="button"]:hover,
+    input[type="button"]:focus,
+    input[type="submit"]:hover,
+    input[type="submit"]:focus {
+        background-color: transparent;
+        border-color: transparent;
+    }
+    button {
+        box-shadow: none;
+        border: none;
+    }
+
+    table, th, td {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-spacing: 0;
+        border-collapse: collapse;
+        font-size: inherit;
+        font-weight: inherit;
+        text-align: inherit;
+        vertical-align: inherit;
+        box-sizing: border-box;
+    }
+}
+
+@config './../../../base-tailwind.config.js';
+@import '../../base-tailwind';
+@import "@getdokan/dokan-ui/dist/dokan-ui.css";

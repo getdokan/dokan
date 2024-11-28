@@ -3,6 +3,7 @@ import {__} from "@wordpress/i18n";
 import {DokanRoute} from "../Layout";
 import { isValidElement, cloneElement, createElement } from '@wordpress/element';
 import { useNavigate, useParams, useLocation, redirect, replace, useMatches, useNavigation,  } from 'react-router-dom';
+import Withdraw from "../Dashboard/Withdraw";
 
 export function withRouter(Component) {
     function ComponentWithRouterProp(props) {
@@ -47,6 +48,17 @@ const getRoutes = () => {
             title: __( 'Dashboard', 'dokan-lite' ),
             element: <h1>Dashboard body</h1>,
             path: '/',
+            exact: true,
+            order: 10,
+        }
+    );
+
+    routes.push(
+        {
+            id: 'dokan-base',
+            title: __( 'Withdraw', 'dokan-lite' ),
+            element: <Withdraw/>,
+            path: '/withdraw',
             exact: true,
             order: 10,
         }

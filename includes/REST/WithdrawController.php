@@ -411,15 +411,23 @@ class WithdrawController extends WP_REST_Controller {
     public function get_balance() {
         $data = [];
 
-        $data['current_balance']    = dokan_get_seller_balance( dokan_get_current_user_id(), false );
-        $data['withdraw_limit']     = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 );
-        $data['withdraw_threshold'] = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
-        $data['withdraw_methods']   = array_filter( dokan_get_seller_active_withdraw_methods( dokan_get_current_user_id() ) );
-        $data['last_withdraw']      = dokan()->withdraw->get_withdraw_requests(
+        $last_withdraw = dokan()->withdraw->get_withdraw_requests(
             dokan_get_current_user_id(),
             dokan()->withdraw->get_status_code( 'approved' ),
             1
         );
+        $last_withdraw   = reset( $last_withdraw );
+
+        if ( is_a( $last_withdraw, \WeDevs\Dokan\Withdraw\Withdraw::class ) ) {
+            $last_withdraw = $last_withdraw->get_withdraw();
+            $last_withdraw['details'] = isset( $last_withdraw['details'] ) ? maybe_unserialize( $last_withdraw['details'] ) : [];
+        }
+
+        $data['current_balance']    = dokan_get_seller_balance( dokan_get_current_user_id(), false );
+        $data['withdraw_limit']     = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 );
+        $data['withdraw_threshold'] = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
+        $data['withdraw_methods']   = array_filter( dokan_get_seller_active_withdraw_methods( dokan_get_current_user_id() ) );
+        $data['last_withdraw']      = $last_withdraw;
 
         return rest_ensure_response( $data );
     }
@@ -464,7 +472,7 @@ class WithdrawController extends WP_REST_Controller {
 			        'user_id' => $user_id,
 			        'amount'  => $request['amount'],
 			        'method'  => $request['method'],
-                    ]
+				]
             );
 
             if ( is_wp_error( $validate_request ) ) {

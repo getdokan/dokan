@@ -54,6 +54,8 @@
   },
   "dependencies": {
     "@getdokan/dokan-ui": "^1.0.14",
+    "@headlessui/react": "^2.2.0",
+    "@tanstack/react-table": "^8.20.5",
     "@wordpress/components": "^28.9.0",
     "@wordpress/data": "^10.9.0",
     "@wordpress/dom-ready": "^4.9.0",
@@ -61,6 +63,8 @@
     "@wordpress/hooks": "^4.9.0",
     "@wordpress/i18n": "^5.8.0",
     "@wordpress/plugins": "^7.10.0",
-    "react-router-dom": "^6.27.0"
+    "react-router-dom": "^6.27.0",
+    "tailwind-merge": "^2.5.5",
+    "usehooks-ts": "^3.1.0"
   }
 }
