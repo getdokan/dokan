@@ -213,6 +213,13 @@ class Manager {
                 'scope'             => 'global',
                 'title'             => __( 'Dokan Update Required', 'dokan-lite' ),
                 'description'       => __( 'To ensure all the feature compatibility and accessibility, Dokan Pro minimum v3.14.0 is required.', 'dokan-lite' ),
+                'actions'     => [
+                    [
+                        'type'   => 'primary',
+                        'text'   => __( 'Update Now', 'dokan-lite' ),
+                        'action' => admin_url( 'plugins.php' ),
+                    ],
+                ],
             ];
         }
 
