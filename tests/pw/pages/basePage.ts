@@ -1481,6 +1481,12 @@ export class BasePage {
         return visibleSelectors;
     }
 
+    // assert element to exists
+    async toExists(selector: string) {
+        const exists = await this.isLocatorExists(selector);
+        expect(exists).toBe(true);
+    }
+
     // assert value to be equal
     toBeEqual(received: any, expected: any) {
         expect(received).toEqual(expected);
@@ -1596,6 +1602,12 @@ export class BasePage {
                 return await asyncFn();
             }, options)
             .toBe(200);
+    }
+
+    // assert element not to exists
+    async notToExists(selector: string) {
+        const exists = await this.isLocatorExists(selector);
+        expect(exists).toBe(false);
     }
 
     // assert element not to be visible

@@ -225,6 +225,7 @@ export const dbData = {
             gmap_api_key: GMAP ?? '',
             mapbox_access_token: MAPBOX ?? '',
             recaptcha_validation_label: '',
+            recaptcha_enable_status: 'off',
             recaptcha_site_key: RECAPTCHA_SITE_KEY ?? '',
             recaptcha_secret_key: RECAPTCHA_SECRET_KEY ?? '',
             contact_seller: 'on',
@@ -244,6 +245,7 @@ export const dbData = {
                 dokan_bank_iban: '',
             },
             disable_dokan_fontawesome: 'off', // on, off
+            dashboard_menu_manager: [],
         },
 
         menuManagerSettings: {

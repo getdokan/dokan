@@ -299,7 +299,8 @@
           admin can disable store map on store sidebar [lite]: true
           admin can set map api source (Google Maps) [lite]: true
           admin can set map api source (Mapbox) [lite]: true
-          admin can set Google reCAPTCHA validation [lite]: true
+          admin can enable Google reCAPTCHA validation [lite]: true
+          admin can disable Google reCAPTCHA validation [lite]: true
           admin can enable store contact form on store sidebar [lite]: true
           admin can disable store contact form on store sidebar [lite]: true
           admin can set store header template (default) [lite]: true

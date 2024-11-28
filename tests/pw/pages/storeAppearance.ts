@@ -37,8 +37,13 @@ export class StoreAppearance extends BasePage {
     }
 
     // set Google reCAPTCHA
-    async viewGoogleRecaptcha(): Promise<void> {
-        // todo: implement
+    async viewGoogleRecaptcha(status: 'enable' | 'disable', storeName: string): Promise<void> {
+        await this.gotoSingleStore(storeName);
+        if (status === 'enable') {
+            await this.toBeVisible(singleStoreCustomer.googleRecaptcha);
+        } else {
+            await this.notToBeVisible(singleStoreCustomer.googleRecaptcha);
+        }
     }
 
     // view store contact form on store sidebar
@@ -71,12 +76,18 @@ export class StoreAppearance extends BasePage {
     async setBannerSize(bannerSize: { width: string; height: string }): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
         await this.toContainText(selector.vendor.vStoreSettings.bannerHelpText, `${bannerSize.width}x${bannerSize.height}`);
-        //todo: need to add more assertion
+        //todo: add more assertion
     }
 
     // view store sidebar from theme
     async viewStoreSideBarFromTheme(status: 'enable' | 'disable', storeName: string): Promise<void> {
-        // todo: implement
+        await this.gotoSingleStore(storeName);
+        if (status === 'enable') {
+            await this.toBeVisible(singleStoreCustomer.dokanStoreSideBar);
+        } else {
+            await this.notToBeVisible(singleStoreCustomer.dokanStoreSideBar);
+            // todo: add more assertions
+        }
     }
 
     // view vendor info on single store page
@@ -92,6 +103,11 @@ export class StoreAppearance extends BasePage {
 
     // view Font Awesome library icons on vendor dashboard
     async viewFontAwesomeLibrary(status: 'enable' | 'disable', storeName: string): Promise<void> {
-        // todo: implement
+        await this.gotoSingleStore(storeName);
+        if (status === 'enable') {
+            await this.toExists(singleStoreCustomer.dokanFontAwesomeLibrary);
+        } else {
+            await this.notToExists(singleStoreCustomer.dokanFontAwesomeLibrary);
+        }
     }
 }

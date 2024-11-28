@@ -7525,6 +7525,8 @@ export const selector = {
                 coupon: (code: string) => `//span[@class="coupon-code"]//strong[normalize-space()="${code}"]`,
             },
 
+            dokanStoreSideBar: 'div.dokan-store-sidebar div.dokan-widget-area',
+
             storeContactForm: {
                 storeContactForm: 'form#dokan-form-contact-seller',
                 name: 'form#dokan-form-contact-seller input[placeholder="Your Name"]',
@@ -7543,6 +7545,10 @@ export const selector = {
             },
 
             storeOpenCloseTime: 'div.dokan-store-open-close',
+
+            googleRecaptcha: '//iframe[@title="reCAPTCHA"]',
+
+            dokanFontAwesomeLibrary: 'link#dokan-fontawesome-css',
         },
 
         cMyOrders: {

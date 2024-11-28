@@ -33,9 +33,11 @@ test.describe('Store Appearance test', () => {
         });
     });
 
-    test.skip('admin can set Google reCAPTCHA validation', { tag: ['@lite', '@admin'] }, async () => {
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { store_map: status === 'enable' ? 'on' : 'off' });
-        await admin.viewGoogleRecaptcha();
+    ['enable', 'disable'].forEach((status: string) => {
+        test.skip(`admin can ${status} Google reCAPTCHA validation`, { tag: ['@lite', '@admin'] }, async () => {
+            await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { recaptcha_enable_status: status === 'enable' ? 'on' : 'off' });
+            await admin.viewGoogleRecaptcha(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);
+        });
     });
 
     ['enable', 'disable'].forEach((status: string) => {
@@ -64,8 +66,8 @@ test.describe('Store Appearance test', () => {
     });
 
     ['enable', 'disable'].forEach((status: string) => {
-        test.skip(`admin can ${status} store sidebar from theme`, { tag: ['@lite', '@admin'] }, async () => {
-            await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { enable_theme_store_sidebar: status === 'enable' ? 'on' : 'off' });
+        test(`admin can ${status} store sidebar from theme`, { tag: ['@lite', '@admin'] }, async () => {
+            await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { enable_theme_store_sidebar: status === 'enable' ? 'off' : 'on' });
             await admin.viewStoreSideBarFromTheme(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);
         });
     });
@@ -78,8 +80,8 @@ test.describe('Store Appearance test', () => {
     });
 
     ['enable', 'disable'].forEach((status: string) => {
-        test.skip(`admin can ${status} Dokan FontAwesome library`, { tag: ['@lite', '@admin'] }, async () => {
-            await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { disable_dokan_fontawesome: status === 'enable' ? 'on' : 'off' });
+        test(`admin can ${status} Dokan FontAwesome library`, { tag: ['@lite', '@admin'] }, async () => {
+            await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { disable_dokan_fontawesome: status === 'enable' ? 'off' : 'on' });
             await admin.viewFontAwesomeLibrary(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);
         });
     });
