@@ -50,7 +50,7 @@ class Manager {
         add_filter( 'dokan_admin_notices', [ $this, 'show_permalink_setting_notice' ] );
         add_filter( 'dokan_admin_notices', [ $this, 'show_admin_logo_update_notice' ] );
         add_action( 'wp_ajax_dismiss_dokan_admin_logo_update_notice', [ $this, 'dismiss_dokan_admin_logo_update_notice' ] );
-        add_filter( 'dokan_admin_notices', [ $this, 'show_admin_commission_notice' ] );
+        add_filter( 'dokan_admin_notices', [ $this, 'show_admin_plugin_update_notice' ] );
     }
 
     /**
@@ -191,7 +191,16 @@ class Manager {
         wp_send_json_success();
     }
 
-    public function show_admin_commission_notice( $notices ) {
+    /**
+     * Show admin notice if dokan lite is updated to v3.14.0 and dokan pro is not updated to minimum v3.14.0.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $notices
+     *
+     * @return mixed
+     */
+    public function show_admin_plugin_update_notice( $notices ) {
         if (
             version_compare( DOKAN_PLUGIN_VERSION, '3.14.0', '>=' ) &&
             defined( 'DOKAN_PRO_PLUGIN_VERSION' ) &&
