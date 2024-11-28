@@ -31,6 +31,7 @@ test.describe('Booking Product test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
+
         // disable vendor global rma settings
         await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
     });

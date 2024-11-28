@@ -538,12 +538,13 @@ class Settings {
                     ],
                 ],
                 'commission_category_based_values' => [
-                    'name'    => 'commission_category_based_values',
-                    'type'    => 'category_based_commission',
+                    'name'                 => 'commission_category_based_values',
+                    'type'                 => 'category_based_commission',
                     'dokan_pro_commission' => 'yes',
-                    'label'   => __( 'Admin Commission', 'dokan-lite' ),
-                    'desc'    => __( 'Amount you will get from each sale', 'dokan-lite' ),
-                    'show_if' => [
+                    'label'                => __( 'Admin Commission', 'dokan-lite' ),
+                    'desc'                 => __( 'Amount you will get from each sale', 'dokan-lite' ),
+                    'required'             => 'yes',
+                    'show_if'              => [
                         'commission_type' => [
                             'equal' => 'category_based',
                         ],

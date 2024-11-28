@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\REST;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WP_REST_Response;
 use WP_REST_Server;
+use WP_REST_Request;
 use WeDevs\Dokan\Abstracts\DokanRESTAdminController;
 
 /**
@@ -36,6 +37,16 @@ class AdminNoticeController extends DokanRESTAdminController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'dokan_get_admin_notices' ],
                     'permission_callback' => [ $this, 'check_permission' ],
+                    'args'                => [
+                        'scope' => [
+                            'description' => __( 'Choose notice scope: "local" displays only on Dokan pages, "global" displays across the entire site.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'enum'        => [ 'local', 'global' ],
+                            'required'    => false,
+                            'default'     => '',
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                    ],
                 ],
             ]
         );
@@ -53,13 +64,26 @@ class AdminNoticeController extends DokanRESTAdminController {
 
     /**
      * Get dokan specific notices
+     * @param WP_REST_Request $request
      *
      * @return WP_REST_Response
      */
-    public function dokan_get_admin_notices() {
+    public function dokan_get_admin_notices( WP_REST_Request $request ) {
+        $notice_scope = $request->get_param( 'scope' );
+        $notice_scope = ! empty( $notice_scope ) ? $notice_scope : 'local';
+
         $notices = Helper::dokan_get_admin_notices();
 
-        return rest_ensure_response( $notices );
+        // Filter notices by scope
+        $filter_notices = array_filter(
+            $notices,
+            function ( $notice ) use ( $notice_scope ) {
+                return $notice_scope === ( $notice['scope'] ?? 'local' );
+            }
+        );
+        $filter_notices = array_values( $filter_notices );
+
+        return rest_ensure_response( $filter_notices );
     }
 
     /**

@@ -149,6 +149,16 @@ export class AuctionsPage extends VendorPage {
         await this.toBeVisible(auctionProductsVendor.productCell(productName));
     }
 
+    // duplicate auction product
+    async duplicateAuctionProduct(productName: string) {
+        await this.searchAuctionProduct(productName);
+        await this.removeAttribute(auctionProductsVendor.rowActions(productName), 'class'); // forcing the row actions to be visible, to avoid flakiness
+        await this.hover(auctionProductsVendor.productCell(productName));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auction, auctionProductsVendor.duplicate(productName), 302);
+        await this.toBeVisible(auctionProductsVendor.duplicateSuccessMessage);
+        await this.toBeVisible(auctionProductsVendor.productCell(productName + ' (Copy)'));
+    }
+
     // delete auction product
     async deleteAuctionProduct(productName: string) {
         await this.searchAuctionProduct(productName);
@@ -235,10 +245,6 @@ export class AuctionsPage extends VendorPage {
         await this.removeAttribute(auctionProductsVendor.auction.auctionEndDate, 'readonly');
         await this.clearAndType(auctionProductsVendor.auction.auctionStartDate, generalOption.startDate);
         await this.clearAndType(auctionProductsVendor.auction.auctionEndDate, generalOption.endDate);
-        await this.check(auctionProductsVendor.auction.enableAutomaticRelisting);
-        await this.clearAndType(auctionProductsVendor.auction.relistIfFailAfterNHours, generalOption.relistIfFailAfterNHours);
-        await this.clearAndType(auctionProductsVendor.auction.relistIfNotPaidAfterNHours, generalOption.relistIfNotPaidAfterNHours);
-        await this.clearAndType(auctionProductsVendor.auction.relistAuctionDurationInH, generalOption.relistAuctionDurationInH);
 
         await this.saveProduct();
 
@@ -251,6 +257,18 @@ export class AuctionsPage extends VendorPage {
         await this.toHaveValue(auctionProductsVendor.auction.buyItNowPrice, buyItNowPrice);
         await this.toHaveValue(auctionProductsVendor.auction.auctionStartDate, generalOption.startDate);
         await this.toHaveValue(auctionProductsVendor.auction.auctionEndDate, generalOption.endDate);
+    }
+
+    // add product Relist option
+    async addProductRelistingOption(productName: string, generalOption: product['auction']) {
+        await this.goToAuctionProductEditById(productName);
+        await this.check(auctionProductsVendor.auction.enableAutomaticRelisting);
+        await this.clearAndType(auctionProductsVendor.auction.relistIfFailAfterNHours, generalOption.relistIfFailAfterNHours);
+        await this.clearAndType(auctionProductsVendor.auction.relistIfNotPaidAfterNHours, generalOption.relistIfNotPaidAfterNHours);
+        await this.clearAndType(auctionProductsVendor.auction.relistAuctionDurationInH, generalOption.relistAuctionDurationInH);
+
+        await this.saveProduct();
+
         await this.toBeChecked(auctionProductsVendor.auction.enableAutomaticRelisting);
         await this.toHaveValue(auctionProductsVendor.auction.relistIfFailAfterNHours, generalOption.relistIfFailAfterNHours);
         await this.toHaveValue(auctionProductsVendor.auction.relistIfNotPaidAfterNHours, generalOption.relistIfNotPaidAfterNHours);
@@ -324,16 +342,23 @@ export class AuctionsPage extends VendorPage {
     }
 
     // add product tags
-    async addProductTags(productName: string, tags: string[], create = false): Promise<void> {
+    async addProductTags(productName: string, tags: string[]): Promise<void> {
+        // async addProductTags(productName: string, tags: string[], create = false): Promise<void> {
         await this.goToAuctionProductEditById(productName);
         for (const tag of tags) {
             await this.clearAndType(auctionProductsVendor.auction.tags.tagInput, tag);
-            if (create) {
-                await this.click(auctionProductsVendor.auction.tags.nonCreatedTag(tag));
-            } else {
-                await this.click(auctionProductsVendor.auction.tags.searchedTag(tag));
-            }
+            await this.toBeVisible(auctionProductsVendor.auction.tags.searchedTag(tag));
+            await this.click(auctionProductsVendor.auction.tags.searchedTag(tag));
             await this.toBeVisible(auctionProductsVendor.auction.tags.selectedTags(tag));
+
+            // todo: remove below lines if the behavior is actually changed
+            // await this.clearAndType(auctionProductsVendor.auction.tags.tagInput, tag);
+            // if (create) {
+            //     await this.click(auctionProductsVendor.auction.tags.nonCreatedTag(tag));
+            // } else {
+            //     await this.click(auctionProductsVendor.auction.tags.searchedTag(tag));
+            // }
+            // await this.toBeVisible(auctionProductsVendor.auction.tags.selectedTags(tag));
         }
         await this.saveProduct();
 
@@ -585,6 +610,7 @@ export class AuctionsPage extends VendorPage {
         await this.toBeVisible(productsVendor.attribute.savedAttribute(attribute.attributeName));
     }
 
+    // can't add already added attribute
     async cantAddAlreadyAddedAttribute(productName: string, attributeName: string): Promise<void> {
         await this.goToAuctionProductEditById(productName);
         await this.toBeVisible(productsVendor.attribute.savedAttribute(attributeName));

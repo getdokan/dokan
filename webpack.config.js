@@ -16,6 +16,7 @@ const entryPoint = {
     './src/utils/vue-vendor.js',
   ],
   'dokan-promo-notice': './src/promo-notice/main.js',
+  'dokan-admin-notice': './src/admin/notice/main.js',
   'reverse-withdrawal': './assets/src/js/reverse-withdrawal.js',
   'product-category-ui': './assets/src/js/product-category-ui.js',
   'dokan-admin-product': './assets/src/js/dokan-admin-product.js',

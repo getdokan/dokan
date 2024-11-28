@@ -128,6 +128,12 @@ export const data = {
         saveSuccessMessage: 'Your settings have been saved.',
     },
 
+    diagnosticNotice: {
+        paragraph1: 'Want to help make Dokan Multivendor Marketplace even more awesome? Allow Dokan Multivendor Marketplace to collect diagnostic data and usage information. (what we collect)',
+        paragraph2:
+            'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and URL, Your name and email address. We are using Appsero to collect your data. Learn more about how Appsero collects and handle your data.',
+    },
+
     // Product
     product: {
         publishSuccessMessage: 'Product published. ',
@@ -363,19 +369,59 @@ export const data = {
             name: '',
             productType: 'booking',
             category: 'Uncategorized',
-            bookingDurationType: 'customer', // 'fixed', 'customer'
-            bookingDuration: '2',
-            bookingDurationMin: '1',
-            bookingDurationMax: '20',
-            bookingDurationUnit: 'day', // 'month', 'day', 'hour', 'minute'
+            accommodationBookingOptions: {
+                minimumNumberOfNightsAllowed: '1',
+                maximumNumberOfNightsAllowed: '5',
+                checkInTime: '12:00 am',
+                checkOutTime: '12:00 am',
+            },
+            duration: {
+                bookingDurationType: 'customer', // 'fixed', 'customer'
+                bookingDuration: '2',
+                bookingDurationUnit: 'day', // 'month', 'day', 'hour', 'minute'
+                bookingDurationMin: '1',
+                bookingDurationMax: '20',
+            },
             calendarDisplayMode: 'always_visible', // '', 'always_visible'
-            maxBookingsPerBlock: '5',
-            minimumBookingWindowIntoTheFutureDate: '0',
-            minimumBookingWindowIntoTheFutureDateUnit: 'month',
-            maximumBookingWindowIntoTheFutureDate: '5',
-            maximumBookingWindowIntoTheFutureDateUnit: 'month',
-            baseCost: '20',
-            blockCost: '10',
+            availability: {
+                maxBookingsPerBlock: '5',
+                minimumBookingWindowIntoTheFutureDate: '0',
+                minimumBookingWindowIntoTheFutureDateUnit: 'month', // 'month', 'week', 'day', 'hour',
+                maximumBookingWindowIntoTheFutureDate: '5',
+                maximumBookingWindowIntoTheFutureDateUnit: 'month',
+                requireABufferPeriodOfMonthsBetweenBookings: '1',
+                allDatesAvailability: 'available', // 'available', 'non-available'
+                checkRulesAgainst: 'start', // 'start'
+            },
+            costs: {
+                baseCost: '5',
+                blockCost: '10',
+                displayCost: '15',
+            },
+
+            extraOptions: {
+                // persons
+                minPersons: '1',
+                maxPersons: '5',
+                person: {
+                    typeName: 'children',
+                    baseCost: '5',
+                    blockCost: '5',
+                    description: '1-5 years old',
+                    min: '1',
+                    max: '5',
+                },
+
+                // resource
+                label: 'test resource label',
+                resourcesAllocation: 'customer', // 'customer', 'automatic'
+                addResourceId: '427', //todo: need actual resource id
+                resource: {
+                    baseCost: '5',
+                    blockCost: '5',
+                },
+            },
+
             storeName: `${VENDOR}store`,
             saveSuccessMessage: 'Success! The product has been saved successfully.',
 
@@ -574,8 +620,8 @@ export const data = {
 
             commission: {
                 commissionType: 'fixed', // 'fixed','category_based'  [category commission will only be applicable to dokan subscription product]
-                commissionPercentage: '2',
-                commissionFixed: '2',
+                commissionPercentage: helpers.priceStringWithDecimal(2, 'ES'),
+                commissionFixed: helpers.priceStringWithDecimal(2, 'ES'),
                 commissionCategory: {
                     allCategory: true, // true for all category, false for specific category
                     category: 'All Categories',
@@ -868,8 +914,8 @@ export const data = {
     commission: {
         fixed: {
             commissionType: 'fixed', // 'fixed','category_based'
-            commissionPercentage: '10',
-            commissionFixed: '10',
+            commissionPercentage: helpers.priceStringWithDecimal(10, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(10, 'ES'),
             commissionCategory: {
                 allCategory: true, // true for all category, false for specific category
                 category: 'All Categories',
@@ -878,18 +924,18 @@ export const data = {
 
         allCategory: {
             commissionType: 'category_based', // 'fixed','category_based'
-            commissionPercentage: '5',
-            commissionFixed: '5',
+            commissionPercentage: helpers.priceStringWithDecimal(5, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(5, 'ES'),
             commissionCategory: {
                 allCategory: true, // true for all category, false for specific category
                 category: 'All Categories',
             },
         },
 
-        specficCategory: {
+        specificCategory: {
             commissionType: 'category_based', // 'fixed','category_based'
-            commissionPercentage: '2',
-            commissionFixed: '2',
+            commissionPercentage: helpers.priceStringWithDecimal(2, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(2, 'ES'),
             commissionCategory: {
                 allCategory: false, // true for all category, false for specific category
                 category: CATEGORY_ID,
@@ -907,8 +953,8 @@ export const data = {
         sellingProductTypes: 'sell_both', // 'physical', 'digital', 'sell_both',
         commission: {
             commissionType: 'fixed', // 'fixed','category_based'
-            commissionPercentage: '10',
-            commissionFixed: '0',
+            commissionPercentage: helpers.priceStringWithDecimal(10, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(0, 'ES'),
             commissionCategory: {
                 allCategory: true, // true for all category, false for specific category
                 category: 'All Categories',
@@ -962,6 +1008,8 @@ export const data = {
             adminLogin: 'wp-admin',
             adminLogout: 'wp-login.php?action=logout',
             adminDashboard: 'wp-admin',
+            diagnosticNotice: 'dokan_tracker_optin=true',
+            orderDetails: (orderId: string) => `wp-admin/admin.php?page=wc-orders&action=edit&id=${orderId}`,
             pages: 'wp-admin/edit.php?post_type=page',
             addNewPage: 'wp-admin/post-new.php?post_type=page',
             user: 'wp-admin/user-edit.php',
@@ -976,6 +1024,10 @@ export const data = {
 
             dokan: {
                 setupWizard: 'wp-admin/admin.php?page=dokan-setup',
+                setupWizardStore: 'wp-admin/admin.php?page=dokan-setup&step=store',
+                setupWizardSelling: 'wp-admin/admin.php?page=dokan-setup&step=selling',
+                setupWizardCommission: 'wp-admin/admin.php?page=dokan-setup&step=commission',
+                setupWizardWithdraw: 'wp-admin/admin.php?page=dokan-setup&step=withdraw',
                 dokan: 'wp-admin/admin.php?page=dokan#',
 
                 // only lite
@@ -1117,6 +1169,7 @@ export const data = {
                 followers: 'dashboard/followers',
                 booking: 'dashboard/booking',
                 addBookingProduct: 'dashboard/booking/new-product',
+                bookingProductEdit: (productId: string) => `dashboard/booking/edit/?product_id=${productId}`,
                 addBooking: 'dashboard/booking/add-booking',
                 manageBooking: 'dashboard/booking/my-bookings',
                 bookingCalendar: 'dashboard/booking/calendar',
@@ -1151,7 +1204,7 @@ export const data = {
                 settingsVerification: 'dashboard/settings/verification',
                 settingsDeliveryTime: 'dashboard/settings/delivery-time',
                 settingsShipping: 'dashboard/settings/shipping',
-                settingsShipstation: 'dashboard/settings/shipstation',
+                settingsShipStation: 'dashboard/settings/shipstation',
                 settingsSocialProfile: 'dashboard/settings/social',
                 settingsRma: 'dashboard/settings/rma',
                 settingsSeo: 'dashboard/settings/seo',
@@ -1193,6 +1246,7 @@ export const data = {
                 productQuestionsBulkActions: 'dokan/v1/product-questions/bulk_action',
                 productAnswers: 'dokan/v1/product-answers',
                 subscriptions: 'dokan/v1/subscription',
+                shipStation: 'dokan/v1/shipstation',
                 verifications: 'dokan/v1/verification-requests',
                 verificationMethods: 'dokan/v1/verification-methods',
             },
@@ -1295,8 +1349,8 @@ export const data = {
             // commission
             commission: {
                 commissionType: 'fixed', // 'fixed','category_based'
-                commissionPercentage: '5',
-                commissionFixed: '5',
+                commissionPercentage: helpers.priceStringWithDecimal(5, 'ES'),
+                commissionFixed: helpers.priceStringWithDecimal(5, 'ES'),
                 commissionCategory: {
                     allCategory: true, // true for all category, false for specific category
                     category: 'All Categories',
@@ -2136,8 +2190,8 @@ export const data = {
             settingTitle: 'Selling Option Settings',
             commission: {
                 commissionType: 'fixed', // 'fixed','category_based'
-                commissionPercentage: '10',
-                commissionFixed: '0',
+                commissionPercentage: helpers.priceStringWithDecimal(10, 'ES'),
+                commissionFixed: helpers.priceStringWithDecimal(0, 'ES'),
                 commissionCategory: {
                     allCategory: true, // true for all category, false for specific category
                     category: 'All Categories',

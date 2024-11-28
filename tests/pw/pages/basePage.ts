@@ -43,13 +43,19 @@ export class BasePage {
     }
 
     // goto subUrl
-    async goto(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }): Promise<void> {
+    async goto(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }, force = false): Promise<void> {
         await this.page.goto(subPath, options);
+        if (force) {
+            await this.reload();
+        }
     }
 
     // goto subUrl until networkidle
-    async gotoUntilNetworkidle(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'networkidle' }): Promise<void> {
+    async gotoUntilNetworkidle(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'networkidle' }, force = false): Promise<void> {
         await this.goto(subPath, options);
+        if (force) {
+            await this.reload();
+        }
     }
 
     // go forward

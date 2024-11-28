@@ -1039,11 +1039,11 @@ export const dbData = {
         },
 
         geolocationSettings: {
-            show_locations_map: 'top',
-            show_location_map_pages: 'all',
-            show_filters_before_locations_map: 'on',
-            show_product_location_in_wc_tab: 'on',
-            distance_unit: 'km',
+            show_locations_map: 'top', // top, left, right
+            show_location_map_pages: 'all', // all, store_listing, shop
+            show_filters_before_locations_map: 'on', // on, off
+            show_product_location_in_wc_tab: 'on', // on, off
+            distance_unit: 'km', // km, miles
             distance_min: '0',
             distance_max: '10',
             map_zoom: '11',

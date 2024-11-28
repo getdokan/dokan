@@ -261,6 +261,12 @@ export class ApiUtils {
         return responseBody;
     }
 
+    // update store status
+    async updateStoreStatus(storeId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.updateStoreStatus(storeId), { data: payload, headers: auth });
+        return responseBody;
+    }
+
     // delete all stores
     async deleteAllStores(auth?: auth): Promise<responseBody> {
         const allStores = await this.getAllStores(auth);
@@ -1525,6 +1531,30 @@ export class ApiUtils {
         const [, responseBody] = await this.post(endPoints.createShipment(orderId), { data: payload, headers: auth });
         const shipmentId = responseBody?.id;
         return [responseBody, orderId, shipmentId];
+    }
+
+    /**
+     * ShipStation api methods
+     */
+
+    async createShipStationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.createShipStationCredential, { data: { vendor_id: vendorId }, headers: auth });
+        return responseBody;
+    }
+
+    async deleteShipStationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteShipStationCredential(vendorId), { headers: auth });
+        return responseBody;
+    }
+
+    async createShipStationOrderStatusSettings(payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.createShipStationOrderStatusSettings, { data: payload, headers: auth });
+        return responseBody;
+    }
+
+    async deleteShipStationOrderStatusSettings(vendorId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteShipStationOrderStatusSettings(vendorId), { headers: auth });
+        return responseBody;
     }
 
     /**

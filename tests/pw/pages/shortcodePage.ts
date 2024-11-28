@@ -140,4 +140,19 @@ export class ShortcodePage extends AdminPage {
     async viewRequestQuote(link: string) {
         await this.requestForQuotationsPage.requestForQuoteRenderProperly(link);
     }
+
+    // view advertised products
+    async viewAdvertisedProducts(link: string) {
+        await this.goto(link);
+
+        const productCount = await this.getElementCount(shopCustomer.productCard.card);
+        if (productCount) {
+            // product card elements are visible
+            await this.notToHaveCount(shopCustomer.productCard.card, 0);
+            await this.notToHaveCount(shopCustomer.productCard.productDetailsLink, 0);
+            await this.notToHaveCount(shopCustomer.productCard.productTitle, 0);
+            await this.notToHaveCount(shopCustomer.productCard.productPrice, 0);
+            await this.notToHaveCount(shopCustomer.productCard.addToCart, 0);
+        }
+    }
 }

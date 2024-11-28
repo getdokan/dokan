@@ -223,18 +223,26 @@ export const selector = {
 
             // dokan promotion
             promotion: {
-                promotion: '.dokan-notice-slides .dokan-promotion',
-                message: '.dokan-promotion .dokan-message',
+                promotion: 'div.dokan-notice-slides div.dokan-promotion',
+                message: 'div.dokan-promotion div.dokan-message',
             },
 
             // dokan notice
             notice: {
-                noticeDiv: '.dokan-admin-notices',
-                noticeDiv1: '.dokan-admin-notice.dokan-alert',
+                noticeDiv: 'div.dokan-admin-notices',
+                noticeDiv1: '//div[@class="dokan-admin-notices"]//div[contains(@class,"dokan-admin-notice")and not(contains(@class,"dokan-promotion"))]',
                 closeNotice: '.close-notice',
                 slider: '.slide-notice',
                 sliderPrev: '.slide-notice .prev',
                 sliderNext: '.slide-notice .next',
+            },
+
+            diagnostic: {
+                noticeDiv: '//a[@class="dokan-insights-data-we-collect"]/../..',
+                allowCollectData: '//a[@class="dokan-insights-data-we-collect"]/../..//a[normalize-space()="Allow"]',
+                disallowCollectData: '//a[@class="dokan-insights-data-we-collect"]/../..//a[normalize-space()="No thanks"]',
+                paragraph1: '(//a[@class="dokan-insights-data-we-collect"]/../..//p)[1]',
+                paragraph2: '//a[@class="dokan-insights-data-we-collect"]/../..//p[@class="description"]',
             },
 
             // promo banner
@@ -433,7 +441,7 @@ export const selector = {
 
                 // Nav Tabs
                 navTabs: {
-                    cancelled: '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
+                    all: '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
                     approved: '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
                     pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
                 },
@@ -692,8 +700,8 @@ export const selector = {
                     expandedCategories: '(//i[contains(@class,"far fa-minus-square")]/..)[1]',
                     categoryPercentage: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='percentage_commission']`,
                     categoryFixed: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='fixed_commission']`,
-                    categoryPercentageById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='percentage_commission']`,
-                    categoryFixedById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='fixed_commission']`,
+                    categoryPercentageById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='percentage_commission']`,
+                    categoryFixedById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='fixed_commission']`,
 
                     // Edit Options
                     cancelEdit: '//div[contains(@class, "action-links footer")]//button[contains(text(),"Cancel")]',
@@ -2072,8 +2080,8 @@ export const selector = {
                     expandedCategories: '(//i[contains(@class,"far fa-minus-square")]/..)[1]',
                     categoryPercentage: (category: string) => `//p[contains(text(),'${category}')]/../..//input[@id='percentage_commission']`,
                     categoryFixed: (category: string) => `//p[contains(text(),'${category}')]/../..//input[@id='fixed_commission']`,
-                    categoryPercentageById: (category: string) => `//p[contains(text(),'(${category})')]/../..//input[@id='percentage_commission']`,
-                    categoryFixedById: (category: string) => `//p[contains(text(),'(${category})')]/../..//input[@id='fixed_commission']`,
+                    categoryPercentageById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='percentage_commission']`,
+                    categoryFixedById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='fixed_commission']`,
                     shippingFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-shipping_fee_recipient')]`,
                     productTaxFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-tax_fee_recipient')]`,
                     shippingTaxFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-shipping_tax_fee_recipient')]`,
@@ -2628,8 +2636,8 @@ export const selector = {
                 expandedCategories: '(//i[contains(@class,"far fa-minus-square")]/..)[1]',
                 categoryPercentage: (category: string) => `//p[text()='${category}']/../..//input[@id='percentage_commission']`,
                 categoryFixed: (category: string) => `//p[text()='${category}']/../..//input[@id='fixed_commission']`,
-                categoryPercentageById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='percentage_commission']`,
-                categoryFixedById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='fixed_commission']`,
+                categoryPercentageById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='percentage_commission']`,
+                categoryFixedById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='fixed_commission']`,
 
                 // Withdraw
                 payPal: '//label[@for="withdraw_methods[paypal]" and @class="switch-label"]',
@@ -2972,6 +2980,13 @@ export const selector = {
                 //table
                 numberOfRowsFound: '(//span[@class="displaying-num"])[1]',
                 noRowsFound: '//td[normalize-space(text())="No items found."]',
+
+                commissionMetaBox: {
+                    metaBoxDiv: 'div#dokan_commission_box',
+                    commissionsText: '//h2[normalize-space()="Commissions"]',
+                    orderItemInfo: 'div#dokan_commission_box table.woocommerce_order_items',
+                    orderTotalInfo: 'div#dokan_commission_box div.wc-order-totals-items',
+                },
             },
         },
 
@@ -3159,8 +3174,8 @@ export const selector = {
                     expandedCategories: '(//i[contains(@class,"far fa-minus-square")]/..)[1]',
                     categoryPercentage: (category: string) => `//p[text()='${category}']/../..//input[@id='percentage_commission']`,
                     categoryFixed: (category: string) => `//p[text()='${category}']/../..//input[@id='fixed_commission']`,
-                    categoryPercentageById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='percentage_commission']`,
-                    categoryFixedById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='fixed_commission']`,
+                    categoryPercentageById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='percentage_commission']`,
+                    categoryFixedById: (category: string) => `//span[contains(text(), '#${category}')]/../../..//input[@id='fixed_commission']`,
                 },
 
                 // Vendor
@@ -5222,27 +5237,33 @@ export const selector = {
 
             // Create Booking Product
             booking: {
-                viewProduct: '.view-product',
+                viewProduct: 'a.view-product',
                 productName: '#post_title',
-                ProductImage: '.dokan-feat-image-btn',
-                virtual: '#\\_virtual',
-                accommodationBooking: '#\\_is_dokan_accommodation',
+                ProductImage: 'a.dokan-feat-image-btn',
+                virtual: 'input#\\_virtual',
+                accommodationBooking: 'input#\\_is_dokan_accommodation',
                 productCategory: '#select2-product_cat-container',
                 productCategoryInput: '.select2-search--dropdown > .select2-search__field',
-                tags: '.select2-search__field',
+                // tags
+                tags: {
+                    tagInput: '//select[@id="product_tag"]/..//input[@class="select2-search__field"]',
+                    searchedTag: (tagName: string) => `//li[@class="select2-results__option select2-results__option--highlighted" and normalize-space(text())="${tagName}"]`,
+                    selectedTags: (tagName: string) => `//li[@class="select2-selection__choice" and contains(., "${tagName}")]`,
+                    removeSelectedTags: (tagName: string) => `//li[@class="select2-selection__choice" and contains(., "${tagName}")]//span[@class="select2-selection__choice__remove"]`,
+                },
 
                 // Accommodation Booking Options
-                minimumNumberOfNightsAllowedInABooking: '#\\_wc_booking_min_duration',
-                maximumNumberOfNightsAllowedInABooking: '#\\_wc_booking_max_duration',
-                checkInTime: '#\\_dokan_accommodation_checkin_time',
-                checkOutTime: '#\\_dokan_accommodation_checkout_time',
+                minimumNumberOfNightsAllowed: 'input#\\_wc_booking_min_duration',
+                maximumNumberOfNightsAllowed: 'input#\\_wc_booking_max_duration',
+                checkInTime: 'input#\\_dokan_accommodation_checkin_time',
+                checkOutTime: 'input#\\_dokan_accommodation_checkout_time',
 
                 // General Booking Options
                 bookingDurationType: '#\\_wc_booking_duration_type',
                 bookingDuration: 'input#\\_wc_booking_duration',
+                bookingDurationUnit: '#\\_wc_booking_duration_unit',
                 bookingDurationMin: 'input#\\_wc_booking_min_duration',
                 bookingDurationMax: 'input#\\_wc_booking_max_duration',
-                bookingDurationUnit: '#\\_wc_booking_duration_unit',
 
                 calendarDisplayMode: '#\\_wc_booking_calendar_display_mode',
 
@@ -5274,7 +5295,7 @@ export const selector = {
                 maximumBookingWindowIntoTheFutureDateUnit: '#\\_wc_booking_max_date_unit',
                 requireABufferPeriodOfMonthsBetweenBookings: '#\\_wc_booking_buffer_period',
                 adjacentBuffering: '#\\_wc_booking_apply_adjacent_buffer',
-                allDatesAre: '#\\_wc_booking_default_date_availability',
+                allDatesAvailability: '#\\_wc_booking_default_date_availability',
                 checkRulesAgainst: '#\\_wc_booking_check_availability_against',
                 restrictStartAndEndDays: '#dokan_booking_has_restricted_days_field',
                 sunday: '#\\_wc_booking_restricted_days\\[0\\]',
@@ -5313,34 +5334,38 @@ export const selector = {
                 // Extra Options
 
                 // Has Persons
-                hasPersons: '#\\_wc_booking_has_persons',
-                minPersons: '#\\_wc_booking_min_persons_group',
-                maxPersons: '#\\_wc_booking_max_persons_group',
-                multiplyAllCostsByPersonCount: '#\\_wc_booking_person_cost_multiplier',
-                countPersonsAsBookings: '#\\_wc_booking_person_qty_multiplier',
-                enablePersonTypes: '#\\_wc_booking_has_person_types',
+                hasPersons: 'input#\\_wc_booking_has_persons',
+                minPersons: 'div#bookings_persons #\\_wc_booking_min_persons_group',
+                maxPersons: 'div#bookings_persons #\\_wc_booking_max_persons_group',
+                multiplyAllCostsByPersonCount: 'div#bookings_persons #\\_wc_booking_person_cost_multiplier',
+                countPersonsAsBookings: 'div#bookings_persons #\\_wc_booking_person_qty_multiplier',
+                enablePersonTypes: 'div#bookings_persons #\\_wc_booking_has_person_types',
 
                 // Add Person
-                addPersonType: '.add_person',
-                personTypeName: '//label[contains(text(),"Person Type Name:")]/..//input',
-                personBaseCost: '//label[contains(text(),"Base Cost:")]/..//input',
-                personBlockCost: '//label[contains(text(),"Block Cost:")]/..//input',
-                description: '.person_description',
-                min: '//label[contains(text(),"Min:")]/..//input',
-                max: '//label[contains(text(),"Max:")]/..//input',
-                unlink: '.unlink_booking_person', // invokes default js alert
+                addPersonType: 'button.add_person',
+                person: {
+                    typeName: '//div[@id="bookings_persons"]//label[contains(text(),"Person Type Name:")]/..//input',
+                    baseCost: '//div[@id="bookings_persons"]//label[contains(text(),"Base Cost:")]/..//input',
+                    blockCost: '//div[@id="bookings_persons"]//label[contains(text(),"Block Cost:")]/..//input',
+                    description: 'input.person_description',
+                    min: '//div[@id="bookings_persons"]//label[contains(text(),"Min:")]/..//input',
+                    max: '//div[@id="bookings_persons"]//label[contains(text(),"Max:")]/..//input',
+                },
+                unlink: 'button.unlink_booking_person', // invokes default js alert
+                remove: 'button.remove_booking_person',
+                confirmRemove: 'button.swal2-confirm',
 
                 // Has Resources
-                hasResources: '#\\_wc_booking_has_resources',
+                hasResources: 'input#\\_wc_booking_has_resources',
 
                 // Add Resource
-                label: '#\\_wc_booking_resource_label',
-                resourcesAre: '#\\_wc_booking_resources_assignment',
-                addResourceId: '.add_resource_id',
-                addResource: '.add_resource',
-                resourceBaseCost: '//label[contains(text(),"Base Cost:")]/..//input',
-                resourceBlockCost: '//label[contains(text(),"Block Cost:")]/..//input',
-                removeResource: '.remove_booking_resource.button', // invokes default js alert
+                label: 'div#bookings_resources input#\\_wc_booking_resource_label',
+                resourcesAllocation: 'div#bookings_resources select#\\_wc_booking_resources_assignment',
+                addResourceId: 'div#bookings_resources select.add_resource_id',
+                addResource: 'button.add_resource',
+                resourceBaseCost: '//div[@id="bookings_resources"]//label[contains(text(),"Base Cost:")]/..//input',
+                resourceBlockCost: '//div[@id="bookings_resources"]//label[contains(text(),"Block Cost:")]/..//input',
+                removeResource: 'button.remove_booking_resource', // invokes default js alert
 
                 // Short Description
                 shortDescriptionIframe: '.dokan-product-short-description iframe',
@@ -5683,6 +5708,8 @@ export const selector = {
             edit: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="edit"]`,
             permanentlyDelete: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="delete"]`,
             view: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="view"]`,
+            duplicate: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="duplicate"]`,
+            duplicateSuccessMessage: '//div[contains(@class,"dokan-alert dokan-alert-success")]//strong[normalize-space(text())="Product successfully duplicated"]',
 
             confirmDelete: '.swal2-confirm',
             cancelDelete: '.swal2-cancel',
@@ -5702,8 +5729,10 @@ export const selector = {
                 // tags
                 tags: {
                     tagInput: '//div[@class="dokan-form-group dokan-auction-tags"]//input[@class="select2-search__field"]',
-                    searchedTag: (tagName: string) => `//li[contains(@class,"select2-results__option") and contains(@id, "select2-product_tag-result") and normalize-space(text())="${tagName}"]`,
-                    nonCreatedTag: (tagName: string) => `//li[@class="select2-results__option select2-results__option--highlighted" and normalize-space(text())="${tagName}"]`,
+                    // todo: remove below lines if the behavior is actually changed
+                    // searchedTag: (tagName: string) => `//li[contains(@class,"select2-results__option") and contains(@id, "select2-product_tag-result") and normalize-space(text())="${tagName}"]`,
+                    // nonCreatedTag: (tagName: string) => `//li[@class="select2-results__option select2-results__option--highlighted" and normalize-space(text())="${tagName}"]`,
+                    searchedTag: (tagName: string) => `//li[@class="select2-results__option select2-results__option--highlighted" and normalize-space(text())="${tagName}"]`,
                     selectedTags: (tagName: string) => `//li[@class="select2-selection__choice" and contains(., "${tagName}")]`,
                     removeSelectedTags: (tagName: string) => `//li[@class="select2-selection__choice" and contains(., "${tagName}")]//span[@class="select2-selection__choice__remove"]`,
                 },
@@ -6518,7 +6547,18 @@ export const selector = {
             shipStationText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 
-            authenticationKey: '//label[normalize-space()="Authentication Key"]/..//code',
+            generateCredentials: 'button#dokan-shipstation-generate-credentials-btn',
+            generateSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="API credentials generated successfully."]',
+            revokeCredentials: 'button#dokan-shipstation-revoke-credentials-btn',
+            confirmRevoke: 'button.swal2-confirm',
+            revokeSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="API credentials revoked successfully."]',
+
+            credentials: {
+                authenticationKey: '//label[normalize-space()="Authentication Key"]/..//code',
+                consumerKey: '//label[normalize-space()="Consumer Key"]/..//code',
+                consumerSecret: '//label[normalize-space()="Consumer Secret"]/..//code',
+            },
+
             selectedStatus: '//label[@for="dokan-shipstation-export-statuses"]/..//li[@class="select2-selection__choice"]',
             exportOrderStatusesInput: '//label[normalize-space()="Export Order Statuses"]/..//span[@class="select2-selection select2-selection--multiple"]//input[@class="select2-search__field"]',
             shippedOrderStatusDropdown: '.select2-selection__arrow',
@@ -6526,8 +6566,7 @@ export const selector = {
             result: '.select2-results__option.select2-results__option--highlighted',
 
             saveChanges: '#dokan-store-shipstation-form-submit',
-            saveSuccessMessage: '#swal2-html-container',
-            successOk: '.swal2-confirm',
+            saveSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="Settings saved successfully."]',
         },
 
         // social profile settings
@@ -6983,8 +7022,14 @@ export const selector = {
                 },
             },
 
+            radiusSearch: {
+                radiusUnit: 'span.dokan-range-slider-value',
+                slider: 'input.dokan-range-slider',
+            },
+
             // Filter
             filters: {
+                filterDiv: 'form.dokan-geolocation-location-filters',
                 searchProduct: 'input.dokan-form-control[placeholder="Search Products"]',
                 location: '.location-address input',
                 selectCategory: '#product_cat',
@@ -7241,7 +7286,7 @@ export const selector = {
             storeListText: '//h1[normalize-space()="Store List"]',
 
             map: {
-                locationMap: '#dokan-geolocation-locations-map',
+                locationMap: 'div#dokan-geolocation-locations-map',
                 map: '//button[normalize-space()="Map"]',
                 satellite: '//button[normalize-space()="Satellite"]',
                 fullScreenToggle: '//button[@title="Toggle fullscreen view"]',
