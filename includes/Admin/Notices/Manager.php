@@ -202,8 +202,8 @@ class Manager {
                 'show_close_button' => false,
                 'type'              => 'alert',
                 'scope'             => 'global',
-                'title'             => __( 'Upgrade to Dokan Pro Latest Version', 'dokan-lite' ),
-                'description'       => __( 'Your Dokan Lite version is updated to the latest version but you are still using the Dokan pro old version. Upgrade to Dokan Pro Latest version to enable the new features.', 'dokan-lite' ),
+                'title'             => __( 'Dokan Update Required', 'dokan-lite' ),
+                'description'       => __( 'To ensure all the feature compatibility and accessibility, Dokan Pro minimum v3.14.0 is required.', 'dokan-lite' ),
             ];
         }
 
