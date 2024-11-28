@@ -49,13 +49,21 @@ add_filter( 'woocommerce_product_tabs', 'dokan_seller_product_tab' );
  * Prints seller info in product single page
  *
  * @global WC_Product $product
- * @param type $val
  */
-function dokan_product_seller_tab( $val ) {
+function dokan_product_seller_tab() {
     global $product;
+
+    if ( ! $product instanceof WC_Product ) {
+        return;
+    }
 
     $author_id  = get_post_field( 'post_author', $product->get_id() );
     $author     = get_user_by( 'id', $author_id );
+
+    if ( ! $author instanceof WP_User ) {
+        return;
+    }
+
     $store_info = dokan_get_store_info( $author->ID );
 
     dokan_get_template_part(
