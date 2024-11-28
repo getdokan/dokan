@@ -36,6 +36,11 @@ export class StoreAppearance extends BasePage {
         }
     }
 
+    // set Google reCAPTCHA
+    async viewGoogleRecaptcha(): Promise<void> {
+        // todo: implement
+    }
+
     // view store contact form on store sidebar
     async viewStoreContactFormOnStoreSidebar(status: 'enable' | 'disable', storeName: string): Promise<void> {
         await this.gotoSingleStore(storeName);
@@ -69,6 +74,11 @@ export class StoreAppearance extends BasePage {
         //todo: need to add more assertion
     }
 
+    // view store sidebar from theme
+    async viewStoreSideBarFromTheme(status: 'enable' | 'disable', storeName: string): Promise<void> {
+        // todo: implement
+    }
+
     // view vendor info on single store page
     async viewVendorInfoOnSingleStorePage(status: 'enable' | 'disable', storeName: string): Promise<void> {
         await this.gotoSingleStore(storeName);
@@ -78,5 +88,10 @@ export class StoreAppearance extends BasePage {
         } else {
             await this.multipleElementNotVisible(vendorInfo);
         }
+    }
+
+    // view Font Awesome library icons on vendor dashboard
+    async viewFontAwesomeLibrary(status: 'enable' | 'disable', storeName: string): Promise<void> {
+        // todo: implement
     }
 }

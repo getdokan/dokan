@@ -1,4 +1,4 @@
-const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, CATEGORY_ID, TALKJS_APP_ID, TALKJS_APP_SECRET, PRINTFUL_APP_ID, PRINTFUL_APP_SECRET } = process.env;
+const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, CATEGORY_ID, TALKJS_APP_ID, TALKJS_APP_SECRET, PRINTFUL_APP_ID, PRINTFUL_APP_SECRET, RECAPTCHA_SITE_KEY, RECAPTCHA_SECRET_KEY } = process.env;
 
 export const dbData = {
     dokan: {
@@ -225,12 +225,14 @@ export const dbData = {
             gmap_api_key: GMAP ?? '',
             mapbox_access_token: MAPBOX ?? '',
             recaptcha_validation_label: '',
+            recaptcha_site_key: RECAPTCHA_SITE_KEY ?? '',
+            recaptcha_secret_key: RECAPTCHA_SECRET_KEY ?? '',
             contact_seller: 'on',
             store_header_template: 'default', // default, layout1, layout2, layout3
             store_banner_width: '625',
             store_banner_height: '300',
             store_open_close: 'on',
-            enable_theme_store_sidebar: 'off',
+            enable_theme_store_sidebar: 'off', // on, off
             hide_vendor_info: {
                 email: '',
                 phone: '',
@@ -241,7 +243,7 @@ export const dbData = {
                 dokan_bank_name: '',
                 dokan_bank_iban: '',
             },
-            disable_dokan_fontawesome: 'off',
+            disable_dokan_fontawesome: 'off', // on, off
         },
 
         menuManagerSettings: {

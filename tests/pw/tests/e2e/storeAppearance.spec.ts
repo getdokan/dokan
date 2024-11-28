@@ -12,7 +12,6 @@ test.describe('Store Appearance test', () => {
         const customerContext = await browser.newContext(data.auth.adminAuth);
         aPage = await customerContext.newPage();
         admin = new StoreAppearance(aPage);
-        await dbUtils.setOptionValue(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
     });
 
     test.afterAll(async () => {
@@ -34,6 +33,11 @@ test.describe('Store Appearance test', () => {
         });
     });
 
+    test.skip('admin can set Google reCAPTCHA validation', { tag: ['@lite', '@admin'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { store_map: status === 'enable' ? 'on' : 'off' });
+        await admin.viewGoogleRecaptcha();
+    });
+
     ['enable', 'disable'].forEach((status: string) => {
         test(`admin can ${status} store contact form on store sidebar`, { tag: ['@lite', '@admin'] }, async () => {
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { contact_seller: status === 'enable' ? 'on' : 'off' });
@@ -50,21 +54,33 @@ test.describe('Store Appearance test', () => {
 
     ['enable', 'disable'].forEach((status: string) => {
         test(`admin can ${status} store open-close time on store sidebar`, { tag: ['@lite', '@admin'] }, async () => {
-            //todo: vendor must have store open-close time
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { store_open_close: status === 'enable' ? 'on' : 'off' });
             await admin.viewStoreOpenCloseTimeOnStoreSidebar(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);
         });
     });
 
-    test(`admin can set store banner size`, { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can set store banner size', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setBannerSize(data.storeBanner);
     });
 
     ['enable', 'disable'].forEach((status: string) => {
-        test(`admin can ${status} vendor info on single store page `, { tag: ['@lite', '@admin'] }, async () => {
-            // todo: vendor store email settings must also be enable
+        test.skip(`admin can ${status} store sidebar from theme`, { tag: ['@lite', '@admin'] }, async () => {
+            await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { enable_theme_store_sidebar: status === 'enable' ? 'on' : 'off' });
+            await admin.viewStoreSideBarFromTheme(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);
+        });
+    });
+
+    ['enable', 'disable'].forEach((status: string) => {
+        test(`admin can ${status} vendor info on single store page`, { tag: ['@lite', '@admin'] }, async () => {
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { hide_vendor_info: status === 'enable' ? { email: '', phone: '', address: '' } : { email: 'email', phone: 'phone', address: 'address' } });
             await admin.viewVendorInfoOnSingleStorePage(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);
+        });
+    });
+
+    ['enable', 'disable'].forEach((status: string) => {
+        test.skip(`admin can ${status} Dokan FontAwesome library`, { tag: ['@lite', '@admin'] }, async () => {
+            await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { disable_dokan_fontawesome: status === 'enable' ? 'on' : 'off' });
+            await admin.viewFontAwesomeLibrary(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);
         });
     });
 });
