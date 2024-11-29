@@ -81,8 +81,6 @@ import Debounce from "debounce";
                     let newPercentage = this.validatePercentage( newVal.percentage );
                     let oldPercentage = this.validatePercentage( oldVal.percentage );
 
-                    console.log(newPercentage, oldPercentage);
-
                     if ( ! newPercentage || '' === newPercentage || Number( newPercentage ) < 0 || Number( newPercentage ) > 100 ) {
                         newPercentage = oldPercentage;
                     }

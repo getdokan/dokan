@@ -1043,7 +1043,7 @@ export const dbData = {
             show_location_map_pages: 'all', // all, store_listing, shop
             show_filters_before_locations_map: 'on', // on, off
             show_product_location_in_wc_tab: 'on', // on, off
-            distance_unit: 'km',
+            distance_unit: 'km', // km, miles
             distance_min: '0',
             distance_max: '10',
             map_zoom: '11',
