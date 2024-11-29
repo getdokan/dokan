@@ -1298,8 +1298,8 @@
 - page: 'Store Reviews'
   features:
       admin:
-          admin can enable store reviews module: false
-          admin can disable store reviews module: false
+          admin can enable store reviews module: true
+          admin can disable store reviews module: true
           admin can view store reviews menu page: true
           admin can view store review: true
           admin can edit store review: true

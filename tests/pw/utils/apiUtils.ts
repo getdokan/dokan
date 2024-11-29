@@ -864,13 +864,19 @@ export class ApiUtils {
     }
 
     // get activate modules
-    async activateModules(moduleIds: string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+    async activateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+        if (!Array.isArray(moduleIds)) {
+            moduleIds = [moduleIds];
+        }
         const [response, responseBody] = await this.put(endPoints.activateModule, { data: { module: moduleIds }, headers: auth });
         return [response, responseBody];
     }
 
     // get deactivated modules
-    async deactivateModules(moduleIds: string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+    async deactivateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+        if (!Array.isArray(moduleIds)) {
+            moduleIds = [moduleIds];
+        }
         const [response, responseBody] = await this.put(endPoints.deactivateModule, { data: { module: moduleIds }, headers: auth });
         return [response, responseBody];
     }
