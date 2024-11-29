@@ -102,6 +102,13 @@ test.describe('Commission test', () => {
         await admin.viewCommissionMetaBox(orderId);
     });
 
-    // todo: admin can view commission on  product list, order list, and order details, sub order details on parent order
-    // todo: vendor can view earning on product list, product details, order list, and order details
+    test('admin can view sub orders meta-box on parent order details', { tag: ['@lite', '@admin'] }, async () => {});
+    test('admin can view related orders meta-box on child order details', { tag: ['@lite', '@admin'] }, async () => {});
+    test('admin can view commission on product list', { tag: ['@lite', '@admin'] }, async () => {});
+    test('admin can view commission on order list', { tag: ['@lite', '@admin'] }, async () => {});
+    test('vendor can view earning on product list', { tag: ['@lite', '@vendor'] }, async () => {});
+    test('vendor can view earning on product add page', { tag: ['@lite', '@vendor'] }, async () => {});
+    test('vendor can view earning on product edit page', { tag: ['@lite', '@vendor'] }, async () => {});
+    test('vendor can view earning on order list', { tag: ['@lite', '@vendor'] }, async () => {});
+    test('vendor can view earning on order details', { tag: ['@lite', '@vendor'] }, async () => {});
 });
