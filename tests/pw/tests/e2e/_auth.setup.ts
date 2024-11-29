@@ -5,6 +5,8 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
+const { DOKAN_PRO } = process.env;
+
 setup.describe('add & authenticate users', () => {
     let apiUtils: ApiUtils;
 
@@ -36,7 +38,9 @@ setup.describe('add & authenticate users', () => {
         // add open-close time
         await apiUtils.updateStore(sellerId, payloads.storeOpenClose, payloads.adminAuth);
         // add review
-        await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.customerAuth);
+        if (DOKAN_PRO) {
+            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.customerAuth);
+        }
         helpers.createEnvVar('VENDOR_ID', sellerId);
     });
 
@@ -50,7 +54,9 @@ setup.describe('add & authenticate users', () => {
         // add open-close time
         await apiUtils.updateStore(sellerId, payloads.storeOpenClose, payloads.adminAuth);
         // add review
-        await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.customerAuth);
+        if (DOKAN_PRO) {
+            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.customerAuth);
+        }
         helpers.createEnvVar('VENDOR2_ID', sellerId);
     });
 
