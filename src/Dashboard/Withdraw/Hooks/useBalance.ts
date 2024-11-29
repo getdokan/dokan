@@ -13,6 +13,7 @@ interface LastWithdraw {
     date: string;
     status: number;
     method: string;
+    method_title: string;
     note: string;
     details: Record< any, any >;
     ip: string;
@@ -29,7 +30,7 @@ export interface BalanceData {
     last_withdraw: LastWithdraw;
 }
 
-interface UseBalanceReturn {
+export interface UseBalanceReturn {
     data: BalanceData | null;
     isLoading: boolean;
     error: Error | null;
@@ -37,36 +38,40 @@ interface UseBalanceReturn {
 }
 
 export const useBalance = (): UseBalanceReturn => {
-    const [data, setData] = useState<BalanceData | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<Error | null>(null);
+    const [ data, setData ] = useState< BalanceData | null >( null );
+    const [ isLoading, setIsLoading ] = useState< boolean >( true );
+    const [ error, setError ] = useState< Error | null >( null );
 
-    const fetchBalance = useCallback(async () => {
+    const fetchBalance = useCallback( async () => {
         try {
-            setIsLoading(true);
-            setError(null);
+            setIsLoading( true );
+            setError( null );
 
-            const response = await apiFetch<BalanceData>({
+            const response = await apiFetch< BalanceData >( {
                 path: '/dokan/v1/withdraw/balance',
                 method: 'GET',
-            });
+            } );
 
-            setData(response);
-        } catch (err) {
-            setError(err instanceof Error ? err : new Error('Failed to fetch balance'));
-            console.error('Error fetching balance:', err);
+            setData( response );
+        } catch ( err ) {
+            setError(
+                err instanceof Error
+                    ? err
+                    : new Error( 'Failed to fetch balance' )
+            );
+            console.error( 'Error fetching balance:', err );
         } finally {
-            setIsLoading(false);
+            setIsLoading( false );
         }
-    }, []);
+    }, [] );
 
-    useEffect(() => {
+    useEffect( () => {
         fetchBalance();
-    }, [fetchBalance]);
+    }, [ fetchBalance ] );
 
-    const refresh = useCallback(() => {
+    const refresh = useCallback( () => {
         fetchBalance();
-    }, [fetchBalance]);
+    }, [ fetchBalance ] );
 
     return { data, isLoading, error, refresh };
 };

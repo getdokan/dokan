@@ -1,4 +1,4 @@
-.withdraw-wraper {
+@mixin windraw-reset {
     button:focus,
     .menu-toggle:hover,
     button:hover,
@@ -12,11 +12,16 @@
     input[type="button"]:focus,
     input[type="submit"]:hover,
     input[type="submit"]:focus {
-        background-color: transparent;
-        border-color: transparent;
+        background-color: var(--dokan-button-hover-color, #F05025);
+        border-color: var(--dokan-button-hover-background-color, #F05025);
     }
+
     button {
         box-shadow: none;
+        border: none;
+    }
+
+    input {
         border: none;
     }
 
@@ -32,6 +37,24 @@
         vertical-align: inherit;
         box-sizing: border-box;
     }
+
+    input[type="text"][role=combobox] {
+        height: fit-content;
+    }
+
+    .border {
+        border-style: solid;
+        border-width: 1px;
+
+        &-b {
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+        }
+    }
+}
+
+.dokan-withdraw-style-reset {
+    @include windraw-reset;
 }
 
 @config './../../../base-tailwind.config.js';

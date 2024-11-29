@@ -17,10 +17,10 @@ interface WithdrawMethod {
 export interface WithdrawSettings {
     withdraw_method: string;
     payment_methods: PaymentMethod[];
-    active_methods: Record<string, WithdrawMethod>;
+    active_methods: Record< string, WithdrawMethod >;
 }
 
-interface UseWithdrawSettingsReturn {
+export interface UseWithdrawSettingsReturn {
     data: WithdrawSettings | null;
     isLoading: boolean;
     error: Error | null;
@@ -28,36 +28,40 @@ interface UseWithdrawSettingsReturn {
 }
 
 export const useWithdrawSettings = (): UseWithdrawSettingsReturn => {
-    const [data, setData] = useState<WithdrawSettings | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<Error | null>(null);
+    const [ data, setData ] = useState< WithdrawSettings | null >( null );
+    const [ isLoading, setIsLoading ] = useState< boolean >( true );
+    const [ error, setError ] = useState< Error | null >( null );
 
-    const fetchSettings = useCallback(async () => {
+    const fetchSettings = useCallback( async () => {
         try {
-            setIsLoading(true);
-            setError(null);
+            setIsLoading( true );
+            setError( null );
 
-            const response = await apiFetch<WithdrawSettings>({
+            const response = await apiFetch< WithdrawSettings >( {
                 path: '/dokan/v2/withdraw/settings',
                 method: 'GET',
-            });
+            } );
 
-            setData(response);
-        } catch (err) {
-            setError(err instanceof Error ? err : new Error('Failed to fetch withdraw settings'));
-            console.error('Error fetching withdraw settings:', err);
+            setData( response );
+        } catch ( err ) {
+            setError(
+                err instanceof Error
+                    ? err
+                    : new Error( 'Failed to fetch withdraw settings' )
+            );
+            console.error( 'Error fetching withdraw settings:', err );
         } finally {
-            setIsLoading(false);
+            setIsLoading( false );
         }
-    }, []);
+    }, [] );
 
-    useEffect(() => {
+    useEffect( () => {
         fetchSettings();
-    }, [fetchSettings]);
+    }, [ fetchSettings ] );
 
-    const refresh = useCallback(() => {
+    const refresh = useCallback( () => {
         fetchSettings();
-    }, [fetchSettings]);
+    }, [ fetchSettings ] );
 
     return { data, isLoading, error, refresh };
 };

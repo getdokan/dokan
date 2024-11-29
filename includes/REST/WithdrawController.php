@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\REST;
 
 use Cassandra\Date;
 use Exception;
+use stdClass;
 use WeDevs\Dokan\Cache;
 use WeDevs\Dokan\Withdraw\Withdraw;
 use WP_Error;
@@ -421,13 +422,14 @@ class WithdrawController extends WP_REST_Controller {
         if ( is_a( $last_withdraw, \WeDevs\Dokan\Withdraw\Withdraw::class ) ) {
             $last_withdraw = $last_withdraw->get_withdraw();
             $last_withdraw['details'] = isset( $last_withdraw['details'] ) ? maybe_unserialize( $last_withdraw['details'] ) : [];
+            $last_withdraw['method_title'] = isset( $last_withdraw['method'] ) ? dokan_withdraw_get_method_title( $last_withdraw['method'] ) : '';
         }
 
         $data['current_balance']    = dokan_get_seller_balance( dokan_get_current_user_id(), false );
         $data['withdraw_limit']     = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 );
         $data['withdraw_threshold'] = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
         $data['withdraw_methods']   = array_filter( dokan_get_seller_active_withdraw_methods( dokan_get_current_user_id() ) );
-        $data['last_withdraw']      = $last_withdraw;
+        $data['last_withdraw']      = is_array( $last_withdraw ) ? $last_withdraw : new stdClass();
 
         return rest_ensure_response( $data );
     }

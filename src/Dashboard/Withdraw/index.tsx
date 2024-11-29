@@ -1,22 +1,18 @@
 import './tailwind.scss';
-import WithdrawDashboardSkeleton from "./WithdrawDashboardSkeleton";
-import WithdrawDashboard from "./WithdrawDashboard";
-import { useBalance } from "./Hooks/useBalance";
-import { useWithdrawSettings } from "./Hooks/useWithdrawSettings";
+import { useBalance } from './Hooks/useBalance';
+import { useWithdrawSettings } from './Hooks/useWithdrawSettings';
+import Balance from './Balance';
+import PaymentDetails from './PaymentDetails';
+import PaymentMethods from './PaymentMethods';
 
 const Index = () => {
     const balance = useBalance();
     const withdrawSettings = useWithdrawSettings();
     return (
-        <div className="withdraw-wraper">
-            { balance.isLoading && withdrawSettings.isLoading ? (
-                <WithdrawDashboardSkeleton />
-            ) : (
-                <WithdrawDashboard
-                    balance={ balance.data }
-                    withdrawSettings={ withdrawSettings.data }
-                />
-            ) }
+        <div className="dokan-withdraw-wrapper dokan-react-withdraw space-y-6">
+            <Balance bodyData={ balance } />
+            <PaymentDetails bodyData={ balance } />
+            <PaymentMethods bodyData={ withdrawSettings } />
         </div>
     );
 };
