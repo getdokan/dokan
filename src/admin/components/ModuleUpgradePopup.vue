@@ -128,7 +128,7 @@ export default {
 </script>
 
 <style lang="less">
-
+@import "../../../assets/src/less/variables.less";
 #dokan-upgrade-to-pro-wrapper {
     #dokan-upgrade-popup {
         position: fixed;
@@ -178,7 +178,7 @@ export default {
                 margin-top: 5px;
 
                 .unlock {
-                    color: #FF5722;
+                    color: @dokan-color;
                     font-size: 1rem;
                     font-weight: normal;
                     font-family: "SF Pro Text", sans-serif;
@@ -212,12 +212,12 @@ export default {
                     font-family: "SF Pro Text", sans-serif;
 
                     strong {
-                        color: #ff5722;
+                        color: @dokan-color;
                     }
                 }
 
                 .upgrade-button {
-                    background: #FF5722;
+                    background: @dokan-color;
                     border-radius: 3px;
                     padding: 10px 18px;
                     font-weight: 400;

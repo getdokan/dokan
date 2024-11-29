@@ -222,6 +222,16 @@ $price_kses = apply_filters(
         do_action( 'dokan_product_list_table_after_column_content_price', $product );
         ?>
     </td>
+    <td data-title="<?php esc_attr_e( 'Earning', 'dokan-lite' ); ?>">
+        <?php
+            $earning = dokan()->commission->get_earning_by_product( $product );
+        if ( $earning ) {
+            echo wp_kses_post( wc_price( $earning ) );
+        } else {
+            echo '<span class="na">&ndash;</span>';
+        }
+        ?>
+    </td>
     <td data-title="<?php esc_attr_e( 'Type', 'dokan-lite' ); ?>">
         <?php
         if ( dokan_get_prop( $product, 'product_type', 'get_type' ) === 'grouped' ) {

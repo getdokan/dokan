@@ -70,9 +70,9 @@ export class VendorSettingsPage extends VendorPage {
         await this.toBeVisible(settingsVendor.updateSettings);
     }
 
-    // vendor shipstation render properly
-    async vendorShipstationSettingsRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipstation);
+    // vendor ShipStation render properly
+    async vendorShipStationSettingsRenderProperly() {
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipStation);
 
         // shipStation text is visible
         await this.toBeVisible(settingsShipStation.shipStationText);
@@ -80,8 +80,13 @@ export class VendorSettingsPage extends VendorPage {
         // visit store link is visible
         await this.toBeVisible(settingsShipStation.visitStore);
 
-        // authentication key is visible
-        await this.toBeVisible(settingsShipStation.authenticationKey);
+        const isCredentialsGenerated = await this.isVisible(settingsShipStation.revokeCredentials);
+
+        if (isCredentialsGenerated) {
+            await this.multipleElementVisible(settingsShipStation.credentials);
+        } else {
+            await this.toBeVisible(settingsShipStation.generateCredentials);
+        }
 
         // export order statuses is visible
         await this.toBeVisible(settingsShipStation.exportOrderStatusesInput);
@@ -237,7 +242,7 @@ export class VendorSettingsPage extends VendorPage {
                 break;
 
             case 'liveChat':
-                await this.liveChatSettings(vendorInfo.liveChat);
+                await this.liveChatSettings();
                 break;
 
             case 'min-max':
@@ -428,7 +433,7 @@ export class VendorSettingsPage extends VendorPage {
     }
 
     // vendor set liveChat settings
-    async liveChatSettings(liveChat: vendor['vendorInfo']['liveChat']): Promise<void> {
+    async liveChatSettings(): Promise<void> {
         await this.check(settingsVendor.liveChat);
     }
 
@@ -438,26 +443,27 @@ export class VendorSettingsPage extends VendorPage {
         await this.clearAndType(settingsVendor.minMax.maximumAmountToPlaceAnOrder, minMax.maximumAmount);
     }
 
-    // vendor set Shipstation settings
+    // vendor set ShipStation settings
     async setShipStation(shipStation: vendor['shipStation']): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipstation);
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipStation);
 
+        // export order statuses
         const allStatus = await this.getMultipleElementTexts(settingsShipStation.selectedStatus);
-        const statusIsSelected = allStatus.includes('×' + shipStation.status);
+        const statusIsSelected = allStatus.includes(`×${shipStation.status}`);
         if (!statusIsSelected) {
             await this.clearAndType(settingsShipStation.exportOrderStatusesInput, shipStation.status);
             await this.toContainText(settingsShipStation.result, shipStation.status);
             await this.press(data.key.enter);
         }
 
-        // await this.click(settingsShipStation.shippedOrderStatusDropdown);
-        // await this.clearAndType(settingsShipStation.shippedOrderStatusInput, shipStation.status);// todo: need to fix -> locator issue
-        // await this.toContainText(settingsShipStation.result, shipStation.status);
-        // await this.press(data.key.enter);
+        // shipped order status
+        await this.click(settingsShipStation.shippedOrderStatusDropdown);
+        await this.clearAndType(settingsShipStation.shippedOrderStatusInput, shipStation.status);
+        await this.toContainText(settingsShipStation.result, shipStation.status);
+        await this.press(data.key.enter);
 
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, settingsShipStation.saveChanges);
-        await this.toContainText(settingsShipStation.saveSuccessMessage, 'Your changes has been updated!');
-        await this.click(settingsShipStation.successOk);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.shipStation, settingsShipStation.saveChanges, 201);
+        await this.toBeVisible(settingsShipStation.saveSuccessMessage);
     }
 
     // vendor set social profile settings

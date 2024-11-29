@@ -2122,7 +2122,7 @@ export const schemas = {
     },
 
     // commission schema
-    commission: z.number(),
+    commission: z.string().or(z.number()),
 
     // withdraws schema
     withdrawsSchema: {
@@ -2953,5 +2953,20 @@ export const schemas = {
         }),
         shipmentSchema: shipmentSchema,
         shipmentsSchema: z.array(shipmentSchema),
+    },
+
+    // ShipStation schema
+    shipStationSchema: {
+        shipStationCredentialSchema: z.object({
+            key_id: z.string().or(z.number()),
+            consumer_key: z.string(),
+            consumer_secret: z.string(),
+        }),
+
+        shipStationOrderStatusSettingSchema: z.object({
+            vendor_id: z.string().or(z.number()),
+            export_statuses: z.array(z.string()),
+            shipped_status: z.string(),
+        }),
     },
 };

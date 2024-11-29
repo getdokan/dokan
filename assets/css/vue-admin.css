@@ -2510,6 +2510,20 @@ ul.dokan-settings-repeatable-list li span.remove-item {
 .field_contents .dokan-setting-warning .dokan-setting-warning-label span {
   margin-top: 6px !important;
 }
+.field_contents .dokan-setting-warning a.dokan-setting-warning-link {
+  display: block;
+  margin-top: 8px;
+  text-decoration: none;
+}
+.field_contents .dokan-setting-warning a.dokan-setting-warning-link:hover,
+.field_contents .dokan-setting-warning a.dokan-setting-warning-link:active,
+.field_contents .dokan-setting-warning a.dokan-setting-warning-link:focus {
+  outline: none;
+  box-shadow: none;
+}
+.field_contents .dokan-setting-warning a.dokan-setting-warning-link i.dashicons {
+  font-size: 18px;
+}
 .field_contents .dokan-setting-warning .dashicons {
   margin: 0px;
   padding: 0px;
