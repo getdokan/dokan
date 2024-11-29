@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan;
 
+use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
@@ -882,6 +883,9 @@ class Assets {
         if ( DOKAN_LOAD_SCRIPTS ) {
             self::load_form_validate_script();
             $this->load_gmap_script();
+
+            $wc_instance = WCAdminAssets::get_instance();
+            $wc_instance->register_scripts();
 
             wp_enqueue_script( 'dokan-react-frontend' );
             wp_enqueue_style( 'dokan-react-frontend' );
