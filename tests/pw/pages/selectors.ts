@@ -223,14 +223,14 @@ export const selector = {
 
             // dokan promotion
             promotion: {
-                promotion: '.dokan-notice-slides .dokan-promotion',
-                message: '.dokan-promotion .dokan-message',
+                promotion: 'div.dokan-notice-slides div.dokan-promotion',
+                message: 'div.dokan-promotion div.dokan-message',
             },
 
             // dokan notice
             notice: {
-                noticeDiv: '.dokan-admin-notices',
-                noticeDiv1: '.dokan-admin-notice.dokan-alert',
+                noticeDiv: 'div.dokan-admin-notices',
+                noticeDiv1: '//div[@class="dokan-admin-notices"]//div[contains(@class,"dokan-admin-notice")and not(contains(@class,"dokan-promotion"))]',
                 closeNotice: '.close-notice',
                 slider: '.slide-notice',
                 sliderPrev: '.slide-notice .prev',
@@ -5708,6 +5708,8 @@ export const selector = {
             edit: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="edit"]`,
             permanentlyDelete: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="delete"]`,
             view: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="view"]`,
+            duplicate: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="duplicate"]`,
+            duplicateSuccessMessage: '//div[contains(@class,"dokan-alert dokan-alert-success")]//strong[normalize-space(text())="Product successfully duplicated"]',
 
             confirmDelete: '.swal2-confirm',
             cancelDelete: '.swal2-cancel',
@@ -6545,7 +6547,18 @@ export const selector = {
             shipStationText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 
-            authenticationKey: '//label[normalize-space()="Authentication Key"]/..//code',
+            generateCredentials: 'button#dokan-shipstation-generate-credentials-btn',
+            generateSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="API credentials generated successfully."]',
+            revokeCredentials: 'button#dokan-shipstation-revoke-credentials-btn',
+            confirmRevoke: 'button.swal2-confirm',
+            revokeSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="API credentials revoked successfully."]',
+
+            credentials: {
+                authenticationKey: '//label[normalize-space()="Authentication Key"]/..//code',
+                consumerKey: '//label[normalize-space()="Consumer Key"]/..//code',
+                consumerSecret: '//label[normalize-space()="Consumer Secret"]/..//code',
+            },
+
             selectedStatus: '//label[@for="dokan-shipstation-export-statuses"]/..//li[@class="select2-selection__choice"]',
             exportOrderStatusesInput: '//label[normalize-space()="Export Order Statuses"]/..//span[@class="select2-selection select2-selection--multiple"]//input[@class="select2-search__field"]',
             shippedOrderStatusDropdown: '.select2-selection__arrow',
@@ -6553,8 +6566,7 @@ export const selector = {
             result: '.select2-results__option.select2-results__option--highlighted',
 
             saveChanges: '#dokan-store-shipstation-form-submit',
-            saveSuccessMessage: '#swal2-html-container',
-            successOk: '.swal2-confirm',
+            saveSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="Settings saved successfully."]',
         },
 
         // social profile settings
@@ -7008,6 +7020,11 @@ export const selector = {
                     productOnList: (productName: string) => `//h3[@class="info-title"]//a[contains(text(),"${productName}")]`,
                     closePopup: 'button.icon-close',
                 },
+            },
+
+            radiusSearch: {
+                radiusUnit: 'span.dokan-range-slider-value',
+                slider: 'input.dokan-range-slider',
             },
 
             // Filter

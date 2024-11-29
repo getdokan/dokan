@@ -1534,6 +1534,30 @@ export class ApiUtils {
     }
 
     /**
+     * ShipStation api methods
+     */
+
+    async createShipStationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.createShipStationCredential, { data: { vendor_id: vendorId }, headers: auth });
+        return responseBody;
+    }
+
+    async deleteShipStationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteShipStationCredential(vendorId), { headers: auth });
+        return responseBody;
+    }
+
+    async createShipStationOrderStatusSettings(payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.createShipStationOrderStatusSettings, { data: payload, headers: auth });
+        return responseBody;
+    }
+
+    async deleteShipStationOrderStatusSettings(vendorId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteShipStationOrderStatusSettings(vendorId), { headers: auth });
+        return responseBody;
+    }
+
+    /**
      * wp api methods
      */
 

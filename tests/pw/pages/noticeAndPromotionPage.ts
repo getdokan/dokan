@@ -91,7 +91,7 @@ export class NoticeAndPromotionPage extends AdminPage {
         await this.notToBeVisible(selector.admin.dokan.diagnostic.noticeDiv);
     }
 
-    // allow diagnostic tracking
+    // disallow diagnostic tracking
     async disallowDiagnosticTracking() {
         await this.goIfNotThere(data.subUrls.backend.adminDashboard, 'networkidle');
         await this.clickAndWaitForLoadState(selector.admin.dokan.diagnostic.disallowCollectData);

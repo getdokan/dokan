@@ -149,6 +149,16 @@ export class AuctionsPage extends VendorPage {
         await this.toBeVisible(auctionProductsVendor.productCell(productName));
     }
 
+    // duplicate auction product
+    async duplicateAuctionProduct(productName: string) {
+        await this.searchAuctionProduct(productName);
+        await this.removeAttribute(auctionProductsVendor.rowActions(productName), 'class'); // forcing the row actions to be visible, to avoid flakiness
+        await this.hover(auctionProductsVendor.productCell(productName));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auction, auctionProductsVendor.duplicate(productName), 302);
+        await this.toBeVisible(auctionProductsVendor.duplicateSuccessMessage);
+        await this.toBeVisible(auctionProductsVendor.productCell(productName + ' (Copy)'));
+    }
+
     // delete auction product
     async deleteAuctionProduct(productName: string) {
         await this.searchAuctionProduct(productName);
@@ -235,10 +245,6 @@ export class AuctionsPage extends VendorPage {
         await this.removeAttribute(auctionProductsVendor.auction.auctionEndDate, 'readonly');
         await this.clearAndType(auctionProductsVendor.auction.auctionStartDate, generalOption.startDate);
         await this.clearAndType(auctionProductsVendor.auction.auctionEndDate, generalOption.endDate);
-        await this.check(auctionProductsVendor.auction.enableAutomaticRelisting);
-        await this.clearAndType(auctionProductsVendor.auction.relistIfFailAfterNHours, generalOption.relistIfFailAfterNHours);
-        await this.clearAndType(auctionProductsVendor.auction.relistIfNotPaidAfterNHours, generalOption.relistIfNotPaidAfterNHours);
-        await this.clearAndType(auctionProductsVendor.auction.relistAuctionDurationInH, generalOption.relistAuctionDurationInH);
 
         await this.saveProduct();
 
@@ -251,6 +257,18 @@ export class AuctionsPage extends VendorPage {
         await this.toHaveValue(auctionProductsVendor.auction.buyItNowPrice, buyItNowPrice);
         await this.toHaveValue(auctionProductsVendor.auction.auctionStartDate, generalOption.startDate);
         await this.toHaveValue(auctionProductsVendor.auction.auctionEndDate, generalOption.endDate);
+    }
+
+    // add product Relist option
+    async addProductRelistingOption(productName: string, generalOption: product['auction']) {
+        await this.goToAuctionProductEditById(productName);
+        await this.check(auctionProductsVendor.auction.enableAutomaticRelisting);
+        await this.clearAndType(auctionProductsVendor.auction.relistIfFailAfterNHours, generalOption.relistIfFailAfterNHours);
+        await this.clearAndType(auctionProductsVendor.auction.relistIfNotPaidAfterNHours, generalOption.relistIfNotPaidAfterNHours);
+        await this.clearAndType(auctionProductsVendor.auction.relistAuctionDurationInH, generalOption.relistAuctionDurationInH);
+
+        await this.saveProduct();
+
         await this.toBeChecked(auctionProductsVendor.auction.enableAutomaticRelisting);
         await this.toHaveValue(auctionProductsVendor.auction.relistIfFailAfterNHours, generalOption.relistIfFailAfterNHours);
         await this.toHaveValue(auctionProductsVendor.auction.relistIfNotPaidAfterNHours, generalOption.relistIfNotPaidAfterNHours);

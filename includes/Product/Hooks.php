@@ -491,7 +491,7 @@ class Hooks {
 
                 <span class="wrapper">
                     <input type="hidden" value="fixed" name="_per_product_admin_commission_type">
-                    <input id="admin_commission" class="input-text wc_input_price" type="text" name="_per_product_admin_commission" value="<?php echo $admin_commission; ?>">
+                    <input id="admin_commission" class="input-text wc_input_price" min="0" max="100" type="text" name="_per_product_admin_commission" value="<?php echo wc_format_localized_price( $admin_commission ); ?>">
                     <span class="additional_fee">
                         <?php echo esc_html( '% &nbsp;&nbsp; +' ); ?>
                         <input class="input-text wc_input_price" type="text" name="_per_product_admin_additional_fee" value="<?php echo wc_format_localized_price( $additional_fee ); ?>">
@@ -540,14 +540,18 @@ class Hooks {
         }
 
         if ( isset( $_POST['_per_product_admin_commission'] ) ) { // phpcs:ignore
-            $admin_commission = ( '' === $_POST['_per_product_admin_commission'] ) ? '' : sanitize_text_field( $_POST['_per_product_admin_commission'] ); // phpcs:ignore
+            $_per_product_admin_commission = wc_format_decimal( sanitize_text_field( $_POST['_per_product_admin_commission'] ) ); // phpcs:ignore
+
+            if ( 0 <= $_per_product_admin_commission && 100 >= $_per_product_admin_commission ) {
+                $admin_commission = ( '' === $_POST['_per_product_admin_commission'] ) ? '' : $_per_product_admin_commission; // phpcs:ignore
+            }
         }
 
         if ( isset( $_POST['_per_product_admin_additional_fee'] ) ) { // phpcs:ignore
             $additional_fee = ( '' === $_POST['_per_product_admin_additional_fee'] ) ? '' : sanitize_text_field( $_POST['_per_product_admin_additional_fee'] ); // phpcs:ignore
         }
 
-        update_post_meta( $post_id, '_per_product_admin_commission', wc_format_decimal( $admin_commission ) );
+        update_post_meta( $post_id, '_per_product_admin_commission', $admin_commission );
         update_post_meta( $post_id, '_per_product_admin_additional_fee', wc_format_decimal( $additional_fee ) );
     }
 }

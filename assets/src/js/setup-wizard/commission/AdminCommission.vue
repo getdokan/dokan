@@ -61,7 +61,12 @@
             this.fixedCommission.fixed = commission.additional_fee ? Number( commission.additional_fee ) : 0;
             this.fixedCommission.percentage = commission.admin_percentage ? Number( commission.admin_percentage ) : 0;
             this.selectedCommission = commission.commission_type ? String(commission.commission_type) : 'fixed';
-            this.commission = commission.commission_category_based_values;
+            let commission_category_based_values = commission.commission_category_based_values;
+
+            commission_category_based_values.all = ! commission_category_based_values.all || Array.isArray( commission_category_based_values.all ) ? {} : commission_category_based_values.all;
+            commission_category_based_values.items = ! commission_category_based_values.items || Array.isArray( commission_category_based_values.items ) ? {} : commission_category_based_values.items;
+
+            this.commission = commission_category_based_values;
         },
 
         methods: {
