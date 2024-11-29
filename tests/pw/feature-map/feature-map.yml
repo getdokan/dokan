@@ -286,7 +286,7 @@
   features:
       customer:
           customer can view single store page [lite]: true
-          customer can view store open-close time on single store [lite]: false
+          customer can view store open-close time on single store [lite]: true
           customer can search product on single store [lite]: true
           customer can sort products on single store [lite]: true
           customer can view store terms and conditions [lite]: true
@@ -308,9 +308,9 @@
           customer can search store [lite]: true
           customer can filter stores by category: true
           customer can filter stores by location: true
-          customer can filter stores by ratings: false
+          customer can filter stores by ratings: true
           customer can filter featured stores: true
-          customer can filter open now stores: false
+          customer can filter open now stores: true
           customer can view stores on map: true
           customer can go to single store from store list [lite]: true
 
