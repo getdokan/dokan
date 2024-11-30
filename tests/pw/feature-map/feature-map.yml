@@ -758,8 +758,8 @@
 - page: 'Color Scheme Customizer'
   features:
       admin:
-          admin can enable color scheme customizer module: false
-          admin can disable color scheme customizer module: false
+          admin can enable color scheme customizer module: true
+          admin can disable color scheme customizer module: true
           admin can switch predefined color palette: true
           admin can add custom color palette: true
           admin can update custom color palette: true
