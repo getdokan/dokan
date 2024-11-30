@@ -6,11 +6,12 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 
-const { PRODUCT_ID } = process.env;
+const { PRODUCT_ID, CUSTOMER_ID } = process.env;
 
 test.describe('Commission test', () => {
     let admin: CommissionPage;
-    let aPage: Page;
+    let vendor: CommissionPage;
+    let aPage: Page, vPage: Page;
     let apiUtils: ApiUtils;
     let subscriptionProductId: string;
     let sellerId: string;
@@ -19,6 +20,10 @@ test.describe('Commission test', () => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new CommissionPage(aPage);
+
+        const vendorContext = await browser.newContext(data.auth.vendorAuth);
+        vPage = await vendorContext.newPage();
+        vendor = new CommissionPage(vPage);
 
         apiUtils = new ApiUtils(await request.newContext());
 
@@ -38,6 +43,7 @@ test.describe('Commission test', () => {
         // }
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
         await aPage.close();
+        await vPage.close();
         await apiUtils.dispose();
     });
 
@@ -102,13 +108,43 @@ test.describe('Commission test', () => {
         await admin.viewCommissionMetaBox(orderId);
     });
 
-    test('admin can view sub orders meta-box on parent order details', { tag: ['@lite', '@admin'] }, async () => {});
-    test('admin can view related orders meta-box on child order details', { tag: ['@lite', '@admin'] }, async () => {});
-    test('admin can view commission on product list', { tag: ['@lite', '@admin'] }, async () => {});
-    test('admin can view commission on order list', { tag: ['@lite', '@admin'] }, async () => {});
-    test('vendor can view earning on product list', { tag: ['@lite', '@vendor'] }, async () => {});
-    test('vendor can view earning on product add page', { tag: ['@lite', '@vendor'] }, async () => {});
-    test('vendor can view earning on product edit page', { tag: ['@lite', '@vendor'] }, async () => {});
-    test('vendor can view earning on order list', { tag: ['@lite', '@vendor'] }, async () => {});
-    test('vendor can view earning on order details', { tag: ['@lite', '@vendor'] }, async () => {});
+    test('admin can view sub orders meta-box on parent order details', { tag: ['@lite', '@admin'] }, async () => {
+        const [, , parentOrderId] = await apiUtils.createOrderWc(payloads.createMultiVendorOrder);
+        await admin.viewSubOrdersMetaBox(parentOrderId);
+    });
+
+    test('admin can view related orders meta-box on child order details', { tag: ['@lite', '@admin'] }, async () => {
+        const [, , parentOrderId] = await apiUtils.createOrderWc(payloads.createMultiVendorOrder);
+        const childOrderIds = await dbUtils.getChildOrderIds(parentOrderId);
+        await admin.viewRelatedOrdersMetaBox(childOrderIds[0] as string);
+    });
+
+    test('admin can view commission on product list', { tag: ['@lite', '@admin'] }, async () => {
+        await admin.viewCommissionOnProductList();
+    });
+
+    test('admin can view commission on order list', { tag: ['@lite', '@admin'] }, async () => {
+        await admin.viewCommissionOnOrderList();
+    });
+
+    test('vendor can view earning on product list', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.vendorViewEarningOnProductList();
+    });
+
+    test('vendor can view earning on product add page', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.vendorViewEarningOnAddProductDetails();
+    });
+
+    test('vendor can view earning on product edit page', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.vendorViewEarningOnEditProductDetails(data.predefined.simpleProduct.product1.name);
+    });
+
+    test('vendor can view earning on order list', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.vendorViewEarningOnOrderList();
+    });
+
+    test('vendor can view earning on order details', { tag: ['@lite', '@vendor'] }, async () => {
+        const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);
+        await vendor.vendorViewEarningOnOrderDetails(orderId);
+    });
 });

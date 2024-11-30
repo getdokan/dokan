@@ -2978,43 +2978,95 @@ export const selector = {
             // orders
             orders: {
                 //table
+                commissionColumn: 'th#admin_commission',
                 numberOfRowsFound: '(//span[@class="displaying-num"])[1]',
                 noRowsFound: '//td[normalize-space(text())="No items found."]',
+
+                firstRow: '(//tbody[@id="the-list"]//tr)[1]',
+                firstRowOrderCommission: '(//tbody[@id="the-list"]//tr[not(@style="display: none;")])[1]//td[@class="admin_commission column-admin_commission"]',
 
                 commissionMetaBox: {
                     metaBoxDiv: 'div#dokan_commission_box',
                     commissionsText: '//h2[normalize-space()="Commissions"]',
+                    table: {
+                        itemColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Item"]',
+                        typeColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Type"]',
+                        rateColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Rate"]',
+                        qtyColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Qty"]',
+                        commissionColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Commission"]',
+                    },
                     orderItemInfo: 'div#dokan_commission_box table.woocommerce_order_items',
                     orderTotalInfo: 'div#dokan_commission_box div.wc-order-totals-items',
+                },
+
+                subOrdersMetaBox: {
+                    metaBoxDiv: 'div#dokan_sub_or_related_orders',
+                    subOrdersText: '//h2[normalize-space()="Sub orders"]',
+                    subOrdersItemInfo: 'div#dokan_sub_or_related_orders div#woocommerce-order-items',
+                    table: {
+                        orderColumn: '//div[@id="dokan_sub_or_related_orders"]//th[normalize-space()="Order"]',
+                        dateColumn: '//div[@id="dokan_sub_or_related_orders"]//th[normalize-space()="Date"]',
+                        statusColumn: '//div[@id="dokan_sub_or_related_orders"]//th[normalize-space()="Status"]',
+                        totalColumn: '//div[@id="dokan_sub_or_related_orders"]//th[normalize-space()="Total"]',
+                        vendorColumn: '//div[@id="dokan_sub_or_related_orders"]//th[normalize-space()="Vendor"]',
+                    },
+                    subOrderTable: 'div#dokan_sub_or_related_orders table.woocommerce_order_items',
+                },
+
+                relatedOrdersMetaBox: {
+                    metaBoxDiv: 'div#dokan_sub_or_related_orders',
+                    relatedOrdersText: '//h2[normalize-space()="Related orders"]',
+                    relatedOrdersItemInfo: 'div#dokan_sub_or_related_orders div#woocommerce-order-items',
+                    table: {
+                        orderColumn: '//div[@id="dokan_sub_or_related_orders"]//th[normalize-space()="Order"]',
+                        dateColumn: '//div[@id="dokan_sub_or_related_orders"]//th[normalize-space()="Date"]',
+                        statusColumn: '//div[@id="dokan_sub_or_related_orders"]//th[normalize-space()="Status"]',
+                        totalColumn: '//div[@id="dokan_sub_or_related_orders"]//th[normalize-space()="Total"]',
+                        vendorColumn: '//div[@id="dokan_sub_or_related_orders"]//th[normalize-space()="Vendor"]',
+                    },
+                    relatedOrderTable: 'div#dokan_sub_or_related_orders table.woocommerce_order_items',
+                    parentOrderRow: '//td[contains(.,"(Parent order)")]/..',
+                    parentOrderVendor: '//td[contains(.,"(Parent order)")]/..//td[contains(.,"(no name)")]/..',
                 },
             },
         },
 
-        // Products
+        // products
         products: {
-            // Products Menus
-            allProductsMenu: '//li[@id="menu-posts-product"]//a[text()="All Products"]',
-            addNewMenu: '//li[@id="menu-posts-product"]//a[text()="Add New"]',
-            categoriesMenu: '//li[@id="menu-posts-product"]//a[text()="Categories"]',
-            tagsMenu: '//li[@id="menu-posts-product"]//a[text()="Tags"]',
-            addOnsMenu: '//li[@id="menu-posts-product"]//a[text()="Add-ons"]',
-            attributesMenu: '//li[@id="menu-posts-product"]//a[text()="Attributes"]',
+            // products menus
+            menus: {
+                allProductsMenu: '//li[@id="menu-posts-product"]//a[text()="All Products"]',
+                addNewMenu: '//li[@id="menu-posts-product"]//a[text()="Add New"]',
+                categoriesMenu: '//li[@id="menu-posts-product"]//a[text()="Categories"]',
+                tagsMenu: '//li[@id="menu-posts-product"]//a[text()="Tags"]',
+                addOnsMenu: '//li[@id="menu-posts-product"]//a[text()="Add-ons"]',
+                attributesMenu: '//li[@id="menu-posts-product"]//a[text()="Attributes"]',
+            },
+
+            // search
+            search: {
+                searchInput: 'input#post-search-input',
+                searchButton: 'input#search-submit',
+            },
 
             // table
+            commissionColumn: 'th#admin_commission',
             numberOfRowsFound: '(//span[@class="displaying-num"])[1]',
             noRowsFound: '//td[normalize-space(text())="No products found"]',
+            productRow: (productName: string) => `//a[@class="row-title" and normalize-space(text())='${productName}']/../../..`,
+            firstRowProductCommission: '(//tbody[@id="the-list"]//tr)[1]//td[@class="admin_commission column-admin_commission"]',
+            productCommission: (productName: string) => `//a[@class="row-title" and normalize-space(text())='${productName}']/../../..//td[@class="admin_commission column-admin_commission"]//bdi`,
 
-            // Product
+            // add new product
             product: {
-                // Add New Product
                 productName: '#title',
-                // Product Data
+                // product data
                 productType: '#product-type',
                 virtual: '#\\_virtual',
                 downloadable: '#\\_downloadable',
                 // todo: group below locators
 
-                // Add New Product Sub Menus
+                // add new product sub menus
                 subMenus: {
                     general: '.general_options a',
                     inventory: '.inventory_options a',
@@ -3813,6 +3865,7 @@ export const selector = {
                 skuColumn: '//th[normalize-space()="SKU"]',
                 stockColumn: '//th[normalize-space()="Stock"]',
                 priceColumn: '//th[normalize-space()="Price"]',
+                earningColumn: '//th[normalize-space()="Earning"]',
                 typeColumn: '//th[normalize-space()="Type"]',
                 viewsColumn: '//th[normalize-space()="Views"]',
                 dateColumn: '//th[normalize-space()="Date"]',
@@ -3821,6 +3874,8 @@ export const selector = {
             // product sub options
             numberOfRowsFound: '#dokan-product-list-table tbody tr',
             noProductsFound: '//td[normalize-space()="No product found"]',
+            firstRow: '(//table[@id="dokan-product-list-table"]//tbody//tr[not(@id="bulk-edit")])[1]',
+            firstRowProductEarning: '(//table[@id="dokan-product-list-table"]//tbody//tr[not(@id="bulk-edit")])[1]//td[@data-title="Earning"]',
             productCell: (productName: string) => `//strong//a[contains(text(),'${productName}')]/../..`,
             productLink: (productName: string) => `//strong//a[contains(text(),'${productName}')]`,
             editProduct: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="edit"]//a`,
@@ -3859,6 +3914,7 @@ export const selector = {
             downloadable: '#\\_downloadable',
             virtual: '#\\_virtual',
             price: '#\\_regular_price',
+            earning: 'span.vendor-earning span.vendor-price',
 
             // discount
             discount: {
@@ -4245,6 +4301,8 @@ export const selector = {
             },
 
             numberOfRowsFound: '.dokan-table.dokan-table tbody tr',
+            firstRow: '(//table//tbody//tr)[1]',
+            firstRowOrderEarning: '(//table//tbody//tr)[1]//td[@class="dokan-order-earning"]',
             // order details from table
             orderTotalTable: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../../..//td[@class='dokan-order-total']//bdi`,
             orderTotalAfterRefundTable: (orderNumber: string) => `///strong[contains(text(),'Order ${orderNumber}')]/../../..//td[@class='dokan-order-total']//ins//bdi`,
@@ -4278,8 +4336,10 @@ export const selector = {
             // general details
             generalDetails: {
                 generalDetailsDiv: '//strong[normalize-space()="General Details"]/../..',
-                orderDetails: '.list-unstyled.order-status',
-                customerDetails: '.list-unstyled.customer-details',
+                orderDetails: 'ul.list-unstyled.order-status',
+                earningFromOrder: 'li.earning-from-order',
+                earningAmount: 'li.earning-from-order span.amount',
+                customerDetails: 'ul.list-unstyled.customer-details',
             },
 
             // status
