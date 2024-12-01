@@ -1215,8 +1215,8 @@
 - page: 'Return and Warranty Request'
   features:
       admin:
-          admin can enable RMA module: false
-          admin can disable RMA module: false
+          admin can enable RMA module: true
+          admin can disable RMA module: true
       vendor:
           vendor can view return request menu page: true
           vendor can view return request details: true

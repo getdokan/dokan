@@ -1,23 +1,28 @@
-import { test, Page } from '@playwright/test';
+import { test, Page, request } from '@playwright/test';
 import { VendorReturnRequestPage } from '@pages/vendorReturnRequestPage';
 import { CustomerPage } from '@pages/customerPage';
 import { OrdersPage } from '@pages/ordersPage';
-// import { ApiUtils } from '@utils/apiUtils';
+import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
-// import { payloads } from '@utils/payloads';
+import { payloads } from '@utils/payloads';
 
 // const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 
 test.describe.skip('Vendor RMA test', () => {
+    let admin: VendorReturnRequestPage;
     let vendor: VendorReturnRequestPage;
     let vendor1: OrdersPage;
     let customer: VendorReturnRequestPage;
     let customer1: CustomerPage;
-    let vPage: Page, cPage: Page;
-    // let apiUtils: ApiUtils;
+    let aPage: Page, vPage: Page, cPage: Page;
+    let apiUtils: ApiUtils;
     let orderId: string;
 
     test.beforeAll(async ({ browser }) => {
+        const adminContext = await browser.newContext(data.auth.adminAuth);
+        aPage = await adminContext.newPage();
+        admin = new VendorReturnRequestPage(aPage);
+
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new VendorReturnRequestPage(vPage);
@@ -35,16 +40,22 @@ test.describe.skip('Vendor RMA test', () => {
         await vendor1.updateOrderStatusOnTable(orderId, 'processing');
         await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
 
-        // apiUtils = new ApiUtils(await request.newContext());
+        apiUtils = new ApiUtils(await request.newContext());
 
         // [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.processing, payloads.vendorAuth);
         // [,, orderId, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.processing, payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.printful, payloads.adminAuth);
+        await aPage.close();
         await vPage.close();
         await cPage.close();
-        // await apiUtils.dispose();
+        await apiUtils.dispose();
+    });
+
+    test.only('admin can RMA module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableRmaModule();
     });
 
     //vendor
@@ -91,5 +102,12 @@ test.describe.skip('Vendor RMA test', () => {
         const orderId = await customer1.paymentOrder();
         await vendor1.updateOrderStatusOnTable(orderId, 'processing');
         await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
+    });
+
+    // admin
+
+    test.only('admin can disable RMA module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.printful, payloads.adminAuth);
+        await admin.disableRmaModule();
     });
 });

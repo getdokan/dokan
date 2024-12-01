@@ -15,6 +15,24 @@ export class VendorReturnRequestPage extends VendorPage {
 
     // return request
 
+    // enable rma module
+    async enableRmaModule() {
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.returnRequest);
+
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.rma);
+    }
+
+    // disable rma module
+    async disableRmaModule() {
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.returnRequest);
+
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.rma);
+    }
+
     // vendor return request render properly
     async vendorReturnRequestRenderProperly() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
