@@ -1430,8 +1430,8 @@
 - page: 'Vendor Staff Manager'
   features:
       admin:
-          admin can enable vendor staff manager module: false
-          admin can disable vendor staff manager module: false
+          admin can enable vendor staff manager module: true
+          admin can disable vendor staff manager module: true
       vendor:
           vendor can view staff menu page: true
           vendor can add new staff: true

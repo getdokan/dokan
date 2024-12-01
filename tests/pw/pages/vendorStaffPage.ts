@@ -15,6 +15,18 @@ export class VendorStaffPage extends VendorPage {
 
     // vendor staff
 
+    // enable vendor staff module
+    async enableVendorStaffModule() {
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.staff);
+    }
+
+    // disable vendor staff module
+    async disableVendorStaffModule() {
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.staff);
+    }
+
     // vendor staff render properly
     async vendorStaffRenderProperly() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.staff);
