@@ -13,6 +13,24 @@ export class VendorAnalyticsPage extends VendorPage {
 
     // vendor analytics
 
+    // enable vendor analytics module
+    async enableVendorAnalyticsModule() {
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.vendorAnalytics);
+
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.analytics);
+    }
+
+    // disable vendor analytics module
+    async disableVendorAnalyticsModule() {
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.vendorAnalytics);
+
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.printful);
+    }
+
     // vendor analytics render properly
     async vendorAnalyticsRenderProperly() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.analytics);

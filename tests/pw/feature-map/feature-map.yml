@@ -1410,8 +1410,8 @@
 - page: 'Vendor Analytics'
   features:
       admin:
-          admin can enable vendor analytics module: false
-          admin can disable vendor analytics module: false
+          admin can enable vendor analytics module: true
+          admin can disable vendor analytics module: true
       vendor:
           vendor can view analytics menu page: true
 
