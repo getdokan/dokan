@@ -1444,8 +1444,8 @@
 - page: 'Vendor Subscription'
   features:
       admin:
-          admin can enable vendor subscription module: false
-          admin can disable vendor subscription module: false
+          admin can enable vendor subscription module: true
+          admin can disable vendor subscription module: true
           admin can view subscriptions menu page: true
           admin can filter subscribed vendors by vendor: true
           admin can filter subscribed vendors by subscription pack: true

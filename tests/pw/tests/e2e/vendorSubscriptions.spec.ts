@@ -46,10 +46,14 @@ test.describe('Vendor subscription test', () => {
         await apiUtils.dispose();
     });
 
-    // admin
-
     // todo: add dokan subscription settings tests
     // todo: add dokan subscription product tests
+
+    // admin
+
+    test.only('admin can enable vendor subscription module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableVendorSubscriptionModule();
+    });
 
     test('admin can view subscriptions menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.subscriptionsRenderProperly();
@@ -120,5 +124,12 @@ test.describe('Vendor subscription test', () => {
 
         const vendor = new VendorSubscriptionsPage(page);
         await vendor.vendorCancelSubscription(vendorName);
+    });
+
+    // admin
+
+    test.only('admin can disable vendor subscription module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.vendorSubscription, payloads.adminAuth);
+        await admin.disableVendorSubscriptionModule();
     });
 });

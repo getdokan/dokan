@@ -22,6 +22,24 @@ export class VendorSubscriptionsPage extends VendorPage {
 
     // admin
 
+    // enable vendor subscription module
+    async enableVendorSubscriptionModule() {
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.vendorSubscription);
+
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.subscription);
+    }
+
+    // disable vendor subscription module
+    async disableVendorSubscriptionModule() {
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.vendorSubscription);
+
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.subscription);
+    }
+
     // subscriptions render properly
     async subscriptionsRenderProperly() {
         await this.goIfNotThere(data.subUrls.backend.dokan.subscriptions);
