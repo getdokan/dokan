@@ -3660,11 +3660,13 @@ export const selector = {
                     addons: '.submenu-item.product-addon',
                     payment: '.submenu-item.payment',
                     verification: '.submenu-item.verification',
+                    deliveryTime: '.submenu-item.delivery-time',
                     shipping: '.submenu-item.shipping',
                     shipStation: '.submenu-item.shipstation',
                     social: '.submenu-item.social',
                     rma: '.submenu-item.rma',
                     seo: '.submenu-item.seo',
+                    printful: '.submenu-item.printful',
                 },
             },
 
@@ -6683,19 +6685,21 @@ export const selector = {
 
         // Customer My Account
         cMyAccount: {
-            dashboard: '.woocommerce-MyAccount-navigation-link--dashboard a',
-            orders: '.woocommerce-MyAccount-navigation-link--orders a',
-            subscriptions: '.woocommerce-MyAccount-navigation-link--subscriptions a',
-            downloads: '.woocommerce-MyAccount-navigation-link--downloads a',
-            addresses: '.woocommerce-MyAccount-navigation-link--edit-address a',
-            paymentMethods: '.woocommerce-MyAccount-navigation-link--payment-methods a',
-            rmaRequests: '.woocommerce-MyAccount-navigation-link--rma-requests a',
-            accountDetails: '.woocommerce-MyAccount-navigation-link--edit-account a',
-            vendors: 'woocommerce-MyAccount-navigation-link--following a',
-            sellerSupportTickets: '.woocommerce-MyAccount-navigation-link--support-tickets a',
-            bookings: '.woocommerce-MyAccount-navigation-link--bookings a',
-            auctions: '.woocommerce-MyAccount-navigation-link--auctions-endpoint a',
-            logout: '.woocommerce-MyAccount-navigation-link--customer-logout a',
+            menus: {
+                dashboard: '.woocommerce-MyAccount-navigation-link--dashboard a',
+                orders: '.woocommerce-MyAccount-navigation-link--orders a',
+                subscriptions: '.woocommerce-MyAccount-navigation-link--subscriptions a',
+                downloads: '.woocommerce-MyAccount-navigation-link--downloads a',
+                addresses: '.woocommerce-MyAccount-navigation-link--edit-address a',
+                paymentMethods: '.woocommerce-MyAccount-navigation-link--payment-methods a',
+                rmaRequests: '.woocommerce-MyAccount-navigation-link--rma-requests a',
+                accountDetails: '.woocommerce-MyAccount-navigation-link--edit-account a',
+                vendors: 'woocommerce-MyAccount-navigation-link--following a',
+                sellerSupportTickets: '.woocommerce-MyAccount-navigation-link--support-tickets a',
+                bookings: '.woocommerce-MyAccount-navigation-link--bookings a',
+                auctions: '.woocommerce-MyAccount-navigation-link--auctions-endpoint a',
+                logout: '.woocommerce-MyAccount-navigation-link--customer-logout a',
+            },
         },
 
         // Customer Dashboard

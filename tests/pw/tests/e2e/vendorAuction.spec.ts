@@ -31,6 +31,7 @@ test.describe('Auction Product test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.auction, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
@@ -38,6 +39,10 @@ test.describe('Auction Product test', () => {
     });
 
     // admin
+
+    test('admin can enable auction integration module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableActionIntegrationModule();
+    });
 
     test('admin can add auction product', { tag: ['@pro', '@admin'] }, async () => {
         await admin.adminAddAuctionProduct(data.product.auction);
@@ -99,5 +104,12 @@ test.describe('Auction Product test', () => {
         test.skip(true, 'buy it now price is not saved by api'); // todo: buy it now price is not saved by api
         const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         await customer.buyAuctionProduct(auctionProductName);
+    });
+
+    // admin
+
+    test('admin can disable auction integration module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.auction, payloads.adminAuth);
+        await admin.disableActionIntegrationModule();
     });
 });
