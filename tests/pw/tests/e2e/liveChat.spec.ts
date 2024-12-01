@@ -38,6 +38,7 @@ test.describe('Live chat test', () => {
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.liveChat, dbData.dokan.liveChatSettings);
         await apiUtils.activateModules(payloads.moduleIds.liveChat, payloads.adminAuth);
+        await aPage.close();
         await vPage.close();
         await cPage.close();
     });

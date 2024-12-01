@@ -919,8 +919,8 @@
 - page: 'Live Search'
   features:
       admin:
-          admin can enable live search module: false
-          admin can disable live search module: false
+          admin can enable live search module: true
+          admin can disable live search module: true
           # admin can set Dokan live search settings [duplicate]: true
       customer:
           customer can search product using live search (suggestion box): true

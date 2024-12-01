@@ -1,17 +1,27 @@
-import { test, Page } from '@playwright/test';
+import { test, Page, request } from '@playwright/test';
 import { LiveSearch } from '@pages/liveSearchPage';
+import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
+import { payloads } from '@utils/payloads';
 
 test.describe('Live search test', () => {
+    let admin: LiveSearch;
     let customer: LiveSearch;
-    let cPage: Page;
+    let aPage: Page, cPage: Page;
+    let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
+        const adminContext = await browser.newContext(data.auth.adminAuth);
+        aPage = await adminContext.newPage();
+        admin = new LiveSearch(aPage);
+
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new LiveSearch(cPage);
+
+        apiUtils = new ApiUtils(await request.newContext());
 
         await dbUtils.updateOptionValue('widget_dokna_product_search', dbData.liveSearchWidget);
         await dbUtils.updateOptionValue('sidebars_widgets', { ...dbData.sidebarWidgets, 'sidebar-1': ['dokna_product_search-2'] });
@@ -19,7 +29,14 @@ test.describe('Live search test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.liveSearch, payloads.adminAuth);
         await cPage.close();
+    });
+
+    // admin
+
+    test.only('admin can enable live search module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableLiveSearchModule();
     });
 
     // customer
@@ -40,5 +57,12 @@ test.describe('Live search test', () => {
     test('customer can search product with category using live search (autoload content)', { tag: ['@pro', '@customer'] }, async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.liveSearch, { live_search_option: 'old_live_search' });
         await customer.searchByLiveSearch(data.predefined.simpleProduct.product1.name, true, data.predefined.categories.uncategorized);
+    });
+
+    // admin
+
+    test.only('admin can disable live search module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.liveChat, payloads.adminAuth);
+        await admin.disableLiveSearchModule();
     });
 });

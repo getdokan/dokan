@@ -7918,7 +7918,7 @@ export const selector = {
         },
 
         cLiveSearch: {
-            liveSearchWidget: 'div.widget_dokna_product_search',
+            liveSearchDiv: 'div.dokan-product-search',
             liveSearchInput: 'div.dokan-product-search input[name="s"]',
             liveSearchCategory: 'div.dokan-product-search select#cat',
             searchedResult: (productName: string) => `//div[@id="dokan-ajax-search-suggestion-result"]//h3[normalize-space(text())='${productName}']`,
