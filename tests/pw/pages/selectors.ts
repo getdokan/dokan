@@ -3394,10 +3394,12 @@ export const selector = {
                     stateInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     phone: '#billing_phone',
                     email: '#billing_email',
-                    companyIdOrEuidNumber: '#billing_dokan_company_id_number',
-                    vatOrTaxNumber: '#billing_dokan_vat_number',
-                    bank: '#billing_dokan_bank_name',
-                    bankIban: '#billing_dokan_bank_iban',
+                    euFields: {
+                        companyIdOrEuidNumber: '#billing_dokan_company_id_number',
+                        vatOrTaxNumber: '#billing_dokan_vat_number',
+                        bank: '#billing_dokan_bank_name',
+                        bankIban: '#billing_dokan_bank_iban',
+                    },
                 },
 
                 // Customer Shipping Address
@@ -6063,8 +6065,8 @@ export const selector = {
                 deleteSaveLocation: '.store-pickup-location-delete-btn',
             },
 
-            // company info
-            companyInfo: {
+            // eu compliance info
+            euFields: {
                 companyName: '#settings_dokan_company_name',
                 companyId: '#settings_dokan_company_id_number',
                 vatOrTaxNumber: '#setting_vat_number',
@@ -6795,10 +6797,12 @@ export const selector = {
                 firstName: '#billing_first_name',
                 lastName: '#billing_last_name',
                 companyName: '#billing_company',
-                companyID: '#billing_dokan_company_id_number',
-                vatOrTaxNumber: '#billing_dokan_vat_number',
-                nameOfBank: '#billing_dokan_bank_name',
-                bankIban: '#billing_dokan_bank_iban',
+                euFields: {
+                    companyID: '#billing_dokan_company_id_number',
+                    vatOrTaxNumber: '#billing_dokan_vat_number',
+                    nameOfBank: '#billing_dokan_bank_name',
+                    bankIban: '#billing_dokan_bank_iban',
+                },
                 countryOrRegion: '(//span[@class="select2-selection__arrow"])[1]',
                 countryOrRegionInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 countryOrRegionValues: '.select2-results ul li',

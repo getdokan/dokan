@@ -17,6 +17,30 @@ export class VendorDeliveryTimePage extends CustomerPage {
 
     // delivery time
 
+    // enable delivery time module
+    async enableDeliveryTimeModule() {
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.deliveryTime);
+
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.deliveryTime);
+
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.subMenus.deliveryTime);
+    }
+
+    // disable delivery time module
+    async disableDeliveryTimeModule() {
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.deliveryTime);
+
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.deliveryTime);
+
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.deliveryTime);
+    }
+
     // vendor delivery time render properly
     async vendorDeliveryTimeRenderProperly() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.deliveryTime);

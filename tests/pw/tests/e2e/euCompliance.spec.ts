@@ -43,6 +43,7 @@ test.describe('EU Compliance test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.euCompliance, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
@@ -50,6 +51,10 @@ test.describe('EU Compliance test', () => {
     });
 
     //admin
+
+    test('admin can enable EU compliance fields module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableEuComplianceFieldsModule();
+    });
 
     test('admin can enable EU compliance fields for vendors', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanEuComplianceSettings('euVendor');
@@ -160,4 +165,11 @@ test.describe('EU Compliance test', () => {
     });
 
     // todo: has more tests with product eu compliance data
+
+    // admin
+
+    test('admin can disable EU compliance fields module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.euCompliance, payloads.adminAuth);
+        await admin.disableEuComplianceFieldsModule();
+    });
 });

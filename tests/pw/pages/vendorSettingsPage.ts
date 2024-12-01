@@ -46,9 +46,9 @@ export class VendorSettingsPage extends VendorPage {
             await this.toBeVisible(saveLocation);
         }
 
-        // company info elements are visible
+        // eu compliance elements are visible
         if (DOKAN_PRO) {
-            await this.multipleElementVisible(settingsVendor.companyInfo);
+            await this.multipleElementVisible(settingsVendor.euFields);
         }
 
         await this.toBeVisible(settingsVendor.email);
@@ -206,7 +206,7 @@ export class VendorSettingsPage extends VendorPage {
                 break;
 
             case 'euCompliance':
-                await this.setCompanyInfo(vendorInfo);
+                await this.setEuComplianceInfo(vendorInfo);
                 break;
 
             case 'map':
@@ -291,13 +291,13 @@ export class VendorSettingsPage extends VendorPage {
         await this.selectByValue(settingsVendor.address.state, vendorInfo.stateSelectValue);
     }
 
-    // vendor set company info
-    async setCompanyInfo(vendorInfo: vendor['vendorInfo']): Promise<void> {
-        await this.clearAndType(settingsVendor.companyInfo.companyName, vendorInfo.companyName);
-        await this.clearAndType(settingsVendor.companyInfo.companyId, vendorInfo.companyId);
-        await this.clearAndType(settingsVendor.companyInfo.vatOrTaxNumber, vendorInfo.vatNumber);
-        await this.clearAndType(settingsVendor.companyInfo.nameOfBank, vendorInfo.bankName);
-        await this.clearAndType(settingsVendor.companyInfo.bankIban, vendorInfo.bankIban);
+    // vendor set eu compliance info
+    async setEuComplianceInfo(vendorInfo: vendor['vendorInfo']): Promise<void> {
+        await this.clearAndType(settingsVendor.euFields.companyName, vendorInfo.companyName);
+        await this.clearAndType(settingsVendor.euFields.companyId, vendorInfo.companyId);
+        await this.clearAndType(settingsVendor.euFields.vatOrTaxNumber, vendorInfo.vatNumber);
+        await this.clearAndType(settingsVendor.euFields.nameOfBank, vendorInfo.bankName);
+        await this.clearAndType(settingsVendor.euFields.bankIban, vendorInfo.bankIban);
     }
 
     // vendor set map settings
