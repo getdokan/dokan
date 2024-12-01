@@ -901,8 +901,8 @@
 - page: 'Live Chat'
   features:
       admin:
-          admin can enable live chat module: false
-          admin can disable live chat module: false
+          admin can enable live chat module: true
+          admin can disable live chat module: true
           # admin can set Dokan live chat settings [duplicate]: true
           admin can enable chat button on vendor page: true
           admin can disable chat button on vendor page: true
