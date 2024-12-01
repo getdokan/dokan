@@ -9,6 +9,24 @@ export class FollowStorePage extends CustomerPage {
         super(page);
     }
 
+    // enable follow store module
+    async enableFollowStoreModule() {
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.followers);
+
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.vendors);
+    }
+
+    // disable follow store module
+    async disableFollowStoreModule() {
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.followers);
+
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.notToBeVisible(selector.customer.cMyAccount.menus.vendors);
+    }
+
     // vendor Followers
 
     // vendor followers render properly

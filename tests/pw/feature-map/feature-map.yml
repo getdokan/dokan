@@ -848,8 +848,8 @@
 - page: 'Follow Store'
   features:
       admin:
-          admin can enable follow store module: false
-          admin can disable follow store module: false
+          admin can enable follow store module: true
+          admin can disable follow store module: true
       vendor:
           vendor can view followers menu page: true
           vendor can view followers: true

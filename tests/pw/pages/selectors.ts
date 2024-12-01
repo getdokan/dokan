@@ -6696,7 +6696,7 @@ export const selector = {
                 paymentMethods: '.woocommerce-MyAccount-navigation-link--payment-methods a',
                 rmaRequests: '.woocommerce-MyAccount-navigation-link--rma-requests a',
                 accountDetails: '.woocommerce-MyAccount-navigation-link--edit-account a',
-                vendors: 'woocommerce-MyAccount-navigation-link--following a',
+                vendors: '.woocommerce-MyAccount-navigation-link--following a',
                 sellerSupportTickets: '.woocommerce-MyAccount-navigation-link--support-tickets a',
                 bookings: '.woocommerce-MyAccount-navigation-link--bookings a',
                 auctions: '.woocommerce-MyAccount-navigation-link--auctions-endpoint a',
