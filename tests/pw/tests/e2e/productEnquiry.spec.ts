@@ -4,6 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
+import { payloads } from '@utils/payloads';
 
 const { VENDOR_ID, CUSTOMER_ID, PRODUCT_ID } = process.env;
 
@@ -23,6 +24,7 @@ test.describe('Product Enquiry test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.productEnquiry, payloads.adminAuth);
         await cPage.close();
         await apiUtils.dispose();
     });

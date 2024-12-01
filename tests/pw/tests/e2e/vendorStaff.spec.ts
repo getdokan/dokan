@@ -20,6 +20,7 @@ test.describe('Vendor staff test (vendor)', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.vendorStaff, payloads.adminAuth);
         await vPage.close();
         await apiUtils.dispose();
     });

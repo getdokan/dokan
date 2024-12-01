@@ -262,7 +262,7 @@ setup.describe('setup dokan settings', () => {
     });
 
     setup('admin set dokan product report abuse settings', { tag: ['@pro'] }, async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.reportAbuse, dbData.dokan.productReportAbuseSettings);
     });
 
     setup('admin set dokan spmv settings', { tag: ['@pro'] }, async () => {

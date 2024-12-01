@@ -27,7 +27,7 @@ export const dbData = {
             deliveryTime: 'dokan_delivery_time',
             productAdvertising: 'dokan_product_advertisement',
             geolocation: 'dokan_geolocation',
-            productReportAbuse: 'dokan_report_abuse',
+            reportAbuse: 'dokan_report_abuse',
             spmv: 'dokan_spmv',
             printful: 'dokan_printful',
             vendorSubscription: 'dokan_product_subscription',

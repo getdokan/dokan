@@ -32,6 +32,7 @@ test.describe('Verifications test', () => {
         customer = new VendorVerificationsPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
+
         [, methodId, methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
         [, mediaId] = await apiUtils.uploadMedia(data.image.avatar, payloads.mimeTypes.png, payloads.adminAuth);
         [, requestId] = await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] }, payloads.adminAuth);
@@ -40,9 +41,11 @@ test.describe('Verifications test', () => {
     test.afterAll(async () => {
         // await apiUtils.deleteAllVerificationMethods(payloads.adminAuth);
         // await apiUtils.deleteAllVerificationRequests(payloads.adminAuth);
+        await apiUtils.activateModules(payloads.moduleIds.vendorVerification, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     //admin

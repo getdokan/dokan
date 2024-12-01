@@ -41,6 +41,7 @@ test.describe('Product addon functionality test', () => {
 
     test.afterAll(async () => {
         await apiUtils.deleteAllProductAddons(payloads.adminAuth);
+        await apiUtils.activateModules(payloads.moduleIds.productAddon, payloads.adminAuth);
         await vPage.close();
         await apiUtils.dispose();
     });

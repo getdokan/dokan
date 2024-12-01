@@ -34,6 +34,7 @@ test.describe('Wholesale test (admin)', () => {
 
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
+        await apiUtils.activateModules(payloads.moduleIds.wholesale, payloads.adminAuth);
         await aPage.close();
         await cPage.close();
         await apiUtils.dispose();

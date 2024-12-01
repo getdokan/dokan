@@ -23,6 +23,7 @@ test.describe('Store Support test (admin)', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.storeSupport, payloads.adminAuth);
         await aPage.close();
         await apiUtils.dispose();
     });

@@ -40,6 +40,7 @@ test.describe('Vendor subscription test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.vendorSubscription, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await apiUtils.dispose();

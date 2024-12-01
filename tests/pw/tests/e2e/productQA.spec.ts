@@ -34,6 +34,7 @@ test.describe('Product QA functionality test', () => {
 
     test.afterAll(async () => {
         // await apiUtils.deleteAllProductQuestions(payloads.adminAuth);
+        await apiUtils.activateModules(payloads.moduleIds.productQA, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();

@@ -38,6 +38,7 @@ test.describe('Vendor SPMV test', () => {
 
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+        await apiUtils.activateModules(payloads.moduleIds.spmv, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();

@@ -37,6 +37,7 @@ test.describe('Booking Product test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.booking, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();

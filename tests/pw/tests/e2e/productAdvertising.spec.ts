@@ -23,6 +23,7 @@ test.describe('Product Advertising test (admin)', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.productAdvertising, payloads.adminAuth);
         await aPage.close();
         await apiUtils.dispose();
     });

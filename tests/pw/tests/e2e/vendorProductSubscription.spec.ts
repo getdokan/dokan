@@ -25,6 +25,7 @@ test.describe('Product subscriptions test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.productSubscription, payloads.adminAuth);
         await vPage.close();
         await cPage.close();
         await apiUtils.dispose();

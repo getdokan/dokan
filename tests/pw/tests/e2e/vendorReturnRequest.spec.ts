@@ -47,7 +47,7 @@ test.describe.skip('Vendor RMA test', () => {
     });
 
     test.afterAll(async () => {
-        await apiUtils.activateModules(payloads.moduleIds.printful, payloads.adminAuth);
+        await apiUtils.activateModules(payloads.moduleIds.rma, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();

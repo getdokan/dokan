@@ -24,6 +24,7 @@ test.describe('Seller badge test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.sellerBadge, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await apiUtils.dispose();
