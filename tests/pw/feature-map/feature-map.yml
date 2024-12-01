@@ -1531,8 +1531,8 @@
 - page: 'WooCommerce Booking Integration'
   features:
       admin:
-          admin can enable woocommerce booking integration module: false
-          admin can disable woocommerce booking integration module: false
+          admin can enable woocommerce booking integration module: true
+          admin can disable woocommerce booking integration module: true
           admin can add booking product: true
       vendor:
           vendor can view booking menu page: true

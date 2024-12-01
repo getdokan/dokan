@@ -22,6 +22,24 @@ export class BookingPage extends VendorPage {
 
     // booking
 
+    // enable booking module
+    async enableBookingModule() {
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.booking);
+
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.bookings);
+    }
+
+    // disable booking module
+    async disableBookingModule() {
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.booking);
+
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.bookings);
+    }
+
     // Admin Add Booking Product
     async adminAddBookingProduct(product: product['booking']) {
         await this.goIfNotThere(data.subUrls.backend.wc.addNewProducts);
