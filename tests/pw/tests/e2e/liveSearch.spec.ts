@@ -35,7 +35,7 @@ test.describe('Live search test', () => {
 
     // admin
 
-    test.only('admin can enable live search module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can enable live search module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.enableLiveSearchModule();
     });
 
@@ -61,7 +61,7 @@ test.describe('Live search test', () => {
 
     // admin
 
-    test.only('admin can disable live search module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can disable live search module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.liveChat, payloads.adminAuth);
         await admin.disableLiveSearchModule();
     });

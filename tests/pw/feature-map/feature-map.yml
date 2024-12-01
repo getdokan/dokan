@@ -975,8 +975,8 @@
 - page: 'Printful'
   features:
       admin:
-          admin can enable Printful module: false
-          admin can disable Printful module: false
+          admin can enable Printful module: true
+          admin can disable Printful module: true
       # admin can set Dokan Printful settings: true [duplicate]: true
       vendor:
           vendor can view printful menu page: true

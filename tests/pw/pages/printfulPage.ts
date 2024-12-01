@@ -11,6 +11,24 @@ export class PrintfulPage extends VendorPage {
         super(page);
     }
 
+    // enable printful module
+    async enablePrintfulModule() {
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.printful);
+
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.subMenus.printful);
+    }
+
+    // disable printful module
+    async disablePrintfulModule() {
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.printful);
+
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.printful);
+    }
+
     // printful render properly
     async vendorPrintfulSettingsRenderProperly(): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsPrintful);

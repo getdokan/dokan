@@ -3643,6 +3643,7 @@ export const selector = {
                     staff: 'ul.dokan-dashboard-menu li.staffs a',
                     followers: 'ul.dokan-dashboard-menu li.followers a',
                     booking: 'ul.dokan-dashboard-menu li.booking a',
+                    printful: 'ul.dokan-dashboard-menu li.printful a',
                     announcements: 'ul.dokan-dashboard-menu li.announcement a',
                     analytics: 'ul.dokan-dashboard-menu li.analytics a',
                     tools: 'ul.dokan-dashboard-menu li.tools a',

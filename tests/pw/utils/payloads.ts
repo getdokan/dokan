@@ -3581,6 +3581,7 @@ export const payloads = {
         storeReviews: 'store_reviews',
         storeSupport: 'store_support',
         stripe: 'stripe',
+        printful: 'printful',
         productAdvertising: 'product_advertising',
         productSubscription: 'product_subscription',
         vendorAnalytics: 'vendor_analytics',
