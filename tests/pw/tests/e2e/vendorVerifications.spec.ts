@@ -50,6 +50,10 @@ test.describe('Verifications test', () => {
 
     //admin
 
+    test.only('admin can enable vendor verification module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableVendorVerificationModule();
+    });
+
     // verification methods
 
     test('admin can change verified icon', { tag: ['@pro', '@admin'] }, async () => {
@@ -212,5 +216,12 @@ test.describe('Verifications test', () => {
     test.skip('vendor address verification gets reset when he update address', { tag: ['@pro', '@vendor'] }, async () => {
         const [, methodId] = await apiUtils.getVerificationMethodId('address', payloads.adminAuth);
         await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId], status: 'approved' }, payloads.adminAuth);
+    });
+
+    // admin
+
+    test.only('admin can disable vendor verification module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.vendorVerification, payloads.adminAuth);
+        await admin.disableVendorVerificationModule();
     });
 });

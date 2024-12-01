@@ -1466,8 +1466,8 @@
 - page: 'Vendor Verification'
   features:
       admin:
-          admin can enable vendor verification module: false
-          admin can disable vendor verification module: false
+          admin can enable vendor verification module: true
+          admin can disable vendor verification module: true
           admin can change verified icon: true
           admin can add vendor verification method: true
           admin can edit vendor verification method: true

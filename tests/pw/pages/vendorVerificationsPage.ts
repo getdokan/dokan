@@ -21,6 +21,24 @@ export class VendorVerificationsPage extends AdminPage {
 
     customerPage = new CustomerPage(this.page);
 
+    // enable vendor verification module
+    async enableVendorVerificationModule() {
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.vendorVerification);
+
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.subMenus.verification);
+    }
+
+    // disable vendor verification module
+    async disableVendorVerificationModule() {
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.vendorVerification);
+
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.verification);
+    }
+
     // verification methods
 
     async changeVerifiedIcon(icon: string, storeName: string) {
