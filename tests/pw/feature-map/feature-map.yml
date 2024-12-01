@@ -1418,8 +1418,8 @@
 - page: 'Vendor Product Importer and Exporter'
   features:
       admin:
-          admin can enable product importer and exporter module: false
-          admin can disable product importer and exporter module: false
+          admin can enable product importer and exporter module: true
+          admin can disable product importer and exporter module: true
       vendor:
           vendor can view tools menu page: true
           vendor can export product as xml: true
