@@ -1318,8 +1318,8 @@
 - page: 'Store Support'
   features:
       admin:
-          admin can enable store support module: false
-          admin can disable store support module: false
+          admin can enable store support module: true
+          admin can disable store support module: true
           admin can view store support menu page: true
           unread count decrease after admin viewing a support ticket: true
           admin can view support ticket details: true

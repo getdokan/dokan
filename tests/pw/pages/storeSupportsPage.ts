@@ -21,6 +21,42 @@ export class StoreSupportsPage extends AdminPage {
 
     // store support
 
+    // enable store support module
+    async enableStoreSupportModule(storeName: string) {
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(selector.admin.dokan.menus.storeSupport);
+
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.storeSupport);
+
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.support);
+
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.sellerSupportTickets);
+
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
+        await this.toBeVisible(selector.customer.cSingleStore.storeTabs.getSupport);
+    }
+
+    // disable store support module
+    async disableStoreSupportModule(storeName: string) {
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.notToBeVisible(selector.admin.dokan.menus.storeSupport);
+
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.storeSupport);
+
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.support);
+
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.notToBeVisible(selector.customer.cMyAccount.menus.sellerSupportTickets);
+
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
+        await this.notToBeVisible(selector.customer.cSingleStore.storeTabs.getSupport);
+    }
+
     // store support render properly
     async adminStoreSupportRenderProperly() {
         await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
