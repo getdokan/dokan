@@ -2,10 +2,10 @@
 **Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988/), [wedevs](https://profiles.wordpress.org/wedevs/), [nizamuddinbabu](https://profiles.wordpress.org/nizamuddinbabu/)  
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace  
-**Requires at least:** 6.4  
-**Tested up to:** 6.7  
+**Requires at least:** 6.5  
+**Tested up to:** 6.7.1  
 **WC requires at least:** 8.0.0  
-**WC tested up to:** 9.4.1  
+**WC tested up to:** 9.4.2  
 **Requires PHP:** 7.4  
 **Stable tag:** 3.14.0  
 **License:** GPLv2 or later  
@@ -347,7 +347,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
-### v3.14.0 ( Nov 18, 2024 ) ###
+### v3.14.0 ( Dec 02, 2024 ) ###
 
 - **new:** Commission amount now displayed in the product list within the admin dashboard.
 - **new:** Vendor earning amount displayed in the product list within the vendor dashboard.

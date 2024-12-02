@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-11-15T12:54:34+00:00\n"
+"POT-Creation-Date: 2024-11-29T10:41:37+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -78,7 +78,7 @@ msgstr ""
 
 #: includes/Abstracts/DokanPromotion.php:185
 #: includes/Admin/Notices/LimitedTimePromotion.php:50
-#: includes/Admin/Notices/Manager.php:185
+#: includes/Admin/Notices/Manager.php:186
 #: includes/Admin/Notices/PluginReview.php:119
 #: includes/Admin/Notices/SetupWizard.php:81
 msgid "You have no permission to do that"
@@ -86,12 +86,12 @@ msgstr ""
 
 #: includes/Abstracts/DokanPromotion.php:189
 #: includes/Admin/Notices/LimitedTimePromotion.php:46
-#: includes/Admin/Notices/Manager.php:180
+#: includes/Admin/Notices/Manager.php:181
 #: includes/Admin/Notices/PluginReview.php:115
 #: includes/Admin/Notices/SetupWizard.php:77
 #: includes/Admin/Notices/WhatsNew.php:74
-#: includes/Admin/Settings.php:101
-#: includes/Admin/Settings.php:127
+#: includes/Admin/Settings.php:120
+#: includes/Admin/Settings.php:146
 #: includes/Ajax.php:320
 #: includes/ReverseWithdrawal/Ajax.php:37
 msgid "Invalid nonce"
@@ -127,9 +127,9 @@ msgstr ""
 
 #: includes/Admin/AdminBar.php:54
 #: includes/Admin/Menu.php:46
-#: includes/Admin/Settings.php:729
+#: includes/Admin/Settings.php:749
 #: includes/functions-dashboard-navigation.php:30
-#: includes/Install/Installer.php:234
+#: includes/Install/Installer.php:233
 #: assets/js/vue-admin.js:2
 msgid "Dashboard"
 msgstr ""
@@ -196,11 +196,11 @@ msgid "Commision: "
 msgstr ""
 
 #: includes/Admin/Hooks.php:66
-#: includes/Admin/Settings.php:570
-#: includes/Admin/Settings.php:581
-#: includes/Admin/Settings.php:592
+#: includes/Admin/Settings.php:590
+#: includes/Admin/Settings.php:601
+#: includes/Admin/Settings.php:612
 #: includes/Admin/SetupWizard.php:407
-#: includes/Install/Installer.php:171
+#: includes/Install/Installer.php:170
 #: includes/Order/Admin/Hooks.php:96
 #: includes/Order/Admin/Hooks.php:394
 #: includes/wc-template.php:18
@@ -231,7 +231,7 @@ msgid "Withdraw %s"
 msgstr ""
 
 #: includes/Admin/Menu.php:48
-#: includes/Admin/Settings.php:329
+#: includes/Admin/Settings.php:348
 #: includes/ReverseWithdrawal/Hooks.php:232
 #: templates/reverse-withdrawal/header.php:9
 #: assets/js/vue-admin.js:2
@@ -254,20 +254,32 @@ msgid "<span style=\"color:#f18500\">Help</span>"
 msgstr ""
 
 #. translators: %s permalink settings url
-#: includes/Admin/Notices/Manager.php:115
+#: includes/Admin/Notices/Manager.php:116
 msgid "The <strong>Plain</strong> permalink structure is not working for the Dokan plugin. Please change your permalink structure from <a href=\"%s\">Settings > Permalinks</a>"
 msgstr ""
 
-#: includes/Admin/Notices/Manager.php:120
+#: includes/Admin/Notices/Manager.php:121
 msgid "Go to Settings"
 msgstr ""
 
-#: includes/Admin/Notices/Manager.php:145
+#: includes/Admin/Notices/Manager.php:146
 msgid "Dokan came up with a new look!"
 msgstr ""
 
-#: includes/Admin/Notices/Manager.php:146
+#: includes/Admin/Notices/Manager.php:147
 msgid "A new rebranded look is introduced in the entire platform. Check the updated visuals in different places."
+msgstr ""
+
+#: includes/Admin/Notices/Manager.php:214
+msgid "Dokan Update Required"
+msgstr ""
+
+#: includes/Admin/Notices/Manager.php:215
+msgid "To ensure all the feature compatibility and accessibility, Dokan Pro minimum v3.14.0 is required."
+msgstr ""
+
+#: includes/Admin/Notices/Manager.php:219
+msgid "Update Now"
 msgstr ""
 
 #: includes/Admin/Notices/PluginReview.php:66
@@ -349,7 +361,7 @@ msgid "Get all the latest news and updates of Dokan from here."
 msgstr ""
 
 #: includes/Admin/Pointers.php:174
-#: includes/Admin/Settings.php:306
+#: includes/Admin/Settings.php:325
 msgid "General Settings"
 msgstr ""
 
@@ -358,7 +370,7 @@ msgid "Configure all general settings for your marketplace from this tab."
 msgstr ""
 
 #: includes/Admin/Pointers.php:191
-#: includes/Admin/Settings.php:311
+#: includes/Admin/Settings.php:330
 msgid "Selling Options"
 msgstr ""
 
@@ -367,7 +379,7 @@ msgid "You can configure different selling options for your vendors"
 msgstr ""
 
 #: includes/Admin/Pointers.php:208
-#: includes/Admin/Settings.php:320
+#: includes/Admin/Settings.php:339
 msgid "Withdraw Options"
 msgstr ""
 
@@ -439,123 +451,123 @@ msgstr ""
 msgid "With the simplest configuration options available, only by enabling a single toggle button you will be able to do everything your competitors are doing and even more."
 msgstr ""
 
-#: includes/Admin/Settings.php:97
+#: includes/Admin/Settings.php:116
 msgid "You have no permission to get settings value"
 msgstr ""
 
-#: includes/Admin/Settings.php:123
-#: includes/Admin/Settings.php:989
+#: includes/Admin/Settings.php:142
+#: includes/Admin/Settings.php:1009
 msgid "You are not authorized to perform this action."
 msgstr ""
 
-#: includes/Admin/Settings.php:131
+#: includes/Admin/Settings.php:150
 msgid "`section` parameter is required."
 msgstr ""
 
-#: includes/Admin/Settings.php:163
+#: includes/Admin/Settings.php:182
 msgid "Setting has been saved successfully."
 msgstr ""
 
-#: includes/Admin/Settings.php:302
+#: includes/Admin/Settings.php:321
 #: includes/Vendor/SettingsApi/Settings/Pages/Payments/Payments.php:60
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:48
 msgid "General"
 msgstr ""
 
-#: includes/Admin/Settings.php:304
+#: includes/Admin/Settings.php:323
 msgid "Site Settings and Store Options"
 msgstr ""
 
-#: includes/Admin/Settings.php:307
+#: includes/Admin/Settings.php:326
 msgid "You can configure your general site settings and vendor store options from this settings menu. Dokan offers countless custom options when setting up your store to provide you with the ultimate flexibility."
 msgstr ""
 
-#: includes/Admin/Settings.php:313
+#: includes/Admin/Settings.php:332
 msgid "Store Settings, Commissions"
 msgstr ""
 
-#: includes/Admin/Settings.php:315
+#: includes/Admin/Settings.php:334
 msgid "Selling Option Settings"
 msgstr ""
 
-#: includes/Admin/Settings.php:316
+#: includes/Admin/Settings.php:335
 msgid "You can configure commissions scales and vendor capabilities from this menu."
 msgstr ""
 
-#: includes/Admin/Settings.php:322
+#: includes/Admin/Settings.php:341
 msgid "Withdraw Settings, Threshold"
 msgstr ""
 
-#: includes/Admin/Settings.php:324
+#: includes/Admin/Settings.php:343
 msgid "Withdraw Settings"
 msgstr ""
 
-#: includes/Admin/Settings.php:325
+#: includes/Admin/Settings.php:344
 msgid "You can configure your store's withdrawal methods, charges, limits, order status and more."
 msgstr ""
 
-#: includes/Admin/Settings.php:331
+#: includes/Admin/Settings.php:350
 msgid "Admin commission config (on COD)"
 msgstr ""
 
-#: includes/Admin/Settings.php:333
+#: includes/Admin/Settings.php:352
 msgid "Reverse Withdrawal Settings"
 msgstr ""
 
-#: includes/Admin/Settings.php:334
+#: includes/Admin/Settings.php:353
 msgid "Configure commission from vendors on Cash on Delivery orders, method and threshold for reverse balance, restrictive actions on vendors and more."
 msgstr ""
 
-#: includes/Admin/Settings.php:338
+#: includes/Admin/Settings.php:357
 msgid "Page Settings"
 msgstr ""
 
-#: includes/Admin/Settings.php:340
+#: includes/Admin/Settings.php:359
 msgid "Store Page Settings Manage"
 msgstr ""
 
-#: includes/Admin/Settings.php:342
+#: includes/Admin/Settings.php:361
 msgid "Site and Store Page Settings"
 msgstr ""
 
-#: includes/Admin/Settings.php:343
+#: includes/Admin/Settings.php:362
 msgid "You can configure and setup your necessary page settings from this menu."
 msgstr ""
 
-#: includes/Admin/Settings.php:347
+#: includes/Admin/Settings.php:366
 msgid "Appearance"
 msgstr ""
 
-#: includes/Admin/Settings.php:349
+#: includes/Admin/Settings.php:368
 msgid "Custom Store Appearance"
 msgstr ""
 
-#: includes/Admin/Settings.php:351
+#: includes/Admin/Settings.php:370
 msgid "Appearance Settings"
 msgstr ""
 
-#: includes/Admin/Settings.php:352
+#: includes/Admin/Settings.php:371
 msgid "You can configure your store appearance settings, configure map API, Google reCaptcha and more. Dokan offers various store header templates to choose from."
 msgstr ""
 
-#: includes/Admin/Settings.php:356
-#: includes/Admin/Settings.php:925
+#: includes/Admin/Settings.php:375
+#: includes/Admin/Settings.php:945
 msgid "Privacy Policy"
 msgstr ""
 
-#: includes/Admin/Settings.php:358
+#: includes/Admin/Settings.php:377
 msgid "Update Store Privacy Policies"
 msgstr ""
 
-#: includes/Admin/Settings.php:359
+#: includes/Admin/Settings.php:378
 msgid "Privacy Settings"
 msgstr ""
 
-#: includes/Admin/Settings.php:360
+#: includes/Admin/Settings.php:379
 msgid "You can configure your site's privacy settings and policy."
 msgstr ""
 
-#: includes/Admin/Settings.php:381
+#: includes/Admin/Settings.php:400
 #: includes/Admin/SetupWizard.php:654
 #: includes/Dashboard/Templates/Dashboard.php:104
 #: includes/Order/functions.php:430
@@ -563,7 +575,7 @@ msgstr ""
 msgid "Completed"
 msgstr ""
 
-#: includes/Admin/Settings.php:382
+#: includes/Admin/Settings.php:401
 #: includes/Admin/SetupWizard.php:661
 #: includes/Dashboard/Templates/Dashboard.php:114
 #: includes/Order/functions.php:445
@@ -572,115 +584,115 @@ msgstr ""
 msgid "Processing"
 msgstr ""
 
-#: includes/Admin/Settings.php:383
+#: includes/Admin/Settings.php:402
 #: includes/Order/functions.php:440
 msgid "On-hold"
 msgstr ""
 
-#: includes/Admin/Settings.php:392
+#: includes/Admin/Settings.php:411
 msgid "Site Settings"
 msgstr ""
 
-#: includes/Admin/Settings.php:393
+#: includes/Admin/Settings.php:412
 msgid "Configure your site settings and control access to your site."
 msgstr ""
 
-#: includes/Admin/Settings.php:397
+#: includes/Admin/Settings.php:416
 msgid "Admin Area Access"
 msgstr ""
 
-#: includes/Admin/Settings.php:398
+#: includes/Admin/Settings.php:417
 msgid "Prevent vendors from accessing the wp-admin dashboard area. If HPOS feature is enabled, admin access will be blocked regardless of this setting."
 msgstr ""
 
-#: includes/Admin/Settings.php:404
+#: includes/Admin/Settings.php:423
 #: templates/admin-setup-wizard/step-store.php:7
 msgid "Vendor Store URL"
 msgstr ""
 
 #. translators: %s: store url
-#: includes/Admin/Settings.php:406
+#: includes/Admin/Settings.php:425
 msgid "Define the vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])"
 msgstr ""
 
-#: includes/Admin/Settings.php:412
+#: includes/Admin/Settings.php:431
 msgid "Vendor Setup Wizard Logo"
 msgstr ""
 
-#: includes/Admin/Settings.php:414
+#: includes/Admin/Settings.php:433
 msgid "Recommended logo size ( 270px X 90px ). If no logo is uploaded, site title is shown by default."
 msgstr ""
 
-#: includes/Admin/Settings.php:418
+#: includes/Admin/Settings.php:437
 msgid "Vendor Setup Wizard Message"
 msgstr ""
 
-#: includes/Admin/Settings.php:420
+#: includes/Admin/Settings.php:439
 msgid "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than two minutes.</strong>"
 msgstr ""
 
-#: includes/Admin/Settings.php:424
+#: includes/Admin/Settings.php:443
 msgid "Disable Welcome Wizard"
 msgstr ""
 
-#: includes/Admin/Settings.php:425
+#: includes/Admin/Settings.php:444
 msgid "Disable welcome wizard for newly registered vendors"
 msgstr ""
 
-#: includes/Admin/Settings.php:428
+#: includes/Admin/Settings.php:447
 msgid "If checked, vendors will not be prompted through a guided setup process but redirected straight to the vendor dashboard."
 msgstr ""
 
-#: includes/Admin/Settings.php:438
+#: includes/Admin/Settings.php:457
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:31
 msgid "Vendor Store Settings"
 msgstr ""
 
-#: includes/Admin/Settings.php:439
+#: includes/Admin/Settings.php:458
 msgid "Configure your vendor store settings and setup your store policy for vendor."
 msgstr ""
 
-#: includes/Admin/Settings.php:444
+#: includes/Admin/Settings.php:463
 msgid "Store Terms and Conditions"
 msgstr ""
 
-#: includes/Admin/Settings.php:445
+#: includes/Admin/Settings.php:464
 msgid "Enable terms and conditions for vendor stores"
 msgstr ""
 
-#: includes/Admin/Settings.php:451
+#: includes/Admin/Settings.php:470
 msgid "Store Products Per Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:452
+#: includes/Admin/Settings.php:471
 msgid "Set how many products to display per page on the vendor store page."
 msgstr ""
 
-#: includes/Admin/Settings.php:458
+#: includes/Admin/Settings.php:477
 msgid "Enable Address Fields"
 msgstr ""
 
-#: includes/Admin/Settings.php:459
+#: includes/Admin/Settings.php:478
 msgid "Add Address Fields on the Vendor Registration form"
 msgstr ""
 
-#: includes/Admin/Settings.php:471
+#: includes/Admin/Settings.php:490
 msgid "Product Page Settings"
 msgstr ""
 
-#: includes/Admin/Settings.php:472
+#: includes/Admin/Settings.php:491
 msgid "Configure single product page for vendors."
 msgstr ""
 
-#: includes/Admin/Settings.php:477
+#: includes/Admin/Settings.php:496
 msgid "Enable More Products Tab"
 msgstr ""
 
-#: includes/Admin/Settings.php:478
+#: includes/Admin/Settings.php:497
 msgid "Enable \"More Products\" tab on the single product page."
 msgstr ""
 
-#: includes/Admin/Settings.php:489
+#: includes/Admin/Settings.php:508
 #: includes/Admin/SetupWizard.php:200
 #: includes/functions.php:994
 #: includes/Order/Admin/Hooks.php:95
@@ -689,391 +701,391 @@ msgstr ""
 msgid "Commission"
 msgstr ""
 
-#: includes/Admin/Settings.php:491
+#: includes/Admin/Settings.php:510
 msgid "Define commission types, admin commissions, shipping and tax recipients, and more."
 msgstr ""
 
-#: includes/Admin/Settings.php:495
+#: includes/Admin/Settings.php:514
 msgid "Commission Type "
 msgstr ""
 
-#: includes/Admin/Settings.php:496
+#: includes/Admin/Settings.php:515
 msgid "Select a commission type for vendor"
 msgstr ""
 
-#: includes/Admin/Settings.php:500
+#: includes/Admin/Settings.php:519
 msgid "Select a commission type"
 msgstr ""
 
-#: includes/Admin/Settings.php:504
-#: includes/Admin/Settings.php:544
+#: includes/Admin/Settings.php:523
+#: includes/Admin/Settings.php:563
 #: includes/Product/Hooks.php:483
 #: assets/js/vue-admin.js:2
 msgid "Admin Commission"
 msgstr ""
 
-#: includes/Admin/Settings.php:509
+#: includes/Admin/Settings.php:528
 msgid "Percent Fee"
 msgstr ""
 
-#: includes/Admin/Settings.php:512
+#: includes/Admin/Settings.php:531
 msgid "Amount you will get from sales in percentage (10%)"
 msgstr ""
 
-#: includes/Admin/Settings.php:519
+#: includes/Admin/Settings.php:538
 msgid "Fixed Fee"
 msgstr ""
 
-#: includes/Admin/Settings.php:522
+#: includes/Admin/Settings.php:541
 msgid "Amount you will get from sales in flat rate(+5)"
 msgstr ""
 
-#: includes/Admin/Settings.php:531
+#: includes/Admin/Settings.php:550
 msgid "Amount you will get from sales in both percentage and fixed fee"
 msgstr ""
 
-#: includes/Admin/Settings.php:545
+#: includes/Admin/Settings.php:564
 msgid "Amount you will get from each sale"
 msgstr ""
 
-#: includes/Admin/Settings.php:559
+#: includes/Admin/Settings.php:579
 msgid "Fee Recipients"
 msgstr ""
 
-#: includes/Admin/Settings.php:561
+#: includes/Admin/Settings.php:581
 msgid "Define the fees that admin or vendor will recive"
 msgstr ""
 
-#: includes/Admin/Settings.php:566
+#: includes/Admin/Settings.php:586
 msgid "Shipping Fee"
 msgstr ""
 
-#: includes/Admin/Settings.php:567
+#: includes/Admin/Settings.php:587
 msgid "Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping method will not be included with shipping fees."
 msgstr ""
 
-#: includes/Admin/Settings.php:571
-#: includes/Admin/Settings.php:582
-#: includes/Admin/Settings.php:593
+#: includes/Admin/Settings.php:591
+#: includes/Admin/Settings.php:602
+#: includes/Admin/Settings.php:613
 #: includes/Admin/SetupWizard.php:408
 msgid "Admin"
 msgstr ""
 
-#: includes/Admin/Settings.php:577
+#: includes/Admin/Settings.php:597
 msgid "Product Tax Fee"
 msgstr ""
 
-#: includes/Admin/Settings.php:578
+#: includes/Admin/Settings.php:598
 msgid "Who will be receiving the tax fees for products? Note that, shipping tax fees will not be included with product tax."
 msgstr ""
 
-#: includes/Admin/Settings.php:588
+#: includes/Admin/Settings.php:608
 msgid "Shipping Tax Fee"
 msgstr ""
 
-#: includes/Admin/Settings.php:589
+#: includes/Admin/Settings.php:609
 msgid "Who will be receiving the tax fees for shipping?"
 msgstr ""
 
-#: includes/Admin/Settings.php:604
+#: includes/Admin/Settings.php:624
 #: assets/js/vue-admin.js:2
 msgid "Vendor Capabilities"
 msgstr ""
 
-#: includes/Admin/Settings.php:606
+#: includes/Admin/Settings.php:626
 msgid "Configure your multivendor site settings and vendor selling capabilities."
 msgstr ""
 
-#: includes/Admin/Settings.php:611
+#: includes/Admin/Settings.php:631
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Enable Selling"
 msgstr ""
 
-#: includes/Admin/Settings.php:612
+#: includes/Admin/Settings.php:632
 msgid "Immediately enable selling for newly registered vendors"
 msgstr ""
 
-#: includes/Admin/Settings.php:615
+#: includes/Admin/Settings.php:635
 msgid "If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard."
 msgstr ""
 
-#: includes/Admin/Settings.php:619
+#: includes/Admin/Settings.php:639
 msgid "One Page Product Creation"
 msgstr ""
 
-#: includes/Admin/Settings.php:620
+#: includes/Admin/Settings.php:640
 msgid "Add new product in single page view"
 msgstr ""
 
-#: includes/Admin/Settings.php:623
+#: includes/Admin/Settings.php:643
 msgid "If disabled, instead of a single add product page it will open a pop up window or vendor will redirect to product page when adding new product."
 msgstr ""
 
-#: includes/Admin/Settings.php:627
+#: includes/Admin/Settings.php:647
 msgid "Disable Product Popup"
 msgstr ""
 
-#: includes/Admin/Settings.php:628
+#: includes/Admin/Settings.php:648
 msgid "Disable add new product in popup view"
 msgstr ""
 
-#: includes/Admin/Settings.php:634
+#: includes/Admin/Settings.php:654
 msgid "If disabled, instead of a pop up window vendor will redirect to product page when adding new product."
 msgstr ""
 
-#: includes/Admin/Settings.php:638
+#: includes/Admin/Settings.php:658
 #: templates/admin-setup-wizard/step-selling.php:18
 #: assets/js/vue-admin.js:2
 msgid "Order Status Change"
 msgstr ""
 
-#: includes/Admin/Settings.php:639
+#: includes/Admin/Settings.php:659
 msgid "Allow vendor to update order status"
 msgstr ""
 
-#: includes/Admin/Settings.php:642
+#: includes/Admin/Settings.php:662
 msgid "Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status."
 msgstr ""
 
-#: includes/Admin/Settings.php:646
+#: includes/Admin/Settings.php:666
 msgid "Select any category"
 msgstr ""
 
-#: includes/Admin/Settings.php:647
+#: includes/Admin/Settings.php:667
 msgid "Allow vendors to select any category while creating/editing products."
 msgstr ""
 
-#: includes/Admin/Settings.php:671
+#: includes/Admin/Settings.php:691
 #: includes/Admin/SetupWizard.php:597
 msgid "Withdraw Methods"
 msgstr ""
 
-#: includes/Admin/Settings.php:672
+#: includes/Admin/Settings.php:692
 msgid "Select suitable withdraw methods for vendors"
 msgstr ""
 
-#: includes/Admin/Settings.php:676
+#: includes/Admin/Settings.php:696
 msgid "Check to add available payment methods for vendors to withdraw money."
 msgstr ""
 
-#: includes/Admin/Settings.php:680
+#: includes/Admin/Settings.php:700
 msgid "Withdraw Charges"
 msgstr ""
 
-#: includes/Admin/Settings.php:681
+#: includes/Admin/Settings.php:701
 msgid "Select suitable withdraw charges for vendors"
 msgstr ""
 
-#: includes/Admin/Settings.php:699
+#: includes/Admin/Settings.php:719
 #: includes/Admin/SetupWizard.php:640
 msgid "Minimum Withdraw Limit"
 msgstr ""
 
-#: includes/Admin/Settings.php:700
+#: includes/Admin/Settings.php:720
 msgid "Minimum balance required to make a withdraw request. Leave blank to set no minimum limits."
 msgstr ""
 
-#: includes/Admin/Settings.php:709
+#: includes/Admin/Settings.php:729
 #: includes/Admin/SetupWizard.php:647
 msgid "Order Status for Withdraw"
 msgstr ""
 
-#: includes/Admin/Settings.php:710
+#: includes/Admin/Settings.php:730
 #: includes/Admin/SetupWizard.php:666
 msgid "Order status for which vendor can make a withdraw request."
 msgstr ""
 
-#: includes/Admin/Settings.php:716
+#: includes/Admin/Settings.php:736
 msgid "Select the order status that will allow vendors to make withdraw request. We prefer you select \"completed\", \"processing\"."
 msgstr ""
 
-#: includes/Admin/Settings.php:720
+#: includes/Admin/Settings.php:740
 msgid "Exclude COD Payments"
 msgstr ""
 
-#: includes/Admin/Settings.php:721
+#: includes/Admin/Settings.php:741
 msgid "If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance."
 msgstr ""
 
-#: includes/Admin/Settings.php:730
+#: includes/Admin/Settings.php:750
 msgid "Select a page to show vendor dashboard"
 msgstr ""
 
-#: includes/Admin/Settings.php:733
-#: includes/Admin/Settings.php:740
-#: includes/Admin/Settings.php:748
-#: includes/Admin/Settings.php:758
-#: includes/Admin/Settings.php:920
+#: includes/Admin/Settings.php:753
+#: includes/Admin/Settings.php:760
+#: includes/Admin/Settings.php:768
+#: includes/Admin/Settings.php:778
+#: includes/Admin/Settings.php:940
 msgid "Select page"
 msgstr ""
 
-#: includes/Admin/Settings.php:737
-#: includes/Install/Installer.php:246
+#: includes/Admin/Settings.php:757
+#: includes/Install/Installer.php:245
 #: templates/global/header-menu.php:52
 msgid "My Orders"
 msgstr ""
 
-#: includes/Admin/Settings.php:738
+#: includes/Admin/Settings.php:758
 msgid "Select a page to show my orders"
 msgstr ""
 
-#: includes/Admin/Settings.php:745
+#: includes/Admin/Settings.php:765
 msgid "Store Listing"
 msgstr ""
 
-#: includes/Admin/Settings.php:746
+#: includes/Admin/Settings.php:766
 msgid "Select a page to show all stores"
 msgstr ""
 
-#: includes/Admin/Settings.php:754
+#: includes/Admin/Settings.php:774
 msgid "Select where you want to add Dokan pages."
 msgstr ""
 
-#: includes/Admin/Settings.php:755
+#: includes/Admin/Settings.php:775
 msgid "Terms and Conditions Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:757
+#: includes/Admin/Settings.php:777
 msgid "Select a page to display the Terms and Conditions of your store for Vendors."
 msgstr ""
 
-#: includes/Admin/Settings.php:765
+#: includes/Admin/Settings.php:785
 msgid "Store Appearance"
 msgstr ""
 
-#: includes/Admin/Settings.php:766
+#: includes/Admin/Settings.php:786
 msgid "Configure your site appearances."
 msgstr ""
 
-#: includes/Admin/Settings.php:770
+#: includes/Admin/Settings.php:790
 msgid "Show map on Store Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:771
+#: includes/Admin/Settings.php:791
 msgid "Enable map of the store location in the store sidebar"
 msgstr ""
 
-#: includes/Admin/Settings.php:777
+#: includes/Admin/Settings.php:797
 #: templates/admin-setup-wizard/step-store.php:55
 msgid "Map API Source"
 msgstr ""
 
-#: includes/Admin/Settings.php:778
+#: includes/Admin/Settings.php:798
 msgid "Which map API source you want to use in your site?"
 msgstr ""
 
-#: includes/Admin/Settings.php:783
+#: includes/Admin/Settings.php:803
 #: includes/Admin/SetupWizard.php:422
 #: assets/js/vue-admin.js:2
 msgid "Google Maps"
 msgstr ""
 
-#: includes/Admin/Settings.php:784
+#: includes/Admin/Settings.php:804
 #: includes/Admin/SetupWizard.php:423
 msgid "Mapbox"
 msgstr ""
 
-#: includes/Admin/Settings.php:789
+#: includes/Admin/Settings.php:809
 #: templates/admin-setup-wizard/step-store.php:68
 msgid "Google Map API Key"
 msgstr ""
 
-#: includes/Admin/Settings.php:790
+#: includes/Admin/Settings.php:810
 msgid "<a href=\"https://developers.google.com/maps/documentation/javascript/\" target=\"_blank\" rel=\"noopener noreferrer\">API Key</a> is needed to display map on store page"
 msgstr ""
 
-#: includes/Admin/Settings.php:793
+#: includes/Admin/Settings.php:813
 msgid "Insert Google API Key (with hyperlink) to display store map."
 msgstr ""
 
-#: includes/Admin/Settings.php:802
+#: includes/Admin/Settings.php:822
 #: templates/admin-setup-wizard/step-store.php:84
 msgid "Mapbox Access Token"
 msgstr ""
 
-#: includes/Admin/Settings.php:803
+#: includes/Admin/Settings.php:823
 msgid "<a href=\"https://docs.mapbox.com/help/how-mapbox-works/access-tokens/\" target=\"_blank\" rel=\"noopener noreferrer\">Access Token</a> is needed to display map on store page"
 msgstr ""
 
-#: includes/Admin/Settings.php:806
+#: includes/Admin/Settings.php:826
 msgid "Insert Mapbox Access Token (with hyperlink) to display store map."
 msgstr ""
 
 #. translators: 1) Opening anchor tag, 2) Closing anchor tag, 3) Opening anchor tag, 4) Closing anchor tag
-#: includes/Admin/Settings.php:818
+#: includes/Admin/Settings.php:838
 msgid "%1$sreCAPTCHA%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s"
 msgstr ""
 
-#: includes/Admin/Settings.php:824
+#: includes/Admin/Settings.php:844
 msgid "Google reCAPTCHA Validation"
 msgstr ""
 
-#: includes/Admin/Settings.php:826
+#: includes/Admin/Settings.php:846
 msgid "You can successfully connect to your Google reCaptcha account from here."
 msgstr ""
 
-#: includes/Admin/Settings.php:834
+#: includes/Admin/Settings.php:854
 msgid "Site Key"
 msgstr ""
 
-#: includes/Admin/Settings.php:835
+#: includes/Admin/Settings.php:855
 msgid "Insert Google reCAPTCHA v3 site key."
 msgstr ""
 
-#: includes/Admin/Settings.php:841
+#: includes/Admin/Settings.php:861
 msgid "Secret Key"
 msgstr ""
 
-#: includes/Admin/Settings.php:843
+#: includes/Admin/Settings.php:863
 msgid "Insert Google reCAPTCHA v3 secret key."
 msgstr ""
 
-#: includes/Admin/Settings.php:851
+#: includes/Admin/Settings.php:871
 msgid "Show Contact Form on Store Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:852
+#: includes/Admin/Settings.php:872
 msgid "Display a vendor contact form in the store sidebar"
 msgstr ""
 
-#: includes/Admin/Settings.php:859
+#: includes/Admin/Settings.php:879
 msgid "Select a store header for your store."
 msgstr ""
 
-#: includes/Admin/Settings.php:860
+#: includes/Admin/Settings.php:880
 msgid "Store Header Template"
 msgstr ""
 
-#: includes/Admin/Settings.php:871
+#: includes/Admin/Settings.php:891
 msgid "Store Opening Closing Time Widget"
 msgstr ""
 
-#: includes/Admin/Settings.php:872
+#: includes/Admin/Settings.php:892
 msgid "Enable store opening & closing time widget in the store sidebar"
 msgstr ""
 
-#: includes/Admin/Settings.php:878
+#: includes/Admin/Settings.php:898
 msgid "Enable Store Sidebar From Theme"
 msgstr ""
 
-#: includes/Admin/Settings.php:879
+#: includes/Admin/Settings.php:899
 msgid "Enable showing store sidebar from your theme."
 msgstr ""
 
-#: includes/Admin/Settings.php:885
+#: includes/Admin/Settings.php:905
 msgid "Hide Vendor Info"
 msgstr ""
 
-#: includes/Admin/Settings.php:886
+#: includes/Admin/Settings.php:906
 msgid "Hide vendor contact info from single store page."
 msgstr ""
 
-#: includes/Admin/Settings.php:894
+#: includes/Admin/Settings.php:914
 msgid "Email Address"
 msgstr ""
 
-#: includes/Admin/Settings.php:895
+#: includes/Admin/Settings.php:915
 #: includes/Admin/UserProfile.php:208
 #: templates/account/update-customer-to-vendor.php:48
 #: templates/account/vendor-registration.php:45
@@ -1083,71 +1095,71 @@ msgstr ""
 msgid "Phone Number"
 msgstr ""
 
-#: includes/Admin/Settings.php:896
+#: includes/Admin/Settings.php:916
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:249
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:250
 msgid "Store Address"
 msgstr ""
 
-#: includes/Admin/Settings.php:901
+#: includes/Admin/Settings.php:921
 msgid "Disable Dokan FontAwesome"
 msgstr ""
 
-#: includes/Admin/Settings.php:902
+#: includes/Admin/Settings.php:922
 msgid "If disabled then dokan fontawesome library won't be loaded in frontend"
 msgstr ""
 
-#: includes/Admin/Settings.php:910
+#: includes/Admin/Settings.php:930
 msgid "Enable Privacy Policy"
 msgstr ""
 
-#: includes/Admin/Settings.php:912
+#: includes/Admin/Settings.php:932
 msgid "Enable privacy policy for vendor store contact form"
 msgstr ""
 
-#: includes/Admin/Settings.php:917
+#: includes/Admin/Settings.php:937
 msgid "Privacy Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:919
+#: includes/Admin/Settings.php:939
 msgid "Select a page to show your privacy policy"
 msgstr ""
 
-#: includes/Admin/Settings.php:927
+#: includes/Admin/Settings.php:947
 #: includes/functions.php:3231
 msgid "Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]"
 msgstr ""
 
-#: includes/Admin/Settings.php:928
+#: includes/Admin/Settings.php:948
 msgid "Customize the Privacy Policy text that will be displayed on your store."
 msgstr ""
 
-#: includes/Admin/Settings.php:1000
+#: includes/Admin/Settings.php:1020
 msgid "Both section and field params are required."
 msgstr ""
 
-#: includes/Admin/Settings.php:1009
+#: includes/Admin/Settings.php:1029
 msgid "No filter found to refresh the setting options"
 msgstr ""
 
-#: includes/Admin/Settings.php:1041
+#: includes/Admin/Settings.php:1061
 msgid "Minimum Withdraw Limit can't be negative value."
 msgstr ""
 
-#: includes/Admin/Settings.php:1052
+#: includes/Admin/Settings.php:1072
 #: includes/ReverseWithdrawal/Admin/Settings.php:223
 msgid "Validation error"
 msgstr ""
 
-#: includes/Admin/Settings.php:1070
+#: includes/Admin/Settings.php:1090
 msgid "Data Clear"
 msgstr ""
 
-#: includes/Admin/Settings.php:1071
+#: includes/Admin/Settings.php:1091
 msgid "Delete all data and tables related to Dokan and Dokan Pro plugin while deleting the Dokan plugin."
 msgstr ""
 
-#: includes/Admin/Settings.php:1074
+#: includes/Admin/Settings.php:1094
 msgid "Check this to remove Dokan related data and table from the database upon deleting the plugin. When you delete the Dokan lite version, it will also delete all the data related to Dokan Pro as well. This won't happen when the plugins are deactivated.."
 msgstr ""
 
@@ -1439,14 +1451,14 @@ msgstr ""
 
 #: includes/Admin/UserProfile.php:38
 #: includes/Ajax.php:142
-#: includes/Assets.php:598
+#: includes/Assets.php:604
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Available"
 msgstr ""
 
 #: includes/Admin/UserProfile.php:39
-#: includes/Assets.php:599
+#: includes/Assets.php:605
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Not Available"
@@ -1856,101 +1868,102 @@ msgstr ""
 msgid "id param is required"
 msgstr ""
 
-#: includes/Assets.php:150
+#: includes/Assets.php:151
 msgid "Could not find any vendor."
 msgstr ""
 
-#: includes/Assets.php:151
+#: includes/Assets.php:152
 msgid "Searching vendors"
 msgstr ""
 
-#: includes/Assets.php:152
+#: includes/Assets.php:153
 msgid "Search vendors"
 msgstr ""
 
-#: includes/Assets.php:153
+#: includes/Assets.php:154
 msgid "Are you sure ?"
 msgstr ""
 
-#: includes/Assets.php:601
+#: includes/Assets.php:607
 #: includes/Product/functions.php:504
 #: templates/products/products-listing.php:109
+#: assets/js/dokan-admin-notice.js:2
 #: assets/js/dokan-promo-notice.js:2
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Are you sure?"
 msgstr ""
 
-#: includes/Assets.php:602
+#: includes/Assets.php:608
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: includes/Assets.php:616
+#: includes/Assets.php:622
 msgid "Are you sure you want to revoke access to this download?"
 msgstr ""
 
-#: includes/Assets.php:617
+#: includes/Assets.php:623
 msgid "Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved."
-msgstr ""
-
-#: includes/Assets.php:747
-msgctxt "time constant"
-msgid "am"
-msgstr ""
-
-#: includes/Assets.php:748
-msgctxt "time constant"
-msgid "pm"
-msgstr ""
-
-#: includes/Assets.php:749
-msgctxt "time constant"
-msgid "AM"
-msgstr ""
-
-#: includes/Assets.php:750
-msgctxt "time constant"
-msgid "PM"
-msgstr ""
-
-#: includes/Assets.php:751
-msgctxt "time constant"
-msgid "hr"
-msgstr ""
-
-#: includes/Assets.php:752
-msgctxt "time constant"
-msgid "hrs"
 msgstr ""
 
 #: includes/Assets.php:753
 msgctxt "time constant"
-msgid "mins"
+msgid "am"
+msgstr ""
+
+#: includes/Assets.php:754
+msgctxt "time constant"
+msgid "pm"
+msgstr ""
+
+#: includes/Assets.php:755
+msgctxt "time constant"
+msgid "AM"
 msgstr ""
 
 #: includes/Assets.php:756
+msgctxt "time constant"
+msgid "PM"
+msgstr ""
+
+#: includes/Assets.php:757
+msgctxt "time constant"
+msgid "hr"
+msgstr ""
+
+#: includes/Assets.php:758
+msgctxt "time constant"
+msgid "hrs"
+msgstr ""
+
+#: includes/Assets.php:759
+msgctxt "time constant"
+msgid "mins"
+msgstr ""
+
+#: includes/Assets.php:762
 #: templates/products/edit-product-single.php:368
 #: templates/products/new-product.php:252
 #: templates/products/tmpl-add-product-popup.php:87
 msgid "To"
 msgstr ""
 
-#: includes/Assets.php:758
+#: includes/Assets.php:764
 #: templates/products/edit-product-single.php:361
 #: templates/products/new-product.php:245
 #: templates/products/tmpl-add-product-popup.php:80
 msgid "From"
 msgstr ""
 
-#: includes/Assets.php:759
+#: includes/Assets.php:765
 msgid " - "
 msgstr ""
 
-#: includes/Assets.php:760
+#: includes/Assets.php:766
 msgid "W"
 msgstr ""
 
-#: includes/Assets.php:761
+#: includes/Assets.php:767
 #: templates/orders/listing.php:20
 #: templates/products/products-listing.php:108
 #: templates/store-lists-filter.php:84
@@ -1958,94 +1971,94 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-#: includes/Assets.php:762
+#: includes/Assets.php:768
 #: assets/js/vue-admin.js:2
 msgid "Clear"
 msgstr ""
 
-#: includes/Assets.php:763
+#: includes/Assets.php:769
 #: includes/Withdraw/Hooks.php:68
 msgid "Custom"
 msgstr ""
 
-#: includes/Assets.php:765
+#: includes/Assets.php:771
 msgid "Su"
 msgstr ""
 
-#: includes/Assets.php:766
+#: includes/Assets.php:772
 msgid "Mo"
 msgstr ""
 
-#: includes/Assets.php:767
+#: includes/Assets.php:773
 msgid "Tu"
 msgstr ""
 
-#: includes/Assets.php:768
+#: includes/Assets.php:774
 msgid "We"
 msgstr ""
 
-#: includes/Assets.php:769
+#: includes/Assets.php:775
 msgid "Th"
 msgstr ""
 
-#: includes/Assets.php:770
+#: includes/Assets.php:776
 msgid "Fr"
 msgstr ""
 
-#: includes/Assets.php:771
+#: includes/Assets.php:777
 msgid "Sa"
 msgstr ""
 
-#: includes/Assets.php:774
+#: includes/Assets.php:780
 msgid "January"
 msgstr ""
 
-#: includes/Assets.php:775
+#: includes/Assets.php:781
 msgid "February"
 msgstr ""
 
-#: includes/Assets.php:776
+#: includes/Assets.php:782
 msgid "March"
 msgstr ""
 
-#: includes/Assets.php:777
+#: includes/Assets.php:783
 msgid "April"
 msgstr ""
 
-#: includes/Assets.php:778
+#: includes/Assets.php:784
 msgid "May"
 msgstr ""
 
-#: includes/Assets.php:779
+#: includes/Assets.php:785
 msgid "June"
 msgstr ""
 
-#: includes/Assets.php:780
+#: includes/Assets.php:786
 msgid "July"
 msgstr ""
 
-#: includes/Assets.php:781
+#: includes/Assets.php:787
 msgid "August"
 msgstr ""
 
-#: includes/Assets.php:782
+#: includes/Assets.php:788
 msgid "September"
 msgstr ""
 
-#: includes/Assets.php:783
+#: includes/Assets.php:789
 msgid "October"
 msgstr ""
 
-#: includes/Assets.php:784
+#: includes/Assets.php:790
 msgid "November"
 msgstr ""
 
-#: includes/Assets.php:785
+#: includes/Assets.php:791
 msgid "December"
 msgstr ""
 
-#: includes/Assets.php:789
-#: includes/Assets.php:1061
+#: includes/Assets.php:795
+#: includes/Assets.php:1067
 #: includes/Product/functions.php:310
 #: templates/my-orders.php:95
 #: templates/orders/details.php:196
@@ -2059,25 +2072,26 @@ msgstr ""
 #: templates/withdraw/pending-request-listing.php:19
 #: templates/withdraw/pending-request-listing.php:39
 #: templates/withdraw/pending-request-listing.php:63
+#: assets/js/dokan-admin-notice.js:2
 #: assets/js/dokan-promo-notice.js:2
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Cancel"
 msgstr ""
 
-#: includes/Assets.php:790
+#: includes/Assets.php:796
 #: includes/Product/functions.php:321
 #: templates/orders/details.php:347
 #: templates/settings/store-form.php:38
 msgid "Close"
 msgstr ""
 
-#: includes/Assets.php:791
-#: includes/Assets.php:1060
+#: includes/Assets.php:797
+#: includes/Assets.php:1066
 msgid "OK"
 msgstr ""
 
-#: includes/Assets.php:792
+#: includes/Assets.php:798
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:283
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:430
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:446
@@ -2087,312 +2101,312 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: includes/Assets.php:793
+#: includes/Assets.php:799
 msgid "Close this dialog"
 msgstr ""
 
-#: includes/Assets.php:808
+#: includes/Assets.php:814
 msgid "This field is required"
 msgstr ""
 
-#: includes/Assets.php:809
+#: includes/Assets.php:815
 msgid "Please fix this field."
 msgstr ""
 
-#: includes/Assets.php:810
+#: includes/Assets.php:816
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: includes/Assets.php:811
+#: includes/Assets.php:817
 msgid "Please enter a valid URL."
 msgstr ""
 
-#: includes/Assets.php:812
+#: includes/Assets.php:818
 msgid "Please enter a valid date."
 msgstr ""
 
-#: includes/Assets.php:813
+#: includes/Assets.php:819
 msgid "Please enter a valid date (ISO)."
 msgstr ""
 
-#: includes/Assets.php:814
+#: includes/Assets.php:820
 msgid "Please enter a valid number."
 msgstr ""
 
-#: includes/Assets.php:815
+#: includes/Assets.php:821
 msgid "Please enter only digits."
 msgstr ""
 
-#: includes/Assets.php:816
+#: includes/Assets.php:822
 msgid "Please enter a valid credit card number."
 msgstr ""
 
-#: includes/Assets.php:817
+#: includes/Assets.php:823
 msgid "Please enter the same value again."
 msgstr ""
 
-#: includes/Assets.php:818
+#: includes/Assets.php:824
 msgid "Please enter no more than {0} characters."
 msgstr ""
 
-#: includes/Assets.php:819
+#: includes/Assets.php:825
 msgid "Please enter at least {0} characters."
 msgstr ""
 
-#: includes/Assets.php:820
+#: includes/Assets.php:826
 msgid "Please enter a value between {0} and {1} characters long."
 msgstr ""
 
-#: includes/Assets.php:821
+#: includes/Assets.php:827
 msgid "Please enter a value between {0} and {1}."
 msgstr ""
 
-#: includes/Assets.php:822
+#: includes/Assets.php:828
 msgid "Please enter a value less than or equal to {0}."
 msgstr ""
 
-#: includes/Assets.php:823
+#: includes/Assets.php:829
 msgid "Please enter a value greater than or equal to {0}."
 msgstr ""
 
-#: includes/Assets.php:985
+#: includes/Assets.php:991
 msgid "Upload featured image"
 msgstr ""
 
-#: includes/Assets.php:986
+#: includes/Assets.php:992
 msgid "Choose a file"
 msgstr ""
 
-#: includes/Assets.php:987
+#: includes/Assets.php:993
 msgid "Add Images to Product Gallery"
 msgstr ""
 
-#: includes/Assets.php:988
+#: includes/Assets.php:994
 msgid "Set featured image"
 msgstr ""
 
-#: includes/Assets.php:989
+#: includes/Assets.php:995
 #: includes/woo-views/html-product-download.php:8
 msgid "Insert file URL"
 msgstr ""
 
-#: includes/Assets.php:990
+#: includes/Assets.php:996
 msgid "Add to gallery"
 msgstr ""
 
-#: includes/Assets.php:991
+#: includes/Assets.php:997
 msgid "Sorry, this attribute option already exists, Try a different one."
 msgstr ""
 
-#: includes/Assets.php:992
+#: includes/Assets.php:998
 msgid "Warning! This product will not have any variations if this option is not checked."
 msgstr ""
 
-#: includes/Assets.php:993
+#: includes/Assets.php:999
 msgid "Enter a name for the new attribute term:"
 msgstr ""
 
-#: includes/Assets.php:994
+#: includes/Assets.php:1000
 msgid "Remove this attribute?"
 msgstr ""
 
 #. translators: %d: max linked variation.
-#: includes/Assets.php:1003
+#: includes/Assets.php:1009
 msgid "Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run)."
 msgstr ""
 
-#: includes/Assets.php:1004
+#: includes/Assets.php:1010
 msgid "Enter a value"
 msgstr ""
 
-#: includes/Assets.php:1005
+#: includes/Assets.php:1011
 msgid "Variation menu order (determines position in the list of variations)"
 msgstr ""
 
-#: includes/Assets.php:1006
+#: includes/Assets.php:1012
 msgid "Enter a value (fixed or %)"
 msgstr ""
 
-#: includes/Assets.php:1007
+#: includes/Assets.php:1013
 msgid "Are you sure you want to delete all variations? This cannot be undone."
 msgstr ""
 
-#: includes/Assets.php:1008
+#: includes/Assets.php:1014
 msgid "Last warning, are you sure?"
 msgstr ""
 
-#: includes/Assets.php:1009
+#: includes/Assets.php:1015
 msgid "Choose an image"
 msgstr ""
 
-#: includes/Assets.php:1010
+#: includes/Assets.php:1016
 msgid "Set variation image"
 msgstr ""
 
-#: includes/Assets.php:1011
+#: includes/Assets.php:1017
 msgid "variation added"
 msgstr ""
 
-#: includes/Assets.php:1012
+#: includes/Assets.php:1018
 msgid "variations added"
 msgstr ""
 
-#: includes/Assets.php:1013
+#: includes/Assets.php:1019
 msgid "No variations added"
 msgstr ""
 
-#: includes/Assets.php:1014
+#: includes/Assets.php:1020
 msgid "Are you sure you want to remove this variation?"
 msgstr ""
 
-#: includes/Assets.php:1015
+#: includes/Assets.php:1021
 msgid "Sale start date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/Assets.php:1016
+#: includes/Assets.php:1022
 msgid "Sale end date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/Assets.php:1017
+#: includes/Assets.php:1023
 msgid "Save changes before changing page?"
 msgstr ""
 
-#: includes/Assets.php:1018
+#: includes/Assets.php:1024
 msgid "%qty% variation"
 msgstr ""
 
-#: includes/Assets.php:1019
+#: includes/Assets.php:1025
 msgid "%qty% variations"
 msgstr ""
 
-#: includes/Assets.php:1020
+#: includes/Assets.php:1026
 msgid "No Result Found"
 msgstr ""
 
-#: includes/Assets.php:1021
+#: includes/Assets.php:1027
 msgid "Please insert value less than the regular price!"
 msgstr ""
 
 #. translators: %s: decimal
-#: includes/Assets.php:1023
-#: includes/Assets.php:1203
+#: includes/Assets.php:1029
+#: includes/Assets.php:1209
 msgid "Please enter with one decimal point (%s) without thousand separators."
 msgstr ""
 
 #. translators: %s: price decimal separator
-#: includes/Assets.php:1025
-#: includes/Assets.php:1205
+#: includes/Assets.php:1031
+#: includes/Assets.php:1211
 msgid "Please enter with one monetary decimal point (%s) without thousand separators and currency symbols."
 msgstr ""
 
-#: includes/Assets.php:1026
-#: includes/Assets.php:1206
+#: includes/Assets.php:1032
+#: includes/Assets.php:1212
 msgid "Please enter in country code with two capital letters."
 msgstr ""
 
-#: includes/Assets.php:1027
-#: includes/Assets.php:1207
+#: includes/Assets.php:1033
+#: includes/Assets.php:1213
 msgid "Please enter in a value less than the regular price."
 msgstr ""
 
-#: includes/Assets.php:1028
-#: includes/Assets.php:1208
+#: includes/Assets.php:1034
+#: includes/Assets.php:1214
 msgid "This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?"
 msgstr ""
 
-#: includes/Assets.php:1029
-#: includes/Assets.php:1209
+#: includes/Assets.php:1035
+#: includes/Assets.php:1215
 msgid "This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?"
 msgstr ""
 
-#: includes/Assets.php:1039
+#: includes/Assets.php:1045
 msgid "Select and Crop"
 msgstr ""
 
-#: includes/Assets.php:1040
+#: includes/Assets.php:1046
 msgid "Choose Image"
 msgstr ""
 
-#: includes/Assets.php:1041
+#: includes/Assets.php:1047
 msgid "Product title is required"
 msgstr ""
 
-#: includes/Assets.php:1042
+#: includes/Assets.php:1048
 msgid "Product category is required"
 msgstr ""
 
-#: includes/Assets.php:1043
+#: includes/Assets.php:1049
 msgid "Product created successfully"
 msgstr ""
 
-#: includes/Assets.php:1047
+#: includes/Assets.php:1053
 msgid "One result is available, press enter to select it."
 msgstr ""
 
-#: includes/Assets.php:1048
+#: includes/Assets.php:1054
 msgid "%qty% results are available, use up and down arrow keys to navigate."
 msgstr ""
 
-#: includes/Assets.php:1049
+#: includes/Assets.php:1055
 msgid "No matches found"
 msgstr ""
 
-#: includes/Assets.php:1050
+#: includes/Assets.php:1056
 msgid "Loading failed"
 msgstr ""
 
-#: includes/Assets.php:1051
+#: includes/Assets.php:1057
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/Assets.php:1052
+#: includes/Assets.php:1058
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/Assets.php:1053
+#: includes/Assets.php:1059
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/Assets.php:1054
+#: includes/Assets.php:1060
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/Assets.php:1055
+#: includes/Assets.php:1061
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/Assets.php:1056
+#: includes/Assets.php:1062
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/Assets.php:1057
+#: includes/Assets.php:1063
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/Assets.php:1058
+#: includes/Assets.php:1064
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/Assets.php:1059
+#: includes/Assets.php:1065
 msgid "Calculating"
 msgstr ""
 
-#: includes/Assets.php:1062
+#: includes/Assets.php:1068
 msgid "Attribute Name"
 msgstr ""
 
-#: includes/Assets.php:1064
+#: includes/Assets.php:1070
 msgid "Are you sure? You have uploaded banner but didn't click the Update Settings button!"
 msgstr ""
 
-#: includes/Assets.php:1065
+#: includes/Assets.php:1071
 #: templates/settings/header.php:20
 #: templates/settings/payment-manage.php:48
 #: templates/settings/store-form.php:270
 msgid "Update Settings"
 msgstr ""
 
-#: includes/Assets.php:1067
+#: includes/Assets.php:1073
 msgid "Please enter 3 or more characters"
 msgstr ""
 
@@ -2615,7 +2629,7 @@ msgid "Show store opening/closing Time"
 msgstr ""
 
 #: includes/Customizer.php:392
-#: includes/Install/Installer.php:240
+#: includes/Install/Installer.php:239
 msgid "Store List"
 msgstr ""
 
@@ -4757,6 +4771,10 @@ msgstr ""
 msgid "Dokan setting section key"
 msgstr ""
 
+#: includes/REST/AdminNoticeController.php:42
+msgid "Choose notice scope: \"local\" displays only on Dokan pages, \"global\" displays across the entire site."
+msgstr ""
+
 #: includes/REST/AdminReportController.php:145
 #: templates/dashboard/orders-widget.php:28
 #: templates/dashboard/products-widget.php:32
@@ -6809,35 +6827,35 @@ msgid "Dokan Data Update Required"
 msgstr ""
 
 #: includes/Upgrade/AdminNotice.php:40
-msgid "We need to update your install to the latest version"
+msgid "Updating your Dokan data is required to continue functional operations."
 msgstr ""
 
-#: includes/Upgrade/AdminNotice.php:45
+#: includes/Upgrade/AdminNotice.php:46
 #: templates/orders/details.php:194
 msgid "Update"
 msgstr ""
 
-#: includes/Upgrade/AdminNotice.php:46
+#: includes/Upgrade/AdminNotice.php:47
 msgid "Updating..."
 msgstr ""
 
-#: includes/Upgrade/AdminNotice.php:47
+#: includes/Upgrade/AdminNotice.php:48
 msgid "Updated"
 msgstr ""
 
-#: includes/Upgrade/AdminNotice.php:49
+#: includes/Upgrade/AdminNotice.php:50
 msgid "It is strongly recommended that you backup your database before proceeding. Are you sure you wish to run the updater now?"
 msgstr ""
 
-#: includes/Upgrade/AdminNotice.php:73
+#: includes/Upgrade/AdminNotice.php:74
 msgid "You are not authorize to perform this operation."
 msgstr ""
 
-#: includes/Upgrade/AdminNotice.php:77
+#: includes/Upgrade/AdminNotice.php:78
 msgid "There is an upgrading process going on."
 msgstr ""
 
-#: includes/Upgrade/AdminNotice.php:81
+#: includes/Upgrade/AdminNotice.php:82
 msgid "Update is not required."
 msgstr ""
 
@@ -9825,6 +9843,7 @@ msgstr ""
 msgid "Setup"
 msgstr ""
 
+#: assets/js/dokan-admin-notice.js:2
 #: assets/js/dokan-promo-notice.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Loading..."

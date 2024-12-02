@@ -2,10 +2,10 @@
 Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
-Requires at least: 6.4
-Tested up to: 6.7
+Requires at least: 6.5
+Tested up to: 6.7.1
 WC requires at least: 8.0.0
-WC tested up to: 9.4.1
+WC tested up to: 9.4.2
 Requires PHP: 7.4
 Stable tag: 3.14.0
 License: GPLv2 or later
@@ -347,7 +347,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
-= v3.14.0 ( Nov 18, 2024 ) =
+= v3.14.0 ( Dec 02, 2024 ) =
 
 - **new:** Commission amount now displayed in the product list within the admin dashboard.
 - **new:** Vendor earning amount displayed in the product list within the vendor dashboard.
@@ -355,7 +355,6 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **new:** Commission details metabox on the order details page in the admin dashboard is now visible for child orders or orders without a parent.
 - **new:** Related order metabox on the order details page in the admin dashboard, displaying sibling orders for child orders and child orders for parent orders.
 - **new:** Backward compatibility for flat, percentage, and combine commission types for older orders.
-- **new:** A new color palette is introduced for store color "Purple Pulse"
 - **update:** Updated commission types from flat, percentage, and combine to fixed and category-based commissions.
 - **update:** Overhauled the commission UI across Dokan global settings, vendor settings, product settings, Dokan subscription product settings, and the admin setup wizard.
 - **update:** Updated the commission settings in the admin setup wizard.

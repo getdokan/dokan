@@ -48,7 +48,7 @@ class Update_Vendor_Commission {
     /**
      * Batch queue creator.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */

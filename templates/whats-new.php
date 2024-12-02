@@ -5,7 +5,7 @@
 $changelog = [
     [
         'version'  => 'Version 3.14.0',
-        'released' => '2024-11-18',
+        'released' => '2024-12-02',
         'changes'  => [
             'New'  => [
                 [
@@ -30,10 +30,6 @@ $changelog = [
                 ],
                 [
                     'title'       => 'Backward compatibility for flat, percentage, and combine commission types for older orders.',
-                    'description' => '',
-                ],
-                [
-                    'title'       => 'A new color palette is introduced for store color "Purple Pulse"',
                     'description' => '',
                 ],
             ],

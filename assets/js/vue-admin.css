@@ -3208,7 +3208,7 @@ tr.data_clear_on_uninstall td fieldset label {
     width: 2px !important;
 }
 .dokan-settings-wrap .metabox-holder {
-    width: 40%;
+    width: 100%;
 }
 .dokan-settings-wrap .metabox-holder .settings-header {
     display: block;
@@ -3229,7 +3229,7 @@ tr.data_clear_on_uninstall td fieldset label {
 }
 @media only screen and (max-width: 768px) {
 .dokan-settings-wrap .nav-tab-wrapper {
-    width: 35% !important;
+    width: 35%;
 }
 .dokan-settings-wrap .nav-tab-wrapper .nav-tab .nav-content .nav-title {
     font-size: 10px;
@@ -3238,7 +3238,7 @@ tr.data_clear_on_uninstall td fieldset label {
     font-size: 8px !important;
 }
 .dokan-settings-wrap .metabox-holder {
-    width: 65%;
+    width: 100%;
 }
 .dokan-settings-wrap .metabox-holder .settings-header .settings-content .settings-title {
     padding-left: 0;

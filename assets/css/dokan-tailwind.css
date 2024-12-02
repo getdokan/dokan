@@ -464,6 +464,9 @@
 .pb-0 {
     padding-bottom: 0px;
 }
+.pb-5 {
+    padding-bottom: 1.25rem;
+}
 .pl-3 {
     padding-left: 0.75rem;
 }
@@ -475,6 +478,9 @@
 }
 .pr-5 {
     padding-right: 1.25rem;
+}
+.pt-0 {
+    padding-top: 0px;
 }
 .pt-4 {
     padding-top: 1rem;
@@ -513,6 +519,10 @@
 }
 .leading-\[1\.5em\] {
     line-height: 1.5em;
+}
+.text-\[\#4C19E6\] {
+    --tw-text-opacity: 1;
+    color: rgb(76 25 230 / var(--tw-text-opacity));
 }
 .text-\[\#F05025\] {
     --tw-text-opacity: 1;

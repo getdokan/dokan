@@ -194,7 +194,7 @@ class Manager {
     /**
      * Show admin notice if dokan lite is updated to v3.14.0 and dokan pro is not updated to minimum v3.14.0.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param $notices
      *

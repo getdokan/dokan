@@ -279,6 +279,10 @@
     font-size: 0.75rem;
     line-height: 1rem
 }
+.text-\[\#4C19E6\] {
+    --tw-text-opacity: 1;
+    color: rgb(76 25 230 / var(--tw-text-opacity))
+}
 .text-\[\#F05025\] {
     --tw-text-opacity: 1;
     color: rgb(240 80 37 / var(--tw-text-opacity))
