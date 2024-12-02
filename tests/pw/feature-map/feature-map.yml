@@ -1507,8 +1507,8 @@
 - page: 'Wholesale'
   features:
       admin:
-          admin can enable wholesale module: false
-          admin can disable wholesale module: false
+          admin can enable wholesale module: true
+          admin can disable wholesale module: true
           admin can view wholesale customers menu page: true
           admin can search wholesale customer: true
           admin can disable customer's wholesale capability: true

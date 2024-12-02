@@ -42,6 +42,10 @@ test.describe('Wholesale test (admin)', () => {
 
     // admin
 
+    test.only('admin can enable wholesale module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableWholesaleModule();
+    });
+
     test('admin can view wholesale customers menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminWholesaleCustomersRenderProperly();
     });
@@ -178,5 +182,10 @@ test.describe('Wholesale test (customer)', () => {
         await customer.assertWholesalePrice(wholesalePrice, minimumWholesaleQuantity);
         await customerPage.goToCheckout();
         await customerPage.paymentOrder();
+    });
+
+    test.only('admin can disable wholesale module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.wholesale, payloads.adminAuth);
+        await admin.disableWholesaleModule();
     });
 });
