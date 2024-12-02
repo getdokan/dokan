@@ -37,6 +37,10 @@ test.describe('Abuse report test', () => {
 
     // admin
 
+    test.only('admin can enable report abuse module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableReportAbuseModule(data.predefined.simpleProduct.product1.name);
+    });
+
     test('admin can view abuse reports menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminAbuseReportRenderProperly();
     });
@@ -77,5 +81,12 @@ test.describe('Abuse report test', () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.reportAbuse, { reported_by_logged_in_users_only: 'on' });
         await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report, true);
         await dbUtils.updateOptionValue(dbData.dokan.optionName.reportAbuse, { reported_by_logged_in_users_only: 'off' });
+    });
+
+    // admin
+
+    test.only('admin can disable report abuse module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.reportAbuse, payloads.adminAuth);
+        await admin.disableReportAbuseModule(data.predefined.simpleProduct.product1.name);
     });
 });

@@ -1133,8 +1133,8 @@
 - page: 'Report Abuse'
   features:
       admin:
-          admin can enable report abuse module: false
-          admin can disable report abuse module: false
+          admin can enable report abuse module: true
+          admin can disable report abuse module: true
           admin can view abuse reports menu page: true
           admin can view abuse report details: true
           admin can filter abuse reports by abuse reason: true

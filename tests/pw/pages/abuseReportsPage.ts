@@ -16,6 +16,30 @@ export class AbuseReportsPage extends AdminPage {
 
     // abuse reports
 
+    // enable report abuse module
+    async enableReportAbuseModule(productName: string) {
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(selector.admin.dokan.menus.abuseReports);
+
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.productReportAbuse);
+
+        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.toBeVisible(abuseReportCustomer.reportAbuse);
+    }
+
+    // disable report abuse module
+    async disableReportAbuseModule(productName: string) {
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.notToBeVisible(selector.admin.dokan.menus.abuseReports);
+
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.productReportAbuse);
+
+        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.notToBeVisible(abuseReportCustomer.reportAbuse);
+    }
+
     // abuse report render properly
     async adminAbuseReportRenderProperly() {
         await this.goIfNotThere(data.subUrls.backend.dokan.abuseReports);
