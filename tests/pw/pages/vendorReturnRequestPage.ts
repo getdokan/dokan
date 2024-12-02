@@ -20,6 +20,9 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.toBeVisible(selector.vendor.vDashboard.menus.primary.returnRequest);
 
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.rma);
+
         await this.hover(selector.vendor.vDashboard.menus.primary.settings);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.rma);
     }
@@ -27,7 +30,10 @@ export class VendorReturnRequestPage extends VendorPage {
     // disable rma module
     async disableRmaModule() {
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.returnRequest);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.returnRequest);
+
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.rma);
 
         await this.hover(selector.vendor.vDashboard.menus.primary.settings);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.rma);
