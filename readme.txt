@@ -2,12 +2,12 @@
 Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
-Requires at least: 6.4
-Tested up to: 6.6.2
+Requires at least: 6.5
+Tested up to: 6.7.1
 WC requires at least: 8.0.0
-WC tested up to: 9.3.3
+WC tested up to: 9.4.2
 Requires PHP: 7.4
-Stable tag: 3.13.1
+Stable tag: 3.14.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -347,6 +347,23 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v3.14.0 ( Dec 02, 2024 ) =
+
+- **new:** Commission amount now displayed in the product list within the admin dashboard.
+- **new:** Vendor earning amount displayed in the product list within the vendor dashboard.
+- **new:** Vendor earning suggestions on the product add and edit pages in the vendor dashboard for simple and variable products.
+- **new:** Commission details metabox on the order details page in the admin dashboard is now visible for child orders or orders without a parent.
+- **new:** Related order metabox on the order details page in the admin dashboard, displaying sibling orders for child orders and child orders for parent orders.
+- **new:** Backward compatibility for flat, percentage, and combine commission types for older orders.
+- **update:** Updated commission types from flat, percentage, and combine to fixed and category-based commissions.
+- **update:** Overhauled the commission UI across Dokan global settings, vendor settings, product settings, Dokan subscription product settings, and the admin setup wizard.
+- **update:** Updated the commission settings in the admin setup wizard.
+- **update:** Enhanced responsiveness of the UI for Dokan admin dashboard settings menus.
+- **update:** Product is rebranded with new branding.
+- **update:** As per new branding of Dokan Multivendor Plugin, full product is rebranded with new theme color.
+- **fix:** Moved the vendor edit page from Dokan Pro to Dokan Lite and eliminated the commission setting from the WordPress default user profile page.
+- **fix:** Removed the commission from every category, introducing category-based commission in global settings, vendor settings, Dokan subscription products, and the admin setup wizard.
+
 = v3.13.1 ( Nov 11, 2024 ) =
 
 - **update:** Compatibility with the Printful Integration Module added.
@@ -370,7 +387,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 - **update:** Added `$data` parameter to `dokan_update_vendor` hook.
 
-[CHECK THE FULL CHANGELOG](https://raw.githubusercontent.com/getdokan/dokan/develop/CHANGELOG.md).
+[CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/ac8cfe42ed6d13a34572571728281591ebbf706f/CHANGELOG.md).
 
 == Upgrade Notice ==
 

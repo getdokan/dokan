@@ -22,7 +22,7 @@ export class ReverseWithdrawsPage extends CustomerPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.settings);
 
         await this.click(selector.admin.dokan.settings.menus.reverseWithdrawal);
-        await this.clickAndWaitForLoadState(selector.admin.dokan.settings.reverseWithdraw.reverseWithdrawSaveChanges);
+        await this.clickAndWaitForLoadState(selector.admin.dokan.settings.saveChanges);
     }
 
     // reverse withdraw render properly

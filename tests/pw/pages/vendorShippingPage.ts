@@ -18,7 +18,7 @@ export class VendorShippingPage extends VendorPage {
     async vendorShippingSettingsRenderProperly() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipping);
 
-        // shipstation text is visible
+        // ShipStation text is visible
         await this.toBeVisible(vendorShipping.shippingSettingsText);
 
         // visit store link is visible
