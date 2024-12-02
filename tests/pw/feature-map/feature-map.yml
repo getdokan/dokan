@@ -1265,8 +1265,8 @@
 - page: 'ShipStation Integration'
   features:
       admin:
-          admin can enable ShipStation Integration module: false
-          admin can disable ShipStation Integration module: false
+          admin can enable ShipStation integration module: true
+          admin can disable ShipStation integration module: true
       vendor:
           # vendor can view ShipStation settings menu page: true
           vendor can generate ShipStation credentials: true

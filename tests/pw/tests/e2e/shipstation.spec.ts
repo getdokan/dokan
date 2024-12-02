@@ -28,6 +28,12 @@ test.describe('ShipStation test', () => {
         await vPage.close();
     });
 
+    // admin
+
+    test.only('admin can enable ShipStation integration module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableShipStationModule();
+    });
+
     // vendor
 
     test('vendor can generate ShipStation credentials', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
@@ -36,5 +42,10 @@ test.describe('ShipStation test', () => {
 
     test('vendor can revoke ShipStation credentials', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.revokeShipStationCredentials();
+    });
+
+    test.only('admin can disable ShipStation integration module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.shipStation, payloads.adminAuth);
+        await admin.disableShipStationModule();
     });
 });

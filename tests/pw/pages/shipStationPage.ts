@@ -11,6 +11,18 @@ export class ShipStationPage extends VendorPage {
         super(page);
     }
 
+    // enable ShipStation module
+    async enableShipStationModule() {
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.subMenus.shipStation);
+    }
+
+    // disable ShipStation module
+    async disableShipStationModule() {
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.shipStation);
+    }
+
     // generate shipStation credentials
     async generateShipStationCredentials() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipStation);
