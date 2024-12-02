@@ -29,7 +29,7 @@ class CommissionControllerV1 extends DokanRESTController {
     /**
      * Registering the commission routes here.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     public function register_routes() {
         register_rest_route(
@@ -87,7 +87,7 @@ class CommissionControllerV1 extends DokanRESTController {
     /**
      * Checking if have any permission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return boolean
      */

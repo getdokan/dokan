@@ -131,7 +131,7 @@ class Manager {
     /**
      * Display dokan admin logo update notice.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $notices
      *
@@ -158,7 +158,7 @@ class Manager {
     /**
      * Dismisses dokan admin logo update notice.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -169,7 +169,7 @@ class Manager {
     /**
      * Dismisses dokan notice.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param string $option_name The name of the option to update.
      *
@@ -194,7 +194,7 @@ class Manager {
     /**
      * Show admin notice if dokan lite is updated to v3.14.0 and dokan pro is not updated to minimum v3.14.0.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param $notices
      *

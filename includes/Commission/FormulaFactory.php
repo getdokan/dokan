@@ -14,14 +14,14 @@ use WeDevs\Dokan\Commission\Settings\DefaultSetting;
 /**
  * This is the factory class that determines the commission formula.
  *
- * @since DOKAN_SINCE
+ * @since 3.14.0
  */
 class FormulaFactory {
 
     /**
      * Returns the applicable formula class or null.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      *
@@ -30,7 +30,7 @@ class FormulaFactory {
     public static function get_formula( Setting $settings ): AbstractFormula {
         switch ( $settings->get_type() ) {
             case Flat::SOURCE:
-                // In Dokan before DOKAN_SINCE version if the commission type was flat the flat value used to be saved in the percentage key, that is why we are passing the percentage value.
+                // In Dokan before 3.14.0 version if the commission type was flat the flat value used to be saved in the percentage key, that is why we are passing the percentage value.
                 return new Flat( $settings );
             case Percentage::SOURCE:
                 return new Percentage( $settings );

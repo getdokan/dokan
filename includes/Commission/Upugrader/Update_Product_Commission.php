@@ -54,7 +54,7 @@ class Update_Product_Commission {
     /**
      * Batch queue creator.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -119,7 +119,7 @@ class Update_Product_Commission {
     /**
      * Schedule a single product for processing.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param $item
      *

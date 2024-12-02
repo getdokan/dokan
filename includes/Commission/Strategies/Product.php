@@ -10,7 +10,7 @@ class Product extends AbstractStrategy {
     /**
      * Product id
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int
      */
@@ -19,14 +19,14 @@ class Product extends AbstractStrategy {
     /**
      * Product strategy source
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'product';
 
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param $product_id
      */
@@ -37,7 +37,7 @@ class Product extends AbstractStrategy {
     /**
      * Returns product strategy source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -48,7 +48,7 @@ class Product extends AbstractStrategy {
     /**
      * Returns product commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
