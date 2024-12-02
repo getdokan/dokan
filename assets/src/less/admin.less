@@ -17,6 +17,7 @@
     }
    .dokan-admin-logo-wrap {
        display: flex;
+       flex: 1;
     .dokan-admin-header-logo {
         display: flex;
         align-items: center;
@@ -32,24 +33,38 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        margin: 0 24px;
-
+        margin-right: 24px;
+        flex: 1;
         .version-tag {
-            padding: 8px 14px;
-            border-radius: 16px;
+
+            border-radius: 20px;
             font-size: 13px;
             line-height: 20px;
-            font-weight: 500;
-            font-family: "SF Pro Text", sans-serif;
-
+            font-weight: 400;
             &.lite {
+                padding: 8px 16px;
                 background: #FF9B5366;
                 color: #995C00;
             }
 
             &.pro {
+                padding: 8px;
                 background: #D8D8FE;
                 color: @dokan-color;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                text-transform: capitalize;
+                font-weight: 400;
+                & .version-tag-pro-badge{
+                    background: @dokan-color;
+                    color: white;
+                    border-radius: 20px;
+                    padding:4px 8px;
+                    display: inline-flex;
+                    align-items: center;
+                    font-size: 12px;
+                }
             }
         }
     }
@@ -58,21 +73,16 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        background: #6C5CE7;
+        background: @dokan-color;
         color: white;
-        padding: 8px 16px;
-        border-radius: 4px;
+        padding: 10px 20px;
+        border-radius: 6px;
         text-decoration: none;
         font-weight: 500;
         transition: background-color 0.2s;
-
+        margin-left: auto;
         &:hover {
-            background: #5849c4;
-            color: white;
-        }
-
-        svg {
-            margin-left: 4px;
+            background: @dokan-dark-purple;
         }
     }
 
