@@ -1058,8 +1058,8 @@
 - page: 'Product Q&A'
   features:
       admin:
-          admin can enable product Q&A module: false
-          admin can disable product Q&A module: false
+          admin can enable product Q&A module: true
+          admin can disable product Q&A module: true
           admin can view product QA menu page: true
           admin can view product question details: true
           admin can filter questions by vendor: true

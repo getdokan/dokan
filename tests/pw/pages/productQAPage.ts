@@ -29,6 +29,30 @@ export class ProductQAPage extends BasePage {
 
     // admin
 
+    // enable product QA module
+    async enableProductQaModule(productName: string) {
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(selector.admin.dokan.menus.productQA);
+
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.productQA);
+
+        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.toBeVisible(selector.customer.cSingleProduct.menus.questionsAnswers);
+    }
+
+    // disable product QA module
+    async disableProductQaModule(productName: string) {
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.notToBeVisible(selector.admin.dokan.menus.productQA);
+
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.productQA);
+
+        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.notToBeVisible(selector.customer.cSingleProduct.menus.questionsAnswers);
+    }
+
     // product question answers render properly
     async adminProductQARenderProperly() {
         await this.goToProductQA();

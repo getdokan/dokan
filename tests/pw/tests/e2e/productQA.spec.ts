@@ -43,6 +43,10 @@ test.describe('Product QA functionality test', () => {
 
     // admin
 
+    test.only('admin can enable product Q&A module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableProductQaModule(data.predefined.simpleProduct.product1.name);
+    });
+
     test('admin product QA menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminProductQARenderProperly();
     });
@@ -147,5 +151,12 @@ test.describe('Product QA functionality test', () => {
     test('guest customer need to signIn/signUp to post question', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         const guest = new ProductQAPage(page);
         await guest.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers(), true);
+    });
+
+    // admin
+
+    test.only('admin can disable product Q&A module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.productQA, payloads.adminAuth);
+        await admin.disableProductQaModule(data.predefined.simpleProduct.product1.name);
     });
 });
