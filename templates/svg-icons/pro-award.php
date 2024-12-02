@@ -4,8 +4,7 @@
  *
  * @since 3.3.0
  */
-
-$args = $args ?? [];
+$args = isset( $args ) ? $args : [];
 $width = $args['width'] ?? 20;
 $height = $args['height'] ?? 20;
 
