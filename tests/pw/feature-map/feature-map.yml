@@ -1089,8 +1089,8 @@
 - page: 'Product Subscription'
   features:
       admin:
-          admin can enable product subscription module: false
-          admin can disable product subscription module: false
+          admin can enable product subscription module: true
+          admin can disable product subscription module: true
       vendor:
           vendor can view user subscriptions menu page: true
           vendor can view product subscription details: true
