@@ -32,6 +32,10 @@ test.describe('Seller badge test', () => {
 
     // admin
 
+    test.only('admin can enable seller badge module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableSellerBadgeModule();
+    });
+
     test('admin can view seller badge menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminSellerBadgeRenderProperly();
     });
@@ -103,5 +107,10 @@ test.describe('Seller badge test', () => {
 
     test('vendor can filter seller badges', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.filterSellerBadges('available_badges');
+    });
+
+    test.only('admin can disable seller badge module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.sellerBadge, payloads.adminAuth);
+        await admin.disableSellerBadgeModule();
     });
 });

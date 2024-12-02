@@ -1233,8 +1233,8 @@
 - page: 'Seller Badge'
   features:
       admin:
-          admin can enable seller badge module: false
-          admin can disable seller badge module: false
+          admin can enable seller badge module: true
+          admin can disable seller badge module: true
           admin can view seller badge menu page: true
           admin can preview seller badge: true
           admin can view seller badge details: true
