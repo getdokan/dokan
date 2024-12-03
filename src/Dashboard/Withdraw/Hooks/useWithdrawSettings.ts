@@ -6,7 +6,7 @@ interface PaymentMethod {
     value: string;
 }
 
-interface WithdrawMethod {
+export interface WithdrawMethod {
     label: string;
     value: string;
     icon: string;
@@ -18,6 +18,7 @@ export interface WithdrawSettings {
     withdraw_method: string;
     payment_methods: PaymentMethod[];
     active_methods: Record< string, WithdrawMethod >;
+    setup_url: string;
 }
 
 export interface UseWithdrawSettingsReturn {

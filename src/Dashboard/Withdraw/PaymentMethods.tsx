@@ -1,7 +1,12 @@
-import { Button, Card } from '@getdokan/dokan-ui';
+import { Button, Card, useToast } from '@getdokan/dokan-ui';
 import { twMerge } from 'tailwind-merge';
-import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
+import {
+    UseWithdrawSettingsReturn,
+    WithdrawMethod,
+} from './Hooks/useWithdrawSettings';
 import { UseBalanceReturn } from './Hooks/useBalance';
+import { __ } from '@wordpress/i18n';
+import { useMakeDefaultMethod } from './Hooks/useMakeDefaultMethod';
 
 const Loader = () => {
     return (
@@ -41,13 +46,73 @@ const Loader = () => {
 };
 function PaymentMethods( {
     bodyData,
+    masterLoading,
 }: {
     bodyData: UseWithdrawSettingsReturn;
+    masterLoading: boolean;
 } ) {
+    const makeDefaultMethodHook = useMakeDefaultMethod();
+    const toast = useToast();
+    const actionButton = ( activemethod: WithdrawMethod ) => {
+        if (
+            activemethod.has_information &&
+            activemethod?.value === bodyData?.data?.withdraw_method
+        ) {
+            return (
+                <Button
+                    color="secondary"
+                    className="bg-gray-50 hover:bg-gray-100"
+                    disabled={ true }
+                >
+                    Default
+                </Button>
+            );
+        } else if (
+            activemethod.has_information &&
+            activemethod?.value !== bodyData?.data?.withdraw_method
+        ) {
+            return (
+                <Button
+                    color="secondary"
+                    className="bg-dokan-btn hover:bg-dokan-btn-hover text-white"
+                    onClick={ () => {
+                        makeDefaultMethodHook
+                            .makeDefaultMethod( activemethod.value )
+                            .then( () => {
+                                toast( {
+                                    type: 'success',
+                                    title: __(
+                                        'Default method updated',
+                                        'dokan-lite'
+                                    ),
+                                } );
+                                bodyData.refresh();
+                            } );
+                    } }
+                    disabled={ makeDefaultMethodHook.isLoading }
+                >
+                    { __( 'Make Default', 'dokan-lite' ) }
+                </Button>
+            );
+        }
+        return (
+            <Button
+                type="button"
+                color="secondary"
+                className="bg-dokan-btn hover:bg-dokan-btn-hover text-white"
+                onClick={ () => {
+                    window.location.href = bodyData?.data?.setup_url;
+                } }
+            >
+                Setup
+            </Button>
+        );
+    };
     if (
         ! bodyData ||
         ! bodyData.hasOwnProperty( 'isLoading' ) ||
-        bodyData.isLoading
+        bodyData.isLoading ||
+        masterLoading
     ) {
         return <Loader />;
     }
@@ -65,6 +130,7 @@ function PaymentMethods( {
                             ( activeMethod, index ) => {
                                 return (
                                     <div
+                                        key={ activeMethod.value }
                                         className={ twMerge(
                                             'flex flex-col sm:flex-row sm:items-center justify-between',
                                             index !== 0 ? 'border-t pt-4' : ''
@@ -86,12 +152,7 @@ function PaymentMethods( {
                                                 </span>
                                             </div>
                                         </div>
-                                        <Button
-                                            variant="secondary"
-                                            className="mt-4 sm:mt-0"
-                                        >
-                                            Default
-                                        </Button>
+                                        { actionButton( activeMethod ) }
                                     </div>
                                 );
                             }

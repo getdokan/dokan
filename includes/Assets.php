@@ -883,6 +883,8 @@ class Assets {
 
             wp_enqueue_script( 'dokan-react-frontend' );
             wp_enqueue_style( 'dokan-react-frontend' );
+            wp_localize_script( 'dokan-react-frontend', 'dokanCurrency', $this->get_localized_price() );
+
             wp_enqueue_script( 'jquery' );
             wp_enqueue_script( 'jquery-ui' );
             wp_enqueue_script( 'jquery-ui-autocomplete' );

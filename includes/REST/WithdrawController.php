@@ -974,7 +974,7 @@ class WithdrawController extends WP_REST_Controller {
                 'amount' => [
                     'required'    => true,
                     'description' => __( 'The amount of discount. Should always be numeric, even if setting a percentage.', 'dokan-lite' ),
-                    'type'        => 'string',
+                    'type'        => 'number',
                     'context'     => [ 'view', 'edit' ],
                 ],
                 'created_date' => [

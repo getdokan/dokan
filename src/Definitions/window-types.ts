@@ -17,6 +17,13 @@ declare global {
         dokan_get_daterange_picker_format: () => string;
         moment: ( date: string ) => any;
         accounting: WooCommerceAccounting.AccountingStatic;
+        dokanCurrency: {
+            decimal: string;
+            format: string;
+            precision: string;
+            symbol: string;
+            thousand: string;
+        };
     }
 }
 

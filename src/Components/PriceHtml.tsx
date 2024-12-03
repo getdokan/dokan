@@ -21,23 +21,23 @@ const PriceHtml = ( {
     format = '',
 }: PriceHtmlProps ) => {
     if ( ! currencySymbol ) {
-        currencySymbol = window.accounting.settings.currency.symbol;
+        currencySymbol = window.dokanCurrency.symbol;
     }
 
     if ( ! precision ) {
-        precision = window.accounting.settings.currency.precision;
+        precision = window.dokanCurrency.precision;
     }
 
     if ( ! thousand ) {
-        thousand = window.accounting.settings.currency.thousand;
+        thousand = window.dokanCurrency.thousand;
     }
 
     if ( ! decimal ) {
-        decimal = window.accounting.settings.currency.decimal;
+        decimal = window.dokanCurrency.decimal;
     }
 
     if ( ! format ) {
-        format = window.accounting.settings.currency.format;
+        format = window.dokanCurrency.format;
     }
 
     return (

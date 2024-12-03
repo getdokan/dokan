@@ -17,7 +17,7 @@ declare namespace WooCommerceAccounting {
     }
 
     interface UnformatOptions {
-        precision?: number;
+        precision?: number|string;
         decimal?: string;
         thousand?: string;
     }
