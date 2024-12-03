@@ -10,20 +10,7 @@ class VendorNavMenuChecker {
      * @var array $template_dependencies List of template dependencies.
      * [ 'route' => [ ['slug' => 'template-slug', 'name' => 'template-name' (Optional), 'args' = [] (Optional)  ] ] ]
      */
-    protected array $template_dependencies = [
-        '' => [
-            [ 'slug' => 'dashboard/dashboard' ],
-            [ 'slug' => 'dashboard/orders-widget' ],
-            [ 'slug' => 'dashboard/products-widget' ],
-        ],
-        'products' => [
-            [ 'slug' => 'products/products' ],
-            [
-				'slug' => 'products/products',
-				'name' => 'listing',
-			],
-        ],
-    ];
+    protected array $template_dependencies = [];
 
     /**
      * Constructor.
@@ -58,8 +45,8 @@ class VendorNavMenuChecker {
     public function convert_to_react_menu( array $menu_items ): array {
         return array_map(
             function ( $item ) {
-                if ( ! empty( $item['route'] ) && $this->is_dependency_cleared( $item['route'] ) ) {
-                    $item['url'] = $this->get_url_for_route( $item['route'] );
+                if ( ! empty( $item['react_route'] ) && $this->is_dependency_cleared( $item['react_route'] ) ) {
+                    $item['url'] = $this->get_url_for_route( $item['react_route'] );
                 }
                 if ( isset( $item['submenu'] ) ) {
                     $item['submenu'] = $this->convert_to_react_menu( $item['submenu'] );
@@ -80,12 +67,14 @@ class VendorNavMenuChecker {
      * @return bool
      */
     protected function is_dependency_cleared( string $route ): bool {
+        $clear        = true;
         $dependencies = $this->get_template_dependencies_resolutions();
+
         if ( ! empty( $dependencies[ trim( $route, '/' ) ] ) ) {
-            return false;
+            $clear = false;
         }
 
-        return true;
+        return apply_filters( 'dokan_is_dashboard_nav_dependency_cleared', $clear, $route );
     }
 
     /**

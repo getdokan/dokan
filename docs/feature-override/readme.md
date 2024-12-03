@@ -8,6 +8,7 @@
     - [Define the override templates for a React route in Dokan Lite.](#define-the-override-templates-for-a-react-route-in-dokan-lite)
     - [Define the override templates for a React route in **Dokan Pro** or **External Plugin**.](#define-the-override-templates-for-a-react-route-in-dokan-pro-or-external-plugin)
     - [Define the override templates array structure.](#define-the-override-templates-array-structure)
+- [Manual Override from External Plugin](#manual-override-from-external-plugin)
 
 ## Introduction
 This document will help you to define a menu is available in `React` and its `PHP` override information.
@@ -26,7 +27,7 @@ $menus = [
             'url'        => dokan_get_navigation_url(),
             'pos'        => 10,
             'permission' => 'dokan_view_overview_menu',
-            'route'      => '/', // <-- Define the route here
+            'react_route'      => '/', // <-- Define the route here
         ],
         'products'  => [
             'title'      => __( 'Products', 'dokan-lite' ),
@@ -34,7 +35,7 @@ $menus = [
             'url'        => dokan_get_navigation_url( 'products' ),
             'pos'        => 30,
             'permission' => 'dokan_view_product_menu',
-            'route'      => 'products', // <-- Define the route here
+            'react_route'      => 'products', // <-- Define the route here
         ],
         'orders'    => [
             'title'      => __( 'Orders', 'dokan-lite' ),
@@ -42,7 +43,7 @@ $menus = [
             'url'        => dokan_get_navigation_url( 'orders' ),
             'pos'        => 50,
             'permission' => 'dokan_view_order_menu',
-            'route'      => 'orders', // <-- Define the route here
+            'react_route'      => 'orders', // <-- Define the route here
         ],
         'withdraw'  => [
             'title'      => __( 'Withdraw', 'dokan-lite' ),
@@ -78,7 +79,7 @@ add_filter( 'dokan_get_dashboard_nav', function ( $menus ) {
         'url'        => dokan_get_navigation_url( 'products' ),
         'pos'        => 30,
         'permission' => 'dokan_view_product_menu',
-        'route'      => 'products', // <-- Define the route here
+        'react_route'      => 'products', // <-- Define the route here
     ];
 
     return $menus;
@@ -146,3 +147,18 @@ add_filter( 'dokan_get_dashboard_nav_template_dependency', function ( array $dep
 - **Slug:** The slug of the template file which is used to display the php content.
 - **Name:** The name of the template file which is used to display the php content. (Optional)
 - **Args:** The arguments which are passed to the template file in `dokan_get_template_part()` function. (Optional)
+
+## Manual Override from External Plugin
+If you did not override any of the template file directly but you have override functionality by using `add_action` or `add_filter` then you can forcefully override the php route and template rendering for the route by using the `dokan_is_dashboard_nav_dependency_cleared` filter hook.
+
+```php
+
+add_filter( 'dokan_is_dashboard_nav_dependency_cleared', function ( $is_cleared, $route ) {
+    if ( 'products' === $route ) {
+        return true;
+    }
+
+    return $is_cleared;
+}, 10, 2 );
+
+```
