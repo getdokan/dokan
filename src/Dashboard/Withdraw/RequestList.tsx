@@ -169,7 +169,9 @@ function RequestList( {
     return (
         <>
             <DataTable table={ table } />
-            <Pagination table={ table } />
+            { withdrawRequests.totalPages > 1 && (
+                <Pagination table={ table } />
+            ) }
             <Modal
                 className="max-w-2xl dokan-withdraw-style-reset dokan-layout"
                 isOpen={ isOpen }

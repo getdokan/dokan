@@ -27,18 +27,9 @@ function WithdrawRequests() {
     }, [] );
 
     useEffect( () => {
-        if ( currentUser?.data ) {
-            console.log( currentUser.data );
-            useWithdrawRequestHook.fetchWithdrawRequests( {
-                per_page: 10,
-                page: 1,
-                status: 'pending',
-                user_id: currentUser?.data?.id ?? 0,
-            } );
+        if ( ! currentUser?.data || ! currentUser?.data?.id ) {
+            return;
         }
-    }, [ currentUser?.data ] );
-
-    useEffect( () => {
         const queryParams = new URLSearchParams( location.search );
         let status = queryParams.get( 'status' );
 
@@ -56,7 +47,7 @@ function WithdrawRequests() {
             status,
             user_id: 1,
         } );
-    }, [ location.search ] );
+    }, [ location.search, currentUser?.data ] );
 
     const Table = () => {
         return (
