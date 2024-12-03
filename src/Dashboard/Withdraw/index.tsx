@@ -11,9 +11,9 @@ import { useCurrentUser } from '../../Hooks/useCurrentUser';
 
 const Index = () => {
     const useWithdrawRequestHook = useWithdrawRequests( true );
+    const withdrawSettings = useWithdrawSettings();
     const currentUser = useCurrentUser( true );
     const balance = useBalance();
-    const withdrawSettings = useWithdrawSettings();
 
     useEffect( () => {
         currentUser.fetchCurrentUser();

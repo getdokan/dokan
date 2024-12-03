@@ -93,7 +93,7 @@ class Withdraws {
         $join       = '';
         $where      = '';
         $groupby    = '';
-        $orderby    = '';
+        $orderby    = 'ORDER BY date DESC';
         $limits     = '';
         $query_args = [ 1, 1 ];
 

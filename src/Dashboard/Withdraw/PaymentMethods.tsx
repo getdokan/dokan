@@ -63,9 +63,8 @@ function PaymentMethods( {
                     color="secondary"
                     className="bg-gray-50 hover:bg-gray-100"
                     disabled={ true }
-                >
-                    Default
-                </Button>
+                    label={ __( 'Default', 'dokan-lite' ) }
+                />
             );
         } else if (
             activemethod.has_information &&
@@ -90,9 +89,9 @@ function PaymentMethods( {
                             } );
                     } }
                     disabled={ makeDefaultMethodHook.isLoading }
-                >
-                    { __( 'Make Default', 'dokan-lite' ) }
-                </Button>
+                    loading={ makeDefaultMethodHook.isLoading }
+                    label={ __( 'Make Default', 'dokan-lite' ) }
+                />
             );
         }
         return (
@@ -103,9 +102,8 @@ function PaymentMethods( {
                 onClick={ () => {
                     window.location.href = bodyData?.data?.setup_url;
                 } }
-            >
-                Setup
-            </Button>
+                label={ __( 'Setup', 'dokan-lite' ) }
+            />
         );
     };
     if (
