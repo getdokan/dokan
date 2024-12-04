@@ -78,7 +78,7 @@ class AdminMiscController extends DokanRESTAdminController {
     /**
      * Get dokan option.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param \WP_REST_Request $request
      *

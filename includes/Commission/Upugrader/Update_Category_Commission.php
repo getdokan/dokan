@@ -55,7 +55,7 @@ class Update_Category_Commission {
     /**
      * Batch queue creator.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -118,7 +118,7 @@ class Update_Category_Commission {
     /**
      * Schedule a category item for processing.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param $term
      *
@@ -157,7 +157,7 @@ class Update_Category_Commission {
     /**
      * Get the total number of categories
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int[]|string|string[]|\WP_Error|\WP_Term[]
      */
@@ -195,11 +195,11 @@ class Update_Category_Commission {
             ];
 
             if ( Flat::SOURCE === $commission_type ) {
-                $category_commission_item['percentage'] = 0;
+                $category_commission_item['percentage'] = '';
                 $category_commission_item['flat'] = $commission;
             } elseif ( Percentage::SOURCE === $commission_type ) {
                 $category_commission_item['percentage'] = $commission;
-                $category_commission_item['flat'] = 0;
+                $category_commission_item['flat'] = '';
             }
 
             $category_commission['items'][ $term_id ] = $category_commission_item;
