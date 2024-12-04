@@ -10,7 +10,7 @@ class Vendor extends AbstractStrategy {
     /**
      * Vendor data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int
      */
@@ -19,14 +19,14 @@ class Vendor extends AbstractStrategy {
     /**
      * Vendor strategy source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'vendor';
 
     /**
      * Category id.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var mixed
      */
@@ -35,7 +35,7 @@ class Vendor extends AbstractStrategy {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param int $vendor_id
      * @param int $category_id
@@ -50,7 +50,7 @@ class Vendor extends AbstractStrategy {
     /**
      * Returns category id.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int
      */
@@ -61,7 +61,7 @@ class Vendor extends AbstractStrategy {
     /**
      * Returns vendor commission source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -72,7 +72,7 @@ class Vendor extends AbstractStrategy {
     /**
      * Returns vendor commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */

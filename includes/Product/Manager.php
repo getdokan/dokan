@@ -720,7 +720,7 @@ class Manager {
     /**
      * Validate product id (if it's a variable product, return it's parent id)
      *
-     * Moved from \WeDevs\Dokan\Commission() ( commission.php file ) in version DOKAN_SINCE
+     * Moved from \WeDevs\Dokan\Commission() ( commission.php file ) in version 3.14.0
      *
      * @since  2.9.21
      *
@@ -742,7 +742,7 @@ class Manager {
     /**
      * Returns product commission settings data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -755,7 +755,7 @@ class Manager {
     /**
      * Saves and returns product commission settings data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */

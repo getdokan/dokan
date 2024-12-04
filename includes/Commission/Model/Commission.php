@@ -11,7 +11,7 @@ class Commission {
     /**
      * Applied commission source or scope.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var string
      */
@@ -20,7 +20,7 @@ class Commission {
     /**
      * Per item admin commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $per_item_admin_commission
      */
@@ -29,7 +29,7 @@ class Commission {
     /**
      * Admin commission aount
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $admin_commission
      */
@@ -38,7 +38,7 @@ class Commission {
     /**
      * Vendor earning amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $vendor_earning
      */
@@ -47,7 +47,7 @@ class Commission {
     /**
      * Total quantity on which the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int $total_quantity
      */
@@ -56,7 +56,7 @@ class Commission {
     /**
      * Total commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $total_amount
      */
@@ -65,7 +65,7 @@ class Commission {
     /**
      * Applied commission type.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var string
      */
@@ -74,7 +74,7 @@ class Commission {
     /**
      * Applied commission data parameters.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var array
      */
@@ -83,7 +83,7 @@ class Commission {
     /**
      * Returns applied commission source. example order_item/product/vendor/global.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -94,7 +94,7 @@ class Commission {
     /**
      * Sets commission source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param string $source
      *
@@ -109,7 +109,7 @@ class Commission {
     /**
      * Returns per item admin commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int|float
      */
@@ -120,7 +120,7 @@ class Commission {
     /**
      * Sets per item admin commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param int|float $per_item_admin_commission
      *
@@ -135,7 +135,7 @@ class Commission {
     /**
      * Returns the admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int|float
      */
@@ -146,7 +146,7 @@ class Commission {
     /**
      * Sets admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param $admin_commission
      *
@@ -161,7 +161,7 @@ class Commission {
     /**
      * Returns vendor earning.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int|float
      */
@@ -172,7 +172,7 @@ class Commission {
     /**
      * Sets vendor earning..
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param int|float $vendor_earning
      *
@@ -187,7 +187,7 @@ class Commission {
     /**
      * Returns the quantity on which the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int
      */
@@ -198,7 +198,7 @@ class Commission {
     /**
      * Sets the total quantity on which the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param int $total_quantity
      *
@@ -213,7 +213,7 @@ class Commission {
     /**
      * Returns the total amount on which the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int
      */
@@ -224,7 +224,7 @@ class Commission {
     /**
      * Sets the total amount on which the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param int|float $total_amount
      *
@@ -239,7 +239,7 @@ class Commission {
     /**
      * Returns the commission type.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -263,7 +263,7 @@ class Commission {
     /**
      * Returns applied commission parameters.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */
@@ -274,7 +274,7 @@ class Commission {
     /**
      * Sets commission parameters.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $parameters
      *
@@ -289,7 +289,7 @@ class Commission {
     /**
      * Returns commission data as array.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */
