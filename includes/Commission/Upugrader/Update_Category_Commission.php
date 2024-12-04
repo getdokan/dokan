@@ -195,11 +195,11 @@ class Update_Category_Commission {
             ];
 
             if ( Flat::SOURCE === $commission_type ) {
-                $category_commission_item['percentage'] = 0;
+                $category_commission_item['percentage'] = '';
                 $category_commission_item['flat'] = $commission;
             } elseif ( Percentage::SOURCE === $commission_type ) {
                 $category_commission_item['percentage'] = $commission;
-                $category_commission_item['flat'] = 0;
+                $category_commission_item['flat'] = '';
             }
 
             $category_commission['items'][ $term_id ] = $category_commission_item;
