@@ -11,7 +11,7 @@ abstract class AbstractStrategy {
     /**
      * Returns commission strategy source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -20,7 +20,7 @@ abstract class AbstractStrategy {
     /**
      * Returns commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return Setting
      */
@@ -29,7 +29,7 @@ abstract class AbstractStrategy {
     /**
      * Returns commission calculator or null.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Formula\AbstractFormula
      */

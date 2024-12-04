@@ -9,7 +9,7 @@ class Combine extends AbstractFormula {
     /**
      * Per item admin commission value.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float
      */
@@ -18,7 +18,7 @@ class Combine extends AbstractFormula {
     /**
      * Admin commission value.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float
      */
@@ -27,7 +27,7 @@ class Combine extends AbstractFormula {
     /**
      * Vendor earning amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float
      */
@@ -36,7 +36,7 @@ class Combine extends AbstractFormula {
     /**
      * The quantity on which the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int
      */
@@ -45,14 +45,14 @@ class Combine extends AbstractFormula {
     /**
      * Combine commission source text.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'combine';
 
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      */
@@ -63,7 +63,7 @@ class Combine extends AbstractFormula {
     /**
      * Calculation is doing here.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -92,7 +92,7 @@ class Combine extends AbstractFormula {
     /**
      * Commission calculation parameters.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */
@@ -107,7 +107,7 @@ class Combine extends AbstractFormula {
     /**
      * Returns the combine commission surce text.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -118,7 +118,7 @@ class Combine extends AbstractFormula {
     /**
      * Returns if the combine commission is applicable or not based on data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -129,7 +129,7 @@ class Combine extends AbstractFormula {
     /**
      * Returns if the commission type data is valid.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -144,7 +144,7 @@ class Combine extends AbstractFormula {
     /**
      * Returns if commission is valid.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -155,7 +155,7 @@ class Combine extends AbstractFormula {
     /**
      * Returns the admin commission
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -166,7 +166,7 @@ class Combine extends AbstractFormula {
     /**
      * Returns the vendors earning.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -177,7 +177,7 @@ class Combine extends AbstractFormula {
     /**
      * Returns per item admin commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -188,7 +188,7 @@ class Combine extends AbstractFormula {
     /**
      * Returns the quantity on which the commission is calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int
      */

@@ -10,7 +10,7 @@ class Product implements InterfaceSetting {
     /**
      * Product id to get a commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var WC_Product
      */
@@ -28,7 +28,7 @@ class Product implements InterfaceSetting {
     /**
      * Returns product commission settings data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -54,7 +54,7 @@ class Product implements InterfaceSetting {
     /**
      * Saves and returns product commission settings data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $setting {
      *

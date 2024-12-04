@@ -54,7 +54,7 @@ class Update_Product_Commission {
     /**
      * Batch queue creator.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -119,7 +119,7 @@ class Update_Product_Commission {
     /**
      * Schedule a single product for processing.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param $item
      *
@@ -187,13 +187,14 @@ class Update_Product_Commission {
         $commission = dokan()->product->get_commission_settings( $product_id );
 
         $commission_type_old = $commission->get_type();
+
         $commission->set_type( Fixed::SOURCE );
 
         if ( Flat::SOURCE === $commission_type_old ) {
             $commission->set_flat( $commission->get_percentage() );
-            $commission->set_percentage( 0 );
+            $commission->set_percentage( '' );
         } elseif ( Percentage::SOURCE === $commission_type_old ) {
-            $commission->set_flat( 0 );
+            $commission->set_flat( '' );
         }
 
         dokan()->product->save_commission_settings(

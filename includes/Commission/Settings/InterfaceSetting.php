@@ -7,14 +7,14 @@ use WeDevs\Dokan\Commission\Model\Setting;
 /**
  * Setting interface class.
  *
- * @since DOKAN_SINCE
+ * @since 3.14.0
  */
 interface InterfaceSetting {
 
     /**
      * Get commission setting.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -23,7 +23,7 @@ interface InterfaceSetting {
     /**
      * Save commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $setting
      *

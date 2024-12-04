@@ -500,7 +500,7 @@ class SetupWizard {
     /**
      * Commission step.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -547,7 +547,7 @@ class SetupWizard {
     /**
      * Save commission options.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */

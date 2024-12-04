@@ -14,14 +14,14 @@ class DefaultStrategy extends AbstractStrategy {
     /**
      * Global commission strategy source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'default';
 
     /**
      * Returns global strategy source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -32,7 +32,7 @@ class DefaultStrategy extends AbstractStrategy {
     /**
      * Returns global commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */

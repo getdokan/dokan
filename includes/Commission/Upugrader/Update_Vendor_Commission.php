@@ -48,7 +48,7 @@ class Update_Vendor_Commission {
     /**
      * Batch queue creator.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -143,11 +143,11 @@ class Update_Vendor_Commission {
             $percentage = $commission->get_percentage();
 
             if ( Flat::SOURCE === $commission_type_old ) {
-                $commission->set_percentage( 0 );
+                $commission->set_percentage( '' );
                 $commission->set_flat( $percentage );
             } elseif ( Percentage::SOURCE === $commission_type_old ) {
                 $commission->set_percentage( $percentage );
-                $commission->set_flat( 0 );
+                $commission->set_flat( '' );
             }
 
             $vendor->save_commission_settings(
