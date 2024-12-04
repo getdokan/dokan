@@ -541,10 +541,10 @@ function dokan_withdraw_get_chargeable_methods() {
  * @return array
  */
 function dokan_withdraw_get_method_charges() {
-    $charges           = dokan_get_option( 'withdraw_charges', 'dokan_withdraw', [] );
-    $all_methods       = array_keys( dokan_withdraw_get_methods() );
+    $charges            = dokan_get_option( 'withdraw_charges', 'dokan_withdraw', [] );
+    $all_methods        = array_keys( dokan_withdraw_get_methods() );
     $chargeable_methods = array_keys( dokan_withdraw_get_chargeable_methods() );
-    $default_val       = [
+    $default_val        = [
         'fixed'      => 0.00,
         'percentage' => 0.00,
     ];
@@ -553,8 +553,8 @@ function dokan_withdraw_get_method_charges() {
         if ( empty( $charges ) || ! is_array( $charges ) || ! in_array( $method, $chargeable_methods, true ) ) {
             $charges[ $method ] = $default_val;
         } else {
-            $charges[ $method ]['fixed']      = ! empty( $charges[ $method ]['fixed'] ) ? (float) wc_format_decimal( $charges[ $method ]['fixed'] ) : 0.00;
-            $charges[ $method ]['percentage'] = ! empty( $charges[ $method ]['percentage'] ) ? (float) wc_format_decimal( $charges[ $method ]['percentage'] ) : 0.00;
+            $charges[ $method ]['fixed']      = wc_format_decimal( $charges[ $method ]['fixed'] ?? 0.00 );
+            $charges[ $method ]['percentage'] = wc_format_decimal( $charges[ $method ]['percentage'] ?? 0.00 );
         }
     }
 

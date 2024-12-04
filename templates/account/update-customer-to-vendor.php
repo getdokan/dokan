@@ -41,10 +41,7 @@ $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'stor
             <label for="seller-url" class="pull-left"><?php esc_html_e( 'Shop URL', 'dokan-lite' ); ?> <span class="required">*</span></label>
             <strong id="url-alart-mgs" class="pull-right"></strong>
             <input type="text" class="input-text form-control" name="shopurl" id="seller-url" value="<?php echo esc_attr( $shop_url ); ?>" required="required" />
-            <small>
-                <?php echo esc_url( $home_url . '/' . $custom_store_url ) . '/'; ?>
-                <strong id="url-alart"></strong>
-            </small>
+            <small><?php echo esc_url( $home_url . '/' . $custom_store_url ) . '/'; ?><strong id="url-alart"></strong></small>
         </p>
 
         <p class="form-row form-group form-row-wide">

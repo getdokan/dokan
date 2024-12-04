@@ -4,7 +4,6 @@ import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
-// import { payloads } from '@utils/payloads';
 
 const { VENDOR_ID, CUSTOMER_ID, PRODUCT_ID } = process.env;
 
@@ -20,7 +19,6 @@ test.describe('Product Enquiry test', () => {
         customer = new ProductEnquiryPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        // const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth); // todo: might not needed
         await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, PRODUCT_ID, VENDOR_ID, CUSTOMER_ID);
     });
 

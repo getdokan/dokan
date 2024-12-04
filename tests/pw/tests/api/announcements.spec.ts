@@ -5,6 +5,9 @@
 //COVERAGE_TAG: DELETE /dokan/v1/announcement/(?P<id>[\d]+)
 //COVERAGE_TAG: PUT /dokan/v1/announcement/(?P<id>[\d]+)/restore
 //COVERAGE_TAG: PUT /dokan/v1/announcement/batch
+//COVERAGE_TAG: GET /dokan/v1/announcement/notice/(?P<id>[\\d]+)
+//COVERAGE_TAG: POST /dokan/v1/announcement/notice/(?P<id>[\\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/announcement/notice/(?P<id>[\\d]+)
 
 import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';

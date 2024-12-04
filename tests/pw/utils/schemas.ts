@@ -72,13 +72,13 @@ const productSchema = z.object({
     price: z.string(),
     regular_price: z.string(),
     sale_price: z.string().optional(),
-    date_on_sale_from: z.null(),
-    date_on_sale_from_gmt: z.null(),
-    date_on_sale_to: z.null(),
-    date_on_sale_to_gmt: z.null(),
+    date_on_sale_from: z.string().nullable(),
+    date_on_sale_from_gmt: z.string().nullable(),
+    date_on_sale_to: z.string().nullable(),
+    date_on_sale_to_gmt: z.string().nullable(),
     on_sale: z.boolean(),
     purchasable: z.boolean(),
-    total_sales: z.number(),
+    total_sales: z.string().or(z.number()),
     virtual: z.boolean(),
     downloadable: z.boolean(),
     downloads: z.array(z.unknown()),
@@ -93,7 +93,7 @@ const productSchema = z.object({
     backorders: z.string(),
     backorders_allowed: z.boolean(),
     backordered: z.boolean(),
-    low_stock_amount: z.string().optional(),
+    low_stock_amount: z.string().or(z.number()).optional(),
     sold_individually: z.boolean(),
     weight: z.string().optional(),
     dimensions: productDimensionsSchema,
@@ -127,6 +127,73 @@ const productSchema = z.object({
     sales_display_price: z.string().optional(),
     barcode: z.string().optional(),
     _links: linksSchema,
+});
+
+const linkedProductSchema = z.object({
+    id: z.string().or(z.number()),
+    name: z.string(),
+    slug: z.string(),
+    date_created: z.object({
+        date: z.coerce.date(),
+        timezone_type: z.number(),
+        timezone: z.string(),
+    }),
+    date_modified: z.object({
+        date: z.coerce.date(),
+        timezone_type: z.number(),
+        timezone: z.string(),
+    }),
+    status: z.string(),
+    featured: z.boolean(),
+    catalog_visibility: z.string(),
+    description: z.string(),
+    short_description: z.string(),
+    sku: z.string().optional(),
+    global_unique_id: z.string().optional(),
+    price: z.string(),
+    regular_price: z.string(),
+    sale_price: z.string().optional(),
+    date_on_sale_from: z.string().nullable(),
+    date_on_sale_to: z.string().nullable(),
+    total_sales: z.string().or(z.number()),
+    virtual: z.boolean(),
+    downloadable: z.boolean(),
+    downloads: z.array(z.unknown()),
+    download_limit: z.number(),
+    download_expiry: z.number(),
+    external_url: z.string().optional(),
+    button_text: z.string().optional(),
+    tax_status: z.string(),
+    tax_class: z.string().optional(),
+    manage_stock: z.boolean(),
+    stock_quantity: z.number().nullable(),
+    backorders: z.string(),
+    low_stock_amount: z.string().or(z.number()).optional(),
+    sold_individually: z.boolean(),
+    weight: z.string().optional(),
+    shipping_class: z.string().optional(),
+    shipping_class_id: z.string().or(z.number()),
+    reviews_allowed: z.boolean(),
+    average_rating: z.string().regex(/^\d+(\.\d+)?$/),
+    upsell_ids: z.array(z.unknown()),
+    cross_sell_ids: z.array(z.unknown()),
+    parent_id: z.string().or(z.number()).optional(),
+    purchase_note: z.string().optional(),
+    attributes: z.array(productAttributeSchema).or(
+        z.object({
+            pa_sizes: z.any(),
+        }),
+    ),
+    default_attributes: z.array(z.unknown()),
+    menu_order: z.number(),
+    meta_data: z.array(productMetaDataSchema).optional(),
+    stock_status: z.string().optional(),
+    has_options: z.boolean().optional(),
+    post_password: z.string().optional(),
+    tax_amount: z.string().optional(),
+    regular_display_price: z.string().optional(),
+    sales_display_price: z.string().optional(),
+    barcode: z.string().optional(),
 });
 
 const productVariationSchema = z.object({
@@ -243,7 +310,7 @@ const paymentSchema = z
         bank: bankSchema.optional(),
         skrill: skrillSchema.optional(),
         dokan_custom: dokan_custom.optional(),
-        stripe: z.boolean().optional(),
+        stripe: z.any().optional(),
         stripe_express: z.boolean().optional(),
         dokan_razorpay: z.boolean().optional(),
         dokan_moip_connect: z.boolean().optional(),
@@ -251,16 +318,17 @@ const paymentSchema = z
     .or(z.array(z.any()));
 
 const storeOpenClose = z.object({
-    enabled: z.boolean(),
+    enabled: z.boolean().or(z.string()),
     time: z
         .object({
-            enabled: z.boolean().optional(),
+            enabled: z.boolean().or(z.string()).optional(),
             time: z.any().optional(),
             status: z.string().optional(),
             opening_time: z.array(z.string()).optional(),
             closing_time: z.array(z.string()).optional(),
         })
-        .or(z.array(z.any())),
+        .or(z.any())
+        .optional(),
     open_notice: z.string(),
     close_notice: z.string(),
 });
@@ -292,7 +360,7 @@ const orderMinMaxSchema = z.object({
     min_quantity_to_order: z.string(),
     max_quantity_to_order: z.string(),
     vendor_min_max_products: z.array(z.any()), // Adjust this based on the actual structure
-    vendor_min_max_product_cat: z.array(z.any()), // Adjust this based on the actual structure
+    vendor_min_max_product_cat: z.array(z.any()).or(z.string()), // Adjust this based on the actual structure
     enable_vendor_min_max_amount: z.string(),
     min_amount_to_order: z.string(),
     max_amount_to_order: z.string(),
@@ -412,7 +480,7 @@ const storeSchema = z.object({
     rating: ratingSchema.optional(),
     enabled: z.boolean().optional(),
     registered: z.string().optional(),
-    payment: paymentSchema.or(z.array(z.any())).optional(),
+    payment: paymentSchema.optional(),
     trusted: z.boolean().optional(),
     store_open_close: storeOpenClose.optional(),
     enable_tnc: z.string().optional(),
@@ -439,7 +507,7 @@ const storeSchema = z.object({
             }),
         )
         .optional(),
-    admin_category_commission: z.array(z.any()).optional(),
+    admin_category_commission: z.any().optional(),
     admin_commission: z.string().optional(),
     admin_additional_fee: z.string().optional(),
     admin_commission_type: z.string().optional(),
@@ -843,7 +911,7 @@ const settingV2LinksSchema = z.object({
 
 const infoSchema = z.object({
     text: z.string(),
-    url: z.string().url(),
+    url: z.string(),
     icon: z.string(),
 });
 
@@ -906,7 +974,7 @@ const abuseReportSchema = z.object({
             id: z.string().or(z.number()),
             name: z.string(),
             email: z.string().email(),
-            admin_url: z.string().url(),
+            admin_url: z.string().url().nullable(),
         })
         .optional(),
     description: z.string(),
@@ -973,11 +1041,11 @@ const quoteRuleSchema = z.object({
 
 const quoteRequestSchema = z.object({
     id: z.string().or(z.number()).optional(),
-    title: z.string(),
-    customer_name: z.string(),
-    customer_email: z.string(),
     status: z.string(),
     created_at: z.string(),
+    order_url: z.any(),
+    store_name: z.string(),
+    customer_name: z.string(),
     _links: linksSchema,
 });
 
@@ -1269,6 +1337,33 @@ const verificationRequestSchema = z.object({
     _links: linksSchema,
 });
 
+const vendorSubscriptionPackageSchema = z.object({
+    id: z.number().or(z.string()),
+    title: z.string(),
+});
+
+const vendorSubscriptionNonRecurringPackageSchema = z.object({
+    name: z.number().or(z.string()),
+    label: z.string(),
+});
+
+const vendorSubscriptionSchema = z.object({
+    id: z.number().or(z.string()),
+    store_name: z.string(),
+    order_link: z.string(),
+    order_id: z.string(),
+    subscription_id: z.string(),
+    subscription_title: z.string(),
+    is_on_trial: z.boolean(),
+    subscription_trial_until: z.any(),
+    start_date: z.string(),
+    end_date: z.string(),
+    current_date: z.string(),
+    status: z.boolean(),
+    is_recurring: z.boolean(),
+    has_active_cancelled_sub: z.boolean(),
+});
+
 const wholesaleCustomerSchema = z.object({
     id: z.string().or(z.number()),
     first_name: z.string(),
@@ -1281,6 +1376,49 @@ const wholesaleCustomerSchema = z.object({
     role: z.string(),
     registerd_date: z.string(),
     wholesale_status: z.string(),
+    _links: linksSchema,
+});
+
+const shipmentSchema = z.object({
+    id: z.number().or(z.string()),
+    order_id: z.number().or(z.string()),
+    shipping_provider: z.string(),
+    shipping_provider_label: z.string(),
+    shipped_status: z.string(),
+    shipping_status_label: z.string(),
+    shipment_description: z.array(
+        z.object({
+            id: z.number().or(z.string()),
+            content: z.string(),
+        }),
+    ),
+    shipping_number: z.string(),
+    shipped_date: z.string(),
+    is_notify: z.string(),
+    item_id: z.array(z.number()),
+    item_qty: z.record(z.string(), z.number()),
+    other_provider: z.string(),
+    other_p_url: z.string().url(),
+    items: z.record(
+        z.string(),
+        z.object({
+            id: z.number(),
+            order_id: z.number(),
+            name: z.string(),
+            product_id: z.number(),
+            variation_id: z.number(),
+            quantity: z.number(),
+            tax_class: z.string(),
+            subtotal: z.string(),
+            subtotal_tax: z.string(),
+            total: z.string(),
+            total_tax: z.string(),
+            taxes: z.object({
+                total: z.record(z.string(), z.string()),
+                subtotal: z.record(z.string(), z.string()),
+            }),
+        }),
+    ),
     _links: linksSchema,
 });
 
@@ -1531,7 +1669,18 @@ export const schemas = {
             delete: z.array(attributeSchema).optional(),
         }),
         setDefaultAttributeSchema: z.boolean(),
-        updateProductAttributeSchema: z.boolean(),
+        updateProductAttributeSchema: z.array(
+            z.object({
+                id: z.number(),
+                name: z.string(),
+                slug: z.string(),
+                visible: z.boolean(),
+                variation: z.boolean(),
+                taxonomy: z.boolean(),
+                all_terms: z.array(categorySchema),
+                options: z.array(categorySchema),
+            }),
+        ),
     },
 
     // attribute terms schema
@@ -1553,6 +1702,7 @@ export const schemas = {
     productsSchema: {
         productSchema: productSchema,
         productsSchema: z.array(productSchema),
+        linkedProductsSchema: z.array(linkedProductSchema),
         productSummarySchema: z.object({
             post_counts: z.object({
                 publish: z.number().optional(),
@@ -1684,7 +1834,7 @@ export const schemas = {
                 stock_status: z.string(),
                 manage_stock: z.boolean(),
                 stock_quantity: z.null().optional(),
-                low_stock_amount: z.string(),
+                low_stock_amount: z.string().or(z.number()).optional(),
                 backorders: z.string(),
                 sold_individually: z.boolean(),
             }),
@@ -1753,13 +1903,8 @@ export const schemas = {
                 .optional(),
             order_min_max: z
                 .object({
-                    product_wise_activation: z.string(),
                     min_quantity: z.string().or(z.number()),
                     max_quantity: z.string().or(z.number()),
-                    min_amount: z.string().or(z.number()),
-                    max_amount: z.string().or(z.number()),
-                    _donot_count: z.string().or(z.number()),
-                    ignore_from_cat: z.string().or(z.number()),
                 })
                 .optional(),
             linked: z
@@ -1977,7 +2122,7 @@ export const schemas = {
     },
 
     // commission schema
-    commission: z.number(),
+    commission: z.string().or(z.number()),
 
     // withdraws schema
     withdrawsSchema: {
@@ -2090,12 +2235,14 @@ export const schemas = {
     // reverse withdraws schema
     reverseWithdrawalSchema: {
         transactionTypesSchema: z.array(transactionTypeSchema),
+
         reverseWithdrawalStoresSchema: z.array(
             z.object({
                 id: z.string().or(z.number()),
                 name: z.string(),
             }),
         ),
+
         reverseWithdrawalStoreBalanceSchema: z.array(
             z.object({
                 store_name: z.string(),
@@ -2107,6 +2254,7 @@ export const schemas = {
                 _links: linksSchema,
             }),
         ),
+
         reverseWithdrawalTransactionsSchema: z.array(
             z.object({
                 id: z.string().or(z.number()),
@@ -2123,6 +2271,11 @@ export const schemas = {
                 _links: linksSchema,
             }),
         ),
+
+        createReverseWithdrawalTransaction: z.object({
+            trn_id: z.string().or(z.number()),
+        }),
+
         reverseWithdrawalVendorDueStatusSchema: z.object({
             status: z.boolean(),
             due_date: z.string(),
@@ -2228,7 +2381,7 @@ export const schemas = {
             dokan_store_time_enabled: z.string(),
             dokan_store_open_notice: z.string(),
             dokan_store_close_notice: z.string(),
-            dokan_store_time: z.array(z.unknown()).optional(),
+            dokan_store_time: z.any().optional(),
             sale_only_here: z.boolean().optional(),
             company_name: z.string().optional(),
             vat_number: z.string().optional(),
@@ -2751,6 +2904,28 @@ export const schemas = {
         verificationRequestsSchema: z.array(verificationRequestSchema),
     },
 
+    // vendor subscriptions schema
+    vendorSubscriptionsSchema: {
+        vendorSubscriptionsSchema: z.array(vendorSubscriptionSchema),
+        vendorSubscriptionPackagesSchema: z.array(vendorSubscriptionPackageSchema),
+        vendorSubscriptionNonRecurringPackagesSchema: z.array(vendorSubscriptionNonRecurringPackageSchema),
+        activeSubscriptionPackSchema: z.object({
+            name: z.number().or(z.string()),
+            label: z.string(),
+        }),
+        updateSubscriptionSchema: vendorSubscriptionSchema.or(
+            z.object({
+                code: z.string(),
+                message: z.string(),
+                data: z.object({
+                    status: z.number(),
+                }),
+            }),
+        ),
+        batchUpdateSubscriptionSchema: z.array(z.number().or(z.string())),
+        saveCommissionSchema: z.number(),
+    },
+
     // wholesale customers schema
     wholesaleCustomersSchema: {
         wholesaleCustomerSchema: wholesaleCustomerSchema,
@@ -2759,6 +2934,39 @@ export const schemas = {
         batchUpdateWholesaleCustomersSchema: z.object({
             approved: z.array(z.number()).optional(),
             pending: z.array(z.number()).optional(),
+        }),
+    },
+
+    // shipping status schema
+    shippingStatusSchema: {
+        shippingStatusSchema: z.object({
+            enabled: z.boolean(),
+            status_list: z.array(
+                z.object({
+                    id: z.string(),
+                    value: z.string(),
+                    must_use: z.string().optional(),
+                    desc: z.string().optional(),
+                }),
+            ),
+            providers: z.record(z.string(), z.string()),
+        }),
+        shipmentSchema: shipmentSchema,
+        shipmentsSchema: z.array(shipmentSchema),
+    },
+
+    // ShipStation schema
+    shipStationSchema: {
+        shipStationCredentialSchema: z.object({
+            key_id: z.string().or(z.number()),
+            consumer_key: z.string(),
+            consumer_secret: z.string(),
+        }),
+
+        shipStationOrderStatusSettingSchema: z.object({
+            vendor_id: z.string().or(z.number()),
+            export_statuses: z.array(z.string()),
+            shipped_status: z.string(),
         }),
     },
 };

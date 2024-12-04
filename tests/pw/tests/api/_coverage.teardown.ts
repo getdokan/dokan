@@ -20,7 +20,7 @@ teardown.describe('get api test coverage', () => {
         await apiUtils.dispose();
     });
 
-    teardown('get coverage', async () => {
+    teardown('get coverage', { tag: ['@lite'] }, async () => {
         const endpoints = [endPoints.getAllDokanEndpointsAdmin, endPoints.getAllDokanEndpointsV1, endPoints.getAllDokanEndpointsV2];
         const allRoutes: string[] = [];
         const allRouteObjValues = [];
@@ -56,7 +56,12 @@ function getCoverage(coverageArray: any[], outputFile?: string) {
     for (const route of coverageArray) {
         const pattern = `COVERAGE_TAG: ${helpers.escapeRegex(route)}$`;
         const output = execSync(`grep -irl -E '${pattern}' tests/api | cat  `, { encoding: 'utf-8' });
-        output.toString() != '' ? ((coveredEndPoints += 1), coveredEndPointsList.push(route)) : uncoveredEndpointsList.push(route);
+        if (output.toString() != '') {
+            coveredEndPoints += 1;
+            coveredEndPointsList.push(route);
+        } else {
+            uncoveredEndpointsList.push(route);
+        }
     }
     const percentCovered = ((coveredEndPoints / totalEndPoints) * 100).toFixed(2) + '%';
 

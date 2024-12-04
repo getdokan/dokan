@@ -237,7 +237,7 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
             return new WP_Error( 'product_bulk_attribute_terms_saved_failed', __( 'Failed to save product bulk attribute and terms. Please try again later.', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
-        return rest_ensure_response( $is_saved );
+        return rest_ensure_response( $product_attribute->get( $product_id ) );
     }
 
     /**

@@ -35,8 +35,7 @@ test.describe('Dashboard test', () => {
         await admin.adminDashboardRenderProperly();
     });
 
-    test.skip('admin can evaluate dashboard at a glance values', { tag: ['@lite', '@admin'] }, async () => {
-        // todo: need to run in sequence
+    test('admin can evaluate dashboard at a glance values', { tag: ['@lite', '@admin', '@serial'] }, async () => {
         const summary = await apiUtils.getAdminReportSummary(payloads.adminAuth);
         await admin.dokanAtAGlanceValueAccuracy(summary);
     });
@@ -49,5 +48,9 @@ test.describe('Dashboard test', () => {
 
     test('vendor can view vendor dashboard', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorDashboardRenderProperly();
+    });
+
+    test('vendor can view vendor dashboard menus', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+        await vendor.vendorDashboardMenusRenderProperly();
     });
 });

@@ -62,6 +62,7 @@ export class ModulesPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.modules);
         await this.clickIfVisible(modulesAdmin.pro.clearFilter);
         await this.clearAndType(modulesAdmin.pro.searchBox, moduleName);
+        await this.toHaveCount(modulesAdmin.pro.moduleCard, 1);
         await this.toBeVisible(modulesAdmin.pro.moduleCardByName(moduleName));
     }
 

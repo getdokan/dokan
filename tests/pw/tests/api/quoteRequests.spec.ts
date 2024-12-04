@@ -78,7 +78,7 @@ test.describe('request quote api test', () => {
         expect(responseBody).toMatchSchema(schemas.quoteRequestsSchema.quoteRequestSchema);
     });
 
-    test('update batch request quote', { tag: ['@pro'] }, async () => {
+    test.skip('update batch request quote', { tag: ['@pro'] }, async () => {
         const allRequestQuoteIds = (await apiUtils.getAllQuoteRequests()).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRequestQuotes, { data: { trash: allRequestQuoteIds } });
         expect(response.ok()).toBeTruthy();

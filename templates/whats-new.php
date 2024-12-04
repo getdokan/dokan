@@ -4,6 +4,228 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.14.0',
+        'released' => '2024-12-02',
+        'changes'  => [
+            'New'  => [
+                [
+                    'title'       => 'Commission amount now displayed in the product list within the admin dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor earning amount displayed in the product list within the vendor dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor earning suggestions on the product add and edit pages in the vendor dashboard for simple and variable products.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Commission details metabox on the order details page in the admin dashboard is now visible for child orders or orders without a parent.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Related order metabox on the order details page in the admin dashboard, displaying sibling orders for child orders and child orders for parent orders.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Backward compatibility for flat, percentage, and combine commission types for older orders.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Updated commission types from flat, percentage, and combine to fixed and category-based commissions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Overhauled the commission UI across Dokan global settings, vendor settings, product settings, Dokan subscription product settings, and the admin setup wizard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated the commission settings in the admin setup wizard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enhanced responsiveness of the UI for Dokan admin dashboard settings menus.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Product is rebranded with new branding.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'As per new branding of Dokan Multivendor Plugin, full product is rebranded with new theme color.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Moved the vendor edit page from Dokan Pro to Dokan Lite and eliminated the commission setting from the WordPress default user profile page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed the commission from every category, introducing category-based commission in global settings, vendor settings, Dokan subscription products, and the admin setup wizard.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.13.1',
+        'released' => '2024-11-11',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Compatibility with the Printful Integration Module added',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Improved logic to ensure the `add new category` button only appears when appropriate conditions are met, enhancing user experience.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.13.0',
+        'released' => '2024-11-06',
+        'changes'  => [
+            'New'  => [
+                [
+                    'title'       => 'Replaced the Dokan array container with the League Container, ensuring backward compatibility for seamless performance and enhanced flexibility.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated Dokan to be fully compatible with WooCommerce Analytics Reports',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.6',
+        'released' => '2024-10-24',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Fixed js error on frontend pages.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.5',
+        'released' => '2024-10-16',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Implement order trash and untrash handling for Dokan',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added wordpress native i18n support',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.4',
+        'released' => '2024-10-03',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added `$data` parameter to `dokan_update_vendor` hook.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.3',
+        'released' => '2024-09-30',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added compatibility with RFQ state field ui.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.2',
+        'released' => '2024-09-23',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Product gallery image uploader close button style fix.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fix incorrect sub-order status updates when the main order status changed specifically for cancelled sub-orders.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed vendor coupon validation for various discount item types.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.1',
+        'released' => '2024-08-30',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Resolve fatal error when updating Dokan Lite to 3.12.0 with Dokan Pro 3.9.7.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.0',
+        'released' => '2024-08-29',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Displaying incorrect withdrawal amount when using decimal separator as thousand.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed multiple invoice button for dokan sub-orders.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Ensure accurate stock updates when vendors edit products while sales occur. Thanks @brunomendespereira',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.5',
+        'released' => '2024-08-07',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed data updating issue on Admin color picker settings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed extra slashes issue on store url when translated via WPML.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.11.4',
         'released' => '2024-07-10',
         'changes'  => [

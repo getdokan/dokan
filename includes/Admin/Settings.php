@@ -30,8 +30,9 @@ class Settings {
         add_action( 'dokan_before_saving_settings', [ $this, 'set_withdraw_limit_value_validation' ], 10, 2 );
         add_filter( 'dokan_admin_localize_script', [ $this, 'add_admin_settings_nonce' ] );
         add_action( 'wp_ajax_dokan_refresh_admin_settings_field_options', [ $this, 'refresh_admin_settings_field_options' ] );
-        add_filter( 'dokan_get_settings_values', [ $this, 'format_price_values' ], 12, 2 );
+        add_filter( 'dokan_save_settings_value', [ $this, 'validate_fixed_price_values' ], 12, 2 );
         add_filter( 'dokan_get_settings_values', [ $this, 'set_withdraw_limit_gateways' ], 20, 2 );
+        add_filter( 'dokan_get_settings_values', [ $this, 'set_commission_type_if_not_set' ], 20, 2 );
         add_filter( 'dokan_settings_general_site_options', [ $this, 'add_dokan_data_clear_setting' ], 310 );
     }
 
@@ -61,21 +62,42 @@ class Settings {
     }
 
     /**
-     * Format price values for price settings
+     * Set commission type as fixed if no commission is set.
      *
-     * @since 1.0.0
+     * @since 3.14.0
      *
-     * @param $option_name
-     * @param $option_values
+     * @param mixed $option_name
+     * @param mixed $option_value
      *
-     * @return void
+     * @return void|mixed $option_value
      */
-    public function format_price_values( $option_values, $option_name ) {
-        if ( 'dokan_selling' === $option_name ) {
-            if ( isset( $option_values['commission_type'] ) && 'flat' === $option_values['commission_type'] ) {
-                $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_localized_price( $option_values['admin_percentage'] ) : 0;
-            } else {
-                $option_values['admin_percentage'] = isset( $option_values['admin_percentage'] ) ? wc_format_localized_decimal( $option_values['admin_percentage'] ) : 0;
+    public function set_commission_type_if_not_set( $option_value, $option_name ) {
+        if ( 'dokan_selling' === $option_name && empty( $option_value['commission_type'] ) ) {
+            $option_value['commission_type'] = 'fixed';
+        }
+
+        return $option_value;
+    }
+
+    /**
+     * Validate price values for saving fixed price settings.
+     *
+     * @since 3.14.0
+     *
+     * @param string  $option_name
+     * @param array $option_values
+     *
+     * @return array
+     */
+    public function validate_fixed_price_values( $option_values, $option_name ) {
+        $clickable_types = [ 'flat', 'fixed' ];
+
+        if ( 'dokan_selling' === $option_name && isset( $option_values['commission_type'] ) && in_array( $option_values['commission_type'], $clickable_types, true ) ) {
+            $admin_percentage       = (float) $option_values['admin_percentage'];
+            $saved_admin_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', '' );
+
+            if ( $admin_percentage < 0 || $admin_percentage > 100 ) {
+                $option_values['admin_percentage'] = $saved_admin_percentage;
             }
         }
 
@@ -493,20 +515,75 @@ class Settings {
                     'desc'    => __( 'Select a commission type for vendor', 'dokan-lite' ),
                     'type'    => 'select',
                     'options' => $commission_types,
-                    'default' => 'percentage',
+                    'default' => 'fixed',
                     'tooltip' => __( 'Select a commission type', 'dokan-lite' ),
                 ],
-                'admin_percentage'       => [
-                    'name'              => 'admin_percentage',
-                    'label'             => __( 'Admin Commission', 'dokan-lite' ),
-                    'desc'              => __( 'Amount you get from each sale', 'dokan-lite' ),
-                    'default'           => '10',
-                    'type'              => 'price',
-                    'sanitize_callback' => 'wc_format_decimal',
+                'commission_fixed_values' => [
+                    'name'    => 'commission_fixed_values',
+                    'label'   => __( 'Admin Commission', 'dokan-lite' ),
+                    'type'    => 'commission_fixed',
+                    'fields'  => [
+                        'percent_fee' => [
+                            'name'                       => 'admin_percentage',
+                            'label'                      => __( 'Percent Fee', 'dokan-lite' ),
+                            'default'                    => '10',
+                            'type'                       => 'text',
+                            'desc'                       => __( 'Amount you will get from sales in percentage (10%)', 'dokan-lite' ),
+                            'required'                   => 'yes',
+                            'sanitize_callback'          => 'wc_format_decimal',
+                            'response_sanitize_callback' => 'wc_format_decimal',
+                        ],
+                        'fixed_fee' => [
+                            'name'                       => 'additional_fee',
+                            'label'                      => __( 'Fixed Fee', 'dokan-lite' ),
+                            'default'                    => '10',
+                            'type'                       => 'text',
+                            'desc'                       => __( 'Amount you will get from sales in flat rate(+5)', 'dokan-lite' ),
+                            'required'                   => 'yes',
+                            'sanitize_callback'          => 'wc_format_decimal',
+                            'response_sanitize_callback' => 'wc_format_localized_price',
+                        ],
+                    ],
+                    'default' => 'fixed',
+                    'min'     => '0',
+                    'step'    => 'any',
+                    'desc'    => __( 'Amount you will get from sales in both percentage and fixed fee', 'dokan-lite' ),
+                    'sanitize_callback'          => 'wc_format_decimal',
+                    'response_sanitize_callback' => 'wc_format_localized_price',
+                    'show_if' => [
+                        'commission_type' => [
+                            'equal' => 'fixed',
+                        ],
+                    ],
+                ],
+                'commission_category_based_values' => [
+                    'name'                 => 'commission_category_based_values',
+                    'type'                 => 'category_based_commission',
+                    'dokan_pro_commission' => 'yes',
+                    'label'                => __( 'Admin Commission', 'dokan-lite' ),
+                    'desc'                 => __( 'Amount you will get from each sale', 'dokan-lite' ),
+                    'required'             => 'yes',
+                    'show_if'              => [
+                        'commission_type' => [
+                            'equal' => 'category_based',
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $selling_option_fees = apply_filters(
+            'dokan_settings_selling_option_fees', [
+                'fee-recipients' => [
+                    'name'        => 'fee-recipients',
+                    'label'       => __( 'Fee Recipients', 'dokan-lite' ),
+                    'type'        => 'sub_section',
+                    'description' => __( 'Define the fees that admin or vendor will recive', 'dokan-lite' ),
+                    'content_class' => 'sub-section-styles',
                 ],
                 'shipping_fee_recipient' => [
                     'name'    => 'shipping_fee_recipient',
-                    'label'   => __( 'Shipping Fee Recipient', 'dokan-lite' ),
+                    'label'   => __( 'Shipping Fee', 'dokan-lite' ),
                     'desc'    => __( 'Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping method will not be included with shipping fees.', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
@@ -517,7 +594,7 @@ class Settings {
                 ],
                 'tax_fee_recipient'      => [
                     'name'    => 'tax_fee_recipient',
-                    'label'   => __( 'Product Tax Fee Recipient', 'dokan-lite' ),
+                    'label'   => __( 'Product Tax Fee', 'dokan-lite' ),
                     'desc'    => __( 'Who will be receiving the tax fees for products? Note that, shipping tax fees will not be included with product tax.', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
@@ -528,7 +605,7 @@ class Settings {
                 ],
                 'shipping_tax_fee_recipient'      => [
                     'name'    => 'shipping_tax_fee_recipient',
-                    'label'   => __( 'Shipping Tax Fee Recipient', 'dokan-lite' ),
+                    'label'   => __( 'Shipping Tax Fee', 'dokan-lite' ),
                     'desc'    => __( 'Who will be receiving the tax fees for shipping?', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
@@ -604,6 +681,7 @@ class Settings {
                 'dokan_settings_selling_options',
                 array_merge(
                     $selling_option_commission,
+                    $selling_option_fees,
                     $selling_option_vendor_capability
                 )
             ),

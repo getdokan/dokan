@@ -33,9 +33,10 @@ export class VendorProductSubscriptionPage extends VendorPage {
     }
 
     // vendor view product subscription
-    // async viewProductSubscription(value: string) {
-    // todo: go to subscription details via link , get subscription id via api
-    // }
+    async viewProductSubscription(value: string) {
+        await this.goto(value);
+        // todo: go to subscription details via link , get subscription id via api
+    }
 
     // filter product subscriptions
     async filterProductSubscriptions(filterBy: string, inputValue: string): Promise<void> {
@@ -81,6 +82,7 @@ export class VendorProductSubscriptionPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.productSubscriptionDetails(subscriptionId));
 
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.productSubscriptionDetails(subscriptionId), subscriptionsCustomer.subscriptionDetails.actions.cancel, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Your subscription has been cancelled.');
     }
 
@@ -88,9 +90,12 @@ export class VendorProductSubscriptionPage extends VendorPage {
     async reactivateProductSubscription(subscriptionId: string) {
         await this.goIfNotThere(data.subUrls.frontend.productSubscriptionDetails(subscriptionId));
         const subscriptionIsActive = await this.isVisible(subscriptionsCustomer.subscriptionDetails.actions.cancel);
-        subscriptionIsActive && (await this.cancelProductSubscription(subscriptionId));
+        if (subscriptionIsActive) {
+            await this.cancelProductSubscription(subscriptionId);
+        }
 
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.productSubscriptionDetails(subscriptionId), subscriptionsCustomer.subscriptionDetails.actions.reActivate, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Your subscription has been reactivated.');
     }
 
@@ -100,7 +105,8 @@ export class VendorProductSubscriptionPage extends VendorPage {
 
         await this.clickAndWaitForLoadState(subscriptionsCustomer.subscriptionDetails.actions.changeAddress);
         await this.customerPage.updateShippingFields(shippingInfo);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.shippingAddress, selector.customer.cAddress.shipping.shippingSaveAddress, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.shippingAddress, selector.customer.cAddress.shipping.saveAddress, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.address.addressChangeSuccessMessage);
     }
 
@@ -110,6 +116,7 @@ export class VendorProductSubscriptionPage extends VendorPage {
         await this.clickAndWaitForLoadState(subscriptionsCustomer.subscriptionDetails.actions.changePayment);
         // todo: change to new card
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.productSubscriptionDetails(subscriptionId), subscriptionsCustomer.subscriptionDetails.changePaymentMethod);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Payment method updated.');
     }
 
