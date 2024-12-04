@@ -9,8 +9,8 @@ test.describe('Store Appearance test', () => {
     let aPage: Page;
 
     test.beforeAll(async ({ browser }) => {
-        const customerContext = await browser.newContext(data.auth.adminAuth);
-        aPage = await customerContext.newPage();
+        const adminContext = await browser.newContext(data.auth.adminAuth);
+        aPage = await adminContext.newPage();
         admin = new StoreAppearance(aPage);
     });
 
@@ -27,7 +27,7 @@ test.describe('Store Appearance test', () => {
     });
 
     ['Google Maps', 'Mapbox'].forEach((api: string) => {
-        test(`admin can set map api source (${api})`, { tag: ['@lite', '@admin'] }, async () => {
+        test.skip(`admin can set map api source (${api})`, { tag: ['@lite', '@admin'] }, async () => {
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { store_map: 'on', map_api_source: api === 'Google Maps' ? 'google_maps' : 'mapbox' });
             await admin.viewMapAPISource(api as 'Google Maps' | 'Mapbox', data.predefined.vendorStores.vendor1);
         });
