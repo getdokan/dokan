@@ -35,7 +35,7 @@ export class StoreReviewsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.storeReviews);
         await this.notToBeVisible(dokanAdmin.storeReviews.storeReviewsDiv);
 
-        // no reviews found is visible
+        // reviews is visible
         await this.goIfNotThere(data.subUrls.frontend.storeReviews(helpers.slugify(storeName)));
         await this.toBeVisible(selector.customer.cSingleStore.reviews.noReviewsFound);
     }
