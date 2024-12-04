@@ -51,8 +51,8 @@ export class ProductsPage extends AdminPage {
     }
 
     // admin assign category to product
-    async assignCategoryToProduct(productName: string) {
-        await this.click(productsAdmin.product.category(productName));
+    async assignCategoryToProduct(categoryName: string) {
+        await this.click(productsAdmin.product.category(categoryName));
     }
 
     // admin assign vendor to product
@@ -201,7 +201,6 @@ export class ProductsPage extends AdminPage {
         await this.clickAndWaitForResponse(data.subUrls.backend.wc.taxonomyTerms, productsAdmin.product.selectAll);
         await this.check(productsAdmin.product.usedForVariations);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsAdmin.product.saveAttributes);
-
 
         // add variations
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsAdmin.product.subMenus.variations);
