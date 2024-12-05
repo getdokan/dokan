@@ -1514,7 +1514,7 @@ export interface modules {
 
     modulesName: {
         auctionIntegration: string;
-        colorSchemeCustomize: string;
+        colorSchemeCustomizer: string;
         deliveryTime: string;
         elementor: string;
         eUComplianceFields: string;

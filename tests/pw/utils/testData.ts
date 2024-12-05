@@ -2093,7 +2093,7 @@ export const data = {
 
         modulesName: {
             auctionIntegration: 'Auction Integration',
-            colorSchemeCustomize: 'Color Scheme Customize',
+            colorSchemeCustomizer: 'Color Scheme Customize',
             deliveryTime: 'Delivery Time',
             elementor: 'Elementor',
             eUComplianceFields: 'EU Compliance Fields',
