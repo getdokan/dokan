@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Product;
 
+use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WC_Product;
 
@@ -534,7 +535,7 @@ class Hooks {
         $additional_fee   = '';
 
         if ( isset( $_POST['_per_product_admin_commission_type'] ) ) { // phpcs:ignore
-            $commission_type = ! empty( $_POST['_per_product_admin_commission_type'] ) ? sanitize_text_field( $_POST['_per_product_admin_commission_type'] ) : 'percentage'; // phpcs:ignore
+            $commission_type = ! empty( $_POST['_per_product_admin_commission_type'] ) ? sanitize_text_field( $_POST['_per_product_admin_commission_type'] ) : Fixed::SOURCE; // phpcs:ignore
             update_post_meta( $post_id, '_per_product_admin_commission_type', $commission_type );
         }
 
