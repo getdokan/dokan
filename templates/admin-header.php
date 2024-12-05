@@ -19,7 +19,7 @@
 
             <?php
             // Show Pro version if installed
-            if ( dokan()->is_pro_exists() && dokan_pro() && dokan_pro()->license->is_valid() ) {
+            if ( dokan_pro() && dokan()->is_pro_exists() && dokan_pro()->license->is_valid() ) {
                 $pro_version = DOKAN_PRO_PLUGIN_VERSION;
                 $license_plan = dokan_pro()->license->get_plan();
                 ?>
