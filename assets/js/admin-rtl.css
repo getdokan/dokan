@@ -115,6 +115,7 @@
 }
 .dokan-admin-header .dokan-admin-header-logo {
   display: flex;
+  align-items: center;
 }
 .dokan-admin-header .dokan-admin-header-logo img {
   height: 25px;
@@ -249,19 +250,19 @@
   margin-bottom: 0;
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a.active {
-  color: #dd452c;
+  color: #7047EB;
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a.active .dokan-icon {
-  background-color: rgba(221, 69, 44, 0.15);
+  background-color: #E4E6EB;
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a.active .dokan-icon svg path {
-  fill: #f1634c;
+  fill: #7047EB;
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a.active:after {
   content: "";
   width: 6px;
   height: 6px;
-  background-color: #dd452c;
+  background-color: #7047EB;
   border-radius: 53px;
   margin-right: 10px;
 }
@@ -277,13 +278,13 @@
   margin-left: 11px;
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a:hover {
-  color: #dd452c;
+  color: #7047EB;
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a:hover .dokan-icon {
-  background-color: rgba(221, 69, 44, 0.15);
+  background-color: #EFEAFF;
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a:hover .dokan-icon svg path {
-  fill: #f1634c;
+  fill: #7047EB;
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a:focus {
   box-shadow: none;

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "85da992aa34ef2564d3d8cca7fe129a8",
+    "content-hash": "6a657eac8bbca8bc3e8cf80e6f08fca0",
     "packages": [
         {
             "name": "appsero/client",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Appsero/client.git",
-                "reference": "575ecd2ddb3900bd2626771f12d5723b69175b60"
+                "reference": "12ff65b9770286d21edf314e7acfcd26fdde3315"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Appsero/client/zipball/575ecd2ddb3900bd2626771f12d5723b69175b60",
-                "reference": "575ecd2ddb3900bd2626771f12d5723b69175b60",
+                "url": "https://api.github.com/repos/Appsero/client/zipball/12ff65b9770286d21edf314e7acfcd26fdde3315",
+                "reference": "12ff65b9770286d21edf314e7acfcd26fdde3315",
                 "shasum": ""
             },
             "require": {
@@ -56,22 +56,22 @@
             ],
             "support": {
                 "issues": "https://github.com/Appsero/client/issues",
-                "source": "https://github.com/Appsero/client/tree/v2.0.3"
+                "source": "https://github.com/Appsero/client/tree/v2.0.4"
             },
-            "time": "2024-09-18T04:41:01+00:00"
+            "time": "2024-11-25T05:58:23+00:00"
         },
         {
             "name": "appsero/updater",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Appsero/updater.git",
-                "reference": "937c658f8a41b7739c5f4915f2a110aa6bf778da"
+                "reference": "0e233fd177eba9cca67f94c5d65d8bb221384983"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Appsero/updater/zipball/937c658f8a41b7739c5f4915f2a110aa6bf778da",
-                "reference": "937c658f8a41b7739c5f4915f2a110aa6bf778da",
+                "url": "https://api.github.com/repos/Appsero/updater/zipball/0e233fd177eba9cca67f94c5d65d8bb221384983",
+                "reference": "0e233fd177eba9cca67f94c5d65d8bb221384983",
                 "shasum": ""
             },
             "type": "library",
@@ -93,9 +93,9 @@
             "description": "Appsero client updater module",
             "support": {
                 "issues": "https://github.com/Appsero/updater/issues",
-                "source": "https://github.com/Appsero/updater/tree/v2.3.0"
+                "source": "https://github.com/Appsero/updater/tree/v2.3.1"
             },
-            "time": "2024-09-06T04:30:41+00:00"
+            "time": "2024-11-25T05:50:04+00:00"
         },
         {
             "name": "jakeasmith/http_build_url",
@@ -138,20 +138,20 @@
     "packages-dev": [
         {
             "name": "antecedent/patchwork",
-            "version": "2.1.28",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/antecedent/patchwork.git",
-                "reference": "6b30aff81ebadf0f2feb9268d3e08385cebcc08d"
+                "reference": "b07d4fb37c3c723c8755122160c089e077d5de65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antecedent/patchwork/zipball/6b30aff81ebadf0f2feb9268d3e08385cebcc08d",
-                "reference": "6b30aff81ebadf0f2feb9268d3e08385cebcc08d",
+                "url": "https://api.github.com/repos/antecedent/patchwork/zipball/b07d4fb37c3c723c8755122160c089e077d5de65",
+                "reference": "b07d4fb37c3c723c8755122160c089e077d5de65",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=7.1.0"
             },
             "require-dev": {
                 "phpunit/phpunit": ">=4"
@@ -180,9 +180,9 @@
             ],
             "support": {
                 "issues": "https://github.com/antecedent/patchwork/issues",
-                "source": "https://github.com/antecedent/patchwork/tree/2.1.28"
+                "source": "https://github.com/antecedent/patchwork/tree/2.2.0"
             },
-            "time": "2024-02-06T09:26:11+00:00"
+            "time": "2024-09-27T16:59:55+00:00"
         },
         {
             "name": "brain/monkey",
@@ -406,12 +406,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hamcrest/hamcrest-php.git",
-                "reference": "dd03e528e461e059e21cdd2ce50fdb842efe5a91"
+                "reference": "515bc471fce72631265184d96d1777770f16d230"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hamcrest/hamcrest-php/zipball/dd03e528e461e059e21cdd2ce50fdb842efe5a91",
-                "reference": "dd03e528e461e059e21cdd2ce50fdb842efe5a91",
+                "url": "https://api.github.com/repos/hamcrest/hamcrest-php/zipball/515bc471fce72631265184d96d1777770f16d230",
+                "reference": "515bc471fce72631265184d96d1777770f16d230",
                 "shasum": ""
             },
             "require": {
@@ -450,7 +450,7 @@
                 "issues": "https://github.com/hamcrest/hamcrest-php/issues",
                 "source": "https://github.com/hamcrest/hamcrest-php/tree/master"
             },
-            "time": "2024-07-08T08:13:58+00:00"
+            "time": "2024-11-24T15:17:53+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -540,12 +540,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "3a6b9a42cd8f8771bd4295d13e1423fa7f3d942c"
+                "reference": "123267b2c49fbf30d78a7b2d333f6be754b94845"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/3a6b9a42cd8f8771bd4295d13e1423fa7f3d942c",
-                "reference": "3a6b9a42cd8f8771bd4295d13e1423fa7f3d942c",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/123267b2c49fbf30d78a7b2d333f6be754b94845",
+                "reference": "123267b2c49fbf30d78a7b2d333f6be754b94845",
                 "shasum": ""
             },
             "require": {
@@ -585,7 +585,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.12.0"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.12.1"
             },
             "funding": [
                 {
@@ -593,20 +593,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-06-12T14:39:25+00:00"
+            "time": "2024-11-08T17:47:46+00:00"
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.2.0",
+            "version": "v5.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "23c79fbbfb725fb92af9bcf41065c8e9a0d49ddb"
+                "reference": "8eea230464783aa9671db8eea6f8c6ac5285794b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/23c79fbbfb725fb92af9bcf41065c8e9a0d49ddb",
-                "reference": "23c79fbbfb725fb92af9bcf41065c8e9a0d49ddb",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/8eea230464783aa9671db8eea6f8c6ac5285794b",
+                "reference": "8eea230464783aa9671db8eea6f8c6ac5285794b",
                 "shasum": ""
             },
             "require": {
@@ -649,9 +649,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.2.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.3.1"
             },
-            "time": "2024-09-15T16:40:33+00:00"
+            "time": "2024-10-08T18:51:32+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -912,12 +912,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "01c1ff2704a58e46f0cb1ca9d06aee07b3589082"
+                "reference": "fd4181347ee2b93e6e581acb48f8c271b763a738"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/01c1ff2704a58e46f0cb1ca9d06aee07b3589082",
-                "reference": "01c1ff2704a58e46f0cb1ca9d06aee07b3589082",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/fd4181347ee2b93e6e581acb48f8c271b763a738",
+                "reference": "fd4181347ee2b93e6e581acb48f8c271b763a738",
                 "shasum": ""
             },
             "require": {
@@ -975,7 +975,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-04-24T21:37:59+00:00"
+            "time": "2024-10-16T19:34:28+00:00"
         },
         {
             "name": "phpcsstandards/phpcsextra",
@@ -983,12 +983,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-                "reference": "de3789a59ee046291bb196c03862c871a692dc75"
+                "reference": "31ef149a1ee85ec0d355e58418d78d927e89d185"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/de3789a59ee046291bb196c03862c871a692dc75",
-                "reference": "de3789a59ee046291bb196c03862c871a692dc75",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/31ef149a1ee85ec0d355e58418d78d927e89d185",
+                "reference": "31ef149a1ee85ec0d355e58418d78d927e89d185",
                 "shasum": ""
             },
             "require": {
@@ -1054,7 +1054,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-07-23T06:25:32+00:00"
+            "time": "2024-11-11T18:03:33+00:00"
         },
         {
             "name": "phpcsstandards/phpcsutils",
@@ -1062,18 +1062,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "dd8f54106f37cd8c6b681d5c659b76a1d309c67f"
+                "reference": "9b2671b7342d2c8ad8ec78c8bdac45958d9de065"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/dd8f54106f37cd8c6b681d5c659b76a1d309c67f",
-                "reference": "dd8f54106f37cd8c6b681d5c659b76a1d309c67f",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/9b2671b7342d2c8ad8ec78c8bdac45958d9de065",
+                "reference": "9b2671b7342d2c8ad8ec78c8bdac45958d9de065",
                 "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.4.1 || ^0.5 || ^0.6.2 || ^0.7 || ^1.0",
                 "php": ">=5.4",
-                "squizlabs/php_codesniffer": "^3.10.0 || 4.0.x-dev@dev"
+                "squizlabs/php_codesniffer": "^3.10.1 || 4.0.x-dev@dev"
             },
             "require-dev": {
                 "ext-filter": "*",
@@ -1143,7 +1143,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-09-16T11:24:55+00:00"
+            "time": "2024-11-17T04:37:55+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1151,12 +1151,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "85402a822d1ecf1db1096959413d35e1c37cf1a5"
+                "reference": "0448d60087a382392a1b2a1abe434466e03dcc87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/85402a822d1ecf1db1096959413d35e1c37cf1a5",
-                "reference": "85402a822d1ecf1db1096959413d35e1c37cf1a5",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/0448d60087a382392a1b2a1abe434466e03dcc87",
+                "reference": "0448d60087a382392a1b2a1abe434466e03dcc87",
                 "shasum": ""
             },
             "require": {
@@ -1213,7 +1213,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.32"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2"
             },
             "funding": [
                 {
@@ -1221,7 +1221,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-08-22T04:23:01+00:00"
+            "time": "2024-10-31T05:58:25+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -1470,12 +1470,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "bc0b86cf861901c60c8a7e62aa0b17f3260d3640"
+                "reference": "aa6e85808145e6357a07fcad937e736cf4022e75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/bc0b86cf861901c60c8a7e62aa0b17f3260d3640",
-                "reference": "bc0b86cf861901c60c8a7e62aa0b17f3260d3640",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/aa6e85808145e6357a07fcad937e736cf4022e75",
+                "reference": "aa6e85808145e6357a07fcad937e736cf4022e75",
                 "shasum": ""
             },
             "require": {
@@ -1486,7 +1486,7 @@
                 "ext-mbstring": "*",
                 "ext-xml": "*",
                 "ext-xmlwriter": "*",
-                "myclabs/deep-copy": "^1.12.0",
+                "myclabs/deep-copy": "^1.12.1",
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=7.3",
@@ -1565,7 +1565,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-19T10:23:44+00:00"
+            "time": "2024-11-21T14:43:04+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2537,12 +2537,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "92c8ef54357ea09d93f8efa043d7c9c0a71ae094"
+                "reference": "823dc9afb8bce7f2cf4ccd7dac3176a4bf4ef146"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/92c8ef54357ea09d93f8efa043d7c9c0a71ae094",
-                "reference": "92c8ef54357ea09d93f8efa043d7c9c0a71ae094",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/823dc9afb8bce7f2cf4ccd7dac3176a4bf4ef146",
+                "reference": "823dc9afb8bce7f2cf4ccd7dac3176a4bf4ef146",
                 "shasum": ""
             },
             "require": {
@@ -2610,7 +2610,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-09-18T16:46:38+00:00"
+            "time": "2024-11-24T17:49:11+00:00"
         },
         {
             "name": "tareq1988/wp-php-cs-fixer",
@@ -2706,12 +2706,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "7f766304b0654cee7c1dfa8e548f65fce197e05c"
+                "reference": "8c069fe12ee7f395e8eba48565ba479cd3ac81aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/7f766304b0654cee7c1dfa8e548f65fce197e05c",
-                "reference": "7f766304b0654cee7c1dfa8e548f65fce197e05c",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/8c069fe12ee7f395e8eba48565ba479cd3ac81aa",
+                "reference": "8c069fe12ee7f395e8eba48565ba479cd3ac81aa",
                 "shasum": ""
             },
             "require": {
@@ -2765,7 +2765,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-08-28T05:05:46+00:00"
+            "time": "2024-11-22T14:46:22+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",
@@ -2773,12 +2773,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-phpunit/wp-phpunit.git",
-                "reference": "a759b93f3ef66c4455a8fc027cce12e6bcacce2e"
+                "reference": "26397ba876ada5a7dd47ee22dabdc823a2cee4bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-phpunit/wp-phpunit/zipball/a759b93f3ef66c4455a8fc027cce12e6bcacce2e",
-                "reference": "a759b93f3ef66c4455a8fc027cce12e6bcacce2e",
+                "url": "https://api.github.com/repos/wp-phpunit/wp-phpunit/zipball/26397ba876ada5a7dd47ee22dabdc823a2cee4bf",
+                "reference": "26397ba876ada5a7dd47ee22dabdc823a2cee4bf",
                 "shasum": ""
             },
             "default-branch": true,
@@ -2814,7 +2814,7 @@
                 "issues": "https://github.com/wp-phpunit/issues",
                 "source": "https://github.com/wp-phpunit/wp-phpunit"
             },
-            "time": "2024-07-17T01:13:44+00:00"
+            "time": "2024-11-13T01:22:47+00:00"
         },
         {
             "name": "yoast/phpunit-polyfills",
@@ -2822,12 +2822,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Yoast/PHPUnit-Polyfills.git",
-                "reference": "e87abf2352b5f6736cab7c8d23c581ef6aaeaf3f"
+                "reference": "36f2d3fe72766d45a2319eece04dce099cb72f37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Yoast/PHPUnit-Polyfills/zipball/e87abf2352b5f6736cab7c8d23c581ef6aaeaf3f",
-                "reference": "e87abf2352b5f6736cab7c8d23c581ef6aaeaf3f",
+                "url": "https://api.github.com/repos/Yoast/PHPUnit-Polyfills/zipball/36f2d3fe72766d45a2319eece04dce099cb72f37",
+                "reference": "36f2d3fe72766d45a2319eece04dce099cb72f37",
                 "shasum": ""
             },
             "require": {
@@ -2877,7 +2877,7 @@
                 "security": "https://github.com/Yoast/PHPUnit-Polyfills/security/policy",
                 "source": "https://github.com/Yoast/PHPUnit-Polyfills"
             },
-            "time": "2024-09-16T19:21:25+00:00"
+            "time": "2024-11-18T19:20:35+00:00"
         }
     ],
     "aliases": [],

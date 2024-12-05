@@ -4,6 +4,74 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.14.0',
+        'released' => '2024-12-02',
+        'changes'  => [
+            'New'  => [
+                [
+                    'title'       => 'Commission amount now displayed in the product list within the admin dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor earning amount displayed in the product list within the vendor dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor earning suggestions on the product add and edit pages in the vendor dashboard for simple and variable products.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Commission details metabox on the order details page in the admin dashboard is now visible for child orders or orders without a parent.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Related order metabox on the order details page in the admin dashboard, displaying sibling orders for child orders and child orders for parent orders.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Backward compatibility for flat, percentage, and combine commission types for older orders.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Updated commission types from flat, percentage, and combine to fixed and category-based commissions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Overhauled the commission UI across Dokan global settings, vendor settings, product settings, Dokan subscription product settings, and the admin setup wizard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated the commission settings in the admin setup wizard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enhanced responsiveness of the UI for Dokan admin dashboard settings menus.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Product is rebranded with new branding.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'As per new branding of Dokan Multivendor Plugin, full product is rebranded with new theme color.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Moved the vendor edit page from Dokan Pro to Dokan Lite and eliminated the commission setting from the WordPress default user profile page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed the commission from every category, introducing category-based commission in global settings, vendor settings, Dokan subscription products, and the admin setup wizard.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.13.1',
         'released' => '2024-11-11',
         'changes'  => [

@@ -1,7 +1,6 @@
 <template>
     <div id="dokan-vendor-capabilities">
         <div class="vendor-capabilities-banner" :style="bannerBg">
-            <img :src="bannerImage" :alt="__( 'Dokan Vendor Capabilities Banner', 'dokan-lite' )">
             <div class="content">
                 <p class="title">{{ __( 'Vendor Capabilities', 'dokan-lite' ) }}</p>
                 <p>
@@ -153,9 +152,6 @@ export default {
                 backgroundImage: `url(${dokan.urls.assetsUrl}/images/dokan-vendor-capabilities-banner-bg.svg)`,
             };
         },
-        bannerImage() {
-            return `${dokan.urls.assetsUrl}/images/dokan-vendor-capabilities-banner.svg`;
-        }
     },
 }
 </script>
@@ -259,6 +255,7 @@ export default {
             }
         }
 
+
         .vendor-capabilities-banner {
             display: flex;
             align-items: center;
@@ -268,15 +265,26 @@ export default {
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
-            margin-bottom: 16px;
+            margin: 20px 0;
 
             .content {
                 margin: 30px;
 
                 .title {
-                    font-size: 26px;
-                    font-weight: bold;
-                    color: #FF0000;
+                    font-size: 51px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: normal;
+                    background: linear-gradient(90deg, #FFF 34.5%, #D68FFF 100%);
+                    background-clip: text !important;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+                p{
+                    color: #FFFFFF;
+                    max-width: 512px;
+                    width: 100%;
+                    font-size: 16px;
                 }
             }
         }

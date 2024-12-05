@@ -15,11 +15,10 @@
 
         <!--   Vendor Capabilities Banner     -->
         <div class="vendor-capabilities-banner" :style="bannerBg">
-            <img :src="bannerImage" :alt="__( 'Dokan Vendor Capabilities Banner', 'dokan-lite' )">
             <div class="content">
-                <p class="title pb-4">{{ __( 'Vendor Capabilities', 'dokan-lite' ) }}</p>
-                <p class='pb-3'>
-                    {{ __( 'One of the finest attractions of Dokan PRO is the vast array of powerful vendor controls & functions it provides so sellers can enjoy ownership, automation & freedom to run their stores. To use these awesome vendor features listed below, consider Upgrading to PRO.', 'dokan-lite' ) }}
+                <p class="title m-0">{{ __( 'Vendor Capabilities', 'dokan-lite' ) }}</p>
+                <p >
+                    {{ __( 'Dokan PRO offers powerful vendor controls and features, giving sellers full ownership, automation, and freedom to run their stores. Upgrade to PRO to unlock these great features!.', 'dokan-lite' ) }}
                 </p>
                 <router-link class="button" :to="{ name: 'VendorCapabilities' }">
                     {{ __( 'Check Out All Vendor Functionalities', 'dokan-lite' ) }}
@@ -938,14 +937,12 @@ export default {
                 backgroundImage: `url(${dokan.urls.assetsUrl}/images/dokan-vendor-capabilities-banner-bg.svg)`,
             };
         },
-        bannerImage() {
-            return `${dokan.urls.assetsUrl}/images/dokan-settings-banner.svg`;
-        },
     }
 };
 </script>
 
 <style lang="less" type="text/less">
+@import "../../../assets/src/less/variables.less";
 
     .dokan-pro-features {
         font-family: 'Open Sans', sans-serif;
@@ -954,7 +951,7 @@ export default {
         .vendor-capabilities-banner {
             display: flex;
             align-items: center;
-            padding: 50px;
+            padding:70px 50px;
             height: auto;
             border-radius: 9px;
             background-position: center;
@@ -966,21 +963,33 @@ export default {
                 margin: 30px;
 
                 .title {
-                    font-size: 26px;
-                    font-weight: bold;
-                    color: #FF0000;
+                    font-size: 51px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: normal;
+                    background: linear-gradient(90deg, #FFF 34.5%, #D68FFF 100%);
+                    background-clip: text !important;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+                p{
+                    color: #FFFFFF;
+                    max-width: 512px;
+                    width: 100%;
+                    font-size: 16px;
                 }
             }
 
             a {
                 box-shadow: none;
-                background: #FF5722;
+                background: lighten(@dokan-color, 5%);
                 color: #fff;
-                border-color: #FF5722;
-
+                border-color: @dokan-color;
+                font-size: 16px;
+                padding: 0 1rem;
                 &:hover {
                     color: #fff;
-                    background: lighten(#FF5722, 5%);
+                    background: @dokan-color;
                 }
             }
         }
@@ -1646,65 +1655,7 @@ export default {
 
         }
 
-        .cta-section {
-            background-image: -moz-linear-gradient( 15deg, rgb(255,125,144) 0%, rgb(255,173,111) 100%);
-            background-image: -webkit-linear-gradient( 15deg, rgb(255,125,144) 0%, rgb(255,173,111) 100%);
-            background-image: -ms-linear-gradient( 15deg, rgb(255,125,144) 0%, rgb(255,173,111) 100%);
-            background-image: linear-gradient( 15deg, rgb(255,125,144) 0%, rgb(255,173,111) 100%);
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: contain;
-            text-align: center;
-            padding: 35px 75px 40px;
-            color: #fff;
 
-            img {
-                width: 60px;
-                border-radius: 50%;
-                box-shadow: 0px 3px 70px 0px rgba(126, 17, 0, 0.35);
-            }
-
-            h2 {
-                font-size: 30px;
-                color: #fff;
-                font-weight: 400;
-                line-height: 1.333em;
-                text-align: center;
-                margin: 10px 0;
-                text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.31);
-            }
-
-            p {
-                font-size: 16px;
-                line-height: 1.5em;
-                font-weight: 300;
-                margin: 10px 0 30px;
-            }
-
-            .btn {
-                background-color: #fff;
-                color: #f2624d;
-                font-size: 16px;
-                line-height: 1.538em;
-                font-weight: 300;
-                border: 1px solid #FF9381;
-                border-radius: 3px;
-                box-shadow: 0px 1px 2px 0px rgba(255, 128, 142, 0.05);
-                display: inline-block;
-                text-decoration: none;
-                padding: 12px 27px;
-
-                &:hover {
-                    box-shadow: 2.736px 7.518px 20px 0 rgba(0,0,0,.15);
-                }
-
-                svg {
-                    width: 15px;
-                    fill: #f2624d;
-                    margin-left: 6px;
-                }
-            }
-        }
     }
 
 </style>

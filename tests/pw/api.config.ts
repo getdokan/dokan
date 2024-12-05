@@ -5,7 +5,7 @@ const { CI, BASE_URL, NO_SETUP, ADMIN, ADMIN_PASSWORD, DOKAN_PRO } = process.env
 
 export default defineConfig({
     /* test directory */
-    testDir: './tests/api',
+    testDir: 'tests/api',
     /* Include tests based on the pattern */
     grep: [/@lite/, /@pro/],
     /* Exclude tests based on the pattern */

@@ -36,6 +36,7 @@ class Assets {
      */
     public function load_dokan_admin_notices_scripts() {
         wp_enqueue_script( 'dokan-promo-notice-js' );
+        wp_enqueue_script( 'dokan-admin-notice-js' );
         $vue_localize_script = apply_filters(
             'dokan_promo_notice_localize_script', [
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -60,7 +61,8 @@ class Assets {
 
         // load vue app inside the parent menu only
         if ( 'toplevel_page_dokan' === $hook ) {
-            $localize_script = $this->get_admin_localized_scripts();
+            $localize_script           = $this->get_admin_localized_scripts();
+            $vue_admin_localize_script = $this->get_vue_admin_localized_scripts();
 
             // Load common styles and scripts
             wp_enqueue_script( 'dokan-tinymce' );
@@ -90,6 +92,7 @@ class Assets {
 
             // fire the admin app
             wp_enqueue_script( 'dokan-vue-admin' );
+            wp_localize_script( 'dokan-vue-vendor', 'dokanAdmin', $vue_admin_localize_script );
 
             if ( version_compare( $wp_version, '5.3', '<' ) ) {
                 wp_enqueue_style( 'dokan-wp-version-before-5-3' );
@@ -211,6 +214,11 @@ class Assets {
                 'path'      => '/vendors',
                 'name'      => 'Vendors',
                 'component' => 'Vendors',
+            ],
+            [
+                'path'      => '/vendors/:id',
+                'name'      => 'VendorSingle',
+                'component' => 'VendorSingle',
             ],
             [
                 'path'      => '/dummy-data',
@@ -529,6 +537,11 @@ class Assets {
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
             ],
+            'dokan-admin-notice-js'    => [
+                'src'     => $asset_url . '/js/dokan-admin-notice.js',
+                'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
+                'version' => filemtime( $asset_path . 'js/dokan-admin-notice.js' ),
+            ],
             'dokan-reverse-withdrawal' => [
                 'src'     => $asset_url . '/js/reverse-withdrawal.js',
                 'deps'    => [ 'jquery', 'dokan-util-helper', 'dokan-vue-vendor', 'dokan-date-range-picker' ],
@@ -590,6 +603,9 @@ class Assets {
             }
         }
 
+        $vendor = dokan()->vendor->get( dokan_get_current_user_id() );
+        $commision_settings = $vendor->get_commission_settings();
+
         $default_script = [
             'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
             'nonce'                        => wp_create_nonce( 'dokan_reviews' ),
@@ -600,8 +616,8 @@ class Assets {
             ],
             'delete_confirm'               => __( 'Are you sure?', 'dokan-lite' ),
             'wrong_message'                => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
-            'vendor_percentage'            => dokan_get_seller_percentage( dokan_get_current_user_id() ),
-            'commission_type'              => dokan_get_commission_type( dokan_get_current_user_id() ),
+            'vendor_percentage'            => $commision_settings->get_percentage(),
+            'commission_type'              => $commision_settings->get_type(),
             'rounding_precision'           => wc_get_rounding_precision(),
             'mon_decimal_point'            => wc_get_price_decimal_separator(),
             'currency_format_num_decimals' => wc_get_price_decimals(),
@@ -1212,6 +1228,21 @@ class Assets {
                 'mon_decimal_point'                 => wc_get_price_decimal_separator(),
                 'i18n_date_format'                  => wc_date_format(),
                 'product_types'                     => apply_filters( 'dokan_product_types', [ 'simple' ] ),
+            ]
+        );
+    }
+
+    /**
+     * Admin vue localized scripts
+     *
+     * @since 3.14.0
+     *
+     * @return array
+     */
+    private function get_vue_admin_localized_scripts() {
+        return apply_filters(
+            'dokan_vue_admin_localize_script', [
+                'commission_types' => dokan_commission_types(),
             ]
         );
     }

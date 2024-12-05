@@ -13,32 +13,38 @@
             </div>
 
             <div class="dokan-settings-wrap" ref='settingsWrapper'>
-                <div class="nav-tab-wrapper">
-                    <div class="nab-section">
-                        <div class="search-box">
-                            <label for="dokan-admin-search" class="dashicons dashicons-search"></label>
-                            <input type="text" id="dokan-admin-search" class="dokan-admin-search-settings"
-                                :placeholder="__( 'Search e.g. vendor', 'dokan-lite' )" v-model="searchText"
-                                @input="searchInSettings" ref="searchInSettings" />
-                            <span
-                                class="dashicons dashicons-no-alt"
-                                @click.prevent="clearSearch"
-                                v-if="'' !== searchText"
-                            ></span>
+                <div class='flex d-xs:flex-col md:flex-row w-full'>
+                    <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 d-xs:w-full md:w-[340px]">
+                        <div class='d-xs:flex justify-between md:hidden font-bold'>
+                            <p class='font-bold'>{{ __( 'Settings', 'dokan-lite' ) }}</p>
+                            <label v-if="screenWidth < 753" for='dokan-setting-show'><i :class="showMenu || screenWidth >= 753 ? 'fas fa-chevron-down' : 'fas fa-chevron-up'"></i></label>
+                            <input v-if="screenWidth < 753" class='!hidden' id='dokan-setting-show' checked :value='showMenu' @click='() => showMenu = !showMenu' type='checkbox'>
                         </div>
-
-                        <template v-for="section in settingSections">
-                            <div :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
-                                @click.prevent="changeTab(section)" :key="section.id">
-                                <img :src="section.icon_url" :alt="section.settings_title"/>
-                                <div class="nav-content">
-                                    <div class="nav-title">{{ section.title }}</div>
-                                    <div class="nav-description">{{ section.description }}</div>
-                                </div>
+                        <div class="nab-section md:block" :class="showMenu || screenWidth >= 753 ? 'd-xs:block' : 'd-xs:hidden'">
+                            <div class="search-box">
+                                <label for="dokan-admin-search" class="dashicons dashicons-search"></label>
+                                <input type="text" id="dokan-admin-search" class="dokan-admin-search-settings"
+                                       :placeholder="__( 'Search e.g. vendor', 'dokan-lite' )" v-model="searchText"
+                                       @input="searchInSettings" ref="searchInSettings" />
+                                <span
+                                    class="dashicons dashicons-no-alt"
+                                    @click.prevent="clearSearch"
+                                    v-if="'' !== searchText"
+                                ></span>
                             </div>
-                        </template>
+
+                            <template v-for="section in settingSections">
+                                <div :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
+                                     @click.prevent="changeTab(section)" :key="section.id">
+                                    <img :src="section.icon_url" :alt="section.settings_title"/>
+                                    <div class="nav-content">
+                                        <div class="nav-title">{{ section.title }}</div>
+                                        <div class="nav-description">{{ section.description }}</div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
                     </div>
-                </div>
 
                 <div class="metabox-holder">
                     <fieldset class="settings-header" v-for="section in settingSections" v-if="currentTab === section.id">
@@ -92,11 +98,11 @@
                         </div>
                     </template>
 
-                    <div ref='backToTop' @click="scrollToTop" class='back-to-top tips' :title="__( 'Back to top', 'dokan-lite' )" v-tooltip="__( 'Back to top', 'dokan-lite' )">
-                        <img :src="dokanAssetsUrl + '/images/up-arrow.svg'" :alt="__( 'Dokan Back to Top Button', 'dokan-lite' )" />
+                        <div ref='backToTop' @click="scrollToTop" class='back-to-top tips' :title="__( 'Back to top', 'dokan-lite' )" v-tooltip="__( 'Back to top', 'dokan-lite' )">
+                            <img :src="dokanAssetsUrl + '/images/up-arrow.svg'" :alt="__( 'Dokan Back to Top Button', 'dokan-lite' )" />
+                        </div>
                     </div>
                 </div>
-
                 <div class="loading" v-if="showLoading">
                     <loading></loading>
                 </div>
@@ -150,6 +156,8 @@
                 isSaveConfirm: false,
                 dokanAssetsUrl: dokan.urls.assetsUrl,
                 disableSubmit: false,
+                showMenu: false,
+                screenWidth: window.document.documentElement.clientWidth
             }
         },
 
@@ -181,6 +189,13 @@
                 if ( typeof( localStorage ) != 'undefined' ) {
                     localStorage.setItem( "activetab", this.currentTab );
                 }
+
+                if (  this.screenWidth >= 753 ) {
+                    this.showMenu = true;
+                    return;
+                }
+
+                this.showMenu = false;
             },
 
             fetchSettingValues() {
@@ -422,11 +437,34 @@
                             if ( ! this.errors.includes( field ) ) {
                                 this.errors.push( field );
 
-                                // If flat or percentage commission is set. Remove the required field.
-                                if ( 'flat' === value['commission_type'] || 'percentage' === value['commission_type'] ) {
+                                if ( 'flat' === value['commission_type'] || 'percentage' === value['commission_type'] || 'combine' === value['commission_type'] || 'fixed' === value['commission_type'] ) {
+                                    this.errors = this.arrayRemove( this.errors, 'commission_category_based_values' );
+                                }
+
+                                if ( 'category_based' === value['commission_type'] ) {
                                     this.errors = this.arrayRemove( this.errors, 'admin_percentage' );
                                     this.errors = this.arrayRemove( this.errors, 'additional_fee' );
                                 }
+                            }
+                        }
+
+                        if ( field in value && 'category_based' === value['commission_type'] ) {
+                            let alreadyAdded = ! this.errors.includes( field );
+
+                            // Validate the commission_category_based_values
+                            if (
+                                'commission_category_based_values' in value &&
+                                typeof value['commission_category_based_values'] === 'object' &&
+                                value?.commission_category_based_values?.all &&
+                                value?.commission_category_based_values?.all?.flat &&
+                                String( value?.commission_category_based_values?.all?.flat ).length > 0 &&
+                                value?.commission_category_based_values?.all?.percentage &&
+                                String( value?.commission_category_based_values?.all?.percentage ).length > 0 &&
+                                alreadyAdded
+                            ) {
+                                this.errors = this.arrayRemove( this.errors, 'commission_category_based_values' );
+                            } else {
+                                this.errors.push( 'commission_category_based_values' );
                             }
                         }
                     } );
@@ -583,6 +621,10 @@
                     this.$refs.backToTop.style.transform = window.scrollY > ( document.body.scrollHeight - 800 ) ? 'scale(1)' : 'scale(0)';
                 }
             },
+
+            updateDocumentWidth() {
+                this.screenWidth = window.document.documentElement.clientWidth;
+            }
         },
 
         created() {
@@ -638,7 +680,14 @@
             this.$root.$on('setting-submit-status', ( status ) => {
                 this.disableSubmit = status;
             } );
+
+            this.updateDocumentWidth();
+            window.addEventListener('resize', this.updateDocumentWidth);
         },
+
+        beforeDestroy() {
+            window.removeEventListener('resize', this.updateDocumentWidth);
+        }
     };
 
 </script>
@@ -1125,7 +1174,7 @@
             }
 
             .metabox-holder {
-                width: 40%;
+                width: 100%;
 
                 .settings-header {
                     display: block;
@@ -1158,7 +1207,7 @@
     @media only screen and (max-width: 768px) {
         .dokan-settings-wrap {
             .nav-tab-wrapper {
-                width: 35% !important;
+                width: 35%;
 
                 .nav-tab {
                     .nav-content {
@@ -1174,7 +1223,7 @@
             }
 
             .metabox-holder {
-                width: 65%;
+                width: 100%;
 
                 .settings-header {
                     .settings-content {

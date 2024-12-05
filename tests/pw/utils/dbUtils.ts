@@ -1,8 +1,7 @@
 import mysql from 'mysql2/promise';
 import { serialize, unserialize, isSerialized } from 'php-serialize';
-import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
-import { commission, feeRecipient } from '@utils/interfaces';
+
 const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 
 const dbPrefix = DB_PREFIX;
@@ -102,20 +101,11 @@ export const dbUtils = {
         return [currentSettings, newSettings];
     },
 
-    // get selling info
-    async getSellingInfo(): Promise<[commission, feeRecipient]> {
-        const res = await this.getOptionValue(dbData.dokan.optionName.selling);
-        const commission = {
-            type: res.commission_type,
-            amount: res.admin_percentage,
-            additionalAmount: res.additional_fee,
-        };
-        const feeRecipient = {
-            shippingFeeRecipient: res.shipping_fee_recipient,
-            taxFeeRecipient: res.tax_fee_recipient,
-            shippingTaxFeeRecipient: res.shipping_tax_fee_recipient,
-        };
-        return [commission, feeRecipient];
+    // delete option row
+    async deleteOptionRow(optionNames: string[]): Promise<any> {
+        const query = `DELETE FROM ${dbPrefix}_options WHERE option_name IN (${optionNames.map(() => '?').join(',')})`;
+        const res = await dbUtils.dbQuery(query, optionNames);
+        return res;
     },
 
     // create abuse report
@@ -145,20 +135,7 @@ export const dbUtils = {
         };
 
         const query = `INSERT INTO ${dbPrefix}_dokan_refund VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
-        const res = await dbUtils.dbQuery(query, [
-            refund.id,
-            refund.orderId,
-            refund.sellerId,
-            refund.refundAmount,
-            refund.refundReason,
-            refund.itemQtys,
-            refund.itemTotals,
-            refund.itemTaxTotals,
-            refund.restockItems,
-            refund.date,
-            refund.status,
-            refund.method,
-        ]);
+        const res = await dbUtils.dbQuery(query, [refund.id, refund.orderId, refund.sellerId, refund.refundAmount, refund.refundReason, refund.itemQtys, refund.itemTotals, refund.itemTaxTotals, refund.restockItems, refund.date, refund.status, refund.method]);
 
         return [res, refundId];
     },
@@ -220,6 +197,14 @@ export const dbUtils = {
         await dbUtils.dbQuery(updateCountQuery, [subscriptionTermTaxonomyId]);
     },
 
+    // get child order ids
+    async getChildOrderIds(orderId: string): Promise<string[]> {
+        const query = `SELECT id FROM ${dbPrefix}_wc_orders WHERE parent_order_id = ?;`;
+        const res = await dbUtils.dbQuery(query, [orderId]);
+        const ids = res.map((row: { id: number }) => row.id);
+        return ids;
+    },
+
     async updateQuoteRuleContent(quoted: string, updatedRuleContent: object) {
         const querySelect = `SELECT rule_contents FROM ${dbPrefix}_dokan_request_quote_rules WHERE id = ?`;
         const res = await dbUtils.dbQuery(querySelect, [quoted]);
@@ -229,5 +214,14 @@ export const dbUtils = {
 
         const queryUpdate = `UPDATE ${dbPrefix}_dokan_request_quote_rules SET rule_contents = ? WHERE id = ?`;
         await dbUtils.dbQuery(queryUpdate, [serialize(newRuleContent), quoted]);
+    },
+
+    async followVendor(followerId: string, vendorId: string) {
+        const currentTime = helpers.currentDateTimeFullFormat;
+        const query = `INSERT INTO ${dbPrefix}_dokan_follow_store_followers (vendor_id, follower_id, followed_at)
+            SELECT ?, ?, ?
+            WHERE NOT EXISTS (  SELECT 1 FROM ${dbPrefix}_dokan_follow_store_followers WHERE vendor_id = ? AND follower_id = ? );`;
+        const res = await dbUtils.dbQuery(query, [vendorId, followerId, currentTime, vendorId, followerId]);
+        return res;
     },
 };

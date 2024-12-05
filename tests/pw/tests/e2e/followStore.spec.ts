@@ -3,8 +3,9 @@ import { FollowStorePage } from '@pages/followStorePage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
 
-const { VENDOR_ID, VENDOR2_ID } = process.env;
+const { CUSTOMER_ID, VENDOR_ID, VENDOR2_ID } = process.env;
 
 test.describe('Follow stores functionality test', () => {
     let vendor: FollowStorePage;
@@ -38,6 +39,11 @@ test.describe('Follow stores functionality test', () => {
         await customer.customerFollowedVendorsRenderProperly();
     });
 
+    test('customer can view followed vendors', { tag: ['@pro', '@customer'] }, async () => {
+        await dbUtils.followVendor(CUSTOMER_ID, VENDOR_ID);
+        await customer.customerViewFollowedVendors(data.predefined.vendorStores.vendor1);
+    });
+
     test('customer can follow store on store list page', { tag: ['@pro', '@customer'] }, async () => {
         await apiUtils.unfollowStore(VENDOR_ID, payloads.customerAuth);
         await customer.followUnfollowStore(data.predefined.vendorStores.vendor1, 'Following', data.predefined.vendorStores.followFromStoreListing);
@@ -57,6 +63,8 @@ test.describe('Follow stores functionality test', () => {
         await apiUtils.followStore(VENDOR2_ID, payloads.customerAuth);
         await customer.followUnfollowStore(data.predefined.vendorStores.vendor2, 'Follow', data.predefined.vendorStores.followFromSingleStore);
     });
+
+    // todo: parameterize above tests also update feature-map
 
     //vendor
 

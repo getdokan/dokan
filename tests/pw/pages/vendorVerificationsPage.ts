@@ -30,7 +30,7 @@ export class VendorVerificationsPage extends AdminPage {
         await this.click(settingsAdmin.vendorVerification.verifiedIconByIcon(icon));
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
 
         // single store page
@@ -53,7 +53,7 @@ export class VendorVerificationsPage extends AdminPage {
         }
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
     }
 
@@ -78,7 +78,7 @@ export class VendorVerificationsPage extends AdminPage {
         await this.toBeVisible(settingsAdmin.vendorVerification.methodCreateSuccessMessage);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
     }
 
@@ -95,7 +95,7 @@ export class VendorVerificationsPage extends AdminPage {
         await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
     }
 
@@ -111,7 +111,7 @@ export class VendorVerificationsPage extends AdminPage {
         await this.toBeVisible(settingsAdmin.vendorVerification.methodDeleteSuccessMessage);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
     }
 
