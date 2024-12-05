@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Admin;
 
+use WeDevs\Dokan\Product\Hooks as ProductHooks;
 use WP_Post;
 
 // don't call the file directly
@@ -35,6 +36,9 @@ class Hooks {
 
         // Ajax hooks
         add_action( 'wp_ajax_dokan_product_search_author', [ $this, 'search_vendors' ] );
+
+        add_action( 'woocommerce_product_bulk_edit_end', [ $this, 'add_product_commission_bulk_edit_field' ] );
+        add_action( 'woocommerce_product_bulk_edit_save', [ $this, 'save_custom_bulk_edit_field' ], 10, 1 );
     }
 
     /**
@@ -222,5 +226,38 @@ class Hooks {
         $value            = is_array( $value ) ? $value : [];
 
         return array_replace_recursive( $current_settings, $value );
+    }
+
+    /**
+     * Add commission settings in bulk product edit.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function add_product_commission_bulk_edit_field() {
+        dokan_get_template_part( 'products/dokan-products-edit-bulk-commission', '', [] );
+    }
+
+    /**
+     * Save commission settings from bulk product edit
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Product $product
+     *
+     * @return void
+     */
+    public function save_custom_bulk_edit_field( $product ) {
+        $excluded_product_types = apply_filters( 'dokan_excluded_product_types_for_bulk_edit', [ 'product_pack', 'external', 'grouped' ] );
+        if ( ! current_user_can( 'manage_woocommerce' ) || in_array( $product->get_type(), $excluded_product_types, true ) ) {
+            return;
+        }
+
+        if ( ! isset( $_REQUEST['dokan_override_bulk_product_commission'] ) || sanitize_text_field( $_REQUEST['dokan_override_bulk_product_commission'] ) !== 'on' ) { // phpcs:ignore
+            return;
+        }
+
+        ProductHooks::save_per_product_commission_options( $product->get_id(), $_REQUEST ); // phpcs:ignore
     }
 }

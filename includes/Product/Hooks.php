@@ -189,11 +189,11 @@ class Hooks {
         <div class="dokan-store-products-filter-area dokan-clearfix">
             <form class="dokan-store-products-ordeby" method="get">
                 <input type="text" name="product_name" class="product-name-search dokan-store-products-filter-search"
-                       placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>" autocomplete="off"
-                       data-store_id="<?php echo esc_attr( $store_id ); ?>">
+                        placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>" autocomplete="off"
+                        data-store_id="<?php echo esc_attr( $store_id ); ?>">
                 <div id="dokan-store-products-search-result" class="dokan-ajax-store-products-search-result"></div>
                 <input type="submit" name="search_store_products" class="search-store-products dokan-btn-theme"
-                       value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
+                        value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
 
                 <?php if ( is_array( $orderby_options['catalogs'] ) && isset( $orderby_options['orderby'] ) ) : ?>
                     <select name="product_orderby" class="orderby orderby-search"
@@ -522,36 +522,45 @@ class Hooks {
      *
      * @since 2.4.12
      *
-     * @param  integer $post_id
+     * @param integer $post_id
+     * @param array   $data
      *
      * @return void
      */
-    public static function save_per_product_commission_options( $post_id ) {
+    public static function save_per_product_commission_options( $post_id, $data = [] ) {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             return;
         }
 
+        $commission_type  = Fixed::SOURCE;
         $admin_commission = '';
         $additional_fee   = '';
+        $data             = empty( $data ) ? $_POST : $data; // phpcs:ignore
 
-        if ( isset( $_POST['_per_product_admin_commission_type'] ) ) { // phpcs:ignore
-            $commission_type = ! empty( $_POST['_per_product_admin_commission_type'] ) ? sanitize_text_field( $_POST['_per_product_admin_commission_type'] ) : Fixed::SOURCE; // phpcs:ignore
-            update_post_meta( $post_id, '_per_product_admin_commission_type', $commission_type );
+        if ( isset( $data['_per_product_admin_commission_type'] ) ) {
+            $commission_type = ! empty( $data['_per_product_admin_commission_type'] ) ? sanitize_text_field( $data['_per_product_admin_commission_type'] ) : Fixed::SOURCE;
         }
 
-        if ( isset( $_POST['_per_product_admin_commission'] ) ) { // phpcs:ignore
-            $_per_product_admin_commission = wc_format_decimal( sanitize_text_field( $_POST['_per_product_admin_commission'] ) ); // phpcs:ignore
+        if ( isset( $data['_per_product_admin_commission'] ) ) {
+            $_per_product_admin_commission = wc_format_decimal( sanitize_text_field( $data['_per_product_admin_commission'] ) );
 
             if ( 0 <= $_per_product_admin_commission && 100 >= $_per_product_admin_commission ) {
-                $admin_commission = ( '' === $_POST['_per_product_admin_commission'] ) ? '' : $_per_product_admin_commission; // phpcs:ignore
+                $admin_commission = ( '' === $data['_per_product_admin_commission'] ) ? '' : $_per_product_admin_commission;
             }
         }
 
-        if ( isset( $_POST['_per_product_admin_additional_fee'] ) ) { // phpcs:ignore
-            $additional_fee = ( '' === $_POST['_per_product_admin_additional_fee'] ) ? '' : sanitize_text_field( $_POST['_per_product_admin_additional_fee'] ); // phpcs:ignore
+        if ( isset( $data['_per_product_admin_additional_fee'] ) ) {
+            $additional_fee = ( '' === $data['_per_product_admin_additional_fee'] ) ? '' : sanitize_text_field( $data['_per_product_admin_additional_fee'] );
+            $additional_fee = wc_format_decimal( $additional_fee );
         }
 
-        update_post_meta( $post_id, '_per_product_admin_commission', $admin_commission );
-        update_post_meta( $post_id, '_per_product_admin_additional_fee', wc_format_decimal( $additional_fee ) );
+        dokan()->product->save_commission_settings(
+            $post_id,
+            [
+                'type'       => $commission_type,
+                'percentage' => $admin_commission,
+                'flat'       => $additional_fee,
+            ]
+        );
     }
 }
