@@ -3155,6 +3155,9 @@ export const selector = {
                 productVariations: '.woocommerce_variation',
                 addVariations: '#field_to_edit',
                 go: '.bulk_edit', // invokes default js alert
+                addVariationPrice: 'button.add_price_for_variations',
+                variationPriceInput: 'input.wc_input_variations_price',
+                addPrice: 'button.add_variations_price_button',
 
                 // Advanced
                 advanced: {
@@ -3199,6 +3202,7 @@ export const selector = {
                 preview: '#post-preview',
                 publish: '#publishing-action #publish',
                 updatedSuccessMessage: '.updated.notice.notice-success p',
+                productPublishSuccessMessage: '//p[contains(.,"Product published. View Product")]',
             },
 
             // Categories
