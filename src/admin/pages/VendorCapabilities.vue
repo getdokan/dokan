@@ -157,6 +157,7 @@ export default {
 </script>
 
 <style lang="less">
+@import "../../../assets/src/less/variables.less";
     #dokan-vendor-capabilities {
         padding: 20px 70px;
 
@@ -233,7 +234,7 @@ export default {
                 }
 
                 .zoom {
-                    background-color: #FFB24B;
+                    background-color: @dokan-color;
                     border-radius: 9px;
                     color: white;
                     font-size: 24px;
