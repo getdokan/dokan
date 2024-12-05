@@ -97,6 +97,21 @@ if ( is_wp_error( $section ) ) {
 
             <?php do_action( 'dokan_product_edit_after_title', $post, $product->get_id(), $product ); ?>
 
+            <?php
+            $category = $section->get_field( Elements::CATEGORIES );
+            if ( ! is_wp_error( $category ) && $category->is_visible() ) :
+                ?>
+                <div class="dokan-form-group">
+                    <?php
+                    $data                    = Helper::get_saved_products_category( $product->get_id() );
+                    $data['from']            = 'edit_product';
+                    $data['required_symbol'] = $category->print_required_symbol( false );
+
+                    dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
+                    ?>
+                </div>
+            <?php endif; ?>
+
             <div class="show_if_simple dokan-clearfix show_if_external">
                 <div class="dokan-clearfix dokan-price-container">
                     <?php
@@ -112,6 +127,26 @@ if ( is_wp_error( $section ) ) {
                                     aria-hidden="true"
                                     data-title="<?php echo esc_attr( $regular_price->get_help_content() ); ?>">
                                 </i>
+                                <span
+                                    class="vendor-earning simple-product"
+                                    data-commission="<?php echo esc_attr( dokan()->commission->get_earning_by_product( $product->get_id() ) ); ?>"
+                                    data-product-id="<?php echo esc_attr( $product->get_id() ); ?>">
+                                        ( <?php esc_html_e( ' You Earn : ', 'dokan-lite' ); ?><?php echo esc_html( get_woocommerce_currency_symbol() ); ?>
+                                            <span class="vendor-price">
+                                                <?php
+                                                echo wp_kses_post(
+                                                    wc_price(
+                                                        dokan()->commission->get_earning_by_product( $product->get_id() ),
+                                                        [
+                                                            'currency' => get_woocommerce_currency_symbol(),
+                                                            'decimals' => wc_get_price_decimals() + 2,
+                                                        ]
+                                                    )
+                                                );
+                                                ?>
+                                            </span>
+                                        )
+                                </span>
                             </label>
                             <div class="dokan-input-group">
                                 <span class="dokan-input-group-addon">
@@ -245,21 +280,6 @@ if ( is_wp_error( $section ) ) {
             </div>
 
             <?php do_action( 'dokan_product_edit_after_pricing', $post, $product->get_id(), $product ); ?>
-
-            <?php
-            $category = $section->get_field( Elements::CATEGORIES );
-            if ( ! is_wp_error( $category ) && $category->is_visible() ) :
-                ?>
-                <div class="dokan-form-group">
-                    <?php
-                    $data                    = Helper::get_saved_products_category( $product->get_id() );
-                    $data['from']            = 'edit_product';
-                    $data['required_symbol'] = $category->print_required_symbol( false );
-
-                    dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
-                    ?>
-                </div>
-            <?php endif; ?>
 
             <?php
             $tags = $section->get_field( Elements::TAGS );
