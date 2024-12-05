@@ -84,11 +84,11 @@
           admin can add product category [lite]: true
           admin can add product attribute [lite]: true
           admin can add simple product [lite]: true
-          admin can add variable product: false
+          admin can add variable product: true
           admin can add simple subscription product: true
-          admin can add variable subscription product: false
+          admin can add variable subscription product: true
           admin can add external product [lite]: true
-          admin can add vendor subscription: false
+          admin can add vendor subscription: true
       vendor:
           vendor can view product menu page [lite]: true
           vendor can view add new product page [lite]: true
