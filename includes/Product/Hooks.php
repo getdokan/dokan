@@ -530,7 +530,6 @@ class Hooks {
             return;
         }
 
-        $commission_type  = '';
         $admin_commission = '';
         $additional_fee   = '';
 
