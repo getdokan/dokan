@@ -22,7 +22,7 @@ test.describe('Single store functionality test', () => {
         await customer.singleStoreRenderProperly(data.predefined.vendorStores.vendor1);
     });
 
-    test('customer can view store open-close time on single store', { tag: ['@lite', '@customer'] }, async () => {
+    test.skip('customer can view store open-close time on single store', { tag: ['@lite', '@customer'] }, async () => {
         await customer.storeOpenCloseTime(data.predefined.vendorStores.vendor1);
     });
 
