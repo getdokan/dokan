@@ -800,6 +800,7 @@ export const selector = {
 
             // Store Reviews
             storeReviews: {
+                storeReviewsDiv: 'div.dokan-store-reviews',
                 storeReviewsText: '.dokan-store-reviews h1',
 
                 // Nav Tabs
@@ -7468,10 +7469,10 @@ export const selector = {
             // Pagination
             pagination: '.dokan-pagination',
 
-            // Review
-            review: {
+            // Reviews
+            reviews: {
                 close: 'button.icon-close',
-                noReviewsFound: '//span[normalize-space()="No Reviews found"]',
+                noReviewsFound: '//span[normalize-space()="No Reviews Found"]',
                 write: '//button[normalize-space()="Write a Review"]',
                 // write: '.add-review-btn',
                 edit: '.edit-review-btn',

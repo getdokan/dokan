@@ -1610,6 +1610,14 @@ export class BasePage {
         expect(exists).toBe(false);
     }
 
+    // assert two element to have same count
+    async toHaveEqualCount(selector1: string, selector2: string, options?: { timeout?: number; intervals?: number[] }) {
+        await this.toPass(async () => {
+            const [selector1Count, selector2Count] = await Promise.all([await this.getElementCount(selector1), await this.getElementCount(selector2)]);
+            expect(selector1Count).toBe(selector2Count);
+        }, options);
+    }
+
     // assert element not to be visible
     async notToBeVisible(selector: string) {
         await expect(this.page.locator(selector)).toBeHidden();
