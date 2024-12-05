@@ -88,11 +88,11 @@ class Hooks {
      * @return void
      */
     public function update_vendor_balance( $withdraw ) {
-        try{
+        try {
             global $wpdb;
 
             if ( NumberUtil::round( dokan_get_seller_balance( $withdraw->get_user_id(), false ), 2 ) < NumberUtil::round( $withdraw->get_amount(), 2 ) ) {
-                error_log( 'Withdraw request amount is greater than vendor balance'. $withdraw->get_amount() );
+                dokan_log( 'Withdraw request amount is greater than vendor balance' . $withdraw->get_amount() );
                 return;
             }
 
@@ -132,7 +132,7 @@ class Hooks {
                 );
             }
         } catch ( \Exception $e ) {
-        dokan_log( 'Withdraw Balance Update Error: ' . $e->getMessage() );
+			dokan_log( 'Withdraw Balance Update Error: ' . $e->getMessage() );
         }
     }
 
