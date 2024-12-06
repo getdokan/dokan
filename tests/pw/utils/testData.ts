@@ -23,7 +23,6 @@ const {
     GMAP,
     MAPBOX,
     LICENSE_KEY,
-    CATEGORY_ID,
     VONAGE_API_KEY,
     VONAGE_API_SECRET,
     FB_APP_ID,
@@ -571,16 +570,6 @@ export const data = {
                 minimumProductQuantity: '1',
                 maximumProductQuantity: '20',
             },
-
-            commission: {
-                commissionType: 'fixed', // 'fixed','category_based'  [category commission will only be applicable to dokan subscription product]
-                commissionPercentage: '2',
-                commissionFixed: '2',
-                commissionCategory: {
-                    allCategory: true, // true for all category, false for specific category
-                    category: 'All Categories',
-                },
-            },
         },
     },
 
@@ -864,39 +853,6 @@ export const data = {
         },
     },
 
-    // commission [for all dokan setup wizard, dokan selling settings, dokan subscription product]
-    commission: {
-        fixed: {
-            commissionType: 'fixed', // 'fixed','category_based'
-            commissionPercentage: '10',
-            commissionFixed: '10',
-            commissionCategory: {
-                allCategory: true, // true for all category, false for specific category
-                category: 'All Categories',
-            },
-        },
-
-        allCategory: {
-            commissionType: 'category_based', // 'fixed','category_based'
-            commissionPercentage: '5',
-            commissionFixed: '5',
-            commissionCategory: {
-                allCategory: true, // true for all category, false for specific category
-                category: 'All Categories',
-            },
-        },
-
-        specficCategory: {
-            commissionType: 'category_based', // 'fixed','category_based'
-            commissionPercentage: '2',
-            commissionFixed: '2',
-            commissionCategory: {
-                allCategory: false, // true for all category, false for specific category
-                category: CATEGORY_ID,
-            },
-        },
-    },
-
     // Dokan Setup Wizard
     dokanSetupWizard: {
         vendorStoreURL: 'store',
@@ -905,15 +861,8 @@ export const data = {
         mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
         googleMapApiKey: GMAP,
         sellingProductTypes: 'sell_both', // 'physical', 'digital', 'sell_both',
-        commission: {
-            commissionType: 'fixed', // 'fixed','category_based'
-            commissionPercentage: '10',
-            commissionFixed: '0',
-            commissionCategory: {
-                allCategory: true, // true for all category, false for specific category
-                category: 'All Categories',
-            },
-        },
+        commissionType: 'percentage', // 'flat','percentage' 'combine',
+        adminCommission: '10',
         minimumWithdrawLimit: '5',
     },
 
@@ -1179,7 +1128,6 @@ export const data = {
                 dummyDataImport: 'dokan/v1/dummy-data/import',
                 refunds: 'dokan/v1/refunds',
                 modules: 'dokan/v1/admin/modules',
-                multistepCategories: 'dokan/v1/products/multistep-categories',
                 storeReviews: 'dokan/v1/store-reviews',
                 productAdvertising: 'dokan/v1/product_adv',
                 wholesaleRegister: 'dokan/v1/wholesale/register',
@@ -1291,17 +1239,6 @@ export const data = {
 
             // address fields enable flag (on vendor registration)
             addressFieldsEnabled: false,
-
-            // commission
-            commission: {
-                commissionType: 'fixed', // 'fixed','category_based'
-                commissionPercentage: '5',
-                commissionFixed: '5',
-                commissionCategory: {
-                    allCategory: true, // true for all category, false for specific category
-                    category: 'All Categories',
-                },
-            },
 
             // subscription pack
             vendorSubscriptionPack: 'Dokan_Subscription_Non_recurring',
@@ -2134,15 +2071,8 @@ export const data = {
         // selling options settings
         selling: {
             settingTitle: 'Selling Option Settings',
-            commission: {
-                commissionType: 'fixed', // 'fixed','category_based'
-                commissionPercentage: '10',
-                commissionFixed: '0',
-                commissionCategory: {
-                    allCategory: true, // true for all category, false for specific category
-                    category: 'All Categories',
-                },
-            },
+            commissionType: 'percentage', // 'flat', 'percentage', 'combine'
+            adminCommission: '10',
             shippingFeeRecipient: 'seller', // 'seller', 'admin'
             productTaxFeeRecipient: 'seller', // 'seller', 'admin'
             shippingTaxFeeRecipient: 'seller', // 'seller', 'admin'

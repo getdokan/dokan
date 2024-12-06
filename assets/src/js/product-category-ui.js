@@ -51,8 +51,6 @@
 
         removeCatBox() {
             $( this ).closest( '.dokan-select-product-category-container' )[0].remove();
-            // Do any action when click remove category.
-            wp.hooks.doAction( 'dokan_removed_multistep_category' );
         },
 
         categoryLiClick() {

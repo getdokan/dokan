@@ -2122,7 +2122,7 @@ export const schemas = {
     },
 
     // commission schema
-    commission: z.string().or(z.number()),
+    commission: z.number(),
 
     // withdraws schema
     withdrawsSchema: {

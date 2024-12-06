@@ -1,46 +1,36 @@
 <template>
-  <div
-    class="d-xs:text-[8px] sm:text-[14px] d-xs:w-fit sm:w-fit md:w-auto h-[32px] flex d-xs:shadow-md md:shadow-none rounded-[5px]">
-    <div
-      class="md:shadow-md  border-[0.957434px] border-[#E9E9E9] d-xs:!border-r-0 md:!border-r-[0.957434px] rounded-[5px] d-xs:!rounded-r-none md:!rounded-r-[5px] !p-0 !m-0 w-[110px] flex justify-start items-center box-border">
-      <input
-        type="text"
-        class="wc_input_decimal !border-none focus:!shadow-none !border-0 !w-[100%] !min-h-full !pl-2 !pr-0 !pt-0 !pb-0 min-w-[75px]"
-        ref="percentage"
-        :id="percentageId"
-        :name="percentageName"
-        v-model="percentage"
-        v-on:input="onInput"
-        style="border: none !important;"
-      />
-      <div
-        class="d-xs:border-l-0 md:border-l-[0.957434px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100 !min-h-full">
-        <span class="d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2">{{ __( '%', 'dokan-lite' ) }}</span></div>
+    <div class="field combine_fields">
+        <div class="percent_fee">
+            <input
+                type="text"
+                class="wc_input_decimal regular-text medium"
+                :id="percentageId"
+                :name="percentageName"
+                v-model="percentage"
+                v-on:input="onInput"
+            />
+            {{ '%' }}
+        </div>
+        <div>
+            {{ '+' }}
+        </div>
+        <div class="fixed_fee">
+            <span>{{ getCurrencySymbol }}</span>
+            <input
+                type="text"
+                class="wc_input_price regular-text medium"
+                :id="fixedId"
+                :name="fixexName"
+                v-model="fixed"
+                v-on:input="onInput"
+            />
+        </div>
     </div>
-    <div class="d-xs:border-[0.957434px] md:border-0 d-xs:bg-gray-100 md:bg-transparent  flex justify-center items-center">
-      <span class="d-xs:p-1 md:p-2">{{ __( '+', 'dokan-lite' ) }}</span>
-    </div>
-    <div
-      class="md:shadow-md border-[0.957434px] d-xs:!border-l-0 md:!border-l-[0.957434px] rounded-[5px] d-xs:!rounded-l-none md:!rounded-l-[5px] !p-0 !m-0 w-[110px] flex justify-start items-center box-border">
-      <div
-        class="d-xs:border-r-0 md:border-r-[0.957434px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100 !min-h-full">
-        <span class="d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2">{{ getCurrencySymbol }}</span></div>
-      <input
-        type="text"
-        class="wc_input_price focus:!shadow-none !border-0 !w-[100%] !min-h-full !pl-2 !pr-0 !pt-0 !pb-0 min-w-[75px]"
-        ref="fixed"
-        :id="fixedId"
-        :name="fixexName"
-        v-model="fixed"
-        v-on:input="onInput"
-        style="border: none !important;"
-      />
-    </div>
-  </div>
 </template>
 
 <script>
-import Debounce from "debounce";
+    import { fixed } from 'lodash/fp/_falseOptions';
+    const Debounce = dokan_get_lib('debounce');
 
     export default {
         name: 'CombineInput',
@@ -64,58 +54,37 @@ import Debounce from "debounce";
             value: {
                 type: Object,
                 default: {
-                    fixed: '',
-                    percentage: ''
+                    fixed: 0,
+                    percentage: 0
                 }
             },
         },
         data() {
             return {
-                fixed: this.formatPositiveValue( this.value.fixed ) ?? '',
-                percentage: this.formatPositiveValue( this.value.percentage ) ?? ''
+                fixed: this.formatPositiveValue( this.value.fixed ) ?? 0,
+                percentage: this.formatPositiveValue( this.value.percentage ) ?? 0
             };
         },
         watch: {
             value: {
                 handler(newVal, oldVal) {
-                    let newPercentage = this.validatePercentage( newVal.percentage );
-                    let oldPercentage = this.validatePercentage( oldVal.percentage );
-
-                    console.log(newPercentage, oldPercentage);
-
-                    if ( ! newPercentage || '' === newPercentage || Number( newPercentage ) < 0 || Number( newPercentage ) > 100 ) {
-                        newPercentage = oldPercentage;
-                    }
-
                     this.fixed = this.formatPositiveValue( newVal.fixed );
-                    this.percentage = this.formatPositiveValue( newPercentage );
+                    this.percentage = this.formatPositiveValue( newVal.percentage );
                 },
                 deep: true
             }
         },
         methods: {
-            validatePercentage( percentage ) {
-                if ( Number( percentage ) < 0 || Number( percentage ) > 100 ) {
-                    percentage = '';
-                }
-
-                return percentage;
-            },
             onInput: Debounce( function() {
-                let self = this;
-                let data = {
-                        fixed: self.fixed ? accounting.unformat(self.fixed, dokan.currency.decimal) : '',
-                        percentage: self.percentage ? accounting.unformat(self.percentage, dokan.currency.decimal): ''
+                let self = this,
+                    data = {
+                        fixed: self.fixed,
+                        percentage: self.percentage
                     };
 
                 this.$emit('change', data);
-            }, 500 ),
-
+            }, 1600 ),
             formatPositiveValue: ( value ) => {
-                if ( value === '' ) {
-                    return value;
-                }
-
                 return accounting.formatNumber( value, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal );
             },
         },
@@ -127,5 +96,21 @@ import Debounce from "debounce";
     };
 </script>
 
-<style scoped lang="less">
+<style scoped lang='less'>
+    .combine_fields {
+        display: flex;
+        justify-content: right;
+        align-items: center;
+
+        .percent_fee {
+            padding-right: 10px;
+        }
+
+        .fixed_fee,
+        .percent_fee {
+            input {
+                width: 100px;
+            }
+        }
+    }
 </style>

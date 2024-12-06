@@ -11,8 +11,6 @@ import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { payloads } from '@utils/payloads';
 
-const { VENDOR_ID } = process.env;
-
 test.describe('EU Compliance test', () => {
     let admin: EuCompliancePage;
     let vendor: VendorSettingsPage;
@@ -98,7 +96,7 @@ test.describe('EU Compliance test', () => {
 
     test('admin can update update EU compliance data on vendor profile edit', { tag: ['@pro', '@admin'] }, async () => {
         const admin = new StoresPage(aPage);
-        await admin.editVendor(VENDOR_ID, data.vendor);
+        await admin.editVendor(data.vendor);
     });
 
     test('admin can hide vendors EU compliance data from single store page', { tag: ['@pro', '@admin'] }, async () => {

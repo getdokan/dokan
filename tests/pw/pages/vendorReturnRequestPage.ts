@@ -118,7 +118,7 @@ export class VendorReturnRequestPage extends VendorPage {
 
         const noRequestsFound = await this.isVisible(selector.customer.cRma.noRowsFound);
         if (noRequestsFound) {
-            console.log('No return request found');
+            console.log('No request found');
             return;
         }
 
