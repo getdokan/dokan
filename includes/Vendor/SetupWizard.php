@@ -9,8 +9,8 @@ use WeDevs\Dokan\Admin\SetupWizard as DokanSetupWizard;
  * Seller setup wizard class
  */
 class SetupWizard extends DokanSetupWizard {
-    /** @var string Currenct Step */
-    protected $step = '';
+    /** @var string Current Step */
+    protected string $current_step = '';
 
     /** @var array Steps for the setup wizard */
     protected $steps = [];
@@ -73,39 +73,19 @@ class SetupWizard extends DokanSetupWizard {
         $this->store_id   = dokan_get_current_user_id();
         $this->store_info = dokan_get_store_info( $this->store_id );
 
-        $steps = [
-            'introduction' => [
-                'name'    => __( 'Introduction', 'dokan-lite' ),
-                'view'    => [ $this, 'dokan_setup_introduction' ],
-                'handler' => '',
-            ],
-            'store'        => [
-                'name'    => __( 'Store', 'dokan-lite' ),
-                'view'    => [ $this, 'dokan_setup_store' ],
-                'handler' => [ $this, 'dokan_setup_store_save' ],
-            ],
-            'payment'      => [
-                'name'    => __( 'Payment', 'dokan-lite' ),
-                'view'    => [ $this, 'dokan_setup_payment' ],
-                'handler' => [ $this, 'dokan_setup_payment_save' ],
-            ],
-            'next_steps'   => [
-                'name'    => __( 'Ready!', 'dokan-lite' ),
-                'view'    => [ $this, 'dokan_setup_ready' ],
-                'handler' => '',
-            ],
-        ];
-
-        $this->steps = apply_filters( 'dokan_seller_wizard_steps', $steps );
-        $this->step  = current( array_keys( $this->steps ) );
+        // Setup wizard steps
+        $this->set_steps();
 
         // get step from url
         if ( isset( $_GET['_admin_sw_nonce'], $_GET['step'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_admin_sw_nonce'] ) ), 'dokan_admin_setup_wizard_nonce' ) ) {
-            $this->step = sanitize_key( wp_unslash( $_GET['step'] ) );
+            $this->current_step = sanitize_key( wp_unslash( $_GET['step'] ) ) ?? $this->get_first_step();
         }
 
-        if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) { // WPCS: CSRF ok.
-            call_user_func( $this->steps[ $this->step ]['handler'] );
+        if ( ! isset( $this->steps[ $this->current_step ]['handler'] ) ) {
+            $this->current_step = $this->get_first_step();
+        }
+        if ( ! empty( $_POST['save_step'] ) ) { // WPCS: CSRF ok.
+            call_user_func( $this->steps[ $this->current_step ]['handler'] );
         }
 
         $this->enqueue_scripts();
@@ -166,7 +146,7 @@ class SetupWizard extends DokanSetupWizard {
      */
     public function setup_wizard_footer() {
         ?>
-        <?php if ( 'next_steps' === $this->step ) : ?>
+        <?php if ( 'next_steps' === $this->current_step ) : ?>
             <a class="wc-return-to-dashboard" href="<?php echo esc_url( site_url() ); ?>"><?php esc_attr_e( 'Return to the Marketplace', 'dokan-lite' ); ?></a>
         <?php endif; ?>
         </body>
@@ -189,7 +169,7 @@ class SetupWizard extends DokanSetupWizard {
         <p><?php esc_attr_e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the Store!', 'dokan-lite' ); ?></p>
         <p class="wc-setup-actions step">
             <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next lets-go-btn dokan-btn-theme"><?php esc_attr_e( 'Let\'s Go!', 'dokan-lite' ); ?></a>
-            <a href="<?php echo esc_url( $dashboard_url ); ?>" class="button button-large not-right-now-btn dokan-btn-theme"><?php esc_attr_e( 'Not right now', 'dokan-lite' ); ?></a>
+            <a href="<?php echo esc_url( $dashboard_url ); ?>" class="button button-large not-right-now-btn dokan-btn-secondary dokan-btn-theme"><?php esc_attr_e( 'Not right now', 'dokan-lite' ); ?></a>
         </p>
         <?php
         do_action( 'dokan_seller_wizard_introduction', $this );
@@ -502,8 +482,11 @@ class SetupWizard extends DokanSetupWizard {
         $dokan_settings['location']     = isset( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '';
         $dokan_settings['find_address'] = isset( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : '';
         $dokan_settings['show_email']   = isset( $_POST['show_email'] ) ? 'yes' : 'no';
-
-        // Validating fileds.
+        $country = $dokan_settings['address']['country'] ?? '';
+        $state = $dokan_settings['address']['state'] ?? '';
+        $state_not_exists = ! isset( $states[ $country ] ); // If state not exists for the country array then user must provide the state name
+        $country_has_states = is_array( $states[ $country ] ) && count( $states[ $country ] ) > 0; // If country has states  more than 0 then user must provide the state name
+		$state_is_empty = empty( $state );
         $is_valid_form = true;
         if ( empty( $dokan_settings['address']['street_1'] ) ) {
             $is_valid_form = false;
@@ -520,12 +503,9 @@ class SetupWizard extends DokanSetupWizard {
         if ( empty( $dokan_settings['address']['country'] ) ) {
             $is_valid_form = false;
             $_POST['error_address[country]'] = 'error';
-        }
-        else {
-            if ( ( isset( $states[ $dokan_settings['address']['country'] ] ) && count( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) || ( ! isset( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) ) ) ) {
-                $is_valid_form = false;
-                $_POST['error_address[state]'] = 'error';
-            }
+        } elseif ( ( $country_has_states && $state_is_empty ) || ( $state_not_exists && $state_is_empty ) ) {
+            $is_valid_form = false;
+            $_POST['error_address[state]'] = 'error';
         }
 
         if ( ! $is_valid_form ) {
@@ -549,6 +529,12 @@ class SetupWizard extends DokanSetupWizard {
     public function dokan_setup_payment() {
         $methods    = dokan_withdraw_get_active_methods();
         $store_info = $this->store_info;
+        // If payment step is accessed but no active methods exist, redirect to next step
+        if ( 'payment' === $this->current_step && empty( $methods ) ) {
+                wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
+                exit;
+        }
+
         ?>
         <h1><?php esc_html_e( 'Payment Setup', 'dokan-lite' ); ?></h1>
         <form method="post" id='dokan-seller-payment-setup-form' novalidate>
@@ -607,12 +593,16 @@ class SetupWizard extends DokanSetupWizard {
                 'swift'          => $bank['swift'],
             ];
 
-            $user_bank_data = array_filter( $dokan_settings['payment']['bank'], function( $item ) { return ! empty( $item ); } );
+            $user_bank_data = array_filter(
+                $dokan_settings['payment']['bank'], function ( $item ) {
+					return ! empty( $item );
+				}
+            );
             $require_fields = array_keys( dokan_bank_payment_required_fields() );
 
             $has_bank_information = true;
             foreach ( $require_fields as $require_field ) {
-                if( empty( $user_bank_data[ $require_field ] ) ) {
+                if ( empty( $user_bank_data[ $require_field ] ) ) {
                     $_POST[ 'error_' . $require_field ] = 'error';
                     $has_bank_information = false;
                 }
@@ -665,5 +655,89 @@ class SetupWizard extends DokanSetupWizard {
             </p>
         </div>
         <?php
+    }
+
+    /**
+     * Gets the URL for the next step in the wizard
+     *
+     * Handles special logic to skip the payment step if no withdrawal methods
+     * are active, preventing users from accessing an empty payment step
+     *
+     * @since 2.9.27
+     *
+     * @return string The URL for the next step
+     */
+    public function get_next_step_link(): string {
+        $keys = array_keys( $this->steps );
+        $step = array_search( $this->current_step, $keys, true );
+        ++$step;
+
+        // If next step is payment but there are no active methods, skip to the following step
+        if ( 'payment' === ( $keys[ $step ] ?? '' ) && empty( dokan_withdraw_get_active_methods() ) ) {
+            ++$step;
+        }
+		$next_step = $keys[ $step ] ?? '';
+        $next_step = apply_filters( 'dokan_seller_wizard_next_step', $next_step, $this->current_step, $this->steps );
+        return add_query_arg(
+            [
+				'step' => $next_step,
+				'_admin_sw_nonce' => wp_create_nonce( 'dokan_admin_setup_wizard_nonce' ),
+			]
+        );
+    }
+
+    /**
+     * Sets up the wizard steps
+     *
+     * Defines the steps for the setup wizard, conditionally including
+     * the payment step only if active withdrawal methods exist
+     *
+     * @since 2.9.27
+     *
+     * @return void
+     */
+    protected function set_steps() {
+        $steps = [
+            'introduction' => [
+                'name'    => __( 'Introduction', 'dokan-lite' ),
+                'view'    => [ $this, 'dokan_setup_introduction' ],
+                'handler' => '',
+            ],
+            'store'        => [
+                'name'    => __( 'Store', 'dokan-lite' ),
+                'view'    => [ $this, 'dokan_setup_store' ],
+                'handler' => [ $this, 'dokan_setup_store_save' ],
+            ],
+        ];
+
+        // Only add payment step if there are active withdrawal methods
+        $active_methods = dokan_withdraw_get_active_methods();
+        if ( ! empty( $active_methods ) ) {
+            $steps['payment'] = [
+                'name'    => __( 'Payment', 'dokan-lite' ),
+                'view'    => [ $this, 'dokan_setup_payment' ],
+                'handler' => [ $this, 'dokan_setup_payment_save' ],
+            ];
+        }
+
+        $steps['next_steps'] = [
+            'name'    => __( 'Ready!', 'dokan-lite' ),
+            'view'    => [ $this, 'dokan_setup_ready' ],
+            'handler' => '',
+        ];
+
+        /**
+         * Filter the seller wizard steps
+         *
+         * @since 2.9.27
+         *
+         * @param array $steps Array of wizard steps
+         */
+        $this->steps = apply_filters( 'dokan_seller_wizard_steps', $steps );
+        $this->current_step  = $this->get_first_step();
+    }
+
+    protected function get_first_step() {
+        return current( array_keys( $this->steps ) );
     }
 }
