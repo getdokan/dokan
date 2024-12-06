@@ -1550,7 +1550,7 @@ class Vendor {
     /**
      * Returns vendor commission settings data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -1562,7 +1562,7 @@ class Vendor {
     /**
      * Saves commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $commission
      *

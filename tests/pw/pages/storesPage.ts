@@ -235,6 +235,25 @@ export class StoresPage extends AdminPage {
         }
     }
 
+    // filter vendors
+    async filterVendors(filterBy: string): Promise<void> {
+        await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
+
+        switch (filterBy) {
+            case 'pending':
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.stores, vendors.navTabs.pending);
+                break;
+
+            case 'approved':
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.stores, vendors.navTabs.approved);
+                break;
+
+            default:
+                break;
+        }
+        await this.notToHaveCount(vendors.numberOfRows, 0);
+    }
+
     // update vendor
     async updateVendor(vendorName: string, action: string) {
         await this.searchVendor(vendorName);

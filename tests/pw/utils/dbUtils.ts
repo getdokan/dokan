@@ -101,6 +101,13 @@ export const dbUtils = {
         return [currentSettings, newSettings];
     },
 
+    // delete option row
+    async deleteOptionRow(optionNames: string[]): Promise<any> {
+        const query = `DELETE FROM ${dbPrefix}_options WHERE option_name IN (${optionNames.map(() => '?').join(',')})`;
+        const res = await dbUtils.dbQuery(query, optionNames);
+        return res;
+    },
+
     // create abuse report
     async createAbuseReport(abuseReport: any, productId: string, vendorId: string, customerId: string): Promise<any> {
         const query = `INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES (?, ?, ?, ?, ?, ?);`;

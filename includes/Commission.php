@@ -51,7 +51,7 @@ class Commission {
     /**
      * Calculate gateway fee
      *
-     * @deprecated DOKAN_SINCE Use dokan()->fees->calculate_gateway_fee insted.
+     * @deprecated 3.14.0 Use dokan()->fees->calculate_gateway_fee insted.
      *
      * @since 2.9.21
      *
@@ -60,14 +60,14 @@ class Commission {
      * @return void
      */
     public function calculate_gateway_fee( $order_id ) {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->fees->calculate_gateway_fee()' );
+        _deprecated_function( __METHOD__, '3.14.0', 'dokan()->fees->calculate_gateway_fee()' );
         dokan()->fees->calculate_gateway_fee( $order_id );
     }
 
     /**
      * Set order id
      *
-     * @deprecated DOKAN_SINCE
+     * @deprecated 3.14.0
      *
      * @since  2.9.21
      *
@@ -76,14 +76,14 @@ class Commission {
      * @return void
      */
     public function set_order_id( $id ) {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE' );
+        _deprecated_function( __METHOD__, '3.14.0' );
         $this->order_id = $id;
     }
 
     /**
      * Set order line item id
      *
-     * @deprecated DOKAN_SINCE
+     * @deprecated 3.14.0
      *
      * @since 3.8.0
      *
@@ -92,42 +92,42 @@ class Commission {
      * @return void
      */
     public function set_order_item_id( $item_id ) {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE' );
+        _deprecated_function( __METHOD__, '3.14.0' );
         $this->order_item_id = absint( $item_id );
     }
 
     /**
      * Get order id
      *
-     * @deprecated DOKAN_SINCE
+     * @deprecated 3.14.0
      *
      * @since  2.9.21
      *
      * @return int
      */
     public function get_order_id() {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE' );
+        _deprecated_function( __METHOD__, '3.14.0' );
         return $this->order_id;
     }
 
     /**
      * Get order line item id
      *
-     * @deprecated DOKAN_SINCE
+     * @deprecated 3.14.0
      *
      * @since 3.8.0
      *
      * @return int
      */
     public function get_order_item_id() {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE' );
+        _deprecated_function( __METHOD__, '3.14.0' );
         return $this->order_item_id;
     }
 
     /**
      * Set order quantity
      *
-     * @deprecated DOKAN_SINCE
+     * @deprecated 3.14.0
      *
      * @since  2.9.21
      *
@@ -136,21 +136,21 @@ class Commission {
      * @return void
      */
     public function set_order_qunatity( $number ) {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE' );
+        _deprecated_function( __METHOD__, '3.14.0' );
         $this->quantity = $number;
     }
 
     /**
      * Get order quantity
      *
-     * @deprecated DOKAN_SINCE
+     * @deprecated 3.14.0
      *
      * @since  2.9.21
      *
      * @return int
      */
     public function get_order_qunatity() {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE' );
+        _deprecated_function( __METHOD__, '3.14.0' );
         return $this->quantity;
     }
 
@@ -296,7 +296,7 @@ class Commission {
     /**
      * Get vendor wise additional rate
      *
-     * @deprecated DOKAN_SINCE Use dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_percentage() insted
+     * @deprecated 3.14.0 Use dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_percentage() insted
      *
      * @since  2.9.21
      *
@@ -305,14 +305,14 @@ class Commission {
      * @return float|null on failure
      */
     public function get_vendor_wise_rate( $vendor_id ) {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_percentage()' );
+        _deprecated_function( __METHOD__, '3.14.0', 'dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_percentage()' );
         return dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_percentage();
     }
 
     /**
      * Get vendor wise additional fee
      *
-     * @deprecated DOKAN_SINCE Use dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_flat() instead
+     * @deprecated 3.14.0 Use dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_flat() instead
      *
      * @since  2.9.21
      *
@@ -321,14 +321,14 @@ class Commission {
      * @return float|null on failure
      */
     public function get_vendor_wise_additional_fee( $vendor_id ) {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_flat()' );
+        _deprecated_function( __METHOD__, '3.14.0', 'dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_flat()' );
         return dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_flat();
     }
 
     /**
      * Get vendor wise additional type
      *
-     * @deprecated DOKAN_SINCE Use dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_type() instead
+     * @deprecated 3.14.0 Use dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_type() instead
      *
      * @since  2.9.21
      *
@@ -337,7 +337,7 @@ class Commission {
      * @return float|null on failure
      */
     public function get_vendor_wise_type( $vendor_id ) {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_type()' );
+        _deprecated_function( __METHOD__, '3.14.0', 'dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_type()' );
         return dokan()->vendor->get( $vendor_id )->get_commission_settings()->get_type();
     }
 
@@ -381,7 +381,7 @@ class Commission {
     /**
      * Get shipping fee recipient
      *
-     * @deprecated DOKAN_SINCE Use dokan()->fees->get_shipping_fee_recipient() instead
+     * @deprecated 3.14.0 Use dokan()->fees->get_shipping_fee_recipient() instead
      *
      * @since  2.9.21
      * @since  3.4.1 introduced the shipping fee recipient hook
@@ -391,7 +391,7 @@ class Commission {
      * @return string
      */
     public function get_shipping_fee_recipient( $order ) {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->fees->get_shipping_fee_recipient()' );
+        _deprecated_function( __METHOD__, '3.14.0', 'dokan()->fees->get_shipping_fee_recipient()' );
 
         return dokan()->fees->get_shipping_fee_recipient( $order );
     }
@@ -399,7 +399,7 @@ class Commission {
     /**
      * Get tax fee recipient
      *
-     * @deprecated DOKAN_SINCE Use dokan()->fees->get_tax_fee_recipient() instead
+     * @deprecated 3.14.0 Use dokan()->fees->get_tax_fee_recipient() instead
      *
      * @since  2.9.21
      * @since  3.4.1 introduced the tax fee recipient hook
@@ -409,7 +409,7 @@ class Commission {
      * @return string|WP_Error
      */
     public function get_tax_fee_recipient( $order ) {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->fees->get_tax_fee_recipient()' );
+        _deprecated_function( __METHOD__, '3.14.0', 'dokan()->fees->get_tax_fee_recipient()' );
 
         return dokan()->fees->get_tax_fee_recipient( $order );
     }
@@ -417,7 +417,7 @@ class Commission {
     /**
      * Get shipping tax fee recipient.
      *
-     * @deprecated DOKAN_SINCE Use dokan()->fees->get_shipping_tax_fee_recipient() instead
+     * @deprecated 3.14.0 Use dokan()->fees->get_shipping_tax_fee_recipient() instead
      *
      * @since 3.7.19
      *
@@ -426,14 +426,14 @@ class Commission {
      * @return string
      */
     public function get_shipping_tax_fee_recipient( $order ): string {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->fees->get_shipping_tax_fee_recipient()' );
+        _deprecated_function( __METHOD__, '3.14.0', 'dokan()->fees->get_shipping_tax_fee_recipient()' );
         return dokan()->fees->get_shipping_tax_fee_recipient( $order );
     }
 
     /**
      * Get total shipping tax refunded for the order.
      *
-     * @deprecated DOKAN_SINCE Use dokan()->fees->get_total_shipping_tax_refunded() instead
+     * @deprecated 3.14.0 Use dokan()->fees->get_total_shipping_tax_refunded() instead
      *
      * @since 3.7.19
      *
@@ -442,7 +442,7 @@ class Commission {
      * @return float
      */
     public function get_total_shipping_tax_refunded( WC_Order $order ): float {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->fees->get_total_shipping_tax_refunded()' );
+        _deprecated_function( __METHOD__, '3.14.0', 'dokan()->fees->get_total_shipping_tax_refunded()' );
 
         return dokan()->fees->get_total_shipping_tax_refunded( $order );
     }
@@ -450,7 +450,7 @@ class Commission {
     /**
      * Get processing fee
      *
-     * @deprecated DOKAN_SINCE Use dokan()->fees->get_processing_fee instead.
+     * @deprecated 3.14.0 Use dokan()->fees->get_processing_fee instead.
      *
      * @since DOKAN_LITE_SINCE
      *
@@ -459,7 +459,7 @@ class Commission {
      * @return float
      */
     public function get_processing_fee( $order ) {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'dokan()->fees->get_processing_fee' );
+        _deprecated_function( __METHOD__, '3.14.0', 'dokan()->fees->get_processing_fee' );
 
         return dokan()->fees->get_processing_fee( $order );
     }
@@ -489,7 +489,7 @@ class Commission {
      * Calculate commission (commission priority [1.product, 2.category, 3.vendor, 4.global] wise)
      * I this function the calculation was written for vendor perspective it is deprecated now it is recomanded to use `get_commission` method it works fo admin perspective.
      *
-     * @deprecated DOKAN_SINCE Use get_commission() instead.
+     * @deprecated 3.14.0 Use get_commission() instead.
      *
      * @since  2.9.21
      *
@@ -500,7 +500,7 @@ class Commission {
      * @return float
      */
     public function calculate_commission( $product_id, $product_price, $vendor_id = null ) {
-        _deprecated_function( __METHOD__, 'DOKAN_SINCE', 'get_commission' );
+        _deprecated_function( __METHOD__, '3.14.0', 'get_commission' );
 
         $commission_data = $this->get_commission(
             [
@@ -528,9 +528,9 @@ class Commission {
     }
 
     /**
-     * Returns all the commission types that ware in dokan. These types were existed before dokan lite version DOKAN_SINCE
+     * Returns all the commission types that ware in dokan. These types were existed before dokan lite version 3.14.0
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */
@@ -545,7 +545,7 @@ class Commission {
     /**
      * Returns commission (commission priority [1.Order item if exists. 2.product, 3.vendor, 4.global] wise)
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $args {
      *     Accepted arguments are below.
@@ -582,7 +582,15 @@ class Commission {
             $category_id        = $category_id ? $category_id : 0;
         }
 
-        if ( ! empty( $product_id ) && empty( $total_amount ) ) {
+        /**
+         * If the $total_amount is empty and $order_item_id is empty then we will calculate the commission based on the product price.
+         * There is a case where the $total_amount is empty and $order_item_id is empty but the $product_id is not empty
+         * In this case, we will calculate the commission based on the product price.
+         * Also there is an issue when 100% coupon is applied see the below link for more details
+         *
+         * @see https://github.com/getdokan/dokan/pull/2440#issuecomment-2488159960
+         */
+        if ( ! empty( $product_id ) && empty( $total_amount ) && empty( $order_item_id ) ) {
             $product = dokan()->product->get( $product_id );
 
             // If product price is empty the setting the price as 0

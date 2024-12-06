@@ -1,3 +1,16 @@
+### v3.12.6 ( Oct 24, 2024 ) ###
+
+- **fix:** Fixed js error on frontend pages.
+
+### v3.12.5 ( Oct 16, 2024 ) ###
+
+- **fix:** Implement order trash and untrash handling for Dokan
+- **fix:** Added wordpress native i18n support
+
+### v3.12.4 ( Oct 03, 2024 ) ###
+
+- **update:** Added `$data` parameter to `dokan_update_vendor` hook.
+
 ### v3.12.3 ( Sep 30, 2024 ) ###
 
 - **update:** Added compatibility with RFQ state field ui.

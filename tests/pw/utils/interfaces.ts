@@ -25,6 +25,11 @@ export interface adminDashboard {
     };
 }
 
+export interface diagnosticNotice {
+    paragraph1: string;
+    paragraph2: string;
+}
+
 export interface bookings {
     startDate: Date;
     endDate: Date;
@@ -161,6 +166,7 @@ export interface product {
         stockStatus: boolean;
         attribute: string;
         attributeTerms: string[];
+        variationPrice: () => string;
         variations: {
             linkAllVariation: string;
             variableRegularPrice: string;
@@ -225,6 +231,7 @@ export interface product {
         status: string;
         attribute: string;
         attributeTerms: string[];
+        variationPrice: () => string;
         variations: {
             linkAllVariation: string;
             variableRegularPrice: string;
@@ -252,19 +259,59 @@ export interface product {
         name: string;
         productType: string;
         category: string;
-        bookingDurationType: string;
-        bookingDuration: string;
-        bookingDurationMin: string;
-        bookingDurationMax: string;
-        bookingDurationUnit: string;
+        accommodationBookingOptions: {
+            minimumNumberOfNightsAllowed: string;
+            maximumNumberOfNightsAllowed: string;
+            checkInTime: string;
+            checkOutTime: string;
+        };
+        duration: {
+            bookingDurationType: string;
+            bookingDuration: string;
+            bookingDurationUnit: string;
+            bookingDurationMin: string;
+            bookingDurationMax: string;
+        };
+
         calendarDisplayMode: string;
-        maxBookingsPerBlock: string;
-        minimumBookingWindowIntoTheFutureDate: string;
-        minimumBookingWindowIntoTheFutureDateUnit: string;
-        maximumBookingWindowIntoTheFutureDate: string;
-        maximumBookingWindowIntoTheFutureDateUnit: string;
-        baseCost: string;
-        blockCost: string;
+
+        availability: {
+            maxBookingsPerBlock: string;
+            minimumBookingWindowIntoTheFutureDate: string;
+            minimumBookingWindowIntoTheFutureDateUnit: string;
+            maximumBookingWindowIntoTheFutureDate: string;
+            maximumBookingWindowIntoTheFutureDateUnit: string;
+            requireABufferPeriodOfMonthsBetweenBookings: string;
+            allDatesAvailability: string;
+            checkRulesAgainst: string;
+        };
+        costs: {
+            baseCost: string;
+            blockCost: string;
+            displayCost: string;
+        };
+
+        extraOptions: {
+            minPersons: string;
+            maxPersons: string;
+            person: {
+                typeName: string;
+                baseCost: string;
+                blockCost: string;
+                description: string;
+                min: string;
+                max: string;
+            };
+
+            label: string;
+            resourcesAllocation: string;
+            addResourceId: string;
+            resource: {
+                baseCost: string;
+                blockCost: string;
+            };
+        };
+
         storeName: string;
         saveSuccessMessage: string;
     };
@@ -1467,7 +1514,7 @@ export interface modules {
 
     modulesName: {
         auctionIntegration: string;
-        colorSchemeCustomize: string;
+        colorSchemeCustomizer: string;
         deliveryTime: string;
         elementor: string;
         eUComplianceFields: string;

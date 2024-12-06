@@ -87,6 +87,13 @@ test.describe('Shortcodes test', () => {
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
+    test('customer can view advertised products (shortcode)', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.createProductAdvertisement(payloads.createProduct(), payloads.adminAuth);
+        const [responseBody, pageId] = await apiUtils.createPage(payloads.productAdvertisementShortcode, payloads.adminAuth);
+        await customer.viewAdvertisedProducts(responseBody.link);
+        await apiUtils.deletePage(pageId, payloads.adminAuth);
+    });
+
     test('customer can view stores (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.storesShortcode, payloads.adminAuth);
         await customer.viewStores(responseBody.link);

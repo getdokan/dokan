@@ -43,13 +43,19 @@ export class BasePage {
     }
 
     // goto subUrl
-    async goto(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }): Promise<void> {
+    async goto(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }, force = false): Promise<void> {
         await this.page.goto(subPath, options);
+        if (force) {
+            await this.reload();
+        }
     }
 
     // goto subUrl until networkidle
-    async gotoUntilNetworkidle(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'networkidle' }): Promise<void> {
+    async gotoUntilNetworkidle(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'networkidle' }, force = false): Promise<void> {
         await this.goto(subPath, options);
+        if (force) {
+            await this.reload();
+        }
     }
 
     // go forward
@@ -1590,6 +1596,14 @@ export class BasePage {
                 return await asyncFn();
             }, options)
             .toBe(200);
+    }
+
+    // assert two element to have same count
+    async toHaveEqualCount(selector1: string, selector2: string, options?: { timeout?: number; intervals?: number[] }) {
+        await this.toPass(async () => {
+            const [selector1Count, selector2Count] = await Promise.all([await this.getElementCount(selector1), await this.getElementCount(selector2)]);
+            expect(selector1Count).toBe(selector2Count);
+        }, options);
     }
 
     // assert element not to be visible

@@ -537,7 +537,7 @@ class Hooks {
      * Add dokan commission meta-box in woocommerce order details page
      * and add suborders or related sibling orders in meta-box.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -581,7 +581,7 @@ class Hooks {
     /**
      * Dokan order commission meta-box body.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param WP_Post|WC_Order $post_or_order
      *

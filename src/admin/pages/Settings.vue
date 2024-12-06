@@ -433,11 +433,34 @@
                             if ( ! this.errors.includes( field ) ) {
                                 this.errors.push( field );
 
-                                // If flat or percentage commission is set. Remove the required field.
-                                if ( 'flat' === value['commission_type'] || 'percentage' === value['commission_type'] ) {
+                                if ( 'flat' === value['commission_type'] || 'percentage' === value['commission_type'] || 'combine' === value['commission_type'] || 'fixed' === value['commission_type'] ) {
+                                    this.errors = this.arrayRemove( this.errors, 'commission_category_based_values' );
+                                }
+
+                                if ( 'category_based' === value['commission_type'] ) {
                                     this.errors = this.arrayRemove( this.errors, 'admin_percentage' );
                                     this.errors = this.arrayRemove( this.errors, 'additional_fee' );
                                 }
+                            }
+                        }
+
+                        if ( field in value && 'category_based' === value['commission_type'] ) {
+                            let alreadyAdded = ! this.errors.includes( field );
+
+                            // Validate the commission_category_based_values
+                            if (
+                                'commission_category_based_values' in value &&
+                                typeof value['commission_category_based_values'] === 'object' &&
+                                value?.commission_category_based_values?.all &&
+                                value?.commission_category_based_values?.all?.flat &&
+                                String( value?.commission_category_based_values?.all?.flat ).length > 0 &&
+                                value?.commission_category_based_values?.all?.percentage &&
+                                String( value?.commission_category_based_values?.all?.percentage ).length > 0 &&
+                                alreadyAdded
+                            ) {
+                                this.errors = this.arrayRemove( this.errors, 'commission_category_based_values' );
+                            } else {
+                                this.errors.push( 'commission_category_based_values' );
                             }
                         }
                     } );
@@ -1096,7 +1119,7 @@
             }
 
             .metabox-holder {
-                width: 40%;
+                width: 100%;
 
                 .settings-header {
                     display: block;
@@ -1129,7 +1152,7 @@
     @media only screen and (max-width: 768px) {
         .dokan-settings-wrap {
             .nav-tab-wrapper {
-                width: 35% !important;
+                width: 35%;
 
                 .nav-tab {
                     .nav-content {
@@ -1145,7 +1168,7 @@
             }
 
             .metabox-holder {
-                width: 65%;
+                width: 100%;
 
                 .settings-header {
                     .settings-content {
