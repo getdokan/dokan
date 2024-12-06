@@ -1,14 +1,14 @@
 # Copyright (c) 2024 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.14.1\n"
+"Project-Id-Version: Dokan 3.14.2\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-12-04T09:23:45+00:00\n"
+"POT-Creation-Date: 2024-12-06T12:33:06+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -195,7 +195,7 @@ msgstr ""
 msgid "Commision: "
 msgstr ""
 
-#: includes/Admin/Hooks.php:66
+#: includes/Admin/Hooks.php:70
 #: includes/Admin/Settings.php:590
 #: includes/Admin/Settings.php:601
 #: includes/Admin/Settings.php:612
@@ -212,16 +212,16 @@ msgstr ""
 msgid "Vendor"
 msgstr ""
 
-#: includes/Admin/Hooks.php:93
+#: includes/Admin/Hooks.php:97
 #: assets/js/vue-admin.js:2
 msgid "Select vendor"
 msgstr ""
 
-#: includes/Admin/Hooks.php:99
+#: includes/Admin/Hooks.php:103
 msgid "You can search vendors and assign them."
 msgstr ""
 
-#: includes/Admin/Hooks.php:112
+#: includes/Admin/Hooks.php:116
 msgid "Unauthorized operation"
 msgstr ""
 
@@ -698,6 +698,7 @@ msgstr ""
 #: includes/Order/Admin/Hooks.php:95
 #: includes/ReverseWithdrawal/Helper.php:65
 #: templates/orders/commission-meta-box-html.php:66
+#: templates/products/dokan-products-edit-bulk-commission.php:17
 msgid "Commission"
 msgstr ""
 
@@ -719,7 +720,7 @@ msgstr ""
 
 #: includes/Admin/Settings.php:523
 #: includes/Admin/Settings.php:563
-#: includes/Product/Hooks.php:483
+#: includes/Product/Hooks.php:484
 #: assets/js/vue-admin.js:2
 msgid "Admin Commission"
 msgstr ""
@@ -1840,7 +1841,7 @@ msgid "Delete"
 msgstr ""
 
 #: includes/Ajax.php:529
-#: includes/Product/Hooks.php:58
+#: includes/Product/Hooks.php:59
 msgid "Error: Nonce verification failed"
 msgstr ""
 
@@ -3899,6 +3900,7 @@ msgid "privacy policy"
 msgstr ""
 
 #: includes/functions.php:3256
+#: templates/products/dokan-products-edit-bulk-commission.php:28
 msgid "Fixed"
 msgstr ""
 
@@ -4556,7 +4558,7 @@ msgid "Catalog"
 msgstr ""
 
 #: includes/Product/functions.php:363
-#: includes/Product/Hooks.php:195
+#: includes/Product/Hooks.php:196
 #: templates/products/listing-filter.php:85
 msgid "Search"
 msgstr ""
@@ -4606,29 +4608,29 @@ msgstr ""
 msgid "Relevance"
 msgstr ""
 
-#: includes/Product/Hooks.php:65
+#: includes/Product/Hooks.php:66
 msgid "Products not found with this search"
 msgstr ""
 
-#: includes/Product/Hooks.php:154
+#: includes/Product/Hooks.php:155
 #: templates/orders/commission-meta-box-html.php:111
 msgid "SKU:"
 msgstr ""
 
-#: includes/Product/Hooks.php:191
+#: includes/Product/Hooks.php:192
 msgid "Enter product name"
 msgstr ""
 
-#: includes/Product/Hooks.php:199
+#: includes/Product/Hooks.php:200
 msgid "Shop order"
 msgstr ""
 
-#: includes/Product/Hooks.php:417
+#: includes/Product/Hooks.php:418
 msgid "As this is your own product, the \"Add to Cart\" button has been removed. Please visit as a guest to view it."
 msgstr ""
 
-#: includes/Product/Hooks.php:487
 #: includes/Product/Hooks.php:488
+#: includes/Product/Hooks.php:489
 #: assets/js/vue-admin.js:2
 msgid "When the value is 0, no commissions will be deducted from this vendor."
 msgstr ""
@@ -7465,6 +7467,7 @@ msgid "Reviews cannot be posted for products that you own."
 msgstr ""
 
 #: includes/wc-template.php:171
+#: templates/products/dokan-products-edit-bulk-commission.php:20
 msgid "— No change —"
 msgstr ""
 
@@ -9063,6 +9066,10 @@ msgstr ""
 
 #: templates/products/dokan-category-ui.php:54
 msgid "Done"
+msgstr ""
+
+#: templates/products/dokan-products-edit-bulk-commission.php:21
+msgid "Change to:"
 msgstr ""
 
 #: templates/products/download-virtual.php:4

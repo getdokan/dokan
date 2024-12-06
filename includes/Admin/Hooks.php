@@ -231,7 +231,7 @@ class Hooks {
     /**
      * Add commission settings in bulk product edit.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.2
      *
      * @return void
      */
@@ -242,7 +242,7 @@ class Hooks {
     /**
      * Save commission settings from bulk product edit
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.2
      *
      * @param \WC_Product $product
      *

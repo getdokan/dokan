@@ -1,3 +1,8 @@
+### v3.13.0 ( Nov 06, 2024 ) ###
+
+- **feat:** Replaced the Dokan array container with the League Container, ensuring backward compatibility for seamless performance and enhanced flexibility.
+- **feat:** Updated Dokan to be fully compatible with WooCommerce Analytics Reports
+- 
 ### v3.12.6 ( Oct 24, 2024 ) ###
 
 - **fix:** Fixed js error on frontend pages.
