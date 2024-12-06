@@ -250,9 +250,9 @@ class Hooks {
      */
     public function save_custom_bulk_edit_field( $product ) {
         $excluded_product_types              = apply_filters( 'dokan_excluded_product_types_for_bulk_edit', [ 'product_pack', 'external', 'grouped' ] );
-        $dokan_advertisement_product_id      = get_option( 'dokan_advertisement_product_id', '' );
-        $dokan_reverse_withdrawal_product_id = get_option( 'dokan_reverse_withdrawal_product_id', '' );
-        $product_id = $product->get_id();
+        $dokan_advertisement_product_id      = intval( get_option( 'dokan_advertisement_product_id', '' ) );
+        $dokan_reverse_withdrawal_product_id = intval( get_option( 'dokan_reverse_withdrawal_product_id', '' ) );
+        $product_id                          = $product->get_id();
 
         if (
             ! current_user_can( 'manage_woocommerce' ) ||
