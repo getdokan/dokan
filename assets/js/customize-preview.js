@@ -1,1 +1,0 @@
-(()=>{var e,n;e=jQuery,(n=wp.customize)("dokan_appearance[store_map]",(function(n){n.bind((function(n){var o=e(".dokan-store-widget.dokan-store-location");n?o.show():o.hide()}))})),n.selectiveRefresh.bind("partial-content-rendered",(function(e){console.log(e)}))})();
