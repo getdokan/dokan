@@ -9,7 +9,7 @@ class Percentage extends AbstractFormula {
     /**
      * Commission type source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'percentage';
 
@@ -18,14 +18,14 @@ class Percentage extends AbstractFormula {
      *
      * @var int|float $flat_commission
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     protected $admin_commission = 0;
 
     /**
      * Per item admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $per_item_admin_commission
      */
@@ -34,7 +34,7 @@ class Percentage extends AbstractFormula {
     /**
      * Total vendor earning amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $vendor_earning
      */
@@ -43,7 +43,7 @@ class Percentage extends AbstractFormula {
     /**
      * Total items quantity, on it the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int $items_total_quantity
      */
@@ -56,7 +56,7 @@ class Percentage extends AbstractFormula {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -80,7 +80,7 @@ class Percentage extends AbstractFormula {
     /**
      * Get commission date parameters.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */
@@ -94,7 +94,7 @@ class Percentage extends AbstractFormula {
     /**
      * Returns commission source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -105,7 +105,7 @@ class Percentage extends AbstractFormula {
     /**
      * Returns if a percentage commission is applicable or not.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -116,7 +116,7 @@ class Percentage extends AbstractFormula {
     /**
      * Returns admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -127,7 +127,7 @@ class Percentage extends AbstractFormula {
     /**
      * Returns vendor earning amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -138,7 +138,7 @@ class Percentage extends AbstractFormula {
     /**
      * Returns per item admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -149,7 +149,7 @@ class Percentage extends AbstractFormula {
     /**
      * Returns the quantity on which the commission has been calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int
      */

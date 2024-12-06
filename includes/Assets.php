@@ -36,6 +36,7 @@ class Assets {
      */
     public function load_dokan_admin_notices_scripts() {
         wp_enqueue_script( 'dokan-promo-notice-js' );
+        wp_enqueue_script( 'dokan-admin-notice-js' );
         $vue_localize_script = apply_filters(
             'dokan_promo_notice_localize_script', [
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -540,6 +541,11 @@ class Assets {
                 'src'     => $asset_url . '/js/dokan-promo-notice.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
+            ],
+            'dokan-admin-notice-js'    => [
+                'src'     => $asset_url . '/js/dokan-admin-notice.js',
+                'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
+                'version' => filemtime( $asset_path . 'js/dokan-admin-notice.js' ),
             ],
             'dokan-reverse-withdrawal' => [
                 'src'     => $asset_url . '/js/reverse-withdrawal.js',
@@ -1235,7 +1241,7 @@ class Assets {
     /**
      * Admin vue localized scripts
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */

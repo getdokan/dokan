@@ -84,11 +84,11 @@
           admin can add product category [lite]: true
           admin can add product attribute [lite]: true
           admin can add simple product [lite]: true
-          admin can add variable product: false
+          admin can add variable product: true
           admin can add simple subscription product: true
-          admin can add variable subscription product: false
+          admin can add variable subscription product: true
           admin can add external product [lite]: true
-          admin can add vendor subscription: false
+          admin can add vendor subscription: true
       vendor:
           vendor can view product menu page [lite]: true
           vendor can view add new product page [lite]: true
@@ -286,7 +286,7 @@
   features:
       customer:
           customer can view single store page [lite]: true
-          customer can view store open-close time on single store [lite]: false
+          customer can view store open-close time on single store [lite]: true
           customer can search product on single store [lite]: true
           customer can sort products on single store [lite]: true
           customer can view store terms and conditions [lite]: true
@@ -308,9 +308,9 @@
           customer can search store [lite]: true
           customer can filter stores by category: true
           customer can filter stores by location: true
-          customer can filter stores by ratings: false
+          customer can filter stores by ratings: true
           customer can filter featured stores: true
-          customer can filter open now stores: false
+          customer can filter open now stores: true
           customer can view stores on map: true
           customer can go to single store from store list [lite]: true
 
@@ -455,7 +455,7 @@
   features:
       vendor:
           vendor can view store settings menu page [lite]: true
-          vendor can view Shipstation settings menu page: true
+          vendor can view ShipStation settings menu page: true
           vendor can view social profile settings menu page: true
           vendor can view rma settings menu page: true
           vendor can view store seo settings menu page: true
@@ -651,6 +651,15 @@
           admin can refresh license: true
           admin can deactivate license: true
 
+- page: 'Feature lock'
+  features:
+      admin:
+          admin can view license expiration notice: false
+          admin can view expired license notice: false
+          admin can view license renewal prompt after license expired: false
+          admin can't enable module after license expired: false
+          admin can't alter pro settings after license expired: false
+
 - page: 'Modules'
   features:
       admin:
@@ -665,18 +674,28 @@
 - page: 'Auction Integration'
   features:
       admin:
+          admin can enable auction integration module: false
+          admin can disable auction integration module: false
+          admin can enable auction for newly added vendor: false
+          admin can disable auction for specific vendor: false
           admin can add auction product: true
+          admin can view auctions activity: false
+          admin can filter auctions activity: false
+          admin can export auctions activity: false
+          admin can view auctions winners: false
+          admin can filter auctions winners: false
+          admin can export auctions winners: false
       vendor:
           vendor can view auction menu page: true
-          vendor can add auction product: true
-          vendor can edit auction product: true
-          vendor can view auction product: true
-          vendor can't bid own product: true
           vendor can search auction product: true
+          vendor can filter auction product by date: false
+          vendor can reset auction product filter: false
+          vendor can't bid own product: true
+          vendor can add auction product: true
+          vendor can view auction product: true
+          vendor can duplicate auction product: true
           vendor can permanently delete auction product: true
-          vendor can view auction activity page: true
-          vendor can filter auction activity: true
-          vendor can search auction activity: true
+          vendor can edit auction product: true
           vendor can update auction product title: true
           vendor can update auction product category (single): true
           vendor can add auction product category (multiple): true
@@ -725,14 +744,22 @@
           vendor can import auction product addon: true
           vendor can export auction product addon: true
           vendor can remove auction product addon: true
-
+          vendor can view auction activity page: true
+          vendor can filter auctions activity by date: false
+          vendor can reset auctions activity filter: false
+          vendor can search auctions activity (auction): false
+          vendor can search auctions activity (name): false
+          vendor can search auctions activity (email): false
       customer:
           customer can bid auction product: true
+          customer can buy auction product after win: false
           customer can buy auction product with buy it now price: true
 
 - page: 'Color Scheme Customizer'
   features:
       admin:
+          admin can enable color scheme customizer module: false
+          admin can disable color scheme customizer module: false
           admin can switch predefined color palette: true
           admin can add custom color palette: true
           admin can update custom color palette: true
@@ -740,13 +767,30 @@
 - page: 'Delivery Time'
   features:
       admin:
+          admin can enable delivery time module: false
+          admin can disable delivery time module: false
+          admin can allow vendor to override delivery time settings: false
+          admin can set delivery support options: false
+          admin can set delivery date label: false
+          admin can set delivery blocked buffer: false
+          admin can set delivery time slot: false
+          admin can set delivery order per slot: false
+          admin can set delivery box info: false
+          admin can require delivery date and time: false
+          admin can set delivery days: false
           admin can update delivery time on order details: false
       vendor:
           vendor can view delivery time menu page: true
+          vendor can change view style of delivery time calendar: true
+          vendor can filter delivery time: true
+          vendor can view delivery time orders on calendar: false
           vendor can view delivery time settings menu page: true
           vendor can set delivery time settings: true
-          vendor can filter delivery time: true
-          vendor can change view style of delivery time calendar: true
+          vendor can set delivery support options: false
+          vendor can set delivery blocked buffer: false
+          vendor can set delivery time slot: false
+          vendor can set delivery order per slot: false
+          vendor can set delivery days: false
           vendor can update delivery time on order details: false
       customer:
           customer can buy product with delivery time: true
@@ -755,11 +799,14 @@
 - page: 'Elementor'
   features:
       admin:
-          no test is written for elementor module (out of scope): false
+          admin can enable Elementor module: false
+          admin can disable Elementor module: false
 
 - page: 'EU Compliance Fields'
   features:
       admin:
+          admin can enable eu compliance fields module: false
+          admin can disable eu compliance fields  module: false
           admin can enable EU compliance fields for vendors: true
           admin can enable EU compliance fields on vendor registration: true
           admin can enable EU compliance fields for customers: true
@@ -800,6 +847,9 @@
 
 - page: 'Follow Store'
   features:
+      admin:
+          admin can enable follow store module: false
+          admin can disable follow store module: false
       vendor:
           vendor can view followers menu page: true
           vendor can view followers: true
@@ -814,6 +864,8 @@
 - page: 'Geolocation'
   features:
       admin:
+          admin can enable geolocation module: false
+          admin can disable geolocation module: false
           #   admin can set Dokan geolocation settings [duplicate]: false
           admin can set map location position (top): true
           admin can set map location position (left): true
@@ -825,17 +877,19 @@
           admin can disable filters before location map: true
           admin can enable product location tab on single product page: true
           admin can disable product location tab on single product page: true
-          admin can set map radius search unit and distance: false
-          admin can set map zoom level: false
-          admin can set map default location: false
-          admin can add geolocation widget (product location) widget: false
-          admin can add geolocation widget (store location) widget: false
-          admin can add geolocation widget (geolocation filter form) widget: false
-          #   admin can add geolocation filters shortcode [duplicate]: false
-      #   vendor:
+          admin can set map radius search unit and distance (km): true
+          admin can set map radius search unit and distance (miles): true
+          # admin can set map zoom level: false
+          # admin can set map default location: false
+          # admin can add geolocation widget (product location) widget: false
+          # admin can add geolocation widget (store location) widget: false
+          # admin can add geolocation widget (geolocation filter form) widget: false
+          # admin can add geolocation filters shortcode [duplicate]: true
+      # vendor:
       #   vendor can add location to store [duplicate]: false
       #   vendor can add location to product [duplicate]: false
-      #   customer:
+      customer:
+          customer can slide map radius bar: true
       #   customer can view map on shop page [duplicate]: false
       #   customer can view map on store list page [duplicate]: false
       #   customer can view map on single product page [duplicate]: false
@@ -847,6 +901,8 @@
 - page: 'Live Chat'
   features:
       admin:
+          admin can enable live chat module: false
+          admin can disable live chat module: false
           #  admin can set Dokan live chat settings [duplicate]: true
           admin can enable chat button on vendor page: true
           admin can disable chat button on vendor page: true
@@ -862,8 +918,10 @@
 
 - page: 'Live Search'
   features:
-      #   admin:
-      #   admin can set Dokan live search settings [duplicate]: true
+      admin:
+          admin can enable live search  module: false
+          admin can disable live search module: false
+          # admin can set Dokan live search settings [duplicate]: true
       customer:
           customer can search product using live search (suggestion box): true
           customer can search product with category using live search (suggestion box): true
@@ -873,22 +931,52 @@
 - page: 'MangoPay'
   features:
       admin:
-          admin can add Mangopay payment method: true
+          admin can enable MangoPay module: false
+          admin can disable MangoPay module: false
+          admin can add MangoPay payment method: true
+          admin can remove MangoPay payment method: false
+          admin can view MangoPay notes on order details: false
+          admin can refund order using MangoPay payment method: false
+      vendor:
+          vendor can add MangoPay payment method: false
+          vendor can remove MangoPay payment method: false
+          admin can refund order using MangoPay payment method: false
+      customer:
+          customer can buy product using MangoPay payment method: false
 
 - page: 'Min Max Quantities'
   features:
+      admin:
+          admin can enable min max quantities module: false
+          admin can disable min max quantities module: false
       vendor:
           vendor can add product min-max options: true
           vendor can set min-max settings: true
+      customer:
+          customer can buy product following min-max quantities rule: false
+          customer can buy product following min-max amount rule: false
 
 - page: 'PayPal Marketplace'
   features:
       admin:
-          admin can add Paypal Marketplace payment method: true
+          admin can enable PayPal Marketplace module: false
+          admin can disable PayPal Marketplace module: false
+          admin can add PayPal Marketplace payment method: true
+          admin can remove PayPal Marketplace payment method: false
+          admin can view PayPal Marketplace notes on order details: false
+          admin can refund order using PayPal Marketplace payment method: false
+      vendor:
+          vendor can add PayPal Marketplace payment method: false
+          vendor can remove PayPal Marketplace payment method: false
+          admin can refund order using PayPal Marketplace payment method: false
+      customer:
+          customer can buy product using PayPal Marketplace payment method: false
 
 - page: 'Printful'
   features:
-      #   admin:
+      admin:
+          admin can enable Printful module: false
+          admin can disable Printful  module: false
       # admin can set Dokan Printful settings: true [duplicate]: true
       vendor:
           vendor can view printful menu page: true
@@ -904,6 +992,9 @@
 
 - page: 'Product Addon'
   features:
+      admin:
+          admin can enable product addon module: false
+          admin can disable product addon module: false
       vendor:
           vendor can view product addons menu page: true
           vendor can add global product addon: true
@@ -912,6 +1003,7 @@
           vendor can export global product addon field: true
           vendor can remove product addon field: true
           vendor can add product addon: true
+          vendor can update product addon: false
           vendor can import product addon: true
           vendor can export product addon: true
           vendor can remove product addon: true
@@ -922,6 +1014,8 @@
 - page: 'Product Advertising'
   features:
       admin:
+          admin can enable product advertising module: false
+          admin can disable product advertising  module: false
           #   admin can set Dokan product advertising settings [duplicate]: true
           admin can set product advertising slot: false
           admin can set product advertising expiry days: false
@@ -953,6 +1047,9 @@
 
 - page: 'Product Enquiry'
   features:
+      admin:
+          admin can enable product enquiry module: false
+          admin can disable product enquiry module: false
       customer:
           customer can enquire product: true
       guest:
@@ -961,6 +1058,8 @@
 - page: 'Product Q&A'
   features:
       admin:
+          admin can enable product Q&A module: false
+          admin can disable product Q&A  module: false
           admin can view product QA menu page: true
           admin can view product question details: true
           admin can filter questions by vendor: true
@@ -989,6 +1088,9 @@
 
 - page: 'Product Subscription'
   features:
+      admin:
+          admin can enable product subscription module: false
+          admin can disable product subscription module: false
       vendor:
           vendor can view user subscriptions menu page: true
           vendor can view product subscription details: true
@@ -1007,16 +1109,32 @@
 - page: 'Rank Math SEO'
   features:
       admin:
-          no test is written for rank math seo module: false
+          admin can enable Rank Math SEO module: false
+          admin can disable Rank Math SEO module: false
+      vendor:
+          vendor can view rank math seo options on product edit page: false
 
 - page: 'Razorpay'
   features:
       admin:
+          admin can enable Razorpay module: false
+          admin can disable Razorpay module: false
           admin can add Razorpay payment method: true
+          admin can remove Razorpay payment method: false
+          admin can view Razorpay notes on order details: false
+          admin can refund order using Razorpay payment method: false
+      vendor:
+          vendor can add Razorpay payment method: false
+          vendor can remove Razorpay payment method: false
+          admin can refund order using Razorpay payment method: false
+      customer:
+          customer can buy product using Razorpay payment method: false
 
 - page: 'Report Abuse'
   features:
       admin:
+          admin can enable report abuse module: false
+          admin can disable report abuse  module: false
           admin can view abuse reports menu page: true
           admin can view abuse report details: true
           admin can filter abuse reports by abuse reason: true
@@ -1031,44 +1149,74 @@
 
 - page: 'Request for Quotation'
   features:
+      admin:
+          admin can enable RFQ module: false
+          admin can disable RFQ module: false
+          admin can add RFQ shortcode: false
+          admin can enable quote for out of stock products: false
+          admin can enable ajax Add to quote: false
+          admin can set quote redirect settings: false
+          admin can set offered price: false
+          admin can enable customer can convert quote to order: false
+          admin can enable quote converter display: false
       quote rules:
-          admin:
-              admin can view quote rules menu page: true
-              admin can add quote rule: true
-              admin can edit quote rule: true
-              admin can trash quote rule: true
-              admin can restore quote rule: true
-              admin can permanently delete quote rule: true
-              admin can perform bulk action on quote rules: true
-      quotes:
-          admin:
-              admin can view quotes menu page: true
-              admin can add quote: true
-              admin can edit quote: true
-              admin can trash quote: true
-              admin can restore quote: true
-              admin can permanently delete quote: true
-              admin can approve quote: true
-              admin can convert quote to order: true
-              admin can perform quote bulk actions: true
-          vendor:
-              vendor can view request quotes menu page: true
-              vendor can view request quote details: true
-              vendor can update quote request: true
-              vendor can approve quote request: true
-              vendor can convert quote request to order: true
-          customer:
-              customer can view request for quote menu page: true
-              customer can view requested quote page: true
-              customer can view requested quote details: true
-              customer can update quote request: true
-              customer can pay for order converted from quote request: true
-              customer can quote product: true
-          guest:
-              guest customer can quote product: true
+          admin can view quote rules menu page: true
+          admin can add quote rule: true
+          admin can edit quote rule: true
+          admin can trash quote rule: true
+          admin can restore quote rule: true
+          admin can permanently delete quote rule: true
+          admin can perform bulk action on quote rules: true
+      quote requests:
+          admin can view quotes menu page: true
+          admin can add quote: true
+          admin can edit quote: true
+          admin can update quote: false
+          admin can trash quote: true
+          admin can restore quote: true
+          admin can permanently delete quote: true
+          admin can approve quote: true
+          admin can reject quote: false
+          admin can reopen quote: false
+          admin can convert quote to order: true
+          admin can perform quote bulk actions: true
+          admin can filter quote requests by status: false
+          admin can filter quote requests by date: false
+          admin can filter quote requests by customer: false
+          admin can reset quote filter: false
+          admin can add quote shipping cost on order: false
+          admin can remove quote shipping cost on order: false
+      vendor:
+          vendor can view request quotes menu page: true
+          vendor can view request quote details: true
+          vendor can search quote: false
+          vendor can filter quote by status: false
+          vendor can update quote request: true
+          vendor can approve quote request: true
+          vendor can reject quote request: false
+          vendor can reopen quote request: false
+          vendor can delete quote request: false
+          vendor can convert quote request to order: true
+          vendor can enable rfq when catalog mode is enabled: false
+      customer:
+          customer can view request for quote menu page: true
+          customer can view requested quote page: true
+          customer can view requested quote details: true
+          customer can clear quote cart: false
+          customer can update quote request: true
+          customer can accept quote request: false
+          customer can cancel quote request: false
+          customer can pay for order converted from quote request: true
+          customer can quote product: true
+          customer can filter quotes by status: false
+      guest:
+          guest customer can quote product: true
 
 - page: 'Return and Warranty Request'
   features:
+      admin:
+          admin can enable RMA module: false
+          admin can disable RMA module: false
       vendor:
           vendor can view return request menu page: true
           vendor can view return request details: true
@@ -1079,11 +1227,14 @@
       customer:
           customer can view return request menu page: true
           customer can request warranty: true
+          customer can request warranty (replace): false
           customer can send rma message: true
 
 - page: 'Seller Badge'
   features:
       admin:
+          admin can enable seller badge module: false
+          admin can disable seller badge module: false
           admin can view seller badge menu page: true
           admin can preview seller badge: true
           admin can view seller badge details: true
@@ -1102,14 +1253,31 @@
           vendor can search seller badge: true
           vendor can filter seller badges: true
 
+- page: 'Seller Vacation'
+  features:
+      admin:
+          admin can enable seller vacation module: false
+          admin can disable seller vacation module: false
+      vendor:
+          vendor can add vacation (instant): false
+          vendor can add vacation (datewise): false
+
 - page: 'ShipStation Integration'
   features:
+      admin:
+          admin can enable ShipStation Integration module: false
+          admin can disable ShipStation Integration module: false
       vendor:
-          vendor can set shipStation settings: true
+          #  vendor can view ShipStation settings menu page: true
+          vendor can generate ShipStation credentials: true
+          vendor can revoke ShipStation credentials: true
+          vendor can set ShipStation settings: true
 
 - page: 'Single Product Multiple Vendor (SPMV)'
   features:
       admin:
+          admin can enable SPMV module: false
+          admin can disable SPMV module: false
           admin can assign SPMV product to other vendor: true
       vendor:
           vendor can view SPMV menu page: true
@@ -1130,6 +1298,8 @@
 - page: 'Store Reviews'
   features:
       admin:
+          admin can enable store reviews module: true
+          admin can disable store reviews module: true
           admin can view store reviews menu page: true
           admin can view store review: true
           admin can edit store review: true
@@ -1148,6 +1318,8 @@
 - page: 'Store Support'
   features:
       admin:
+          admin can enable store support module: false
+          admin can disable store support module: false
           admin can view store support menu page: true
           unread count decrease after admin viewing a support ticket: true
           admin can view support ticket details: true
@@ -1192,29 +1364,62 @@
 - page: 'Stripe Connect'
   features:
       admin:
-          admin can add stripe payment method: true
+          admin can enable Stripe Connect module: false
+          admin can disable Stripe Connect module: false
+          admin can add Stripe Connect payment method: true
+          admin can remove Stripe Connect payment method: false
+          admin can view Stripe Connect notes on order details: false
+          admin can refund order using Stripe Connect payment method: false
+      vendor:
+          vendor can add Stripe Connect payment method: false
+          vendor can remove Stripe Connect payment method: false
+          admin can refund order using Stripe Connect payment method: false
+      customer:
+          customer can buy product using Stripe Connect payment method: false
 
 - page: 'Stripe Express'
   features:
       admin:
-          admin can add Strip Express payment method: true
+          admin can enable Stripe Express module: false
+          admin can disable Stripe Express module: false
+          admin can add Stripe Express payment method: true
+          admin can remove Stripe Express payment method: false
+          admin can view Stripe Express notes on order details: false
+          admin can refund order using Stripe Express payment method: false
+      vendor:
+          vendor can add Stripe Express payment method: false
+          vendor can remove Stripe Express payment method: false
+          admin can refund order using Stripe Express payment method: false
+      customer:
+          customer can buy product using Stripe Express payment method: false
 
 - page: 'Table Rate Shipping'
   features:
       admin:
+          admin can enable table rate shipping module: false
+          admin can disable table rate shipping module: false
           admin can add vendor table rate shipping method: true
           admin can add vendor distance rate shipping method: true
       vendor:
           vendor can add table rate shipping: true
           vendor can add distance rate shipping: true
+      customer:
+          customer can purchase product using table rate shipping: false
+          customer can purchase product using distance rate shipping: false
 
 - page: 'Vendor Analytics'
   features:
+      admin:
+          admin can enable vendor analytics module: false
+          admin can disable vendor analytics module: false
       vendor:
           vendor can view analytics menu page: true
 
 - page: 'Vendor Product Importer and Exporter'
   features:
+      admin:
+          admin can enable product importer and exporter module: false
+          admin can disable product importer and exporter module: false
       vendor:
           vendor can view tools menu page: true
           vendor can export product as xml: true
@@ -1224,6 +1429,9 @@
 
 - page: 'Vendor Staff Manager'
   features:
+      admin:
+          admin can enable vendor staff manager module: false
+          admin can disable vendor staff manager module: false
       vendor:
           vendor can view staff menu page: true
           vendor can add new staff: true
@@ -1236,6 +1444,8 @@
 - page: 'Vendor Subscription'
   features:
       admin:
+          admin can enable vendor subscription module: false
+          admin can disable vendor subscription module: false
           admin can view subscriptions menu page: true
           admin can filter subscribed vendors by vendor: true
           admin can filter subscribed vendors by subscription pack: true
@@ -1256,6 +1466,8 @@
 - page: 'Vendor Verification'
   features:
       admin:
+          admin can enable vendor verification module: false
+          admin can disable vendor verification module: false
           admin can change verified icon: true
           admin can add vendor verification method: true
           admin can edit vendor verification method: true
@@ -1295,6 +1507,8 @@
 - page: 'Wholesale'
   features:
       admin:
+          admin can enable wholesale module: false
+          admin can disable wholesale module: false
           admin can view wholesale customers menu page: true
           admin can search wholesale customer: true
           admin can disable customer's wholesale capability: true
@@ -1303,7 +1517,7 @@
           admin can view wholesale customer orders: true
           admin can delete wholesale customer: true
           admin can perform bulk action on wholesale customers: true
-          All users can see wholesale price: true
+          all users can see wholesale price: true
       vendor:
           vendor can create wholesale product: true
       customer:
@@ -1317,6 +1531,8 @@
 - page: 'WooCommerce Booking Integration'
   features:
       admin:
+          admin can enable woocommerce booking integration module: false
+          admin can disable woocommerce booking integration module: false
           admin can add booking product: true
       vendor:
           vendor can view booking menu page: true

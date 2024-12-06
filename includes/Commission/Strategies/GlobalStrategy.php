@@ -10,14 +10,14 @@ class GlobalStrategy extends AbstractStrategy {
     /**
      * Global commission strategy source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'global';
 
     /**
      * Catgory id for category commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var mixed
      */
@@ -26,7 +26,7 @@ class GlobalStrategy extends AbstractStrategy {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param $category_id
      */
@@ -37,7 +37,7 @@ class GlobalStrategy extends AbstractStrategy {
     /**
      * Returns category id.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return mixed
      */
@@ -48,7 +48,7 @@ class GlobalStrategy extends AbstractStrategy {
     /**
      * Returns global strategy source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -59,7 +59,7 @@ class GlobalStrategy extends AbstractStrategy {
     /**
      * Returns global commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */

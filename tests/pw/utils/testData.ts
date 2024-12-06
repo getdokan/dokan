@@ -278,6 +278,7 @@ export const data = {
             stockStatus: false,
             attribute: 'sizes',
             attributeTerms: ['s', 'l', 'm'],
+            variationPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             variations: {
                 linkAllVariation: 'link_all_variations',
                 variableRegularPrice: 'variable_regular_price',
@@ -342,6 +343,7 @@ export const data = {
             status: 'publish',
             attribute: 'sizes',
             attributeTerms: ['s', 'l', 'm'],
+            variationPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             variations: {
                 linkAllVariation: 'link_all_variations',
                 variableRegularPrice: 'variable_regular_price',
@@ -1204,7 +1206,7 @@ export const data = {
                 settingsVerification: 'dashboard/settings/verification',
                 settingsDeliveryTime: 'dashboard/settings/delivery-time',
                 settingsShipping: 'dashboard/settings/shipping',
-                settingsShipstation: 'dashboard/settings/shipstation',
+                settingsShipStation: 'dashboard/settings/shipstation',
                 settingsSocialProfile: 'dashboard/settings/social',
                 settingsRma: 'dashboard/settings/rma',
                 settingsSeo: 'dashboard/settings/seo',
@@ -1246,6 +1248,7 @@ export const data = {
                 productQuestionsBulkActions: 'dokan/v1/product-questions/bulk_action',
                 productAnswers: 'dokan/v1/product-answers',
                 subscriptions: 'dokan/v1/subscription',
+                shipStation: 'dokan/v1/shipstation',
                 verifications: 'dokan/v1/verification-requests',
                 verificationMethods: 'dokan/v1/verification-methods',
             },
@@ -2090,7 +2093,7 @@ export const data = {
 
         modulesName: {
             auctionIntegration: 'Auction Integration',
-            colorSchemeCustomize: 'Color Scheme Customize',
+            colorSchemeCustomizer: 'Color Scheme Customize',
             deliveryTime: 'Delivery Time',
             elementor: 'Elementor',
             eUComplianceFields: 'EU Compliance Fields',

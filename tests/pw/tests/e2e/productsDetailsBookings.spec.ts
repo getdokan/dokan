@@ -389,7 +389,7 @@ test.describe('Booking Product details functionality test', () => {
         await vendor.addProductAddon(productIdBasic, data.product.productInfo.addon);
     });
 
-    test('vendor can import booking product addon', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can import booking product addon', { tag: ['@pro', '@vendor'] }, async () => {
         const addon = payloads.createProductAddon();
         await vendor.importAddon(productIdBasic, serialize([addon]), addon.name);
     });

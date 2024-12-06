@@ -69,6 +69,11 @@ test.describe('Auction Product test', () => {
         await vendor.searchAuctionProduct(auctionProductName);
     });
 
+    test('vendor can duplicate auction product', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
+        await vendor.duplicateAuctionProduct(auctionProductName);
+    });
+
     test('vendor can permanently delete auction product', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         await vendor.deleteAuctionProduct(auctionProductName);

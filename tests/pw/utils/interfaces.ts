@@ -166,6 +166,7 @@ export interface product {
         stockStatus: boolean;
         attribute: string;
         attributeTerms: string[];
+        variationPrice: () => string;
         variations: {
             linkAllVariation: string;
             variableRegularPrice: string;
@@ -230,6 +231,7 @@ export interface product {
         status: string;
         attribute: string;
         attributeTerms: string[];
+        variationPrice: () => string;
         variations: {
             linkAllVariation: string;
             variableRegularPrice: string;
@@ -1512,7 +1514,7 @@ export interface modules {
 
     modulesName: {
         auctionIntegration: string;
-        colorSchemeCustomize: string;
+        colorSchemeCustomizer: string;
         deliveryTime: string;
         elementor: string;
         eUComplianceFields: string;

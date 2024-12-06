@@ -864,13 +864,19 @@ export class ApiUtils {
     }
 
     // get activate modules
-    async activateModules(moduleIds: string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+    async activateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+        if (!Array.isArray(moduleIds)) {
+            moduleIds = [moduleIds];
+        }
         const [response, responseBody] = await this.put(endPoints.activateModule, { data: { module: moduleIds }, headers: auth });
         return [response, responseBody];
     }
 
     // get deactivated modules
-    async deactivateModules(moduleIds: string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+    async deactivateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+        if (!Array.isArray(moduleIds)) {
+            moduleIds = [moduleIds];
+        }
         const [response, responseBody] = await this.put(endPoints.deactivateModule, { data: { module: moduleIds }, headers: auth });
         return [response, responseBody];
     }
@@ -1531,6 +1537,30 @@ export class ApiUtils {
         const [, responseBody] = await this.post(endPoints.createShipment(orderId), { data: payload, headers: auth });
         const shipmentId = responseBody?.id;
         return [responseBody, orderId, shipmentId];
+    }
+
+    /**
+     * ShipStation api methods
+     */
+
+    async createShipStationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.createShipStationCredential, { data: { vendor_id: vendorId }, headers: auth });
+        return responseBody;
+    }
+
+    async deleteShipStationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteShipStationCredential(vendorId), { headers: auth });
+        return responseBody;
+    }
+
+    async createShipStationOrderStatusSettings(payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.createShipStationOrderStatusSettings, { data: payload, headers: auth });
+        return responseBody;
+    }
+
+    async deleteShipStationOrderStatusSettings(vendorId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteShipStationOrderStatusSettings(vendorId), { headers: auth });
+        return responseBody;
     }
 
     /**
