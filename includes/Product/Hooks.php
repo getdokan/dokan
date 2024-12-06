@@ -189,11 +189,11 @@ class Hooks {
         <div class="dokan-store-products-filter-area dokan-clearfix">
             <form class="dokan-store-products-ordeby" method="get">
                 <input type="text" name="product_name" class="product-name-search dokan-store-products-filter-search"
-                        placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>" autocomplete="off"
-                        data-store_id="<?php echo esc_attr( $store_id ); ?>">
+                       placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>" autocomplete="off"
+                       data-store_id="<?php echo esc_attr( $store_id ); ?>">
                 <div id="dokan-store-products-search-result" class="dokan-ajax-store-products-search-result"></div>
                 <input type="submit" name="search_store_products" class="search-store-products dokan-btn-theme"
-                        value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
+                       value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
 
                 <?php if ( is_array( $orderby_options['catalogs'] ) && isset( $orderby_options['orderby'] ) ) : ?>
                     <select name="product_orderby" class="orderby orderby-search"
