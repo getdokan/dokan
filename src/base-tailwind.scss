@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Reset unwanted table styles but keep structure intact
+@layer base {
+    .dokan-layout {
+        table, th, td {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            border-spacing: 0;
+            border-collapse: collapse;
+            font-size: inherit;
+            font-weight: inherit;
+            text-align: inherit;
+            vertical-align: inherit;
+            box-sizing: border-box;
+        }
+    }
+}

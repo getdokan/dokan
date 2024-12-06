@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
+use WeDevs\Dokan\VendorNavMenuChecker;
 
 class CommonServiceProvider extends BaseServiceProvider {
     /**
@@ -64,6 +65,9 @@ class CommonServiceProvider extends BaseServiceProvider {
 
 		$this->getContainer()
             ->addShared( \WeDevs\Dokan\Privacy::class, \WeDevs\Dokan\Privacy::class )
+            ->addTag( self::TAG );
+		$this->getContainer()
+            ->addShared( VendorNavMenuChecker::class, VendorNavMenuChecker::class )
             ->addTag( self::TAG );
     }
 }
