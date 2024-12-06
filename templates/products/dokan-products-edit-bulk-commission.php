@@ -3,7 +3,7 @@
 /**
  * Template Name: Dokan commission setting bulk product edit
  *
- * @since DOKAN_SINCE
+ * @since 3.14.2
  *
  * @package Dokan
  */
@@ -11,8 +11,7 @@
 use WeDevs\Dokan\Commission\Formula\Fixed;
 ?>
 
-<div class="inline-edit-col" style="float: left">
-    <h4><?php esc_html_e( 'Commission settings', 'dokan-lite' ); ?></h4>
+<div class="inline-edit-col">
     <div class="inline-edit-group">
         <label class="alignleft">
             <span class="title"><?php esc_html_e( 'Commission', 'dokan-lite' ); ?></span>

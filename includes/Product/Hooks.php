@@ -551,6 +551,11 @@ class Hooks {
 
         if ( isset( $data['_per_product_admin_additional_fee'] ) ) {
             $additional_fee = ( '' === $data['_per_product_admin_additional_fee'] ) ? '' : sanitize_text_field( $data['_per_product_admin_additional_fee'] );
+
+            if ( 0 > $additional_fee ) {
+                $additional_fee = '';
+            }
+
             $additional_fee = wc_format_decimal( $additional_fee );
         }
 
