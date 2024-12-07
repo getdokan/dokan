@@ -7,21 +7,21 @@ use WeDevs\Dokan\Commission\Model\Setting;
 /**
  * Category based commission calculator class.
  *
- * @since DOKAN_SINCE
+ * @since 3.14.0
  */
 class CategoryBased extends AbstractFormula {
 
     /**
      * Commission type source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'category_based';
 
     /**
      * Admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $admin_commission
      */
@@ -30,7 +30,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Per item admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $per_item_admin_commission
      */
@@ -39,7 +39,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Total vendor earning amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $vendor_earning
      */
@@ -48,7 +48,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Total items quantity, on it the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int $items_total_quantity
      */
@@ -57,7 +57,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Commission meta data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var array $meta_data
      */
@@ -66,14 +66,14 @@ class CategoryBased extends AbstractFormula {
     /**
      * Fixed commission calculator classs instance.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var \WeDevs\Dokan\Commission\Formula\Fixed $fixed_formula
      */
     protected Fixed $fixed_formula;
 
     /**
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -82,7 +82,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Commission type.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var mixed
      */
@@ -91,7 +91,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      */
@@ -103,7 +103,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Calculating the category commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -130,7 +130,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Returns calculated commissions meta data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */
@@ -141,7 +141,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Sets category commission meta data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $meta_data
      *
@@ -156,7 +156,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Returns type.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return mixed
      */
@@ -167,7 +167,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Get commission date parameters.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */
@@ -183,7 +183,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Returns commission source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -194,7 +194,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Returns if a category commission is applicable or not.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -215,7 +215,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Returns true if commission type is valid.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -226,7 +226,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Returns if saved commission data is valid to be applied.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -266,7 +266,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Validates and returns commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param Setting $setting
      *
@@ -310,7 +310,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Returns admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -321,7 +321,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Returns vendor earning amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -333,7 +333,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Returns per item admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
@@ -344,7 +344,7 @@ class CategoryBased extends AbstractFormula {
     /**
      * Returns the quantity on which the commission has been calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int
      */

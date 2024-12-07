@@ -373,7 +373,6 @@ test.describe.serial('fee recipient calculation test', () => {
     });
 });
 
-// todo: vendor coupon tests [skipped wc order api doesn't support vendor coupon]
 test.describe.serial('marketplace coupon calculation test', () => {
     let apiUtils: ApiUtils;
 
@@ -387,10 +386,10 @@ test.describe.serial('marketplace coupon calculation test', () => {
     });
 
     test('marketplace coupon: single coupon', { tag: ['@lite'] }, async () => {
-        const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
+        const [, , couponCode] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
 
         // place order and assert order calculation
-        const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }] }, payloads.vendorAuth);
+        const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: couponCode }] }, payloads.vendorAuth);
         await assertOrderCalculation(order);
     });
 
@@ -425,18 +424,85 @@ test.describe.serial('marketplace coupon calculation test', () => {
     });
 
     test('marketplace coupon: percent coupon', { tag: ['@lite'] }, async () => {
-        const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
+        const [, , couponCode] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
 
         // place order and assert order calculation
-        const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }] }, payloads.vendorAuth);
+        const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: couponCode }] }, payloads.vendorAuth);
         await assertOrderCalculation(order);
     });
 
     test('marketplace coupon: fixed_cart coupon', { tag: ['@lite'] }, async () => {
-        const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'fixed_cart' }, payloads.adminAuth);
+        const [, , couponCode] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'fixed_cart' }, payloads.adminAuth);
 
         // place order and assert order calculation
-        const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }] }, payloads.vendorAuth);
+        const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: couponCode }] }, payloads.vendorAuth);
+        await assertOrderCalculation(order);
+    });
+});
+
+test.describe.serial('vendor coupon calculation test', () => {
+    let apiUtils: ApiUtils;
+
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+        await apiUtils.setUpTaxRate(payloads.enableTax, { ...payloads.createTaxRate, rate: '10' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+        const store = await apiUtils.getSingleStore(VENDOR_ID);
+        await apiUtils.updateStore(VENDOR_ID, { ...store, ...payloads.vendorwiseCommission, admin_commission: '', admin_additional_fee: '' });
+        await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
+    });
+
+    test('vendor coupon: single coupon', { tag: ['@pro'] }, async () => {
+        const [, , couponCode] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
+
+        // place order and assert order calculation
+        const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: couponCode }] }, payloads.vendorAuth);
+        await assertOrderCalculation(order);
+    });
+
+    test('vendor coupon: multiple coupon', { tag: ['@pro'] }, async () => {
+        const [, , code1] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
+        const [, , code2] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
+        await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
+
+        // place order and assert order calculation
+        const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }, { code: code2 }] }, payloads.vendorAuth);
+        await assertOrderCalculation(order);
+    });
+
+    test('vendor coupon: multiple coupon non-sequential', { tag: ['@pro'] }, async () => {
+        const [, , code1] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
+        const [, , code2] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
+        await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
+
+        // place order and assert order calculation
+        const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }, { code: code2 }] }, payloads.vendorAuth);
+        await assertOrderCalculation(order);
+    });
+
+    test('vendor coupon: multiple coupon sequential', { tag: ['@pro'] }, async () => {
+        const [, , code1] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
+        const [, , code2] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
+        await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'yes' });
+
+        // place order and assert order calculation
+        const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }, { code: code2 }] }, payloads.vendorAuth);
+        await assertOrderCalculation(order);
+    });
+
+    test('vendor coupon: percent coupon', { tag: ['@pro'] }, async () => {
+        const [, , couponCode] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
+
+        // place order and assert order calculation
+        const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: couponCode }] }, payloads.vendorAuth);
+        await assertOrderCalculation(order);
+    });
+
+    test('vendor coupon: fixed_cart coupon', { tag: ['@pro'] }, async () => {
+        const [, , couponCode] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'fixed_cart' }, payloads.vendorAuth);
+
+        // place order and assert order calculation
+        const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: couponCode }] }, payloads.vendorAuth);
         await assertOrderCalculation(order);
     });
 });

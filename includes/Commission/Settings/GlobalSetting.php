@@ -9,7 +9,7 @@ class GlobalSetting implements InterfaceSetting {
     /**
      * Product id to get a commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int
      */
@@ -18,7 +18,7 @@ class GlobalSetting implements InterfaceSetting {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param int $category_id
      */
@@ -29,7 +29,7 @@ class GlobalSetting implements InterfaceSetting {
     /**
      * Returns product commission settings data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -52,7 +52,7 @@ class GlobalSetting implements InterfaceSetting {
     /**
      * Saves and returns product commission settings data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $setting {
      *

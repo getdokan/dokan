@@ -263,7 +263,7 @@ export class StoreSupportsPage extends AdminPage {
         if (ticketIsOpen) {
             await this.toBeVisible(addReplyText);
         } else {
-            await this.multipleElementVisible(closeTicketText);
+            await this.toBeVisible(closeTicketText);
         }
         await this.multipleElementVisible(replyBox);
     }

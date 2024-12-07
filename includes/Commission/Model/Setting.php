@@ -9,7 +9,7 @@ class Setting {
     /**
      * Commission type.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var null|string
      */
@@ -18,7 +18,7 @@ class Setting {
     /**
      * Flat commission amount
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var string|float|int
      */
@@ -27,7 +27,7 @@ class Setting {
     /**
      * Commissin percentage amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var string|int|float
      */
@@ -36,7 +36,7 @@ class Setting {
     /**
      * The category id for which the commission will be applied.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      * @var string|int
      */
     protected $category_id = '';
@@ -44,7 +44,7 @@ class Setting {
     /**
      * The category commission data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var array
      */
@@ -53,7 +53,7 @@ class Setting {
     /**
      * Applied commission meta data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var array
      */
@@ -62,7 +62,7 @@ class Setting {
     /**
      * Returns the commission meta data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */
@@ -73,7 +73,7 @@ class Setting {
     /**
      * Sets the commission meta data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $meta_data
      *
@@ -88,7 +88,7 @@ class Setting {
     /**
      * Sets the commission type.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param mixed|string $type
      *
@@ -103,7 +103,7 @@ class Setting {
     /**
      * Sets the flat commissin amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param mixed|string $flat
      *
@@ -118,7 +118,7 @@ class Setting {
     /**
      * Sets the percentage amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param mixed|string $percentage
      *
@@ -133,7 +133,7 @@ class Setting {
     /**
      * Sets the category id.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param mixed|string $category_id
      *
@@ -148,7 +148,7 @@ class Setting {
     /**
      * Sets the category commission data.
      *
-     * @since DOKAN_SINCE.
+     * @since 3.14.0.
      *
      * @param array|mixed $category_commissions
      *
@@ -163,7 +163,7 @@ class Setting {
     /**
      * Sets the commission type.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return mixed|string|null
      */
@@ -174,7 +174,7 @@ class Setting {
     /**
      * Returns the flat amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return mixed|string
      */
@@ -185,7 +185,7 @@ class Setting {
     /**
      * Returns the percentage amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return mixed|string
      */
@@ -196,7 +196,7 @@ class Setting {
     /**
      * Returns the category commission data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array|mixed|null
      */
@@ -207,7 +207,7 @@ class Setting {
     /**
      * Returns the category id
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array|mixed|null
      */

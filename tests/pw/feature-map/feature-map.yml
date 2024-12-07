@@ -84,11 +84,11 @@
           admin can add product category [lite]: true
           admin can add product attribute [lite]: true
           admin can add simple product [lite]: true
-          admin can add variable product: false
+          admin can add variable product: true
           admin can add simple subscription product: true
-          admin can add variable subscription product: false
+          admin can add variable subscription product: true
           admin can add external product [lite]: true
-          admin can add vendor subscription: false
+          admin can add vendor subscription: true
       vendor:
           vendor can view product menu page [lite]: true
           vendor can view add new product page [lite]: true
@@ -286,7 +286,7 @@
   features:
       customer:
           customer can view single store page [lite]: true
-          customer can view store open-close time on single store [lite]: false
+          customer can view store open-close time on single store [lite]: true
           customer can search product on single store [lite]: true
           customer can sort products on single store [lite]: true
           customer can view store terms and conditions [lite]: true
@@ -308,9 +308,9 @@
           customer can search store [lite]: true
           customer can filter stores by category: true
           customer can filter stores by location: true
-          customer can filter stores by ratings: false
+          customer can filter stores by ratings: true
           customer can filter featured stores: true
-          customer can filter open now stores: false
+          customer can filter open now stores: true
           customer can view stores on map: true
           customer can go to single store from store list [lite]: true
 
@@ -348,6 +348,15 @@
           admin can set commission to Dokan subscription product (category based): true
           admin can set commission to Dokan subscription product (specific category based): true
           admin can view commission meta-box on order details [lite]: true
+          admin can view sub orders meta-box on parent order details [lite]: true
+          admin can view related orders meta-box on child order details [lite]: true
+          admin can view commission on product list [lite]: true
+          admin can view commission on order list [lite]: true
+          vendor can view earning on product list [lite]: true
+          vendor can view earning on product add page [lite]: true
+          vendor can view earning on product edit page [lite]: true
+          vendor can view earning on order list [lite]: true
+          vendor can view earning on order details [lite]: true
 
 - page: 'Withdraw'
   features:
@@ -1298,8 +1307,8 @@
 - page: 'Store Reviews'
   features:
       admin:
-          admin can enable store reviews module: false
-          admin can disable store reviews module: false
+          admin can enable store reviews module: true
+          admin can disable store reviews module: true
           admin can view store reviews menu page: true
           admin can view store review: true
           admin can edit store review: true
