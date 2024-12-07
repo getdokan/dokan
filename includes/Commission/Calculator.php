@@ -8,12 +8,12 @@ use WeDevs\Dokan\Commission\Model\Commission;
 /**
  * Calculates and returns commission
  *
- * @since DOKAN_SINCE
+ * @since 3.14.0
  */
 class Calculator {
 
     /**
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var AbstractStrategy[]
      */
@@ -22,7 +22,7 @@ class Calculator {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param AbstractStrategy[] $strategies
      */
@@ -33,7 +33,7 @@ class Calculator {
     /**
      * Returns applied commission data
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param int|float $total_amount
      * @param int       $total_quantity

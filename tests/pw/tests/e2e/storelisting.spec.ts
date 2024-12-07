@@ -42,20 +42,19 @@ test.describe('Store list functionality test', () => {
         await customer.filterStores('by-location', 'New York, NY, USA');
     });
 
-    test.skip('customer can filter stores by ratings', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.filterStores('by-ratings', '1');
+    test('customer can filter stores by ratings', { tag: ['@pro', '@customer'] }, async () => {
+        await customer.filterStores('by-ratings', '5');
     });
 
     test('customer can filter featured stores', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterStores('featured');
     });
 
-    test.skip('customer can filter open now stores', { tag: ['@pro', '@customer'] }, async () => {
+    test('customer can filter open now stores', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterStores('open-now');
     });
 
     test('customer can view stores on map', { tag: ['@pro', '@customer'] }, async () => {
-        // test.skip(true, '@todo fix this test');
         await customer.storeOnMap();
     });
 
