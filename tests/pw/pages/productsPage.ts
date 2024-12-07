@@ -17,6 +17,14 @@ export class ProductsPage extends AdminPage {
         super(page);
     }
 
+    // admin search product
+    async adminSearchProduct(productName: string) {
+        await this.gotoUntilNetworkidle(data.subUrls.backend.wc.products);
+        await this.clearAndType(selector.admin.products.search.searchInput, productName);
+        await this.clickAndWaitForLoadState(selector.admin.products.search.searchButton, 'networkidle');
+        await this.toBeVisible(selector.admin.products.productRow(productName));
+    }
+
     // admin add product category
     async addCategory(categoryName: string) {
         await this.goIfNotThere(data.subUrls.backend.wc.addNewCategories);
@@ -323,6 +331,7 @@ export class ProductsPage extends AdminPage {
 
         // price
         await this.toBeVisible(productsVendor.price);
+        await this.toBeVisible(productsVendor.earning);
 
         // discount price & Schedule
         await this.click(productsVendor.discount.schedule);
