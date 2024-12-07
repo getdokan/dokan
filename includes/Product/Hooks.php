@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Product;
 
+use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WC_Product;
 
@@ -521,37 +522,50 @@ class Hooks {
      *
      * @since 2.4.12
      *
-     * @param  integer $post_id
+     * @param integer $post_id
+     * @param array   $data
      *
      * @return void
      */
-    public static function save_per_product_commission_options( $post_id ) {
+    public static function save_per_product_commission_options( $post_id, $data = [] ) {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             return;
         }
 
-        $commission_type  = '';
+        $commission_type  = Fixed::SOURCE;
         $admin_commission = '';
         $additional_fee   = '';
+        $data             = empty( $data ) ? $_POST : $data; // phpcs:ignore
 
-        if ( isset( $_POST['_per_product_admin_commission_type'] ) ) { // phpcs:ignore
-            $commission_type = ! empty( $_POST['_per_product_admin_commission_type'] ) ? sanitize_text_field( $_POST['_per_product_admin_commission_type'] ) : 'percentage'; // phpcs:ignore
-            update_post_meta( $post_id, '_per_product_admin_commission_type', $commission_type );
+        if ( isset( $data['_per_product_admin_commission_type'] ) ) {
+            $commission_type = ! empty( $data['_per_product_admin_commission_type'] ) ? sanitize_text_field( $data['_per_product_admin_commission_type'] ) : Fixed::SOURCE;
         }
 
-        if ( isset( $_POST['_per_product_admin_commission'] ) ) { // phpcs:ignore
-            $_per_product_admin_commission = wc_format_decimal( sanitize_text_field( $_POST['_per_product_admin_commission'] ) ); // phpcs:ignore
+        if ( isset( $data['_per_product_admin_commission'] ) ) {
+            $_per_product_admin_commission = wc_format_decimal( sanitize_text_field( $data['_per_product_admin_commission'] ) );
 
             if ( 0 <= $_per_product_admin_commission && 100 >= $_per_product_admin_commission ) {
-                $admin_commission = ( '' === $_POST['_per_product_admin_commission'] ) ? '' : $_per_product_admin_commission; // phpcs:ignore
+                $admin_commission = ( '' === $data['_per_product_admin_commission'] ) ? '' : $_per_product_admin_commission;
             }
         }
 
-        if ( isset( $_POST['_per_product_admin_additional_fee'] ) ) { // phpcs:ignore
-            $additional_fee = ( '' === $_POST['_per_product_admin_additional_fee'] ) ? '' : sanitize_text_field( $_POST['_per_product_admin_additional_fee'] ); // phpcs:ignore
+        if ( isset( $data['_per_product_admin_additional_fee'] ) ) {
+            $additional_fee = ( '' === $data['_per_product_admin_additional_fee'] ) ? '' : sanitize_text_field( $data['_per_product_admin_additional_fee'] );
+
+            if ( 0 > $additional_fee ) {
+                $additional_fee = '';
+            }
+
+            $additional_fee = wc_format_decimal( $additional_fee );
         }
 
-        update_post_meta( $post_id, '_per_product_admin_commission', $admin_commission );
-        update_post_meta( $post_id, '_per_product_admin_additional_fee', wc_format_decimal( $additional_fee ) );
+        dokan()->product->save_commission_settings(
+            $post_id,
+            [
+                'type'       => $commission_type,
+                'percentage' => $admin_commission,
+                'flat'       => $additional_fee,
+            ]
+        );
     }
 }

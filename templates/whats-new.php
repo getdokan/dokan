@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.14.2',
+        'released' => '2024-12-06',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Added commission setting option in product bulk edit for Admin.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.14.1',
         'released' => '2024-12-04',
         'changes'  => [
