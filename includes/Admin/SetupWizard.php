@@ -12,7 +12,7 @@ use stdClass;
 class SetupWizard {
 
     /** @var string Currenct Step */
-    protected $step = '';
+    protected string $current_step = '';
 
     /** @var array Steps for the setup wizard */
     protected $steps = [];
@@ -266,10 +266,10 @@ class SetupWizard {
             unset( $this->steps['recommended'] );
         }
 
-        $this->step = current( array_keys( $this->steps ) );
+        $this->current_step = current( array_keys( $this->steps ) );
         // get step from url
         if ( isset( $_GET['_admin_sw_nonce'], $_GET['step'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_admin_sw_nonce'] ) ), 'dokan_admin_setup_wizard_nonce' ) ) {
-            $this->step = sanitize_key( wp_unslash( $_GET['step'] ) );
+            $this->current_step = sanitize_key( wp_unslash( $_GET['step'] ) );
         }
 
         $this->enqueue_scripts();
@@ -278,8 +278,8 @@ class SetupWizard {
             isset( $_POST['_wpnonce'], $_POST['save_step'] )
             && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'dokan-setup' )
             && ! empty( $_POST['save_step'] )
-            && isset( $this->steps[ $this->step ]['handler'] ) ) {
-            call_user_func_array( $this->steps[ $this->step ]['handler'], [ $this ] );
+            && isset( $this->steps[ $this->current_step ]['handler'] ) ) {
+            call_user_func_array( $this->steps[ $this->current_step ]['handler'], [ $this ] );
         }
 
         ob_start();
@@ -292,7 +292,7 @@ class SetupWizard {
 
         return add_query_arg(
             [
-                'step' => $keys[ array_search( $this->step, array_keys( $this->steps ), true ) + 1 ],
+                'step' => $keys[ array_search( $this->current_step, array_keys( $this->steps ), true ) + 1 ],
                 '_admin_sw_nonce' => wp_create_nonce( 'dokan_admin_setup_wizard_nonce' ),
             ]
         );
@@ -328,7 +328,7 @@ class SetupWizard {
      */
     public function setup_wizard_footer() {
         ?>
-        <?php if ( 'next_steps' === $this->step ) : ?>
+        <?php if ( 'next_steps' === $this->current_step ) : ?>
             <a class="wc-return-to-dashboard" href="<?php echo esc_url( admin_url() ); ?>"><?php esc_html_e( 'Return to the WordPress Dashboard', 'dokan-lite' ); ?></a>
         <?php endif; ?>
         </body>
@@ -347,9 +347,9 @@ class SetupWizard {
             <?php foreach ( $ouput_steps as $step_key => $step ) : ?>
                 <li class="
                 <?php
-                if ( $step_key === $this->step ) {
+                if ( $step_key === $this->current_step ) {
                     echo 'active';
-                } elseif ( array_search( $this->step, array_keys( $this->steps ), true ) > array_search( $step_key, array_keys( $this->steps ), true ) ) {
+                } elseif ( array_search( $this->current_step, array_keys( $this->steps ), true ) > array_search( $step_key, array_keys( $this->steps ), true ) ) {
                     echo 'done';
                 }
                 ?>
@@ -363,13 +363,13 @@ class SetupWizard {
      * Output the content for the current step.
      */
     public function setup_wizard_content() {
-        if ( empty( $this->steps[ $this->step ]['view'] ) ) {
+        if ( empty( $this->steps[ $this->current_step ]['view'] ) ) {
             wp_safe_redirect( esc_url_raw( add_query_arg( 'step', 'introduction' ) ) );
             exit;
         }
 
         echo '<div class="wc-setup-content">';
-        call_user_func( $this->steps[ $this->step ]['view'] );
+        call_user_func( $this->steps[ $this->current_step ]['view'] );
         echo '</div>';
     }
 
@@ -500,7 +500,7 @@ class SetupWizard {
     /**
      * Commission step.
      *
-     * @since 3.14.0
+     * @since DOKAN_SINCE
      *
      * @return void
      */
@@ -547,7 +547,7 @@ class SetupWizard {
     /**
      * Save commission options.
      *
-     * @since 3.14.0
+     * @since DOKAN_SINCE
      *
      * @return void
      */
@@ -831,12 +831,12 @@ class SetupWizard {
         $options['withdraw_methods']      = ! empty( $_POST['withdraw_methods'] ) ? wc_clean( wp_unslash( $_POST['withdraw_methods'] ) ) : [];
         $options['withdraw_order_status'] = ! empty( $_POST['withdraw_order_status'] ) ? wc_clean( wp_unslash( $_POST['withdraw_order_status'] ) ) : [];
 
-		if ( ! empty( $_POST['withdraw_limit'] ) ) {
-				$input_limit                = sanitize_text_field( wp_unslash( $_POST['withdraw_limit'] ) );
-				$options['withdraw_limit']  = is_numeric( $input_limit ) && $input_limit >= 0 ? wc_format_decimal( $input_limit ) : 0;
-		} else {
-			$options['withdraw_limit'] = 0;
-		}
+        if ( ! empty( $_POST['withdraw_limit'] ) ) {
+            $input_limit                = sanitize_text_field( wp_unslash( $_POST['withdraw_limit'] ) );
+            $options['withdraw_limit']  = is_numeric( $input_limit ) && $input_limit >= 0 ? wc_format_decimal( $input_limit ) : 0;
+        } else {
+            $options['withdraw_limit'] = 0;
+        }
 
         /**
          * Filter dokan_withdraw options before saving in setup wizard
