@@ -452,7 +452,7 @@ test.describe.serial('vendor coupon calculation test', () => {
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
     });
 
-    test('vendor coupon: single coupon', { tag: ['@lite'] }, async () => {
+    test('vendor coupon: single coupon', { tag: ['@pro'] }, async () => {
         const [, , couponCode] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
 
         // place order and assert order calculation
@@ -460,7 +460,7 @@ test.describe.serial('vendor coupon calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('vendor coupon: multiple coupon', { tag: ['@lite'] }, async () => {
+    test('vendor coupon: multiple coupon', { tag: ['@pro'] }, async () => {
         const [, , code1] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
         const [, , code2] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
@@ -470,7 +470,7 @@ test.describe.serial('vendor coupon calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('vendor coupon: multiple coupon non-sequential', { tag: ['@lite'] }, async () => {
+    test('vendor coupon: multiple coupon non-sequential', { tag: ['@pro'] }, async () => {
         const [, , code1] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
         const [, , code2] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
@@ -480,7 +480,7 @@ test.describe.serial('vendor coupon calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('vendor coupon: multiple coupon sequential', { tag: ['@lite'] }, async () => {
+    test('vendor coupon: multiple coupon sequential', { tag: ['@pro'] }, async () => {
         const [, , code1] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
         const [, , code2] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'yes' });
@@ -490,7 +490,7 @@ test.describe.serial('vendor coupon calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('vendor coupon: percent coupon', { tag: ['@lite'] }, async () => {
+    test('vendor coupon: percent coupon', { tag: ['@pro'] }, async () => {
         const [, , couponCode] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'percent' }, payloads.vendorAuth);
 
         // place order and assert order calculation
@@ -498,7 +498,7 @@ test.describe.serial('vendor coupon calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('vendor coupon: fixed_cart coupon', { tag: ['@lite'] }, async () => {
+    test('vendor coupon: fixed_cart coupon', { tag: ['@pro'] }, async () => {
         const [, , couponCode] = await apiUtils.createCoupon([], { ...payloads.createCoupon(), discount_type: 'fixed_cart' }, payloads.vendorAuth);
 
         // place order and assert order calculation
