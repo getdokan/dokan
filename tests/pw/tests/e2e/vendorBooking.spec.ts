@@ -46,7 +46,7 @@ test.describe('Booking Product test', () => {
 
     // admin
 
-    test.only('admin can enable woocommerce booking integration module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can enable woocommerce booking integration module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.enableBookingModule();
     });
 
@@ -143,7 +143,7 @@ test.describe('Booking Product test', () => {
 
     // admin
 
-    test.only('admin can disable woocommerce booking integration module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can disable woocommerce booking integration module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.booking, payloads.adminAuth);
         await admin.disableBookingModule();
     });
