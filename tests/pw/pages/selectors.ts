@@ -1626,7 +1626,8 @@ export const selector = {
             },
 
             // Product QA
-            productQA: {
+            productQa: {
+                productQaDiv: 'div.product-questions-answers',
                 productQuestionAnswersText: '.product-questions-answers h1',
 
                 unreadQuestionCount: '//a[contains(text(),"Product Q&A")]/..//span[@class="pending-count"]',
@@ -3710,7 +3711,7 @@ export const selector = {
                     withdraw: 'ul.dokan-dashboard-menu li.withdraw a',
                     reverseWithdrawal: 'ul.dokan-dashboard-menu li.reverse-withdrawal a',
                     badges: 'ul.dokan-dashboard-menu li.seller-badge a',
-                    productQA: 'ul.dokan-dashboard-menu li.product-questions-answers a',
+                    productQa: 'ul.dokan-dashboard-menu li.product-questions-answers a',
                     returnRequest: 'ul.dokan-dashboard-menu li.return-request a',
                     staff: 'ul.dokan-dashboard-menu li.staffs a',
                     followers: 'ul.dokan-dashboard-menu li.followers a',

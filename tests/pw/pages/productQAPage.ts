@@ -6,7 +6,7 @@ import { questionsAnswers } from '@utils/interfaces';
 import { BasePage } from '@pages/basePage';
 
 // selectors
-const productQAAdmin = selector.admin.dokan.productQA;
+const productQAAdmin = selector.admin.dokan.productQa;
 const productQAVendor = selector.vendor.vProductQA;
 const productQACustomer = selector.customer.cSingleProduct.questionsAnswers;
 
@@ -35,7 +35,7 @@ export class ProductQAPage extends BasePage {
         await this.toBeVisible(selector.admin.dokan.menus.productQA);
 
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.productQA);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.productQa);
 
         await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
         await this.toBeVisible(selector.customer.cSingleProduct.menus.questionsAnswers);
@@ -46,8 +46,14 @@ export class ProductQAPage extends BasePage {
         await this.goto(data.subUrls.backend.dokan.dokan);
         await this.notToBeVisible(selector.admin.dokan.menus.productQA);
 
+        await this.goto(data.subUrls.backend.dokan.productQA);
+        await this.notToBeVisible(productQAAdmin.productQaDiv);
+
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.productQA);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.productQa);
+
+        await this.goto(data.subUrls.frontend.vDashboard.productQa);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
 
         await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
         await this.notToBeVisible(selector.customer.cSingleProduct.menus.questionsAnswers);
@@ -217,7 +223,7 @@ export class ProductQAPage extends BasePage {
 
     // product question answers render properly
     async vendorProductQARenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.productQA);
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.productQa);
 
         // product question answers text is visible
         await this.toBeVisible(productQAVendor.productQuestionAnswersText);
@@ -250,13 +256,13 @@ export class ProductQAPage extends BasePage {
 
     // filter questions
     async vendorFilterQuestions(productName: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.productQA);
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.productQa);
         await this.click(productQAVendor.filters.filterByProducts);
         await this.typeAndWaitForResponse(data.subUrls.ajax, productQAVendor.filters.filterInput, productName);
         await this.toContainText(productQAVendor.filters.result, productName);
         await this.press(data.key.arrowDown);
         await this.press(data.key.enter);
-        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.productQA, productQAVendor.filters.filter);
+        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.productQa, productQAVendor.filters.filter);
     }
 
     // answer question

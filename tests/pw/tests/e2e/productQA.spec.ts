@@ -34,7 +34,7 @@ test.describe('Product QA functionality test', () => {
 
     test.afterAll(async () => {
         // await apiUtils.deleteAllProductQuestions(payloads.adminAuth);
-        await apiUtils.activateModules(payloads.moduleIds.productQA, payloads.adminAuth);
+        await apiUtils.activateModules(payloads.moduleIds.productQa, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
@@ -43,7 +43,7 @@ test.describe('Product QA functionality test', () => {
 
     // admin
 
-    test.only('admin can enable product Q&A module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can enable product Q&A module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.enableProductQaModule(data.predefined.simpleProduct.product1.name);
     });
 
@@ -155,8 +155,8 @@ test.describe('Product QA functionality test', () => {
 
     // admin
 
-    test.only('admin can disable product Q&A module', { tag: ['@pro', '@admin'] }, async () => {
-        await apiUtils.deactivateModules(payloads.moduleIds.productQA, payloads.adminAuth);
+    test('admin can disable product Q&A module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.productQa, payloads.adminAuth);
         await admin.disableProductQaModule(data.predefined.simpleProduct.product1.name);
     });
 });

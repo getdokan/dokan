@@ -3660,7 +3660,8 @@ export const payloads = {
         vendorAnalytics: 'vendor_analytics',
         vendorImportExport: 'export_import',
         vendorStaff: 'vendor_staff',
-        vendorVerification: 'product_subscription',
+        vendorVerification: 'vendor_verification',
+        vendorSubscription: 'product_subscription',
         wholesale: 'wholesale',
     },
 

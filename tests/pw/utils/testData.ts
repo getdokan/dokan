@@ -1181,7 +1181,7 @@ export const data = {
                 withdrawRequests: 'dashboard/withdraw-requests',
                 reverseWithdrawal: 'dashboard/reverse-withdrawal',
                 badges: 'dashboard/seller-badge',
-                productQA: 'dashboard/product-questions-answers',
+                productQa: 'dashboard/product-questions-answers',
                 questionDetails: (questionId: string) => `dashboard/product-questions-answers/?question_id=${questionId}`,
                 returnRequest: 'dashboard/return-request',
                 staff: 'dashboard/staffs',
