@@ -56,17 +56,32 @@ export class VendorSettingsPage extends VendorPage {
         // map is visible
         await this.toBeVisible(settingsVendor.map);
 
-        // todo: catalog, discount, vacation, open close, store category
-
+        // dokan pro options are visible
         if (DOKAN_PRO) {
+            // catalog is visible
+            await this.toBeVisible(settingsVendor.catalogMode.removeAddToCartButton);
+
+            // toc is visible
+            await this.toBeVisible(settingsVendor.toc.termsAndConditions);
+
+            // open close is visible
+            await this.toBeVisible(settingsVendor.storeOpeningClosingTime.storeOpeningClosingTime);
+
+            // vacation  is visible
+            await this.toBeVisible(settingsVendor.vacation.vacationDiv);
+
+            // discount is visible
+            await this.toBeVisible(settingsVendor.discount.enableStoreWideDiscount);
+
             // biography is visible
             await this.toBeVisible(settingsVendor.biography.biographyIframe);
+
+            // store support elements are visible
+            await this.multipleElementVisible(settingsVendor.storeSupport);
 
             // min max elements are visible
             await this.multipleElementVisible(settingsVendor.minMax);
         }
-
-        // todo: min-max, store-support
 
         // update settings are visible
         await this.toBeVisible(settingsVendor.updateSettingsTop);

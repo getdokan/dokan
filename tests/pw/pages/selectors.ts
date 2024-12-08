@@ -6178,7 +6178,7 @@ export const selector = {
 
             storeOpeningClosingTime: {
                 // store opening closing time
-                storeOpeningClosingTime: '#dokan-store-time-enable',
+                storeOpeningClosingTime: 'input#dokan-store-time-enable',
 
                 // lite locators
                 lite: {
@@ -6656,12 +6656,14 @@ export const selector = {
 
         // shipStation settings
         vShipStationSettings: {
+            shipStationSettingsDiv: 'div#dokan-shipstation-vendor-settings',
             shipStationText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 
             generateCredentials: 'button#dokan-shipstation-generate-credentials-btn',
             generateSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="API credentials generated successfully."]',
             revokeCredentials: 'button#dokan-shipstation-revoke-credentials-btn',
+            confirmGeneration: 'button.swal2-confirm',
             confirmRevoke: 'button.swal2-confirm',
             revokeSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="API credentials revoked successfully."]',
 
@@ -6670,6 +6672,7 @@ export const selector = {
                 consumerKey: '//label[normalize-space()="Consumer Key"]/..//code',
                 consumerSecret: '//label[normalize-space()="Consumer Secret"]/..//code',
             },
+            secretKeyHideWarning: '//p[normalize-space(text())="Note: Once this page is refreshed, the consumer secret will no longer be available."]',
 
             selectedStatus: '//label[@for="dokan-shipstation-export-statuses"]/..//li[@class="select2-selection__choice"]',
             exportOrderStatusesInput: '//label[normalize-space()="Export Order Statuses"]/..//span[@class="select2-selection select2-selection--multiple"]//input[@class="select2-search__field"]',
