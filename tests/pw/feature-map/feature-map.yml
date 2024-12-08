@@ -873,8 +873,8 @@
 - page: 'Geolocation'
   features:
       admin:
-          admin can enable geolocation module: false
-          admin can disable geolocation module: false
+          admin can enable geolocation module: true
+          admin can disable geolocation module: true
           # admin can set Dokan geolocation settings [duplicate]: false
           admin can set map location position (top): true
           admin can set map location position (left): true

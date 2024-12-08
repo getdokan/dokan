@@ -13,6 +13,24 @@ export class GeolocationPage extends AdminPage {
         await this.gotoUntilNetworkidle(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
     }
 
+    // enable geolocation module
+    async enableGeolocationModule() {
+        await this.goto(data.subUrls.frontend.shop);
+        await this.toBeVisible(selector.customer.cShop.map.locationMap);
+
+        await this.goto(data.subUrls.frontend.storeListing);
+        await this.toBeVisible(selector.customer.cStoreList.map.locationMap);
+    }
+
+    // disable geolocation module
+    async disableGeolocationModule() {
+        await this.goto(data.subUrls.frontend.shop);
+        await this.notToBeVisible(selector.customer.cShop.map.locationMap);
+
+        await this.goto(data.subUrls.frontend.storeListing);
+        await this.notToBeVisible(selector.customer.cStoreList.map.locationMap);
+    }
+
     // view map position
     async viewMapPosition(position: 'top' | 'left' | 'right'): Promise<void> {
         await this.gotoUntilNetworkidle(data.subUrls.frontend.storeListing);

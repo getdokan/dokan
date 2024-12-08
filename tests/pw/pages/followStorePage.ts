@@ -25,6 +25,12 @@ export class FollowStorePage extends CustomerPage {
 
         await this.goto(data.subUrls.frontend.myAccount);
         await this.notToBeVisible(selector.customer.cMyAccount.menus.vendors);
+
+        await this.goto(data.subUrls.frontend.vDashboard.followers);
+        await this.toBeVisible(selector.frontend.pageNotFound);
+
+        await this.goto(data.subUrls.frontend.followingStores);
+        await this.toBeVisible(selector.frontend.pageNotFound);
     }
 
     // vendor Followers

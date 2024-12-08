@@ -29,6 +29,12 @@ test.describe('Geolocation test', () => {
         await aPage.close();
     });
 
+    //admin
+
+    test('admin can enable geolocation module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableGeolocationModule();
+    });
+
     ['top', 'left', 'right'].forEach((position: string) => {
         test(`admin can set map position (${position})`, { tag: ['@pro', '@admin'] }, async () => {
             await dbUtils.updateOptionValue(dbData.dokan.optionName.geolocation, { show_locations_map: position });
@@ -66,5 +72,12 @@ test.describe('Geolocation test', () => {
 
     test('customer can slide map radius bar', { tag: ['@pro', '@customer'] }, async () => {
         await admin.slideMapRadiusBar('5');
+    });
+
+    // admin
+
+    test('admin can disable geolocation module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.geolocation, payloads.adminAuth);
+        await admin.disableGeolocationModule();
     });
 });
