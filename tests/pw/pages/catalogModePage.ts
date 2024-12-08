@@ -38,7 +38,7 @@ export class CatalogModePage extends AdminPage {
     // vendor can't access catalog mode settings
     async accessCatalogModeSettings() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
-        await this.notToBeVisible(settingsVendor.hideProductPrice);
+        await this.notToBeVisible(settingsVendor.catalogMode.hideProductPrice);
     }
 
     // customer

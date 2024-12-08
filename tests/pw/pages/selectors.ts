@@ -6167,66 +6167,81 @@ export const selector = {
             map: '#dokan-map-add',
 
             // terms and conditions
-            termsAndConditions: '//label[contains(text(), "Terms and Conditions")]/..//input[@type="checkbox"]',
-            termsAndConditionsIframe: '#dokan_tnc_text iframe',
-            termsAndConditionsHtmlBody: '#tinymce',
-
-            // store opening closing time
-            storeOpeningClosingTime: '#dokan-store-time-enable',
-
-            // lite locators
-            lite: {
-                openingClosingTimeEnable: (day: string) => `select[name="${day}[working_status]"]`,
-                openingTimeInput: (day: string) => `input#opening-time\\[${day}\\]`,
-                closingTimeInput: (day: string) => `input#closing-time\\[${day}\\]`,
+            toc: {
+                termsAndConditions: '//label[contains(text(), "Terms and Conditions")]/..//input[@type="checkbox"]',
+                termsAndConditionsIframe: '#dokan_tnc_text iframe',
+                termsAndConditionsHtmlBody: '#tinymce',
             },
-            // openingTime: (day: string) => `#opening-time-${day}`,
-            // closingTime: (day: string) => `#closing-time-${day}`,
-            // addNewRow: (day: string) => `#store-tab-${day} .added-store-opening-time > .fa`,
-            // deleteOneRow: '.remove-store-closing-time > .fa',
-            openingClosingTimeSwitch: (day: string) => `//label[@for='${day}-working-status']/p[@class='switch tips']`,
-            openingTime: (day: string) => `input#opening-time-${day}`,
-            openingTimeHiddenInput: (day: string) => `//input[@name='opening_time[${day}][]']`,
-            closingTime: (day: string) => `input#closing-time-${day}`,
-            closingTimeHiddenInput: (day: string) => `//input[@name='closing_time[${day}][]']`,
-            storeOpenNotice: '//input[@name="dokan_store_open_notice"]',
-            storeCloseNotice: '//input[@name="dokan_store_close_notice"]',
+
+            storeOpeningClosingTime: {
+                // store opening closing time
+                storeOpeningClosingTime: '#dokan-store-time-enable',
+
+                // lite locators
+                lite: {
+                    openingClosingTimeEnable: (day: string) => `select[name="${day}[working_status]"]`,
+                    openingTimeInput: (day: string) => `input#opening-time\\[${day}\\]`,
+                    closingTimeInput: (day: string) => `input#closing-time\\[${day}\\]`,
+                },
+                // openingTime: (day: string) => `#opening-time-${day}`,
+                // closingTime: (day: string) => `#closing-time-${day}`,
+                // addNewRow: (day: string) => `#store-tab-${day} .added-store-opening-time > .fa`,
+                // deleteOneRow: '.remove-store-closing-time > .fa',
+                openingClosingTimeSwitch: (day: string) => `//label[@for='${day}-working-status']/p[@class='switch tips']`,
+                openingTime: (day: string) => `input#opening-time-${day}`,
+                openingTimeHiddenInput: (day: string) => `//input[@name='opening_time[${day}][]']`,
+                closingTime: (day: string) => `input#closing-time-${day}`,
+                closingTimeHiddenInput: (day: string) => `//input[@name='closing_time[${day}][]']`,
+                storeOpenNotice: '//input[@name="dokan_store_open_notice"]',
+                storeCloseNotice: '//input[@name="dokan_store_close_notice"]',
+            },
 
             // vacation
-            goToVacation: '#dokan-seller-vacation-activate',
-            closingStyle: 'label .form-control',
-            setVacationMessageInstantly: '//textarea[@id="dokan-seller-vacation-message" and @name="setting_vacation_message"]',
-            setVacationMessageDatewise: '//textarea[@id="dokan-seller-vacation-message" and @name="dokan_seller_vacation_datewise_message"]',
-            vacationDateRange: '#dokan-seller-vacation-date-from-range',
-            vacationDateRangeFrom: 'input#dokan-seller-vacation-date-from',
-            vacationDateRangeTo: 'input#dokan-seller-vacation-date-to',
-            saveVacationEdit: '#dokan-seller-vacation-save-edit',
-            cancelVacationEdit: '#dokan-seller-vacation-cancel-edit',
-            noVacationIsSet: '//td[contains( text(),"No vacation is set")]',
-            vacationRow: '//td[@class="dokan-seller-vacation-list-action"]/..',
-            editSavedVacationSchedule: '.dokan-seller-vacation-list-action .fas',
-            deleteSavedVacationSchedule: '.dokan-seller-vacation-remove-schedule',
-            confirmDeleteSavedVacationSchedule: '.swal2-confirm',
-            cancelDeleteSavedVacationSchedule: '.swal2-cancel',
+            vacation: {
+                vacationDiv: 'fieldset#dokan-seller-vacation-settings',
+                goToVacation: '#dokan-seller-vacation-activate',
+                closingStyle: 'label .form-control',
+                setVacationMessageInstantly: '//textarea[@id="dokan-seller-vacation-message" and @name="setting_vacation_message"]',
+                setVacationMessageDatewise: '//textarea[@id="dokan-seller-vacation-message" and @name="dokan_seller_vacation_datewise_message"]',
+                vacationDateRange: '#dokan-seller-vacation-date-from-range',
+                vacationDateRangeFrom: 'input#dokan-seller-vacation-date-from',
+                vacationDateRangeTo: 'input#dokan-seller-vacation-date-to',
+                saveVacationEdit: '#dokan-seller-vacation-save-edit',
+                cancelVacationEdit: '#dokan-seller-vacation-cancel-edit',
+                noVacationIsSet: '//td[contains( text(),"No vacation is set")]',
+                vacationRow: '//td[@class="dokan-seller-vacation-list-action"]/..',
+                editSavedVacationSchedule: '.dokan-seller-vacation-list-action .fas',
+                deleteSavedVacationSchedule: '.dokan-seller-vacation-remove-schedule',
+                confirmDeleteSavedVacationSchedule: '.swal2-confirm',
+                cancelDeleteSavedVacationSchedule: '.swal2-cancel',
+            },
 
             // catalog mode
-            removeAddToCartButton: 'input#catalog_mode_hide_add_to_cart_button',
-            hideProductPrice: 'input#catalog_mode_hide_product_price',
-            enableRequestQuoteSupport: 'input#catalog_mode_request_a_quote_support',
+            catalogMode: {
+                removeAddToCartButton: 'input#catalog_mode_hide_add_to_cart_button',
+                hideProductPrice: 'input#catalog_mode_hide_product_price',
+                enableRequestQuoteSupport: 'input#catalog_mode_request_a_quote_support',
+            },
 
             // discount
-            enableStoreWideDiscount: '#lbl_setting_minimum_quantity',
-            minimumOrderAmount: '#setting_minimum_order_amount',
-            percentage: '#setting_order_percentage',
+            discount: {
+                enableStoreWideDiscount: '#lbl_setting_minimum_quantity',
+                minimumOrderAmount: '#setting_minimum_order_amount',
+                percentage: '#setting_order_percentage',
+            },
 
             // biography
-            biographyIframe: '#wp-vendor_biography-wrap iframe',
-            biographyHtmlBody: '#tinymce',
+            biography: {
+                biographyIframe: '#wp-vendor_biography-wrap iframe',
+                biographyHtmlBody: '#tinymce',
+            },
 
             // store support
-            showSupportButtonInStore: '#support_checkbox',
-            showSupportButtonInSingleProduct: '#support_checkbox_product',
-            supportButtonText: '#dokan_support_btn_name',
+            storeSupport: {
+                showSupportButtonInStore: '#support_checkbox',
+                showSupportButtonInSingleProduct: '#support_checkbox_product',
+                supportButtonText: '#dokan_support_btn_name',
+            },
 
             // live chat
             liveChat: 'input#live_chat',

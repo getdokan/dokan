@@ -1265,8 +1265,8 @@
 - page: 'Seller Vacation'
   features:
       admin:
-          admin can enable seller vacation module: false
-          admin can disable seller vacation module: false
+          admin can enable seller vacation module: true
+          admin can disable seller vacation module: true
       vendor:
           vendor can add vacation (instant): false
           vendor can add vacation (datewise): false

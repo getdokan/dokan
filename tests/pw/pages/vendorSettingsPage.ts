@@ -54,13 +54,17 @@ export class VendorSettingsPage extends VendorPage {
         await this.toBeVisible(settingsVendor.email);
 
         // map is visible
-        // await this.toBeVisible(settingsVendor.map); // TODO: g_map value not found
+        await this.toBeVisible(settingsVendor.map);
 
         // todo: catalog, discount, vacation, open close, store category
 
-        // biography is visible
+        
         if (DOKAN_PRO) {
-            await this.toBeVisible(settingsVendor.biographyIframe);
+            // biography is visible
+            await this.toBeVisible(settingsVendor.biography.biographyIframe);
+
+            // min max elements are visible
+            await this.multipleElementVisible(settingsVendor.minMax);
         }
 
         // todo: min-max, store-support
@@ -312,59 +316,59 @@ export class VendorSettingsPage extends VendorPage {
 
     // vendor set terms and conditions settings
     async termsAndConditionsSettings(termsAndConditions: string): Promise<void> {
-        const tocEnabled = await this.isVisible(settingsVendor.termsAndConditions);
+        const tocEnabled = await this.isVisible(settingsVendor.toc.termsAndConditions);
         if (tocEnabled) {
-            await this.check(settingsVendor.termsAndConditions);
-            await this.typeFrameSelector(settingsVendor.termsAndConditionsIframe, settingsVendor.termsAndConditionsHtmlBody, termsAndConditions);
+            await this.check(settingsVendor.toc.termsAndConditions);
+            await this.typeFrameSelector(settingsVendor.toc.termsAndConditionsIframe, settingsVendor.toc.termsAndConditionsHtmlBody, termsAndConditions);
         }
     }
 
     // vendor set opening closing time settings
     async openingClosingTimeSettings(openingClosingTime: vendor['vendorInfo']['openingClosingTime']): Promise<void> {
-        const openCloseTimeEnabled = await this.isVisible(settingsVendor.storeOpeningClosingTime);
+        const openCloseTimeEnabled = await this.isVisible(settingsVendor.storeOpeningClosingTime.storeOpeningClosingTime);
         if (openCloseTimeEnabled) {
-            await this.check(settingsVendor.storeOpeningClosingTime);
+            await this.check(settingsVendor.storeOpeningClosingTime.storeOpeningClosingTime);
             for (const day of openingClosingTime.days) {
                 if (DOKAN_PRO) {
-                    await this.enableSwitcherDeliveryTime(settingsVendor.openingClosingTimeSwitch(day));
-                    await this.setAttributeValue(settingsVendor.openingTime(day), 'value', openingClosingTime.openingTime);
-                    await this.setAttributeValue(settingsVendor.openingTimeHiddenInput(day), 'value', openingClosingTime.openingTime);
-                    await this.setAttributeValue(settingsVendor.closingTime(day), 'value', openingClosingTime.closingTime);
-                    await this.setAttributeValue(settingsVendor.closingTimeHiddenInput(day), 'value', openingClosingTime.closingTime);
+                    await this.enableSwitcherDeliveryTime(settingsVendor.storeOpeningClosingTime.openingClosingTimeSwitch(day));
+                    await this.setAttributeValue(settingsVendor.storeOpeningClosingTime.openingTime(day), 'value', openingClosingTime.openingTime);
+                    await this.setAttributeValue(settingsVendor.storeOpeningClosingTime.openingTimeHiddenInput(day), 'value', openingClosingTime.openingTime);
+                    await this.setAttributeValue(settingsVendor.storeOpeningClosingTime.closingTime(day), 'value', openingClosingTime.closingTime);
+                    await this.setAttributeValue(settingsVendor.storeOpeningClosingTime.closingTimeHiddenInput(day), 'value', openingClosingTime.closingTime);
                 } else {
                     // lite
-                    await this.selectByValue(settingsVendor.lite.openingClosingTimeEnable(day), openingClosingTime.statusLite);
-                    await this.clearAndType(settingsVendor.lite.openingTimeInput(day), openingClosingTime.openingTime);
-                    await this.clearAndType(settingsVendor.lite.closingTimeInput(day), openingClosingTime.closingTime);
+                    await this.selectByValue(settingsVendor.storeOpeningClosingTime.lite.openingClosingTimeEnable(day), openingClosingTime.statusLite);
+                    await this.clearAndType(settingsVendor.storeOpeningClosingTime.lite.openingTimeInput(day), openingClosingTime.openingTime);
+                    await this.clearAndType(settingsVendor.storeOpeningClosingTime.lite.closingTimeInput(day), openingClosingTime.closingTime);
                 }
             }
-            await this.clearAndType(settingsVendor.storeOpenNotice, openingClosingTime.storeOpenNotice);
-            await this.clearAndType(settingsVendor.storeCloseNotice, openingClosingTime.storeCloseNotice);
+            await this.clearAndType(settingsVendor.storeOpeningClosingTime.storeOpenNotice, openingClosingTime.storeOpenNotice);
+            await this.clearAndType(settingsVendor.storeOpeningClosingTime.storeCloseNotice, openingClosingTime.storeCloseNotice);
         }
     }
 
     // vendor set vacation settings
     async vacationSettings(vacation: vendor['vendorInfo']['vacation']): Promise<void> {
-        const vacationModeEnabled = await this.isVisible(settingsVendor.goToVacation);
+        const vacationModeEnabled = await this.isVisible(settingsVendor.vacation.goToVacation);
         if (vacationModeEnabled) {
-            await this.check(settingsVendor.goToVacation);
-            await this.selectByValue(settingsVendor.closingStyle, vacation.closingStyle);
+            await this.check(settingsVendor.vacation.goToVacation);
+            await this.selectByValue(settingsVendor.vacation.closingStyle, vacation.closingStyle);
 
             switch (vacation.closingStyle) {
                 // instantly close
                 case 'instantly':
-                    await this.clearAndType(settingsVendor.setVacationMessageInstantly, vacation.instantly.vacationMessage);
+                    await this.clearAndType(settingsVendor.vacation.setVacationMessageInstantly, vacation.instantly.vacationMessage);
                     break;
 
                 // datewise close
                 case 'datewise': {
                     const vacationDayFrom = vacation.datewise.vacationDayFrom();
                     const vacationDayTo = vacation.datewise.vacationDayTo(vacationDayFrom);
-                    await this.setAttributeValue(settingsVendor.vacationDateRange, 'value', `${helpers.dateFormatFYJ(vacationDayFrom)} - ${helpers.dateFormatFYJ(vacationDayTo)}`);
-                    await this.setAttributeValue(settingsVendor.vacationDateRangeFrom, 'value', vacationDayFrom);
-                    await this.setAttributeValue(settingsVendor.vacationDateRangeTo, 'value', vacationDayTo);
-                    await this.clearAndType(settingsVendor.setVacationMessageDatewise, vacation.datewise.vacationMessage);
-                    await this.clickAndWaitForResponse(data.subUrls.ajax, settingsVendor.saveVacationEdit);
+                    await this.setAttributeValue(settingsVendor.vacation.vacationDateRange, 'value', `${helpers.dateFormatFYJ(vacationDayFrom)} - ${helpers.dateFormatFYJ(vacationDayTo)}`);
+                    await this.setAttributeValue(settingsVendor.vacation.vacationDateRangeFrom, 'value', vacationDayFrom);
+                    await this.setAttributeValue(settingsVendor.vacation.vacationDateRangeTo, 'value', vacationDayTo);
+                    await this.clearAndType(settingsVendor.vacation.setVacationMessageDatewise, vacation.datewise.vacationMessage);
+                    await this.clickAndWaitForResponse(data.subUrls.ajax, settingsVendor.vacation.saveVacationEdit);
                     break;
                 }
 
@@ -377,11 +381,11 @@ export class VendorSettingsPage extends VendorPage {
     // vendor delete pervious datewise vacation settings if any
     async deletePreviousDatewiseVacation() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
-        const noVacationIsSetIsVisible = await this.isVisible(settingsVendor.noVacationIsSet);
+        const noVacationIsSetIsVisible = await this.isVisible(settingsVendor.vacation.noVacationIsSet);
         if (!noVacationIsSetIsVisible) {
-            await this.hover(settingsVendor.vacationRow);
-            await this.click(settingsVendor.deleteSavedVacationSchedule);
-            await this.clickAndWaitForResponse(data.subUrls.ajax, settingsVendor.confirmDeleteSavedVacationSchedule);
+            await this.hover(settingsVendor.vacation.vacationRow);
+            await this.click(settingsVendor.vacation.deleteSavedVacationSchedule);
+            await this.clickAndWaitForResponse(data.subUrls.ajax, settingsVendor.vacation.confirmDeleteSavedVacationSchedule);
         }
 
         // update settings
@@ -391,17 +395,17 @@ export class VendorSettingsPage extends VendorPage {
 
     // vendor set catalog mode settings
     async catalogModeSettings(): Promise<void> {
-        const catalogModeEnabled = await this.isVisible(settingsVendor.removeAddToCartButton);
+        const catalogModeEnabled = await this.isVisible(settingsVendor.catalogMode.removeAddToCartButton);
         if (catalogModeEnabled) {
-            await this.check(settingsVendor.removeAddToCartButton);
-            await this.checkIfVisible(settingsVendor.hideProductPrice);
-            await this.checkIfVisible(settingsVendor.enableRequestQuoteSupport);
+            await this.check(settingsVendor.catalogMode.removeAddToCartButton);
+            await this.checkIfVisible(settingsVendor.catalogMode.hideProductPrice);
+            await this.checkIfVisible(settingsVendor.catalogMode.enableRequestQuoteSupport);
         }
     }
 
     // reset catalog
     async resetCatalog(): Promise<void> {
-        await this.uncheck(settingsVendor.removeAddToCartButton);
+        await this.uncheck(settingsVendor.catalogMode.removeAddToCartButton);
         // update settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsVendor.updateSettings);
         await this.toContainText(settingsVendor.updateSettingsSuccessMessage, data.vendor.vendorInfo.storeSettingsSaveSuccessMessage);
@@ -409,30 +413,27 @@ export class VendorSettingsPage extends VendorPage {
 
     // vendor set discount settings
     async discountSettings(amountDiscount: vendor['vendorInfo']['amountDiscount']): Promise<void> {
-        const discountEnabled = await this.isVisible(settingsVendor.enableStoreWideDiscount);
+        const discountEnabled = await this.isVisible(settingsVendor.discount.enableStoreWideDiscount);
         if (discountEnabled) {
-            await this.check(settingsVendor.enableStoreWideDiscount);
-            await this.clearAndType(settingsVendor.minimumOrderAmount, amountDiscount.minimumOrderAmount);
-            await this.clearAndType(settingsVendor.percentage, amountDiscount.discountPercentage);
+            await this.check(settingsVendor.discount.enableStoreWideDiscount);
+            await this.clearAndType(settingsVendor.discount.minimumOrderAmount, amountDiscount.minimumOrderAmount);
+            await this.clearAndType(settingsVendor.discount.percentage, amountDiscount.discountPercentage);
         }
     }
 
     // vendor set biography settings
     async biographySettings(biography: string): Promise<void> {
-        await this.typeFrameSelector(settingsVendor.biographyIframe, settingsVendor.biographyHtmlBody, biography);
+        await this.typeFrameSelector(settingsVendor.biography.biographyIframe, settingsVendor.biography.biographyHtmlBody, biography);
     }
 
     // vendor set store support settings
     async storeSupportSettings(supportButtonText: string): Promise<void> {
-        const storeSupportEnabled = await this.isVisible(settingsVendor.removeAddToCartButton);
-        if (storeSupportEnabled) {
-            await this.check(settingsVendor.showSupportButtonInStore);
-            await this.check(settingsVendor.showSupportButtonInSingleProduct);
-            await this.clearAndType(settingsVendor.supportButtonText, supportButtonText);
-        }
+        await this.check(settingsVendor.storeSupport.showSupportButtonInStore);
+        await this.check(settingsVendor.storeSupport.showSupportButtonInSingleProduct);
+        await this.clearAndType(settingsVendor.storeSupport.supportButtonText, supportButtonText);
     }
 
-    // vendor set liveChat settings
+    // vendor set live chat settings
     async liveChatSettings(): Promise<void> {
         await this.check(settingsVendor.liveChat);
     }
