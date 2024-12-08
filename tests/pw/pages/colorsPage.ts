@@ -20,6 +20,7 @@ export class ColorsPage extends AdminPage {
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.toBeVisible(settingsAdmin.menus.colors);
     }
+
     // disable color scheme customizer
     async disableColorSchemeCustomizerModule() {
         await this.goto(data.subUrls.backend.dokan.settings, { waitUntil: 'domcontentloaded' }, true);

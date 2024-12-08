@@ -39,6 +39,12 @@ export class VendorDeliveryTimePage extends CustomerPage {
 
         await this.hover(selector.vendor.vDashboard.menus.primary.settings);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.deliveryTime);
+
+        await this.goto(data.subUrls.frontend.vDashboard.deliveryTime);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+
+        await this.goto(data.subUrls.frontend.vDashboard.settingsDeliveryTime);
+        await this.notToBeVisible(deliveryTimeSettingsVendor.deliveryTimeSettingsDiv);
     }
 
     // vendor delivery time render properly

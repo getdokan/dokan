@@ -6491,6 +6491,7 @@ export const selector = {
 
         // Delivery Time Settings
         vDeliveryTimeSettings: {
+            deliveryTimeSettingsDiv: 'div.dokan-delivery-time-wrapper',
             settingsText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 
