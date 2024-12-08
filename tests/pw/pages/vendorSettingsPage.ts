@@ -58,7 +58,6 @@ export class VendorSettingsPage extends VendorPage {
 
         // todo: catalog, discount, vacation, open close, store category
 
-        
         if (DOKAN_PRO) {
             // biography is visible
             await this.toBeVisible(settingsVendor.biography.biographyIframe);

@@ -1972,7 +1972,7 @@ export const selector = {
 
             // SPMV
             spmv: {
-                spmvDiv: '#dokan-spmv-products-admin',
+                spmvDiv: 'div#dokansellerdiv',
                 searchVendor: '#dokan-spmv-products-admin input.select2-search__field',
                 searchedResult: (storeName: string) => `//div[contains(text(),"${storeName}") and @class="dokan-spmv-vendor-dropdown-results__title"]`,
                 highlightedResult: '.select2-results__option.select2-results__option--highlighted',
