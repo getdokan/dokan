@@ -209,7 +209,7 @@ export const selector = {
                 rfq: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="RFQ"]',
                 sellerBadge: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Seller Badge"]',
                 storeReviews: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Store Reviews"]',
-                storeSupport: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Store Support"]',
+                storeSupport: '//li[contains(@class,"toplevel_page_dokan")]//a[contains(.,"Store Support")]',
                 announcements: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Announcements"]',
                 refunds: '//li[contains(@class,"toplevel_page_dokan")]//a[contains(text(),"Refunds")]',
                 reports: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Reports"]',
@@ -864,6 +864,7 @@ export const selector = {
 
             // Store Support
             storeSupport: {
+                storeSupportDiv: 'div.admin-store-support-tickets',
                 storeSupportText: '.admin-store-support-tickets h1',
 
                 unreadTicketCount: 'span.pending-count.dokan-unread-ticket-count-badge-in-list',

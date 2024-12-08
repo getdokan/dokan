@@ -23,36 +23,50 @@ export class StoreSupportsPage extends AdminPage {
 
     // enable store support module
     async enableStoreSupportModule(storeName: string) {
+        // dokan menu
         await this.goto(data.subUrls.backend.dokan.dokan);
         await this.toBeVisible(selector.admin.dokan.menus.storeSupport);
 
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.toBeVisible(selector.admin.dokan.settings.menus.storeSupport);
 
+        // vendor dashboard menu
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.toBeVisible(selector.vendor.vDashboard.menus.primary.support);
 
+        // customer dashboard menu
         await this.goto(data.subUrls.frontend.myAccount);
         await this.toBeVisible(selector.customer.cMyAccount.menus.sellerSupportTickets);
 
+        // single store page
         await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
         await this.toBeVisible(selector.customer.cSingleStore.storeTabs.getSupport);
     }
 
     // disable store support module
     async disableStoreSupportModule(storeName: string) {
+        // dokan menu
         await this.goto(data.subUrls.backend.dokan.dokan);
         await this.notToBeVisible(selector.admin.dokan.menus.storeSupport);
 
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.notToBeVisible(selector.admin.dokan.settings.menus.storeSupport);
 
+        // dokan menu page
+        await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
+        await this.notToBeVisible(storeSupportsAdmin.storeSupportDiv);
+
+        // vendor dashboard menu
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.support);
 
+        // customer dashboard menu
         await this.goto(data.subUrls.frontend.myAccount);
         await this.notToBeVisible(selector.customer.cMyAccount.menus.sellerSupportTickets);
 
+        // single store page
         await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
         await this.notToBeVisible(selector.customer.cSingleStore.storeTabs.getSupport);
     }

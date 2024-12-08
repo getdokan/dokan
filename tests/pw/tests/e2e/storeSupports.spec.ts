@@ -19,6 +19,7 @@ test.describe('Store Support test (admin)', () => {
         admin = new StoreSupportsPage(aPage);
 
         apiUtils = new ApiUtils(await request.newContext());
+        await apiUtils.activateModules(payloads.moduleIds.storeSupport, payloads.adminAuth);
         [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
     });
 
@@ -30,7 +31,7 @@ test.describe('Store Support test (admin)', () => {
 
     //admin
 
-    test.only('admin can enable wholesale module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can store support module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.enableStoreSupportModule(data.predefined.vendorStores.vendor1);
     });
 
@@ -189,6 +190,7 @@ test.describe('Store Support test (vendor)', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.storeSupport, payloads.adminAuth);
         await vPage.close();
         await apiUtils.dispose();
     });
@@ -242,7 +244,7 @@ test.describe('Store Support test (vendor)', () => {
         await vendor.vendorReopenSupportTicketWithReply(closedSupportTicketId, 'reopening this ticket');
     });
 
-    test.only('admin can disable wholesale module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can disable store support module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.storeSupport, payloads.adminAuth);
         await admin.disableStoreSupportModule(data.predefined.vendorStores.vendor1);
     });

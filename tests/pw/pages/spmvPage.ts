@@ -34,7 +34,7 @@ export class SpmvPage extends VendorPage {
         await this.notToBeVisible(spmvVendor.search.searchDiv);
 
         await this.goto(data.subUrls.frontend.vDashboard.spmv);
-        await this.multipleElementNotVisible([spmvVendor.search.searchDiv, spmvVendor.spmvDetailsDiv]);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
     }
 
     async assignSpmvProduct(productId: string, storeName: string) {

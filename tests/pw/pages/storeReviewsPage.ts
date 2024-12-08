@@ -31,13 +31,11 @@ export class StoreReviewsPage extends AdminPage {
         await this.goto(data.subUrls.backend.dokan.dokan, { waitUntil: 'domcontentloaded' }, true);
         await this.notToBeVisible(dokanAdmin.menus.storeReviews);
 
-        // no reviews table is visible
-        await this.goIfNotThere(data.subUrls.backend.dokan.storeReviews);
+        await this.goto(data.subUrls.backend.dokan.storeReviews);
         await this.notToBeVisible(dokanAdmin.storeReviews.storeReviewsDiv);
 
-        // reviews is visible
         await this.goIfNotThere(data.subUrls.frontend.storeReviews(helpers.slugify(storeName)));
-        await this.toBeVisible(selector.customer.cSingleStore.reviews.noReviewsFound);
+        await this.toBeVisible(selector.customer.cSingleStore.reviews.noReviewsFound); //todo: shouldn't be visible , bug
     }
 
     // store reviews render properly
