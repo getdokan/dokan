@@ -1057,8 +1057,8 @@
 - page: 'Product Enquiry'
   features:
       admin:
-          admin can enable product enquiry module: false
-          admin can disable product enquiry module: false
+          admin can enable product enquiry module: true
+          admin can disable product enquiry module: true
       customer:
           customer can enquire product: true
       guest:

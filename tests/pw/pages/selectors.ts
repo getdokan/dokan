@@ -4209,7 +4209,7 @@ export const selector = {
 
             // wholesale options
             wholesale: {
-                wholesaleSection:'div.dokan-wholesale-options',
+                wholesaleSection: 'div.dokan-wholesale-options',
                 enableWholesale: '#wholesale\\[enable_wholesale\\]',
                 wholesalePrice: '#dokan-wholesale-price',
                 minimumQuantity: '#dokan-wholesale-qty',
@@ -6244,7 +6244,7 @@ export const selector = {
 
         // addon settings
         vAddonSettings: {
-            productAddonsDiv:'div.dokan-pa-all-addons',
+            productAddonsDiv: 'div.dokan-pa-all-addons',
             productAddonsText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 
