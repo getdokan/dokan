@@ -30,7 +30,7 @@ test.describe('Vendor staff test (vendor)', () => {
         await apiUtils.dispose();
     });
 
-    test.only('admin can enable vendor staff manager module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can enable vendor staff manager module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.enableVendorStaffModule();
     });
 
@@ -85,8 +85,8 @@ test.describe('Vendor staff test (vendorStaff)', () => {
         await staff.viewPermittedMenus(data.vendorStaff.basicMenuNames);
     });
 
-    test.only('admin can disable vendor staff manager module', { tag: ['@pro', '@admin'] }, async () => {
-        await apiUtils.deactivateModules(payloads.moduleIds.booking, payloads.adminAuth);
+    test('admin can disable vendor staff manager module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.vendorStaff, payloads.adminAuth);
         await admin.disableVendorStaffModule();
     });
 });

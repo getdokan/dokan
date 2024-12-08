@@ -17,14 +17,20 @@ export class VendorStaffPage extends VendorPage {
 
     // enable vendor staff module
     async enableVendorStaffModule() {
+        // vendor dashboard menu
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.toBeVisible(selector.vendor.vDashboard.menus.primary.staff);
     }
 
     // disable vendor staff module
     async disableVendorStaffModule() {
+        // vendor dashboard menu
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.staff);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.staff);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
     }
 
     // vendor staff render properly
