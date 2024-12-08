@@ -940,8 +940,8 @@
 - page: 'MangoPay'
   features:
       admin:
-          admin can enable MangoPay module: false
-          admin can disable MangoPay module: false
+          admin can enable MangoPay module: true
+          admin can disable MangoPay module: true
           admin can add MangoPay payment method: true
           admin can remove MangoPay payment method: false
           admin can view MangoPay notes on order details: false
@@ -968,8 +968,8 @@
 - page: 'PayPal Marketplace'
   features:
       admin:
-          admin can enable PayPal Marketplace module: false
-          admin can disable PayPal Marketplace module: false
+          admin can enable PayPal Marketplace module: true
+          admin can disable PayPal Marketplace module: true
           admin can add PayPal Marketplace payment method: true
           admin can remove PayPal Marketplace payment method: false
           admin can view PayPal Marketplace notes on order details: false
@@ -1126,8 +1126,8 @@
 - page: 'Razorpay'
   features:
       admin:
-          admin can enable Razorpay module: false
-          admin can disable Razorpay module: false
+          admin can enable Razorpay module: true
+          admin can disable Razorpay module: true
           admin can add Razorpay payment method: true
           admin can remove Razorpay payment method: false
           admin can view Razorpay notes on order details: false
@@ -1373,8 +1373,8 @@
 - page: 'Stripe Connect'
   features:
       admin:
-          admin can enable Stripe Connect module: false
-          admin can disable Stripe Connect module: false
+          admin can enable Stripe Connect module: true
+          admin can disable Stripe Connect module: true
           admin can add Stripe Connect payment method: true
           admin can remove Stripe Connect payment method: false
           admin can view Stripe Connect notes on order details: false
@@ -1389,8 +1389,8 @@
 - page: 'Stripe Express'
   features:
       admin:
-          admin can enable Stripe Express module: false
-          admin can disable Stripe Express module: false
+          admin can enable Stripe Express module: true
+          admin can disable Stripe Express module: true
           admin can add Stripe Express payment method: true
           admin can remove Stripe Express payment method: false
           admin can view Stripe Express notes on order details: false

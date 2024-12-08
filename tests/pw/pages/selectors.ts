@@ -2657,6 +2657,7 @@ export const selector = {
                 orderStatusForWithdrawProcessing: '//label[@for="withdraw_order_status[wc-processing]"]',
 
                 // Recommended
+                recommendedHeading: '//h1[normalize-space()="Recommended for All Dokan Marketplaces"]',
                 wooCommerceConversionTracking: '//label[@for="dokan_recommended_wc_conversion_tracking"]',
                 weMail: '//label[@for="dokan_recommended_wemail"]',
                 texty: '//label[@for="dokan_recommended_texty"]',
@@ -2832,16 +2833,17 @@ export const selector = {
                     setupCashOnDelivery: '//a[contains(text(),"Cash on delivery")]/../..//td[@class="action"]//a',
                     setupDokanWireCardConnect: '//a[contains(text(),"Dokan Wirecard Connect")]/../..//td[@class="action"]//a',
                     setupDokanPayPalAdaptivePayments: '//a[contains(text(),"Dokan PayPal Adaptive Payments")]/../..//td[@class="action"]//a',
-                    setupDokanPayPalMarketplace: '//a[contains(text(),"Dokan PayPal Marketplace")]/../..//td[@class="action"]//a',
-                    setupDokanStripeConnect: '//a[contains(text(),"Dokan Stripe Connect")]/../..//td[@class="action"]//a',
-                    setupDokanMangoPay: '//a[contains(text(),"Dokan MangoPay")]/../..//td[@class="action"]//a',
-                    setupDokanRazorpay: '//a[contains(text(),"Dokan Razorpay")]/../..//td[@class="action"]//a',
-                    setupDokanStripeExpress: '//a[contains(text(),"Dokan Stripe Express")]/../..//td[@class="action"]//a',
+                    setupDokanPayPalMarketplace: '//tr[@data-gateway_id="dokan_paypal_marketplace"]//td[@class="action"]//a',
+                    setupDokanStripeConnect: '//tr[@data-gateway_id="dokan-stripe-connect"]//td[@class="action"]//a',
+                    setupDokanMangoPay: '//tr[@data-gateway_id="dokan_mangopay"]//td[@class="action"]//a',
+                    setupDokanRazorpay: '//tr[@data-gateway_id="dokan_razorpay"]//td[@class="action"]//a',
+                    setupDokanStripeExpress: '//tr[@data-gateway_id="dokan_stripe_express"]//td[@class="action"]//a',
                     paymentMethodsSaveChanges: '.woocommerce-save-button',
 
                     // Stripe
                     stripe: {
                         // Stripe Connect
+                        stripeConnectText: '//h3[normalize-space()="Stripe Connect"]',
                         enableDisableStripe: '#woocommerce_dokan-stripe-connect_enabled',
                         title: '#woocommerce_dokan-stripe-connect_title',
                         description: '#woocommerce_dokan-stripe-connect_description',
@@ -2862,6 +2864,7 @@ export const selector = {
 
                     // Paypal Marketplace
                     paypalMarketPlace: {
+                        paypalMarketPlaceText: '//h2[contains(.,"Dokan PayPal Marketplace")]',
                         enableDisablePayPalMarketplace: '#woocommerce_dokan_paypal_marketplace_enabled',
                         title: '#woocommerce_dokan_paypal_marketplace_title',
                         description: '#woocommerce_dokan_paypal_marketplace_description',
@@ -2886,6 +2889,7 @@ export const selector = {
 
                     // Dokan Mangopay
                     dokanMangoPay: {
+                        mangoPayText: '//h2[contains(.,"Dokan MangoPay")]',
                         enableDisableMangoPayPayment: '#woocommerce_dokan_mangopay_enabled',
                         title: '#woocommerce_dokan_mangopay_title',
                         description: '#woocommerce_dokan_mangopay_description',
@@ -2920,6 +2924,7 @@ export const selector = {
                     },
 
                     dokanRazorpay: {
+                        razorpayText: '//h2[contains(.,"Dokan MangoPay")]',
                         enableDisableDokanRazorpay: '#woocommerce_dokan_razorpay_enabled',
                         title: '#woocommerce_dokan_razorpay_title',
                         description: '#woocommerce_dokan_razorpay_description',
@@ -2938,6 +2943,7 @@ export const selector = {
 
                     stripeExpress: {
                         // Stripe Express
+                        stripeExpressText: '//h2[contains(.,"Stripe Express")]',
                         enableOrDisableStripeExpress: '#woocommerce_dokan_stripe_express_enabled',
                         title: '#woocommerce_dokan_stripe_express_title',
                         description: '#woocommerce_dokan_stripe_express_description',
@@ -2965,7 +2971,7 @@ export const selector = {
                         // Advanced Settings
                         displayNoticeToNonConnectedSellers: '#woocommerce_dokan_stripe_express_notice_on_vendor_dashboard',
                         sendAnnouncementToNonConnectedSellers: '#woocommerce_dokan_stripe_express_announcement_to_sellers',
-                        announcementInterval: '#woocommerce_dokan_stripe_express_notice_interval',
+                        announcementInterval: 'input#woocommerce_dokan_stripe_express_notice_interval',
                         debugLog: '#woocommerce_dokan_stripe_express_debug',
                         stripeExpressSaveChanges: '.woocommerce-save-button',
                     },

@@ -3641,8 +3641,10 @@ export const payloads = {
         productAddon: 'product_addon',
         productAdvertising: 'product_advertising',
         productEnquiry: 'product_enquiry',
-        productSubscription: 'product_subscription',
+        productSubscription: 'vsp',
+        productQa: 'product_qa',
         rankMath: 'rank_math',
+        razorpay: 'razorpay',
         reportAbuse: 'report_abuse',
         requestForQuotation: 'request_for_quotation',
         rma: 'rma',
@@ -3658,8 +3660,7 @@ export const payloads = {
         vendorAnalytics: 'vendor_analytics',
         vendorImportExport: 'export_import',
         vendorStaff: 'vendor_staff',
-        vendorVerification: 'vendor_verification',
-        vsp: 'vsp',
+        vendorVerification: 'product_subscription',
         wholesale: 'wholesale',
     },
 
@@ -4873,6 +4874,7 @@ export const payloads = {
         shipping_number: '#002',
         shipped_status: 'ss_pickedup', // ss_delivered, ss_cancelled, ss_proceccing, ss_ready_for_pickup, ss_pickedup (has more options)
         shipped_date: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString(),
+        shipment_comments: 'updated shipment comment',
     },
 
     vendorwiseCommission: {
