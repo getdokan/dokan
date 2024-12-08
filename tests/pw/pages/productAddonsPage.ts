@@ -7,10 +7,36 @@ import { unserialize } from 'php-serialize';
 
 // selectors
 const addonsVendor = selector.vendor.vAddonSettings;
+const productsVendor = selector.vendor.product;
 
 export class ProductAddonsPage extends VendorPage {
     constructor(page: Page) {
         super(page);
+    }
+
+    // enable product addon module
+    async enableProductAddonModule() {
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.subMenus.addons);
+
+        await this.goto(data.subUrls.frontend.vDashboard.products);
+        await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
+        await this.toBeVisible(productsVendor.addon.addonSection);
+    }
+
+    // disable product addon module
+    async disableProductAddonModule() {
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.addons);
+
+        await this.goto(data.subUrls.frontend.vDashboard.products);
+        await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
+        await this.notToBeVisible(productsVendor.addon.addonSection);
+
+        await this.goto(data.subUrls.frontend.vDashboard.settingsAddon);
+        await this.notToBeVisible(addonsVendor.productAddonsDiv);
     }
 
     // product addons render properly

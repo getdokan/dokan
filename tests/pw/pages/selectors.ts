@@ -4074,6 +4074,7 @@ export const selector = {
 
             // addon
             addon: {
+                addonSection: 'div#dokan-product-addons-options',
                 addonForm: 'div.wc-pao-addon.open',
                 addField: 'button.wc-pao-add-field',
                 type: 'select#wc-pao-addon-content-type-0',
@@ -4208,6 +4209,7 @@ export const selector = {
 
             // wholesale options
             wholesale: {
+                wholesaleSection:'div.dokan-wholesale-options',
                 enableWholesale: '#wholesale\\[enable_wholesale\\]',
                 wholesalePrice: '#dokan-wholesale-price',
                 minimumQuantity: '#dokan-wholesale-qty',
@@ -4229,6 +4231,7 @@ export const selector = {
 
             // advertise product
             advertisement: {
+                advertisementSection: 'div.dokan-proudct-advertisement',
                 needsPublishNotice: '//p[normalize-space(text())="You can not advertise this product. Product needs to be published before you can advertise."]',
                 advertiseThisProduct: 'input#dokan_advertise_single_product',
                 confirmAdvertiseThisProduct: '.swal2-confirm',
@@ -6241,6 +6244,7 @@ export const selector = {
 
         // addon settings
         vAddonSettings: {
+            productAddonsDiv:'div.dokan-pa-all-addons',
             productAddonsText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 

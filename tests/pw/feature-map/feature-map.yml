@@ -1002,8 +1002,8 @@
 - page: 'Product Addon'
   features:
       admin:
-          admin can enable product addon module: false
-          admin can disable product addon module: false
+          admin can enable product addon module: true
+          admin can disable product addon module: true
       vendor:
           vendor can view product addons menu page: true
           vendor can add global product addon: true
@@ -1023,8 +1023,8 @@
 - page: 'Product Advertising'
   features:
       admin:
-          admin can enable product advertising module: false
-          admin can disable product advertising module: false
+          admin can enable product advertising module: true
+          admin can disable product advertising module: true
           # admin can set Dokan product advertising settings [duplicate]: true
           admin can set product advertising slot: false
           admin can set product advertising expiry days: false

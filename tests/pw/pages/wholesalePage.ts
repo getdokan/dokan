@@ -29,7 +29,7 @@ export class WholesalePage extends AdminPage {
 
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
         await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
-        await this.toBeVisible(productsVendor.wholesale.enableWholesale);
+        await this.toBeVisible(productsVendor.wholesale.wholesaleSection);
 
         await this.goto(data.subUrls.frontend.myAccount);
         await this.toBeVisible(selector.customer.cDashboard.becomeWholesaleCustomer);
@@ -42,7 +42,7 @@ export class WholesalePage extends AdminPage {
 
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
         await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
-        await this.notToBeVisible(productsVendor.wholesale.enableWholesale);
+        await this.notToBeVisible(productsVendor.wholesale.wholesaleSection);
 
         await this.goto(data.subUrls.frontend.myAccount);
         await this.notToBeVisible(selector.customer.cDashboard.becomeWholesaleCustomer);
