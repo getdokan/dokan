@@ -8,6 +8,7 @@ import { helpers } from '@utils/helpers';
 const spmvAdmin = selector.admin.dokan.spmv;
 const spmvVendor = selector.vendor.vSpmv;
 const spmvCustomer = selector.customer.cSpmv;
+const productsVendor = selector.vendor.product;
 
 export class SpmvPage extends VendorPage {
     constructor(page: Page) {
@@ -15,6 +16,26 @@ export class SpmvPage extends VendorPage {
     }
 
     // admin
+
+    // enable SPMV module
+    async enableSpmvModule() {
+        await this.goto(data.subUrls.frontend.vDashboard.products);
+        await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
+        await this.toBeVisible(spmvVendor.search.searchDiv);
+
+        await this.goto(data.subUrls.frontend.vDashboard.spmv);
+        await this.multipleElementVisible([spmvVendor.search.searchDiv, spmvVendor.spmvDetailsDiv]);
+    }
+
+    // disable SPMV module
+    async disableSpmvModule() {
+        await this.goto(data.subUrls.frontend.vDashboard.products);
+        await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
+        await this.notToBeVisible(spmvVendor.search.searchDiv);
+
+        await this.goto(data.subUrls.frontend.vDashboard.spmv);
+        await this.multipleElementNotVisible([spmvVendor.search.searchDiv, spmvVendor.spmvDetailsDiv]);
+    }
 
     async assignSpmvProduct(productId: string, storeName: string) {
         await this.goIfNotThere(data.subUrls.backend.wc.productDetails(productId));

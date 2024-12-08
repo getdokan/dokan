@@ -1285,8 +1285,8 @@
 - page: 'Single Product Multiple Vendor (SPMV)'
   features:
       admin:
-          admin can enable SPMV module: false
-          admin can disable SPMV module: false
+          admin can enable SPMV module: true
+          admin can disable SPMV module: true
           admin can assign SPMV product to other vendor: true
       vendor:
           vendor can view SPMV menu page: true

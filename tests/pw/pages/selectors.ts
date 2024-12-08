@@ -6036,11 +6036,13 @@ export const selector = {
             saveSuccessMessage: 'Account details changed successfully.',
         },
 
-        // Search Similar Product
+        // search similar product
         vSpmv: {
-            // Search similar product spmv
+            spmvDetailsDiv: 'article.dokan-spmv-products-search-result-area',
+
+            // search similar product spmv
             search: {
-                searchDiv: '.dokan-spmv-add-new-product-search-box-area',
+                searchDiv: 'div.dokan-spmv-add-new-product-search-box-area',
                 subHeader: '//p[@class="sub-header"]',
                 toggleBtn: '#dokan-spmv-area-toggle-button',
                 // toggleBtn: '#dokan-spmv-area-toggle-button i.fa-caret-down',

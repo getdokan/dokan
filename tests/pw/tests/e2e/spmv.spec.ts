@@ -45,6 +45,10 @@ test.describe('Vendor SPMV test', () => {
         await apiUtils.dispose();
     });
 
+    test('admin can enable SPMV module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableSpmvModule();
+    });
+
     test('admin can assign SPMV product to other vendor', { tag: ['@pro', '@admin'] }, async () => {
         const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
         await admin.assignSpmvProduct(productId, data.predefined.vendorStores.vendor1);
@@ -107,5 +111,12 @@ test.describe('Vendor SPMV test', () => {
 
     test('customer can add to cart other available vendor product', { tag: ['@pro', '@customer'] }, async () => {
         await customer.addToCartOtherAvailableVendorsProduct(productName2, data.predefined.vendorStores.vendor1);
+    });
+
+    // admin
+
+    test('admin can disable SPMV module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.spmv, payloads.adminAuth);
+        await admin.disableSpmvModule();
     });
 });
