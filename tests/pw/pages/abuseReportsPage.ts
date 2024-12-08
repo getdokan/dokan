@@ -36,6 +36,9 @@ export class AbuseReportsPage extends AdminPage {
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.notToBeVisible(selector.admin.dokan.settings.menus.productReportAbuse);
 
+        await this.goto(data.subUrls.backend.dokan.abuseReports);
+        await this.notToBeVisible(abuseReportAdmin.abuseReportsText);
+
         await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
         await this.notToBeVisible(abuseReportCustomer.reportAbuse);
     }

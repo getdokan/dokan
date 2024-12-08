@@ -37,7 +37,7 @@ test.describe('Abuse report test', () => {
 
     // admin
 
-    test.only('admin can enable report abuse module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can enable report abuse module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.enableReportAbuseModule(data.predefined.simpleProduct.product1.name);
     });
 
@@ -85,7 +85,7 @@ test.describe('Abuse report test', () => {
 
     // admin
 
-    test.only('admin can disable report abuse module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can disable report abuse module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.reportAbuse, payloads.adminAuth);
         await admin.disableReportAbuseModule(data.predefined.simpleProduct.product1.name);
     });
