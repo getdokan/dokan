@@ -6686,6 +6686,7 @@ export const selector = {
 
         // rma settings
         vRmaSettings: {
+            rmaSettingsDiv: 'div.dokan-rma-wrapper',
             returnAndWarrantyText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 

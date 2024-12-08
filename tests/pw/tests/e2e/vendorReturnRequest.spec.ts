@@ -8,7 +8,7 @@ import { payloads } from '@utils/payloads';
 
 // const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 
-test.describe.skip('Vendor RMA test', () => {
+test.describe('Vendor RMA test', () => {
     let admin: VendorReturnRequestPage;
     let vendor: VendorReturnRequestPage;
     let vendor1: OrdersPage;
@@ -54,7 +54,7 @@ test.describe.skip('Vendor RMA test', () => {
         await apiUtils.dispose();
     });
 
-    test.only('admin can RMA module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can RMA module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.enableRmaModule();
     });
 
@@ -62,6 +62,10 @@ test.describe.skip('Vendor RMA test', () => {
 
     test('vendor can view return request menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorReturnRequestRenderProperly();
+    });
+
+    test('vendor can view return request settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+        await vendor.vendorRmaSettingsRenderProperly();
     });
 
     test('vendor can view return request details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
@@ -106,8 +110,8 @@ test.describe.skip('Vendor RMA test', () => {
 
     // admin
 
-    test.only('admin can disable RMA module', { tag: ['@pro', '@admin'] }, async () => {
-        await apiUtils.deactivateModules(payloads.moduleIds.printful, payloads.adminAuth);
+    test('admin can disable RMA module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.rma, payloads.adminAuth);
         await admin.disableRmaModule();
     });
 });
