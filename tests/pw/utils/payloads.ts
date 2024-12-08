@@ -3635,7 +3635,7 @@ export const payloads = {
         liveSearch: 'live_search',
         mangopay: 'mangopay',
         moip: 'moip',
-        orderMinMax: 'order_min_max',
+        minMaxQuantities: 'order_min_max',
         paypalMarketplace: 'paypal_marketplace',
         printful: 'printful',
         productAddon: 'product_addon',

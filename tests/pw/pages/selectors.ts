@@ -6702,6 +6702,7 @@ export const selector = {
 
         // Printful settings
         vPrintfulSettings: {
+            printfulSettingsDiv: 'div#dokan-pro-printful-vendor-settings',
             connectToPrintful: 'button#dokan-pro-connect-printful-btn',
             authorize: '//a[normalize-space()="Authorize"]',
             disconnectToPrintful: 'button#dokan-pro-disconnect-printful-btn',

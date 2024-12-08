@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-test.describe.skip('Printful test', () => {
+test.describe('Printful test', () => {
     let admin: PrintfulPage;
     let vendor: PrintfulPage;
     let aPage: Page, vPage: Page;
@@ -18,7 +18,9 @@ test.describe.skip('Printful test', () => {
         const customerContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await customerContext.newPage();
         vendor = new PrintfulPage(vPage);
+
         apiUtils = new ApiUtils(await request.newContext());
+        await apiUtils.activateModules(payloads.moduleIds.printful, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
@@ -27,7 +29,7 @@ test.describe.skip('Printful test', () => {
         await apiUtils.dispose();
     });
 
-    test.only('admin can enable printful module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can enable printful module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.enablePrintfulModule();
     });
 
@@ -35,11 +37,11 @@ test.describe.skip('Printful test', () => {
         await vendor.vendorPrintfulSettingsRenderProperly();
     });
 
-    test('vendor can connect printful account', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can connect printful account', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.connectPrintful();
     });
 
-    test('vendor can disconnect printful account', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can disconnect printful account', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.disconnectPrintful();
     });
 
@@ -57,7 +59,7 @@ test.describe.skip('Printful test', () => {
 
     // admin
 
-    test.only('admin can disable printful module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can disable printful module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.printful, payloads.adminAuth);
         await admin.disablePrintfulModule();
     });
