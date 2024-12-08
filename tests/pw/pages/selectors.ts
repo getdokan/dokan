@@ -3686,6 +3686,10 @@ export const selector = {
         vDashboard: {
             dokanNotice: 'div.dokan-alert.dokan-alert-warning',
 
+            dashboardDiv: 'div.dokan-dashboard-wrap',
+            dashboardSidebar: 'div.dokan-dash-sidebar',
+            dashboardContent: 'div.dokan-dashboard-content',
+
             // Dashboard Menus
             menuParent: '#dokan-navigation ul.dokan-dashboard-menu',
             menus: {

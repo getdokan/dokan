@@ -683,8 +683,8 @@
 - page: 'Auction Integration'
   features:
       admin:
-          admin can enable auction integration module: false
-          admin can disable auction integration module: false
+          admin can enable auction integration module: true
+          admin can disable auction integration module: true
           admin can enable auction for newly added vendor: false
           admin can disable auction for specific vendor: false
           admin can add auction product: true

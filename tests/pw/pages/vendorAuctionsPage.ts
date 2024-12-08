@@ -44,6 +44,9 @@ export class AuctionsPage extends VendorPage {
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.auction);
 
+        await this.goto(data.subUrls.frontend.vDashboard.auction);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+
         await this.goto(data.subUrls.frontend.myAccount);
         await this.toBeVisible(selector.customer.cMyAccount.menus.auctions);
     }
