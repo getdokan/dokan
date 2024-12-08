@@ -32,8 +32,11 @@ export class VendorProductSubscriptionPage extends VendorPage {
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.userSubscriptions);
 
+        await this.goto(data.subUrls.frontend.vDashboard.userSubscriptions);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+
         await this.goto(data.subUrls.frontend.myAccount);
-        await this.notToBeVisible(selector.customer.cMyAccount.menus.subscriptions);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.subscriptions);
     }
 
     // vendor return request render properly

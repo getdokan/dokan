@@ -21,7 +21,7 @@ test.describe('Color scheme customizer test', () => {
 
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.colors, dbData.dokan.colorsSettings);
-        await apiUtils.activateModules(payloads.moduleIds.colorSchemeCustomize, payloads.adminAuth);
+        await apiUtils.activateModules(payloads.moduleIds.colorSchemeCustomizer, payloads.adminAuth);
         await aPage.close();
     });
 
@@ -43,7 +43,7 @@ test.describe('Color scheme customizer test', () => {
     });
 
     test('admin can disable color scheme customizer module', { tag: ['@pro', '@admin'] }, async () => {
-        await apiUtils.deactivateModules(payloads.moduleIds.colorSchemeCustomize, payloads.adminAuth);
+        await apiUtils.deactivateModules(payloads.moduleIds.colorSchemeCustomizer, payloads.adminAuth);
         await admin.disableColorSchemeCustomizerModule();
     });
 });

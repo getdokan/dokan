@@ -38,7 +38,7 @@ test.describe('Product subscriptions test', () => {
 
     // admin
 
-    test.only('admin can enable product subscription module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can enable product subscription module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.enableProductSubscriptionModule();
     });
 
@@ -94,7 +94,7 @@ test.describe('Product subscriptions test', () => {
         await customer.buyProductSubscription(data.predefined.simpleSubscription.product1);
     });
 
-    test.only('admin can disable product subscription module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can disable product subscription module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.productSubscription, payloads.adminAuth);
         await admin.disableProductSubscriptionModule();
     });
