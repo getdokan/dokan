@@ -6482,6 +6482,7 @@ export const selector = {
 
         // Verification Settings
         vVerificationSettings: {
+            verificationSettingsDiv: 'div.dokan-verification-content',
             verificationText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 
