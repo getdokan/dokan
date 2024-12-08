@@ -6228,6 +6228,7 @@ export const selector = {
 
             // min-max
             minMax: {
+                minMaxDiv: 'fieldset#min_max_amount',
                 minimumAmountToPlaceAnOrder: 'input#min_amount_to_order',
                 maximumAmountToPlaceAnOrder: 'input#max_amount_to_order',
             },

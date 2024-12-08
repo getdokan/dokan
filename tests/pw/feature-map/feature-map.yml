@@ -956,8 +956,8 @@
 - page: 'Min Max Quantities'
   features:
       admin:
-          admin can enable min max quantities module: false
-          admin can disable min max quantities module: false
+          admin can enable min max quantities module: true
+          admin can disable min max quantities module: true
       vendor:
           vendor can add product min-max options: true
           vendor can set min-max settings: true
