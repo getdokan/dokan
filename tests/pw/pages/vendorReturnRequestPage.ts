@@ -18,30 +18,38 @@ export class VendorReturnRequestPage extends VendorPage {
 
     // enable rma module
     async enableRmaModule() {
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.toBeVisible(selector.admin.dokan.settings.menus.rma);
 
+        // vendor dashboard menu
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.toBeVisible(selector.vendor.vDashboard.menus.primary.returnRequest);
 
+        // vendor dashboard settings menu
         await this.hover(selector.vendor.vDashboard.menus.primary.settings);
         await this.toBeVisible(selector.vendor.vDashboard.menus.subMenus.rma);
     }
 
     // disable rma module
     async disableRmaModule() {
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.notToBeVisible(selector.admin.dokan.settings.menus.rma);
 
+        // vendor dashboard menu
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.returnRequest);
 
-        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
-        await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.rma);
-
+        // vendor dashboard menu page
         await this.goto(data.subUrls.frontend.vDashboard.returnRequest);
         await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
 
+        // vendor dashboard settings menu
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.rma);
+
+        // vendor dashboard settings menu page
         await this.goto(data.subUrls.frontend.vDashboard.settingsDeliveryTime);
         await this.notToBeVisible(returnRequestSettingsVendor.rmaSettingsDiv);
     }

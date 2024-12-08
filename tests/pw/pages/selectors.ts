@@ -1768,6 +1768,7 @@ export const selector = {
 
             // Verifications
             verifications: {
+                verificationsDiv: 'div.verification-requests',
                 verificationRequestsText: '//h1[normalize-space()="Verification Requests"]',
 
                 // Nav Tabs
@@ -1828,6 +1829,7 @@ export const selector = {
 
             // Advertising
             productAdvertising: {
+                productAdvertisingDiv: 'div.product-advertisement-list',
                 productAdvertisingText: '.product-advertisement-list h1',
 
                 addNewProductAdvertising: '//button[normalize-space()="Add New Advertisement"]',
@@ -1897,6 +1899,7 @@ export const selector = {
 
             // Wholesale Customer
             wholesaleCustomer: {
+                wholesaleCustomerDiv: 'div.wholesale-customer-list',
                 wholesaleCustomerText: '.wholesale-customer-list h1',
 
                 // Nav Tabs

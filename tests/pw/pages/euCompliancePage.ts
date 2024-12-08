@@ -25,24 +25,30 @@ export class EuCompliancePage extends AdminPage {
 
     // enable eu compliance fields module
     async enableEuComplianceFieldsModule() {
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.toBeVisible(selector.admin.dokan.settings.menus.euComplianceFields);
 
+        // vendor dashboard settings
         await this.goto(data.subUrls.frontend.vDashboard.settingsStore);
         await this.multipleElementVisible(selector.vendor.vStoreSettings.euFields);
 
+        // my account
         await this.goto(data.subUrls.frontend.billingAddress);
         await this.multipleElementVisible(customerAddress.billing.euFields);
     }
 
     // disable eu compliance fields module
     async disableEuComplianceFieldsModule() {
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.notToBeVisible(selector.admin.dokan.settings.menus.euComplianceFields);
 
+        // vendor dashboard settings        
         await this.goto(data.subUrls.frontend.vDashboard.settingsStore);
         await this.multipleElementNotVisible(selector.vendor.vStoreSettings.euFields);
 
+        // my account
         await this.goto(data.subUrls.frontend.billingAddress);
         await this.multipleElementNotVisible(customerAddress.billing.euFields);
     }

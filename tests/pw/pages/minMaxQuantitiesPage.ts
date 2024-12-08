@@ -13,9 +13,11 @@ export class MinMaxQuantitiesPage extends BasePage {
 
     // enable enable min max quantities module
     async enableMinMaxQuantitiesModule() {
+        // vendor dashboard settings
         await this.goto(data.subUrls.frontend.vDashboard.settingsStore);
         await this.multipleElementVisible(settingsVendor.minMax);
 
+        // vendor dashboard
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
         await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
         await this.multipleElementVisible(productsVendor.minMax);
@@ -23,9 +25,11 @@ export class MinMaxQuantitiesPage extends BasePage {
 
     // disable enable min max quantities module
     async disableMinMaxQuantitiesModule() {
+        // vendor dashboard settings
         await this.goto(data.subUrls.frontend.vDashboard.settingsStore);
         await this.multipleElementNotVisible(settingsVendor.minMax);
 
+        // vendor dashboard
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
         await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
         await this.multipleElementNotVisible(productsVendor.minMax);

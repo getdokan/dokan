@@ -24,29 +24,36 @@ export class AuctionsPage extends VendorPage {
 
     // enable auction integration module
     async enableActionIntegrationModule() {
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.click(selector.admin.dokan.settings.menus.sellingOptions);
         await this.toBeVisible(selector.admin.dokan.settings.selling.newVendorEnableAuction);
 
+        // vendor dashboard menu
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.toBeVisible(selector.vendor.vDashboard.menus.primary.auction);
 
+        // customer dashboard menu
         await this.goto(data.subUrls.frontend.myAccount);
         await this.toBeVisible(selector.customer.cMyAccount.menus.auctions);
     }
 
     // disable auction integration module
     async disableActionIntegrationModule() {
+        // admin dashboard
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.click(selector.admin.dokan.settings.menus.sellingOptions);
         await this.notToBeVisible(selector.admin.dokan.settings.selling.newVendorEnableAuction);
 
+        // vendor dashboard menu
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.auction);
 
+        // vendor dashboard menu page
         await this.goto(data.subUrls.frontend.vDashboard.auction);
         await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
 
+        // customer dashboard menu
         await this.goto(data.subUrls.frontend.myAccount);
         await this.toBeVisible(selector.customer.cMyAccount.menus.auctions);
     }

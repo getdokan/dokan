@@ -19,6 +19,10 @@ export class SpmvPage extends VendorPage {
 
     // enable SPMV module
     async enableSpmvModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.singleProductMultiVendor);
+
         // admin dashboard
         await this.goto(data.subUrls.backend.wc.addNewProducts);
         await this.toBeVisible(spmvAdmin.spmvDiv);
@@ -35,6 +39,10 @@ export class SpmvPage extends VendorPage {
 
     // disable SPMV module
     async disableSpmvModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.singleProductMultiVendor);
+
         // admin dashboard
         await this.goto(data.subUrls.backend.wc.addNewProducts);
         await this.notToBeVisible(spmvAdmin.spmvDiv);

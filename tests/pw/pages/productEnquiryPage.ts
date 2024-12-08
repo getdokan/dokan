@@ -16,20 +16,24 @@ export class ProductEnquiryPage extends CustomerPage {
 
     // enable product enquiry module
     async enableProductEnquiryModule(productName: string) {
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.click(selector.admin.dokan.settings.menus.sellingOptions);
         await this.toBeVisible(selector.admin.dokan.settings.selling.guestProductEnquiry);
 
+        // single product page
         await this.goToProductDetails(productName);
         await this.toBeVisible(selector.customer.cSingleProduct.menus.productEnquiry);
     }
 
     // disable product enquiry module
     async disableProductEnquiryModule(productName: string) {
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.click(selector.admin.dokan.settings.menus.sellingOptions);
         await this.notToBeVisible(selector.admin.dokan.settings.selling.guestProductEnquiry);
 
+        // single product page
         await this.goToProductDetails(productName);
         await this.notToBeVisible(selector.customer.cSingleProduct.menus.productEnquiry);
     }

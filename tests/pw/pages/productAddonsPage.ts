@@ -16,10 +16,12 @@ export class ProductAddonsPage extends VendorPage {
 
     // enable product addon module
     async enableProductAddonModule() {
+        // vendor dashboard settings menu
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.hover(selector.vendor.vDashboard.menus.primary.settings);
         await this.toBeVisible(selector.vendor.vDashboard.menus.subMenus.addons);
 
+        // vendor dashboard
         await this.goto(data.subUrls.frontend.vDashboard.products);
         await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
         await this.toBeVisible(productsVendor.addon.addonSection);
@@ -27,16 +29,19 @@ export class ProductAddonsPage extends VendorPage {
 
     // disable product addon module
     async disableProductAddonModule() {
+        // vendor dashboard settings menu
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.hover(selector.vendor.vDashboard.menus.primary.settings);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.addons);
 
+        // vendor dashboard settings menu page
+        await this.goto(data.subUrls.frontend.vDashboard.settingsAddon);
+        await this.notToBeVisible(addonsVendor.productAddonsDiv);
+
+        // vendor dashboard
         await this.goto(data.subUrls.frontend.vDashboard.products);
         await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
         await this.notToBeVisible(productsVendor.addon.addonSection);
-
-        await this.goto(data.subUrls.frontend.vDashboard.settingsAddon);
-        await this.notToBeVisible(addonsVendor.productAddonsDiv);
     }
 
     // product addons render properly

@@ -48,6 +48,10 @@ export class WholesalePage extends AdminPage {
         await this.goto(data.subUrls.backend.dokan.dokan);
         await this.notToBeVisible(selector.admin.dokan.menus.wholesaleCustomer);
 
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.wholeSaleCustomer);
+        await this.notToBeVisible(wholesaleAdmin.wholesaleCustomerDiv);
+
         // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.notToBeVisible(selector.admin.dokan.settings.menus.wholesale);

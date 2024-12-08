@@ -17,12 +17,14 @@ export class ColorsPage extends AdminPage {
 
     // enable color scheme customizer
     async enableColorSchemeCustomizerModule() {
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.toBeVisible(settingsAdmin.menus.colors);
     }
 
     // disable color scheme customizer
     async disableColorSchemeCustomizerModule() {
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings, { waitUntil: 'domcontentloaded' }, true);
         await this.notToBeVisible(settingsAdmin.menus.colors);
     }

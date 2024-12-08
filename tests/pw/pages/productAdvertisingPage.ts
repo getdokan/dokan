@@ -25,6 +25,15 @@ export class ProductAdvertisingPage extends AdminPage {
 
     // enable product advertising module
     async enableProductAdvertisingModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(selector.admin.dokan.menus.advertising);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.productAdvertising);
+
+        // vendor dashboard
         await this.goto(data.subUrls.frontend.vDashboard.products);
         await this.toBeVisible(productsVendor.table.productAdvertisementColumn);
         await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
@@ -33,6 +42,19 @@ export class ProductAdvertisingPage extends AdminPage {
 
     // disable product advertising module
     async disableProductAdvertisingModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.notToBeVisible(selector.admin.dokan.menus.advertising);
+
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.productAdvertising);
+        await this.notToBeVisible(productAdvertisingAdmin.productAdvertisingDiv);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.productAdvertising);
+
+        // vendor dashboard
         await this.goto(data.subUrls.frontend.vDashboard.products);
         await this.notToBeVisible(productsVendor.table.productAdvertisementColumn);
         await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
