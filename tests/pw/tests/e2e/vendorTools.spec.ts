@@ -24,12 +24,14 @@ test.describe('Vendor tools test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.vendorImportExport, payloads.adminAuth);
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     // admin
 
-    test.only('admin can enable product importer and exporter module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can enable product importer and exporter module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.enableProductImporterExporterModule();
     });
 
@@ -56,7 +58,8 @@ test.describe('Vendor tools test', () => {
     });
 
     // admin
-    test.only('admin can disable product importer and exporter module', { tag: ['@pro', '@admin'] }, async () => {
+
+    test('admin can disable product importer and exporter module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.vendorImportExport, payloads.adminAuth);
         await admin.disableProductImporterExporterModule();
     });
