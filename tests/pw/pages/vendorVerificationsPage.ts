@@ -23,20 +23,30 @@ export class VendorVerificationsPage extends AdminPage {
 
     // enable vendor verification module
     async enableVendorVerificationModule() {
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.toBeVisible(selector.admin.dokan.settings.menus.vendorVerification);
 
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.hover(selector.vendor.vDashboard.menus.primary.settings);
         await this.toBeVisible(selector.vendor.vDashboard.menus.subMenus.verification);
     }
 
     // disable vendor verification module
     async disableVendorVerificationModule() {
+        // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.notToBeVisible(selector.admin.dokan.settings.menus.vendorVerification);
 
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.hover(selector.vendor.vDashboard.menus.primary.settings);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.verification);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.settingsVerification);
+        await this.notToBeVisible(verificationsVendor.verificationSettingsDiv);
     }
 
     // verification methods

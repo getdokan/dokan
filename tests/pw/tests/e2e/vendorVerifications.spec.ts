@@ -50,7 +50,7 @@ test.describe('Verifications test', () => {
 
     //admin
 
-    test.only('admin can enable vendor verification module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can enable vendor verification module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.enableVendorVerificationModule();
     });
 
@@ -220,7 +220,7 @@ test.describe('Verifications test', () => {
 
     // admin
 
-    test.only('admin can disable vendor verification module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can disable vendor verification module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.vendorVerification, payloads.adminAuth);
         await admin.disableVendorVerificationModule();
     });
