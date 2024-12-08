@@ -32,8 +32,14 @@ export class SellerBadgesPage extends AdminPage {
         await this.goto(data.subUrls.backend.dokan.dokan);
         await this.notToBeVisible(selector.admin.dokan.menus.sellerBadge);
 
+        await this.goto(data.subUrls.backend.dokan.abuseReports);
+        await this.notToBeVisible(sellerBadgeAdmin.sellerBadgeDiv);
+
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.badges);
+
+        await this.goto(data.subUrls.frontend.vDashboard.badges);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
     }
 
     // seller badge render properly

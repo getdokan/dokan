@@ -1123,6 +1123,7 @@ export const selector = {
 
             // Seller Badge
             sellerBadge: {
+                sellerBadgeDiv: 'div.seller-badge-list',
                 sellerBadgeText: '.seller-badge-list h1',
                 createBadge: '//a[normalize-space()="+ Create Badge"]',
 
