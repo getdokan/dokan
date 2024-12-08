@@ -7036,6 +7036,8 @@ export const selector = {
 
         // customer support tickets
         cSupportTickets: {
+            supportTicketDiv: 'div.dokan-support-customer-listing',
+
             // menus
             menus: {
                 allTickets: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"All Tickets")]',

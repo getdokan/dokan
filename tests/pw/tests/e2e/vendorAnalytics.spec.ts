@@ -28,7 +28,8 @@ test.describe('Vendor analytics test', () => {
     });
 
     // admin
-    test.only('admin can enable vendor analytics module', { tag: ['@pro', '@admin'] }, async () => {
+
+    test('admin can enable vendor analytics module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.enableVendorAnalyticsModule();
     });
 
@@ -40,7 +41,7 @@ test.describe('Vendor analytics test', () => {
 
     // admin
 
-    test.only('admin can disable vendor analytics module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can disable vendor analytics module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.vendorAnalytics, payloads.adminAuth);
         await admin.disableVendorAnalyticsModule();
     });

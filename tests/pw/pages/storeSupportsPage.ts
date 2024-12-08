@@ -55,16 +55,24 @@ export class StoreSupportsPage extends AdminPage {
         await this.notToBeVisible(selector.admin.dokan.settings.menus.storeSupport);
 
         // dokan menu page
-        await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
+        await this.goto(data.subUrls.backend.dokan.storeSupport);
         await this.notToBeVisible(storeSupportsAdmin.storeSupportDiv);
 
         // vendor dashboard menu
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
         await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.support);
 
+        // vendor dashboard page
+        await this.goto(data.subUrls.frontend.vDashboard.storeSupport);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+
         // customer dashboard menu
         await this.goto(data.subUrls.frontend.myAccount);
         await this.notToBeVisible(selector.customer.cMyAccount.menus.sellerSupportTickets);
+
+        // customer dashboard menu page
+        await this.goto(data.subUrls.frontend.supportTickets);
+        await this.notToBeVisible(supportsTicketsCustomer.supportTicketDiv);
 
         // single store page
         await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
