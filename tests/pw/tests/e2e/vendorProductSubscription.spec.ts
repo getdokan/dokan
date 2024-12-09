@@ -10,7 +10,7 @@ test.describe('Product subscriptions test', () => {
     let customer: VendorProductSubscriptionPage;
     let aPage: Page, vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
-    let subscriptionId: string;
+    const subscriptionId: string = '1';
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);

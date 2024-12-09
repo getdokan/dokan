@@ -13,7 +13,7 @@ test.describe('Commission test', () => {
     let vendor: CommissionPage;
     let aPage: Page, vPage: Page;
     let apiUtils: ApiUtils;
-    let subscriptionProductId: string;
+    const subscriptionProductId: string = '1';
     let sellerId: string;
 
     test.beforeAll(async ({ browser }) => {
