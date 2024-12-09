@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan;
 
+use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
@@ -15,6 +16,11 @@ class Assets {
     public function __construct() {
         add_action( 'init', [ $this, 'register_all_scripts' ], 10 );
         add_filter( 'dokan_localized_args', [ $this, 'conditional_localized_args' ] );
+        add_action(
+            'wp_footer', function () {
+				echo '<div class="dokan-layout" id="headlessui-portal-root"><div></div></div>';
+			}
+        );
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 10 );
@@ -360,6 +366,10 @@ class Assets {
                 'src'       => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
                 'version'   => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
             ],
+            'dokan-react-frontend' => [
+                'src'       => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
+                'version'   => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
+            ],
         ];
 
         return $styles;
@@ -373,6 +383,7 @@ class Assets {
     public function get_scripts() {
         global $wp_version;
 
+        $frontend_shipping_asset = require DOKAN_DIR . '/assets/js/frontend.asset.php';
         $suffix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
         $asset_url      = DOKAN_PLUGIN_ASSEST;
         $asset_path     = DOKAN_DIR . '/assets/';
@@ -566,6 +577,11 @@ class Assets {
                 'src'     => $asset_url . '/js/dokan-frontend.js',
                 'deps'    => [ 'jquery' ],
                 'version' => filemtime( $asset_path . 'js/dokan-frontend.js' ),
+            ],
+            'dokan-react-frontend'           => [
+                'src'     => $asset_url . '/js/frontend.js',
+                'deps'    => $frontend_shipping_asset['dependencies'],
+                'version' => $frontend_shipping_asset['version'],
             ],
         ];
 
@@ -873,6 +889,11 @@ class Assets {
             self::load_form_validate_script();
             $this->load_gmap_script();
 
+            $wc_instance = WCAdminAssets::get_instance();
+            $wc_instance->register_scripts();
+
+            wp_enqueue_script( 'dokan-react-frontend' );
+            wp_enqueue_style( 'dokan-react-frontend' );
             wp_enqueue_script( 'jquery' );
             wp_enqueue_script( 'jquery-ui' );
             wp_enqueue_script( 'jquery-ui-autocomplete' );
