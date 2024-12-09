@@ -32,6 +32,7 @@ class Settings {
         add_action( 'wp_ajax_dokan_refresh_admin_settings_field_options', [ $this, 'refresh_admin_settings_field_options' ] );
         add_filter( 'dokan_save_settings_value', [ $this, 'validate_fixed_price_values' ], 12, 2 );
         add_filter( 'dokan_get_settings_values', [ $this, 'set_withdraw_limit_gateways' ], 20, 2 );
+        add_filter( 'dokan_get_settings_values', [ $this, 'set_commission_type_if_not_set' ], 20, 2 );
         add_filter( 'dokan_settings_general_site_options', [ $this, 'add_dokan_data_clear_setting' ], 310 );
     }
 
@@ -61,9 +62,27 @@ class Settings {
     }
 
     /**
+     * Set commission type as fixed if no commission is set.
+     *
+     * @since 3.14.0
+     *
+     * @param mixed $option_name
+     * @param mixed $option_value
+     *
+     * @return void|mixed $option_value
+     */
+    public function set_commission_type_if_not_set( $option_value, $option_name ) {
+        if ( 'dokan_selling' === $option_name && empty( $option_value['commission_type'] ) ) {
+            $option_value['commission_type'] = 'fixed';
+        }
+
+        return $option_value;
+    }
+
+    /**
      * Validate price values for saving fixed price settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param string  $option_name
      * @param array $option_values

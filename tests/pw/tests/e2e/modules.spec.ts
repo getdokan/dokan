@@ -41,7 +41,7 @@ test.describe('Modules test', () => {
     });
 
     test('admin can activate module', { tag: ['@pro', '@admin'] }, async () => {
-        await apiUtils.deactivateModules([payloads.moduleIds.auction], payloads.adminAuth);
+        await apiUtils.deactivateModules(payloads.moduleIds.auction, payloads.adminAuth);
         await admin.activateDeactivateModule(data.modules.modulesName.auctionIntegration);
     });
 

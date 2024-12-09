@@ -16,7 +16,7 @@ class OrderItem implements InterfaceSetting {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $data
      */
@@ -28,7 +28,7 @@ class OrderItem implements InterfaceSetting {
     /**
      * Rrturns order item commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @throws \Exception
      *
@@ -111,7 +111,7 @@ class OrderItem implements InterfaceSetting {
     /**
      * Saves order item commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $setting
      *

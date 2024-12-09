@@ -37,7 +37,7 @@ class AdminNotice {
         $notices[] = [
             'type'              => 'info',
             'title'             => __( 'Dokan Data Update Required', 'dokan-lite' ),
-            'description'       => __( 'Updating your Dokan data is required to continue functional operations.', 'dokan-lite' ),
+            'description'       => __( 'Updating your Dokan data is required to continue functional operations. Kindly backup your database before running upgrade for safety.', 'dokan-lite' ),
             'priority'          => 1,
             'scope'             => 'global',
             'actions'           => [

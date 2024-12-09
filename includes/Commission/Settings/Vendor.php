@@ -9,7 +9,7 @@ class Vendor implements InterfaceSetting {
     /**
      * Product id to get a commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var \WeDevs\Dokan\Vendor\Vendor
      */
@@ -23,7 +23,7 @@ class Vendor implements InterfaceSetting {
     /**
      * Returns product commission settings data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -54,7 +54,7 @@ class Vendor implements InterfaceSetting {
     /**
      * Saves and returns product commission settings data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $setting {
      *

@@ -774,10 +774,6 @@ td[data-v-98ac2448],th[data-v-98ac2448]{padding:2px;background-color:#fff}td.tod
   margin-top: 5px;
   margin-bottom: 5px;
 }
-.payment-info.edit-mode .combine-commission-field .dokan-form-input.percent_fee,
-.payment-info.edit-mode .combine-commission-field .dokan-form-input.fixed_fee {
-  width: 40%;
-}
 
 .dokan-card-fun-fact {
   background: white;

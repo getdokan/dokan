@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Commission\Settings;
 /**
  * Setting builder class.
  *
- * @since DOKAN_SINCE
+ * @since 3.14.0
  */
 class Builder {
 
@@ -17,7 +17,7 @@ class Builder {
     /**
      * Builds setting for different strategies.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param string $type
      * @param        $param
