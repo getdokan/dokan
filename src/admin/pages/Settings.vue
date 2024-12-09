@@ -15,13 +15,14 @@
             <div class="dokan-settings-wrap" ref='settingsWrapper'>
                 <div class='flex d-xs:flex-col md:flex-row w-full'>
                     <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 d-xs:w-full md:w-[340px]">
-                        <div class='d-xs:flex justify-between md:hidden font-bold'>
-                            <p class='font-bold'>{{ __( 'Settings', 'dokan-lite' ) }}</p>
-                            <label v-if="screenWidth < 753" for='dokan-setting-show'><i :class="showMenu || screenWidth >= 753 ? 'fas fa-chevron-down' : 'fas fa-chevron-up'"></i></label>
-                            <input v-if="screenWidth < 753" class='!hidden' id='dokan-setting-show' checked :value='showMenu' @click='() => showMenu = !showMenu' type='checkbox'>
-                        </div>
-                        <div class="nab-section md:block" :class="showMenu || screenWidth >= 753 ? 'd-xs:block' : 'd-xs:hidden'">
-                            <div class="search-box">
+<!--                        <div class='d-xs:flex justify-between md:hidden font-bold'>-->
+<!--                            <p class='font-bold'>{{ __( 'Settings', 'dokan-lite' ) }}</p>-->
+<!--                            <label v-if="screenWidth < 753" for='dokan-setting-show'><i :class="showMenu || screenWidth >= 753 ? 'fas fa-chevron-down' : 'fas fa-chevron-up'"></i></label>-->
+<!--                            <input v-if="screenWidth < 753" class='!hidden' id='dokan-setting-show' checked :value='showMenu' @click='() => showMenu = !showMenu' type='checkbox'>-->
+<!--                        </div>-->
+                        <div class="nab-section block">
+                            <div class="flex">
+                            <div class="search-box flex-1">
                                 <label for="dokan-admin-search" class="dashicons dashicons-search"></label>
                                 <input type="text" id="dokan-admin-search" class="dokan-admin-search-settings"
                                        :placeholder="__( 'Search e.g. vendor', 'dokan-lite' )" v-model="searchText"
@@ -33,16 +34,27 @@
                                 ></span>
                             </div>
 
-                            <template v-for="section in settingSections">
-                                <div :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
-                                     @click.prevent="changeTab(section)" :key="section.id">
-                                    <img :src="section.icon_url" :alt="section.settings_title"/>
-                                    <div class="nav-content">
-                                        <div class="nav-title">{{ section.title }}</div>
-                                        <div class="nav-description">{{ section.description }}</div>
-                                    </div>
-                                </div>
-                            </template>
+                                <button class="d-xs:flex md:hidden" >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                        <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+
+
+                           <div class="d-xs:hidden md:block">
+                               <template  v-for="section in settingSections">
+                                   <div :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
+                                        @click.prevent="changeTab(section)" :key="section.id">
+                                       <img :src="section.icon_url" :alt="section.settings_title"/>
+                                       <div class="nav-content">
+                                           <div class="nav-title">{{ section.title }}</div>
+                                           <div class="nav-description">{{ section.description }}</div>
+                                       </div>
+                                   </div>
+                               </template>
+                           </div>
                         </div>
                     </div>
 
