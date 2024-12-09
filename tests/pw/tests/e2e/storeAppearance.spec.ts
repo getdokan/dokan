@@ -1,17 +1,24 @@
-import { test, Page } from '@playwright/test';
+import { test, Page, request } from '@playwright/test';
 import { StoreAppearance } from '@pages/storeAppearance';
+import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
+import { payloads } from '@utils/payloads';
+
+const { VENDOR_ID } = process.env;
 
 test.describe('Store Appearance test', () => {
     let admin: StoreAppearance;
     let aPage: Page;
+    let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new StoreAppearance(aPage);
+
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
@@ -74,6 +81,7 @@ test.describe('Store Appearance test', () => {
 
     ['enable', 'disable'].forEach((status: string) => {
         test(`admin can ${status} vendor info on single store page`, { tag: ['@lite', '@admin'] }, async () => {
+            await apiUtils.updateStore(VENDOR_ID, { show_email: 'yes' }, payloads.adminAuth);
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { hide_vendor_info: status === 'enable' ? { email: '', phone: '', address: '' } : { email: 'email', phone: 'phone', address: 'address' } });
             await admin.viewVendorInfoOnSingleStorePage(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);
         });

@@ -1429,6 +1429,28 @@ export const dbData = {
                 enabled_more_products_tab: 'on',
             },
 
+            unhideVendorInfo: {
+                email: '',
+                phone: '',
+                address: '',
+                dokan_company_name: '',
+                dokan_company_id_number: '',
+                dokan_vat_number: '',
+                dokan_bank_name: '',
+                dokan_bank_iban: '',
+            },
+
+            unhideVendorEuInfo: {
+                email: '',
+                phone: '',
+                address: '',
+                dokan_company_name: '',
+                dokan_company_id_number: '',
+                dokan_vat_number: '',
+                dokan_bank_name: '',
+                dokan_bank_iban: '',
+            },
+
             hideVendorInfo: {
                 email: 'email',
                 phone: 'phone',

@@ -32,7 +32,7 @@ test.describe('Catalog mode test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
 
-        [, sellerId, , vendorName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
+        [, sellerId, , vendorName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth); // todo: add catalog settings
 
         const vendorContext = await browser.newContext(data.header.userAuth(vendorName));
         vPage = await vendorContext.newPage();
@@ -55,11 +55,11 @@ test.describe('Catalog mode test', () => {
     });
 
     test('admin can disable hide product price in catalog mode', { tag: ['@lite', '@admin'] }, async () => {
-        const [previousSettings] = await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_product_price: 'off' });
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_product_price: 'off' });
         await vendor.accessCatalogModeSettings();
 
         // reset
-        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, previousSettings);
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_product_price: 'on' });
     });
 
     //vendor
