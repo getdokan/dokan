@@ -270,24 +270,26 @@
 
 // Responsive styles
 @media screen and (max-width: 782px) {
+    .dokan-admin-logo-wrap {
+       flex-direction: column;
+    }
+
     .dokan-admin-header {
         margin: 10px 10px 0 2px;
         padding: 12px 16px;
 
         .dokan-admin-header-content {
-            flex-direction: column;
             gap: 16px;
+            align-items:start;
         }
 
         .dokan-version-tags {
             margin: 12px 0;
             flex-wrap: wrap;
-            justify-content: center;
         }
 
         .upgrade-button {
-            width: 100%;
-            justify-content: center;
+          margin: 0;
         }
     }
 }
