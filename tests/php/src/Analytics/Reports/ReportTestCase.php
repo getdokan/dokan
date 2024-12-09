@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Test\Analytics\Reports;
 
+use WeDevs\Dokan\Commission;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
@@ -100,14 +101,19 @@ abstract class ReportTestCase extends DokanTestCase {
             [
 				[
 					'vendor_earning' => random_int( 5, 10 ),
-					'vendor_gateway_fee' => random_int( 5, 10 ),
-					'vendor_discount' => random_int( 5, 10 ),
+					// 'vendor_gateway_fee' => random_int( 5, 10 ),
+					// 'vendor_discount' => random_int( 5, 10 ),
 					'admin_commission' => random_int( 5, 10 ),
-					'admin_gateway_fee' => random_int( 5, 10 ),
-					'admin_discount' => random_int( 5, 10 ),
-					'admin_subsidy' => random_int( 5, 10 ),
+					// 'admin_gateway_fee' => random_int( 5, 10 ),
+					// 'admin_discount' => random_int( 5, 10 ),
+					// 'admin_subsidy' => random_int( 5, 10 ),
 				],
 			],
         ];
+    }
+
+    public function tear_down() {
+        dokan()->get_container()->extend( 'commission' )->setConcrete( new Commission() );
+        parent::tear_down();
     }
 }
