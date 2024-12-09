@@ -1447,10 +1447,10 @@ export const selector = {
                     popup: {
                         dokanUpgradePopup: '#dokan-upgrade-popup',
                         closeDokanUpgradePopup: '#dokan-upgrade-popup .close',
-                        upgradeToProText: '.upgrade-text',
-                        upgradeToPro: '.upgrade-button',
-                        proCard: '.promo-card',
-                        alreadyUpdated: '.already-updated',
+                        upgradeToProText: 'div.modal-content p.upgrade-text',
+                        upgradeToPro: 'div.modal-content a.upgrade-button',
+                        proCard: 'div.modal-content div.promo-card',
+                        alreadyUpdated: 'div.modal-content a.already-updated',
                     },
 
                     // modules
