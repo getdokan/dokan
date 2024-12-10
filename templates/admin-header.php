@@ -13,9 +13,9 @@
             // Always show Lite version
             $lite_version = DOKAN_PLUGIN_VERSION;
             ?>
-            <span class="version-tag lite">
+            <div class="version-tag lite ">
                 Lite: <?php echo esc_html( $lite_version ); ?>
-            </span>
+            </div>
 
             <?php
             // Show Pro version if installed

@@ -38,32 +38,35 @@
         .version-tag {
 
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 1rem;
             line-height: 20px;
             font-weight: 400;
+            padding: 0.5rem 1rem;
+            max-height: 2rem;
             &.lite {
-                padding: 8px 16px;
                 background: #FF9B5366;
-                color: #995C00;
+                color: #7B4E2E;
+                display: flex;
+                align-items: center;
             }
 
             &.pro {
-                padding: 8px;
                 background: #D8D8FE;
                 color: @dokan-color;
                 display: flex;
                 align-items: center;
                 gap: 8px;
                 text-transform: capitalize;
-                font-weight: 400;
+                font-weight: 450;
                 & .version-tag-pro-badge{
                     background: @dokan-color;
                     color: white;
-                    border-radius: 20px;
-                    padding:4px 8px;
+                    border-radius: 28px;
                     display: inline-flex;
                     align-items: center;
-                    font-size: 12px;
+                    padding: 3px 9px;
+                    font-size: 16px;
+                    margin: -10px 0 -10px -10px;
                 }
             }
         }
