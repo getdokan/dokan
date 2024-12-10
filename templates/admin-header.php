@@ -38,7 +38,7 @@
                     <?php echo esc_html( $license_plan ); ?>: <?php echo esc_html( $pro_version ); ?>
                 </div>
                 <?php
-            } else {
+            } elseif ( ! dokan()->is_pro_exists() ) {
                 // Show upgrade button if Pro not installed
                 $upgrade_url = 'https://dokan.co/wordpress/pricing/';
                 ?>
