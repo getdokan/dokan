@@ -8,7 +8,7 @@ use WeDevs\Dokan\Commission\Model\Setting;
 /**
  * Default setting class
  *
- * @since DOKAN_SINCE
+ * @since 3.14.0
  */
 class DefaultSetting implements InterfaceSetting {
 
@@ -17,7 +17,7 @@ class DefaultSetting implements InterfaceSetting {
     /**
      * Returns default setting.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -31,7 +31,7 @@ class DefaultSetting implements InterfaceSetting {
     /**
      * Saves and returns default setting
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $setting
      *
