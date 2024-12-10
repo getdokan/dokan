@@ -6,32 +6,32 @@
 
 ## :bookmark: Table of contents
 
--   [Pre-requisites :pushpin:](#pre-requisites)
-    -   [Install Node](#install-node)
-    -   [Install NVM](#install-nvm)
-    -   [Install Docker](#install-docker)
+- [Pre-requisites :pushpin:](#pre-requisites)
+    - [Install Node](#install-node)
+    - [Install NVM](#install-nvm)
+    - [Install Docker](#install-docker)
 
  <br/>
 
--   [Prep for tests :construction:](#prep-for-tests)
-    -   [Build Dokan plugin](#build-dokan-plugin)
-    -   [Install Dependencies](#install-dependencies)
-    -   [Start Wordpress Environment](#start-wordpress-environment)
-    -   [Create Env file](#create-env-file)
+- [Prep for tests :construction:](#prep-for-tests)
+    - [Build Dokan plugin](#build-dokan-plugin)
+    - [Install Dependencies](#install-dependencies)
+    - [Start Wordpress Environment](#start-wordpress-environment)
+    - [Create Env file](#create-env-file)
 
 <br/>
 
--   [Running tests :test_tube: ](#running-tests)
-    -   [How to run test projects](#how-to-run-test-projects)
-    -   [How to run tests](#how-to-run-tests)
-    -   [How to skip tests](#how-to-skip-tests)
-    -   [How to debug tests](#how-to-debug-tests)
-    -   [How to serve reports](#how-to-serve-reports)
+- [Running tests :test_tube: ](#running-tests)
+    - [How to run test projects](#how-to-run-test-projects)
+    - [How to run tests](#how-to-run-tests)
+    - [How to skip tests](#how-to-skip-tests)
+    - [How to debug tests](#how-to-debug-tests)
+    - [How to serve reports](#how-to-serve-reports)
 
 <br/>
 
--   [Contributing to Dokan-e2e-api-test](#Contributing-to-dokan-e2e-api-test)
-    -   [How to wright tests](#how-to-run-tests)
+- [Contributing to Dokan-e2e-api-test](#Contributing-to-dokan-e2e-api-test)
+    - [How to wright tests](#how-to-run-tests)
 
 <br/>
 

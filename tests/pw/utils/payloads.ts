@@ -3794,7 +3794,7 @@ export const payloads = {
             rating: '0.00',
             count: 1,
         },
-        enabled: true,
+        enabled: 'yes',
         payment: {
             paypal: {
                 email: 'paypal@g.c',
@@ -3810,9 +3810,9 @@ export const payloads = {
                 swift: '12345',
             },
         },
-        trusted: true,
+        trusted: 'yes',
         store_open_close: {
-            enabled: false,
+            enabled: 'yes',
             time: [],
             open_notice: 'Store is open',
             close_notice: 'Store is closed',
@@ -3850,7 +3850,7 @@ export const payloads = {
             threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
-        show_email: false,
+        show_email: 'yes',
         address: {
             street_1: 'abc street',
             street_2: 'xyz street',
@@ -3866,16 +3866,15 @@ export const payloads = {
         gravatar_id: 0,
         shop_url: '',
 
-        toc_enabled: false,
+        enable_tnc: 'yes',
         store_toc: '',
-        featured: true,
+        featured: 'yes',
         rating: {
             rating: '0.00',
             count: 1,
         },
-        trusted: true,
-        enabled: true,
-        registered: '',
+        trusted: 'yes',
+        enabled: 'yes',
         payment: {
             paypal: {
                 0: 'email',
@@ -3894,7 +3893,7 @@ export const payloads = {
             stripe: false,
         },
         store_open_close: {
-            enabled: false,
+            enabled: 'yes',
             time: [],
             open_notice: 'Store is open',
             close_notice: 'Store is closed',
@@ -3954,11 +3953,7 @@ export const payloads = {
         enable_tnc: 'on',
         store_tnc: 'test Vendor terms and conditions',
         featured: 'yes',
-        // rating: {
-        //     rating: '4.00', // todo:  doesn't work on lite [might not implemented on lite]
-        //     count: 1,
-        // },
-        enabled: true,
+        enabled: 'yes',
         payment: {
             paypal: {
                 email: 'paypal@g.c',
@@ -3974,7 +3969,7 @@ export const payloads = {
                 swift: '12345',
             },
         },
-        trusted: true,
+        trusted: 'yes',
         company_name: 'company name',
         vat_number: '123456789',
         company_id_number: '123456789',
@@ -4017,6 +4012,9 @@ export const payloads = {
     },
 
     storeOpenClose: {
+        featured: 'yes',
+        enabled: 'yes',
+        trusted: 'yes',
         store_open_close: {
             enabled: 'yes',
             time: {
@@ -4097,12 +4095,8 @@ export const payloads = {
         gravatar_id: 0,
         enable_tnc: 'on',
         store_tnc: 'test Vendor terms and conditions',
-        featured: true, // disabling this also disable publish product directly
-        // rating: {
-        //     rating: '4.00', // todo:  not supported on create api, has separate api store reviews
-        //     count: 1,
-        // },
-        enabled: true,
+        featured: 'yes',
+        enabled: 'yes',
         payment: {
             paypal: {
                 email: 'paypal@g.c',
@@ -4126,7 +4120,7 @@ export const payloads = {
             //     value: '',
             // },
         },
-        trusted: true,
+        trusted: 'yes',
         // store_open_close: {
         //     // todo: doesn't work on create api need support
         //     enabled: 'yes',
@@ -4238,12 +4232,8 @@ export const payloads = {
         gravatar_id: 0,
         enable_tnc: 'on',
         store_tnc: 'test Vendor terms and conditions',
-        featured: true, // disabling this also disable publish product directly
-        // rating: {
-        //     rating: '4.00', // todo:  not supported on create api, has separate api store reviews
-        //     count: 1,
-        // },
-        enabled: true,
+        featured: 'yes',
+        enabled: 'yes',
         payment: {
             paypal: {
                 email: 'paypal@g.c',
@@ -4267,7 +4257,7 @@ export const payloads = {
             //     value: '',
             // },
         },
-        trusted: true,
+        trusted: 'yes',
         sale_only_here: false,
         company_name: faker.company.name(),
         company_id_number: faker.string.alphanumeric(5),
