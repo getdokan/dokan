@@ -46,7 +46,6 @@ test.describe('Booking Product details functionality test', () => {
     });
 
     // product virtual options
-
     test('vendor can add booking product accommodation booking option', { tag: ['@pro', '@vendor'] }, async () => {
         const [, productId] = await apiUtils.createBookableProduct(payloads.createBookableProductRequiredFields(), payloads.vendorAuth);
         await vendor.addProductAccommodationBookingOptions(productId, data.product.booking.accommodationBookingOptions);
@@ -395,12 +394,12 @@ test.describe('Booking Product details functionality test', () => {
     });
 
     test('vendor can export booking product addon', { tag: ['@pro', '@vendor'] }, async () => {
-        const [responseBody, productId] = await apiUtils.createProductWithAddon(payloads.createBookableProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
+        const [responseBody, productId] = await apiUtils.createBookingProductWithAddon(payloads.createBookableProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
         await vendor.exportAddon(productId, serialize(apiUtils.getMetaDataValue(responseBody.meta_data, '_product_addons')));
     });
 
     test('vendor can remove booking product addon', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, productId, , addonNames] = await apiUtils.createProductWithAddon(payloads.createBookableProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
+        const [, productId, , addonNames] = await apiUtils.createBookingProductWithAddon(payloads.createBookableProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
         await vendor.removeAddon(productId, addonNames[0] as string);
     });
 });
