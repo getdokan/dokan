@@ -1379,7 +1379,7 @@ export const dbData = {
             featureSeller: 'widget_dokan-feature-seller-widget',
             filter: 'widget_dokan-filter-product',
             geolocation: 'widget_dokan-geolocation-widget-filters',
-            liveSearch: 'dokna_product_search-2',
+            liveSearch: 'widget_dokna_product_search',
             productAdvertisement: 'widget_dokan_product_advertisement_widget',
             productLocation: 'widget_dokan-geolocation-widget-product-location',
             sellerBadge: 'widget_dokan_seller_badges',

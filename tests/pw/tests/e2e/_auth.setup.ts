@@ -4,7 +4,6 @@ import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
-import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
