@@ -16,7 +16,7 @@ export class PrivacyPolicyPage extends CustomerPage {
     // contact vendor
     async contactVendor(storeName: string, storeContactData: storeContactData) {
         await this.toPass(async () => {
-            await this.gotoUntilNetworkidle(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+            await this.gotoUntilNetworkidle(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), { waitUntil: 'networkidle' }, true);
             await this.toBeVisible(singleStoreCustomer.storeContactForm.storeContactForm);
         });
         await this.clearAndType(singleStoreCustomer.storeContactForm.name, storeContactData.name);

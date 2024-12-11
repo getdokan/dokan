@@ -113,7 +113,7 @@ setup.describe('setup woocommerce settings', () => {
     });
 
     setup('disable woocommerce variable product tour', { tag: ['@lite'] }, async () => {
-        await dbUtils.setUserMeta('1','woocommerce_admin_variable_product_tour_shown', 'yes', false);
+        await dbUtils.setUserMeta('1', 'woocommerce_admin_variable_product_tour_shown', 'yes', false);
     });
 
     setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {
