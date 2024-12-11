@@ -48,18 +48,18 @@ test.describe('Booking Product details functionality test', () => {
     // product virtual options
 
     test('vendor can add booking product accommodation booking option', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, productId] = await apiUtils.createProduct(payloads.createBookableProductRequiredFields(), payloads.vendorAuth);
+        const [, productId] = await apiUtils.createBookableProduct(payloads.createBookableProductRequiredFields(), payloads.vendorAuth);
         await vendor.addProductAccommodationBookingOptions(productId, data.product.booking.accommodationBookingOptions);
     });
 
     test('vendor can update booking product accommodation booking option', { tag: ['@pro', '@vendor'] }, async () => {
         test.skip(true, 'need min & max duration'); // todo: need to add min & max duration
-        const [, productId] = await apiUtils.createProduct({ ...payloads.createBookableProductWithAccommodation() }, payloads.vendorAuth);
+        const [, productId] = await apiUtils.createBookableProduct({ ...payloads.createBookableProductWithAccommodation() }, payloads.vendorAuth);
         await vendor.addProductAccommodationBookingOptions(productId, { minimumNumberOfNightsAllowed: '1', maximumNumberOfNightsAllowed: '5', checkInTime: '1:00 am', checkOutTime: '1:00 am' });
     });
 
     test('vendor can remove booking product accommodation booking option', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, productId] = await apiUtils.createProduct({ ...payloads.createBookableProductWithAccommodation() }, payloads.vendorAuth);
+        const [, productId] = await apiUtils.createBookableProduct({ ...payloads.createBookableProductWithAccommodation() }, payloads.vendorAuth);
         await vendor.removeProductAccommodationBookingOptions(productId);
     });
 
@@ -77,7 +77,7 @@ test.describe('Booking Product details functionality test', () => {
     test('vendor can remove booking product category (multiple)', { tag: ['@pro', '@vendor'] }, async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { product_category_style: 'multiple' });
         const uncategorizedId = await apiUtils.getCategoryId('Uncategorized', payloads.adminAuth);
-        const [, productId] = await apiUtils.createProduct({ ...payloads.createBookableProduct(), categories: [{ id: uncategorizedId }, { id: CATEGORY_ID }] }, payloads.vendorAuth); // need multiple categories
+        const [, productId] = await apiUtils.createBookableProduct({ ...payloads.createBookableProduct(), categories: [{ id: uncategorizedId }, { id: CATEGORY_ID }] }, payloads.vendorAuth); // need multiple categories
         await vendor.removeProductCategory(productId, [data.product.category.clothings]);
     });
 
@@ -169,12 +169,12 @@ test.describe('Booking Product details functionality test', () => {
     // product virtual options
 
     test('vendor can add booking product virtual option', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, productId] = await apiUtils.createProduct(payloads.createBookableProductRequiredFields(), payloads.vendorAuth);
+        const [, productId] = await apiUtils.createBookableProduct(payloads.createBookableProductRequiredFields(), payloads.vendorAuth);
         await vendor.addProductVirtualOption(productId, true);
     });
 
     test('vendor can remove booking product virtual option', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, productId] = await apiUtils.createProduct({ ...payloads.createBookableProductRequiredFields(), virtual: true }, payloads.vendorAuth);
+        const [, productId] = await apiUtils.createBookableProduct({ ...payloads.createBookableProductRequiredFields(), virtual: true }, payloads.vendorAuth);
         await vendor.addProductVirtualOption(productId, false);
     });
 
@@ -349,14 +349,14 @@ test.describe('Booking Product details functionality test', () => {
 
     test('vendor can create booking product attribute term', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , , attributeName] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
-        const [, productId] = await apiUtils.createProduct(payloads.createBookableProductRequiredFields(), payloads.vendorAuth);
+        const [, productId] = await apiUtils.createBookableProduct(payloads.createBookableProductRequiredFields(), payloads.vendorAuth);
         await vendor.addProductAttribute(productId, { ...data.product.productInfo.attribute, attributeName: attributeName }, true);
     });
 
     test('vendor can remove booking product attribute', { tag: ['@pro', '@vendor'] }, async () => {
         const [, attributeId, , attributeName, attributeTerm] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
         const attributes = { id: attributeId, name: attributeName, options: [attributeTerm] };
-        const [, productId] = await apiUtils.createProduct({ ...payloads.createBookableProduct(), attributes: [attributes] }, payloads.vendorAuth);
+        const [, productId] = await apiUtils.createBookableProduct({ ...payloads.createBookableProduct(), attributes: [attributes] }, payloads.vendorAuth);
         await vendor.removeProductAttribute(productId, attributeName);
     });
 
@@ -364,7 +364,7 @@ test.describe('Booking Product details functionality test', () => {
         const [, attributeId, , attributeName, attributeTerm] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
         const [, , , , attributeTerm2] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
         const attributes = { id: attributeId, name: attributeName, options: [attributeTerm, attributeTerm2] };
-        const [, productId] = await apiUtils.createProduct({ ...payloads.createBookableProduct(), attributes: [attributes] }, payloads.vendorAuth);
+        const [, productId] = await apiUtils.createBookableProduct({ ...payloads.createBookableProduct(), attributes: [attributes] }, payloads.vendorAuth);
         await vendor.removeProductAttributeTerm(productId, attributeName, attributeTerm2);
     });
 

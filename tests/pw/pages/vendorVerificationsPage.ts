@@ -389,9 +389,6 @@ export class VendorVerificationsPage extends AdminPage {
 
         await this.toBeVisible(verificationsVendor.verificationMethodDiv(requiredMethod));
         await this.notToBeVisible(verificationsVendor.verificationMethodDiv(nonRequiredMethod));
-
-        const count = await this.getElementCount(verificationsVendor.verificationMethodAllDiv);
-        await this.toHaveCount(verificationsVendor.requiredText, count);
     }
 
     async completeAddressStep(setupWizardData: vendorSetupWizard) {

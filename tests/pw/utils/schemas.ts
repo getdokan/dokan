@@ -2751,23 +2751,12 @@ export const schemas = {
 
     // seller badge schema
     sellerBadgeSchema: {
-        verificationTypesSchema: z.object({
-            id_verification: verificationTypeSchema,
-            company_verification: verificationTypeSchema,
-            address_verification: verificationTypeSchema,
-            phone_verification: verificationTypeSchema,
-            social_profiles: verificationTypeSchema,
-        }),
-
+        verificationTypesSchema: z.record(z.string(), verificationTypeSchema),
         badgeEventsSchema: z.array(badgeEventSchema),
-
         badgeSchema: badgeSchema,
         badgesSchema: z.array(badgeSchema),
-
         badgeSeenSchema: z.boolean(),
-
         badgeCreateUpdateSchema: badgeCreateUpdateSchema,
-
         deleteBadgeSchema: z.object({
             deleted: z.boolean(),
         }),

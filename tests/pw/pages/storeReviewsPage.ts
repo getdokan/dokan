@@ -40,7 +40,7 @@ export class StoreReviewsPage extends AdminPage {
 
         // single store page
         await this.goIfNotThere(data.subUrls.frontend.storeReviews(helpers.slugify(storeName)));
-        await this.toBeVisible(selector.customer.cSingleStore.reviews.noReviewsFound); //todo: shouldn't be visible , bug
+        await this.toBeVisible(selector.customer.cSingleStore.storeTabs.reviews);
     }
 
     // store reviews render properly
