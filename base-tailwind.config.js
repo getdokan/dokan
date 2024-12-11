@@ -22,6 +22,16 @@ const baseConfig = {
                         DEFAULT:
                             'var(--dokan-button-background-color, #F05025)',
                         hover: 'var(--dokan-button-hover-background-color, #F05025)',
+                        secondary: {
+                            DEFAULT:
+                                'var(--dokan-button-secondary-background-color, var(--dokan-button-text-color))',
+                            hover: 'var(--dokan-button-secondary-hover-background-color, var(--dokan-button-background-color))',
+                        },
+                        tertiary: {
+                            DEFAULT:
+                                'var(--dokan-button-tertiary-background-color, #00000000)',
+                            hover: 'var(--dokan-button-tertiary-hover-background-color, var(--dokan-button-text-color))',
+                        },
                     },
                 },
             },
@@ -34,6 +44,16 @@ const baseConfig = {
                     btn: {
                         DEFAULT: 'var(--dokan-button-text-color, #ffffff)',
                         hover: 'var(--dokan-button-hover-text-color, #ffffff)',
+                        secondary: {
+                            DEFAULT:
+                                'var(--dokan-button-secondary-text-color, var(--dokan-button-background-color))',
+                            hover: 'var(--dokan-button-secondary-hover-text-color, var(--dokan-button-text-color))',
+                        },
+                        tertiary: {
+                            DEFAULT:
+                                'var(--dokan-button-tertiary-text-color, var(--dokan-button-background-color))',
+                            hover: 'var(--dokan-button-tertiary-hover-text-color, var(--dokan-button-background-color))',
+                        },
                     },
                 },
             },
@@ -42,6 +62,16 @@ const baseConfig = {
                     btn: {
                         DEFAULT: 'var(--dokan-button-border-color, #F05025)',
                         hover: 'var(--dokan-button-hover-border-color, #F05025)',
+                        secondary: {
+                            DEFAULT:
+                                'var(--dokan-button-secondary-border-color, var(--dokan-button-border-color))',
+                            hover: 'var(--dokan-button-secondary-hover-border-color, var(--dokan-button-border-color))',
+                        },
+                        tertiary: {
+                            DEFAULT:
+                                'var(--dokan-button-tertiary-border-color, #00000000)',
+                            hover: 'var(--dokan-button-tertiary-hover-border-color, var(--dokan-button-border-color))',
+                        },
                     },
                 },
             },
