@@ -1,14 +1,14 @@
 # Copyright (c) 2024 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.14.2\n"
+"Project-Id-Version: Dokan 3.14.3\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-12-06T12:33:06+00:00\n"
+"POT-Creation-Date: 2024-12-10T07:02:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -62,7 +62,7 @@ msgid "Settings"
 msgstr ""
 
 #: dokan-class.php:411
-#: templates/admin-header.php:63
+#: templates/admin-header.php:118
 #: assets/js/vue-admin.js:2
 msgid "Documentation"
 msgstr ""
@@ -7848,39 +7848,39 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#: templates/admin-header.php:19
+#: templates/admin-header.php:74
 msgid "Get Help"
 msgstr ""
 
-#: templates/admin-header.php:34
+#: templates/admin-header.php:89
 msgid "What’s New"
 msgstr ""
 
-#: templates/admin-header.php:47
+#: templates/admin-header.php:102
 msgid "Get Support"
 msgstr ""
 
-#: templates/admin-header.php:55
+#: templates/admin-header.php:110
 msgid "Community"
 msgstr ""
 
-#: templates/admin-header.php:72
+#: templates/admin-header.php:127
 msgid "FAQ"
 msgstr ""
 
-#: templates/admin-header.php:80
+#: templates/admin-header.php:135
 msgid "Basic & Fundamental"
 msgstr ""
 
-#: templates/admin-header.php:89
+#: templates/admin-header.php:144
 msgid "Request a Feature"
 msgstr ""
 
-#: templates/admin-header.php:97
+#: templates/admin-header.php:152
 msgid "Run Setup Wizard"
 msgstr ""
 
-#: templates/admin-header.php:105
+#: templates/admin-header.php:160
 #: assets/js/vue-admin.js:2
 msgid "Import dummy data"
 msgstr ""
