@@ -2057,6 +2057,13 @@ export class ApiUtils {
         return [...order, productId];
     }
 
+    // create multivendor order
+    async createMultivendorOrder(orderPayload: any, lineItemPayload?: any) {
+        const lineItems = await this.createLineItemsEnhanced(lineItemPayload);
+        const [, parentOrder, parentOrderId] = await this.createOrderWc({ ...orderPayload, line_items: lineItems });
+        return [parentOrder, parentOrderId];
+    }
+
     // create order with status
     async createOrderWithStatus(product: string | object, order: any, status: string, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
         const [response, responseBody, orderId, productId] = await this.createOrder(product, order, auth);
@@ -2066,6 +2073,7 @@ export class ApiUtils {
 
     // create line items
     async createLineItems(products = 1, quantities = [1], authors = [payloads.vendorAuth]) {
+        // todo: replace createLineItems with createLineItemsEnhanced and update tests
         const lineItems = [];
 
         for (let i = 0; i < products; i++) {
@@ -2075,6 +2083,28 @@ export class ApiUtils {
             lineItems.push({ product_id: productId, quantity: quantity });
         }
 
+        return lineItems;
+    }
+
+    // create multivendor line items
+    async createLineItemsEnhanced(multivendorLineItem: { author: string; products: string | string[]; quantities: string | string[] }[]) {
+        const lineItems = [];
+        for (const item of multivendorLineItem) {
+            const { author, products, quantities } = item;
+
+            // Validate lengths only if both `products` and `quantities` are arrays
+            if (Array.isArray(products) && Array.isArray(quantities) && products.length !== quantities.length) {
+                throw new Error('products and quantities must be the same length');
+            }
+
+            const quantitiesArray = Array.isArray(quantities) ? quantities : [quantities];
+            const length = Array.isArray(products) ? products.length : Number(item.products);
+            for (let i = 0; i < length; i++) {
+                const productId = Array.isArray(products) ? products[i] : (await this.createProduct({ ...payloads.createProduct(), post_author: author }, payloads.adminAuth))[1];
+                const quantity = quantitiesArray[i % quantitiesArray.length];
+                lineItems.push({ product_id: productId, quantity: quantity });
+            }
+        }
         return lineItems;
     }
 

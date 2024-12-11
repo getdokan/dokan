@@ -348,6 +348,15 @@
           admin can set commission to Dokan subscription product (category based): true
           admin can set commission to Dokan subscription product (specific category based): true
           admin can view commission meta-box on order details [lite]: true
+          admin can view sub orders meta-box on parent order details [lite]: true
+          admin can view related orders meta-box on child order details [lite]: true
+          admin can view commission on product list [lite]: true
+          admin can view commission on order list [lite]: true
+          vendor can view earning on product list [lite]: true
+          vendor can view earning on product add page [lite]: true
+          vendor can view earning on product edit page [lite]: true
+          vendor can view earning on order list [lite]: true
+          vendor can view earning on order details [lite]: true
 
 - page: 'Withdraw'
   features:
