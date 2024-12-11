@@ -31,7 +31,7 @@ export class ProductAdvertisingPage extends AdminPage {
 
         // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
-        await this.notToBeVisible(selector.admin.dokan.settings.menus.productAdvertising);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.productAdvertising);
 
         // vendor dashboard
         await this.goto(data.subUrls.frontend.vDashboard.products);

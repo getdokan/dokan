@@ -25,7 +25,7 @@ export class VendorVerificationsPage extends AdminPage {
     async enableVendorVerificationModule() {
         // dokan menu
         await this.goto(data.subUrls.backend.dokan.dokan);
-        await this.notToBeVisible(selector.admin.dokan.menus.advertising);
+        await this.notToBeVisible(selector.admin.dokan.menus.verifications);
 
         // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
@@ -41,10 +41,10 @@ export class VendorVerificationsPage extends AdminPage {
     async disableVendorVerificationModule() {
         // dokan menu
         await this.goto(data.subUrls.backend.dokan.dokan);
-        await this.notToBeVisible(selector.admin.dokan.menus.advertising);
+        await this.notToBeVisible(selector.admin.dokan.menus.verifications);
 
         // dokan menu page
-        await this.goto(data.subUrls.backend.dokan.productAdvertising);
+        await this.goto(data.subUrls.backend.dokan.verifications);
         await this.notToBeVisible(verificationsAdmin.verificationsDiv);
 
         // dokan settings

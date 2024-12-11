@@ -62,7 +62,7 @@ test.describe('Live search test', () => {
     // admin
 
     test('admin can disable live search module', { tag: ['@pro', '@admin'] }, async () => {
-        await apiUtils.deactivateModules(payloads.moduleIds.liveChat, payloads.adminAuth);
+        await apiUtils.deactivateModules(payloads.moduleIds.liveSearch, payloads.adminAuth);
         await admin.disableLiveSearchModule();
     });
 });

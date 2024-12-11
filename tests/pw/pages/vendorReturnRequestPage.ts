@@ -50,7 +50,7 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.rma);
 
         // vendor dashboard settings menu page
-        await this.goto(data.subUrls.frontend.vDashboard.settingsDeliveryTime);
+        await this.goto(data.subUrls.frontend.vDashboard.settingsRma);
         await this.notToBeVisible(returnRequestSettingsVendor.rmaSettingsDiv);
     }
 
