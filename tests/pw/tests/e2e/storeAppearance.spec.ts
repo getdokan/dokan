@@ -1,5 +1,5 @@
 import { test, Page, request } from '@playwright/test';
-import { StoreAppearance } from '@pages/storeAppearance';
+import { StoreAppearancePage } from '@pages/storeAppearancePage';
 import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
@@ -9,20 +9,20 @@ import { payloads } from '@utils/payloads';
 const { VENDOR_ID } = process.env;
 
 test.describe('Store Appearance test', () => {
-    let admin: StoreAppearance;
+    let admin: StoreAppearancePage;
     let aPage: Page;
     let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
-        admin = new StoreAppearance(aPage);
+        admin = new StoreAppearancePage(aPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeLocation, dbData.dokanWidgets.values.storeLocationWidget);
-        await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeOpenClose, dbData.dokanWidgets.values.storeOpenCloseWidget);
-        await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeContactForm, dbData.dokanWidgets.values.storeContactFormWidget);
-        await dbUtils.updateOptionValue('sidebars_widgets', { 'sidebar-store': [dbData.dokanWidgets.widgets.storeLocation, dbData.dokanWidgets.widgets.storeOpenClose, dbData.dokanWidgets.widgets.storeContactForm] });
+        // await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeLocation, dbData.dokanWidgets.values.storeLocationWidget);
+        // await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeOpenClose, dbData.dokanWidgets.values.storeOpenCloseWidget);
+        // await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeContactForm, dbData.dokanWidgets.values.storeContactFormWidget);
+        // await dbUtils.updateOptionValue('sidebars_widgets', { 'sidebar-store': [dbData.dokanWidgets.widgets.storeLocation, dbData.dokanWidgets.widgets.storeOpenClose, dbData.dokanWidgets.widgets.storeContactForm] });
     });
 
     test.afterAll(async () => {
@@ -40,7 +40,7 @@ test.describe('Store Appearance test', () => {
     });
 
     ['Google Maps', 'Mapbox'].forEach((api: string) => {
-        test.skip(`admin can set map api source (${api})`, { tag: ['@lite', '@admin'] }, async () => {
+        test(`admin can set map api source (${api})`, { tag: ['@lite', '@admin'] }, async () => {
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { store_map: 'on', map_api_source: api === 'Google Maps' ? 'google_maps' : 'mapbox' });
             await admin.viewMapAPISource(api as 'Google Maps' | 'Mapbox', data.predefined.vendorStores.vendor1);
         });
@@ -87,7 +87,7 @@ test.describe('Store Appearance test', () => {
 
     ['enable', 'disable'].forEach((status: string) => {
         test(`admin can ${status} vendor info on single store page`, { tag: ['@lite', '@admin'] }, async () => {
-            // await apiUtils.updateStore(VENDOR_ID, { show_email: 'yes' }, payloads.adminAuth); // todo: apply this after issue fix
+            // await apiUtils.updateStore(VENDOR_ID, { show_email: 'yes' }, payloads.adminAuth); // todo: apply this after api issue fix
             await apiUtils.updateStore(VENDOR_ID, { ...payloads.storeResetFields, show_email: 'yes' }, payloads.adminAuth);
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { hide_vendor_info: status === 'enable' ? { email: '', phone: '', address: '' } : { email: 'email', phone: 'phone', address: 'address' } });
             await admin.viewVendorInfoOnSingleStorePage(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);

@@ -7,13 +7,13 @@ import { data } from '@utils/testData';
 // selectors
 const singleStoreCustomer = selector.customer.cSingleStore;
 
-export class StoreAppearance extends BasePage {
+export class StoreAppearancePage extends BasePage {
     constructor(page: Page) {
         super(page);
     }
 
     async gotoSingleStore(storeName: string): Promise<void> {
-        await this.gotoUntilNetworkidle(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.gotoUntilNetworkidle(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), { waitUntil: 'networkidle' }, true);
     }
 
     // view store map on store sidebar
