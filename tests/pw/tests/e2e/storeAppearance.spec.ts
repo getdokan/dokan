@@ -81,7 +81,8 @@ test.describe('Store Appearance test', () => {
 
     ['enable', 'disable'].forEach((status: string) => {
         test(`admin can ${status} vendor info on single store page`, { tag: ['@lite', '@admin'] }, async () => {
-            await apiUtils.updateStore(VENDOR_ID, { show_email: 'yes' }, payloads.adminAuth);
+            // await apiUtils.updateStore(VENDOR_ID, { show_email: 'yes' }, payloads.adminAuth); // todo: apply this after issue fix
+            await apiUtils.updateStore(VENDOR_ID, { ...payloads.storeResetFields, show_email: 'yes' }, payloads.adminAuth);
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { hide_vendor_info: status === 'enable' ? { email: '', phone: '', address: '' } : { email: 'email', phone: 'phone', address: 'address' } });
             await admin.viewVendorInfoOnSingleStorePage(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);
         });
