@@ -32,7 +32,7 @@ test.describe('Catalog mode test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
 
-        [, sellerId, , vendorName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth); // todo: add catalog settings
+        [, sellerId, , vendorName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
 
         const vendorContext = await browser.newContext(data.header.userAuth(vendorName));
         vPage = await vendorContext.newPage();
