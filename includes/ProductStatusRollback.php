@@ -28,7 +28,7 @@ class ProductStatusRollback {
      * @since DOKAN_PRO_SINCE
      */
     public function __construct() {
-        $this->setup_hooks();
+        $this->register_hooks();
     }
 
     /**
@@ -38,7 +38,7 @@ class ProductStatusRollback {
      *
      * @return void
      */
-    private function setup_hooks(): void {
+    private function register_hooks(): void {
         add_action( 'dokan_rollback_product_status_reject_to_draft_schedule', [ $this, 'process_batch_reject_operation' ], 10, 2 );
     }
 
