@@ -46,7 +46,6 @@ env:
     CUSTOMER2: customer2
     USER_PASSWORD: 01dokan01
     GMAP: ${{secrets.GMAP}}
-    MAPBOX: ${{secrets.MAPBOX}}
     BASE_URL: http://localhost:9999
     CI: true
     FORCE_COLOR: 1

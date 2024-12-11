@@ -13,8 +13,8 @@ test.describe('Live search test', () => {
         cPage = await customerContext.newPage();
         customer = new LiveSearch(cPage);
 
-        await dbUtils.updateOptionValue(dbData.dokanWidgets.names.liveSearch, dbData.dokanWidgets.values.liveSearchWidget);
-        await dbUtils.updateOptionValue('sidebars_widgets', { ...dbData.sidebarWidgets, 'sidebar-1': [dbData.dokanWidgets.widgets.liveSearch] });
+        await dbUtils.updateOptionValue('widget_dokna_product_search', dbData.liveSearchWidget);
+        await dbUtils.updateOptionValue('sidebars_widgets', { ...dbData.sidebarWidgets, 'sidebar-1': ['dokna_product_search-2'] });
         await dbUtils.setOptionValue(dbData.dokan.optionName.liveSearch, dbData.dokan.liveSearchSettings);
     });
 

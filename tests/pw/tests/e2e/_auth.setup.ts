@@ -3,10 +3,7 @@ import { LoginPage } from '@pages/loginPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
-import { dbUtils } from '@utils/dbUtils';
 import { helpers } from '@utils/helpers';
-
-const { DOKAN_PRO } = process.env;
 
 setup.describe('add & authenticate users', () => {
     let apiUtils: ApiUtils;
@@ -36,18 +33,6 @@ setup.describe('add & authenticate users', () => {
 
     setup('add vendor1', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth, true);
-        // add open-close time
-        await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
-        // add review
-        if (DOKAN_PRO) {
-            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.customerAuth);
-        }
-        // add map location
-        await dbUtils.setUserMeta(sellerId, 'dokan_geo_latitude', '40.7127753', false);
-        await dbUtils.setUserMeta(sellerId, 'dokan_geo_longitude', '-74.0059728', false);
-        await dbUtils.setUserMeta(sellerId, 'dokan_geo_public', '1', false);
-        await dbUtils.setUserMeta(sellerId, 'dokan_geo_address', 'New York, NY, USA', false);
-
         helpers.createEnvVar('VENDOR_ID', sellerId);
     });
 
@@ -58,18 +43,6 @@ setup.describe('add & authenticate users', () => {
 
     setup('add vendor2', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth, true);
-        // add open-close time
-        await apiUtils.updateStore(sellerId, payloads.createStore2, payloads.adminAuth);
-        // add review
-        if (DOKAN_PRO) {
-            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.customerAuth);
-        }
-        // add map location
-        await dbUtils.setUserMeta(sellerId, 'dokan_geo_latitude', '40.7127753', false);
-        await dbUtils.setUserMeta(sellerId, 'dokan_geo_longitude', '-74.0059728', false);
-        await dbUtils.setUserMeta(sellerId, 'dokan_geo_public', '1', false);
-        await dbUtils.setUserMeta(sellerId, 'dokan_geo_address', 'New York, NY, USA', false);
-
         helpers.createEnvVar('VENDOR2_ID', sellerId);
     });
 

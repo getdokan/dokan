@@ -41,7 +41,7 @@ import { ShortcodePage } from '@pages/shortcodePage';
 import { SingleProductPage } from '@pages/singleProductPage';
 import { SingleStorePage } from '@pages/singleStorePage';
 import { SpmvPage } from '@pages/spmvPage';
-import { StoreAppearancePage } from '@pages/storeAppearancePage';
+import { StoreAppearance } from '@pages/storeAppearance';
 import { StoreCategoriesPage } from '@pages/storeCategoriesPage';
 import { StoreListingPage } from '@pages/storeListingPage';
 import { StoreReviewsPage } from '@pages/storeReviewsPage';
@@ -111,7 +111,7 @@ type pages = {
     singleProductPage: SingleProductPage;
     singleStorePage: SingleStorePage;
     spmvPage: SpmvPage;
-    storeAppearance: StoreAppearancePage;
+    storeAppearance: StoreAppearance;
     storeCategoriesPage: StoreCategoriesPage;
     storeListingPage: StoreListingPage;
     storeReviewsPage: StoreReviewsPage;
@@ -308,7 +308,7 @@ export const test = base.extend<pages>({
     },
 
     storeAppearance: async ({ page }, use) => {
-        await use(new StoreAppearancePage(page));
+        await use(new StoreAppearance(page));
     },
 
     storeCategoriesPage: async ({ page }, use) => {
