@@ -5728,11 +5728,11 @@ export const selector = {
 
                     chooseCsv: '#upload',
                     updateExistingProducts: '#woocommerce-importer-update-existing',
-                    continue: '.button',
-                    runTheImporter: '.button',
-                    viewImportLog: '.woocommerce-importer-done-view-errors',
-                    viewProducts: '.button',
-                    completionMessage: '.woocommerce-importer-done',
+                    continue: '//button[@value="Continue"]',
+                    runTheImporter: '//button[@value="Run the importer"]',
+                    viewImportLog: 'a.woocommerce-importer-done-view-errors',
+                    viewProducts: '//a[normalize-space()="View products"]',
+                    completionMessage: 'section.woocommerce-importer-done',
                 },
             },
 
