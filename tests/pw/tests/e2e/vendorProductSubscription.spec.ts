@@ -9,7 +9,7 @@ test.describe('Product subscriptions test', () => {
     let customer: VendorProductSubscriptionPage;
     let vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
-    let subscriptionId: string = '1';
+    let subscriptionId: string;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);

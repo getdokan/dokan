@@ -1447,10 +1447,10 @@ export const selector = {
                     popup: {
                         dokanUpgradePopup: '#dokan-upgrade-popup',
                         closeDokanUpgradePopup: '#dokan-upgrade-popup .close',
-                        upgradeToProText: 'div.modal-content p.upgrade-text',
-                        upgradeToPro: 'div.modal-content a.upgrade-button',
-                        proCard: 'div.modal-content div.promo-card',
-                        alreadyUpdated: 'div.modal-content a.already-updated',
+                        upgradeToProText: '.upgrade-text',
+                        upgradeToPro: '.upgrade-button',
+                        proCard: '.promo-card',
+                        alreadyUpdated: '.already-updated',
                     },
 
                     // modules
@@ -6087,7 +6087,6 @@ export const selector = {
 
             // banner and profile picture
             banner: '.dokan-banner .dokan-banner-drag',
-            bannerHelpText: 'div.dokan-banner p.help-block',
             bannerImage: '//div[@class="image-wrap"]//img[@class="dokan-banner-img"]',
             uploadedBanner: 'div#dokan-profile-picture-wrapper div.gravatar-wrap',
             removeBannerImage: '.close.dokan-remove-banner-image',
@@ -7441,24 +7440,25 @@ export const selector = {
 
             // Store Profile Summary
             storeProfile: {
-                storeProfileInfoBox: 'div.profile-info-box',
                 storeProfileSummary: '.dokan-single-store .profile-info-summery',
 
-                storeBanner: 'div.profile-info-img',
+                storeBanner: '.profile-info-img',
 
-                profileInfoHead: 'div.profile-info-head',
-                profileImage: 'div.profile-img.profile-img-circle',
-                storeName: 'div.profile-info-head h1.store-name',
+                profileInfoHead: '.profile-info-head',
+                profileImage: '.profile-img.profile-img-circle',
+                storeName: '.profile-info-head .store-name',
                 verifiedIcon: '//div[@data-original-title="Verified"]',
                 verifiedIconByIcon: (icon: string) => `//div[@data-original-title="Verified"]//i[@class="${icon}"]`,
 
-                profileInfo: 'div.profile-info',
-                storeInfo: 'ul.dokan-store-info',
-                storeAddress: 'li.dokan-store-address',
-                storePhone: 'li.dokan-store-phone',
-                storeEmail: 'li.dokan-store-email',
-                // storeRating: 'li.dokan-store-rating',
-                // storeOpenClose: 'li.dokan-store-open-close',
+                profileInfo: '.profile-info',
+                storeInfo: '.dokan-store-info',
+                storeAddress: '.dokan-store-address',
+                storePhone: '.dokan-store-phone',
+                storeEmail: '.dokan-store-email',
+                // storeRating: '.dokan-store-rating',
+                // storeOpenClose: '.dokan-store-open-close',
+                storeSocial: '.store-social',
+
                 euComplianceData: {
                     companyName: 'li.dokan-company-name',
                     companyId: 'li.dokan-company-id-number',
@@ -7466,8 +7466,6 @@ export const selector = {
                     bankName: 'li.dokan-bank-name',
                     bankIban: 'li.dokan-bank-iban',
                 },
-
-                storeSocial: 'ul.store-social',
             },
 
             // Store open close time
@@ -7590,8 +7588,6 @@ export const selector = {
                 coupon: (code: string) => `//span[@class="coupon-code"]//strong[normalize-space()="${code}"]`,
             },
 
-            dokanStoreSideBar: 'div.dokan-store-sidebar div.dokan-widget-area',
-
             storeContactForm: {
                 storeContactForm: 'form#dokan-form-contact-seller',
                 name: 'form#dokan-form-contact-seller input[placeholder="Your Name"]',
@@ -7602,18 +7598,8 @@ export const selector = {
                 privacyPolicy: 'div.dokan-privacy-policy-text p',
                 privacyPolicyLink: 'a.dokan-privacy-policy-link',
             },
-
-            storeMap: {
-                storeMap: 'div#dokan-store-location',
-                googleMap: '//div[@id="dokan-store-location"]//a[contains(@href,"https://maps.google.com/")]',
-                mapbox: '//div[@id="dokan-store-location"]//a[@href="https://www.mapbox.com/"]',
-            },
-
+            storeMap: 'div#dokan-store-location',
             storeOpenCloseTime: 'div.dokan-store-open-close',
-
-            googleRecaptcha: '//iframe[@title="reCAPTCHA"]',
-
-            dokanFontAwesomeLibrary: 'link#dokan-fontawesome-css',
         },
 
         cMyOrders: {
