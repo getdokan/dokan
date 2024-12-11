@@ -102,22 +102,6 @@ export class SettingPage extends AdminPage {
         }
     }
 
-    async enableMoreProductsTab(productName: string, status: string) {
-        await this.goToProductDetails(productName);
-        if (status == 'on') {
-            await this.click(selector.customer.cSingleProduct.menus.moreProducts);
-            const hasMoreProducts = await this.isVisible(selector.customer.cSingleProduct.moreProducts.moreProductsDiv);
-            if (hasMoreProducts) {
-                await this.toBeVisible(selector.customer.cSingleProduct.moreProducts.moreProductsDiv);
-                await this.notToHaveCount(selector.customer.cSingleProduct.moreProducts.product, 0);
-            } else {
-                await this.toContainText(selector.customer.cSingleProduct.moreProducts.noProductsDiv, 'No product has been found!');
-            }
-        } else {
-            await this.notToBeVisible(selector.customer.cSingleProduct.menus.moreProducts);
-        }
-    }
-
     // selling settings
 
     async enableVendorSelling(status: string) {

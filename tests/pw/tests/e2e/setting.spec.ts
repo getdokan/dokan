@@ -107,14 +107,6 @@ test.describe.skip('Settings test', () => {
         await customer.setShowVendorInfo(data.predefined.simpleProduct.product1.name, 'off');
     });
 
-    test('admin can enable more products tab (general settings)', { tag: ['@lite', '@customer'] }, async () => {
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { enabled_more_products_tab: 'on' });
-        await customer.enableMoreProductsTab(data.predefined.simpleProduct.product1.name, 'on');
-
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { enabled_more_products_tab: 'off' });
-        await customer.enableMoreProductsTab(data.predefined.simpleProduct.product1.name, 'off');
-    });
-
     // selling settings
 
     test('admin can enable vendor selling (selling settings)', { tag: ['@lite', '@guest'] }, async () => {
