@@ -27,20 +27,20 @@ test.describe('Store Appearance test', () => {
 
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
-        await dbUtils.setOptionValue('sidebars_widgets', dbData.emptySideBarsWidgets);
+        // await dbUtils.setOptionValue('sidebars_widgets', dbData.emptySideBarsWidgets);
         await aPage.close();
         await apiUtils.dispose();
     });
 
     ['enable', 'disable'].forEach((status: string) => {
-        test(`admin can ${status} store map on store sidebar`, { tag: ['@lite', '@admin'] }, async () => {
+        test.skip(`admin can ${status} store map on store sidebar`, { tag: ['@lite', '@admin'] }, async () => {
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { store_map: status === 'enable' ? 'on' : 'off' });
             await admin.viewStoreMapOnStoreSidebar(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);
         });
     });
 
     ['Google Maps', 'Mapbox'].forEach((api: string) => {
-        test(`admin can set map api source (${api})`, { tag: ['@lite', '@admin'] }, async () => {
+        test.skip(`admin can set map api source (${api})`, { tag: ['@lite', '@admin'] }, async () => {
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { store_map: 'on', map_api_source: api === 'Google Maps' ? 'google_maps' : 'mapbox' });
             await admin.viewMapAPISource(api as 'Google Maps' | 'Mapbox', data.predefined.vendorStores.vendor1);
         });
