@@ -19,11 +19,17 @@ test.describe('Store Appearance test', () => {
         admin = new StoreAppearance(aPage);
 
         apiUtils = new ApiUtils(await request.newContext());
+        await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeLocation, dbData.dokanWidgets.values.storeLocationWidget);
+        await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeOpenClose, dbData.dokanWidgets.values.storeOpenCloseWidget);
+        await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeContactForm, dbData.dokanWidgets.values.storeContactFormWidget);
+        await dbUtils.updateOptionValue('sidebars_widgets', { 'sidebar-store': [dbData.dokanWidgets.widgets.storeLocation, dbData.dokanWidgets.widgets.storeOpenClose, dbData.dokanWidgets.widgets.storeContactForm] });
     });
 
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
+        await dbUtils.setOptionValue('sidebars_widgets', dbData.emptySideBarsWidgets);
         await aPage.close();
+        await apiUtils.dispose();
     });
 
     ['enable', 'disable'].forEach((status: string) => {

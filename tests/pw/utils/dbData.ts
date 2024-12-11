@@ -1344,20 +1344,6 @@ export const dbData = {
 
     // widgets & sidebars
 
-    widgets: {
-        bestSelling: 'dokan-best-selling-widget-2',
-        category: 'dokan-category-menu-2',
-        filter: 'dokan-filter-product-2',
-        liveSearch: 'dokna_product_search-2',
-        storeContactForm: 'dokan-store-contact-widget-2',
-        storeLocation: 'dokan-store-location-2',
-        storeMenu: 'dokan-store-menu-2',
-        storeOpenClose: 'dokan-store-open-close-widget-2',
-        topRated: 'dokan-top-rated-2',
-
-        // emptySideBarsWidgets: { wp_inactive_widgets: [] },
-    },
-
     sidebars: {
         wp_inactive_widgets: 'wp_inactive_widgets',
         'sidebar-store': 'sidebar-store',
@@ -1384,16 +1370,66 @@ export const dbData = {
     emptySideBarsWidgets: { wp_inactive_widgets: [] },
 
     // dokan widgets
-    storeContactFormWidget: {
-        '2': {
-            title: 'Contact Vendor',
+    dokanWidgets: {
+        // names  (option names)
+        names: {
+            bestSelling: 'widget_dokan-best-selling-widget',
+            bestSeller: 'widget_dokan-best-seller-widget',
+            category: 'widget_dokan-category-menu',
+            featureSeller: 'widget_dokan-feature-seller-widget',
+            filter: 'widget_dokan-filter-product',
+            geolocation: 'widget_dokan-geolocation-widget-filters',
+            liveSearch: 'dokna_product_search-2',
+            productAdvertisement: 'widget_dokan_product_advertisement_widget',
+            productLocation: 'widget_dokan-geolocation-widget-product-location',
+            sellerBadge: 'widget_dokan_seller_badges',
+            storeContactForm: 'widget_dokan-store-contact-widget',
+            storeLocation: 'widget_dokan-store-location',
+            storeMenu: 'widget_dokan-store-menu',
+            storeOpenClose: 'widget_dokan-store-open-close-widget',
+            storeSupport: 'widget_dokan-store-support-widget',
+            topRated: 'widget_dokan-top-rated',
+            verifications: 'widget_dokan-verification-list',
         },
-        _multiwidget: 1,
-    },
 
-    liveSearchWidget: {
-        '2': { title: 'Live Search' },
-        _multiwidget: 1,
+        // values (option values)
+        values: {
+            defaultValues: { _multiwidget: 1 },
+
+            storeLocationWidget: {
+                '2': { title: 'Store Location' },
+                _multiwidget: 1,
+            },
+
+            storeOpenCloseWidget: {
+                '2': {
+                    title: 'Store Time',
+                },
+                _multiwidget: 1,
+            },
+
+            storeContactFormWidget: {
+                '2': { title: 'Contact Vendor' },
+                _multiwidget: 1,
+            },
+
+            liveSearchWidget: {
+                '2': { title: 'Live Search' },
+                _multiwidget: 1,
+            },
+        },
+
+        widgets: {
+            bestSelling: 'dokan-best-selling-widget-2',
+            category: 'dokan-category-menu-2',
+            filter: 'dokan-filter-product-2',
+            liveSearch: 'dokna_product_search-2',
+            storeContactForm: 'dokan-store-contact-widget-2',
+            storeLocation: 'dokan-store-location-2',
+            storeMenu: 'dokan-store-menu-2',
+            storeOpenClose: 'dokan-store-open-close-widget-2',
+            topRated: 'dokan-top-rated-2',
+        },
     },
 
     // test db data
