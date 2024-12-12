@@ -14,10 +14,10 @@
             ]"
         >
             <!-- Drawer Header -->
-            <div class="flex items-center justify-between p-4 border-b">
+            <div class="flex items-center justify-between p-4 border-b mt-4">
                 <h2 class="text-lg font-bold">{{ __('Settings Menu', 'dokan-lite') }}</h2>
                 <button
-                    class="p-2 hover:bg-gray-100 rounded-full"
+                    class="bg-none border-0 p-1"
                     @click="$emit('close')"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -32,7 +32,7 @@
                     <div
                         :key="section.id"
                         :class="[
-                            'flex items-center p-4 cursor-pointer border-b border-gray-100',
+                            'flex items-center px-4 py-2 cursor-pointer border-b border-gray-100',
                             { 'bg-blue-50 border-l-4 border-l-blue-500': currentTab === section.id }
                         ]"
                         @click="handleTabChange(section)"
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+
 export default {
     name: 'MobileSettingsDrawer',
 
@@ -77,6 +78,6 @@ export default {
             this.$emit('change-tab', section);
             this.$emit('close');
         }
-    }
+    },
 }
 </script>

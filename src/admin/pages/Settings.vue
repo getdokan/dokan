@@ -43,12 +43,13 @@
                                     <div class="relative flex-1">
                                         <!-- Search Box -->
                                         <div class="search-section relative w-full mb-4">
-                                            <div class="search-box w-full bg-white rounded-md border border-gray-200 shadow-sm flex items-center">
-                                                <label for="dokan-admin-search" class="dashicons dashicons-search ml-3 text-gray-400"></label>
+                                            <div class="search-box w-full bg-white rounded-md border border-gray-200 flex items-center">
+                                                <label for="dokan-admin-search" class="dashicons dashicons-search "></label>
                                                 <input
                                                     type="text"
+                                                    autocomplete="off"
                                                     id="dokan-admin-search"
-                                                    class="w-full px-3 py-2 border-none focus:outline-none focus:ring-0 bg-transparent"
+                                                    class="w-full px-3 py-2 border-none focus:outline-none focus:ring-0 bg-transparent "
                                                     :placeholder="__('Search e.g. vendor', 'dokan-lite')"
                                                     v-model="searchText"
                                                     @input="searchInSettings"
@@ -108,9 +109,6 @@
                                     </div>
                                 </template>
                             </div>
-
-
-
                             <!-- Mobile Settings List -->
                             <transition name="slide">
                                 <MobileSettingsDrawer
@@ -136,6 +134,7 @@
                            </div>
                         </div>
                     </div>
+
 
                 <div class="metabox-holder">
                     <fieldset class="settings-header" v-for="section in settingSections" v-if="currentTab === section.id">
@@ -1126,8 +1125,7 @@
 
                 .dashicons {
                     &.dashicons-search {
-                        font-size: 20px;
-                        margin-right: 8px;
+                        font-size: 1.5rem;
                     }
 
                     &.dashicons-no-alt {
@@ -1239,65 +1237,7 @@
         }
     }
 
-    //@media only screen and (max-width: 430px) {
-    //    .dokan-settings-wrap {
-    //        .nav-tab-wrapper {
-    //
-    //            .nav-tab {
-    //                padding-left: 10px !important;
-    //
-    //                img {
-    //                    margin: 3px 8px 0px 4px;
-    //                }
-    //
-    //                .nav-content {
-    //                    .nav-title {
-    //                        font-size: 7px;
-    //                    }
-    //
-    //                    .nav-description {
-    //                        font-size: 5px !important;
-    //                    }
-    //                }
-    //            }
-    //
-    //            .nav-tab-active {
-    //                &:before {
-    //                    width: 2px !important;
-    //                }
-    //            }
-    //        }
-    //
-    //        .metabox-holder {
-    //            width: 100%;
-    //
-    //            .settings-header {
-    //                display: block;
-    //
-    //                .settings-content {
-    //                    .settings-title,
-    //                    .settings-description {
-    //                        padding-left: 0;
-    //                    }
-    //                }
-    //
-    //                .settings-document-button {
-    //                    text-align: left;
-    //                }
-    //            }
-    //        }
-    //
-    //        .search-box {
-    //            .dashicons.dashicons-search {
-    //                margin-left: 10px;
-    //            }
-    //
-    //            .dokan-admin-search-settings {
-    //                font-size: 10px;
-    //            }
-    //        }
-    //    }
-    //}
+
 
     @media only screen and (max-width: 768px) {
         .dokan-settings-wrap {
