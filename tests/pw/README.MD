@@ -6,32 +6,32 @@
 
 ## :bookmark: Table of contents
 
--   [Pre-requisites :pushpin:](#pre-requisites)
-    -   [Install Node](#install-node)
-    -   [Install NVM](#install-nvm)
-    -   [Install Docker](#install-docker)
+- [Pre-requisites :pushpin:](#pre-requisites)
+    - [Install Node](#install-node)
+    - [Install NVM](#install-nvm)
+    - [Install Docker](#install-docker)
 
  <br/>
 
--   [Prep for tests :construction:](#prep-for-tests)
-    -   [Build Dokan plugin](#build-dokan-plugin)
-    -   [Install Dependencies](#install-dependencies)
-    -   [Start Wordpress Environment](#start-wordpress-environment)
-    -   [Create Env file](#create-env-file)
+- [Prep for tests :construction:](#prep-for-tests)
+    - [Build Dokan plugin](#build-dokan-plugin)
+    - [Install Dependencies](#install-dependencies)
+    - [Start Wordpress Environment](#start-wordpress-environment)
+    - [Create Env file](#create-env-file)
 
 <br/>
 
--   [Running tests :test_tube: ](#running-tests)
-    -   [How to run test projects](#how-to-run-test-projects)
-    -   [How to run tests](#how-to-run-tests)
-    -   [How to skip tests](#how-to-skip-tests)
-    -   [How to debug tests](#how-to-debug-tests)
-    -   [How to serve reports](#how-to-serve-reports)
+- [Running tests :test_tube: ](#running-tests)
+    - [How to run test projects](#how-to-run-test-projects)
+    - [How to run tests](#how-to-run-tests)
+    - [How to skip tests](#how-to-skip-tests)
+    - [How to debug tests](#how-to-debug-tests)
+    - [How to serve reports](#how-to-serve-reports)
 
 <br/>
 
--   [Contributing to Dokan-e2e-api-test](#Contributing-to-dokan-e2e-api-test)
-    -   [How to wright tests](#how-to-run-tests)
+- [Contributing to Dokan-e2e-api-test](#Contributing-to-dokan-e2e-api-test)
+    - [How to wright tests](#how-to-run-tests)
 
 <br/>
 
@@ -120,16 +120,18 @@ Create .env file according to .env.example file
 <br/>
 
 ```
-# Plugin Configuration
+# Plugin Configuration 
 ADMIN=John_Doe                                                                  [Admin username]
 ADMIN_PASSWORD=AdminPass123                                                     [Password for the admin account]
 VENDOR=David_Johnson                                                            [Vendor username]
-VENDOR2=jhonathon_Smith                                                         [Vendor username]
+VENDOR2=Jhonathon_Smith                                                         [Vendor username]
 CUSTOMER=Michael_Williams                                                       [Customer username]
+CUSTOMER2=Robert_Thomas                                                         [Customer username]
 USER_PASSWORD=Passw0rd123                                                       [Password for all other users]
 DOKAN_PRO=true                                                                  [Dokan pro active status]
-LICENSE_KEY=licence_key                                                         [Dokan License key]
+LICENSE_KEY=license_key                                                         [Dokan License key]
 GMAP=map_key                                                                    [Google Maps API key]
+MAPBOX=mapbox_key                                                               [Mapbox Maps API key]
 TALKJS_APP_ID=talkjs_app_id                                                     [TalkJS App ID]
 TALKJS_APP_SECRET=talkjs_app_secret                                             [TalkJS App Secret]
 VONAGE_API_KEY=vonage_key                                                       [Vonage SMS API key]
@@ -138,6 +140,8 @@ FB_APP_ID=facebook_app_id                                                       
 FB_APP_SECRET=facebook_app_secret                                               [Facebook App secret]
 PRINTFUL_APP_ID=printful_app_id                                                 [Printful App ID]
 PRINTFUL_APP_SECRET=printful_app_secret                                         [Printful App secret]
+RECAPTCHA_SITE_KEY=recaptcha_site_key                                           [reCAPTCHA site key]
+RECAPTCHA_SECRET_KEY=recaptcha_secret_key                                       [reCAPTCHA secret key]
 TEST_PUBLISH_KEY_STRIPE=test_publish_key_stripe                                 [Stripe publish key]
 TEST_SECRET_KEY_STRIPE=test_secret_key_stripe                                   [Stripe secret key]
 TEST_CLIENT_ID_STRIPE=test_client_id_stripe                                     [Stripe client ID]
@@ -151,7 +155,7 @@ TEST_MERCHANT_ID_PAYPAL_MARKETPLACE=test_merchant_id                            
 TEST_CLIENT_ID_PAYPAL_MARKETPLACE=test_client_id_paypal_marketplace             [PayPal Marketplace Client ID]
 TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE=test_client_secret_paypal_marketplace     [PayPal Marketplace Client Secret]
 
-# Playwright Configuration
+# Playwright Configuration              
 BASE_URL=https://example.com                                                    [Base URL of the test site]
 CI=true                                                                         [CI/CD environment indicator]
 SLOWMO=10                                                                       [Slow down test execution by provided seconds] [optional]
@@ -160,13 +164,13 @@ LOCAL=true                                                                      
 NON_HEADLESS=true                                                               [browser mode indicator] [optional]
 SITE_PATH=/users/rk/sites/dokan                                                 [Path of the local test site][only for local testing]
 
-# Database Configuration
+# Database Configuration                
 DB_HOST_NAME=localhost                                                          [Database server hostname or IP address]
 DB_USER_NAME=dbuser                                                             [Database username]
 DB_USER_PASSWORD=dbpassword                                                     [Database user password]
 DATABASE=mywpdb                                                                 [Database name]
 DB_PORT=3306                                                                    [Database connection port]
-DB_PREFIX=wp                                                                    [Prefix for database tables]
+DB_PREFIX=wp 
 ```
 
 <br/>

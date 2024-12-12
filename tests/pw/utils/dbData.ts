@@ -1,4 +1,4 @@
-const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, CATEGORY_ID, TALKJS_APP_ID, TALKJS_APP_SECRET, PRINTFUL_APP_ID, PRINTFUL_APP_SECRET } = process.env;
+const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, CATEGORY_ID, TALKJS_APP_ID, TALKJS_APP_SECRET, PRINTFUL_APP_ID, PRINTFUL_APP_SECRET, RECAPTCHA_SITE_KEY, RECAPTCHA_SECRET_KEY } = process.env;
 
 export const dbData = {
     dokan: {
@@ -220,17 +220,20 @@ export const dbData = {
 
         appearanceSettings: {
             appearance_options: '',
-            store_map: 'on',
-            map_api_source: 'google_maps',
+            store_map: 'on', // 'on', 'off'
+            map_api_source: 'google_maps', // google_maps, mapbox
             gmap_api_key: GMAP ?? '',
             mapbox_access_token: MAPBOX ?? '',
             recaptcha_validation_label: '',
+            recaptcha_enable_status: 'off',
+            recaptcha_site_key: RECAPTCHA_SITE_KEY ?? '',
+            recaptcha_secret_key: RECAPTCHA_SECRET_KEY ?? '',
             contact_seller: 'on',
-            store_header_template: 'default',
+            store_header_template: 'default', // default, layout1, layout2, layout3
             store_banner_width: '625',
             store_banner_height: '300',
             store_open_close: 'on',
-            enable_theme_store_sidebar: 'off',
+            enable_theme_store_sidebar: 'off', // on, off
             hide_vendor_info: {
                 email: '',
                 phone: '',
@@ -241,7 +244,8 @@ export const dbData = {
                 dokan_bank_name: '',
                 dokan_bank_iban: '',
             },
-            disable_dokan_fontawesome: 'off',
+            disable_dokan_fontawesome: 'off', // on, off
+            dashboard_menu_manager: [],
         },
 
         menuManagerSettings: {
@@ -1340,20 +1344,6 @@ export const dbData = {
 
     // widgets & sidebars
 
-    widgets: {
-        bestSelling: 'dokan-best-selling-widget-2',
-        category: 'dokan-category-menu-2',
-        filter: 'dokan-filter-product-2',
-        liveSearch: 'dokna_product_search-2',
-        storeContactForm: 'dokan-store-contact-widget-2',
-        storeLocation: 'dokan-store-location-2',
-        storeMenu: 'dokan-store-menu-2',
-        storeOpenClose: 'dokan-store-open-close-widget-2',
-        topRated: 'dokan-top-rated-2',
-
-        // emptySideBarsWidgets: { wp_inactive_widgets: [] },
-    },
-
     sidebars: {
         wp_inactive_widgets: 'wp_inactive_widgets',
         'sidebar-store': 'sidebar-store',
@@ -1380,16 +1370,66 @@ export const dbData = {
     emptySideBarsWidgets: { wp_inactive_widgets: [] },
 
     // dokan widgets
-    storeContactFormWidget: {
-        '2': {
-            title: 'Contact Vendor',
+    dokanWidgets: {
+        // names  (option names)
+        names: {
+            bestSelling: 'widget_dokan-best-selling-widget',
+            bestSeller: 'widget_dokan-best-seller-widget',
+            category: 'widget_dokan-category-menu',
+            featureSeller: 'widget_dokan-feature-seller-widget',
+            filter: 'widget_dokan-filter-product',
+            geolocation: 'widget_dokan-geolocation-widget-filters',
+            liveSearch: 'widget_dokna_product_search',
+            productAdvertisement: 'widget_dokan_product_advertisement_widget',
+            productLocation: 'widget_dokan-geolocation-widget-product-location',
+            sellerBadge: 'widget_dokan_seller_badges',
+            storeContactForm: 'widget_dokan-store-contact-widget',
+            storeLocation: 'widget_dokan-store-location',
+            storeMenu: 'widget_dokan-store-menu',
+            storeOpenClose: 'widget_dokan-store-open-close-widget',
+            storeSupport: 'widget_dokan-store-support-widget',
+            topRated: 'widget_dokan-top-rated',
+            verifications: 'widget_dokan-verification-list',
         },
-        _multiwidget: 1,
-    },
 
-    liveSearchWidget: {
-        '2': { title: 'Live Search' },
-        _multiwidget: 1,
+        // values (option values)
+        values: {
+            defaultValues: { _multiwidget: 1 },
+
+            storeLocationWidget: {
+                '2': { title: 'Store Location' },
+                _multiwidget: 1,
+            },
+
+            storeOpenCloseWidget: {
+                '2': {
+                    title: 'Store Time',
+                },
+                _multiwidget: 1,
+            },
+
+            storeContactFormWidget: {
+                '2': { title: 'Contact Vendor' },
+                _multiwidget: 1,
+            },
+
+            liveSearchWidget: {
+                '2': { title: 'Live Search' },
+                _multiwidget: 1,
+            },
+        },
+
+        widgets: {
+            bestSelling: 'dokan-best-selling-widget-2',
+            category: 'dokan-category-menu-2',
+            filter: 'dokan-filter-product-2',
+            liveSearch: 'dokna_product_search-2',
+            storeContactForm: 'dokan-store-contact-widget-2',
+            storeLocation: 'dokan-store-location-2',
+            storeMenu: 'dokan-store-menu-2',
+            storeOpenClose: 'dokan-store-open-close-widget-2',
+            topRated: 'dokan-top-rated-2',
+        },
     },
 
     // test db data
@@ -1423,6 +1463,28 @@ export const dbData = {
                 product_page_options: '',
                 show_vendor_info: 'on',
                 enabled_more_products_tab: 'on',
+            },
+
+            unhideVendorInfo: {
+                email: '',
+                phone: '',
+                address: '',
+                dokan_company_name: '',
+                dokan_company_id_number: '',
+                dokan_vat_number: '',
+                dokan_bank_name: '',
+                dokan_bank_iban: '',
+            },
+
+            unhideVendorEuInfo: {
+                email: '',
+                phone: '',
+                address: '',
+                dokan_company_name: '',
+                dokan_company_id_number: '',
+                dokan_vat_number: '',
+                dokan_bank_name: '',
+                dokan_bank_iban: '',
             },
 
             hideVendorInfo: {

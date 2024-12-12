@@ -5,6 +5,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { payloads } from '@utils/payloads';
+import { ap } from '@faker-js/faker/dist/airline-BnpeTvY9';
 
 test.describe('Live search test', () => {
     let admin: LiveSearch;
@@ -23,14 +24,15 @@ test.describe('Live search test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
 
-        await dbUtils.updateOptionValue('widget_dokna_product_search', dbData.liveSearchWidget);
-        await dbUtils.updateOptionValue('sidebars_widgets', { ...dbData.sidebarWidgets, 'sidebar-1': ['dokna_product_search-2'] });
+        await dbUtils.updateOptionValue(dbData.dokanWidgets.names.liveSearch, dbData.dokanWidgets.values.liveSearchWidget);
+        await dbUtils.updateOptionValue('sidebars_widgets', { ...dbData.sidebarWidgets, 'sidebar-1': [dbData.dokanWidgets.widgets.liveSearch] });
         await dbUtils.setOptionValue(dbData.dokan.optionName.liveSearch, dbData.dokan.liveSearchSettings);
     });
 
     test.afterAll(async () => {
         await apiUtils.activateModules(payloads.moduleIds.liveSearch, payloads.adminAuth);
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     // admin

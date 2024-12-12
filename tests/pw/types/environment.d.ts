@@ -34,6 +34,8 @@ declare global {
             TALKJS_APP_SECRET: string;
             PRINTFUL_APP_ID: string;
             PRINTFUL_APP_SECRET: string;
+            RECAPTCHA_SITE_KEY: string;
+            RECAPTCHA_SECRET_KEY: string;
             TEST_PUBLISH_KEY_STRIPE: string;
             TEST_SECRET_KEY_STRIPE: string;
             TEST_CLIENT_ID_STRIPE: string;
