@@ -1277,8 +1277,6 @@
             .slide-enter, .slide-leave-to {
                 transform: translateX(-100%);
             }
-
-
             .dokan-settings-wrap {
                     .nav-tab-wrapper {
                         padding: 10px;
