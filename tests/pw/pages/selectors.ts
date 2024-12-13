@@ -2237,7 +2237,7 @@ export const selector = {
                     menuNameInput: '//div[@class="first-part"]//input',
                     menuNameConfirm: '//div[@class="menu-item"]//div[@class="action-icon-wrapper check-icon-wrapper"]',
                     menuNameCancel: '//div[@class="menu-item"]//div[@class="action-icon-wrapper cancel-icon-wrapper"]',
-                    menuSwitcher: (menuName: string) => `//span[text()='${menuName}']/../..//label[@class="switch tips"]`,
+                    menuSwitcher: (menuName: string) => `(//div[@class="tabs-details"]//div[not(@style="display: none;")])[1]//span[text()='${menuName}']/../..//label[@class="switch tips"]`,
                     noPermissionNotice: '//strong[text()="You have no permission to view this page"]',
                 },
 

@@ -44,7 +44,7 @@ export class EuCompliancePage extends AdminPage {
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.notToBeVisible(selector.admin.dokan.settings.menus.euComplianceFields);
 
-        // vendor dashboard settings        
+        // vendor dashboard settings
         await this.goto(data.subUrls.frontend.vDashboard.settingsStore);
         await this.multipleElementNotVisible(selector.vendor.vStoreSettings.euFields);
 

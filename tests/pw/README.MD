@@ -120,7 +120,7 @@ Create .env file according to .env.example file
 <br/>
 
 ```
-# Plugin Configuration 
+# Plugin Configuration
 ADMIN=John_Doe                                                                  [Admin username]
 ADMIN_PASSWORD=AdminPass123                                                     [Password for the admin account]
 VENDOR=David_Johnson                                                            [Vendor username]
@@ -155,7 +155,7 @@ TEST_MERCHANT_ID_PAYPAL_MARKETPLACE=test_merchant_id                            
 TEST_CLIENT_ID_PAYPAL_MARKETPLACE=test_client_id_paypal_marketplace             [PayPal Marketplace Client ID]
 TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE=test_client_secret_paypal_marketplace     [PayPal Marketplace Client Secret]
 
-# Playwright Configuration              
+# Playwright Configuration
 BASE_URL=https://example.com                                                    [Base URL of the test site]
 CI=true                                                                         [CI/CD environment indicator]
 SLOWMO=10                                                                       [Slow down test execution by provided seconds] [optional]
@@ -164,13 +164,13 @@ LOCAL=true                                                                      
 NON_HEADLESS=true                                                               [browser mode indicator] [optional]
 SITE_PATH=/users/rk/sites/dokan                                                 [Path of the local test site][only for local testing]
 
-# Database Configuration                
+# Database Configuration
 DB_HOST_NAME=localhost                                                          [Database server hostname or IP address]
 DB_USER_NAME=dbuser                                                             [Database username]
 DB_USER_PASSWORD=dbpassword                                                     [Database user password]
 DATABASE=mywpdb                                                                 [Database name]
 DB_PORT=3306                                                                    [Database connection port]
-DB_PREFIX=wp 
+DB_PREFIX=wp
 ```
 
 <br/>
