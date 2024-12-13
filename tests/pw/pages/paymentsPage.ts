@@ -99,7 +99,7 @@ export class PaymentsPage extends AdminPage {
         await this.notToBeVisible(paymentSettingsAdmin.setupDokanStripeConnect);
 
         await this.goto(data.subUrls.backend.wc.stripeConnectSettings);
-        await this.notToBeVisible(paymentSettingsAdmin.dokanRazorpay.razorpayText);
+        await this.notToBeVisible(paymentSettingsAdmin.stripe.stripeConnectText);
     }
 
     // disable Stripe Express module
