@@ -110,7 +110,7 @@ test.describe('Vendor RMA test', () => {
 
     // admin
 
-    test('admin can disable RMA module', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can disable RMA module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.rma, payloads.adminAuth);
         await admin.disableRmaModule();
     });

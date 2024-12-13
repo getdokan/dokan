@@ -3,7 +3,7 @@ import { LoginPage } from '@pages/loginPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
-import { dbUtils } from '@utils/dbUtils';
+// import { dbUtils } from '@utils/dbUtils';
 import { helpers } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
