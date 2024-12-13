@@ -131,7 +131,7 @@ export class PaymentsPage extends AdminPage {
         await this.clearAndType(paymentSettingsAdmin.stripe.testSecretKey, payment.stripeConnect.testSecretKey);
         await this.clearAndType(paymentSettingsAdmin.stripe.testClientId, payment.stripeConnect.testClientId);
         await this.removeAttribute(paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges, 'disabled');
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.stripeConnectSettings, paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.stripeConnectSettings, paymentSettingsAdmin.stripe.stripeSaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
@@ -159,7 +159,7 @@ export class PaymentsPage extends AdminPage {
         await this.check(paymentSettingsAdmin.paypalMarketPlace.sendAnnouncementToConnectSeller);
         await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.sendAnnouncementInterval, payment.paypalMarketPlace.announcementInterval);
         await this.removeAttribute(paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges, 'disabled');
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.paypalMarketplaceSettings, paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.paypalMarketplaceSettings, paymentSettingsAdmin.paypalMarketPlace.paypalMarketPlaceSaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
@@ -231,7 +231,7 @@ export class PaymentsPage extends AdminPage {
         await this.check(paymentSettingsAdmin.dokanRazorpay.sendAnnouncementToConnectSeller);
         await this.clearAndType(paymentSettingsAdmin.dokanRazorpay.sendAnnouncementInterval, payment.razorPay.announcementInterval);
         await this.removeAttribute(paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges, 'disabled');
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.razorPaySettings, paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.razorPaySettings, paymentSettingsAdmin.dokanRazorpay.dokanRazorpaySaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
@@ -274,7 +274,7 @@ export class PaymentsPage extends AdminPage {
         await this.type(paymentSettingsAdmin.stripeExpress.announcementInterval, payment.stripeExpress.announcementInterval);
         await this.check(paymentSettingsAdmin.stripeExpress.debugLog);
         await this.removeAttribute(paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges, 'disabled');
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.stripeExpressSettings, paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.stripeExpressSettings, paymentSettingsAdmin.stripeExpress.stripeExpressSaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }

@@ -24,7 +24,9 @@ test.describe('Vendor analytics test', () => {
 
     test.afterAll(async () => {
         await apiUtils.activateModules(payloads.moduleIds.vendorAnalytics, payloads.adminAuth);
+        await aPage.close();
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     // admin

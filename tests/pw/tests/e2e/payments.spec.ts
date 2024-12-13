@@ -7,7 +7,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
 
-const { VENDOR_ID } = process.env;
+const { DOKAN_PRO, VENDOR_ID } = process.env;
 
 test.describe('Payments test', () => {
     let admin: PaymentsPage;
@@ -26,22 +26,26 @@ test.describe('Payments test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         // await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: [] });
-        await apiUtils.activateModules(payloads.moduleIds.mangopay, payloads.adminAuth);
-        await apiUtils.activateModules(payloads.moduleIds.paypalMarketplace, payloads.adminAuth);
-        await apiUtils.activateModules(payloads.moduleIds.razorpay, payloads.adminAuth);
-        await apiUtils.activateModules(payloads.moduleIds.stripe, payloads.adminAuth);
-        await apiUtils.activateModules(payloads.moduleIds.stripeExpress, payloads.adminAuth);
+        if (DOKAN_PRO) {
+            await apiUtils.activateModules(payloads.moduleIds.mangopay, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.paypalMarketplace, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.razorpay, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.stripe, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.stripeExpress, payloads.adminAuth);
+        }
     });
 
     test.afterAll(async () => {
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);
         await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', dbData.testData.dokan.paymentSettings);
         // await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
-        await apiUtils.activateModules(payloads.moduleIds.mangopay, payloads.adminAuth);
-        await apiUtils.activateModules(payloads.moduleIds.paypalMarketplace, payloads.adminAuth);
-        await apiUtils.activateModules(payloads.moduleIds.razorpay, payloads.adminAuth);
-        await apiUtils.activateModules(payloads.moduleIds.stripe, payloads.adminAuth);
-        await apiUtils.activateModules(payloads.moduleIds.stripeExpress, payloads.adminAuth);
+        if (DOKAN_PRO) {
+            await apiUtils.activateModules(payloads.moduleIds.mangopay, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.paypalMarketplace, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.razorpay, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.stripe, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.stripeExpress, payloads.adminAuth);
+        }
         await aPage.close();
         await vPage.close();
         await apiUtils.dispose();

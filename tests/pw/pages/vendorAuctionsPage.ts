@@ -23,7 +23,7 @@ export class AuctionsPage extends VendorPage {
     // auctions
 
     // enable auction integration module
-    async enableActionIntegrationModule() {
+    async enableAuctionIntegrationModule() {
         // dokan settings
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.click(selector.admin.dokan.settings.menus.sellingOptions);
@@ -39,7 +39,7 @@ export class AuctionsPage extends VendorPage {
     }
 
     // disable auction integration module
-    async disableActionIntegrationModule() {
+    async disableAuctionIntegrationModule() {
         // admin dashboard
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.click(selector.admin.dokan.settings.menus.sellingOptions);

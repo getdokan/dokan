@@ -41,7 +41,7 @@ test.describe('Auction Product test', () => {
     // admin
 
     test('admin can enable auction integration module', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.enableActionIntegrationModule();
+        await admin.enableAuctionIntegrationModule();
     });
 
     test('admin can add auction product', { tag: ['@pro', '@admin'] }, async () => {
@@ -110,6 +110,6 @@ test.describe('Auction Product test', () => {
 
     test('admin can disable auction integration module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.auction, payloads.adminAuth);
-        await admin.disableActionIntegrationModule();
+        await admin.disableAuctionIntegrationModule();
     });
 });
