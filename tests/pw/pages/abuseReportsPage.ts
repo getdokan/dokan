@@ -34,7 +34,7 @@ export class AbuseReportsPage extends AdminPage {
     // disable report abuse module
     async disableReportAbuseModule(productName: string) {
         // dokan menu
-        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.goto(data.subUrls.backend.dokan.dokan, { waitUntil: 'domcontentloaded' }, true);
         await this.notToBeVisible(selector.admin.dokan.menus.abuseReports);
 
         // dokan settings

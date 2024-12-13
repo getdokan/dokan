@@ -969,7 +969,7 @@ export const data = {
         shippingFeeRecipient: 'seller', // 'seller', 'admin'
         taxFeeRecipient: 'seller', // 'seller', 'admin'
         mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
-        googleMapApiKey: GMAP,
+        googleMapApiKey: GMAP ?? '',
         sellingProductTypes: 'sell_both', // 'physical', 'digital', 'sell_both',
         commission: {
             commissionType: 'fixed', // 'fixed','category_based'
@@ -2277,8 +2277,8 @@ export const data = {
         appearance: {
             settingTitle: 'Appearance Settings',
             mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
-            googleMapApiKey: GMAP,
-            mapBoxApiKey: MAPBOX,
+            googleMapApiKey: GMAP ?? '',
+            mapBoxApiKey: MAPBOX ?? '',
             storeBannerWidth: '625',
             storeBannerHeight: '300',
             saveSuccessMessage: 'Setting has been saved successfully.',

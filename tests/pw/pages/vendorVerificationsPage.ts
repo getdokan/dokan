@@ -40,11 +40,11 @@ export class VendorVerificationsPage extends AdminPage {
     // disable vendor verification module
     async disableVendorVerificationModule() {
         // dokan menu
-        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.goto(data.subUrls.backend.dokan.dokan, { waitUntil: 'domcontentloaded' }, true);
         await this.notToBeVisible(selector.admin.dokan.menus.verifications);
 
         // dokan menu page
-        await this.goto(data.subUrls.backend.dokan.verifications);
+        await this.goto(data.subUrls.backend.dokan.verifications, { waitUntil: 'domcontentloaded' }, true);
         await this.notToBeVisible(verificationsAdmin.verificationsDiv);
 
         // dokan settings

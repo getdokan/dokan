@@ -5,7 +5,6 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { payloads } from '@utils/payloads';
-import { ap } from '@faker-js/faker/dist/airline-BnpeTvY9';
 
 test.describe('Live search test', () => {
     let admin: LiveSearch;

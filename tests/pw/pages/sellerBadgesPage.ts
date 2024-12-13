@@ -32,7 +32,7 @@ export class SellerBadgesPage extends AdminPage {
     // disable seller badge module
     async disableSellerBadgeModule() {
         // dokan menu
-        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.goto(data.subUrls.backend.dokan.dokan, { waitUntil: 'domcontentloaded' }, true);
         await this.notToBeVisible(selector.admin.dokan.menus.sellerBadge);
 
         // dokan menu page
