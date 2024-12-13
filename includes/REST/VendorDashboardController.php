@@ -39,7 +39,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_dashboard_statistics' ],
-                    'args'                => [],
+                    'args'                => [], // Returns a single object with statistics, not a collection. So, empty args is correct.
                     'permission_callback' => 'is_user_logged_in',
                 ],
             ]
@@ -49,7 +49,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_profile_information' ],
-                    'args'                => [],
+                    'args'                => [], // Returns a single store profile. So, empty args is correct.
                     'permission_callback' => 'is_user_logged_in',
                 ],
             ]
@@ -96,7 +96,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_products_summary' ],
-                    'args'                => [],
+                    'args'                => [], // Returns count data, not a collection. So, empty args is correct
                     'permission_callback' => 'is_user_logged_in',
                 ],
             ]
@@ -117,7 +117,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_preferences' ],
-                    'args'                => [],
+                    'args'                => [], // Returns static preferences data. So, empty args is correct.
                     'schema'              => [ $this, 'get_preferences_schema' ],
                     'permission_callback' => 'is_user_logged_in',
                 ],
