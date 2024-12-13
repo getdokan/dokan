@@ -11,14 +11,36 @@ export class ShipStationPage extends VendorPage {
         super(page);
     }
 
+    // enable ShipStation module
+    async enableShipStationModule() {
+        // vendor dashboard settings menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.subMenus.shipStation);
+    }
+
+    // disable ShipStation module
+    async disableShipStationModule() {
+        // vendor dashboard settings menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.shipStation);
+
+        // vendor dashboard settings menu page
+        await this.goto(data.subUrls.frontend.vDashboard.settingsShipStation);
+        await this.notToBeVisible(settingsShipStation.shipStationSettingsDiv);
+    }
+
     // generate shipStation credentials
     async generateShipStationCredentials() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipStation);
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.shipStation, settingsShipStation.generateCredentials, 201);
-        await this.toBeVisible(settingsShipStation.generateSuccessMessage);
+        await this.click(settingsShipStation.generateCredentials);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.settingsShipStation, settingsShipStation.confirmGeneration);
+        // await this.toBeVisible(settingsShipStation.generateSuccessMessage); //todo: success message is removed
 
         await this.toBeVisible(settingsShipStation.revokeCredentials);
         await this.multipleElementVisible(settingsShipStation.credentials);
+        await this.toBeVisible(settingsShipStation.secretKeyHideWarning);
     }
 
     // revoke shipStation credentials

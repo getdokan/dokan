@@ -253,7 +253,7 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
     });
 
-    setup.skip('admin set dokan delivery time settings', { tag: ['@pro'] }, async () => {
+    setup('admin set dokan delivery time settings', { tag: ['@pro'] }, async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);
     });
 
@@ -266,7 +266,7 @@ setup.describe('setup dokan settings', () => {
     });
 
     setup('admin set dokan product report abuse settings', { tag: ['@pro'] }, async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.reportAbuse, dbData.dokan.productReportAbuseSettings);
     });
 
     setup('admin set dokan spmv settings', { tag: ['@pro'] }, async () => {

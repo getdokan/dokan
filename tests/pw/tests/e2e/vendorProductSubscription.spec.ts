@@ -5,13 +5,18 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
 test.describe('Product subscriptions test', () => {
+    let admin: VendorProductSubscriptionPage;
     let vendor: VendorProductSubscriptionPage;
     let customer: VendorProductSubscriptionPage;
-    let vPage: Page, cPage: Page;
+    let aPage: Page, vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
     let subscriptionId: string = '1';
 
     test.beforeAll(async ({ browser }) => {
+        const adminContext = await browser.newContext(data.auth.adminAuth);
+        aPage = await adminContext.newPage();
+        admin = new VendorProductSubscriptionPage(aPage);
+
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new VendorProductSubscriptionPage(vPage);
@@ -25,9 +30,16 @@ test.describe('Product subscriptions test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.productSubscription, payloads.adminAuth);
         await vPage.close();
         await cPage.close();
         await apiUtils.dispose();
+    });
+
+    // admin
+
+    test('admin can enable product subscription module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableProductSubscriptionModule();
     });
 
     //vendor
@@ -80,5 +92,10 @@ test.describe('Product subscriptions test', () => {
 
     test.skip('customer can buy product subscription', { tag: ['@pro', '@customer'] }, async () => {
         await customer.buyProductSubscription(data.predefined.simpleSubscription.product1);
+    });
+
+    test('admin can disable product subscription module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.productSubscription, payloads.adminAuth);
+        await admin.disableProductSubscriptionModule();
     });
 });

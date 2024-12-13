@@ -36,6 +36,18 @@ declare global {
             PRINTFUL_APP_SECRET: string;
             RECAPTCHA_SITE_KEY: string;
             RECAPTCHA_SECRET_KEY: string;
+            TEST_PUBLISH_KEY_STRIPE: string;
+            TEST_SECRET_KEY_STRIPE: string;
+            TEST_CLIENT_ID_STRIPE: string;
+            SANDBOX_CLIENT_ID_MANGOPAY: string;
+            SANDBOX_API_KEY_MANGOPAY: string;
+            TEST_KEY_ID_RAZORPAY: string;
+            TEST_KEY_SECRET_RAZORPAY: string;
+            TEST_PUBLISH_KEY_STRIPE_EXPRESS: string;
+            TEST_SECRET_KEY_STRIPE_EXPRESS: string;
+            TEST_MERCHANT_ID_PAYPAL_MARKETPLACE: string;
+            TEST_CLIENT_ID_PAYPAL_MARKETPLACE: string;
+            TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE: string;
             DOKAN_PRO: boolean;
             SITE_LANGUAGE: string;
             SITE_TITLE: string;

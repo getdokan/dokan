@@ -136,7 +136,6 @@ test.describe('Request for quotation test customer', () => {
         customer = new RequestForQuotationsPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-
         [, productId[0], productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         const [, quoteRuleId] = await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), product_ids: productId }, payloads.adminAuth);
         await dbUtils.updateQuoteRuleContent(quoteRuleId, { switches: { product_switch: 'true' } }); // todo: remove after api fix
@@ -167,6 +166,13 @@ test.describe('Request for quotation test customer', () => {
     });
 
     test('customer can pay for order converted from quote request', { tag: ['@pro', '@customer'] }, async () => {
+        test.slow();
+        // todo: remove payment gateway disable methods when this issue is fixed https://github.com/getdokan/dokan-pro/issues/4015
+        await apiUtils.updatePaymentGateway('dokan-stripe-connect', { ...payloads.stripeConnect, enabled: false }, payloads.adminAuth);
+        await apiUtils.updatePaymentGateway('dokan_paypal_marketplace', { ...payloads.payPal, enabled: false }, payloads.adminAuth);
+        await apiUtils.updatePaymentGateway('dokan_mangopay', { ...payloads.mangoPay, enabled: false }, payloads.adminAuth);
+        await apiUtils.updatePaymentGateway('dokan_razorpay', { ...payloads.razorpay, enabled: false }, payloads.adminAuth);
+        await apiUtils.updatePaymentGateway('dokan_stripe_express', { ...payloads.stripeExpress, enabled: false }, payloads.adminAuth);
         await apiUtils.convertQuoteToOrder(quoteId, payloads.adminAuth);
         await customer.payConvertedQuote(quoteId);
     });

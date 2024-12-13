@@ -52,11 +52,11 @@ export class SettingPage extends AdminPage {
     async setStoreTermsAndConditions(status: string) {
         await this.goto(data.subUrls.frontend.vDashboard.settingsStore);
         if (status == 'on') {
-            await this.toBeVisible(selector.vendor.vStoreSettings.termsAndConditions);
-            await this.toBeVisible(selector.vendor.vStoreSettings.termsAndConditionsIframe);
+            await this.toBeVisible(selector.vendor.vStoreSettings.toc.termsAndConditions);
+            await this.toBeVisible(selector.vendor.vStoreSettings.toc.termsAndConditionsIframe);
         } else {
-            await this.notToBeVisible(selector.vendor.vStoreSettings.termsAndConditions);
-            await this.notToBeVisible(selector.vendor.vStoreSettings.termsAndConditionsIframe);
+            await this.notToBeVisible(selector.vendor.vStoreSettings.toc.termsAndConditions);
+            await this.notToBeVisible(selector.vendor.vStoreSettings.toc.termsAndConditionsIframe);
         }
     }
 
