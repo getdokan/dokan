@@ -165,7 +165,7 @@ test.describe('Request for quotation test customer', () => {
         await customer.customerUpdateRequestedQuote(quoteId, { ...data.requestForQuotation.customerQuoteProduct, productName: productName });
     });
 
-    test.only('customer can pay for order converted from quote request', { tag: ['@pro', '@customer'] }, async () => {
+    test('customer can pay for order converted from quote request', { tag: ['@pro', '@customer'] }, async () => {
         test.slow();
         // todo: remove payment gateway disable methods when this issue is fixed https://github.com/getdokan/dokan-pro/issues/4015
         await apiUtils.updatePaymentGateway('dokan-stripe-connect', { ...payloads.stripeConnect, enabled: false }, payloads.adminAuth);
