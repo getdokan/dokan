@@ -65,5 +65,9 @@ class CommonServiceProvider extends BaseServiceProvider {
 		$this->getContainer()
             ->addShared( \WeDevs\Dokan\Privacy::class, \WeDevs\Dokan\Privacy::class )
             ->addTag( self::TAG );
+
+        $this->getContainer()
+             ->addShared( \WeDevs\Dokan\ProductStatusRollback::class, \WeDevs\Dokan\ProductStatusRollback::class )
+             ->addTag( self::TAG );
     }
 }
