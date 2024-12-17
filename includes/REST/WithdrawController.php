@@ -79,6 +79,7 @@ class WithdrawController extends WP_REST_Controller {
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_balance' ],
 					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+                    'args'                => [], // No args needed for this endpoint
 				],
 			]
         );
@@ -118,6 +119,7 @@ class WithdrawController extends WP_REST_Controller {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_payment_method_items' ],
                     'permission_callback' => [ $this, 'get_payment_method_items_permissions_check' ],
+                    'args'                => [], // No args needed for this endpoint
                 ],
                 'schema' => [ $this, 'get_payment_method_item_schema' ],
             ]

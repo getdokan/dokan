@@ -30,6 +30,7 @@ class WithdrawControllerV2 extends WithdrawController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_withdraw_settings' ],
                     'permission_callback' => [ $this, 'get_items_permissions_check' ],
+                    'args'                => [], // no args are needed
                 ],
             ]
         );
@@ -41,6 +42,7 @@ class WithdrawControllerV2 extends WithdrawController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_withdraw_summary' ],
                     'permission_callback' => [ $this, 'get_items_permissions_check' ],
+                    'args'                => [], // no args are needed
                 ],
             ]
         );
