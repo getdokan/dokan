@@ -23,7 +23,7 @@ abstract class DokanRESTVendorController extends DokanBaseRESTController {
      *
      * @var string
      */
-    protected $base = 'vendor';
+    protected $rest_base = 'vendor';
 
     /**
      * Check if user has vendor permission.

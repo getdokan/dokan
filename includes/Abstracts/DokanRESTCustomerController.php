@@ -23,7 +23,7 @@ abstract class DokanRESTCustomerController extends DokanBaseRESTController {
      *
      * @var string
      */
-    protected $base = 'customer';
+    protected $rest_base = 'customer';
 
     /**
      * Check if user has customer permission.

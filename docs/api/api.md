@@ -30,8 +30,7 @@ abstract class DokanBaseRESTController extends WP_REST_Controller {
 
 ```php
 abstract class DokanRESTAdminController extends DokanBaseRESTController {
-    protected $namespace = 'dokan/v1';
-    protected $base = 'admin';
+    protected $namespace = 'dokan/v1/admin';
     
     public function check_permission() {
         return current_user_can( 'manage_woocommerce' );
@@ -43,8 +42,7 @@ abstract class DokanRESTAdminController extends DokanBaseRESTController {
 
 ```php
 class ExampleAdminController extends DokanRESTAdminController {
-    protected $namespace = 'dokan/v1';
-    protected $rest_base = 'example-admin';
+    protected $namespace = 'dokan/v1/example-admin';
 
     public function register_routes() {
         register_rest_route(
@@ -75,8 +73,7 @@ class ExampleAdminController extends DokanRESTAdminController {
 
 ```php
 class ExampleAdminController extends DokanRESTAdminController {
-    protected $namespace = 'dokan/v1';
-    protected $rest_base = 'example-admin';
+    protected $namespace = 'dokan/v1/example-admin';
 
     public function register_routes() {
         register_rest_route(
@@ -113,7 +110,7 @@ class ExampleAdminController extends DokanRESTAdminController {
 ```php
 abstract class DokanRESTVendorController extends DokanBaseRESTController {
     protected $namespace = 'dokan/v1';
-    protected $base = 'vendor';
+    protected $rest_base = 'vendor';
     
     public function check_permission() {
         return current_user_can( 'dokandar' );
@@ -195,7 +192,7 @@ class ExampleVendorController extends DokanRESTVendorController {
 ```php
 abstract class DokanRESTCustomerController extends DokanBaseRESTController {
     protected $namespace = 'dokan/v1';
-    protected $base = 'customer';
+    protected $rest_base = 'customer';
     
     public function check_permission() {
         return is_user_logged_in();

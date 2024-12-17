@@ -16,14 +16,7 @@ abstract class DokanRESTAdminController extends DokanBaseRESTController {
      *
      * @var string
      */
-    protected $namespace = 'dokan/v1';
-
-    /**
-     * Endpoint base.
-     *
-     * @var string
-     */
-    protected $base = 'admin';
+    protected $namespace = 'dokan/v1/admin';
 
     /**
      * Check if user has admin permission.
