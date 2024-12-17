@@ -15,36 +15,126 @@
             <div class="dokan-settings-wrap" ref='settingsWrapper'>
                 <div class='flex d-xs:flex-col md:flex-row w-full'>
                     <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 d-xs:w-full md:w-[340px]">
-                        <div class='d-xs:flex justify-between md:hidden font-bold'>
-                            <p class='font-bold'>{{ __( 'Settings', 'dokan-lite' ) }}</p>
-                            <label v-if="screenWidth < 753" for='dokan-setting-show'><i :class="showMenu || screenWidth >= 753 ? 'fas fa-chevron-down' : 'fas fa-chevron-up'"></i></label>
-                            <input v-if="screenWidth < 753" class='!hidden' id='dokan-setting-show' checked :value='showMenu' @click='() => showMenu = !showMenu' type='checkbox'>
-                        </div>
-                        <div class="nab-section md:block" :class="showMenu || screenWidth >= 753 ? 'd-xs:block' : 'd-xs:hidden'">
-                            <div class="search-box">
-                                <label for="dokan-admin-search" class="dashicons dashicons-search"></label>
-                                <input type="text" id="dokan-admin-search" class="dokan-admin-search-settings"
-                                       :placeholder="__( 'Search e.g. vendor', 'dokan-lite' )" v-model="searchText"
-                                       @input="searchInSettings" ref="searchInSettings" />
-                                <span
-                                    class="dashicons dashicons-no-alt"
-                                    @click.prevent="clearSearch"
-                                    v-if="'' !== searchText"
-                                ></span>
-                            </div>
+                        <div class="nab-section block">
+                            <div class="flex gap-4 items-center">
+                                <!-- Mobile menu toggle button -->
+                                <button
+                                    class="d-xs:flex md:hidden p-2.5 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-200 ease-in-out group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                    @click="openMobileDrawer"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        width="24"
+                                        height="24"
+                                        class="group-hover:scale-110 transition-transform duration-200"
+                                    >
+                                        <path
+                                            stroke="#246EFE"
+                                            stroke-width="2.5"
+                                            stroke-linecap="round"
+                                            d="M4 6h16M4 12h16M4 18h16"
+                                            class="group-hover:stroke-[#1b4fd1]"
+                                        />
+                                    </svg>
+                                    <span class="sr-only">{{ __('Toggle Settings Menu', 'dokan-lite') }}</span>
+                                </button>
+                                <template>
+                                    <div class="relative flex-1">
+                                        <!-- Search Box -->
+                                        <div class="search-section relative w-full mb-4">
+                                            <div class="search-box w-full bg-white rounded-md border border-gray-200 flex items-center">
+                                                <label for="dokan-admin-search" class="dashicons dashicons-search "></label>
+                                                <input
+                                                    type="text"
+                                                    autocomplete="off"
+                                                    id="dokan-admin-search"
+                                                    class="w-full px-3 py-2 border-none focus:outline-none focus:ring-0 bg-transparent "
+                                                    :placeholder="__('Search e.g. vendor', 'dokan-lite')"
+                                                    v-model="searchText"
+                                                    @input="searchInSettings"
+                                                    ref="searchInSettings"
+                                                />
+                                                <span
+                                                    v-if="searchText !== ''"
+                                                    class="dashicons dashicons-no-alt mr-3 text-gray-400 cursor-pointer hover:text-gray-600"
+                                                    @click.prevent="clearSearch"
+                                                ></span>
+                                            </div>
 
-                            <template v-for="section in settingSections">
-                                <div :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
-                                     @click.prevent="changeTab(section)" :key="section.id">
-                                    <img :src="section.icon_url" :alt="section.settings_title"/>
-                                    <div class="nav-content">
-                                        <div class="nav-title">{{ section.title }}</div>
-                                        <div class="nav-description">{{ section.description }}</div>
+                                            <!-- Search Suggestions Dropdown -->
+                                            <div
+                                                v-if="searchText && settingSections.length > 0"
+                                                class="d-xs:absolute md:hidden left-0 right-0 top-[calc(100%+4px)] bg-white border border-gray-200 rounded-lg shadow-lg divide-y divide-gray-100 max-h-[280px] overflow-y-auto z-50"
+                                            >
+                                                <div
+                                                    v-for="section in settingSections"
+                                                    :key="section.id"
+                                                    class="hover:bg-gray-50 transition-colors cursor-pointer"
+                                                    @click="handleSectionClick(section)"
+                                                >
+                                                    <div class="p-3">
+                                                        <div class="flex items-center gap-3">
+                                                            <img
+                                                                :src="section.icon_url"
+                                                                :alt="section.title"
+                                                                class="w-5 h-5"
+                                                            />
+                                                            <div class="flex-1 min-w-0">
+                                                                <div class="text-sm font-medium text-gray-900 truncate">
+                                                                    {{ section.title }}
+                                                                </div>
+                                                                <div class="text-xs text-gray-500 mt-0.5 line-clamp-1">
+                                                                    {{ section.description }}
+                                                                </div>
+                                                            </div>
+                                                            <svg
+                                                                class="w-4 h-4 text-gray-400 flex-shrink-0"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                            >
+                                                                <path
+                                                                    stroke-linecap="round"
+                                                                    stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M9 5l7 7-7 7"
+                                                                />
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </template>
+                                </template>
+                            </div>
+                            <!-- Mobile Settings List -->
+                            <transition name="slide">
+                                <MobileSettingsDrawer
+                                    :is-open="showMobileDrawer"
+                                    :sections="settingSections"
+                                    :current-tab="currentTab"
+                                    @close="closeMobileDrawer"
+                                    @change-tab="changeTab"
+                                />
+                            </transition>
+
+                           <div class="d-xs:hidden md:block">
+                               <template  v-for="section in settingSections">
+                                   <div :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
+                                        @click.prevent="changeTab(section)" :key="section.id">
+                                       <img :src="section.icon_url" :alt="section.settings_title"/>
+                                       <div class="nav-content">
+                                           <div class="nav-title">{{ section.title }}</div>
+                                           <div class="nav-description">{{ section.description }}</div>
+                                       </div>
+                                   </div>
+                               </template>
+                           </div>
                         </div>
                     </div>
+
 
                 <div class="metabox-holder">
                     <fieldset class="settings-header" v-for="section in settingSections" v-if="currentTab === section.id">
@@ -111,18 +201,23 @@
 </template>
 
 <script>
+    import MobileSettingsList from "admin/components/Settings/MobileSettingsList.vue";
+
     let Loading     = dokan_get_lib('Loading');
     let AdminNotice = dokan_get_lib('AdminNotice');
 
     import Fields from "admin/components/Fields.vue"
     import SettingsBanner from "admin/components/SettingsBanner.vue";
     import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+    import MobileSettingsDrawer from "admin/components/Settings/MobileSettingsList.vue";
 
     export default {
 
         name: 'Settings',
 
         components: {
+            MobileSettingsDrawer,
+            MobileSettingsList,
             Fields,
             Loading,
             SettingsBanner,
@@ -153,7 +248,10 @@
                 dokanAssetsUrl: dokan.urls.assetsUrl,
                 disableSubmit: false,
                 showMenu: false,
-                screenWidth: window.document.documentElement.clientWidth
+                screenWidth: window.document.documentElement.clientWidth,
+                showMobileDrawer: false,
+                showSuggestions :false
+
             }
         },
 
@@ -485,7 +583,7 @@
 
             clearSearch() {
                 this.searchText = '';
-
+                this.showSuggestions = false;
                 this.validateBlankSearch();
             },
 
@@ -519,6 +617,7 @@
                         // Search now with searchText.
                         this.doSearch( searchText );
                         this.awaitingSearch = false;
+                        this.showSuggestions= true;
                     }, 1000 );
                 }
 
@@ -595,7 +694,22 @@
 
             updateDocumentWidth() {
                 this.screenWidth = window.document.documentElement.clientWidth;
+            },
+            openMobileDrawer() {
+                this.showMobileDrawer = true;
+                // Clear search text when opening drawer
+                this.searchText = '';
+                this.validateBlankSearch();
+            },
+
+            closeMobileDrawer() {
+                this.showMobileDrawer = false;
+            },
+            handleSectionClick(section) {
+                this.changeTab(section);
+                this.searchText = '';
             }
+
         },
 
         created() {
@@ -990,7 +1104,43 @@
             grid-template-columns: repeat(2, 1fr);
         }
 
-        .search-box {
+        .search-section {
+            .search-box {
+                input {
+                    width: 100%;
+                    height: 48px;
+                    border: none;
+                    display: block;
+                    padding: 0 45px 0 0;
+                    background: transparent;
+                    font-weight: 400;
+                    font-family: Roboto, sans-serif;
+
+                    &:focus {
+                        outline: none;
+                        box-shadow: none;
+                        border-color: transparent;
+                    }
+                }
+
+                .dashicons {
+                    &.dashicons-search {
+                        font-size: 1.5rem;
+                    }
+
+                    &.dashicons-no-alt {
+                        cursor: pointer;
+                        position: absolute;
+                        right: 12px;
+                        top: 50%;
+                        transform: translateY(-50%);
+
+                        &:hover {
+                            color: #d43f3a;
+                        }
+                    }
+                }
+            }
             color: rgba(60, 60, 67, 0.6);
             filter: drop-shadow(0px 0.0869484px 0.260845px rgba(0, 0, 0, 0.1)) drop-shadow(0px 0.869484px 1.73897px rgba(0, 0, 0, 0.2));
             margin: 8px 0px 14px;
@@ -1014,7 +1164,7 @@
                 cursor: pointer;
                 color: #000;
                 font-size: 25px;
-                transform: translate( 0%, -60%);
+                transform: translate(0%, -60%);
                 &:hover {
                     color: #d43f3a;
                 }
@@ -1087,73 +1237,15 @@
         }
     }
 
-    @media only screen and (max-width: 430px) {
-        .dokan-settings-wrap {
-            .nav-tab-wrapper {
-                width: 60%;
-                padding: 10px 12px 15px 12px;
 
-                .nav-tab {
-                    padding-left: 10px !important;
-
-                    img {
-                        margin: 3px 8px 0px 4px;
-                    }
-
-                    .nav-content {
-                        .nav-title {
-                            font-size: 7px;
-                        }
-
-                        .nav-description {
-                            font-size: 5px !important;
-                        }
-                    }
-                }
-
-                .nav-tab-active {
-                    &:before {
-                        width: 2px !important;
-                    }
-                }
-            }
-
-            .metabox-holder {
-                width: 100%;
-
-                .settings-header {
-                    display: block;
-
-                    .settings-content {
-                        .settings-title,
-                        .settings-description {
-                            padding-left: 0;
-                        }
-                    }
-
-                    .settings-document-button {
-                        text-align: left;
-                    }
-                }
-            }
-
-            .search-box {
-                .dashicons.dashicons-search {
-                    margin-left: 10px;
-                }
-
-                .dokan-admin-search-settings {
-                    font-size: 10px;
-                }
-            }
-        }
-    }
 
     @media only screen and (max-width: 768px) {
         .dokan-settings-wrap {
             .nav-tab-wrapper {
-                width: 35%;
-
+                overflow: inherit !important;
+                z-index: 444;
+              width: 100% !important;
+              padding: 1rem !important;
                 .nav-tab {
                     .nav-content {
                         .nav-title {
@@ -1169,7 +1261,7 @@
 
             .metabox-holder {
                 width: 100%;
-
+                padding: 0 !important;
                 .settings-header {
                     .settings-content {
                         .settings-title {
@@ -1178,6 +1270,36 @@
                     }
                 }
             }
+
+            .slide-enter-active, .slide-leave-active {
+                transition: transform 0.3s ease-out;
+            }
+            .slide-enter, .slide-leave-to {
+                transform: translateX(-100%);
+            }
+            .dokan-settings-wrap {
+                    .nav-tab-wrapper {
+                        padding: 10px;
+
+                        .mobile-settings-list {
+                            margin-top: 1rem;
+
+                            .setting-section {
+                                &.active {
+                                    border-left: 4px solid #246EFE;
+                                }
+
+                                &:hover {
+                                    background-color: #f9fafb;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-    }
+
+
+
+
 </style>
