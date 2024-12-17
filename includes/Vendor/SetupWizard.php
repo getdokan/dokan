@@ -9,7 +9,7 @@ use WeDevs\Dokan\Admin\SetupWizard as DokanSetupWizard;
  * Seller setup wizard class
  */
 class SetupWizard extends DokanSetupWizard {
-    /** @var string Currenct Step */
+    /** @var string Current Step */
     protected $step = '';
 
     /** @var array Steps for the setup wizard */
@@ -17,13 +17,11 @@ class SetupWizard extends DokanSetupWizard {
 
     /** @var string custom logo url of the theme */
     protected $custom_logo = '';
-    /**
-     * @var int
-     */
+
+    /** @var int */
     public $store_id;
-    /**
-     * @var array
-     */
+
+    /** @var array */
     public $store_info;
 
     /**
@@ -35,7 +33,7 @@ class SetupWizard extends DokanSetupWizard {
         add_action( 'dokan_setup_wizard_enqueue_scripts', [ $this, 'frontend_enqueue_scripts' ] );
     }
 
-    // define the woocommerce_registration_redirect callback
+    // Define the woocommerce_registration_redirect callback
     public function filter_woocommerce_registration_redirect( $var ) {
         $url  = $var;
         $user = wp_get_current_user();
@@ -99,7 +97,7 @@ class SetupWizard extends DokanSetupWizard {
         $this->steps = apply_filters( 'dokan_seller_wizard_steps', $steps );
         $this->step  = current( array_keys( $this->steps ) );
 
-        // get step from url
+        // Get step from URL
         if ( isset( $_GET['_admin_sw_nonce'], $_GET['step'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_admin_sw_nonce'] ) ), 'dokan_admin_setup_wizard_nonce' ) ) {
             $this->step = sanitize_key( wp_unslash( $_GET['step'] ) );
         }
@@ -365,6 +363,7 @@ class SetupWizard extends DokanSetupWizard {
 
             </table>
             <p class="wc-setup-actions step">
+                <a href="<?php echo esc_url( $this->get_previous_step_link() ); ?>" class="button button-large button-prev store-step-back-btn dokan-btn-theme"><?php esc_html_e( 'Return to the previous step', 'dokan-lite' ); ?></a>
                 <input type="button" class="button-primary button button-large button-next store-step-continue dokan-btn-theme" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>"/>
                 <input type="submit" id="save_step_submit" style='display: none' value="submit" name="save_step"/>
                 <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next store-step-skip-btn dokan-btn-theme"><?php esc_html_e( 'Skip this step', 'dokan-lite' ); ?></a>
@@ -503,7 +502,7 @@ class SetupWizard extends DokanSetupWizard {
         $dokan_settings['find_address'] = isset( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : '';
         $dokan_settings['show_email']   = isset( $_POST['show_email'] ) ? 'yes' : 'no';
 
-        // Validating fileds.
+        // Validating fields.
         $is_valid_form = true;
         if ( empty( $dokan_settings['address']['street_1'] ) ) {
             $is_valid_form = false;
@@ -520,9 +519,8 @@ class SetupWizard extends DokanSetupWizard {
         if ( empty( $dokan_settings['address']['country'] ) ) {
             $is_valid_form = false;
             $_POST['error_address[country]'] = 'error';
-        }
-        else {
-            if ( ( isset( $states[ $dokan_settings['address']['country'] ] ) && count( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) || ( ! isset( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) ) ) ) {
+        } else {
+            if ( ( isset( $states[ $dokan_settings['address']['country'] ] ) && count( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) ) || ( ! isset( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) ) ) {
                 $is_valid_form = false;
                 $_POST['error_address[state]'] = 'error';
             }
@@ -572,8 +570,8 @@ class SetupWizard extends DokanSetupWizard {
                 ?>
             </table>
             <p class="wc-setup-actions step">
+                <a href="<?php echo esc_url( $this->get_previous_step_link() ); ?>" class="button button-large button-prev payment-step-back-btn dokan-btn-theme"><?php esc_html_e( 'Return to the previous step', 'dokan-lite' ); ?></a>
                 <input type="submit" class="button-primary button button-large button-next payment-continue-btn dokan-btn-theme" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step"/>
-
                 <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next payment-step-skip-btn dokan-btn-theme"><?php esc_html_e( 'Skip this step', 'dokan-lite' ); ?></a>
                 <?php wp_nonce_field( 'dokan-seller-setup' ); ?>
             </p>
@@ -661,9 +659,22 @@ class SetupWizard extends DokanSetupWizard {
 
         <div class="dokan-setup-done-content">
             <p class="wc-setup-actions step">
+                <a href="<?php echo esc_url( $this->get_previous_step_link() ); ?>" class="button button-large button-prev dokan-btn-theme"><?php esc_html_e( 'Return to the previous step', 'dokan-lite' ); ?></a>
                 <a class="button button-primary dokan-btn-theme" href="<?php echo esc_url( $dashboard_url ); ?>"><?php esc_html_e( 'Go to your Store Dashboard!', 'dokan-lite' ); ?></a>
             </p>
         </div>
         <?php
+    }
+
+    /**
+     * Get the previous step link.
+     *
+     * @return string
+     */
+    protected function get_previous_step_link() {
+        $keys = array_keys( $this->steps );
+        $current_index = array_search( $this->step, $keys, true );
+        $prev_step = isset( $keys[ $current_index - 1 ] ) ? $keys[ $current_index - 1 ] : '';
+        return add_query_arg( 'step', $prev_step, remove_query_arg( 'save_step' ) );
     }
 }
