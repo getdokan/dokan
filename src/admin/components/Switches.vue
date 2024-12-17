@@ -37,7 +37,7 @@ export default {
             default: '#fff',
         },
         value: {
-            type: [String, Number]
+            type: [String, Number, Boolean]
         }
     },
 

@@ -128,6 +128,7 @@ export interface product {
         productName: () => string;
         category: string;
         regularPrice: () => string;
+        description: string;
         storeName: string;
         status: string;
         stockStatus: boolean;
@@ -141,6 +142,7 @@ export interface product {
         productName: () => string;
         category: string;
         regularPrice: () => string;
+        description: string;
         storeName: string;
         status: string;
         stockStatus: boolean;
@@ -161,6 +163,7 @@ export interface product {
         productName: () => string;
         category: string;
         regularPrice: () => string;
+        description: string;
         storeName: string;
         status: string;
         stockStatus: boolean;
@@ -182,6 +185,7 @@ export interface product {
         buttonText: string;
         category: string;
         regularPrice: () => string;
+        description: string;
         storeName: string;
         status: string;
         description: string;
@@ -205,6 +209,7 @@ export interface product {
         category: string;
         regularPrice: () => string;
         subscriptionPrice: () => string;
+        description: string;
         subscriptionPeriodInterval: string;
         subscriptionPeriod: string;
         expireAfter: string;
@@ -222,6 +227,7 @@ export interface product {
         category: string;
         regularPrice: () => string;
         subscriptionPrice: () => string;
+        description: string;
         subscriptionPeriodInterval: string;
         subscriptionPeriod: string;
         expireAfter: string;
@@ -245,6 +251,7 @@ export interface product {
         productName: () => string;
         category: string;
         regularPrice: () => string;
+        description: string;
         numberOfProducts: string;
         packValidity: string;
         advertisementSlot: string;
