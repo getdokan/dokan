@@ -4,6 +4,42 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.14.3',
+        'released' => '2024-12-11',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Updated Dokan admin header to display current pro plan and version with upgrading option.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.2',
+        'released' => '2024-12-06',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Added commission setting option in product bulk edit for Admin.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.1',
+        'released' => '2024-12-04',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Fixed a issue in the commission upgrader to deal with empty values for product and vendor.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.14.0',
         'released' => '2024-12-02',
         'changes'  => [

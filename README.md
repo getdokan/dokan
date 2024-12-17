@@ -5,9 +5,9 @@
 **Requires at least:** 6.5  
 **Tested up to:** 6.7.1  
 **WC requires at least:** 8.0.0  
-**WC tested up to:** 9.4.2  
+**WC tested up to:** 9.4.3  
 **Requires PHP:** 7.4  
-**Stable tag:** 3.14.0  
+**Stable tag:** 3.14.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -346,6 +346,16 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+### v3.14.3 ( Dec 11, 2024 ) ###
+- **update:** Updated Dokan admin header to display current pro plan and version with upgrading option.
+
+### v3.14.2 ( Dec 06, 2024 ) ###
+
+- **update:** Added commission setting option in product bulk edit for Admin.
+
+### v3.14.1 ( Dec 04, 2024 ) ###
+
+- **fix:** Fixed a issue in the commission upgrader to deal with empty values for product and vendor.
 
 ### v3.14.0 ( Dec 02, 2024 ) ###
 
@@ -355,7 +365,6 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **new:** Commission details metabox on the order details page in the admin dashboard is now visible for child orders or orders without a parent.
 - **new:** Related order metabox on the order details page in the admin dashboard, displaying sibling orders for child orders and child orders for parent orders.
 - **new:** Backward compatibility for flat, percentage, and combine commission types for older orders.
-- **new:** A new color palette is introduced for store color "Purple Pulse"
 - **update:** Updated commission types from flat, percentage, and combine to fixed and category-based commissions.
 - **update:** Overhauled the commission UI across Dokan global settings, vendor settings, product settings, Dokan subscription product settings, and the admin setup wizard.
 - **update:** Updated the commission settings in the admin setup wizard.
@@ -365,30 +374,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Moved the vendor edit page from Dokan Pro to Dokan Lite and eliminated the commission setting from the WordPress default user profile page.
 - **fix:** Removed the commission from every category, introducing category-based commission in global settings, vendor settings, Dokan subscription products, and the admin setup wizard.
 
-### v3.13.1 ( Nov 11, 2024 ) ###
-
-- **update:** Compatibility with the Printful Integration Module added.
-- **fix:** Improved logic to ensure the `add new category` button only appears when appropriate conditions are met, enhancing user experience.
-
-### v3.13.0 ( Nov 06, 2024 ) ###
-
-- **feat:** Replaced the Dokan array container with the League Container, ensuring backward compatibility for seamless performance and enhanced flexibility.
-- **feat:** Updated Dokan to be fully compatible with WooCommerce Analytics Reports
-
-### v3.12.6 ( Oct 24, 2024 ) ###
-
-- **fix:** Fixed js error on frontend pages.
-
-### v3.12.5 ( Oct 16, 2024 ) ###
-
-- **fix:** Implement order trash and untrash handling for Dokan
-- **fix:** Added wordpress native i18n support
-
-### v3.12.4 ( Oct 03, 2024 ) ###
-
-- **update:** Added `$data` parameter to `dokan_update_vendor` hook.
-
-[CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/ac8cfe42ed6d13a34572571728281591ebbf706f/CHANGELOG.md).
+[CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
 
 ## Upgrade Notice ##
 

@@ -4,7 +4,7 @@ import { dbData } from '@utils/dbData';
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
-const { ADMIN, VENDOR, VENDOR2, VENDOR3, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, VENDOR_ID, PRODUCT_ID, PRODUCT_ID_V2, TAG_ID, ATTRIBUTE_ID } = process.env;
+const { ADMIN, VENDOR, VENDOR2, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, VENDOR_ID, VENDOR2_ID, PRODUCT_ID, PRODUCT_ID_V2, TAG_ID, ATTRIBUTE_ID } = process.env;
 
 export const payloads = {
     // wp
@@ -400,6 +400,7 @@ export const payloads = {
     }),
 
     createProduct: () => ({
+        // post_author: '',
         name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
@@ -1953,6 +1954,70 @@ export const payloads = {
         ],
     },
 
+    createMultiVendorOrder: {
+        payment_method: 'bacs',
+        payment_method_title: 'Direct Bank Transfer',
+        set_paid: true,
+        customer_id: CUSTOMER_ID ?? 0,
+        billing: {
+            first_name: 'customer1',
+            last_name: 'c1',
+            address_1: 'abc street',
+            address_2: 'xyz street',
+            city: 'New York',
+            state: 'NY',
+            postcode: '10003',
+            country: 'US',
+            email: 'customer1@email.com',
+            phone: '(555) 555-5555',
+        },
+
+        shipping: {
+            first_name: 'customer1',
+            last_name: 'c1',
+            address_1: 'abc street',
+            address_2: 'xyz street',
+            city: 'New York',
+            state: 'NY',
+            postcode: '10003',
+            country: 'US',
+        },
+
+        line_items: [
+            {
+                product_id: PRODUCT_ID ?? '',
+                quantity: 1,
+            },
+            {
+                product_id: PRODUCT_ID_V2 ?? '',
+                quantity: 1,
+            },
+        ],
+
+        shipping_lines: [
+            {
+                method_id: 'flat_rate',
+                method_title: 'Flat Rate',
+                total: '10.00',
+            },
+        ],
+
+        coupon_lines: [],
+    },
+
+    multivendorLineItems: [
+        {
+            author: VENDOR_ID,
+            products: '3', // product Ids
+            quantities: '1',
+        },
+        {
+            author: VENDOR2_ID,
+            products: '3', // product Ids
+            quantities: '1',
+        },
+    ],
+
     createOrderNote: {
         status: 'processing',
         note: 'test order note',
@@ -2186,7 +2251,7 @@ export const payloads = {
         // title        : 'dokan',
         // description  : 'Just another WordPress site',
         // url          : 'http://dokan.test',
-        // email        : 'shashwata@wedevs.com',
+        email: 'shashwata@wedevs.com',
         timezone: 'Asia/Dhaka',
         date_format: 'F j, Y',
         time_format: 'g:i a',
@@ -3558,51 +3623,54 @@ export const payloads = {
     // module
 
     moduleIds: {
+        auction: 'auction',
         booking: 'booking',
-        colorSchemeCustomize: 'color_scheme_customizer',
+        colorSchemeCustomizer: 'color_scheme_customizer',
         deliveryTime: 'delivery_time',
         elementor: 'elementor',
-        exportImport: 'export_import',
+        euCompliance: 'germanized',
         followStore: 'follow_store',
         geolocation: 'geolocation',
-        germanized: 'germanized',
         liveChat: 'live_chat',
         liveSearch: 'live_search',
+        mangopay: 'mangopay',
         moip: 'moip',
+        minMaxQuantities: 'order_min_max',
         paypalMarketplace: 'paypal_marketplace',
+        printful: 'printful',
         productAddon: 'product_addon',
+        productAdvertising: 'product_advertising',
         productEnquiry: 'product_enquiry',
+        productSubscription: 'vsp',
+        productQa: 'product_qa',
+        rankMath: 'rank_math',
+        razorpay: 'razorpay',
         reportAbuse: 'report_abuse',
+        requestForQuotation: 'request_for_quotation',
         rma: 'rma',
+        sellerBadge: 'seller_badge',
         sellerVacation: 'seller_vacation',
         shipStation: 'shipstation',
-        auction: 'auction',
         spmv: 'spmv',
         storeReviews: 'store_reviews',
         storeSupport: 'store_support',
         stripe: 'stripe',
-        productAdvertising: 'product_advertising',
-        productSubscription: 'product_subscription',
-        vendorAnalytics: 'vendor_analytics',
-        vendorStaff: 'vendor_staff',
-        vsp: 'vsp',
-        vendorVerification: 'vendor_verification',
-        wholesale: 'wholesale',
-        rankMath: 'rank_math',
-        tableRateShipping: 'table_rate_shipping',
-        mangopay: 'mangopay',
-        orderMinMax: 'order_min_max',
-        sellerBadge: 'seller_badge',
         stripeExpress: 'stripe_express',
-        requestForQuotation: 'request_for_quotation',
+        tableRateShipping: 'table_rate_shipping',
+        vendorAnalytics: 'vendor_analytics',
+        vendorImportExport: 'export_import',
+        vendorStaff: 'vendor_staff',
+        vendorVerification: 'vendor_verification',
+        vendorSubscription: 'product_subscription',
+        wholesale: 'wholesale',
     },
 
     deactivateModule: {
-        module: ['booking'],
+        module: 'booking',
     },
 
     activateModule: {
-        module: ['booking'],
+        module: 'booking',
     },
 
     // announcement
@@ -3690,11 +3758,12 @@ export const payloads = {
     createStore: () => ({
         user_login: `${faker.person.firstName()}_${faker.string.nanoid(5)}`,
         user_pass: String(USER_PASSWORD),
-        role: 'seller',
         email: faker.internet.email(),
         store_name: `${faker.person.firstName()}_store`,
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
+        role: 'seller',
+        notify_vendor: 'yes',
         social: {
             fb: 'https://www.facebook.com/',
             twitter: 'https://www.twitter.com/',
@@ -3716,19 +3785,13 @@ export const payloads = {
             country: 'US',
         },
         location: '40.7127753,-74.0059728',
-        banner: 0,
         banner_id: 0,
-        gravatar: 0,
         gravatar_id: 0,
-        show_more_product_tab: true,
-        enable_tnc: 'on',
+        enable_tnc: 'yes',
         store_tnc: 'test Vendor terms and conditions',
         featured: 'yes',
-        rating: {
-            rating: '0.00',
-            count: 1,
-        },
-        enabled: true,
+        enabled: 'yes',
+        trusted: 'yes', // publish product directly
         payment: {
             paypal: {
                 email: 'paypal@g.c',
@@ -3743,14 +3806,62 @@ export const payloads = {
                 iban: '123456',
                 swift: '12345',
             },
+            skrill: {
+                email: 'skrill@g.c',
+            },
+            dokan_custom: {
+                withdraw_method_name: 'Bksh',
+                withdraw_method_type: 'Phone',
+                value: '0123456789',
+            },
+            // "stripe": false,
+            // stripe_express: false,
+            // 'dokan-moip-connect': true,
+            // dokan_razorpay: false,
         },
-        trusted: true,
-        store_open_close: {
-            enabled: false,
-            time: [],
-            open_notice: 'Store is open',
-            close_notice: 'Store is closed',
-        },
+        // store_open_close: {
+        //     enabled: 'yes',
+        //     time: {
+        //         monday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         tuesday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         wednesday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         thursday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         friday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         saturday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         sunday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //     },
+        //     open_notice: 'Store is open',
+        //     close_notice: 'Store is closed',
+        // },
+        sale_only_here: 'yes',
         company_name: faker.company.name(),
         company_id_number: faker.string.alphanumeric(5),
         vat_number: faker.string.alphanumeric(10),
@@ -3759,13 +3870,38 @@ export const payloads = {
         categories: [
             {
                 // id: 74,
-                name: 'Uncategorized',
-                slug: 'uncategorized',
+                // name: 'Uncategorized',
+                // slug: 'uncategorized',
             },
         ],
-        admin_commission: '',
-        admin_additional_fee: '',
-        admin_commission_type: '',
+
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
+        admin_commission: '5',
+        admin_additional_fee: '5',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
+        // store_seo: {
+        //     'dokan-seo-meta-title': 'meta title',
+        //     'dokan-seo-meta-desc': 'meta description',
+        //     'dokan-seo-meta-keywords': 'meta keywords',
+        //     'dokan-seo-og-title': 'facebook title',
+        //     'dokan-seo-og-desc': 'facebook description',
+        //     'dokan-seo-og-image': '0',
+        //     'dokan-seo-twitter-title': 'twitter title',
+        //     'dokan-seo-twitter-desc': 'twitter description',
+        //     'dokan-seo-twitter-image': '0',
+        // },
     }),
 
     updateStore: () => ({
@@ -3784,7 +3920,7 @@ export const payloads = {
             threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
-        show_email: false,
+        show_email: 'yes',
         address: {
             street_1: 'abc street',
             street_2: 'xyz street',
@@ -3793,26 +3929,16 @@ export const payloads = {
             state: 'NY',
             country: 'US',
         },
-        location: '',
-        banner: '',
+        location: '40.7127753,-74.0059728',
         banner_id: 0,
-        gravatar: '',
         gravatar_id: 0,
-        shop_url: '',
-        show_more_product_tab: true,
-        toc_enabled: false,
-        store_toc: '',
-        featured: true,
-        rating: {
-            rating: '0.00',
-            count: 1,
-        },
-        trusted: true,
-        enabled: true,
-        registered: '',
+        enable_tnc: 'yes',
+        store_tnc: 'test Vendor terms and conditions',
+        featured: 'yes',
+        enabled: 'yes',
+        trusted: 'yes', // publish product directly
         payment: {
             paypal: {
-                0: 'email',
                 email: 'paypal@g.c',
             },
             bank: {
@@ -3825,24 +3951,79 @@ export const payloads = {
                 iban: '123456',
                 swift: '12345',
             },
-            stripe: false,
+            skrill: {
+                email: 'skrill@g.c',
+            },
+            dokan_custom: {
+                withdraw_method_name: 'Bksh',
+                withdraw_method_type: 'Phone',
+                value: '0123456789',
+            },
+            // "stripe": false,
+            // stripe_express: false,
+            // 'dokan-moip-connect': true,
+            // dokan_razorpay: false,
         },
-        store_open_close: {
-            enabled: false,
-            time: [],
-            open_notice: 'Store is open',
-            close_notice: 'Store is closed',
-        },
-        company_name: '',
-        vat_number: '',
-        company_id_number: '',
-        bank_name: '',
-        bank_iban: '',
-        categories: [{}],
+        // store_open_close: {
+        //     enabled: 'yes',
+        //     time: {
+        //         monday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         tuesday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         wednesday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         thursday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         friday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         saturday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         sunday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //     },
+        //     open_notice: 'Store is open',
+        //     close_notice: 'Store is closed',
+        // },
+        sale_only_here: 'yes',
+        company_name: faker.company.name(),
+        company_id_number: faker.string.alphanumeric(5),
+        vat_number: faker.string.alphanumeric(10),
+        bank_name: faker.string.alphanumeric(7),
+        bank_iban: faker.finance.iban(),
+        categories: [
+            {
+                // id: 74,
+                // name: 'Uncategorized',
+                // slug: 'uncategorized',
+            },
+        ],
+
         // vendorwise commission
         admin_commission_type: '', // fixed, category_based
-        admin_commission: '',
-        admin_additional_fee: '',
+        admin_commission: '5',
+        admin_additional_fee: '5',
         admin_category_commission: {
             all: {
                 flat: '7',
@@ -3855,6 +4036,17 @@ export const payloads = {
                 },
             },
         },
+        // store_seo: {
+        //     'dokan-seo-meta-title': 'meta title',
+        //     'dokan-seo-meta-desc': 'meta description',
+        //     'dokan-seo-meta-keywords': 'meta keywords',
+        //     'dokan-seo-og-title': 'facebook title',
+        //     'dokan-seo-og-desc': 'facebook description',
+        //     'dokan-seo-og-image': '0',
+        //     'dokan-seo-twitter-title': 'twitter title',
+        //     'dokan-seo-twitter-desc': 'twitter description',
+        //     'dokan-seo-twitter-image': '0',
+        // },
     }),
 
     // always revert vendor settings to this after altering in tests
@@ -3884,15 +4076,11 @@ export const payloads = {
         banner_id: 0,
         gravatar: 0,
         gravatar_id: 0,
-        show_more_product_tab: true,
+
         enable_tnc: 'on',
         store_tnc: 'test Vendor terms and conditions',
         featured: 'yes',
-        // rating: {
-        //     rating: '4.00', // todo:  doesn't work on lite [might not implemented on lite]
-        //     count: 1,
-        // },
-        enabled: true,
+        enabled: 'yes',
         payment: {
             paypal: {
                 email: 'paypal@g.c',
@@ -3908,7 +4096,7 @@ export const payloads = {
                 swift: '12345',
             },
         },
-        trusted: true,
+        trusted: 'yes',
         company_name: 'company name',
         vat_number: '123456789',
         company_id_number: '123456789',
@@ -3950,15 +4138,72 @@ export const payloads = {
         bank_iban: faker.finance.iban(),
     },
 
+    storeResetFields: {
+        featured: 'yes',
+        enabled: 'yes',
+        trusted: 'yes',
+        enable_tnc: 'yes',
+        show_email: 'yes',
+        store_open_close: {
+            enabled: 'yes',
+        },
+    },
+
+    storeOpenClose: {
+        store_open_close: {
+            enabled: 'yes',
+            time: {
+                monday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:59 pm'],
+                },
+                tuesday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:59 pm'],
+                },
+                wednesday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:59 pm'],
+                },
+                thursday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:59 pm'],
+                },
+                friday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:59 pm'],
+                },
+                saturday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:59 pm'],
+                },
+                sunday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:59 pm'],
+                },
+            },
+            open_notice: 'Store is open',
+            close_notice: 'Store is closed',
+        },
+    },
+
     createStore1: {
         user_login: VENDOR,
         user_pass: USER_PASSWORD,
-        user_nicename: `${VENDOR}store`,
-        role: 'seller',
+        user_nicename: `${VENDOR}store`, // store url
         email: `${VENDOR}@email.com`,
         store_name: `${VENDOR}store`,
         first_name: VENDOR,
         last_name: 'v',
+        role: 'seller',
+        notify_vendor: 'yes',
         social: {
             fb: 'https://www.facebook.com/',
             twitter: 'https://www.twitter.com/',
@@ -3980,19 +4225,13 @@ export const payloads = {
             country: 'US',
         },
         location: '40.7127753,-74.0059728',
-        banner: 0,
         banner_id: 0,
-        gravatar: 0,
         gravatar_id: 0,
-        show_more_product_tab: true,
-        enable_tnc: 'on',
+        enable_tnc: 'yes',
         store_tnc: 'test Vendor terms and conditions',
         featured: 'yes',
-        // rating: {
-        //     rating: '4.00', // todo:  doesn't work on lite [might not implemented on lite]
-        //     count: 1,
-        // },
-        enabled: true,
+        enabled: 'yes',
+        trusted: 'yes', // publish product directly
         payment: {
             paypal: {
                 email: 'paypal@g.c',
@@ -4007,339 +4246,62 @@ export const payloads = {
                 iban: '123456',
                 swift: '12345',
             },
+            skrill: {
+                email: 'skrill@g.c',
+            },
+            dokan_custom: {
+                withdraw_method_name: 'Bksh',
+                withdraw_method_type: 'Phone',
+                value: '0123456789',
+            },
+            // "stripe": false,
+            // stripe_express: false,
+            // 'dokan-moip-connect': true,
+            // dokan_razorpay: false,
         },
-        trusted: true,
         // store_open_close: {
-        // 	enabled: false,
-        // 	time: [],
-        // 	open_notice: 'Store is open',
-        // 	close_notice: 'Store is closed',
-        // },
-        // store_open_close: {
-        //     // todo:  isn't implemented on dokan create store api
-        //     enabled: 'yes', // todo:
+        //     enabled: 'yes',
         //     time: {
         //         monday: {
-        //             status: 'open', // 'close'
-        //             opening_time: ['12:00 am'], // []
-        //             closing_time: ['11:30 pm'], // []
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
         //         },
         //         tuesday: {
         //             status: 'open',
         //             opening_time: ['12:00 am'],
-        //             closing_time: ['11:30 pm'],
+        //             closing_time: ['11:59 pm'],
         //         },
         //         wednesday: {
         //             status: 'open',
         //             opening_time: ['12:00 am'],
-        //             closing_time: ['11:30 pm'],
+        //             closing_time: ['11:59 pm'],
         //         },
         //         thursday: {
         //             status: 'open',
         //             opening_time: ['12:00 am'],
-        //             closing_time: ['11:30 pm'],
+        //             closing_time: ['11:59 pm'],
         //         },
         //         friday: {
         //             status: 'open',
         //             opening_time: ['12:00 am'],
-        //             closing_time: ['11:30 pm'],
+        //             closing_time: ['11:59 pm'],
         //         },
         //         saturday: {
         //             status: 'open',
         //             opening_time: ['12:00 am'],
-        //             closing_time: ['11:30 pm'],
+        //             closing_time: ['11:59 pm'],
         //         },
         //         sunday: {
         //             status: 'open',
         //             opening_time: ['12:00 am'],
-        //             closing_time: ['11:30 pm'],
+        //             closing_time: ['11:59 pm'],
         //         },
         //     },
         //     open_notice: 'Store is open',
         //     close_notice: 'Store is closed',
         // },
-        company_name: faker.company.name(),
-        company_id_number: faker.string.alphanumeric(5),
-        vat_number: faker.string.alphanumeric(10),
-        bank_name: faker.string.alphanumeric(7),
-        bank_iban: faker.finance.iban(),
-        categories: [
-            {
-                // id: 74,
-                name: 'Uncategorized',
-                slug: 'uncategorized',
-            },
-        ],
-
-        // vendorwise commission
-        admin_commission_type: '', // fixed, category_based
-        admin_commission: '',
-        admin_additional_fee: '',
-        admin_category_commission: {
-            all: {
-                flat: '7',
-                percentage: '7',
-            },
-            items: {
-                '27': {
-                    flat: '7',
-                    percentage: '7',
-                },
-            },
-        },
-    },
-
-    createStore2: {
-        user_login: VENDOR2,
-        user_pass: USER_PASSWORD,
-        user_nicename: `${VENDOR2}store`,
-        role: 'seller',
-        email: `${VENDOR2}@email.com`,
-        store_name: `${VENDOR2}store`,
-        first_name: VENDOR2,
-        last_name: 'v',
-        social: {
-            fb: 'https://www.facebook.com/',
-            twitter: 'https://www.twitter.com/',
-            pinterest: 'https://www.pinterest.com/',
-            linkedin: 'https://www.linkedin.com/',
-            youtube: 'https://www.youtube.com/',
-            instagram: 'https://www.instagram.com/',
-            flickr: 'https://www.flickr.com/',
-            threads: 'https://www.threads.net/',
-        },
-        phone: '0123456789',
-        show_email: true, // todo:  doesn't work on lite
-        address: {
-            street_1: 'abc street',
-            street_2: 'xyz street',
-            city: 'New York',
-            zip: '10003',
-            state: 'NY',
-            country: 'US',
-        },
-        location: '40.7127753,-74.0059728',
-        banner: 0,
-        banner_id: 0,
-        gravatar: 0,
-        gravatar_id: 0,
-        show_more_product_tab: true,
-        toc_enabled: true, // todo:  doesn't work on lite
-        store_toc: 'test Vendor terms and conditions',
-        featured: true,
-        rating: {
-            rating: '4.00', // todo:  doesn't work on lite
-            count: 1,
-        },
-        enabled: true,
-        payment: {
-            paypal: {
-                0: 'email',
-                email: 'paypal@g.c',
-            },
-            bank: {
-                ac_name: 'account name',
-                ac_type: 'personal',
-                ac_number: '1234567',
-                bank_name: 'bank name',
-                bank_addr: 'bank address',
-                routing_number: '123456',
-                iban: '123456',
-                swift: '12345',
-            },
-            stripe: false,
-        },
-        trusted: true,
-        // store_open_close: {
-        // 	enabled: false,
-        // 	time: [],
-        // 	open_notice: 'Store is open',
-        // 	close_notice: 'Store is closed',
-        // },
-        store_open_close: {
-            // todo:  doesn't work on lite
-            enabled: true,
-            time: {
-                monday: {
-                    status: 'open', // 'close'
-                    opening_time: ['12:00 am'], // []
-                    closing_time: ['11:30 pm'], // []
-                },
-                tuesday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                wednesday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                thursday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                friday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                saturday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                sunday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-            },
-            open_notice: 'Store is open',
-            close_notice: 'Store is closed',
-        },
-        company_name: faker.company.name(),
-        company_id_number: faker.string.alphanumeric(5),
-        vat_number: faker.string.alphanumeric(10),
-        bank_name: faker.string.alphanumeric(7),
-        bank_iban: faker.finance.iban(),
-        categories: [
-            {
-                // id: 74,
-                name: 'Uncategorized',
-                slug: 'uncategorized',
-            },
-        ],
-
-        // vendorwise commission
-        admin_commission_type: '', // fixed, category_based
-        admin_commission: '',
-        admin_additional_fee: '',
-        admin_category_commission: {
-            all: {
-                flat: '7',
-                percentage: '7',
-            },
-            items: {
-                '27': {
-                    flat: '7',
-                    percentage: '7',
-                },
-            },
-        },
-    },
-
-    createStore3: {
-        user_login: VENDOR3,
-        user_pass: USER_PASSWORD,
-        user_nicename: `${VENDOR3}store`,
-        role: 'seller',
-        email: `${VENDOR3}@email.com`,
-        store_name: `${VENDOR3}store`,
-        first_name: VENDOR3,
-        last_name: 'v',
-        social: {
-            fb: 'https://www.facebook.com/',
-            twitter: 'https://www.twitter.com/',
-            pinterest: 'https://www.pinterest.com/',
-            linkedin: 'https://www.linkedin.com/',
-            youtube: 'https://www.youtube.com/',
-            instagram: 'https://www.instagram.com/',
-            flickr: 'https://www.flickr.com/',
-            threads: 'https://www.threads.net/',
-        },
-        phone: '0123456789',
-        show_email: true, // todo:  doesn't work on lite
-        address: {
-            street_1: 'abc street',
-            street_2: 'xyz street',
-            city: 'New York',
-            zip: '10003',
-            state: 'NY',
-            country: 'US',
-        },
-        location: '40.7127753,-74.0059728',
-        banner: 0,
-        banner_id: 0,
-        gravatar: 0,
-        gravatar_id: 0,
-        show_more_product_tab: true,
-        toc_enabled: true, // todo:  doesn't work on lite
-        store_toc: 'test Vendor terms and conditions',
-        featured: true,
-        rating: {
-            rating: '4.00', // todo:  doesn't work on lite
-            count: 1,
-        },
-        enabled: true,
-        payment: {
-            paypal: {
-                0: 'email',
-                email: 'paypal@g.c',
-            },
-            bank: {
-                ac_name: 'account name',
-                ac_type: 'personal',
-                ac_number: '1234567',
-                bank_name: 'bank name',
-                bank_addr: 'bank address',
-                routing_number: '123456',
-                iban: '123456',
-                swift: '12345',
-            },
-            stripe: false,
-        },
-        trusted: true,
-        // store_open_close: {
-        // 	enabled: false,
-        // 	time: [],
-        // 	open_notice: 'Store is open',
-        // 	close_notice: 'Store is closed',
-        // },
-        store_open_close: {
-            // todo:  doesn't work on lite
-            enabled: true,
-            time: {
-                monday: {
-                    status: 'open', // 'close'
-                    opening_time: ['12:00 am'], // []
-                    closing_time: ['11:30 pm'], // []
-                },
-                tuesday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                wednesday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                thursday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                friday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                saturday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                sunday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-            },
-            open_notice: 'Store is open',
-            close_notice: 'Store is closed',
-        },
+        sale_only_here: 'yes',
         company_name: faker.company.name(),
         company_id_number: faker.string.alphanumeric(5),
         vat_number: faker.string.alphanumeric(10),
@@ -4349,13 +4311,14 @@ export const payloads = {
             {
                 // id: 74,
                 // name: 'Uncategorized',
-                // slug: 'uncategorized'
+                // slug: 'uncategorized',
             },
         ],
+
         // vendorwise commission
         admin_commission_type: '', // fixed, category_based
-        admin_commission: '',
-        admin_additional_fee: '',
+        admin_commission: '5',
+        admin_additional_fee: '5',
         admin_category_commission: {
             all: {
                 flat: '7',
@@ -4368,6 +4331,167 @@ export const payloads = {
                 },
             },
         },
+        // store_seo: {
+        //     'dokan-seo-meta-title': 'meta title',
+        //     'dokan-seo-meta-desc': 'meta description',
+        //     'dokan-seo-meta-keywords': 'meta keywords',
+        //     'dokan-seo-og-title': 'facebook title',
+        //     'dokan-seo-og-desc': 'facebook description',
+        //     'dokan-seo-og-image': '0',
+        //     'dokan-seo-twitter-title': 'twitter title',
+        //     'dokan-seo-twitter-desc': 'twitter description',
+        //     'dokan-seo-twitter-image': '0',
+        // },
+    },
+
+    createStore2: {
+        user_login: VENDOR2,
+        user_pass: USER_PASSWORD,
+        user_nicename: `${VENDOR2}store`,
+        email: `${VENDOR2}@email.com`,
+        store_name: `${VENDOR2}store`,
+        first_name: VENDOR2,
+        last_name: 'v',
+        role: 'seller',
+        notify_vendor: 'yes',
+        social: {
+            fb: 'https://www.facebook.com/',
+            twitter: 'https://www.twitter.com/',
+            pinterest: 'https://www.pinterest.com/',
+            linkedin: 'https://www.linkedin.com/',
+            youtube: 'https://www.youtube.com/',
+            instagram: 'https://www.instagram.com/',
+            flickr: 'https://www.flickr.com/',
+            threads: 'https://www.threads.net/',
+        },
+        phone: '0123456789',
+        show_email: 'yes',
+        address: {
+            street_1: 'abc street',
+            street_2: 'xyz street',
+            city: 'New York',
+            zip: '10003',
+            state: 'NY',
+            country: 'US',
+        },
+        location: '40.7127753,-74.0059728',
+        banner_id: 0,
+        gravatar_id: 0,
+        enable_tnc: 'yes',
+        store_tnc: 'test Vendor terms and conditions',
+        featured: 'yes',
+        enabled: 'yes',
+        trusted: 'yes', // publish product directly
+        payment: {
+            paypal: {
+                email: 'paypal@g.c',
+            },
+            bank: {
+                ac_name: 'account name',
+                ac_type: 'personal',
+                ac_number: '1234567',
+                bank_name: 'bank name',
+                bank_addr: 'bank address',
+                routing_number: '123456',
+                iban: '123456',
+                swift: '12345',
+            },
+            skrill: {
+                email: 'skrill@g.c',
+            },
+            dokan_custom: {
+                withdraw_method_name: 'Bksh',
+                withdraw_method_type: 'Phone',
+                value: '0123456789',
+            },
+            // "stripe": false,
+            // stripe_express: false,
+            // 'dokan-moip-connect': true,
+            // dokan_razorpay: false,
+        },
+        // store_open_close: {
+        //     enabled: 'yes',
+        //     time: {
+        //         monday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         tuesday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         wednesday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         thursday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         friday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         saturday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         sunday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //     },
+        //     open_notice: 'Store is open',
+        //     close_notice: 'Store is closed',
+        // },
+        sale_only_here: 'yes',
+        company_name: faker.company.name(),
+        company_id_number: faker.string.alphanumeric(5),
+        vat_number: faker.string.alphanumeric(10),
+        bank_name: faker.string.alphanumeric(7),
+        bank_iban: faker.finance.iban(),
+        categories: [
+            {
+                // id: 74,
+                // name: 'Uncategorized',
+                // slug: 'uncategorized',
+            },
+        ],
+
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
+        admin_commission: '5',
+        admin_additional_fee: '5',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
+        // store_seo: {
+        //     'dokan-seo-meta-title': 'meta title',
+        //     'dokan-seo-meta-desc': 'meta description',
+        //     'dokan-seo-meta-keywords': 'meta keywords',
+        //     'dokan-seo-og-title': 'facebook title',
+        //     'dokan-seo-og-desc': 'facebook description',
+        //     'dokan-seo-og-image': '0',
+        //     'dokan-seo-twitter-title': 'twitter title',
+        //     'dokan-seo-twitter-desc': 'twitter description',
+        //     'dokan-seo-twitter-image': '0',
+        // },
     },
 
     createCustomer1: {
@@ -4807,6 +4931,7 @@ export const payloads = {
         shipping_number: '#002',
         shipped_status: 'ss_pickedup', // ss_delivered, ss_cancelled, ss_proceccing, ss_ready_for_pickup, ss_pickedup (has more options)
         shipped_date: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString(),
+        shipment_comments: 'updated shipment comment',
     },
 
     vendorwiseCommission: {

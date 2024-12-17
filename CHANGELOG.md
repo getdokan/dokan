@@ -1,3 +1,27 @@
+### v3.13.1 ( Nov 11, 2024 ) ###
+
+- **update:** Compatibility with the Printful Integration Module added.
+- **fix:** Improved logic to ensure the `add new category` button only appears when appropriate conditions are met, enhancing user experience.
+
+
+### v3.13.0 ( Nov 06, 2024 ) ###
+
+- **feat:** Replaced the Dokan array container with the League Container, ensuring backward compatibility for seamless performance and enhanced flexibility.
+- **feat:** Updated Dokan to be fully compatible with WooCommerce Analytics Reports
+
+### v3.12.6 ( Oct 24, 2024 ) ###
+
+- **fix:** Fixed js error on frontend pages.
+
+### v3.12.5 ( Oct 16, 2024 ) ###
+
+- **fix:** Implement order trash and untrash handling for Dokan
+- **fix:** Added WordPress native i18n support
+
+### v3.12.4 ( Oct 03, 2024 ) ###
+
+- **update:** Added `$data` parameter to `dokan_update_vendor` hook.
+
 ### v3.12.3 ( Sep 30, 2024 ) ###
 
 - **update:** Added compatibility with RFQ state field ui.
