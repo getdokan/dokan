@@ -3,13 +3,13 @@
 namespace WeDevs\Dokan\Abstracts;
 
 /**
-* Admin Dashboard
-*
-* @since 2.8.0
-*
-* @package dokan
-*/
-abstract class DokanRESTAdminController extends DokanBaseRESTController {
+ * Vendor REST Controller for Dokan
+ *
+ * @since DOKAN_PRO_SINCE
+ *
+ * @package dokan
+ */
+abstract class DokanRESTVendorController extends DokanBaseRESTController {
 
     /**
      * Endpoint namespace.
@@ -23,16 +23,16 @@ abstract class DokanRESTAdminController extends DokanBaseRESTController {
      *
      * @var string
      */
-    protected $base = 'admin';
+    protected $base = 'vendor';
 
     /**
-     * Check if user has admin permission.
+     * Check if user has vendor permission.
      *
-     * @since 2.8.0
+     * @since DOKAN_PRO_SINCE
      *
      * @return bool
      */
     public function check_permission() {
-        return current_user_can( 'manage_woocommerce' );
+        return current_user_can( 'dokandar' );
     }
 }
