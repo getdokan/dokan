@@ -42,7 +42,8 @@ abstract class DokanRESTAdminController extends DokanBaseRESTController {
 
 ```php
 class ExampleAdminController extends DokanRESTAdminController {
-    protected $namespace = 'dokan/v1/example-admin';
+    protected $namespace = 'dokan/v1';
+    protected $rest_base = 'example-admin';
 
     public function register_routes() {
         register_rest_route(
@@ -73,7 +74,8 @@ class ExampleAdminController extends DokanRESTAdminController {
 
 ```php
 class ExampleAdminController extends DokanRESTAdminController {
-    protected $namespace = 'dokan/v1/example-admin';
+    protected $namespace = 'dokan/v1';
+    protected $rest_base = 'example-admin';
 
     public function register_routes() {
         register_rest_route(
