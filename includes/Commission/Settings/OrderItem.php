@@ -71,7 +71,8 @@ class OrderItem implements InterfaceSetting {
 
         $product_price = (float) wc_format_decimal( $this->product_price_to_calculate_commission );
         if ( $order_id && $item_total ) {
-            $additional_flat = ( $additional_flat / $item_total ) * $product_price;
+            $empty_safe_additional_flat = empty( $additional_flat ) ? 0 : $additional_flat;
+            $additional_flat = ( $empty_safe_additional_flat / $item_total ) * $product_price;
         }
 
         $settings = new Setting();
