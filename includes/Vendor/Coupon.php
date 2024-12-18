@@ -28,14 +28,13 @@ class Coupon {
         $coupon_info = $item_object['dokan_coupon_info'] ?? [];
 
         $coupon_info[ $coupon->get_code() ] = [
-            'amount' => $discount,
+            'discount' => $discount,
             'coupon_code' => $coupon->get_code(),
             'per_item' => $discount / $item_object['quantity'],
-            'id' => $item_object['product_id'],
+            'product_id' => $item_object['product_id'],
         ];
 
         $item_object['dokan_coupon_info'] = $coupon_info;
-
         WC()->cart->cart_contents[ $item_object['key'] ] = $item_object;
         return $discount;
     }
@@ -52,6 +51,22 @@ class Coupon {
     public function add_coupon_info_to_order_item( $item, $cart_item_key, $values ) {
         if ( ! empty( $values['dokan_coupon_info'] ) ) {
             $coupon_info = $values['dokan_coupon_info'];
+            $total_discount = 0;
+            $limit_reached = '';
+            // Adjust coupon discount greater than product price
+            foreach ( $coupon_info as $key => $coupon ) {
+                $total_discount += $coupon['discount'];
+                $product = wc_get_product( $coupon['product_id'] );
+                $total_product_price = $product->get_price() * $values['quantity'];
+                if ( $limit_reached === 'exit' ) {
+                    $coupon_info[ $key ]['discount'] = 0;
+                }
+                if ( $total_discount > $total_product_price && $limit_reached !== 'exit' ) {
+                    $remain_discount = $total_discount - $total_product_price;
+                    $coupon_info[ $key ]['discount'] = $coupon['discount'] - $remain_discount;
+                    $limit_reached = 'exit';
+                }
+            }
             $item->add_meta_data( '_dokan_coupon_info', $coupon_info, true );
         }
     }
