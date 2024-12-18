@@ -19,6 +19,7 @@ class V_3_2_12 extends DokanUpgrader {
 
         $map_table = $wpdb->prefix . 'dokan_withdraw';
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         if ( $wpdb->get_var( $wpdb->prepare( 'show tables like %s', $map_table ) ) !== $map_table ) {
             return;
         }
@@ -31,10 +32,12 @@ class V_3_2_12 extends DokanUpgrader {
             }
         );
 
+        $column = 'details';
+        $after = 'note';
+
         if ( empty( $columns ) ) {
-            $wpdb->query(
-                "alter table {$map_table} add column details longtext NOT NULL AFTER note" // phpcs:ignore
-            );
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQLPlaceholders.UnsupportedIdentifierPlaceholder
+            $wpdb->query( $wpdb->prepare( 'alter table %i add column %i longtext NOT NULL AFTER %i', $map_table, $column, $after ) );
         }
     }
 

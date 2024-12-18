@@ -1,33 +1,91 @@
 @import "mixins.less";
 @import "tooltip.less";
+@import "variables.less";
 
 .dokan-admin-header {
     background: #fff;
-    padding: 15px 15px 15px 22px;
-    margin: 0 0 0 -20px;
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    padding: 16px 24px;
+    margin: 20px 20px 0 2px;
+    border-radius: 8px;
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.06);
 
+    .dokan-admin-header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+   .dokan-admin-logo-wrap {
+       display: flex;
+       flex: 1;
     .dokan-admin-header-logo {
         display: flex;
+        align-items: center;
 
         img {
-            height: 25px;
+            height: 32px;
             width: auto;
             margin-right: 12px;
         }
+    }
 
-        span {
-            color: #F1634C;
-            background: #FFF4F2;
-            padding: 4px 12px;
-            font-size: 12px;
-            font-weight: 500;
-            font-family: "SF Pro Text", sans-serif;
-            border: 1px solid rgba(241, 99, 76, 0.2);
-            border-radius: 93px;
+    .dokan-version-tags {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-right: 24px;
+        flex: 1;
+        .version-tag {
+
+            border-radius: 20px;
+            font-size: 1rem;
+            line-height: 20px;
+            font-weight: 400;
+            padding: 0.5rem 1rem;
+            max-height: 2rem;
+            &.lite {
+                background: #FF9B5366;
+                color: #7B4E2E;
+                display: flex;
+                align-items: center;
+            }
+
+            &.pro {
+                background: #D8D8FE;
+                color: @dokan-color;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                text-transform: capitalize;
+                font-weight: 450;
+                & .version-tag-pro-badge{
+                    background: @dokan-color;
+                    color: white;
+                    border-radius: 28px;
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 3px 9px;
+                    font-size: 16px;
+                    margin: -10px 0 -10px -10px;
+                }
+            }
+        }
+    }
+    }
+    .upgrade-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: @dokan-color;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.2s;
+        margin-left: auto;
+        &:hover {
+            background: @dokan-dark-purple;
         }
     }
 
@@ -54,7 +112,6 @@
                 border-radius: 42px;
                 cursor: pointer;
                 transition: all .2s ease;
-
                 .notification-count {
                     position: absolute;
                     top: -5px;
@@ -69,7 +126,6 @@
                     align-items: center;
                     justify-content: center;
                 }
-
                 .whats-new-pointer {
                     position: absolute;
                     top: 0;
@@ -79,7 +135,7 @@
                     background-color: #ff5a40;
                     border-radius: 53px;
                     border: 2px solid #fff;
-                  box-sizing: content-box;
+                    box-sizing: content-box;
                 }
 
                 &:hover {
@@ -135,10 +191,10 @@
                     }
 
                     h3 {
-                          margin: 0;
-                          font-weight: bold;
-                          font-size: 18px;
-                          font-family: "SF Pro Text", sans-serif;
+                        margin: 0;
+                        font-weight: bold;
+                        font-size: 18px;
+                        font-family: "SF Pro Text", sans-serif;
                     }
 
                     .list-item {
@@ -156,17 +212,17 @@
                             margin-bottom: 10px;
 
                             &:last-child {
-                              margin-bottom: 0;
+                                margin-bottom: 0;
                             }
 
                             &.active {
-                                color: #dd452c;
+                                color: @dokan-color;
 
                                 .dokan-icon {
-                                    background-color: rgba(221, 69, 44, 0.15);
+                                    background-color: @dokan-light-purple;
 
                                     svg path {
-                                        fill: #f1634c;
+                                        fill: @dokan-color;
                                     }
                                 }
 
@@ -174,7 +230,7 @@
                                     content: "";
                                     width: 6px;
                                     height: 6px;
-                                    background-color: #dd452c;
+                                    background-color: @dokan-color;
                                     border-radius: 53px;
                                     margin-left: 10px;
                                 }
@@ -193,13 +249,13 @@
                             }
 
                             &:hover {
-                                color: #dd452c;
+                                color: @dokan-color;
 
                                 .dokan-icon {
-                                    background-color: rgba(221, 69, 44, 0.15);
+                                    background-color: @dokan-light-gray;
 
                                     svg path {
-                                        fill: #f1634c;
+                                        fill: @dokan-color;
                                     }
                                 }
                             }
@@ -215,6 +271,31 @@
     }
 }
 
+// Responsive styles
+@media screen and (max-width: 782px) {
+    .dokan-admin-logo-wrap {
+       flex-direction: column;
+    }
+
+    .dokan-admin-header {
+        margin: 10px 10px 0 2px;
+        padding: 12px 16px;
+
+        .dokan-admin-header-content {
+            gap: 16px;
+            align-items:start;
+        }
+
+        .dokan-version-tags {
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+
+        .upgrade-button {
+          margin: 0;
+        }
+    }
+}
 .dokan-dashboard {
     .post-box-container {
         width: 49%;

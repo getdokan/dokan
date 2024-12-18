@@ -214,7 +214,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
          *
          * @param string $menu_key
          */
-        $filtered_key = apply_filters( 'dokan_dashboard_nav_menu_key', $key );
+        $filtered_key = rawurlencode_deep( apply_filters( 'dokan_dashboard_nav_menu_key', $key ) );
 
         $class = $active_menu === $filtered_key || 0 === stripos( $active_menu, $filtered_key ) ? 'active ' . $key : $key;  // checking starts with the key
         $title = __( 'No Title', 'dokan-lite' );
@@ -247,7 +247,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                  * @param string $submenu_key
                  * @param string $menu_key
                  */
-                $filtered_subkey = apply_filters( 'dokan_dashboard_nav_submenu_key', $sub_key, $key );
+                $filtered_subkey = rawurlencode_deep( apply_filters( 'dokan_dashboard_nav_submenu_key', $sub_key, $key ) );
 
                 $submenu_class = $active_submenu === $filtered_subkey || 0 === stripos( $active_submenu, $filtered_subkey ) ? "current $sub_key" : $sub_key;
                 $submenu_title = __( 'No Title', 'dokan-lite' );
@@ -278,9 +278,10 @@ function dokan_dashboard_nav( $active_menu = '' ) {
         }
 
         $menu .= sprintf(
-            '<li class="%s"><a href="%s">%s %s</a>%s</li>',
+            '<li class="%s"><a href="%s" target="%s">%s %s</a>%s</li>',
             $class,
             isset( $item['url'] ) ? $item['url'] : dokan_get_navigation_url( $menu_slug ),
+            isset( $item['target'] ) ? $item['target'] : '_self',
             isset( $item['icon'] ) ? $item['icon'] : '<i class="fab fa-staylinked"></i>',
             apply_filters( 'dokan_vendor_dashboard_menu_title', $title, $item ),
             $submenu

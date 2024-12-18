@@ -15,27 +15,6 @@
             </td>
         </tr>
         <tr>
-            <th scope="row"><label for="admin_percentage"><?php esc_html_e( 'Commission Type', 'dokan-lite' ); ?></label></th>
-            <td>
-                <select class="commission_type wc-enhanced-select" name="commission_type">
-                    <?php foreach ( $dokan_commission_types as $type_key => $type_title ) : ?>
-                        <option value="<?php echo esc_attr( $type_key ); ?>" <?php selected( $commission_type, $type_key ); ?>>
-                            <?php echo esc_html( $type_title ); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-                <p class="description"><?php esc_html_e( 'Set your commission type', 'dokan-lite' ); ?></p>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row"><label for="admin_percentage"><?php esc_html_e( 'Admin Commission', 'dokan-lite' ); ?></label></th>
-            <td>
-                <input type="text" class="location-input" id="admin_percentage" name="admin_percentage" value="<?php echo esc_attr( $admin_percentage ); ?>" />
-                <?php do_action( 'dokan_admin_setup_wizard_after_admin_commission' ); ?>
-                <p class="description combine-commission-description"><?php esc_html_e( 'How much amount (%) you will get from each order', 'dokan-lite' ); ?></p>
-            </td>
-        </tr>
-        <tr>
             <th scope="row"><label for="order_status_change"><?php esc_html_e( 'Order Status Change', 'dokan-lite' ); ?></label></th>
             <td>
                 <input type="checkbox" name="order_status_change" id="order_status_change" class="switch-input" <?php checked( $order_status_change, 'on' ); ?>>

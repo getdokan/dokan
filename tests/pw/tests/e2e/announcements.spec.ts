@@ -26,7 +26,7 @@ test.describe('Announcements test (admin)', () => {
 
     //admin
 
-    test('dokan announcements menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view announcements menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminAnnouncementsRenderProperly();
     });
 
@@ -59,9 +59,8 @@ test.describe('Announcements test (admin)', () => {
         await admin.updateAnnouncement(announcementTitle, 'permanently-delete');
     });
 
-    test.skip('admin can perform announcements bulk action', { tag: ['@pro', '@admin'] }, async () => {
-        // todo: might cause other tests to fail in parallel
-        // await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
+    test('admin can perform bulk action on announcements', { tag: ['@pro', '@admin', '@serial'] }, async () => {
+        await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
         await admin.announcementBulkAction('trash');
     });
 });
@@ -88,7 +87,7 @@ test.describe('Announcements test (vendor)', () => {
 
     // vendor
 
-    test('vendor announcement menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view announcements menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAnnouncementsRenderProperly();
     });
 

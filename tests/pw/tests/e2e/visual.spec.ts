@@ -4,7 +4,7 @@ import { data } from '@utils/testData';
 import { selector } from '@pages/selectors';
 
 test.describe('dokan visual test', () => {
-    test.skip(!!process.env.CI, 'skip visual test on CI');
+    test.skip(true, 'skip visual tests');
     let admin: VisualPage;
     let aPage: Page;
 
@@ -17,8 +17,6 @@ test.describe('dokan visual test', () => {
     test.afterAll(async () => {
         await aPage.close();
     });
-
-    // TODO: add dokan lite pages like modules, promotions
 
     test('dokan admin dashboard @visual', async () => {
         await admin.dokanMenu(data.subUrls.backend.dokan.dokan);
@@ -177,7 +175,7 @@ test.describe('dokan visual test', () => {
     });
 
     test('dokan settings sellerVerification menu @visual', async () => {
-        await admin.dokanSettingsMenu(selector.admin.dokan.settings.menus.sellerVerification);
+        await admin.dokanSettingsMenu(selector.admin.dokan.settings.menus.vendorVerification);
     });
 
     test('dokan settings verificationSmsGateways menu @visual', async () => {

@@ -27,10 +27,11 @@ test.describe('Auction Product test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
-        // await customer.bidAuctionProduct(auctionProductName);
+        await customer.bidAuctionProduct(auctionProductName);
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.auction, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
@@ -39,13 +40,17 @@ test.describe('Auction Product test', () => {
 
     // admin
 
+    test('admin can enable auction integration module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableAuctionIntegrationModule();
+    });
+
     test('admin can add auction product', { tag: ['@pro', '@admin'] }, async () => {
         await admin.adminAddAuctionProduct(data.product.auction);
     });
 
     //vendor
 
-    test('vendor auction menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view auction menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAuctionRenderProperly();
     });
 
@@ -69,12 +74,17 @@ test.describe('Auction Product test', () => {
         await vendor.searchAuctionProduct(auctionProductName);
     });
 
+    test('vendor can duplicate auction product', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
+        await vendor.duplicateAuctionProduct(auctionProductName);
+    });
+
     test('vendor can permanently delete auction product', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         await vendor.deleteAuctionProduct(auctionProductName);
     });
 
-    test('vendor auction activity page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view auction activity page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAuctionActivityRenderProperly();
     });
 
@@ -90,8 +100,16 @@ test.describe('Auction Product test', () => {
         await customer.bidAuctionProduct(auctionProductName);
     });
 
-    test.skip('customer can buy auction product with buy it now price', { tag: ['@pro', '@customer'] }, async () => {
-        const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth); // todo: buy it now price is not saved by api
+    test('customer can buy auction product with buy it now price', { tag: ['@pro', '@customer'] }, async () => {
+        test.skip(true, 'buy it now price is not saved by api'); // todo: buy it now price is not saved by api
+        const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         await customer.buyAuctionProduct(auctionProductName);
+    });
+
+    // admin
+
+    test('admin can disable auction integration module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.auction, payloads.adminAuth);
+        await admin.disableAuctionIntegrationModule();
     });
 });

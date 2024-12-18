@@ -271,10 +271,10 @@ function dokan_order_listing_status_filter() {
                     <?php
                     // Set formatted orders count data based on status.
                     $status_order_count    = $orders_counts->{$status_key} ?? 0;
-                    $formatted_order_count = $status_key === 'all' ? number_format_i18n( $total_orders ) : number_format_i18n( $status_order_count );
+                    $formatted_order_count = $status_key === 'all' ? $total_orders : $status_order_count;
 
                     /* translators: 1: Order status label 2: Order count */
-                    printf( esc_html__( '%1$s (%2$s)', 'dokan-lite' ), $status_label, $formatted_order_count );
+                    printf( esc_html__( '%1$s (%2$s)', 'dokan-lite' ), esc_html( $status_label ), number_format_i18n( $formatted_order_count ) );
                     ?>
                 </a>
             </li>
@@ -296,7 +296,7 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
      *
      * @return void
      */
-    function dokan_store_category_menu( $seller_id, $title = '' ) {
+    function dokan_store_category_menu( $seller_id ) {
         ?>
     <div class="store-cat-stack-dokan cat-drop-stack">
         <?php
@@ -306,7 +306,7 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
             $categories = $vendor->get_store_categories();
             $walker = new \WeDevs\Dokan\Walkers\StoreCategory( $seller_id );
             echo '<ul>';
-            echo call_user_func_array( array( &$walker, 'walk' ), array( $categories, 0, array() ) ); //phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( call_user_func_array( array( &$walker, 'walk' ), array( $categories, 0, array() ) ) );
             echo '</ul>';
         }
         ?>
@@ -384,7 +384,7 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
 
                 echo '
                 <li class="parent-cat-wrap">
-                    <a href=' . esc_url( $link ) . '> <input style="pointer-events: none;" type="checkbox" ' . $checked . '> &nbsp;' . $term->name . ' <span style="float: right" class="count">(' . $term->count . ')</span> </a>
+                    <a href="' . esc_url( $link ) . '"> <input style="pointer-events: none;" type="checkbox" ' . esc_attr( $checked ) . '> &nbsp;' . esc_html( $term->name ) . ' <span style="float: right" class="count">(' . esc_html( $term->count ) . ')</span> </a>
                 </li>';
             }
             echo '</ul>';

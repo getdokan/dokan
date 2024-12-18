@@ -173,7 +173,7 @@ class ProductAttribute {
      */
     public function set( &$product, $needs_save = false ) {
         // Stop if no attributes found.
-        if ( ! count( $this->request_attributes ) ) {
+        if ( ! is_array( $this->request_attributes ) ) {
             return $product;
         }
 

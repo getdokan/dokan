@@ -18,7 +18,7 @@ test.describe('modules api test', () => {
     });
 
     test.afterAll(async () => {
-        await apiUtils.activateModules([randomModule]);
+        await apiUtils.activateModules(randomModule);
         await apiUtils.dispose();
     });
 

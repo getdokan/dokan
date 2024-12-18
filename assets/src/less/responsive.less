@@ -200,6 +200,25 @@
     .dokan-dashboard-content {
       float: none;
       width: 100%;
+
+      ul.dokan_tabs {
+        border: 0;
+        gap: .5rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+
+        li {
+          margin: auto 0 !important;
+          border-bottom: 1px solid #EDEDED;
+
+          &.active {
+            a {
+              border-bottom: 1px solid #EDEDED;
+            }
+          }
+        }
+      }
     }
     .product-edit-new-container {
       .dokan-edit-row {

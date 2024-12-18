@@ -9,10 +9,10 @@ import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('refunds api test', () => {
     let apiUtils: ApiUtils;
-    // let orderId: string;
     let refundId: string;
     let orderResponseBody: APIResponse;
 
@@ -30,24 +30,28 @@ test.describe('refunds api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds, { headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.refundsSchema.refundsSchema);
     });
 
     test('get all refunds by status', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds, { params: { status: 'pending' }, headers: payloads.vendorAuth }); // pending, cancelled, completed
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.refundsSchema.refundsSchema);
     });
 
     test('cancel a refund', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.cancelRefund(refundId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.refundsSchema.refundSchema);
     });
 
     test('delete a refund', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteRefund(refundId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.refundsSchema.refundSchema);
     });
 
     test('approve a refund', { tag: ['@pro'] }, async () => {
@@ -55,6 +59,7 @@ test.describe('refunds api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.approveRefund(refundId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.refundsSchema.refundSchema);
     });
 
     test('update batch refunds', { tag: ['@pro'] }, async () => {
@@ -63,5 +68,6 @@ test.describe('refunds api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRefunds, { data: { cancelled: allPendingRefundsIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.refundsSchema.batchUpdateRefundsSchema);
     });
 });

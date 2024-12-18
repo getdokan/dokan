@@ -5,6 +5,9 @@
 //COVERAGE_TAG: DELETE /dokan/v1/announcement/(?P<id>[\d]+)
 //COVERAGE_TAG: PUT /dokan/v1/announcement/(?P<id>[\d]+)/restore
 //COVERAGE_TAG: PUT /dokan/v1/announcement/batch
+//COVERAGE_TAG: GET /dokan/v1/announcement/notice/(?P<id>[\\d]+)
+//COVERAGE_TAG: POST /dokan/v1/announcement/notice/(?P<id>[\\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/announcement/notice/(?P<id>[\\d]+)
 
 import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
@@ -86,14 +89,14 @@ test.describe('announcements api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleAnnouncementNotice(announcementNoticeId), { headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementNoticeSchema);
+        expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementSchema);
     });
 
     test('update an announcement notice', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateAnnouncementNotice(announcementNoticeId), { data: payloads.updateAnnouncementNotice, headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementNoticeSchema);
+        expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementSchema);
     });
 
     test('delete an announcement notice', { tag: ['@pro'] }, async () => {

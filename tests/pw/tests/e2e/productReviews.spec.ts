@@ -28,7 +28,7 @@ test.describe('Product Reviews test', () => {
 
     //vendor
 
-    test('vendor product reviews menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view product reviews menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductReviewsRenderProperly();
     });
 
@@ -66,8 +66,7 @@ test.describe('Product Reviews test', () => {
         await vendor.updateProductReview('permanently-delete', reviewMessage);
     });
 
-    test.skip('vendor can perform product reviews bulk action', { tag: ['@pro', '@vendor'] }, async () => {
-        // todo: might cause other tests to fail in parallel
+    test('vendor can perform bulk action on product reviews', { tag: ['@pro', '@vendor', '@serial'] }, async () => {
         await vendor.productReviewsBulkActions('hold');
     });
 });

@@ -2,7 +2,7 @@ import { test, Page } from '@playwright/test';
 import { StoreListingPage } from '@pages/storeListingPage';
 import { data } from '@utils/testData';
 
-test.describe('Store listing functionality test', () => {
+test.describe('Store list functionality test', () => {
     let customer: StoreListingPage;
     let cPage: Page;
 
@@ -18,7 +18,7 @@ test.describe('Store listing functionality test', () => {
 
     // store listing
 
-    test('dokan store list page is rendering properly', { tag: ['@lite', '@exploratory', '@customer'] }, async () => {
+    test('customer can view store list page', { tag: ['@lite', '@exploratory', '@customer'] }, async () => {
         await customer.storeListRenderProperly();
     });
 
@@ -42,15 +42,15 @@ test.describe('Store listing functionality test', () => {
         await customer.filterStores('by-location', 'New York, NY, USA');
     });
 
-    test.skip('customer can filter stores by ratings', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.filterStores('by-ratings', '1');
+    test('customer can filter stores by ratings', { tag: ['@pro', '@customer'] }, async () => {
+        await customer.filterStores('by-ratings', '5');
     });
 
     test('customer can filter featured stores', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterStores('featured');
     });
 
-    test.skip('customer can filter open now stores', { tag: ['@pro', '@customer'] }, async () => {
+    test('customer can filter open now stores', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterStores('open-now');
     });
 

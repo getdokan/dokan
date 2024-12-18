@@ -20,7 +20,7 @@
         <a href="<?php echo esc_url( $permalink ); ?>">
             <?php
             // translators: 1) All product count
-            printf( esc_html__( 'All (%s)', 'dokan-lite' ), number_format_i18n( $post_counts->total ) );
+            printf( esc_html__( 'All (%s)', 'dokan-lite' ), esc_html( number_format_i18n( $post_counts->total ) ) );
             ?>
         </a>
     </li>

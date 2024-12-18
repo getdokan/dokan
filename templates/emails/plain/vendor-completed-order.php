@@ -17,7 +17,7 @@ echo esc_html( wp_strip_all_tags( $email_heading ) );
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
 // translators: 1) order billing full name
-echo sprintf( __( 'You have received complete order from %s.', 'dokan-lite' ), $order->get_formatted_billing_full_name() ) . "\n\n";
+echo sprintf( esc_html__( 'You have received complete order from %s.', 'dokan-lite' ), esc_html( $order->get_formatted_billing_full_name() ) ) . "\n\n";
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
 esc_html_e( 'Product            | Quantity        | Price', 'dokan-lite' );

@@ -44,7 +44,7 @@ class V_2_9_4_OrderPostAuthor extends DokanBackgroundProcesses {
 
         $limit  = 100;
         $count  = $limit * $paged;
-        $orders = $wpdb->get_results(
+        $orders = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "SELECT `id`, `post_author` FROM {$wpdb->posts} WHERE `post_type` = 'shop_order' LIMIT %d OFFSET %d",
                 $limit, $count

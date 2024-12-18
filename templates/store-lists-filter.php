@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit; ?>
         <p class="item store-count">
             <?php
             // translators: 1) number of stores
-            printf( _n( 'Total store showing: %s', 'Total stores showing: %s', $number_of_store, 'dokan-lite' ), number_format_i18n( $number_of_store ) );
+            printf( esc_html( _n( 'Total store showing: %s', 'Total stores showing: %s', $number_of_store, 'dokan-lite' ) ), esc_html( number_format_i18n( $number_of_store ) ) );
             ?>
         </p>
     </div>
@@ -48,12 +48,9 @@ defined( 'ABSPATH' ) || exit; ?>
             <label><?php esc_html_e( 'Sort by', 'dokan-lite' ); ?>:</label>
 
             <select name="stores_orderby" id="stores_orderby" aria-label="<?php esc_html_e( 'Sort by', 'dokan-lite' ); ?>">
-                <?php
-                foreach ( $sort_filters as $key => $filter ) {
-                    $optoins = "<option value='{$key}'" . selected( $sort_by, $key, false ) . ">{$filter}</option>";
-                    printf( $optoins );
-                }
-                ?>
+                <?php foreach ( $sort_filters as $key => $filter ) : ?>
+                    <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $sort_by, $key ); ?> ><?php echo esc_html( $filter ); ?></option>
+                <?php endforeach; ?>
             </select>
         </form>
 

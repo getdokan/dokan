@@ -3,6 +3,7 @@ import { ToolsPage } from '@pages/toolsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 test.describe('Tools test', () => {
     let admin: ToolsPage;
@@ -24,11 +25,12 @@ test.describe('Tools test', () => {
 
     //admin
 
-    test('dokan tools menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view tools menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminToolsRenderProperly();
     });
 
-    test.skip('admin can perform dokan page Installation', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can perform Dokan page installation', { tag: ['@pro', '@admin'] }, async () => {
+        await dbUtils.setOptionValue('dokan_pages_created', '0', false);
         await admin.dokanPageInstallation();
     });
 
@@ -40,7 +42,7 @@ test.describe('Tools test', () => {
         await admin.checkForDuplicateOrders();
     });
 
-    test('admin can set dokan setup wizard', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can set Dokan setup wizard', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setDokanSetupWizard(data.dokanSetupWizard);
     });
 
@@ -48,8 +50,8 @@ test.describe('Tools test', () => {
         await admin.regenerateVariableProductVariationsAuthorIds();
     });
 
-    test.skip('admin can import dummy data', { tag: ['@pro'] }, async () => {
-        // todo: need to fix
+    test('admin can import dummy data', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.clearDummyData(payloads.adminAuth);
         await admin.importDummyData();
     });
 

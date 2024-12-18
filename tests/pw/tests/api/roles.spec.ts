@@ -3,6 +3,7 @@
 import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
+import { schemas } from '@utils/schemas';
 
 test.describe('roles api test', () => {
     let apiUtils: ApiUtils;
@@ -19,5 +20,6 @@ test.describe('roles api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllUserRoles);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.rolesSchema);
     });
 });

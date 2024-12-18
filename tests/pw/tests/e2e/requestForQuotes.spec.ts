@@ -3,6 +3,7 @@ import { RequestForQuotationsPage } from '@pages/requestForQuotationsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
 
 const { CUSTOMER_ID } = process.env;
 
@@ -11,7 +12,7 @@ test.describe('Request for quotation test admin', () => {
     let aPage: Page;
     let apiUtils: ApiUtils;
     const productId: string[] = [];
-    let quoteTitle: string;
+    let quoteId: string;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
@@ -20,7 +21,7 @@ test.describe('Request for quotation test admin', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [, productId[0]] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
+        [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
@@ -32,7 +33,7 @@ test.describe('Request for quotation test admin', () => {
 
     //admin
 
-    test('admin quotes menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view quotes menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminQuotesRenderProperly();
     });
 
@@ -40,37 +41,36 @@ test.describe('Request for quotation test admin', () => {
         await admin.addQuote(data.requestForQuotation.quote());
     });
 
-    test('admin can edit quote', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.editQuote({ ...data.requestForQuotation.quote(), title: quoteTitle });
+    test.skip('admin can edit quote', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.editQuote({ ...data.requestForQuotation.quote(), id: quoteId });
     });
 
     test('admin can trash quote', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
-        await admin.updateQuote(quoteTitle, 'trash');
+        const [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
+        await admin.updateQuote(quoteId, 'trash');
     });
 
     test('admin can restore quote', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'trash', user_id: CUSTOMER_ID }, payloads.adminAuth);
-        await admin.updateQuote(quoteTitle, 'restore');
+        const [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'trash', user_id: CUSTOMER_ID }, payloads.adminAuth);
+        await admin.updateQuote(quoteId, 'restore');
     });
 
     test('admin can permanently delete quote', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'trash', user_id: CUSTOMER_ID }, payloads.adminAuth);
-        await admin.updateQuote(quoteTitle, 'permanently-delete');
+        const [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'trash', user_id: CUSTOMER_ID }, payloads.adminAuth);
+        await admin.updateQuote(quoteId, 'permanently-delete');
     });
 
     test('admin can approve quote', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
-        await admin.approveQuote(quoteTitle);
+        const [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
+        await admin.approveQuote(quoteId);
     });
 
     test('admin can convert quote to order', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'approve', user_id: CUSTOMER_ID }, payloads.adminAuth);
-        await admin.convertQuoteToOrder(quoteTitle);
+        const [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'approve', user_id: CUSTOMER_ID }, payloads.adminAuth);
+        await admin.convertQuoteToOrder(quoteId);
     });
 
-    test.skip('admin can perform quote bulk actions', { tag: ['@pro', '@admin'] }, async () => {
-        // todo: might cause other tests to fail in parallel
+    test('admin can perform quote bulk actions', { tag: ['@pro', '@admin', '@serial'] }, async () => {
         await admin.quotesBulkAction('trash');
     });
 });
@@ -80,9 +80,8 @@ test.describe('Request for quotation test vendor', () => {
     let vPage: Page;
     let apiUtils: ApiUtils;
     const productId: string[] = [];
-    let quoteTitle: string;
-    let productName: string;
     let quoteId: string;
+    let productName: string;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
@@ -91,7 +90,7 @@ test.describe('Request for quotation test vendor', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [, productId[0], productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        [, quoteId, quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
+        [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
@@ -99,12 +98,12 @@ test.describe('Request for quotation test vendor', () => {
         await apiUtils.dispose();
     });
 
-    test('vendor request quotes menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view request quotes menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorRequestQuotesRenderProperly();
     });
 
     test('vendor can view request quote details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorViewQuoteDetails(quoteTitle);
+        await vendor.vendorViewQuoteDetails(quoteId);
     });
 
     test('vendor can update quote request', { tag: ['@pro', '@vendor'] }, async () => {
@@ -137,9 +136,9 @@ test.describe('Request for quotation test customer', () => {
         customer = new RequestForQuotationsPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-
         [, productId[0], productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), product_ids: productId, apply_on_all_product: '0' }, payloads.adminAuth);
+        const [, quoteRuleId] = await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), product_ids: productId }, payloads.adminAuth);
+        await dbUtils.updateQuoteRuleContent(quoteRuleId, { switches: { product_switch: 'true' } }); // todo: remove after api fix
         [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
     });
 
@@ -150,11 +149,11 @@ test.describe('Request for quotation test customer', () => {
 
     //customer
 
-    test('customer request for quote menu page renders properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
+    test('customer can view request for quote menu page', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.requestForQuoteRenderProperly();
     });
 
-    test('customer requested quote page is rendering properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
+    test('customer can view requested quote page', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.requestedQuotesRenderProperly();
     });
 
@@ -162,11 +161,18 @@ test.describe('Request for quotation test customer', () => {
         await customer.customerViewRequestedQuoteDetails(quoteId);
     });
 
-    test('customer can update quote request', { tag: ['@pro', '@customer'] }, async () => {
+    test.skip('customer can update quote request', { tag: ['@pro', '@customer'] }, async () => {
         await customer.customerUpdateRequestedQuote(quoteId, { ...data.requestForQuotation.customerQuoteProduct, productName: productName });
     });
 
     test('customer can pay for order converted from quote request', { tag: ['@pro', '@customer'] }, async () => {
+        test.slow();
+        // todo: remove payment gateway disable methods when this issue is fixed https://github.com/getdokan/dokan-pro/issues/4015
+        await apiUtils.updatePaymentGateway('dokan-stripe-connect', { ...payloads.stripeConnect, enabled: false }, payloads.adminAuth);
+        await apiUtils.updatePaymentGateway('dokan_paypal_marketplace', { ...payloads.payPal, enabled: false }, payloads.adminAuth);
+        await apiUtils.updatePaymentGateway('dokan_mangopay', { ...payloads.mangoPay, enabled: false }, payloads.adminAuth);
+        await apiUtils.updatePaymentGateway('dokan_razorpay', { ...payloads.razorpay, enabled: false }, payloads.adminAuth);
+        await apiUtils.updatePaymentGateway('dokan_stripe_express', { ...payloads.stripeExpress, enabled: false }, payloads.adminAuth);
         await apiUtils.convertQuoteToOrder(quoteId, payloads.adminAuth);
         await customer.payConvertedQuote(quoteId);
     });

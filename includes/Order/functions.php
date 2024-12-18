@@ -137,6 +137,7 @@ function dokan_get_seller_withdraw_by_date( $start_date, $end_date, $seller_id =
 
     $seller_id = ! $seller_id ? dokan_get_current_user_id() : intval( $seller_id );
 
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     return $wpdb->get_results(
         $wpdb->prepare(
             "SELECT * FROM {$wpdb->prefix}dokan_withdraw
@@ -249,6 +250,7 @@ function dokan_sync_insert_order( $order_id ) {
 
     dokan()->order->delete_seller_order( $order_id, $seller_id );
 
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
     $wpdb->insert(
         $wpdb->prefix . 'dokan_orders',
         [
@@ -267,6 +269,7 @@ function dokan_sync_insert_order( $order_id ) {
         ]
     );
 
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
     $wpdb->insert(
         $wpdb->prefix . 'dokan_vendor_balance',
         [
@@ -318,6 +321,7 @@ function dokan_get_seller_id_by_order( $order ) {
     $items     = [];
 
     if ( false === $seller_id ) {
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $seller_id = (int) $wpdb->get_var(
             $wpdb->prepare( "SELECT seller_id FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order_id )
         );
@@ -514,6 +518,7 @@ function dokan_total_orders() {
 
     global $wpdb;
 
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     $order_count = $wpdb->get_var( 'SELECT COUNT(id) FROM ' . $wpdb->prefix . 'dokan_orders ' );
 
     return (int) $order_count;

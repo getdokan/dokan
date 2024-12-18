@@ -19,17 +19,23 @@ test.describe('Store Support test (admin)', () => {
         admin = new StoreSupportsPage(aPage);
 
         apiUtils = new ApiUtils(await request.newContext());
+        await apiUtils.activateModules(payloads.moduleIds.storeSupport, payloads.adminAuth);
         [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.storeSupport, payloads.adminAuth);
         await aPage.close();
         await apiUtils.dispose();
     });
 
     //admin
 
-    test('dokan store support menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can store support module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableStoreSupportModule(data.predefined.vendorStores.vendor1);
+    });
+
+    test('admin can view store support menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminStoreSupportRenderProperly();
     });
 
@@ -84,7 +90,7 @@ test.describe('Store Support test (admin)', () => {
         await admin.reopenSupportTicket(closedSupportTicketId);
     });
 
-    test('admin can perform store support bulk action', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can perform bulk action on store support tickets', { tag: ['@pro', '@admin'] }, async () => {
         const [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         await admin.storeSupportBulkAction('close', supportTicketId);
     });
@@ -114,7 +120,7 @@ test.describe('Store Support test (customer)', () => {
         await apiUtils.dispose();
     });
 
-    test('customer store support menu page renders properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
+    test('customer can view store support menu page', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.customerStoreSupportRenderProperly();
     });
 
@@ -163,12 +169,17 @@ test.describe('Store Support test (customer)', () => {
 });
 
 test.describe('Store Support test (vendor)', () => {
+    let admin: StoreSupportsPage;
     let vendor: StoreSupportsPage;
-    let vPage: Page;
+    let aPage: Page, vPage: Page;
     let apiUtils: ApiUtils;
     let supportTicketId: string;
 
     test.beforeAll(async ({ browser }) => {
+        const adminContext = await browser.newContext(data.auth.adminAuth);
+        aPage = await adminContext.newPage();
+        admin = new StoreSupportsPage(aPage);
+
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new StoreSupportsPage(vPage);
@@ -179,13 +190,14 @@ test.describe('Store Support test (vendor)', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.storeSupport, payloads.adminAuth);
         await vPage.close();
         await apiUtils.dispose();
     });
 
     // vendor
 
-    test('vendor store support menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view store support menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorStoreSupportRenderProperly();
     });
 
@@ -202,11 +214,11 @@ test.describe('Store Support test (vendor)', () => {
     });
 
     test('vendor can search support ticket by ticket id', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorSearchSupportTicket('id', supportTicketId);
+        await vendor.vendorSearchSupportTicket(supportTicketId);
     });
 
     test('vendor can search support ticket by ticket title', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorSearchSupportTicket('title', data.storeSupport.title);
+        await vendor.vendorSearchSupportTicket(data.storeSupport.title);
     });
 
     test('vendor can reply to support ticket', { tag: ['@pro', '@vendor'] }, async () => {
@@ -230,5 +242,10 @@ test.describe('Store Support test (vendor)', () => {
     test('vendor can reopen closed support ticket with a chat reply', { tag: ['@pro', '@vendor'] }, async () => {
         const [, closedSupportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         await vendor.vendorReopenSupportTicketWithReply(closedSupportTicketId, 'reopening this ticket');
+    });
+
+    test('admin can disable store support module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.storeSupport, payloads.adminAuth);
+        await admin.disableStoreSupportModule(data.predefined.vendorStores.vendor1);
     });
 });

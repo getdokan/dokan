@@ -285,6 +285,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "../../../assets/src/less/variables.less";
 .fade-enter-active, .fade-leave-active {
     transition: opacity .3s ease;
 }
@@ -326,7 +327,7 @@ ul {
         }
 
         .change-log {
-            background: rgba(223, 0, 0, 0.05);
+            background: rgba(239, 234, 255, 1);
             margin: -15px -20px 0;
 
             &.lite-change-log {
@@ -365,7 +366,7 @@ ul {
                     background: none;
                     border-radius: 27px;
                     border: none;
-                    color: #cc7376;
+                    color: @dokan-gray;
                     display: inline-block;
                     position: relative;
                     transition: all .2s ease;
@@ -376,7 +377,7 @@ ul {
                 }
 
                 .active {
-                    background: #FF5722;
+                    background: @dokan-color;
                     border-radius: 30px;
                     position: absolute;
                     top: 0;
@@ -467,7 +468,7 @@ ul {
                                 cursor: pointer;
 
                                 &:hover {
-                                    color: #f2624d;
+                                    color: @dokan-color;
                                 }
 
                                 &:last-child {
@@ -475,7 +476,7 @@ ul {
                                 }
 
                                 &.current {
-                                    color: #f2624d;
+                                    color: @dokan-color;
                                     font-weight: bold;
                                     font-family: "SF Pro Text", sans-serif;
                                 }
@@ -635,7 +636,7 @@ ul {
                     p {
                         font-weight: 400;
                         font-size: 13px;
-                        color: #5C626A;
+                        color: @dokan-gray;
                         font-family: "SF Pro Text", sans-serif;
                     }
 
@@ -768,7 +769,7 @@ ul {
         width: 40px;
         height: 40px;
         color: #ffffff;
-        background: #ff5722;
+        background: @dokan-color;
         border: 0;
         position: fixed;
         right: 10px;

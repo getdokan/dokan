@@ -5,7 +5,7 @@ import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
-// import { schemas } from '@utils/schemas';
+import { schemas } from '@utils/schemas';
 
 test.describe('settings api test', () => {
     let apiUtils: ApiUtils;
@@ -22,13 +22,13 @@ test.describe('settings api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSettings);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        // expect(responseBody).toMatchSchema(schemas.settingsSchema.storeSettingsSchema);
+        expect(responseBody).toMatchSchema(schemas.settingsSchema.storeSettingsSchema);
     });
 
     test('update settings', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateSettings, { data: payloads.updateSettings });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        // expect(responseBody).toMatchSchema(schemas.settingsSchema.setStoreSchema);
+        expect(responseBody).toMatchSchema(schemas.settingsSchema.setStoreSchema);
     });
 });

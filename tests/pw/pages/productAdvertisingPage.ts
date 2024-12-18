@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -6,6 +6,7 @@ import { productAdvertisement } from '@utils/interfaces';
 
 // selectors
 const productAdvertisingAdmin = selector.admin.dokan.productAdvertising;
+const productsVendor = selector.vendor.product;
 
 export class ProductAdvertisingPage extends AdminPage {
     constructor(page: Page) {
@@ -18,8 +19,46 @@ export class ProductAdvertisingPage extends AdminPage {
     async recreateProductAdvertisementPaymentViaSettingsSave() {
         await this.goToDokanSettings();
         await this.click(selector.admin.dokan.settings.menus.productAdvertising);
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.productAdvertising.productAdvertisingSaveChanges);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.saveChanges);
         await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, 'Setting has been saved successfully.');
+    }
+
+    // enable product advertising module
+    async enableProductAdvertisingModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(selector.admin.dokan.menus.advertising);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.productAdvertising);
+
+        // vendor dashboard
+        await this.goto(data.subUrls.frontend.vDashboard.products);
+        await this.toBeVisible(productsVendor.table.productAdvertisementColumn);
+        await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
+        await this.toBeVisible(productsVendor.advertisement.advertisementSection);
+    }
+
+    // disable product advertising module
+    async disableProductAdvertisingModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.notToBeVisible(selector.admin.dokan.menus.advertising);
+
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.productAdvertising);
+        await this.notToBeVisible(productAdvertisingAdmin.productAdvertisingDiv);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.productAdvertising);
+
+        // vendor dashboard
+        await this.goto(data.subUrls.frontend.vDashboard.products);
+        await this.notToBeVisible(productsVendor.table.productAdvertisementColumn);
+        await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
+        await this.notToBeVisible(productsVendor.advertisement.advertisementSection);
     }
 
     // product advertising render properly
@@ -57,7 +96,7 @@ export class ProductAdvertisingPage extends AdminPage {
 
     // add new product advertisement
     async addNewProductAdvertisement(advertising: productAdvertisement) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+        await this.goto(data.subUrls.backend.dokan.productAdvertising);
 
         await this.click(productAdvertisingAdmin.addNewProductAdvertising);
 
@@ -79,16 +118,19 @@ export class ProductAdvertisingPage extends AdminPage {
     }
 
     // search advertised product
-    async searchAdvertisedProduct(productOrOrder: string | number) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+    async searchAdvertisedProduct(searchKey: string | number) {
+        await this.goto(data.subUrls.backend.dokan.productAdvertising);
 
         await this.clearInputField(productAdvertisingAdmin.search);
 
-        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.search, String(productOrOrder));
-        if (typeof productOrOrder != 'number') {
-            await this.toBeVisible(productAdvertisingAdmin.advertisedProductCell(productOrOrder));
+        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.search, String(searchKey));
+        await this.toHaveCount(productAdvertisingAdmin.numberOfRows, 1);
+        if (typeof searchKey != 'number') {
+            // searched by product
+            await this.toBeVisible(productAdvertisingAdmin.advertisedProductCell(searchKey));
         } else {
-            await this.toBeVisible(productAdvertisingAdmin.advertisedProductOrderIdCell(productOrOrder));
+            // searched by orderId
+            await this.toBeVisible(productAdvertisingAdmin.advertisedProductOrderIdCell(searchKey));
         }
     }
 
@@ -111,9 +153,8 @@ export class ProductAdvertisingPage extends AdminPage {
             default:
                 break;
         }
-
-        const count = (await this.getElementText(productAdvertisingAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToHaveText(productAdvertisingAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(productAdvertisingAdmin.noRowsFound);
 
         // clear filter
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.filters.clearFilter);
@@ -146,7 +187,11 @@ export class ProductAdvertisingPage extends AdminPage {
 
     // product advertising bulk action
     async productAdvertisingBulkAction(action: string, productName?: string) {
-        productName ? await this.searchAdvertisedProduct(productName) : await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+        if (productName) {
+            await this.searchAdvertisedProduct(productName);
+        } else {
+            await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+        }
 
         // ensure row exists
         await this.notToBeVisible(productAdvertisingAdmin.noRowsFound);

@@ -28,7 +28,7 @@ class ReverseWithdrawal {
      */
     public function __clone() {
         $message = ' Backtrace: ' . wp_debug_backtrace_summary();
-        _doing_it_wrong( __METHOD__, $message . esc_html__( 'Cloning is forbidden.', 'dokan-lite' ), DOKAN_PLUGIN_VERSION );
+        _doing_it_wrong( __METHOD__, $message . esc_html__( 'Cloning is forbidden.', 'dokan-lite' ), DOKAN_PLUGIN_VERSION ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 
     /**
@@ -38,7 +38,7 @@ class ReverseWithdrawal {
      */
     public function __wakeup() {
         $message = ' Backtrace: ' . wp_debug_backtrace_summary();
-        _doing_it_wrong( __METHOD__, $message . esc_html__( 'Unserializing instances of this class is forbidden.', 'dokan-lite' ), DOKAN_PLUGIN_VERSION );
+        _doing_it_wrong( __METHOD__, $message . esc_html__( 'Unserializing instances of this class is forbidden.', 'dokan-lite' ), DOKAN_PLUGIN_VERSION ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 
     /**

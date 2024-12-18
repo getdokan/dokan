@@ -24,6 +24,7 @@ test.describe('Seller badge test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.sellerBadge, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await apiUtils.dispose();
@@ -31,7 +32,11 @@ test.describe('Seller badge test', () => {
 
     // admin
 
-    test('dokan seller badge menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can enable seller badge module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableSellerBadgeModule();
+    });
+
+    test('admin can view seller badge menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminSellerBadgeRenderProperly();
     });
 
@@ -48,6 +53,8 @@ test.describe('Seller badge test', () => {
     });
 
     test('admin can create seller badge', { tag: ['@pro', '@admin'] }, async () => {
+        const badgeId = await apiUtils.getSellerBadgeId(data.sellerBadge.eventName.numberOfItemsSold, payloads.adminAuth);
+        if (badgeId) await apiUtils.deleteSellerBadge(badgeId, payloads.adminAuth);
         await admin.createSellerBadge({ ...data.sellerBadge, badgeName: data.sellerBadge.eventName.numberOfItemsSold });
     });
 
@@ -79,14 +86,14 @@ test.describe('Seller badge test', () => {
         await admin.updateSellerBadge(data.sellerBadge.eventName.exclusiveToPlatform, 'delete');
     });
 
-    test('admin can perform seller badge bulk action', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can perform bulk action on seller badges', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.createSellerBadge(payloads.createSellerBadgeFeatureProducts, payloads.adminAuth);
         await admin.sellerBadgeBulkAction('delete', data.sellerBadge.eventName.featuredProducts);
     });
 
     // vendor
 
-    test('vendor badges menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view badges menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorSellerBadgeRenderProperly();
     });
 
@@ -100,5 +107,10 @@ test.describe('Seller badge test', () => {
 
     test('vendor can filter seller badges', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.filterSellerBadges('available_badges');
+    });
+
+    test('admin can disable seller badge module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.sellerBadge, payloads.adminAuth);
+        await admin.disableSellerBadgeModule();
     });
 });

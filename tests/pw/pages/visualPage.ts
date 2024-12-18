@@ -12,7 +12,7 @@ export class VisualPage extends AdminPage {
     async addReverseWithdrawal() {
         await this.goIfNotThere(data.subUrls.backend.dokan.reverseWithdraws);
         await this.click(selector.admin.dokan.reverseWithdraw.addNewReverseWithdrawal);
-        await this.toHaveScreenshot(this.page); //todo: fullscreen modal
+        await this.toHaveScreenshot(this.page); // todo: fullscreen modal
     }
 
     // admin add new vendors

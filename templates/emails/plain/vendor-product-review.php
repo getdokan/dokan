@@ -25,9 +25,9 @@ echo " \n\n";
 printf(
 // translators: 1) product name, 2) customer name, 3) rating
     esc_html__( 'We are happy to inform you that your product %1$s has received a new review on our website. The review was written by %2$s and has a rating of %3$s out of 5 stars.', 'dokan-lite' ),
-    $data['{product_name}'],
-    $data['{customer_name}'],
-    $data['{rating}']
+    esc_html( $data['{product_name}'] ),
+    esc_html( $data['{customer_name}'] ),
+    esc_html( $data['{rating}'] )
 );
 echo " \n\n";
 

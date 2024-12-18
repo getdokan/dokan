@@ -29,7 +29,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 </p>
 <p>
     <?php
-    echo sprintf(
+    printf(
         // translators: 1) invoice month 2) invoice year 3) store name
         esc_html__( 'Your %1$s %2$s invoice is now available for store: %3$s.', 'dokan-lite' ),
         esc_html( $data['{month}'] ), esc_html( $data['{year}'] ), esc_html( $seller_info->get_shop_name() )
@@ -42,7 +42,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         <strong>
             <?php
             // translators: 1) store name
-            printf( esc_html__( 'Summary for %1$s: ', 'dokan-lite' ), $seller_info->get_shop_name() );
+            printf( esc_html__( 'Summary for %1$s: ', 'dokan-lite' ), esc_html( $seller_info->get_shop_name() ) );
             ?>
         </strong>
     </li>
@@ -62,7 +62,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         <strong>
             <?php esc_html_e( 'Due Date: ', 'dokan-lite' ); ?>
         </strong>
-        <?php echo 'immediate' === $due_status['due_date'] ? ucfirst( $due_status['due_date'] ) : dokan_format_date( $due_status['due_date'] ); ?>
+        <?php echo 'immediate' === $due_status['due_date'] ? esc_html( ucfirst( $due_status['due_date'] ) ) : esc_html( dokan_format_date( $due_status['due_date'] ) ); ?>
     </li>
 </ul>
 
