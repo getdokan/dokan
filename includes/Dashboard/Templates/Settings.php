@@ -161,12 +161,12 @@ class Settings {
      * @return void
      */
     public function load_store_content() {
-        $currentuser  = dokan_get_current_user_id();
-        $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
+        $current_user = dokan_get_current_user_id();
+        $profile_info = dokan_get_store_info( $current_user );
 
         dokan_get_template_part(
             'settings/store-form', '', [
-                'current_user' => $currentuser,
+                'current_user' => $current_user,
                 'profile_info' => $profile_info,
             ]
         );
