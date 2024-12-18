@@ -9,7 +9,7 @@ namespace WeDevs\Dokan\Abstracts;
 *
 * @package dokan
 */
-abstract class DokanRESTAdminController extends DokanBaseRESTController {
+abstract class DokanRESTAdminController extends DokanRESTBaseController {
 
     /**
      * Endpoint namespace.

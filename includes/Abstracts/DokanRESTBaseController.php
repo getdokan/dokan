@@ -11,7 +11,7 @@ use WP_REST_Controller;
  *
  * @package dokan
  */
-abstract class DokanBaseRESTController extends WP_REST_Controller {
+abstract class DokanRESTBaseController extends WP_REST_Controller {
 
     /**
      * Endpoint namespace

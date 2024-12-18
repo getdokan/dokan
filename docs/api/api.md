@@ -8,14 +8,14 @@
     - [Customer REST Controller.](#customer-rest-controller)
 
 ## Introduction
-The Dokan REST Controllers provide a structured approach to handle REST API endpoints with role-based permissions. The hierarchy consists of a base controller (DokanBaseRESTController) and role-specific controllers (`DokanRESTAdminController`, `DokanRESTVendorController`, `DokanRESTCustomerController`).
+The Dokan REST Controllers provide a structured approach to handle REST API endpoints with role-based permissions. The hierarchy consists of a base controller (`DokanRESTBaseController`) and role-specific controllers (`DokanRESTAdminController`, `DokanRESTVendorController`, `DokanRESTCustomerController`).
 
 ## Base REST Controller
-The `DokanBaseRESTController` extends WordPress's `WP_REST_Controller` and provides common functionality for all Dokan REST endpoints.
+The `DokanRESTBaseController` extends WordPress's `WP_REST_Controller` and provides common functionality for all Dokan REST endpoints.
 
 ### Base Controller Implementation
 ```php
-abstract class DokanBaseRESTController extends WP_REST_Controller {
+abstract class DokanRESTBaseController extends WP_REST_Controller {
     protected $namespace = 'dokan/v1';
 
     public function format_collection_response( $response, $request, $total_items ) {
@@ -29,7 +29,7 @@ abstract class DokanBaseRESTController extends WP_REST_Controller {
 ### Admin REST Controller Implementation
 
 ```php
-abstract class DokanRESTAdminController extends DokanBaseRESTController {
+abstract class DokanRESTAdminController extends DokanRESTBaseController {
     protected $namespace = 'dokan/v1/admin';
     
     public function check_permission() {
@@ -110,8 +110,7 @@ class ExampleAdminController extends DokanRESTAdminController {
 ### Vendor REST Controller Implementation
 
 ```php
-abstract class DokanRESTVendorController extends DokanBaseRESTController {
-    protected $namespace = 'dokan/v1';
+abstract class DokanRESTVendorController extends DokanRESTBaseController {
     protected $rest_base = 'vendor';
     
     public function check_permission() {
@@ -124,7 +123,7 @@ abstract class DokanRESTVendorController extends DokanBaseRESTController {
 
 ```php
 class ExampleVendorController extends DokanRESTVendorController {
-    protected $namespace = 'dokan/v1';
+    // protected $namespace = 'dokan/v1'; (namespace will be inherited from the parent class)
     protected $rest_base = 'example-vendor';
 
     public function register_routes() {
@@ -156,7 +155,7 @@ class ExampleVendorController extends DokanRESTVendorController {
 
 ```php
 class ExampleVendorController extends DokanRESTVendorController {
-    protected $namespace = 'dokan/v1';
+    // protected $namespace = 'dokan/v1'; (namespace will be inherited from the parent class)
     protected $rest_base = 'example-vendor';
 
     public function register_routes() {
@@ -192,8 +191,8 @@ class ExampleVendorController extends DokanRESTVendorController {
 ### Customer REST Controller Implementation
 
 ```php
-abstract class DokanRESTCustomerController extends DokanBaseRESTController {
-    protected $namespace = 'dokan/v1';
+abstract class DokanRESTCustomerController extends DokanRESTBaseController {
+    // protected $namespace = 'dokan/v1'; (namespace will be inherited from the parent class)
     protected $rest_base = 'customer';
     
     public function check_permission() {
@@ -206,7 +205,7 @@ abstract class DokanRESTCustomerController extends DokanBaseRESTController {
 
 ```php
 class ExampleCustomerController extends DokanRESTCustomerController {
-    protected $namespace = 'dokan/v1';
+    // protected $namespace = 'dokan/v1'; (namespace will be inherited from the parent class)
     protected $rest_base = 'example-customer';
 
     public function register_routes() {
@@ -238,7 +237,7 @@ class ExampleCustomerController extends DokanRESTCustomerController {
 
 ```php
 class ExampleCustomerController extends DokanRESTCustomerController {
-    protected $namespace = 'dokan/v1';
+    // protected $namespace = 'dokan/v1'; (namespace will be inherited from the parent class)
     protected $rest_base = 'example-customer';
 
     public function register_routes() {

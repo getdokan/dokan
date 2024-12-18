@@ -9,14 +9,7 @@ namespace WeDevs\Dokan\Abstracts;
  *
  * @package dokan
  */
-abstract class DokanRESTCustomerController extends DokanBaseRESTController {
-
-    /**
-     * Endpoint namespace.
-     *
-     * @var string
-     */
-    protected $namespace = 'dokan/v1';
+abstract class DokanRESTCustomerController extends DokanRESTBaseController {
 
     /**
      * Endpoint base.
