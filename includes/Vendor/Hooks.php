@@ -17,5 +17,8 @@ class Hooks {
 
         // init Vendor Settings Manager
         new SettingsApi\Manager();
+
+        // coupon discount distribution
+        new Coupon();
     }
 }
