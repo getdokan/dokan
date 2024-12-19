@@ -264,7 +264,7 @@ class Commission {
         }
 
         if ( $context === dokan()->fees->get_tax_fee_recipient( $order->get_id() ) ) {
-            $earning_or_commission += ( ( floatval( $order->get_total_tax() ) - floatval( $order->get_total_tax_refunded() ) ) - ( floatval( $order->get_shipping_tax() ) - floatval( $order->get_shipping_tax() ) ) );
+            $earning_or_commission += ( ( floatval( $order->get_total_tax() ) - floatval( $order->get_total_tax_refunded() ) ) - ( floatval( $order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $order ) ) ) );
         }
 
         if ( $context === dokan()->fees->get_shipping_tax_fee_recipient( $order ) ) {
