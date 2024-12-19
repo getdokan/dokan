@@ -287,7 +287,7 @@ class Commission {
      */
     public function validate_rate( $rate ) {
         if ( '' === $rate || ! is_numeric( $rate ) || $rate < 0 ) {
-            return null;
+            $rate = 0.0;
         }
 
         return (float) $rate;
