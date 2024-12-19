@@ -268,7 +268,7 @@ class Commission {
         }
 
         if ( $context === dokan()->fees->get_shipping_tax_fee_recipient( $order ) ) {
-            $earning_or_commission += ( floatval( $order->get_shipping_tax() ) - dokan()->fees->get_total_shipping_tax_refunded( $order ) );
+            $earning_or_commission += ( floatval( $order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $order ) ) );
         }
 
         $earning_or_commission = apply_filters_deprecated( 'dokan_order_admin_commission', [ $earning_or_commission, $order, $context ], '2.9.21', 'dokan_get_earning_by_order' );
