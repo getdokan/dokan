@@ -10,6 +10,75 @@ class Coupon {
         add_filter( 'woocommerce_coupon_get_discount_amount', [ $this, 'apply_line_item_coupon_discount' ], 12, 5 );
         add_action( 'woocommerce_checkout_create_order_line_item', [ $this, 'add_coupon_info_to_order_item' ], 10, 4 );
         add_action( 'woocommerce_removed_coupon', [ $this, 'remove_coupon_info_from_cart_item' ] );
+        add_action( 'woocommerce_before_order_item_object_save', [ $this, 'coupon_applied' ], 10, 2 );
+    }
+
+    /**
+     * Add coupon info to cart item
+     *
+     * @param $item
+     * @param $order_id
+     *
+     * @return void
+     */
+
+    public function coupon_applied( $item ) {
+        error_log( 'item-type: ' . $item->get_type() );
+        if ( $item->get_type() === 'coupon' ) {
+            // get discount amount from coupon
+            $discount_amount = $item->get_discount();
+            $coupon_code = $item->get_code();
+            $order = wc_get_order( $item->get_order_id() );
+            $order_items = $order->get_items();
+            foreach ( $order_items as $order_item ) {
+                $product_id = $order_item->get_product_id();
+                $product = wc_get_product( $product_id );
+                // check if coupon is valid for product
+                if ( ! $this->is_coupon_valid( $product, $coupon_code ) ) {
+                    continue;
+                }
+                $product_price = $product->get_price();
+                $product_quantity = $order_item->get_quantity();
+                $total_product_price = $product_price * $product_quantity;
+
+                if ( $discount_amount > $total_product_price ) {
+                    $discount_amount = $total_product_price;
+                }
+                $coupon_info = [
+                    'discount' => $discount_amount,
+                    'coupon_code' => $coupon_code,
+                    'per_item' => $discount_amount / $product_quantity,
+                    'product_id' => $product_id,
+                ];
+                // get order item meta data
+                $order_item_meta = $order_item->get_meta( '_dokan_coupon_info' );
+                if ( ! empty( $order_item_meta ) ) {
+                    $order_item_meta[ $coupon_code ] = $coupon_info;
+                } else {
+                    $order_item_meta = [ $coupon_code => $coupon_info ];
+                }
+                $order_item->update_meta_data( '_dokan_coupon_info', $order_item_meta );
+                $order_item->save();
+            }
+        }
+    }
+
+    /**
+     * Check coupon validity
+     *
+     * @param $product
+     * @param $coupon_code
+     *
+     * @return bool
+     */
+
+    public function is_coupon_valid( $product, $coupon_code ): bool {
+        $valid = false;
+        $coupon = new WC_Coupon( $coupon_code );
+        if ( $coupon->is_valid_for_product( $product ) ) {
+            $valid = true;
+        }
+        return $valid;
     }
 
     /**
