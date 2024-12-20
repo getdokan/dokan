@@ -3,13 +3,16 @@
 namespace WeDevs\Dokan\Vendor;
 
 use WC_Coupon;
+use WC_Discounts;
 
 class Coupon {
 
     public function __construct() {
+        // before order created
         add_filter( 'woocommerce_coupon_get_discount_amount', [ $this, 'apply_line_item_coupon_discount' ], 12, 5 );
         add_action( 'woocommerce_checkout_create_order_line_item', [ $this, 'add_coupon_info_to_order_item' ], 10, 4 );
         add_action( 'woocommerce_removed_coupon', [ $this, 'remove_coupon_info_from_cart_item' ] );
+        // after order created
         add_action( 'woocommerce_before_order_item_object_save', [ $this, 'coupon_applied' ], 10, 2 );
     }
 
@@ -23,13 +26,13 @@ class Coupon {
      */
 
     public function coupon_applied( $item ) {
-        error_log( 'item-type: ' . $item->get_type() );
         if ( $item->get_type() === 'coupon' ) {
             // get discount amount from coupon
             $discount_amount = $item->get_discount();
             $coupon_code = $item->get_code();
             $order = wc_get_order( $item->get_order_id() );
             $order_items = $order->get_items();
+
             foreach ( $order_items as $order_item ) {
                 $product_id = $order_item->get_product_id();
                 $product = wc_get_product( $product_id );
@@ -41,9 +44,6 @@ class Coupon {
                 $product_quantity = $order_item->get_quantity();
                 $total_product_price = $product_price * $product_quantity;
 
-                if ( $discount_amount > $total_product_price ) {
-                    $discount_amount = $total_product_price;
-                }
                 $coupon_info = [
                     'discount' => $discount_amount,
                     'coupon_code' => $coupon_code,
@@ -52,6 +52,17 @@ class Coupon {
                 ];
                 // get order item meta data
                 $order_item_meta = $order_item->get_meta( '_dokan_coupon_info' );
+                if ( empty( $order_item_meta ) ) {
+                    $order_item_meta = [];
+                }
+                // total discount form meta data
+                $total_discount = array_sum( array_column( $order_item_meta, 'discount' ) ) + $discount_amount;
+                if ( $total_discount > $total_product_price ) {
+                    $coupon_info['discount'] = $discount_amount - ( $total_discount - $total_product_price );
+                    if ( $coupon_info['discount'] < 0 ) {
+                        $coupon_info['discount'] = 0;
+                    }
+                }
                 if ( ! empty( $order_item_meta ) ) {
                     $order_item_meta[ $coupon_code ] = $coupon_info;
                 } else {
@@ -59,6 +70,26 @@ class Coupon {
                 }
                 $order_item->update_meta_data( '_dokan_coupon_info', $order_item_meta );
                 $order_item->save();
+            }
+
+            // order has sub orders
+            if ( $order->get_meta( 'has_sub_order' ) ) {
+                $sub_orders = dokan()->order->get_child_orders( $order->get_id() );
+                foreach ( $sub_orders as $sub_order ) {
+                    $used_coupons = $sub_order->get_coupon_codes();
+                    if ( ! in_array( $coupon_code, $used_coupons, true ) ) {
+                        $coupon = new WC_Coupon( $coupon_code );
+                        $discount = new WC_Discounts( $sub_order );
+                        $discount->apply_coupon( $coupon );
+
+                        // Add the coupon to the order
+                        $sub_order->apply_coupon( $coupon_code );
+
+                        // Recalculate totals
+                        $sub_order->calculate_totals();
+                        $sub_order->save();
+                    }
+                }
             }
         }
     }
