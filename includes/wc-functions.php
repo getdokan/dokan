@@ -31,11 +31,11 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
     update_post_meta( $post_id, '_virtual', $is_virtual );
 
     // Gallery Images
-    if ( isset( $data['product_image_gallery'] ) ) {
-        $data = apply_filters( 'dokan_restrict_product_image_gallery_on_edit', $data );
+    if ( isset( $data['gallery_image_ids'] ) ) {
+        $attachment_ids     = apply_filters( 'dokan_restrict_product_gallery_images_on_edit', wp_unslash( $data['gallery_image_ids'] ) );
+        $attachment_ids_arr = array_filter( explode( ',', wc_clean( $attachment_ids ) ) );
 
-        $attachment_ids = array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) );
-        update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
+        update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids_arr ) );
     }
 
     // Check product visibility and purchase note
@@ -302,7 +302,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
             $manage_stock = $data['_manage_stock'];
             $backorders   = wc_clean( $data['_backorders'] );
         }
-    
+
         update_post_meta( $post_id, '_manage_stock', $manage_stock );
         update_post_meta( $post_id, '_backorders', $backorders );
         if ( $stock_status ) {
@@ -312,7 +312,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
                 dokan_log( 'product stock update exception' );
             }
         }
-    
+
         // Retrieve original stock value from the hidden field
         $original_stock = isset( $data['_original_stock'] ) ? wc_stock_amount( wc_clean( $data['_original_stock'] ) ) : '';
         // Clean the current stock value
@@ -326,7 +326,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
                 wc_update_product_stock( $post_id, $stock_amount );
             }
         }
-    
+
         // Update low stock amount regardless of stock changes
         $_low_stock_amount = isset( $data['_low_stock_amount'] ) ? wc_clean( $data['_low_stock_amount'] ) : '';
         $_low_stock_amount = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $_low_stock_amount ) ) : '';
