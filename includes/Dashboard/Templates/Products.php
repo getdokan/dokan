@@ -490,6 +490,12 @@ class Products {
                     $field_value    = $field->sanitize( wp_unslash( $_POST[ $field_name ] ), $original_stock, $product ); //phpcs:ignore
                     break;
 
+                case ProductFormElements::GALLERY_IMAGE_IDS:
+                    $attachment_ids = isset( $_POST['gallery_image_ids'] ) ? apply_filters( 'dokan_restrict_product_gallery_images_on_edit', wp_unslash( $_POST['gallery_image_ids'] ) ) : '';
+                    $attachment_ids = array_filter( explode( ',', wc_clean( $attachment_ids ) ) );
+                    $field_value = $field->sanitize( implode( ',', $attachment_ids ), $product ); //phpcs:ignore
+                    break;
+
                 default:
                     // give a chance to other plugins to sanitize their data
                     $field_value = apply_filters( 'dokan_product_update_field_value', null, $field, wp_unslash( $_POST[ $field_name ] ), $product ); // phpcs:ignore
