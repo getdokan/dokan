@@ -2,10 +2,9 @@
 
 namespace WeDevs\Dokan;
 
-use Exception;
+use RuntimeException;
 use Throwable;
 use WC_Product;
-use WC_Queue_Interface;
 
 class ProductStatusRollback {
     /**
@@ -20,7 +19,7 @@ class ProductStatusRollback {
      *
      * @var int
      */
-    private const BATCH_SIZE = 20;
+    private const BATCH_SIZE = 10;
 
     /**
      * Constructor.
@@ -39,7 +38,7 @@ class ProductStatusRollback {
      * @return void
      */
     private function register_hooks(): void {
-        add_action( 'dokan_rollback_product_status_reject_to_draft_schedule', [ $this, 'process_batch_reject_operation' ], 10, 2 );
+        add_action( 'dokan_rollback_product_status_reject_to_draft_schedule', array( $this, 'process_reject_operation' ) );
     }
 
     /**
@@ -47,31 +46,18 @@ class ProductStatusRollback {
      *
      * @since DOKAN_PRO_SINCE
      *
-     * @param int $batch Current batch number
-     * @param int $total_batches Total number of batches
-     *
      * @return void
      */
-    public function process_batch_reject_operation( int $batch, int $total_batches ): void {
+    public function process_reject_operation(): void {
         global $wpdb;
 
         try {
-            $queue = WC()->queue();
-            if ( ! $queue instanceof WC_Queue_Interface ) {
-                throw new Exception( 'WooCommerce queue not available' );
-            }
-
             // Get products for this batch
             $products = $wpdb->get_col(
                 $wpdb->prepare(
-                    "SELECT ID FROM $wpdb->posts
-                WHERE post_type = 'product'
-                AND post_status = %s
-                ORDER BY ID
-                LIMIT %d OFFSET %d",
+                    "SELECT ID FROM $wpdb->posts WHERE post_type = 'product' AND post_status = %s ORDER BY ID LIMIT %d",
                     'reject',
                     self::BATCH_SIZE,
-                    ( $batch - 1 ) * self::BATCH_SIZE
                 )
             );
             if ( empty( $products ) ) {
@@ -83,7 +69,7 @@ class ProductStatusRollback {
                 try {
                     $product = wc_get_product( $product_id );
                     if ( ! $product instanceof WC_Product ) {
-                        throw new Exception( 'Invalid product' );
+                        throw new RuntimeException( 'Invalid product' );
                     }
 
                     /**
@@ -127,7 +113,7 @@ class ProductStatusRollback {
                 } catch ( Throwable $e ) {
                     dokan_log(
                         sprintf(
-                            '[Product Status Rollback] Error rolling back product #%d: %s',
+                            'Error product status rolling back product #%d: %s',
                             $product_id,
                             $e->getMessage()
                         ),
@@ -136,31 +122,14 @@ class ProductStatusRollback {
                 }
             }
 
-            dokan_log(
-                sprintf(
-                    '[Product Status Rollback] Processed reject->draft batch %d/%d: %d products',
-                    $batch,
-                    $total_batches,
-                    $processed
-                )
-            );
+            dokan_log( sprintf( 'Processed reject->draft : %d products', $processed ) );
 
-            // Schedule next batch if needed
-            if ( $batch < $total_batches ) {
-                $queue->add(
-                    'dokan_rollback_product_status_reject_to_draft_schedule',
-                    [
-                        'batch'         => $batch + 1,
-                        'total_batches' => $total_batches,
-                    ],
-                    self::QUEUE_GROUP
-                );
-            }
+            // Register next schedule if needed
+            WC()->queue()->add( 'dokan_rollback_product_status_reject_to_draft_schedule', array(), self::QUEUE_GROUP );
         } catch ( Throwable $e ) {
             dokan_log(
                 sprintf(
-                    '[Product Status Rollback] Error processing reject->draft batch %d: %s',
-                    $batch,
+                    'Error processing product status reject->draft: %s',
                     $e->getMessage()
                 ),
                 'error'
