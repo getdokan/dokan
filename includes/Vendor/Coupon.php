@@ -147,6 +147,42 @@ class Coupon {
         }
 
         wc_update_order_item_meta( $order_item->get_id(), self::DOKAN_COUPON_META_KEY, $coupon_info );
+
+        // apply coupon sub order
+        if ( $order->get_meta( 'has_sub_order' ) ) {
+            $this->process_coupon_into_child_orders( $order, $coupon );
+        }
+    }
+
+    /**
+    * Process coupon for child orders.
+    *
+    * @param WC_Order $order
+    * @param WC_Coupon $coupon
+    *
+    * @return void
+    * @throws \Exception
+    */
+    public function process_coupon_into_child_orders( WC_Order $order, WC_Coupon $coupon ): void {
+        $sub_orders = dokan()->order->get_child_orders( $order->get_id() );
+        foreach ( $sub_orders as $sub_order ) {
+            // Check if the coupon is already applied
+            $used_coupons = $sub_order->get_coupon_codes();
+            $coupon_code = $coupon->get_code();
+            if ( in_array( $coupon_code, $used_coupons, true ) ) {
+                continue;
+            }
+
+            // Apply the coupon
+            $coupon = new WC_Coupon( $coupon_code );
+            $discount = new WC_Discounts( $sub_order );
+            $discount->apply_coupon( $coupon );
+            // Add the coupon to the order
+            $sub_order->apply_coupon( $coupon_code );
+            // Recalculate totals
+            $sub_order->calculate_totals();
+            $sub_order->save();
+        }
     }
 
     /**
