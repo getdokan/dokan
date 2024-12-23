@@ -38,10 +38,15 @@ test.describe('Vendor SPMV test', () => {
 
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+        await apiUtils.activateModules(payloads.moduleIds.spmv, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
         await apiUtils.dispose();
+    });
+
+    test('admin can enable SPMV module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableSpmvModule();
     });
 
     test('admin can assign SPMV product to other vendor', { tag: ['@pro', '@admin'] }, async () => {
@@ -106,5 +111,12 @@ test.describe('Vendor SPMV test', () => {
 
     test('customer can add to cart other available vendor product', { tag: ['@pro', '@customer'] }, async () => {
         await customer.addToCartOtherAvailableVendorsProduct(productName2, data.predefined.vendorStores.vendor1);
+    });
+
+    // admin
+
+    test('admin can disable SPMV module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.spmv, payloads.adminAuth);
+        await admin.disableSpmvModule();
     });
 });

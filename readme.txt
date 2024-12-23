@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivend
 Requires at least: 6.5
 Tested up to: 6.7.1
 WC requires at least: 8.0.0
-WC tested up to: 9.4.2
+WC tested up to: 9.4.3
 Requires PHP: 7.4
-Stable tag: 3.14.2
+Stable tag: 3.14.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -346,6 +346,8 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+= v3.14.3 ( Dec 11, 2024 ) =
+- **update:** Updated Dokan admin header to display current pro plan and version with upgrading option.
 
 = v3.14.2 ( Dec 06, 2024 ) =
 
@@ -371,12 +373,6 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **update:** As per new branding of Dokan Multivendor Plugin, full product is rebranded with new theme color.
 - **fix:** Moved the vendor edit page from Dokan Pro to Dokan Lite and eliminated the commission setting from the WordPress default user profile page.
 - **fix:** Removed the commission from every category, introducing category-based commission in global settings, vendor settings, Dokan subscription products, and the admin setup wizard.
-
-= v3.13.1 ( Nov 11, 2024 ) =
-
-- **update:** Compatibility with the Printful Integration Module added.
-- **fix:** Improved logic to ensure the `add new category` button only appears when appropriate conditions are met, enhancing user experience.
-
 
 [CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
 

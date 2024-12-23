@@ -16,14 +16,14 @@ test.describe('Privacy Policy & Store Contact form test', () => {
         customer = new PrivacyPolicyPage(cPage);
         apiUtils = new ApiUtils(await request.newContext());
 
-        // await dbUtils.updateOptionValue('widget_dokan-store-contact-widget', dbData.storeContactFormWidget);
-        // await dbUtils.updateOptionValue('sidebars_widgets', { ...dbData.sidebarWidgets, 'sidebar-store': ['dokan-store-contact-widget-2'] });
+        // await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeContactForm, dbData.dokanWidgets.values.storeContactFormWidget);
+        // await dbUtils.updateOptionValue('sidebars_widgets', { 'sidebar-store': [dbData.dokanWidgets.widgets.storeContactForm] });
     });
 
     test.afterAll(async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.privacyPolicy, { enable_privacy: 'on' });
         await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { contact_seller: 'on' });
-        await dbUtils.setOptionValue('sidebars_widgets', dbData.emptySideBarsWidgets); // todo: remove in future
+        await dbUtils.setOptionValue('sidebars_widgets', dbData.emptySideBarsWidgets);
         await cPage.close();
         await apiUtils.dispose();
     });
@@ -41,7 +41,8 @@ test.describe('Privacy Policy & Store Contact form test', () => {
         await customer.disablePrivacyPolicy(data.predefined.vendorStores.vendor1);
     });
 
-    test('admin can disable store contact form from store sidebar', { tag: ['@lite', '@customer'] }, async () => {
+    // todo: remove below test: duplicate test
+    test.skip('admin can disable store contact form from store sidebar', { tag: ['@lite', '@customer'] }, async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { contact_seller: 'off' });
         await customer.disableStoreContactForm(data.predefined.vendorStores.vendor1);
     });
