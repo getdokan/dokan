@@ -21,7 +21,6 @@ const Index = () => {
 
     useEffect( () => {
         if ( currentUser?.data ) {
-            console.log( currentUser.data );
             useWithdrawRequestHook.fetchWithdrawRequests( {
                 per_page: 10,
                 page: 1,
@@ -50,6 +49,7 @@ const Index = () => {
                     }
                     bodyData={ balance }
                     withdrawRequests={ useWithdrawRequestHook }
+                    settings={ withdrawSettings }
                 />
                 <PaymentMethods
                     masterLoading={

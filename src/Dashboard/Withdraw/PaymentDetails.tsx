@@ -6,6 +6,9 @@ import { UseBalanceReturn } from './Hooks/useBalance';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
 import RequestList from './RequestList';
 import { useNavigate } from 'react-router-dom';
+import { Slot, SlotFillProvider } from '@wordpress/components';
+import { PluginArea } from '@wordpress/plugins';
+import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 
 const Loader = () => {
     return (
@@ -29,10 +32,12 @@ function PaymentDetails( {
     bodyData,
     masterLoading,
     withdrawRequests,
+    settings,
 }: {
     bodyData: UseBalanceReturn;
     masterLoading: boolean;
     withdrawRequests: UseWithdrawRequestsReturn;
+    settings: UseWithdrawSettingsReturn;
 } ) {
     const navigate = useNavigate();
 
@@ -46,7 +51,7 @@ function PaymentDetails( {
     }
 
     return (
-        <>
+        <SlotFillProvider>
             <Card>
                 <Card.Header>
                     <Card.Title className="p-0 m-0">Payment Details</Card.Title>
@@ -107,6 +112,16 @@ function PaymentDetails( {
                             </Button>
                         </div>
 
+                        <Slot
+                            name="dokan-vendor-dashboard-withdraw-payment-details"
+                            fillProps={ {
+                                withdrawRequests,
+                                bodyData,
+                                masterLoading,
+                                settings,
+                            } }
+                        />
+
                         { ! withdrawRequests?.isLoading &&
                             withdrawRequests?.data &&
                             Array.isArray( withdrawRequests?.data ) &&
@@ -125,7 +140,9 @@ function PaymentDetails( {
                     </div>
                 </Card.Body>
             </Card>
-        </>
+
+            <PluginArea />
+        </SlotFillProvider>
     );
 }
 
