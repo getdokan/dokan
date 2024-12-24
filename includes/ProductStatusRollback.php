@@ -60,6 +60,7 @@ class ProductStatusRollback {
                     self::BATCH_SIZE,
                 )
             );
+
             if ( empty( $products ) ) {
                 return;
             }
@@ -77,8 +78,8 @@ class ProductStatusRollback {
                      *
                      * @since DOKAN_PRO_SINCE
                      *
-                     * @param string $target_status Target status
-                     * @param WC_Product $product Product object
+                     * @param string $target_status Target rollback status
+                     * @param WC_Product $product Product
                      */
                     $target_status = apply_filters( 'dokan_product_rollback_status', 'draft', $product );
 
@@ -87,15 +88,13 @@ class ProductStatusRollback {
                      *
                      * @since DOKAN_PRO_SINCE
                      *
-                     * @param WC_Product $product Product object
-                     * @param string $target_status Target status
+                     * @param WC_Product $product Product
+                     * @param string $target_status Target rollback status
                      */
                     do_action( 'dokan_before_product_rollback', $product, $target_status );
 
                     // Track previous status
-                    $product->add_meta_data( '_dokan_previous_status', $product->get_status(), true );
-                    $product->save_meta_data();
-
+                    $product->add_meta_data( '_dokan_previous_status', $product->get_status() );
                     $product->set_status( $target_status );
                     $product->save();
 
@@ -104,12 +103,12 @@ class ProductStatusRollback {
                      *
                      * @since DOKAN_PRO_SINCE
                      *
-                     * @param WC_Product $product Product object
-                     * @param string $target_status Target status
+                     * @param WC_Product $product Product
+                     * @param string $target_status Target rollback status
                      */
                     do_action( 'dokan_after_product_status_rollback', $product, $target_status );
 
-                    ++$processed;
+                    ++ $processed;
                 } catch ( Throwable $e ) {
                     dokan_log(
                         sprintf(
@@ -124,7 +123,7 @@ class ProductStatusRollback {
 
             dokan_log( sprintf( 'Processed reject->draft : %d products', $processed ) );
 
-            // Register next schedule if needed
+            // Schedule next batch
             WC()->queue()->add( 'dokan_rollback_product_status_reject_to_draft_schedule', array(), self::QUEUE_GROUP );
         } catch ( Throwable $e ) {
             dokan_log(
