@@ -130,8 +130,8 @@ class Coupon {
             $coupon_info[ $coupon->get_code() ] = [
                 'discount'    => $discount_amount,
                 'coupon_code' => $coupon->get_code(),
-                'per_item'    => $discount_amount / $item_object['quantity'],
-                'product_id'  => $item_object['product_id'],
+                'per_qty_amount'    => $discount_amount / $item_object['quantity'],
+                'quantity'  => $item_object['quantity'],
             ];
         }
 
@@ -178,8 +178,8 @@ class Coupon {
             $coupon_info[ $coupon->get_code() ] = [
                 'discount'    => $discount_amount,
                 'coupon_code' => $coupon->get_code(),
-                'per_item'    => $discount_amount / $order_item->get_quantity(),
-                'product_id'  => $order_item->get_product_id(),
+                'per_qty_amount'    => $discount_amount / $order_item->get_quantity(),
+                'quantity'  => $order_item->get_quantity(),
             ];
         }
 
@@ -209,11 +209,6 @@ class Coupon {
             if ( in_array( $coupon_code, $used_coupons, true ) ) {
                 continue;
             }
-
-            // Apply the coupon
-            $coupon = new WC_Coupon( $coupon_code );
-            $discount = new WC_Discounts( $sub_order );
-            $discount->apply_coupon( $coupon );
             // Add the coupon to the order
             $sub_order->apply_coupon( $coupon_code );
             $sub_order->save();
@@ -251,7 +246,7 @@ class Coupon {
 
             foreach ( $coupon_info as $key => $coupon ) {
                 $total_discount += $coupon['discount'];
-                $product = wc_get_product( $coupon['product_id'] );
+                $product = wc_get_product( $item->get_product_id() );
                 $total_product_price = $product->get_price() * $values['quantity'];
 
                 if ( $limit_reached ) {
