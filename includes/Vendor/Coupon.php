@@ -27,7 +27,6 @@ class Coupon {
      *
      * @param mixed $check
      * @param WC_Data $data
-     * @param bool $force_delete
      *
      * @return mixed
      * @throws Exception
@@ -36,6 +35,9 @@ class Coupon {
         if ( $data instanceof \WC_Order_Item_Coupon ) {
             $removed_coupon = $data->get_code();
             $order = wc_get_order( $data->get_order_id() );
+            if ( ! $order ) {
+                return $check;
+            }
             $order_items = $order->get_items();
 
             foreach ( $order_items as $order_item ) {
