@@ -130,7 +130,7 @@ class Coupon {
             $coupon_info[ $coupon->get_code() ] = [
                 'discount'    => $discount_amount,
                 'coupon_code' => $coupon->get_code(),
-                'per_qty_amount'    => $discount_amount / $item_object['quantity'],
+                'per_qty_amount'    => $item_object['quantity'] > 0 ? ( $discount_amount / $item_object['quantity'] ) : 0,
                 'quantity'  => $item_object['quantity'],
             ];
         }
@@ -255,7 +255,8 @@ class Coupon {
 
                 if ( $total_discount > $total_product_price && $limit_reached === false ) {
                     $remain_discount = $total_discount - $total_product_price;
-                    $coupon_info[ $key ]['discount'] = $coupon['discount'] - $remain_discount;
+                    $adjusted_discount = max( $coupon['discount'] - $remain_discount, 0 );
+                    $coupon_info[ $key ]['discount'] = $adjusted_discount;
                     $limit_reached = true;
                 }
             }
