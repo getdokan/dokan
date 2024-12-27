@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.14.4',
+        'released' => '2024-12-27',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Added tweaks to improve system stability and smoothness',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.14.3',
         'released' => '2024-12-11',
         'changes'  => [
