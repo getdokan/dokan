@@ -11,9 +11,11 @@ use stdClass;
  */
 class SetupWizard {
 
-    /** @var string Currenct Step */
+    /** @var string Current Step */
     protected string $current_step = '';
 
+    /** @var string custom logo url of the theme */
+    protected $custom_logo = '';
     /** @var array Steps for the setup wizard */
     protected $steps = [];
 

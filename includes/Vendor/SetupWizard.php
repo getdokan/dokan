@@ -15,8 +15,6 @@ class SetupWizard extends DokanSetupWizard {
     /** @var array Steps for the setup wizard */
     protected $steps = [];
 
-    /** @var string custom logo url of the theme */
-    protected $custom_logo = '';
     /**
      * @var int
      */
