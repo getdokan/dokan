@@ -15,6 +15,20 @@ export class ColorsPage extends AdminPage {
         super(page);
     }
 
+    // enable color scheme customizer
+    async enableColorSchemeCustomizerModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(settingsAdmin.menus.colors);
+    }
+
+    // disable color scheme customizer
+    async disableColorSchemeCustomizerModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(settingsAdmin.menus.colors);
+    }
+
     // add color palette
     async addColorPalette(paletteName: string, paletteValues: paletteValues, paletteChoice: string = 'predefined') {
         await this.goToDokanSettings();

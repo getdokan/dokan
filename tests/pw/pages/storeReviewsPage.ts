@@ -19,25 +19,28 @@ export class StoreReviewsPage extends AdminPage {
 
     // enable store reviews
     async enableStoreReviewsModule(storeName: string) {
+        // dokan menu
         await this.goto(data.subUrls.backend.dokan.dokan);
         await this.toBeVisible(dokanAdmin.menus.storeReviews);
 
+        // single store page
         await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
         await this.toBeVisible(selector.customer.cSingleStore.storeTabs.reviews);
     }
 
     // disable store reviews
     async disableStoreReviewsModule(storeName: string) {
+        // dokan menu
         await this.goto(data.subUrls.backend.dokan.dokan, { waitUntil: 'domcontentloaded' }, true);
         await this.notToBeVisible(dokanAdmin.menus.storeReviews);
 
-        // no reviews table is visible
-        await this.goIfNotThere(data.subUrls.backend.dokan.storeReviews);
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.storeReviews);
         await this.notToBeVisible(dokanAdmin.storeReviews.storeReviewsDiv);
 
-        // reviews is visible
+        // single store page
         await this.goIfNotThere(data.subUrls.frontend.storeReviews(helpers.slugify(storeName)));
-        await this.toBeVisible(selector.customer.cSingleStore.reviews.noReviewsFound);
+        await this.toBeVisible(selector.customer.cSingleStore.storeTabs.reviews);
     }
 
     // store reviews render properly

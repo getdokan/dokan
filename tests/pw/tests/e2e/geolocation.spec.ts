@@ -1,17 +1,22 @@
-import { test, Page } from '@playwright/test';
+import { test, Page, request } from '@playwright/test';
 import { GeolocationPage } from '@pages/geolocationPage';
 import { dbData } from '@utils/dbData';
+import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
 test.describe('Geolocation test', () => {
     let admin: GeolocationPage;
     let aPage: Page;
+    let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new GeolocationPage(aPage);
+
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.beforeEach(async () => {
@@ -20,7 +25,14 @@ test.describe('Geolocation test', () => {
 
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.geolocation, dbData.dokan.geolocationSettings);
+        await apiUtils.activateModules(payloads.moduleIds.geolocation, payloads.adminAuth);
         await aPage.close();
+    });
+
+    //admin
+
+    test('admin can enable geolocation module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableGeolocationModule();
     });
 
     ['top', 'left', 'right'].forEach((position: string) => {
@@ -60,5 +72,12 @@ test.describe('Geolocation test', () => {
 
     test('customer can slide map radius bar', { tag: ['@pro', '@customer'] }, async () => {
         await admin.slideMapRadiusBar('5');
+    });
+
+    // admin
+
+    test('admin can disable geolocation module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.geolocation, payloads.adminAuth);
+        await admin.disableGeolocationModule();
     });
 });

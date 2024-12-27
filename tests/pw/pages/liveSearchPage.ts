@@ -11,6 +11,28 @@ export class LiveSearch extends BasePage {
         super(page);
     }
 
+    // enable live search module
+    async enableLiveSearchModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.liveSearch);
+
+        // my account
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(liveSearchCustomer.liveSearchDiv);
+    }
+
+    // disable live search module
+    async disableLiveSearchModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.liveSearch);
+
+        // my account
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.notToBeVisible(liveSearchCustomer.liveSearchDiv);
+    }
+
     async searchByLiveSearch(productName: string, autoload = false, categoryName?: string) {
         await this.gotoUntilNetworkidle(data.subUrls.frontend.myAccount);
 
