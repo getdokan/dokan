@@ -13,13 +13,13 @@
             </div>
 
             <div class="dokan-settings-wrap" ref='settingsWrapper'>
-                <div class='flex d-xs:flex-col md:flex-row w-full'>
-                    <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 d-xs:w-full md:w-[340px]">
+                <div class='flex d-xs:flex-col lg:flex-row w-full'>
+                    <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 px-4 py-2 lg:overflow-hidden d-xs:w-full z-[500] lg:w-[340px]">
                         <div class="nab-section block">
                             <div class="flex gap-4 items-center">
                                 <!-- Mobile menu toggle button -->
                                 <button
-                                    class="d-xs:flex md:hidden p-2.5 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-200 ease-in-out group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                    class="d-xs:flex lg:hidden p-2.5 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-200 ease-in-out group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                                     @click="openMobileDrawer"
                                 >
                                     <svg
@@ -43,7 +43,7 @@
                                     <div class="relative flex-1">
                                         <!-- Search Box -->
                                         <div class="search-section relative w-full mb-4">
-                                            <div class="search-box w-full bg-white rounded-md border border-gray-200 flex items-center">
+                                            <div class="search-box w-full bg-white rounded-lg border border-gray-200 flex items-center">
                                                 <label for="dokan-admin-search" class="dashicons dashicons-search "></label>
                                                 <input
                                                     type="text"
@@ -65,7 +65,7 @@
                                             <!-- Search Suggestions Dropdown -->
                                             <div
                                                 v-if="searchText && settingSections.length > 0"
-                                                class="d-xs:absolute md:hidden left-0 right-0 top-[calc(100%+4px)] bg-white border border-gray-200 rounded-lg shadow-lg divide-y divide-gray-100 max-h-[280px] overflow-y-auto z-50"
+                                                class="d-xs:absolute lg:hidden left-0 right-0 top-[calc(100%+4px)] bg-white border border-gray-200 rounded-lg shadow-lg divide-y divide-gray-100 max-h-[280px] overflow-y-auto z-50"
                                             >
                                                 <div
                                                     v-for="section in settingSections"
@@ -120,7 +120,7 @@
                                 />
                             </transition>
 
-                           <div class="d-xs:hidden md:block">
+                           <div class="d-xs:hidden lg:block">
                                <template  v-for="section in settingSections">
                                    <div :class="['nav-tab', currentTab === section.id ? 'nav-tab-active' : '']"
                                         @click.prevent="changeTab(section)" :key="section.id">
@@ -805,9 +805,7 @@
         }
 
         div.nav-tab-wrapper {
-            width: 340px;
-            padding: 14px 16px 30px 24px;
-            overflow: hidden;
+            //width: 340px;
             background: #F9FAFB;
             box-sizing: border-box;
             margin-right: 12px;
@@ -1242,10 +1240,6 @@
     @media only screen and (max-width: 768px) {
         .dokan-settings-wrap {
             .nav-tab-wrapper {
-                overflow: inherit !important;
-                z-index: 444;
-              width: 100% !important;
-              padding: 1rem !important;
                 .nav-tab {
                     .nav-content {
                         .nav-title {
@@ -1279,8 +1273,6 @@
             }
             .dokan-settings-wrap {
                     .nav-tab-wrapper {
-                        padding: 10px;
-
                         .mobile-settings-list {
                             margin-top: 1rem;
 
