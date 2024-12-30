@@ -1,4 +1,7 @@
 <?php
+
+use WeDevs\Dokan\Vendor\Vendor;
+
 /**
  * Injects seller name on cart and other areas
  *
@@ -57,14 +60,13 @@ function dokan_product_seller_tab() {
         return;
     }
 
-    $author_id  = get_post_field( 'post_author', $product->get_id() );
-    $author     = get_user_by( 'id', $author_id );
-
-    if ( ! $author instanceof WP_User ) {
+    $vendor = dokan_get_vendor_by_product( $product );
+    if ( ! $vendor instanceof Vendor ) {
         return;
     }
 
-    $store_info = dokan_get_store_info( $author->ID );
+    $store_info = $vendor->get_shop_info();
+    $author     = get_user_by( 'id', $vendor->get_id() );
 
     dokan_get_template_part(
         'global/product-tab',
