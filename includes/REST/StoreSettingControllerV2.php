@@ -52,7 +52,7 @@ class StoreSettingControllerV2 extends StoreSettingController {
 					'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                     'args'                => [
                         'group_id' => [
-                            'description' => __( 'Unique identifier for the settings group.', 'dokan' ),
+                            'description' => __( 'Unique identifier for the settings group.', 'dokan-lite' ),
                             'type'        => 'string',
                             'required'    => true,
                         ],
@@ -76,12 +76,12 @@ class StoreSettingControllerV2 extends StoreSettingController {
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                     'args'                => [
                         'group_id' => [
-                            'description' => __( 'Unique identifier for the settings group.', 'dokan' ),
+                            'description' => __( 'Unique identifier for the settings group.', 'dokan-lite' ),
                             'type'        => 'string',
                             'required'    => true,
                         ],
                         'id' => [
-                            'description' => __( 'Unique identifier for the setting.', 'dokan' ),
+                            'description' => __( 'Unique identifier for the setting.', 'dokan-lite' ),
                             'type'        => 'string',
                             'required'    => true,
                         ],
@@ -105,17 +105,17 @@ class StoreSettingControllerV2 extends StoreSettingController {
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                     'args'                => [
                         'group_id' => [
-                            'description' => __( 'Unique identifier for the settings group.', 'dokan' ),
+                            'description' => __( 'Unique identifier for the settings group.', 'dokan-lite' ),
                             'type'        => 'string',
                             'required'    => true,
                         ],
                         'parent_id' => [
-                            'description' => __( 'Unique identifier for the parent setting.', 'dokan' ),
+                            'description' => __( 'Unique identifier for the parent setting.', 'dokan-lite' ),
                             'type'        => 'string',
                             'required'    => true,
                         ],
                         'id' => [
-                            'description' => __( 'Unique identifier for the setting field.', 'dokan' ),
+                            'description' => __( 'Unique identifier for the setting field.', 'dokan-lite' ),
                             'type'        => 'string',
                             'required'    => true,
                         ],
