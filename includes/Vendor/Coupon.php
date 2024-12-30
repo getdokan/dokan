@@ -58,12 +58,24 @@ class Coupon {
     }
 
     /**
-     * Intercept coupon application to apply line item coupon discount.
+     * Intercepts coupon application to handle line-item coupon discounts.
      *
-     * @param int $apply_quantity Number of items the coupon applies to.
+     * WooCommerce removes the coupon from the order and recalculates totals. For reference, see:
+     * @see https://github.com/woocommerce/woocommerce/blob/8abd6e97ca598381cb07287a2e7b735799cb55d5/plugins/woocommerce/includes/abstracts/abstract-wc-order.php#L1339
+     *
+     * WooCommerce does not provide a direct hook to retrieve coupon amounts per line item. However,
+     * the `get_discounts` method of the `WC_Discounts` class allows access to this information.
+     * This implementation utilizes the following steps to calculate line-item discounts:
+     *
+     * 1. Remove the interfering WC hook used by Dokan hook.
+     * 2. Reapply the coupon to the order or cart.
+     * 3. Trigger the Dokan action to apply the coupon to the order or cart.
+     * 4. Reattach the interfering WC hook used by Dokan hook.
+     *
+     * @param int $apply_quantity The number of items to which the coupon applies.
      * @param object $item The cart or order item object.
      * @param WC_Coupon $coupon The coupon being applied.
-     * @param WC_Discounts $discounts Discount object.
+     * @param WC_Discounts $discounts The discount object managing the coupon.
      *
      * @return int
      */
@@ -178,10 +190,10 @@ class Coupon {
             $discount_amount = $item_wise_discounts[ $coupon->get_code() ][ $item_key ];
 
             $coupon_info[ $coupon->get_code() ] = [
-                'discount'    => $discount_amount,
+                'discount' => $discount_amount,
                 'coupon_code' => $coupon->get_code(),
-                'per_qty_amount'    => $discount_amount / $order_item->get_quantity(),
-                'quantity'  => $order_item->get_quantity(),
+                'per_qty_amount' => $order_item->get_quantity() > 0 ? $discount_amount / $order_item->get_quantity() : 0,
+                'quantity' => $order_item->get_quantity(),
             ];
         }
 
