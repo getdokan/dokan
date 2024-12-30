@@ -14,8 +14,8 @@
             ]"
         >
             <!-- Drawer Header -->
-            <div class="flex items-center justify-between p-4 border-b mt-4">
-                <h2 class="text-lg font-bold">{{ __('Settings Menu', 'dokan-lite') }}</h2>
+            <div class="flex items-center justify-between p-4 border-b mt-8">
+                <h2 class="text-lg font-bold m-0 p-0">{{ __('Settings Menu', 'dokan-lite') }}</h2>
                 <button
                     class="bg-none border-0 p-1"
                     @click="$emit('close')"

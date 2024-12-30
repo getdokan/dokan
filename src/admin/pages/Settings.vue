@@ -19,7 +19,7 @@
                             <div class="flex gap-4 items-center">
                                 <!-- Mobile menu toggle button -->
                                 <button
-                                    class="d-xs:flex lg:hidden p-2.5 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-200 ease-in-out group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                    class="d-xs:flex lg:hidden p-2.5 bg-white border border-gray-400 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-200 ease-in-out group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                                     @click="openMobileDrawer"
                                 >
                                     <svg
