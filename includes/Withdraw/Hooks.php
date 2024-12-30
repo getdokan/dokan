@@ -88,7 +88,6 @@ class Hooks {
      * @return void
      */
     public function update_vendor_balance( $withdraw ) {
-        dokan_log( 'Withdraw request approved', $withdraw->get_id() );
         try {
             global $wpdb;
 
@@ -135,7 +134,7 @@ class Hooks {
                 error_log( 'Withdraw request already approved' . $withdraw->get_id() );
             }
         } catch ( \Exception $e ) {
-			dokan_log( 'Withdraw Balance Update Error: ' . $e->getMessage() );
+			dokan_log( $e->getMessage(), 'error' );
         }
     }
 
