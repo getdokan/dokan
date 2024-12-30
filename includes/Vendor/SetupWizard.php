@@ -9,12 +9,6 @@ use WeDevs\Dokan\Admin\SetupWizard as DokanSetupWizard;
  * Seller setup wizard class
  */
 class SetupWizard extends DokanSetupWizard {
-    /** @var string Current Step */
-    protected string $current_step = '';
-
-    /** @var array Steps for the setup wizard */
-    protected $steps = [];
-
     /**
      * @var int
      */
