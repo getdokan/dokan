@@ -268,6 +268,10 @@ class Assets {
         $this->register_styles( $styles );
         $this->register_scripts( $scripts );
 
+        $assets = require DOKAN_DIR . '/assets/js/dokan-components.asset.php';
+
+        wp_register_script( 'dokan-react-component', DOKAN_PLUGIN_ASSEST . '/js/dokan-components.js', $assets['dependencies'], $assets['version'], true );
+
         do_action( 'dokan_register_scripts' );
     }
 
@@ -595,6 +599,8 @@ class Assets {
         if ( ! function_exists( 'WC' ) ) {
             return;
         }
+
+        wp_enqueue_script( 'dokan-react-component' );
 
         // load dokan style on every pages. requires for shortcodes in other pages
         if ( DOKAN_LOAD_STYLE ) {

@@ -63,11 +63,22 @@ const entryPoint = {
 
 const updatedConfig = {
   mode: defaultConfig.mode,
-  entry: entryPoint,
+  entry: {
+      ...entryPoint,
+      'dokan-components':{
+          import: './src/Layout/DataViews/index.tsx',
+          library: {
+              name: ['dokan', 'Components'],
+              type: 'window',
+              export: 'default',
+          }
+      },
+  },
   output: {
     path: path.resolve(__dirname, './assets/js'),
     filename: '[name].js',
     clean: true,
+    devtoolNamespace: 'dokan',
   },
 
   resolve: {

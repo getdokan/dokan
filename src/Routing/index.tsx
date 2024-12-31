@@ -3,6 +3,22 @@ import {__} from "@wordpress/i18n";
 import {DokanRoute} from "../Layout";
 import { isValidElement, cloneElement, createElement } from '@wordpress/element';
 import { useNavigate, useParams, useLocation, redirect, replace, useMatches, useNavigation,  } from 'react-router-dom';
+import WPostsDataView from "../Layout/WPostsDataView";
+
+import { DataViews } from "@/Layout/DataViews";
+
+// Step 1: Exported components via hooks.
+// window.dokan.components                     = window.dokan.components || {}; // Ensure `window.dokan.components` exist.
+// window.dokan.components.DataViews           = DataViews;
+// window.dokan.components.useWindowDimensions = ViewportDimensions;
+
+
+// Step 2: Exported components via global function.
+// window.dokan.components = window.dokan.components || {};
+// window.dokan.components['DataViews'] = DataViews;
+// window.dokan.dokanGetComponent = function( componentName ) {
+//     return window.dokan.components[ componentName ];
+// };
 
 export function withRouter(Component) {
     function ComponentWithRouterProp(props) {
@@ -51,6 +67,18 @@ const getRoutes = () => {
             order: 10,
         }
     );
+
+    // routes.push(
+    //     {
+    //         id: 'dokan-data-view-table',
+    //         title: __( 'Dokan Data Views', 'dokan' ),
+    //         element: WPostsDataView,
+    //         path: '/dataviews',
+    //         exact: true,
+    //         order: 10,
+    //         parent: '',
+    //     }
+    // );
 
     // @ts-ignore
     routes = wp.hooks.applyFilters('dokan-dashboard-routes', routes) as Array<DokanRoute>;
