@@ -73,7 +73,7 @@ class StoreController extends WP_REST_Controller {
                             'required'    => false,
                             'type'        => 'array',
                             'items'       => [
-                                'type' => 'string'
+                                'type' => 'string',
                             ],
                             'description' => __( 'An array of social media details for the store.', 'dokan-lite' ),
                         ],
@@ -84,13 +84,13 @@ class StoreController extends WP_REST_Controller {
                                 'paypal' => array(
                                     'type' => 'array',
                                     'items' => array(
-                                        'type' => 'string'
+                                        'type' => 'string',
                                     )
                                 ),
                                 'bank' => array(
                                     'type' => 'array',
                                     'items' => array(
-                                        'type' => 'string'
+                                        'type' => 'string',
                                     )
                                 )
                             ),
@@ -166,7 +166,7 @@ class StoreController extends WP_REST_Controller {
                                     'day' => array(
                                         'type' => 'array',
                                         'items' => array(
-                                            'type' => 'string'
+                                            'type' => 'string',
                                         )
                                     )
                                 )
