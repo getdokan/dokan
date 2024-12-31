@@ -40,17 +40,36 @@ class Coupon {
             }
             $order_items = $order->get_items();
 
+            $product_ids = [];
+
             foreach ( $order_items as $order_item ) {
                 $item = $order_item->get_meta( self::DOKAN_COUPON_META_KEY, true );
 
                 if ( isset( $item[ $removed_coupon ] ) ) {
                     unset( $item[ $removed_coupon ] );
                     wc_update_order_item_meta( $order_item->get_id(), self::DOKAN_COUPON_META_KEY, $item );
+                    $product_ids[] = $order_item->get_product_id();
                 }
             }
-
+            // Remove coupon with child orders
             if ( $order->get_meta( 'has_sub_order' ) ) {
                 $this->remove_coupon_into_child_orders( $order, $removed_coupon );
+            } else {
+                // Remove coupon from child order items
+                $parent_order = wc_get_order( $order->get_parent_id() );
+                if ( ! empty( $product_ids ) && $parent_order ) {
+                    $order_items = $parent_order->get_items();
+                    foreach ( $order_items as $order_item ) {
+                        /** @var WC_Order_Item_Product $order_item */
+                        if ( in_array( $order_item->get_product_id(), $product_ids, true ) ) {
+                            $item = $order_item->get_meta( self::DOKAN_COUPON_META_KEY, true );
+                            if ( isset( $item[ $removed_coupon ] ) ) {
+                                unset( $item[ $removed_coupon ] );
+                                wc_update_order_item_meta( $order_item->get_id(), self::DOKAN_COUPON_META_KEY, $item );
+                            }
+                        }
+                    }
+                }
             }
         }
 
