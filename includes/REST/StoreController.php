@@ -52,7 +52,7 @@ class StoreController extends WP_REST_Controller {
                     'methods'             => WP_REST_Server::CREATABLE,
                     'callback'            => [ $this, 'create_store' ],
                     'permission_callback' => [ $this, 'permission_check_for_manageable_part' ],
-                    'args'                => [
+                    'args' => [
                         'user_login' => [
                             'required'    => false,
                             'type'        => 'string',
@@ -72,11 +72,28 @@ class StoreController extends WP_REST_Controller {
                         'social' => [
                             'required'    => false,
                             'type'        => 'array',
+                            'items'       => [
+                                'type' => 'string'
+                            ],
                             'description' => __( 'An array of social media details for the store.', 'dokan-lite' ),
                         ],
                         'payment' => [
                             'required'    => false,
-                            'type'        => 'array',
+                            'type'        => 'object',
+                            'properties'  => array(
+                                'paypal' => array(
+                                    'type' => 'array',
+                                    'items' => array(
+                                        'type' => 'string'
+                                    )
+                                ),
+                                'bank' => array(
+                                    'type' => 'array',
+                                    'items' => array(
+                                        'type' => 'string'
+                                    )
+                                )
+                            ),
                             'description' => __( 'Payment details for the store. E.g., PayPal or bank details.', 'dokan-lite' ),
                         ],
                         'phone' => [
@@ -92,6 +109,9 @@ class StoreController extends WP_REST_Controller {
                         'address' => [
                             'required'    => false,
                             'type'        => 'array',
+                            'items'       => [
+                                'type' => 'string'
+                            ],
                             'description' => __( 'Address details of the store.', 'dokan-lite' ),
                         ],
                         'location' => [
@@ -132,11 +152,25 @@ class StoreController extends WP_REST_Controller {
                         'store_seo' => [
                             'required'    => false,
                             'type'        => 'array',
+                            'items'       => [
+                                'type' => 'string'
+                            ],
                             'description' => __( 'SEO metadata for the store.', 'dokan-lite' ),
                         ],
                         'store_open_close' => [
                             'required'    => false,
                             'type'        => 'array',
+                            'items'       => array(
+                                'type'  => 'object',
+                                'properties' => array(
+                                    'day' => array(
+                                        'type' => 'array',
+                                        'items' => array(
+                                            'type' => 'string'
+                                        )
+                                    )
+                                )
+                            ),
                             'description' => __( 'Opening and closing times for the store.', 'dokan-lite' ),
                         ],
                         'notify_vendor' => [
