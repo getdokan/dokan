@@ -46,7 +46,7 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
     };
 
     return (
-        <div className="dokan-dashboard-datatable bg-dokan-sidebar">
+        <div className="dokan-dashboard-datatable">
             {/* Before dokan data table rendered slot */}
             <Slot name={ `dokan-before-vendor-data-table-${ props?.namespace }` } fillProps={{ ...filteredProps }} />
             <DataViews { ...filteredProps } />
