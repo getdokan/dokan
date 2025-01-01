@@ -46,20 +46,30 @@ test.describe('Stores test', () => {
         await admin.searchVendor(data.predefined.vendorStores.vendor1);
     });
 
+    test('admin can filter vendors by status (pending)', { tag: ['@lite', '@admin'] }, async () => {
+        const [, sellerId] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
+        await apiUtils.updateStoreStatus(sellerId, { status: 'inactive' }, payloads.adminAuth);
+        await admin.filterVendors('pending');
+    });
+
+    test('admin can filter vendors by status (approved)', { tag: ['@lite', '@admin'] }, async () => {
+        await admin.filterVendors('approved');
+    });
+
+    test("admin can enable vendor's selling capability", { tag: ['@lite', '@admin'] }, async () => {
+        const [, sellerId, storeName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
+        await apiUtils.updateStoreStatus(sellerId, { status: 'inactive' }, payloads.adminAuth);
+        await admin.updateVendor(storeName, 'enable');
+    });
+
     test("admin can disable vendor's selling capability", { tag: ['@lite', '@admin'] }, async () => {
-        //todo: might need to combine with enable
         const [, , storeName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
         await admin.updateVendor(storeName, 'disable');
     });
 
-    test("admin can enable vendor's selling capability", { tag: ['@lite', '@admin'] }, async () => {
-        const [, , storeName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
-        await admin.updateVendor(storeName, 'enable');
-    });
-
     test('admin can edit vendor info', { tag: ['@lite', '@admin'] }, async () => {
-        //todo: implement option to edit particular chunk of data: social profile, address, etc
-        await admin.editVendor(data.vendor);
+        // todo: implement option to edit particular chunk of data: social profile, address, etc
+        await admin.editVendor(VENDOR_ID, data.vendor);
     });
 
     test('admin can view vendor products', { tag: ['@lite', '@admin'] }, async () => {

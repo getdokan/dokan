@@ -1,0 +1,678 @@
+.dokan-spinner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: url(../js/../images/spinner-2x.gif) center center no-repeat;
+  z-index: 99;
+  background-size: 20px;
+}
+.tooltip {
+  position: absolute;
+  z-index: 9999;
+  display: block;
+  visibility: visible;
+  line-height: 1.3;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+.tooltip.in {
+  opacity: 0.9;
+  filter: alpha(opacity=90);
+}
+.tooltip.top {
+  margin-top: -3px;
+  padding: 5px 0;
+}
+.tooltip.right {
+  margin-right: 3px;
+  padding: 0 5px;
+}
+.tooltip.bottom {
+  margin-top: 3px;
+  padding: 5px 0;
+}
+.tooltip.left {
+  margin-right: -3px;
+  padding: 0 5px;
+}
+.tooltip-inner {
+  max-width: 200px;
+  padding: 10px !important;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  background-color: #000;
+  border-radius: 4px;
+  font-weight: normal !important;
+}
+.tooltip-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+.tooltip.top .tooltip-arrow {
+  bottom: 0;
+  right: 50%;
+  margin-right: -5px;
+  border-width: 5px 5px 0;
+  border-top-color: #000;
+}
+.tooltip.top-left .tooltip-arrow {
+  bottom: 0;
+  right: 5px;
+  border-width: 5px 5px 0;
+  border-top-color: #000;
+}
+.tooltip.top-right .tooltip-arrow {
+  bottom: 0;
+  left: 5px;
+  border-width: 5px 5px 0;
+  border-top-color: #000;
+}
+.tooltip.right .tooltip-arrow {
+  top: 50%;
+  right: 0;
+  margin-top: -5px;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #000;
+}
+.tooltip.left .tooltip-arrow {
+  top: 50%;
+  left: 0;
+  margin-top: -5px;
+  border-width: 5px 5px 5px 0;
+  border-right-color: #000;
+}
+.tooltip.bottom .tooltip-arrow {
+  top: 0;
+  right: 50%;
+  margin-right: -5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: #000;
+}
+.tooltip.bottom-left .tooltip-arrow {
+  top: 0;
+  right: 5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: #000;
+}
+.tooltip.bottom-right .tooltip-arrow {
+  top: 0;
+  left: 5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: #000;
+}
+.dokan-admin-header {
+  background: #fff;
+  padding: 16px 24px;
+  margin: 20px 2px 0 20px;
+  border-radius: 8px;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.06);
+}
+.dokan-admin-header .dokan-admin-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.dokan-admin-header .dokan-admin-logo-wrap {
+  display: flex;
+  flex: 1;
+}
+.dokan-admin-header .dokan-admin-logo-wrap .dokan-admin-header-logo {
+  display: flex;
+  align-items: center;
+}
+.dokan-admin-header .dokan-admin-logo-wrap .dokan-admin-header-logo img {
+  height: 32px;
+  width: auto;
+  margin-left: 12px;
+}
+.dokan-admin-header .dokan-admin-logo-wrap .dokan-version-tags {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 24px;
+  flex: 1;
+}
+.dokan-admin-header .dokan-admin-logo-wrap .dokan-version-tags .version-tag {
+  border-radius: 20px;
+  font-size: 1rem;
+  line-height: 20px;
+  font-weight: 400;
+  padding: 0.5rem 1rem;
+  max-height: 2rem;
+}
+.dokan-admin-header .dokan-admin-logo-wrap .dokan-version-tags .version-tag.lite {
+  background: #FF9B5366;
+  color: #7B4E2E;
+  display: flex;
+  align-items: center;
+}
+.dokan-admin-header .dokan-admin-logo-wrap .dokan-version-tags .version-tag.pro {
+  background: #D8D8FE;
+  color: #7047EB;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: capitalize;
+  font-weight: 450;
+}
+.dokan-admin-header .dokan-admin-logo-wrap .dokan-version-tags .version-tag.pro .version-tag-pro-badge {
+  background: #7047EB;
+  color: white;
+  border-radius: 28px;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  font-size: 16px;
+  margin: -10px -10px -10px 0;
+}
+.dokan-admin-header .upgrade-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #7047EB;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  margin-right: auto;
+}
+.dokan-admin-header .upgrade-button:hover {
+  background: #A244FF;
+}
+.dokan-admin-header .dokan-admin-header-menu {
+  padding-left: 6px;
+  display: flex;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item {
+  margin-left: 12px;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item:last-child {
+  margin-left: 0;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon {
+  position: relative;
+  background: #e4e6eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  box-sizing: border-box;
+  border-radius: 42px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .notification-count {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 15px;
+  height: 15px;
+  padding: 1px;
+  background-color: #ff5a40;
+  border-radius: 53px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .whats-new-pointer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background-color: #ff5a40;
+  border-radius: 53px;
+  border: 2px solid #fff;
+  box-sizing: content-box;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon:hover {
+  background: #0C5F9A;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon:hover > svg path {
+  fill: #fff;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon:hover .dropdown {
+  opacity: 1;
+  visibility: visible;
+  top: 42px;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown {
+  position: absolute;
+  cursor: context-menu;
+  top: 80px;
+  left: -10px;
+  z-index: 1;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 3px;
+  border: 1px solid #e2e2e2;
+  box-shadow: 0 6px 12px rgb(129 129 21.5%);
+  min-width: 255px;
+  max-width: 255px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown:before,
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown:after {
+  content: "";
+  position: absolute;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  top: -10px;
+  left: 14px;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown:before {
+  border-bottom: 10px solid #e2e2e2;
+  margin-top: -1px;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown:after {
+  border-bottom: 10px solid white;
+  margin-top: 0;
+  z-index: 1;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown h3 {
+  margin: 0;
+  font-weight: bold;
+  font-size: 18px;
+  font-family: "SF Pro Text", sans-serif;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item {
+  margin-top: 13px;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a {
+  display: flex;
+  align-items: center;
+  color: #000;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: "SF Pro Text", sans-serif;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin-bottom: 10px;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a:last-child {
+  margin-bottom: 0;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a.active {
+  color: #7047EB;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a.active .dokan-icon {
+  background-color: #E4E6EB;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a.active .dokan-icon svg path {
+  fill: #7047EB;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a.active:after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background-color: #7047EB;
+  border-radius: 53px;
+  margin-right: 10px;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a .dokan-icon {
+  background: #e4e6eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  box-sizing: border-box;
+  border-radius: 42px;
+  margin-left: 11px;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a:hover {
+  color: #7047EB;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a:hover .dokan-icon {
+  background-color: #EFEAFF;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a:hover .dokan-icon svg path {
+  fill: #7047EB;
+}
+.dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a:focus {
+  box-shadow: none;
+}
+@media screen and (max-width: 782px) {
+  .dokan-admin-logo-wrap {
+    flex-direction: column;
+  }
+  .dokan-admin-header {
+    margin: 10px 2px 0 10px;
+    padding: 12px 16px;
+  }
+  .dokan-admin-header .dokan-admin-header-content {
+    gap: 16px;
+    align-items: start;
+  }
+  .dokan-admin-header .dokan-version-tags {
+    margin: 12px 0;
+    flex-wrap: wrap;
+  }
+  .dokan-admin-header .upgrade-button {
+    margin: 0;
+  }
+}
+.dokan-dashboard .post-box-container {
+  width: 49%;
+  float: right;
+}
+.dokan-dashboard .meta-box-sortables {
+  margin: 0 8px;
+  min-height: 100px;
+}
+.dokan-dashboard .postbox .main {
+  padding: 0 12px 11px;
+}
+.dokan-dashboard .postbox .main:before,
+.dokan-dashboard .postbox .main:after {
+  content: " ";
+  display: table;
+}
+.dokan-dashboard .postbox .main:after {
+  clear: both;
+}
+.dokan-dashboard .postbox .main a {
+  text-decoration: none;
+}
+.dokan-dashboard .postbox .main p {
+  margin: 0;
+}
+.dokan-dashboard .postbox .main h4 {
+  margin: 0 0 7px 0;
+  padding: 0 0 7px 0;
+  border-bottom: 1px solid #eee;
+}
+.dokan-dashboard .postbox .inside {
+  margin: 10px 0 0 0;
+  padding: 0;
+}
+.dokan-dashboard .postbox.dokan-status .main {
+  padding: 0;
+}
+.dokan-dashboard .postbox.dokan-status .inside {
+  margin: 0;
+}
+.dokan-dashboard .postbox.dokan-status ul {
+  margin-top: -13px;
+}
+.dokan-dashboard .postbox.dokan-status ul li {
+  min-height: 50px;
+  width: 50%;
+  float: right;
+  padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  border-top: 1px solid #ececec;
+  color: #aaa;
+}
+.dokan-dashboard .postbox.dokan-status ul li a {
+  display: block;
+  color: #aaa;
+  padding: 10px;
+  -webkit-transition: all ease 0.5s;
+  transition: all ease 0.5s;
+  position: relative;
+  font-size: 12px;
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details {
+  color: #aaa;
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span {
+  margin-right: 10px;
+  font-weight: bold;
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span.up {
+  color: green;
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span.up::before {
+  content: "+";
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span.up::after {
+  content: "%";
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span.down {
+  color: red;
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span.down::before {
+  content: "-";
+}
+.dokan-dashboard .postbox.dokan-status ul li a .details span.down::after {
+  content: "%";
+}
+.dokan-dashboard .postbox.dokan-status ul li a strong {
+  font-size: 18px;
+  line-height: 1.2em;
+  font-weight: 400;
+  display: block;
+  color: #21759b;
+}
+.dokan-dashboard .postbox.dokan-status ul li .dashicons {
+  font-size: 2em;
+  float: right;
+  margin: 15px;
+}
+.dokan-dashboard .postbox.dokan-status ul li:nth-child(1) {
+  border-top: none;
+}
+.dokan-dashboard .postbox.dokan-status ul li:nth-child(2) {
+  border-top: none;
+}
+.dokan-dashboard .postbox.dokan-status ul li:nth-child(odd) {
+  border-left: 1px solid #ececec;
+}
+.dokan-dashboard .postbox.dokan-status ul li.sale .dashicons {
+  color: #307be1;
+}
+.dokan-dashboard .postbox.dokan-status ul li.commission .dashicons {
+  color: #6da754;
+}
+.dokan-dashboard .postbox.dokan-status ul li.vendor .dashicons {
+  color: #169c22;
+}
+.dokan-dashboard .postbox.dokan-status ul li.approval .dashicons {
+  color: #fd9728;
+}
+.dokan-dashboard .postbox.dokan-status ul li.product .dashicons::before {
+  font-family: WooCommerce;
+  content: "\e006";
+  color: #464646;
+}
+.dokan-dashboard .postbox.dokan-status ul li.withdraw .dashicons::before {
+  font-family: WooCommerce;
+  content: "\e01e";
+  color: #cd2c2f;
+}
+.dokan-dashboard .mark-red a {
+  color: red;
+}
+.dokan-dashboard .mark-green a {
+  color: green;
+}
+.dokan-dashboard .dokan-left {
+  float: right;
+  width: 45%;
+}
+.dokan-dashboard .dokan-right {
+  float: left;
+  width: 45%;
+}
+.chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+  height: 23px;
+}
+.dokan-settings-wrap {
+  display: flex;
+  border: 1px solid #c8d7e1;
+}
+.dokan-settings-wrap .dashicons {
+  padding-top: 2px;
+  margin-left: 5px;
+}
+.dokan-settings-wrap .dashicons.dashicons-admin-generic {
+  color: #6c75ff;
+}
+.dokan-settings-wrap .dashicons.dashicons-cart {
+  color: #00aeff;
+}
+.dokan-settings-wrap .dashicons.dashicons-money {
+  color: #d35400;
+}
+.dokan-settings-wrap .dashicons.dashicons-admin-page {
+  color: #8e44ad;
+}
+.dokan-settings-wrap .dashicons.dashicons-admin-appearance {
+  color: #3498db;
+}
+.dokan-settings-wrap .dashicons.dashicons-networking {
+  color: #1abc9c;
+}
+.dokan-settings-wrap h2.nav-tab-wrapper {
+  flex: 1;
+  border-bottom: none;
+  padding: 0;
+  background: #f1f1f1;
+  border-left: 1px solid #c8d7e1;
+}
+.dokan-settings-wrap h2.nav-tab-wrapper a {
+  float: none;
+  display: block;
+  margin: 0;
+  border: none;
+  padding: 13px 13px;
+  background: #f1f1f1;
+  font-weight: 500;
+  border-bottom: 1px solid #c8d7e1;
+}
+.dokan-settings-wrap h2.nav-tab-wrapper a.nav-tab-active {
+  background: #fff !important;
+  border-left: 1px solid #c8d7e1;
+  width: 99%;
+  color: #2e4453;
+}
+.dokan-settings-wrap .metabox-holder {
+  flex: 3;
+  padding-right: 3%;
+  padding-left: 10px;
+  background: #fff;
+}
+td.tooltips-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4px;
+  padding-left: 0;
+}
+.tooltips-data span {
+  width: 20px;
+}
+ul.dokan-settings-repeatable-list {
+  margin: 0;
+}
+.form-table tr td.dokan_checkbox_up {
+  vertical-align: top;
+  margin-top: 0.45em !important;
+}
+td.combine-tips-style {
+  display: table-cell;
+  vertical-align: top;
+}
+.wc_error_tip {
+  max-width: 20em;
+  line-height: 1.8em;
+  position: absolute;
+  white-space: normal;
+  background: #d82223;
+  margin: 1.2em -1em 0 1px;
+  z-index: 9999999;
+  color: #fff;
+  font-size: 12px;
+  padding: 8px;
+}
+.wc_error_tip:after {
+  content: "";
+  display: block;
+  border: 8px solid #d82223;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  position: absolute;
+  top: -3px;
+  right: 50%;
+  margin: -1em -3px 0 0;
+}
+.dokan-settings-radio-image {
+  display: block;
+  width: 50%;
+  background: #fff;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  margin: 0 0 15px;
+  position: relative;
+  line-height: 0;
+  border: 1px solid #ededed;
+  padding: 4px;
+}
+.dokan-settings-radio-image img {
+  max-width: 100%;
+  z-index: 1;
+}
+.dokan-settings-radio-image .current-option-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #4caf50;
+  color: #fff;
+  padding: 4px;
+  z-index: 2;
+  line-height: 1.3;
+}
+.dokan-settings-radio-image .active-option {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.45);
+  transition: opacity 0.4s ease;
+}
+.dokan-settings-radio-image .active-option button {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  margin-top: -23px;
+  margin-right: -58px;
+}
+.dokan-settings-radio-image:hover .active-option {
+  opacity: 1;
+}
+.dokan-settings-radio-image.active .active-option {
+  display: none;
+}
+.dokan-settings-radio-image.not-active .current-option-indicator {
+  display: none;
+}
+.wp-pointer-buttons button.next {
+  margin-left: 5px;
+}
+.wp-pointer-buttons a.dokan {
+  padding-right: 10px;
+}
+.wp-pointer-buttons a.dokan:before {
+  content: unset;
+}
+.dokan-admin-notices a {
+  text-decoration: none;
+}
+

@@ -23,7 +23,7 @@
                         ?>
                     </strong><br>
                     <?php if ( $withdraw_limit !== 0 ) : ?>
-                        <?php esc_html_e( 'Minimum Withdraw Amount:', 'dokan-lite' ); ?> <strong><?php echo wc_price( $withdraw_limit ); ?></strong><br>
+                        <?php esc_html_e( 'Minimum Withdraw Amount:', 'dokan-lite' ); ?> <strong><?php echo wp_kses_post( wc_price( $withdraw_limit ) ); ?></strong><br>
 						<?php
                     endif;
                     if ( $threshold !== 0 ) :
@@ -31,9 +31,11 @@
                         <?php esc_html_e( 'Withdraw Threshold:', 'dokan-lite' ); ?>
                         <strong>
                             <?php
-                            echo sprintf(
+                            echo esc_html(
+                                sprintf(
                                 // translators: 1) withdraw threshold days
-                                _n( '%s day', '%s days', $threshold, 'dokan-lite' ), number_format_i18n( $threshold )
+                                    _n( '%s day', '%s days', $threshold, 'dokan-lite' ), esc_html( number_format_i18n( $threshold ) )
+                                )
                             );
                             ?>
                         </strong>

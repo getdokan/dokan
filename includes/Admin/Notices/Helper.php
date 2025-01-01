@@ -116,11 +116,15 @@ class Helper {
             return false;
         }
 
+        $is_valid = false;
+
         try {
-            return dokan_pro()->license->is_valid();
-        } catch ( \Exception $e ) {
-            return false;
+            $is_valid = dokan_pro()->license->is_valid();
+        } catch ( \Throwable $e ) {
+            dokan_log( 'Error while checking pro license status: ' . $e->getMessage() );
         }
+
+        return $is_valid;
     }
 
     /**

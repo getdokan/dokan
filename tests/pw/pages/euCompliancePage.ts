@@ -23,6 +23,36 @@ export class EuCompliancePage extends AdminPage {
 
     // admin
 
+    // enable eu compliance fields module
+    async enableEuComplianceFieldsModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.euComplianceFields);
+
+        // vendor dashboard settings
+        await this.goto(data.subUrls.frontend.vDashboard.settingsStore);
+        await this.multipleElementVisible(selector.vendor.vStoreSettings.euFields);
+
+        // my account
+        await this.goto(data.subUrls.frontend.billingAddress);
+        await this.multipleElementVisible(customerAddress.billing.euFields);
+    }
+
+    // disable eu compliance fields module
+    async disableEuComplianceFieldsModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.euComplianceFields);
+
+        // vendor dashboard settings
+        await this.goto(data.subUrls.frontend.vDashboard.settingsStore);
+        await this.multipleElementNotVisible(selector.vendor.vStoreSettings.euFields);
+
+        // my account
+        await this.goto(data.subUrls.frontend.billingAddress);
+        await this.multipleElementNotVisible(customerAddress.billing.euFields);
+    }
+
     async setDokanEuComplianceSettings(option: string) {
         await this.goToDokanSettings();
         await this.click(settingsAdmin.menus.euComplianceFields);
@@ -56,7 +86,7 @@ export class EuCompliancePage extends AdminPage {
         }
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.euCompliance.euComplianceFieldsSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.euCompliance.saveSuccessMessage);
 
         switch (option) {
@@ -96,20 +126,20 @@ export class EuCompliancePage extends AdminPage {
     async addUserEuCompliance(userId: string, euData: eUComplianceData) {
         await this.goIfNotThere(data.subUrls.backend.editUser(userId));
         await this.clearAndType(userInfo.billingAddress.company, euData.companyName!);
-        await this.clearAndType(userInfo.billingAddress.companyIdOrEuidNumber, euData.companyId);
-        await this.clearAndType(userInfo.billingAddress.vatOrTaxNumber, euData.vatNumber);
-        await this.clearAndType(userInfo.billingAddress.bank, euData.bankName);
-        await this.clearAndType(userInfo.billingAddress.bankIban, euData.bankIban);
+        await this.clearAndType(userInfo.billingAddress.euFields.companyIdOrEuidNumber, euData.companyId);
+        await this.clearAndType(userInfo.billingAddress.euFields.vatOrTaxNumber, euData.vatNumber);
+        await this.clearAndType(userInfo.billingAddress.euFields.bank, euData.bankName);
+        await this.clearAndType(userInfo.billingAddress.euFields.bankIban, euData.bankIban);
 
         // update user
         await this.clickAndWaitForResponse(data.subUrls.backend.user, selector.admin.users.updateUser, 302);
         await this.toContainText(selector.admin.users.updateSuccessMessage, 'User updated.');
 
         await this.toHaveValue(userInfo.billingAddress.company, euData.companyName!);
-        await this.toHaveValue(userInfo.billingAddress.companyIdOrEuidNumber, euData.companyId);
-        await this.toHaveValue(userInfo.billingAddress.vatOrTaxNumber, euData.vatNumber);
-        await this.toHaveValue(userInfo.billingAddress.bank, euData.bankName);
-        await this.toHaveValue(userInfo.billingAddress.bankIban, euData.bankIban);
+        await this.toHaveValue(userInfo.billingAddress.euFields.companyIdOrEuidNumber, euData.companyId);
+        await this.toHaveValue(userInfo.billingAddress.euFields.vatOrTaxNumber, euData.vatNumber);
+        await this.toHaveValue(userInfo.billingAddress.euFields.bank, euData.bankName);
+        await this.toHaveValue(userInfo.billingAddress.euFields.bankIban, euData.bankIban);
     }
 
     // edit vendor
@@ -127,7 +157,7 @@ export class EuCompliancePage extends AdminPage {
 
         // update vendor
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.editVendor.saveChanges);
-        await this.click(vendors.editVendor.confirmSaveChanges);
+        await this.click(vendors.editVendor.closeUpdateSuccessModal);
 
         await this.toHaveValue(vendors.editVendor.companyName, vendor.vendorInfo.companyName);
         await this.toHaveValue(vendors.editVendor.companyIdEuidNumber, vendor.vendorInfo.companyId);
@@ -139,26 +169,26 @@ export class EuCompliancePage extends AdminPage {
     // hide vendor EU compliance data
     async hideEuComplianceVendor(storeName: string) {
         await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
-        await this.multipleElementnotVisible(singleStoreCustomer.storeProfile.euComplianceData);
+        await this.multipleElementNotVisible(singleStoreCustomer.storeProfile.euComplianceData);
     }
 
     // customer
 
     // add or update EU compliance data
-    async customerAddEuComplicancedata(euData: eUComplianceData): Promise<void> {
+    async customerAddEuComplianceData(euData: eUComplianceData): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.billingAddress);
-        await this.clearAndType(customerAddress.billing.billingCompanyID, euData.companyId);
-        await this.clearAndType(customerAddress.billing.billingVatOrTaxNumber, euData.vatNumber);
-        await this.clearAndType(customerAddress.billing.billingNameOfBank, euData.bankName);
-        await this.clearAndType(customerAddress.billing.billingBankIban, euData.bankIban);
+        await this.clearAndType(customerAddress.billing.euFields.companyID, euData.companyId);
+        await this.clearAndType(customerAddress.billing.euFields.vatOrTaxNumber, euData.vatNumber);
+        await this.clearAndType(customerAddress.billing.euFields.nameOfBank, euData.bankName);
+        await this.clearAndType(customerAddress.billing.euFields.bankIban, euData.bankIban);
 
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.billingAddress, customerAddress.billing.billingSaveAddress, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.billingAddress, customerAddress.billing.saveAddress, 302);
 
         await this.goIfNotThere(data.subUrls.frontend.billingAddress);
-        await this.toHaveValue(customerAddress.billing.billingCompanyID, euData.companyId);
-        await this.toHaveValue(customerAddress.billing.billingVatOrTaxNumber, euData.vatNumber);
-        await this.toHaveValue(customerAddress.billing.billingNameOfBank, euData.bankName);
-        await this.toHaveValue(customerAddress.billing.billingBankIban, euData.bankIban);
+        await this.toHaveValue(customerAddress.billing.euFields.companyID, euData.companyId);
+        await this.toHaveValue(customerAddress.billing.euFields.vatOrTaxNumber, euData.vatNumber);
+        await this.toHaveValue(customerAddress.billing.euFields.nameOfBank, euData.bankName);
+        await this.toHaveValue(customerAddress.billing.euFields.bankIban, euData.bankIban);
     }
 
     // view vendor EU compliance data
@@ -170,7 +200,7 @@ export class EuCompliancePage extends AdminPage {
     // view product EU compliance data
     async viewProductEuComplianceData(productName: string) {
         await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
-        const { deliveryTime, ...euComplianceData } = singleProductCustomer.productDetails.euComplianceData; //todo: skip delivery time for data is not saved via api
+        const { deliveryTime, ...euComplianceData } = singleProductCustomer.productDetails.euComplianceData; // todo: skip delivery time for data is not saved via api
         await this.multipleElementVisible(euComplianceData);
     }
 }

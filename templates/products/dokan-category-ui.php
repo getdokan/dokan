@@ -17,7 +17,12 @@
                 <div class="dokan-cat-search-box">
                     <span class="dokan-cat-search-icon"><i class="fas fa-search"></i></span>
                     <input maxlength="100" id="dokan-single-cat-search-input" class="dokan-cat-search-input" type="text" placeholder="<?php esc_attr_e( 'Search category', 'dokan-lite' ); ?>">
-                    <span class="dokan-cat-search-text-limit"><span id="dokan-cat-search-text-limit"><?php echo number_format_i18n( 0 ); ?></span>/<?php echo number_format_i18n( 100 ); ?></span>
+                    <span class="dokan-cat-search-text-limit">
+                        <span id="dokan-cat-search-text-limit">
+                            <?php echo esc_html( number_format_i18n( 0 ) ); ?>
+                        </span>
+                        /<?php echo esc_html( number_format_i18n( 100 ) ); ?>
+                    </span>
                 </div>
                 <div id="dokan-cat-search-res" class="dokan-cat-search-res dokan-hide">
                     <ul id="dokan-cat-search-res-ul" class="dokan-cat-search-res-ul"></ul>

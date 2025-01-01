@@ -64,6 +64,7 @@ export class ProductReviewsPage extends VendorPage {
 
             case 'approve':
                 await this.clickAndWaitForLoadState(productReviewsVendor.menus.pending);
+                await this.setElementCssStyle(productReviewsVendor.rowActions(reviewMessage), 'visibility', 'visible'); // forcing the row actions to be visible, to avoid flakiness
                 await this.hover(productReviewsVendor.reviewMessageCell(reviewMessage));
                 await this.clickAndWaitForResponse(data.subUrls.ajax, productReviewsVendor.approveReview(reviewMessage));
                 break;

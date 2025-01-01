@@ -16,6 +16,7 @@ const entryPoint = {
     './src/utils/vue-vendor.js',
   ],
   'dokan-promo-notice': './src/promo-notice/main.js',
+  'dokan-admin-notice': './src/admin/notice/main.js',
   'reverse-withdrawal': './assets/src/js/reverse-withdrawal.js',
   'product-category-ui': './assets/src/js/product-category-ui.js',
   'dokan-admin-product': './assets/src/js/dokan-admin-product.js',
@@ -53,6 +54,10 @@ const entryPoint = {
   'reverse-withdrawal-style': '/assets/src/less/reverse-withdrawal.less',
   'dokan-product-category-ui': '/assets/src/less/dokan-product-category-ui.less',
   'dokan-admin-product-style': '/assets/src/less/dokan-admin-product.less',
+  'page-views': './assets/src/js/page-views.js',
+  'dokan-setup-wizard-commission': './assets/src/js/setup-wizard/commission/index.js',
+  // Category commission component styles.
+  'dokan-category-commission': '/src/admin/components/Commission/index.js',
 };
 
 const updatedConfig = {
@@ -80,6 +85,7 @@ const updatedConfig = {
   },
 
   plugins: [
+      ...defaultConfig.plugins,
     new MiniCssExtractPlugin(
       {
         filename: ( { chunk } ) => {

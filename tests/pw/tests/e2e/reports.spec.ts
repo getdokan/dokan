@@ -54,11 +54,11 @@ test.describe('Reports test', () => {
     });
 
     test('admin can filter all logs by store name', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.filterAllLogsByStore(data.predefined.vendorStores.vendor1);
+        await admin.filterAllLogs(data.predefined.vendorStores.vendor1, 'by-store');
     });
 
     test('admin can filter all logs by order status', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.filterAllLogsByStatus('completed');
+        await admin.filterAllLogs('completed', 'by-status');
     });
 
     //vendor

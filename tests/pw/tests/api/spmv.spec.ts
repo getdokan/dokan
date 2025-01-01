@@ -6,6 +6,7 @@ import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('spmv API test', () => {
     let apiUtils: ApiUtils;
@@ -24,17 +25,20 @@ test.describe('spmv API test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSpmvSettings);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.spmvSchema.spmvSettingsSchema);
     });
 
     test('get spmv products', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSpmvProducts, { data: payloads.spmvSearch });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.spmvSchema.spmvProductsSchema);
     });
 
     test('add spmv product to store', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.addToStore, { data: { product_id: productId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.spmvSchema.addToStoreSchema);
     });
 });

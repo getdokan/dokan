@@ -65,7 +65,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                         </td>
                         <td>
                             <label><?php esc_html_e( 'Access Expires', 'dokan-lite' ); ?>:</label>
-                            <input type="text" style="width: 150px;" class="short datepicker" name="access_expires[<?php echo esc_attr( $loop ); ?>]" value="<?php echo esc_attr( $download->access_expires ) ? dokan_current_datetime()->modify( $download->access_expires )->format( 'Y-m-d' ) : ''; ?>" maxlength="10" placeholder="<?php esc_attr_e( 'Never', 'dokan-lite' ); ?>" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" />
+                            <?php
+                            $expire_date = $download->access_expires ? dokan_current_datetime()->modify( $download->access_expires )->format( 'Y-m-d' ) : '';
+                            ?>
+
+                            <input type="text" style="width: 150px;" class="short datepicker" name="access_expires[<?php echo esc_attr( $loop ); ?>]" value="<?php echo esc_attr( $expire_date ); ?>" maxlength="10" placeholder="<?php esc_attr_e( 'Never', 'dokan-lite' ); ?>" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" />
                         </td>
                     </tr>
                 </tbody>

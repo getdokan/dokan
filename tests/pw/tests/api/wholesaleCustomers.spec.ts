@@ -7,6 +7,7 @@ import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('wholesale customers api test', () => {
     let apiUtils: ApiUtils;
@@ -25,6 +26,7 @@ test.describe('wholesale customers api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllWholesaleCustomers);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.wholesaleCustomersSchema.wholesaleCustomersSchema);
     });
 
     test('create a wholesale customer', { tag: ['@pro'] }, async () => {
@@ -32,18 +34,21 @@ test.describe('wholesale customers api test', () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.wholesaleCustomersSchema.wholesaleCustomerSchema);
     });
 
     test('update a wholesale customer', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateCustomer(wholesaleCustomerId), { data: payloads.updateWholesaleCustomer });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.wholesaleCustomersSchema.updateWholesaleCustomerSchema);
     });
 
     test('delete a wholesale customer', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateCustomer(wholesaleCustomerId), { data: payloads.deleteWholesaleCustomer });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.wholesaleCustomersSchema.updateWholesaleCustomerSchema);
     });
 
     test('update batch wholesale customers', { tag: ['@pro'] }, async () => {
@@ -51,5 +56,6 @@ test.describe('wholesale customers api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchWholesaleCustomer, { data: { activate: allWholesaleCustomerIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.wholesaleCustomersSchema.batchUpdateWholesaleCustomersSchema);
     });
 });

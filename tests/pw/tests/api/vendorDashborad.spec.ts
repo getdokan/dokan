@@ -9,6 +9,7 @@
 import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
+import { schemas } from '@utils/schemas';
 
 test.describe('vendor dashboard api test', () => {
     let apiUtils: ApiUtils;
@@ -25,41 +26,48 @@ test.describe('vendor dashboard api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorDashboardStatistics);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorDashboardSchema.statisticsSchema);
     });
 
     test('get vendor profile information', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorProfileInformation);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorDashboardSchema.profileSchema);
     });
 
     test('get vendor sales report', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorSalesReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorDashboardSchema.salesReportSchema);
     });
 
     test('get vendor product reports summary', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorProductReportsSummary);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorDashboardSchema.productReportsSummarySchema);
     });
 
     test('get vendor order reports summary', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorOrderReportsSummary);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorDashboardSchema.orderReportsSummarySchema);
     });
 
     test('get vendor store preferences', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorStorePreferences);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorDashboardSchema.storePreferencesSchema);
     });
 
     test('get vendor profile progress bar data', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorProfileProgressBarData);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorDashboardSchema.profileCompletionSchema);
     });
 });

@@ -46,17 +46,17 @@ export class SettingPage extends AdminPage {
 
     async disableVendorSetupWizardSetting() {
         await this.vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, setupWizardEnabled: false, choice: false });
-        await this.toBeVisible(selector.vendor.vDashboard.menus.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.dashboard);
     }
 
     async setStoreTermsAndConditions(status: string) {
         await this.goto(data.subUrls.frontend.vDashboard.settingsStore);
         if (status == 'on') {
-            await this.toBeVisible(selector.vendor.vStoreSettings.termsAndConditions);
-            await this.toBeVisible(selector.vendor.vStoreSettings.termsAndConditionsIframe);
+            await this.toBeVisible(selector.vendor.vStoreSettings.toc.termsAndConditions);
+            await this.toBeVisible(selector.vendor.vStoreSettings.toc.termsAndConditionsIframe);
         } else {
-            await this.notToBeVisible(selector.vendor.vStoreSettings.termsAndConditions);
-            await this.notToBeVisible(selector.vendor.vStoreSettings.termsAndConditionsIframe);
+            await this.notToBeVisible(selector.vendor.vStoreSettings.toc.termsAndConditions);
+            await this.notToBeVisible(selector.vendor.vStoreSettings.toc.termsAndConditionsIframe);
         }
     }
 
@@ -84,7 +84,11 @@ export class SettingPage extends AdminPage {
 
     async enableStoreTermsAndConditionsOnRegistration(status: string) {
         await this.vendorPage.openVendorRegistrationForm();
-        status == 'on' ? await this.toBeVisible(selector.customer.cDashboard.termsAndConditions) : await this.notToBeVisible(selector.customer.cDashboard.termsAndConditions);
+        if (status == 'on') {
+            await this.toBeVisible(selector.customer.cDashboard.termsAndConditions);
+        } else {
+            await this.notToBeVisible(selector.customer.cDashboard.termsAndConditions);
+        }
     }
 
     async setShowVendorInfo(productName: string, status: string) {
@@ -119,10 +123,10 @@ export class SettingPage extends AdminPage {
     async enableVendorSelling(status: string) {
         await this.vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice: false });
         if (status == 'on') {
-            await this.notToBeVisible(selector.vendor.vDashboard.dokanAlert);
+            await this.notToBeVisible(selector.vendor.vDashboard.dokanNotice);
         } else {
-            await this.toBeVisible(selector.vendor.vDashboard.dokanAlert);
-            await this.toContainText(selector.vendor.vDashboard.dokanAlert, 'Error! Your account is not enabled for selling, please contact the admin');
+            await this.toBeVisible(selector.vendor.vDashboard.dokanNotice);
+            await this.toContainText(selector.vendor.vDashboard.dokanNotice, 'Error! Your account is not enabled for selling, please contact the admin');
         }
     }
 

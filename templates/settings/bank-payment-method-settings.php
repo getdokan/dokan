@@ -27,7 +27,7 @@
                 <?php
                 // phpcs:ignore
                 if ( ! empty( $_POST['error_ac_name'] ) ) {
-                    echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                    echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
                 }
                 ?>
             </span>
@@ -49,7 +49,7 @@
                 <?php
                 // phpcs:ignore
                 if ( ! empty( $_POST['error_ac_type'] ) ) {
-                    echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                    echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
                 }
                 ?>
             </span>
@@ -66,7 +66,7 @@
                 <?php
                 // phpcs:ignore
                 if ( ! empty( $_POST['error_ac_number'] ) ) {
-                    echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                    echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
                 }
                 ?>
             </span>
@@ -84,7 +84,7 @@
                 <?php
                 // phpcs:ignore
 				if ( ! empty( $_POST['error_routing_number'] ) ) {
-					echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+					echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
 				}
                 ?>
             </span>
@@ -102,7 +102,7 @@
                 <?php
                 // phpcs:ignore
                 if ( ! empty( $_POST['error_bank_name'] ) ) {
-                    echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                    echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
                 }
                 ?>
             </span>
@@ -120,7 +120,7 @@
                 <?php
                 // phpcs:ignore
                 if ( ! empty( $_POST['error_bank_addr'] ) ) {
-                    echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                    echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
                 }
                 ?>
             </span>
@@ -138,7 +138,7 @@
                 <?php
                 // phpcs:ignore
                 if ( ! empty( $_POST['error_iban'] ) ) {
-                    echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                    echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
                 }
                 ?>
             </span>
@@ -156,7 +156,7 @@
                 <?php
                 // phpcs:ignore
                 if ( ! empty( $_POST['error_swift'] ) ) {
-                    echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                    echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
                 }
                 ?>
             </span>

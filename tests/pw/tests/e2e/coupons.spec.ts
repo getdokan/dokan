@@ -40,7 +40,7 @@ test.describe('Coupons test', () => {
         await apiUtils.dispose();
     });
 
-    test.skip('admin can add marketplace coupon', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can add marketplace coupon', { tag: ['@pro', '@admin'] }, async () => {
         await admin.addMarketplaceCoupon({ ...data.coupon, title: data.coupon.couponTitle() });
     });
 
@@ -74,11 +74,12 @@ test.describe('Coupons test', () => {
     });
 
     test('customer can apply coupon', { tag: ['@pro', '@customer'] }, async ({ page }) => {
-        const customer = new CouponsPage(page); // Used guest customer to avoid conlict with other tests
+        const customer = new CouponsPage(page); // Used guest customer to avoid conflict with other tests
         await customer.applyCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
     });
 
     test('customer can buy product with coupon', { tag: ['@pro', '@customer'] }, async () => {
+        test.slow();
         await customer.buyProductWithCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
     });
 });

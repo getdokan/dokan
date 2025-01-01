@@ -1,8 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { FullConfig, FullResult, Reporter, Suite, TestCase, TestError, TestResult, TestStep } from '@playwright/test/reporter';
 import fs from 'fs';
 import path from 'path';
-
-// todo: update custom reporter, add more features like duration, failed tests list
 
 type TestResults = {
     [key: string]: string;
@@ -53,30 +53,35 @@ export default class summaryReport implements Reporter {
         summary.total_tests = suite.allTests().length;
     }
 
-    // onTestBegin(test: TestCase, result: TestResult): void {}
+    onTestBegin(test: TestCase, result: TestResult): void {}
 
-    // onStepBegin(test: TestCase, result: TestResult, step: TestStep): void {}
+    onStepBegin(test: TestCase, result: TestResult, step: TestStep): void {}
 
-    // onStepEnd(test: TestCase, result: TestResult, step: TestStep): void {}
+    onStepEnd(test: TestCase, result: TestResult, step: TestStep): void {}
 
-    // onStdOut(chunk: string | Buffer, test: void | TestCase, result: void | TestResult): void {
-    //     console.log(chunk);
-    // }
+    onStdOut(chunk: string | Buffer, test: void | TestCase, result: void | TestResult): void {
+        // console.log(chunk);
+    }
 
-    // onStdErr(chunk: string | Buffer, test: void | TestCase, result: void | TestResult): void {}
+    onStdErr(chunk: string | Buffer, test: void | TestCase, result: void | TestResult): void {}
 
-    // onError?(error: TestError): void {
-    //     console.log(error);
-    // }
+    onError?(error: TestError): void {
+        // console.log(error);
+    }
 
     onTestEnd(test: TestCase, result: TestResult): void {
         this.testResults[test.id] = test.outcome();
-        test.outcome() !== 'skipped' ? summary.tests.push(test.title) : summary.skipped_tests.push(test.title);
-        test.outcome() == 'expected' && summary.passed_tests.push(test.title);
-        test.outcome() == 'unexpected' && summary.failed_tests.push(test.title);
-        test.outcome() == 'flaky' && summary.flaky_tests.push(test.title);
+        if (test.outcome() !== 'skipped') {
+            summary.tests.push(test.title);
+        } else {
+            summary.skipped_tests.push(test.title);
+        }
+        if (test.outcome() == 'expected') summary.passed_tests.push(test.title);
+        if (test.outcome() == 'unexpected') summary.failed_tests.push(test.title);
+        if (test.outcome() == 'flaky') summary.flaky_tests.push(test.title);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onEnd(result: FullResult): void {
         this.endTime = Date.now();
         summary.suite_duration = this.endTime - this.startTime;

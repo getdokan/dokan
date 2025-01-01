@@ -37,15 +37,8 @@ class Registration {
             return $error;
         }
 
-        $nonce_check = apply_filters( 'dokan_register_nonce_check', true );
-
-        if ( $nonce_check ) {
-            $nonce_value = isset( $_POST['_wpnonce'] ) ? sanitize_key( $_POST['_wpnonce'] ) : '';
-            $nonce_value = isset( $_POST['woocommerce-register-nonce'] ) ? sanitize_key( $_POST['woocommerce-register-nonce'] ) : $nonce_value;
-
-            if ( empty( $nonce_value ) || ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
-                return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed', 'dokan-lite' ) );
-            }
+        if ( ! $this->validate_nonce() ) {
+            return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed', 'dokan-lite' ) );
         }
 
         $allowed_roles = apply_filters( 'dokan_register_user_role', [ 'customer', 'seller' ] );
@@ -92,10 +85,7 @@ class Registration {
      * @return array
      */
     public function set_new_vendor_names( $data ) {
-        $nonce_value = isset( $_POST['_wpnonce'] ) ? sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $nonce_value = isset( $_POST['woocommerce-register-nonce'] ) ? sanitize_key( wp_unslash( $_POST['woocommerce-register-nonce'] ) ) : $nonce_value; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
-        if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
+		if ( ! $this->validate_nonce() ) {
             return $data;
         }
 
@@ -124,10 +114,8 @@ class Registration {
      * @return void
      */
     public function save_vendor_info( $user_id, $data ) {
-        $nonce_value = isset( $_POST['_wpnonce'] ) ? sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $nonce_value = isset( $_POST['woocommerce-register-nonce'] ) ? sanitize_key( wp_unslash( $_POST['woocommerce-register-nonce'] ) ) : $nonce_value; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-        if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
+        if ( ! $this->validate_nonce() ) {
             return;
         }
 
@@ -229,4 +217,24 @@ class Registration {
 
         return $new_dokan_settings;
     }
+
+    /**
+     * Validate nonce for seller registration.
+     * This function checks the nonce value to ensure the request is valid and secure.
+     * If the "dokan_register_nonce_check" filter returns false, the validation is bypassed,
+     * third-party developers to override the nonce check if necessary.
+     *
+     * @return bool True if nonce is valid or validation is bypassed, false otherwise.
+     */
+	protected function validate_nonce() {
+		if ( apply_filters( 'dokan_register_nonce_check', true ) ) {
+			$nonce_value = isset( $_POST['_wpnonce'] ) ? sanitize_key( $_POST['_wpnonce'] ) : '';
+			$nonce_value = isset( $_POST['woocommerce-register-nonce'] ) ? sanitize_key( $_POST['woocommerce-register-nonce'] ) : $nonce_value;
+
+			return ! empty( $nonce_value ) && wp_verify_nonce( $nonce_value, 'woocommerce-register' );
+		}
+
+		// Bypass validation if the filter returns false
+		return true;
+	}
 }

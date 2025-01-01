@@ -6,6 +6,8 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
+const { DOKAN_PRO, VENDOR_ID } = process.env;
+
 test.describe('Vendor settings test', () => {
     let vendor: VendorSettingsPage;
     let vPage: Page;
@@ -21,6 +23,7 @@ test.describe('Vendor settings test', () => {
 
     test.afterAll(async () => {
         await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
+        if (DOKAN_PRO) await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
         await vPage.close();
         await apiUtils.dispose();
     });
@@ -31,8 +34,9 @@ test.describe('Vendor settings test', () => {
         await vendor.vendorStoreSettingsRenderProperly();
     });
 
-    test('vendor can view Shipstation settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorShipstationSettingsRenderProperly();
+    test('vendor can view ShipStation settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+        test.skip(true, 'pr not merged yet');
+        await vendor.vendorShipStationSettingsRenderProperly();
     });
 
     test('vendor can view social profile settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
@@ -49,7 +53,13 @@ test.describe('Vendor settings test', () => {
 
     // store settings
 
-    // todo: ensure which settings need to reset, and test data should be what
+    test.skip('vendor can set store banner settings', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'banner');
+    });
+
+    test.skip('vendor can set store profile picture settings', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'profile-picture');
+    });
 
     test('vendor can set store basic settings', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'basic');
@@ -59,8 +69,8 @@ test.describe('Vendor settings test', () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'address');
     });
 
-    test('vendor can set euComplicance info settings', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.setStoreSettings(data.vendor.vendorInfo, 'euComplicance');
+    test('vendor can set euCompliance info settings', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'euCompliance');
     });
 
     test('vendor can set map settings', { tag: ['@lite', '@vendor'] }, async () => {
@@ -80,12 +90,10 @@ test.describe('Vendor settings test', () => {
     });
 
     test('vendor can set catalog settings', { tag: ['@lite', '@vendor'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'catalog');
-        // await vendor.resetCatalog();
 
         // disable catalog
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, catalog_mode_hide_add_to_cart_button: 'off', catalog_mode_hide_product_price: 'off' });
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'off', catalog_mode_hide_product_price: 'off' });
     });
 
     test('vendor can set discount settings', { tag: ['@pro', '@vendor'] }, async () => {
@@ -100,13 +108,19 @@ test.describe('Vendor settings test', () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'store-support');
     });
 
-    test('vendor can set min-max settings', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.setStoreSettings(data.vendor.vendorInfo, 'min-max');
-        // disable min-max
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'off', enable_min_max_amount: 'off' });
+    test('vendor can set live chat settings', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'liveChat');
     });
 
-    test('vendor can set shipStation settings', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can set min-max settings', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'min-max');
+
+        // disable min-max
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { enable_min_max_quantity: 'off', enable_min_max_amount: 'off' });
+    });
+
+    test('vendor can set ShipStation settings', { tag: ['@pro', '@vendor'] }, async () => {
+        test.skip(true, 'pr not merged yet');
         await vendor.setShipStation(data.vendor.shipStation);
     });
 
@@ -114,8 +128,20 @@ test.describe('Vendor settings test', () => {
         await vendor.setSocialProfile(data.vendor.socialProfileUrls);
     });
 
-    test('vendor can set rma settings', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can set rma settings (no warranty)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setRmaSettings({ ...data.vendor.rma, type: 'no_warranty' });
+    });
+
+    test('vendor can set rma settings (warranty included limited)', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setRmaSettings(data.vendor.rma);
+    });
+
+    test('vendor can set rma settings (warranty included lifetime)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setRmaSettings({ ...data.vendor.rma, length: 'lifetime' });
+    });
+
+    test('vendor can set rma settings (warranty as addon)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setRmaSettings({ ...data.vendor.rma, type: 'addon_warranty' });
     });
 
     test('vendor can set store seo settings', { tag: ['@pro', '@vendor'] }, async () => {

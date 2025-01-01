@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 // import { dbData } from '@utils/dbData';
 // import { helpers } from '@utils/helpers';
 
-test.describe('test environment', () => {
+test.describe('reset test environment', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -28,7 +28,7 @@ test.describe('test environment', () => {
     });
 
     test('delete all stores', async () => {
-        await apiUtils.deleteAllStores(payloads.adminAuth); //todo: don't work
+        await apiUtils.deleteAllStores(payloads.adminAuth); // todo: doesn't work
     });
 
     test('delete all customers', async () => {

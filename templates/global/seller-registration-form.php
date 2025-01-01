@@ -4,6 +4,9 @@
  *
  * @since 2.4
  */
+
+$home_url         = untrailingslashit( home_url() );
+$custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 ?>
 
 <div class="show_if_seller" style="<?php echo esc_attr( $role_style ); ?>">
@@ -29,7 +32,7 @@
         <label for="seller-url" class="pull-left"><?php esc_html_e( 'Shop URL', 'dokan-lite' ); ?> <span class="required">*</span></label>
         <strong id="url-alart-mgs" class="pull-right"></strong>
         <input type="text" class="input-text form-control" name="shopurl" id="seller-url" value="<?php echo ! empty( $data['shopurl'] ) ? esc_attr( $data['shopurl'] ) : ''; ?>" required="required" />
-        <small><?php echo esc_url( home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) ); ?>/<strong id="url-alart"></strong></small>
+        <small><?php echo esc_url( $home_url . '/' . $custom_store_url ) . '/'; ?><strong id="url-alart"></strong></small>
     </p>
 
     <?php
@@ -64,7 +67,7 @@
                 <?php
                 printf(
                 /* translators: %1$s: opening anchor tag with link, %2$s: an ampersand %3$s: closing anchor tag */
-                    __( 'I have read and agree to the %1$sTerms %2$s Conditions%3$s.', 'dokan-lite' ),
+                    esc_html__( 'I have read and agree to the %1$sTerms %2$s Conditions%3$s.', 'dokan-lite' ),
                     sprintf( '<a target="_blank" href="%s">', esc_url( $terms_condition_url ) ),
                     '&amp;',
                     '</a>'

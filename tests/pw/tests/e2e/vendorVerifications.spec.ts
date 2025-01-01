@@ -32,6 +32,7 @@ test.describe('Verifications test', () => {
         customer = new VendorVerificationsPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
+
         [, methodId, methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
         [, mediaId] = await apiUtils.uploadMedia(data.image.avatar, payloads.mimeTypes.png, payloads.adminAuth);
         [, requestId] = await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] }, payloads.adminAuth);
@@ -40,35 +41,41 @@ test.describe('Verifications test', () => {
     test.afterAll(async () => {
         // await apiUtils.deleteAllVerificationMethods(payloads.adminAuth);
         // await apiUtils.deleteAllVerificationRequests(payloads.adminAuth);
+        await apiUtils.activateModules(payloads.moduleIds.vendorVerification, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     //admin
 
+    test('admin can enable vendor verification module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableVendorVerificationModule();
+    });
+
     // verification methods
 
     test('admin can change verified icon', { tag: ['@pro', '@admin'] }, async () => {
-        await dbUtils.createUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
+        await dbUtils.setUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
         await admin.changeVerifiedIcon(data.dokanSettings.vendorVerification.verifiedIcons.byIcon.certificateSolid, data.predefined.vendorStores.vendor2);
     });
 
     test('admin can add vendor verification method', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.addVendoVerificationMethod(data.dokanSettings.vendorVerification.customMethod);
+        await admin.addVendorVerificationMethod(data.dokanSettings.vendorVerification.customMethod);
     });
 
     test('admin can edit vendor verification method', { tag: ['@pro', '@admin'] }, async () => {
         const [, , methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
-        await admin.editVendoVerificationMethod(methodName, data.dokanSettings.vendorVerification.updateMethod);
+        await admin.editVendorVerificationMethod(methodName, data.dokanSettings.vendorVerification.updateMethod);
     });
 
     test('admin can delete vendor verification method', { tag: ['@pro', '@admin'] }, async () => {
         const [, , methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
-        await admin.deleteVendoVerificationMethod(methodName);
+        await admin.deleteVendorVerificationMethod(methodName);
     });
 
-    test('admin can update verificaiton method status', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can update verification method status', { tag: ['@pro', '@admin'] }, async () => {
         const [, , methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
         await admin.updateVerificationMethodStatus(methodName, 'disable');
     });
@@ -129,7 +136,7 @@ test.describe('Verifications test', () => {
 
     test('admin can reject verification request', { tag: ['@pro', '@admin'] }, async () => {
         const [, requestId] = await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] }, payloads.adminAuth);
-        //todo: need to force goto or reload page, page is not reloading because of previous test are on the same page, and created data via api is not loading
+        // todo: need to force goto url contains # which avoid page reload
         await admin.updateVerificationRequest(requestId, 'reject');
     });
 
@@ -171,7 +178,7 @@ test.describe('Verifications test', () => {
         await vendor.viewVerificationRequestNote(methodName, note);
     });
 
-    test('vendor can view only required verificaiton method on setup wizard', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can view only required verification method on setup wizard', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , nonRequiredMethodName] = await apiUtils.createVerificationMethod({ ...payloads.createVerificationMethod(), required: false }, payloads.adminAuth);
         await vendor.viewRequiredVerificationMethod(methodName, nonRequiredMethodName);
     });
@@ -200,15 +207,21 @@ test.describe('Verifications test', () => {
     // customer
 
     test('customer can view verified badge', { tag: ['@pro', '@customer'] }, async () => {
-        await dbUtils.createUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
+        await dbUtils.setUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
         await customer.viewVerifiedBadge(data.predefined.vendorStores.vendor2);
     });
 
-    test.skip('admin receive notification for verification request', { tag: ['@pro', '@admin'] }, async () => {});
     test.skip('vendor need all required method to be verified to get verification badge', { tag: ['@pro', '@vendor'] }, async () => {});
     test.skip('vendor need to be verified only one method when no required method is exists', { tag: ['@pro', '@vendor'] }, async () => {});
     test.skip('vendor address verification gets reset when he update address', { tag: ['@pro', '@vendor'] }, async () => {
         const [, methodId] = await apiUtils.getVerificationMethodId('address', payloads.adminAuth);
         await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId], status: 'approved' }, payloads.adminAuth);
+    });
+
+    // admin
+
+    test('admin can disable vendor verification module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.vendorVerification, payloads.adminAuth);
+        await admin.disableVendorVerificationModule();
     });
 });
