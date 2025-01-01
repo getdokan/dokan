@@ -46,7 +46,7 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
     };
 
     return (
-        <div id="dokan-dashboard-datatable">
+        <div className="dokan-dashboard-datatable bg-dokan-sidebar">
             {/* Before dokan data table rendered slot */}
             <Slot name={ `dokan-before-vendor-data-table-${ props?.namespace }` } fillProps={{ ...filteredProps }} />
             <DataViews { ...filteredProps } />
@@ -55,8 +55,5 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
         </div>
     );
 };
-
-// Attach the hook to the DataViews component.
-DataViewTable.ViewportDimensions = ViewportDimensions;
 
 export default DataViewTable;

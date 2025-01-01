@@ -1,13 +1,17 @@
+import { addQueryArgs } from "@wordpress/url";
+import { __, sprintf } from '@wordpress/i18n';
+import { useEffect, useState } from "@wordpress/element";
 import {
     __experimentalHStack as HStack,
     __experimentalText as Text,
     __experimentalVStack as VStack, Button
 } from "@wordpress/components";
-import useWindowDimensions from "../Hooks/ViewportDimensions";
-import { DataViews } from "./DataViews/index";
-import { useEffect, useState } from "@wordpress/element";
-import { addQueryArgs } from "@wordpress/url";
-import { __, sprintf } from '@wordpress/i18n';
+
+// Get the DataViews and useWindowDimensions from the global DokanPlugin object.
+// const { DataViews, useWindowDimensions } = window.DokanPlugin.components;
+
+import { DataViews } from "./../Components";
+import useWindowDimensions from "./../Hooks/ViewportDimensions";
 
 const WPostsDataView = ({ navigate }) => {
     const [ data, setData ] = useState([]);
@@ -234,7 +238,6 @@ const WPostsDataView = ({ navigate }) => {
     return (
         <DataViews
             data={data}
-            namespace='dokan-post-data-view'
             defaultLayouts={{ ...defaultLayouts }}
             fields={fields}
             getItemId={(item) => item.id}

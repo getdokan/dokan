@@ -5,21 +5,6 @@ import { isValidElement, cloneElement, createElement } from '@wordpress/element'
 import { useNavigate, useParams, useLocation, redirect, replace, useMatches, useNavigation,  } from 'react-router-dom';
 import WPostsDataView from "../Layout/WPostsDataView";
 
-import { DataViews } from "@/Layout/DataViews";
-
-// Step 1: Exported components via hooks.
-// window.dokan.components                     = window.dokan.components || {}; // Ensure `window.dokan.components` exist.
-// window.dokan.components.DataViews           = DataViews;
-// window.dokan.components.useWindowDimensions = ViewportDimensions;
-
-
-// Step 2: Exported components via global function.
-// window.dokan.components = window.dokan.components || {};
-// window.dokan.components['DataViews'] = DataViews;
-// window.dokan.dokanGetComponent = function( componentName ) {
-//     return window.dokan.components[ componentName ];
-// };
-
 export function withRouter(Component) {
     function ComponentWithRouterProp(props) {
         let navigate = useNavigate();

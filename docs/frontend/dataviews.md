@@ -42,7 +42,7 @@ domReady(() => {
                 id: 'dokan-pro-data-view-table',
                 title: __( 'Dokan Data Views', 'dokan' ),
                 element: WPostsDataView,
-                path: '/dataviews',
+                path: '/frontend',
                 exact: true,
                 order: 10,
                 parent: '',
