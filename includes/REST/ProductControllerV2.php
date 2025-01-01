@@ -231,13 +231,13 @@ class ProductControllerV2 extends ProductController {
     protected function prepare_objects_query( $request ) {
         $args = parent::prepare_objects_query( $request );
 
-        $args = array_merge(
+         $args = array_merge(
             $args,
             array(
-                'posts_per_page' => 10,
-                'paged'          => 1,
+                'posts_per_page' => isset( $request['per_page'] ) ? $request['per_page'] : 10,
+                'paged'          => isset( $request['page'] ) ? $request['page'] : 1,
                 'author'         => dokan_get_current_user_id(),
-                'orderby'        => 'post_date',
+                'orderby'        => isset( $request['orderby'] ) ? $request['orderby'] : 'date',
                 'post_type'      => 'product',
                 'date_query'     => [],
                 'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
