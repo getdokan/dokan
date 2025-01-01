@@ -39,7 +39,6 @@ class ProductControllerV2 extends ProductController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_items' ],
-                    'args'                => $this->get_product_collection_params(),
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
                 ],
                 'schema' => [ $this, 'get_item_schema' ],
@@ -119,7 +118,7 @@ class ProductControllerV2 extends ProductController {
      *
      * @return array Query parameters.
      */
-    public function get_product_collection_params() {
+    public function get_collection_params() {
         $params = parent::get_collection_params();
 
         $params['author'] = array(
@@ -176,6 +175,24 @@ class ProductControllerV2 extends ProductController {
             'sanitize_callback' => 'sanitize_text_field',
             'validate_callback' => 'rest_validate_request_arg',
             'required'          => false,
+        );
+        $params['include']         = array(
+            'description'       => __( 'Limit result set to specific ids.', 'dokan-lite' ),
+            'type'              => 'array',
+            'items'             => array(
+                'type' => 'integer',
+            ),
+            'default'           => array(),
+            'sanitize_callback' => 'wp_parse_id_list',
+        );
+        $params['exclude']         = array(
+            'description'       => __( 'Ensure result set excludes specific IDs.', 'dokan-lite' ),
+            'type'              => 'array',
+            'items'             => array(
+                'type' => 'integer',
+            ),
+            'default'           => array(),
+            'sanitize_callback' => 'wp_parse_id_list',
         );
 
         return $params;
