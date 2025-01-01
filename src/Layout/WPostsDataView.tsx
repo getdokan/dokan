@@ -7,9 +7,6 @@ import {
     __experimentalVStack as VStack, Button
 } from "@wordpress/components";
 
-// Get the DataViews and useWindowDimensions from the global DokanPlugin object.
-// const { DataViews, useWindowDimensions } = window.DokanPlugin.components;
-
 import { DataViews } from "./../Components";
 import useWindowDimensions from "./../Hooks/ViewportDimensions";
 
@@ -238,6 +235,7 @@ const WPostsDataView = ({ navigate }) => {
     return (
         <DataViews
             data={data}
+            namespace='dokan-post-data-view'
             defaultLayouts={{ ...defaultLayouts }}
             fields={fields}
             getItemId={(item) => item.id}
@@ -256,8 +254,8 @@ const WPostsDataView = ({ navigate }) => {
             header={
                 <Button
                     isPrimary
+                    className={'!bg-dokan-btn'}
                     onClick={() => navigate('/posts/new')}
-                    className={'dokan-btn dokan-btn-theme dokan-btn-hover'}
                 >
                     { __( 'Add New Post', 'dokan' ) }
                 </Button>

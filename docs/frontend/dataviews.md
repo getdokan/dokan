@@ -28,7 +28,44 @@ Also, an example component are designed to interact with WordPress REST APIs and
 
 ## Quick Overview
 
-### Step 1: Initiate a route for the DataViewTable component.
+### Step 1: Initiate a route for the DataViewTable component
+
+To use the `DataViewTable` component, we need to register the necessary assets for handling route in `Dokan`. Make sure to include the necessary dependencies while registering the component.
+
+**Important:** For Dokan, you must add dependencies name **dokan-react-components** to your scripts where needed.  
+
+**Example:**
+
+```js
+$script_assets = 'add your script assets path here';
+
+if ( file_exists( $script_assets ) ) {
+    $vendor_asset = require $script_assets;
+    $version      = $vendor_asset['version'] ?? '';
+
+    // Add dokan-react-components as a dependency for the vendor script.
+    $component_handle = 'dokan-react-components';
+    $dependencies     = $vendor_asset['dependencies'] ?? [];
+    $dependencies[]   = $component_handle;
+
+    wp_register_script(
+        'handler-name',
+        'path to your script file',
+        $dependencies,
+        $version,
+        true
+    );
+
+    wp_register_style(
+        'handler-name',
+        'path to your style file',
+        [ $component_handle ],
+        $version
+);
+}
+```
+
+### Step 2: Initiate a route for the DataViewTable component.
 
 ```js
 import domReady from '@wordpress/dom-ready';
@@ -36,13 +73,13 @@ import domReady from '@wordpress/dom-ready';
 domReady(() => {
     wp.hooks.addFilter(
         'dokan-dashboard-routes',
-        'dokan-pro-data-view-table',
+        'dokan-data-view-table',
         ( routes ) => {
             routes.push( {
-                id: 'dokan-pro-data-view-table',
+                id: 'dokan-data-view-table',
                 title: __( 'Dokan Data Views', 'dokan' ),
                 element: WPostsDataView,
-                path: '/frontend',
+                path: '/dataviews',
                 exact: true,
                 order: 10,
                 parent: '',
@@ -54,19 +91,24 @@ domReady(() => {
 });
 ```
 
-### Step 2: Create a DataViewTable component.
+### Step 3: Create a DataViewTable component.
+
+In `Dokan Pro`, we can use the `DataViews` component from the `@dokan/components` package. For the free version, we can import `DataViews` from the `src/components` (`lite`) directory.  
+
+All the (free version) global components are available in `@dokan/components` package.
 
 ```js
+import { addQueryArgs } from "@wordpress/url";
+import { __, sprintf } from '@wordpress/i18n';
+import { useEffect, useState } from "@wordpress/element";
 import {
     __experimentalHStack as HStack,
     __experimentalText as Text,
     __experimentalVStack as VStack, Button
 } from "@wordpress/components";
-import useWindowDimensions from "@/Hooks/ViewportDimensions";
-import { DataViews } from "@/components/DataViews/index";
-import { useEffect, useState } from "@wordpress/element";
-import { addQueryArgs } from "@wordpress/url";
-import { __, sprintf } from '@wordpress/i18n';
+
+// For dokan-pro, we will import the `DataViews` component from the @dokan/components package. Otherwise, in free version we will import from the `src/components` directory.
+import { DataViews, useWindowDimensions } from '@dokan/components';
 
 const WPostsDataView = ({ navigate }) => {
     const [ data, setData ] = useState([]);
@@ -312,8 +354,8 @@ const WPostsDataView = ({ navigate }) => {
             header={
                 <Button
                     isPrimary
+                    className={'!bg-dokan-btn'}
                     onClick={() => navigate('/posts/new')}
-                    className={'dokan-btn dokan-btn-theme dokan-btn-hover'}
                 >
                     { __( 'Add New Post', 'dokan' ) }
                 </Button>
@@ -511,7 +553,7 @@ We need to control `paginationInfo` props for calculate `total pagination item &
 #### ~ Set pagination state in view.
 ```js
 const [ view, setView ] = useState({
-    perPage: 2, // Items per page
+    perPage: 10, // Items per page
     page: 1,    // Current page
     // ... other view properties
 });
@@ -532,7 +574,7 @@ const [ view, setView ] = useState({
 ```js
 // Set query arguments for the post fetching.
 const queryArgs = {
-    per_page: view?.perPage ?? 2,
+    per_page: view?.perPage ?? 10,
     page: view?.page ?? 1,
     // ... other query args
 }
@@ -584,7 +626,7 @@ const [ selection, setSelection ] = useState( [] );
 ```js
 // Set query arguments for the post fetching.
 const queryArgs = {
-    per_page: view?.perPage ?? 2,
+    per_page: view?.perPage ?? 10,
     page: view?.page ?? 1,
     // ... other query args
 }
