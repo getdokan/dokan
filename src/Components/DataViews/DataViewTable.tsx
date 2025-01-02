@@ -33,7 +33,7 @@ type DataViewsProps< Item > = {
     : { getItemId: ( item: Item ) => string } );
 
 const applyFiltersToTableElements = (namespace: string, elementName: string, element) => {
-    return wp.hooks.applyFilters( `${namespace}.${elementName}`, element );
+    return wp.hooks.applyFilters( `dokan_${namespace.toLowerCase()}_dataviews_${elementName}`, element );
 };
 
 const DataViewTable = ( props: DataViewsProps< Item > ) => {
