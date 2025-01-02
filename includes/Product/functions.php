@@ -399,7 +399,7 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
             $query_args[] = $user_ids;
         }
     }
-    // phpcs:disable WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.DirectDatabaseQuery.NoCaching
     $product_ids = $wpdb->get_col(
         $wpdb->prepare(
             "SELECT DISTINCT posts.ID FROM {$wpdb->posts} posts
