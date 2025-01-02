@@ -19,7 +19,7 @@ class Tracker {
 
     /**
      * Class constructor
-
+     *
      * @since 2.8.7
      *
      * @return void
@@ -30,7 +30,7 @@ class Tracker {
 
     /**
      * Initialize the plugin tracker
-
+     *
      * @since 2.8.7
      *
      * @return void
