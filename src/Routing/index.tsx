@@ -53,18 +53,6 @@ const getRoutes = () => {
         }
     );
 
-    // routes.push(
-    //     {
-    //         id: 'dokan-data-view-table',
-    //         title: __( 'Dokan Data Views', 'dokan' ),
-    //         element: WPostsDataView,
-    //         path: '/dataviews',
-    //         exact: true,
-    //         order: 10,
-    //         parent: '',
-    //     }
-    // );
-
     // @ts-ignore
     routes = wp.hooks.applyFilters('dokan-dashboard-routes', routes) as Array<DokanRoute>;
     routes.push(
