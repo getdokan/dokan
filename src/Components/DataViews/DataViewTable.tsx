@@ -1,7 +1,7 @@
 import { DataViews } from '@wordpress/dataviews/wp';
 import { Slot } from "@wordpress/components";
 import { ViewportDimensions } from '@/Hooks/ViewportDimensions';
-import type {Action, Field, SupportedLayouts, View} from "@wordpress/dataviews/src/types";
+import type { Action, Field, SupportedLayouts, View } from "@wordpress/dataviews/src/types";
 import type { ReactNode } from "react";
 import './style.scss';
 
