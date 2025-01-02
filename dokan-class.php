@@ -8,6 +8,7 @@ use WeDevs\Dokan\DependencyManagement\Container;
  * @class WeDevs_Dokan The class that holds the entire WeDevs_Dokan plugin
  *
  * @property WeDevs\Dokan\Commission    $commission Instance of Commission class
+ * @property WeDevs\Dokan\Fees $fees Instance of Fees class
  * @property WeDevs\Dokan\Order\Manager $order Instance of Order Manager class
  * @property WeDevs\Dokan\Product\Manager $product Instance of Order Manager class
  * @property WeDevs\Dokan\Vendor\Manager $vendor Instance of Vendor Manager Class
@@ -23,7 +24,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.14.3';
+    public $version = '3.14.4';
 
     /**
      * Instance of self
