@@ -3,7 +3,6 @@ import {__} from "@wordpress/i18n";
 import {DokanRoute} from "../Layout";
 import { isValidElement, cloneElement, createElement } from '@wordpress/element';
 import { useNavigate, useParams, useLocation, redirect, replace, useMatches, useNavigation,  } from 'react-router-dom';
-import WPostsDataView from "../Layout/WPostsDataView";
 
 export function withRouter(Component) {
     function ComponentWithRouterProp(props) {
