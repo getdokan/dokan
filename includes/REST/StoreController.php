@@ -433,15 +433,15 @@ class StoreController extends WP_REST_Controller {
     /**
      * Prepare links for the request.
      *
-     * @param \WC_Data $object Object data.
+     * @param \WC_Data        $store   Store object.
      * @param WP_REST_Request $request Request object.
      *
      * @return array                   Links for the given post.
      */
-    protected function prepare_links( $object, $request ) {
+    protected function prepare_links( $store, $request ) {
         $links = [
             'self'       => [
-                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $object['id'] ) ),
+                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $store['id'] ) ),
             ],
             'collection' => [
                 'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ) ),
