@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\ProductCategory;
 
+use WC_Product;
 use WeDevs\Dokan\ProductCategory\Categories;
 
 /**
@@ -64,7 +65,7 @@ class Helper {
         }
 
         // get product terms
-        $terms = wp_get_post_terms( $post_id, 'product_cat', [ 'fields' => 'ids' ] );
+        $terms = self::get_product_terms( $post_id );
 
         $chosen_cat = self::generate_chosen_categories( $terms );
 
@@ -258,12 +259,32 @@ class Helper {
      *
      * @since 3.7.0
      *
-     * @param int $product_id
+     * @param int $product
      *
      * @return array
      */
-    public static function get_product_chosen_category( $product_id ) {
-        return get_post_meta( $product_id, 'chosen_product_cat', true );
+    public static function get_product_chosen_category( $product ) {
+        if ( ! $product instanceof WC_Product ) {
+            $product = wc_get_product( $product );
+        }
+
+        if ( ! $product ) {
+            return [];
+        }
+
+        $product_id = 'variation' === $product->get_type() ? $product->get_parent_id() : $product->get_id();
+
+        $chosen_product_cat = get_post_meta( $product_id, 'chosen_product_cat', true );
+
+        if ( ! is_array( $chosen_product_cat ) ) {
+            return $chosen_product_cat;
+        }
+
+        return array_filter(
+            $chosen_product_cat, function ( $item ) {
+				return ! empty( $item );
+			}
+        );
     }
 
     /**
@@ -277,12 +298,31 @@ class Helper {
      */
     public static function generate_and_set_chosen_categories( $product_id, $chosen_categories = [] ) {
         if ( empty( $chosen_categories ) ) {
-            $terms             = wp_get_post_terms( $product_id, 'product_cat', [ 'fields' => 'ids' ] );
+            $terms             = self::get_product_terms( $product_id );
             $chosen_categories = self::generate_chosen_categories( $terms );
         }
 
         self::set_object_terms_from_chosen_categories( $product_id, $chosen_categories );
 
         return $chosen_categories;
+    }
+
+    /**
+     * @param int|WC_Product $product
+     *
+     * @return array|\WP_Error
+     */
+    public static function get_product_terms( $product ) {
+        if ( ! $product instanceof WC_Product ) {
+            $product = wc_get_product( $product );
+        }
+
+        if ( ! $product ) {
+            return [];
+        }
+
+        $product_id = 'variation' === $product->get_type() ? $product->get_parent_id() : $product->get_id();
+
+        return wp_get_post_terms( $product_id, 'product_cat', [ 'fields' => 'ids' ] );
     }
 }
