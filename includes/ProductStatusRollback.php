@@ -5,6 +5,7 @@ namespace WeDevs\Dokan;
 use RuntimeException;
 use Throwable;
 use WC_Product;
+use WeDevs\Dokan\Contracts\Hookable;
 
 /**
  * Class to handle product status rollback operations.
@@ -18,7 +19,7 @@ use WC_Product;
  * - Log the status changes and handle errors during the process.
  * - Schedule the next batch operation if there are more products to process.
  */
-class ProductStatusRollback {
+class ProductStatusRollback implements Hookable {
     /**
      * Queue group identifier
      *
@@ -49,7 +50,7 @@ class ProductStatusRollback {
      *
      * @return void
      */
-    private function register_hooks(): void {
+    public function register_hooks(): void {
         add_action( 'dokan_rollback_product_status_reject_to_draft_schedule', array( $this, 'process_reject_operation' ) );
     }
 
