@@ -19,7 +19,8 @@
                             <div class="flex gap-4 items-center">
                                 <!-- Mobile menu toggle button -->
                                 <button
-                                    class="d-xs:flex lg:hidden p-2.5 bg-white border border-gray-400 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-200 ease-in-out group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                    class="d-xs:flex lg:hidden p-2.5 bg-white  dokan-settings-menu-toggle-btn
+                                     rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-200 ease-in-out group outline-none "
                                     @click="openMobileDrawer"
                                 >
                                     <svg
@@ -778,15 +779,19 @@
 </script>
 
 <style lang="less">
+
     .dokan-settings-wrap {
         border: 1px solid #c8d7e1;
         display: flex;
         padding: 20px;
+        z-index: 9999;
         position: relative;
         background: #fff;
         padding-bottom: 100px;
         scroll-margin-top: 65px;
-
+        .dokan-settings-menu-toggle-btn {
+            border: 1px solid #e9e9ea;
+        }
         .loading{
             position: absolute;
             width: 100%;
