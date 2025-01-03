@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.14.5',
+        'released' => '2025-01-03',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Improvement vendor setup wizard ui.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improvement withdraw approved email template.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.14.4',
         'released' => '2024-12-27',
         'changes'  => [
