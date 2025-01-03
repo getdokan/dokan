@@ -16,6 +16,10 @@ $changelog = [
                     'title'       => 'Improvement withdraw approved email template.',
                     'description' => '',
                 ],
+                [
+                    'title'       => 'Dokan admin settings page responsive & update ui design.',
+                    'description' => '',
+                ],
             ],
         ],
     ],

@@ -351,6 +351,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 - **update:** Improvement vendor setup wizard ui.
 - **update:** Improvement withdraw approved email template.
+- **update:** Dokan admin settings page responsive & update ui design.
 
 = v3.14.4 ( Dec 27, 2024 ) =
 
