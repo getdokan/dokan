@@ -1580,6 +1580,9 @@
           vendor can delete booking resource: true
           vendor can add booking for guest customer: true
           vendor can add booking for existing customer: true
+          vendor can add booking with new order id: false
+          vendor can add booking with existing order id: false
+          vendor can add booking without order id : false
           vendor can update booking product title: true
           vendor can add booking product accommodation booking option: true
           vendor can update booking product accommodation booking option: true
