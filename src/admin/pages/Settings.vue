@@ -12,7 +12,7 @@
                 </button>
             </div>
 
-            <div class="dokan-settings-wrap" ref='settingsWrapper'>
+            <div class="dokan-settings-wrap " ref='settingsWrapper'>
                 <div class='flex d-xs:flex-col lg:flex-row w-full'>
                     <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 px-4 py-2 lg:overflow-hidden d-xs:w-full z-[500] lg:w-[340px]">
                         <div class="nab-section block">
@@ -700,11 +700,15 @@
                 this.showMobileDrawer = true;
                 // Clear search text when opening drawer
                 this.searchText = '';
+                const settingsWrap = document.querySelector('.dokan-settings-wrap');
+                settingsWrap.style.zIndex = 9999;
                 this.validateBlankSearch();
             },
 
             closeMobileDrawer() {
                 this.showMobileDrawer = false;
+                const settingsWrap = document.querySelector('.dokan-settings-wrap');
+                settingsWrap.style.zIndex = 1;
             },
             handleSectionClick(section) {
                 this.changeTab(section);
@@ -784,7 +788,6 @@
         border: 1px solid #c8d7e1;
         display: flex;
         padding: 20px;
-        z-index: 9999;
         position: relative;
         background: #fff;
         padding-bottom: 100px;
