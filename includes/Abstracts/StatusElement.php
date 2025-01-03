@@ -12,6 +12,7 @@ abstract class StatusElement {
     protected string $icon = '';
     protected string $type = '';
     protected string $data = '';
+    protected string $hook_key = '';
     protected array $children = [];
 
     /**
@@ -55,6 +56,24 @@ abstract class StatusElement {
      */
     public function set_id( string $id ): StatusElement {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function get_hook_key(): string {
+        return $this->hook_key;
+    }
+
+    /**
+     * @param  string  $hook_key
+     *
+     * @return StatusElement
+     */
+    public function set_hook_key( string $hook_key ): StatusElement {
+        $this->hook_key = $hook_key;
 
         return $this;
     }
@@ -114,10 +133,18 @@ abstract class StatusElement {
     }
 
     /**
-     * @return array
+     * @return array<self>
      */
     public function get_children(): array {
-        return $this->children;
+        $children = array();
+        $filtered_children = apply_filters( $this->get_hook_key() . '_children', $this->children, $this ); // phpcs:ignore.
+
+        foreach ( $filtered_children as $child ) {
+            $child->set_hook_key( $this->get_hook_key() . '_' . $child->get_id() );
+            $children[ $child->get_id() ] = $child;
+        }
+
+        return $children;
     }
 
     /**
@@ -204,13 +231,11 @@ abstract class StatusElement {
      * @return array
      */
     public function render(): array {
-        $children = [];
+        $children = array();
         if ( $this->is_support_children() ) {
-            $children = array_map(
-                function ( $child ) {
-                    return $child->render();
-                }, $this->get_children()
-            );
+            foreach ( $this->get_children() as $child ) {
+                $children[] = $child->render();
+            }
         }
 
         return [
@@ -220,6 +245,7 @@ abstract class StatusElement {
             'icon'        => $this->get_icon(),
             'type'        => $this->get_type(),
             'data'        => $this->escape_data( $this->get_data() ),
+            'hook_key'    => $this->get_hook_key(),
             'children'    => $children,
         ];
     }

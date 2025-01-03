@@ -59,6 +59,7 @@ const entryPoint = {
   'dokan-setup-wizard-commission': './assets/src/js/setup-wizard/commission/index.js',
   // Category commission component styles.
   'dokan-category-commission': '/src/admin/components/Commission/index.js',
+  'dokan-status': '/src/Status/index.tsx',
 };
 
 const updatedConfig = {
