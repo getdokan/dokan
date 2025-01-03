@@ -10,14 +10,7 @@ use WeDevs\Dokan\Contracts\Hookable;
 /**
  * Class to handle product status rollback operations.
  *
- * This class is responsible for processing batch operations to change the status
- * of products from 'reject' to 'draft'. It includes methods to register necessary
- * hooks and to process the batch operation.
- *
- * Use cases:
- * - Automatically change the status of rejected products to draft.
- * - Log the status changes and handle errors during the process.
- * - Schedule the next batch operation if there are more products to process.
+ * Dokan pro schedule an action during deactivation to change product status from `reject` to `draft`.
  */
 class ProductStatusRollback implements Hookable {
     /**
