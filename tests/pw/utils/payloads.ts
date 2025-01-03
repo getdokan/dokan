@@ -4144,9 +4144,15 @@ export const payloads = {
         trusted: 'yes',
         enable_tnc: 'yes',
         show_email: 'yes',
+        sale_only_here: 'yes',
         store_open_close: {
             enabled: 'yes',
         },
+        company_name: faker.company.name(),
+        company_id_number: faker.string.alphanumeric(5),
+        vat_number: faker.string.alphanumeric(10),
+        bank_name: faker.string.alphanumeric(7),
+        bank_iban: faker.finance.iban(),
     },
 
     storeOpenClose: {
@@ -4307,6 +4313,7 @@ export const payloads = {
         vat_number: faker.string.alphanumeric(10),
         bank_name: faker.string.alphanumeric(7),
         bank_iban: faker.finance.iban(),
+        vendor_biography: 'test vendor biography', // todo: api does not support this field create enhancement
         categories: [
             {
                 // id: 74,
@@ -4566,7 +4573,7 @@ export const payloads = {
         billing: {
             first_name: faker.person.firstName(),
             last_name: faker.person.lastName(),
-            company: '',
+            company: faker.company.name(),
             address_1: 'abc street',
             address_2: 'xyz street',
             city: 'New York',
