@@ -354,8 +354,8 @@ const WPostsDataView = ({ navigate }) => {
             header={
                 <Button
                     isPrimary
-                    className={'!bg-dokan-btn'}
                     onClick={() => navigate('/posts/new')}
+                    className={'!bg-dokan-btn !text-dokan-btn hover:bg-dokan-btn-hover hover:text-dokan-btn-hover'}
                 >
                     { __( 'Add New Post', 'dokan' ) }
                 </Button>
