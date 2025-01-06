@@ -7,3 +7,17 @@ export {
     filterSortAndPaginate,
     isItemValid
 } from '@wordpress/dataviews/wp';
+
+export {
+    kebabCase,
+    snakeCase,
+    camelCase,
+    capitalCase,
+    constantCase,
+    dotCase,
+    headerCase,
+    noCase,
+    pascalCase,
+    pathCase,
+    sentenceCase,
+} from './../Utilities';

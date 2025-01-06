@@ -908,10 +908,6 @@ class Assets {
             wp_enqueue_script( 'dokan-react-frontend' );
             wp_enqueue_style( 'dokan-react-frontend' );
 
-            // Enqueue dokan react components scripts.
-            wp_enqueue_script( 'dokan-react-components' );
-            wp_enqueue_style( 'dokan-react-components' );
-
             wp_enqueue_script( 'jquery' );
             wp_enqueue_script( 'jquery-ui' );
             wp_enqueue_script( 'jquery-ui-autocomplete' );

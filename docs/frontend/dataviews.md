@@ -11,6 +11,7 @@
 - [2. Data Properties](#2-data-properties)
     - [data](#data)
     - [namespace](#namespace)
+    - [responsive](#responsive)
     - [fields](#fields)
     - [actions](#actions)
     - [view](#view)
@@ -32,7 +33,7 @@ Also, an example component are designed to interact with WordPress REST APIs and
 
 To use the `DataViewTable` component, we need to register the necessary assets for handling route in `Dokan`. Make sure to include the necessary dependencies while registering the component.
 
-**Important:** For Dokan, you must add dependencies name **dokan-react-components** to your scripts where needed.  
+**Important:** For both **Dokan Free and Pro** versions, you must add the dependency named **dokan-react-components** to the scripts and styles where global components are utilized.
 
 **Example:**
 
@@ -108,13 +109,12 @@ import {
 } from "@wordpress/components";
 
 // For dokan-pro, we will import the `DataViews` component from the @dokan/components package. Otherwise, in free version we will import from the `src/components` directory.
-import { DataViews, useWindowDimensions } from '@dokan/components';
+import { DataViews } from '@dokan/components';
 
 const WPostsDataView = ({ navigate }) => {
     const [ data, setData ] = useState([]);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ totalPosts, setTotalPosts ] = useState(0);
-    const { width: windowWidth } = useWindowDimensions();
 
     // Define the available post statuses which will be use for filter.
     const POST_STATUSES = [
@@ -326,16 +326,11 @@ const WPostsDataView = ({ navigate }) => {
         fetchPosts();
     }, [view]);
 
-    // Set view type `list` for mobile device.
-    useEffect(() => setView({
-        ...view,
-        type: windowWidth <= 768 ? 'list' : 'table',
-    }), [windowWidth]);
-
     return (
         <DataViews
             data={data}
-            namespace='dokan-post-data-view'
+            namespace='post-data-view'
+            // responsive={false} // we can override the table default responsive behavior by passing the `false` value.
             defaultLayouts={{ ...defaultLayouts }}
             fields={fields}
             getItemId={(item) => item.id}
@@ -366,10 +361,6 @@ const WPostsDataView = ({ navigate }) => {
 
 export default WPostsDataView;
 ```
-
-### Output:
-
-<a href="https://ibb.co.com/cQxf7Hn"><img src="https://i.ibb.co.com/JHC6M4J/test-imbb.png" alt="test-imbb" border="0"></a>
 
 ## Features of DataViewTable
 
@@ -411,10 +402,6 @@ const queryArgs = {
 
 // apifetch data from the REST API using the prepared queryArgs.
 ```
-
-### Output:
-
-<a href="https://ibb.co.com/tPs6RGX"><img src="https://i.ibb.co.com/Fqw1prV/Screenshot-2024-12-26-at-11-22-02-AM.png" alt="Screenshot-2024-12-26-at-11-22-02-AM" border="0"></a>
 
 ### Data Sort
 To enable `sorting` functionality for specific columns in the `DataViewTable`, you need to configure both the field definitions and handle the sorting parameters in your data fetching logic.
@@ -541,10 +528,6 @@ if ( !! view?.filters ) {
 // Fetch data using the prepared queryArgs.
 ```
 
-### Output:
-
-<a href="https://ibb.co.com/hc3PxqF"><img src="https://i.ibb.co.com/qCTtLZY/Screenshot-2024-12-26-at-12-10-09-PM.png" alt="Screenshot-2024-12-26-at-12-10-09-PM" border="0"></a>
-
 ### Data Pagination
 The `DataViewTable` component includes built-in pagination functionality. Configure pagination parameters and handle them in your data fetching logic.  
 
@@ -581,10 +564,6 @@ const queryArgs = {
 
 // apifetch data from the REST API using the prepared queryArgs.
 ```
-
-### Output:
-
-<a href="https://ibb.co.com/7vX8YPy"><img src="https://i.ibb.co.com/XXbN21J/Screenshot-2024-12-26-at-12-35-47-PM.png" alt="Screenshot-2024-12-26-at-12-35-47-PM" border="0"></a>
 
 ### Data Bulk Action
 Enable bulk actions on selected items in the `DataViewTable`. We need to configure action definitions and handle bulk operations.
@@ -634,10 +613,6 @@ const queryArgs = {
 // apifetch data from the REST API using the prepared queryArgs.
 ```
 
-### Output:
-
-<a href="https://ibb.co.com/WvYF97S"><img src="https://i.ibb.co.com/B2SjDv8/Screenshot-2024-12-26-at-12-54-30-PM.png" alt="Screenshot-2024-12-26-at-12-54-30-PM" border="0"></a>
-
 ## Data Properties
 
 ### data
@@ -669,6 +644,15 @@ If we can want to modify a table from the outside of module or feature, we can u
         {/* After dokan data table rendered slot */}
         <Slot name={ `dokan-before-vendor-data-table-${ props?.namespace }` } fillProps={{ ...filteredProps }} />
     </div>
+
+### responsive
+
+The `responsive` property controls the `responsiveness` of the `DataViewTable` component. When set to `true`, the table will be responsive and will display `List` view from the `768px` devices. In the large devices, it will display the `Table` view. As default, the `responsive` property is set to `true`. If we want to use the default responsive view then don't need to pass the `responsive` property. `Responsive` property is optional.
+
+    <DataViews
+        // ... other props
+        responsive={false} // Don't need to pass the responsive property if we want to use the default responsive view. If we want to override the default responsive view only then we can pass the `false` value.
+    />
 
 ### fields
 
@@ -810,7 +794,3 @@ A `callback function` that returns the unique identifier for a record. It's used
 ### header
 
 The `header` property allows you to add a custom header to the `DataViewTable` component. It can be a ReactNode or a custom component. Used to display additional content or actions above the table.
-
-#### Output:
-
-<a href="https://ibb.co.com/g4hRMYc"><img src="https://i.ibb.co.com/8Yt7DkQ/Screenshot-2024-12-26-at-11-07-10-PM.png" alt="Screenshot-2024-12-26-at-11-07-10-PM" border="0"></a><br /><a target='_blank' href='https://imgbb.com/'></a><br />
