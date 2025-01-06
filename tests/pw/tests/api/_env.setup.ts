@@ -93,6 +93,7 @@ setup.describe('setup woocommerce settings', () => {
 
         // create attribute, attribute term
         const [, attributeId] = await apiUtils.createAttribute({ name: 'sizes' });
+        helpers.createEnvVar('ATTRIBUTE_ID', attributeId);
         await apiUtils.createAttributeTerm(attributeId, { name: 's' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'l' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
