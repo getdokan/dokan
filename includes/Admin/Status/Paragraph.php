@@ -24,6 +24,8 @@ class Paragraph extends StatusElement {
             'br' => [],
             'em' => [],
             'strong' => [],
+            'span' => [],
+            'code' => [],
         ];
         return wp_kses( $data, $allowed_tags );
     }

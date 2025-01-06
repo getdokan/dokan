@@ -49,7 +49,6 @@ class ServiceProvider extends BootableServiceProvider {
         'widgets'             => \WeDevs\Dokan\Widgets\Manager::class,
         'admin_notices'       => \WeDevs\Dokan\Admin\Notices\Manager::class,
         'tracker'             => \WeDevs\Dokan\Tracker::class,
-        'admin_status'        => \WeDevs\Dokan\Admin\Status\Status::class,
 	];
 
 	/**

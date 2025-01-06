@@ -238,7 +238,7 @@ abstract class StatusElement {
             }
         }
 
-        return [
+        $data = [
             'id'          => $this->get_id(),
             'title'       => $this->get_title(),
             'description' => $this->get_description(),
@@ -248,6 +248,8 @@ abstract class StatusElement {
             'hook_key'    => $this->get_hook_key(),
             'children'    => $children,
         ];
+
+        return apply_filters( 'dokan_status_element_render_' . $this->get_hook_key(), $data, $this );
     }
 
     /**

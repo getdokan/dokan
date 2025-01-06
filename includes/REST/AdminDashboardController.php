@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Admin\Status\Status;
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -176,9 +177,9 @@ class AdminDashboardController extends DokanRESTAdminController {
 
     public function get_status( $request ) {
         /**
-         * @var \WeDevs\Dokan\Admin\Status\Status $status
+         * @var Status $status
          */
-        $status = dokan_get_container()->get( 'admin_status' );
+        $status = dokan_get_container()->get( Status::class );
         $content = $status->render();
 
         return rest_ensure_response( $content );
