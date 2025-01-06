@@ -114,7 +114,7 @@ class ProductStatusRollback implements Hookable {
                      */
                     do_action( 'dokan_after_product_status_rollback', $product, $target_status );
 
-                    ++ $processed;
+                    ++$processed;
                 } catch ( Throwable $e ) {
                     dokan_log(
                         sprintf(
