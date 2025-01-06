@@ -14,7 +14,7 @@
 
             <div class="dokan-settings-wrap " ref='settingsWrapper'>
                 <div class='flex d-xs:flex-col lg:flex-row w-full'>
-                    <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 px-4 py-2 lg:overflow-hidden d-xs:w-full z-[500] w-[250px] lg:w-[340px]">
+                    <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 px-4 py-2 lg:overflow-hidden d-xs:w-full z-[500] lg:w-[340px]">
                         <div class="nab-section block">
                             <div class="flex gap-4 items-center">
                                 <!-- Mobile menu toggle button -->
@@ -136,6 +136,7 @@
                         </div>
                     </div>
 
+
                 <div class="metabox-holder">
                     <fieldset class="settings-header" v-for="section in settingSections" v-if="currentTab === section.id">
                         <div class="settings-content">
@@ -209,6 +210,7 @@
     import Fields from "admin/components/Fields.vue"
     import SettingsBanner from "admin/components/SettingsBanner.vue";
     import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+    import MobileSettingsDrawer from "admin/components/Settings/MobileSettingsList.vue";
 
     export default {
 
@@ -712,6 +714,7 @@
                 this.changeTab(section);
                 this.searchText = '';
             }
+
         },
 
         created() {
@@ -835,7 +838,6 @@
                 font-weight: bold;
                 border-bottom: 1px solid #e9e9ea;
                 transition-property: none;
-                white-space: normal;
 
                 img {
                     width: 20px;
@@ -872,6 +874,7 @@
                     background: #fff !important;
                     //box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
                     transition-property: none;
+
                     &:before {
                         content: '';
                         position: absolute;
