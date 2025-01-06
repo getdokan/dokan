@@ -1544,12 +1544,22 @@ export class ApiUtils {
      */
 
     async createShipStationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.post(endPoints.createShipStationCredential, { data: { vendor_id: vendorId }, headers: auth });
+        const [response, responseBody] = await this.post(endPoints.createShipStationCredential, { data: { vendor_id: vendorId }, headers: auth }, false);
+        if (responseBody.code && responseBody.message == 'The vendor already has API credentials.') {
+            expect(response.status()).toBe(500);
+        } else {
+            expect(response.ok()).toBeTruthy();
+        }
         return responseBody;
     }
 
     async deleteShipStationCredential(vendorId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.delete(endPoints.deleteShipStationCredential(vendorId), { headers: auth });
+        const [response, responseBody] = await this.delete(endPoints.deleteShipStationCredential(vendorId), { headers: auth }, false);
+        if (responseBody.code && responseBody.message == 'Something went wrong to delete credential.') {
+            expect(response.status()).toBe(500);
+        } else {
+            expect(response.ok()).toBeTruthy();
+        }
         return responseBody;
     }
 
@@ -1685,7 +1695,7 @@ export class ApiUtils {
         return helpers.isSubArray(existingPlugins, plugins);
     }
 
-    // get plugin active or not
+    // get plugin active or not [plugin name format : [ dokan, dokan-pro, woocommerce]...]
     async pluginsActiveOrNot(plugins: string[], auth?: auth): Promise<boolean> {
         const activePlugins = (await this.getAllPlugins({ status: 'active' }, auth)).map((a: { plugin: string }) => a.plugin.split('/')[1]);
         return helpers.isSubArray(activePlugins, plugins);
@@ -2361,6 +2371,14 @@ export class ApiUtils {
     // create product addon
     async createProductWithAddon(productPayload: string | object, addonPayload: object[], auth?: auth): Promise<[responseBody, string, string, string[]]> {
         const productId = typeof productPayload === 'object' ? (await this.createProduct(productPayload, auth))[1] : productPayload;
+        const responseBody = await this.updateProduct(productId, { meta_data: [{ key: '_product_addons', value: addonPayload }] }, auth);
+        const productName = String(responseBody?.name);
+        const addonNames = addonPayload.map((item: any) => item.name);
+        return [responseBody, productId, productName, addonNames];
+    }
+
+    async createBookingProductWithAddon(productPayload: string | object, addonPayload: object[], auth?: auth): Promise<[responseBody, string, string, string[]]> {
+        const productId = typeof productPayload === 'object' ? (await this.createBookableProduct(productPayload, auth))[1] : productPayload;
         const responseBody = await this.updateProduct(productId, { meta_data: [{ key: '_product_addons', value: addonPayload }] }, auth);
         const productName = String(responseBody?.name);
         const addonNames = addonPayload.map((item: any) => item.name);
