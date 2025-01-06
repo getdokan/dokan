@@ -272,7 +272,7 @@ class Helper {
             return [];
         }
 
-        $product_id = 'variation' === $product->get_type() ? $product->get_parent_id() : $product->get_id();
+        $product_id = ( 'variation' === $product->get_type() || 'subscription_variation' === $product->get_type() ) ? $product->get_parent_id() : $product->get_id();
 
         $chosen_product_cat = get_post_meta( $product_id, 'chosen_product_cat', true );
 
@@ -321,7 +321,7 @@ class Helper {
             return [];
         }
 
-        $product_id = 'variation' === $product->get_type() ? $product->get_parent_id() : $product->get_id();
+        $product_id = ( 'variation' === $product->get_type() || 'subscription_variation' === $product->get_type() ) ? $product->get_parent_id() : $product->get_id();
 
         return wp_get_post_terms( $product_id, 'product_cat', [ 'fields' => 'ids' ] );
     }

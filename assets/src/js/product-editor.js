@@ -964,7 +964,7 @@
                 }
             }).done( ( response ) => {
                 if ( ! isNaN( response ) ) {
-                    earning_suggestion.html( response );
+                    earning_suggestion.html( Dokan_Editor.formatMoney( response ) );
                 }
 
                 if ( typeof callback === 'function' ) {
@@ -973,10 +973,29 @@
             } );
         },
 
+        formatMoney( amount ) {
+            return accounting.formatMoney( amount, {
+                symbol: dokan.currency_format_symbol,
+                decimal: dokan.currency_format_decimal_sep,
+                thousand: dokan.currency_format_thousand_sep,
+                precision: 4,
+                format: dokan.currency_format,
+            } );
+        },
+
+        unormatMoney( amount ) {
+            return accounting.unformat( amount, dokan.mon_decimal_point );
+        },
+
         earning_suggestion_callbak: function() {
 
             if ( $( '#product_type' ).val() == 'simple' || $( '#product_type' ).text() == '' ) {
-                if ( Number( $('.simple-product span.vendor-price').text() ) < 0  ) {
+                let vandorPrice = $(
+                    '.simple-product span.vendor-price'
+                ).text();
+                vandorPrice = Dokan_Editor.unormatMoney( vandorPrice );
+
+                if ( vandorPrice < 0 ) {
                     $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
                     $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
                     $( 'button[type=submit]' ).attr( 'disabled', 'disabled' );
