@@ -12,14 +12,15 @@
                 </button>
             </div>
 
-            <div class="dokan-settings-wrap" ref='settingsWrapper'>
+            <div class="dokan-settings-wrap " ref='settingsWrapper'>
                 <div class='flex d-xs:flex-col lg:flex-row w-full'>
                     <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 px-4 py-2  flex-1 lg:overflow-hidden d-xs:w-full z-[500] w-[250px] lg:w-[340px]">
                         <div class="nab-section block">
                             <div class="flex gap-4 items-center">
                                 <!-- Mobile menu toggle button -->
                                 <button
-                                    class="d-xs:flex lg:hidden p-2.5 bg-white border border-gray-400 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-200 ease-in-out group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                    class="d-xs:flex lg:hidden p-2.5 bg-white  dokan-settings-menu-toggle-btn
+                                     rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-200 ease-in-out group outline-none "
                                     @click="openMobileDrawer"
                                 >
                                     <svg
@@ -699,11 +700,15 @@
                 this.showMobileDrawer = true;
                 // Clear search text when opening drawer
                 this.searchText = '';
+                const settingsWrap = document.querySelector('.dokan-settings-wrap');
+                settingsWrap.style.zIndex = 9999;
                 this.validateBlankSearch();
             },
 
             closeMobileDrawer() {
                 this.showMobileDrawer = false;
+                const settingsWrap = document.querySelector('.dokan-settings-wrap');
+                settingsWrap.style.zIndex = 1;
             },
             handleSectionClick(section) {
                 this.changeTab(section);
@@ -778,6 +783,7 @@
 </script>
 
 <style lang="less">
+
     .dokan-settings-wrap {
         border: 1px solid #c8d7e1;
         display: flex;
@@ -786,7 +792,9 @@
         background: #fff;
         padding-bottom: 100px;
         scroll-margin-top: 65px;
-
+        .dokan-settings-menu-toggle-btn {
+            border: 1px solid #e9e9ea;
+        }
         .loading{
             position: absolute;
             width: 100%;

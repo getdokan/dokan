@@ -14,7 +14,7 @@
             ]"
         >
             <!-- Drawer Header -->
-            <div class="flex items-center justify-between p-4 border-b mt-8">
+            <div class="flex items-center justify-between px-4 md:pt-4 pt-8 border-b mt-8 mb-4">
                 <h2 class="text-lg font-bold m-0 p-0">{{ __('Settings Menu', 'dokan-lite') }}</h2>
                 <button
                     class="bg-none border-0 p-1"
@@ -27,7 +27,7 @@
             </div>
 
             <!-- Settings List -->
-            <div class="overflow-y-auto h-[calc(100%-64px)]">
+            <div class="overflow-y-auto h-full pb-4 box-border">
                 <template v-for="section in sections">
                     <div
                         :key="section.id"
