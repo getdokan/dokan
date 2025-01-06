@@ -10,6 +10,7 @@ import { customer } from '@utils/interfaces';
 // selectors
 const wholesaleAdmin = selector.admin.dokan.wholesaleCustomer;
 const userInfo = selector.admin.users.userInfo;
+const productsVendor = selector.vendor.product;
 
 export class WholesalePage extends AdminPage {
     constructor(page: Page) {
@@ -20,6 +21,50 @@ export class WholesalePage extends AdminPage {
     customerPage = new CustomerPage(this.page);
 
     // wholesale customers
+
+    // enable wholesale module
+    async enableWholesaleModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(selector.admin.dokan.menus.wholesaleCustomer);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.wholesale);
+
+        // vendor dashboard
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
+        await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
+        await this.toBeVisible(productsVendor.wholesale.wholesaleSection);
+
+        // customer dashboard menu
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cDashboard.becomeWholesaleCustomer);
+    }
+
+    // disable wholesale module
+    async disableWholesaleModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.notToBeVisible(selector.admin.dokan.menus.wholesaleCustomer);
+
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.wholeSaleCustomer);
+        await this.notToBeVisible(wholesaleAdmin.wholesaleCustomerDiv);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.wholesale);
+
+        // vendor dashboard
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
+        await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
+        await this.notToBeVisible(productsVendor.wholesale.wholesaleSection);
+
+        // customer dashboard menu
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.notToBeVisible(selector.customer.cDashboard.becomeWholesaleCustomer);
+    }
 
     // wholesale customers render properly
     async adminWholesaleCustomersRenderProperly() {

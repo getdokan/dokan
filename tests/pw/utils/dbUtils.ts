@@ -224,4 +224,11 @@ export const dbUtils = {
         const res = await dbUtils.dbQuery(query, [vendorId, followerId, currentTime, vendorId, followerId]);
         return res;
     },
+
+    async addStoreMapLocation(sellerId: string) {
+        await dbUtils.setUserMeta(sellerId, 'dokan_geo_latitude', '40.7127753', false);
+        await dbUtils.setUserMeta(sellerId, 'dokan_geo_longitude', '-74.0059728', false);
+        await dbUtils.setUserMeta(sellerId, 'dokan_geo_public', '1', false);
+        await dbUtils.setUserMeta(sellerId, 'dokan_geo_address', 'New York, NY, USA', false);
+    },
 };
