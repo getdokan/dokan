@@ -1,3 +1,7 @@
+### v3.14.1 ( Dec 04, 2024 ) ###
+
+- **fix:** Fixed a issue in the commission upgrader to deal with empty values for product and vendor.
+- 
 ### v3.14.0 ( Dec 02, 2024 ) ###
 
 - **new:** Commission amount now displayed in the product list within the admin dashboard.

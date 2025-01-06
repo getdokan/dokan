@@ -13,6 +13,14 @@ type TestOptions = {
 };
 
 const getFormattedDuration = (milliseconds: number) => {
+    // Handle negative values
+    if (milliseconds < 0) return '0s';
+
+    // Handle values less than 1 second
+    if (milliseconds < 1000) {
+        return Math.round(milliseconds / 100) / 10 + 's';
+    }
+
     const hours = Math.floor(milliseconds / (1000 * 60 * 60));
     const min = Math.floor((milliseconds / (1000 * 60)) % 60);
     const sec = Math.floor((milliseconds / 1000) % 60);
@@ -71,14 +79,31 @@ export default class summaryReport implements Reporter {
 
     onTestEnd(test: TestCase, result: TestResult): void {
         this.testResults[test.id] = test.outcome();
-        if (test.outcome() !== 'skipped') {
-            summary.tests.push(test.title);
-        } else {
-            summary.skipped_tests.push(test.title);
+
+        switch (test.outcome()) {
+            case 'skipped':
+                summary.skipped_tests.push(test.title);
+                break;
+            case 'expected':
+                summary.passed_tests.push(test.title);
+                summary.tests.push(test.title);
+                break;
+            case 'unexpected':
+                if (!summary.failed_tests.includes(test.title)) {
+                    summary.failed_tests.push(test.title);
+                    summary.tests.push(test.title);
+                }
+                break;
+            case 'flaky':
+                summary.flaky_tests.push(test.title);
+                const index = summary.failed_tests.indexOf(test.title);
+                if (index !== -1) {
+                    summary.failed_tests.splice(index, 1);
+                }
+                break;
+            default:
+                break;
         }
-        if (test.outcome() == 'expected') summary.passed_tests.push(test.title);
-        if (test.outcome() == 'unexpected') summary.failed_tests.push(test.title);
-        if (test.outcome() == 'flaky') summary.flaky_tests.push(test.title);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

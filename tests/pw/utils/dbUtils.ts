@@ -173,7 +173,7 @@ export const dbUtils = {
     async updateProductType(productId?: string): Promise<void> {
         // get term ids
         const termIdQuery = `SELECT t1.term_id AS simple_term_id, t2.term_id AS subscription_term_id
-                    FROM (SELECT term_id FROM ${dbPrefix}_terms WHERE name = ? ORDER BY term_id DESC LIMIT 1) t1, ${dbPrefix}_terms t2 
+                    FROM (SELECT term_id FROM ${dbPrefix}_terms WHERE name = ? ORDER BY term_id DESC LIMIT 1) t1, ${dbPrefix}_terms t2
                     WHERE t2.name = ?;
                 `;
         const [termIdQueryResult] = await dbUtils.dbQuery(termIdQuery, ['simple', 'product_pack']);
@@ -181,9 +181,9 @@ export const dbUtils = {
         const subscriptionTermId = termIdQueryResult.subscription_term_id;
         // console.log('simpleTermId:', simpleTermId, 'subscriptionTermId:', subscriptionTermId);
 
-        const termTaxonomyIdQuery = `SELECT  t1.term_taxonomy_id AS simple_term_taxonomy_id,  t2.term_taxonomy_id AS subscription_term_taxonomy_id 
-                    FROM ${dbPrefix}_term_taxonomy t1, ${dbPrefix}_term_taxonomy t2 
-                    WHERE  t1.term_id = ? AND t2.term_id = ?;    
+        const termTaxonomyIdQuery = `SELECT  t1.term_taxonomy_id AS simple_term_taxonomy_id,  t2.term_taxonomy_id AS subscription_term_taxonomy_id
+                    FROM ${dbPrefix}_term_taxonomy t1, ${dbPrefix}_term_taxonomy t2
+                    WHERE  t1.term_id = ? AND t2.term_id = ?;
                 `;
         const [termTaxonomyIdQueryResult] = await dbUtils.dbQuery(termTaxonomyIdQuery, [simpleTermId, subscriptionTermId]);
         const simpleTermTaxonomyId = termTaxonomyIdQueryResult.simple_term_taxonomy_id;
@@ -225,7 +225,9 @@ export const dbUtils = {
         return res;
     },
 
-    async addStoreMapLocation(sellerId: string) {
+    async addStoreBiographyAndMapLocation(sellerId: string) {
+        await dbUtils.updateUserMeta(sellerId, 'dokan_profile_settings', { vendor_biography: 'test biography' });
+        await dbUtils.updateUserMeta(sellerId, 'dokan_profile_settings', { find_address: 'New York, NY, USA' });
         await dbUtils.setUserMeta(sellerId, 'dokan_geo_latitude', '40.7127753', false);
         await dbUtils.setUserMeta(sellerId, 'dokan_geo_longitude', '-74.0059728', false);
         await dbUtils.setUserMeta(sellerId, 'dokan_geo_public', '1', false);

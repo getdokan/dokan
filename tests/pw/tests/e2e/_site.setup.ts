@@ -6,7 +6,7 @@ import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
 
-const { LOCAL, BASE_URL } = process.env;
+const { CI, BASE_URL, DOKAN_PRO } = process.env;
 
 setup.describe('site setup', () => {
     let apiUtils: ApiUtils;
@@ -34,7 +34,7 @@ setup.describe('site setup', () => {
     });
 
     setup('get server url', { tag: ['@lite'] }, async () => {
-        setup.skip(LOCAL, 'skip on local');
+        setup.skip(!CI, 'skip on local');
         const headers = await apiUtils.getSiteHeaders(BASE_URL);
         if (headers.link) {
             const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
@@ -56,11 +56,21 @@ setup.describe('site setup', () => {
     setup('activate Dokan Lite', { tag: ['@lite'] }, async () => {
         const [response] = await apiUtils.updatePlugin(data.plugin.pluginList.dokanLite, { status: 'active' }, payloads.adminAuth);
         expect(response.ok()).toBeTruthy();
+
+        // deactivate Dokan Pro if DOKAN_PRO is false
+        if (!DOKAN_PRO) {
+            const isActivated = await apiUtils.pluginsActiveOrNot([data.plugin.pluginList.dokanPro], payloads.adminAuth);
+            if (isActivated) {
+                const [response] = await apiUtils.updatePlugin(data.plugin.pluginList.dokanPro, { status: 'inactive' }, payloads.adminAuth);
+                expect(response.ok()).toBeTruthy();
+                console.log('Dokan Pro is deactivated');
+            }
+        }
     });
 
     setup('activate Dokan Pro', { tag: ['@pro'] }, async () => {
         // remove dokan pro plugin requirements (dokan-lite)
-        if (LOCAL) await helpers.exeCommand(data.commands.removeLiteRequired);
+        if (!CI) await helpers.exeCommand(data.commands.removeLiteRequired);
 
         const [response] = await apiUtils.updatePlugin(data.plugin.pluginList.dokanPro, { status: 'active' }, payloads.adminAuth);
         expect(response.ok()).toBeTruthy();
