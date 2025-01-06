@@ -14,7 +14,7 @@
 
             <div class="dokan-settings-wrap " ref='settingsWrapper'>
                 <div class='flex d-xs:flex-col lg:flex-row w-full'>
-                    <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 px-4 py-2 lg:overflow-hidden d-xs:w-full z-[500] lg:w-[340px]">
+                    <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 px-4 py-2 lg:overflow-hidden d-xs:w-full z-[500] w-[250px] flex-1 lg:w-[340px]">
                         <div class="nab-section block">
                             <div class="flex gap-4 items-center">
                                 <!-- Mobile menu toggle button -->
@@ -838,6 +838,7 @@
                 font-weight: bold;
                 border-bottom: 1px solid #e9e9ea;
                 transition-property: none;
+                white-space: normal;
 
                 img {
                     width: 20px;
