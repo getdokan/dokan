@@ -7,7 +7,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
 
-const { VENDOR_ID } = process.env;
+const { DOKAN_PRO, VENDOR_ID } = process.env;
 
 test.describe('Payments test', () => {
     let admin: PaymentsPage;
@@ -26,12 +26,26 @@ test.describe('Payments test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         // await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: [] });
+        if (DOKAN_PRO) {
+            await apiUtils.activateModules(payloads.moduleIds.mangopay, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.paypalMarketplace, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.razorpay, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.stripe, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.stripeExpress, payloads.adminAuth);
+        }
     });
 
     test.afterAll(async () => {
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);
         await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', dbData.testData.dokan.paymentSettings);
         // await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
+        if (DOKAN_PRO) {
+            await apiUtils.activateModules(payloads.moduleIds.mangopay, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.paypalMarketplace, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.razorpay, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.stripe, payloads.adminAuth);
+            await apiUtils.activateModules(payloads.moduleIds.stripeExpress, payloads.adminAuth);
+        }
         await aPage.close();
         await vPage.close();
         await apiUtils.dispose();
@@ -48,27 +62,48 @@ test.describe('Payments test', () => {
         await admin.setupBasicPaymentMethods(data.payment);
     });
 
-    test.skip('admin can add stripe payment method', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can enable MangoPay module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableMangoPayModule();
+    });
+
+    test('admin can enable PayPal Marketplace module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enablePayPalMarketplaceModule();
+    });
+
+    test('admin can enable Razorpay module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableRazorpayModule();
+    });
+
+    test('admin can enable Stripe Connect module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableStripeConnectModule();
+    });
+
+    test('admin can enable Stripe Express module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableStripeExpressModule();
+    });
+
+    test('admin can add stripe payment method', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);
         await admin.setupStripeConnect(data.payment);
     });
 
-    test.skip('admin can add Paypal Marketplace payment method', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can add Paypal Marketplace payment method', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);
         await admin.setupPaypalMarketPlace(data.payment);
     });
 
-    test.skip('admin can add Mangopay payment method', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can add Mangopay payment method', { tag: ['@pro', '@admin'] }, async () => {
+        test.slow();
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);
         await admin.setupMangoPay(data.payment);
     });
 
-    test.skip('admin can add Razorpay payment method', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can add Razorpay payment method', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.updateBatchWcSettingsOptions('general', { update: [{ id: 'woocommerce_currency', value: 'INR' }] }, payloads.adminAuth);
         await admin.setupRazorpay(data.payment);
     });
 
-    test.skip('admin can add Strip Express payment method', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can add Strip Express payment method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setupStripeExpress(data.payment);
     });
 
@@ -137,5 +172,32 @@ test.describe('Payments test', () => {
     test('vendor can remove custom payment method', { tag: ['@pro', '@vendor'] }, async () => {
         await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: { dokan_custom: { value: '0123456789' } } });
         await vendor.removeBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
+    });
+
+    // admin
+
+    test('admin can disable MangoPay module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.mangopay, payloads.adminAuth);
+        await admin.disableMangoPayModule();
+    });
+
+    test('admin can disable PayPal Marketplace module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.paypalMarketplace, payloads.adminAuth);
+        await admin.disablePayPalMarketplaceModule();
+    });
+
+    test('admin can disable Razorpay module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.razorpay, payloads.adminAuth);
+        await admin.disableRazorpayModule();
+    });
+
+    test('admin can disable Stripe Connect module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.stripe, payloads.adminAuth);
+        await admin.disableStripeConnectModule();
+    });
+
+    test('admin can disable Stripe Express module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.stripeExpress, payloads.adminAuth);
+        await admin.disableStripeExpressModule();
     });
 });
