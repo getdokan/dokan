@@ -347,7 +347,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
-### v3.14.5 ( Jan 06, 2025 ) ###
+### v3.14.5 ( Jan 03, 2025 ) ###
 
 - **update:** Improvement vendor setup wizard ui.
 - **update:** Improvement withdraw approved email template.

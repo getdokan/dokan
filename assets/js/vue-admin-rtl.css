@@ -2891,6 +2891,7 @@ ul.dokan-settings-repeatable-list li span.remove-item {
   font-weight: bold;
   border-bottom: 1px solid #e9e9ea;
   transition-property: none;
+  white-space: normal;
 }
 .dokan-settings-wrap div.nav-tab-wrapper .nav-tab img {
   width: 20px;
