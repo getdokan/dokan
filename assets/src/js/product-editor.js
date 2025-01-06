@@ -949,6 +949,8 @@
                 return $(this).val();
             }).get();
 
+            let priceAmount = sale_price ? sale_price : product_price;
+
             jQuery.ajax({
                 url: window.dokan.rest.root + `dokan/v1/commission`,
                 beforeSend: function ( xhr ) {
@@ -957,7 +959,7 @@
                 type: 'GET',
                 data: {
                     product_id: product_id,
-                    amount: sale_price ? sale_price : product_price,
+                    amount: priceAmount ? priceAmount : 0,
                     // vendor_id
                     category_ids,
                     context: 'seller'
