@@ -2,9 +2,9 @@ import { DataViews } from '@wordpress/dataviews/wp';
 import { Slot } from "@wordpress/components";
 import { ViewportDimensions } from '@/Hooks/ViewportDimensions';
 import type { Action, Field, SupportedLayouts, View } from "@wordpress/dataviews/src/types";
-import { kebabCase, snakeCase } from './../index';
+import { kebabCase, snakeCase } from "@/utilities";
+import { useWindowDimensions } from "@/components";
 import { useEffect } from "@wordpress/element";
-import { useWindowDimensions } from "../index";
 import type { ReactNode } from "react";
 import './style.scss';
 
@@ -36,11 +36,16 @@ type DataViewsProps< Item > = {
     ? { getItemId?: ( item: Item ) => string }
     : { getItemId: ( item: Item ) => string } );
 
-const applyFiltersToTableElements = (namespace: string, elementName: string, element) => {
-    return wp.hooks.applyFilters( `dokan_${ snakeCase( namespace ) }_dataviews_${elementName}`, element );
+const applyFiltersToTableElements = (namespace: string, elementName: string, element, props: DataViewsProps) => {
+    const snakeCaseNamespace = snakeCase(namespace);
+    return wp.hooks.applyFilters( `dokan_${snakeCaseNamespace}_dataviews_${elementName}`, element, { ...props } );
 };
 
 const DataViewTable = ( props: DataViewsProps< Item > ) => {
+    if ( ! props.namespace ) {
+        throw new Error( 'Namespace is required for the DataViewTable component' );
+    }
+
     const { width: windowWidth } = useWindowDimensions();
     const {
         responsive = true,
@@ -54,10 +59,10 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
 
     const filteredProps = {
         ...props,
-        data: applyFiltersToTableElements( namespace, 'data', data ),
-        view: applyFiltersToTableElements( namespace, 'view', view ),
-        fields: applyFiltersToTableElements( namespace, 'fields', fields ),
-        actions: applyFiltersToTableElements( namespace, 'actions', actions ),
+        data: applyFiltersToTableElements( namespace, 'data', data, props ),
+        view: applyFiltersToTableElements( namespace, 'view', view, props ),
+        fields: applyFiltersToTableElements( namespace, 'fields', fields, props ),
+        actions: applyFiltersToTableElements( namespace, 'actions', actions, props ),
     };
 
     const tableNameSpace = kebabCase( namespace );
@@ -69,7 +74,7 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
     }
 
     return (
-        <div id={ tableNameSpace }>
+        <div id={ tableNameSpace } className={ `dokan-dashboard-datatable` }>
             {/* Before dokan data table rendered slot */}
             <Slot name={ `dokan-before-vendor-data-table-${ tableNameSpace }` } fillProps={{ ...filteredProps }} />
             <DataViews { ...filteredProps } />

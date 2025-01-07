@@ -392,10 +392,12 @@ class Assets {
         $react_components_asset  = require DOKAN_DIR . '/assets/js/components.asset.php';
         $frontend_shipping_asset = require DOKAN_DIR . '/assets/js/frontend.asset.php';
 
-        $suffix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-        $asset_url      = DOKAN_PLUGIN_ASSEST;
-        $asset_path     = DOKAN_DIR . '/assets/';
-        $bootstrap_deps = [ 'dokan-vue-vendor', 'wp-i18n', 'wp-hooks' ];
+        $suffix     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+        $asset_url  = DOKAN_PLUGIN_ASSEST;
+        $asset_path = DOKAN_DIR . '/assets/';
+
+        $bootstrap_deps                           = [ 'dokan-vue-vendor', 'wp-i18n', 'wp-hooks' ];
+        $react_components_asset['dependencies'][] = 'dokan-utilities';
 
         $scripts = [
             'jquery-tiptip'             => [
@@ -589,6 +591,11 @@ class Assets {
                 'src'     => $asset_url . '/js/frontend.js',
                 'deps'    => $frontend_shipping_asset['dependencies'],
                 'version' => $frontend_shipping_asset['version'],
+            ],
+            'dokan-utilities'        => [
+                'deps'    => [],
+                'src'     => $asset_url . '/js/utilities.js',
+                'version' => filemtime( $asset_path . 'js/utilities.js' ),
             ],
             'dokan-react-components'    => [
                 'src'     => $asset_url . '/js/components.js',

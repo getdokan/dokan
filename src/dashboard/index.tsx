@@ -1,7 +1,7 @@
 import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
-import Layout from '../Layout';
-import getRoutes, { withRouter } from '../Routing';
+import Layout from '../layout';
+import getRoutes, { withRouter } from '../routing';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import './tailwind.scss';
 
