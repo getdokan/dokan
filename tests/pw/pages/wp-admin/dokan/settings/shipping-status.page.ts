@@ -1,18 +1,6 @@
 import { BasePage } from '@pages/basePage';
 
 export default class DokanShippingStatusPage extends BasePage {
-    shippingStatusTab() {
-        return this.page.locator('//div[@class="nav-title"][text()="Shipping Status"]');
-    }
-
-    allowShipmentTrackingCheckbox() {
-        return this.page.locator('(//p/../following-sibling::div/label/label)[1]');
-    }
-
-    allowMarkAsReceivedCheckbox() {
-        return this.page.locator('(//p/../following-sibling::div/label/label)[2]');
-    }
-
     async shippingStatusItem(status: string) {
         const list = this.page.locator('//ul[@class="dokan-settings-repeatable-list"]/li').all();
 
@@ -27,23 +15,19 @@ export default class DokanShippingStatusPage extends BasePage {
         return locator;
     }
 
-    saveChangesButton() {
-        return this.page.locator('#submit');
-    }
-
     async clickOnShippingStatusTab() {
-        await this.shippingStatusTab().click();
+        await this.page.locator('//div[@class="nav-title"][text()="Shipping Status"]').click();
     }
 
     async clickOnAllowShipmentTrackingCheckbox() {
-        await this.allowShipmentTrackingCheckbox().click();
+        await this.page.locator('(//p/../following-sibling::div/label/label)[1]').click();
     }
 
     async clickOnAllowMarkAsReceivedCheckbox() {
-        await this.allowMarkAsReceivedCheckbox().click();
+        await this.page.locator('(//p/../following-sibling::div/label/label)[2]').click();
     }
 
     async clickOnSaveChangesButton() {
-        await this.saveChangesButton().click();
+        await this.page.locator('#submit').click();
     }
 }

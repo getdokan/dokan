@@ -1,14 +1,6 @@
 import { BasePage } from '@pages/basePage';
 
 export default class CartPage extends BasePage {
-    quantityInputFieldFor(productTitle: string) {
-        return this.page.locator(`//div[@class="quantity"]/label[contains(text(), "${productTitle}")]/following-sibling::input`);
-    }
-
-    updateCartButton() {
-        return this.page.locator('//button[@name="update_cart"]');
-    }
-
     quantityErrorElement() {
         return this.page.locator('//td[@class="product-quantity"]/div[@class="required"]');
     }
@@ -18,10 +10,14 @@ export default class CartPage extends BasePage {
     }
 
     async enterQuantityValue(productTitle: string, quantityValue: string) {
-        await this.quantityInputFieldFor(productTitle).fill(quantityValue);
+        await this.page.locator(`//div[@class="quantity"]/label[contains(text(), "${productTitle}")]/following-sibling::input`).fill(quantityValue);
     }
 
     async clickOnUpdateCartButton() {
-        await this.updateCartButton().click();
+        await this.page.locator('//button[@name="update_cart"]').click();
+    }
+
+    async removeProductByName(productName: string) {
+        await this.page.locator(`//div[@class="quantity"]/label[contains(text(), "${productName}")]/../../../td[1]/a`).click();
     }
 }
