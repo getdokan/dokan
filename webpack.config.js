@@ -11,7 +11,10 @@ const updatedConfig = {
   entry: {
     ...entryPoints,
     'components': {
-      import: '@/Components/index.tsx',
+      import: '@/components/index.tsx',
+    },
+    'utilities': {
+      import: '@/utilities/index.ts',
     },
   },
   output: {
