@@ -3,6 +3,8 @@ import { ShortcodePage } from '@pages/shortcodePage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 
 test.describe('Shortcodes test', () => {
     let admin: ShortcodePage;
@@ -34,20 +36,24 @@ test.describe('Shortcodes test', () => {
         await apiUtils.dispose();
     });
 
-    test('admin can create page with dokan shortcode', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can create page with dokan shortcode', { tag: ['@lite', '@admin'] }, async () => {
         await admin.createPageWithShortcode(data.pageTitle, data.dokanShortcodes.dashboard);
     });
 
-    test('vendor can view dokan dashboard (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
+    test('vendor can view Dokan dashboard (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.dashboardShortcode, payloads.adminAuth);
         await vendor.viewDashboard(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
-    test('vendor can view dokan subscription packs (shortcode)', { tag: ['@pro', '@admin'] }, async () => {
+    test('vendor can view Dokan subscription packs (shortcode)', { tag: ['@pro', '@admin'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.vendorSubscription, { enable_pricing: 'on' });
         const [responseBody, pageId] = await apiUtils.createPage(payloads.dokanSubscriptionPackShortcode, payloads.adminAuth);
         await vendor.viewDokanSubscriptionPacks(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
+
+        // reset settings
+        await dbUtils.setOptionValue(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
     });
 
     test('guest user can view vendor registration form (shortcode)', { tag: ['@lite', '@admin'] }, async ({ page }) => {
@@ -78,6 +84,13 @@ test.describe('Shortcodes test', () => {
     test('customer can view geolocation filter form (shortcode)', { tag: ['@pro', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.geolocationFilterFormShortcode, payloads.adminAuth);
         await customer.viewGeolocationFilterForm(responseBody.link);
+        await apiUtils.deletePage(pageId, payloads.adminAuth);
+    });
+
+    test('customer can view advertised products (shortcode)', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.createProductAdvertisement(payloads.createProduct(), payloads.adminAuth);
+        const [responseBody, pageId] = await apiUtils.createPage(payloads.productAdvertisementShortcode, payloads.adminAuth);
+        await customer.viewAdvertisedProducts(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 

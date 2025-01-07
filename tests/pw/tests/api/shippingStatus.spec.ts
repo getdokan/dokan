@@ -1,8 +1,10 @@
 //COVERAGE_TAG: GET /dokan/v1/shipping-status
-//COVERAGE_TAG: GET /dokan/v1/shipping-status/orders/(?P<order_id>[\\d]+)
-//COVERAGE_TAG: POST /dokan/v1/shipping-status/orders/(?P<order_id>[\\d]+)
-//COVERAGE_TAG: GET /dokan/v1/shipping-status/orders/(?P<order_id>[\\d]+)/shipment/(?P<id>[\\d]+)
-//COVERAGE_TAG: PUT /dokan/v1/shipping-status/orders/(?P<order_id>[\\d]+)/shipment/(?P<id>[\\d]+)
+//COVERAGE_TAG: GET /dokan/v1/shipping-status/orders/(?P<order_id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/shipping-status/orders/(?P<order_id>[\d]+)
+//COVERAGE_TAG: GET /dokan/v1/shipping-status/orders/(?P<order_id>[\d]+)/shipment/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/shipping-status/orders/(?P<order_id>[\d]+)/shipment/(?P<id>[\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/shipping-status/orders/(?P<order_id>[\d]+)/shipment/(?P<id>[\d]+)
+// delete method doesn't exists on dokan
 
 import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';

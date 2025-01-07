@@ -57,7 +57,7 @@ export class WithdrawsPage extends AdminPage {
                 break;
 
             case 'by-payment-method':
-                // add toPass to remove flakyness
+                // add toPass to remove flakiness
                 await this.toPass(async () => {
                     await this.reload(); // todo: need to resolve this
                     await this.click(withdrawsAdmin.filters.filterByPaymentMethods);
@@ -114,6 +114,7 @@ export class WithdrawsPage extends AdminPage {
             default:
                 break;
         }
+        await this.notToBeVisible(withdrawsAdmin.withdrawCell(vendorName));
     }
 
     // withdraw bulk action
@@ -224,7 +225,7 @@ export class WithdrawsPage extends AdminPage {
     // vendor add auto withdraw disbursement schedule
     async addAutoWithdrawDisbursementSchedule(withdraw: vendor['withdraw']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.withdraw);
-        await this.enableSwitcherDisbursement(withdrawsVendor.autoWithdrawDisbursement.enableSchedule);
+        await this.enableSwitcherVendorDashboard(withdrawsVendor.autoWithdrawDisbursement.enableSchedule);
         await this.click(withdrawsVendor.autoWithdrawDisbursement.editSchedule);
         await this.selectByValue(withdrawsVendor.autoWithdrawDisbursement.preferredPaymentMethod, withdraw.preferredPaymentMethod);
         await this.click(withdrawsVendor.autoWithdrawDisbursement.preferredSchedule(withdraw.preferredSchedule));

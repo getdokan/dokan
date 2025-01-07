@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin;
 
+use stdClass;
+
 /**
  * Setup wizard class
  *
@@ -9,9 +11,11 @@ namespace WeDevs\Dokan\Admin;
  */
 class SetupWizard {
 
-    /** @var string Currenct Step */
-    protected $step = '';
+    /** @var string Current Step */
+    protected string $current_step = '';
 
+    /** @var string custom logo url of the theme */
+    protected $custom_logo = '';
     /** @var array Steps for the setup wizard */
     protected $steps = [];
 
@@ -91,6 +95,40 @@ class SetupWizard {
         wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', [ 'dashicons', 'install' ], WC_VERSION );
         wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup.css', [ 'wc-setup' ], DOKAN_PLUGIN_VERSION );
 
+        wp_enqueue_script(
+            'dokan-vue-bootstrap',
+            DOKAN_PLUGIN_ASSEST . '/js/vue-bootstrap.js',
+            [ 'dokan-vue-vendor', 'dokan-i18n-jed', 'wp-hooks' ],
+            DOKAN_PLUGIN_VERSION,
+            [ 'in_footer' => true ]
+        );
+
+        wp_localize_script(
+            'dokan-vue-bootstrap',
+            'dokan',
+            dokan()->scripts->get_admin_localized_scripts()
+        );
+        wp_enqueue_script(
+            'dokan-setup-wizard-commission',
+            DOKAN_PLUGIN_ASSEST . '/js/dokan-setup-wizard-commission.js',
+            array( 'jquery', 'dokan-vue-bootstrap', 'dokan-accounting' ),
+            DOKAN_PLUGIN_VERSION,
+            [ 'in_footer' => true ]
+        );
+        wp_enqueue_style(
+            'dokan-setup-wizard-commission',
+            DOKAN_PLUGIN_ASSEST . '/css/dokan-setup-wizard-commission.css',
+            [ 'dokan-setup' ],
+            DOKAN_PLUGIN_VERSION
+        );
+
+        wp_enqueue_style(
+            'dokan-category-commission',
+            DOKAN_PLUGIN_ASSEST . '/css/dokan-category-commission.css',
+            [],
+            DOKAN_PLUGIN_VERSION
+        );
+
         if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
             wp_enqueue_style( 'dokan-fontawesome' );
         }
@@ -155,10 +193,15 @@ class SetupWizard {
                     'view'    => [ $this, 'dokan_setup_store' ],
                     'handler' => [ $this, 'dokan_setup_store_save' ],
                 ],
-                'selling'      => [
+                'selling'     => [
                     'name'    => __( 'Selling', 'dokan-lite' ),
                     'view'    => [ $this, 'dokan_setup_selling' ],
                     'handler' => [ $this, 'dokan_setup_selling_save' ],
+                ],
+                'commission'  => [
+                    'name'    => __( 'Commission', 'dokan-lite' ),
+                    'view'    => [ $this, 'dokan_setup_commission' ],
+                    'handler' => [ $this, 'dokan_setup_commission_save' ],
                 ],
                 'withdraw'     => [
                     'name'    => __( 'Withdraw', 'dokan-lite' ),
@@ -225,10 +268,10 @@ class SetupWizard {
             unset( $this->steps['recommended'] );
         }
 
-        $this->step = current( array_keys( $this->steps ) );
+        $this->current_step = current( array_keys( $this->steps ) );
         // get step from url
         if ( isset( $_GET['_admin_sw_nonce'], $_GET['step'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_admin_sw_nonce'] ) ), 'dokan_admin_setup_wizard_nonce' ) ) {
-            $this->step = sanitize_key( wp_unslash( $_GET['step'] ) );
+            $this->current_step = sanitize_key( wp_unslash( $_GET['step'] ) );
         }
 
         $this->enqueue_scripts();
@@ -237,8 +280,8 @@ class SetupWizard {
             isset( $_POST['_wpnonce'], $_POST['save_step'] )
             && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'dokan-setup' )
             && ! empty( $_POST['save_step'] )
-            && isset( $this->steps[ $this->step ]['handler'] ) ) {
-            call_user_func_array( $this->steps[ $this->step ]['handler'], [ $this ] );
+            && isset( $this->steps[ $this->current_step ]['handler'] ) ) {
+            call_user_func_array( $this->steps[ $this->current_step ]['handler'], [ $this ] );
         }
 
         ob_start();
@@ -251,7 +294,7 @@ class SetupWizard {
 
         return add_query_arg(
             [
-                'step' => $keys[ array_search( $this->step, array_keys( $this->steps ), true ) + 1 ],
+                'step' => $keys[ array_search( $this->current_step, array_keys( $this->steps ), true ) + 1 ],
                 '_admin_sw_nonce' => wp_create_nonce( 'dokan_admin_setup_wizard_nonce' ),
             ]
         );
@@ -269,10 +312,14 @@ class SetupWizard {
             <meta name="viewport" content="width=device-width"/>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
             <title><?php esc_html_e( 'Dokan &rsaquo; Setup Wizard', 'dokan-lite' ); ?></title>
-            <?php wp_print_scripts(); ?>
-            <?php do_action( 'admin_print_styles' ); ?>
-            <?php do_action( 'admin_head' ); ?>
-            <?php do_action( 'dokan_setup_wizard_styles' ); ?>
+            <?php
+            wp_print_scripts();
+            wp_enqueue_emoji_styles();
+            do_action( 'admin_print_styles' );
+            wp_enqueue_admin_bar_header_styles();
+            do_action( 'admin_head' );
+            do_action( 'dokan_setup_wizard_styles' );
+            ?>
         </head>
         <body class="wc-setup dokan-admin-setup-wizard wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : ''; ?>">
         <?php
@@ -287,7 +334,7 @@ class SetupWizard {
      */
     public function setup_wizard_footer() {
         ?>
-        <?php if ( 'next_steps' === $this->step ) : ?>
+        <?php if ( 'next_steps' === $this->current_step ) : ?>
             <a class="wc-return-to-dashboard" href="<?php echo esc_url( admin_url() ); ?>"><?php esc_html_e( 'Return to the WordPress Dashboard', 'dokan-lite' ); ?></a>
         <?php endif; ?>
         </body>
@@ -306,9 +353,9 @@ class SetupWizard {
             <?php foreach ( $ouput_steps as $step_key => $step ) : ?>
                 <li class="
                 <?php
-                if ( $step_key === $this->step ) {
+                if ( $step_key === $this->current_step ) {
                     echo 'active';
-                } elseif ( array_search( $this->step, array_keys( $this->steps ), true ) > array_search( $step_key, array_keys( $this->steps ), true ) ) {
+                } elseif ( array_search( $this->current_step, array_keys( $this->steps ), true ) > array_search( $step_key, array_keys( $this->steps ), true ) ) {
                     echo 'done';
                 }
                 ?>
@@ -322,13 +369,13 @@ class SetupWizard {
      * Output the content for the current step.
      */
     public function setup_wizard_content() {
-        if ( empty( $this->steps[ $this->step ]['view'] ) ) {
+        if ( empty( $this->steps[ $this->current_step ]['view'] ) ) {
             wp_safe_redirect( esc_url_raw( add_query_arg( 'step', 'introduction' ) ) );
             exit;
         }
 
         echo '<div class="wc-setup-content">';
-        call_user_func( $this->steps[ $this->step ]['view'] );
+        call_user_func( $this->steps[ $this->current_step ]['view'] );
         echo '</div>';
     }
 
@@ -457,6 +504,35 @@ class SetupWizard {
     }
 
     /**
+     * Commission step.
+     *
+     * @since 3.14.5
+     *
+     * @return void
+     */
+    public function dokan_setup_commission() {
+        $options = get_option( 'dokan_selling', [ 'admin_percentage' => 10 ] );
+
+        $admin_percentage                 = isset( $options['admin_percentage'] ) ? $options['admin_percentage'] : 10;
+        $additional_fee                   = isset( $options['additional_fee'] ) ? $options['additional_fee'] : 0;
+        $commission_category_based_values = isset( $options['commission_category_based_values'] ) ? $options['commission_category_based_values'] : new stdClass();
+        $commission_type                  = ! empty( $options['commission_type'] ) ? $options['commission_type'] : 'fixed';
+
+        $args = apply_filters(
+            'dokan_admin_setup_wizard_step_setup_selling_template_args', [
+                'commission_type'                  => $commission_type,
+                'admin_percentage'                 => $admin_percentage,
+                'additional_fee'                   => $additional_fee,
+                'commission_category_based_values' => $commission_category_based_values,
+                'dokanCommission'                  => dokan_commission_types(),
+                'setup_wizard'                     => $this,
+            ]
+        );
+
+        dokan_get_template( 'admin-setup-wizard/step-commission.php', $args );
+    }
+
+    /**
      * Save selling options.
      */
     public function dokan_setup_selling_save() {
@@ -464,13 +540,40 @@ class SetupWizard {
 
         $options                              = get_option( 'dokan_selling', [] );
         $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? 'on' : 'off';
-        $options['commission_type']           = isset( $_POST['commission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['commission_type'] ) ) : '';
-        $options['admin_percentage']          = isset( $_POST['admin_percentage'] ) ? wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['admin_percentage'] ) ) ) : 0;
         $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
 
         update_option( 'dokan_selling', $options );
 
         do_action( 'dokan_admin_setup_wizard_save_step_setup_selling', $options, [] );
+
+        wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
+        exit;
+    }
+
+    /**
+     * Save commission options.
+     *
+     * @since 3.14.5
+     *
+     * @return void
+     */
+    public function dokan_setup_commission_save() {
+        check_admin_referer( 'dokan-setup' );
+
+        $dokan_commission_percentage = isset( $_POST['dokan_commission_percentage'] ) ? (float) wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['dokan_commission_percentage'] ) ) ) : 0;
+        if ( $dokan_commission_percentage < 0 || $dokan_commission_percentage > 100 ) {
+            $dokan_commission_percentage = 0;
+        }
+
+        $options                                     = get_option( 'dokan_selling', [] );
+        $options['commission_type']                  = isset( $_POST['dokan_commission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_type'] ) ) : 'fixed';
+        $options['admin_percentage']                 = $dokan_commission_percentage;
+        $options['additional_fee']                   = isset( $_POST['dokan_commission_flat'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_flat'] ) ) : 0;
+        $options['commission_category_based_values'] = isset( $_POST['dokan_commission_category_based'] ) ? wc_clean( json_decode( sanitize_text_field( wp_unslash( $_POST['dokan_commission_category_based'] ) ), true ) ) : [];
+
+        update_option( 'dokan_selling', $options );
+
+        do_action( 'dokan_admin_setup_wizard_save_step_setup_commission', $options, [] );
 
         wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
@@ -734,12 +837,12 @@ class SetupWizard {
         $options['withdraw_methods']      = ! empty( $_POST['withdraw_methods'] ) ? wc_clean( wp_unslash( $_POST['withdraw_methods'] ) ) : [];
         $options['withdraw_order_status'] = ! empty( $_POST['withdraw_order_status'] ) ? wc_clean( wp_unslash( $_POST['withdraw_order_status'] ) ) : [];
 
-		if ( ! empty( $_POST['withdraw_limit'] ) ) {
-				$input_limit                = sanitize_text_field( wp_unslash( $_POST['withdraw_limit'] ) );
-				$options['withdraw_limit']  = is_numeric( $input_limit ) && $input_limit >= 0 ? wc_format_decimal( $input_limit ) : 0;
-		} else {
-			$options['withdraw_limit'] = 0;
-		}
+        if ( ! empty( $_POST['withdraw_limit'] ) ) {
+            $input_limit                = sanitize_text_field( wp_unslash( $_POST['withdraw_limit'] ) );
+            $options['withdraw_limit']  = is_numeric( $input_limit ) && $input_limit >= 0 ? wc_format_decimal( $input_limit ) : 0;
+        } else {
+            $options['withdraw_limit'] = 0;
+        }
 
         /**
          * Filter dokan_withdraw options before saving in setup wizard

@@ -49,4 +49,8 @@ test.describe('Dashboard test', () => {
     test('vendor can view vendor dashboard', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorDashboardRenderProperly();
     });
+
+    test('vendor can view vendor dashboard menus', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+        await vendor.vendorDashboardMenusRenderProperly();
+    });
 });

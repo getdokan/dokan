@@ -8,6 +8,7 @@ import { reverseWithdraw, date } from '@utils/interfaces';
 // selectors
 const reverseWithdrawAdmin = selector.admin.dokan.reverseWithdraw;
 const reverseWithdrawVendor = selector.vendor.vReverseWithdrawal;
+const vendorDashboard = selector.vendor.vDashboard;
 
 export class ReverseWithdrawsPage extends CustomerPage {
     constructor(page: Page) {
@@ -21,7 +22,7 @@ export class ReverseWithdrawsPage extends CustomerPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.settings);
 
         await this.click(selector.admin.dokan.settings.menus.reverseWithdrawal);
-        await this.clickAndWaitForLoadState(selector.admin.dokan.settings.reverseWithdraw.reverseWithdrawSaveChanges);
+        await this.clickAndWaitForLoadState(selector.admin.dokan.settings.saveChanges);
     }
 
     // reverse withdraw render properly
@@ -160,13 +161,13 @@ export class ReverseWithdrawsPage extends CustomerPage {
     // vendor can't withdraw when reverse withdrawal rule applied
     async vendorCantWithdraw() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.dashboard);
-        await this.notToBeVisible(selector.vendor.vDashboard.menus.withdraw);
+        await this.notToBeVisible(vendorDashboard.menus.primary.withdraw);
     }
 
     // vendor status is inactive when reverse withdrawal rule applied
     async vendorStatusInactive() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.dashboard);
-        await this.toContainText(selector.vendor.vDashboard.dokanNotice, 'Error! Your account is not enabled for selling, please contact the admin');
+        await this.toContainText(vendorDashboard.dokanNotice, 'Error! Your account is not enabled for selling, please contact the admin');
     }
 
     // vendor product in catalog mode when reverse withdrawal rule applied

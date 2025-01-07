@@ -22,6 +22,32 @@ export class VendorSubscriptionsPage extends VendorPage {
 
     // admin
 
+    // enable vendor subscription module
+    async enableVendorSubscriptionModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.vendorSubscription);
+
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.subscription);
+    }
+
+    // disable vendor subscription module
+    async disableVendorSubscriptionModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.vendorSubscription);
+
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.subscription);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.subscriptions);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+    }
+
     // subscriptions render properly
     async subscriptionsRenderProperly() {
         await this.goIfNotThere(data.subUrls.backend.dokan.subscriptions);
@@ -105,7 +131,7 @@ export class VendorSubscriptionsPage extends VendorPage {
         await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.subscriptions, adminSubscriptions.bulkActions.applyAction);
     }
 
-    // assign suscription pack to vendor
+    // assign subscription pack to vendor
     async assignSubscriptionPack(sellerId: string, subscriptionPack: string) {
         await this.goto(data.subUrls.backend.dokan.vendorDetailsEdit(sellerId));
         await this.click(vendors.editVendor.assignSubscriptionPackDropdown);

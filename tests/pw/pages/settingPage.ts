@@ -46,17 +46,17 @@ export class SettingPage extends AdminPage {
 
     async disableVendorSetupWizardSetting() {
         await this.vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, setupWizardEnabled: false, choice: false });
-        await this.toBeVisible(selector.vendor.vDashboard.menus.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.dashboard);
     }
 
     async setStoreTermsAndConditions(status: string) {
         await this.goto(data.subUrls.frontend.vDashboard.settingsStore);
         if (status == 'on') {
-            await this.toBeVisible(selector.vendor.vStoreSettings.termsAndConditions);
-            await this.toBeVisible(selector.vendor.vStoreSettings.termsAndConditionsIframe);
+            await this.toBeVisible(selector.vendor.vStoreSettings.toc.termsAndConditions);
+            await this.toBeVisible(selector.vendor.vStoreSettings.toc.termsAndConditionsIframe);
         } else {
-            await this.notToBeVisible(selector.vendor.vStoreSettings.termsAndConditions);
-            await this.notToBeVisible(selector.vendor.vStoreSettings.termsAndConditionsIframe);
+            await this.notToBeVisible(selector.vendor.vStoreSettings.toc.termsAndConditions);
+            await this.notToBeVisible(selector.vendor.vStoreSettings.toc.termsAndConditionsIframe);
         }
     }
 

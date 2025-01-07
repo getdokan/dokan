@@ -41,7 +41,8 @@ export class ShortcodePage extends AdminPage {
         await this.goto(data.subUrls.backend.addNewPage);
         await this.closeBlockEditorModal();
 
-        await this.clearAndType(selector.admin.pages.addTitle, pageTitle);
+        await this.click(selector.admin.pages.addTitle);
+        await this.type(selector.admin.pages.addTitle, pageTitle);
         await this.click(selector.admin.pages.contentPlaceholder);
         await this.clearAndType(selector.admin.pages.addContent, shortcode);
 
@@ -138,5 +139,20 @@ export class ShortcodePage extends AdminPage {
     // view request quote
     async viewRequestQuote(link: string) {
         await this.requestForQuotationsPage.requestForQuoteRenderProperly(link);
+    }
+
+    // view advertised products
+    async viewAdvertisedProducts(link: string) {
+        await this.goto(link);
+
+        const productCount = await this.getElementCount(shopCustomer.productCard.card);
+        if (productCount) {
+            // product card elements are visible
+            await this.notToHaveCount(shopCustomer.productCard.card, 0);
+            await this.notToHaveCount(shopCustomer.productCard.productDetailsLink, 0);
+            await this.notToHaveCount(shopCustomer.productCard.productTitle, 0);
+            await this.notToHaveCount(shopCustomer.productCard.productPrice, 0);
+            await this.notToHaveCount(shopCustomer.productCard.addToCart, 0);
+        }
     }
 }

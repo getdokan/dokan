@@ -8,6 +8,7 @@ import { helpers } from '@utils/helpers';
 const spmvAdmin = selector.admin.dokan.spmv;
 const spmvVendor = selector.vendor.vSpmv;
 const spmvCustomer = selector.customer.cSpmv;
+const productsVendor = selector.vendor.product;
 
 export class SpmvPage extends VendorPage {
     constructor(page: Page) {
@@ -15,6 +16,46 @@ export class SpmvPage extends VendorPage {
     }
 
     // admin
+
+    // enable SPMV module
+    async enableSpmvModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.singleProductMultiVendor);
+
+        // admin dashboard
+        await this.goto(data.subUrls.backend.wc.addNewProducts);
+        await this.toBeVisible(spmvAdmin.spmvDiv);
+
+        // vendor dashboard
+        await this.goto(data.subUrls.frontend.vDashboard.products);
+        await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
+        await this.toBeVisible(spmvVendor.search.searchDiv);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.spmv);
+        await this.multipleElementVisible([spmvVendor.search.searchDiv, spmvVendor.spmvDetailsDiv]);
+    }
+
+    // disable SPMV module
+    async disableSpmvModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.singleProductMultiVendor);
+
+        // admin dashboard
+        await this.goto(data.subUrls.backend.wc.addNewProducts);
+        await this.notToBeVisible(spmvAdmin.spmvDiv);
+
+        // vendor dashboard
+        await this.goto(data.subUrls.frontend.vDashboard.products);
+        await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
+        await this.notToBeVisible(spmvVendor.search.searchDiv);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.spmv);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+    }
 
     async assignSpmvProduct(productId: string, storeName: string) {
         await this.goIfNotThere(data.subUrls.backend.wc.productDetails(productId));
@@ -61,7 +102,7 @@ export class SpmvPage extends VendorPage {
         switch (from) {
             case 'popup':
                 await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-                await this.click(selector.vendor.product.create.addNewProduct);
+                await this.click(selector.vendor.product.addNewProduct);
                 await this.click(spmvVendor.search.toggleBtn);
                 break;
 
@@ -101,7 +142,7 @@ export class SpmvPage extends VendorPage {
     async goToProductEditFromSpmv(productName: string): Promise<void> {
         await this.searchSimilarProduct(productName, 'spmv');
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, spmvVendor.editProduct(productName));
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.toHaveValue(selector.vendor.product.title, productName);
     }
 
     // sort spmv product
@@ -115,14 +156,14 @@ export class SpmvPage extends VendorPage {
     async cloneProduct(productName: string): Promise<void> {
         await this.searchSimilarProduct(productName, 'spmv');
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, spmvVendor.addToStore);
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.toHaveValue(selector.vendor.product.title, productName);
     }
 
     // clone product via sell item button
     async cloneProductViaSellItemButton(productName: string): Promise<void> {
         await this.goToProductDetails(productName);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, spmvVendor.productDetails.sellThisItem);
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.toHaveValue(selector.vendor.product.title, productName);
     }
 
     // view other available vendors

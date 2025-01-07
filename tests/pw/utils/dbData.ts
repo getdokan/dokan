@@ -1,4 +1,4 @@
-const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY } = process.env;
+const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, CATEGORY_ID, TALKJS_APP_ID, TALKJS_APP_SECRET, PRINTFUL_APP_ID, PRINTFUL_APP_SECRET, RECAPTCHA_SITE_KEY, RECAPTCHA_SECRET_KEY } = process.env;
 
 export const dbData = {
     dokan: {
@@ -12,30 +12,36 @@ export const dbData = {
             menuManager: 'dokan_menu_manager',
             privacyPolicy: 'dokan_privacy',
             colors: 'dokan_colors',
-            // liveSearch: 'dokan_live_search_setting',
+            liveSearch: 'dokan_live_search_setting',
             storeSupport: 'dokan_store_support_setting',
-            // sellerVerification: 'dokan_verification',
-            // verificationSMSGateways: 'dokan_verification_sms_gateways',
+            vendorVerification: 'dokan_verification',
+            verificationSMSGateways: 'dokan_verification_sms_gateways',
             emailVerification: 'dokan_email_verification',
-            // socialApi: 'dokan_social_api',
+            socialApi: 'dokan_social_api',
             shippingStatus: 'dokan_shipping_status_setting',
             quote: 'dokan_quote_settings',
-            // liveChat: 'dokan_live_chat',
+            liveChat: 'dokan_live_chat',
             rma: 'dokan_rma',
             wholesale: 'dokan_wholesale',
             euCompliance: 'dokan_germanized',
             deliveryTime: 'dokan_delivery_time',
             productAdvertising: 'dokan_product_advertisement',
             geolocation: 'dokan_geolocation',
-            productReportAbuse: 'dokan_report_abuse',
+            reportAbuse: 'dokan_report_abuse',
             spmv: 'dokan_spmv',
+            printful: 'dokan_printful',
             vendorSubscription: 'dokan_product_subscription',
             // vendorAnalytics:
             dokanActiveModules: 'dokan_pro_active_modules',
 
             // dokanPro
+            dokanProVersion: 'dokan_pro_version',
+            dokanProAllowTracking: 'dokan-pro_allow_tracking',
+            dokanProTrackingNotice: 'dokan-pro_tracking_notice',
             dokanProLicense: 'dokan_pro_license',
             dokanProActiveModules: 'dokan_pro_active_modules',
+            dokanDeliverySlotSettings: '_dokan_delivery_slot_settings',
+            dokanVendorVerificationInitialMethodIds: 'dokan_vendor_verification_initial_method_ids',
         },
 
         generalSettings: {
@@ -44,8 +50,7 @@ export const dbData = {
             admin_access: 'on', // vendor edit product test needs it to disable
             custom_store_url: 'store',
             setup_wizard_logo_url: '',
-            setup_wizard_message:
-                '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.<strong></p>',
+            setup_wizard_message: '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.<strong></p>',
             disable_welcome_wizard: 'off',
             global_digital_mode: 'sell_both',
             enable_shipstation_logging: 'off',
@@ -64,14 +69,36 @@ export const dbData = {
             product_page_options: '',
             show_vendor_info: 'on',
             enabled_more_products_tab: 'on',
+            dashboard_menu_manager: [],
         },
 
         sellingSettings: {
             // commission
             selling_capabilities: '',
-            commission_type: 'percentage',
+            commission_type: 'fixed', // 'fixed', 'category_based'
             admin_percentage: '10',
-            shipping_fee_recipient: 'seller',
+            additional_fee: '0',
+            commission_fixed_values: '',
+            commission_category_based_values: {
+                all: {
+                    percentage: '5',
+                    flat: '5',
+                },
+                items: {
+                    [CATEGORY_ID]: {
+                        percentage: '5',
+                        flat: '5',
+                    },
+                    // '27': {
+                    //     percentage: '5',
+                    //     flat: '5',
+                    // },
+                },
+            },
+
+            // fee recipient
+            'fee-recipients': '',
+            shipping_fee_recipient: 'seller', // 'seller', 'admin'
             tax_fee_recipient: 'seller',
             shipping_tax_fee_recipient: 'seller',
 
@@ -103,6 +130,7 @@ export const dbData = {
             catalog_mode_settings: '',
             catalog_mode_hide_add_to_cart_button: 'on',
             catalog_mode_hide_product_price: 'on',
+            dashboard_menu_manager: [],
         },
 
         withdrawSettings: {
@@ -170,6 +198,7 @@ export const dbData = {
             weekly_schedule: 'monday',
             send_announcement_for_payment_change: 'false',
             send_announcement_for_disbursement_schedule_change: 'false',
+            dashboard_menu_manager: [],
         },
 
         reverseWithdrawSettings: {
@@ -188,6 +217,7 @@ export const dbData = {
             },
             display_notice: 'on',
             send_announcement: 'on',
+            dashboard_menu_manager: [],
         },
 
         pageSettings: {
@@ -195,21 +225,25 @@ export const dbData = {
             store_listing: '5',
             my_orders: '6',
             reg_tc_page: '2',
+            dashboard_menu_manager: [],
         },
 
         appearanceSettings: {
             appearance_options: '',
-            store_map: 'on',
-            map_api_source: 'google_maps',
+            store_map: 'on', // 'on', 'off'
+            map_api_source: 'google_maps', // google_maps, mapbox
             gmap_api_key: GMAP ?? '',
             mapbox_access_token: MAPBOX ?? '',
             recaptcha_validation_label: '',
+            recaptcha_enable_status: 'off',
+            recaptcha_site_key: RECAPTCHA_SITE_KEY ?? '',
+            recaptcha_secret_key: RECAPTCHA_SECRET_KEY ?? '',
             contact_seller: 'on',
-            store_header_template: 'default',
+            store_header_template: 'default', // default, layout1, layout2, layout3
             store_banner_width: '625',
             store_banner_height: '300',
             store_open_close: 'on',
-            enable_theme_store_sidebar: 'off',
+            enable_theme_store_sidebar: 'off', // on, off
             hide_vendor_info: {
                 email: '',
                 phone: '',
@@ -220,7 +254,8 @@ export const dbData = {
                 dokan_bank_name: '',
                 dokan_bank_iban: '',
             },
-            disable_dokan_fontawesome: 'off',
+            disable_dokan_fontawesome: 'off', // on, off
+            dashboard_menu_manager: [],
         },
 
         menuManagerSettings: {
@@ -753,8 +788,9 @@ export const dbData = {
         },
         privacyPolicySettings: {
             enable_privacy: 'on',
-            privacy_page: '2',
+            privacy_page: '',
             privacy_policy: '<p>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]</p>',
+            dashboard_menu_manager: [],
         },
 
         colorsSettings: {
@@ -778,19 +814,41 @@ export const dbData = {
                     'color-4': '#DD3B0F',
                 },
             },
+            dashboard_menu_manager: [],
         },
 
         liveSearchSettings: {
-            live_search_option: 'suggestion_box',
+            live_search_option: 'suggestion_box', // old_live_search,  suggestion_box
+            dashboard_menu_manager: [],
+        },
+
+        printful: {
+            app: '',
+            size_guide_sub_section: '',
+            popup_title: 'Size Guide',
+            popup_text_color: '#000000',
+            popup_bg_color: '#FFFFFF',
+            tab_bg_color: '#EEEEEE',
+            active_tab_bg_color: '#DDDDDD',
+            size_guide_button_text: 'Size Guide',
+            button_text_color: '#1064A9',
+            primary_measurement_unit: 'inches',
+            app_id: PRINTFUL_APP_ID ?? '',
+            app_secret: PRINTFUL_APP_SECRET ?? '',
+            dashboard_menu_manager: [],
         },
 
         storeSupportSettings: {
             enabled_for_customer_order: 'on',
             store_support_product_page: 'above_tab',
             support_button_label: 'Get Support',
+            dashboard_menu_manager: [],
         },
 
-        sellerVerificationSettings: {
+        vendorVerificationSettings: {
+            verified_icon: 'check_circle_solid',
+            vendor_verification_methods: '',
+            vendor_verification_social_section: '',
             facebook_app_details: '',
             twitter_app_details: '',
             google_details: '',
@@ -801,6 +859,17 @@ export const dbData = {
             twitter_app_secret: '',
             google_app_id: '',
             google_app_secret: '',
+            linkedin_app_id: '',
+            linkedin_app_secret: '',
+            dashboard_menu_manager: [],
+        },
+
+        VendorVerificationsInitialMethodIds: {
+            passport: 1,
+            national_id: 2,
+            driving_license: 3,
+            address: 4,
+            company: 5,
         },
 
         verificationSMSGatewaysSettings: {
@@ -817,12 +886,14 @@ export const dbData = {
 
             // twilio details
             twilio_details: '',
+            dashboard_menu_manager: [],
         },
 
         emailVerificationSettings: {
             enabled: 'off',
             registration_notice: 'Please check your email and complete email verification to login.',
             login_notice: 'Please check your email and complete email verification to login.',
+            dashboard_menu_manager: [],
         },
 
         socialAPISettings: {
@@ -837,6 +908,7 @@ export const dbData = {
             fb_app_secret: '',
             twitter_app_id: '',
             twitter_app_secret: '',
+            dashboard_menu_manager: [],
         },
 
         shippingStatusSettings: {
@@ -880,6 +952,7 @@ export const dbData = {
                     value: 'On the way',
                 },
             ],
+            dashboard_menu_manager: [],
         },
 
         quoteSettings: {
@@ -894,18 +967,20 @@ export const dbData = {
             decrease_offered_price: '0',
             enable_convert_to_order: 'off',
             enable_quote_converter_display: 'off',
+            dashboard_menu_manager: [],
         },
 
         liveChatSettings: {
-            enable: 'off',
-            provider: 'messenger',
+            enable: 'on',
+            provider: 'talkjs',
             theme_color: '#0084FF',
-            app_id: '',
-            app_secret: '',
+            app_id: TALKJS_APP_ID ?? '',
+            app_secret: TALKJS_APP_SECRET ?? '',
             wa_opening_method: 'in_app',
             wa_pre_filled_message: 'Hello {store_name}, I have an enquiry regarding your store at {store_url}',
             chat_button_seller_page: 'on',
-            chat_button_product_page: 'above_tab',
+            chat_button_product_page: 'above_tab', // above_tab, inside_tab, dont_show
+            dashboard_menu_manager: [],
         },
 
         rmaSettings: {
@@ -927,12 +1002,14 @@ export const dbData = {
                 },
             ],
             rma_policy: '<p>Refund Policy</p>',
+            dashboard_menu_manager: [],
         },
 
         wholesaleSettings: {
             wholesale_price_display: 'all_user',
             display_price_in_shop_archieve: 'on',
             need_approval_for_wholesale_customer: 'off',
+            dashboard_menu_manager: [],
         },
 
         euComplianceSettings: {
@@ -952,6 +1029,7 @@ export const dbData = {
             },
             enabled_germanized: 'on',
             override_invoice_number: 'on',
+            dashboard_menu_manager: [],
         },
 
         deliveryTimeSettings: {
@@ -1002,6 +1080,7 @@ export const dbData = {
                 opening_time: '12:00 am',
                 closing_time: '11:59 pm',
             },
+            dashboard_menu_manager: [],
         },
 
         productAdvertisingSettings: {
@@ -1013,14 +1092,15 @@ export const dbData = {
             featured: 'on',
             catalog_priority: 'on',
             hide_out_of_stock_items: 'on',
+            dashboard_menu_manager: [],
         },
 
         geolocationSettings: {
-            show_locations_map: 'top',
-            show_location_map_pages: 'all',
-            show_filters_before_locations_map: 'on',
-            show_product_location_in_wc_tab: 'on',
-            distance_unit: 'km',
+            show_locations_map: 'top', // top, left, right
+            show_location_map_pages: 'all', // all, store_listing, shop
+            show_filters_before_locations_map: 'on', // on, off
+            show_product_location_in_wc_tab: 'on', // on, off
+            distance_unit: 'km', // km, miles
             distance_min: '0',
             distance_max: '10',
             map_zoom: '11',
@@ -1030,6 +1110,7 @@ export const dbData = {
                 address: 'New York, NY, USA',
                 zoom: '10',
             },
+            dashboard_menu_manager: [],
         },
 
         productReportAbuseSettings: {
@@ -1072,6 +1153,7 @@ export const dbData = {
                     value: 'This product is fake',
                 },
             ],
+            dashboard_menu_manager: [],
         },
 
         spmvSettings: {
@@ -1080,6 +1162,7 @@ export const dbData = {
             available_vendor_list_title: 'Other Available Vendor',
             available_vendor_list_position: 'below_tabs',
             show_order: 'show_all',
+            dashboard_menu_manager: [],
         },
 
         vendorSubscriptionSettings: {
@@ -1093,6 +1176,7 @@ export const dbData = {
             cancelling_email_body: 'Dear subscriber, Your subscription has expired. Please renew your package to continue using it.',
             alert_email_subject: 'Subscription Ending Soon',
             alert_email_body: 'Dear subscriber, Your subscription will be ending soon. Please renew your package in a timely',
+            dashboard_menu_manager: [],
         },
 
         // dokan pro license
@@ -1124,6 +1208,7 @@ export const dbData = {
             'moip',
             'order_min_max',
             'paypal_marketplace',
+            'printful',
             'product_addon',
             'product_advertising',
             'product_enquiry',
@@ -1298,47 +1383,94 @@ export const dbData = {
         },
     },
 
-    // widget
+    // widgets & sidebars
 
-    widget: {
-        name: {
-            widgetBlock: 'widget_block',
-            sidebarsWidgets: 'sidebars_widgets',
+    sidebars: {
+        wp_inactive_widgets: 'wp_inactive_widgets',
+        'sidebar-store': 'sidebar-store',
+        'sidebar-1': 'sidebar-1',
+        'header-1': 'header-1',
+        'footer-1': 'footer-1',
+        'footer-2': 'footer-2',
+        'footer-3': 'footer-3',
+        'footer-4': 'footer-4',
+    },
+
+    sidebarWidgets: {
+        wp_inactive_widgets: [],
+        'sidebar-store': [],
+        'sidebar-1': [],
+        'header-1': [],
+        'footer-1': [],
+        'footer-2': [],
+        'footer-3': [],
+        'footer-4': [],
+        array_version: 3,
+    },
+
+    emptySideBarsWidgets: { wp_inactive_widgets: [] },
+
+    // dokan widgets
+    dokanWidgets: {
+        // names  (option names)
+        names: {
+            bestSelling: 'widget_dokan-best-selling-widget',
+            bestSeller: 'widget_dokan-best-seller-widget',
+            category: 'widget_dokan-category-menu',
+            featureSeller: 'widget_dokan-feature-seller-widget',
+            filter: 'widget_dokan-filter-product',
+            geolocation: 'widget_dokan-geolocation-widget-filters',
+            liveSearch: 'widget_dokna_product_search',
+            productAdvertisement: 'widget_dokan_product_advertisement_widget',
+            productLocation: 'widget_dokan-geolocation-widget-product-location',
+            sellerBadge: 'widget_dokan_seller_badges',
+            storeContactForm: 'widget_dokan-store-contact-widget',
+            storeLocation: 'widget_dokan-store-location',
+            storeMenu: 'widget_dokan-store-menu',
+            storeOpenClose: 'widget_dokan-store-open-close-widget',
+            storeSupport: 'widget_dokan-store-support-widget',
+            topRated: 'widget_dokan-top-rated',
+            verifications: 'widget_dokan-verification-list',
         },
-        widgetBlock: {
-            '2': {
-                content: '<!-- wp:search /-->',
+
+        // values (option values)
+        values: {
+            defaultValues: { _multiwidget: 1 },
+
+            storeLocationWidget: {
+                '2': { title: 'Store Location' },
+                _multiwidget: 1,
             },
-            '3': {
-                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Recent Posts</h2><!-- /wp:heading --><!-- wp:latest-posts /--></div><!-- /wp:group -->',
+
+            storeOpenCloseWidget: {
+                '2': {
+                    title: 'Store Time',
+                },
+                _multiwidget: 1,
             },
-            '4': {
-                content:
-                    '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Recent Comments</h2><!-- /wp:heading --><!-- wp:latest-comments {"displayAvatar":false,"displayDate":false,"displayExcerpt":false} /--></div><!-- /wp:group -->',
+
+            storeContactFormWidget: {
+                '2': { title: 'Contact Vendor' },
+                _multiwidget: 1,
             },
-            '5': {
-                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Archives</h2><!-- /wp:heading --><!-- wp:archives /--></div><!-- /wp:group -->',
+
+            liveSearchWidget: {
+                '2': { title: 'Live Search' },
+                _multiwidget: 1,
             },
-            '6': {
-                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Categories</h2><!-- /wp:heading --><!-- wp:categories /--></div><!-- /wp:group -->',
-            },
-            '9': {
-                content: '<!-- wp:legacy-widget /-->',
-            },
-            _multiwidget: 1,
         },
-        sideBarsWidgets: {
-            wp_inactive_widgets: ['block-8', 'block-2', 'block-3', 'block-4', 'block-5', 'block-6'],
-            'sidebar-store': ['dokan-category-menu-2', 'dokan-store-location-2', 'dokan-store-contact-widget-2'],
-            'sidebar-1': [],
-            'header-1': [],
-            'footer-1': [],
-            'footer-2': [],
-            'footer-3': [],
-            'footer-4': [],
-            array_version: 3,
+
+        widgets: {
+            bestSelling: 'dokan-best-selling-widget-2',
+            category: 'dokan-category-menu-2',
+            filter: 'dokan-filter-product-2',
+            liveSearch: 'dokna_product_search-2',
+            storeContactForm: 'dokan-store-contact-widget-2',
+            storeLocation: 'dokan-store-location-2',
+            storeMenu: 'dokan-store-menu-2',
+            storeOpenClose: 'dokan-store-open-close-widget-2',
+            topRated: 'dokan-top-rated-2',
         },
-        multiwidget: { _multiwidget: 1 },
     },
 
     // test db data
@@ -1353,8 +1485,7 @@ export const dbData = {
                 setup_wizard_logo_url: '',
                 setup_wizard_message:
                     '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.</strong> Test wizard message.</p>',
-                setup_wizard_message_without_html:
-                    'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It’s completely optional and shouldn’t take longer than two minutes. Test wizard message.',
+                setup_wizard_message_without_html: 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It’s completely optional and shouldn’t take longer than two minutes. Test wizard message.',
                 disable_welcome_wizard: 'off',
                 global_digital_mode: 'sell_both',
                 enable_shipstation_logging: 'off',
@@ -1373,6 +1504,28 @@ export const dbData = {
                 product_page_options: '',
                 show_vendor_info: 'on',
                 enabled_more_products_tab: 'on',
+            },
+
+            unhideVendorInfo: {
+                email: '',
+                phone: '',
+                address: '',
+                dokan_company_name: '',
+                dokan_company_id_number: '',
+                dokan_vat_number: '',
+                dokan_bank_name: '',
+                dokan_bank_iban: '',
+            },
+
+            unhideVendorEuInfo: {
+                email: '',
+                phone: '',
+                address: '',
+                dokan_company_name: '',
+                dokan_company_id_number: '',
+                dokan_vat_number: '',
+                dokan_bank_name: '',
+                dokan_bank_iban: '',
             },
 
             hideVendorInfo: {
@@ -1404,6 +1557,42 @@ export const dbData = {
                 enable_catalog_mode: 'enable_catalog_mode',
                 hide_withdraw_menu: 'hide_withdraw_menu',
                 status_inactive: 'status_inactive',
+            },
+
+            // vendor rma settings
+            rmaSettings: {
+                label: 'Warranty',
+                type: 'no_warranty',
+                policy: 'Refund Policy',
+                reasons: [],
+                length: '',
+                length_value: '',
+                length_duration: '',
+                addon_settings: [],
+            },
+
+            // vendor payment settings
+            paymentSettings: {
+                paypal: {
+                    email: 'paypal@g.com',
+                },
+                bank: {
+                    ac_name: 'accountName',
+                    ac_number: '0123456789',
+                    bank_name: 'bankName',
+                    ac_type: 'personal',
+                    bank_addr: 'bankAddress',
+                    routing_number: '9876543210',
+                    iban: 'QWERTY12345',
+                    swift: 'AZERTY98765',
+                    declaration: 'on',
+                },
+                dokan_custom: {
+                    value: '0123456789QWERTY',
+                },
+                skrill: {
+                    email: 'skrill@g.com',
+                },
             },
         },
     },

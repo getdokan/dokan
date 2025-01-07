@@ -32,6 +32,7 @@ test.describe('Verifications test', () => {
         customer = new VendorVerificationsPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
+
         [, methodId, methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
         [, mediaId] = await apiUtils.uploadMedia(data.image.avatar, payloads.mimeTypes.png, payloads.adminAuth);
         [, requestId] = await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] }, payloads.adminAuth);
@@ -40,12 +41,18 @@ test.describe('Verifications test', () => {
     test.afterAll(async () => {
         // await apiUtils.deleteAllVerificationMethods(payloads.adminAuth);
         // await apiUtils.deleteAllVerificationRequests(payloads.adminAuth);
+        await apiUtils.activateModules(payloads.moduleIds.vendorVerification, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     //admin
+
+    test('admin can enable vendor verification module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableVendorVerificationModule();
+    });
 
     // verification methods
 
@@ -204,11 +211,17 @@ test.describe('Verifications test', () => {
         await customer.viewVerifiedBadge(data.predefined.vendorStores.vendor2);
     });
 
-    test.skip('admin receive notification for verification request', { tag: ['@pro', '@admin'] }, async () => {});
     test.skip('vendor need all required method to be verified to get verification badge', { tag: ['@pro', '@vendor'] }, async () => {});
     test.skip('vendor need to be verified only one method when no required method is exists', { tag: ['@pro', '@vendor'] }, async () => {});
     test.skip('vendor address verification gets reset when he update address', { tag: ['@pro', '@vendor'] }, async () => {
         const [, methodId] = await apiUtils.getVerificationMethodId('address', payloads.adminAuth);
         await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId], status: 'approved' }, payloads.adminAuth);
+    });
+
+    // admin
+
+    test('admin can disable vendor verification module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.vendorVerification, payloads.adminAuth);
+        await admin.disableVendorVerificationModule();
     });
 });

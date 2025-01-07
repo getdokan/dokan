@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Product;
 
+use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WC_Product;
 
@@ -40,6 +41,11 @@ class Hooks {
         // Init Product Cache Class
         new VendorStoreInfo();
         new ProductCache();
+
+        // Product commission
+        add_action( 'woocommerce_product_options_advanced', array( $this, 'add_per_product_commission_options' ), 15 );
+        add_action( 'woocommerce_process_product_meta_simple', array( $this, 'save_per_product_commission_options' ), 15 );
+        add_action( 'woocommerce_process_product_meta_variable', array( $this, 'save_per_product_commission_options' ), 15 );
     }
 
     /**
@@ -247,11 +253,13 @@ class Hooks {
             return;
         }
 
+        do_action( 'dokan_product_bulk_delete', $products );
         foreach ( $products as $product_id ) {
             if ( dokan_is_product_author( $product_id ) ) {
                 dokan()->product->delete( $product_id, true );
             }
         }
+        do_action( 'dokan_product_bulk_deleted', $products );
 
         wp_safe_redirect( add_query_arg( [ 'message' => 'product_deleted' ], dokan_get_navigation_url( 'products' ) ) );
         exit;
@@ -409,7 +417,7 @@ class Hooks {
 
         wc_print_notice( __( 'As this is your own product, the "Add to Cart" button has been removed. Please visit as a guest to view it.', 'dokan-lite' ), 'notice' );
     }
-  
+
     /**
      * Filter the recipients of the product review notification.
      *
@@ -450,5 +458,114 @@ class Hooks {
         }
 
         return $filtered_emails;
+    }
+
+    /**
+     * Add per product commission options
+     * Moved from dokan pro in version 3.14.0
+     *
+     * @since 2.4.12
+     *
+     * @return void
+     */
+    public function add_per_product_commission_options() {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        $product          = wc_get_product( get_the_ID() );
+        $admin_commission = $product->get_meta( '_per_product_admin_commission' );
+        $additional_fee   = $product->get_meta( '_per_product_admin_additional_fee' );
+        ?>
+
+        <div class="commission show_if_simple show_if_variable show_if_booking">
+            <p class="form-field dimensions_field">
+                <label for="admin_commission">
+                    <?php esc_html_e( 'Admin Commission', 'dokan-lite' ); ?>
+                    <span
+                        class="woocommerce-help-tip"
+                        tabindex="0" for="admin_commission"
+                        aria-label="<?php esc_attr_e( 'When the value is 0, no commissions will be deducted from this vendor.', 'dokan-lite' ); ?>"
+                        data-tip="<?php esc_attr_e( 'When the value is 0, no commissions will be deducted from this vendor.', 'dokan-lite' ); ?>"
+                    ></span>
+                </label>
+
+                <span class="wrapper">
+                    <input type="hidden" value="fixed" name="_per_product_admin_commission_type">
+                    <input id="admin_commission" class="input-text wc_input_price" min="0" max="100" type="text" name="_per_product_admin_commission" value="<?php echo wc_format_localized_price( $admin_commission ); ?>">
+                    <span class="additional_fee">
+                        <?php echo esc_html( '% &nbsp;&nbsp; +' ); ?>
+                        <input class="input-text wc_input_price" type="text" name="_per_product_admin_additional_fee" value="<?php echo wc_format_localized_price( $additional_fee ); ?>">
+                    </span>
+                    <span class="combine-commission-description"></span>
+                </span>
+            </p>
+        </div>
+
+        <style type="text/css">
+            .commission .wrapper input {
+                width: 60px;
+                float: none;
+            }
+            span.combine-commission-description {
+                margin-left: 5px;
+                font-size: 13px;
+                font-style: italic;
+            }
+        </style>
+        <?php
+    }
+
+    /**
+     * Save per product commission options
+     *  Moved from dokan pro in version 3.14.0
+     *
+     * @since 2.4.12
+     *
+     * @param integer $post_id
+     * @param array   $data
+     *
+     * @return void
+     */
+    public static function save_per_product_commission_options( $post_id, $data = [] ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        $commission_type  = Fixed::SOURCE;
+        $admin_commission = '';
+        $additional_fee   = '';
+        $data             = empty( $data ) ? $_POST : $data; // phpcs:ignore
+
+        if ( isset( $data['_per_product_admin_commission_type'] ) ) {
+            $commission_type = ! empty( $data['_per_product_admin_commission_type'] ) ? sanitize_text_field( $data['_per_product_admin_commission_type'] ) : Fixed::SOURCE;
+        }
+
+        if ( isset( $data['_per_product_admin_commission'] ) ) {
+            $_per_product_admin_commission = wc_format_decimal( sanitize_text_field( $data['_per_product_admin_commission'] ) );
+
+            if ( 0 <= $_per_product_admin_commission && 100 >= $_per_product_admin_commission ) {
+                $admin_commission = ( '' === $data['_per_product_admin_commission'] ) ? '' : $_per_product_admin_commission;
+            }
+        }
+
+        if ( isset( $data['_per_product_admin_additional_fee'] ) ) {
+            $additional_fee = ( '' === $data['_per_product_admin_additional_fee'] ) ? '' : sanitize_text_field( $data['_per_product_admin_additional_fee'] );
+
+            if ( 0 > $additional_fee ) {
+                $additional_fee = '';
+            }
+
+            $additional_fee = wc_format_decimal( $additional_fee );
+        }
+
+        dokan()->product->save_commission_settings(
+            $post_id,
+            [
+                'type'       => $commission_type,
+                'percentage' => $admin_commission,
+                'flat'       => $additional_fee,
+            ]
+        );
     }
 }

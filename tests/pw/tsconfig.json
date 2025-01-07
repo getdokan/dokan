@@ -36,10 +36,13 @@
         "resolveJsonModule": true,
         "importHelpers": true /* Import emit helpers from 'tslib'. */,
         "downlevelIteration": true /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */,
-        // "allowSyntheticDefaultImports": true   /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */,
+        "allowSyntheticDefaultImports": true /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */,
+        "incremental": true /*to speed up subsequent compilations by only rebuilding changed files. */,
+
         // Source Map
         "sourceMap": true /* enables the use of source maps for debuggers and error reporting etc*/,
         "sourceRoot": "/" /* Specify the location where a debugger should locate TypeScript files instead of relative source locations.*/,
+
         // Strict Checks
         "alwaysStrict": true /* Ensures that your files are parsed in the ECMAScript strict mode, and emit “use strict” for each source file.*/,
         "strict": true /* Enable all strict type-checking options. */,
@@ -51,6 +54,7 @@
         "strictPropertyInitialization": true /* Enable strict checking of property initialization in classes. */,
         "noImplicitThis": true /* Raise error on 'this' expressions with an implied 'any' type. */,
         "skipLibCheck": true /* Skip type checking of declaration files. */,
+
         // Linter Checks
         "noUnusedLocals": true /* Report errors on unused local variables.*/,
         "noUnusedParameters": true /* Report errors on unused parameters in functions*/,

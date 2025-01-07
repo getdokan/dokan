@@ -19,11 +19,35 @@ declare global {
             PRODUCT_ID: string;
             PRODUCT_ID_V2: string;
             CATEGORY_ID: string;
+            ATTRIBUTE_ID: string;
+            TAG_ID: string;
             LOCAL: boolean;
             CI: boolean;
             GMAP: string;
             MAPBOX: string;
             LICENSE_KEY: string;
+            VONAGE_API_KEY: string;
+            VONAGE_API_SECRET: string;
+            FB_APP_ID: string;
+            FB_APP_SECRET: string;
+            TALKJS_APP_ID: string;
+            TALKJS_APP_SECRET: string;
+            PRINTFUL_APP_ID: string;
+            PRINTFUL_APP_SECRET: string;
+            RECAPTCHA_SITE_KEY: string;
+            RECAPTCHA_SECRET_KEY: string;
+            TEST_PUBLISH_KEY_STRIPE: string;
+            TEST_SECRET_KEY_STRIPE: string;
+            TEST_CLIENT_ID_STRIPE: string;
+            SANDBOX_CLIENT_ID_MANGOPAY: string;
+            SANDBOX_API_KEY_MANGOPAY: string;
+            TEST_KEY_ID_RAZORPAY: string;
+            TEST_KEY_SECRET_RAZORPAY: string;
+            TEST_PUBLISH_KEY_STRIPE_EXPRESS: string;
+            TEST_SECRET_KEY_STRIPE_EXPRESS: string;
+            TEST_MERCHANT_ID_PAYPAL_MARKETPLACE: string;
+            TEST_CLIENT_ID_PAYPAL_MARKETPLACE: string;
+            TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE: string;
             DOKAN_PRO: boolean;
             SITE_LANGUAGE: string;
             SITE_TITLE: string;
@@ -51,6 +75,7 @@ declare global {
             E2E_TEST_RESULT: string;
             API_COVERAGE: string;
             E2E_COVERAGE: string;
+            SKIP_DOKAN: boolean;
         }
     }
 }

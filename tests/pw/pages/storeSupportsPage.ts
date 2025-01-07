@@ -21,6 +21,64 @@ export class StoreSupportsPage extends AdminPage {
 
     // store support
 
+    // enable store support module
+    async enableStoreSupportModule(storeName: string) {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(selector.admin.dokan.menus.storeSupport);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.storeSupport);
+
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.support);
+
+        // customer dashboard menu
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.sellerSupportTickets);
+
+        // single store page
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
+        await this.toBeVisible(selector.customer.cSingleStore.storeTabs.getSupport);
+    }
+
+    // disable store support module
+    async disableStoreSupportModule(storeName: string) {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.notToBeVisible(selector.admin.dokan.menus.storeSupport);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.storeSupport);
+
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.storeSupport);
+        await this.notToBeVisible(storeSupportsAdmin.storeSupportDiv);
+
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.support);
+
+        // vendor dashboard page
+        await this.goto(data.subUrls.frontend.vDashboard.storeSupport);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+
+        // customer dashboard menu
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.notToBeVisible(selector.customer.cMyAccount.menus.sellerSupportTickets);
+
+        // customer dashboard menu page
+        await this.goto(data.subUrls.frontend.supportTickets);
+        await this.notToBeVisible(supportsTicketsCustomer.supportTicketDiv);
+
+        // single store page
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
+        await this.notToBeVisible(selector.customer.cSingleStore.storeTabs.getSupport);
+    }
+
     // store support render properly
     async adminStoreSupportRenderProperly() {
         await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
@@ -227,7 +285,7 @@ export class StoreSupportsPage extends AdminPage {
         if (ticketIsOpen) {
             await this.toBeVisible(addReplyText);
         } else {
-            await this.multipleElementVisible(closeTicketText);
+            await this.toBeVisible(closeTicketText);
         }
         await this.multipleElementVisible(replyBox);
     }
@@ -424,7 +482,7 @@ export class StoreSupportsPage extends AdminPage {
         await this.toBeVisible(supportsTicketsCustomer.supportTicketDetails.orderReference.orderReferenceLink(orderId));
     }
 
-    // customer send message to  support ticket
+    // customer send message to support ticket
     async sendMessageToSupportTicket(supportTicketId: string, supportTicket: customer['supportTicket']): Promise<void> {
         const message = supportTicket.message();
         await this.goIfNotThere(data.subUrls.frontend.supportTicketDetails(supportTicketId));

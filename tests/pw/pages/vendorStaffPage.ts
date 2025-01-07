@@ -6,6 +6,7 @@ import { staff } from '@utils/interfaces';
 
 // selectors
 const vendorStaff = selector.vendor.vStaff;
+const vendorDashboard = selector.vendor.vDashboard;
 
 export class VendorStaffPage extends VendorPage {
     constructor(page: Page) {
@@ -13,6 +14,24 @@ export class VendorStaffPage extends VendorPage {
     }
 
     // vendor staff
+
+    // enable vendor staff module
+    async enableVendorStaffModule() {
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.staff);
+    }
+
+    // disable vendor staff module
+    async disableVendorStaffModule() {
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.staff);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.staff);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+    }
 
     // vendor staff render properly
     async vendorStaffRenderProperly() {
@@ -118,5 +137,15 @@ export class VendorStaffPage extends VendorPage {
 
         // manage auction permission
         // await this.multipleElementCheck(vendorStaff.managePermission.auction); // todo:  add auction module + plugin check
+    }
+
+    // staff
+
+    // view permitted menus
+    async viewPermittedMenus(menus: string[]) {
+        await this.goToVendorDashboard();
+        for (const menu of menus) {
+            await this.toBeVisible((vendorDashboard.menus.primary as any)[menu]);
+        }
     }
 }

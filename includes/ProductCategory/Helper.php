@@ -99,12 +99,16 @@ class Helper {
      *
      * @since 3.6.4
      *
-     * @param object $terms
+     * @param array $terms
      *
      * @return array
      */
     public static function generate_chosen_categories( $terms ) {
         $all_parents = [];
+
+        if ( ! is_array( $terms ) ) {
+            $terms = [];
+        }
 
         // If any category selection option is turned we don't need to generate chosen categories, all terms are also chosen category.
         if ( self::is_any_category_selection_enabled() ) {

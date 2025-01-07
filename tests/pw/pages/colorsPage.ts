@@ -15,6 +15,20 @@ export class ColorsPage extends AdminPage {
         super(page);
     }
 
+    // enable color scheme customizer
+    async enableColorSchemeCustomizerModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(settingsAdmin.menus.colors);
+    }
+
+    // disable color scheme customizer
+    async disableColorSchemeCustomizerModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(settingsAdmin.menus.colors);
+    }
+
     // add color palette
     async addColorPalette(paletteName: string, paletteValues: paletteValues, paletteChoice: string = 'predefined') {
         await this.goToDokanSettings();
@@ -48,32 +62,33 @@ export class ColorsPage extends AdminPage {
         }
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.colors.colorsSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.colors.saveSuccessMessage);
-
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
-
-        // asertions
 
         // convert hex to rgb
         Object.keys(paletteValues).forEach(key => {
             paletteValues[key as keyof paletteValues] = helpers.hexToRgb(paletteValues[key as keyof paletteValues]);
         });
 
+        // assertions
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore, 'networkidle');
+
+        // assertions
+
         // button color
-        const beforHover = await this.getElementCssStyle(settingsVendor.updateSettingsTop);
+        const beforeHover = await this.getElementCssStyle(settingsVendor.updateSettingsTop);
         // hovered button color
-        await this.hover(settingsVendor.updateSettingsTop);
+        await this.addAttributeValue(settingsVendor.updateSettingsTop, 'class', 'active');
         const afterHover = await this.getElementCssStyle(settingsVendor.updateSettingsTop);
         // sidebar color
-        const dashboardSidebarMenuText = await this.getElementColor(dashboardVendor.menus.dashboard);
+        const dashboardSidebarMenuText = await this.getElementColor(dashboardVendor.menus.primary.dashboard);
         const dashboardSidebarBackground = await this.getElementBackgroundColor(dashboardVendor.menus.menus);
         const dashboardSidebarActiveMenuBackground = await this.getElementBackgroundColor(dashboardVendor.menus.activeMenu);
-        const dashboardSidebarActiveHoverMenuText = await this.getElementColor(dashboardVendor.menus.settings);
+        const dashboardSidebarActiveHoverMenuText = await this.getElementColor(dashboardVendor.menus.primary.settings);
 
-        expect(beforHover.color).toEqual(paletteValues.buttonText);
-        expect(beforHover.backgroundColor).toEqual(paletteValues.buttonBackground);
-        expect(beforHover.borderColor).toEqual(paletteValues.buttonBorder);
+        expect(beforeHover.color).toEqual(paletteValues.buttonText);
+        expect(beforeHover.backgroundColor).toEqual(paletteValues.buttonBackground);
+        expect(beforeHover.borderColor).toEqual(paletteValues.buttonBorder);
         expect(afterHover.color).toEqual(paletteValues.buttonHoverText);
         expect(afterHover.backgroundColor).toEqual(paletteValues.buttonHoverBackground);
         expect(afterHover.borderColor).toEqual(paletteValues.buttonHoverBorder);
