@@ -220,7 +220,7 @@ class Commission {
         $saved_admin_fee = $order->get_meta( '_dokan_admin_fee', true );
 
         if ( $saved_admin_fee !== '' ) {
-            $saved_fee = ( 'seller' === $context ) ? $order->get_total() - $saved_admin_fee : $saved_admin_fee;
+            $saved_fee = ( 'seller' === $context ) ? floatval( $order->get_total() ) - floatval( $saved_admin_fee ) : $saved_admin_fee;
 
             return apply_filters( 'dokan_order_admin_commission', $saved_fee, $order );
         }
@@ -238,11 +238,11 @@ class Commission {
             $product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
             $refund     = $order->get_total_refunded_for_item( $item_id );
 
-            if ( dokan_is_admin_coupon_applied( $order, $vendor_id, $product_id ) ) {
+            if ( dokan_is_admin_coupon_applied( $order, $vendor_id, $product_id ) && dokan()->is_pro_exists() ) {
                 $earning_or_commission += dokan_pro()->coupon->get_earning_by_admin_coupon( $order, $item, $context, $item->get_product(), $vendor_id, $refund );
             } else {
                 $item_price = apply_filters( 'dokan_earning_by_order_item_price', $item->get_total(), $item, $order );
-                $item_price = $refund ? $item_price - $refund : $item_price;
+                $item_price = $refund ? floatval( $item_price ) - floatval( $refund ) : $item_price;
 
                 $item_earning_or_commission = $this->get_commission(
                     [
@@ -255,7 +255,7 @@ class Commission {
                     true
                 );
                 $item_earning_or_commission = 'admin' === $context ? $item_earning_or_commission->get_admin_commission() : $item_earning_or_commission->get_vendor_earning();
-                $earning_or_commission      += $item_earning_or_commission;
+                $earning_or_commission      += floatval( $item_earning_or_commission );
             }
         }
 
@@ -264,11 +264,11 @@ class Commission {
         }
 
         if ( $context === dokan()->fees->get_tax_fee_recipient( $order->get_id() ) ) {
-            $earning_or_commission += ( ( $order->get_total_tax() - $order->get_total_tax_refunded() ) - ( $order->get_shipping_tax() - dokan()->fees->get_total_shipping_tax_refunded( $order ) ) );
+            $earning_or_commission += ( ( floatval( $order->get_total_tax() ) - floatval( $order->get_total_tax_refunded() ) ) - ( floatval( $order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $order ) ) ) );
         }
 
         if ( $context === dokan()->fees->get_shipping_tax_fee_recipient( $order ) ) {
-            $earning_or_commission += ( $order->get_shipping_tax() - dokan()->fees->get_total_shipping_tax_refunded( $order ) );
+            $earning_or_commission += ( floatval( $order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $order ) ) );
         }
 
         $earning_or_commission = apply_filters_deprecated( 'dokan_order_admin_commission', [ $earning_or_commission, $order, $context ], '2.9.21', 'dokan_get_earning_by_order' );
@@ -287,7 +287,7 @@ class Commission {
      */
     public function validate_rate( $rate ) {
         if ( '' === $rate || ! is_numeric( $rate ) || $rate < 0 ) {
-            return null;
+            $rate = 0.0;
         }
 
         return (float) $rate;

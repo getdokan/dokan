@@ -34,12 +34,17 @@ test.describe('Wholesale test (admin)', () => {
 
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
+        await apiUtils.activateModules(payloads.moduleIds.wholesale, payloads.adminAuth);
         await aPage.close();
         await cPage.close();
         await apiUtils.dispose();
     });
 
     // admin
+
+    test('admin can enable wholesale module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableWholesaleModule();
+    });
 
     test('admin can view wholesale customers menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminWholesaleCustomersRenderProperly();
@@ -144,9 +149,11 @@ test.describe('Wholesale test (customer)', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.wholesale, payloads.adminAuth);
         await dbUtils.setOptionValue(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
         await aPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     test('all users can see wholesale price', { tag: ['@pro', '@customer'] }, async () => {
@@ -177,5 +184,10 @@ test.describe('Wholesale test (customer)', () => {
         await customer.assertWholesalePrice(wholesalePrice, minimumWholesaleQuantity);
         await customerPage.goToCheckout();
         await customerPage.paymentOrder();
+    });
+
+    test('admin can disable wholesale module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.wholesale, payloads.adminAuth);
+        await admin.disableWholesaleModule();
     });
 });

@@ -16,6 +16,11 @@ class Assets {
     public function __construct() {
         add_action( 'init', [ $this, 'register_all_scripts' ], 10 );
         add_filter( 'dokan_localized_args', [ $this, 'conditional_localized_args' ] );
+        add_action(
+            'wp_footer', function () {
+				echo '<div class="dokan-layout" id="headlessui-portal-root"><div></div></div>';
+			}
+        );
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 10 );

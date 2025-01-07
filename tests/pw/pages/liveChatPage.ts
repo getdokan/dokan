@@ -23,6 +23,22 @@ export class LiveChatPage extends BasePage {
         await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)), 'domcontentloaded', force);
     }
 
+    // admin
+
+    // enable live chat module
+    async enableLiveChatModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.liveChat);
+    }
+
+    // disable live chat module
+    async disableLiveChatModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.liveChat);
+    }
+
     // vendor
 
     // vendor inbox render properly

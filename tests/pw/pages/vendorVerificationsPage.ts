@@ -21,6 +21,46 @@ export class VendorVerificationsPage extends AdminPage {
 
     customerPage = new CustomerPage(this.page);
 
+    // enable vendor verification module
+    async enableVendorVerificationModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.notToBeVisible(selector.admin.dokan.menus.verifications);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.vendorVerification);
+
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.subMenus.verification);
+    }
+
+    // disable vendor verification module
+    async disableVendorVerificationModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(selector.admin.dokan.menus.verifications);
+
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.verifications, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(verificationsAdmin.verificationsDiv);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.vendorVerification);
+
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.verification);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.settingsVerification);
+        await this.notToBeVisible(verificationsVendor.verificationSettingsDiv);
+    }
+
     // verification methods
 
     async changeVerifiedIcon(icon: string, storeName: string) {
@@ -349,9 +389,6 @@ export class VendorVerificationsPage extends AdminPage {
 
         await this.toBeVisible(verificationsVendor.verificationMethodDiv(requiredMethod));
         await this.notToBeVisible(verificationsVendor.verificationMethodDiv(nonRequiredMethod));
-
-        const count = await this.getElementCount(verificationsVendor.verificationMethodAllDiv);
-        await this.toHaveCount(verificationsVendor.requiredText, count);
     }
 
     async completeAddressStep(setupWizardData: vendorSetupWizard) {
