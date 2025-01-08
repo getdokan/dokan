@@ -114,7 +114,7 @@ class UserProfile {
                                 <a href="#" class="dokan-banner-drag button button-primary"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
                                 <p class="description">
                                     <?php
-                                    echo sprintf(
+                                    printf(
                                         /* translators: %1$s: banner width, %2$s: banner height in integers */
                                         esc_attr__( 'Upload a banner for your store. Banner size is (%1$sx%2$s) pixels.', 'dokan-lite' ),
                                         esc_attr( $banner_width ),
