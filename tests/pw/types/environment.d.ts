@@ -18,6 +18,7 @@ declare global {
             CUSTOMER2_ID: string;
             PRODUCT_ID: string;
             PRODUCT_ID_V2: string;
+            PRODUCT_EDIT_NONCE: string;
             CATEGORY_ID: string;
             ATTRIBUTE_ID: string;
             TAG_ID: string;
