@@ -35,13 +35,12 @@ export default {
         background: #fff;
         display: flex;
         align-items: flex-start;
-
+        flex-wrap: wrap;
         a {
             box-shadow: none;
             background: #FF5722;
             color: #fff;
             border-color: #FF5722;
-
             &:hover {
                 background: lighten(#FF5722, 5%);
             }

@@ -7,7 +7,7 @@ Tested up to: 6.7.1
 WC requires at least: 8.0.0
 WC tested up to: 9.5.1
 Requires PHP: 7.4
-Stable tag: 3.14.4
+Stable tag: 3.14.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -346,19 +346,24 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.14.5 ( Jan 03, 2025 ) =
+
+- **update:** Improvement vendor setup wizard ui.
+- **update:** Improvement withdraw approved email template.
+- **update:** Dokan admin settings page responsive & update ui design.
+
 = v3.14.4 ( Dec 27, 2024 ) =
+
 - **fix:** Added tweaks to improve system stability and smoothness.
 
 = v3.14.3 ( Dec 11, 2024 ) =
+
 - **update:** Updated Dokan admin header to display current pro plan and version with upgrading option.
 
 = v3.14.2 ( Dec 06, 2024 ) =
 
 - **update:** Added commission setting option in product bulk edit for Admin.
-
-= v3.14.1 ( Dec 04, 2024 ) =
-
-- **fix:** Fixed a issue in the commission upgrader to deal with empty values for product and vendor.
 
 [CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
 
