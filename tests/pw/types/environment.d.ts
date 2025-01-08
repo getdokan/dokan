@@ -77,6 +77,7 @@ declare global {
             API_COVERAGE: string;
             E2E_COVERAGE: string;
             SKIP_DOKAN: boolean;
+            REPORT_TYPE: string;
         }
     }
 }
