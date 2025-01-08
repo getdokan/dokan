@@ -368,6 +368,7 @@ class Assets {
             ],
             'dokan-react-frontend'          => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
+                'deps'    => [ 'dokan-react-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
             'dokan-react-components'        => [
@@ -589,7 +590,7 @@ class Assets {
             ],
             'dokan-react-frontend'      => [
                 'src'     => $asset_url . '/js/frontend.js',
-                'deps'    => $frontend_shipping_asset['dependencies'],
+                'deps'    => array_merge( $frontend_shipping_asset['dependencies'], [ 'dokan-react-components' ] ),
                 'version' => $frontend_shipping_asset['version'],
             ],
             'dokan-utilities'        => [

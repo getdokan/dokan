@@ -1,148 +1,187 @@
-import { Button, Modal, SimpleAlert, useToast } from '@getdokan/dokan-ui';
+import { Button, Modal, useToast } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
-import { DataTable } from '../../Components/DataTable';
-import { useEffect, useMemo, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import PriceHtml from '../../Components/PriceHtml';
 import DateTimeHtml from '../../Components/DateTimeHtml';
-import {
-    getCoreRowModel,
-    getPaginationRowModel,
-    PaginationState,
-    useReactTable,
-} from '@tanstack/react-table';
 import { useWithdraw } from './Hooks/useWithdraw';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
-import Pagination from '../../Components/Pagination';
-import { useNavigate } from 'react-router-dom';
+import { isEqual } from 'lodash';
+import { DataViews } from '@/Components';
 
 function RequestList( {
     withdrawRequests,
     status = 'pending',
+    loading = true,
 }: {
     withdrawRequests: UseWithdrawRequestsReturn;
     status: string;
+    loading: boolean;
 } ) {
+    const defaultLayouts = {
+        table: {},
+        grid: {},
+        list: {},
+        density: 'comfortable', // Use density pre-defined values: comfortable, compact, cozy
+    };
+
+    const allStatus = {
+        pending: __( 'Pending Review', 'dokan' ),
+        approved: __( 'Approved', 'dokan' ),
+        cancelled: __( 'Cancelled', 'dokan' ),
+    };
+
+    const fields = [
+        {
+            id: 'amount',
+            label: __( 'Amount', 'dokan-lite' ),
+            render: ( { item } ) => (
+                <div>
+                    { loading ? (
+                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                    ) : (
+                        <PriceHtml price={ item?.amount } />
+                    ) }
+                </div>
+            ),
+            enableSorting: false,
+        },
+        {
+            id: 'method_title',
+            label: __( 'Method', 'dokan' ),
+            enableSorting: false,
+            render: ( { item } ) => (
+                <div>
+                    { loading ? (
+                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                    ) : (
+                        item?.method_title
+                    ) }
+                </div>
+            ),
+        },
+        {
+            id: 'created',
+            label: __( 'Date', 'dokan' ),
+            enableSorting: false,
+            render: ( { item } ) => (
+                <div>
+                    { loading ? (
+                        <span className="block w-40 h-3 rounded bg-gray-200 animate-pulse"></span>
+                    ) : (
+                        <DateTimeHtml date={ item?.created } />
+                    ) }
+                </div>
+            ),
+        },
+        {
+            id: 'charge',
+            label: __( 'Charge', 'dokan' ),
+            enableSorting: false,
+            render: ( { item } ) => (
+                <div>
+                    { loading ? (
+                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                    ) : (
+                        <PriceHtml price={ item?.charge } />
+                    ) }
+                </div>
+            ),
+        },
+        {
+            id: 'receivable',
+            label: __( 'Receivable', 'dokan' ),
+            enableSorting: false,
+            render: ( { item } ) => (
+                <div>
+                    { loading ? (
+                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                    ) : (
+                        <PriceHtml price={ item?.receivable } />
+                    ) }
+                </div>
+            ),
+        },
+        ...( status === 'pending'
+            ? [
+                  {
+                      id: 'id',
+                      label: __( 'Cancel', 'dokan' ),
+                      render: ( { item } ) => {
+                          return (
+                              <div>
+                                  { loading ? (
+                                      <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                                  ) : (
+                                      <button
+                                          className="whitespace-normal m-0 hover:underline cursor-pointer bg-transparent hover:bg-transparent"
+                                          type="button"
+                                          onClick={ () => {
+                                              setCancelRequestId( item.id );
+                                              setIsOpen( true );
+                                          } }
+                                      >
+                                          { __( 'Cancel', 'dokan' ) }
+                                      </button>
+                                  ) }
+                              </div>
+                          );
+                      },
+                  },
+              ]
+            : [] ),
+        ...( status === 'pending'
+            ? [
+                  {
+                      id: 'status',
+                      label: __( 'Status', 'dokan' ),
+                      enableSorting: false,
+                      render: ( { item } ) => (
+                          <div>
+                              { loading ? (
+                                  <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                              ) : (
+                                  <span>
+                                      {
+                                          allStatus[
+                                              item?.status as keyof typeof allStatus
+                                          ]
+                                      }
+                                  </span>
+                              ) }
+                          </div>
+                      ),
+                  },
+              ]
+            : [] ),
+        ...( status === 'cancelled'
+            ? [
+                  {
+                      id: 'note',
+                      label: __( 'Note', 'dokan' ),
+                      enableSorting: false,
+                      render: ( { item } ) => (
+                          <div>
+                              { loading ? (
+                                  <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                              ) : (
+                                  item?.note
+                              ) }
+                          </div>
+                      ),
+                  },
+              ]
+            : [] ),
+    ];
     const [ isOpen, setIsOpen ] = useState( false );
-    console.log( status );
 
     const [ cancelRequestId, setCancelRequestId ] = useState( '' );
     const withdrawHook = useWithdraw();
+
+    const actions = [];
+
     const toast = useToast();
 
-    const columns = useMemo(
-        () => [
-            {
-                header: __( 'Amount', 'dokan-lite' ),
-                accessorKey: 'amount',
-                cell( { getValue } ) {
-                    return (
-                        <div className="whitespace-normal m-0">
-                            <PriceHtml price={ getValue() } />
-                        </div>
-                    );
-                },
-            },
-            {
-                header: __( 'Method', 'dokan' ),
-                accessorKey: 'method_title',
-                cell( { getValue } ) {
-                    return (
-                        <p className="whitespace-normal m-0">{ getValue() }</p>
-                    );
-                },
-            },
-            {
-                header: __( 'Date', 'dokan' ),
-                accessorKey: 'created',
-                cell( { row, getValue } ) {
-                    return (
-                        <p className="whitespace-normal m-0">
-                            <DateTimeHtml date={ getValue() } />
-                        </p>
-                    );
-                },
-            },
-            {
-                header: __( 'Charge', 'dokan' ),
-                accessorKey: 'charge',
-                cell( { row, getValue } ) {
-                    return (
-                        <p className="whitespace-normal m-0">
-                            <PriceHtml price={ getValue() } />
-                        </p>
-                    );
-                },
-            },
-            {
-                header: __( 'Receivable', 'dokan' ),
-                accessorKey: 'receivable',
-                cell( { getValue, row } ) {
-                    return (
-                        <p className="whitespace-normal m-0">
-                            <PriceHtml price={ getValue() } />
-                        </p>
-                    );
-                },
-            },
-            ...( status === 'pending'
-                ? [
-                      {
-                          header: __( 'Cancel', 'dokan' ),
-                          accessorKey: 'id',
-                          cell( { getValue } ) {
-                              return (
-                                  <button
-                                      className="whitespace-normal m-0 hover:underline cursor-pointer bg-transparent hover:bg-transparent"
-                                      type="button"
-                                      onClick={ () => {
-                                          setCancelRequestId( getValue );
-                                          setIsOpen( true );
-                                      } }
-                                  >
-                                      { __( 'Cancel', 'dokan' ) }
-                                  </button>
-                              );
-                          },
-                      },
-                  ]
-                : [] ),
-            {
-                header: __( 'Status', 'dokan' ),
-                accessorKey: 'status',
-                cell( { getValue } ) {
-                    return (
-                        <p className="whitespace-normal m-0">{ getValue() }</p>
-                    );
-                },
-            },
-        ],
-        [ status ]
-    );
-
     const fallbackData = [];
-    const table = useReactTable( {
-        data: withdrawRequests?.data ?? fallbackData,
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        pageCount: withdrawRequests.totalPages,
-        rowCount: withdrawRequests.totalItems,
-        manualPagination: true,
-        onPaginationChange: ( updater ) => {
-            // @ts-ignore
-            const newPagination = updater( table.getState().pagination );
-            // setPagination( updater );
-            withdrawRequests.fetchWithdrawRequests( {
-                ...withdrawRequests.lastPayload,
-                page: newPagination.pageIndex + 1,
-                status,
-            } );
-        },
-        state: {
-            pagination: { ...withdrawRequests.pagination },
-        },
-    } );
-
     const canclePendingRequest = () => {
         withdrawHook
             .updateWithdraw( Number( cancelRequestId ), {
@@ -166,12 +205,46 @@ function RequestList( {
             } );
     };
 
+    const fetchWithdraw = ( newView ) => {
+        if ( ! isEqual( newView, withdrawRequests?.view ) ) {
+            withdrawRequests.setView( newView );
+
+            withdrawRequests.fetchWithdrawRequests( {
+                ...withdrawRequests.lastPayload,
+                page: newView.page,
+                status,
+                per_page: newView.perPage,
+            } );
+        }
+    };
+
     return (
         <>
-            <DataTable table={ table } />
-            { withdrawRequests.totalPages > 1 && (
-                <Pagination table={ table } />
-            ) }
+            <DataViews
+                data={ withdrawRequests?.data ?? fallbackData }
+                namespace="dokan-withdraw-request-data-view"
+                defaultLayouts={ { ...defaultLayouts } }
+                fields={ fields }
+                getItemId={ ( item ) => item.id }
+                onChangeView={ fetchWithdraw }
+                search={ false }
+                paginationInfo={ {
+                    totalItems: withdrawRequests?.totalItems,
+                    totalPages: withdrawRequests?.totalPages,
+                } }
+                view={ {
+                    ...withdrawRequests?.view,
+                    layout: { ...defaultLayouts },
+                    fields: fields.map( ( field ) =>
+                        field.id !== withdrawRequests?.view?.titleField
+                            ? field.id
+                            : ''
+                    ),
+                } }
+                actions={ actions }
+                isLoading={ loading }
+            />
+
             <Modal
                 className="max-w-2xl dokan-withdraw-style-reset dokan-layout"
                 isOpen={ isOpen }
@@ -182,13 +255,12 @@ function RequestList( {
                     { __( 'Confirm', 'dokan' ) }
                 </Modal.Title>
                 <Modal.Content className="">
-                    <SimpleAlert
-                        type="warning"
-                        color="gray"
-                        label={ __(
-                            'Are you sure, you want to cancel this request ?'
+                    <p className="text-gray-600">
+                        { __(
+                            'Are you sure, you want to cancel this request ?',
+                            'dokan'
                         ) }
-                    />
+                    </p>
                 </Modal.Content>
                 <Modal.Footer className="border-t">
                     <div className="flex flex-row gap-3">

@@ -2,14 +2,12 @@ import { useWithdrawRequests } from './Hooks/useWithdrawRequests';
 import { Button, DokanToaster } from '@getdokan/dokan-ui';
 import RequestList from './RequestList';
 import { useEffect, useState } from '@wordpress/element';
-import TableSkeleton from './TableSkeleton';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 import RequestWithdrawBtn from './RequestWithdrawBtn';
 import { useWithdrawSettings } from './Hooks/useWithdrawSettings';
 import { useCurrentUser } from '../../Hooks/useCurrentUser';
-import { useBalance } from './Hooks/useBalance';
 
 function WithdrawRequests() {
     const useWithdrawRequestHook = useWithdrawRequests( true );
@@ -38,12 +36,19 @@ function WithdrawRequests() {
             queryParams.set( 'status', status );
             navigate( { search: queryParams.toString() }, { replace: true } );
         }
-
         setStatusParam( status );
 
+        let page = useWithdrawRequestHook?.view?.page;
+        if ( status !== useWithdrawRequestHook?.lastPayload?.status ) {
+            useWithdrawRequestHook.setView( {
+                ...useWithdrawRequestHook.view,
+                page: 1,
+            } );
+        }
+
         useWithdrawRequestHook.fetchWithdrawRequests( {
-            per_page: 10,
-            page: 1,
+            per_page: useWithdrawRequestHook?.view?.perPage,
+            page,
             status,
             user_id: 1,
         } );
@@ -106,9 +111,15 @@ function WithdrawRequests() {
                         </Button>
                     </div>
                 </div>
+
                 <RequestList
                     withdrawRequests={ useWithdrawRequestHook }
                     status={ statusParam }
+                    loading={
+                        useWithdrawRequestHook.isLoading ||
+                        currentUser.isLoading ||
+                        withdrawSettings.isLoading
+                    }
                 />
             </>
         );
@@ -117,13 +128,7 @@ function WithdrawRequests() {
     return (
         <>
             <div className="dokan-withdraw-wrapper dokan-react-withdraw space-y-6">
-                { useWithdrawRequestHook.isLoading ||
-                currentUser.isLoading ||
-                withdrawSettings.isLoading ? (
-                    <TableSkeleton />
-                ) : (
-                    <Table />
-                ) }
+                <Table />
             </div>
 
             <DokanToaster />

@@ -6,7 +6,7 @@ import Balance from './Balance';
 import PaymentDetails from './PaymentDetails';
 import PaymentMethods from './PaymentMethods';
 import { DokanToaster } from '@getdokan/dokan-ui';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import { useCurrentUser } from '../../Hooks/useCurrentUser';
 
 const Index = () => {

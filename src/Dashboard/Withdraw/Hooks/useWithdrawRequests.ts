@@ -1,7 +1,6 @@
 import { useState, useCallback, useRef } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
-import { PaginationState } from '@tanstack/react-table';
 
 interface WithdrawRequestPayload {
     per_page: number;
@@ -19,6 +18,14 @@ interface WithdrawRequest {
     created_date: string;
 }
 
+export interface WithdrawTableView {
+    perPage: number;
+    page: number;
+    search: any;
+    type: string;
+    titleField: string;
+}
+
 export interface UseWithdrawRequestsReturn {
     data: WithdrawRequest[] | null;
     isLoading: boolean;
@@ -27,8 +34,10 @@ export interface UseWithdrawRequestsReturn {
     refresh: () => void;
     totalItems: number;
     totalPages: number;
-    pagination: PaginationState;
     lastPayload?: WithdrawRequestPayload | null;
+    view: WithdrawTableView;
+    setView: ( view: any ) => void;
+    setData: ( data: any ) => void;
 }
 
 export const useWithdrawRequests = (
@@ -37,10 +46,14 @@ export const useWithdrawRequests = (
     const [ data, setData ] = useState< WithdrawRequest[] | null >( null );
     const [ totalItems, setTotalItems ] = useState< number >( 0 );
     const [ totalPages, setTotalPages ] = useState< number >( 0 );
-    const [ pagination, setPagination ] = useState< PaginationState >( {
-        pageIndex: 0,
-        pageSize: 10,
-    } );
+    const [ view, setView] = useState< WithdrawTableView >({
+        perPage:  10,
+        page:  1,
+        search: '',
+        type: 'table',
+        titleField: 'amount',
+    });
+
     const [ isLoading, setIsLoading ] = useState< boolean >( defaultLoader );
     const [ error, setError ] = useState< Error | null >( null );
     const lastPayload = useRef< WithdrawRequestPayload | null >( null );
@@ -60,14 +73,6 @@ export const useWithdrawRequests = (
                 } else {
                     lastPayload.current = payload;
                 }
-
-                setPagination( ( old ) => {
-                    return {
-                        ...old,
-                        pageIndex: payload.page ? payload.page - 1 : 1,
-                        pageSize: payload.per_page,
-                    };
-                } );
 
                 const newURL = addQueryArgs( `/dokan/v1/withdraw`, payload );
 
@@ -114,7 +119,9 @@ export const useWithdrawRequests = (
         refresh,
         totalItems,
         totalPages,
-        pagination,
         lastPayload: lastPayload.current,
+        view,
+        setView,
+        setData,
     };
 };
