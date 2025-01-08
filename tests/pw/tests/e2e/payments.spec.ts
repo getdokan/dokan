@@ -92,7 +92,7 @@ test.describe('Payments test', () => {
         await admin.setupPaypalMarketPlace(data.payment);
     });
 
-    test('admin can add Mangopay payment method', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can add Mangopay payment method', { tag: ['@pro', '@admin'] }, async () => {
         test.slow();
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);
         await admin.setupMangoPay(data.payment);

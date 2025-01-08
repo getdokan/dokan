@@ -7,7 +7,6 @@ import { payloads } from '@utils/payloads';
 const { VENDOR_ID } = process.env;
 
 test.describe('ShipStation test', () => {
-    test.skip(true, 'remove after pr is merged');
     let admin: ShipStationPage;
     let vendor: ShipStationPage;
     let aPage: Page, vPage: Page;
