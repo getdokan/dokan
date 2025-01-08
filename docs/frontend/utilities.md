@@ -62,7 +62,11 @@ The following case transformation utilities are available:
 
 ## Utilities Access
 
-### Pro Version
+For `Dokan Free`, we can import the `utilities` via `@/utilities`:
+
+```js
+import { snakeCase, camelCase, kebabCase } from '@/utilities';
+```
 
 In `Dokan Pro`, `utilities` can be imported directly from `@dokan/components`:
 

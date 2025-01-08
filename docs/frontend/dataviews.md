@@ -108,8 +108,9 @@ import {
     __experimentalVStack as VStack, Button
 } from "@wordpress/components";
 
-// For dokan-pro, we will import the `DataViews` component from the @dokan/components package. Otherwise, in free version we will import from the `src/components` directory.
-import { DataViews } from '@dokan/components';
+// For dokan-pro, we will import the `DataViews` component from the @dokan/components package. Otherwise, in free version we will import from the `@/components` directory.
+import { DataViews } from '@dokan/components'; // For pro version
+// import { DataViews } from '@/components'; // For free version
 
 const WPostsDataView = ({ navigate }) => {
     const [ data, setData ] = useState([]);
