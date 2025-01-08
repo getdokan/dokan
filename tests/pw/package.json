@@ -28,6 +28,7 @@
         "test:codegen": "playwright codegen",
         "test:report": "npx playwright show-report",
         "test:trace": "npx playwright show-trace trace.zip",
+        "merge:report": "npx playwright merge-reports --reporter html",
         "allure:generate": "allure generate playwright-report/allure-report -o allure-report  --clean",
         "allure:open": "allure open allure-report",
         "start:env": "wp-env start",
