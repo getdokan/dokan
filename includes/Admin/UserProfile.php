@@ -134,13 +134,15 @@ class UserProfile {
                     </td>
                 </tr>
 
-                <tr>
-                    <th><?php esc_html_e( 'Store URL', 'dokan-lite' ); ?></th>
-                    <td>
-                        <input type="text" name="dokan_store_url" data-vendor="<?php echo esc_attr( $user->ID ); ?>" class="regular-text" id="seller-url" value="<?php echo esc_attr( $user->data->user_nicename ); ?>"><strong id="url-alart-mgs"></strong>
-                        <p><small><?php echo esc_url( home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) ); ?>/<strong id="url-alart"><?php echo esc_attr( $user->data->user_nicename ); ?></strong></small></p>
-                    </td>
-                </tr>
+                <?php if ( ! user_can( $user, 'vendor_staff' ) ) : ?>
+                    <tr>
+                        <th><?php esc_html_e( 'Store URL', 'dokan-lite' ); ?></th>
+                        <td>
+                            <input type="text" name="dokan_store_url" data-vendor="<?php echo esc_attr( $user->ID ); ?>" class="regular-text" id="seller-url" value="<?php echo esc_attr( $user->data->user_nicename ); ?>"><strong id="url-alart-mgs"></strong>
+                            <p><small><?php echo esc_url( home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) ); ?>/<strong id="url-alart"><?php echo esc_attr( $user->data->user_nicename ); ?></strong></small></p>
+                        </td>
+                    </tr>
+                <?php endif; ?>
 
                 <tr>
                     <th><?php esc_html_e( 'Address 1', 'dokan-lite' ); ?></th>
