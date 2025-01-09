@@ -4425,30 +4425,30 @@ tr.data_clear_on_uninstall td fieldset label {
 }
 }
 
-.dokan-importer-wrapper[data-v-c15c744e] {
+.dokan-importer-wrapper[data-v-38c18719] {
   text-align: center;
   max-width: 700px;
   margin: 40px auto;
 }
-.dokan-importer-wrapper .skeleton-loader[data-v-c15c744e] {
+.dokan-importer-wrapper .skeleton-loader[data-v-38c18719] {
   width: 100%;
   display: block;
   background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 80%), lightgray;
   background-repeat: repeat-y;
   background-size: 50px 500px;
   background-position: 100% 0;
-  animation: shine-c15c744e 1s infinite;
+  animation: shine-38c18719 1s infinite;
   border-radius: 5px;
 }
-@keyframes shine-c15c744e {
+@keyframes shine-38c18719 {
 to {
     background-position: 0% 0, /* move highlight to right */ 100% 0;
 }
 }
-.dokan-importer-wrapper .error[data-v-c15c744e] {
+.dokan-importer-wrapper .error[data-v-38c18719] {
   border-radius: 5px;
 }
-.dokan-importer-wrapper .dokan-importer-progress-steps[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer-progress-steps[data-v-38c18719] {
   padding: 0 0 24px;
   margin: 0;
   list-style: none outside;
@@ -4457,7 +4457,7 @@ to {
   width: 100%;
   display: inline-flex;
 }
-.dokan-importer-wrapper .dokan-importer-progress-steps li[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer-progress-steps li[data-v-38c18719] {
   width: 50%;
   float: right;
   padding: 0 0 0.8em;
@@ -4467,7 +4467,7 @@ to {
   border-bottom: 4px solid #ccc;
   line-height: 1.4em;
 }
-.dokan-importer-wrapper .dokan-importer-progress-steps li[data-v-c15c744e]::before {
+.dokan-importer-wrapper .dokan-importer-progress-steps li[data-v-38c18719]::before {
   content: "";
   border: 4px solid #ccc;
   border-radius: 100%;
@@ -4480,14 +4480,14 @@ to {
   margin-bottom: -8px;
   background: #fff;
 }
-.dokan-importer-wrapper .dokan-importer-progress-steps li.active[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer-progress-steps li.active[data-v-38c18719] {
   border-color: #1BAC9E;
   color: #1BAC9E;
 }
-.dokan-importer-wrapper .dokan-importer-progress-steps li.active[data-v-c15c744e]::before {
+.dokan-importer-wrapper .dokan-importer-progress-steps li.active[data-v-38c18719]::before {
   border-color: #1BAC9E;
 }
-.dokan-importer-wrapper .dokan-importer[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer[data-v-38c18719] {
   background: #fff;
   overflow: hidden;
   padding: 0;
@@ -4495,23 +4495,23 @@ to {
   color: #555;
   text-align: right;
 }
-.dokan-importer-wrapper .dokan-importer header[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer header[data-v-38c18719] {
   margin: 0;
   padding: 24px 24px 0;
 }
-.dokan-importer-wrapper .dokan-importer header .loader-title[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer header .loader-title[data-v-38c18719] {
   width: 50%;
   height: 20px;
   margin-bottom: 24px;
 }
-.dokan-importer-wrapper .dokan-importer header .loader-description[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer header .loader-description[data-v-38c18719] {
   height: 10px;
   margin-bottom: 10px;
 }
-.dokan-importer-wrapper .dokan-importer section[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer section[data-v-38c18719] {
   padding: 10px 24px 0;
 }
-.dokan-importer-wrapper .dokan-importer section div[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer section div[data-v-38c18719] {
   margin: 0;
   position: relative;
   table-layout: fixed;
@@ -4519,50 +4519,50 @@ to {
   width: 100%;
   clear: both;
 }
-.dokan-importer-wrapper .dokan-importer section div .dokan-dummy-data-progress-bar[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer section div .dokan-dummy-data-progress-bar[data-v-38c18719] {
   width: 100%;
   height: 35px;
   -webkit-appearance: none;
 }
-.dokan-importer-wrapper .dokan-importer section div .dokan-dummy-data-progress-bar[value][data-v-c15c744e]::-webkit-progress-bar {
+.dokan-importer-wrapper .dokan-importer section div .dokan-dummy-data-progress-bar[value][data-v-38c18719]::-webkit-progress-bar {
   background-color: #EEEEEE;
   border: 1px solid #BCBCBC;
   border-radius: 5px;
 }
-.dokan-importer-wrapper .dokan-importer section div .dokan-dummy-data-progress-bar[value][data-v-c15c744e]::-webkit-progress-value {
+.dokan-importer-wrapper .dokan-importer section div .dokan-dummy-data-progress-bar[value][data-v-38c18719]::-webkit-progress-value {
   background-color: #1BAC9E;
   border-radius: 5px;
   transition: width 0.5s;
 }
-.dokan-importer-wrapper .dokan-importer section div .loader-loader[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer section div .loader-loader[data-v-38c18719] {
   height: 35px;
 }
-.dokan-importer-wrapper .dokan-importer .import-done[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .import-done[data-v-38c18719] {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 24px 24px 0 24px;
 }
-.dokan-importer-wrapper .dokan-importer .import-done p[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .import-done p[data-v-38c18719] {
   font-size: 1.2rem;
   color: #1BAC9E;
 }
-.dokan-importer-wrapper .dokan-importer .import-done .links[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .import-done .links[data-v-38c18719] {
   text-align: center;
 }
-.dokan-importer-wrapper .dokan-importer .dokan-importer-action[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .dokan-importer-action[data-v-38c18719] {
   overflow: hidden;
   margin: 0;
   padding: 24px;
   line-height: 3em;
 }
-.dokan-importer-wrapper .dokan-importer .dokan-importer-action .loader-btn[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .dokan-importer-action .loader-btn[data-v-38c18719] {
   height: 35px;
   width: 150px;
   float: left;
 }
-.dokan-importer-wrapper .dokan-importer .dokan-importer-action .dokan-import-continue-btn[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .dokan-importer-action .dokan-import-continue-btn[data-v-38c18719] {
   float: left;
   font-size: 1.25em;
   padding: 6px 12px;
@@ -4577,18 +4577,18 @@ to {
   color: #FFF;
   cursor: pointer;
 }
-.dokan-importer-wrapper .dokan-importer .dokan-importer-action .dokan-import-continue-btn.is-loading[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .dokan-importer-action .dokan-import-continue-btn.is-loading[data-v-38c18719] {
   background-color: rgba(27, 172, 158, 0.5);
   border-color: rgba(27, 172, 158, 0.5);
 }
-.dokan-importer-wrapper .dokan-importer .dokan-importer-action .dokan-import-continue-btn.is-busy[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .dokan-importer-action .dokan-import-continue-btn.is-busy[data-v-38c18719] {
   animation: components-button__busy-animation 2500ms infinite linear;
   opacity: 1;
   background-size: 100px 100%;
   background-image: linear-gradient(45deg, #f7f6f6 33%, #e0e0e0 33%, #e0e0e0 70%, #f7f6f6 70%);
   color: #848484;
 }
-.dokan-importer-wrapper .dokan-importer .dokan-importer-action .cancel-btn[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .dokan-importer-action .cancel-btn[data-v-38c18719] {
   background-color: #FFFFFF;
   border-color: #E2E2E2;
   color: #72777C;

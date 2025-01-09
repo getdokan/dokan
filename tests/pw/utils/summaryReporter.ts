@@ -79,6 +79,8 @@ export default class summaryReport implements Reporter {
 
     onTestEnd(test: TestCase, result: TestResult): void {
         this.testResults[test.id] = test.outcome();
+        // N.B. playwright skip tests from all tests, but we included them in the total tests to track all tests count comment below line and enable other commented line to make similar to playwright
+        summary.tests.push(test.title);
 
         switch (test.outcome()) {
             case 'skipped':
@@ -86,16 +88,16 @@ export default class summaryReport implements Reporter {
                 break;
             case 'expected':
                 summary.passed_tests.push(test.title);
-                summary.tests.push(test.title);
+                // summary.tests.push(test.title);
                 break;
             case 'unexpected':
                 if (!summary.failed_tests.includes(test.title)) {
                     summary.failed_tests.push(test.title);
-                    summary.tests.push(test.title);
+                    // summary.tests.push(test.title);
                 }
                 break;
             case 'flaky':
-                summary.flaky_tests.push(test.title);
+                // summary.flaky_tests.push(test.title);
                 const index = summary.failed_tests.indexOf(test.title);
                 if (index !== -1) {
                     summary.failed_tests.splice(index, 1);
