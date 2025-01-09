@@ -227,7 +227,7 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 
 Dokan comes with a number of advanced features & modules that boost your WooCommerce marketplace position, always keeping you one step ahead of the competition. Continuous innovations and features are brought with regular and timely releases. Check out the changelog [here](https://wedevs.com/docs/dokan/changelog/)
 
-* [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro) 
+* [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
 * [Print on Demand Marketplace](https://dokan.co/wordpress/modules/printful-integration/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
 * [Minimum Maximum Order](https://dokan.co/wordpress/modules/minimum-maximum-order/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
 * [Product Advertising](https://dokan.co/wordpress/modules/product-advertising/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
@@ -352,7 +352,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 - **fix:** Translations on Admin Commission Setup Wizard, Withdraw, Withdraw Log, Add Reverse Withdraw, Dummy Data, and Vendor Single pages were not working due to wrong text-domains.
 
-= v3.14.5 ( Jan 03, 2025 ) =
+= v3.14.5 ( Jan 06, 2025 ) =
 
 - **update:** Improvement vendor setup wizard ui.
 - **update:** Improvement withdraw approved email template.
