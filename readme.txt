@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivend
 Requires at least: 6.5
 Tested up to: 6.7.1
 WC requires at least: 8.0.0
-WC tested up to: 9.5.1
+WC tested up to: 9.5.5
 Requires PHP: 7.4
-Stable tag: 3.14.5
+Stable tag: 3.14.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -347,6 +347,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v3.14.6 ( Jan 09, 2025 ) =
+
+- **fix:** Translations on Admin Commission Setup Wizard, Withdraw, Withdraw Log, Add Reverse Withdraw, Dummy Data, and Vendor Single pages were not working due to wrong text-domains.
+
 = v3.14.5 ( Jan 03, 2025 ) =
 
 - **update:** Improvement vendor setup wizard ui.
@@ -360,10 +364,6 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 = v3.14.3 ( Dec 11, 2024 ) =
 
 - **update:** Updated Dokan admin header to display current pro plan and version with upgrading option.
-
-= v3.14.2 ( Dec 06, 2024 ) =
-
-- **update:** Added commission setting option in product bulk edit for Admin.
 
 [CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
 

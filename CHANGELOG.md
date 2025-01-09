@@ -1,7 +1,11 @@
+### v3.14.2 ( Dec 06, 2024 ) ###
+
+- **update:** Added commission setting option in product bulk edit for Admin.
+
 ### v3.14.1 ( Dec 04, 2024 ) ###
 
 - **fix:** Fixed a issue in the commission upgrader to deal with empty values for product and vendor.
-- 
+
 ### v3.14.0 ( Dec 02, 2024 ) ###
 
 - **new:** Commission amount now displayed in the product list within the admin dashboard.
@@ -18,7 +22,7 @@
 - **update:** As per new branding of Dokan Multivendor Plugin, full product is rebranded with new theme color.
 - **fix:** Moved the vendor edit page from Dokan Pro to Dokan Lite and eliminated the commission setting from the WordPress default user profile page.
 - **fix:** Removed the commission from every category, introducing category-based commission in global settings, vendor settings, Dokan subscription products, and the admin setup wizard.
-- 
+
 ### v3.13.1 ( Nov 11, 2024 ) ###
 
 - **update:** Compatibility with the Printful Integration Module added.
