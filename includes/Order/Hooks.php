@@ -3,7 +3,10 @@
 namespace WeDevs\Dokan\Order;
 
 use Exception;
+use WC_Coupon;
+use WC_Discounts;
 use WC_Order;
+use WC_Product;
 
 // don't call the file directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -409,19 +412,19 @@ class Hooks {
      *
      * @since DOKAN_SINCE Refactored to make it more flexible, and added filter
      *
-     * @param boolean       $valid      Whether the coupon is currently considered valid.
-     * @param \WC_Coupon    $coupon     The coupon object being validated.
-     * @param \WC_Discounts $discount   The discount object containing cart/order items being validated.
+     * @param boolean      $valid      Whether the coupon is currently considered valid.
+     * @param WC_Coupon    $coupon     The coupon object being validated.
+     * @param WC_Discounts $discounts  The discount object containing cart/order items being validated.
      *
      * @return boolean True if the coupon is valid, false otherwise
-     * @throws \Exception When the coupon is invalid for multiple vendors
+     * @throws Exception When the coupon is invalid for multiple vendors
      */
-    public function ensure_is_coupon_valid( $valid, $coupon, $discount ) {
+    public function ensure_is_coupon_valid( bool $valid, WC_Coupon $coupon, WC_Discounts $discounts ): bool {
         $available_vendors  = [];
         $available_products = [];
 
-	    foreach ( $discount->get_items() as $item ) {
-		    if ( ! isset( $item->product ) || ! $item->product instanceof \WC_Product ) {
+	    foreach ( $discounts->get_items() as $item ) {
+		    if ( ! isset( $item->product ) || ! $item->product instanceof WC_Product ) {
 			    continue;
 		    }
 
@@ -442,13 +445,13 @@ class Hooks {
 	     *
 	     * @since DOKAN_SINCE
 	     *
-	     * @param boolean       $valid              The validity of the coupon.
-	     * @param \WC_Coupon    $coupon             The coupon object.
-	     * @param array         $available_vendors  List of available vendors.
-	     * @param array         $available_products List of available products.
-	     * @param \WC_Discounts $discount           The discount object, which contains the order details.
+	     * @param boolean      $valid              The validity of the coupon.
+	     * @param WC_Coupon    $coupon             The coupon object.
+	     * @param array        $available_vendors  List of available vendors.
+	     * @param array        $available_products List of available products.
+	     * @param WC_Discounts $discounts          The discount object, which contains the order details.
 	     */
-	    if ( apply_filters( 'dokan_coupon_is_valid', $valid, $coupon, $available_vendors, $available_products, $discount ) ) {
+	    if ( apply_filters( 'dokan_coupon_is_valid', $valid, $coupon, $available_vendors, $available_products, $discounts ) ) {
 		    return true;
 	    }
 
