@@ -46,7 +46,7 @@ class Hooks {
         add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 
         // prevent non-vendor coupons from being added
-        add_filter( 'woocommerce_coupon_is_valid', [ $this, 'ensure_vendor_coupon' ], 10, 3 );
+        add_filter( 'woocommerce_coupon_is_valid', [ $this, 'ensure_is_coupon_valid' ], 10, 3 );
 
         if ( is_admin() ) {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order', 60 );
@@ -407,35 +407,29 @@ class Hooks {
      * sure a product of the admin is in the cart. Otherwise it wouldn't be
      * possible to distribute the coupon in sub orders.
      *
-     * @param boolean       $valid
-     * @param \WC_Coupon    $coupon
-     * @param \WC_Discounts $discount
+     * @since DOKAN_SINCE Refactored to make it more flexible, and added filter
+     *
+     * @param boolean       $valid      The validity of the coupon.
+     * @param \WC_Coupon    $coupon     The coupon object.
+     * @param \WC_Discounts $discount   The discount object, which contains the order details.
      *
      * @throws Exception
      * @return boolean|Exception
      */
-    public function ensure_vendor_coupon( $valid, $coupon, $discount ) {
+    public function ensure_is_coupon_valid( $valid, $coupon, $discount ) {
         $available_vendors  = [];
         $available_products = [];
 
-        if ( WC()->cart && ! WC()->cart->is_empty() ) {
-            foreach ( WC()->cart->get_cart() as $item ) {
-                $product_id           = $item['data']->get_id();
-                $available_vendors[]  = (int) dokan_get_vendor_by_product( $product_id, true );
-                $available_products[] = $product_id;
-            }
-        } else {
-            foreach ( $discount->get_items() as $item ) {
-                if ( ! isset( $item->product ) || ! $item->product instanceof \WC_Product ) {
-                    continue;
-                }
+	    foreach ( $discount->get_items() as $item ) {
+		    if ( ! isset( $item->product ) || ! $item->product instanceof \WC_Product ) {
+			    continue;
+		    }
 
-                $item_id = $item->product->get_id();
+		    $item_id = $item->product->get_id();
 
-                $available_vendors[]  = (int) dokan_get_vendor_by_product( $item_id, true );
-                $available_products[] = $item_id;
-            }
-        }
+		    $available_vendors[]  = (int) dokan_get_vendor_by_product( $item_id, true );
+		    $available_products[] = $item_id;
+	    }
 
         $available_vendors = array_unique( $available_vendors );
 
@@ -443,26 +437,20 @@ class Hooks {
             throw new Exception( esc_html__( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
         }
 
-        // Make sure applied coupon created by admin
-        if ( apply_filters( 'dokan_ensure_admin_have_create_coupon', $valid, $coupon, $available_vendors, $available_products ) ) {
-            return true;
-        }
-
-        if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
-            return $valid;
-        }
-
-        // A coupon must be bound with a product
-        if ( ! dokan()->is_pro_exists() && count( $coupon->get_product_ids() ) === 0 ) {
-            throw new Exception( esc_html__( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
-        }
-
-        $coupon_id = $coupon->get_id();
-        $vendor_id = intval( get_post_field( 'post_author', $coupon_id ) );
-
-        if ( ! in_array( $vendor_id, $available_vendors, true ) ) {
-            return false;
-        }
+	    /**
+	     * Filter the validity of a coupon.
+	     *
+	     * @since DOKAN_SINCE
+	     *
+	     * @param boolean       $valid              The validity of the coupon.
+	     * @param \WC_Coupon    $coupon             The coupon object.
+	     * @param array         $available_vendors  List of available vendors.
+	     * @param array         $available_products List of available products.
+	     * @param \WC_Discounts $discount           The discount object, which contains the order details.
+	     */
+	    if ( apply_filters( 'dokan_coupon_is_valid', $valid, $coupon, $available_vendors, $available_products, $discount ) ) {
+		    return true;
+	    }
 
         return $valid;
     }
