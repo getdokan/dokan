@@ -451,11 +451,7 @@ class Hooks {
 	     * @param array        $available_products List of available products.
 	     * @param WC_Discounts $discounts          The discount object, which contains the order details.
 	     */
-	    if ( apply_filters( 'dokan_coupon_is_valid', $valid, $coupon, $available_vendors, $available_products, $discounts ) ) {
-		    return true;
-	    }
-
-        return $valid;
+        return apply_filters( 'dokan_coupon_is_valid', $valid, $coupon, $available_vendors, $available_products, $discounts );
     }
 
     /**
