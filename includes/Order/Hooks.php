@@ -49,7 +49,7 @@ class Hooks {
         add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );
 
         // prevent non-vendor coupons from being added
-        add_filter( 'woocommerce_coupon_is_valid', [ $this, 'ensure_is_coupon_valid' ], 10, 3 );
+        add_filter( 'woocommerce_coupon_is_valid', [ $this, 'ensure_coupon_is_valid' ], 10, 3 );
 
         if ( is_admin() ) {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order', 60 );
@@ -419,7 +419,7 @@ class Hooks {
      * @return boolean True if the coupon is valid, false otherwise
      * @throws Exception When the coupon is invalid for multiple vendors
      */
-    public function ensure_is_coupon_valid( bool $valid, WC_Coupon $coupon, WC_Discounts $discounts ): bool {
+    public function ensure_coupon_is_valid( bool $valid, WC_Coupon $coupon, WC_Discounts $discounts ): bool {
         $available_vendors  = [];
         $available_products = [];
 
