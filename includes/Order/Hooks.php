@@ -409,12 +409,12 @@ class Hooks {
      *
      * @since DOKAN_SINCE Refactored to make it more flexible, and added filter
      *
-     * @param boolean       $valid      The validity of the coupon.
-     * @param \WC_Coupon    $coupon     The coupon object.
-     * @param \WC_Discounts $discount   The discount object, which contains the order details.
+     * @param boolean       $valid      Whether the coupon is currently considered valid.
+     * @param \WC_Coupon    $coupon     The coupon object being validated.
+     * @param \WC_Discounts $discount   The discount object containing cart/order items being validated.
      *
-     * @throws Exception
-     * @return boolean|Exception
+     * @return boolean True if the coupon is valid, false otherwise
+     * @throws \Exception When the coupon is invalid for multiple vendors
      */
     public function ensure_is_coupon_valid( $valid, $coupon, $discount ) {
         $available_vendors  = [];
