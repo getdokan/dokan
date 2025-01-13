@@ -440,17 +440,63 @@ class Hooks {
             throw new Exception( esc_html__( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
         }
 
-	    /**
-	     * Filter the validity of a coupon.
-	     *
-	     * @since DOKAN_SINCE
-	     *
-	     * @param boolean      $valid              The validity of the coupon.
-	     * @param WC_Coupon    $coupon             The coupon object.
-	     * @param array        $available_vendors  List of available vendors.
-	     * @param array        $available_products List of available products.
-	     * @param WC_Discounts $discounts          The discount object, which contains the order details.
-	     */
+        /**
+         * Filter to customize minimum amount validation for vendor coupons.
+         *
+         * Allows modifying whether a coupon should be valid based on the minimum order amount requirement.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool         $is_valid  True if the minimum amount requirement is met
+         * @param WC_Coupon    $coupon    The coupon object being validated
+         * @param float        $subtotal  The current order subtotal
+         * @param WC_Discounts $discounts The WC_Discounts object containing cart/order details
+         */
+        if ( ! apply_filters( 'dokan_coupon_validate_minimum_amount', true, $coupon, $discounts ) ) {
+            throw new Exception(
+                sprintf(
+                /* translators: %s: minimum spend amount for coupon */
+                    esc_html__( 'The minimum spend for this coupon is %s', 'dokan' ),
+                    esc_html( wc_price( $coupon->get_minimum_amount() ) )
+                ),
+                108
+            );
+        }
+
+        /**
+         * Filter to customize maximum amount validation for vendor coupons.
+         *
+         * Allows modifying whether a coupon should be valid based on the maximum order amount requirement.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool         $is_valid  True if the maximum amount requirement is met
+         * @param WC_Coupon    $coupon    The coupon object being validated
+         * @param float        $subtotal  The current order subtotal
+         * @param WC_Discounts $discounts The WC_Discounts object containing cart/order details
+         */
+        if ( ! apply_filters( 'dokan_coupon_validate_maximum_amount', true, $coupon, $discounts ) ) {
+            throw new Exception(
+                sprintf(
+                /* translators: %s: maximum spend amount for coupon */
+                    esc_html__( 'The maximum spend for this coupon is %s', 'dokan' ),
+                    esc_html( wc_price( $coupon->get_maximum_amount() ) )
+                ),
+                108
+            );
+        }
+
+        /**
+         * Filter the validity of a coupon.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param boolean      $valid              The validity of the coupon.
+         * @param \WC_Coupon    $coupon             The coupon object.
+         * @param array        $available_vendors  List of available vendors.
+         * @param array        $available_products List of available products.
+         * @param \WC_Discounts $discounts          The discount object, which contains the order details.
+         */
         return apply_filters( 'dokan_coupon_is_valid', $valid, $coupon, $available_vendors, $available_products, $discounts );
     }
 
