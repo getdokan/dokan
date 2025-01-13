@@ -693,18 +693,18 @@ class SetupWizard {
             <ul class="recommended-step">
                 <?php
                 if ( $this->user_can_install_plugin() ) {
-                    if ( ! $this->is_wc_conversion_tracking_active() ) {
+                    if ( ! $this->is_store_growth_active() ) {
                         $this->display_recommended_item(
                             [
-                                'type'        => 'wc_conversion_tracking',
-                                'title'       => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                                'description' => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
-                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
-                                'img_alt'     => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
+                                'type'        => 'store_growth',
+                                'title'       => __( 'StoreGrowth', 'dokan-lite' ),
+                                'description' => __( 'Best WooCommerce Marketing Solution!', 'dokan-lite' ),
+                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
+                                'img_alt'     => __( 'StoreGrowth logo', 'dokan-lite' ),
                                 'plugins'     => [
                                     [
-                                        'name' => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                                        'slug' => 'woocommerce-conversion-tracking',
+                                        'name' => __( 'StoreGrowth', 'dokan-lite' ),
+                                        'slug' => 'storegrowth-sales-booster',
                                     ],
                                 ],
                             ]
@@ -729,12 +729,30 @@ class SetupWizard {
                         );
                     }
 
+                    if ( ! $this->is_wc_conversion_tracking_active() ) {
+                        $this->display_recommended_item(
+                            [
+                                'type'        => 'wc_conversion_tracking',
+                                'title'       => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
+                                'description' => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
+                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
+                                'img_alt'     => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
+                                'plugins'     => [
+                                    [
+                                        'name' => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
+                                        'slug' => 'woocommerce-conversion-tracking',
+                                    ],
+                                ],
+                            ]
+                        );
+                    }
+
                     if ( ! $this->is_texty_active() ) {
                         $this->display_recommended_item(
                             [
                                 'type'        => 'texty',
                                 'title'       => __( 'Texty', 'dokan-lite' ),
-                                'description' => __( 'SMS Notification for WordPress, WooCommerce, Dokan and more', 'dokan-lite' ),
+                                'description' => __( 'SMS Notification for WordPress, WooCommerce, Dokan and more!', 'dokan-lite' ),
                                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/texty-logo.png',
                                 'img_alt'     => __( 'Texty logo', 'dokan-lite' ),
                                 'plugins'     => [
@@ -768,9 +786,21 @@ class SetupWizard {
     public function dokan_setup_recommended_save() {
         check_admin_referer( 'dokan-setup' );
 
+        $setup_store_growth           = isset( $_POST['setup_store_growth'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_store_growth'] ) );
         $setup_wc_conversion_tracking = isset( $_POST['setup_wc_conversion_tracking'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_wc_conversion_tracking'] ) );
         $setup_wemail                 = isset( $_POST['setup_wemail'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_wemail'] ) );
         $setup_texty                  = isset( $_POST['setup_texty'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_texty'] ) );
+
+        if ( $setup_store_growth && ! $this->is_store_growth_active() ) {
+            $this->install_plugin(
+                'storegrowth-sales-booster',
+                [
+                    'name'      => __( 'StoreGrowth', 'dokan-lite' ),
+                    'repo-slug' => 'storegrowth-sales-booster',
+                    'file'      => 'storegrowth-sales-booster.php',
+                ]
+            );
+        }
 
         if ( $setup_wc_conversion_tracking && ! $this->is_wc_conversion_tracking_active() ) {
             $this->install_plugin(
@@ -885,6 +915,10 @@ class SetupWizard {
             return false;
         }
 
+        if ( $this->is_store_growth_active() ) {
+            return false;
+        }
+
         if ( $this->is_wc_conversion_tracking_active() ) {
             return false;
         }
@@ -898,6 +932,17 @@ class SetupWizard {
         }
 
         return true;
+    }
+
+    /**
+     * Check if StoreGrowth is active or not.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected function is_store_growth_active() {
+        return is_plugin_active( 'storegrowth-sales-booster/storegrowth-sales-booster.php' );
     }
 
     /**
