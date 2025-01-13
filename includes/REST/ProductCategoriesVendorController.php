@@ -149,6 +149,7 @@ class ProductCategoriesVendorController extends DokanRESTVendorController {
                 'default' => 1,
                 'minimum' => 1,
                 'sanitize_callback' => 'absint',
+                'validate_callback' => 'rest_validate_request_arg',
             ),
             'per_page' => array(
                 'description' => 'Maximum number of items to be returned in result set.',
@@ -161,14 +162,17 @@ class ProductCategoriesVendorController extends DokanRESTVendorController {
             'search' => array(
                 'description' => 'Limit results to those matching a string.',
                 'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
             ),
             'exclude' => array(
                 'description' => 'Ensure result set excludes specific IDs.',
                 'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
             ),
             'include' => array(
                 'description' => 'Limit result set to specific IDs.',
                 'type' => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
             ),
             'order' => array(
                 'description' => 'Order sort attribute ascending or descending.',
