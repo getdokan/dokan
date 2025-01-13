@@ -231,7 +231,7 @@ class ProductControllerV2 extends ProductController {
     protected function prepare_objects_query( $request ) {
         $args = parent::prepare_objects_query( $request );
 
-         $args = array_merge(
+        $args = array_merge(
             $args,
             array(
                 'posts_per_page' => isset( $request['per_page'] ) ? $request['per_page'] : 10,
