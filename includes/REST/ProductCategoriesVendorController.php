@@ -79,9 +79,8 @@ class ProductCategoriesVendorController extends DokanRESTVendorController {
         }
 
         // Get total count for pagination
-        $total_args = $args;
-        unset( $total_args['number'] );
-        unset( $total_args['offset'] );
+        unset( $args['number'] );
+        unset( $args['offset'] );
         $total_categories = wp_count_terms( $args );
 
         // Format the response data
@@ -176,12 +175,16 @@ class ProductCategoriesVendorController extends DokanRESTVendorController {
                 'type' => 'string',
                 'default' => 'ASC',
                 'enum' => array( 'ASC', 'DESC' ),
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
             ),
             'orderby' => array(
                 'description' => 'Sort collection by term attribute.',
                 'type' => 'string',
                 'default' => 'name',
                 'enum' => array( 'name', 'id', 'slug', 'count' ),
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
             ),
             'hide_empty' => array(
                 'description' => 'Whether to hide terms not assigned to any posts.',
