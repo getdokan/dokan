@@ -2592,6 +2592,7 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // Printful Settings
         printful: {
             settingTitle: 'Printful Settings',
             clientId: PRINTFUL_APP_ID,
@@ -2607,6 +2608,18 @@ export const data = {
             optionNames: ['Size Guide Popup Text Color', 'Size Guide Popup Background Color', 'Size Guide Tab Background Color', 'Size Guide Active Tab Background Color', 'Size Guide Button Text Color'],
             optionValues: ['#000000', '#FFFFFF', '#EEEEEE', '#DDDDDD', '#1064A9'],
             saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
+        // Product form manager settings
+        productFormManager: {
+            settingTitle: 'Product Form Manager Settings',
+            customBlock: {
+                currentLabel: 'Custom Block',
+                label: `test_block_${faker.string.nanoid(5)}`,
+                description: 'test Description',
+                productType: 'Simple',
+                productCategory: 'Uncategorized',
+            },
         },
 
         // Vendor Subscription Settings
