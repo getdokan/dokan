@@ -835,7 +835,7 @@ class Settings {
                     'type'                 => 'social',
                     'desc'                 => sprintf(
                     /* translators: 1) Opening anchor tag, 2) Closing anchor tag, 3) Opening anchor tag, 4) Closing anchor tag */
-                        __( '%1$sreCAPTCHA%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s', 'dokan-lite' ),
+                        __( '%1$sreCAPTCHA_v3%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s', 'dokan-lite' ),
                         '<a href="https://developers.google.com/recaptcha/docs/v3" target="_blank" rel="noopener noreferrer">',
                         '</a>',
                         '<a href="https://wedevs.com/docs/dokan/settings/dokan-recaptacha-v3-integration" target="_blank" rel="noopener noreferrer">',
