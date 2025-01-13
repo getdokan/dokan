@@ -11,7 +11,7 @@ class ProductCategoryApiTest extends DokanTestCase {
      *
      * @var string Dokan API Namespace
      */
-    protected $rest_base = 'product-categories';
+    protected string $rest_base = 'product-categories';
 
     /**
      * Test that the endpoint exists
