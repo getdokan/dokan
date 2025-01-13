@@ -456,7 +456,7 @@ class Hooks {
             throw new Exception(
                 sprintf(
                 /* translators: %s: minimum spend amount for coupon */
-                    esc_html__( 'The minimum spend for this coupon is %s', 'dokan' ),
+                    esc_html__( 'The minimum spend for this coupon is %s', 'dokan-lite' ),
                     esc_html( wc_price( $coupon->get_minimum_amount() ) )
                 ),
                 108
@@ -479,7 +479,7 @@ class Hooks {
             throw new Exception(
                 sprintf(
                 /* translators: %s: maximum spend amount for coupon */
-                    esc_html__( 'The maximum spend for this coupon is %s', 'dokan' ),
+                    esc_html__( 'The maximum spend for this coupon is %s', 'dokan-lite' ),
                     esc_html( wc_price( $coupon->get_maximum_amount() ) )
                 ),
                 108
