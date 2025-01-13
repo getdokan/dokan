@@ -3,7 +3,9 @@ namespace WeDevs\Dokan\REST;
 
 use WeDevs\Dokan\Abstracts\DokanRESTVendorController;
 use WP_Error;
+use WP_REST_Request;
 use WP_REST_Server;
+use WP_Term;
 
 class ProductCategoriesVendorController extends DokanRESTVendorController {
 
@@ -107,7 +109,7 @@ class ProductCategoriesVendorController extends DokanRESTVendorController {
      * @param WP_REST_Request $request Request object.
      * @return array Formatted category data.
      */
-    protected function prepare_category_for_response( $category, $request ) {
+    protected function prepare_category_for_response( $category, $request ): array {
         $thumbnail_id = get_term_meta( $category->term_id, 'thumbnail_id', true );
         $thumbnail_url = $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '';
 
