@@ -32,7 +32,7 @@ const SettingsParser = ( { element }: { element: StatusElement } ) => {
 
         default:
             // @ts-ignore
-            return wp.applyFilters(
+            return wp.hooks.applyFilters(
                 'dokan_status_custom_element',
                 <></>,
                 element
