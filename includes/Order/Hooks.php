@@ -449,7 +449,6 @@ class Hooks {
          *
          * @param bool         $is_valid  True if the minimum amount requirement is met
          * @param WC_Coupon    $coupon    The coupon object being validated
-         * @param float        $subtotal  The current order subtotal
          * @param WC_Discounts $discounts The WC_Discounts object containing cart/order details
          */
         if ( ! apply_filters( 'dokan_coupon_validate_minimum_amount', true, $coupon, $discounts ) ) {
@@ -472,7 +471,6 @@ class Hooks {
          *
          * @param bool         $is_valid  True if the maximum amount requirement is met
          * @param WC_Coupon    $coupon    The coupon object being validated
-         * @param float        $subtotal  The current order subtotal
          * @param WC_Discounts $discounts The WC_Discounts object containing cart/order details
          */
         if ( ! apply_filters( 'dokan_coupon_validate_maximum_amount', true, $coupon, $discounts ) ) {
@@ -492,10 +490,10 @@ class Hooks {
          * @since DOKAN_SINCE
          *
          * @param boolean      $valid              The validity of the coupon.
-         * @param \WC_Coupon    $coupon             The coupon object.
+         * @param WC_Coupon    $coupon             The coupon object.
          * @param array        $available_vendors  List of available vendors.
          * @param array        $available_products List of available products.
-         * @param \WC_Discounts $discounts          The discount object, which contains the order details.
+         * @param WC_Discounts $discounts          The discount object, which contains the order details.
          */
         return apply_filters( 'dokan_coupon_is_valid', $valid, $coupon, $available_vendors, $available_products, $discounts );
     }
