@@ -148,11 +148,19 @@ abstract class StatusElement {
     }
 
     /**
+     * Set children.
+     *
+     * @since DOKAN_SINCE
+     *
      * @param  array  $children
      *
      * @return StatusElement
+     * @throws Exception
      */
     public function set_children( array $children ): StatusElement {
+        if ( ! $this->is_support_children() ) {
+            throw new Exception( esc_html__( 'This element does not support child element.', 'dokan-lite' ) );
+        }
         $this->children = $children;
 
         return $this;
