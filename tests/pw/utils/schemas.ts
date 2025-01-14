@@ -1825,7 +1825,7 @@ export const schemas = {
                         slug: z.string(),
                     }),
                 ),
-                chosen_cat: z.array(z.number()),
+                chosen_cat: z.array(z.number().or(z.string())),
                 external_url: z.string().optional(),
                 button_text: z.string().optional(),
             }),

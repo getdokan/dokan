@@ -2,15 +2,21 @@
 
 namespace WeDevs\Dokan\Dashboard\Templates;
 
-use WeDevs\Dokan\Dashboard\Templates\Dashboard;
-use WeDevs\Dokan\Dashboard\Templates\Main;
-use WeDevs\Dokan\Dashboard\Templates\Orders;
-use WeDevs\Dokan\Dashboard\Templates\Products;
-use WeDevs\Dokan\Dashboard\Templates\Settings;
-use WeDevs\Dokan\Dashboard\Templates\Withdraw;
-use WeDevs\Dokan\Dashboard\Templates\MultiStepCategories;
 use WeDevs\Dokan\Traits\ChainableContainer;
 
+/**
+ * Dashboard Template Manager
+ *
+ * @since 3.0.0
+ *
+ * @property Dashboard           $dashboard          Instance of Dashboard class
+ * @property Orders              $orders             Instance of Orders class
+ * @property Products            $products           Instance of Dashboard class
+ * @property Settings            $settings           Instance of Settings class
+ * @property Withdraw            $withdraw           Instance of Withdraw class
+ * @property MultiStepCategories $product_category   Instance of MultiStepCategories class
+ * @property ReverseWithdrawal   $reverse_withdrawal Instance of ReverseWithdrawal class
+ */
 class Manager {
 
     use ChainableContainer;

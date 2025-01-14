@@ -142,7 +142,7 @@ class Manager {
             return;
         }
 
-        do_action( 'dokan_new_product_added', $object->get_id(), $request );
+        do_action( 'dokan_new_product_added', $object->get_id(), [] );
     }
 
     /**

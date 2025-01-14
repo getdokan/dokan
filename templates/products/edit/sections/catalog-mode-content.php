@@ -8,6 +8,8 @@
 
 use WeDevs\Dokan\CatalogMode\Helper;
 
+defined( 'ABSPATH' ) || exit;
+
 ?>
 <?php do_action( 'dokan_product_edit_before_catalog_mode', $product_id, $saved_data ); ?>
 

@@ -41,8 +41,6 @@ class Ajax {
         add_action( 'wp_ajax_dokan_seller_listing_search', [ $this, 'seller_listing_search' ] );
         add_action( 'wp_ajax_nopriv_dokan_seller_listing_search', [ $this, 'seller_listing_search' ] );
 
-        add_action( 'wp_ajax_dokan_create_new_product', [ $this, 'create_product' ] );
-
         add_action( 'wp_ajax_custom-header-crop', [ $this, 'crop_store_banner' ] );
 
         add_action( 'wp_ajax_dokan_json_search_products_tags', [ $this, 'dokan_json_search_products_tags' ] );
@@ -55,43 +53,6 @@ class Ajax {
         add_action( 'wp_ajax_nopriv_dokan_login_user', [ $this, 'login_user' ] );
 
         add_action( 'wp_ajax_dokan-upgrade-dissmiss', [ $this, 'dismiss_pro_notice' ] );
-    }
-
-    /**
-     * Create product from popup submission
-     *
-     * @since  2.5.0
-     *
-     * @return void
-     */
-    public function create_product() {
-        check_ajax_referer( 'dokan_reviews' );
-
-        if ( ! current_user_can( 'dokan_add_product' ) ) {
-            wp_send_json_error( __( 'You have no permission to do this action', 'dokan-lite' ) );
-        }
-
-        $submited_data = isset( $_POST['postdata'] ) ? wp_unslash( $_POST['postdata'] ) : ''; //phpcs:ignore
-
-        parse_str( $submited_data, $postdata );
-
-        $response = dokan_save_product( $postdata );
-
-        if ( is_wp_error( $response ) ) {
-            wp_send_json_error( $response->get_error_message() );
-        }
-
-        if ( is_int( $response ) ) {
-            if ( current_user_can( 'dokan_edit_product' ) ) {
-                $redirect = dokan_edit_product_url( $response );
-            } else {
-                $redirect = dokan_get_navigation_url( 'products' );
-            }
-
-            wp_send_json_success( $redirect );
-        } else {
-            wp_send_json_error( __( 'Something wrong, please try again later', 'dokan-lite' ) );
-        }
     }
 
     /**
