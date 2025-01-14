@@ -1,4 +1,3 @@
-const defaultConfig = require("@wordpress/scripts/config/webpack.config");
 const entryPoints = {
     // Dokan tailwind css
     'dokan-tailwind': './src/tailwind.css',

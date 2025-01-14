@@ -1,5 +1,4 @@
 const path = require( 'path' );
-const package = require( './package.json' );
 const {VueLoaderPlugin} = require( 'vue-loader' );
 const entryPoints = require( './webpack-entries' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
