@@ -2613,12 +2613,37 @@ export const data = {
         // Product form manager settings
         productFormManager: {
             settingTitle: 'Product Form Manager Settings',
-            customBlock: {
+            customBlock: () => ({
                 currentLabel: 'Custom Block',
                 label: `test_block_${faker.string.nanoid(5)}`,
                 description: 'test Description',
                 productType: 'Simple',
                 productCategory: 'Uncategorized',
+            }),
+
+            updateBlock: {
+                currentLabel: '',
+                label: `test_block_${faker.string.nanoid(5)}`,
+                description: 'updated test Description',
+                productType: 'Variable',
+                productCategory: 'clothings',
+            },
+
+            customField: () => ({
+                block: 'Custom Block',
+                currentLabel: 'Custom Field',
+                label: `test_field_${faker.string.nanoid(5)}`,
+                type: 'checkbox', // 'text', 'number', 'reach_text', 'date_picker', 'date_range_picker', 'time_picker', 'select', 'multiselect', 'radio', 'checkbox', 'image', 'file'
+                placeholder: 'test placeholder',
+                helpContent: 'test help content',
+            }),
+
+            updateField: {
+                currentLabel: '',
+                label: `test_field_${faker.string.nanoid(5)}`,
+                filedType: 'number',
+                placeHolder: 'updated test placeholder',
+                helpContent: 'updated test help content',
             },
         },
 
