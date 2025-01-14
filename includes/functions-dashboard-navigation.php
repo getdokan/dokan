@@ -48,11 +48,12 @@ function dokan_get_dashboard_nav(): array {
             'permission' => 'dokan_view_order_menu',
         ],
         'withdraw'  => [
-            'title'      => __( 'Withdraw', 'dokan-lite' ),
-            'icon'       => '<i class="fas fa-upload"></i>',
-            'url'        => dokan_get_navigation_url( 'withdraw' ),
-            'pos'        => 70,
-            'permission' => 'dokan_view_withdraw_menu',
+            'title'       => __( 'Withdraw', 'dokan-lite' ),
+            'icon'        => '<i class="fas fa-upload"></i>',
+            'url'         => dokan_get_navigation_url( 'withdraw' ),
+            'pos'         => 70,
+            'permission'  => 'dokan_view_withdraw_menu',
+            'react_route' => 'withdraw',
         ],
         'settings'  => [
             'title' => __( 'Settings', 'dokan-lite' ),

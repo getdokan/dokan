@@ -13,7 +13,20 @@ class VendorNavMenuChecker {
      * @var array $template_dependencies List of template dependencies.
      * [ 'route' => [ ['slug' => 'template-slug', 'name' => 'template-name' (Optional), 'args' = [] (Optional)  ] ] ]
      */
-    protected array $template_dependencies = [];
+    protected array $template_dependencies = [
+        'withdraw' => [
+            [ 'slug' => 'withdraw/withdraw-dashboard' ],
+            [ 'slug' => 'withdraw/withdraw' ],
+            [ 'slug' => 'withdraw/header' ],
+            [ 'slug' => 'withdraw/status-listing' ],
+            [ 'slug' => 'withdraw/pending-request-listing' ],
+            [ 'slug' => 'withdraw/approved-request-listing' ],
+            [ 'slug' => 'withdraw/cancelled-request-listing' ],
+            [ 'slug' => 'withdraw/tmpl-withdraw-request-popup' ],
+            [ 'slug' => 'withdraw/request-form' ],
+            [ 'slug' => 'withdraw/pending-request-listing-dashboard' ],
+        ],
+    ];
 
     /**
      * Constructor.
