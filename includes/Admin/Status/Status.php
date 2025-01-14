@@ -182,11 +182,11 @@ class Status extends StatusElement {
      * @throws Exception
      */
     public function describe() {
-        $this->add(
-            self::heading( 'main_heading' )
-                ->set_title( __( 'Dokan Status', 'dokan-lite' ) )
-                ->set_description( __( 'Check the status of your Dokan installation.', 'dokan-lite' ) )
-        );
+		//        $this->add(
+		//            self::heading( 'main_heading' )
+		//                ->set_title( __( 'Dokan Status', 'dokan-lite' ) )
+		//                ->set_description( __( 'Check the status of your Dokan installation.', 'dokan-lite' ) )
+		//        );
 
 		//        $this->add(
 		//            self::section( 'overridden_features' )
