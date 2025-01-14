@@ -13,6 +13,24 @@ export class VendorToolsPage extends VendorPage {
 
     // tools
 
+    // enable vendor product importer and exporter module
+    async enableProductImporterExporterModule() {
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.tools);
+    }
+
+    // disable vendor product importer and exporter module
+    async disableProductImporterExporterModule() {
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.tools);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.tools);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+    }
+
     // vendor tools render properly
     async vendorToolsRenderProperly() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.tools);

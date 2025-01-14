@@ -62,16 +62,14 @@ class OrderItem implements InterfaceSetting {
          */
         $order_id = wc_get_order_id_by_order_item_id( $this->order_item_id );
 
-        if ( $order_id && OrderUtil::is_hpos_enabled() ) {
+        if ( $order_id ) {
             $order = dokan()->order->get( $order_id );
-            $item_total = $order->get_meta( '_dokan_item_total' );
-        } else {
-            $item_total = get_post_meta( $order_id, '_dokan_item_total', true );
+            $item_total = floatval( $order->get_meta( '_dokan_item_total' ) );
         }
 
         $product_price = (float) wc_format_decimal( $this->product_price_to_calculate_commission );
         if ( $order_id && $item_total ) {
-            $additional_flat = ( $additional_flat / $item_total ) * $product_price;
+            $additional_flat = ( floatval( $additional_flat ) / $item_total ) * $product_price;
         }
 
         $settings = new Setting();

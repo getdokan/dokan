@@ -1,9 +1,64 @@
 <div class="dokan-admin-header">
-    <div class="dokan-admin-header-logo">
-        <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . '/images/dokan-logo.png' ); ?>" alt="Dokan Logo"/>
-        <span class="dokan-admin-header-version">v<?php echo esc_html( DOKAN_PLUGIN_VERSION ); ?></span>
-    </div>
+    <div class="dokan-admin-header-content">
 
+        <div class="dokan-admin-logo-wrap">
+        <!-- Logo Section -->
+        <div class="dokan-admin-header-logo">
+            <img src="<?php echo esc_url( DOKAN_PLUGIN_ASSEST . '/images/dokan-logo.png' ); ?>" alt="Dokan Logo"/>
+        </div>
+
+        <!-- Version Tags Section -->
+        <div class="dokan-version-tags">
+            <?php
+            // Always show Lite version
+            $lite_version = DOKAN_PLUGIN_VERSION;
+            ?>
+            <div class="version-tag lite ">
+                Lite: <?php echo esc_html( $lite_version ); ?>
+            </div>
+
+            <?php
+            // Show Pro version if installed
+            if ( dokan()->is_pro_exists() && dokan_pro()->license->is_valid() ) {
+                $pro_version = DOKAN_PRO_PLUGIN_VERSION;
+                $license_plan = dokan_pro()->license->get_plan();
+                ?>
+                <div class="version-tag pro">
+                    <span class="version-tag-pro-badge">Pro
+                        <?php
+                        dokan_get_template_part(
+                            'svg-icons/pro-award', null,
+                            [
+                                'width' => 20,
+                                'height' => 20,
+							]
+                        );
+                        ?>
+                    </span>
+                    <?php echo esc_html( $license_plan ); ?>: <?php echo esc_html( $pro_version ); ?>
+                </div>
+                <?php
+            } elseif ( ! dokan()->is_pro_exists() ) {
+                // Show upgrade button if Pro not installed
+                $upgrade_url = 'https://dokan.co/wordpress/pricing/';
+                ?>
+                <a target="_blank" href="<?php echo esc_url( $upgrade_url ); ?>" class="upgrade-button">
+                    Upgrade
+                    <?php
+                    dokan_get_template_part(
+                        'svg-icons/pro-award', null,
+                        [
+                            'width' => 20,
+                            'height' => 20,
+                        ]
+                    );
+                    ?>
+                </a>
+                <?php
+            }
+            ?>
+        </div>
+        </div>
     <div class="dokan-admin-header-menu">
         <div class="menu-item">
             <div class="menu-icon">
@@ -108,5 +163,6 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </div>

@@ -5,6 +5,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 
 test.describe('Vendor subscription test', () => {
     test.skip(true, ' need to update create dokan subscription product');
@@ -40,15 +41,22 @@ test.describe('Vendor subscription test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.vendorSubscription, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await apiUtils.dispose();
     });
 
-    // admin
-
     // todo: add dokan subscription settings tests
     // todo: add dokan subscription product tests
+
+    // admin
+
+    test('admin can enable vendor subscription module', { tag: ['@pro', '@admin'] }, async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.vendorSubscription, { ...dbData.dokan.vendorSubscriptionSettings, enable_pricing: 'on' });
+        await admin.enableVendorSubscriptionModule();
+        await dbUtils.setOptionValue(dbData.dokan.optionName.vendorSubscription, { ...dbData.dokan.vendorSubscriptionSettings, enable_pricing: 'off' });
+    });
 
     test('admin can view subscriptions menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.subscriptionsRenderProperly();
@@ -119,5 +127,12 @@ test.describe('Vendor subscription test', () => {
 
         const vendor = new VendorSubscriptionsPage(page);
         await vendor.vendorCancelSubscription(vendorName);
+    });
+
+    // admin
+
+    test('admin can disable vendor subscription module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.vendorSubscription, payloads.adminAuth);
+        await admin.disableVendorSubscriptionModule();
     });
 });

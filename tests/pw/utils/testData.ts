@@ -32,6 +32,18 @@ const {
     TALKJS_APP_SECRET,
     PRINTFUL_APP_ID,
     PRINTFUL_APP_SECRET,
+    TEST_PUBLISH_KEY_STRIPE,
+    TEST_SECRET_KEY_STRIPE,
+    CLIENT_ID_STRIPE,
+    SANDBOX_CLIENT_ID_MANGOPAY,
+    SANDBOX_API_KEY_MANGOPAY,
+    TEST_KEY_ID_RAZORPAY,
+    TEST_KEY_SECRET_RAZORPAY,
+    TEST_PUBLISH_KEY_STRIPE_EXPRESS,
+    TEST_SECRET_KEY_STRIPE_EXPRESS,
+    TEST_MERCHANT_ID_PAYPAL_MARKETPLACE,
+    TEST_CLIENT_ID_PAYPAL_MARKETPLACE,
+    TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE,
 } = process.env;
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
@@ -639,6 +651,12 @@ export const data = {
         reviewMessage: () => faker.string.nanoid(10),
     },
 
+    // store banner
+    storeBanner: {
+        width: '625',
+        height: '300',
+    },
+
     // store list
     storeList: {
         sort: 'most_recent',
@@ -849,17 +867,17 @@ export const data = {
             title: 'Dokan Credit card (Stripe)',
             description: 'Pay with your credit card via Stripe.',
             displayNoticeInterval: '7',
-            testPublishableKey: 'pk_test_',
-            testSecretKey: 'sk_test_',
-            testClientId: 'ca_',
+            testPublishableKey: TEST_PUBLISH_KEY_STRIPE ?? 'pk_test_',
+            testSecretKey: TEST_SECRET_KEY_STRIPE ?? 'sk_test_',
+            testClientId: CLIENT_ID_STRIPE ?? 'ca_',
         },
 
         paypalMarketPlace: {
             title: 'PayPal Marketplace',
             description: "Pay via PayPal Marketplace you can pay with your credit card if you don't have a PayPal account",
-            payPalMerchantId: 'partner_',
-            sandboxClientId: 'client_',
-            sandBoxClientSecret: 'secret_',
+            payPalMerchantId: TEST_MERCHANT_ID_PAYPAL_MARKETPLACE ?? 'partner_',
+            sandboxClientId: TEST_CLIENT_ID_PAYPAL_MARKETPLACE ?? 'client_',
+            sandBoxClientSecret: TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE ?? 'secret_',
             payPalPartnerAttributionId: 'weDevs_SP_Dokan',
             disbursementMode: 'Delayed', // 'Immediate', 'On Order Complete', 'Delayed'
             paymentButtonType: 'Smart Payment Buttons', // 'Smart Payment Buttons', 'Standard Button'
@@ -870,8 +888,8 @@ export const data = {
         mangoPay: {
             title: 'MangoPay',
             description: 'Pay via MangoPay',
-            sandboxClientId: 'client_',
-            sandBoxApiKey: 'secret_',
+            sandboxClientId: SANDBOX_CLIENT_ID_MANGOPAY ?? 'client_',
+            sandBoxApiKey: SANDBOX_API_KEY_MANGOPAY ?? 'secret_',
             availableCreditCards: 'CB/Visa/Mastercard', // 'CB/Visa/Mastercard', 'Maestro*', 'Bancontact/Mister Cash', 'Przelewy24*', 'Diners*', 'PayLib', 'iDeal*', 'MasterPass*', 'Bankwire Direct*'
             availableDirectPaymentServices: 'Sofort*', // 'Sofort*', 'Giropay*'],
             transferFunds: 'On payment completed', // 'On payment completed', 'On order completed', 'Delayed'
@@ -883,8 +901,8 @@ export const data = {
         razorPay: {
             title: 'Razorpay',
             description: 'Pay securely by Credit or Debit card or Internet Banking through Razorpay.',
-            testKeyId: 'rzp_test',
-            testKeySecret: 'rzp_test',
+            testKeyId: TEST_KEY_ID_RAZORPAY ?? 'rzp_test',
+            testKeySecret: TEST_KEY_SECRET_RAZORPAY ?? 'rzp_test',
             disbursementMode: 'Delayed', // 'Immediate', 'On Order Complete', 'Delayed'
             announcementInterval: '7',
         },
@@ -892,8 +910,8 @@ export const data = {
         stripeExpress: {
             title: 'Dokan Express Payment Methods',
             description: 'Pay with your credit card via Stripe.',
-            testPublishableKey: 'pk_test_',
-            testSecretKey: 'sk_test_',
+            testPublishableKey: TEST_PUBLISH_KEY_STRIPE_EXPRESS ?? 'pk_test_',
+            testSecretKey: TEST_SECRET_KEY_STRIPE_EXPRESS ?? 'sk_test_',
             testWebhookSecret: 'webHook_test_',
             paymentMethods: {
                 card: 'Credit/Debit Card',
@@ -951,7 +969,7 @@ export const data = {
         shippingFeeRecipient: 'seller', // 'seller', 'admin'
         taxFeeRecipient: 'seller', // 'seller', 'admin'
         mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
-        googleMapApiKey: GMAP,
+        googleMapApiKey: GMAP ?? '',
         sellingProductTypes: 'sell_both', // 'physical', 'digital', 'sell_both',
         commission: {
             commissionType: 'fixed', // 'fixed','category_based'
@@ -1088,6 +1106,11 @@ export const data = {
                 shippingSettings: 'wp-admin/admin.php?page=wc-settings&tab=shipping',
                 shippingZone: (zoneId: string) => `wp-admin/admin.php?page=wc-settings&tab=shipping&zone_id=${zoneId}`,
                 paymentSettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout',
+                mangoPaySettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan_mangopay',
+                paypalMarketplaceSettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan_paypal_marketplace',
+                razorPaySettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan_razorpay',
+                stripeConnectSettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan-stripe-connect',
+                stripeExpressSettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan_stripe_express',
                 accountSettings: 'wp-admin/admin.php?page=wc-settings&tab=account',
             },
         },
@@ -1150,6 +1173,7 @@ export const data = {
                 setupWizard: '?page=dokan-seller-setup',
                 dashboard: 'dashboard',
                 products: 'dashboard/products',
+                productEdit: (productId: string, nonce: string) => `dashboard/products/?product_id=${productId}&action=edit&_dokan_edit_product_nonce=${nonce}`,
                 spmv: 'dashboard/products-search',
                 orders: 'dashboard/orders',
                 userSubscriptions: 'dashboard/user-subscription',
@@ -1164,7 +1188,7 @@ export const data = {
                 withdrawRequests: 'dashboard/withdraw-requests',
                 reverseWithdrawal: 'dashboard/reverse-withdrawal',
                 badges: 'dashboard/seller-badge',
-                productQA: 'dashboard/product-questions-answers',
+                productQa: 'dashboard/product-questions-answers',
                 questionDetails: (questionId: string) => `dashboard/product-questions-answers/?question_id=${questionId}`,
                 returnRequest: 'dashboard/return-request',
                 staff: 'dashboard/staffs',
@@ -2254,8 +2278,8 @@ export const data = {
         appearance: {
             settingTitle: 'Appearance Settings',
             mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
-            googleMapApiKey: GMAP,
-            mapBoxApiKey: MAPBOX,
+            googleMapApiKey: GMAP ?? '',
+            mapBoxApiKey: MAPBOX ?? '',
             storeBannerWidth: '625',
             storeBannerHeight: '300',
             saveSuccessMessage: 'Setting has been saved successfully.',
