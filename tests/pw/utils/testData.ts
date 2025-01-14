@@ -1181,6 +1181,7 @@ export const data = {
                 setupWizard: '?page=dokan-seller-setup',
                 dashboard: 'dashboard',
                 products: 'dashboard/products',
+                productEdit: (productId: string, nonce: string) => `dashboard/products/?product_id=${productId}&action=edit&_dokan_edit_product_nonce=${nonce}`,
                 spmv: 'dashboard/products-search',
                 orders: 'dashboard/orders',
                 userSubscriptions: 'dashboard/user-subscription',

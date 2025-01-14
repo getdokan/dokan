@@ -19,6 +19,7 @@ test.describe('Store Appearance test', () => {
         admin = new StoreAppearancePage(aPage);
 
         apiUtils = new ApiUtils(await request.newContext());
+        await dbUtils.setOptionValue('sidebars_widgets', dbData.emptySideBarsWidgets);
         // await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeLocation, dbData.dokanWidgets.values.storeLocationWidget);
         // await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeOpenClose, dbData.dokanWidgets.values.storeOpenCloseWidget);
         // await dbUtils.updateOptionValue(dbData.dokanWidgets.names.storeContactForm, dbData.dokanWidgets.values.storeContactFormWidget);
