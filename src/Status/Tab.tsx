@@ -1,4 +1,5 @@
 import { StatusElement } from './Status';
+import { __ } from '@wordpress/i18n';
 
 function classNames( ...classes ) {
     return classes.filter( Boolean ).join( ' ' );
@@ -21,7 +22,7 @@ const Tab = ( {
             <div>
                 <div className="sm:hidden">
                     <label htmlFor="tabs" className="sr-only">
-                        Select a tab
+                        { __( 'Select a tab', 'dokan-lite' ) }
                     </label>
                     { /* Use an "onChange" listener to redirect the user to the selected tab URL. */ }
                     <select

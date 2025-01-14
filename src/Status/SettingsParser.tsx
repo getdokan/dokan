@@ -31,7 +31,12 @@ const SettingsParser = ( { element }: { element: StatusElement } ) => {
             return <Button key={ element.hook_key } element={ element } />;
 
         default:
-            return <></>;
+            // @ts-ignore
+            return wp.applyFilters(
+                'dokan_status_custom_element',
+                <></>,
+                element
+            );
     }
 };
 
