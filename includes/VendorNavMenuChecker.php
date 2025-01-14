@@ -2,6 +2,9 @@
 
 namespace WeDevs\Dokan;
 
+use Exception;
+use WeDevs\Dokan\Admin\Status\Status;
+
 class VendorNavMenuChecker {
 
     /**
@@ -19,6 +22,7 @@ class VendorNavMenuChecker {
     public function __construct() {
         add_filter( 'dokan_get_dashboard_nav', [ $this, 'convert_to_react_menu' ], 999 );
         add_filter( 'dokan_admin_notices', [ $this, 'display_notice' ] );
+        add_action( 'dokan_status_after_describing_elements', [ $this, 'add_status_section' ] );
     }
 
     /**
@@ -207,8 +211,64 @@ class VendorNavMenuChecker {
             'type'        => 'alert',
             'title'       => esc_html__( 'Some of Dokan Templates are overridden which limit new features.', 'dokan-lite' ),
             'description' => $notice,
+            'actions'     => [
+                [
+                    'type'   => 'primary',
+                    'text' => esc_html__( 'Learn More', 'dokan-lite' ),
+                    'action'   => admin_url( 'admin.php?page=dokan-status' ),
+                    'target' => '_blank',
+                ],
+            ],
         ];
 
         return $notices;
+    }
+
+    /**
+     * Add template dependencies to status page.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function add_status_section( Status $status ) {
+        if ( empty( $this->list_overridden_templates() ) ) {
+            return;
+        }
+
+        $table = Status::table( 'override_table' )
+                ->set_title( __( 'General Heading', 'dokan-lite' ) )
+                ->set_headers(
+                    [
+                        __( 'Template', 'dokan-lite' ),
+                    ]
+                );
+
+        foreach ( $this->list_overridden_templates() as $id => $template ) {
+            $table->add(
+                Status::table_row( 'override_row_' . $id )
+                    ->add(
+                        Status::table_column( 'template_' . $id )
+                            ->add(
+                                Status::paragraph( 'file_location_' . $id )
+                                    ->set_title( $template )
+                            )
+                            ->add(
+                                Status::paragraph( 'file_location_' . $id . '_instruction' )
+                                        ->set_title( __( 'Please Remove the above file to enable ', 'dokan-lite' ) )
+                            )
+                    )
+            );
+        }
+
+        $status->add(
+            Status::section( 'overridden_features' )
+                ->set_title( __( 'Overridden Templates', 'dokan-lite' ) )
+                ->set_description( __( 'The templates currently overridden that is preventing enabling new features.', 'dokan-lite' ) )
+                ->add(
+                    $table
+                )
+        );
     }
 }
