@@ -49,7 +49,7 @@ class VendorNavMenuChecker {
     public function convert_to_react_menu( array $menu_items ): array {
         return array_map(
             function ( $item ) {
-                if ( ! empty( $item['react_route'] ) && $this->is_dependency_cleared( $item['react_route'] ) ) {
+                if ( ! empty( $item['react_route'] ) && $this->is_dependency_resolved( $item['react_route'] ) ) {
                     $item['url'] = $this->get_url_for_route( $item['react_route'] );
                 }
                 if ( isset( $item['submenu'] ) ) {
@@ -70,7 +70,7 @@ class VendorNavMenuChecker {
      *
      * @return bool
      */
-    protected function is_dependency_cleared( string $route ): bool {
+    protected function is_dependency_resolved( string $route ): bool {
         $clear        = true;
         $dependencies = $this->get_template_dependencies_resolutions();
 
@@ -78,7 +78,7 @@ class VendorNavMenuChecker {
             $clear = false;
         }
 
-        return apply_filters( 'dokan_is_dashboard_nav_dependency_cleared', $clear, $route );
+        return apply_filters( 'dokan_is_dashboard_nav_dependency_resolved', $clear, $route );
     }
 
     /**
