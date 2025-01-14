@@ -16,6 +16,8 @@ const updatedConfig = {
     'utilities': {
       import: '@/utilities/index.ts',
     },
+    'dokan-status': '/src/Status/index.tsx',
+
   },
   output: {
     path: path.resolve(__dirname, './assets/js'),
