@@ -1,3 +1,4 @@
+const defaultConfig = require("@wordpress/scripts/config/webpack.config");
 const entryPoints = {
     // Dokan tailwind css
     'dokan-tailwind': './src/tailwind.css',
@@ -52,6 +53,7 @@ const entryPoints = {
     'dokan-setup-wizard-commission': './assets/src/js/setup-wizard/commission/index.js',
     // Category commission component styles.
     'dokan-category-commission': '/src/admin/components/Commission/index.js',
+    'dokan-status': '/src/Status/index.tsx',
 };
 
 module.exports = entryPoints;
