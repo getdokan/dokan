@@ -4,6 +4,86 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.14.6',
+        'released' => '2025-01-09',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Translations on Admin Commission Setup Wizard, Withdraw, Withdraw Log, Add Reverse Withdraw, Dummy Data, and Vendor Single pages were not working due to wrong text-domains.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.5',
+        'released' => '2025-01-06',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Improvement vendor setup wizard ui.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improvement withdraw approved email template.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Dokan admin settings page responsive & update ui design.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.4',
+        'released' => '2024-12-27',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Added tweaks to improve system stability and smoothness',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.3',
+        'released' => '2024-12-11',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Updated Dokan admin header to display current pro plan and version with upgrading option.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.2',
+        'released' => '2024-12-06',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Added commission setting option in product bulk edit for Admin.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.1',
+        'released' => '2024-12-04',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Fixed a issue in the commission upgrader to deal with empty values for product and vendor.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.14.0',
         'released' => '2024-12-02',
         'changes'  => [

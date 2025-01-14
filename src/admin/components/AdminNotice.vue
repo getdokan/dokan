@@ -13,10 +13,12 @@
                                 <h3 v-if="notice.title">{{ notice.title }}</h3>
                                 <div v-if="notice.description" v-html="notice.description"></div>
                                 <template v-if="notice.actions && notice.actions.length">
+                                    <div>
                                     <template v-for="action in notice.actions">
                                         <a v-if="action.action" class="dokan-btn" :class="[`dokan-btn-${action.type}`, action.class]" :target="action.target ? action.target : '_self'" :href="action.action">{{ action.text }}</a>
                                         <button :disabled="loading" v-else class="dokan-btn btn-dokan" :class="[`dokan-btn-${action.type}`, action.class]" @click="handleAction(action, index)">{{ loading || task_completed ? button_text : action.text }}</button>
                                     </template>
+                                    </div>
                                 </template>
                             </div>
 

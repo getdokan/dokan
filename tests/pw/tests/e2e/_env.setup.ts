@@ -112,6 +112,10 @@ setup.describe('setup woocommerce settings', () => {
         await dbUtils.setOptionValue('woocommerce_task_list_reminder_bar_hidden', 'yes', false);
     });
 
+    setup('disable woocommerce variable product tour', { tag: ['@lite'] }, async () => {
+        await dbUtils.setUserMeta('1', 'woocommerce_admin_variable_product_tour_shown', 'yes', false);
+    });
+
     setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {
         await dbUtils.updateOptionValue('theme_mods_storefront', { storefront_sticky_add_to_cart: false });
     });
@@ -249,7 +253,7 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
     });
 
-    setup.skip('admin set dokan delivery time settings', { tag: ['@pro'] }, async () => {
+    setup('admin set dokan delivery time settings', { tag: ['@pro'] }, async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);
     });
 
@@ -262,7 +266,7 @@ setup.describe('setup dokan settings', () => {
     });
 
     setup('admin set dokan product report abuse settings', { tag: ['@pro'] }, async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.reportAbuse, dbData.dokan.productReportAbuseSettings);
     });
 
     setup('admin set dokan spmv settings', { tag: ['@pro'] }, async () => {

@@ -1,3 +1,52 @@
+### v3.14.2 ( Dec 06, 2024 ) ###
+
+- **update:** Added commission setting option in product bulk edit for Admin.
+
+### v3.14.1 ( Dec 04, 2024 ) ###
+
+- **fix:** Fixed a issue in the commission upgrader to deal with empty values for product and vendor.
+
+### v3.14.0 ( Dec 02, 2024 ) ###
+
+- **new:** Commission amount now displayed in the product list within the admin dashboard.
+- **new:** Vendor earning amount displayed in the product list within the vendor dashboard.
+- **new:** Vendor earning suggestions on the product add and edit pages in the vendor dashboard for simple and variable products.
+- **new:** Commission details metabox on the order details page in the admin dashboard is now visible for child orders or orders without a parent.
+- **new:** Related order metabox on the order details page in the admin dashboard, displaying sibling orders for child orders and child orders for parent orders.
+- **new:** Backward compatibility for flat, percentage, and combine commission types for older orders.
+- **update:** Updated commission types from flat, percentage, and combine to fixed and category-based commissions.
+- **update:** Overhauled the commission UI across Dokan global settings, vendor settings, product settings, Dokan subscription product settings, and the admin setup wizard.
+- **update:** Updated the commission settings in the admin setup wizard.
+- **update:** Enhanced responsiveness of the UI for Dokan admin dashboard settings menus.
+- **update:** Product is rebranded with new branding.
+- **update:** As per new branding of Dokan Multivendor Plugin, full product is rebranded with new theme color.
+- **fix:** Moved the vendor edit page from Dokan Pro to Dokan Lite and eliminated the commission setting from the WordPress default user profile page.
+- **fix:** Removed the commission from every category, introducing category-based commission in global settings, vendor settings, Dokan subscription products, and the admin setup wizard.
+
+### v3.13.1 ( Nov 11, 2024 ) ###
+
+- **update:** Compatibility with the Printful Integration Module added.
+- **fix:** Improved logic to ensure the `add new category` button only appears when appropriate conditions are met, enhancing user experience.
+
+
+### v3.13.0 ( Nov 06, 2024 ) ###
+
+- **feat:** Replaced the Dokan array container with the League Container, ensuring backward compatibility for seamless performance and enhanced flexibility.
+- **feat:** Updated Dokan to be fully compatible with WooCommerce Analytics Reports
+
+### v3.12.6 ( Oct 24, 2024 ) ###
+
+- **fix:** Fixed js error on frontend pages.
+
+### v3.12.5 ( Oct 16, 2024 ) ###
+
+- **fix:** Implement order trash and untrash handling for Dokan
+- **fix:** Added WordPress native i18n support
+
+### v3.12.4 ( Oct 03, 2024 ) ###
+
+- **update:** Added `$data` parameter to `dokan_update_vendor` hook.
+
 ### v3.12.3 ( Sep 30, 2024 ) ###
 
 - **update:** Added compatibility with RFQ state field ui.

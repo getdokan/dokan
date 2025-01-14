@@ -37,6 +37,7 @@ test.describe('Booking Product test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.booking, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
@@ -44,6 +45,10 @@ test.describe('Booking Product test', () => {
     });
 
     // admin
+
+    test('admin can enable woocommerce booking integration module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableBookingModule();
+    });
 
     test('admin can add booking product', { tag: ['@pro', '@admin'] }, async () => {
         await admin.adminAddBookingProduct(data.product.booking);
@@ -134,5 +139,12 @@ test.describe('Booking Product test', () => {
 
     test('customer can buy bookable product', { tag: ['@pro', '@customer'] }, async () => {
         await customer.buyBookableProduct(bookableProductName, data.bookings); //todo: failed on git action if ran after 12 am local time
+    });
+
+    // admin
+
+    test('admin can disable woocommerce booking integration module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.booking, payloads.adminAuth);
+        await admin.disableBookingModule();
     });
 });

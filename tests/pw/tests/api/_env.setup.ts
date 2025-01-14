@@ -93,6 +93,7 @@ setup.describe('setup woocommerce settings', () => {
 
         // create attribute, attribute term
         const [, attributeId] = await apiUtils.createAttribute({ name: 'sizes' });
+        helpers.createEnvVar('ATTRIBUTE_ID', attributeId);
         await apiUtils.createAttributeTerm(attributeId, { name: 's' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'l' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
@@ -227,7 +228,7 @@ setup.describe('setup dokan settings', () => {
     });
 
     setup('admin set dokan product report abuse settings', { tag: ['@pro'] }, async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.reportAbuse, dbData.dokan.productReportAbuseSettings);
     });
 
     setup('admin set dokan spmv settings', { tag: ['@pro'] }, async () => {
