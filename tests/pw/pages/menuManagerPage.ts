@@ -25,13 +25,13 @@ export class MenuManagerPage extends BasePage {
 
     // update menu status
     async updateMenuStatus(menu: string, action: string, menuLink: string) {
-        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.gotoUntilNetworkidle(data.subUrls.backend.dokan.settings, { waitUntil: 'networkidle' }, true);
         await this.click(settingsAdmin.menus.menuManager);
 
         switch (action) {
             case 'activate':
                 await this.enableSwitcher(settingsAdmin.menuManager.menuSwitcher(menu));
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
+                await this.clickAndWaitForResponseAndLoadStateUntilNetworkIdle(data.subUrls.ajax, settingsAdmin.saveChanges);
                 await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(0, 144, 255)');
                 //assertion
                 await this.goto(data.subUrls.frontend.vDashboard.dashboard);
@@ -42,7 +42,7 @@ export class MenuManagerPage extends BasePage {
 
             case 'deactivate':
                 await this.disableSwitcher(settingsAdmin.menuManager.menuSwitcher(menu));
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
+                await this.clickAndWaitForResponseAndLoadStateUntilNetworkIdle(data.subUrls.ajax, settingsAdmin.saveChanges);
                 await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(215, 218, 221)');
                 //assertion
                 await this.goto(data.subUrls.frontend.vDashboard.dashboard);

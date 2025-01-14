@@ -5,9 +5,9 @@
 **Requires at least:** 6.5  
 **Tested up to:** 6.7.1  
 **WC requires at least:** 8.0.0  
-**WC tested up to:** 9.5.1  
+**WC tested up to:** 9.5.2  
 **Requires PHP:** 7.4  
-**Stable tag:** 3.14.4  
+**Stable tag:** 3.14.6  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -228,6 +228,7 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 Dokan comes with a number of advanced features & modules that boost your WooCommerce marketplace position, always keeping you one step ahead of the competition. Continuous innovations and features are brought with regular and timely releases. Check out the changelog [here](https://wedevs.com/docs/dokan/changelog/)
 
 * [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
+* [Print on Demand Marketplace](https://dokan.co/wordpress/modules/printful-integration/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
 * [Minimum Maximum Order](https://dokan.co/wordpress/modules/minimum-maximum-order/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
 * [Product Advertising](https://dokan.co/wordpress/modules/product-advertising/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
 * [Product Subscription](https://dokan.co/wordpress/modules/product-subscription/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
@@ -346,19 +347,24 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.14.6 ( Jan 09, 2025 ) ###
+
+- **fix:** Translations on Admin Commission Setup Wizard, Withdraw, Withdraw Log, Add Reverse Withdraw, Dummy Data, and Vendor Single pages were not working due to wrong text-domains.
+
+### v3.14.5 ( Jan 06, 2025 ) ###
+
+- **update:** Improvement vendor setup wizard ui.
+- **update:** Improvement withdraw approved email template.
+- **update:** Dokan admin settings page responsive & update ui design.
+
 ### v3.14.4 ( Dec 27, 2024 ) ###
-- **fix:** Added tweaks to improve system stability and smoothness
+
+- **fix:** Added tweaks to improve system stability and smoothness.
 
 ### v3.14.3 ( Dec 11, 2024 ) ###
+
 - **update:** Updated Dokan admin header to display current pro plan and version with upgrading option.
-
-### v3.14.2 ( Dec 06, 2024 ) ###
-
-- **update:** Added commission setting option in product bulk edit for Admin.
-
-### v3.14.1 ( Dec 04, 2024 ) ###
-
-- **fix:** Fixed a issue in the commission upgrader to deal with empty values for product and vendor.
 
 [CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
 
