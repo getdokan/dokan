@@ -66,13 +66,11 @@ test.describe('Vendor delivery time test', () => {
     // customer
 
     test('customer can buy product with delivery time', { tag: ['@pro', '@customer'] }, async () => {
-        test.skip(true, 'run when chart & checkout block pr is merged');
         await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
         await customer.placeOrderWithDeliverTimeStorePickup('delivery-time', data.deliveryTime);
     });
 
     test('customer can buy product with store pickup', { tag: ['@pro', '@customer'] }, async () => {
-        test.skip(true, 'run when chart & checkout block pr is merged');
         await dbUtils.setOptionValue(dbData.dokan.optionName.deliveryTime, { ...dbData.dokan.deliveryTimeSettings, allow_vendor_override_settings: 'off' }); // todo: resolve: previous test disable store pickup
         await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
         await customer.placeOrderWithDeliverTimeStorePickup('store-pickup', data.deliveryTime);
