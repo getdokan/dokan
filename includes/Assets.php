@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan;
 
-use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
@@ -16,11 +15,6 @@ class Assets {
     public function __construct() {
         add_action( 'init', [ $this, 'register_all_scripts' ], 10 );
         add_filter( 'dokan_localized_args', [ $this, 'conditional_localized_args' ] );
-        add_action(
-            'wp_footer', function () {
-				echo '<div class="dokan-layout" id="headlessui-portal-root"><div></div></div>';
-			}
-        );
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 10 );
@@ -369,7 +363,6 @@ class Assets {
             'dokan-react-frontend'          => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
                 'deps'    => [ 'dokan-react-components' ],
-                'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
             'dokan-react-components'        => [
                 'deps'    => [ 'wp-components' ],
@@ -681,7 +674,8 @@ class Assets {
                 'routeComponents' => [ 'default' => null ],
                 'routes'          => $this->get_vue_frontend_routes(),
                 'urls'            => [
-                    'assetsUrl' => DOKAN_PLUGIN_ASSEST,
+                    'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
+                    'dashboardUrl' => dokan_get_navigation_url(),
                 ],
             ]
         );
@@ -908,12 +902,6 @@ class Assets {
         if ( DOKAN_LOAD_SCRIPTS ) {
             self::load_form_validate_script();
             $this->load_gmap_script();
-
-            $wc_instance = WCAdminAssets::get_instance();
-            $wc_instance->register_scripts();
-
-            // Enqueue dokan frontend scripts.
-            wp_localize_script( 'dokan-react-frontend', 'dokanCurrency', $this->get_localized_price() );
 
             wp_enqueue_script( 'jquery' );
             wp_enqueue_script( 'jquery-ui' );
