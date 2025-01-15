@@ -913,8 +913,6 @@ class Assets {
             $wc_instance->register_scripts();
 
             // Enqueue dokan frontend scripts.
-            wp_enqueue_script( 'dokan-react-frontend' );
-            wp_enqueue_style( 'dokan-react-frontend' );
             wp_localize_script( 'dokan-react-frontend', 'dokanCurrency', $this->get_localized_price() );
 
             wp_enqueue_script( 'jquery' );

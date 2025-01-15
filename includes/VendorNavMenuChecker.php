@@ -106,7 +106,7 @@ class VendorNavMenuChecker {
     protected function get_url_for_route( string $route ): string {
         $route = apply_filters( 'dokan_get_url_for_react_route', $route );
 
-        return dokan_get_navigation_url() . '#' . trim( $route, '/' );
+        return dokan_get_navigation_url( 'new' ) . '#' . trim( $route, '/' );
     }
 
     /**
