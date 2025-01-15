@@ -44,7 +44,11 @@ if (file_exists($script_assets)) {
 
 ## Component Access
 
-### Pro Version
+For `Dokan Free`, we can import the components via `@/components`:
+
+```js
+import { DataViews, useWindowDimensions } from '@/components';
+```
 
 In `Dokan Pro`, components can be imported directly from `@dokan/components`:
 

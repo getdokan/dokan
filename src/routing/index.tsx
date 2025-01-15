@@ -2,7 +2,7 @@ import NotFound from "../Layout/404";
 import {__} from "@wordpress/i18n";
 import {DokanRoute} from "../Layout";
 import { isValidElement, cloneElement, createElement } from '@wordpress/element';
-import { useNavigate, useParams, useLocation, redirect, replace, useMatches, useNavigation,  } from 'react-router-dom';
+import { useNavigate, useParams, useLocation, redirect, replace, useMatches, useNavigation, createSearchParams } from 'react-router-dom';
 import Withdraw from "../Dashboard/Withdraw";
 import WithdrawRequests from "../Dashboard/Withdraw/WithdrawRequests";
 
@@ -21,7 +21,8 @@ export function withRouter(Component) {
             redirect,
             replace,
             matches,
-            navigation
+            navigation,
+            createSearchParams,
         };
 
         // Check if Component is a valid element
