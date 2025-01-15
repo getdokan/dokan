@@ -40,18 +40,18 @@ export function withRouter(Component) {
 }
 
 const getRoutes = () => {
-    let routes : Array<DokanRoute> = [];
+    let routes: Array< DokanRoute > = [];
 
-    routes.push(
-        {
-            id: 'dokan-base',
-            title: __( 'Dashboard', 'dokan-lite' ),
-            element: <h1>Dashboard body</h1>,
-            path: '/',
-            exact: true,
-            order: 10,
-        }
-    );
+    // routes.push(
+    //     {
+    //         id: 'dokan-base',
+    //         title: __( 'Dashboard', 'dokan-lite' ),
+    //         element: <h1>Dashboard body</h1>,
+    //         path: '/',
+    //         exact: true,
+    //         order: 10,
+    //     }
+    // );
 
     // @ts-ignore
     routes = wp.hooks.applyFilters('dokan-dashboard-routes', routes) as Array<DokanRoute>;

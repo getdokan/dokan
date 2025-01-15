@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan;
 
-use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
@@ -16,11 +15,6 @@ class Assets {
     public function __construct() {
         add_action( 'init', [ $this, 'register_all_scripts' ], 10 );
         add_filter( 'dokan_localized_args', [ $this, 'conditional_localized_args' ] );
-        add_action(
-            'wp_footer', function () {
-				echo '<div class="dokan-layout" id="headlessui-portal-root"><div></div></div>';
-			}
-        );
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 10 );
@@ -388,7 +382,6 @@ class Assets {
     public function get_scripts() {
         global $wp_version;
 
-        // Require built assets.
         $frontend_shipping_asset = require DOKAN_DIR . '/assets/js/frontend.asset.php';
 
         $suffix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -684,7 +677,8 @@ class Assets {
                 'routeComponents' => [ 'default' => null ],
                 'routes'          => $this->get_vue_frontend_routes(),
                 'urls'            => [
-                    'assetsUrl' => DOKAN_PLUGIN_ASSEST,
+                    'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
+                    'dashboardUrl' => dokan_get_navigation_url(),
                 ],
             ]
         );
@@ -911,13 +905,6 @@ class Assets {
         if ( DOKAN_LOAD_SCRIPTS ) {
             self::load_form_validate_script();
             $this->load_gmap_script();
-
-            $wc_instance = WCAdminAssets::get_instance();
-            $wc_instance->register_scripts();
-
-            // Enqueue dokan frontend scripts.
-            wp_enqueue_script( 'dokan-react-frontend' );
-            wp_enqueue_style( 'dokan-react-frontend' );
 
             wp_enqueue_script( 'jquery' );
             wp_enqueue_script( 'jquery-ui' );
