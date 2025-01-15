@@ -892,8 +892,6 @@ class Assets {
             $wc_instance = WCAdminAssets::get_instance();
             $wc_instance->register_scripts();
 
-            wp_enqueue_script( 'dokan-react-frontend' );
-            wp_enqueue_style( 'dokan-react-frontend' );
             wp_enqueue_script( 'jquery' );
             wp_enqueue_script( 'jquery-ui' );
             wp_enqueue_script( 'jquery-ui-autocomplete' );
