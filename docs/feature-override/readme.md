@@ -1,3 +1,4 @@
+[//]: # (TODO: Update the document with the correct information and hook name.)
 # How to define a menu is available in `React` and its `PHP` override information.
 
 - [Introduction](#introduction)
@@ -153,9 +154,9 @@ If you did not override any of the template file directly but you have override 
 
 ```php
 
-add_filter( 'dokan_is_dashboard_nav_dependency_cleared', function ( $is_cleared, $route ) {
+add_filter( 'dokan_is_dashboard_nav_dependency_resolved', function ( $is_cleared, $route ) {
     if ( 'products' === $route ) {
-        return true;
+        return false;
     }
 
     return $is_cleared;
