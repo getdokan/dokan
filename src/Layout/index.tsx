@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from '@wordpress/element';
+import { createContext, useContext, useState } from '@wordpress/element';
 import Header from './Header';
 import Footer from './Footer';
 import ContentArea from './ContentArea';
