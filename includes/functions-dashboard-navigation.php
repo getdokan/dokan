@@ -259,12 +259,12 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                 }
 
                 $submenu .= sprintf(
-                    /* translators: %s: submenu class, %s: submenu route, %s: submenu icon, %s: submenu title */
+                    /* translators: 1) submenu class, 2) submenu route, 3) submenu icon, 4) submenu title */
                     '<li class="submenu-item %1$s" data-react-route="%2$s"><a href="%3$s" class="submenu-link">%4$s %5$s</a></li>',
                     $submenu_class,
-                    isset( $sub['react_route'] ) ? $sub['react_route'] : '',
-                    isset( $sub['url'] ) ? $sub['url'] : dokan_get_navigation_url( "{$key}/{$sub_key}" ),
-                    isset( $sub['icon'] ) ? $sub['icon'] : '<i class="fab fa-staylinked"></i>',
+                    $sub['react_route'] ?? '',
+                    $sub['url'] ?? dokan_get_navigation_url( "{$key}/{$sub_key}" ),
+                    $sub['icon'] ?? '<i class="fab fa-staylinked"></i>',
                     apply_filters( 'dokan_vendor_dashboard_menu_title', $submenu_title, $sub )
                 );
 
@@ -280,13 +280,13 @@ function dokan_dashboard_nav( $active_menu = '' ) {
         }
 
         $menu .= sprintf(
-            /* translators: %s: menu class, %s: menu route, %s: menu url, %s: menu target, %s: menu icon, %s: menu title, %s: submenu */
+            /* translators: 1) menu class, 2) menu route, 3) menu url, 4) menu target, 5) menu icon, 6) menu title, 7) submenu */
             '<li class="%1$s" data-react-route="%2$s"><a href="%3$s" target="%4$s">%5$s %6$s</a>%7$s</li>',
             $class,
-            isset( $item['react_route'] ) ? $item['react_route'] : '',
-            isset( $item['url'] ) ? $item['url'] : dokan_get_navigation_url( $menu_slug ),
-            isset( $item['target'] ) ? $item['target'] : '_self',
-            isset( $item['icon'] ) ? $item['icon'] : '<i class="fab fa-staylinked"></i>',
+            $item['react_route'] ?? '',
+            $item['url'] ?? dokan_get_navigation_url( $menu_slug ),
+            $item['target'] ?? '_self',
+            $item['icon'] ?? '<i class="fab fa-staylinked"></i>',
             apply_filters( 'dokan_vendor_dashboard_menu_title', $title, $item ),
             $submenu
         );
