@@ -81,7 +81,7 @@ const Layout = ( {
     footerComponent,
 }: LayoutProps ) => {
     const location = useLocation(); // Use the location hook to get the current path.
-    handleMenuActiveStates( location.pathname );
+    handleMenuActiveStates( location?.pathname );
 
     return (
         <ThemeProvider>
