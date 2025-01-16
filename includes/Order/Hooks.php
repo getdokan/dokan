@@ -421,17 +421,13 @@ class Hooks {
      */
     public function ensure_coupon_is_valid( bool $valid, WC_Coupon $coupon, WC_Discounts $discounts ): bool {
         $available_vendors  = [];
-        $available_products = [];
 
 	    foreach ( $discounts->get_items() as $item ) {
 		    if ( ! isset( $item->product ) || ! $item->product instanceof WC_Product ) {
 			    continue;
 		    }
 
-		    $item_id = $item->product->get_id();
-
-		    $available_vendors[]  = (int) dokan_get_vendor_by_product( $item_id, true );
-		    $available_products[] = $item_id;
+		    $available_vendors[]  = (int) dokan_get_vendor_by_product( $item->product->get_id(), true );
 	    }
 
         $available_vendors = array_unique( $available_vendors );
@@ -445,13 +441,11 @@ class Hooks {
          *
          * @since DOKAN_SINCE
          *
-         * @param boolean      $valid              The validity of the coupon.
-         * @param WC_Coupon    $coupon             The coupon object.
-         * @param WC_Discounts $discounts          The discount object, which contains the order details.
-         * @param array        $available_vendors  List of available vendors.
-         * @param array        $available_products List of available products.
+         * @param boolean      $valid     The validity of the coupon.
+         * @param WC_Coupon    $coupon    The coupon object.
+         * @param WC_Discounts $discounts The discount object, which contains the order details.
          */
-        return apply_filters( 'dokan_coupon_is_valid', $valid, $coupon, $discounts, $available_vendors, $available_products );
+        return apply_filters( 'dokan_coupon_is_valid', $valid, $coupon, $discounts );
     }
 
     /**
