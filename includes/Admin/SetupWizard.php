@@ -699,76 +699,10 @@ class SetupWizard {
             <ul class="recommended-step">
                 <?php
                 if ( $this->user_can_install_plugin() ) {
-                    if ( ! $this->is_store_growth_active() ) {
-                        $this->display_recommended_item(
-                            [
-                                'type'        => 'store_growth',
-                                'title'       => __( 'StoreGrowth', 'dokan-lite' ),
-                                'description' => __( 'Best WooCommerce Marketing Solution!', 'dokan-lite' ),
-                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
-                                'img_alt'     => __( 'StoreGrowth logo', 'dokan-lite' ),
-                                'plugins'     => [
-                                    [
-                                        'name' => __( 'StoreGrowth', 'dokan-lite' ),
-                                        'slug' => 'storegrowth-sales-booster',
-                                    ],
-                                ],
-                            ]
-                        );
-                    }
+                    $recommended_plugins = new RecommendedPlugins();
 
-                    if ( ! $this->is_wemail_active() ) {
-                        $this->display_recommended_item(
-                            [
-                                'type'        => 'wemail',
-                                'title'       => __( 'weMail', 'dokan-lite' ),
-                                'description' => __( 'Simplified Email  Marketing Solution for WordPress!', 'dokan-lite' ),
-                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wemail-logo.png',
-                                'img_alt'     => __( 'weMail logo', 'dokan-lite' ),
-                                'plugins'     => [
-                                    [
-                                        'name' => __( 'weMail', 'dokan-lite' ),
-                                        'slug' => 'wemail',
-                                    ],
-                                ],
-                            ]
-                        );
-                    }
-
-                    if ( ! $this->is_wc_conversion_tracking_active() ) {
-                        $this->display_recommended_item(
-                            [
-                                'type'        => 'wc_conversion_tracking',
-                                'title'       => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                                'description' => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
-                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
-                                'img_alt'     => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
-                                'plugins'     => [
-                                    [
-                                        'name' => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                                        'slug' => 'woocommerce-conversion-tracking',
-                                    ],
-                                ],
-                            ]
-                        );
-                    }
-
-                    if ( ! $this->is_texty_active() ) {
-                        $this->display_recommended_item(
-                            [
-                                'type'        => 'texty',
-                                'title'       => __( 'Texty', 'dokan-lite' ),
-                                'description' => __( 'SMS Notification for WordPress, WooCommerce, Dokan and more!', 'dokan-lite' ),
-                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/texty-logo.png',
-                                'img_alt'     => __( 'Texty logo', 'dokan-lite' ),
-                                'plugins'     => [
-                                    [
-                                        'name' => __( 'Texty', 'dokan-lite' ),
-                                        'slug' => 'texty',
-                                    ],
-                                ],
-                            ]
-                        );
+                    foreach ( $recommended_plugins->get() as $plugin ) {
+                        $this->display_recommended_item( $plugin );
                     }
                 }
                 ?>
@@ -918,22 +852,6 @@ class SetupWizard {
      */
     protected function should_show_recommended_step() {
         if ( ! $this->user_can_install_plugin() ) {
-            return false;
-        }
-
-        if ( $this->is_store_growth_active() ) {
-            return false;
-        }
-
-        if ( $this->is_wc_conversion_tracking_active() ) {
-            return false;
-        }
-
-        if ( $this->is_wemail_active() ) {
-            return false;
-        }
-
-        if ( $this->is_texty_active() ) {
             return false;
         }
 
