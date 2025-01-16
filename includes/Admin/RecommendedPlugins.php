@@ -123,7 +123,6 @@ class RecommendedPlugins {
             }
         );
 
-        error_log( print_r( $recommended_plugins, 1 ) );
         return apply_filters( 'dokan_recommended_inactive_plugins', $recommended_plugins );
     }
 }
