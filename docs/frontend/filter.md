@@ -35,7 +35,7 @@ import { Filter } from '@dokan/components';
     onReset={clearFilter}
     showFilter={true}
     showReset={true}
-    namespace="product_table_filters"
+    namespace="vendor_subscription"
 />
 ```
 
@@ -60,8 +60,15 @@ const MyTableComponent = () => {
     const [searchedCustomer, setSearchedCustomer] = useState(null);
 
     const handleFilter = () => {
-        // Implement your filter logic here
-        fetchFilteredData(filterArgs);
+        // Process request payload through applyFilter
+        const requestPayload = applyFilter('dokan_subscription_filter_request_param', {
+            ...filterArgs,
+            per_page: perPage,
+            page: currentPage,
+        }, namespace);
+
+        // Make server request with processed payload
+        fetchFilteredData(requestPayload);
     };
 
     const clearFilter = () => {
@@ -131,6 +138,59 @@ const CustomFilter = ({ filterArgs, setFilterArgs }) => {
     );
 };
 ```
+
+## Important Implementation Notes
+
+### Server Request Handling
+Before making requests to the server in your `onFilter` handler, you must process the request payload through an `applyFilter` function. This is a critical step for maintaining consistent filter behavior across the application.
+
+#### Filter Hook Naming Convention
+The filter hook name should follow this pattern:
+- Start with "dokan"
+- Follow with the feature or task name
+- End with "_filter_request_param"
+- Must be in snake_case format
+
+You can use the `snakeCase` utility to ensure proper formatting:
+
+For Dokan Lite:
+```jsx
+import { snakeCase } from "@/utilities";
+```
+
+For Dokan Pro or other plugins:
+```jsx
+import { snakeCase } from "@dokan/utilities";
+```
+
+Example usage:
+```jsx
+const handleFilter = () => {
+    // Convert hook name to snake_case
+    const hookName = snakeCase('dokan_subscription_filter_request_param');
+    
+    // Apply filters to your request payload before sending to server
+    const requestPayload = applyFilter(hookName, {
+        ...filterArgs,
+        per_page: perPage,
+        page: currentPage,
+    }, namespace);
+
+    // Now make your server request with the processed payload
+    fetchData(requestPayload);
+};
+```
+
+Parameters for `applyFilter`:
+- First parameter: Hook name (string, must follow naming convention)
+- Second parameter: Request payload (object)
+- Third parameter: Namespace from Filter component props (string)
+
+This step ensures:
+- Consistent filter processing across the application
+- Proper parameter formatting
+- Extensibility for future filter modifications
+- Standardized hook naming across the application
 
 ## Best Practices
 
