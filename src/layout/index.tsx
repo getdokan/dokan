@@ -7,6 +7,7 @@ import {
 } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
 import { DokanToaster } from "@getdokan/dokan-ui";
+import { useLocation } from 'react-router-dom';
 
 // Create a ThemeContext
 const ThemeContext = createContext( null );
@@ -43,6 +44,34 @@ interface LayoutProps {
     footerComponent?: JSX.Element|React.ReactNode;
 }
 
+const handleMenuActiveStates = ( currentPath ) => {
+    const menuRoute = currentPath.replace( /^\//, '' ); // Remove leading slash.
+    const menuItem  = document.querySelector( `.dokan-dashboard-menu li[data-react-route='${ menuRoute }']` ) || null;
+
+    // Return if menu item not found.
+    if ( ! menuItem ) {
+        return;
+    }
+
+    document.querySelectorAll( '.dokan-dashboard-menu li' ).forEach( item => {
+        item.classList.remove( 'active' );
+        item.querySelectorAll( '.navigation-submenu li' ).forEach( subItem => {
+            subItem.classList.remove( 'current' );
+        });
+    });
+
+    // Get parent menu item if this is a submenu item.
+    const parentMenuItem = menuItem.closest( '.dokan-dashboard-menu > li' );
+    if ( parentMenuItem ) { // Add `active` to parent menu.
+        parentMenuItem.classList.add( 'active' );
+    }
+
+    const subMenuItem = document.querySelector( `.navigation-submenu li[data-react-route='${ menuRoute }']` );
+    if ( subMenuItem ) { // Add `current` to submenu item.
+        subMenuItem.classList.add( 'current' );
+    }
+};
+
 // Create a Layout component that uses the ThemeProvider
 const Layout = ( {
     children,
@@ -51,6 +80,9 @@ const Layout = ( {
     headerComponent,
     footerComponent,
 }: LayoutProps ) => {
+    const location = useLocation(); // Use the location hook to get the current path.
+    handleMenuActiveStates( location?.pathname );
+
     return (
         <ThemeProvider>
             <SlotFillProvider>
