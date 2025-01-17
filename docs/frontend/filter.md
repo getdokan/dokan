@@ -60,12 +60,12 @@ const MyTableComponent = () => {
     const [searchedCustomer, setSearchedCustomer] = useState(null);
 
     const handleFilter = () => {
-        // Process request payload through applyFilter
-        const requestPayload = applyFilter('dokan_subscription_filter_request_param', {
+        // Process request payload through applyFilters
+        const requestPayload = applyFilters('dokan_subscription_filter_request_param', {
             ...filterArgs,
             per_page: perPage,
             page: currentPage,
-        }, namespace);
+        } );
 
         // Make server request with processed payload
         fetchFilteredData(requestPayload);
@@ -142,7 +142,7 @@ const CustomFilter = ({ filterArgs, setFilterArgs }) => {
 ## Important Implementation Notes
 
 ### Server Request Handling
-Before making requests to the server in your `onFilter` handler, you must process the request payload through an `applyFilter` function. This is a critical step for maintaining consistent filter behavior across the application.
+Before making requests to the server in your `onFilter` handler, you must process the request payload through an `applyFilters` function. This is a critical step for maintaining consistent filter behavior across the application.
 
 #### Filter Hook Naming Convention
 The filter hook name should follow this pattern:
@@ -170,18 +170,18 @@ const handleFilter = () => {
     const hookName = snakeCase('dokan_subscription_filter_request_param');
     
     // Apply filters to your request payload before sending to server
-    const requestPayload = applyFilter(hookName, {
+    const requestPayload = applyFilters(hookName, {
         ...filterArgs,
         per_page: perPage,
         page: currentPage,
-    }, namespace);
+    } );
 
     // Now make your server request with the processed payload
     fetchData(requestPayload);
 };
 ```
 
-Parameters for `applyFilter`:
+Parameters for `applyFilters`:
 - First parameter: Hook name (string, must follow naming convention)
 - Second parameter: Request payload (object)
 - Third parameter: Namespace from Filter component props (string)
