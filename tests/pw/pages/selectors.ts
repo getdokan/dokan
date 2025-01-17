@@ -8038,8 +8038,9 @@ export const selector = {
             deliveryTimeInputHidden: '//input[@class="delivery-time-date-picker flatpickr-input"]',
             deliveryDate: (date: string) => `//div[contains(@class,"flatpickr-calendar animate open")]//div[@class="dayContainer"]//span[contains(@class,"flatpickr-day") and @aria-label="${date}"]`,
 
-            timePicker: 'select.delivery-time-slot-picker',
-            locationPicker: 'select.delivery-store-location-picker',
+            timePicker: '//option[normalize-space()="Select time slot"]/..',
+            locationPicker: '//option[normalize-space()="Select store location"]/..',
+            storeLocation:'div.store-address.vendor-info',
 
             orderDetails: {
                 deliveryTimeDetails: 'div#dokan-delivery-time-slot-order-details',
