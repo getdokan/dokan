@@ -43,12 +43,12 @@ import { Filter } from '@dokan/components';
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
+| `namespace` | `string` | Yes | Unique identifier for the filter group |
 | `fields` | `ReactNode[]` | No | Array of filter field components to be rendered |
 | `onFilter` | `() => void` | No | Handler function called when the filter button is clicked |
 | `onReset` | `() => void` | No | Handler function called when the reset button is clicked |
 | `showFilter` | `boolean` | No | Controls visibility of the filter button (default: true) |
 | `showReset` | `boolean` | No | Controls visibility of the reset button (default: true) |
-| `namespace` | `string` | Yes | Unique identifier for the filter group |
 
 ## Example Implementation
 
