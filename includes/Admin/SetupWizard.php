@@ -733,53 +733,25 @@ class SetupWizard {
      * @return void
      */
     public function dokan_setup_recommended_save() {
-        check_admin_referer( 'dokan-setup' );
+        foreach ( $this->recommended_plugins->get() as $plugin ) {
+            if ( ! $this->should_install_plugin( $plugin ) ) {
+                continue;
+            }
 
-        $setup_store_growth           = isset( $_POST['setup_store_growth'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_store_growth'] ) );
-        $setup_wc_conversion_tracking = isset( $_POST['setup_wc_conversion_tracking'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_wc_conversion_tracking'] ) );
-        $setup_wemail                 = isset( $_POST['setup_wemail'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_wemail'] ) );
-        $setup_texty                  = isset( $_POST['setup_texty'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_texty'] ) );
+            $plugin_details = $plugin['plugins'][0] ?? null;
 
-        if ( $setup_store_growth && ! $this->is_store_growth_active() ) {
+            if ( ! $plugin_details ) {
+                continue;
+            }
+
+            $plugin_details_arr = explode( '/', $plugin_details['basename'] ?? '' );
+
             $this->install_plugin(
-                'storegrowth-sales-booster',
+                $plugin_details['slug'],
                 [
-                    'name'      => __( 'StoreGrowth', 'dokan-lite' ),
-                    'repo-slug' => 'storegrowth-sales-booster',
-                    'file'      => 'storegrowth-sales-booster.php',
-                ]
-            );
-        }
-
-        if ( $setup_wc_conversion_tracking && ! $this->is_wc_conversion_tracking_active() ) {
-            $this->install_plugin(
-                'woocommerce-conversion-tracking',
-                [
-                    'name'      => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                    'repo-slug' => 'woocommerce-conversion-tracking',
-                    'file'      => 'conversion-tracking.php',
-                ]
-            );
-        }
-
-        if ( $setup_wemail && ! $this->is_wemail_active() ) {
-            $this->install_plugin(
-                'wemail',
-                [
-                    'name'      => __( 'weMail', 'dokan-lite' ),
-                    'repo-slug' => 'wemail',
-                    'file'      => 'wemail.php',
-                ]
-            );
-        }
-
-        if ( $setup_texty && ! $this->is_texty_active() ) {
-            $this->install_plugin(
-                'texty',
-                [
-                    'name'      => __( 'Texty', 'dokan-lite' ),
-                    'repo-slug' => 'texty',
-                    'file'      => 'texty.php',
+                    'name'      => $plugin_details['name'] ?? '',
+                    'repo-slug' => $plugin_details_arr[0] ?? '',
+                    'file'      => $plugin_details_arr[1] ?? '',
                 ]
             );
         }
@@ -798,6 +770,27 @@ class SetupWizard {
 
         wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
+    }
+
+    /**
+     * Determines if a plugin should be installed based on POST data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $plugin Plugin configuration array
+     *
+     * @return bool
+     */
+    private function should_install_plugin( array $plugin ): bool {
+        check_admin_referer( 'dokan-setup' );
+
+        $setup_key = 'setup_' . $plugin['type'];
+
+        if ( ! isset( $_POST[ $setup_key ] ) ) {
+            return false;
+        }
+
+        return 'yes' === sanitize_text_field( wp_unslash( $_POST[ $setup_key ] ) );
     }
 
     /**
@@ -869,50 +862,6 @@ class SetupWizard {
         }
 
         return true;
-    }
-
-    /**
-     * Check if StoreGrowth is active or not.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    protected function is_store_growth_active() {
-        return is_plugin_active( 'storegrowth-sales-booster/storegrowth-sales-booster.php' );
-    }
-
-    /**
-     * Check if WC Conversion Tracking is active or not
-     *
-     * @since 2.8.7
-     *
-     * @return bool
-     */
-    protected function is_wc_conversion_tracking_active() {
-        return is_plugin_active( 'woocommerce-conversion-tracking/conversion-tracking.php' );
-    }
-
-    /**
-     * Check if weMail is active or not
-     *
-     * @since 3.0.0
-     *
-     * @return bool
-     */
-    protected function is_wemail_active() {
-        return is_plugin_active( 'wemail/wemail.php' );
-    }
-
-    /**
-     * Check if texty is active or not
-     *
-     * @since 3.2.11
-     *
-     * @return bool
-     */
-    protected function is_texty_active() {
-        return is_plugin_active( 'texty/texty.php' );
     }
 
     /**
@@ -988,6 +937,10 @@ class SetupWizard {
      * @param array  $plugin_info Plugin info array containing name and repo-slug, and optionally file if different from [repo-slug].php.
      */
     protected function install_plugin( $plugin_id, $plugin_info ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
         // Make sure we don't trigger multiple simultaneous installs.
         if ( get_option( 'woocommerce_setup_background_installing_' . $plugin_id ) ) {
             return;
