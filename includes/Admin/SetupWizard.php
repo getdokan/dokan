@@ -27,6 +27,15 @@ class SetupWizard {
     private $deferred_actions = [];
 
     /**
+     * Instance of RecommendedPlugins class for managing plugin recommendations.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var RecommendedPlugins Handles the retrieval and management of recommended plugins
+     */
+    private RecommendedPlugins $recommended_plugins;
+
+    /**
      * Hook in tabs.
      */
     public function __construct() {
@@ -35,6 +44,8 @@ class SetupWizard {
         }
 
         if ( current_user_can( 'manage_woocommerce' ) ) {
+            $this->recommended_plugins = new RecommendedPlugins();
+
             add_action( 'admin_menu', [ $this, 'admin_menus' ] );
             add_action( 'admin_init', [ $this, 'setup_wizard' ], 99 );
 
@@ -699,9 +710,7 @@ class SetupWizard {
             <ul class="recommended-step">
                 <?php
                 if ( $this->user_can_install_plugin() ) {
-                    $recommended_plugins = new RecommendedPlugins();
-
-                    foreach ( $recommended_plugins->get() as $plugin ) {
+                    foreach ( $this->recommended_plugins->get() as $plugin ) {
                         $this->display_recommended_item( $plugin );
                     }
                 }
@@ -852,6 +861,10 @@ class SetupWizard {
      */
     protected function should_show_recommended_step() {
         if ( ! $this->user_can_install_plugin() ) {
+            return false;
+        }
+
+        if ( ! count( $this->recommended_plugins->get() ) ) {
             return false;
         }
 
