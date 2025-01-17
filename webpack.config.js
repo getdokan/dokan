@@ -15,6 +15,9 @@ const updatedConfig = {
     'utilities': {
       import: '@/utilities/index.ts',
     },
+    'hooks': {
+      import: '@/hooks/index.tsx',
+    },
   },
   output: {
     path: path.resolve(__dirname, './assets/js'),

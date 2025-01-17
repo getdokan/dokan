@@ -587,16 +587,21 @@ class Assets {
                 'src'     => $asset_url . '/js/utilities.js',
                 'version' => filemtime( $asset_path . 'js/utilities.js' ),
             ],
+            'dokan-hooks'               => [
+                'deps'    => [],
+                'src'     => $asset_url . '/js/hooks.js',
+                'version' => filemtime( $asset_path . 'js/hooks.js' ),
+            ],
         ];
 
-        $components_asset_dir = DOKAN_DIR . '/assets/js/components.asset.php';
-        if ( file_exists( $components_asset_dir ) ) {
-            $components_asset                   = require $components_asset_dir;
-            $components_asset['dependencies'][] = 'dokan-utilities';
+        $components_asset = DOKAN_DIR . '/assets/js/components.asset.php';
+        if ( file_exists( $components_asset ) ) {
+            $components_asset = require $components_asset;
 
+            // Register React components.
             $scripts['dokan-react-components'] = [
                 'src'     => $asset_url . '/js/components.js',
-                'deps'    => $components_asset['dependencies'],
+                'deps'    => array_merge( $components_asset['dependencies'], [ 'dokan-utilities', 'dokan-hooks' ] ),
                 'version' => $components_asset['version'],
             ];
         }
@@ -611,6 +616,9 @@ class Assets {
         if ( ! function_exists( 'WC' ) ) {
             return;
         }
+
+        wp_enqueue_script( 'dokan-react-components' );
+        wp_enqueue_script( 'dokan-react-components' );
 
         // load dokan style on every pages. requires for shortcodes in other pages
         if ( DOKAN_LOAD_STYLE ) {

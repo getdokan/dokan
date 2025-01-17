@@ -47,13 +47,13 @@ if (file_exists($script_assets)) {
 For `Dokan Free`, we can import the components via `@/components`:
 
 ```js
-import { DataViews, useWindowDimensions } from '@/components';
+import { DataViews } from '@/components';
 ```
 
 In `Dokan Pro`, components can be imported directly from `@dokan/components`:
 
 ```js
-import { DataViews, useWindowDimensions } from '@dokan/components';
+import { DataViews } from '@dokan/components';
 ```
 
 For external `plugins`, we must include the `dokan-react-components` as scripts dependency and the `@dokan/components` should be introduced as an external resource configuration to resolve the path via `webpack`:

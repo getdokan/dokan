@@ -1,5 +1,4 @@
 export { default as DataViews } from './dataviews/DataViewTable';
-export { default as useWindowDimensions } from '@/hooks/ViewportDimensions';
 
 export {
     DataForm,
