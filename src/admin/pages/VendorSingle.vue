@@ -4,7 +4,7 @@
         <AdminNotice></AdminNotice>
 
         <div style="margin-bottom: 10px">
-            <a class="button" href="javascript:history.go(-1)">&larr; {{ __( 'Go Back', 'dokan' ) }}</a>
+            <a class="button" href="javascript:history.go(-1)">&larr; {{ __( 'Go Back', 'dokan-lite' ) }}</a>
         </div>
 
         <div class="dokan-hide">
@@ -12,34 +12,34 @@
         </div>
 
         <modal
-            :title="__( 'Send Email', 'dokan' )"
+            :title="__( 'Send Email', 'dokan-lite' )"
             v-if="showDialog"
             @close="showDialog = false"
         >
             <template slot="body">
                 <div class="form-row">
-                    <label for="mailto">{{ __( 'To', 'dokan' ) }}</label>
+                    <label for="mailto">{{ __( 'To', 'dokan-lite' ) }}</label>
                     <input type="text" id="mailto" disabled="disabled" :value="mailTo">
                 </div>
 
                 <div class="form-row">
-                    <label for="replyto">{{ __( 'Reply-To', 'dokan' ) }}</label>
+                    <label for="replyto">{{ __( 'Reply-To', 'dokan-lite' ) }}</label>
                     <input type="email" id="replyto" v-model="mail.replyto">
                 </div>
 
                 <div class="form-row">
-                    <label for="subject">{{ __( 'Subject', 'dokan' ) }}</label>
+                    <label for="subject">{{ __( 'Subject', 'dokan-lite' ) }}</label>
                     <input type="text" id="subject" v-model="mail.subject">
                 </div>
 
                 <div class="form-row">
-                    <label for="message">{{ __( 'Message', 'dokan' ) }}</label>
+                    <label for="message">{{ __( 'Message', 'dokan-lite' ) }}</label>
                     <textarea id="message" rows="5" cols="60" v-model="mail.body"></textarea>
                 </div>
             </template>
 
             <template slot="footer">
-                <button class="button button-primary button-large" @click="sendEmail()">{{ __( 'Send Email', 'dokan' ) }}</button>
+                <button class="button button-primary button-large" @click="sendEmail()">{{ __( 'Send Email', 'dokan-lite' ) }}</button>
             </template>
         </modal>
 
@@ -56,7 +56,7 @@
                             <upload-image @uploadedImage="uploadGravatar" :croppingWidth="625" :croppingHeight="625" :src="store.gravatar_id && store.gravatar ? store.gravatar : getDefaultPic()">
                                 <template v-slot:imagePlaceholder>
                                     <span class="edit-photo" v-if="editMode" :style="{color: ! store.gravatar_id ? 'black' : '' }">
-                                        {{ __( 'Change Store Photo', 'dokan' ) }}
+                                        {{ __( 'Change Store Photo', 'dokan-lite' ) }}
                                     </span>
                                 </template>
                             </upload-image>
@@ -68,7 +68,7 @@
 
                     <div :class="{'store-info': true, 'edit-mode': editMode}">
                         <template v-if="! editMode">
-                            <h2 class="store-name">{{ store.store_name ? store.store_name : __( '(No Name)', 'dokan' ) }}</h2>
+                            <h2 class="store-name">{{ store.store_name ? store.store_name : __( '(No Name)', 'dokan-lite' ) }}</h2>
                         </template>
 
                         <div class="star-rating" v-if="! editMode">
@@ -86,7 +86,7 @@
                                     <a
                                         class="store-categoy-names"
                                         href="#edit-categories"
-                                        v-html="isCategoryMultiple ? __( 'Add Categories', 'dokan' ) : __( 'Add Category', 'dokan' )"
+                                        v-html="isCategoryMultiple ? __( 'Add Categories', 'dokan-lite' ) : __( 'Add Category', 'dokan-lite' )"
                                         @click.prevent="editCategory"
                                     />
                                 </template>
@@ -101,22 +101,22 @@
                             </template>
                             <template v-else>
                                 <div class="store-categories-editing">
-                                    <h4>{{ isCategoryMultiple ? __( 'Set Store Categories', 'dokan' ) : __( 'Set Store Category', 'dokan' ) }}</h4>
+                                    <h4>{{ isCategoryMultiple ? __( 'Set Store Categories', 'dokan-lite' ) : __( 'Set Store Category', 'dokan-lite' ) }}</h4>
                                     <fieldset :disabled="isUpdating">
                                         <select multiple="multiple"
                                                 id="store-categories"
                                                 style="width: 100%"
-                                                :data-placeholder="__( 'Select Category', 'dokan' )">
+                                                :data-placeholder="__( 'Select Category', 'dokan-lite' )">
                                         </select>
                                         <p>
                                             <button
                                                 class="button button-primary button-small"
-                                                v-text="__( 'Done', 'dokan' )"
+                                                v-text="__( 'Done', 'dokan-lite' )"
                                                 @click="updateStore"
                                             />
                                             <button
                                                 class="button button-link button-small"
-                                                v-text="__( 'Cancel', 'dokan' )"
+                                                v-text="__( 'Cancel', 'dokan-lite' )"
                                                 @click="editingCategories = false"
                                             />
                                         </p>
@@ -139,8 +139,8 @@
                         </ul>
 
                         <div class="actions" v-if="! editMode">
-                            <button v-if="hasPro" class="button message" @click="messageDialog()"><span class="dashicons dashicons-email"></span> {{ __( 'Send Email', 'dokan' ) }}</button>
-                            <button :class="['button', 'status', store.enabled ? 'enabled' : 'disabled']"><span class="dashicons"></span> {{ store.enabled ? __( 'Enabled', 'dokan' ) : __( 'Disabled', 'dokan' ) }}</button>
+                            <button v-if="hasPro" class="button message" @click="messageDialog()"><span class="dashicons dashicons-email"></span> {{ __( 'Send Email', 'dokan-lite' ) }}</button>
+                            <button :class="['button', 'status', store.enabled ? 'enabled' : 'disabled']"><span class="dashicons"></span> {{ store.enabled ? __( 'Enabled', 'dokan-lite' ) : __( 'Disabled', 'dokan-lite' ) }}</button>
                         </div>
                     </div>
                 </div>
@@ -152,7 +152,7 @@
                                 <template v-slot:imagePlaceholder>
                                         <span class="edit-banner" v-if="editMode">
                                             <i class="change-banner dashicons dashicons-format-image"></i>
-                                            {{ __( 'Change Store Banner', 'dokan' ) }}
+                                            {{ __( 'Change Store Banner', 'dokan-lite' ) }}
                                         </span>
                                 </template>
                             </upload-image>
@@ -164,12 +164,12 @@
                     </div>
                     <div :class="{'action-links': true, 'edit-mode': editMode}">
                         <template v-if="editMode">
-                            <button @click="editMode = false" class="button">{{ __( 'Cancel', 'dokan' ) }}</button>
+                            <button @click="editMode = false" class="button">{{ __( 'Cancel', 'dokan-lite' ) }}</button>
                             <button @click="updateStore" class="button button-primary">{{ saveBtn }}</button>
                         </template>
 
                         <template v-else>
-                            <a :href="store.shop_url" target="_blank" class="button visit-store">{{ __( 'Visit Store', 'dokan' ) }} <span class="dashicons dashicons-arrow-right-alt"></span></a>
+                            <a :href="store.shop_url" target="_blank" class="button visit-store">{{ __( 'Visit Store', 'dokan-lite' ) }} <span class="dashicons dashicons-arrow-right-alt"></span></a>
                             <router-link :to="id" class="button" @click.native="editMode = true">
                                 <span class="dashicons dashicons-edit"></span>
                             </router-link>
@@ -187,64 +187,64 @@
                 />
                 <div class="summary-wrap products-revenue">
                     <div class="stat-summary products">
-                        <h3>{{ __( 'Products', 'dokan' ) }}</h3>
+                        <h3>{{ __( 'Products', 'dokan-lite' ) }}</h3>
 
                         <ul class="counts">
                             <li class="products">
                                 <span class="count"><a :href="productUrl()">{{ stats.products.total }}</a></span>
-                                <span class="subhead">{{ __( 'Total Products', 'dokan' ) }}</span>
+                                <span class="subhead">{{ __( 'Total Products', 'dokan-lite' ) }}</span>
                             </li>
                             <li class="items">
                                 <span class="count">{{ stats.products.sold }}</span>
-                                <span class="subhead">{{ __( 'Items Sold', 'dokan' ) }}</span>
+                                <span class="subhead">{{ __( 'Items Sold', 'dokan-lite' ) }}</span>
                             </li>
                             <li class="visitors">
                                 <span class="count">{{ stats.products.visitor }}</span>
-                                <span class="subhead">{{ __( 'Store Visitors', 'dokan' ) }}</span>
+                                <span class="subhead">{{ __( 'Store Visitors', 'dokan-lite' ) }}</span>
                             </li>
                         </ul>
                     </div>
 
                     <div class="stat-summary revenue">
-                        <h3>{{ __( 'Revenue', 'dokan' ) }}</h3>
+                        <h3>{{ __( 'Revenue', 'dokan-lite' ) }}</h3>
 
                         <ul class="counts">
                             <li class="orders">
                                 <span class="count"><a :href="ordersUrl()">{{ stats.revenue.orders }}</a></span>
-                                <span class="subhead">{{ __( 'Orders Processed', 'dokan' ) }}</span>
+                                <span class="subhead">{{ __( 'Orders Processed', 'dokan-lite' ) }}</span>
                             </li>
                             <li class="gross">
                                 <span class="count">
                                     <currency :amount="stats.revenue.sales"></currency>
                                 </span>
-                                <span class="subhead">{{ __( 'Gross Sales', 'dokan' ) }}</span>
+                                <span class="subhead">{{ __( 'Gross Sales', 'dokan-lite' ) }}</span>
                             </li>
                             <li class="earning">
                                 <span class="count">
                                     <currency :amount="stats.revenue.earning"></currency>
                                 </span>
-                                <span class="subhead">{{ __( 'Total Earning', 'dokan' ) }}</span>
+                                <span class="subhead">{{ __( 'Total Earning', 'dokan-lite' ) }}</span>
                             </li>
                         </ul>
                     </div>
 
                     <div class="stat-summary others">
-                        <h3>{{ __( 'Others', 'dokan' ) }}</h3>
+                        <h3>{{ __( 'Others', 'dokan-lite' ) }}</h3>
 
                         <ul class="counts">
                             <li class="commision">
                                 <span class="count" v-html="getEearningRate"></span>
-                                <span class="subhead">{{ __( 'Admin Commission', 'dokan' ) }}</span>
+                                <span class="subhead">{{ __( 'Admin Commission', 'dokan-lite' ) }}</span>
                             </li>
                             <li class="balance">
                                 <span class="count">
                                     <currency :amount="stats.others.balance"></currency>
                                 </span>
-                                <span class="subhead">{{ __( 'Current Balance', 'dokan' ) }}</span>
+                                <span class="subhead">{{ __( 'Current Balance', 'dokan-lite' ) }}</span>
                             </li>
                             <li class="reviews">
                                 <span class="count">{{ stats.others.reviews }}</span>
-                                <span class="subhead">{{ __( 'Reviews', 'dokan' ) }}</span>
+                                <span class="subhead">{{ __( 'Reviews', 'dokan-lite' ) }}</span>
                             </li>
                         </ul>
                     </div>
@@ -252,14 +252,14 @@
                 <div class="vendor-info">
                     <ul>
                         <li class="registered">
-                            <div class="subhead">{{ __( 'Registered Since', 'dokan' ) }}</div>
+                            <div class="subhead">{{ __( 'Registered Since', 'dokan-lite' ) }}</div>
                             <span class="date">
                                 {{ moment(store.registered).format('MMM D, YYYY') }}
                                 ({{ moment(store.registered).toNow(true) }})
                             </span>
                         </li>
                         <li class="social-profiles">
-                            <div class="subhead">{{ __( 'Social Profiles', 'dokan' ) }}</div>
+                            <div class="subhead">{{ __( 'Social Profiles', 'dokan-lite' ) }}</div>
 
                             <div class="profiles">
                                 <a :class="{ active: isSocialActive('fb') }" :href="store.social.fb" target="_blank"><i class="fab fa-facebook-square"></i></a>
@@ -272,44 +272,44 @@
                             </div>
                         </li>
                         <li class="payments">
-                            <div class="subhead">{{ __( 'Payment Methods', 'dokan' ) }}</div>
+                            <div class="subhead">{{ __( 'Payment Methods', 'dokan-lite' ) }}</div>
 
                             <div class="payment-methods">
-                                <span class='payment-chip' v-if='hasPayment( "paypal" )' :class="[ hasPaymentEmail('paypal') ? 'active' : '']" v-tooltip :title="__( 'PayPal', 'dokan' )">
+                                <span class='payment-chip' v-if='hasPayment( "paypal" )' :class="[ hasPaymentEmail('paypal') ? 'active' : '']" v-tooltip :title="__( 'PayPal', 'dokan-lite' )">
                                     <img src='../../../assets/images/payments/paypal.svg' alt=''>
                                 </span>
-                                <span class='payment-chip' v-if='hasPayment( "dokan-paypal-marketplace" )' :class="[ isActivePayment('dokan-paypal-marketplace') ? 'active' : '']" v-tooltip :title="__( 'Dokan PayPal Marketplace', 'dokan' )">
+                                <span class='payment-chip' v-if='hasPayment( "dokan-paypal-marketplace" )' :class="[ isActivePayment('dokan-paypal-marketplace') ? 'active' : '']" v-tooltip :title="__( 'Dokan PayPal Marketplace', 'dokan-lite' )">
                                     <img src='../../../assets/images/payments/d-paypal.svg' alt=''>
                                 </span>
-                                <span class='payment-chip' v-if='hasPayment( "dokan_stripe_express" )' :class="[ isActivePayment( 'stripe_express' ) ? 'active' : '']" v-tooltip :title="__( 'Stripe Express', 'dokan' )">
+                                <span class='payment-chip' v-if='hasPayment( "dokan_stripe_express" )' :class="[ isActivePayment( 'stripe_express' ) ? 'active' : '']" v-tooltip :title="__( 'Stripe Express', 'dokan-lite' )">
                                     <img src='../../../assets/images/payments/stripe.svg' alt=''>
                                 </span>
-                                <span class='payment-chip' v-if='hasPayment( "dokan-stripe-connect" )' :class="[ isActivePayment('stripe') ? 'active' : '']" v-tooltip :title="__( 'Dokan Stripe Connect', 'dokan' )">
+                                <span class='payment-chip' v-if='hasPayment( "dokan-stripe-connect" )' :class="[ isActivePayment('stripe') ? 'active' : '']" v-tooltip :title="__( 'Dokan Stripe Connect', 'dokan-lite' )">
                                     <img src='../../../assets/images/payments/d-stripe.svg' alt=''>
                                 </span>
-                                <span class='payment-chip' v-if='hasPayment( "bank" )' :class="[isBankActive ? 'active': '' ]" v-tooltip :title="__( 'Bank Payment', 'dokan' )">
+                                <span class='payment-chip' v-if='hasPayment( "bank" )' :class="[isBankActive ? 'active': '' ]" v-tooltip :title="__( 'Bank Payment', 'dokan-lite' )">
                                     <img src='../../../assets/images/payments/bank.svg' alt=''>
                                 </span>
-                                <span class='payment-chip' v-if='hasPayment( "skrill" )' :class="[hasPaymentEmail('skrill') ? 'active' : '' ]" v-tooltip :title="__( 'Skrill', 'dokan' )">
+                                <span class='payment-chip' v-if='hasPayment( "skrill" )' :class="[hasPaymentEmail('skrill') ? 'active' : '' ]" v-tooltip :title="__( 'Skrill', 'dokan-lite' )">
                                     <img src='../../../assets/images/payments/skrill.svg' alt=''>
                                 </span>
-                                <span class='payment-chip' v-if='hasPayment( "dokan_razorpay" )' :class="[ isActivePayment('dokan_razorpay') ? 'active' : '']" v-tooltip :title="__( 'Dokan Razorpay', 'dokan' )">
+                                <span class='payment-chip' v-if='hasPayment( "dokan_razorpay" )' :class="[ isActivePayment('dokan_razorpay') ? 'active' : '']" v-tooltip :title="__( 'Dokan Razorpay', 'dokan-lite' )">
                                     <img src='../../../assets/images/payments/razorpay.svg' alt=''>
                                 </span>
-                                <span class='payment-chip' v-if='hasPayment( "dokan_mangopay" )' :class="[ isActivePayment('dokan_mangopay') ? 'active' : '']" v-tooltip :title="__( 'Dokan MangoPay', 'dokan' )">
+                                <span class='payment-chip' v-if='hasPayment( "dokan_mangopay" )' :class="[ isActivePayment('dokan_mangopay') ? 'active' : '']" v-tooltip :title="__( 'Dokan MangoPay', 'dokan-lite' )">
                                     <img src='../../../assets/images/payments/mangopay.svg' alt=''>
                                 </span>
-                                <span class='dokan-custom-payment payment-chip' v-tooltip :title="__( 'Custom Payment', 'dokan' )" v-if='hasPayment( "dokan_custom" )' :class="[ isActiveCustomPayment() ? 'active' : '']">
+                                <span class='dokan-custom-payment payment-chip' v-tooltip :title="__( 'Custom Payment', 'dokan-lite' )" v-if='hasPayment( "dokan_custom" )' :class="[ isActiveCustomPayment() ? 'active' : '']">
                                     <img src='../../../assets/images/payments/payment-bag.svg' alt=''>
                                     <span>{{ custom_withdraw_method }}</span>
                                 </span>
                             </div>
                         </li>
                         <li class="publishing">
-                            <div class="subhead">{{ __( 'Product Publishing', 'dokan' ) }}</div>
+                            <div class="subhead">{{ __( 'Product Publishing', 'dokan-lite' ) }}</div>
 
-                            <span v-if="store.trusted"><span class="dashicons dashicons-shield"></span> {{ __( 'Direct', 'dokan' ) }}</span>
-                            <span v-else><span class="dashicons dashicons-backup"></span> {{ __( 'Requires Review', 'dokan' ) }}</span>
+                            <span v-if="store.trusted"><span class="dashicons dashicons-shield"></span> {{ __( 'Direct', 'dokan-lite' ) }}</span>
+                            <span v-else><span class="dashicons dashicons-backup"></span> {{ __( 'Requires Review', 'dokan-lite' ) }}</span>
                         </li>
                     </ul>
                 </div>
@@ -330,7 +330,7 @@
 
             <div :class="{'action-links': true, 'footer': true, 'edit-mode': editMode}">
                 <template v-if="editMode">
-                    <button @click="editMode = false" class="button">{{ __( 'Cancel', 'dokan' ) }}</button>
+                    <button @click="editMode = false" class="button">{{ __( 'Cancel', 'dokan-lite' ) }}</button>
                     <button @click="updateStore" class="button button-primary">{{ saveBtn }}</button>
                 </template>
             </div>
@@ -491,14 +491,14 @@ export default {
 
         getEearningRate() {
             if ( ! this.store.admin_commission_type || ! window.dokanAdmin.commission_types ) {
-                return this.__( 'Not Set', 'dokan' );
+                return this.__( 'Not Set', 'dokan-lite' );
             }
 
             return window.dokanAdmin.commission_types[this.store.admin_commission_type] ?? '';
         },
 
         saveBtn() {
-            return this.isUpdating ? this.__( 'Saving...', 'dokan' ) : this.__( 'Save Changes', 'dokan' )
+            return this.isUpdating ? this.__( 'Saving...', 'dokan-lite' ) : this.__( 'Save Changes', 'dokan-lite' )
         },
     },
 
@@ -647,9 +647,9 @@ export default {
                 replyto: this.mail.replyto
             } ).done(response => {
                 this.$notify({
-                    title: this.__( 'Success!', 'dokan' ),
+                    title: this.__( 'Success!', 'dokan-lite' ),
                     type: 'success',
-                    text: this.__( 'Email has been sent successfully.', 'dokan' )
+                    text: this.__( 'Email has been sent successfully.', 'dokan-lite' )
                 });
             });
 
@@ -693,14 +693,14 @@ export default {
                     this.updateCommissonRate();
 
                     this.showAlert(
-                        this.__( 'Vendor Updated', 'dokan' ),
-                        this.__( 'Vendor Updated Successfully!', 'dokan' ),
+                        this.__( 'Vendor Updated', 'dokan-lite' ),
+                        this.__( 'Vendor Updated Successfully!', 'dokan-lite' ),
                         'success'
                     );
 
                 } )
                 .fail((response) => {
-                    this.showAlert( this.__( response.responseJSON.message, 'dokan' ), '', 'error' );
+                    this.showAlert( this.__( response.responseJSON.message, 'dokan-lite' ), '', 'error' );
                 } )
                 .always( () => {
                     this.$router.push( {
