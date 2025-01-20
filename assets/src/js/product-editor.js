@@ -985,7 +985,7 @@
             } );
         },
 
-        unormatMoney( amount ) {
+        unformatMoney( amount ) {
             return accounting.unformat( amount, dokan.mon_decimal_point );
         },
 
@@ -995,7 +995,7 @@
                 let vandorPrice = $(
                     '.simple-product span.vendor-price'
                 ).text();
-                vandorPrice = Dokan_Editor.unormatMoney( vandorPrice );
+                vandorPrice = Dokan_Editor.unformatMoney( vandorPrice );
 
                 if ( vandorPrice < 0 ) {
                     $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );

@@ -35,7 +35,13 @@ class Helper {
     }
 
     /**
-     * Returns products category.
+     * Returns products category. If the category selection is single, it will return the first category of the product.
+     * If the category selection is multiple, it will return all the categories of the product.
+     * If the category selection is single and the product has multiple categories, it will return the first category.
+     * If you want to get the chosen category of a product as it is saved in the database and not considering the category selection setting,
+     * then use the function self::get_product_chosen_category
+     *
+     * @see self::get_product_chosen_category
      *
      * @since 3.6.2
      *
@@ -256,6 +262,15 @@ class Helper {
 
     /**
      * Returns the chosen category of a product.
+     * The purpose of this function is to get the chosen category of a product. It will return the category ids as saved
+     * in the database. it will not consider if the setting in dokan setting is single or multiple category selection.
+     * It will return the saved category ids as it is. And if the product is a variation product, it will find the parent
+     * product id and return the chosen category of the parent product.
+     *
+     * It is not recommended to use this function to get the chosen category of a product by the chosen category setting.
+     * Instead, use the function self::get_saved_products_category
+     *
+     * @see self::get_saved_products_category
      *
      * @since 3.7.0
      *
@@ -277,7 +292,7 @@ class Helper {
         $chosen_product_cat = get_post_meta( $product_id, 'chosen_product_cat', true );
 
         if ( ! is_array( $chosen_product_cat ) ) {
-            return $chosen_product_cat;
+            return [];
         }
 
         return array_filter(
