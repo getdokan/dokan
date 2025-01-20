@@ -1,8 +1,8 @@
-# Dokan Components
+# Dokan Hooks
 
 ## Overview
 
-`Dokan` provides a set of reusable `components` that can be used across both `Free` and `Pro` versions. This documentation explains how to properly set up and use these `components` in your project.
+`Dokan` provides a set of reusable `hooks` that can be used across both `Free` and `Pro` versions. This documentation explains how to properly set up and use `hooks` in your project.
 
 ## Important Dependencies
 
@@ -44,23 +44,23 @@ if (file_exists($script_assets)) {
 
 ## Component Access
 
-For `Dokan Free`, we can import the components via `@/components`:
+For `Dokan Free`, we can import the components via `@/hooks`:
 
 ```js
-import { DataViews } from '@/components';
+import { useWindowDimensions } from '@/hooks';
 ```
 
 In `Dokan Pro`, components can be imported directly from `@dokan/components`:
 
 ```js
-import { DataViews } from '@dokan/components';
+import { useWindowDimensions } from '@dokan/hooks';
 ```
 
-For external `plugins`, we must include the `dokan-react-components` as scripts dependency and the `@dokan/components` should be introduced as an external resource configuration to resolve the path via `webpack`:
+For external `plugins`, we must include the `dokan-react-components` as scripts dependency and the `@dokan/hooks` should be introduced as an external resource configuration to resolve the path via `webpack`:
 
 ```js
 externals: {
-    '@dokan/components': 'dokan.components',
+    '@dokan/hooks': 'dokan.hooks',
     ...
 },
 ```
@@ -71,12 +71,10 @@ externals: {
 
 ```
 |____ src/
-|        |___ components/
-|        |      |___ index.tsx         # Main export file
-|        |      |___ DataViews/        # Existing component
-|        |      |___ YourComponent/   # Your new component directory
-|        |      |     |___ index.tsx
-|        |      |     |___ style.scss
+|        |___ hooks/
+|        |      |___ index.tsx               # Main export file
+|        |      |___ ViewportDimensions.tsx  # Existing hook
+|        |      |___ YourHook                # Your new hook
 |        |      |
 |        |      |___ Other Files
 |        |
@@ -85,9 +83,8 @@ externals: {
 |____ Other Files
 ```
 
-**Finally,** we need to export the new `component` from the `src/components/index.tsx` file. Then, we can import the new component from `@dokan/components` in `dokan pro` version.
+**Finally,** we need to export the new `hook` from the `src/hooks/index.tsx` file. Then, we can import the new component from `@dokan/hooks` in `dokan pro` version.
 
-```ts
-export { default as DataViews } from './dataviews/DataViewTable';
-export { default as ComponentName } from './YourComponent';
+```tsx
+export { default as useWindowDimensions } from '@/hooks/ViewportDimensions';
 ```

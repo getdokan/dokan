@@ -1,5 +1,5 @@
 const path = require( 'path' );
-const {VueLoaderPlugin} = require( 'vue-loader' );
+const { VueLoaderPlugin } = require( 'vue-loader' );
 const entryPoints = require( './webpack-entries' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
@@ -14,6 +14,9 @@ const updatedConfig = {
     },
     'utilities': {
       import: '@/utilities/index.ts',
+    },
+    'hooks': {
+      import: '@/hooks/index.tsx',
     },
   },
   output: {
