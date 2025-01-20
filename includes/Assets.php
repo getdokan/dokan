@@ -600,9 +600,12 @@ class Assets {
 
             // Register React components.
             $scripts['dokan-react-components'] = [
-                'src'     => $asset_url . '/js/components.js',
-                'deps'    => array_merge( $components_asset['dependencies'], [ 'dokan-utilities', 'dokan-hooks' ] ),
                 'version' => $components_asset['version'],
+                'src'     => $asset_url . '/js/components.js',
+                'deps'    => array_merge(
+                    $components_asset['dependencies'],
+                    [ 'dokan-utilities', 'dokan-hooks' ]
+                ),
             ];
         }
 
@@ -616,9 +619,6 @@ class Assets {
         if ( ! function_exists( 'WC' ) ) {
             return;
         }
-
-        wp_enqueue_script( 'dokan-react-components' );
-        wp_enqueue_script( 'dokan-react-components' );
 
         // load dokan style on every pages. requires for shortcodes in other pages
         if ( DOKAN_LOAD_STYLE ) {
