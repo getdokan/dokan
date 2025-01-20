@@ -594,9 +594,9 @@ class Assets {
             ],
         ];
 
-        $components_asset = DOKAN_DIR . '/assets/js/components.asset.php';
-        if ( file_exists( $components_asset ) ) {
-            $components_asset = require $components_asset;
+        $components_asset_file = DOKAN_DIR . '/assets/js/components.asset.php';
+        if ( file_exists( $components_asset_file ) ) {
+            $components_asset = require $components_asset_file;
 
             // Register React components.
             $scripts['dokan-react-components'] = [
