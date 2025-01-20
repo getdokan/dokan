@@ -3,9 +3,8 @@ import { Slot } from "@wordpress/components";
 import { ViewportDimensions } from '@/Hooks/ViewportDimensions';
 import type { Action, Field, SupportedLayouts, View } from "@wordpress/dataviews/src/types";
 import { kebabCase, snakeCase } from "@/utilities";
-import { useWindowDimensions } from "@/components";
 import { useEffect } from "@wordpress/element";
-import type { ReactNode } from "react";
+import { useWindowDimensions } from "@/hooks";
 import './style.scss';
 
 type ItemWithId = { id: string };
@@ -31,7 +30,7 @@ type DataViewsProps< Item > = {
     onChangeSelection?: ( items: string[] ) => void;
     onClickItem?: ( item: Item ) => void;
     isItemClickable?: ( item: Item ) => boolean;
-    header?: ReactNode;
+    header?: JSX.Element;
 } & ( Item extends ItemWithId
     ? { getItemId?: ( item: Item ) => string }
     : { getItemId: ( item: Item ) => string } );
