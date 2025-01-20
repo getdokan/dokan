@@ -1,4 +1,5 @@
 export { default as DataViews } from './dataviews/DataViewTable';
+export { default as SortableList } from './sortable-list';
 export { default as useWindowDimensions } from '@/hooks/ViewportDimensions';
 
 export {
