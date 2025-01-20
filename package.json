@@ -24,7 +24,7 @@
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/typography": "^0.5.15",
-    "@wordpress/scripts": "^27.9.0",
+    "@wordpress/scripts": "^30.7.0",
     "chartjs-adapter-moment": "^1.0.1",
     "debounce": "^1.2.1",
     "fs-extra": "^10.1.0",
@@ -53,16 +53,13 @@
     "wp-readme-to-markdown": "^1.0.1"
   },
   "dependencies": {
-    "@getdokan/dokan-ui": "^1.0.14",
-    "@wordpress/api-fetch": "^7.14.0",
-    "@wordpress/components": "^28.9.0",
-    "@wordpress/data": "^10.9.0",
+    "@getdokan/dokan-ui": "^1.0.18",
+    "@wordpress/dataviews": "^4.10.0",
     "@wordpress/dom-ready": "^4.9.0",
     "@wordpress/element": "^6.9.0",
     "@wordpress/hooks": "^4.9.0",
     "@wordpress/i18n": "^5.8.0",
     "@wordpress/plugins": "^7.10.0",
-    "@wordpress/url": "^4.15.0",
     "react-router-dom": "^6.27.0"
   }
 }
