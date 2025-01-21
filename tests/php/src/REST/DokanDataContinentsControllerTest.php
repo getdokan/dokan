@@ -1,10 +1,10 @@
 <?php
 
-namespace WeDevs\Dokan\Test\Continents;
+namespace WeDevs\Dokan\Test\REST;
 
 use WeDevs\Dokan\Test\DokanTestCase;
 
-class RestApi extends DokanTestCase {
+class DokanDataContinentsControllerTest extends DokanTestCase {
 
     /**
      * The namespace of the REST route.
