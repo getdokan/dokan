@@ -162,7 +162,6 @@ export class CustomerPage extends BasePage {
     async updateBillingFields(billingInfo: customer['customerInfo']['billing']) {
         await this.clearAndType(customerAddress.billing.firstName, billingInfo.firstName);
         await this.clearAndType(customerAddress.billing.lastName, billingInfo.lastName);
-        await this.clearAndType(customerAddress.billing.companyName, billingInfo.companyName);
         if (DOKAN_PRO) {
             await this.clearAndType(customerAddress.billing.euFields.companyID, billingInfo.companyId);
             await this.clearAndType(customerAddress.billing.euFields.vatOrTaxNumber, billingInfo.vatNumber);
@@ -188,7 +187,6 @@ export class CustomerPage extends BasePage {
     async updateShippingFields(shippingInfo: customer['customerInfo']['shipping']): Promise<void> {
         await this.clearAndType(customerAddress.shipping.firstName, shippingInfo.firstName);
         await this.clearAndType(customerAddress.shipping.lastName, shippingInfo.lastName);
-        await this.clearAndType(customerAddress.shipping.companyName, shippingInfo.companyName);
         await this.click(customerAddress.shipping.countryOrRegion);
         await this.clearAndType(customerAddress.shipping.countryOrRegionInput, shippingInfo.country);
         await this.press(data.key.enter);

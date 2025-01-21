@@ -6913,7 +6913,6 @@ export const selector = {
                 editBillingAddress: '//h3[contains(text(),"Billing address")]/..//a[@class="edit"]',
                 firstName: '#billing_first_name',
                 lastName: '#billing_last_name',
-                companyName: '#billing_company',
                 euFields: {
                     companyID: '#billing_dokan_company_id_number',
                     vatOrTaxNumber: '#billing_dokan_vat_number',
@@ -6942,7 +6941,6 @@ export const selector = {
                 editShippingAddress: '//h3[contains(text(),"Shipping address")]/..//a[@class="edit"]',
                 firstName: '#shipping_first_name',
                 lastName: '#shipping_last_name',
-                companyName: '#shipping_company',
                 countryOrRegion: '(//span[@class="select2-selection__arrow"])[1]',
                 countryOrRegionInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 countryOrRegionValues: '.select2-results ul li',
