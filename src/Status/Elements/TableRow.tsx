@@ -3,7 +3,7 @@ import SettingsParser from '../SettingsParser';
 
 const TableRow = ( { element }: { element: StatusElement } ) => {
     return (
-        <tr>
+        <tr data-hook={ element.hook_key }>
             { element.children.map( ( child ) => {
                 return (
                     <SettingsParser

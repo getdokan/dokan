@@ -3,7 +3,10 @@ import SettingsParser from '../SettingsParser';
 
 const Table = ( { element }: { element: StatusElement } ) => {
     return (
-        <div className="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
+        <div
+            className="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg"
+            data-hook={ element.hook_key }
+        >
             <table className="min-w-full divide-y divide-gray-300">
                 { element.headers.length > 0 && (
                     <thead className="bg-gray-50">
