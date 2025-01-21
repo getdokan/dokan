@@ -95,7 +95,7 @@ class ProductController extends DokanRESTController {
         $schema = parent::get_product_collection_params();
 
         $schema['only_downloadable'] = [
-            'description' => __( 'If truthy value then only downloadable products will be returned', 'dokan' ),
+            'description' => __( 'If truthy value then only downloadable products will be returned', 'dokan-lite' ),
             'type' => [ 'boolean', 'string' ],
             'enum' => [ true, false, 0, 1 ],
             'sanitize_callback' => 'dokan_string_to_bool',
