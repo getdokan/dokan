@@ -38,8 +38,10 @@
         do_action( 'dokan_dashboard_content_inside_before' );
         ?>
 
-        <article class="dashboard-content-area">
-        <?php esc_html_e( 'Locading...', 'dokan-lite' ); ?>
+        <article class="dashboard-content-area" id="">
+            <div id="dokan-vendor-dashboard-root">
+                <?php esc_html_e( 'Locading...', 'dokan-lite' ); ?>
+            </div>
         </article><!-- .dashboard-content-area -->
 
         <?php
