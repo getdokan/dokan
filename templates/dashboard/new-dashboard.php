@@ -68,5 +68,3 @@
 </div><!-- .dokan-dashboard-wrap -->
 
 <?php do_action( 'dokan_dashboard_wrap_end' ); ?>
-
-<div class="dokan-layout" id="headlessui-portal-root"><div></div></div>
