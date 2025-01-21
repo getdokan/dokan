@@ -14,7 +14,7 @@ const Section = ( { element }: { element: StatusElement } ) => {
                     </p>
                 ) }
             </div>
-            <div className="bg-gray-50 px-4 py-5 sm:p-6">
+            <div className="bg-gray-50 px-4 py-5 flex flex-col gap-4 sm:p-6">
                 { element.children.map( ( child ) => {
                     return (
                         <SettingsParser

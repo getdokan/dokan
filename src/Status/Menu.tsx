@@ -22,6 +22,7 @@ const Menu = ( {
                     pages.map( ( item: StatusElement ) => {
                         return (
                             <a
+                                data-hook={ item.hook_key }
                                 key={ item.id }
                                 href={ item.id }
                                 onClick={ ( e ) => {

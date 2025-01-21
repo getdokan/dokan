@@ -362,7 +362,7 @@ class Assets {
             ],
             'dokan-react-frontend'          => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
-                'deps'    => [ 'dokan-react-components' ],
+                'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
             'dokan-react-components'        => [
                 'deps'    => [ 'wp-components' ],
@@ -579,7 +579,7 @@ class Assets {
             ],
             'dokan-react-frontend'      => [
                 'src'     => $asset_url . '/js/frontend.js',
-                'deps'    => array_merge( $frontend_shipping_asset['dependencies'], [ 'dokan-react-components' ] ),
+                'deps'    => $frontend_shipping_asset['dependencies'],
                 'version' => $frontend_shipping_asset['version'],
             ],
             'dokan-utilities'           => [
@@ -587,17 +587,25 @@ class Assets {
                 'src'     => $asset_url . '/js/utilities.js',
                 'version' => filemtime( $asset_path . 'js/utilities.js' ),
             ],
+            'dokan-hooks'               => [
+                'deps'    => [],
+                'src'     => $asset_url . '/js/hooks.js',
+                'version' => filemtime( $asset_path . 'js/hooks.js' ),
+            ],
         ];
 
-        $components_asset_dir = DOKAN_DIR . '/assets/js/components.asset.php';
-        if ( file_exists( $components_asset_dir ) ) {
-            $components_asset                   = require $components_asset_dir;
-            $components_asset['dependencies'][] = 'dokan-utilities';
+        $components_asset_file = DOKAN_DIR . '/assets/js/components.asset.php';
+        if ( file_exists( $components_asset_file ) ) {
+            $components_asset = require $components_asset_file;
 
+            // Register React components.
             $scripts['dokan-react-components'] = [
-                'src'     => $asset_url . '/js/components.js',
-                'deps'    => $components_asset['dependencies'],
                 'version' => $components_asset['version'],
+                'src'     => $asset_url . '/js/components.js',
+                'deps'    => array_merge(
+                    $components_asset['dependencies'],
+                    [ 'dokan-utilities', 'dokan-hooks' ]
+                ),
             ];
         }
 

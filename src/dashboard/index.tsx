@@ -36,7 +36,9 @@ const App = () => {
 };
 
 domReady( function () {
-    const rootElement = document.querySelector( '.dashboard-content-area' );
+    const rootElement = document.querySelector(
+        '#dokan-vendor-dashboard-root'
+    );
     const root = createRoot( rootElement! );
     root.render( <App /> );
 } );
