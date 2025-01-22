@@ -176,6 +176,16 @@ class OrderControllerV2 extends OrderController {
         return rest_ensure_response( $data );
     }
 
+    /**
+     * Format downloads data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \stdClass[]   $downloads
+     * @param \WC_Product[] $products
+     *
+     * @return array
+     */
     protected function format_downloads_data( $downloads, $products ) {
         $data = [];
         $data['downloads'] = $downloads;
@@ -188,14 +198,24 @@ class OrderControllerV2 extends OrderController {
 			}, []
         );
 
-        return $data;
+        return apply_filters( 'dokan_rest_prepare_format_downloads_data', $data, $downloads, $products );
     }
 
-    public function prepare_data_for_response( $object, $request ) {
-        $product = $object->product;
-        unset( $object->product );
+    /**
+     * Prepare data for response.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \stdClass        $download
+     * @param \WP_REST_Request $request
+     *
+     * @return \stdClass
+     */
+    public function prepare_data_for_response( $download, $request ) {
+        $product = $download->product;
+        unset( $download->product );
 
-        return apply_filters( 'dokan_filter', $object, $product );
+        return apply_filters( 'dokan_rest_prepare_order_download_response', $download, $product );
     }
 
     /**
