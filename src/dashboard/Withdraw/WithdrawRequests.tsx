@@ -7,22 +7,18 @@ import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 import RequestWithdrawBtn from './RequestWithdrawBtn';
 import { useWithdrawSettings } from './Hooks/useWithdrawSettings';
-import { useCurrentUser } from '../../Hooks/useCurrentUser';
+import { useCurrentUser } from "@/hooks";
 
 function WithdrawRequests() {
     const useWithdrawRequestHook = useWithdrawRequests( true );
     const withdrawSettings = useWithdrawSettings();
-    const currentUser = useCurrentUser( true );
+    const currentUser = useCurrentUser();
 
     const navigate = useNavigate();
     const location = useLocation();
     const [ statusParam, setStatusParam ] = useState( 'pending' );
 
     const validStatuses = [ 'pending', 'approved', 'cancelled' ];
-
-    useEffect( () => {
-        currentUser.fetchCurrentUser();
-    }, [] );
 
     useEffect( () => {
         if ( ! currentUser?.data || ! currentUser?.data?.id ) {

@@ -7,17 +7,13 @@ import PaymentDetails from './PaymentDetails';
 import PaymentMethods from './PaymentMethods';
 import { DokanToaster } from '@getdokan/dokan-ui';
 import { useEffect } from '@wordpress/element';
-import { useCurrentUser } from '../../Hooks/useCurrentUser';
+import { useCurrentUser } from "@/hooks";
 
 const Index = () => {
     const useWithdrawRequestHook = useWithdrawRequests( true );
     const withdrawSettings = useWithdrawSettings();
-    const currentUser = useCurrentUser( true );
+    const currentUser = useCurrentUser();
     const balance = useBalance();
-
-    useEffect( () => {
-        currentUser.fetchCurrentUser();
-    }, [] );
 
     useEffect( () => {
         if ( currentUser?.data ) {

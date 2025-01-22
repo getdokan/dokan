@@ -1,5 +1,4 @@
-import { useState, useCallback, useEffect } from '@wordpress/element';
-import apiFetch from '@wordpress/api-fetch';
+import { useSelect } from '@wordpress/data';
 
 interface Links {
     self: { href: string; targetHints: { allow: string[] } }[];
@@ -23,45 +22,39 @@ interface CurrentUserResponse {
 export interface UseCurrentUserReturn {
     data: CurrentUserResponse | null;
     isLoading: boolean;
+    hasFinished: boolean;
     error: Error | null;
-    fetchCurrentUser: () => Promise< CurrentUserResponse | void >;
 }
 
 export const useCurrentUser = (
-    defaultLoader: boolean = false
+    enabled: boolean = true
 ): UseCurrentUserReturn => {
-    const [ data, setData ] = useState< CurrentUserResponse | null >( null );
-    const [ isLoading, setIsLoading ] = useState< boolean >( defaultLoader );
-    const [ error, setError ] = useState< Error | null >( null );
-
-    const fetchCurrentUser =
-        useCallback( async (): Promise< CurrentUserResponse | void > => {
-            try {
-                setIsLoading( true );
-                setError( null );
-
-                const response = await apiFetch< CurrentUserResponse >( {
-                    path: '/wp/v2/users/me',
-                    method: 'GET',
-                } );
-
-                setData( response );
-                return response;
-            } catch ( err ) {
-                setError(
-                    err instanceof Error
-                        ? err
-                        : new Error( 'Failed to fetch current user' )
-                );
-                console.error( 'Error fetching current user:', err );
-            } finally {
-                setIsLoading( false );
+    // @ts-ignore
+    return useSelect(
+        ( select ) => {
+            if ( ! enabled ) {
+                return {
+                    data: null,
+                    isLoading: false,
+                    hasFinished: false,
+                    error: null,
+                };
             }
-        }, [] );
 
-    // useEffect( () => {
-    //     fetchCurrentUser();
-    // }, [ fetchCurrentUser ] );
+            const store = select( 'core' );
 
-    return { data, isLoading, error, fetchCurrentUser };
+            return {
+                // @ts-ignore
+                data: store.getCurrentUser() as CurrentUserResponse,
+                // @ts-ignore
+                isLoading: store.isResolving( 'getCurrentUser', [] ),
+                // @ts-ignore
+                hasFinished: store.hasFinishedResolution(
+                    'getCurrentUser',
+                    []
+                ),
+            };
+        },
+        [ enabled ]
+    );
 };
