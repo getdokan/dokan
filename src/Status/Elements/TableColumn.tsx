@@ -7,7 +7,7 @@ const TableColumn = ( { element }: { element: StatusElement } ) => {
             className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
             data-hook={ element.hook_key }
         >
-            { element.children.map( ( child ) => {
+            { ( element?.children || [] ).map( ( child ) => {
                 return (
                     <SettingsParser
                         element={ child }

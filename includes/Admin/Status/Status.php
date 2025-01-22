@@ -14,12 +14,6 @@ class Status extends StatusElement {
     public function __construct() {
         parent::__construct( 'dokan-status' );
 
-        try {
-            $this->describe();
-        } catch ( Exception $e ) {
-            dokan_log( $e->getMessage() );
-        }
-
         add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
         add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -33,6 +27,11 @@ class Status extends StatusElement {
     }
 
     public function render(): array {
+        try {
+            $this->describe();
+        } catch ( Exception $e ) {
+            dokan_log( $e->getMessage() );
+        }
         return parent::render()['children'];
     }
 
