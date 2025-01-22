@@ -57,7 +57,7 @@ const getRoutes = () => {
 
     routes.push(
         {
-            id: 'dokan-base',
+            id: 'dokan-withdraw',
             title: __( 'Withdraw', 'dokan-lite' ),
             element: <Withdraw/>,
             path: '/withdraw',
@@ -68,7 +68,7 @@ const getRoutes = () => {
 
     routes.push(
         {
-            id: 'dokan-base',
+            id: 'dokan-withdraw-requests',
             title: __( 'Withdraw', 'dokan-lite' ),
             element: <WithdrawRequests/>,
             path: '/withdraw-requests',
