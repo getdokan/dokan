@@ -18,7 +18,7 @@ const Tab = ( {
 } ) => {
     return (
         ! loading &&
-        tabs.length > 0 && (
+        ( tabs || [] ).length > 0 && (
             <div>
                 <div className="sm:hidden">
                     <label htmlFor="tabs" className="sr-only">

@@ -19,7 +19,7 @@ const Menu = ( {
         <aside className="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
             <nav className=" bg-white rounded-md">
                 { ! loading &&
-                    pages.map( ( item: StatusElement ) => {
+                    ( pages || [] ).map( ( item: StatusElement ) => {
                         return (
                             <a
                                 data-hook={ item.hook_key }
