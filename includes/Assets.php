@@ -369,6 +369,11 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
+            'dokan-order-details'        => [
+                'deps'    => [ 'wp-components' ],
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/order-details.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/order-details.css' ),
+            ],
         ];
 
         return $styles;
@@ -383,6 +388,7 @@ class Assets {
         global $wp_version;
 
         $frontend_shipping_asset = require DOKAN_DIR . '/assets/js/frontend.asset.php';
+        $order_details_asset = require DOKAN_DIR . '/assets/js/order-details.asset.php';
 
         $suffix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
         $asset_url      = DOKAN_PLUGIN_ASSEST;
@@ -591,6 +597,11 @@ class Assets {
                 'deps'    => [],
                 'src'     => $asset_url . '/js/hooks.js',
                 'version' => filemtime( $asset_path . 'js/hooks.js' ),
+            ],
+            'dokan-order-details'       => [
+                'deps'    => [],
+                'src'     => $asset_url . '/js/order-details.js',
+                'version' => filemtime( $asset_path . 'js/order-details.js' ),
             ],
         ];
 

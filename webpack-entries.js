@@ -53,6 +53,9 @@ const entryPoints = {
     // Category commission component styles.
     'dokan-category-commission': '/src/admin/components/Commission/index.js',
     'dokan-status': '/src/Status/index.tsx',
+
+    // order details
+    'order-details': './src/dashboard/order-details/index.tsx',
 };
 
 module.exports = entryPoints;

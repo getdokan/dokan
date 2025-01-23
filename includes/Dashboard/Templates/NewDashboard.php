@@ -85,6 +85,10 @@ class NewDashboard {
 
         wp_enqueue_script( 'dokan-react-frontend' );
         wp_enqueue_style( 'dokan-react-frontend' );
+
+        // order details
+        wp_enqueue_script( 'dokan-order-details' );
+        wp_enqueue_style( 'dokan-order-details' );
     }
 
     /**

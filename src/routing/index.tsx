@@ -3,6 +3,7 @@ import {__} from "@wordpress/i18n";
 import {DokanRoute} from "../Layout";
 import { isValidElement, cloneElement, createElement } from '@wordpress/element';
 import { useNavigate, useParams, useLocation, redirect, replace, useMatches, useNavigation, createSearchParams } from 'react-router-dom';
+import OrderDetails from '../dashboard/order-details';
 
 export function withRouter(Component) {
     function ComponentWithRouterProp(props) {
@@ -52,6 +53,17 @@ const getRoutes = () => {
     //         order: 10,
     //     }
     // );
+
+    routes.push(
+        {
+            id: 'dokan-order-details',
+            title: __( 'Order Details', 'dokan-lite' ),
+            element: <OrderDetails/>,
+            path: '/orders/:id',
+            exact: true,
+            order: 10,
+        }
+    );
 
     // @ts-ignore
     routes = wp.hooks.applyFilters('dokan-dashboard-routes', routes) as Array<DokanRoute>;

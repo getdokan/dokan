@@ -260,6 +260,8 @@ class OrderController extends DokanRESTController {
         $format_date       = array( 'date_created', 'date_modified', 'date_completed', 'date_paid' );
         $format_line_items = array( 'line_items', 'tax_lines', 'shipping_lines', 'fee_lines', 'coupon_lines' );
 
+        $currency_symbol = get_woocommerce_currency_symbol( $data['currency'] );
+
         // Format decimal values.
         foreach ( $format_decimal as $key ) {
             $data[ $key ] = wc_format_decimal( $data[ $key ], '' );
@@ -302,6 +304,7 @@ class OrderController extends DokanRESTController {
             'version'              => $data['version'],
             'status'               => $data['status'],
             'currency'             => $data['currency'],
+            'currency_symbol'      => $currency_symbol,
             'date_created'         => $data['date_created'],
             'date_created_gmt'     => $data['date_created_gmt'],
             'date_modified'        => $data['date_modified'],
@@ -536,6 +539,7 @@ class OrderController extends DokanRESTController {
             $data['sku']   = $item->get_product() ? $item->get_product()->get_sku() : null;
             $data['image'] = ( is_a( $item->get_product(), \WC_Product::class ) && wp_get_attachment_image_url( $item->get_product()->get_image_id() ) ) ? wp_get_attachment_image_url( $item->get_product()->get_image_id(), 'full' ) : wc_placeholder_img_src();
             $data['price'] = (float) ( $item->get_total() / max( 1, $item->get_quantity() ) );
+            $data['permalink'] = $item->get_product() ? $item->get_product()->get_permalink() : '';
         }
 
         // Format taxes.
