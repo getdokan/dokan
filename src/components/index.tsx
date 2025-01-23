@@ -7,3 +7,5 @@ export {
     filterSortAndPaginate,
     isItemValid
 } from '@wordpress/dataviews/wp';
+export { default as PriceHtml } from './PriceHtml';
+export { default as DateTimeHtml } from './DateTimeHtml';
