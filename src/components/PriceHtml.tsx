@@ -1,5 +1,5 @@
 import { RawHTML } from '@wordpress/element';
-import '../Definitions/window-types';
+import { formatPrice } from '@/utilities';
 
 type PriceHtmlProps = {
     price: string | number;
@@ -20,29 +20,9 @@ const PriceHtml = ( {
     decimal = '',
     format = '',
 }: PriceHtmlProps ) => {
-    if ( ! currencySymbol ) {
-        currencySymbol = window.dokanCurrency.symbol;
-    }
-
-    if ( ! precision ) {
-        precision = window.dokanCurrency.precision;
-    }
-
-    if ( ! thousand ) {
-        thousand = window.dokanCurrency.thousand;
-    }
-
-    if ( ! decimal ) {
-        decimal = window.dokanCurrency.decimal;
-    }
-
-    if ( ! format ) {
-        format = window.dokanCurrency.format;
-    }
-
     return (
         <RawHTML>
-            { window.accounting.formatMoney(
+            { formatPrice(
                 price,
                 currencySymbol,
                 precision,
