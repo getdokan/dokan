@@ -3,8 +3,11 @@ import SettingsParser from '../SettingsParser';
 
 const TableColumn = ( { element }: { element: StatusElement } ) => {
     return (
-        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-            { element.children.map( ( child ) => {
+        <td
+            className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+            data-hook={ element.hook_key }
+        >
+            { ( element?.children || [] ).map( ( child ) => {
                 return (
                     <SettingsParser
                         element={ child }

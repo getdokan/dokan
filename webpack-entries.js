@@ -2,7 +2,7 @@ const entryPoints = {
     // Dokan tailwind css
     'dokan-tailwind': './src/tailwind.css',
 
-    'frontend': './src/Dashboard/index.tsx',
+    'frontend': './src/dashboard/index.tsx',
     'vue-frontend': './src/frontend/main.js',
     'vue-admin': './src/admin/main.js',
     'vue-bootstrap': './src/utils/Bootstrap.js',

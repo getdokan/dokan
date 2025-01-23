@@ -18,7 +18,7 @@ const Tab = ( {
 } ) => {
     return (
         ! loading &&
-        tabs.length > 0 && (
+        ( tabs || [] ).length > 0 && (
             <div>
                 <div className="sm:hidden">
                     <label htmlFor="tabs" className="sr-only">
@@ -33,7 +33,12 @@ const Tab = ( {
                     >
                         { tabs.map( ( tab ) => {
                             return (
-                                <option key={ tab.id }>{ tab.title }</option>
+                                <option
+                                    data-hook={ tab.hook_key }
+                                    key={ tab.id }
+                                >
+                                    { tab.title }
+                                </option>
                             );
                         } ) }
                     </select>
@@ -47,6 +52,7 @@ const Tab = ( {
                             { tabs.map( ( tab ) => {
                                 return (
                                     <a
+                                        data-hook={ tab.hook_key }
                                         key={ tab.id }
                                         href={ tab.id }
                                         onClick={ ( e ) => {

@@ -5,7 +5,9 @@
 // Reset unwanted table styles but keep structure intact
 @layer base {
     .dokan-layout {
-        table, th, td {
+        table:not(.dataviews-view-table),
+        table:not(.dataviews-view-table) th,
+        table:not(.dataviews-view-table) td {
             margin: 0;
             padding: 0;
             border: 0;
