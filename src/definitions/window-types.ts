@@ -11,9 +11,6 @@ declare global {
         wp: {
             hooks: Hooks;
         };
-        dokanProductSubscription: {
-            currencySymbols: Record< string, string >;
-        };
         dokan_get_daterange_picker_format: () => string;
         moment: ( date: string ) => any;
         accounting: WooCommerceAccounting.AccountingStatic;
