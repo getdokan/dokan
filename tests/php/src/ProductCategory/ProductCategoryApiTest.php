@@ -87,6 +87,15 @@ class ProductCategoryApiTest extends DokanTestCase {
         return $this->server->dispatch( $request );
     }
 
+    // make single category request
+    protected function make_single_category_request( int $category_id ): \WP_REST_Response {
+        $route = $this->get_route( $this->rest_base . '/' . $category_id );
+        $request = new \WP_REST_Request( 'GET', $route );
+
+        return $this->server->dispatch( $request );
+
+    }
+
     /**
      * Helper method to authenticate as vendor
      */
@@ -229,6 +238,17 @@ class ProductCategoryApiTest extends DokanTestCase {
         }
     }
 
+    // test single category response
+    public function test_single_category_response(): void {
+        $this->authenticate_as_vendor();
+
+        $category_id = $this->categories['parent1'];
+        $response = $this->make_single_category_request( $category_id );
+        $data = $response->get_data();
+
+        $this->assertEquals( $category_id, $data['id'] );
+        $this->assertEquals( 'Parent Category 1', $data['name'] );
+    }
     /**
      * Clean up after tests
      */
