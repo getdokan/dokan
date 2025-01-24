@@ -1,13 +1,13 @@
 import '../definitions/window-types';
 
-function formatPrice(
-    price = 0,
+export const formatPrice = (
+    price: number | string = '',
     currencySymbol = '',
     precision = null,
     thousand = '',
     decimal = '',
     format = ''
-): string {
+): string => {
     if ( ! currencySymbol ) {
         currencySymbol = window.dokanCurrency.symbol;
     }
@@ -36,6 +36,19 @@ function formatPrice(
         decimal,
         format
     );
-}
+};
 
 export default formatPrice;
+
+export const formatNumber = ( value ) => {
+    if ( value === '' ) {
+        return value;
+    }
+    return window.accounting.formatNumber(
+        value,
+        // @ts-ignore
+        window.dokanCurrency.precision,
+        window.dokanCurrency.thousand,
+        window.dokanCurrency.decimal
+    );
+};

@@ -15,6 +15,7 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { useCharge } from './Hooks/useCharge';
 import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
+import { formatPrice } from '@/utilities';
 
 function RequestWithdrawBtn( {
     settings,
@@ -49,41 +50,17 @@ function RequestWithdrawBtn( {
         fetchCharge( method, value );
     }
 
-    const formatNumber = ( value ) => {
-        if ( value === '' ) {
-            return value;
-        }
-        return window.accounting.formatNumber(
-            value,
-            // @ts-ignore
-            window.dokanCurrency.precision,
-            window.dokanCurrency.thousand,
-            window.dokanCurrency.decimal
-        );
-    };
-
-    const formatMoney = ( money ) => {
-        // @ts-ignore
-        return window.accounting.formatMoney( money, {
-            symbol: '',
-            decimal: window.dokanCurrency.decimal,
-            thousand: window.dokanCurrency.thousand,
-            precision: window.dokanCurrency.precision,
-            format: window.dokanCurrency.format,
-        } );
-    };
-
     const getRecivableFormated = () => {
         if ( ! withdrawAmount ) {
-            return formatMoney( '' );
+            return formatPrice( '', '' );
         }
 
-        return formatMoney( data?.receivable ?? '' );
+        return formatPrice( data?.receivable ?? '', '' );
     };
     const getChargeFormated = () => {
         let chargeText = '';
         if ( ! withdrawAmount ) {
-            return formatMoney( '' );
+            return formatPrice( '', '' );
         }
 
         const fixed = data?.charge_data?.fixed
@@ -94,17 +71,17 @@ function RequestWithdrawBtn( {
             : '';
 
         if ( fixed ) {
-            chargeText += formatMoney( fixed );
+            chargeText += formatPrice( fixed, '' );
         }
 
         if ( percentage ) {
             chargeText += chargeText ? ' + ' : '';
             chargeText += `${ percentage }%`;
-            chargeText += ` = ${ formatMoney( data?.charge ) }`;
+            chargeText += ` = ${ formatPrice( data?.charge, '' ) }`;
         }
 
         if ( ! chargeText ) {
-            chargeText = formatMoney( data?.charge );
+            chargeText = formatPrice( data?.charge, '' );
         }
 
         return chargeText;
