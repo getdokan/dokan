@@ -2,7 +2,7 @@
 
 ## Overview
 
-`Dokan` provides a set of reusable `hooks` that can be used across both `Free` and `Pro` versions. This documentation explains how to properly set up and use `hooks` in your project.
+`Dokan` provides a set of reusable `hooks` that can be used across both `Free` and `Premium` versions. This documentation explains how to properly set up and use `hooks` in your project.
 
 ## Important Dependencies
 
@@ -11,7 +11,7 @@ For both `Dokan Free and Pro` versions, we must register the `dokan-react-compon
 ### Implementation Example
 
 ```php
-// Register scripts with dokan-react-components dependency
+// Register scripts with `dokan-react-components` dependency
 $script_assets = 'add_your_script_assets_path_here';
 
 if (file_exists($script_assets)) {
@@ -44,13 +44,7 @@ if (file_exists($script_assets)) {
 
 ## Component Access
 
-For `Dokan Free`, we can import the components via `@/hooks`:
-
-```js
-import { useWindowDimensions } from '@/hooks';
-```
-
-In `Dokan Pro`, components can be imported directly from `@dokan/components`:
+For `Dokan free & premium version`, we can import the components via `@dokan/hooks`:
 
 ```js
 import { useWindowDimensions } from '@dokan/hooks';
@@ -83,7 +77,7 @@ externals: {
 |____ Other Files
 ```
 
-**Finally,** we need to export the new `hook` from the `src/hooks/index.tsx` file. Then, we can import the new component from `@dokan/hooks` in `dokan pro` version.
+**Finally,** we need to export the new `hook` from the `src/hooks/index.tsx` file. Then, we can import the new component via `@dokan/hooks`.
 
 ```tsx
 export { default as useWindowDimensions } from '@/hooks/ViewportDimensions';

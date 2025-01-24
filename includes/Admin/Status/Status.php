@@ -14,94 +14,9 @@ class Status extends StatusElement {
     public function __construct() {
         parent::__construct( 'dokan-status' );
 
-        try {
-            $this->describe();
-        } catch ( Exception $e ) {
-            dokan_log( $e->getMessage() );
-        }
-
         add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
         add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-    }
-
-    /**
-     * Get a new Page object.
-     *
-     * @param string $id ID.
-     *
-     * @return Page
-     */
-    public static function page( string $id ): Page {
-        return new Page( $id );
-    }
-
-    /**
-     * Get a new tab object.
-     *
-     * @param string $id ID.
-     *
-     * @return Tab
-     */
-    public static function tab( string $id ): Tab {
-        return new Tab( $id );
-    }
-
-    /**
-     * Get a new Section object.
-     *
-     * @param string $id ID.
-     *
-     * @return Section
-     */
-    public static function section( string $id ): Section {
-        return new Section( $id );
-    }
-
-    /**
-     * Get a new SubSection object.
-     *
-     * @param string $id ID.
-     *
-     * @return SubSection
-     */
-    public static function sub_section( string $id ): SubSection {
-        return new SubSection( $id );
-    }
-
-    /**
-     * Get a new Table object.
-     *
-     * @param string $id ID.
-     *
-     * @return Table
-     */
-    public static function table( string $id ): Table {
-        return new Table( $id );
-    }
-
-    public static function table_row( string $id ): TableRow {
-        return new TableRow( $id );
-    }
-
-    public static function table_column( string $id ): TableColumn {
-        return new TableColumn( $id );
-    }
-
-    public static function paragraph( string $id ): Paragraph {
-        return new Paragraph( $id );
-    }
-
-    public static function heading( string $id ): Heading {
-        return new Heading( $id );
-    }
-
-    public static function link( string $id ): Link {
-        return new Link( $id );
-    }
-
-    public static function button( string $id ): Button {
-        return new Button( $id );
     }
 
     /**
@@ -112,6 +27,11 @@ class Status extends StatusElement {
     }
 
     public function render(): array {
+        try {
+            $this->describe();
+        } catch ( Exception $e ) {
+            dokan_log( $e->getMessage() );
+        }
         return parent::render()['children'];
     }
 
@@ -183,17 +103,17 @@ class Status extends StatusElement {
      */
     public function describe() {
 		//        $this->add(
-		//            self::heading( 'main_heading' )
+		//            StatusElementFactory::heading( 'main_heading' )
 		//                ->set_title( __( 'Dokan Status', 'dokan-lite' ) )
 		//                ->set_description( __( 'Check the status of your Dokan installation.', 'dokan-lite' ) )
 		//        );
 
 		//        $this->add(
-		//            self::section( 'overridden_features' )
+		//            StatusElementFactory::section( 'overridden_features' )
 		//                ->set_title( __( 'Overridden Templates', 'dokan-lite' ) )
 		//                ->set_description( __( 'The templates currently overridden that is preventing enabling new features.', 'dokan-lite' ) )
 		//                ->add(
-		//                    self::table( 'override_table' )
+		//                    StatusElementFactory::table( 'override_table' )
 		//                        ->set_title( __( 'General Heading', 'dokan-lite' ) )
 		//                        ->set_headers(
 		//                            [
@@ -203,18 +123,18 @@ class Status extends StatusElement {
 		//                            ]
 		//                        )
 		//                        ->add(
-		//                            self::table_row( 'override_row' )
+		//                            StatusElementFactory::table_row( 'override_row' )
 		//                                ->add(
-		//                                    self::table_column( 'template' )
+		//                                    StatusElementFactory::table_column( 'template' )
 		//                                        ->add(
-		//                                            self::paragraph( 'file' )
+		//                                            StatusElementFactory::paragraph( 'file' )
 		//                                                ->set_title( __( 'FileA.php', 'dokan-lite' ) )
 		//                                        )
 		//                                )
 		//                                ->add(
-		//                                    self::table_column( 'action' )
+		//                                    StatusElementFactory::table_column( 'action' )
 		//                                        ->add(
-		//                                            self::button( 'action' )
+		//                                            StatusElementFactory::button( 'action' )
 		//                                                ->set_title( __( 'Remove', 'dokan-lite' ) )
 		//                                        )
 		//                                )

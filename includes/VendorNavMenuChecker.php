@@ -4,6 +4,7 @@ namespace WeDevs\Dokan;
 
 use Exception;
 use WeDevs\Dokan\Admin\Status\Status;
+use WeDevs\Dokan\Admin\Status\StatusElementFactory;
 
 class VendorNavMenuChecker {
 
@@ -13,7 +14,32 @@ class VendorNavMenuChecker {
      * @var array $template_dependencies List of template dependencies.
      * [ 'route' => [ ['slug' => 'template-slug', 'name' => 'template-name' (Optional), 'args' = [] (Optional)  ] ] ]
      */
-    protected array $template_dependencies = [];
+    protected array $template_dependencies = [
+        'withdraw' => [
+            [ 'slug' => 'withdraw/withdraw-dashboard' ],
+            [ 'slug' => 'withdraw/withdraw' ],
+            [ 'slug' => 'withdraw/header' ],
+            [ 'slug' => 'withdraw/status-listing' ],
+            [ 'slug' => 'withdraw/pending-request-listing' ],
+            [ 'slug' => 'withdraw/approved-request-listing' ],
+            [ 'slug' => 'withdraw/cancelled-request-listing' ],
+            [ 'slug' => 'withdraw/tmpl-withdraw-request-popup' ],
+            [ 'slug' => 'withdraw/request-form' ],
+            [ 'slug' => 'withdraw/pending-request-listing-dashboard' ],
+        ],
+    ];
+
+
+    /**
+     * Forcefully resolved dependencies.
+     *
+     * Using `dokan_is_dashboard_nav_dependency_resolved` filter hook.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var array $forcefully_resolved_dependencies List of forcefully resolved dependencies.
+     */
+    protected array $forcefully_resolved_dependencies = [];
 
     /**
      * Constructor.
@@ -78,7 +104,27 @@ class VendorNavMenuChecker {
             $clear = false;
         }
 
-        return apply_filters( 'dokan_is_dashboard_nav_dependency_resolved', $clear, $route );
+        $filtered_clear = apply_filters( 'dokan_is_dashboard_nav_dependency_resolved', $clear, $route );
+
+        if ( $clear !== $filtered_clear ) {
+            $this->forcefully_resolved_dependencies[ $route ] = $filtered_clear;
+        }
+
+        return $filtered_clear;
+    }
+
+    /**
+     * List forcefully resolved dependencies.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function list_force_dependency_resolved_alteration(): array {
+        // Forcefully rebuild dependencies resolutions.
+        dokan_get_dashboard_nav();
+
+        return $this->forcefully_resolved_dependencies;
     }
 
     /**
@@ -196,21 +242,17 @@ class VendorNavMenuChecker {
      */
     public function display_notice( array $notices ): array {
         $overridden_templates = $this->list_overridden_templates();
+        $overridden_routes = $this->list_force_dependency_resolved_alteration();
 
-        if ( empty( $overridden_templates ) ) {
+        if ( empty( $overridden_templates ) && empty( $overridden_routes ) ) {
             return $notices;
         }
 
-        $notice = sprintf(
-            /* translators: %s: overridden templates */
-            __( 'The following templates are overridden:<br><code>%s</code>', 'dokan-lite' ),
-            implode( ',<br>', $overridden_templates )
-        );
-
         $notices[] = [
             'type'        => 'alert',
-            'title'       => esc_html__( 'Some of Dokan Templates are overridden which limit new features.', 'dokan-lite' ),
-            'description' => $notice,
+            'scope'       => 'global',
+            'title'       => esc_html__( 'Some of Dokan Templates or functionalities are overridden which limit new features.', 'dokan-lite' ),
+            'description' => esc_html__( 'Some of the Dokan templates or routes are overridden, which can prevent new features and intended functionalities from working correctly.', 'dokan-lite' ),
             'actions'     => [
                 [
                     'type'   => 'primary',
@@ -233,42 +275,85 @@ class VendorNavMenuChecker {
      * @throws Exception
      */
     public function add_status_section( Status $status ) {
-        if ( empty( $this->list_overridden_templates() ) ) {
+        $overridden_templates = $this->list_overridden_templates();
+        $overridden_routes = $this->list_force_dependency_resolved_alteration();
+
+        if ( empty( $overridden_templates ) && empty( $overridden_routes ) ) {
             return;
         }
 
-        $table = Status::table( 'override_table' )
-                ->set_title( __( 'General Heading', 'dokan-lite' ) )
+        if ( ! empty( $overridden_templates ) ) {
+            $template_table = StatusElementFactory::table( 'override_templates_table' )
+                ->set_title( __( 'Overridden Template Table', 'dokan-lite' ) )
                 ->set_headers(
                     [
                         __( 'Template', 'dokan-lite' ),
                     ]
                 );
 
-        foreach ( $this->list_overridden_templates() as $id => $template ) {
-            $table->add(
-                Status::table_row( 'override_row_' . $id )
-                    ->add(
-                        Status::table_column( 'template_' . $id )
-                            ->add(
-                                Status::paragraph( 'file_location_' . $id )
-                                    ->set_title( $template )
-                            )
-                            ->add(
-                                Status::paragraph( 'file_location_' . $id . '_instruction' )
-                                        ->set_title( __( 'Please Remove the above file to enable ', 'dokan-lite' ) )
-                            )
-                    )
-            );
+            foreach ( $overridden_templates as $id => $template ) {
+                $template_table->add(
+                    StatusElementFactory::table_row( 'override_row_' . $id )
+                        ->add(
+                            StatusElementFactory::table_column( 'template_' . $id )
+                                ->add(
+                                    StatusElementFactory::paragraph( 'file_location_' . $id )
+                                        ->set_title( '<code>' . $template . '</code>' )
+                                )
+                                ->add(
+                                    StatusElementFactory::paragraph( 'file_location_' . $id . '_instruction' )
+                                        ->set_title( __( 'Please Remove the above file to enable new features.', 'dokan-lite' ) )
+                                )
+                        )
+                );
+            }
+        }
+
+        if ( ! empty( $overridden_routes ) ) {
+            $route_table = StatusElementFactory::table( 'override_features_table' )
+                ->set_title( __( 'Overridden Template Table', 'dokan-lite' ) )
+                ->set_headers(
+                    [
+                        __( 'Route', 'dokan-lite' ),
+                        __( 'Override Status', 'dokan-lite' ),
+                    ]
+                );
+
+            foreach ( $overridden_routes as $route => $clearance ) {
+                $route_table->add(
+                    StatusElementFactory::table_row( 'override_feature_row_' . $route )
+                        ->add(
+                            StatusElementFactory::table_column( 'route_coll_' . $route )
+                                ->add(
+                                    StatusElementFactory::paragraph( 'route_' . $route )
+                                        ->set_title( '<code>' . $route . '</code>' )
+                                )
+                        )
+                        ->add(
+                            StatusElementFactory::table_column( 'status_coll_' . $route )
+                                ->add(
+                                    StatusElementFactory::paragraph( 'status_' . $route )
+                                        ->set_title( $clearance ? __( 'Forcefully enabled new feature.', 'dokan-lite' ) : __( 'Forcefully disabled new feature.', 'dokan-lite' ) )
+                                )
+                        )
+                );
+            }
+        }
+
+        $section = StatusElementFactory::section( 'overridden_features' )
+            ->set_title( __( 'Overridden Templates or Routes', 'dokan-lite' ) )
+            ->set_description( __( 'The listed templates or vendor dashboard routes are currently overridden, which are preventing enabling new features.', 'dokan-lite' ) );
+
+        if ( ! empty( $overridden_templates ) ) {
+            $section->add( $template_table );
+        }
+
+        if ( ! empty( $overridden_routes ) ) {
+            $section->add( $route_table );
         }
 
         $status->add(
-            Status::section( 'overridden_features' )
-                ->set_title( __( 'Overridden Templates', 'dokan-lite' ) )
-                ->set_description( __( 'The templates currently overridden that is preventing enabling new features.', 'dokan-lite' ) )
-                ->add(
-                    $table
-                )
+            $section
         );
     }
 }

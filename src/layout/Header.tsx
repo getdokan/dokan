@@ -4,6 +4,12 @@ import {useNavigate} from "react-router-dom";
 const Header = ( { title = '' } ) => {
     const navigate = useNavigate();
 
+    // @ts-ignore
+    title = wp.hooks.applyFilters(
+        'dokan-vendor-dashboard-header-title',
+        title
+    );
+
     return (
         <div className="flex items-center sm:flex-wrap md:flex-nowrap mb-4">
             <Slot name="dokan-before-header" />

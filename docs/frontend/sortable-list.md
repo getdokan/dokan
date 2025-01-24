@@ -8,7 +8,7 @@
 - [Component Properties](#component-properties)
 
 ## Introduction
-The Dokan `SortableList` component provide a `flexible` and `reusable` `drag-and-drop` interface for managing `sortable lists`, `grids`, and `horizontal` layouts. Built on top of `@dnd-kit`, these components offer seamless integration with Dokan's existing component ecosystem.
+The Dokan `SortableList` component provide a `flexible` and `reusable` `drag-and-drop` interface for managing `sortable lists`, `grids`, and `horizontal` layouts. Built on top of `@dnd-kit`, these components offer seamless integration with `Dokan's` existing component ecosystem.
 
 ## Data Structures
 The `SortableList` component accommodates an `array` data type for its `items` property, which can follow `three primary array data structure patterns`:
@@ -109,7 +109,7 @@ For both `Dokan Free and Pro` versions, we must register the `dokan-react-compon
 
 ```tsx
 import { useState } from '@wordpress/element';
-import SortableList from '@/components/sortable-list';
+import SortableList from '@dokan/components/sortable-list';
 ```
 
 #### Step 2: Set Up Your State Management

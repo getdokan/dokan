@@ -44,13 +44,7 @@ if (file_exists($script_assets)) {
 
 ## Component Access
 
-For `Dokan Free`, we can import the components via `@/components`:
-
-```js
-import { DataViews } from '@/components';
-```
-
-In `Dokan Pro`, components can be imported directly from `@dokan/components`:
+For `dokan free & premium version`, we can import the components via `@dokan/components`:
 
 ```js
 import { DataViews } from '@dokan/components';
@@ -73,8 +67,8 @@ externals: {
 |____ src/
 |        |___ components/
 |        |      |___ index.tsx         # Main export file
-|        |      |___ DataViews/        # Existing component
-|        |      |___ YourComponent/   # Your new component directory
+|        |      |___ dataviews/        # Existing component
+|        |      |___ your-component/   # Your new component directory
 |        |      |     |___ index.tsx
 |        |      |     |___ style.scss
 |        |      |
