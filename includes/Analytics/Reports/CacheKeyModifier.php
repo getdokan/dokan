@@ -21,7 +21,7 @@ class CacheKeyModifier implements Hookable {
     protected array $entities;
 
     /**
-     * SellerDataModifier constructor.
+     * CacheKeyModifier constructor.
      * Registers the hooks on instantiation.
      */
     public function __construct() {
