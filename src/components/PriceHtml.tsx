@@ -1,5 +1,5 @@
 import { RawHTML } from '@wordpress/element';
-import { formatPrice } from '@/utilities';
+import { formatPrice } from '@dokan/utilities';
 
 type PriceHtmlProps = {
     price: string | number;

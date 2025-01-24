@@ -6,7 +6,7 @@ import DateTimeHtml from '../../Components/DateTimeHtml';
 import { useWithdraw } from './Hooks/useWithdraw';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
 import { isEqual } from 'lodash';
-import { DataViews } from '@/Components';
+import { DataViews } from '@dokan/components';
 
 function RequestList( {
     withdrawRequests,
