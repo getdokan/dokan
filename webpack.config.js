@@ -18,6 +18,7 @@ const updatedConfig = {
     'hooks': {
       import: '@/hooks/index.tsx',
     },
+    'dokan-status': '/src/Status/index.tsx',
   },
   output: {
     path: path.resolve(__dirname, './assets/js'),
