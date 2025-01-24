@@ -9,3 +9,4 @@ export {
 } from '@wordpress/dataviews/wp';
 export { default as PriceHtml } from './PriceHtml';
 export { default as DateTimeHtml } from './DateTimeHtml';
+export { default as Filter } from './Filter';
