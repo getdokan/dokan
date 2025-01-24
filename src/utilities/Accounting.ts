@@ -7,7 +7,17 @@ export const formatPrice = (
     thousand = '',
     decimal = '',
     format = ''
-): string => {
+): string | number => {
+    if ( ! window.accounting ) {
+        console.warn( 'Woocommerce Accounting Library Not Found' );
+        return price;
+    }
+
+    if ( ! window.dokanCurrency ) {
+        console.warn( 'Dokan Currency Data Not Found' );
+        return price;
+    }
+
     if ( ! currencySymbol ) {
         currencySymbol = window.dokanCurrency.symbol;
     }
@@ -44,6 +54,17 @@ export const formatNumber = ( value ) => {
     if ( value === '' ) {
         return value;
     }
+
+    if ( ! window.accounting ) {
+        console.warn( 'Woocommerce Accounting Library Not Found' );
+        return value;
+    }
+
+    if ( ! window.dokanCurrency ) {
+        console.warn( 'Dokan Currency Data Not Found' );
+        return value;
+    }
+
     return window.accounting.formatNumber(
         value,
         // @ts-ignore
