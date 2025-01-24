@@ -1,2 +1,2 @@
 export * from './ChangeCase';
-export { default as formatPrice } from './formatPrice';
+export * from './Accounting';
