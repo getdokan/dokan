@@ -579,7 +579,7 @@ class Assets {
             ],
             'dokan-react-frontend'      => [
                 'src'     => $asset_url . '/js/frontend.js',
-                'deps'    => array_merge( $frontend_shipping_asset['dependencies'], [ 'wp-core-data' ] ),
+                'deps'    => array_merge( $frontend_shipping_asset['dependencies'], [ 'wp-core-data', 'dokan-react-components' ] ),
                 'version' => $frontend_shipping_asset['version'],
             ],
             'dokan-utilities'           => [
