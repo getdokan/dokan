@@ -9,7 +9,7 @@ use WeDevs\Dokan\Contracts\Hookable;
  *
  * @since DOKAN_SINCE
  */
-class SellerDataModifier implements Hookable {
+class CacheKeyModifier implements Hookable {
 
     /**
      * Report entities to modify.
@@ -34,28 +34,32 @@ class SellerDataModifier implements Hookable {
      *
      * @since DOKAN_SINCE
      *
+     * WC apply filters from @see https://github.com/woocommerce/woocommerce/blob/be602de39d39878085e752f30ec1dabf16b0d642/plugins/woocommerce/src/Admin/API/Reports/GenericQuery.php#L77
+     * WC reports generation pattern @see https://github.com/woocommerce/woocommerce/blob/be602de39d39878085e752f30ec1dabf16b0d642/plugins/woocommerce/src/Admin/API/Reports/Products/Controller.php#L53
+     *
      * @return void
      */
     protected function setup_entities(): void {
-        $this->entities = [
-            'categories',
-            'coupons',
-            'coupons_stats',
-            'customers',
-            'customers_stats',
-            'downloads',
-            'downloads_stats',
-            'orders',
-            'orders_stats',
-            'products',
-            'products_stats',
-            'revenue',
-            'stock',
-            'taxes',
-            'taxes_stats',
-            'variations',
-            'variations_stats',
-        ];
+        $this->entities = apply_filters(
+            'dokan_analytics_entities_for_query_args',
+            [
+                'categories',
+                'coupons',
+                'coupons_stats',
+                'customers',
+                'downloads',
+                'downloads_stats',
+                'orders',
+                'orders_stats',
+                'products',
+                'products_stats',
+                'revenue',
+                'taxes',
+                'taxes_stats',
+                'variations',
+                'variations_stats',
+			]
+        );
     }
 
     /**
