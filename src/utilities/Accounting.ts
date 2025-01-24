@@ -48,8 +48,6 @@ export const formatPrice = (
     );
 };
 
-export default formatPrice;
-
 export const formatNumber = ( value ) => {
     if ( value === '' ) {
         return value;
