@@ -69,7 +69,7 @@ abstract class BaseQueryFilter implements Hookable {
      * @return array The modified where clauses.
      */
 	protected function add_where_subquery_for_refund( array $clauses ): array {
-		if ( ! isset( $_GET['refunds'] ) ) {
+		if ( ! isset( $_GET['refunds'] ) ) { //phpcs:ignore
 			return $clauses;
 		}
 
