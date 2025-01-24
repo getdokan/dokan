@@ -108,4 +108,19 @@ export const resolvers = {
                 dispatch( actions.setCategoriesLoading( false ) );
             }
         },
+    getCategory:
+        ( id: number ) =>
+        async ( { dispatch }: { dispatch } ) => {
+            try {
+                const response = await apiFetch< Category >( {
+                    path: `/dokan/v1/product-categories/${ id }`,
+                } );
+
+                return dispatch(
+                    actions.setCategories( { [ id ]: response } )
+                );
+            } catch ( error ) {
+                return dispatch( actions.setCategoryError( error as Error ) );
+            }
+        },
 };
