@@ -147,8 +147,9 @@ export class AdminPage extends BasePage {
         await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.backend.dokan.setupWizardWithdraw, setupWizardAdmin.continue, 302);
 
         // Recommended
-        await this.disableSwitcherSetupWizard(setupWizardAdmin.wooCommerceConversionTracking);
+        await this.disableSwitcherSetupWizard(setupWizardAdmin.storeGrowth);
         await this.disableSwitcherSetupWizard(setupWizardAdmin.weMail);
+        await this.disableSwitcherSetupWizard(setupWizardAdmin.wooCommerceConversionTracking);
         await this.disableSwitcherSetupWizard(setupWizardAdmin.texty);
         await this.click(setupWizardAdmin.continueRecommended);
 

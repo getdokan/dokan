@@ -2664,8 +2664,9 @@ export const selector = {
 
                 // Recommended
                 recommendedHeading: '//h1[normalize-space()="Recommended for All Dokan Marketplaces"]',
-                wooCommerceConversionTracking: '//label[@for="dokan_recommended_wc_conversion_tracking"]',
+                storeGrowth: '//label[@for="dokan_recommended_store_growth"]',
                 weMail: '//label[@for="dokan_recommended_wemail"]',
+                wooCommerceConversionTracking: '//label[@for="dokan_recommended_wc_conversion_tracking"]',
                 texty: '//label[@for="dokan_recommended_texty"]',
                 continueRecommended: '.button-primary',
 
