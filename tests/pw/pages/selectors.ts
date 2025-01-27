@@ -2047,6 +2047,7 @@ export const selector = {
                     geolocation: '//div[@class="nav-title" and contains(text(),"Geolocation")]',
                     productReportAbuse: '//div[@class="nav-title" and contains(text(),"Product Report Abuse")]',
                     printful: '//div[@class="nav-title" and contains(text(),"Printful")]',
+                    productFormManager: '//div[@class="nav-title" and contains(text(),"Product Form Manager")]',
                     singleProductMultiVendor: '//div[@class="nav-title" and contains(text(),"Single Product MultiVendor")]',
                     vendorSubscription: '//div[@class="nav-title" and contains(text(),"Vendor Subscription")]',
                     vendorAnalytics: '//div[@class="nav-title" and contains(text(),"Vendor Analytics")]',
@@ -2543,6 +2544,61 @@ export const selector = {
                     reasonsForAbuseReportSingle: (reason: string) => `//li[contains(text(),'${reason}')]//span[@class="dashicons dashicons-no-alt remove-item"]`,
                     reasonsForAbuseReportInput: '.regular-text',
                     reasonsForAbuseReportAdd: '.dokan-repetable-add-item-btn',
+                },
+
+                // Product Form Manager
+                productFormManager: {
+                    resetAll: '//a[normalize-space(text())="Reset All"]',
+
+                    blockSection: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..`,
+                    enableBlock: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//div[contains(@class,'block-header-toggle')]//label[@class="switch tips"]`,
+                    editBlock: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//span[normalize-space(text())="Edit Block"]/..`,
+                    deleteBlock: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//button[contains(@class,'delete-button')]`,
+
+                    blockContents: {
+                        label: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//input[@id="input-label"]`,
+                        description: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//input[@id="input-desc"]`,
+
+                        specificProductTypeDropdown: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//label[normalize-space()="Specific Product Type"]/..//div[@class="multiselect__select"]`,
+                        productType: (productType: string) => `//div[@role="combobox" and contains(@class,'multiselect multiselect--active') ]//ul[@role="listbox"]//span[normalize-space(text())="${productType}"]`,
+                        selectedProductType: (blockName: string, productType: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//label[normalize-space()="Specific Product Type"]/..//span[@class="multiselect__single" and normalize-space(text())="${productType}"]`,
+
+                        specificProductCategoryDropdown: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//label[normalize-space()="Specific Product Category"]/..//div[@class="multiselect__select"]`,
+                        inputProductCategory: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//input[@placeholder="All Product Categories"]`,
+                        searchedResult: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//label[normalize-space()="Specific Product Category"]/..//span[@class="multiselect__option multiselect__option--highlight"]/..`,
+                        selectedProductCategory: (blockName: string, productType: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//label[normalize-space()="Specific Product Category"]/..//span[@class="multiselect__single" and normalize-space(text())="${productType}"]`,
+
+                        cancel: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../..//button[@id="input-Cancel"]`,
+                        done: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../..//button[@id="input-submit"]`,
+                    },
+
+                    addField: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//span[normalize-space(text())='Add Field']/..`,
+
+                    fieldSection: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..`,
+                    enableField: (blockName: string, fieldName: string) =>
+                        `(//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..//span[normalize-space(text())='Enabled']/..//label[@class="switch tips"])[last()]`, //todo: resolve the issue
+                    requireField: (blockName: string, fieldName: string) =>
+                        `(//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..//span[normalize-space(text())='Required']/..//label[@class="switch tips"])[last()]`,
+                    editField: (blockName: string, fieldName: string) => `(//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..//button[contains(@class,'field-edit-button')])[last()]`,
+
+                    fieldContents: {
+                        label: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id="field-input-label"]`,
+                        type: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//select[@id="field-input-type"]`,
+                        placeholder: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id='input-placeholder']`,
+                        helpContent: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id='input-help-content']`,
+                        cancel: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//button[@id="input-Cancel"]`,
+                        done: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//button[@id="input-submit"]`,
+                    },
+
+                    // edit custom field
+                    editCustomField: '//div[@role="menu"]//span[normalize-space()="Edit"]',
+                    deleteCustomField: '//div[@role="menu"]//span[normalize-space()="Delete"]',
+                    confirmRemove: 'button.swal2-confirm',
+                    cancelRemove: 'button.swal2-cancel',
+
+                    createCustomBlock: '//button[contains(.,"Create Custom Block")]',
                 },
 
                 // Single Product Multi Vendor

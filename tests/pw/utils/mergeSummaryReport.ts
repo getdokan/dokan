@@ -53,12 +53,6 @@ const mergeReports = (reportPaths: string[]): TestReport => {
     reportPaths.forEach(reportPath => {
         const report: TestReport = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
 
-        // mergedReport.total_tests += report.total_tests;
-        // mergedReport.passed += report.passed;
-        // mergedReport.failed += report.failed;
-        // mergedReport.flaky += report.flaky;
-        // mergedReport.skipped += report.skipped;
-        // mergedReport.suite_duration += report.suite_duration;
         mergedReport.all_suite_durations.push(report.suite_duration);
 
         // Append and de-duplicate test arrays
@@ -90,12 +84,11 @@ const mergeReports = (reportPaths: string[]): TestReport => {
 };
 
 // Main script execution
-const reportsFolder = './all-reports'; // Change to your artifacts location
+const reportsFolder = './all-reports'; 
 const reportPaths: string[] = [];
 
 // Collect all reports.json files
 const findReports = (dir: string): void => {
-    // console.log(`Scanning directory: ${dir}`);
     const files = fs.readdirSync(dir);
 
     files.forEach(file => {
