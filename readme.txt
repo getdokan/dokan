@@ -1,6 +1,6 @@
 === Dokan - Powerful WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
-Contributors: tareq1988, wedevs, nizamuddinbabu
-Donate Link: http://tareq.co/donate/
+Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
+Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
 Requires at least: 6.5
 Tested up to: 6.7.1
@@ -225,7 +225,7 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 
 = 💥💥 EXTENDED FEATURES BY SIMPLY ENABLING A TOGGLE BUTTON 💥💥 =
 
-Dokan comes with a number of advanced features & modules that boost your WooCommerce marketplace position, always keeping you one step ahead of the competition. Continuous innovations and features are brought with regular and timely releases. Check out the changelog [here](https://wedevs.com/docs/dokan/changelog/)
+Dokan comes with a number of advanced features & modules that boost your WooCommerce marketplace position, always keeping you one step ahead of the competition. Continuous innovations and features are brought with regular and timely releases. Check out the changelog [here](https://dokan.co/wordpress/changelog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
 * [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
 * [Print on Demand Marketplace](https://dokan.co/wordpress/modules/printful-integration/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
@@ -274,7 +274,7 @@ Dokan comes with a number of advanced features & modules that boost your WooComm
 
 This could have bugs and lack some features. If you want to contribute to this project, you are more than welcome.
 
-👨‍💻 [Please fork the repository from Github](https://github.com/weDevsOfficial/dokan) 👨‍💻
+👨‍💻 [Please fork the repository from Github](https://github.com/getdokan/dokan) 👨‍💻
 
 
 = Privacy Policy =
@@ -285,10 +285,7 @@ Appsero SDK **does not gather any data by default.** The SDK only starts gatheri
 Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
 
 = Contribute =
-This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/weDevsOfficial/dokan).
-
-= Author =
-Brought to you by [Tareq Hasan](http://tareq.co) from [Dokan Inc.](http://dokan.co)
+This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/getdokan/dokan).
 
 == Installation ==
 
