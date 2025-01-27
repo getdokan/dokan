@@ -1087,7 +1087,8 @@ function dokan_get_store_url( $user_id, $tab = '' ) {
 
     $path = '/' . $custom_store_url . '/' . $user_nicename . '/';
     if ( $tab ) {
-        $path .= trailingslashit( trim( $tab, " \n\r\t\v\0/\\" ) );
+        $tab = trailingslashit( trim( $tab, " \n\r\t\v\0/\\" ) );
+        $path .= $tab;
     }
 
     /**
