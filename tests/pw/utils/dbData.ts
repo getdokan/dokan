@@ -2192,7 +2192,7 @@ export const dbData = {
             'product_addon',
             'product_advertising',
             'product_enquiry',
-            'product_form_customization',
+            // 'product_form_customization', // todo: enable after PR is merged
             'product_qa',
             'product_subscription',
             'rank_math',
