@@ -27,7 +27,7 @@ import {
     ProductsHookReturn,
 } from './hooks';
 
-const store = createReduxStore( STORE_NAME, {
+export const store = createReduxStore( STORE_NAME, {
     reducer,
     actions,
     selectors,
