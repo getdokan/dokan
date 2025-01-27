@@ -11,13 +11,7 @@ The Filter component provides a standardized way to implement filtering function
 
 ## Installation
 
-#### Dokan lite
-
-```jsx
-import Filter from '../components';
-```
-
-#### Dokan pro or external plugins
+For `dokan free & premium version`, we can import the `Filter` components from `@dokan/components` package:
 
 ```jsx
 import { Filter } from '@dokan/components';
@@ -153,12 +147,6 @@ The filter hook name should follow this pattern:
 
 You can use the `snakeCase` utility to ensure proper formatting:
 
-For Dokan Lite:
-```jsx
-import { snakeCase } from "@/utilities";
-```
-
-For Dokan Pro or other plugins:
 ```jsx
 import { snakeCase } from "@dokan/utilities";
 ```
