@@ -6,33 +6,25 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 
-const { PRODUCT_ID } = process.env;
 
-test.describe.only('Product functionality test', () => {
+test.describe('Product functionality test', () => {
+    test.skip(true, 'feature not merged yet')
     let admin: ProductFormManager;
-    let vendor: ProductFormManager;
-    let aPage: Page, vPage: Page;
+    let aPage: Page;
     let apiUtils: ApiUtils;
-    // let productName: string;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new ProductFormManager(aPage);
 
-        // const vendorContext = await browser.newContext(data.auth.vendorAuth);
-        // vPage = await vendorContext.newPage();
-        // vendor = new ProductFormManager(vPage);
-
         apiUtils = new ApiUtils(await request.newContext());
-        // [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.productFormManager, dbData.dokan.productFormManager);
         await apiUtils.activateModules(payloads.moduleIds.productFormManager, payloads.adminAuth);
         await aPage.close();
-        // await vPage.close();
         await apiUtils.dispose();
     });
 
@@ -74,6 +66,7 @@ test.describe.only('Product functionality test', () => {
     });
 
     test.skip('admin can reset product form manager settings', { tag: ['@pro', '@admin'] }, async () => {
+        // todo: update test for reseting predefined blocks, custom blocks wont reset
         // await dbUtils.updateOptionValue(dbData.dokan.optionName.productFormManager, dbData.testData.dokan.customBlock);
         const blockLabel = await admin.addCustomBlock(data.dokanSettings.productFormManager.customBlock());
         await admin.resetProductFormManagerSettings(blockLabel);

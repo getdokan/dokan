@@ -6,7 +6,6 @@ import { block, field } from '@utils/interfaces';
 // selectors
 const settingsAdmin = selector.admin.dokan.settings;
 const formManagerAdmin = selector.admin.dokan.settings.productFormManager;
-const productsVendor = selector.vendor.product;
 
 export class ProductFormManager extends AdminPage {
     constructor(page: Page) {
