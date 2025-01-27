@@ -63,12 +63,14 @@ function dokan_get_current_user_id() {
 /**
  * Check if a user is seller
  *
+ * @since DOKAN_SINCE Added `$exclude_staff` as optional parameter
+ *
  * @param int  $user_id       User ID
  * @param bool $exclude_staff Exclude staff
  *
  * @return bool
  */
-function dokan_is_user_seller( int $user_id, bool $exclude_staff = false ): bool {
+function dokan_is_user_seller( $user_id, $exclude_staff = false ) {
     if ( $exclude_staff && user_can( $user_id, 'vendor_staff' ) ) {
         return false;
     }
