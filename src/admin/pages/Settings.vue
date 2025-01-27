@@ -741,6 +741,27 @@
                         }
                     });
                 }
+
+                if ( ( 'dokan_selling' in this.settingValues ) && 'reset_sub_category_when_edit_all_category' === fieldName ) {
+                    const confirmTitle = 'on' === value ? this.__( 'Enable Commission Inheritance Setting?', 'dokan-lite' ) : this.__( 'Disable Commission Inheritance Setting?', 'dokan-lite' );
+                    const htmlText = 'on' === value ? this.__( 'Parent category commission changes will automatically update all subcategories. Existing rates will remain unchanged until parent category is modified.', 'dokan-lite' ) : this.__( 'Subcategories will maintain their independent commission rates when parent category rates are changed.', 'dokan-lite' );
+                    const confirmBtnText = 'on' === value ? this.__( 'Enable', 'dokan-lite' ) : this.__( 'Disable', 'dokan-lite' );
+                    const updatableValue = 'on' === value ? 'off' : 'on';
+
+                    Swal.fire({
+                        icon              : 'warning',
+                        html              : htmlText,
+                        title             : confirmTitle,
+                        showCancelButton  : true,
+                        cancelButtonText  : this.__( 'Cancel', 'dokan-lite' ),
+                        confirmButtonText : confirmBtnText,
+                    }).then( ( response ) => {
+                        if ( response.dismiss ) {
+                            this.settingValues.dokan_selling.reset_sub_category_when_edit_all_category = updatableValue;
+                            this.$emit( 'switcHandler', 'reset_sub_category_when_edit_all_category', this.settingValues.dokan_selling.reset_sub_category_when_edit_all_category );
+                        }
+                    });
+                }
             });
 
             // Scroll into specific setting field.

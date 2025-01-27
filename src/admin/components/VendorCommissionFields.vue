@@ -15,6 +15,16 @@
                     <span class="description !mt-[6px] block">{{__( 'Set the commission type that admin will get', 'dokan-lite' )}}</span>
                 </div>
             </div>
+            <div v-if="'category_based' === selectedCommission" class="flex justify-between mb-4">
+                <label class="!p-0 m-0 !mb-[6px] block" for="_subscription_product_admin_commission_type">
+                    {{__( 'Apply Parent Category Commission to All Subcategories ', 'dokan-lite' )}}
+
+                    <span class="dokan-tooltips-help tips" v-tooltip :title="__( 'When enabled, changing a parent category\'s commission rate will automatically update all its subscription. Disable this option to maintain independent commission rates for subcategories', 'dokan-lite' )">
+                        <i class="fas fa-question-circle"></i>
+                    </span>
+                </label>
+                <Switches @input="handleResetToggle" :enabled="resetSubCategory"/>
+            </div>
             <div v-if="'category_based' === selectedCommission">
                 <label class="!p-0 m-0 !mb-[6px] block" for="_subscription_product_admin_commission_type">
                     {{__( 'Admin Commission', 'dokan-lite' )}}
@@ -26,6 +36,7 @@
                 <category-based-commission
                     :value="categoryCommission"
                     @change="onCategoryUpdate"
+                    :resetSubCategory="resetSubCategory"
                 />
             </div>
             <div v-else-if="'fixed' === selectedCommission">
@@ -50,11 +61,12 @@
 
 import CombineInput from "admin/components/CombineInput.vue";
 import CategoryBasedCommission from "admin/components/Commission/CategoryBasedCommission.vue";
+import Switches from "./Switches.vue";
 
 export default {
   name: "VendorCommissionFields",
 
-  components: { CategoryBasedCommission, CombineInput },
+  components: { Switches, CategoryBasedCommission, CombineInput },
 
   props: {
       vendorInfo: {
@@ -68,6 +80,7 @@ export default {
       categoryCommission: {},
       commissionTypes: {},
       fixedCommission: {},
+      resetSubCategory: true
     };
   },
 
@@ -98,6 +111,24 @@ export default {
   },
 
   methods: {
+      handleResetToggle(value) {
+          const confirmTitle = value ? this.__("Enable Commission Inheritance Setting?", "dokan-lite") : this.__("Disable Commission Inheritance Setting?", "dokan-lite");
+          const htmlText = value ? this.__("Parent category commission changes will automatically update all subcategories. Existing rates will remain unchanged until parent category is modified.", "dokan-lite") : this.__("Subcategories will maintain their independent commission rates when parent category rates are changed.", "dokan-lite");
+          const confirmBtnText = value ? this.__("Enable", "dokan-lite") : this.__("Disable", "dokan-lite");
+          const updatableValue = !value;
+          const self = this;
+
+          Swal.fire({
+              icon: "warning",
+              html: htmlText,
+              title: confirmTitle,
+              showCancelButton: true,
+              cancelButtonText: this.__("Cancel", "dokan-lite"),
+              confirmButtonText: confirmBtnText
+          }).then((response) => {
+              self.resetSubCategory = response.isConfirmed ? value : updatableValue;
+          });
+      },
       fixedCOmmissionhandler(data) {
           if (isNaN( data.fixed )) {
               data.fixed = this.fixedCommission.fixed ?? '';

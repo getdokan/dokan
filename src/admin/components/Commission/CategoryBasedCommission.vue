@@ -122,6 +122,10 @@
                     },
                     items:{}
                 }
+            },
+            resetSubCategory: {
+                type: Boolean,
+                default: true
             }
         },
         computed: {
@@ -266,7 +270,10 @@
 
                 let commissions = JSON.parse( JSON.stringify( this.commission.items ) );
 
-                let data = JSON.parse( JSON.stringify( this.commission.all ) );
+                let data = this.resetSubCategory ? JSON.parse( JSON.stringify( this.commission.all ) ) : {
+                    flat: '',
+                    percentage: ''
+                };
 
                 if ( commissions.hasOwnProperty( term_id ) ) {
                     data = commissions[term_id];
@@ -293,7 +300,10 @@
                     value = this.unFormatValue( value );
                 }
                 this.$set( this.commission.all, commission_type, value );
-                this.$set(this.commission, 'items', {});
+
+                let items = JSON.parse( JSON.stringify( this.commission.items ?? {} ) );
+                items = this.resetSubCategory ? {} : items;
+                this.$set(this.commission, 'items', items);
 
                 this.emitComponentChange( JSON.parse( JSON.stringify( this.commission ) ) )
             }, 700 ),
@@ -356,6 +366,10 @@
             },
 
             updateChildCommissionValues(parent_cat_id, commission_data) {
+                if ( ! this.resetSubCategory ) {
+                    return;
+                }
+
                 let all_nested_children_ids = this.getChildren( parent_cat_id );
                 let children = JSON.parse( JSON.stringify( this.commission.items ) );
 
