@@ -97,7 +97,7 @@ With Dokan, experience a smooth, fast setup process in under an hour and have yo
 
 We continuously update Dokan with reliable services for flawless operation, staying ahead of industry trends and introducing new features with each update.
 
-See Our Official GitHub page: [Official Dokan GitHub](https://github.com/weDevsOfficial/dokan/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
+See Our Official GitHub page: [Official Dokan GitHub](https://github.com/getdokan/dokan/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
 = A SCALABLE MARKET =
 
@@ -179,7 +179,7 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 **Simple Product Management**
 
 * Create and manage your products from the frontend.
-* [Create variable or downloadable products](https://wedevs.com/87025/types-of-products-you-can-create-using-woocommerce/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro).
+* [Create variable or downloadable products](https://wedevs.com/blog/87025/types-of-products-you-can-create-using-woocommerce/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro).
 * Vendors have the option to [manage product attributes](https://dokan.co/docs/wordpress/vendor-dashboard/products/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro).
 * Vendors can manage downloadable [product permission, expiry date, and download limit](https://dokan.co/docs/wordpress/tutorials/how-to-create-a-digital-product/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro).
 
@@ -288,7 +288,7 @@ Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without
 This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/weDevsOfficial/dokan).
 
 = Author =
-Brought to you by [Tareq Hasan](http://tareq.co) from [weDevs](http://wedevs.com)
+Brought to you by [Tareq Hasan](http://tareq.co) from [Dokan Inc.](http://dokan.co)
 
 == Installation ==
 
