@@ -18,15 +18,6 @@ use WC_Email;
 class VendorProductReview extends WC_Email {
 
     /**
-     * Reply email
-     *
-     * @since 3.9.2
-     *
-     * @var string
-     */
-    private $from_email;
-
-    /**
      * Constructor.
      *
      * @since 3.9.2
@@ -108,8 +99,6 @@ class VendorProductReview extends WC_Email {
 
         $this->setup_locale();
 
-        $this->from_email = get_option( 'admin_email' );
-
         // get the vendor
         $seller = dokan_get_vendor_by_product( $product->get_id() );
 
@@ -121,17 +110,6 @@ class VendorProductReview extends WC_Email {
         $this->placeholders['{review_link}']    = get_comment_link( $comment );
         $this->send( $seller->get_email(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
-    }
-
-    /**
-     * Get the from address for outgoing emails.
-     *
-     * @since 3.9.2
-     *
-     * @return string
-     */
-    public function get_from_address( $from_email = '' ) {
-        return $this->from_email;
     }
 
     /**

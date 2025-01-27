@@ -16,15 +16,6 @@ use WeDevs\Dokan\Vendor\Vendor;
 class ContactSeller extends WC_Email {
 
     /**
-     * Reply email
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @var string
-     */
-    private $from_email;
-
-    /**
      * Constructor.
      */
     public function __construct() {
@@ -83,8 +74,6 @@ class ContactSeller extends WC_Email {
         }
         $this->setup_locale();
 
-        $this->from_email = $contact_email;
-
         $seller = get_user_by( 'email', $seller_email );
         $seller = new Vendor( $seller );
 
@@ -95,15 +84,6 @@ class ContactSeller extends WC_Email {
         $this->placeholders['{seller_name}']    = $seller->get_shop_name(); // only for backward compatibility.
         $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
-    }
-
-    /**
-     * Get the from address for outgoing emails.
-     *
-     * @return string
-     */
-    public function get_from_address( $from_email = '' ) {
-        return $this->from_email;
     }
 
     /**
