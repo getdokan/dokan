@@ -19,8 +19,6 @@ export class MenuManagerPage extends BasePage {
         await this.click(settingsAdmin.menus.menuManager);
     }
 
-
-
     // update menu status
     async updateMenuStatus(menu: string, action: string, menuLink: string) {
         await this.gotoUntilNetworkidle(data.subUrls.backend.dokan.settings, { waitUntil: 'networkidle' }, true);

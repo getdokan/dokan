@@ -2,8 +2,6 @@ import { test, Page, request } from '@playwright/test';
 import { VendorDeliveryTimePage } from '@pages/vendorDeliveryTimePage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
-import { dbUtils } from '@utils/dbUtils';
-import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
 
 test.describe('Vendor delivery time test', () => {
