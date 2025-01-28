@@ -69,7 +69,7 @@ abstract class BaseQueryFilter implements Hookable {
      * @return array The modified where clauses.
      */
 	protected function add_where_subquery_for_refund( array $clauses ): array {
-		if ( ! isset( $_GET['refunds'] ) ) {
+		if ( ! isset( $_GET['refunds'] ) ) { //phpcs:ignore
 			return $clauses;
 		}
 
@@ -176,6 +176,6 @@ abstract class BaseQueryFilter implements Hookable {
 			return dokan_get_current_user_id();
 		}
 
-		return (int) ( wp_unslash( $_GET['sellers']  ?? 0 ) ); // phpcs:ignore
+		return (int) ( wp_unslash( $_GET['sellers'] ?? 0 ) ); // phpcs:ignore
 	}
 }
