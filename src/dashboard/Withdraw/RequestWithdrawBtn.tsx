@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import {
     Button,
     MaskedInput,
@@ -219,23 +219,25 @@ function RequestWithdrawBtn( {
                         </div>
                     </>
                 ) : (
-                    <SimpleAlert
-                        type="warning"
-                        color="orange"
-                    >
-                        { __( 'No payment methods found to submit withdraw request. Please set up payment methods first. ', 'dokan-lite' ) }
-                        <strong className={`cursor-pointer text-dokan-primary underline`}>
-                            <a href={ dokanWithdraw?.setUpUrl }>
-                                { __( 'Payment Settings Setup', 'dokan-lite' ) }
-                            </a>
-                        </strong>
+                    <SimpleAlert type="warning" color="orange">
+                        <p className="mb-2" dangerouslySetInnerHTML={{
+                            __html: sprintf(
+                                /* translators: %s: opening and closing anchor tags for "payment methods" link */
+                                __(
+                                    'No payment methods found to submit a withdrawal request. Please set up your %1$spayment methods%2$s first.',
+                                    'dokan-lite'
+                                ),
+                                `<a href="${dokanWithdraw?.paymentSettingUrl}" class="cursor-pointer text-dokan-primary">`,
+                                '</a>'
+                            )
+                        }}></p>
                     </SimpleAlert>
                 )}
             </>
         );
     };
 
-    useEffect( () => {
+    useEffect(() => {
         if ( settings?.data?.payment_methods.length > 0 ) {
             setWithdrawMethod( settings?.data?.payment_methods[ 0 ].value );
         }

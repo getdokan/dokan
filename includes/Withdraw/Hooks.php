@@ -61,7 +61,7 @@ class Hooks {
         wp_localize_script(
             'dokan-react-frontend',
             'dokanWithdraw',
-            [ 'setUpUrl' => dokan_get_navigation_url( 'settings/payment' ) ]
+            [ 'paymentSettingUrl' => dokan_get_navigation_url( 'settings/payment' ) ]
         );
     }
 
