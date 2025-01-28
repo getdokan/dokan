@@ -222,21 +222,24 @@ function RequestWithdrawBtn( {
                     <SimpleAlert
                         type="warning"
                         color="orange"
-                        label={ __(
-                            'No payment methods found to submit withdraw request. Please set up payment methods first.',
-                            'dokan-lite'
-                        ) }
-                    />
-                ) }
+                    >
+                        { __( 'No payment methods found to submit withdraw request. Please set up payment methods first. ', 'dokan-lite' ) }
+                        <strong className={`cursor-pointer text-dokan-primary underline`}>
+                            <a href={ dokanWithdraw?.setUpUrl }>
+                                { __( 'Payment Settings Setup', 'dokan-lite' ) }
+                            </a>
+                        </strong>
+                    </SimpleAlert>
+                )}
             </>
         );
     };
 
-    useEffect( () => {
-        if ( settings?.data?.payment_methods.length > 0 ) {
-            setWithdrawMethod( settings?.data?.payment_methods[ 0 ].value );
+    useEffect(() => {
+        if (settings?.data?.payment_methods.length > 0) {
+            setWithdrawMethod(settings?.data?.payment_methods[0].value);
         }
-    }, [ settings ] );
+    }, [settings]);
 
     return (
         <>
