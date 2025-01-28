@@ -1,8 +1,8 @@
 import { __ } from  '@wordpress/i18n';
 import { Slot } from '@wordpress/components';
+import { kebabCase } from '@dokan/utilities';
 import { debounce } from '@wordpress/compose';
 import { Modal, Button } from '@getdokan/dokan-ui';
-import { kebabCase, snakeCase } from '@/utilities';
 import { useCallback, useState } from '@wordpress/element';
 
 interface DokanModalProps {
