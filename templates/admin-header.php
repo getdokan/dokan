@@ -29,8 +29,8 @@
                         dokan_get_template_part(
                             'svg-icons/pro-award', null,
                             [
-                                'width' => 20,
-                                'height' => 20,
+                                'width' => 16,
+                                'height' => 16,
 							]
                         );
                         ?>

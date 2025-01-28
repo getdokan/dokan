@@ -36,18 +36,18 @@
         margin-right: 24px;
         flex: 1;
         .version-tag {
-
             border-radius: 20px;
-            font-size: 1rem;
-            line-height: 20px;
-            font-weight: 400;
-            padding: 0.5rem 1rem;
-            max-height: 2rem;
+            font-size: 12px;
+            line-height: 16px;
+            font-weight: 500;
+            height: 30px;
+            box-sizing: border-box;
             &.lite {
                 background: #FF9B5366;
                 color: #7B4E2E;
                 display: flex;
                 align-items: center;
+                padding: 0 12px;
             }
 
             &.pro {
@@ -55,18 +55,18 @@
                 color: @dokan-color;
                 display: flex;
                 align-items: center;
-                gap: 8px;
                 text-transform: capitalize;
-                font-weight: 450;
+                padding: 5px 9px 5px 5px;
+                gap: 6px;
                 & .version-tag-pro-badge{
                     background: @dokan-color;
                     color: white;
                     border-radius: 28px;
                     display: inline-flex;
                     align-items: center;
-                    padding: 3px 9px;
-                    font-size: 16px;
-                    margin: -10px 0 -10px -10px;
+                    padding: 3px 8px;
+                    font-size: 12px;
+                    gap: 3px;
                 }
             }
         }
@@ -148,7 +148,7 @@
                     .dropdown {
                         opacity: 1;
                         visibility: visible;
-                        top: 42px;
+                        top: 50px;
                     }
                 }
 
@@ -162,7 +162,7 @@
                     padding: 20px;
                     border-radius: 3px;
                     border: 1px solid #e2e2e2;
-                    box-shadow: 0 6px 12px rgb(129 129 129 / 6%);
+                    box-shadow: 0 8px 10px #ccc;
                     min-width: 255px;
                     max-width: 255px;
                     opacity: 0;
@@ -199,7 +199,7 @@
 
                     .list-item {
                         margin-top: 13px;
-
+                        list-style-type: none;
                         a {
                             display: flex;
                             align-items: center;
