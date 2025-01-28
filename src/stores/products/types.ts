@@ -44,18 +44,18 @@ export interface QueryParams {
 
 // Define the shape of our selectors
 export interface StoreSelectors {
-    getItems( query: QueryParams ): Product[] | undefined;
-    getItem( id: number ): Product | undefined;
-    getQueryTotalCount( query: QueryParams ): number | undefined;
-    getQueryTotalPages( query: QueryParams ): number | undefined;
-    isLoading(): boolean;
-    getError(): Error | null;
-    getCategories( query: QueryParams ): Category[] | undefined;
-    getCategory( id: number ): Category | undefined;
-    getCategoryQueryTotalCount( query: QueryParams ): number | undefined;
-    getCategoryQueryTotalPages( query: QueryParams ): number | undefined;
-    isCategoriesLoading(): boolean;
-    getCategoryError(): Error | null;
+    getItems: ( query: QueryParams ) => Product[] | undefined;
+    getItem: ( id: number ) => Product | undefined;
+    getQueryTotalCount: ( query: QueryParams ) => number | undefined;
+    getQueryTotalPages: ( query: QueryParams ) => number | undefined;
+    isLoading: () => boolean;
+    getError: () => Error | null;
+    getCategories: ( query: QueryParams ) => Category[] | undefined;
+    getCategory: ( id: number ) => Category | undefined;
+    getCategoryQueryTotalCount: ( query: QueryParams ) => number | undefined;
+    getCategoryQueryTotalPages: ( query: QueryParams ) => number | undefined;
+    isCategoriesLoading: () => boolean;
+    getCategoryError: () => Error | null;
 }
 
 // Define the shape of the select function
