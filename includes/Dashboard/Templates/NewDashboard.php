@@ -85,6 +85,7 @@ class NewDashboard {
 
         wp_enqueue_script( 'dokan-react-frontend' );
         wp_enqueue_style( 'dokan-react-frontend' );
+		wp_localize_script( 'dokan-react-frontend', 'dokanCurrency', dokan_get_container()->get( 'scripts' )->get_localized_price() );
     }
 
     /**

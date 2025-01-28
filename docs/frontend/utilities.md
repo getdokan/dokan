@@ -33,7 +33,7 @@ export * from './YourUtility';
 
 ## Change Case Utilities
 
-In `Dokan` and `Dokan Pro`, we recommend using the `change-case` utility methods from the `Dokan utilities package`. These utilities are accessible through the `@dokan/utilities` import in `Dokan Pro`.
+In `Dokan` and `Dokan Pro`, we recommend using the `change-case` utility methods from the `Dokan utilities package`. These utilities are accessible through the `@dokan/utilities` package.
 
 ## Why Use Change Case from Dokan Utilities?
 
@@ -62,13 +62,7 @@ The following case transformation utilities are available:
 
 ## Utilities Access
 
-For `Dokan Free`, we can import the `utilities` via `@/utilities`:
-
-```js
-import { snakeCase, camelCase, kebabCase } from '@/utilities';
-```
-
-In `Dokan Pro`, `utilities` can be imported directly from `@dokan/components`:
+For `Dokan free & premium version`, we can import the `utilities` via `@dokan/utilities`:
 
 ```js
 import { snakeCase, camelCase, kebabCase } from '@dokan/utilities';
