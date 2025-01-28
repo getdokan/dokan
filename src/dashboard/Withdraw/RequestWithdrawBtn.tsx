@@ -235,11 +235,11 @@ function RequestWithdrawBtn( {
         );
     };
 
-    useEffect(() => {
-        if (settings?.data?.payment_methods.length > 0) {
-            setWithdrawMethod(settings?.data?.payment_methods[0].value);
+    useEffect( () => {
+        if ( settings?.data?.payment_methods.length > 0 ) {
+            setWithdrawMethod( settings?.data?.payment_methods[ 0 ].value );
         }
-    }, [settings]);
+    }, [ settings ] );
 
     return (
         <>
