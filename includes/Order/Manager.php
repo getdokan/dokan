@@ -786,6 +786,12 @@ class Manager {
             }
             dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
 
+            $tax_status = apply_filters(
+                'dokan_vendor_shipping_tax_status',
+                $shipping_method->get_tax_status(),
+                $shipping_method,
+                $order_seller_id,
+            );
             $item = new \WC_Order_Item_Shipping();
             $item->set_props(
                 [
@@ -793,6 +799,7 @@ class Manager {
                     'method_id'    => $shipping_method->get_method_id(),
                     'total'        => $shipping_method->get_total(),
                     'taxes'        => $shipping_method->get_taxes(),
+                    'tax_status'   => $tax_status,
                 ]
             );
             $shipping_totals += $shipping_method->get_total();
