@@ -293,4 +293,7 @@
   padding: 0;
   color: #cc0000;
 }
+#adminmenu #toplevel_page_dokan .wp-menu-image.svg {
+  background-size: 17px;
+}
 
