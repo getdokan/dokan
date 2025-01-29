@@ -107,6 +107,11 @@ export default {
           this.categoryCommission = this.vendorInfo.admin_category_commission;
       }
 
+
+      if ( this.vendorInfo.hasOwnProperty( 'reset_sub_category' ) ) {
+          this.resetSubCategory = this.vendorInfo.reset_sub_category !== false;
+      }
+
       this.fixedCommission = fixedCommission;
   },
 
@@ -126,7 +131,10 @@ export default {
               cancelButtonText: this.__("Cancel", "dokan-lite"),
               confirmButtonText: confirmBtnText
           }).then((response) => {
-              self.resetSubCategory = response.isConfirmed ? value : updatableValue;
+              const status = response.isConfirmed ? value : updatableValue;
+              self.resetSubCategory = status;
+
+              self.vendorInfo.reset_sub_category = status;
           });
       },
       fixedCOmmissionhandler(data) {
