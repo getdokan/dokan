@@ -84,7 +84,7 @@ class NewDashboard {
         $wc_instance->register_scripts();
 
         $dokan_frontend = [
-            'dokanCurrency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+            'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
         ];
 
         wp_enqueue_script( 'dokan-react-frontend' );

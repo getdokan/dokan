@@ -26,7 +26,7 @@ function RequestWithdrawBtn( {
 } ) {
     const [ isOpen, setIsOpen ] = useState( false );
     const [ withdrawAmount, setWithdrawAmount ] = useState( '' );
-    const currencySymbol = window?.dokanFrontend?.dokanCurrency?.symbol ?? '';
+    const currencySymbol = window?.dokanFrontend?.currency?.symbol ?? '';
     const withdrawHook = useWithdraw();
     const toast = useToast();
     const [ withdrawMethod, setWithdrawMethod ] = useState( '' );
@@ -46,7 +46,7 @@ function RequestWithdrawBtn( {
         }
         return window.accounting.unformat(
             value,
-            window?.dokanFrontend?.dokanCurrency.decimal
+            window?.dokanFrontend?.currency.decimal
         );
     };
 
@@ -163,13 +163,13 @@ function RequestWithdrawBtn( {
                                 maskRule={ {
                                     numeral: true,
                                     numeralDecimalMark:
-                                        window?.dokanFrontend?.dokanCurrency
+                                        window?.dokanFrontend?.currency
                                             ?.decimal ?? '.',
                                     delimiter:
-                                        window?.dokanFrontend?.dokanCurrency
+                                        window?.dokanFrontend?.currency
                                             ?.thousand ?? ',',
                                     numeralDecimalScale:
-                                        window?.dokanFrontend?.dokanCurrency
+                                        window?.dokanFrontend?.currency
                                             ?.precision ?? 2,
                                 } }
                                 input={ {
@@ -232,7 +232,7 @@ function RequestWithdrawBtn( {
                                         'No payment methods found to submit a withdrawal request. Please set up your %1$spayment methods%2$s first.',
                                         'dokan-lite'
                                     ),
-                                    `<a href="${ window?.dokanFrontend?.dokanWithdraw?.paymentSettingUrl }" class="cursor-pointer text-dokan-primary">`,
+                                    `<a href="${ window?.dokanFrontend?.withdraw?.paymentSettingUrl }" class="cursor-pointer text-dokan-primary">`,
                                     '</a>'
                                 ),
                             } }
@@ -253,7 +253,7 @@ function RequestWithdrawBtn( {
         <>
             <Button
                 color="gray"
-                className="hover:bg-dokan-btn-hover dokan-btn-primary"
+                className="bg-dokan-btn hover:bg-dokan-btn-hover"
                 onClick={ () => setIsOpen( true ) }
                 label={ __( 'Request Withdraw', 'dokan' ) }
             />

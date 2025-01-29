@@ -6,7 +6,7 @@ import WooCommerceAccounting from './woocommerce-accounting.d';
  * Ex: import '../path.../src/Definitions/window-types';
  */
 
-interface DokanCurrency {
+interface Currency {
     precision: number;
     symbol: string;
     decimal: string;
@@ -14,13 +14,13 @@ interface DokanCurrency {
     format: string;
 }
 
-interface DokanWithdraw {
-    paymentSettingUrl: string;
+interface Withdraw {
+    paymentSettingUrl?: string;
 }
 
 interface DokanFrontend {
-    dokanCurrency: DokanCurrency;
-    dokanWithdraw: DokanWithdraw;
+    currency?: Currency;
+    withdraw?: Withdraw;
 }
 
 declare global {
@@ -31,7 +31,7 @@ declare global {
         dokan_get_daterange_picker_format: () => string;
         moment: ( date: string ) => any;
         accounting: WooCommerceAccounting.AccountingStatic;
-        dokanFrontend: DokanFrontend;
+        dokanFrontend?: DokanFrontend;
     }
 }
 
