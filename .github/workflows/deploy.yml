@@ -39,6 +39,6 @@ jobs:
             - name: Create GitHub release
               uses: softprops/action-gh-release@v2
               with:
-                files: ${{steps.deploy.outputs.zip_file}}
+                files: ${{steps.deploy.outputs.zip-path}}
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
