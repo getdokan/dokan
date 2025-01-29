@@ -4,6 +4,13 @@
 
 // Reset unwanted table styles but keep structure intact
 @layer base {
+    :root {
+        --colors-primary-500: var(--dokan-button-border-color, #F05025);
+        --wp-components-color-accent: var(--dokan-button-background-color, #F05025);
+    }
+    .bg-primary-500 {
+        @apply bg-dokan-btn focus:outline-dokan-btn;
+    }
     .dokan-layout {
         table:not(.dataviews-view-table),
         table:not(.dataviews-view-table) th,
@@ -18,6 +25,10 @@
             text-align: inherit;
             vertical-align: inherit;
             box-sizing: border-box;
+        }
+
+        a:focus, button:focus, .button.alt:focus, input:focus, textarea:focus, input[type="button"]:focus, input[type="reset"]:focus, input[type="submit"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="url"]:focus, input[type="password"]:focus, input[type="search"]:focus {
+            outline-color: var(--dokan-button-border-color, #F05025);
         }
     }
 }

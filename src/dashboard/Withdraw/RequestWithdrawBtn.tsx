@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import {
     Button,
     MaskedInput,
@@ -26,7 +26,7 @@ function RequestWithdrawBtn( {
 } ) {
     const [ isOpen, setIsOpen ] = useState( false );
     const [ withdrawAmount, setWithdrawAmount ] = useState( '' );
-    const currencySymbol = window?.dokanCurrency?.symbol ?? '';
+    const currencySymbol = window?.dokanFrontend?.currency?.symbol ?? '';
     const withdrawHook = useWithdraw();
     const toast = useToast();
     const [ withdrawMethod, setWithdrawMethod ] = useState( '' );
@@ -35,6 +35,10 @@ function RequestWithdrawBtn( {
         withdrawRequests?.data &&
         Array.isArray( withdrawRequests?.data ) &&
         withdrawRequests?.data?.length > 0;
+    const hasPaymentMethods =
+        settings?.data?.payment_methods &&
+        Array.isArray( settings?.data?.payment_methods ) &&
+        settings?.data?.payment_methods.length > 0;
 
     const unformatNumber = ( value ) => {
         if ( value === '' ) {
@@ -42,7 +46,7 @@ function RequestWithdrawBtn( {
         }
         return window.accounting.unformat(
             value,
-            window.dokanCurrency.decimal
+            window?.dokanFrontend?.currency.decimal
         );
     };
 
@@ -128,6 +132,117 @@ function RequestWithdrawBtn( {
         500
     );
 
+    const withdrawRequestForm = () => {
+        return (
+            <>
+                { hasPaymentMethods ? (
+                    <>
+                        <div>
+                            <SimpleSelect
+                                label={ __( 'Withdraw method', 'dokan' ) }
+                                value={ withdrawMethod }
+                                onChange={ ( e ) => {
+                                    setWithdrawMethod( e.target.value );
+                                    calculateWithdrawCharge(
+                                        e.target.value,
+                                        unformatNumber( withdrawAmount )
+                                    );
+                                } }
+                                options={ settings?.data?.payment_methods }
+                            />
+                        </div>
+                        <div className="mt-3">
+                            <MaskedInput
+                                label={ __( 'Withdraw amount', 'dokan' ) }
+                                className="focus:border-none"
+                                addOnLeft={ currencySymbol }
+                                defaultValue={ withdrawAmount }
+                                onChange={ ( e ) => {
+                                    debouncedWithdrawAmount( e.target.value );
+                                } }
+                                maskRule={ {
+                                    numeral: true,
+                                    numeralDecimalMark:
+                                        window?.dokanFrontend?.currency
+                                            ?.decimal ?? '.',
+                                    delimiter:
+                                        window?.dokanFrontend?.currency
+                                            ?.thousand ?? ',',
+                                    numeralDecimalScale:
+                                        window?.dokanFrontend?.currency
+                                            ?.precision ?? 2,
+                                } }
+                                input={ {
+                                    id: 'withdraw-amount',
+                                    name: 'withdraw-amount',
+                                    type: 'text',
+                                    placeholder: __( 'Enter amount', 'dokan' ),
+                                    required: true,
+                                    disabled: false,
+                                } }
+                            />
+                        </div>
+                        <div className="mt-3">
+                            <SimpleInput
+                                label={ __( 'Withdraw charge', 'dokan' ) }
+                                className="pl-12"
+                                addOnLeft={ currencySymbol }
+                                value={
+                                    isLoading
+                                        ? __( 'Calculating…', 'dokan' )
+                                        : getChargeFormated()
+                                }
+                                input={ {
+                                    id: 'withdraw-charge',
+                                    name: 'withdraw-charge',
+                                    type: 'text',
+                                    placeholder: '',
+                                    disabled: true,
+                                } }
+                            />
+                        </div>
+                        <div className="mt-3">
+                            <SimpleInput
+                                label={ __( 'Receivable amount', 'dokan' ) }
+                                className="pl-12"
+                                addOnLeft={ currencySymbol }
+                                value={
+                                    isLoading
+                                        ? __( 'Calculating…', 'dokan' )
+                                        : getRecivableFormated()
+                                }
+                                input={ {
+                                    id: 'receivable-amount',
+                                    name: 'receivable-amount',
+                                    type: 'text',
+                                    placeholder: '',
+                                    disabled: true,
+                                } }
+                            />
+                        </div>
+                    </>
+                ) : (
+                    <SimpleAlert type="warning" color="orange" label="">
+                        <p
+                            className="mb-2"
+                            dangerouslySetInnerHTML={ {
+                                __html: sprintf(
+                                    /* translators: %s: opening and closing anchor tags for "payment methods" link */
+                                    __(
+                                        'No payment methods found to submit a withdrawal request. Please set up your %1$spayment methods%2$s first.',
+                                        'dokan-lite'
+                                    ),
+                                    `<a href="${ window?.dokanFrontend?.withdraw?.paymentSettingUrl }" class="cursor-pointer text-dokan-primary">`,
+                                    '</a>'
+                                ),
+                            } }
+                        ></p>
+                    </SimpleAlert>
+                ) }
+            </>
+        );
+    };
+
     useEffect( () => {
         if ( settings?.data?.payment_methods.length > 0 ) {
             setWithdrawMethod( settings?.data?.payment_methods[ 0 ].value );
@@ -153,98 +268,7 @@ function RequestWithdrawBtn( {
                     { __( 'Send Withdraw Request', 'dokan' ) }
                 </Modal.Title>
                 <Modal.Content className="">
-                    { ! hasWithdrawRequests && (
-                        <>
-                            <div className="">
-                                <SimpleSelect
-                                    label={ __( 'Withdraw method', 'dokan' ) }
-                                    value={ withdrawMethod }
-                                    onChange={ ( e ) => {
-                                        setWithdrawMethod( e.target.value );
-                                        calculateWithdrawCharge(
-                                            e.target.value,
-                                            unformatNumber( withdrawAmount )
-                                        );
-                                    } }
-                                    options={ settings?.data?.payment_methods }
-                                />
-                            </div>
-                            <div className="mt-3">
-                                <MaskedInput
-                                    label={ __( 'Withdraw amount', 'dokan' ) }
-                                    className="focus:border-none"
-                                    addOnLeft={ currencySymbol }
-                                    defaultValue={ withdrawAmount }
-                                    onChange={ ( e ) => {
-                                        debouncedWithdrawAmount(
-                                            e.target.value
-                                        );
-                                    } }
-                                    maskRule={ {
-                                        numeral: true,
-                                        numeralDecimalMark:
-                                            window?.dokanCurrency?.decimal ??
-                                            '.',
-                                        delimiter:
-                                            window?.dokanCurrency?.thousand ??
-                                            ',',
-                                        numeralDecimalScale:
-                                            window?.dokanCurrency?.precision ??
-                                            2,
-                                    } }
-                                    input={ {
-                                        id: 'withdraw-amount',
-                                        name: 'withdraw-amount',
-                                        type: 'text',
-                                        placeholder: __(
-                                            'Enter amount',
-                                            'dokan'
-                                        ),
-                                        required: true,
-                                        disabled: false,
-                                    } }
-                                />
-                            </div>
-                            <div className="mt-3">
-                                <SimpleInput
-                                    label={ __( 'Withdraw charge', 'dokan' ) }
-                                    className="pl-12"
-                                    addOnLeft={ currencySymbol }
-                                    value={
-                                        isLoading
-                                            ? __( 'Calculating…', 'dokan' )
-                                            : getChargeFormated()
-                                    }
-                                    input={ {
-                                        id: 'withdraw-charge',
-                                        name: 'withdraw-charge',
-                                        type: 'text',
-                                        placeholder: '',
-                                        disabled: true,
-                                    } }
-                                />
-                            </div>
-                            <div className="mt-3">
-                                <SimpleInput
-                                    label={ __( 'Receivable amount', 'dokan' ) }
-                                    className="pl-12"
-                                    addOnLeft={ currencySymbol }
-                                    value={
-                                        isLoading
-                                            ? __( 'Calculating…', 'dokan' )
-                                            : getRecivableFormated()
-                                    }
-                                    input={ {
-                                        id: 'receivable-amount',
-                                        name: 'receivable-amount',
-                                        type: 'text',
-                                        placeholder: '',
-                                        disabled: true,
-                                    } }
-                                />
-                            </div>
-                        </>
-                    ) }
+                    { ! hasWithdrawRequests && withdrawRequestForm() }
 
                     { hasWithdrawRequests && (
                         <SimpleAlert
@@ -266,7 +290,7 @@ function RequestWithdrawBtn( {
                             label={ __( 'Close', 'dokan' ) }
                         />
 
-                        { ! hasWithdrawRequests && (
+                        { ! hasWithdrawRequests && hasPaymentMethods && (
                             <Button
                                 color="secondary"
                                 className="bg-dokan-btn hover:bg-dokan-btn-hover text-white"
