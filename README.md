@@ -344,7 +344,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
-### v3.14.7 ( Jan 29, 2025 ) ###
+### v3.14.8 ( Jan 29, 2025 ) ###
 
 - **update:** Missing parameters support added for the reverse-withdrawal API endpoints.
 - **update:** Missing parameters support added for the Settings API endpoints.
