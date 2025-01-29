@@ -7,14 +7,14 @@ use WeDevs\Dokan\Contracts\Hookable;
 /**
  * Seller analytics data filter.
  *
- * @since DOKAN_SINCE
+ * @since 3.14.7
  */
 class CacheKeyModifier implements Hookable {
 
     /**
      * Report entities to modify.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.7
      *
      * @var array
      */
@@ -32,7 +32,7 @@ class CacheKeyModifier implements Hookable {
     /**
      * Setup analytics entities
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.7
      *
      * WC apply filters from @see https://github.com/woocommerce/woocommerce/blob/be602de39d39878085e752f30ec1dabf16b0d642/plugins/woocommerce/src/Admin/API/Reports/GenericQuery.php#L77
      * WC reports generation pattern @see https://github.com/woocommerce/woocommerce/blob/be602de39d39878085e752f30ec1dabf16b0d642/plugins/woocommerce/src/Admin/API/Reports/Products/Controller.php#L53
@@ -65,7 +65,7 @@ class CacheKeyModifier implements Hookable {
     /**
      * Register necessary hooks.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.7
      *
      * @return void
      */
@@ -105,7 +105,7 @@ class CacheKeyModifier implements Hookable {
      *
      * @param int $seller_id Seller ID.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.7
      *
      * @return bool
      */
