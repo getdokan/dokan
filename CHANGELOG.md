@@ -1,4 +1,4 @@
-### v3.14.7 ( Jan 29, 2025 ) ###
+### v3.14.8 ( Jan 29, 2025 ) ###
 - **update:** Missing parameters support added for the reverse-withdrawal API endpoints.
 - **update:** Missing parameters support added for the Settings API endpoints.
 - **fix:** Fixed an error when navigating to the product edit page with an invalid (non-numeric) product ID.
