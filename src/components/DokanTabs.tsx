@@ -4,16 +4,19 @@ import { twMerge } from 'tailwind-merge';
 const MyTabPanel = ( {
     onSelect,
     tabs,
+    defaultTab,
 }: {
     onSelect: ( tabName: string ) => void;
     tabs: {
         name: string;
         title: string;
         className: string;
-        content: string | JSX.Element;
+        content: string | React.ReactNode;
     }[];
+    defaultTab?: string;
 } ) => (
     <TabPanel
+        initialTabName={ defaultTab }
         className="my-tab-panel"
         activeClass="bg-dokan-btn-hover"
         onSelect={ onSelect }
