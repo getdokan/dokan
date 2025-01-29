@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivend
 Requires at least: 6.5
 Tested up to: 6.7.1
 WC requires at least: 8.0.0
-WC tested up to: 9.5.2
+WC tested up to: 9.6.0
 Requires PHP: 7.4
-Stable tag: 3.14.6
+Stable tag: 3.14.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -344,7 +344,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
-= v3.14.7 ( Jan 29, 2025 ) =
+= v3.14.8 ( Jan 29, 2025 ) =
 
 - **update:** Missing parameters support added for the reverse-withdrawal API endpoints.
 - **update:** Missing parameters support added for the Settings API endpoints.
