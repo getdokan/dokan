@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Traits\VendorAuthorizable;
+
 /**
  * Vendor REST Controller for Dokan
  *
@@ -10,6 +12,7 @@ namespace WeDevs\Dokan\REST;
  * @package dokan
  */
 abstract class DokanBaseVendorController extends DokanBaseController {
+    use VendorAuthorizable;
 
     /**
      * Endpoint base.
@@ -17,15 +20,4 @@ abstract class DokanBaseVendorController extends DokanBaseController {
      * @var string
      */
     protected $rest_base = 'vendor';
-
-    /**
-     * Check if user has vendor permission.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    public function check_permission() {
-        return current_user_can( 'dokandar' );
-    }
 }
