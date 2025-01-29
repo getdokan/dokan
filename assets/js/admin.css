@@ -139,26 +139,27 @@
 }
 .dokan-admin-header .dokan-admin-logo-wrap .dokan-version-tags .version-tag {
   border-radius: 20px;
-  font-size: 1rem;
-  line-height: 20px;
-  font-weight: 400;
-  padding: 0.5rem 1rem;
-  max-height: 2rem;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  height: 30px;
+  box-sizing: border-box;
 }
 .dokan-admin-header .dokan-admin-logo-wrap .dokan-version-tags .version-tag.lite {
   background: #FF9B5366;
   color: #7B4E2E;
   display: flex;
   align-items: center;
+  padding: 0 12px;
 }
 .dokan-admin-header .dokan-admin-logo-wrap .dokan-version-tags .version-tag.pro {
   background: #D8D8FE;
   color: #7047EB;
   display: flex;
   align-items: center;
-  gap: 8px;
   text-transform: capitalize;
-  font-weight: 450;
+  padding: 5px 9px 5px 5px;
+  gap: 6px;
 }
 .dokan-admin-header .dokan-admin-logo-wrap .dokan-version-tags .version-tag.pro .version-tag-pro-badge {
   background: #7047EB;
@@ -166,9 +167,9 @@
   border-radius: 28px;
   display: inline-flex;
   align-items: center;
-  padding: 3px 9px;
-  font-size: 16px;
-  margin: -10px 0 -10px -10px;
+  padding: 3px 8px;
+  font-size: 12px;
+  gap: 3px;
 }
 .dokan-admin-header .upgrade-button {
   display: flex;
@@ -243,7 +244,7 @@
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon:hover .dropdown {
   opacity: 1;
   visibility: visible;
-  top: 42px;
+  top: 50px;
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown {
   position: absolute;
@@ -255,7 +256,7 @@
   padding: 20px;
   border-radius: 3px;
   border: 1px solid #e2e2e2;
-  box-shadow: 0 6px 12px rgb(129 129 21.5%);
+  box-shadow: 0 8px 10px #ccc;
   min-width: 255px;
   max-width: 255px;
   opacity: 0;
@@ -288,6 +289,7 @@
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item {
   margin-top: 13px;
+  list-style-type: none;
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon .dropdown .list-item a {
   display: flex;
