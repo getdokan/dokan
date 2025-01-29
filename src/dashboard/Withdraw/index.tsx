@@ -7,7 +7,7 @@ import PaymentDetails from './PaymentDetails';
 import PaymentMethods from './PaymentMethods';
 import { DokanToaster } from '@getdokan/dokan-ui';
 import { useEffect } from '@wordpress/element';
-import { useCurrentUser } from "@/hooks";
+import { useCurrentUser } from "@dokan/hooks";
 
 const Index = () => {
     const useWithdrawRequestHook = useWithdrawRequests( true );

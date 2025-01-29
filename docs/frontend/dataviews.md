@@ -94,7 +94,7 @@ domReady(() => {
 
 ### Step 3: Create a DataViewTable component.
 
-In `Dokan Pro`, we can use the `DataViews` component from the `@dokan/components` package. For the free version, we can import `DataViews` from the `src/components` (`lite`) directory.  
+We can use the `DataViews` component from the `@dokan/components` package. `(for both free & premium version)`  
 
 All the (free version) global components are available in `@dokan/components` package.
 
@@ -108,9 +108,8 @@ import {
     __experimentalVStack as VStack, Button
 } from "@wordpress/components";
 
-// For dokan-pro, we will import the `DataViews` component from the @dokan/components package. Otherwise, in free version we will import from the `@/components` directory.
-import { DataViews } from '@dokan/components'; // For pro version
-// import { DataViews } from '@/components'; // For free version
+// We will import the `DataViews` component from the @dokan/components package.
+import { DataViews } from '@dokan/components';
 
 const WPostsDataView = ({ navigate }) => {
     const [ data, setData ] = useState([]);

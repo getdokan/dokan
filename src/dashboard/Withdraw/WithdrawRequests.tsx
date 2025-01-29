@@ -7,7 +7,7 @@ import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 import RequestWithdrawBtn from './RequestWithdrawBtn';
 import { useWithdrawSettings } from './Hooks/useWithdrawSettings';
-import { useCurrentUser } from "@/hooks";
+import { useCurrentUser } from "@dokan/hooks";
 
 function WithdrawRequests() {
     const useWithdrawRequestHook = useWithdrawRequests( true );

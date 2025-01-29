@@ -10,13 +10,13 @@ const updatedConfig = {
   entry: {
     ...entryPoints,
     'components': {
-      import: '@/components/index.tsx',
+      import: '@dokan/components/index.tsx',
     },
     'utilities': {
-      import: '@/utilities/index.ts',
+      import: '@dokan/utilities/index.ts',
     },
     'hooks': {
-      import: '@/hooks/index.tsx',
+      import: '@dokan/hooks/index.tsx',
     },
     'dokan-status': '/src/Status/index.tsx',
   },
@@ -35,7 +35,7 @@ const updatedConfig = {
     ...defaultConfig.resolve,
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': path.resolve('./src/'),
+      '@dokan': path.resolve('./src/'),
       'frontend': path.resolve('./src/frontend/'),
       'admin': path.resolve('./src/admin/'),
     },

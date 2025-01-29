@@ -15,7 +15,7 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { useCharge } from './Hooks/useCharge';
 import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
-import { formatPrice } from '@/utilities';
+import { formatPrice } from '@dokan/utilities';
 
 function RequestWithdrawBtn( {
     settings,
