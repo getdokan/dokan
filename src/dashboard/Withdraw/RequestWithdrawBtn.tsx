@@ -26,7 +26,7 @@ function RequestWithdrawBtn( {
 } ) {
     const [ isOpen, setIsOpen ] = useState( false );
     const [ withdrawAmount, setWithdrawAmount ] = useState( '' );
-    const currencySymbol = window?.dokanCurrency?.symbol ?? '';
+    const currencySymbol = window?.dokanFrontend?.dokanCurrency?.symbol ?? '';
     const withdrawHook = useWithdraw();
     const toast = useToast();
     const [ withdrawMethod, setWithdrawMethod ] = useState( '' );
@@ -46,7 +46,7 @@ function RequestWithdrawBtn( {
         }
         return window.accounting.unformat(
             value,
-            window.dokanCurrency.decimal
+            window?.dokanFrontend?.dokanCurrency.decimal
         );
     };
 
@@ -163,11 +163,14 @@ function RequestWithdrawBtn( {
                                 maskRule={ {
                                     numeral: true,
                                     numeralDecimalMark:
-                                        window?.dokanCurrency?.decimal ?? '.',
+                                        window?.dokanFrontend?.dokanCurrency
+                                            ?.decimal ?? '.',
                                     delimiter:
-                                        window?.dokanCurrency?.thousand ?? ',',
+                                        window?.dokanFrontend?.dokanCurrency
+                                            ?.thousand ?? ',',
                                     numeralDecimalScale:
-                                        window?.dokanCurrency?.precision ?? 2,
+                                        window?.dokanFrontend?.dokanCurrency
+                                            ?.precision ?? 2,
                                 } }
                                 input={ {
                                     id: 'withdraw-amount',
@@ -219,25 +222,28 @@ function RequestWithdrawBtn( {
                         </div>
                     </>
                 ) : (
-                    <SimpleAlert type="warning" color="orange">
-                        <p className="mb-2" dangerouslySetInnerHTML={{
-                            __html: sprintf(
-                                /* translators: %s: opening and closing anchor tags for "payment methods" link */
-                                __(
-                                    'No payment methods found to submit a withdrawal request. Please set up your %1$spayment methods%2$s first.',
-                                    'dokan-lite'
+                    <SimpleAlert type="warning" color="orange" label="">
+                        <p
+                            className="mb-2"
+                            dangerouslySetInnerHTML={ {
+                                __html: sprintf(
+                                    /* translators: %s: opening and closing anchor tags for "payment methods" link */
+                                    __(
+                                        'No payment methods found to submit a withdrawal request. Please set up your %1$spayment methods%2$s first.',
+                                        'dokan-lite'
+                                    ),
+                                    `<a href="${ window?.dokanFrontend?.dokanWithdraw?.paymentSettingUrl }" class="cursor-pointer text-dokan-primary">`,
+                                    '</a>'
                                 ),
-                                `<a href="${dokanWithdraw?.paymentSettingUrl}" class="cursor-pointer text-dokan-primary">`,
-                                '</a>'
-                            )
-                        }}></p>
+                            } }
+                        ></p>
                     </SimpleAlert>
-                )}
+                ) }
             </>
         );
     };
 
-    useEffect(() => {
+    useEffect( () => {
         if ( settings?.data?.payment_methods.length > 0 ) {
             setWithdrawMethod( settings?.data?.payment_methods[ 0 ].value );
         }
@@ -247,7 +253,7 @@ function RequestWithdrawBtn( {
         <>
             <Button
                 color="gray"
-                className="bg-dokan-btn hover:bg-dokan-btn-hover"
+                className="hover:bg-dokan-btn-hover dokan-btn-primary"
                 onClick={ () => setIsOpen( true ) }
                 label={ __( 'Request Withdraw', 'dokan' ) }
             />

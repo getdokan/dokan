@@ -80,12 +80,20 @@ class NewDashboard {
             return;
         }
 
-	    $wc_instance = WCAdminAssets::get_instance();
-	    $wc_instance->register_scripts();
+		    $wc_instance = WCAdminAssets::get_instance();
+        $wc_instance->register_scripts();
+
+        $dokan_frontend = [
+            'dokanCurrency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+        ];
 
         wp_enqueue_script( 'dokan-react-frontend' );
         wp_enqueue_style( 'dokan-react-frontend' );
-		wp_localize_script( 'dokan-react-frontend', 'dokanCurrency', dokan_get_container()->get( 'scripts' )->get_localized_price() );
+        wp_localize_script(
+            'dokan-react-frontend',
+            'dokanFrontend',
+            apply_filters( 'dokan_react_frontend_localized_args', $dokan_frontend ),
+        );
     }
 
     /**

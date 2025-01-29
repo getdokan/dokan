@@ -13,29 +13,29 @@ export const formatPrice = (
         return price;
     }
 
-    if ( ! window.dokanCurrency ) {
+    if ( ! window?.dokanFrontend?.dokanCurrency ) {
         console.warn( 'Dokan Currency Data Not Found' );
         return price;
     }
 
     if ( ! currencySymbol ) {
-        currencySymbol = window.dokanCurrency.symbol;
+        currencySymbol = window?.dokanFrontend?.dokanCurrency.symbol;
     }
 
     if ( ! precision ) {
-        precision = window.dokanCurrency.precision;
+        precision = window?.dokanFrontend?.dokanCurrency.precision;
     }
 
     if ( ! thousand ) {
-        thousand = window.dokanCurrency.thousand;
+        thousand = window?.dokanFrontend?.dokanCurrency.thousand;
     }
 
     if ( ! decimal ) {
-        decimal = window.dokanCurrency.decimal;
+        decimal = window?.dokanFrontend?.dokanCurrency.decimal;
     }
 
     if ( ! format ) {
-        format = window.dokanCurrency.format;
+        format = window?.dokanFrontend?.dokanCurrency.format;
     }
 
     return window.accounting.formatMoney(
@@ -58,7 +58,7 @@ export const formatNumber = ( value ) => {
         return value;
     }
 
-    if ( ! window.dokanCurrency ) {
+    if ( ! window?.dokanFrontend?.dokanCurrency ) {
         console.warn( 'Dokan Currency Data Not Found' );
         return value;
     }
@@ -66,8 +66,8 @@ export const formatNumber = ( value ) => {
     return window.accounting.formatNumber(
         value,
         // @ts-ignore
-        window.dokanCurrency.precision,
-        window.dokanCurrency.thousand,
-        window.dokanCurrency.decimal
+        window?.dokanFrontend?.dokanCurrency.precision,
+        window?.dokanFrontend?.dokanCurrency.thousand,
+        window?.dokanFrontend?.dokanCurrency.decimal
     );
 };

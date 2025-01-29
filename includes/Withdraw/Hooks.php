@@ -15,7 +15,7 @@ class Hooks {
      */
     public function __construct() {
         add_action( 'init', [ $this, 'download_withdraw_log_export_file' ] );
-        add_action( 'wp_enqueue_scripts', [ $this, 'localize_withdraw_scripts' ] );
+        add_action( 'dokan_react_frontend_localized_args', [ $this, 'localize_withdraw_scripts' ] );
         add_action( 'dokan_withdraw_request_approved', [ $this, 'update_vendor_balance' ], 11 );
         // change custom withdraw method title
         add_filter( 'dokan_get_withdraw_method_title', [ $this, 'dokan_withdraw_dokan_custom_method_title' ], 10, 3 );
@@ -55,14 +55,14 @@ class Hooks {
      *
      * @since DOKAN_SINCE
      *
-     * @return void
+     * @param array $localized_args
+     *
+     * @return array
      */
-    public function localize_withdraw_scripts() {
-        wp_localize_script(
-            'dokan-react-frontend',
-            'dokanWithdraw',
-            [ 'paymentSettingUrl' => dokan_get_navigation_url( 'settings/payment' ) ]
-        );
+    public function localize_withdraw_scripts( $localized_args ) {
+        $localized_args['dokanWithdraw'] = [ 'paymentSettingUrl' => dokan_get_navigation_url( 'settings/payment' ) ];
+
+        return $localized_args;
     }
 
     /**
