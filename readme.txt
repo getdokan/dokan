@@ -97,7 +97,7 @@ With Dokan, experience a smooth, fast setup process in under an hour and have yo
 
 We continuously update Dokan with reliable services for flawless operation, staying ahead of industry trends and introducing new features with each update.
 
-See Our Official GitHub page: [Official Dokan GitHub](https://github.com/getdokan/dokan/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
+See Our Official GitHub page: [Official Dokan GitHub](https://github.com/getdokan/dokan/)
 
 = A SCALABLE MARKET =
 

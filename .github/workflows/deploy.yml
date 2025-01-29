@@ -19,7 +19,7 @@ jobs:
                 tools: composer:v2
             - name: Build
               run: |
-                composer install --no-dev
+                composer install --no-dev -o
                 npm install
                 npm run build
             - name: Install SVN ( Subversion )
