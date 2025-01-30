@@ -1,4 +1,3 @@
-export { default as DokanModal } from './modals/DokanModal';
 export { default as DataViews } from './dataviews/DataViewTable';
 export { default as SortableList } from './sortable-list';
 
