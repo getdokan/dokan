@@ -46,6 +46,7 @@ env:
     CUSTOMER2: customer2
     USER_PASSWORD: 01dokan01
     GMAP: ${{secrets.GMAP}}
+    MAPBOX: ${{secrets.MAPBOX}}
     BASE_URL: http://localhost:9999
     CI: true
     FORCE_COLOR: 1
@@ -55,7 +56,6 @@ env:
     DB_PORT: 9998
     DATABASE: tests-wordpress
     DB_PREFIX: wp
-
     PR_NUMBER: ${{ github.event.number }}
     SHA: ${{ github.event.pull_request.head.sha }}
     SYSTEM_INFO: ./tests/pw/playwright/systemInfo.json
@@ -65,25 +65,35 @@ env:
     E2E_COVERAGE: ./tests/pw/playwright-report/e2e/coverage-report/coverage.json
 
 jobs:
-    tests:
-        name: e2e_api tests
+    e2e_tests:
+        name: e2e tests
         runs-on: ubuntu-latest
+        timeout-minutes: 20
+        strategy:
+            fail-fast: false
+            matrix:
+                shardIndex: [1, 2, 3]
+                shardTotal: [3]
 
         steps:
+            # Checkout testing repo
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
 
+            # Use desired version of NodeJS
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: npm
 
+            # Composer install and build (Dokan-lite)
             - name: Composer install and build (Dokan-lite)
               run: |
                   composer i --no-dev -o || composer update --no-dev -o
 
+            # Npm install and build (Dokan-lite)
             - name: Npm install and build (Dokan-lite)
               run: |
                   npm ci || npm i
@@ -107,31 +117,19 @@ jobs:
               id: wp-env
               uses: nick-fields/retry@v3
               with:
-                  timeout_minutes: 4
+                  timeout_minutes: 5
                   max_attempts: 2
                   retry_on: error
                   command: |
                       cd tests/pw
                       npm run start:env
 
-            # Set permalink structure
-            - name: Set Permalink structure
-              working-directory: tests/pw
-              run: |
-                  npm run wp-env run tests-cli wp rewrite structure /%postname%/
-
-            # Activate theme
-            - name: Activate theme:Storefront
-              working-directory: tests/pw
-              run: |
-                  npm run wp-env run tests-cli wp theme activate storefront
-
             # Get Playwright version
             - name: Get installed Playwright version
               id: playwright-version
               working-directory: tests/pw
               run: |
-                  echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
+                  echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> "$GITHUB_ENV"
 
             # Cache browser binaries, cache key is based on Playwright version and OS
             - name: Cache playwright binaries
@@ -150,71 +148,41 @@ jobs:
               if: steps.playwright-cache.outputs.cache-hit != 'true'
               working-directory: tests/pw
               run: |
-                  npm run pw:browser-with-deps
+                  npm run pw:chrome-with-deps
 
-            # # Install only the OS dependencies if cache hit  not needed
+            # # Install only the OS dependencies if cache hit
             # - name: Install Playwright OS dependencies
             #   if: steps.playwright-cache.outputs.cache-hit == 'true'
             #   working-directory: tests/pw
             #   run: |
-            #     npm run pw:deps-only
+            #     npm run pw:chrome-deps-only
 
-            # Run e2e tests
-            - name: 🧪 Run e2e tests
+            # Run E2E tests
+            - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
               id: e2e-test
               if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
-              timeout-minutes: 40
+              timeout-minutes: 15
               working-directory: tests/pw
               run: |
-                  npm run test:e2e
+                  npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
             # Run e2e coverage
             - name: 🧪 Run e2e coverage
               if: always() && (steps.e2e-test.outcome == 'success' || steps.e2e-test.outcome == 'failure')
               working-directory: tests/pw
               run: |
-                npm run test:e2e:coverage
+                  npm run test:e2e:coverage
 
-            # Run api tests
-            - name: 🧪 Run api tests
-              id: api-test
-              if: always() && steps.wp-env.outcome == 'success' && ( github.event_name != 'workflow_dispatch'  || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
-              timeout-minutes: 5
-              working-directory: tests/pw
-              run: |
-                  npm run test:api
-
-            # Prepare test summary
-            - name: Prepare test summary
-              id: prepare-test-summary
-              uses: actions/github-script@v7
-              if: always() && steps.clone-dokan-lite.outcome == 'success'
-              with:
-                  result-encoding: string
-                  script: |
-                      const script = require("./tests/pw/utils/gitTestSummary.ts")
-                      return await script({github, context, core})
-
-            # # Find PR comment
-            # - name: Find PR comment by github-actions[bot]
-            #   uses: peter-evans/find-comment@v3
-            #   id: find-comment
-            #   if: github.event_name == 'pull_request'
+            # # Prepare test summary
+            # - name: Prepare test summary
+            #   id: prepare-test-summary
+            #   uses: actions/github-script@v7
+            #   if: always() && steps.clone-dokan-lite.outcome == 'success'
             #   with:
-            #       issue-number: ${{ github.event.pull_request.number }}
-            #       comment-author: 'github-actions[bot]'
-            #       body-includes: Tests Summary
-
-            # # Post test summary as PR comment
-            # - name: Create or update PR comment
-            #   uses: peter-evans/create-or-update-comment@v4
-            #   if: github.event_name == 'pull_request'
-            #   with:
-            #       comment-id: ${{ steps.find-comment.outputs.comment-id }}
-            #       issue-number: ${{ github.event.pull_request.number }}
-            #       body: ${{ steps.prepare-test-summary.outputs.result }}
-            #       reactions: hooray
-            #       edit-mode: replace
+            #       result-encoding: string
+            #       script: |
+            #           const script = require("./tests/pw/utils/gitTestSummary.ts")
+            #           return await script({github, context, core})
 
             # Backup Database
             - name: Backup Database
@@ -225,13 +193,268 @@ jobs:
 
             # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
-              uses: actions/upload-artifact@v4
               if: always() && steps.debug-log.outcome == 'success'
+              uses: actions/upload-artifact@v4
               with:
-                  name: test-artifact
+                  name: test-artifact-e2e-${{ matrix.shardIndex }}
                   path: |
                       tests/pw/wp-data
                       tests/pw/playwright
                       tests/pw/playwright-report
                   if-no-files-found: ignore
-                  retention-days: 30
+                  retention-days: 1
+
+    api_tests:
+        name: api tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        strategy:
+            fail-fast: false
+            matrix:
+                shardIndex: [1]
+                shardTotal: [1]
+
+        steps:
+            # Checkout testing repo
+            - name: Checkout testing repo
+              id: clone-dokan-lite
+              uses: actions/checkout@v4
+
+            # Use desired version of NodeJS
+            - name: Use desired version of NodeJS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+
+            # Composer install and build (Dokan-lite)
+            - name: Composer install and build (Dokan-lite)
+              run: |
+                  composer i --no-dev -o || composer update --no-dev -o
+
+            # Npm install and build (Dokan-lite)
+            - name: Npm install and build (Dokan-lite)
+              run: |
+                  npm ci || npm i
+                  npm run build
+
+            # Install test dependencies
+            - name: Install test dependencies
+              working-directory: tests/pw
+              run: |
+                  npm ci || npm i
+
+            # Create wp debuglog file
+            - name: Create wp debuglog file
+              id: debug-log
+              working-directory: tests/pw
+              run: |
+                  mkdir -p wp-data && touch wp-data/debug.log
+
+            # Start wordpress environment
+            - name: Start WordPress Env
+              id: wp-env
+              uses: nick-fields/retry@v3
+              with:
+                  timeout_minutes: 5
+                  max_attempts: 2
+                  retry_on: error
+                  command: |
+                      cd tests/pw
+                      npm run start:env
+
+            # Get Playwright version
+            - name: Get installed Playwright version
+              id: playwright-version
+              working-directory: tests/pw
+              run: |
+                  echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> "$GITHUB_ENV"
+
+            # Cache browser binaries, cache key is based on Playwright version and OS
+            - name: Cache playwright binaries
+              id: playwright-cache
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.cache/ms-playwright
+                  key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+                  restore-keys: |
+                      ${{ runner.os }}-playwright-
+
+            # Install browser binaries & OS dependencies if cache missed
+            - name: Install Playwright browser binaries & OS dependencies
+              id: pw-install
+              if: steps.playwright-cache.outputs.cache-hit != 'true'
+              working-directory: tests/pw
+              run: |
+                  npm run pw:chrome-with-deps
+
+            # # Install only the OS dependencies if cache hit
+            # - name: Install Playwright OS dependencies
+            #   if: steps.playwright-cache.outputs.cache-hit == 'true'
+            #   working-directory: tests/pw
+            #   run: |
+            #     npm run pw:chrome-deps-only
+
+            # Run API tests
+            - name: 🧪 Run api tests-${{ matrix.shardIndex }}
+              id: api-test
+              if: always() && steps.wp-env.outcome == 'success' && ( github.event_name != 'workflow_dispatch'  || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
+              timeout-minutes: 5
+              working-directory: tests/pw
+              run: |
+                  npm run test:api -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+
+            # # Prepare test summary
+            # - name: Prepare test summary
+            #   id: prepare-test-summary
+            #   if: always() && steps.clone-dokan-lite.outcome == 'success'
+            #   uses: actions/github-script@v7
+            #   with:
+            #       result-encoding: string
+            #       script: |
+            #           const script = require("./tests/pw/utils/gitTestSummary.ts")
+            #           return await script({github, context, core})
+
+            # Backup Database
+            - name: Backup Database
+              if: always() && steps.wp-env.outcome == 'success'
+              working-directory: tests/pw
+              run: |
+                  npm run wp-env run tests-cli wp db export wp-data/db.sql
+
+            # Upload artifacts
+            - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
+              if: always() && steps.debug-log.outcome == 'success'
+              uses: actions/upload-artifact@v4
+              with:
+                #   name: test-artifact-api-${{ matrix.shardIndex }}
+                  name: test-artifact-api
+                  path: |
+                      tests/pw/wp-data
+                      tests/pw/playwright
+                      tests/pw/playwright-report
+                  if-no-files-found: ignore
+                  retention-days: 1
+
+    merge-reports:
+        # Merge reports after playwright-tests, even if some shards have failed
+        if: ${{ !cancelled() }}
+        needs: [e2e_tests, api_tests]
+        runs-on: ubuntu-24.04
+        timeout-minutes: 5
+
+        # Override reports path specifically for this job
+        env:
+            API_TEST_RESULT: ./tests/pw/all-reports/test-artifact-api/playwright-report/api/summary-report/results.json
+            API_COVERAGE: ./tests/pw/all-reports/test-artifact-api/playwright-report/api/coverage-report/coverage.json
+            E2E_TEST_RESULT: ./tests/pw/all-reports/merged-summary.json
+            E2E_COVERAGE: ./tests/pw/all-reports/merged-coverage.json
+
+        steps:
+            # Checkout testing repo
+            - name: Checkout testing repo
+              id: clone-dokan-lite
+              uses: actions/checkout@v4
+
+            # Use desired version of NodeJS
+            - name: Use desired version of NodeJS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+
+            # Install test dependencies
+            - name: Install test dependencies
+              working-directory: tests/pw
+              run: |
+                  npm ci || npm i
+
+            # Download all test artifacts from GitHub Actions
+            - name: Download all test artifacts from GitHub Actions
+              id: download-test-artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  path: tests/pw/all-reports
+                  pattern: test-artifact-*
+
+            # Move all blob report folder contents into a single folder
+            - name: Move all blob report folder contents into a single folder
+              working-directory: tests/pw/all-reports
+              run: |
+                  mkdir -p all-blob-reports
+                  find . -type f -path "*/blob-report/*" -exec mv {} all-blob-reports/ \;
+              #   ls all-blob-reports
+
+            # Generate HTML Report
+            - name: Generate HTML Report
+              id: generate-html-report
+              working-directory: tests/pw
+              run: |
+                  npx playwright merge-reports --reporter html ./all-reports/all-blob-reports
+                  mv playwright-report ./all-reports/html-report
+
+            # Clean all extracted blob reports (except ZIPs)
+            - name: Clean all extracted blob reports (except ZIPs)
+              working-directory: tests/pw
+              run: |
+                  find all-reports/all-blob-reports -mindepth 1 ! -name "*.zip" -exec rm -rf {} +
+
+            # Generate merged summary report
+            - name: Generate merged summary report
+              id: merge-summary-report
+              if: steps.download-test-artifacts.outcome == 'success'
+              working-directory: tests/pw
+              run: |
+                  REPORT_TYPE=e2e npx ts-node ./utils/mergeSummaryReport.ts
+
+            # Generate merged coverage report
+            - name: Generate merged coverage report
+              id: merge-coverage-report
+              if: steps.download-test-artifacts.outcome == 'success'
+              working-directory: tests/pw
+              run: |
+                  REPORT_TYPE=e2e npx ts-node ./utils/mergeCoverageSummary.ts
+
+            # Prepare test summary
+            - name: Prepare test summary
+              id: prepare-test-summary
+              if: always() && steps.merge-summary-report.outcome == 'success'
+              uses: actions/github-script@v7
+              with:
+                  result-encoding: string
+                  script: |
+                      const script = require("./tests/pw/utils/gitTestSummary.ts")
+                      return await script({github, context, core})
+
+            # # Find PR comment
+            # - name: Find PR comment by github-actions[bot]
+            #   id: find-comment
+            #   if: github.event_name == 'pull_request'
+            #   uses: peter-evans/find-comment@v3
+            #   with:
+            #       issue-number: ${{ github.event.pull_request.number }}
+            #       comment-author: 'github-actions[bot]'
+            #       body-includes: Tests Summary
+
+            # # Post test summary as PR comment
+            # - name: Create or update PR comment
+            #   if: github.event_name == 'pull_request'
+            #   uses: peter-evans/create-or-update-comment@v4
+            #   with:
+            #       comment-id: ${{ steps.find-comment.outputs.comment-id }}
+            #       issue-number: ${{ github.event.pull_request.number }}
+            #       body: ${{ steps.prepare-test-summary.outputs.result }}
+            #       reactions: hooray
+            #       edit-mode: replace
+
+            # Upload final test artifact
+            - name: Upload final test artifact
+              if: always() && steps.download-test-artifacts.outcome == 'success'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: final-test-artifact
+                  path: tests/pw/all-reports
+                  if-no-files-found: ignore
+                  retention-days: 7
+

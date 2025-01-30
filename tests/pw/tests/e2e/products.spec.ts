@@ -45,7 +45,8 @@ test.describe('Product functionality test', () => {
         await admin.addSimpleProduct(data.product.simple);
     });
 
-    test.skip('admin can add variable product', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can add variable product', { tag: ['@pro', '@admin'] }, async () => {
+        test.slow();
         await admin.addVariableProduct(data.product.variable);
     });
 
@@ -53,7 +54,8 @@ test.describe('Product functionality test', () => {
         await admin.addSimpleSubscription(data.product.simpleSubscription);
     });
 
-    test.skip('admin can add variable subscription product', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can add variable subscription product', { tag: ['@pro', '@admin'] }, async () => {
+        test.slow();
         await admin.addVariableSubscription(data.product.variableSubscription);
     });
 
@@ -61,7 +63,7 @@ test.describe('Product functionality test', () => {
         await admin.addExternalProduct(data.product.external);
     });
 
-    test.skip('admin can add vendor subscription', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can add vendor subscription', { tag: ['@pro', '@admin'] }, async () => {
         await admin.addDokanSubscription(data.product.vendorSubscription);
     });
 
@@ -102,6 +104,7 @@ test.describe('Product functionality test', () => {
     });
 
     test('vendor can add downloadable product', { tag: ['@lite', '@vendor'] }, async () => {
+        test.slow();
         await vendor.vendorAddDownloadableProduct(data.product.downloadable);
     });
 

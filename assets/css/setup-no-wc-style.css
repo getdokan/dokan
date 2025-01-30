@@ -187,10 +187,10 @@ body {
   display: inline-block;
 }
 .form-table .switch-input:checked + .switch-label:before {
-  background-color: #fbcbc4;
+  background-color: #c9baf8;
 }
 .form-table .switch-input:checked + .switch-label:after {
-  background-color: #f2624d;
+  background-color: #7047EB;
   -ms-transform: translate(80%, -50%);
   -webkit-transform: translate(80%, -50%);
   transform: translate(80%, -50%);
@@ -271,13 +271,13 @@ body {
 /* WC Overrides */
 .wc-setup .wc-setup-steps li.done,
 .wc-setup .wc-setup-steps li.active {
-  color: #f2624d;
-  border-color: #f2624d;
+  color: #7047EB;
+  border-color: #7047EB;
 }
 .wc-setup .wc-setup-steps li.done:before,
 .wc-setup .wc-setup-steps li.active:before {
-  background: #f2624d;
-  border-color: #f2624d;
+  background: #7047EB;
+  border-color: #7047EB;
 }
 .wc-setup .wc-setup-steps li.active:before {
   background: #fff;
@@ -289,22 +289,22 @@ body {
 }
 .wc-setup .wc-setup-actions .button-primary {
   color: #fff;
-  background: #f2624d;
-  border-color: #f2624d;
+  background: #7047EB;
+  border-color: #7047EB;
   text-shadow: none;
 }
 .wc-setup .wc-setup-actions .button-primary:hover,
 .wc-setup .wc-setup-actions .button-primary:active,
 .wc-setup .wc-setup-actions .button-primary:focus {
-  background-color: #ef381d;
-  border-color: #ef381d;
+  background-color: #4c19e6;
+  border-color: #4c19e6;
 }
 .wc-setup .wc-setup-content a {
-  color: #f2624d;
+  color: #7047EB;
 }
 .wc-setup .wc-setup-content .checkbox input[type=checkbox]:checked + label::before {
-  background: #f2624d;
-  border-color: #f2624d;
+  background: #7047EB;
+  border-color: #7047EB;
 }
 .wc-setup .wc-setup-content .checkbox label {
   font-weight: 400;

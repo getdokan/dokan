@@ -117,7 +117,9 @@ export class CustomerPage extends BasePage {
             await this.clearAndType(customerDashboard.bankIban, customerInfo.bankIban);
         }
 
+        // check if terms and conditions is visible
         await this.clickIfVisible(customerDashboard.termsAndConditions);
+        // purchase subscription pack if enabled
         const subscriptionPackIsVisible = await this.isVisible(customerDashboard.subscriptionPack);
         if (subscriptionPackIsVisible) await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.becomeVendor, customerDashboard.becomeAVendor, 302);
@@ -162,10 +164,10 @@ export class CustomerPage extends BasePage {
         await this.clearAndType(customerAddress.billing.lastName, billingInfo.lastName);
         await this.clearAndType(customerAddress.billing.companyName, billingInfo.companyName);
         if (DOKAN_PRO) {
-            await this.clearAndType(customerAddress.billing.companyID, billingInfo.companyId);
-            await this.clearAndType(customerAddress.billing.vatOrTaxNumber, billingInfo.vatNumber);
-            await this.clearAndType(customerAddress.billing.nameOfBank, billingInfo.bankName);
-            await this.clearAndType(customerAddress.billing.bankIban, billingInfo.bankIban);
+            await this.clearAndType(customerAddress.billing.euFields.companyID, billingInfo.companyId);
+            await this.clearAndType(customerAddress.billing.euFields.vatOrTaxNumber, billingInfo.vatNumber);
+            await this.clearAndType(customerAddress.billing.euFields.nameOfBank, billingInfo.bankName);
+            await this.clearAndType(customerAddress.billing.euFields.bankIban, billingInfo.bankIban);
         }
         await this.click(customerAddress.billing.countryOrRegion);
         await this.clearAndType(customerAddress.billing.countryOrRegionInput, billingInfo.country);

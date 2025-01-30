@@ -4,11 +4,11 @@ import Moment from 'moment'
 import Notifications from 'vue-notification'
 import ListTable from 'vue-wp-list-table';
 import Multiselect from 'vue-multiselect'
-import API_Helper from '@/utils/Api'
+import API_Helper from '@dokan/utils/Api'
 import ChartJS from 'vue-chartjs'
 import Mixin from './Mixin'
 import Debounce from 'debounce'
-import VersionCompare from '@/utils/VersionCompare'
+import VersionCompare from '@dokan/utils/VersionCompare'
 import { parse } from 'papaparse'
 
 window.__ = function( text, domain ) {
@@ -51,6 +51,8 @@ import VendorSocialFields from "admin/pages/VendorSocialFields.vue";
 import VendorPaymentFields from "admin/pages/VendorPaymentFields.vue";
 import AdminNotice from "../admin/components/AdminNotice.vue";
 import CardFunFact from "../admin/components/CardFunFact.vue";
+import CombineInput  from 'admin/components/CombineInput.vue';
+import CategoryBasedCommission from "admin/components/Commission/CategoryBasedCommission.vue";
 import StoreCategory from 'admin/components/StoreCategory.vue';
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
@@ -124,6 +126,8 @@ window.dokan.libs['AdminNotice']         = AdminNotice;
 window.dokan.libs['CardFunFact']         = CardFunFact;
 window.dokan.libs['StoreCategory']       = StoreCategory;
 window.dokan.libs['papaparse']           = parse;
+window.dokan.libs['CombineInput']        = CombineInput;
+window.dokan.libs['CategoryBasedCommission'] = CategoryBasedCommission;
 window.dokan.libs['Vuedraggable']        = Vuedraggable;
 
 window.dokan.libs['ContentLoading']  = {

@@ -23,6 +23,27 @@ const {
     GMAP,
     MAPBOX,
     LICENSE_KEY,
+    CATEGORY_ID,
+    VONAGE_API_KEY,
+    VONAGE_API_SECRET,
+    FB_APP_ID,
+    FB_APP_SECRET,
+    TALKJS_APP_ID,
+    TALKJS_APP_SECRET,
+    PRINTFUL_APP_ID,
+    PRINTFUL_APP_SECRET,
+    TEST_PUBLISH_KEY_STRIPE,
+    TEST_SECRET_KEY_STRIPE,
+    CLIENT_ID_STRIPE,
+    SANDBOX_CLIENT_ID_MANGOPAY,
+    SANDBOX_API_KEY_MANGOPAY,
+    TEST_KEY_ID_RAZORPAY,
+    TEST_KEY_SECRET_RAZORPAY,
+    TEST_PUBLISH_KEY_STRIPE_EXPRESS,
+    TEST_SECRET_KEY_STRIPE_EXPRESS,
+    TEST_MERCHANT_ID_PAYPAL_MARKETPLACE,
+    TEST_CLIENT_ID_PAYPAL_MARKETPLACE,
+    TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE,
 } = process.env;
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
@@ -117,6 +138,12 @@ export const data = {
 
     woocommerce: {
         saveSuccessMessage: 'Your settings have been saved.',
+    },
+
+    diagnosticNotice: {
+        paragraph1: 'Want to help make Dokan Multivendor Marketplace even more awesome? Allow Dokan Multivendor Marketplace to collect diagnostic data and usage information. (what we collect)',
+        paragraph2:
+            'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and URL, Your name and email address. We are using Appsero to collect your data. Learn more about how Appsero collects and handle your data.',
     },
 
     // Product
@@ -263,6 +290,7 @@ export const data = {
             stockStatus: false,
             attribute: 'sizes',
             attributeTerms: ['s', 'l', 'm'],
+            variationPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             variations: {
                 linkAllVariation: 'link_all_variations',
                 variableRegularPrice: 'variable_regular_price',
@@ -327,6 +355,7 @@ export const data = {
             status: 'publish',
             attribute: 'sizes',
             attributeTerms: ['s', 'l', 'm'],
+            variationPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             variations: {
                 linkAllVariation: 'link_all_variations',
                 variableRegularPrice: 'variable_regular_price',
@@ -354,19 +383,59 @@ export const data = {
             name: '',
             productType: 'booking',
             category: 'Uncategorized',
-            bookingDurationType: 'customer', // 'fixed', 'customer'
-            bookingDuration: '2',
-            bookingDurationMin: '1',
-            bookingDurationMax: '20',
-            bookingDurationUnit: 'day', // 'month', 'day', 'hour', 'minute'
+            accommodationBookingOptions: {
+                minimumNumberOfNightsAllowed: '1',
+                maximumNumberOfNightsAllowed: '5',
+                checkInTime: '12:00 am',
+                checkOutTime: '12:00 am',
+            },
+            duration: {
+                bookingDurationType: 'customer', // 'fixed', 'customer'
+                bookingDuration: '2',
+                bookingDurationUnit: 'day', // 'month', 'day', 'hour', 'minute'
+                bookingDurationMin: '1',
+                bookingDurationMax: '20',
+            },
             calendarDisplayMode: 'always_visible', // '', 'always_visible'
-            maxBookingsPerBlock: '5',
-            minimumBookingWindowIntoTheFutureDate: '0',
-            minimumBookingWindowIntoTheFutureDateUnit: 'month',
-            maximumBookingWindowIntoTheFutureDate: '5',
-            maximumBookingWindowIntoTheFutureDateUnit: 'month',
-            baseCost: '20',
-            blockCost: '10',
+            availability: {
+                maxBookingsPerBlock: '5',
+                minimumBookingWindowIntoTheFutureDate: '0',
+                minimumBookingWindowIntoTheFutureDateUnit: 'month', // 'month', 'week', 'day', 'hour',
+                maximumBookingWindowIntoTheFutureDate: '5',
+                maximumBookingWindowIntoTheFutureDateUnit: 'month',
+                requireABufferPeriodOfMonthsBetweenBookings: '1',
+                allDatesAvailability: 'available', // 'available', 'non-available'
+                checkRulesAgainst: 'start', // 'start'
+            },
+            costs: {
+                baseCost: '5',
+                blockCost: '10',
+                displayCost: '15',
+            },
+
+            extraOptions: {
+                // persons
+                minPersons: '1',
+                maxPersons: '5',
+                person: {
+                    typeName: 'children',
+                    baseCost: '5',
+                    blockCost: '5',
+                    description: '1-5 years old',
+                    min: '1',
+                    max: '5',
+                },
+
+                // resource
+                label: 'test resource label',
+                resourcesAllocation: 'customer', // 'customer', 'automatic'
+                addResourceId: '427', //todo: need actual resource id
+                resource: {
+                    baseCost: '5',
+                    blockCost: '5',
+                },
+            },
+
             storeName: `${VENDOR}store`,
             saveSuccessMessage: 'Success! The product has been saved successfully.',
 
@@ -391,6 +460,9 @@ export const data = {
             buyItNowPrice: () => faker.finance.amount({ min: 900, max: 1000, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             startDate: helpers.currentDateTime,
             endDate: helpers.addDays(helpers.currentDateTime, 20, 'full'),
+            relistIfFailAfterNHours: '1',
+            relistIfNotPaidAfterNHours: '2',
+            relistAuctionDurationInH: '3',
             storeName: `${VENDOR}store`,
             // saveSuccessMessage: '× Success! The product has been updated successfully. View Product →',
             saveSuccessMessage: 'Success! The product has been updated successfully.',
@@ -559,6 +631,16 @@ export const data = {
                 minimumProductQuantity: '1',
                 maximumProductQuantity: '20',
             },
+
+            commission: {
+                commissionType: 'fixed', // 'fixed','category_based'  [category commission will only be applicable to dokan subscription product]
+                commissionPercentage: helpers.priceStringWithDecimal(2, 'ES'),
+                commissionFixed: helpers.priceStringWithDecimal(2, 'ES'),
+                commissionCategory: {
+                    allCategory: true, // true for all category, false for specific category
+                    category: 'All Categories',
+                },
+            },
         },
     },
 
@@ -567,6 +649,12 @@ export const data = {
         rating: faker.helpers.arrayElement(['width: 20%', 'width: 40%', 'width: 60%', 'width: 80%', 'width: 100%']),
         reviewTitle: 'store review title',
         reviewMessage: () => faker.string.nanoid(10),
+    },
+
+    // store banner
+    storeBanner: {
+        width: '625',
+        height: '300',
     },
 
     // store list
@@ -779,17 +867,17 @@ export const data = {
             title: 'Dokan Credit card (Stripe)',
             description: 'Pay with your credit card via Stripe.',
             displayNoticeInterval: '7',
-            testPublishableKey: 'pk_test_',
-            testSecretKey: 'sk_test_',
-            testClientId: 'ca_',
+            testPublishableKey: TEST_PUBLISH_KEY_STRIPE ?? 'pk_test_',
+            testSecretKey: TEST_SECRET_KEY_STRIPE ?? 'sk_test_',
+            testClientId: CLIENT_ID_STRIPE ?? 'ca_',
         },
 
         paypalMarketPlace: {
             title: 'PayPal Marketplace',
             description: "Pay via PayPal Marketplace you can pay with your credit card if you don't have a PayPal account",
-            payPalMerchantId: 'partner_',
-            sandboxClientId: 'client_',
-            sandBoxClientSecret: 'secret_',
+            payPalMerchantId: TEST_MERCHANT_ID_PAYPAL_MARKETPLACE ?? 'partner_',
+            sandboxClientId: TEST_CLIENT_ID_PAYPAL_MARKETPLACE ?? 'client_',
+            sandBoxClientSecret: TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE ?? 'secret_',
             payPalPartnerAttributionId: 'weDevs_SP_Dokan',
             disbursementMode: 'Delayed', // 'Immediate', 'On Order Complete', 'Delayed'
             paymentButtonType: 'Smart Payment Buttons', // 'Smart Payment Buttons', 'Standard Button'
@@ -800,8 +888,8 @@ export const data = {
         mangoPay: {
             title: 'MangoPay',
             description: 'Pay via MangoPay',
-            sandboxClientId: 'client_',
-            sandBoxApiKey: 'secret_',
+            sandboxClientId: SANDBOX_CLIENT_ID_MANGOPAY ?? 'client_',
+            sandBoxApiKey: SANDBOX_API_KEY_MANGOPAY ?? 'secret_',
             availableCreditCards: 'CB/Visa/Mastercard', // 'CB/Visa/Mastercard', 'Maestro*', 'Bancontact/Mister Cash', 'Przelewy24*', 'Diners*', 'PayLib', 'iDeal*', 'MasterPass*', 'Bankwire Direct*'
             availableDirectPaymentServices: 'Sofort*', // 'Sofort*', 'Giropay*'],
             transferFunds: 'On payment completed', // 'On payment completed', 'On order completed', 'Delayed'
@@ -813,8 +901,8 @@ export const data = {
         razorPay: {
             title: 'Razorpay',
             description: 'Pay securely by Credit or Debit card or Internet Banking through Razorpay.',
-            testKeyId: 'rzp_test',
-            testKeySecret: 'rzp_test',
+            testKeyId: TEST_KEY_ID_RAZORPAY ?? 'rzp_test',
+            testKeySecret: TEST_KEY_SECRET_RAZORPAY ?? 'rzp_test',
             disbursementMode: 'Delayed', // 'Immediate', 'On Order Complete', 'Delayed'
             announcementInterval: '7',
         },
@@ -822,8 +910,8 @@ export const data = {
         stripeExpress: {
             title: 'Dokan Express Payment Methods',
             description: 'Pay with your credit card via Stripe.',
-            testPublishableKey: 'pk_test_',
-            testSecretKey: 'sk_test_',
+            testPublishableKey: TEST_PUBLISH_KEY_STRIPE_EXPRESS ?? 'pk_test_',
+            testSecretKey: TEST_SECRET_KEY_STRIPE_EXPRESS ?? 'sk_test_',
             testWebhookSecret: 'webHook_test_',
             paymentMethods: {
                 card: 'Credit/Debit Card',
@@ -842,16 +930,56 @@ export const data = {
         },
     },
 
+    // commission [for all dokan setup wizard, dokan selling settings, dokan subscription product]
+    commission: {
+        fixed: {
+            commissionType: 'fixed', // 'fixed','category_based'
+            commissionPercentage: helpers.priceStringWithDecimal(10, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(10, 'ES'),
+            commissionCategory: {
+                allCategory: true, // true for all category, false for specific category
+                category: 'All Categories',
+            },
+        },
+
+        allCategory: {
+            commissionType: 'category_based', // 'fixed','category_based'
+            commissionPercentage: helpers.priceStringWithDecimal(5, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(5, 'ES'),
+            commissionCategory: {
+                allCategory: true, // true for all category, false for specific category
+                category: 'All Categories',
+            },
+        },
+
+        specificCategory: {
+            commissionType: 'category_based', // 'fixed','category_based'
+            commissionPercentage: helpers.priceStringWithDecimal(2, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(2, 'ES'),
+            commissionCategory: {
+                allCategory: false, // true for all category, false for specific category
+                category: CATEGORY_ID,
+            },
+        },
+    },
+
     // Dokan Setup Wizard
     dokanSetupWizard: {
         vendorStoreURL: 'store',
         shippingFeeRecipient: 'seller', // 'seller', 'admin'
         taxFeeRecipient: 'seller', // 'seller', 'admin'
         mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
-        googleMapApiKey: GMAP,
+        googleMapApiKey: GMAP ?? '',
         sellingProductTypes: 'sell_both', // 'physical', 'digital', 'sell_both',
-        commissionType: 'percentage', // 'flat','percentage' 'combine',
-        adminCommission: '10',
+        commission: {
+            commissionType: 'fixed', // 'fixed','category_based'
+            commissionPercentage: helpers.priceStringWithDecimal(10, 'ES'),
+            commissionFixed: helpers.priceStringWithDecimal(0, 'ES'),
+            commissionCategory: {
+                allCategory: true, // true for all category, false for specific category
+                category: 'All Categories',
+            },
+        },
         minimumWithdrawLimit: '5',
     },
 
@@ -900,6 +1028,8 @@ export const data = {
             adminLogin: 'wp-admin',
             adminLogout: 'wp-login.php?action=logout',
             adminDashboard: 'wp-admin',
+            diagnosticNotice: 'dokan_tracker_optin=true',
+            orderDetails: (orderId: string) => `wp-admin/admin.php?page=wc-orders&action=edit&id=${orderId}`,
             pages: 'wp-admin/edit.php?post_type=page',
             addNewPage: 'wp-admin/post-new.php?post_type=page',
             user: 'wp-admin/user-edit.php',
@@ -914,6 +1044,10 @@ export const data = {
 
             dokan: {
                 setupWizard: 'wp-admin/admin.php?page=dokan-setup',
+                setupWizardStore: 'wp-admin/admin.php?page=dokan-setup&step=store',
+                setupWizardSelling: 'wp-admin/admin.php?page=dokan-setup&step=selling',
+                setupWizardCommission: 'wp-admin/admin.php?page=dokan-setup&step=commission',
+                setupWizardWithdraw: 'wp-admin/admin.php?page=dokan-setup&step=withdraw',
                 dokan: 'wp-admin/admin.php?page=dokan#',
 
                 // only lite
@@ -972,6 +1106,11 @@ export const data = {
                 shippingSettings: 'wp-admin/admin.php?page=wc-settings&tab=shipping',
                 shippingZone: (zoneId: string) => `wp-admin/admin.php?page=wc-settings&tab=shipping&zone_id=${zoneId}`,
                 paymentSettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout',
+                mangoPaySettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan_mangopay',
+                paypalMarketplaceSettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan_paypal_marketplace',
+                razorPaySettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan_razorpay',
+                stripeConnectSettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan-stripe-connect',
+                stripeExpressSettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan_stripe_express',
                 accountSettings: 'wp-admin/admin.php?page=wc-settings&tab=account',
             },
         },
@@ -993,7 +1132,7 @@ export const data = {
             rmaRequests: 'my-account/rma-requests',
             viewRmaRequests: 'my-account/view-rma-requests',
             requestWarranty: 'my-account/request-warranty',
-            vendors: 'my-account/following',
+            followingStores: 'my-account/following',
             supportTickets: 'my-account/support-tickets',
 
             productCustomerPage: 'product',
@@ -1004,10 +1143,10 @@ export const data = {
             storeListingSort: 'store-listing/?stores_orderby',
             cart: 'cart',
             checkout: 'checkout',
-            addToCart: '?wc-ajax=add_to_cart',
-            applyCoupon: '?wc-ajax=apply_coupon',
-            removeCoupon: '?wc-ajax=remove_coupon',
-            refreshedFragment: '?wc-ajax=get_refreshed_fragments',
+            addToCart: 'wc-ajax=add_to_cart',
+            applyCoupon: 'wc-ajax=apply_coupon',
+            removeCoupon: 'wc-ajax=remove_coupon',
+            refreshedFragment: 'wc-ajax=get_refreshed_fragments',
             placeOrder: '?wc-ajax=checkout',
             billingAddress: 'my-account/edit-address/billing',
             shippingAddress: 'my-account/edit-address/shipping',
@@ -1024,6 +1163,7 @@ export const data = {
             quoteDetails: (quotId: string) => `my-account/request-a-quote/${quotId}`,
             supportTicketDetails: (ticketId: string) => `my-account/support-tickets/${ticketId}`,
             productSubscriptionDetails: (subscriptionId: string) => `my-account/view-subscription/${subscriptionId}`,
+            talkjs: 'app.talkjs.com/api',
 
             productReview: 'wp-comments-post.php',
             submitSupport: 'wp-comments-post.php',
@@ -1033,6 +1173,7 @@ export const data = {
                 setupWizard: '?page=dokan-seller-setup',
                 dashboard: 'dashboard',
                 products: 'dashboard/products',
+                productEdit: (productId: string, nonce: string) => `dashboard/products/?product_id=${productId}&action=edit&_dokan_edit_product_nonce=${nonce}`,
                 spmv: 'dashboard/products-search',
                 orders: 'dashboard/orders',
                 userSubscriptions: 'dashboard/user-subscription',
@@ -1047,13 +1188,14 @@ export const data = {
                 withdrawRequests: 'dashboard/withdraw-requests',
                 reverseWithdrawal: 'dashboard/reverse-withdrawal',
                 badges: 'dashboard/seller-badge',
-                productQA: 'dashboard/product-questions-answers',
+                productQa: 'dashboard/product-questions-answers',
                 questionDetails: (questionId: string) => `dashboard/product-questions-answers/?question_id=${questionId}`,
                 returnRequest: 'dashboard/return-request',
                 staff: 'dashboard/staffs',
                 followers: 'dashboard/followers',
                 booking: 'dashboard/booking',
                 addBookingProduct: 'dashboard/booking/new-product',
+                bookingProductEdit: (productId: string) => `dashboard/booking/edit/?product_id=${productId}`,
                 addBooking: 'dashboard/booking/add-booking',
                 manageBooking: 'dashboard/booking/my-bookings',
                 bookingCalendar: 'dashboard/booking/calendar',
@@ -1067,6 +1209,8 @@ export const data = {
                 csvExport: 'dashboard/tools/csv-export',
                 auction: 'dashboard/auction',
                 auctionActivity: 'dashboard/auction-activity',
+                inbox: 'dashboard/inbox',
+                auctionProductEdit: (productId: string) => `dashboard/auction/?product_id=${productId}&action=edit`,
                 storeSupport: 'dashboard/support',
 
                 // sub menus
@@ -1074,6 +1218,9 @@ export const data = {
                 settingsAddon: 'dashboard/settings/product-addon',
                 settingsAddonEdit: (addonId: string) => `dashboard/settings/product-addon/?edit=${addonId}`,
                 settingsPayment: 'dashboard/settings/payment',
+                settingsPrintful: 'dashboard/settings/printful',
+                printful: 'https://www.printful.com/oauth/authorize',
+
                 // payment settings
                 paypal: 'dashboard/settings/payment-manage-paypal',
                 bankTransfer: 'dashboard/settings/payment-manage-bank',
@@ -1083,7 +1230,7 @@ export const data = {
                 settingsVerification: 'dashboard/settings/verification',
                 settingsDeliveryTime: 'dashboard/settings/delivery-time',
                 settingsShipping: 'dashboard/settings/shipping',
-                settingsShipstation: 'dashboard/settings/shipstation',
+                settingsShipStation: 'dashboard/settings/shipstation',
                 settingsSocialProfile: 'dashboard/settings/social',
                 settingsRma: 'dashboard/settings/rma',
                 settingsSeo: 'dashboard/settings/seo',
@@ -1106,10 +1253,12 @@ export const data = {
                 abuseReports: 'dokan/v1/abuse-reports',
                 logs: 'dokan/v1/admin/logs',
                 announcements: 'dokan/v1/announcement',
+                deliveryTime: 'dokan/v1/delivery-time',
                 dummyData: 'dokan/v1/dummy-data',
                 dummyDataImport: 'dokan/v1/dummy-data/import',
                 refunds: 'dokan/v1/refunds',
                 modules: 'dokan/v1/admin/modules',
+                multistepCategories: 'dokan/v1/products/multistep-categories',
                 storeReviews: 'dokan/v1/store-reviews',
                 productAdvertising: 'dokan/v1/product_adv',
                 wholesaleRegister: 'dokan/v1/wholesale/register',
@@ -1123,6 +1272,7 @@ export const data = {
                 productQuestionsBulkActions: 'dokan/v1/product-questions/bulk_action',
                 productAnswers: 'dokan/v1/product-answers',
                 subscriptions: 'dokan/v1/subscription',
+                shipStation: 'dokan/v1/shipstation',
                 verifications: 'dokan/v1/verification-requests',
                 verificationMethods: 'dokan/v1/verification-methods',
             },
@@ -1222,6 +1372,17 @@ export const data = {
             // address fields enable flag (on vendor registration)
             addressFieldsEnabled: false,
 
+            // commission
+            commission: {
+                commissionType: 'fixed', // 'fixed','category_based'
+                commissionPercentage: helpers.priceStringWithDecimal(5, 'ES'),
+                commissionFixed: helpers.priceStringWithDecimal(5, 'ES'),
+                commissionCategory: {
+                    allCategory: true, // true for all category, false for specific category
+                    category: 'All Categories',
+                },
+            },
+
             // subscription pack
             vendorSubscriptionPack: 'Dokan_Subscription_Non_recurring',
 
@@ -1287,6 +1448,10 @@ export const data = {
             amountDiscount: {
                 minimumOrderAmount: '200',
                 discountPercentage: '10',
+            },
+
+            liveChat: {
+                pageId: '',
             },
 
             minMax: {
@@ -1897,9 +2062,9 @@ export const data = {
     modules: {
         noModuleMessage: 'No modules found.',
         moduleStats: {
-            totalModules: 39,
-            modulesVideoLink: 17,
-            productManagement: 14,
+            totalModules: 40,
+            modulesVideoLink: 19,
+            productManagement: 15,
             integration: 6,
             uiUx: 2,
             shipping: 3,
@@ -1932,6 +2097,7 @@ export const data = {
             'spmv',
             'store_reviews',
             'stripe',
+            'printful',
             'product_advertising',
             'product_subscription',
             'vendor_analytics',
@@ -1951,7 +2117,7 @@ export const data = {
 
         modulesName: {
             auctionIntegration: 'Auction Integration',
-            colorSchemeCustomize: 'Color Scheme Customize',
+            colorSchemeCustomizer: 'Color Scheme Customize',
             deliveryTime: 'Delivery Time',
             elementor: 'Elementor',
             eUComplianceFields: 'EU Compliance Fields',
@@ -2048,8 +2214,15 @@ export const data = {
         // selling options settings
         selling: {
             settingTitle: 'Selling Option Settings',
-            commissionType: 'percentage', // 'flat', 'percentage', 'combine'
-            adminCommission: '10',
+            commission: {
+                commissionType: 'fixed', // 'fixed','category_based'
+                commissionPercentage: helpers.priceStringWithDecimal(10, 'ES'),
+                commissionFixed: helpers.priceStringWithDecimal(0, 'ES'),
+                commissionCategory: {
+                    allCategory: true, // true for all category, false for specific category
+                    category: 'All Categories',
+                },
+            },
             shippingFeeRecipient: 'seller', // 'seller', 'admin'
             productTaxFeeRecipient: 'seller', // 'seller', 'admin'
             shippingTaxFeeRecipient: 'seller', // 'seller', 'admin'
@@ -2105,8 +2278,8 @@ export const data = {
         appearance: {
             settingTitle: 'Appearance Settings',
             mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
-            googleMapApiKey: GMAP,
-            mapBoxApiKey: MAPBOX,
+            googleMapApiKey: GMAP ?? '',
+            mapBoxApiKey: MAPBOX ?? '',
             storeBannerWidth: '625',
             storeBannerHeight: '300',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2217,6 +2390,17 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // social api
+        socialApi: {
+            settingTitle: 'Social Settings',
+            platform: 'facebook',
+            facebook: {
+                appId: FB_APP_ID,
+                appSecret: FB_APP_SECRET,
+            },
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // shipping status
         shippingStatus: {
             settingTitle: 'Shipping Status Settings',
@@ -2298,11 +2482,37 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // Verification Sms Gateways
+        verificationSmsGateway: {
+            settingTitle: 'Verification SMS Gateways Settings',
+            senderName: 'weDevs Team',
+            smsText: 'Your verification code is: %CODE%',
+            smsSentSuccess: 'SMS sent. Please enter your verification code',
+            smsSentError: 'Unable to send sms. Contact admin',
+            activeGateway: 'nexmo', // nexmo, twilio
+            vonage: {
+                apiKey: VONAGE_API_KEY,
+                apiSecret: VONAGE_API_SECRET,
+            },
+
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // Email verification
         emailVerification: {
             settingTitle: 'Email Verification Settings',
             registrationNotice: 'Please check your email and complete email verification to login.',
             loginNotice: 'Please check your email and complete email verification to login.',
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
+        // live chat
+        liveChat: {
+            settingTitle: 'Live Chat Settings',
+            chatProvider: 'talkjs', // messenger, talkjs, tawkto, whatsapp
+            talkJsAppId: TALKJS_APP_ID,
+            talkJsAppSecret: TALKJS_APP_SECRET,
+            chatButtonPosition: 'above_tab', // above_tab, inside_tab, dont_show
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
@@ -2382,6 +2592,23 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        printful: {
+            settingTitle: 'Printful Settings',
+            clientId: PRINTFUL_APP_ID,
+            secretKey: PRINTFUL_APP_SECRET,
+            popupTitle: 'Size Guide',
+            popupTextColor: '#000000',
+            popupBackgroundColor: '#FFFFFF',
+            tabBackgroundColor: '#EEEEEE',
+            activeTabBackgroundColor: '#DDDDDD',
+            sizeGuideButtonText: 'Size Guide',
+            buttonTextColor: '#1064A9',
+            primaryMeasurementUnit: 'inches', // inches, centimetre
+            optionNames: ['Size Guide Popup Text Color', 'Size Guide Popup Background Color', 'Size Guide Tab Background Color', 'Size Guide Active Tab Background Color', 'Size Guide Button Text Color'],
+            optionValues: ['#000000', '#FFFFFF', '#EEEEEE', '#DDDDDD', '#1064A9'],
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // Vendor Subscription Settings
         vendorSubscription: {
             settingTitle: 'Vendor Subscription Settings',
@@ -2450,6 +2677,7 @@ export const data = {
     uniqueId: {
         uuid: faker.string.uuid(),
         nanoId: faker.string.nanoid(10),
+        nanoIdRandom: () => faker.string.nanoid(10),
     },
 
     // predefined  test data
@@ -2535,6 +2763,11 @@ export const data = {
             lastName: () => 'c1',
             username: () => 'customer1',
             username1: 'customer1',
+        },
+
+        categories: {
+            uncategorized: 'Uncategorized',
+            clothings: 'clothings',
         },
     },
 

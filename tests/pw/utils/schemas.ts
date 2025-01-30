@@ -788,8 +788,8 @@ const refundSchema = z.object({
     reason: z.string(),
     item_qtys: z.record(z.number()),
     item_totals: z.record(z.string()),
-    tax_totals: z.record(z.record(z.number())),
-    restock_items: z.number(),
+    tax_totals: z.record(z.record(z.string().or(z.number()))),
+    restock_items: z.string().or(z.number()),
     created: z.string(),
     status: z.string(),
     method: z.string(),
@@ -974,7 +974,7 @@ const abuseReportSchema = z.object({
             id: z.string().or(z.number()),
             name: z.string(),
             email: z.string().email(),
-            admin_url: z.string().url(),
+            admin_url: z.string().url().nullable(),
         })
         .optional(),
     description: z.string(),
@@ -2122,7 +2122,7 @@ export const schemas = {
     },
 
     // commission schema
-    commission: z.number(),
+    commission: z.string().or(z.number()),
 
     // withdraws schema
     withdrawsSchema: {
@@ -2751,23 +2751,12 @@ export const schemas = {
 
     // seller badge schema
     sellerBadgeSchema: {
-        verificationTypesSchema: z.object({
-            id_verification: verificationTypeSchema,
-            company_verification: verificationTypeSchema,
-            address_verification: verificationTypeSchema,
-            phone_verification: verificationTypeSchema,
-            social_profiles: verificationTypeSchema,
-        }),
-
+        verificationTypesSchema: z.record(z.string(), verificationTypeSchema),
         badgeEventsSchema: z.array(badgeEventSchema),
-
         badgeSchema: badgeSchema,
         badgesSchema: z.array(badgeSchema),
-
         badgeSeenSchema: z.boolean(),
-
         badgeCreateUpdateSchema: badgeCreateUpdateSchema,
-
         deleteBadgeSchema: z.object({
             deleted: z.boolean(),
         }),
@@ -2953,5 +2942,20 @@ export const schemas = {
         }),
         shipmentSchema: shipmentSchema,
         shipmentsSchema: z.array(shipmentSchema),
+    },
+
+    // ShipStation schema
+    shipStationSchema: {
+        shipStationCredentialSchema: z.object({
+            key_id: z.string().or(z.number()),
+            consumer_key: z.string(),
+            consumer_secret: z.string(),
+        }),
+
+        shipStationOrderStatusSettingSchema: z.object({
+            vendor_id: z.string().or(z.number()),
+            export_statuses: z.array(z.string()),
+            shipped_status: z.string(),
+        }),
     },
 };

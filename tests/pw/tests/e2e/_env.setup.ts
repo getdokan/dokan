@@ -44,7 +44,8 @@ setup.describe('setup woocommerce settings', () => {
         // create shipping zone, location and method
         const [, zoneId] = await apiUtils.createShippingZone(payloads.createShippingZone);
         await apiUtils.addShippingZoneLocation(zoneId, payloads.addShippingZoneLocation);
-        await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
+        const [, methodId] = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
+        await apiUtils.updateShippingZoneMethod(zoneId, methodId, payloads.addShippingMethodFlatRateCost);
         await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
 
         if (DOKAN_PRO) {
@@ -105,6 +106,14 @@ setup.describe('setup woocommerce settings', () => {
         // create tag
         const [, tagId] = await apiUtils.createTag(payloads.createTag);
         helpers.createEnvVar('TAG_ID', tagId);
+    });
+
+    setup('disable woocommerce task list reminder bar', { tag: ['@lite'] }, async () => {
+        await dbUtils.setOptionValue('woocommerce_task_list_reminder_bar_hidden', 'yes', false);
+    });
+
+    setup('disable woocommerce variable product tour', { tag: ['@lite'] }, async () => {
+        await dbUtils.setUserMeta('1', 'woocommerce_admin_variable_product_tour_shown', 'yes', false);
     });
 
     setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {
@@ -228,6 +237,10 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.quote, dbData.dokan.quoteSettings);
     });
 
+    setup('admin set dokan live chat settings', { tag: ['@pro'] }, async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.liveChat, dbData.dokan.liveChatSettings);
+    });
+
     setup('admin set dokan rma settings', { tag: ['@pro'] }, async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.rma, dbData.dokan.rmaSettings);
     });
@@ -240,7 +253,7 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
     });
 
-    setup.skip('admin set dokan delivery time settings', { tag: ['@pro'] }, async () => {
+    setup('admin set dokan delivery time settings', { tag: ['@pro'] }, async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);
     });
 
@@ -253,11 +266,15 @@ setup.describe('setup dokan settings', () => {
     });
 
     setup('admin set dokan product report abuse settings', { tag: ['@pro'] }, async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.reportAbuse, dbData.dokan.productReportAbuseSettings);
     });
 
     setup('admin set dokan spmv settings', { tag: ['@pro'] }, async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.spmv, dbData.dokan.spmvSettings);
+    });
+
+    setup('admin set dokan printful settings', { tag: ['@pro'] }, async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.printful, dbData.dokan.printful);
     });
 
     setup('admin set dokan vendor subscription settings', { tag: ['@pro'] }, async () => {

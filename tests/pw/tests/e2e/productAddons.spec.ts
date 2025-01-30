@@ -41,8 +41,15 @@ test.describe('Product addon functionality test', () => {
 
     test.afterAll(async () => {
         await apiUtils.deleteAllProductAddons(payloads.adminAuth);
+        await apiUtils.activateModules(payloads.moduleIds.productAddon, payloads.adminAuth);
         await vPage.close();
         await apiUtils.dispose();
+    });
+
+    // admin
+
+    test('admin can enable product addon module', { tag: ['@pro', '@admin'] }, async () => {
+        await vendor.enableProductAddonModule();
     });
 
     // vendor
@@ -84,6 +91,7 @@ test.describe('Product addon functionality test', () => {
     // product addon
 
     test('vendor can add product addon', { tag: ['@pro', '@vendor'] }, async () => {
+        test.slow();
         await vendor1.addProductAddon(productName, data.product.productInfo.addon);
     });
 
@@ -100,5 +108,12 @@ test.describe('Product addon functionality test', () => {
     test('vendor can remove product addon', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , productName, addonName] = await apiUtils.createProductWithAddon(payloads.createProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
         await vendor1.removeAddon(productName, addonName[0] as string);
+    });
+
+    // admin
+
+    test('admin can disable product addon module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.productAddon, payloads.adminAuth);
+        await vendor.disableProductAddonModule();
     });
 });
