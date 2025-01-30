@@ -62,7 +62,7 @@
                     <div class='d-xs:flex h-1/2'>
                         <span v-for='parent_id in item.parents' :key='parent_id' class='d-xs:bg-[#e5e7eb] md:bg-transparent block h-full w-[1px] d-xs:ml-1'></span>
                     </div>
-                    <button type='button' class='p-1 d-xs:pl-1 md:pl-6 bg-transparent border-none cursor-pointer' :disabled='!item.children.length' :class='!item.children.length ? "disabled:cursor-not-allowed text-gray-300" : "cursor-pointer text-[#F05025]"' @click='()=> catRowClick( item, index )'>
+                    <button type='button' class='p-1 d-xs:pl-1 md:pl-6 bg-transparent border-none cursor-pointer' :disabled='!item.children.length' :class='!item.children.length ? "disabled:cursor-not-allowed text-gray-300" : "cursor-pointer text-[#4C19E6]"' @click='()=> catRowClick( item, index )'>
                         <i class="far" :class='openRows.includes( Number( item.term_id ) ) ? "fa-minus-square text-black" : "fa-plus-square"'></i>
                     </button>
                     <p class='d-xs:text-[8px] sm:text-[14px] text-black !m-0'>
