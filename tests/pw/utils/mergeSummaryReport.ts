@@ -84,7 +84,7 @@ const mergeReports = (reportPaths: string[]): TestReport => {
 };
 
 // Main script execution
-const reportsFolder = './all-reports'; 
+const reportsFolder = './all-reports';
 const reportPaths: string[] = [];
 
 // Collect all reports.json files

@@ -250,15 +250,6 @@ export const selector = {
                 paragraph2: '//a[@class="dokan-insights-data-we-collect"]/../..//p[@class="description"]',
             },
 
-            // promo banner
-            promoBanner: {
-                promoBanner: '.dokan-promo-banner',
-                bannerThumbnail: '.dokan-promo-banner .thumbnail',
-                promoContent: '.dokan-promo-banner .content',
-                upgradeToPremium: '.btn-upgrade',
-                closePromoBanner: '.close-banner',
-            },
-
             //table loader
             loader: 'div.table-loader',
 
@@ -2584,11 +2575,16 @@ export const selector = {
                     editField: (blockName: string, fieldName: string) => `(//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..//button[contains(@class,'field-edit-button')])[last()]`,
 
                     fieldContents: {
-                        label: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id="field-input-label"]`,
-                        type: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//select[@id="field-input-type"]`,
-                        placeholder: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id='input-placeholder']`,
-                        helpContent: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id='input-help-content']`,
-                        cancel: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//button[@id="input-Cancel"]`,
+                        label: (blockName: string, fieldName: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id="field-input-label"]`,
+                        type: (blockName: string, fieldName: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//select[@id="field-input-type"]`,
+                        placeholder: (blockName: string, fieldName: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id='input-placeholder']`,
+                        helpContent: (blockName: string, fieldName: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id='input-help-content']`,
+                        cancel: (blockName: string, fieldName: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//button[@id="input-Cancel"]`,
                         done: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//button[@id="input-submit"]`,
                     },
 
