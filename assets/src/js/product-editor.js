@@ -959,7 +959,7 @@
                 type: 'GET',
                 data: {
                     product_id: product_id,
-                    amount: priceAmount ? priceAmount : 0,
+                    amount: priceAmount ? Dokan_Editor.unformatMoney( priceAmount ) : 0,
                     // vendor_id
                     category_ids,
                     context: 'seller'
