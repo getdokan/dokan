@@ -104,34 +104,6 @@ function RequestList( {
         ...( status === 'pending'
             ? [
                   {
-                      id: 'id',
-                      label: __( 'Cancel', 'dokan' ),
-                      render: ( { item } ) => {
-                          return (
-                              <div>
-                                  { loading ? (
-                                      <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
-                                  ) : (
-                                      <button
-                                          className="whitespace-normal m-0 hover:underline cursor-pointer bg-transparent hover:bg-transparent"
-                                          type="button"
-                                          onClick={ () => {
-                                              setCancelRequestId( item.id );
-                                              setIsOpen( true );
-                                          } }
-                                      >
-                                          { __( 'Cancel', 'dokan' ) }
-                                      </button>
-                                  ) }
-                              </div>
-                          );
-                      },
-                  },
-              ]
-            : [] ),
-        ...( status === 'pending'
-            ? [
-                  {
                       id: 'status',
                       label: __( 'Status', 'dokan' ),
                       enableSorting: false,
@@ -168,6 +140,34 @@ function RequestList( {
                               ) }
                           </div>
                       ),
+                  },
+              ]
+            : [] ),
+        ...( status === 'pending'
+            ? [
+                  {
+                      id: 'id',
+                      label: __( 'Action', 'dokan' ),
+                      render: ( { item } ) => {
+                          return (
+                              <div>
+                                  { loading ? (
+                                      <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                                  ) : (
+                                      <button
+                                          className="whitespace-normal m-0 hover:underline cursor-pointer bg-transparent hover:bg-transparent"
+                                          type="button"
+                                          onClick={ () => {
+                                              setCancelRequestId( item.id );
+                                              setIsOpen( true );
+                                          } }
+                                      >
+                                          { __( 'Cancel', 'dokan' ) }
+                                      </button>
+                                  ) }
+                              </div>
+                          );
+                      },
                   },
               ]
             : [] ),
