@@ -29,8 +29,8 @@
                         dokan_get_template_part(
                             'svg-icons/pro-award', null,
                             [
-                                'width' => 20,
-                                'height' => 20,
+                                'width' => 16,
+                                'height' => 16,
 							]
                         );
                         ?>
@@ -40,7 +40,7 @@
                 <?php
             } elseif ( ! dokan()->is_pro_exists() ) {
                 // Show upgrade button if Pro not installed
-                $upgrade_url = 'https://dokan.co/wordpress/pricing/';
+                $upgrade_url = 'https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite';
                 ?>
                 <a target="_blank" href="<?php echo esc_url( $upgrade_url ); ?>" class="upgrade-button">
                     Upgrade

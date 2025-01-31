@@ -3641,6 +3641,7 @@ export const payloads = {
         productAddon: 'product_addon',
         productAdvertising: 'product_advertising',
         productEnquiry: 'product_enquiry',
+        productFormManager: 'product_form_customization',
         productSubscription: 'vsp',
         productQa: 'product_qa',
         rankMath: 'rank_math',

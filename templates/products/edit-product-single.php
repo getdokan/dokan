@@ -29,8 +29,21 @@ if ( isset( $post->ID ) && $post->ID && 'product' === $post->post_type ) {
 }
 
 if ( isset( $_GET['product_id'] ) ) {
-    $post_id        = intval( $_GET['product_id'] );
-    $post           = get_post( $post_id );
+    $post_id = intval( $_GET['product_id'] );
+    $post    = get_post( $post_id );
+
+    if ( ! $post instanceof WP_Post ) {
+        dokan_get_template_part(
+            'global/dokan-error',
+            '',
+            array(
+                'deleted' => false,
+                'message' => __( 'This product is no longer available', 'dokan-lite' )
+            )
+        );
+        return;
+    }
+
     $post_status    = $post->post_status;
     $auto_draft     = 'auto-draft' === $post_status;
     $post_title     = $auto_draft ? '' : $post->post_title;
