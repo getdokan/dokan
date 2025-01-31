@@ -69,7 +69,7 @@ class ChartBlock extends Component {
               charts={charts}
               endpoint={endpoint}
               query={query}
-              interactiveLegend={false}
+              interactiveLegend={true}
               legendPosition="bottom"
               path={path}
               selectedChart={selectedChart}

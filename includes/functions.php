@@ -2,6 +2,7 @@
 
 use WeDevs\Dokan\Cache;
 use WeDevs\Dokan\Utilities\OrderUtil;
+use Automattic\WooCommerce\Internal\Admin\Analytics;
 
 /**
  * Dokan Admin menu position
@@ -160,6 +161,29 @@ function dokan_is_seller_dashboard() {
     }
 
     return false;
+}
+
+/**
+ * Check if analytics is enabled for the current seller.
+ *
+ * This checks if the seller is enabled and the analytics toggle option is set to "yes".
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return bool True if analytics is enabled, false otherwise.
+ */
+function dokan_is_analytics_enabled(): bool {
+    $is_seller_enabled    = dokan_is_seller_enabled( dokan_get_current_user_id() );
+    $is_analytics_enabled = 'yes' === get_option( Analytics::TOGGLE_OPTION_NAME, 'no' );
+
+    /**
+     * Filter to modify the analytics enabled status for the current seller.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool $is_enabled Whether analytics is enabled for the current seller.
+     */
+    return apply_filters( 'dokan_is_analytics_enabled', ( $is_seller_enabled && $is_analytics_enabled ) );
 }
 
 /**
