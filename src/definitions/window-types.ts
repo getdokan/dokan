@@ -6,6 +6,23 @@ import WooCommerceAccounting from './woocommerce-accounting.d';
  * Ex: import '../path.../src/Definitions/window-types';
  */
 
+interface Currency {
+    precision: number;
+    symbol: string;
+    decimal: string;
+    thousand: string;
+    format: string;
+}
+
+interface Withdraw {
+    paymentSettingUrl?: string;
+}
+
+interface DokanFrontend {
+    currency?: Currency;
+    withdraw?: Withdraw;
+}
+
 declare global {
     interface Window extends Window {
         wp: {
@@ -14,13 +31,7 @@ declare global {
         dokan_get_daterange_picker_format: () => string;
         moment: ( date: string ) => any;
         accounting: WooCommerceAccounting.AccountingStatic;
-        dokanCurrency: {
-            decimal: string;
-            format: string;
-            precision: string;
-            symbol: string;
-            thousand: string;
-        };
+        dokanFrontend?: DokanFrontend;
     }
 }
 
