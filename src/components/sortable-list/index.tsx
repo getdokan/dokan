@@ -76,6 +76,10 @@ interface SortableListProps<T> {
 }
 
 const SortableList = <T extends object>( props: SortableListProps<T> ): JSX.Element => {
+    if ( ! props.namespace ) {
+        throw new Error( 'Namespace is required for the SortableList component' );
+    }
+
     const {
         items,
         namespace,
