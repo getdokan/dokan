@@ -357,7 +357,6 @@ class SetupWizard extends DokanSetupWizard {
         <script>
             (function ($) {
                 var states = <?php echo wp_json_encode( $states ); ?>;
-
                 var requiredMsg = <?php echo wp_json_encode( __( 'This is required', 'dokan-lite' ) ); ?>;
 
                 $('body').on('change', 'select.country_to_state, input.country_to_state', function () {
@@ -381,6 +380,7 @@ class SetupWizard extends DokanSetupWizard {
                             $(document.body).trigger('country_to_state_changed', [country, $wrapper]);
 
                         } else {
+
                             var options = '',
                                 state = states[country];
 
