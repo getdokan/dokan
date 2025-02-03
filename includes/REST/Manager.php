@@ -206,6 +206,7 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/DokanDataContinentsController.php'   => '\WeDevs\Dokan\REST\DokanDataContinentsController',
                 DOKAN_DIR . '/includes/REST/OrderControllerV3.php'               => '\WeDevs\Dokan\REST\OrderControllerV3',
                 DOKAN_DIR . '/includes/REST/ProductCategoriesVendorController.php'          => '\WeDevs\Dokan\REST\ProductCategoriesVendorController',
+                DOKAN_DIR . '/includes/REST/VendorProductCategoriesController.php'          => '\WeDevs\Dokan\REST\VendorProductCategoriesController',
             )
         );
     }
