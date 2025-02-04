@@ -24,7 +24,7 @@ const MyTabPanel = ( {
             name: tab.name,
             title: tab.title,
             className: twMerge(
-                'bg-dokan-btn text-dokan-btn hover:bg-dokan-btn-hover hover:hover:text-dokan-btn-hover h-10',
+                'bg-dokan-btn text-dokan-btn hover:bg-dokan-btn-hover hover:hover:text-dokan-btn-hover h-10 px-4',
                 tab.className
             ),
             content: tab.content,
