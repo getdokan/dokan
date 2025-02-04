@@ -4,7 +4,7 @@ import { kebabCase } from '@dokan/utilities';
 import { debounce } from '@wordpress/compose';
 import { Modal, Button } from '@getdokan/dokan-ui';
 import { useCallback, useState } from '@wordpress/element';
-import DailogIcon from "./DailogIcon";
+import DialogIcon from "./DialogIcon";
 
 interface DokanModalProps {
     isOpen: boolean;
@@ -98,7 +98,7 @@ const DokanModal = ({
                             {dialogIcon || (
                                 <div
                                     className={`flex items-center justify-center flex-shrink-0 w-14 h-14 bg-red-50 border border-red-50 rounded-full`}>
-                                    <DailogIcon />
+                                    <DialogIcon />
                                 </div>
                             )}
                             <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
@@ -134,7 +134,7 @@ const DokanModal = ({
                             <Button
                                 onClick={ onClose }
                                 disabled={ isSubmitting || loading }
-                                className={ `inline-flex justify-center bg-white hover:bg-gray-200 text-gray-700 font-semibold text-sm py-2 px-4 ring-1 ring-inset ring-gray-300 rounded-md` }
+                                className={ `inline-flex justify-center bg-white hover:bg-gray-200 text-gray-700 font-semibold text-sm py-2 px-4 ring-1 ring-inset ring-gray-300 rounded-md focus:outline-none focus-visible:ring-1` }
                             >
                                 { cancelButtonText || __( 'Cancel', 'dokan-lite' ) }
                             </Button>
