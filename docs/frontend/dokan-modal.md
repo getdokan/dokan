@@ -22,16 +22,27 @@ For both `Dokan Free and Pro` versions, we must register the `dokan-react-compon
 import { __ } from '@wordpress/i18n';
 import { DokanModal } from '@dokan/components';
 
-const [ isOpen, setIsOpen ] = useState( false );
+const QuickConfirm = () => {
+    const [ isOpen, setIsOpen ] = useState( false );
+    
+    const handleConfirm = () => {
+        // Handle confirm action
+        setIsOpen( false );
+    };
 
-<DokanModal
-    isOpen={ isOpen }
-    namespace='quick-confirm'
-    onConfirm={ () => handleConfirm() }
-    onClose={ () => setIsOpen( false ) }
-    confirmationTitle={ __( 'Quick Confirmation', 'dokan-lite' ) } // Optional title for confirmation modals, modify as needed
-    confirmationDescription={ __( 'Are you sure?', 'dokan-lite' ) } // Optional description for confirmation modals, modify as needed
-/>
+    return (
+        <DokanModal
+            isOpen={ true }
+            namespace='quick-confirm'
+            onConfirm={ () => handleConfirm() }
+            onClose={ () => setIsOpen( false ) }
+            confirmationTitle={ __( 'Quick Confirmation', 'dokan-lite' ) }
+            confirmationDescription={ __( 'Are you sure?', 'dokan-lite' ) }
+        />
+    );
+}
+
+export default QuickConfirm;
 ```
 
 ## Features of DokanModal Component
@@ -53,6 +64,8 @@ The `DokanModal` component offers several features for customization and flexibi
   - Unique Namespace:
     - Required unique namespace for each modal instance
     - Namespace is used for proper identification of the modal component.
+
+#### 2. All elements can be passed dynamically during component declaration
 
 ## Component Properties
 
