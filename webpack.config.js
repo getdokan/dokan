@@ -58,6 +58,8 @@ const entryPoint = {
   'dokan-setup-wizard-commission': './assets/src/js/setup-wizard/commission/index.js',
   // Category commission component styles.
   'dokan-category-commission': '/src/admin/components/Commission/index.js',
+  // intelligence
+  'dokan-intelligence': './src/intelligence/main.tsx',
 };
 
 const updatedConfig = {
@@ -70,6 +72,7 @@ const updatedConfig = {
   },
 
   resolve: {
+    extensions: [ '.js', '.jsx', '.vue', '.ts', '.tsx', '...' ],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': path.resolve('./src/'),
