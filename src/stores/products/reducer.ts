@@ -1,4 +1,4 @@
-import { State, QueryParams, Product, Category } from './types';
+import { State } from './types';
 import { DEFAULT_STATE } from './state';
 import {
     ActionTypes,

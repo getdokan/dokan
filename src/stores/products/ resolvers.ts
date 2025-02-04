@@ -25,12 +25,12 @@ export const resolvers = {
 
             dispatch( actions.setLoading( true ) );
             try {
+                const queryArgs = new URLSearchParams(
+                    query as Record< string, string >
+                );
+
                 const response = await apiFetch< Response >( {
-                    path:
-                        '/dokan/v2/products?' +
-                        new URLSearchParams(
-                            query as Record< string, string >
-                        ).toString(),
+                    path: '/dokan/v2/products?' + queryArgs.toString(),
                     parse: false,
                 } );
 
@@ -70,7 +70,7 @@ export const resolvers = {
             try {
                 const response = await apiFetch< Response >( {
                     path:
-                        '/dokan/v1/product-categories?' +
+                        '/dokan/v1/products/categories?' +
                         new URLSearchParams(
                             query as Record< string, string >
                         ).toString(),
@@ -113,7 +113,7 @@ export const resolvers = {
         async ( { dispatch }: { dispatch } ) => {
             try {
                 const response = await apiFetch< Category >( {
-                    path: `/dokan/v1/product-categories/${ id }`,
+                    path: `/dokan/v1/products/categories/${ id }`,
                 } );
 
                 return dispatch(
