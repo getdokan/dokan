@@ -835,7 +835,7 @@ export default {
         showErrorAlert( message ) {
             let self = this;
             swal.fire(
-                self.__( 'Something went wrong', 'dokan' ),
+                self.__( 'Something went wrong', 'dokan-lite' ),
                 message,
                 'error'
             );

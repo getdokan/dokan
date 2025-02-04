@@ -1,14 +1,14 @@
 # Copyright (c) 2025 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.14.5\n"
+"Project-Id-Version: Dokan 3.14.6\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-01-06T09:36:30+00:00\n"
+"POT-Creation-Date: 2025-01-09T09:40:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -721,6 +721,7 @@ msgstr ""
 #: includes/Admin/Settings.php:523
 #: includes/Admin/Settings.php:563
 #: includes/Product/Hooks.php:484
+#: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
 msgid "Admin Commission"
 msgstr ""
@@ -1616,6 +1617,10 @@ msgstr ""
 msgid "This vendor will be marked as a featured vendor."
 msgstr ""
 
+#: includes/Admin/WithdrawLogExporter.php:110
+msgid "ID"
+msgstr ""
+
 #: includes/Admin/WithdrawLogExporter.php:111
 msgid "Vendor ID"
 msgstr ""
@@ -1946,6 +1951,7 @@ msgstr ""
 #: templates/products/edit-product-single.php:368
 #: templates/products/new-product.php:252
 #: templates/products/tmpl-add-product-popup.php:87
+#: assets/js/vue-admin.js:2
 msgid "To"
 msgstr ""
 
@@ -2990,6 +2996,7 @@ msgstr ""
 #: includes/Emails/VendorWithdrawRequest.php:163
 #: includes/Emails/WithdrawApproved.php:153
 #: includes/Emails/WithdrawCancelled.php:157
+#: assets/js/vue-admin.js:2
 msgid "Subject"
 msgstr ""
 
@@ -3386,6 +3393,7 @@ msgstr ""
 #: includes/functions-dashboard-navigation.php:292
 #: templates/settings/header.php:14
 #: templates/store-lists-loop.php:105
+#: assets/js/vue-admin.js:2
 msgid "Visit Store"
 msgstr ""
 
@@ -6152,6 +6160,7 @@ msgid "Due Date, immediate or any future date"
 msgstr ""
 
 #: includes/REST/ReverseWithdrawalController.php:892
+#: assets/js/vue-admin.js:2
 msgid "Current Balance"
 msgstr ""
 
@@ -6941,6 +6950,7 @@ msgstr ""
 
 #: includes/Vendor/SettingsApi/Settings/Pages/Payments/Gateways/PayPal.php:39
 #: includes/Withdraw/functions.php:15
+#: assets/js/vue-admin.js:2
 msgid "PayPal"
 msgstr ""
 
@@ -7601,6 +7611,7 @@ msgid "Disconnect"
 msgstr ""
 
 #: includes/Withdraw/functions.php:189
+#: assets/js/vue-admin.js:2
 msgid "Save"
 msgstr ""
 
@@ -9066,6 +9077,7 @@ msgid "No category"
 msgstr ""
 
 #: templates/products/dokan-category-ui.php:54
+#: assets/js/vue-admin.js:2
 msgid "Done"
 msgstr ""
 
@@ -9557,6 +9569,7 @@ msgstr ""
 
 #: templates/settings/payment.php:16
 #: templates/withdraw/withdraw-dashboard.php:91
+#: assets/js/vue-admin.js:2
 msgid "Payment Methods"
 msgstr ""
 
@@ -9874,6 +9887,11 @@ msgstr ""
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "+"
+msgstr ""
+
+#: assets/js/dokan-setup-wizard-commission.js:1
+#: assets/js/vue-admin.js:2
+msgid "Admin Commission type"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
@@ -10560,11 +10578,171 @@ msgid "Commission Options"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
-msgid "Admin Commission type"
+msgid "Set the commission type that admin will get"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
-msgid "Set the commission type that admin will get"
+msgid "Not Set"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Saving..."
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Email has been sent successfully."
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Vendor Updated"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Vendor Updated Successfully!"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Go Back"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Send Email"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Reply-To"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Message"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Change Store Photo"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "(No Name)"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Set Store Categories"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Set Store Category"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Select Category"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Add Categories"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Add Category"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Enabled"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Disabled"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Change Store Banner"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Total Products"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Items Sold"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Store Visitors"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Revenue"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Orders Processed"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Gross Sales"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Total Earning"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Others"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Reviews"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Registered Since"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Social Profiles"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Dokan PayPal Marketplace"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Stripe Express"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Dokan Stripe Connect"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Bank Payment"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Skrill"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Dokan Razorpay"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Dokan MangoPay"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Custom Payment"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Product Publishing"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Direct"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Requires Review"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
@@ -10697,10 +10875,6 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 msgid "Sell auction-able products in your store with Dokan’s integration."
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Social Profiles"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
@@ -11077,10 +11251,6 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 msgid "Filter by expire date"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Go Back"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
