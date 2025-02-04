@@ -1,17 +1,11 @@
 import { useSortable } from '@dnd-kit/sortable';
-import { cloneElement } from '@wordpress/element';
 
 interface SortableItemProps {
     id: string | number;
-    dragSelector?: string;
-    wrapperElement?: string | null;
+    renderItem: () => JSX.Element;
 }
 
-const SortableItem = ( {
-    id,
-    renderItem,
-    dragSelector
-}: SortableItemProps ) => {
+const SortableItem = ( { id, renderItem }: SortableItemProps ) => {
     const {
         attributes,
         listeners,
@@ -21,7 +15,6 @@ const SortableItem = ( {
         isDragging,
     } = useSortable( { id } );
 
-    const content = renderItem();
     const style = {
         transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
         opacity: isDragging ? 0.6 : 1,
@@ -29,41 +22,11 @@ const SortableItem = ( {
         transition,
     };
 
-    // If dragSelector is provided, find and enhance the draggable cell
-    if ( dragSelector && content.props.children ) {
-        const children = content.props.children;
-        const enhancedChildren = children.map( child => {
-            if ( child?.props?.className?.includes( dragSelector ) ) {
-                return cloneElement( child, {
-                    ...child.props,
-                    ...listeners
-                });
-            }
-
-            return child;
-        });
-
-        return cloneElement( content, {
-            ref: setNodeRef,
-            style: {
-                ...content.props.style,
-                ...style
-            },
-            ...attributes,
-            children: enhancedChildren
-        });
-    }
-
-    // No dragSelector, apply everything to the root element
-    return cloneElement( content, {
-        ref: setNodeRef,
-        style: {
-            ...content.props.style,
-            ...style
-        },
-        ...attributes,
-        ...listeners
-    });
+    return (
+        <div ref={ setNodeRef } style={{ ...style }} { ...attributes } { ...listeners }>
+            { renderItem ? renderItem( id ) : id }
+        </div>
+    );
 };
 
 export default SortableItem;
