@@ -506,7 +506,7 @@ class SetupWizard extends DokanSetupWizard {
         if ( empty( $dokan_settings['address']['country'] ) ) {
             $is_valid_form = false;
             $_POST['error_address[country]'] = 'error';
-        } elseif ( ( $country_has_states && $state_is_empty ) || ( ! $country_has_states && $state_is_empty ) ) {
+        } elseif ( ( $country_has_states && $state_is_empty ) ) {
             $is_valid_form = false;
             $_POST['error_address[state]'] = 'error';
         }
