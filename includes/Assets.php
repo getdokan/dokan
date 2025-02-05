@@ -609,6 +609,18 @@ class Assets {
             ];
         }
 
+        $stores_asset_file = DOKAN_DIR . '/assets/js/stores.asset.php';
+        if ( file_exists( $stores_asset_file ) ) {
+            $stores_asset = require $stores_asset_file;
+
+            // Register React stores.
+            $scripts['dokan-react-stores'] = [
+                'version' => $stores_asset['version'],
+                'src'     => $asset_url . '/js/stores.js',
+                'deps'    => $stores_asset['dependencies'],
+            ];
+        }
+
         return $scripts;
     }
 
