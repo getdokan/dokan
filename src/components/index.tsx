@@ -12,4 +12,4 @@ export {
 export { default as PriceHtml } from './PriceHtml';
 export { default as DateTimeHtml } from './DateTimeHtml';
 export { default as Filter } from './Filter';
-export { default as DokanTabs } from './DokanTabs';
+// export { default as DokanTabs } from './DokanTabs';
