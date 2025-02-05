@@ -36,6 +36,10 @@ class ChatgptResponseService extends AbstractAIService {
         $request_data = [
             'model' => $this->config['model'],
             'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => __( 'You are a helpful assistant. The response will html content (if needed) with well-organized, detailed, formatted and clean content.', 'dokan-lite' ),
+                ],
 				[
 					'role' => 'user',
 					'content' => $prompt,

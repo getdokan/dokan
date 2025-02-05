@@ -1,4 +1,4 @@
-import { useState } from '@wordpress/element';
+import { useState, RawHTML } from '@wordpress/element';
 import { Modal } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
@@ -180,7 +180,7 @@ const DokanAI = ( { field } ) => {
                             </div>
                             <div className="flex flex-row">
                                 <div className="rounded border border-gray-200 bg-gray-50 p-4 max-h-48 overflow-y-auto text-gray-700 text-base shadow-inner">
-                                    { response }
+                                    <RawHTML>{ response }</RawHTML>
                                 </div>
                             </div>
                         </div>

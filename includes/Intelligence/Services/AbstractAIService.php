@@ -52,6 +52,7 @@ abstract class AbstractAIService implements AIResponseServiceInterface {
             $params['url'], [
 				'headers' => $params['headers'],
 				'body' => wp_json_encode( $params['data'] ),
+                'timeout' => 60,
 			]
         );
 
