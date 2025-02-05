@@ -466,7 +466,7 @@ class Hooks {
             return;
         }
 
-        $child_orders = dokan()->order->get_child_orders( $order->get_id() );
+        $child_orders = dokan()->order->get_child_orders( $order->get_id(), true );
         if ( ! $child_orders ) {
             return;
         }
