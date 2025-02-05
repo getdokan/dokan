@@ -27,7 +27,7 @@ import {
     ProductsHookReturn,
 } from './hooks';
 
-export const store = createReduxStore( STORE_NAME, {
+const store = createReduxStore( STORE_NAME, {
     reducer,
     actions,
     selectors,
@@ -88,3 +88,5 @@ export function useCategory( id: number ): CategoryHookReturn {
         [ id ]
     );
 }
+
+export const PRODUCTS_STORE_NAME = STORE_NAME;
