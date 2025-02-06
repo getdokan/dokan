@@ -43,7 +43,7 @@ class ChatgptResponseService extends AbstractAIService {
             array_unshift(
                 $messages, [
 					'role' => 'system',
-					'content' => __( 'You are a helpful assistant. The response will html content (if needed) with well-organized, detailed, formatted and clean content.', 'dokan-lite' ),
+					'content' => __( 'You are a helpful assistant. The response will html content (if needed) with well-organized, detailed, formatted and clean content without "```html" this', 'dokan-lite' ),
 				]
             );
         }
