@@ -30,21 +30,27 @@ class ChatgptResponseService extends AbstractAIService {
         );
     }
 
-    public function process( string $prompt, $payload = null ) {
+    public function process( string $prompt, array $payload = [] ) {
         $this->set_api_key();
+
+        $messages = [
+            [
+				'role' => 'user',
+				'content' => $prompt,
+			],
+        ];
+        if ( isset( $payload['id'] ) && $payload['id'] === 'post_content' ) {
+            array_unshift(
+                $messages, [
+					'role' => 'system',
+					'content' => __( 'You are a helpful assistant. The response will html content (if needed) with well-organized, detailed, formatted and clean content.', 'dokan-lite' ),
+				]
+            );
+        }
 
         $request_data = [
             'model' => $this->config['model'],
-            'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => __( 'You are a helpful assistant. The response will html content (if needed) with well-organized, detailed, formatted and clean content.', 'dokan-lite' ),
-                ],
-				[
-					'role' => 'user',
-					'content' => $prompt,
-				],
-			],
+            'messages' => $messages,
             'max_tokens' => $this->config['max_tokens'],
             'temperature' => $this->config['temperature'],
         ];

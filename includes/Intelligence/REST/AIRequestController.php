@@ -82,6 +82,8 @@ class AIRequestController extends DokanRESTController {
         $id      = $request->get_param( 'id' ) ?? ''; // Getting the id parameter
         $payload = $request->get_param( 'payload' ) ?? [];
 
+        $payload['id'] = $id; // Adding the id parameter to the payload
+
         $ai_engine = dokan_get_option( 'dokan_ai_engine', 'dokan_ai', 'chatgpt' );
 
         // Resolve the appropriate service based on the AI engine

@@ -29,7 +29,7 @@ class GeminiResponseService extends AbstractAIService {
         );
     }
 
-    public function process( string $prompt, $payload = null ) {
+    public function process( string $prompt, array $payload = [] ) {
         $this->set_api_key();
 
         $request_data = [

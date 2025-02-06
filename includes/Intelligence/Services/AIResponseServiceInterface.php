@@ -7,10 +7,10 @@ interface AIResponseServiceInterface {
      * Process the AI request and return a response.
      *
      * @param string $prompt The input prompt for the AI.
-     * @param mixed $payload Optional additional data.
+     * @param array $payload Optional additional data.
      * @return mixed The response from the AI.
      */
-    public function process( string $prompt, $payload = null );
+    public function process( string $prompt, array $payload = [] );
 
     public function send_request( array $params );
 
