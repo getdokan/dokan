@@ -88,7 +88,7 @@
 
                             <?php esc_html_e( 'What’s New', 'dokan-lite' ); ?>
                         </a>
-                        <a href="https://wedevs.com/account/tickets/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite" target="_blank">
+                        <a href="https://dokan.co/contact/" target="_blank">
                             <span class="dokan-icon">
                                 <svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4.15332 6.91895C3.37788 6.91895 2.74707 7.54976 2.74707 8.3252V12.1377C2.74707 12.9131 3.37788 13.5439 4.15332 13.5439C4.92876 13.5439 5.55957 12.9131 5.55957 12.1377V8.3252C5.55957 7.54976 4.92876 6.91895 4.15332 6.91895Z" fill="#A3A3A3"/>
