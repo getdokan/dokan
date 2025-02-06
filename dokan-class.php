@@ -312,6 +312,7 @@ final class WeDevs_Dokan {
 
         if ( is_admin() ) {
             $admin_services = $this->get_container()->get( 'admin-service' );
+            $admin_dashboard_services = $this->get_container()->get( 'admin-dashboard-service' );
         } else {
             $frontend_services = $this->get_container()->get( 'frontend-service' );
         }
