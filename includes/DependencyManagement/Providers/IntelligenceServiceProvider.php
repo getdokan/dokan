@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
+use WeDevs\Dokan\Intelligence\Hooks;
 use WeDevs\Dokan\Intelligence\Manager;
 use WeDevs\Dokan\ThirdParty\Packages\League\Container\Definition\DefinitionInterface;
 
@@ -14,6 +15,7 @@ class IntelligenceServiceProvider extends BaseServiceProvider {
 
 	protected $services = [
         Manager::class,
+        Hooks::class,
     ];
 
     /**

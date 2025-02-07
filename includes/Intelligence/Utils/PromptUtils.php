@@ -29,7 +29,7 @@ class PromptUtils {
         $personalized_prompt = self::get_personalized_prompt( $id );
 
         if ( $personalized_prompt ) {
-            return $personalized_prompt . $prompt;
+            return $personalized_prompt . ' ' . $prompt;
         }
 
         return $prompt;

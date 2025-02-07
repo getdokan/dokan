@@ -2,8 +2,9 @@ import './styles/modal.css';
 import '@getdokan/dokan-ui/dist/dokan-ui.css';
 import DokanAI from './components/DokanAI';
 import { createRoot } from '@wordpress/element';
+import domReady from '@wordpress/dom-ready';
 
-const positionedElement = (
+const setElementPosition = (
     targetField: HTMLElement,
     container: HTMLElement
 ) => {
@@ -39,14 +40,15 @@ const initializeDokanAI = () => {
                 targetField.parentNode.style.cssText = 'position:relative;';
                 // render the DokanAI component
                 createRoot( container ).render( <DokanAI field={ field } /> );
-                positionedElement( targetField, container );
+                setElementPosition( targetField, container );
             }
         } );
     }
 };
 
-if ( document.readyState === 'loading' ) {
-    document.addEventListener( 'DOMContentLoaded', initializeDokanAI );
-} else {
-    initializeDokanAI();
-}
+domReady( initializeDokanAI );
+
+/**
+ * Todo: We need to check/observe the dynamic element e.i. when react mount/unmount element which is in AI supported IDs.
+ * We may use MutationObserver for this.
+ */

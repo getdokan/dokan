@@ -2,37 +2,23 @@
 
 namespace WeDevs\Dokan\Intelligence\Services;
 
-class GeminiResponseService extends AbstractAIService {
+use Exception;
+
+class GeminiResponseService extends BaseAIService {
     private const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
-    protected function load_configuration(): void {
-        $this->config = [
-            'temperature' => 0.7,
-            'max_tokens' => (int) dokan_get_option( 'dokan_ai_max_tokens_for_marketplace', 'dokan_ai', '200' ),
-            'model' => dokan_get_option( 'dokan_ai_gemini_model', 'dokan_ai', 'gemini-1.5-flash' ),
+    protected function get_url(): string {
+        return self::API_URL . '?key=' . $this->get_api_key();
+    }
+
+    protected function get_headers(): array {
+        return [
+            'Content-Type' => 'application/json',
         ];
     }
 
-    /**
-     * Set the API key for the service.
-     * @return void
-     */
-    public function set_api_key(): void {
-        $this->api_key = dokan_get_option( 'dokan_ai_gemini_api_key', 'dokan_ai' );
-    }
-
-    public function get_models(): array {
-        return apply_filters(
-            'dokan_ai_supported_gemini_models', [
-                'gemini-1.5-flash' => __( 'Gemini 1.5 Flash', 'dokan-lite' ),
-            ]
-        );
-    }
-
-    public function process( string $prompt, array $payload = [] ) {
-        $this->set_api_key();
-
-        $request_data = [
+    protected function get_payload( string $prompt, array $args = [] ): array {
+        return [
             'contents' => [
                 [
                     'parts' => [
@@ -48,30 +34,43 @@ class GeminiResponseService extends AbstractAIService {
             ],
             'generationConfig' => [
                 'stopSequences' => [ 'Title' ],
-                'temperature' => $this->config['temperature'],
-                'maxOutputTokens' => $this->config['max_tokens'],
+                'temperature' => 0.7,
+                'maxOutputTokens' => (int) dokan_get_option( 'dokan_ai_max_tokens_for_marketplace', 'dokan_ai', '250' ),
                 'topP' => 0.8,
                 'topK' => 10,
             ],
         ];
+    }
 
-        $params = [
-            'url' => self::API_URL . '?key=' . $this->api_key,
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
-            'data' => $request_data,
-        ];
-
-        $response = $this->send_request( $params );
+    /**
+     * Process the request
+     *
+     * @param string $prompt
+     * @param array $args
+     *
+     * @return array|Exception|mixed|null
+     * @throws Exception
+     */
+    public function process( string $prompt, array $args = [] ) {
+        $response = $this->request( $prompt, $args );
 
         if ( is_wp_error( $response ) ) {
             return $response;
         }
 
-        return [
-            'response' => $response['candidates'][0]['content']['parts'][0]['text'] ?? '',
-            'prompt' => $prompt,
-        ];
+        return apply_filters(
+            'dokan_ai_gemini_response_json', [
+				'response' => $response['candidates'][0]['content']['parts'][0]['text'] ?? '',
+				'prompt' => $prompt,
+			]
+        );
+    }
+
+    public static function get_models(): array {
+        return apply_filters(
+            'dokan_ai_supported_gemini_models', [
+                'gemini-1.5-flash' => __( 'Gemini 1.5 Flash', 'dokan-lite' ),
+            ]
+        );
     }
 }

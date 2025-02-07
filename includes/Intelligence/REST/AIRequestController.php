@@ -4,7 +4,7 @@ namespace WeDevs\Dokan\Intelligence\REST;
 
 use Exception;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
-use WeDevs\Dokan\Intelligence\Services\ServiceLocator;
+use WeDevs\Dokan\Intelligence\Services\EngineFactory;
 use WeDevs\Dokan\Intelligence\Utils\PromptUtils;
 use WP_Error;
 use WP_REST_Server;
@@ -54,7 +54,7 @@ class AIRequestController extends DokanRESTController {
      * @return true
      */
     public function get_items_permissions_check( $request ): bool {
-        return true;
+        return current_user_can( 'dokandar' );
     }
 
     public function get_request_args(): array {
@@ -80,15 +80,20 @@ class AIRequestController extends DokanRESTController {
     public function handle_request( $request ) {
         $prompt  = $request->get_param( 'prompt' ) ?? '';
         $id      = $request->get_param( 'id' ) ?? ''; // Getting the id parameter
-        $payload = $request->get_param( 'payload' ) ?? [];
+        $args = $request->get_param( 'payload' ) ?? [];
 
-        $payload['id'] = $id; // Adding the id parameter to the payload
-
-        $ai_engine = dokan_get_option( 'dokan_ai_engine', 'dokan_ai', 'chatgpt' );
+        $args['id'] = $id; // Adding the id parameter to the payload
 
         // Resolve the appropriate service based on the AI engine
 		try {
-            $service = ServiceLocator::resolve_service( $ai_engine );
+            $service = EngineFactory::create();
+            // Prepare the prompt using the personalized prompt based on the ID
+            $prompt = PromptUtils::prepare_prompt( $id, $prompt );
+
+            // Process using the dynamically resolved service
+            $response = $service->process( $prompt, $args );
+
+            return rest_ensure_response( $response );
         } catch ( Exception $e ) {
             return new WP_Error(
                 'dokan_ai_service_error',
@@ -96,17 +101,5 @@ class AIRequestController extends DokanRESTController {
                 [ 'status' => 500 ]
             );
         }
-
-        if ( is_wp_error( $service ) ) {
-            return $service; // Return error if service is not found
-        }
-
-        // Prepare the prompt using the personalized prompt based on the ID
-        $prepared_prompt = PromptUtils::prepare_prompt( $id, $prompt );
-
-        // Process using the dynamically resolved service
-        $response = $service->process( $prepared_prompt, $payload );
-
-        return rest_ensure_response( $response );
     }
 }

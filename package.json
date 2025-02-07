@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@getdokan/dokan-ui": "^1.0.19",
+    "@wordpress/dom-ready": "^4.17.0",
     "@wordpress/element": "^6.17.0",
     "@wordpress/i18n": "^5.8.0"
   }

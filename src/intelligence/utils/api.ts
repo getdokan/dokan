@@ -1,6 +1,11 @@
-import { Field } from '../types';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
+
+export interface Field {
+    id: string;
+    title: string;
+    type: 'input' | 'section'; // Update types based on API response
+}
 
 export const API_ENDPOINTS = {
     GENERATE: '/dokan/v1/ai/generate',

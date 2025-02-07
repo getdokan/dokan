@@ -59,7 +59,7 @@ const entryPoint = {
   // Category commission component styles.
   'dokan-category-commission': '/src/admin/components/Commission/index.js',
   // intelligence
-  'dokan-intelligence': './src/intelligence/main.tsx',
+  'dokan-intelligence': './src/intelligence/index.tsx',
 };
 
 const updatedConfig = {
