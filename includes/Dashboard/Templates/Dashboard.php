@@ -2,8 +2,6 @@
 
 namespace WeDevs\Dokan\Dashboard\Templates;
 
-use Automattic\WooCommerce\Internal\Admin\Analytics;
-
 /**
  * Dokan Template Dashboard Class
  *
