@@ -448,11 +448,14 @@ class Manager {
     }
 
     /**
+     * Get all child orders of a parent order
+     *
      * @param int|WC_Order $parent_order
+     * @param array $args
      *
      * @return WC_Order[]
      */
-    public function get_child_orders( $parent_order, $args = [] ) {
+    public function get_child_orders( $parent_order, array $args = [] ) {
         $parent_order_id = is_numeric( $parent_order ) ? $parent_order : $parent_order->get_id();
         $default_args = [
 			'type'   => 'shop_order',
