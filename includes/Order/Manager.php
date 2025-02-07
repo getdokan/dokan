@@ -452,16 +452,14 @@ class Manager {
      *
      * @return WC_Order[]
      */
-    public function get_child_orders( $parent_order, $trashed = false ) {
+    public function get_child_orders( $parent_order, $args = [] ) {
         $parent_order_id = is_numeric( $parent_order ) ? $parent_order : $parent_order->get_id();
-        $args = [
+        $default_args = [
 			'type'   => 'shop_order',
 			'parent' => $parent_order_id,
 			'limit'  => -1,
 		];
-        if ( $trashed ) {
-            $args['status'] = [ 'trash' ];
-        }
+        $args = wp_parse_args( $args, $default_args );
 
         return wc_get_orders( $args );
     }

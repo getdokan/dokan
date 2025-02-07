@@ -466,7 +466,11 @@ class Hooks {
             return;
         }
 
-        $child_orders = dokan()->order->get_child_orders( $order->get_id(), true );
+        $child_orders = dokan()->order->get_child_orders(
+            $order->get_id(), [
+				'status' => [ 'trash' ],
+			]
+        );
         if ( ! $child_orders ) {
             return;
         }

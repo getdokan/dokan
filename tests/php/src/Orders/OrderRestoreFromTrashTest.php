@@ -31,7 +31,11 @@ class OrderRestoreFromTrashTest extends DokanTestCase {
         $this->assertNotEquals( 'trash', get_post_status( $parent_order_id ) );
 
         // get from trash
-        $child_orders = dokan()->order->get_child_orders( $parent_order_id, true );
+        $child_orders = dokan()->order->get_child_orders(
+            $parent_order_id, [
+				'status' => [ 'trash' ],
+			]
+        );
         $this->assertCount( 2, $child_orders );
 
         foreach ( $child_orders as $child_order ) {
