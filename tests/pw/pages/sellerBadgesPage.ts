@@ -18,6 +18,36 @@ export class SellerBadgesPage extends AdminPage {
 
     // seller badge
 
+    // enable seller badge module
+    async enableSellerBadgeModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(selector.admin.dokan.menus.sellerBadge);
+
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.badges);
+    }
+
+    // disable seller badge module
+    async disableSellerBadgeModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(selector.admin.dokan.menus.sellerBadge);
+
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.sellerBadge);
+        await this.notToBeVisible(sellerBadgeAdmin.sellerBadgeDiv);
+
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.badges);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.badges);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+    }
+
     // seller badge render properly
     async adminSellerBadgeRenderProperly() {
         await this.goIfNotThere(data.subUrls.backend.dokan.sellerBadge);

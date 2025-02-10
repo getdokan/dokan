@@ -5,7 +5,7 @@ const { CI, BASE_URL, NO_SETUP, ADMIN, ADMIN_PASSWORD, DOKAN_PRO } = process.env
 
 export default defineConfig({
     /* test directory */
-    testDir: './tests/api',
+    testDir: 'tests/api',
     /* Include tests based on the pattern */
     grep: [/@lite/, /@pro/],
     /* Exclude tests based on the pattern */
@@ -44,7 +44,7 @@ export default defineConfig({
     /* Configure reporters */
     reporter: CI
         ? [
-              ['github'],
+              //   ['github'],
               ['html', { open: 'never', outputFolder: 'playwright-report/api/html-report' }],
               //   ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
               ['list', { printSteps: true }],

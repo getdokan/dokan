@@ -6,8 +6,9 @@ import { data } from '@utils/testData';
 import { storeReview } from '@utils/interfaces';
 
 // selectors
+const dokanAdmin = selector.admin.dokan;
 const storeReviewsAdmin = selector.admin.dokan.storeReviews;
-const storeReviewsCustomer = selector.customer.cSingleStore.review;
+const storeReviewsCustomer = selector.customer.cSingleStore.reviews;
 
 export class StoreReviewsPage extends AdminPage {
     constructor(page: Page) {
@@ -15,6 +16,32 @@ export class StoreReviewsPage extends AdminPage {
     }
 
     // store reviews
+
+    // enable store reviews
+    async enableStoreReviewsModule(storeName: string) {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(dokanAdmin.menus.storeReviews);
+
+        // single store page
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
+        await this.toBeVisible(selector.customer.cSingleStore.storeTabs.reviews);
+    }
+
+    // disable store reviews
+    async disableStoreReviewsModule(storeName: string) {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(dokanAdmin.menus.storeReviews);
+
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.storeReviews);
+        await this.notToBeVisible(dokanAdmin.storeReviews.storeReviewsDiv);
+
+        // single store page
+        await this.goIfNotThere(data.subUrls.frontend.storeReviews(helpers.slugify(storeName)));
+        await this.toBeVisible(selector.customer.cSingleStore.storeTabs.reviews);
+    }
 
     // store reviews render properly
     async adminStoreReviewsRenderProperly() {

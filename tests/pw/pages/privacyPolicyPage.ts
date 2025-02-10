@@ -1,5 +1,5 @@
 import { Page } from '@playwright/test';
-import { CustomerPage } from './customerPage';
+import { CustomerPage } from '@pages/customerPage';
 import { selector } from '@pages/selectors';
 import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
@@ -16,7 +16,7 @@ export class PrivacyPolicyPage extends CustomerPage {
     // contact vendor
     async contactVendor(storeName: string, storeContactData: storeContactData) {
         await this.toPass(async () => {
-            await this.gotoUntilNetworkidle(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+            await this.gotoUntilNetworkidle(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), { waitUntil: 'networkidle' }, true);
             await this.toBeVisible(singleStoreCustomer.storeContactForm.storeContactForm);
         });
         await this.clearAndType(singleStoreCustomer.storeContactForm.name, storeContactData.name);

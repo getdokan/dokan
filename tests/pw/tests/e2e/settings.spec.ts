@@ -140,6 +140,10 @@ test.describe('Settings test', () => {
         await admin.setDokanSpmvSettings(data.dokanSettings.spmv);
     });
 
+    test('admin can set Dokan Printful settings', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.setDokanPrintfulSettings(data.dokanSettings.printful);
+    });
+
     test('admin can set Dokan vendor subscription settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
         await dbUtils.setOptionValue(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);

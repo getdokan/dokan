@@ -6,9 +6,12 @@ import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 import { product, bookings, bookingResource } from '@utils/interfaces';
 
+const { DOKAN_PRO } = process.env;
+
 // selectors
 const bookingProductsAdmin = selector.admin.products;
 const bookingProductsVendor = selector.vendor.vBooking;
+const productsVendor = selector.vendor.product;
 
 export class BookingPage extends VendorPage {
     constructor(page: Page) {
@@ -19,6 +22,32 @@ export class BookingPage extends VendorPage {
 
     // booking
 
+    // enable booking module
+    async enableBookingModule() {
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.booking);
+
+        // customer dashboard menu
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.bookings);
+    }
+
+    // disable booking module
+    async disableBookingModule() {
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.booking);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.booking);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+
+        // customer dashboard menu
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.bookings);
+    }
+
     // Admin Add Booking Product
     async adminAddBookingProduct(product: product['booking']) {
         await this.goIfNotThere(data.subUrls.backend.wc.addNewProducts);
@@ -26,15 +55,15 @@ export class BookingPage extends VendorPage {
         // Name
         await this.clearAndType(bookingProductsAdmin.product.productName, product.productName());
         await this.selectByValue(bookingProductsAdmin.product.productType, product.productType);
-        await this.click(bookingProductsAdmin.product.general);
-        await this.selectByValue(bookingProductsAdmin.product.bookingDurationType, product.bookingDurationType);
-        await this.clearAndType(bookingProductsAdmin.product.bookingDurationMax, product.bookingDurationMax);
+        await this.click(bookingProductsAdmin.product.subMenus.general);
+        await this.selectByValue(bookingProductsAdmin.product.bookingDurationType, product.duration.bookingDurationType);
+        await this.clearAndType(bookingProductsAdmin.product.bookingDurationMax, product.duration.bookingDurationMax);
         await this.selectByValue(bookingProductsAdmin.product.calendarDisplayMode, product.calendarDisplayMode);
 
         // Costs
-        await this.click(bookingProductsAdmin.product.bookingCosts);
-        await this.clearAndType(bookingProductsAdmin.product.baseCost, product.baseCost);
-        await this.clearAndType(bookingProductsAdmin.product.blockCost, product.blockCost);
+        await this.click(bookingProductsAdmin.product.subMenus.bookingCosts);
+        await this.clearAndType(bookingProductsAdmin.product.baseCost, product.costs.baseCost);
+        await this.clearAndType(bookingProductsAdmin.product.blockCost, product.costs.blockCost);
 
         // Category
         await this.click(bookingProductsAdmin.product.category(product.category));
@@ -56,6 +85,10 @@ export class BookingPage extends VendorPage {
         await this.hover(bookingProductsVendor.productCell(productName));
         await this.clickAndWaitForLoadState(bookingProductsVendor.edit(productName));
         await this.toHaveValue(bookingProductsVendor.booking.productName, productName);
+    }
+
+    async goToBookingProductEditById(productId: string): Promise<void> {
+        await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.bookingProductEdit(productId));
     }
 
     // vendor booking render properly
@@ -147,23 +180,23 @@ export class BookingPage extends VendorPage {
     async updateBookingProductFields(product: product['booking']) {
         await this.clearAndType(bookingProductsVendor.booking.productName, product.name);
         // await this.addProductCategory(product.category);
-        // general booking options
-        await this.selectByValue(bookingProductsVendor.booking.bookingDurationType, product.bookingDurationType);
-        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMin, product.bookingDurationMin);
-        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMax, product.bookingDurationMax);
-        await this.selectByValue(bookingProductsVendor.booking.bookingDurationUnit, product.bookingDurationUnit);
+        // booking duration options
+        await this.selectByValue(bookingProductsVendor.booking.bookingDurationType, product.duration.bookingDurationType);
+        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMin, product.duration.bookingDurationMin);
+        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMax, product.duration.bookingDurationMax);
+        await this.selectByValue(bookingProductsVendor.booking.bookingDurationUnit, product.duration.bookingDurationUnit);
         // calendar display mode
         await this.selectByValue(bookingProductsVendor.booking.calendarDisplayMode, product.calendarDisplayMode);
         await this.check(bookingProductsVendor.booking.enableCalendarRangePicker);
         // availability
-        await this.clearAndType(bookingProductsVendor.booking.maxBookingsPerBlock, product.maxBookingsPerBlock);
-        await this.clearAndType(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDate, product.minimumBookingWindowIntoTheFutureDate);
-        await this.selectByValue(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDateUnit, product.minimumBookingWindowIntoTheFutureDateUnit);
-        await this.clearAndType(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDate, product.maximumBookingWindowIntoTheFutureDate);
-        await this.selectByValue(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDateUnit, product.maximumBookingWindowIntoTheFutureDateUnit);
+        await this.clearAndType(bookingProductsVendor.booking.maxBookingsPerBlock, product.availability.maxBookingsPerBlock);
+        await this.clearAndType(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDate, product.availability.minimumBookingWindowIntoTheFutureDate);
+        await this.selectByValue(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDateUnit, product.availability.minimumBookingWindowIntoTheFutureDateUnit);
+        await this.clearAndType(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDate, product.availability.maximumBookingWindowIntoTheFutureDate);
+        await this.selectByValue(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDateUnit, product.availability.maximumBookingWindowIntoTheFutureDateUnit);
         // costs
-        await this.clearAndType(bookingProductsVendor.booking.baseCost, product.baseCost);
-        await this.clearAndType(bookingProductsVendor.booking.blockCost, product.blockCost);
+        await this.clearAndType(bookingProductsVendor.booking.baseCost, product.costs.baseCost);
+        await this.clearAndType(bookingProductsVendor.booking.blockCost, product.costs.blockCost);
         // todo: add more fields
     }
 
@@ -311,5 +344,783 @@ export class BookingPage extends VendorPage {
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.endDate.getMonth(), bookings.endDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.frontend.productDetails(helpers.slugify(productName)), selector.customer.cBookings.bookNow);
         await this.customerPage.placeOrder();
+    }
+
+    // save product
+    async saveProduct() {
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, bookingProductsVendor.booking.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, 'Success! The product has been saved successfully.');
+    }
+
+    // add product title
+    async addProductTitle(productName: string, title: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.clearAndType(bookingProductsVendor.booking.productName, title);
+        await this.saveProduct();
+        await this.toHaveValue(bookingProductsVendor.booking.productName, title);
+    }
+
+    // add product accommodation booking options
+    async addProductAccommodationBookingOptions(productName: string, accommodationBookingOptions: product['booking']['accommodationBookingOptions']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.check(bookingProductsVendor.booking.accommodationBooking);
+        await this.clearAndType(bookingProductsVendor.booking.minimumNumberOfNightsAllowed, accommodationBookingOptions.minimumNumberOfNightsAllowed);
+        await this.clearAndType(bookingProductsVendor.booking.maximumNumberOfNightsAllowed, accommodationBookingOptions.maximumNumberOfNightsAllowed);
+        await this.clearAndType(bookingProductsVendor.booking.checkInTime, accommodationBookingOptions.checkInTime);
+        await this.clearAndType(bookingProductsVendor.booking.checkOutTime, accommodationBookingOptions.checkOutTime);
+
+        await this.saveProduct();
+        await this.toBeChecked(bookingProductsVendor.booking.accommodationBooking);
+        await this.toHaveValue(bookingProductsVendor.booking.minimumNumberOfNightsAllowed, accommodationBookingOptions.minimumNumberOfNightsAllowed);
+        await this.toHaveValue(bookingProductsVendor.booking.maximumNumberOfNightsAllowed, accommodationBookingOptions.maximumNumberOfNightsAllowed);
+        await this.toHaveValue(bookingProductsVendor.booking.checkInTime, accommodationBookingOptions.checkInTime);
+        await this.toHaveValue(bookingProductsVendor.booking.checkOutTime, accommodationBookingOptions.checkOutTime);
+    }
+
+    // remove product accommodation booking options
+    async removeProductAccommodationBookingOptions(productName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.uncheck(bookingProductsVendor.booking.accommodationBooking);
+
+        await this.saveProduct();
+        await this.notToBeChecked(bookingProductsVendor.booking.accommodationBooking);
+        // await this.notToBeVisible(bookingProductsVendor.booking.minimumNumberOfNightsAllowed); // todo: has dokan issue, after saving it becomes customer defined blocks instead of fixed block types
+        // await this.notToBeVisible(bookingProductsVendor.booking.maximumNumberOfNightsAllowed);
+        await this.notToBeVisible(bookingProductsVendor.booking.checkInTime);
+        await this.notToBeVisible(bookingProductsVendor.booking.checkOutTime);
+    }
+
+    // vendor add product category
+    async vendorAddProductCategory(category: string, multiple: boolean, neg?: boolean): Promise<void> {
+        if (!multiple) {
+            await this.click(productsVendor.category.openCategoryModal);
+        } else {
+            await this.click(productsVendor.category.addNewCategory);
+            await this.click(productsVendor.category.selectACategory);
+        }
+        await this.toBeVisible(productsVendor.category.categoryModal);
+        await this.type(productsVendor.category.searchInput, category);
+        await this.toContainText(productsVendor.category.searchedResultText, category);
+        await this.click(productsVendor.category.searchedResult);
+        await this.click(productsVendor.category.categoryOnList(category));
+        if (neg) {
+            await this.toBeDisabled(productsVendor.category.done);
+            return;
+        }
+        await this.click(productsVendor.category.done);
+
+        const categoryAlreadySelectedPopup = await this.isVisible(productsVendor.category.categoryAlreadySelectedPopup);
+        if (categoryAlreadySelectedPopup) {
+            await this.click(productsVendor.category.categoryAlreadySelectedPopup);
+            await this.click(productsVendor.category.categoryModalClose);
+        }
+        await this.toBeVisible(productsVendor.category.selectedCategory(category));
+    }
+
+    // add product category
+    async addProductCategory(productName: string, categories: string[], multiple: boolean = false): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        for (const category of categories) {
+            await this.vendorAddProductCategory(category, multiple);
+        }
+        await this.saveProduct();
+        for (const category of categories) {
+            await this.toBeVisible(productsVendor.category.selectedCategory(category));
+        }
+    }
+
+    // remove product category
+    async removeProductCategory(productName: string, categories: string[]): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        for (const category of categories) {
+            await this.click(productsVendor.category.removeSelectedCategory(category));
+            await this.notToBeVisible(productsVendor.category.selectedCategory(category));
+        }
+        await this.saveProduct();
+        for (const category of categories) {
+            await this.notToBeVisible(productsVendor.category.selectedCategory(category));
+        }
+    }
+
+    // can't add product category
+    async cantAddCategory(productName: string, category: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.vendorAddProductCategory(category, false, true);
+    }
+
+    // add product tags
+    async addProductTags(productName: string, tags: string[]): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        for (const tag of tags) {
+            await this.clearAndType(bookingProductsVendor.booking.tags.tagInput, tag);
+            await this.toBeVisible(bookingProductsVendor.booking.tags.searchedTag(tag));
+            await this.click(bookingProductsVendor.booking.tags.searchedTag(tag));
+            await this.toBeVisible(bookingProductsVendor.booking.tags.selectedTags(tag));
+        }
+        await this.saveProduct();
+        for (const tag of tags) {
+            await this.toBeVisible(bookingProductsVendor.booking.tags.selectedTags(tag));
+        }
+    }
+
+    // remove product tags
+    async removeProductTags(productName: string, tags: string[]): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        for (const tag of tags) {
+            await this.click(productsVendor.tags.removeSelectedTags(tag));
+            await this.press('Escape'); // shift focus from element
+        }
+        await this.saveProduct();
+
+        for (const tag of tags) {
+            await this.notToBeVisible(productsVendor.tags.selectedTags(tag));
+        }
+    }
+
+    // add product cover image
+    async addProductCoverImage(productName: string, coverImage: string, removePrevious: boolean = false): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        // remove previous cover image
+        if (removePrevious) {
+            await this.hover(productsVendor.image.coverImageDiv);
+            await this.click(productsVendor.image.removeFeatureImage);
+            await this.toBeVisible(productsVendor.image.uploadImageText);
+        }
+        await this.click(productsVendor.image.cover);
+        await this.uploadMedia(coverImage);
+        await this.saveProduct();
+        await this.toHaveAttribute(productsVendor.image.uploadedFeatureImage, 'src', /.+/); // Ensures 'src' has any non-falsy value
+        await this.notToBeVisible(productsVendor.image.uploadImageText);
+    }
+
+    // remove product cover image
+    async removeProductCoverImage(productName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.hover(productsVendor.image.coverImageDiv);
+        await this.click(productsVendor.image.removeFeatureImage);
+        await this.saveProduct();
+        await this.toHaveAttribute(productsVendor.image.uploadedFeatureImage, 'src', /^$/);
+        await this.toBeVisible(productsVendor.image.uploadImageText);
+    }
+
+    // add product gallery images
+    async addProductGalleryImages(productName: string, galleryImages: string[], removePrevious: boolean = false): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        // remove previous gallery images
+        if (removePrevious) {
+            const imageCount = await this.getElementCount(productsVendor.image.uploadedGalleryImage);
+            for (let i = 0; i < imageCount; i++) {
+                await this.hover(productsVendor.image.galleryImageDiv);
+                await this.click(productsVendor.image.removeGalleryImage);
+            }
+            await this.toHaveCount(productsVendor.image.uploadedGalleryImage, 0);
+        }
+
+        for (const galleryImage of galleryImages) {
+            await this.click(productsVendor.image.gallery);
+            await this.uploadMedia(galleryImage);
+        }
+        await this.saveProduct();
+        await this.toHaveCount(productsVendor.image.uploadedGalleryImage, galleryImages.length);
+    }
+
+    // remove product gallery images
+    async removeProductGalleryImages(productName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        const imageCount = await this.getElementCount(productsVendor.image.uploadedGalleryImage);
+        for (let i = 0; i < imageCount; i++) {
+            await this.hover(productsVendor.image.galleryImageDiv);
+            await this.click(productsVendor.image.removeGalleryImage);
+        }
+        await this.saveProduct();
+        await this.toHaveCount(productsVendor.image.uploadedGalleryImage, 0);
+    }
+
+    // add product short description
+    async addProductShortDescription(productName: string, shortDescription: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.typeFrameSelector(productsVendor.shortDescription.shortDescriptionIframe, productsVendor.shortDescription.shortDescriptionHtmlBody, shortDescription);
+        await this.saveProduct();
+        await this.toContainTextFrameLocator(productsVendor.shortDescription.shortDescriptionIframe, productsVendor.shortDescription.shortDescriptionHtmlBody, shortDescription);
+    }
+
+    // add product description
+    async addProductDescription(productName: string, description: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.typeFrameSelector(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, description);
+        await this.saveProduct();
+        await this.toContainTextFrameLocator(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, description);
+    }
+
+    // add product virtual option
+    async addProductVirtualOption(productName: string, enable: boolean): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        if (enable) {
+            await this.check(productsVendor.virtual);
+        } else {
+            await this.focus(productsVendor.virtual);
+            await this.uncheck(productsVendor.virtual);
+        }
+        await this.saveProduct();
+        if (enable) {
+            await this.toBeChecked(productsVendor.virtual);
+            if (DOKAN_PRO) {
+                await this.notToBeVisible(productsVendor.shipping.shippingContainer);
+            }
+        } else {
+            await this.notToBeChecked(productsVendor.virtual);
+        }
+    }
+
+    // add product inventory
+    async addProductInventory(productName: string, inventory: product['productInfo']['inventory'], choice: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+
+        switch (choice) {
+            case 'sku':
+                await this.clearAndType(productsVendor.inventory.sku, inventory.sku);
+                break;
+            case 'stock-status':
+                await this.selectByValue(productsVendor.inventory.stockStatus, inventory.stockStatus);
+                break;
+            case 'stock-management':
+                await this.check(productsVendor.inventory.enableStockManagement);
+                await this.clearAndType(productsVendor.inventory.stockQuantity, inventory.stockQuantity);
+                await this.clearAndType(productsVendor.inventory.lowStockThreshold, inventory.lowStockThreshold);
+                await this.selectByValue(productsVendor.inventory.allowBackorders, inventory.backorders);
+                break;
+            case 'one-quantity':
+                if (inventory.oneQuantity) {
+                    await this.check(productsVendor.inventory.allowOnlyOneQuantity);
+                } else {
+                    await this.uncheck(productsVendor.inventory.allowOnlyOneQuantity);
+                }
+                break;
+            default:
+                break;
+        }
+
+        await this.saveProduct();
+
+        // todo: replace switch with all method action and assertion as object member and loop through to call them
+
+        switch (choice) {
+            case 'sku':
+                await this.toHaveValue(productsVendor.inventory.sku, inventory.sku);
+                break;
+            case 'stock-status':
+                await this.toHaveSelectedValue(productsVendor.inventory.stockStatus, inventory.stockStatus);
+                break;
+            case 'stock-management':
+                await this.toBeChecked(productsVendor.inventory.enableStockManagement);
+                await this.toHaveValue(productsVendor.inventory.stockQuantity, inventory.stockQuantity);
+                await this.toHaveValue(productsVendor.inventory.lowStockThreshold, inventory.lowStockThreshold);
+                await this.toHaveSelectedValue(productsVendor.inventory.allowBackorders, inventory.backorders);
+                await this.notToBeVisible(productsVendor.inventory.stockStatus);
+                break;
+            case 'one-quantity':
+                if (inventory.oneQuantity) {
+                    await this.toBeChecked(productsVendor.inventory.allowOnlyOneQuantity);
+                } else {
+                    await this.notToBeChecked(productsVendor.inventory.allowOnlyOneQuantity);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    // remove product inventory [stock management]
+    async removeProductInventory(productName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.uncheck(productsVendor.inventory.enableStockManagement);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.inventory.enableStockManagement);
+    }
+
+    // add product other options (product status, visibility, purchase note, reviews)
+    async addProductOtherOptions(productName: string, otherOption: product['productInfo']['otherOptions'], choice: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+
+        switch (choice) {
+            case 'status':
+                await this.selectByValue(productsVendor.otherOptions.productStatus, otherOption.status);
+                break;
+            case 'visibility':
+                await this.selectByValue(productsVendor.otherOptions.visibility, otherOption.visibility);
+                break;
+            case 'purchaseNote':
+                await this.clearAndType(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
+                break;
+            case 'reviews':
+                if (otherOption.enableReview) {
+                    await this.check(productsVendor.otherOptions.enableProductReviews);
+                } else {
+                    await this.uncheck(productsVendor.otherOptions.enableProductReviews);
+                }
+                break;
+            default:
+                break;
+        }
+
+        await this.saveProduct();
+
+        switch (choice) {
+            case 'status':
+                await this.toHaveSelectedValue(productsVendor.otherOptions.productStatus, otherOption.status);
+                break;
+            case 'visibility':
+                await this.toHaveSelectedValue(productsVendor.otherOptions.visibility, otherOption.visibility);
+                break;
+            case 'purchaseNote':
+                await this.toHaveValue(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
+                break;
+            case 'reviews':
+                if (otherOption.enableReview) {
+                    await this.toBeChecked(productsVendor.otherOptions.enableProductReviews);
+                } else {
+                    await this.notToBeChecked(productsVendor.otherOptions.enableProductReviews);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    // add product catalog mode
+    async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.check(productsVendor.catalogMode.removeAddToCart);
+        if (hidePrice) await this.check(productsVendor.catalogMode.hideProductPrice);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.catalogMode.removeAddToCart);
+        if (hidePrice) await this.toBeChecked(productsVendor.catalogMode.hideProductPrice);
+    }
+
+    // remove product catalog mode
+    async removeProductCatalogMode(productName: string, onlyPrice: boolean = false): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+
+        if (onlyPrice) {
+            await this.uncheck(productsVendor.catalogMode.hideProductPrice);
+        } else {
+            await this.uncheck(productsVendor.catalogMode.removeAddToCart);
+        }
+
+        await this.saveProduct();
+
+        if (onlyPrice) {
+            await this.notToBeChecked(productsVendor.catalogMode.hideProductPrice);
+        } else {
+            await this.notToBeChecked(productsVendor.catalogMode.removeAddToCart);
+        }
+    }
+
+    // dokan pro features
+
+    // add product shipping
+    async addProductShipping(productName: string, shipping: product['productInfo']['shipping']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.check(productsVendor.shipping.requiresShipping);
+        await this.clearAndType(productsVendor.shipping.weight, shipping.weight);
+        await this.clearAndType(productsVendor.shipping.length, shipping.length);
+        await this.clearAndType(productsVendor.shipping.width, shipping.width);
+        await this.clearAndType(productsVendor.shipping.height, shipping.height);
+        await this.selectByLabel(productsVendor.shipping.shippingClass, shipping.shippingClass);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.shipping.requiresShipping);
+        await this.toHaveValue(productsVendor.shipping.weight, shipping.weight);
+        await this.toHaveValue(productsVendor.shipping.length, shipping.length);
+        await this.toHaveValue(productsVendor.shipping.width, shipping.width);
+        await this.toHaveValue(productsVendor.shipping.height, shipping.height);
+        await this.toHaveSelectedLabel(productsVendor.shipping.shippingClass, shipping.shippingClass);
+    }
+    // add product shipping
+    async removeProductShipping(productName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.uncheck(productsVendor.shipping.requiresShipping);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.shipping.requiresShipping);
+    }
+
+    // add product tax
+    async addProductTax(productName: string, tax: product['productInfo']['tax'], hasClass: boolean = false): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.selectByValue(productsVendor.tax.status, tax.status);
+        if (hasClass) await this.selectByValue(productsVendor.tax.class, tax.class);
+        await this.saveProduct();
+        await this.toHaveSelectedValue(productsVendor.tax.status, tax.status);
+        if (hasClass) await this.toHaveSelectedValue(productsVendor.tax.class, tax.class);
+    }
+
+    // add product duration
+    async addProductDuration(productName: string, duration: product['booking']['duration']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.selectByValue(bookingProductsVendor.booking.bookingDurationType, duration.bookingDurationType);
+        await this.clearAndType(bookingProductsVendor.booking.bookingDuration, duration.bookingDuration);
+        await this.selectByValue(bookingProductsVendor.booking.bookingDurationUnit, duration.bookingDurationUnit);
+        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMin, duration.bookingDurationMin);
+        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMax, duration.bookingDurationMax);
+
+        await this.saveProduct();
+
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.bookingDurationType, duration.bookingDurationType);
+        await this.toHaveValue(bookingProductsVendor.booking.bookingDuration, duration.bookingDuration);
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.bookingDurationUnit, duration.bookingDurationUnit);
+        await this.toHaveValue(bookingProductsVendor.booking.bookingDurationMin, duration.bookingDurationMin);
+        await this.toHaveValue(bookingProductsVendor.booking.bookingDurationMax, duration.bookingDurationMax);
+    }
+
+    // add product basic options
+    async addProductBasicOptions(productName: string, product: product['booking']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.selectByValue(bookingProductsVendor.booking.calendarDisplayMode, product.calendarDisplayMode);
+        await this.check(bookingProductsVendor.booking.enableCalendarRangePicker);
+        await this.check(bookingProductsVendor.booking.requiresConfirmation);
+        await this.check(bookingProductsVendor.booking.canBeCancelled);
+
+        await this.saveProduct();
+
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.calendarDisplayMode, product.calendarDisplayMode);
+        await this.toBeChecked(bookingProductsVendor.booking.enableCalendarRangePicker);
+        await this.toBeChecked(bookingProductsVendor.booking.requiresConfirmation);
+        await this.toBeChecked(bookingProductsVendor.booking.canBeCancelled);
+    }
+
+    // add product availability options
+    async addProductAvailability(productName: string, availability: product['booking']['availability']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.clearAndType(bookingProductsVendor.booking.maxBookingsPerBlock, availability.maxBookingsPerBlock);
+        await this.clearAndType(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDate, availability.minimumBookingWindowIntoTheFutureDate);
+        await this.selectByValue(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDateUnit, availability.minimumBookingWindowIntoTheFutureDateUnit);
+        await this.clearAndType(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDate, availability.maximumBookingWindowIntoTheFutureDate);
+        await this.selectByValue(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDateUnit, availability.maximumBookingWindowIntoTheFutureDateUnit);
+        await this.clearAndType(bookingProductsVendor.booking.requireABufferPeriodOfMonthsBetweenBookings, availability.requireABufferPeriodOfMonthsBetweenBookings);
+        await this.check(bookingProductsVendor.booking.adjacentBuffering);
+        await this.selectByValue(bookingProductsVendor.booking.allDatesAvailability, availability.allDatesAvailability);
+        await this.selectByValue(bookingProductsVendor.booking.checkRulesAgainst, availability.checkRulesAgainst);
+
+        await this.saveProduct();
+
+        await this.toHaveValue(bookingProductsVendor.booking.maxBookingsPerBlock, availability.maxBookingsPerBlock);
+        await this.toHaveValue(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDate, availability.minimumBookingWindowIntoTheFutureDate);
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDateUnit, availability.minimumBookingWindowIntoTheFutureDateUnit);
+        await this.toHaveValue(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDate, availability.maximumBookingWindowIntoTheFutureDate);
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDateUnit, availability.maximumBookingWindowIntoTheFutureDateUnit);
+        await this.toHaveValue(bookingProductsVendor.booking.requireABufferPeriodOfMonthsBetweenBookings, availability.requireABufferPeriodOfMonthsBetweenBookings);
+        await this.toBeChecked(bookingProductsVendor.booking.adjacentBuffering);
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.allDatesAvailability, availability.allDatesAvailability);
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.checkRulesAgainst, availability.checkRulesAgainst);
+    }
+
+    // add product costs
+    async addProductCosts(productName: string, costs: product['booking']['costs']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.clearAndType(bookingProductsVendor.booking.baseCost, costs.baseCost);
+        await this.clearAndType(bookingProductsVendor.booking.blockCost, costs.blockCost);
+        await this.clearAndType(bookingProductsVendor.booking.displayCost, costs.displayCost);
+        await this.saveProduct();
+        await this.toHaveValue(bookingProductsVendor.booking.baseCost, costs.baseCost);
+        await this.toHaveValue(bookingProductsVendor.booking.blockCost, costs.blockCost);
+        await this.toHaveValue(bookingProductsVendor.booking.displayCost, costs.displayCost);
+    }
+
+    // add product extra options
+
+    // persons
+    async addProductPersons(productName: string, extraOptions: product['booking']['extraOptions']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.focus(bookingProductsVendor.booking.hasPersons);
+        await this.check(bookingProductsVendor.booking.hasPersons);
+        await this.clearAndType(bookingProductsVendor.booking.minPersons, extraOptions.minPersons);
+        await this.clearAndType(bookingProductsVendor.booking.maxPersons, extraOptions.maxPersons);
+        await this.check(bookingProductsVendor.booking.multiplyAllCostsByPersonCount);
+        await this.check(bookingProductsVendor.booking.countPersonsAsBookings);
+        await this.saveProduct();
+        await this.toBeChecked(bookingProductsVendor.booking.hasPersons);
+        await this.toHaveValue(bookingProductsVendor.booking.minPersons, extraOptions.minPersons);
+        await this.toHaveValue(bookingProductsVendor.booking.maxPersons, extraOptions.maxPersons);
+        await this.toBeChecked(bookingProductsVendor.booking.multiplyAllCostsByPersonCount);
+        await this.toBeChecked(bookingProductsVendor.booking.countPersonsAsBookings);
+    }
+
+    // add person type
+    async addProductPersonType(productName: string, extraOptions: product['booking']['extraOptions']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.focus(bookingProductsVendor.booking.hasPersons);
+        await this.check(bookingProductsVendor.booking.hasPersons);
+        await this.check(bookingProductsVendor.booking.enablePersonTypes);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, bookingProductsVendor.booking.addPersonType);
+        await this.clearAndType(bookingProductsVendor.booking.person.typeName, extraOptions.person.typeName);
+        await this.clearAndType(bookingProductsVendor.booking.person.baseCost, extraOptions.person.baseCost);
+        await this.clearAndType(bookingProductsVendor.booking.person.blockCost, extraOptions.person.blockCost);
+        await this.clearAndType(bookingProductsVendor.booking.person.description, extraOptions.person.description);
+        await this.clearAndType(bookingProductsVendor.booking.person.min, extraOptions.person.min);
+        await this.clearAndType(bookingProductsVendor.booking.person.max, extraOptions.person.max);
+
+        await this.saveProduct();
+
+        await this.toBeChecked(bookingProductsVendor.booking.hasPersons);
+        await this.toBeChecked(bookingProductsVendor.booking.enablePersonTypes);
+        await this.toHaveValue(bookingProductsVendor.booking.person.typeName, extraOptions.person.typeName);
+        await this.toHaveValue(bookingProductsVendor.booking.person.baseCost, extraOptions.person.baseCost);
+        await this.toHaveValue(bookingProductsVendor.booking.person.blockCost, extraOptions.person.blockCost);
+        await this.toHaveValue(bookingProductsVendor.booking.person.description, extraOptions.person.description);
+        await this.toHaveValue(bookingProductsVendor.booking.person.min, extraOptions.person.min);
+        await this.toHaveValue(bookingProductsVendor.booking.person.max, extraOptions.person.max);
+    }
+
+    // remove product person
+    async removeProductPersonType(productName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.focus(bookingProductsVendor.booking.remove);
+        await this.click(bookingProductsVendor.booking.remove);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, bookingProductsVendor.booking.confirmRemove);
+        await this.notToBeVisible(bookingProductsVendor.booking.remove); //todo: replace with person id
+    }
+
+    // resources
+
+    // add product resource
+    async addProductResources(productName: string, extraOptions: product['booking']['extraOptions']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.focus(bookingProductsVendor.booking.hasResources);
+        await this.check(bookingProductsVendor.booking.hasResources);
+        await this.clearAndType(bookingProductsVendor.booking.label, extraOptions.label);
+        await this.selectByValue(bookingProductsVendor.booking.resourcesAllocation, extraOptions.resourcesAllocation);
+        await this.selectByValue(bookingProductsVendor.booking.addResourceId, extraOptions.addResourceId);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, bookingProductsVendor.booking.addResource);
+        await this.clearAndType(bookingProductsVendor.booking.resourceBaseCost, extraOptions.resource.baseCost);
+        await this.clearAndType(bookingProductsVendor.booking.resourceBlockCost, extraOptions.resource.blockCost);
+
+        await this.saveProduct();
+
+        await this.toBeChecked(bookingProductsVendor.booking.hasResources);
+        await this.toHaveValue(bookingProductsVendor.booking.label, extraOptions.label);
+        await this.toHaveSelectedValue(bookingProductsVendor.booking.resourcesAllocation, extraOptions.resourcesAllocation);
+        await this.toHaveValue(bookingProductsVendor.booking.resourceBaseCost, extraOptions.resource.baseCost);
+        await this.toHaveValue(bookingProductsVendor.booking.resourceBlockCost, extraOptions.resource.blockCost);
+    }
+
+    // remove product resource
+    async removeProductResource(productName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.focus(bookingProductsVendor.booking.removeResource);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, bookingProductsVendor.booking.removeResource);
+        await this.notToBeVisible(bookingProductsVendor.booking.removeResource); //todo: replace with resource id
+    }
+
+    // add product linked products
+    async addProductLinkedProducts(productName: string, linkedProducts: product['productInfo']['linkedProducts'], choice: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        switch (choice) {
+            case 'up-sells':
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.linkedProducts.upSells, linkedProduct);
+                    await this.click(productsVendor.linkedProducts.searchedResult(linkedProduct));
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(linkedProduct));
+                }
+                break;
+            case 'cross-sells':
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.linkedProducts.crossSells, linkedProduct);
+                    await this.click(productsVendor.linkedProducts.searchedResult(linkedProduct));
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(linkedProduct));
+                }
+                break;
+            default:
+                break;
+        }
+
+        await this.saveProduct();
+
+        switch (choice) {
+            case 'up-sells':
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(linkedProduct));
+                }
+                break;
+            case 'cross-sells':
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(linkedProduct));
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    // add product linked products
+    async removeProductLinkedProducts(productName: string, linkedProducts: product['productInfo']['linkedProducts'], choice: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        switch (choice) {
+            case 'up-sells':
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.click(productsVendor.linkedProducts.removeSelectedUpSellProduct(linkedProduct));
+                    await this.press('Escape'); // shift focus from element
+                }
+                break;
+            case 'cross-sells':
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.click(productsVendor.linkedProducts.removeSelectedCrossSellProduct(linkedProduct));
+                    await this.press('Escape'); // shift focus from element
+                }
+                break;
+            default:
+                break;
+        }
+
+        await this.saveProduct();
+
+        switch (choice) {
+            case 'up-sells':
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.notToBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(linkedProduct));
+                }
+                break;
+            case 'cross-sells':
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.notToBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(linkedProduct));
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    // add product attribute
+    async addProductAttribute(productName: string, attribute: product['productInfo']['attribute'], addTerm: boolean = false): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.selectByLabel(productsVendor.attribute.customAttribute, attribute.attributeName);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.addAttribute);
+        await this.check(productsVendor.attribute.visibleOnTheProductPage);
+        await this.click(productsVendor.attribute.selectAll);
+        await this.notToHaveCount(productsVendor.attribute.attributeTerms, 0);
+        if (addTerm) {
+            await this.click(productsVendor.attribute.addNew);
+            await this.clearAndType(productsVendor.attribute.attributeTermInput, attribute.attributeTerm);
+            await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.confirmAddAttributeTerm);
+            await this.toBeVisible(productsVendor.attribute.selectedAttributeTerm(attribute.attributeTerm));
+        }
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.saveAttribute);
+        await this.saveProduct();
+        await this.toBeVisible(productsVendor.attribute.savedAttribute(attribute.attributeName));
+    }
+
+    // can't add already added attribute
+    async cantAddAlreadyAddedAttribute(productName: string, attributeName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.toBeVisible(productsVendor.attribute.savedAttribute(attributeName));
+        await this.toHaveAttribute(productsVendor.attribute.disabledAttribute(attributeName), 'disabled', 'disabled');
+    }
+
+    // remove product attribute
+    async removeProductAttribute(productName: string, attribute: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.click(productsVendor.attribute.removeAttribute(attribute));
+        await this.click(productsVendor.attribute.confirmRemoveAttribute);
+        await this.notToBeVisible(productsVendor.attribute.savedAttribute(attribute));
+        await this.saveProduct();
+        await this.notToBeVisible(productsVendor.attribute.savedAttribute(attribute));
+    }
+
+    // remove product attribute term
+    async removeProductAttributeTerm(productName: string, attribute: string, attributeTerm: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.click(productsVendor.attribute.savedAttribute(attribute));
+        await this.click(productsVendor.attribute.removeSelectedAttributeTerm(attributeTerm));
+        await this.press('Escape'); // shift focus from element
+        await this.notToBeVisible(productsVendor.attribute.selectedAttributeTerm(attributeTerm));
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.saveAttribute);
+        await this.saveProduct();
+        await this.click(productsVendor.attribute.savedAttribute(attribute));
+        await this.notToBeVisible(productsVendor.attribute.selectedAttributeTerm(attributeTerm));
+    }
+
+    // dokan pro modules
+
+    // add product geolocation
+    async addProductGeolocation(productName: string, location: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.uncheck(productsVendor.geolocation.sameAsStore);
+        await this.typeAndWaitForResponse(data.subUrls.gmap, productsVendor.geolocation.productLocation, location);
+        await this.press(data.key.arrowDown);
+        await this.press(data.key.enter);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.geolocation.sameAsStore);
+        await this.toHaveValue(productsVendor.geolocation.productLocation, location);
+    }
+
+    // remove product geolocation
+    async removeProductGeolocation(productName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.check(productsVendor.geolocation.sameAsStore);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.geolocation.sameAsStore);
+    }
+
+    // add product addons
+    async addProductAddon(productName: string, addon: product['productInfo']['addon']): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.toPass(async () => {
+            await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.addon.addField);
+            await this.toBeVisible(productsVendor.addon.addonForm);
+        });
+
+        await this.selectByValue(productsVendor.addon.type, addon.type);
+        await this.selectByValue(productsVendor.addon.displayAs, addon.displayAs);
+        await this.clearAndType(productsVendor.addon.titleRequired, addon.title);
+        await this.selectByValue(productsVendor.addon.formatTitle, addon.formatTitle);
+        await this.check(productsVendor.addon.addDescription);
+        await this.clearAndType(productsVendor.addon.descriptionInput, addon.addDescription);
+        await this.check(productsVendor.addon.requiredField);
+        // option
+        await this.clearAndType(productsVendor.addon.option.enterAnOption, addon.enterAnOption);
+        await this.selectByValue(productsVendor.addon.option.optionPriceType, addon.optionPriceType);
+        await this.clearAndType(productsVendor.addon.option.optionPriceInput, addon.optionPriceInput);
+        await this.check(productsVendor.addon.excludeAddons);
+
+        await this.saveProduct();
+
+        await this.toBeVisible(productsVendor.addon.addonRow(addon.title));
+        await this.click(productsVendor.addon.addonRow(addon.title));
+
+        await this.toHaveSelectedValue(productsVendor.addon.type, addon.type);
+        await this.toHaveSelectedValue(productsVendor.addon.displayAs, addon.displayAs);
+        await this.toHaveValue(productsVendor.addon.titleRequired, addon.title);
+        await this.toHaveSelectedValue(productsVendor.addon.formatTitle, addon.formatTitle);
+        await this.toBeChecked(productsVendor.addon.addDescription);
+        await this.toHaveValue(productsVendor.addon.descriptionInput, addon.addDescription);
+        await this.toBeChecked(productsVendor.addon.requiredField);
+        // option
+        await this.toHaveValue(productsVendor.addon.option.enterAnOption, addon.enterAnOption);
+        await this.toHaveSelectedValue(productsVendor.addon.option.optionPriceType, addon.optionPriceType);
+        await this.toHaveValue(productsVendor.addon.option.optionPriceInput, addon.optionPriceInput);
+        await this.toBeChecked(productsVendor.addon.excludeAddons);
+    }
+
+    // import addon
+    async importAddon(productName: string, addon: string, addonTitle: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.click(productsVendor.addon.import);
+        await this.clearAndType(productsVendor.addon.importInput, addon);
+        await this.saveProduct();
+        await this.toBeVisible(productsVendor.addon.addonRow(addonTitle));
+    }
+
+    // export addon
+    async exportAddon(productName: string, addon: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.click(productsVendor.addon.export);
+        await this.toContainText(productsVendor.addon.exportInput, addon);
+    }
+
+    // delete addon
+    async removeAddon(productName: string, addonName: string): Promise<void> {
+        await this.goToBookingProductEditById(productName);
+        await this.click(productsVendor.addon.removeAddon(addonName));
+        await this.click(productsVendor.addon.confirmRemove);
+        await this.notToBeVisible(productsVendor.addon.addonRow(addonName));
+        await this.saveProduct();
+        await this.notToBeVisible(productsVendor.addon.addonRow(addonName));
     }
 }

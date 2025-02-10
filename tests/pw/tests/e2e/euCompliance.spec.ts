@@ -11,6 +11,8 @@ import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { payloads } from '@utils/payloads';
 
+const { VENDOR_ID } = process.env;
+
 test.describe('EU Compliance test', () => {
     let admin: EuCompliancePage;
     let vendor: VendorSettingsPage;
@@ -41,6 +43,7 @@ test.describe('EU Compliance test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.euCompliance, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
@@ -48,6 +51,10 @@ test.describe('EU Compliance test', () => {
     });
 
     //admin
+
+    test('admin can enable EU compliance fields module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableEuComplianceFieldsModule();
+    });
 
     test('admin can enable EU compliance fields for vendors', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanEuComplianceSettings('euVendor');
@@ -96,14 +103,15 @@ test.describe('EU Compliance test', () => {
 
     test('admin can update update EU compliance data on vendor profile edit', { tag: ['@pro', '@admin'] }, async () => {
         const admin = new StoresPage(aPage);
-        await admin.editVendor(data.vendor);
+        await admin.editVendor(VENDOR_ID, data.vendor);
     });
 
     test('admin can hide vendors EU compliance data from single store page', { tag: ['@pro', '@admin'] }, async () => {
-        const [previousSettings] = await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { hide_vendor_info: dbData.testData.dokan.hideVendorEuInfo });
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { hide_vendor_info: dbData.testData.dokan.hideVendorEuInfo });
         await admin.hideEuComplianceVendor(data.predefined.vendorStores.vendor1);
+
         // reset
-        await dbUtils.setOptionValue(dbData.dokan.optionName.appearance, previousSettings);
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { hide_vendor_info: dbData.testData.dokan.unhideVendorEuInfo });
     });
 
     // vendor
@@ -158,4 +166,11 @@ test.describe('EU Compliance test', () => {
     });
 
     // todo: has more tests with product eu compliance data
+
+    // admin
+
+    test('admin can disable EU compliance fields module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.euCompliance, payloads.adminAuth);
+        await admin.disableEuComplianceFieldsModule();
+    });
 });

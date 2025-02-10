@@ -6,6 +6,7 @@ import { productAdvertisement } from '@utils/interfaces';
 
 // selectors
 const productAdvertisingAdmin = selector.admin.dokan.productAdvertising;
+const productsVendor = selector.vendor.product;
 
 export class ProductAdvertisingPage extends AdminPage {
     constructor(page: Page) {
@@ -18,8 +19,46 @@ export class ProductAdvertisingPage extends AdminPage {
     async recreateProductAdvertisementPaymentViaSettingsSave() {
         await this.goToDokanSettings();
         await this.click(selector.admin.dokan.settings.menus.productAdvertising);
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.productAdvertising.productAdvertisingSaveChanges);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.saveChanges);
         await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, 'Setting has been saved successfully.');
+    }
+
+    // enable product advertising module
+    async enableProductAdvertisingModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(selector.admin.dokan.menus.advertising);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.productAdvertising);
+
+        // vendor dashboard
+        await this.goto(data.subUrls.frontend.vDashboard.products);
+        await this.toBeVisible(productsVendor.table.productAdvertisementColumn);
+        await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
+        await this.toBeVisible(productsVendor.advertisement.advertisementSection);
+    }
+
+    // disable product advertising module
+    async disableProductAdvertisingModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.notToBeVisible(selector.admin.dokan.menus.advertising);
+
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.productAdvertising);
+        await this.notToBeVisible(productAdvertisingAdmin.productAdvertisingDiv);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.productAdvertising);
+
+        // vendor dashboard
+        await this.goto(data.subUrls.frontend.vDashboard.products);
+        await this.notToBeVisible(productsVendor.table.productAdvertisementColumn);
+        await this.clickAndWaitForLoadState(productsVendor.addNewProduct);
+        await this.notToBeVisible(productsVendor.advertisement.advertisementSection);
     }
 
     // product advertising render properly

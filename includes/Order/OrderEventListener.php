@@ -64,7 +64,7 @@ class OrderEventListener {
      * This method updates the order status in the `dokan_orders` and `dokan_vendor_balance` tables
      * based on the current status of the WooCommerce order.
      *
-     * @since DOKAN_SINCE
+     * @since 3.13.1
      *
      * @param WC_Order $order The WooCommerce order object.
      * @param \wpdb    $wpdb  The WordPress database object.
