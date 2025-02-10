@@ -2,6 +2,8 @@
 
 /**
  * Lists all depricated classes
+ *
+ * @deprecated 3.0.0
  */
 class Dokan_Deprecated_Classes {
 

@@ -4,7 +4,7 @@
  * Wrapper for wc_doing_it_wrong.
  *
  * @since 3.0.0
- *
+ * @deprecated 3.0.0
  * @param string $function_name Function used.
  * @param string $message Message to log.
  * @param string $version Version the message was added in.
@@ -42,6 +42,7 @@ function dokan_get_product_status( $status ) {
  * @since 3.0.0
  *
  * @return void
+ * @deprecated 3.0.0
  */
 function dokan_depricated_widget_classes() {
     global $wp_widget_factory;
