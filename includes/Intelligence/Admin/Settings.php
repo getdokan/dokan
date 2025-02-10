@@ -8,10 +8,6 @@ use WeDevs\Dokan\Intelligence\Services\ChatgptResponseService;
 use WeDevs\Dokan\Intelligence\Services\GeminiResponseService;
 
 class Settings implements Hookable {
-    public function __construct() {
-        $this->register_hooks();
-    }
-
     public function register_hooks(): void {
         add_filter( 'dokan_settings_sections', [ $this, 'render_appearance_section' ] );
         add_filter( 'dokan_settings_fields', [ $this, 'render_ai_settings' ] );

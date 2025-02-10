@@ -6,9 +6,6 @@ use WeDevs\Dokan\Contracts\Hookable;
 use WeDevs\Dokan\Intelligence\Utils\AISupportedFields;
 
 class Assets implements Hookable {
-    public function __construct() {
-        $this->register_hooks();
-    }
 
     public function register_hooks(): void {
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_ai_assets' ] );
@@ -41,9 +38,7 @@ class Assets implements Hookable {
 
         $supported_fields = AISupportedFields::get_supported_fields();
 
-        $settings = [
-            'fields' => $supported_fields,
-        ];
+        $settings = [ 'fields' => $supported_fields ];
 
         wp_enqueue_style( 'dokan-ai-style' );
         wp_enqueue_script( 'dokan-ai-script' );

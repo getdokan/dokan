@@ -2,7 +2,6 @@ import './styles/modal.css';
 import '@getdokan/dokan-ui/dist/dokan-ui.css';
 import DokanAI from './components/DokanAI';
 import { createRoot } from '@wordpress/element';
-import domReady from '@wordpress/dom-ready';
 
 const setElementPosition = (
     targetField: HTMLElement,
@@ -46,7 +45,7 @@ const initializeDokanAI = () => {
     }
 };
 
-domReady( initializeDokanAI );
+document.addEventListener( 'DOMContentLoaded', initializeDokanAI );
 
 /**
  * Todo: We need to check/observe the dynamic element e.i. when react mount/unmount element which is in AI supported IDs.
