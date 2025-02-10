@@ -3,7 +3,8 @@
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
-use WeDevs\Dokan\Intelligence\Hooks;
+use WeDevs\Dokan\Intelligence\Assets;
+use WeDevs\Dokan\Intelligence\Admin\Settings;
 use WeDevs\Dokan\Intelligence\Manager;
 use WeDevs\Dokan\ThirdParty\Packages\League\Container\Definition\DefinitionInterface;
 
@@ -14,8 +15,9 @@ class IntelligenceServiceProvider extends BaseServiceProvider {
     public const TAGS = [ 'intelligence-service', 'common-service' ];
 
 	protected $services = [
+        Assets::class,
         Manager::class,
-        Hooks::class,
+        Settings::class,
     ];
 
     /**
