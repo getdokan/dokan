@@ -67,6 +67,7 @@ class OrderQueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         foreach ( $mocking_methods as $method ) {
             $service->shouldReceive( $method )
@@ -118,7 +119,7 @@ class OrderQueryFilterTest extends ReportTestCase {
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
 
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
-
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
         remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
         $service->shouldReceive( 'should_filter_by_vendor_id' )
@@ -171,6 +172,7 @@ class OrderQueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+		dokan_get_container()->get( QueryFilter::class )->register_hooks( );
 
         $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnUsing(
@@ -208,6 +210,7 @@ class OrderQueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+		dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnTrue();
@@ -238,6 +241,7 @@ class OrderQueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+		dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnFalse();
