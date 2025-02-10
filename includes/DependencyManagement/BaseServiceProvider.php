@@ -58,10 +58,13 @@ abstract class BaseServiceProvider extends AbstractServiceProvider {
 	 * @return DefinitionInterface
 	 */
 	protected function add_with_implements_tags( string $id, $concrete = null, bool $shared = null ): DefinitionInterface {
-		$definition = $this->getContainer()->add( $id, $concrete, $shared );
+		$definition = $this->getContainer()->add( $id, $concrete )->setShared( $shared );
 
 		foreach ( class_implements( $id ) as $interface ) {
 			$definition->addTag( $interface );
+			if ( ! in_array( $interface, $this->services, true ) ) {
+				$this->services[] = $interface;
+			}
 		}
 
 		return $definition;
