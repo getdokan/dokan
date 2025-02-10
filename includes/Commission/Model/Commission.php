@@ -2,9 +2,9 @@
 
 namespace WeDevs\Dokan\Commission\Model;
 
-use WeDevs\Dokan\Commission\Formula\Percentage;
 use WeDevs\Dokan\Commission\Settings\DefaultSetting;
 use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
+use WeDevs\Dokan\Vendor\DokanOrderLineItemCouponInfo;
 
 class Commission {
 
@@ -79,6 +79,43 @@ class Commission {
      * @var array
      */
     protected $parameters = [];
+
+    /**
+     * @var float $vendor_discount
+     */
+    private $vendor_discount = 0;
+
+    /**
+     * @var float $admin_discount
+     */
+    private $admin_discount = 0;
+
+    /**
+     * Net admin commission
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var int|float $net_admin_commission
+     */
+    private $net_admin_commission = 0;
+
+    /**
+     * Net vendor earning
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var int|float $net_vendor_earning
+     */
+    private $net_vendor_earning = 0;
+
+    /**
+     * Admin subsidy amount
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var int|float $admin_subsidy
+     */
+    private $admin_subsidy = 0;
 
     /**
      * Returns applied commission source. example order_item/product/vendor/global.
@@ -303,6 +340,130 @@ class Commission {
             'total_amount'              => $this->get_total_amount(),
             'type'                      => $this->get_type(),
             'parameters'                => $this->get_parameters(),
+            'admin_subsidy'             => $this->get_admin_subsidy(),
+            'vendor_discount'           => $this->get_vendor_discount(),
+            'admin_discount'            => $this->get_admin_discount(),
+            'net_admin_commission'      => $this->get_net_admin_commission(),
+            'net_vendor_earning'        => $this->get_net_vendor_earning(),
         ];
+    }
+    /**
+     * @return float|int
+     */
+    public function get_vendor_discount() {
+        return $this->vendor_discount;
+    }
+
+    /**
+     * @param float|int $vendor_discount
+     */
+    public function set_vendor_discount( float $vendor_discount ): Commission {
+        $this->vendor_discount = $vendor_discount;
+
+        return $this;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function get_admin_discount() {
+        return $this->admin_discount;
+    }
+
+    /**
+     * @param float|int $admin_discount
+     */
+    public function set_admin_discount( $admin_discount ): Commission {
+        $this->admin_discount = $admin_discount;
+
+        return $this;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function get_net_admin_commission() {
+        return $this->net_admin_commission;
+    }
+
+    /**
+     * @param DokanOrderLineItemCouponInfo[] $dokan_coupon_infos
+     *
+     * @return void
+     */
+    public function with_coupon_discounts( $dokan_coupon_infos, $item_price_after_discount ): Commission {
+        if ( ! is_array( $dokan_coupon_infos ) || empty( $dokan_coupon_infos ) ) {
+            return $this;
+        }
+
+        $admin_net_commission = 0;
+        $vendor_net_earning = 0;
+
+        foreach ( $dokan_coupon_infos as $dokan_coupon_info ) {
+            $commission_params     = $this->get_parameters();
+            $flat                  = $commission_params['flat'] ?? 0;
+            $percent               = $commission_params['percentage'] ?? 0;
+            $admin_commission_rate = $flat + ( $percent / 100 );
+
+            $admin_net_commission += ( ( $this->get_total_amount() - $dokan_coupon_info->get_vendor_discount() ) * $admin_commission_rate ) - $dokan_coupon_info->get_admin_discount();
+            $vendor_net_earning += floatval( $item_price_after_discount ) - $admin_net_commission;
+
+            $this->set_vendor_discount( $this->get_vendor_discount() + $dokan_coupon_info->get_vendor_discount() );
+            $this->set_admin_discount( $this->get_vendor_discount() + $dokan_coupon_info->get_vendor_discount() );
+        }
+
+        $this->set_net_admin_commission( $admin_net_commission );
+        $this->set_admin_commission( $admin_net_commission );
+        $this->set_net_vendor_earning( $vendor_net_earning );
+        $this->set_per_item_admin_commission( $admin_net_commission / $this->get_total_quantity() );
+
+        if ( $this->get_net_admin_commission() < 0 ) {
+            $this->set_admin_subsidy( abs( $this->net_admin_commission ) );
+            $this->set_admin_commission( 0 );
+            $this->set_per_item_admin_commission( 0 );
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param float|int $net_admin_commission
+     */
+    public function set_net_admin_commission( $net_admin_commission ): Commission {
+        $this->net_admin_commission = $net_admin_commission;
+
+        return $this;
+    }
+
+    /**
+     * @param float|int $net_vendor_earning
+     */
+    public function set_net_vendor_earning( $net_vendor_earning ): Commission {
+        $this->net_vendor_earning = $net_vendor_earning;
+
+        return $this;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function get_net_vendor_earning() {
+        return $this->net_vendor_earning;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function get_admin_subsidy() {
+        return $this->admin_subsidy;
+    }
+
+    /**
+     * @param float|int $admin_subsidy
+     */
+    public function set_admin_subsidy( $admin_subsidy ): Commission {
+        $this->admin_subsidy = $admin_subsidy;
+
+        return $this;
     }
 }
