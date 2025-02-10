@@ -65,6 +65,10 @@ add_action( 'woocommerce_before_main_content', 'dokan_depricated_widget_classes'
 /**
  * Depricated function for render seller metabox in product
  *
+ * @since 3.0.0
+ *
+ * @deprecated 3.0.0 Use \WeDevs\Dokan\Admin\Hooks::seller_meta_box_content instead of this function
+ *
  * @param object $post
  *
  * @return void|html

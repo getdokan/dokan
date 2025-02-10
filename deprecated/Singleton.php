@@ -6,6 +6,8 @@ namespace Dokan\Traits;
  * Singleton Trait
  *
  * @since 1.0.0
+ *
+ * @deprecated 3.0.0
  */
 trait Singleton {
 
