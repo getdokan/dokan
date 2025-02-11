@@ -462,7 +462,12 @@ class Manager {
 			'parent' => $parent_order_id,
 			'limit'  => -1,
 		];
-        $args = wp_parse_args( $args, $default_args );
+
+        $args = apply_filters(
+            'dokan_get_child_orders_args',
+            wp_parse_args( $args, $default_args ),
+            $parent_order_id
+        );
 
         return wc_get_orders( $args );
     }
