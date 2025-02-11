@@ -6,9 +6,8 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 
-
 test.describe('Product functionality test', () => {
-    test.skip(true, 'feature not merged yet')
+    test.skip(true, 'feature not merged yet');
     let admin: ProductFormManager;
     let aPage: Page;
     let apiUtils: ApiUtils;

@@ -25,7 +25,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.14.6';
+    public $version = '3.14.8';
 
     /**
      * Instance of self
@@ -270,12 +270,10 @@ final class WeDevs_Dokan {
 
         add_action( 'widgets_init', [ $this, 'register_widgets' ] );
 
-        // Register Hooks
-		$hooks = $this->get_container()->get( Hookable::class );
-
-		foreach ( $hooks as $hook ) {
-			$hook->register_hooks();
-		}
+        $hooks = $this->get_container()->get( Hookable::class );
+        foreach ( $hooks as $hook ) {
+            $hook->register_hooks();
+        }
     }
 
     /**

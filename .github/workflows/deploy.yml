@@ -19,7 +19,7 @@ jobs:
                 tools: composer:v2
             - name: Build
               run: |
-                composer install --no-dev
+                composer install --no-dev -o
                 npm install
                 npm run build
             - name: Install SVN ( Subversion )
@@ -39,6 +39,6 @@ jobs:
             - name: Create GitHub release
               uses: softprops/action-gh-release@v2
               with:
-                files: ${{github.workspace}}/${{ github.event.repository.name }}.zip
+                files: ${{steps.deploy.outputs.zip-path}}
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

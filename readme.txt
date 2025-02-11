@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivend
 Requires at least: 6.5
 Tested up to: 6.7.1
 WC requires at least: 8.0.0
-WC tested up to: 9.5.2
+WC tested up to: 9.6.0
 Requires PHP: 7.4
-Stable tag: 3.14.6
+Stable tag: 3.14.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,7 +97,7 @@ With Dokan, experience a smooth, fast setup process in under an hour and have yo
 
 We continuously update Dokan with reliable services for flawless operation, staying ahead of industry trends and introducing new features with each update.
 
-See Our Official GitHub page: [Official Dokan GitHub](https://github.com/getdokan/dokan/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
+See Our Official GitHub page: [Official Dokan GitHub](https://github.com/getdokan/dokan/)
 
 = A SCALABLE MARKET =
 
@@ -322,28 +322,34 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Screenshots ==
 
-1. Admin Dashboard
-2. Withdraw requests from sellers
-3. Settings &rarr; General
-4. Settings &rarr; Selling Options
-5. Settings &rarr; Withdraw Options
-6. Settings &rarr; Page Settings
-7. Settings &rarr; Appearance
-8. Seller Dashboard in site frontend
-9. Frontend &rarr; Products Listing
-10. Frontend &rarr; Create a new Product
-11. Frontend &rarr; Edit a product
-12. Frontend &rarr; Orders Listing
-13. Frontend &rarr; Orders &rarr; Details
-14. Frontend &rarr; Submit withdraw request
-15. Frontend &rarr; Store Settings
-16. Frontend &rarr; Store Payment Settings
-17. Frontend &rarr; Individual Seller Store-1
-18. Frontend &rarr; Individual Seller Store-2
-19. Frontend &rarr; Individual Seller Store-3
-
+1. Dokan Install
+2. Dokan Modules
+3. Admin &rarr; Report Logs
+4. Admin Settings &rarr; General
+5. Admin Settings &rarr; Selling Options
+6. Seller Badges
+7. Admin Settings &rarr; Appearance
+8. Admin Settings &rarr; Withdraw Options
+9. Frontend &rarr; Vendor Dashboard
+10. Frontend &rarr; Product Listing
+11. Frontend &rarr; Create a new Product
+12. Frontend &rarr; Orders Details
+13. Frontend &rarr; Vendor Reports
+14. Frontend &rarr; Vendor Badge View
+15. Frontend &rarr; Vendor Verification
+16. Frontend &rarr; Store Edit
+17. Frontend &rarr; Vendor Payment Setting
+18. Frontend &rarr; Vendor Withdraw Methods
+19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+= v3.14.8 ( Jan 29, 2025 ) =
+
+- **update:** Missing parameters support added for the reverse-withdrawal API endpoints.
+- **update:** Missing parameters support added for the Settings API endpoints.
+- **fix:** Fixed an error when navigating to the product edit page with an invalid (non-numeric) product ID.
+- **fix:** Fixed a misspelling typo vendor contact form input field.
+- **fix:** Fixed and updated analytics cache modifier for seller analytics filter.
 
 = v3.14.6 ( Jan 09, 2025 ) =
 
@@ -358,10 +364,6 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 = v3.14.4 ( Dec 27, 2024 ) =
 
 - **fix:** Added tweaks to improve system stability and smoothness.
-
-= v3.14.3 ( Dec 11, 2024 ) =
-
-- **update:** Updated Dokan admin header to display current pro plan and version with upgrading option.
 
 [CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
 

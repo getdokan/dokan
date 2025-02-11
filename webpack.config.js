@@ -7,8 +7,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 const WooCommerceDependencyExtractionWebpackPlugin = require( '@woocommerce/dependency-extraction-webpack-plugin' );
 
 const entryPoint = {
-    // Dokan tailwind css
-    'dokan-tailwind': './src/tailwind.css',
+  // Dokan tailwind css
+  'dokan-tailwind': './src/tailwind.css',
 
   'vue-frontend': './src/frontend/main.js',
   'vue-admin': './src/admin/main.js',
@@ -42,6 +42,7 @@ const entryPoint = {
   ],
   'helper': './assets/src/js/helper.js',
   'dokan-frontend': './assets/src/js/dokan-frontend.js',
+  'dokan-admin-analytics': './assets/src/js/dokan-admin-analytics.js',
 
   'style': '/assets/src/less/style.less',
   'rtl': '/assets/src/less/rtl.less',
