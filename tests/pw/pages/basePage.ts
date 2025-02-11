@@ -6,6 +6,7 @@
 import { expect, Page, BrowserContext, Cookie, Request, Response, Locator, Frame, FrameLocator, JSHandle, ElementHandle } from '@playwright/test';
 import { data } from '@utils/testData';
 import { selector } from '@pages/selectors';
+import { helpers } from '@utils/helpers';
 
 const { BASE_URL } = process.env;
 
@@ -43,13 +44,19 @@ export class BasePage {
     }
 
     // goto subUrl
-    async goto(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }): Promise<void> {
+    async goto(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }, force = false): Promise<void> {
         await this.page.goto(subPath, options);
+        if (force) {
+            await this.reload();
+        }
     }
 
     // goto subUrl until networkidle
-    async gotoUntilNetworkidle(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'networkidle' }): Promise<void> {
+    async gotoUntilNetworkidle(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'networkidle' }, force = false): Promise<void> {
         await this.goto(subPath, options);
+        if (force) {
+            await this.reload();
+        }
     }
 
     // go forward
@@ -204,8 +211,8 @@ export class BasePage {
     }
 
     // click & wait for load state to complete
-    async clickAndWaitForLoadState(selector: string): Promise<void> {
-        await Promise.all([this.waitForLoadState(), this.page.locator(selector).click()]);
+    async clickAndWaitForLoadState(selector: string, state: 'load' | 'domcontentloaded' | 'networkidle' = 'domcontentloaded', options?: { timeout?: number }): Promise<void> {
+        await Promise.all([this.waitForLoadState(state, options), this.page.locator(selector).click()]);
     }
 
     // click & wait for navigation to complete
@@ -232,10 +239,7 @@ export class BasePage {
 
     // click & wait for response with response type
     async clickAndWaitForResponseWithType(subUrl: string, selector: string, requestType: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.request().method().toLowerCase() == requestType.toLowerCase() && resp.status() === code),
-            this.page.locator(selector).click(),
-        ]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.request().method().toLowerCase() == requestType.toLowerCase() && resp.status() === code), this.page.locator(selector).click()]);
         return response;
     }
 
@@ -299,10 +303,21 @@ export class BasePage {
         return response;
     }
 
+    // type & wait for loadState
+    async typeByPageAndWaitForLoadState(selector: string, text: string, clear = true): Promise<void> {
+        if (clear) await this.clearInputField(selector);
+        await Promise.all([this.waitForLoadState(), this.page.locator(selector).pressSequentially(text, { delay: 200 })]);
+    }
+
     // type & wait for response
-    async typeByPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
+    async typeByPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200, clear = true): Promise<Response> {
+        if (clear) await this.clearInputField(selector);
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).pressSequentially(text, { delay: 200 })]);
         return response;
+    }
+    // type & wait for loadState
+    async typeAndWaitForLoadState(selector: string, text: string): Promise<void> {
+        await Promise.all([this.waitForLoadState(), this.clearAndFill(selector, text)]);
     }
 
     // type & wait for response
@@ -328,6 +343,12 @@ export class BasePage {
         await Promise.all([this.waitForLoadState(), this.press(key)]);
     }
 
+    // select & wait for response
+    async selectAndWaitForResponse(subUrl: string, selector: string, value: string, code = 200): Promise<Response> {
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.selectByValue(selector, value)]);
+        return response;
+    }
+
     // type & wait for response
     async pressAndWaitForResponse(subUrl: string, key: string, code = 200): Promise<Response> {
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.press(key)]);
@@ -349,6 +370,14 @@ export class BasePage {
     async clickIfVisible(selector: string): Promise<void> {
         const isVisible = await this.isVisible(selector, 1);
         if (isVisible) {
+            await this.click(selector);
+        }
+    }
+
+    // click if enabled
+    async clickIfEnabled(selector: string): Promise<void> {
+        const isEnabled = await this.isEnabled(selector);
+        if (isEnabled) {
             await this.click(selector);
         }
     }
@@ -683,7 +712,7 @@ export class BasePage {
 
     // clear input field
     async clearInputField(selector: string): Promise<void> {
-        await this.page.fill(selector, '');
+        await this.page.locator(selector).fill('');
     }
 
     // Or
@@ -702,7 +731,8 @@ export class BasePage {
 
     // clear input field and type
     async clearAndTypeByPage(selector: string, text: string): Promise<void> {
-        await this.clearInputFieldByMultipleClick(selector);
+        await this.clearInputField(selector);
+        // await this.clearInputFieldByMultipleClick(selector);
         await this.type(selector, text);
     }
 
@@ -821,6 +851,11 @@ export class BasePage {
     // select by number
     async selectByNumber(selector: string, value: number | string): Promise<string[]> {
         return await this.page.selectOption(selector, { index: Number(value) });
+    }
+
+    // select by value and wait for loadState
+    async selectByValueAndWaitForLoadState(selector: string, value: string, state: 'load' | 'domcontentloaded' | 'networkidle' = 'domcontentloaded'): Promise<void> {
+        await Promise.all([this.waitForLoadState(state), this.page.selectOption(selector, { value })]);
     }
 
     // select by value and wait for response
@@ -959,6 +994,12 @@ export class BasePage {
         const locator = this.page.frameLocator(frame).locator(frameSelector);
         await locator.fill(text);
         // await locator.pressSequentially(text);
+    }
+
+    async clickFrameSelectorAndWaitForResponse(frame: string, subUrl: string, frameSelector: string, code = 200): Promise<Response> {
+        const locator = this.page.frameLocator(frame).locator(frameSelector);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), locator.click()]);
+        return response;
     }
 
     /**
@@ -1394,10 +1435,15 @@ export class BasePage {
         }
     }
 
-    // multiple elements to be visible
-    async multipleElementVisible(selectors: any) {
+    async multipleElementVisible(selectors: { [key: string]: any }) {
         for (const selector in selectors) {
-            await this.toBeVisible(selectors[selector]);
+            if (helpers.isPlainObject(selectors[selector])) {
+                await this.multipleElementVisible(selectors[selector]);
+            } else if (typeof selectors[selector] === 'function') {
+                continue;
+            } else {
+                await this.toBeVisible(selectors[selector]);
+            }
         }
     }
 
@@ -1448,6 +1494,12 @@ export class BasePage {
         const visibleSelectors = visibilityResults.filter(selector => selector !== null);
         expect(visibleSelectors.length).toBeGreaterThan(0);
         return visibleSelectors;
+    }
+
+    // assert element to exists
+    async toExists(selector: string) {
+        const exists = await this.isLocatorExists(selector);
+        expect(exists).toBe(true);
     }
 
     // assert value to be equal
@@ -1537,7 +1589,13 @@ export class BasePage {
         }, options);
     }
 
-    // assert element to contain text
+    // assert frame element to be visible
+    async toBeVisibleFrameLocator(frame: string, frameSelector: string, options?: { timeout?: number; visible?: boolean } | undefined) {
+        const locator = this.page.frameLocator(frame).locator(frameSelector);
+        await expect(locator).toBeVisible(options);
+    }
+
+    // assert frame element to contain text
     async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp, options?: { timeout?: number; intervals?: number[] }): Promise<void> {
         await this.toPass(async () => {
             const locator = this.page.frameLocator(frame).locator(frameSelector);
@@ -1559,6 +1617,20 @@ export class BasePage {
                 return await asyncFn();
             }, options)
             .toBe(200);
+    }
+
+    // assert element not to exists
+    async notToExists(selector: string) {
+        const exists = await this.isLocatorExists(selector);
+        expect(exists).toBe(false);
+    }
+
+    // assert two element to have same count
+    async toHaveEqualCount(selector1: string, selector2: string, options?: { timeout?: number; intervals?: number[] }) {
+        await this.toPass(async () => {
+            const [selector1Count, selector2Count] = await Promise.all([await this.getElementCount(selector1), await this.getElementCount(selector2)]);
+            expect(selector1Count).toBe(selector2Count);
+        }, options);
     }
 
     // assert element not to be visible
@@ -1691,8 +1763,8 @@ export class BasePage {
     // enable switch or checkbox: dokan setup wizard
     async enableSwitcherSetupWizard(selector: string): Promise<void> {
         const value = await this.getPseudoElementStyles(selector, 'before', 'background-color');
-        // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
-        if (!value.includes('rgb(251, 203, 196)') && !value.includes('rgb(242, 98, 77)')) {
+        // rgb(201, 186, 248) for switcher & rgb(112, 71, 235) for checkbox
+        if (!value.includes('rgb(201, 186, 248)') && !value.includes('rgb(112, 71, 235)')) {
             if (selector.includes('withdraw_methods')) selector += '/..';
             await this.click(selector);
         }
@@ -1701,18 +1773,27 @@ export class BasePage {
     // disable switch or checkbox: dokan setup wizard
     async disableSwitcherSetupWizard(selector: string): Promise<void> {
         const value = await this.getPseudoElementStyles(selector, 'before', 'background-color');
-        // rgb(251, 203, 196) for switcher & rgb(242, 98, 77) for checkbox
-        if (value.includes('rgb(251, 203, 196)') || value.includes('rgb(242, 98, 77)')) {
+        // rgb(201, 186, 248) for switcher & rgb(112, 71, 235) for checkbox
+        if (value.includes('rgb(201, 186, 248)') || value.includes('rgb(112, 71, 235)')) {
             if (selector.includes('withdraw_methods')) selector += '/..';
             await this.click(selector);
         }
     }
 
-    // admin enable switcher , if enabled then Skip : vendor dashboard disbursements
-    async enableSwitcherDisbursement(selector: string): Promise<void> {
+    // vendor enable switcher , if enabled then Skip : vendor dashboard (disbursements, printful)
+    async enableSwitcherVendorDashboard(selector: string): Promise<void> {
         selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
         const value = await this.getElementBackgroundColor(selector);
         if (!value.includes('rgb(33, 150, 243)')) {
+            await this.click(selector);
+        }
+    }
+
+    // vendor disable switcher , if enabled then Skip : vendor dashboard (disbursements, printful)
+    async disableSwitcherVendorDashboard(selector: string): Promise<void> {
+        selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
+        const value = await this.getElementBackgroundColor(selector);
+        if (value.includes('rgb(33, 150, 243)')) {
             await this.click(selector);
         }
     }

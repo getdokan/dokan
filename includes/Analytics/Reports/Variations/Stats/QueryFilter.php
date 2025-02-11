@@ -9,7 +9,7 @@ use WeDevs\Dokan\Analytics\Reports\Variations\QueryFilter as ProductsQueryFilter
  *
  * Filters and modifies WooCommerce analytics queries for variations.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class QueryFilter extends ProductsQueryFilter {
 	protected $context = 'variations_stats';

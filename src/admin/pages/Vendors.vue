@@ -12,7 +12,7 @@
 
             <AdminNotice></AdminNotice>
 
-            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
+<!--            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>-->
 
             <hr class="wp-header-end">
 
@@ -53,8 +53,7 @@
                 <template slot="store_name" slot-scope="data">
                     <img :src="data.row.gravatar" :alt="data.row.store_name" width="50">
                     <strong>
-                        <router-link v-if="hasPro" :to="'/vendors/' + data.row.id">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan-lite' ) }}</router-link>
-                        <a v-else :href="editUrl(data.row.id)">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan-lite' ) }}</a>
+                        <router-link :to="'/vendors/' + data.row.id">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan-lite' ) }}</router-link>
                     </strong>
                 </template>
 
@@ -76,8 +75,7 @@
 
                 <template slot="row-actions" slot-scope="data">
                 <span v-for="(action, index) in actions" :class="action.key">
-                    <router-link v-if="hasPro && action.key == 'edit'" :to="{ path: 'vendors/' + data.row.id, query:{edit:'true'} }">{{ action.label }}</router-link>
-                    <a v-else-if="! hasPro && action.key == 'edit'" :href="editUrl(data.row.id)">{{ action.label }}</a>
+                    <router-link v-if="action.key == 'edit'" :to="{ path: 'vendors/' + data.row.id, query:{edit:'true'} }">{{ action.label }}</router-link>
                     <a v-else-if="action.key == 'products'" :href="productUrl(data.row.id)">{{ action.label }}</a>
                     <a v-else-if="action.key == 'orders'" :href="ordersUrl(data.row.id)">{{ action.label }}</a>
                     <a v-else-if="action.key == 'switch_to'" :href="switchToUrl(data.row)">{{ action.label }}</a>
@@ -102,7 +100,7 @@
 
 <script>
 import AddVendor from './AddVendor.vue'
-import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+// import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
 let ListTable   = dokan_get_lib('ListTable');
 let Switches    = dokan_get_lib('Switches');
@@ -118,7 +116,7 @@ export default {
         Switches,
         Search,
         AddVendor,
-        UpgradeBanner,
+        // UpgradeBanner,
         AdminNotice,
     },
 

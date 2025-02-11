@@ -5,11 +5,16 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
 test.describe('Vendor tools test', () => {
+    let admin: VendorToolsPage;
     let vendor: VendorToolsPage;
-    let vPage: Page;
+    let aPage: Page, vPage: Page;
     let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
+        const adminContext = await browser.newContext(data.auth.adminAuth);
+        aPage = await adminContext.newPage();
+        admin = new VendorToolsPage(aPage);
+
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new VendorToolsPage(vPage);
@@ -19,7 +24,15 @@ test.describe('Vendor tools test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.vendorImportExport, payloads.adminAuth);
         await vPage.close();
+        await apiUtils.dispose();
+    });
+
+    // admin
+
+    test('admin can enable product importer and exporter module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableProductImporterExporterModule();
     });
 
     //vendor
@@ -42,5 +55,12 @@ test.describe('Vendor tools test', () => {
 
     test('vendor can import product as csv', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.importProduct('csv', 'utils/sampleData/products.csv');
+    });
+
+    // admin
+
+    test('admin can disable product importer and exporter module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.vendorImportExport, payloads.adminAuth);
+        await admin.disableProductImporterExporterModule();
     });
 });

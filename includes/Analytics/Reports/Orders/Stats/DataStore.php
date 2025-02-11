@@ -14,7 +14,7 @@ use WeDevs\Dokan\Analytics\Reports\OrderType;
 /**
  * Dokan Orders stats data synchronizer.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class DataStore extends ReportsDataStore implements DataStoreInterface {
 	/**
@@ -140,7 +140,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		 * @param array $data Data written to order stats lookup table.
 		 * @param WC_Order $order  Order object.
 		 *
-		 * @since DOKAN_SINCE
+		 * @since 3.13.0
 		 */
 		$data = apply_filters(
 			'dokan_analytics_update_order_stats_data',
@@ -188,7 +188,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		 *
 		 * @param int $order_id Order ID.
 		 *
-		 * @since DOKAN_SINCE
+		 * @since 3.13.0
 		 */
 		do_action( 'dokan_analytics_update_order_stats', $order->get_id() );
 
@@ -222,7 +222,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		 * @param int $order_id Order ID.
 		 * @param int $customer_id Customer ID.
 		 *
-		 * @since DOKAN_SINCE
+		 * @since 3.13.0
 		 */
 		do_action( 'dokan_analytics_delete_order_stats', $order_id, $customer_id );
 	}

@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('jquery', 'moment', 'wp-i18n'), 'version' => 'db0f41849b3c331ef68f');
+<?php return array('dependencies' => array('jquery', 'moment', 'wp-i18n'), 'version' => '2ecefa1cf0cf40f5f645');

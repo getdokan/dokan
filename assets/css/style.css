@@ -2101,6 +2101,9 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li a i.menu-dropdown::before {
   padding-left: 15px;
 }
+.dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li a svg {
+  margin-right: 15px;
+}
 .dokan-dashboard .dokan-dash-sidebar ul.dokan-dashboard-menu li:hover {
   background: #f05025;
   color: #fff;
@@ -3401,7 +3404,6 @@ div.media-sidebar a.edit-attachment {
 .product-edit-new-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder a.action-delete {
   position: absolute;
   top: 0;
-  right: 0;
   color: red;
   background: rgba(0, 0, 0, 0.6);
   margin: 0;
@@ -3415,7 +3417,9 @@ div.media-sidebar a.edit-attachment {
 }
 .product-edit-new-container #dokan-product-images ul.product_images li.image:hover a.action-delete,
 .product-edit-new-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder:hover a.action-delete {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .product-edit-new-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder {
   border: 1px dashed #ccc;
@@ -3964,7 +3968,6 @@ div.media-sidebar a.edit-attachment {
 .product-edit-container #dokan-product-images ul.product_images li.add-image a.action-delete {
   position: absolute;
   top: 0;
-  right: 0;
   color: red;
   background: rgba(0, 0, 0, 0.6);
   margin: 0;
@@ -3979,7 +3982,9 @@ div.media-sidebar a.edit-attachment {
 .product-edit-container #dokan-product-images ul.product_images li.image:hover a.action-delete,
 .product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder:hover a.action-delete,
 .product-edit-container #dokan-product-images ul.product_images li.add-image:hover a.action-delete {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .product-edit-container #dokan-product-images ul.product_images li.dokan-sortable-placeholder {
   border: 1px dashed #ccc;
@@ -4192,23 +4197,22 @@ div.media-sidebar a.edit-attachment {
 .dokan-add-new-product-popup #dokan-product-images ul.product_images li.add-image a.action-delete {
   position: absolute;
   top: 0;
-  right: 0;
   color: red;
   background: rgba(0, 0, 0, 0.6);
   margin: 0;
-  padding: 0 3px;
   font-size: 50px;
   width: 100%;
   text-align: center;
   height: 100%;
-  padding-top: 25%;
   font-weight: bold;
   display: none;
 }
 .dokan-add-new-product-popup #dokan-product-images ul.product_images li.image:hover a.action-delete,
 .dokan-add-new-product-popup #dokan-product-images ul.product_images li.dokan-sortable-placeholder:hover a.action-delete,
 .dokan-add-new-product-popup #dokan-product-images ul.product_images li.add-image:hover a.action-delete {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .dokan-add-new-product-popup #dokan-product-images ul.product_images li.dokan-sortable-placeholder {
   border: 1px dashed #ccc;

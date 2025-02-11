@@ -73,13 +73,13 @@ class SetupWizardNoWC extends DokanSetupWizard {
      * @return void
      */
     public function setup_wizard_content() {
-        if ( empty( $this->steps[ $this->step ]['view'] ) ) {
+        if ( empty( $this->steps[ $this->current_step ]['view'] ) ) {
             wp_safe_redirect( esc_url_raw( add_query_arg( 'step', 'install_woocommerce' ) ) );
             exit;
         }
 
         echo '<div class="wc-setup-content">';
-        call_user_func( $this->steps[ $this->step ]['view'] );
+        call_user_func( $this->steps[ $this->current_step ]['view'] );
         echo '</div>';
     }
 
@@ -92,8 +92,8 @@ class SetupWizardNoWC extends DokanSetupWizard {
      */
     public function setup_wizard_footer() {
         ?>
-                <a class="wc-return-to-dashboard" href="<?php echo esc_url( admin_url() ); ?>"><?php esc_html_e( 'Return to the WordPress Dashboard', 'dokan-lite' ); ?></a>
-            </body>
+        <a class="wc-return-to-dashboard" href="<?php echo esc_url( admin_url() ); ?>"><?php esc_html_e( 'Return to the WordPress Dashboard', 'dokan-lite' ); ?></a>
+        </body>
         </html>
         <?php
     }

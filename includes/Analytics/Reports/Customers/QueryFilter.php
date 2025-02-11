@@ -9,7 +9,7 @@ use WeDevs\Dokan\Analytics\Reports\BaseQueryFilter;
  *
  * Filters and modifies WooCommerce analytics queries for Dokan orders.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class QueryFilter extends BaseQueryFilter {
     /**

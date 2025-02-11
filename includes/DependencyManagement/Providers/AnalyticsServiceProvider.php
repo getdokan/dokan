@@ -9,6 +9,9 @@ use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 use WeDevs\Dokan\ThirdParty\Packages\League\Container\Definition\DefinitionInterface;
 
 class AnalyticsServiceProvider extends BaseServiceProvider {
+    /**
+     * Tags for services added to the container.
+     */
     public const TAGS = [ 'analytics-service', 'common-service' ];
 
     protected $services = [
@@ -21,6 +24,7 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Analytics\Reports\Variations\Stats\QueryFilter::class,
         \WeDevs\Dokan\Analytics\Reports\Categories\QueryFilter::class,
         \WeDevs\Dokan\Analytics\Reports\DataStoreModifier::class,
+        \WeDevs\Dokan\Analytics\Reports\CacheKeyModifier::class,
         \WeDevs\Dokan\Analytics\Reports\Taxes\QueryFilter::class,
         \WeDevs\Dokan\Analytics\Reports\Taxes\Stats\QueryFilter::class,
         \WeDevs\Dokan\Analytics\Reports\Coupons\QueryFilter::class,
