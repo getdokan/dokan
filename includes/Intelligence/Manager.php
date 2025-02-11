@@ -31,12 +31,10 @@ class Manager {
      * @return bool
      */
     public function is_configured(): bool {
-        $engine = self::active_engine();
-
-        $engines = self::get_engines();
+        $engine  = $this->active_engine();
+        $engines = $this->get_engines();
 
         $available_engines = array_keys( $engines );
-
         // activated engine should be in available engines
         if ( ! in_array( $engine, $available_engines, true ) ) {
             return false;
