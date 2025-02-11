@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Store Location Widget
+ * Store Location
  *
  * @deprecated 3.0.0
  */

@@ -37,7 +37,7 @@ function dokan_get_product_status( $status ) {
 }
 
 /**
- * Load depericated widget class dynamically
+ * Load deprecated widget class dynamically
  *
  * @since 3.0.0
  *
@@ -64,7 +64,7 @@ function dokan_depricated_widget_classes() {
 add_action( 'woocommerce_before_main_content', 'dokan_depricated_widget_classes' );
 
 /**
- * Depricated function for render seller metabox in product
+ * Deprecated function for render seller metabox in product
  *
  * @since 3.0.0
  *

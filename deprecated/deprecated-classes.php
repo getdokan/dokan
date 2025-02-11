@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Lists all depricated classes
+ * Lists all deprecated classes
  *
  * @deprecated 3.0.0
  */
