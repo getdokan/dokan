@@ -6,7 +6,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { VENDOR_ID } = process.env;
+const { DOKAN_PRO, VENDOR_ID } = process.env;
 
 test.describe('Vendor settings test', () => {
     let vendor: VendorSettingsPage;
@@ -23,7 +23,7 @@ test.describe('Vendor settings test', () => {
 
     test.afterAll(async () => {
         await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
-        await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
+        if (DOKAN_PRO) await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
         await vPage.close();
         await apiUtils.dispose();
     });
@@ -34,8 +34,9 @@ test.describe('Vendor settings test', () => {
         await vendor.vendorStoreSettingsRenderProperly();
     });
 
-    test('vendor can view Shipstation settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorShipstationSettingsRenderProperly();
+    test('vendor can view ShipStation settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+        test.skip(true, 'pr not merged yet');
+        await vendor.vendorShipStationSettingsRenderProperly();
     });
 
     test('vendor can view social profile settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
@@ -90,6 +91,7 @@ test.describe('Vendor settings test', () => {
 
     test('vendor can set catalog settings', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'catalog');
+
         // disable catalog
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'off', catalog_mode_hide_product_price: 'off' });
     });
@@ -106,13 +108,19 @@ test.describe('Vendor settings test', () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'store-support');
     });
 
+    test('vendor can set live chat settings', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'liveChat');
+    });
+
     test('vendor can set min-max settings', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'min-max');
+
         // disable min-max
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { enable_min_max_quantity: 'off', enable_min_max_amount: 'off' });
     });
 
-    test('vendor can set shipStation settings', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can set ShipStation settings', { tag: ['@pro', '@vendor'] }, async () => {
+        test.skip(true, 'pr not merged yet');
         await vendor.setShipStation(data.vendor.shipStation);
     });
 

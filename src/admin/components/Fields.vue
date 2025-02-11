@@ -1,7 +1,7 @@
 <template>
     <div :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
         <template v-if="'sub_section' === fieldData.type">
-            <div class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <h3 class="sub-section-title">{{ fieldData.label }}</h3>
                 <p class="sub-section-description">
                     {{ fieldData.description }}
@@ -10,7 +10,7 @@
         </template>
 
         <template v-if="containCommonFields( fieldData.type )">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
@@ -43,7 +43,7 @@
         </template>
 
         <template v-if="'number' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
@@ -72,58 +72,17 @@
             </div>
         </template>
 
-        <template v-if="'price' === fieldData.type && allSettingsValues.dokan_selling && 'combine' !== allSettingsValues.dokan_selling.commission_type">
+        <template v-if="'commission_fixed' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <fieldset>
+                <fieldset class='flex justify-between'>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
-                    <div class="field">
-                        <label :for="sectionId + '[' + fieldData.name + ']'">
-                            <input type="text" :min="fieldData.min" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
-                                :class="{ wc_input_decimal: allSettingsValues.dokan_selling.commission_type=='percentage', 'wc_input_price': allSettingsValues.dokan_selling.commission_type=='flat' }"
-                                :name="sectionId + '[' + fieldData.name + ']'"
-                                :value="fieldValue[fieldData.name]"
-                                @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
-                            />
-                        </label>
-                    </div>
-                </fieldset>
-                <p v-if="hasError( fieldData.name )" class="dokan-error">
-                    {{ getError( fieldData.label ) }}
-                </p>
-                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
-                  {{ getValidationErrorMessage( fieldData.name ) }}
-                </p>
-            </div>
-        </template>
-
-        <template v-if="'combine' === fieldData.type && haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <fieldset>
-                    <FieldHeading :fieldData="fieldData"></FieldHeading>
-                    <div class="field combine_fields">
-                        <div class="percent_fee">
-                            <input
-                                type="text"
-                                class="wc_input_decimal regular-text medium"
-                                :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'"
-                                :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'"
-                                :value="fieldValue[fieldData.fields.percent_fee.name]"
-                                @input="event => inputValueHandler( fieldData.fields.percent_fee.name, event.target.value, fieldValue[fieldData.fields.percent_fee.name] )"
-                            />
-                            {{ '%' }}
-                        </div>
-                        <div class="fixed_fee">
-                            {{ '+' }}
-                            <input
-                                type="text"
-                                class="wc_input_price regular-text medium"
-                                :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'"
-                                :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'"
-                                :value="fieldValue[fieldData.fields.fixed_fee.name]"
-                                @input="event => inputValueHandler( fieldData.fields.fixed_fee.name, event.target.value, fieldValue[fieldData.fields.fixed_fee.name] )"
-                            />
-                        </div>
-                    </div>
+                      <combine-input
+                        :value="{
+                            fixed: fieldData.fields ? fieldValue[fieldData.fields.fixed_fee.name] : '',
+                            percentage: fieldData.fields ? fieldValue[fieldData.fields.percent_fee.name] : ''
+                        }"
+                        v-on:change='data => commissionUpdated( data )'
+                      />
                 </fieldset>
                 <p class="dokan-error combine-commission" v-if="hasError( fieldData.fields.percent_fee.name ) && hasError( fieldData.fields.fixed_fee.name )">
                     {{ __( 'Both percentage and fixed fee is required.', 'dokan-lite' ) }}
@@ -137,8 +96,47 @@
             </div>
         </template>
 
+        <template v-if="'category_based_commission' === fieldData.type">
+            <div class="field_contents p-0" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <fieldset class="pt-4 pb-0 pl-5 pr-5">
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
+                </fieldset>
+                <div class="p-4 pl-5 pr-5">
+                    <category-based-commission
+                        :value="watchCategoryCommission"
+                        @change="onCategoryUpdate"
+                    />
+                </div>
+
+                <p v-if="hasError( fieldData.name )" class="dokan-error pt-0 pl-5 pb-5 m-0">
+                    {{ getError( fieldData.label ) }}
+                </p>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error pl-5 pb-5">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+            </div>
+        </template>
+
+        <template  v-if="'yes' === fieldData.dokan_pro_commission">
+            <component
+                :key="fieldData.type"
+                :sectionId="sectionId"
+                :fieldData="fieldData"
+                :is="settingsComponent"
+                :fieldValue="fieldValue"
+                :id="id"
+                :allSettingsValues="allSettingsValues"
+                :dokanAssetsUrl="dokanAssetsUrl"
+                :errors="errors"
+                :assetsUrl="dokanAssetsUrl"
+                :validationErrors="validationErrors"
+                :toggleLoadingState="toggleLoadingState"
+                @some-event="thisSomeEvent"
+                v-for="( settingsComponent, index ) in commissionFieldComponents"/>
+        </template>
+
         <template v-if="'textarea' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
@@ -164,7 +162,7 @@
         </template>
 
         <template v-if="'switcher' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
@@ -184,7 +182,7 @@
         </template>
 
         <template v-if="'multicheck' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field multicheck_fields">
@@ -207,7 +205,7 @@
         </template>
 
         <template v-if="'select' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
@@ -249,7 +247,7 @@
         </template>
 
         <template v-if="'file' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field add_files">
@@ -273,7 +271,7 @@
         </template>
 
         <template v-if="'color' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
@@ -293,7 +291,7 @@
         </template>
 
         <template v-if="'html' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
@@ -304,7 +302,7 @@
         </template>
 
         <template v-if="'warning' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <div class="field_data">
                         <h3 scope="row" class="field_heading dokan-setting-warning error">
@@ -313,6 +311,8 @@
                                 {{ fieldData.label }}
                             </span>
                             <span class="field_desc" v-html="fieldData.desc"></span>
+                            <a v-if="fieldData.scroll_into_view" class="dokan-setting-warning-link" @click.prevent="scrollIntoField( fieldData.scroll_to_field, fieldData.scroll_to_section )" href="#">{{ fieldData.scroll_to_label }} <i class="dashicons dashicons-admin-links"></i></a>
+                            <a v-else-if="fieldData.external_link" class="dokan-setting-warning-link" :href="fieldData.link_url">{{ fieldData.link_text }} <i class="dashicons dashicons-admin-links"></i></a>
                         </h3>
                     </div>
                 </fieldset>
@@ -320,7 +320,7 @@
         </template>
 
         <template v-if="'radio' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="radio_fields">
@@ -339,7 +339,7 @@
         </template>
 
         <template v-if="'wpeditor' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
@@ -353,7 +353,7 @@
         </template>
 
         <template v-if="'repeatable' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field repeatable_fields">
@@ -381,7 +381,7 @@
         </template>
 
         <template v-if="'radio_image' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
@@ -412,7 +412,7 @@
         </template>
 
         <template v-if="'gmap' === fieldData.type && ! hideMap">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
@@ -440,7 +440,7 @@
         </template>
 
         <template v-if="'social' === fieldData.type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+            <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <label class="social-switch-wraper" v-if="fieldData.enable_status">
@@ -509,8 +509,9 @@
     import FieldHeading from './FieldHeading.vue';
     import SecretInput from './SecretInput.vue';
     import WithdrawCharges from './Fields/WithdrawCharges.vue'
+    import CombineInput from "admin/components/CombineInput.vue";
+    import CategoryBasedCommission from "admin/components/Commission/CategoryBasedCommission.vue";
     import DokanRadioGroup from "admin/components/DokanRadioGroup.vue";
-
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -520,7 +521,9 @@
         name: 'Fields',
 
         components: {
-          DokanRadioGroup,
+            CategoryBasedCommission,
+            CombineInput,
+            DokanRadioGroup,
             Mapbox,
             Switches,
             TextEditor,
@@ -546,6 +549,7 @@
                 singleColorPicker     : { default: this.fieldData.default, label: '', show_pallete: false },
                 yourStringTimeValue   : '',
                 customFieldComponents : dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
+                commissionFieldComponents : dokan.hooks.applyFilters( 'getDokanCommissionFieldComponents', [] ),
                 multiCheckValues      : {},
             }
         },
@@ -564,14 +568,6 @@
                     this.checked = value;
                 }
             });
-        },
-
-        watch: {
-            fieldValue: {
-                handler() {
-                },
-                deep: true,
-            }
         },
 
         computed: {
@@ -688,6 +684,16 @@
 
                 return true;
             },
+
+            watchCategoryCommission() {
+                let data =  JSON.parse( JSON.stringify( this.fieldValue[this.fieldData.name] ) );
+
+                if ( window._.isEmpty( data ) ) {
+                    return {};
+                }
+
+                return data;
+            },
         },
 
         beforeMount() {
@@ -701,6 +707,10 @@
         },
 
         methods: {
+            scrollIntoField( fieldId, sectionId ) {
+                this.scrollToSettingField( fieldId, sectionId );
+            },
+
             formatDokanRadioData( options ) {
               let data = [];
               Object.keys( options ).map( item => {
@@ -813,7 +823,6 @@
 
                 return 'on';
             },
-
 
             thisSomeEvent(value) {
                 console.log('hello priting...', value);
@@ -934,6 +943,22 @@
                 const hexPattern = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 
                 this.fieldData[ key ] = hexPattern.test( value ) ? value : defaultValue;
+            },
+
+            commissionUpdated( data ) {
+                if (isNaN( data.fixed )) {
+                    data.fixed = this.fieldValue[this.fieldData.fields.fixed_fee.name] ?? '';
+                }
+                if (isNaN( data.percentage )) {
+                    data.percentage = this.fieldValue[this.fieldData.fields.percent_fee.name] ?? '';
+                }
+
+                this.fieldValue[this.fieldData.fields.percent_fee.name] = data.percentage;
+                this.fieldValue[this.fieldData.fields.fixed_fee.name] = data.fixed;
+            },
+
+            onCategoryUpdate(data) {
+                this.fieldValue[this.fieldData.name] = data;
             },
         },
     };
@@ -1233,6 +1258,21 @@
 
                 span {
                     margin-top: 6px !important;
+                }
+            }
+
+            a.dokan-setting-warning-link {
+                display: block;
+                margin-top: 8px;
+                text-decoration: none;
+
+                &:hover, &:active, &:focus {
+                    outline: none;
+                    box-shadow: none;
+                }
+
+                i.dashicons {
+                    font-size: 18px;
                 }
             }
 

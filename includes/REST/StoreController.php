@@ -623,14 +623,21 @@ class StoreController extends WP_REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param $store
+     * @param Vendor $store
      * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $store, $request, $additional_fields = [] ) {
-        $data     = $store->to_array();
+        $data = $store->to_array();
+
+        $commission_settings               = $store->get_commission_settings();
+        $data['admin_category_commission'] = $commission_settings->get_category_commissions();
+        $data['admin_commission']          = $commission_settings->get_percentage();
+        $data['admin_additional_fee']      = $commission_settings->get_flat();
+        $data['admin_commission_type']     = $commission_settings->get_type();
+
         $data     = array_merge( $data, apply_filters( 'dokan_rest_store_additional_fields', $additional_fields, $store, $request ) );
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $data, $request ) );
@@ -935,7 +942,22 @@ class StoreController extends WP_REST_Controller {
         }
 
         $category_data = $store->get_store_categories( $best_selling );
-        $response      = rest_ensure_response( $category_data );
+        $commission_settings = $store->get_commission_settings();
+        $category_commissions = $commission_settings->get_category_commissions();
+
+        foreach ( $category_data as $term ) {
+            $term->admin_commission_type = $commission_settings->get_type();
+
+            if ( isset( $category_commissions['items'][ $term->term_id ] ) ) {
+                $term->commission = $category_commissions['items'][ $term->term_id ];
+            } elseif ( $category_commissions['all'] ) {
+                $term->commission = $category_commissions['all'];
+            } else {
+                $term->commission = [];
+            }
+        }
+
+        $response = rest_ensure_response( $category_data );
 
         return $response;
     }

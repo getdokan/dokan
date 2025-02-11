@@ -11,7 +11,7 @@ use WeDevs\Dokan\DependencyManagement\BootableServiceProvider;
  * This service provider handles the core services with the Dokan's
  * dependency injection container.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class ServiceProvider extends BootableServiceProvider {
 	/**
@@ -36,6 +36,7 @@ class ServiceProvider extends BootableServiceProvider {
         'withdraw'            => \WeDevs\Dokan\Withdraw\Manager::class,
         'dashboard'           => \WeDevs\Dokan\Dashboard\Manager::class,
         'commission'          => \WeDevs\Dokan\Commission::class,
+        'fees'                => \WeDevs\Dokan\Fees::class,
         'customizer'          => \WeDevs\Dokan\Customizer::class,
         'upgrades'            => \WeDevs\Dokan\Upgrade\Manager::class,
         'product_sections'    => \WeDevs\Dokan\ProductSections\Manager::class,

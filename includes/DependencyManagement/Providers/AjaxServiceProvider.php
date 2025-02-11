@@ -3,35 +3,41 @@
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
+use WeDevs\Dokan\Ajax;
 
+/**
+ * Class AjaxServiceProvider
+ *
+ * Registers the Ajax service with the dependency container and adds
+ * appropriate tags to the service definition.
+ */
 class AjaxServiceProvider extends BaseServiceProvider {
     /**
-     * Tag for services added to the container.
-     */
-    public const TAG = 'ajax-service';
-
-	protected $services = [
-		self::TAG,
-	];
-
-	/**
-     * {@inheritDoc}
+     * Tags used to identify the service in the container.
      *
-     * Check if the service provider can provide the given service alias.
-     *
-     * @param string $alias The service alias to check.
-     * @return bool True if the service provider can provide the service, false otherwise.
+     * @var array
      */
-	public function provides( string $alias ): bool {
-		return in_array( $alias, $this->services, true );
-	}
+    protected $tags = [ 'ajax-service' ];
 
-	/**
-     * Register the classes.
+    /**
+     * List of services provided by this provider.
+     *
+     * @var array
      */
-	public function register(): void {
-		$this->getContainer()
-            ->addShared( \WeDevs\Dokan\Ajax::class, \WeDevs\Dokan\Ajax::class )
-            ->addTag( self::TAG );
+    protected $services = [
+        Ajax::class,
+    ];
+
+
+    /**
+     * Register the Ajax class in the container and add the corresponding tags.
+     *
+     * @return void
+     */
+    public function register(): void {
+        $this->add_tags(
+            $this->getContainer()->addShared( Ajax::class ),
+            $this->tags
+        );
     }
 }
