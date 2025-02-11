@@ -31,4 +31,15 @@
             outline-color: var(--dokan-button-border-color, #F05025);
         }
     }
+
+    button[data-headlessui-state="checked"] {
+        &:hover, &:focus {
+            background-color: var(--dokan-button-background-color, #F05025) !important;
+        }
+    }
+    div[data-headlessui-state="open"][role="dialog"] {
+        // we are using z-index: 999 to make sure the modal is on top of everything except dokan ui toast
+        // When changing this value, make sure to check if toast is still on top of the modal
+        z-index: 999;
+    }
 }
