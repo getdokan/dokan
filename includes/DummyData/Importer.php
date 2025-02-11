@@ -2,8 +2,8 @@
 
 namespace WeDevs\Dokan\DummyData;
 
-use \WP_Error;
-use \WP_Query;
+use WP_Error;
+use WP_Query;
 
 /**
  * Include dependencies.
@@ -166,7 +166,6 @@ class Importer extends \WC_Product_Importer {
      * @return array
      */
     public function import() {
-        $index            = 0;
         $update_existing  = false;
         $data             = array(
             'imported' => array(),
@@ -242,8 +241,6 @@ class Importer extends \WC_Product_Importer {
                     )
                 );
             }
-
-            $index ++;
         }
 
         return $data;
@@ -273,8 +270,8 @@ class Importer extends \WC_Product_Importer {
             'posts_per_page' => - 1,
             'post_status'    => 'any',
             'fields'         => 'ids',
-            'meta_key'       => 'dokan_dummy_data',
-            'meta_value'     => '1'
+            'meta_key'       => 'dokan_dummy_data', // phpcs:ignore
+            'meta_value'     => '1',                // phpcs:ignore
         ];
 
         $query = new WP_Query( $args );
@@ -324,7 +321,13 @@ class Importer extends \WC_Product_Importer {
             return;
         }
 
-        $orders = dokan()->order->all( [ 'seller_id' => $vendor_id, 'return' => 'objects' ] );
+        $orders = dokan()->order->all(
+            [
+                'seller_id' => $vendor_id,
+                'return'    => 'objects',
+            ]
+        );
+
         // Deleting vendors orders.
         foreach ( $orders as $order ) {
             $order->delete( true );
@@ -332,6 +335,7 @@ class Importer extends \WC_Product_Importer {
 
         global $wpdb;
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         // Deleting orders from dokan orders table.
         $wpdb->delete(
             $wpdb->prefix . 'dokan_orders',
@@ -352,5 +356,6 @@ class Importer extends \WC_Product_Importer {
             [ 'user_id' => $vendor_id ],
             [ '%d' ]
         );
+        // phpcs:enable
     }
 }

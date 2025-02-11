@@ -38,10 +38,8 @@ function dokan_save_product( $args ) {
             if ( absint( $data['product_cat'] ) < 0 ) {
                 return new WP_Error( 'no-category', __( 'Please select a category', 'dokan-lite' ) );
             }
-        } else {
-            if ( ! isset( $data['product_cat'] ) && empty( $data['product_cat'] ) ) {
-                return new WP_Error( 'no-category', __( 'Please select at least one category', 'dokan-lite' ) );
-            }
+        } elseif ( ! isset( $data['product_cat'] ) && empty( $data['product_cat'] ) ) {
+            return new WP_Error( 'no-category', __( 'Please select at least one category', 'dokan-lite' ) );
         }
     } elseif ( empty( $data['chosen_product_cat'] ) ) {
         return new WP_Error( 'no-category', __( 'Please select a category', 'dokan-lite' ) );
@@ -89,10 +87,8 @@ function dokan_save_product( $args ) {
     if ( ! isset( $data['chosen_product_cat'] ) ) {
         if ( Helper::product_category_selection_is_single() ) {
             $cat_ids[] = $data['product_cat'];
-        } else {
-            if ( ! empty( $data['product_cat'] ) ) {
-                $cat_ids = array_map( 'absint', (array) $data['product_cat'] );
-            }
+        } elseif ( ! empty( $data['product_cat'] ) ) {
+            $cat_ids = array_map( 'absint', (array) $data['product_cat'] );
         }
         $post_data['categories'] = $cat_ids;
     }
@@ -189,7 +185,7 @@ function dokan_product_output_variations() {
         }
     }
 
-    $variations_count       = absint( $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM $wpdb->posts WHERE post_parent = %d AND post_type = 'product_variation' AND post_status IN ('publish', 'private', 'pending')", $post->ID ) ) );
+    $variations_count       = absint( $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM $wpdb->posts WHERE post_parent = %d AND post_type = 'product_variation' AND post_status IN ('publish', 'private', 'pending')", $post->ID ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     $variations_per_page    = absint( apply_filters( 'woocommerce_admin_meta_boxes_variations_per_page', 15 ) );
     $variations_total_pages = ceil( $variations_count / $variations_per_page ); ?>
     <div id="dokan-variable-product-options" class="">
@@ -403,11 +399,10 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
             $query_args[] = $user_ids;
         }
     }
-    // phpcs:ignore WordPress.DB.PreparedSQL
+    // phpcs:disable WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.DirectDatabaseQuery.NoCaching
     $product_ids = $wpdb->get_col(
-        // phpcs:disable
-        $wpdb->prepare( "
-            SELECT DISTINCT posts.ID FROM {$wpdb->posts} posts
+        $wpdb->prepare(
+            "SELECT DISTINCT posts.ID FROM {$wpdb->posts} posts
             LEFT JOIN {$wpdb->postmeta} postmeta ON posts.ID = postmeta.post_id
             $type_join
             WHERE (
@@ -421,12 +416,11 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
             AND posts.post_status IN ('" . implode( "','", $post_statuses ) . "')
             $type_where
             $users_where
-            ORDER BY posts.post_parent ASC, posts.post_title ASC
-            ",
+            ORDER BY posts.post_parent ASC, posts.post_title ASC",
             $query_args
         )
-        // phpcs:enable
     );
+    // phpcs:enable
 
     if ( is_numeric( $term ) ) {
         $post_id   = absint( $term );

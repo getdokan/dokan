@@ -97,6 +97,7 @@ class Manager {
     public function is_valid_cancellation_request( $args ) {
         global $wpdb;
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $result = $wpdb->get_row(
             $wpdb->prepare(
                 "select * from {$wpdb->dokan_withdraw} where id = %d and status = %d",
@@ -104,6 +105,7 @@ class Manager {
                 $this->get_status_code( 'pending' )
             )
         );
+        // phpcs:enable
 
         if ( ! empty( $result ) ) {
             // permission: vendor -> only own && shop_manager
@@ -135,6 +137,7 @@ class Manager {
         // 1 -> active
         // 2 -> cancelled
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $updated = $wpdb->update(
             $wpdb->dokan_withdraw,
             [
@@ -152,6 +155,7 @@ class Manager {
                 '%d',
             ]
         );
+        // phpcs:enable
 
         if ( $updated !== 1 ) {
             return new WP_Error( 'dokan_withdraw_unable_to_update', __( 'Could not update withdraw status', 'dokan-lite' ) );
@@ -185,7 +189,7 @@ class Manager {
 
         $format = [ '%d', '%f', '%s', '%d', '%s', '%s', '%s', '%s' ];
 
-        $inserted = $wpdb->insert( $wpdb->dokan_withdraw, $data, $format );
+        $inserted = $wpdb->insert( $wpdb->dokan_withdraw, $data, $format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 
         if ( $inserted !== 1 ) {
             return new WP_Error( 'dokan_withdraw_unable_to_insert', __( 'Could not add new withdraw approval request.', 'dokan-lite' ) );
@@ -219,6 +223,7 @@ class Manager {
 
         $wpdb->dokan_withdraw = $wpdb->prefix . 'dokan_withdraw';
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $status = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT id
@@ -227,6 +232,7 @@ class Manager {
                 $user_id
             )
         );
+        // phpcs:enable
 
         if ( $status ) {
             return true;
@@ -256,9 +262,11 @@ class Manager {
         if ( false === $result ) {
             global $wpdb;
             if ( empty( $user_id ) ) {
+                // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE status = %d LIMIT %d, %d", $status, $offset, $limit ) );
             } else {
                 $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d ORDER BY id DESC LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
+                //phpcs:enable
             }
 
             $result = array_map(
@@ -398,12 +406,14 @@ class Manager {
         global $wpdb;
 
         if ( ! is_array( $id ) ) {
+            // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $result = $wpdb->get_row(
                 $wpdb->prepare(
                     "select * from {$wpdb->dokan_withdraw} where id = %d",
                     $id
                 ), ARRAY_A
             );
+            // phpcs:enable
         } else {
             $attributes = [
                 'id'      => '%d',
@@ -522,6 +532,7 @@ class Manager {
             $user_id = dokan_get_current_user_id();
         }
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $results = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT
@@ -535,6 +546,7 @@ class Manager {
             ),
             ARRAY_A
         );
+        // phpcs:enable
 
         $summary = [
             'total'     => ! empty( $results['total'] ) ? absint( $results['total'] ) : 0,

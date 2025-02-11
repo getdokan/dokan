@@ -448,6 +448,7 @@ class Withdraw {
 
         unset( $this->data['id'] );
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
         $inserted = $wpdb->insert(
             $wpdb->dokan_withdraw,
             [
@@ -462,6 +463,7 @@ class Withdraw {
             ],
             [ '%d', '%s', '%s', '%d', '%s', '%s', '%s', '%s' ]
         );
+        // phpcs:enable
 
         if ( $inserted !== 1 ) {
             return new WP_Error( 'dokan_withdraw_create_error', __( 'Could not create new withdraw', 'dokan-lite' ) );
@@ -493,6 +495,7 @@ class Withdraw {
     protected function update() {
         global $wpdb;
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $updated = $wpdb->update(
             $wpdb->dokan_withdraw,
             [
@@ -508,6 +511,7 @@ class Withdraw {
             [ '%d', '%s', '%s', '%d', '%s', '%s', '%s' ],
             [ '%d' ]
         );
+        // phpcs:enable
 
         if ( $wpdb->last_error ) {
             return new WP_Error( 'dokan_withdraw_update_error', __( 'Could not update withdraw', 'dokan-lite' ) );
@@ -544,11 +548,13 @@ class Withdraw {
     public function delete() {
         global $wpdb;
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $deleted = $wpdb->delete(
             $wpdb->dokan_withdraw,
             [ 'id' => $this->data['id'] ],
             [ '%d' ]
         );
+        // phpcs:enable
 
         if ( ! $deleted ) {
             return new WP_Error( 'dokan_withdraw_delete_error', __( 'Could not delete withdraw', 'dokan-lite' ) );

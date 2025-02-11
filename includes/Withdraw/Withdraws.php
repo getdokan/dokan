@@ -194,7 +194,7 @@ class Withdraws {
                 $this->withdraws[] = new Withdraw( $withdraw );
             }
 
-            $this->total = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
+            $this->total = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         }
 
         return $this;

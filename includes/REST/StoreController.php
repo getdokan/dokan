@@ -433,15 +433,15 @@ class StoreController extends WP_REST_Controller {
     /**
      * Prepare links for the request.
      *
-     * @param \WC_Data $object Object data.
+     * @param \WC_Data        $store   Store object.
      * @param WP_REST_Request $request Request object.
      *
      * @return array                   Links for the given post.
      */
-    protected function prepare_links( $object, $request ) {
+    protected function prepare_links( $store, $request ) {
         $links = [
             'self'       => [
-                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $object['id'] ) ),
+                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $store['id'] ) ),
             ],
             'collection' => [
                 'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ) ),
@@ -605,6 +605,7 @@ class StoreController extends WP_REST_Controller {
     public function get_total_review_count( $id, $post_type, $status ) {
         global $wpdb;
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $total = $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT COUNT(*)
@@ -616,6 +617,7 @@ class StoreController extends WP_REST_Controller {
             $wpdb->posts.post_type=%s", $id, $status, $post_type
             )
         );
+        // phpcs:enable
 
         return intval( $total );
     }
