@@ -79,8 +79,5 @@
     "vue2-daterange-picker": "^0.6.8",
     "vuedraggable": "^2.24.3",
     "wp-readme-to-markdown": "^1.0.1"
-  },
-  "dependencies": {
-    "@wordpress/i18n": "^5.8.0"
   }
 }
