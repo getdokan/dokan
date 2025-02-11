@@ -11,7 +11,7 @@
   - [Vendor Controller Example](#vendor-controller-example)
 
 ## Introduction
-Dokan REST Controllers provide a structured approach to managing REST API endpoints with role-based permissions. The hierarchy consists of a base controller, `DokanBaseBaseController`, and role-specific controllers:
+Dokan REST Controllers provide a structured approach to managing REST API endpoints with role-based permissions. The hierarchy consists of a base controller, `DokanBaseController`, and role-specific controllers:
 
 - `DokanBaseAdminController`
 - `DokanBaseVendorController`
@@ -77,7 +77,7 @@ This trait provides a `check_permission` method, which can be used to verify if 
 use WeDevs\Dokan\REST\DokanBaseAdminController;
 
 class ExampleAdminController extends DokanBaseAdminController {
-    protected $namespace = 'dokan/v1';
+    protected $namespace = 'dokan/v1'; // default namespace is 'dokan/v1/admin' in `DokanBaseAdminController`
     protected $rest_base = 'example-admin';
 
     public function register_routes() {
