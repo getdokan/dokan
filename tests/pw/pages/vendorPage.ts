@@ -49,8 +49,9 @@ export class VendorPage extends BasePage {
     // go to product edit
     async goToProductEdit(productName: string): Promise<void> {
         await this.searchProduct(productName);
+        await this.removeAttribute(productsVendor.rowActions(productName), 'class'); // forcing the row actions to be visible, to avoid flakiness
         await this.hover(productsVendor.productCell(productName));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.editProduct(productName));
+        await this.clickAndWaitForResponseAndLoadStateUntilNetworkIdle(data.subUrls.frontend.vDashboard.products, productsVendor.editProduct(productName));
         await this.toHaveValue(productsVendor.title, productName);
     }
 
