@@ -67,6 +67,7 @@ class GeminiResponseService extends BaseAIService {
     }
 
     public static function get_models(): array {
+        // Todo: Model list should be fetched from the API
         return apply_filters(
             'dokan_ai_supported_gemini_models', [
                 'gemini-1.5-flash' => __( 'Gemini 1.5 Flash', 'dokan-lite' ),

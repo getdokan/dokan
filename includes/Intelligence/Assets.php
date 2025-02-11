@@ -8,7 +8,33 @@ use WeDevs\Dokan\Intelligence\Utils\AISupportedFields;
 class Assets implements Hookable {
 
     public function register_hooks(): void {
+        add_action( 'init', [ $this, 'register_all_scripts' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_ai_assets' ] );
+    }
+
+    /**
+     * Register all scripts
+     *
+     * @return void
+     */
+
+    public function register_all_scripts() {
+        $asset = require DOKAN_DIR . '/assets/js/dokan-intelligence.asset.php';
+
+        wp_register_style(
+            'dokan-ai-style',
+            DOKAN_PLUGIN_ASSEST . '/css/dokan-intelligence.css',
+            [],
+            $asset['version']
+        );
+
+        wp_register_script(
+            'dokan-ai-script',
+            DOKAN_PLUGIN_ASSEST . '/js/dokan-intelligence.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
+        );
     }
 
     /**
@@ -17,24 +43,10 @@ class Assets implements Hookable {
      * @return void
      */
     public function enqueue_ai_assets() {
-        if ( ! dokan_is_seller_dashboard() || ! Manager::is_configured() ) {
+        $is_configured = dokan()->get_container()->get( Manager::class )->is_configured();
+        if ( ! dokan_is_seller_dashboard() || ! $is_configured ) {
             return;
         }
-
-        wp_register_style(
-            'dokan-ai-style',
-            DOKAN_PLUGIN_ASSEST . '/css/dokan-intelligence.css',
-            [],
-            filemtime( DOKAN_DIR . '/assets/css/dokan-intelligence.css' )
-        );
-
-        wp_register_script(
-            'dokan-ai-script',
-            DOKAN_PLUGIN_ASSEST . '/js/dokan-intelligence.js',
-            [ 'wp-element', 'wp-i18n', 'wp-api-fetch' ],
-            filemtime( DOKAN_DIR . '/assets/js/dokan-intelligence.js' ),
-            true
-        );
 
         $supported_fields = AISupportedFields::get_supported_fields();
 

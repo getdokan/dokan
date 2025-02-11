@@ -23,9 +23,12 @@ class IntelligenceServiceProvider extends BaseServiceProvider {
      * Register the classes.
      */
 	public function register(): void {
-        foreach ( $this->services as $service ) {
-            $definition = $this->share_with_implements_tags( $service );
-            $this->add_tags( $definition, $this->tags );
-        }
+        $this->add_tags( $this->getContainer()->add( Manager::class ), $this->tags );
+
+        $assets = $this->share_with_implements_tags( Assets::class );
+        $this->add_tags( $assets, $this->tags );
+
+        $settings = $this->share_with_implements_tags( Settings::class );
+        $this->add_tags( $settings, $this->tags );
     }
 }

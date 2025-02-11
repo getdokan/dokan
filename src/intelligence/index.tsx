@@ -5,7 +5,8 @@ import { createRoot } from '@wordpress/element';
 
 const setElementPosition = (
     targetField: HTMLElement,
-    container: HTMLElement
+    container: HTMLElement,
+    field: any
 ) => {
     if ( ! container ) {
         return;
@@ -18,9 +19,12 @@ const setElementPosition = (
 
     if ( targetField.tagName === 'INPUT' ) {
         position += titleRect.height / 4;
+    } else if ( field.type === 'editor' ) {
+        position = 10;
     } else {
         position = titleRect.height - 5;
     }
+
     container.style.top = `${ position }px`;
 };
 const initializeDokanAI = () => {
@@ -30,7 +34,7 @@ const initializeDokanAI = () => {
     if ( fields && Array.isArray( fields ) && fields.length > 0 ) {
         fields.forEach( ( field ) => {
             const targetField = document.getElementById( field.id );
-            if ( targetField && field.type === 'input' ) {
+            if ( targetField ) {
                 const container = document.createElement( 'div' );
                 container.id = `dokan-ai-root-${ field.id }`;
                 container.className = 'dokan-ai-prompt-icon';
@@ -39,7 +43,7 @@ const initializeDokanAI = () => {
                 targetField.parentNode.style.cssText = 'position:relative;';
                 // render the DokanAI component
                 createRoot( container ).render( <DokanAI field={ field } /> );
-                setElementPosition( targetField, container );
+                setElementPosition( targetField, container, field );
             }
         } );
     }

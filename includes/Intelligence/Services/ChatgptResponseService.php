@@ -66,6 +66,7 @@ class ChatgptResponseService extends BaseAIService {
     }
 
     public static function get_models(): array {
+        // Todo: Model list should be fetched from the API
         return apply_filters(
             'dokan_ai_supported_chatgpt_models', [
                 'gpt-3.5-turbo' => __( 'GPT-3.5 Turbo', 'dokan-lite' ),

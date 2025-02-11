@@ -46,7 +46,7 @@ class Settings implements Hookable {
                 'name'    => 'dokan_ai_engine',
                 'label'   => __( 'Engine', 'dokan-lite' ),
                 'type'    => 'select',
-                'options' => Manager::get_engines(),
+                'options' => dokan()->get_container()->get( Manager::class )->get_engines(),
                 'desc'    => __( 'Select AI engine', 'dokan-lite' ),
                 'default' => 'chatgpt',
             ],

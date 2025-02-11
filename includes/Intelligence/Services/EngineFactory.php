@@ -15,7 +15,7 @@ class EngineFactory {
      * @throws Exception
      */
     public static function create(): AIServiceInterface {
-        $engine = Manager::active_engine();
+        $engine = dokan()->get_container()->get( Manager::class )->active_engine();
         // Sanitize and capitalize the engine name
         $engine = ucfirst( trim( $engine ) );
         // Construct the class name based on the engine
@@ -28,6 +28,13 @@ class EngineFactory {
             return new $class_name();
         }
 
-        throw new Exception( sprintf( '%s %s', esc_html__( 'Unsupported service type provided:', 'dokan-lite' ), esc_html( $class_name ) ) );
+        throw new Exception(
+            sprintf(
+                // translators: %1$s: class name, %2$s: interface name
+                esc_html__( 'Unsupported service type provided: %1$s must be an instance of %2$s', 'dokan-lite' ),
+                esc_html( $class_name ),
+                AIServiceInterface::class
+            )
+		);
     }
 }

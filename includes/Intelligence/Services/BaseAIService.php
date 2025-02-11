@@ -36,7 +36,7 @@ abstract class BaseAIService implements AIServiceInterface {
      * @return string
      */
     protected function get_provider(): string {
-        return Manager::active_engine();
+        return dokan()->get_container()->get( Manager::class )->active_engine();
     }
 
     /**
@@ -90,7 +90,7 @@ abstract class BaseAIService implements AIServiceInterface {
         $data = json_decode( $response_body, true );
 
         if ( isset( $data['error'] ) ) {
-            throw new Exception( esc_html( $data['error'] ) );
+            throw new Exception( esc_html( $data['error']['message'] ?? __( 'Error resolving API Request', 'dokan-lite' ) ) );
         }
 
         return $data;

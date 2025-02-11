@@ -4,8 +4,11 @@ namespace WeDevs\Dokan\Intelligence;
 
 class Manager {
 
-    public static function active_engine(): string {
-        return dokan_get_option( 'dokan_ai_engine', 'dokan_ai', 'chatgpt' );
+    public function active_engine(): string {
+        return apply_filters(
+            'dokan_ai_active_engine',
+            dokan_get_option( 'dokan_ai_engine', 'dokan_ai', 'chatgpt' )
+        );
     }
 
     /**
@@ -13,7 +16,7 @@ class Manager {
      *
      * @return array
      */
-    public static function get_engines(): array {
+    public function get_engines(): array {
         return apply_filters(
             'dokan_ai_supported_engines', [
 				'chatgpt' => __( 'ChatGPT', 'dokan-lite' ),
@@ -27,7 +30,7 @@ class Manager {
      *
      * @return bool
      */
-    public static function is_configured(): bool {
+    public function is_configured(): bool {
         $engine = self::active_engine();
 
         $engines = self::get_engines();
