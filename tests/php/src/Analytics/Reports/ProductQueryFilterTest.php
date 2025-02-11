@@ -64,7 +64,7 @@ class ProductQueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
-
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
         foreach ( $mocking_methods as $method ) {
             $service->shouldReceive( $method )
             ->atLeast()
@@ -97,6 +97,7 @@ class ProductQueryFilterTest extends ReportTestCase {
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
 
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+		dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         remove_filter( 'woocommerce_analytics_clauses_where_products_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
@@ -142,6 +143,7 @@ class ProductQueryFilterTest extends ReportTestCase {
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
 
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+		dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         remove_filter( 'woocommerce_analytics_clauses_where_products_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
