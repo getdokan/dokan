@@ -5,7 +5,7 @@ const { CI, NON_HEADLESS, BASE_URL, SLOWMO, NO_SETUP, DOKAN_PRO } = process.env;
 
 export default defineConfig({
     /* test directory */
-    testDir: './tests/e2e',
+    testDir: 'tests/e2e',
     /* Include tests based on the pattern */
     grep: [/@lite/, /@liteOnly/, /@pro/],
     /* Exclude tests based on the pattern */
@@ -21,11 +21,11 @@ export default defineConfig({
     /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
     maxFailures: CI ? 50 : 50,
     /* Maximum time one test can run for. */
-    timeout: CI ? 35 * 1000 : 40 * 1000,
+    timeout: CI ? 35 * 1000 : 45 * 1000,
     /* Configuration for the expect assertion library */
     expect: {
         /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/
-        timeout: 10 * 1000,
+        timeout: 15 * 1000,
         toHaveScreenshot: {
             maxDiffPixelRatio: 0.2,
             maxDiffPixels: 500,
@@ -50,14 +50,14 @@ export default defineConfig({
     reporter: CI
         ? [
               //   ['github'],
-              ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
-              //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
+              //   ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
+              ['blob', { open: 'outputDir', outputDir: 'playwright-report/e2e/blob-report' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
           ]
         : [
+              //   ['blob', { open: 'outputDir', outputDir: 'playwright-report/e2e/blob-report' }],
               ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
-              //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
           ],

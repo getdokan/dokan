@@ -18,6 +18,32 @@ export class VendorProductSubscriptionPage extends VendorPage {
 
     // product subscription
 
+    // enable product subscription module
+    async enableProductSubscriptionModule() {
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.userSubscriptions);
+
+        // my account menu
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.subscriptions);
+    }
+
+    // disable product subscription module
+    async disableProductSubscriptionModule() {
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.userSubscriptions);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.userSubscriptions);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+
+        // my account menu
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.subscriptions);
+    }
+
     // vendor return request render properly
     async vendorUserSubscriptionsRenderProperly() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.userSubscriptions);

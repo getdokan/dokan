@@ -41,6 +41,7 @@ class DummyDataController extends DokanRESTController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => array( $this, 'import_dummy_data_status' ),
                     'permission_callback' => array( $this, 'get_permissions_check' ),
+                    'args'                => [], // No args needed.
                 ),
             )
         );
@@ -63,6 +64,7 @@ class DummyDataController extends DokanRESTController {
                     'methods'             => WP_REST_Server::DELETABLE,
                     'callback'            => array( $this, 'clear_dummy_data' ),
                     'permission_callback' => array( $this, 'get_permissions_check' ),
+                    'args'                => [], // No args needed.
                 ),
             )
         );

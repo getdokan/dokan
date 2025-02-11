@@ -28,5 +28,9 @@ export default {
             ...window.dokan_helper.daterange_picker_local
           }
         },
+
+        scrollToSettingField( fieldId, sectionId ) {
+            this.$root.$emit( 'scrollToSettingField', fieldId, sectionId );
+        }
     }
 }

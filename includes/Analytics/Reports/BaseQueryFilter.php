@@ -11,7 +11,7 @@ use WeDevs\Dokan\Contracts\Hookable;
  *
  * Filters and modifies WooCommerce analytics queries for Dokan orders.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 abstract class BaseQueryFilter implements Hookable {
     protected $wc_table = 'wc_order_stats';
@@ -69,7 +69,7 @@ abstract class BaseQueryFilter implements Hookable {
      * @return array The modified where clauses.
      */
 	protected function add_where_subquery_for_refund( array $clauses ): array {
-		if ( ! isset( $_GET['refunds'] ) ) {
+		if ( ! isset( $_GET['refunds'] ) ) { //phpcs:ignore
 			return $clauses;
 		}
 

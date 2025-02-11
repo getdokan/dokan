@@ -9,7 +9,7 @@ namespace WeDevs\Dokan\DependencyManagement;
  * Class ContainerException.
  * Used to signal error conditions related to the dependency injection container.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class ContainerException extends \Exception {
 	/**

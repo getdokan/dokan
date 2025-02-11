@@ -27,7 +27,7 @@ export class CatalogModePage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.selling.hideProductPrice);
 
         // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.selling.sellingOptionsSaveChanges);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
 
         await this.switcherHasColor(settingsAdmin.selling.removeAddToCartButton, data.colorCode.blue);
         await this.switcherHasColor(settingsAdmin.selling.hideProductPrice, data.colorCode.blue);
@@ -38,7 +38,7 @@ export class CatalogModePage extends AdminPage {
     // vendor can't access catalog mode settings
     async accessCatalogModeSettings() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
-        await this.notToBeVisible(settingsVendor.hideProductPrice);
+        await this.notToBeVisible(settingsVendor.catalogMode.hideProductPrice);
     }
 
     // customer

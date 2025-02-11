@@ -10,7 +10,7 @@ use Automattic\WooCommerce\Admin\API\Reports\Stock\Stats\DataStore as StockStats
  *
  * Filters and modifies WooCommerce analytics queries for Stock Stats.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class WcDataStore extends StockStatsDataStore {
 	/**

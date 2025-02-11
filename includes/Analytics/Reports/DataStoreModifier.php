@@ -7,7 +7,7 @@ use WeDevs\Dokan\Contracts\Hookable;
 /**
  * WC default data store modifier.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class DataStoreModifier implements Hookable {
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Test\Analytics\Reports\Stock\Stats;
+namespace WeDevs\Dokan\Test\Analytics\Reports;
 
 use WeDevs\Dokan\Test\DokanTestCase;
 
