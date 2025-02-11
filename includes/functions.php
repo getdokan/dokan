@@ -1069,11 +1069,14 @@ function dokan_is_seller_trusted( $user_id ) {
 /**
  * Get store page url of a seller
  *
+ * @since DOKAN_SINCE Added `$tab` optional parameter.
+ *
  * @param int $user_id
+ * @param string $tab Tab endpoint (Optional). Default is empty.
  *
  * @return string
  */
-function dokan_get_store_url( $user_id ) {
+function dokan_get_store_url( $user_id, $tab = '' ) {
     if ( ! $user_id ) {
         return '';
     }
@@ -1082,16 +1085,25 @@ function dokan_get_store_url( $user_id ) {
     $user_nicename    = ( false !== $userdata ) ? $userdata->user_nicename : '';
     $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
+    $path = '/' . $custom_store_url . '/' . $user_nicename . '/';
+    if ( $tab ) {
+        $tab  = untrailingslashit( trim( $tab, " \n\r\t\v\0/\\" ) );
+        $path .= $tab;
+        $path = trailingslashit( $path );
+    }
+
     /**
      * Filter hook for the store URL before returning.
      *
      * @since 3.9.0
+     * @since DOKAN_SINCE Added `$tab` parameter
      *
      * @param string $store_url        The default store URL
      * @param string $custom_store_url The custom store URL
      * @param int    $user_id          The user ID for the store owner
+     * @param string $tab              The tab endpoint. Default is empty.
      */
-    return apply_filters( 'dokan_get_store_url', home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' ), $custom_store_url, $user_id );
+    return apply_filters( 'dokan_get_store_url', home_url( $path ), $custom_store_url, $user_id, $tab );
 }
 
 /**
@@ -2485,9 +2497,7 @@ function dokan_get_toc_url( $store_id ) {
         return '';
     }
 
-    $userstore = dokan_get_store_url( $store_id );
-
-    return apply_filters( 'dokan_get_toc_url', $userstore . 'toc' );
+    return apply_filters( 'dokan_get_toc_url', dokan_get_store_url( $store_id, 'toc' ) );
 }
 
 /**
