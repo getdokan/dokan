@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class BecomeAVendor extends DokanShortcode {
+class CustomerMigration extends DokanShortcode {
     /**
      * Shortcode name.
      *
