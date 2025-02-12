@@ -22,7 +22,7 @@ class Dashboard implements Hookable {
     protected string $script_key = 'dokan-admin-dashboard';
 
     /**
-     * Constructor for the class.
+     * Register hooks.
      */
     public function register_hooks(): void {
         add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
