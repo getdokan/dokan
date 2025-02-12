@@ -485,8 +485,8 @@ class SetupWizard extends DokanSetupWizard {
         $dokan_settings['location']     = isset( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '';
         $dokan_settings['find_address'] = isset( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : '';
         $dokan_settings['show_email']   = isset( $_POST['show_email'] ) ? 'yes' : 'no';
-        $country = $dokan_settings['address']['country'];
-        $state = $dokan_settings['address']['state'];
+        $country = $dokan_settings['address']['country'] ?? '';
+        $state = $dokan_settings['address']['state'] ?? '';
         $country_has_states = isset( $states[ $country ] );
         $state_is_empty = empty( $state );        // Validating filed.
         // Validating filed.
