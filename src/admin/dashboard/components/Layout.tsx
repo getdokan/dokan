@@ -8,7 +8,7 @@ const Layout = ( { children, route } ) => {
         <SlotFillProvider>
             <Header />
             { children }
-            <PluginArea scope={ 'dokan-admin-dashboard' + route.id } />
+            <PluginArea scope={ 'dokan-admin-dashboard-' + route.id } />
             <DokanToaster />
         </SlotFillProvider>
     );

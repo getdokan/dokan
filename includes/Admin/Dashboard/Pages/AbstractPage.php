@@ -3,10 +3,22 @@
 namespace WeDevs\Dokan\Admin\Dashboard\Pages;
 
 use WeDevs\Dokan\Admin\Dashboard\Pageable;
+use WeDevs\Dokan\Contracts\Hookable;
 
-abstract class AbstractPage implements Pageable {
+abstract class AbstractPage implements Pageable, Hookable {
 
-    public function __construct() {
+    /**
+     * Register the hooks.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function register_hooks(): void {
+        if ( ! is_admin() ) {
+            return;
+        }
+
         add_filter( 'dokan_admin_dashboard_pages', [ $this, 'enlist' ] );
     }
 

@@ -34,11 +34,9 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
      * Register the classes.
      */
 	public function register(): void {
-		$this->getContainer()
-            ->addShared( Dashboard::class, Dashboard::class )
-            ->addTag( self::TAG );
-        $this->getContainer()
-            ->addShared( Status::class, Status::class )
-            ->addTag( self::TAG );
+        foreach ( $this->services as $service ) {
+            $definition = $this->share_with_implements_tags( $service );
+            $this->add_tags( $definition, $this->tags );
+        }
     }
 }
