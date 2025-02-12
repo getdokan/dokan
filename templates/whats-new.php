@@ -4,6 +4,42 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.14.9',
+        'released' => '2025-02-12',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Rollback support for product statues on dokan pro deactivation.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Improved dokan_is_user_seller function by adding strict comparison to differentiate between vendor and staff.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Fix earning suggestion in vendor dashboard when product edit page loads initially.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fix vendor earning suggestion currency, currency position, decimal separator in vendor dashboard product edit page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fix vendor earning suggestion for invalid product price.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Tax calculation for shipping based on tax status',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.14.8',
         'released' => '2025-01-29',
         'changes'  => [

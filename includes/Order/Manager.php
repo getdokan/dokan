@@ -786,23 +786,9 @@ class Manager {
             }
             dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
 
-            $item = new \WC_Order_Item_Shipping();
-            $item->set_props(
-                [
-                    'method_title' => $shipping_method->get_name(),
-                    'method_id'    => $shipping_method->get_method_id(),
-                    'total'        => $shipping_method->get_total(),
-                    'taxes'        => $shipping_method->get_taxes(),
-                ]
-            );
+            $item = clone $shipping_method;
+            $item->set_id( 0 );
             $shipping_totals += $shipping_method->get_total();
-            $metadata        = $shipping_method->get_meta_data();
-
-            if ( $metadata ) {
-                foreach ( $metadata as $meta ) {
-                    $item->add_meta_data( $meta->key, $meta->value );
-                }
-            }
             $order->add_item( $item );
         }
         $order->set_shipping_total( $shipping_totals );

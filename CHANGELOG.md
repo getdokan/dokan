@@ -1,4 +1,14 @@
+### v3.14.9 ( Feb 12, 2025 ) ###
+
+- **fix:** Fix earning suggestion in vendor dashboard when product edit page loads initially.
+- **fix:** Fix vendor earning suggestion currency, currency position, decimal separator in vendor dashboard product edit page.
+- **fix:** Fix vendor earning suggestion for invalid product price.
+- **fix:** Tax calculation for shipping based on tax status
+- **feat:** Rollback support for product statues on dokan pro deactivation.
+- **refactor:** Improved dokan_is_user_seller function by adding strict comparison to differentiate between vendor and staff.
+
 ### v3.14.8 ( Jan 29, 2025 ) ###
+
 - **update:** Missing parameters support added for the reverse-withdrawal API endpoints.
 - **update:** Missing parameters support added for the Settings API endpoints.
 - **fix:** Fixed an error when navigating to the product edit page with an invalid (non-numeric) product ID.

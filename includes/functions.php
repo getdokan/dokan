@@ -63,16 +63,19 @@ function dokan_get_current_user_id() {
 /**
  * Check if a user is seller
  *
- * @param int $user_id
+ * @since 3.14.9 Added `$exclude_staff` as optional parameter
+ *
+ * @param int  $user_id       User ID
+ * @param bool $exclude_staff Exclude staff
  *
  * @return bool
  */
-function dokan_is_user_seller( $user_id ) {
-    if ( ! user_can( $user_id, 'dokandar' ) ) {
+function dokan_is_user_seller( $user_id, $exclude_staff = false ) {
+    if ( $exclude_staff && user_can( $user_id, 'vendor_staff' ) ) {
         return false;
     }
 
-    return true;
+    return user_can( $user_id, 'dokandar' );
 }
 
 /**
@@ -1069,11 +1072,14 @@ function dokan_is_seller_trusted( $user_id ) {
 /**
  * Get store page url of a seller
  *
+ * @since 3.14.9 Added `$tab` optional parameter.
+ *
  * @param int $user_id
+ * @param string $tab Tab endpoint (Optional). Default is empty.
  *
  * @return string
  */
-function dokan_get_store_url( $user_id ) {
+function dokan_get_store_url( $user_id, $tab = '' ) {
     if ( ! $user_id ) {
         return '';
     }
@@ -1082,16 +1088,25 @@ function dokan_get_store_url( $user_id ) {
     $user_nicename    = ( false !== $userdata ) ? $userdata->user_nicename : '';
     $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
+    $path = '/' . $custom_store_url . '/' . $user_nicename . '/';
+    if ( $tab ) {
+        $tab  = untrailingslashit( trim( $tab, " \n\r\t\v\0/\\" ) );
+        $path .= $tab;
+        $path = trailingslashit( $path );
+    }
+
     /**
      * Filter hook for the store URL before returning.
      *
      * @since 3.9.0
+     * @since 3.14.9 Added `$tab` parameter
      *
      * @param string $store_url        The default store URL
      * @param string $custom_store_url The custom store URL
      * @param int    $user_id          The user ID for the store owner
+     * @param string $tab              The tab endpoint. Default is empty.
      */
-    return apply_filters( 'dokan_get_store_url', home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' ), $custom_store_url, $user_id );
+    return apply_filters( 'dokan_get_store_url', home_url( $path ), $custom_store_url, $user_id, $tab );
 }
 
 /**
@@ -2485,9 +2500,7 @@ function dokan_get_toc_url( $store_id ) {
         return '';
     }
 
-    $userstore = dokan_get_store_url( $store_id );
-
-    return apply_filters( 'dokan_get_toc_url', $userstore . 'toc' );
+    return apply_filters( 'dokan_get_toc_url', dokan_get_store_url( $store_id, 'toc' ) );
 }
 
 /**
