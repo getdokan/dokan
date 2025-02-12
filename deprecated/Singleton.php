@@ -7,9 +7,10 @@ namespace Dokan\Traits;
  *
  * @since 1.0.0
  *
- * @deprecated 2.9.30
+ * @deprecated 2.9.30 Use `WeDevs\Dokan\Traits\Singleton` instead of this.
  */
-trait Singleton {
+trait Singleton
+{
 
     /**
      * Singleton class instance holder
@@ -27,11 +28,12 @@ trait Singleton {
      *
      * @return object
      */
-    public static function instance() {
-        if ( ! isset( static::$instance ) && ! ( static::$instance instanceof static ) ) {
+    public static function instance()
+    {
+        if (! isset(static::$instance) && ! (static::$instance instanceof static)) {
             static::$instance = new static();
 
-            if ( method_exists( static::$instance, 'boot' ) ) {
+            if (method_exists(static::$instance, 'boot')) {
                 static::$instance->boot();
             }
         }

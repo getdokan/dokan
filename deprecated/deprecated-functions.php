@@ -42,7 +42,7 @@ function dokan_get_product_status( $status ) {
  * @since 3.0.0
  *
  * @return void
- * @deprecated 3.0.0
+ * @deprecated 3.0.0 Use WeDevs\Dokan\Widgets\Manager class instead of this function
  */
 function dokan_depricated_widget_classes() {
     global $wp_widget_factory;
