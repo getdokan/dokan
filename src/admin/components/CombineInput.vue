@@ -9,8 +9,8 @@
         ref="percentage"
         :id="percentageId"
         :name="percentageName"
-        v-model="percentage"
-        v-on:input="onInput"
+        :value="formatPositiveValue( value.percentage ?? '' )"
+        v-on:input="( e ) => onInput(e.target.value, 'percentage')"
         style="border: none !important;"
       />
       <div
@@ -31,8 +31,8 @@
         ref="fixed"
         :id="fixedId"
         :name="fixexName"
-        v-model="fixed"
-        v-on:input="onInput"
+        :value="formatPositiveValue( value.fixed ?? '' )"
+        v-on:input="( e ) => onInput(e.target.value, 'fixed')"
         style="border: none !important;"
       />
     </div>
@@ -69,28 +69,6 @@ import Debounce from "debounce";
                 }
             },
         },
-        data() {
-            return {
-                fixed: this.formatPositiveValue( this.value.fixed ) ?? '',
-                percentage: this.formatPositiveValue( this.value.percentage ) ?? ''
-            };
-        },
-        watch: {
-            value: {
-                handler(newVal, oldVal) {
-                    let newPercentage = this.validatePercentage( newVal.percentage );
-                    let oldPercentage = this.validatePercentage( oldVal.percentage );
-
-                    if ( ! newPercentage || '' === newPercentage || Number( newPercentage ) < 0 || Number( newPercentage ) > 100 ) {
-                        newPercentage = oldPercentage;
-                    }
-
-                    this.fixed = this.formatPositiveValue( newVal.fixed );
-                    this.percentage = this.formatPositiveValue( newPercentage );
-                },
-                deep: true
-            }
-        },
         methods: {
             validatePercentage( percentage ) {
                 if ( Number( percentage ) < 0 || Number( percentage ) > 100 ) {
@@ -99,19 +77,28 @@ import Debounce from "debounce";
 
                 return percentage;
             },
-            onInput: Debounce( function() {
+            validateNegative( value ) {
+                if ( Number( value ) < 0 ) {
+                    value = '';
+                }
+
+                return value;
+            },
+
+            onInput: Debounce( function( currentValue, type ) {
                 let self = this;
-                let data = {
-                        fixed: self.fixed ? accounting.unformat(self.fixed, dokan.currency.decimal) : '',
-                        percentage: self.percentage ? accounting.unformat(self.percentage, dokan.currency.decimal): ''
-                    };
+                let data = JSON.parse( JSON.stringify( { ...self.value }) );
+                data[ type ] = '' !== currentValue  ? String( currentValue ) : '';
+
+                data.fixed = '' !== data.fixed  ? self.validateNegative( accounting.unformat( data.fixed, dokan.currency.decimal ) ) : '';
+                data.percentage = '' !== data.percentage  ? self.validateNegative( self.validatePercentage( accounting.unformat( data.percentage, dokan.currency.decimal ) ) ) : '';
 
                 this.$emit('change', data);
             }, 500 ),
 
             formatPositiveValue: ( value ) => {
-                if ( value === '' ) {
-                    return value;
+                if ( undefined === value || value === '' ) {
+                    return '';
                 }
 
                 return accounting.formatNumber( value, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal );

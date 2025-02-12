@@ -89,7 +89,11 @@ function PaymentMethods( {
                             } );
                     } }
                     disabled={ makeDefaultMethodHook.isLoading }
-                    loading={ makeDefaultMethodHook.isLoading }
+                    loading={
+                        makeDefaultMethodHook.isLoading &&
+                        makeDefaultMethodHook.makingDefault ===
+                            activemethod.value
+                    }
                     label={ __( 'Make Default', 'dokan-lite' ) }
                 />
             );

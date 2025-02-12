@@ -8,7 +8,7 @@ import {
     SimpleSelect,
     useToast,
 } from '@getdokan/dokan-ui';
-import { useEffect, useState } from '@wordpress/element';
+import { RawHTML, useEffect, useState } from '@wordpress/element';
 import '../../Definitions/window-types';
 import { useWithdraw } from './Hooks/useWithdraw';
 import { useDebounceCallback } from 'usehooks-ts';
@@ -16,13 +16,16 @@ import { useCharge } from './Hooks/useCharge';
 import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
 import { formatPrice } from '@dokan/utilities';
+import { UseBalanceReturn } from './Hooks/useBalance';
 
 function RequestWithdrawBtn( {
     settings,
     withdrawRequests,
+    balanceData,
 }: {
     settings: UseWithdrawSettingsReturn;
     withdrawRequests: UseWithdrawRequestsReturn;
+    balanceData: UseBalanceReturn;
 } ) {
     const [ isOpen, setIsOpen ] = useState( false );
     const [ withdrawAmount, setWithdrawAmount ] = useState( '' );
@@ -39,6 +42,9 @@ function RequestWithdrawBtn( {
         settings?.data?.payment_methods &&
         Array.isArray( settings?.data?.payment_methods ) &&
         settings?.data?.payment_methods.length > 0;
+    const hasSuffcientBalance =
+        Number( balanceData?.data?.current_balance ) >=
+        Number( balanceData?.data?.withdraw_limit );
 
     const unformatNumber = ( value ) => {
         if ( value === '' ) {
@@ -96,6 +102,14 @@ function RequestWithdrawBtn( {
             amount: unformatNumber( withdrawAmount ),
         };
 
+        if ( ! payload.amount ) {
+            toast( {
+                title: __( 'Withdraw amount is required', 'dokan' ),
+                type: 'error',
+            } );
+            return;
+        }
+
         // Call the createWithdraw function here
         withdrawHook
             .createWithdraw( payload )
@@ -132,7 +146,7 @@ function RequestWithdrawBtn( {
         500
     );
 
-    const withdrawRequestForm = () => {
+    const WithdrawRequestForm = () => {
         return (
             <>
                 { hasPaymentMethods ? (
@@ -156,7 +170,7 @@ function RequestWithdrawBtn( {
                                 label={ __( 'Withdraw amount', 'dokan' ) }
                                 className="focus:border-none"
                                 addOnLeft={ currencySymbol }
-                                defaultValue={ withdrawAmount }
+                                value={ withdrawAmount }
                                 onChange={ ( e ) => {
                                     debouncedWithdrawAmount( e.target.value );
                                 } }
@@ -223,20 +237,17 @@ function RequestWithdrawBtn( {
                     </>
                 ) : (
                     <SimpleAlert type="warning" color="orange" label="">
-                        <p
-                            className="mb-2"
-                            dangerouslySetInnerHTML={ {
-                                __html: sprintf(
-                                    /* translators: %s: opening and closing anchor tags for "payment methods" link */
-                                    __(
-                                        'No payment methods found to submit a withdrawal request. Please set up your %1$spayment methods%2$s first.',
-                                        'dokan-lite'
-                                    ),
-                                    `<a href="${ window?.dokanFrontend?.withdraw?.paymentSettingUrl }" class="cursor-pointer text-dokan-primary">`,
-                                    '</a>'
+                        <RawHTML>
+                            { sprintf(
+                                /* translators: %s: opening and closing anchor tags for "payment methods" link */
+                                __(
+                                    'No payment methods found to submit a withdrawal request. Please set up your %1$spayment methods%2$s first.',
+                                    'dokan-lite'
                                 ),
-                            } }
-                        ></p>
+                                `<a href="${ window?.dokanFrontend?.withdraw?.paymentSettingUrl }" class="cursor-pointer text-dokan-primary">`,
+                                '</a>'
+                            ) }
+                        </RawHTML>
                     </SimpleAlert>
                 ) }
             </>
@@ -248,6 +259,33 @@ function RequestWithdrawBtn( {
             setWithdrawMethod( settings?.data?.payment_methods[ 0 ].value );
         }
     }, [ settings ] );
+
+    const ModalContect = () => {
+        if ( hasWithdrawRequests ) {
+            return (
+                <SimpleAlert
+                    type="danger"
+                    color="red"
+                    label={ __(
+                        'You already have pending withdraw request(s). Please submit your request after approval or cancellation of your previous request.',
+                        'dokan-lite'
+                    ) }
+                />
+            );
+        } else if ( ! hasSuffcientBalance ) {
+            return (
+                <SimpleAlert
+                    type="danger"
+                    color="red"
+                    label={ __(
+                        "You don't have sufficient balance for a withdraw request!",
+                        'dokan-lite'
+                    ) }
+                />
+            );
+        }
+        return <WithdrawRequestForm />;
+    };
 
     return (
         <>
@@ -268,18 +306,7 @@ function RequestWithdrawBtn( {
                     { __( 'Send Withdraw Request', 'dokan' ) }
                 </Modal.Title>
                 <Modal.Content className="">
-                    { ! hasWithdrawRequests && withdrawRequestForm() }
-
-                    { hasWithdrawRequests && (
-                        <SimpleAlert
-                            type="danger"
-                            color="red"
-                            label={ __(
-                                'You already have pending withdraw request(s). Please submit your request after approval or cancellation of your previous request.',
-                                'dokan-lite'
-                            ) }
-                        />
-                    ) }
+                    <ModalContect />
                 </Modal.Content>
                 <Modal.Footer className="border-t">
                     <div className="flex flex-row gap-3">
@@ -290,22 +317,24 @@ function RequestWithdrawBtn( {
                             label={ __( 'Close', 'dokan' ) }
                         />
 
-                        { ! hasWithdrawRequests && hasPaymentMethods && (
-                            <Button
-                                color="secondary"
-                                className="bg-dokan-btn hover:bg-dokan-btn-hover text-white"
-                                onClick={ handleCreateWithdraw }
-                                disabled={
-                                    isLoading || withdrawHook?.isLoading
-                                }
-                                loading={ isLoading || withdrawHook?.isLoading }
-                                label={
-                                    withdrawHook?.isLoading
-                                        ? __( 'Creating…', 'dokan' )
-                                        : __( 'Submit request', 'dokan' )
-                                }
-                            />
-                        ) }
+                        { ! hasWithdrawRequests &&
+                            hasSuffcientBalance &&
+                            hasPaymentMethods && (
+                                <Button
+                                    color="secondary"
+                                    className="bg-dokan-btn hover:bg-dokan-btn-hover text-white"
+                                    onClick={ handleCreateWithdraw }
+                                    disabled={
+                                        isLoading || withdrawHook?.isLoading
+                                    }
+                                    loading={ withdrawHook?.isLoading }
+                                    label={
+                                        withdrawHook?.isLoading
+                                            ? __( 'Creating…', 'dokan' )
+                                            : __( 'Submit request', 'dokan' )
+                                    }
+                                />
+                            ) }
                     </div>
                 </Modal.Footer>
             </Modal>

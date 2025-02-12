@@ -18,14 +18,6 @@ abstract class BaseQueryFilter implements Hookable {
     protected $context = '';
 
     /**
-     * QueryFilter constructor.
-     * Registers the hooks on instantiation.
-     */
-	public function __construct() {
-		$this->register_hooks();
-	}
-
-    /**
      * Add join clause for Dokan order state table in WooCommerce analytics queries.
      *
      * @param array $clauses The existing join clauses.

@@ -5,17 +5,20 @@ interface UseMakeDefaultMethodReturn {
     isLoading: boolean;
     error: Error | null;
     makeDefaultMethod: ( method: string ) => Promise< void >;
+    makingDefault: string;
 }
 
 export const useMakeDefaultMethod = (): UseMakeDefaultMethodReturn => {
     const [ isLoading, setIsLoading ] = useState< boolean >( false );
     const [ error, setError ] = useState< Error | null >( null );
+    const [ makingDefault, setMakingDefault ] = useState( '' );
 
     const makeDefaultMethod = useCallback(
         async ( method: string ): Promise< void > => {
             try {
                 setIsLoading( true );
                 setError( null );
+                setMakingDefault( method );
 
                 await apiFetch( {
                     path: '/dokan/v2/withdraw/make-default-method',
@@ -31,10 +34,11 @@ export const useMakeDefaultMethod = (): UseMakeDefaultMethodReturn => {
                 console.error( 'Error making default method:', err );
             } finally {
                 setIsLoading( false );
+                setMakingDefault( '' );
             }
         },
         []
     );
 
-    return { isLoading, error, makeDefaultMethod };
+    return { isLoading, error, makeDefaultMethod, makingDefault };
 };
