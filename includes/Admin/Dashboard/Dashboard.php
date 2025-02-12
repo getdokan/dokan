@@ -2,12 +2,14 @@
 
 namespace WeDevs\Dokan\Admin\Dashboard;
 
+use WeDevs\Dokan\Contracts\Hookable;
+
 /**
  * Admin dashboard class.
  *
  * @since DOKAN_SINCE
  */
-class Dashboard {
+class Dashboard implements Hookable {
 
     /**
      * @var array< Pageable >
@@ -22,7 +24,7 @@ class Dashboard {
     /**
      * Constructor for the class.
      */
-    public function __construct() {
+    public function register_hooks(): void {
         add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
         add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
