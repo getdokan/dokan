@@ -89,6 +89,7 @@ function Balance( {
                         <RequestWithdrawBtn
                             settings={ settings }
                             withdrawRequests={ withdrawRequests }
+                            balanceData={ bodyData }
                         />
                     </div>
                 </Card.Body>

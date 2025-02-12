@@ -346,6 +346,7 @@ jobs:
 
         # Override reports path specifically for this job
         env:
+            SYSTEM_INFO: ./tests/pw/all-reports/test-artifact-api/playwright/systemInfo.json
             API_TEST_RESULT: ./tests/pw/all-reports/test-artifact-api/playwright-report/api/summary-report/results.json
             API_COVERAGE: ./tests/pw/all-reports/test-artifact-api/playwright-report/api/coverage-report/coverage.json
             E2E_TEST_RESULT: ./tests/pw/all-reports/merged-summary.json
