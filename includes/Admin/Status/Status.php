@@ -13,10 +13,6 @@ class Status extends StatusElement {
 
     public function __construct() {
         parent::__construct( 'dokan-status' );
-
-        add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
-        add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
-        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
     }
 
     /**
@@ -33,66 +29,6 @@ class Status extends StatusElement {
             dokan_log( $e->getMessage() );
         }
         return parent::render()['children'];
-    }
-
-
-    /**
-     * Register the submenu menu.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $capability Menu capability.
-     * @param string $position Menu position.
-     *
-     * @return void
-     */
-    public function register_menu( string $capability, string $position ) {
-        add_submenu_page(
-            'dokan',
-            __( 'Dokan Status', 'dokan-lite' ),
-            __( 'Status', 'dokan-lite' ),
-            $capability,
-            'dokan-status',
-            [ $this, 'render_status_page' ],
-            99
-        );
-    }
-
-    public function register_scripts() {
-        $asset_file = include DOKAN_DIR . '/assets/js/dokan-status.asset.php';
-
-        wp_register_script(
-            'dokan-status',
-            DOKAN_PLUGIN_ASSEST . '/js/dokan-status.js',
-            $asset_file['dependencies'],
-            $asset_file['version'],
-            [
-                'strategy' => 'defer',
-                'in_footer' => true,
-            ]
-        );
-
-        wp_register_style( 'dokan-status', DOKAN_PLUGIN_ASSEST . '/css/dokan-status.css', [], $asset_file['version'] );
-    }
-
-    public function enqueue_scripts() {
-        if ( 'dokan_page_dokan-status' !== get_current_screen()->id ) {
-            return;
-        }
-
-        wp_enqueue_script( 'dokan-status' );
-        wp_enqueue_style( 'dokan-status' );
-    }
-
-    /**
-     * Load Status Page Template
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function render_status_page() {
-        echo '<div class="wrap"><div id="dokan-status" class="dokan-layout"></div></div>';
     }
 
     /**
