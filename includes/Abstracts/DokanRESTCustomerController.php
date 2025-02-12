@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Abstracts;
 /**
  * Customer REST Controller for Dokan
  *
- * @since DOKAN_PRO_SINCE
+ * @since 3.14.4
  *
  * @package dokan
  */
@@ -21,7 +21,7 @@ abstract class DokanRESTCustomerController extends DokanRESTBaseController {
     /**
      * Check if user has customer permission.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.4
      *
      * @return bool
      */

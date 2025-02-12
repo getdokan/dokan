@@ -30,7 +30,7 @@ class ProductStatusRollback implements Hookable {
     /**
      * Constructor.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.9
      */
     public function __construct() {
         $this->register_hooks();
@@ -39,7 +39,7 @@ class ProductStatusRollback implements Hookable {
     /**
      * Set up necessary hooks
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.9
      *
      * @return void
      */
@@ -50,7 +50,7 @@ class ProductStatusRollback implements Hookable {
     /**
      * Process reject to draft batch operation
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.9
      *
      * @return void
      */
@@ -82,7 +82,7 @@ class ProductStatusRollback implements Hookable {
                     /**
                      * Filter the target status for product rollback
                      *
-                     * @since DOKAN_PRO_SINCE
+                     * @since 3.14.9
                      *
                      * @param string $target_status Target rollback status
                      * @param WC_Product $product Product
@@ -92,7 +92,7 @@ class ProductStatusRollback implements Hookable {
                     /**
                      * Action before product rollback
                      *
-                     * @since DOKAN_PRO_SINCE
+                     * @since 3.14.9
                      *
                      * @param WC_Product $product Product
                      * @param string $target_status Target rollback status
@@ -107,7 +107,7 @@ class ProductStatusRollback implements Hookable {
                     /**
                      * Action after product status rollback
                      *
-                     * @since DOKAN_PRO_SINCE
+                     * @since 3.14.9
                      *
                      * @param WC_Product $product Product
                      * @param string $target_status Target rollback status
