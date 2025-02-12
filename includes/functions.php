@@ -63,7 +63,7 @@ function dokan_get_current_user_id() {
 /**
  * Check if a user is seller
  *
- * @since DOKAN_SINCE Added `$exclude_staff` as optional parameter
+ * @since 3.14.9 Added `$exclude_staff` as optional parameter
  *
  * @param int  $user_id       User ID
  * @param bool $exclude_staff Exclude staff
@@ -1072,7 +1072,7 @@ function dokan_is_seller_trusted( $user_id ) {
 /**
  * Get store page url of a seller
  *
- * @since DOKAN_SINCE Added `$tab` optional parameter.
+ * @since 3.14.9 Added `$tab` optional parameter.
  *
  * @param int $user_id
  * @param string $tab Tab endpoint (Optional). Default is empty.
@@ -1099,7 +1099,7 @@ function dokan_get_store_url( $user_id, $tab = '' ) {
      * Filter hook for the store URL before returning.
      *
      * @since 3.9.0
-     * @since DOKAN_SINCE Added `$tab` parameter
+     * @since 3.14.9 Added `$tab` parameter
      *
      * @param string $store_url        The default store URL
      * @param string $custom_store_url The custom store URL
