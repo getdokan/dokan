@@ -118,16 +118,29 @@ class OrderItem implements InterfaceSetting {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save( array $setting ): Setting {
-        $percentage           = isset( $setting['percentage'] ) ? $setting['percentage'] : '';
-        $type                 = isset( $setting['type'] ) ? $setting['type'] : '';
-        $flat                 = isset( $setting['flat'] ) ? $setting['flat'] : '';
-        $meta_data            = isset( $setting['meta_data'] ) ? $setting['meta_data'] : [];
+        if ( ! isset( $setting['percentage'] ) ) {
+            $setting['percentage'] = '';
+        }
 
-        wc_add_order_item_meta( $this->order_item_id, '_dokan_commission_type', $type );
-        wc_add_order_item_meta( $this->order_item_id, '_dokan_commission_rate', $percentage );
-        wc_add_order_item_meta( $this->order_item_id, '_dokan_additional_fee', $flat );
-        wc_add_order_item_meta( $this->order_item_id, 'dokan_commission_meta', $meta_data );
+        if ( ! isset( $setting['type'] ) ) {
+            $setting['type'] = '';
+        }
 
-        return $this->get();
+        if ( ! isset( $setting['flat'] ) ) {
+            $setting['flat'] = '';
+        }
+
+        if ( ! isset( $setting['meta_data'] ) ) {
+            $setting['meta_data'] = [];
+        }
+
+        $setting = apply_filters( 'dokan_commission_order_line_item_save_before', $this->order_item_id, $setting );
+
+        wc_add_order_item_meta( $this->order_item_id, '_dokan_commission_type', $setting['type'] );
+        wc_add_order_item_meta( $this->order_item_id, '_dokan_commission_rate', $setting['percentage'] );
+        wc_add_order_item_meta( $this->order_item_id, '_dokan_additional_fee', $setting['flat'] );
+        wc_add_order_item_meta( $this->order_item_id, 'dokan_commission_meta', $setting['meta_data'] );
+
+        return apply_filters( 'dokan_commission_order_line_item_save_after', $this->order_item_id, $this->get() );
     }
 }
