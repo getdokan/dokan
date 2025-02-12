@@ -29,7 +29,8 @@ class NewDashboard {
 
         add_action(
             'wp_footer',
-            [ $this, 'fix_headless_ui_portal' ]
+            [ $this, 'fix_headless_ui_portal' ],
+            99
         );
     }
 
@@ -109,16 +110,35 @@ class NewDashboard {
         if ( ! dokan_is_seller_dashboard() || ! isset( $wp->query_vars['new'] ) ) {
             return;
         }
-
+        ob_start();
         ?>
+        <style>
+            #headlessui-portal-root {
+                display: none;
+            }
+        </style>
         <script>
             (function() {
-                const portal = document.getElementById( 'headlessui-portal-root' );
-                if ( portal ) {
-                    portal.classList.add( 'dokan-layout' );
-                }
+                const observer = new MutationObserver(function(mutations) {
+                    for (const mutation of mutations) {
+                        if (mutation.type === 'childList') {
+                            for (const node of mutation.addedNodes) {
+                                if (node.id === 'headlessui-portal-root') {
+                                    node.classList.add('dokan-layout');
+                                    node.style.display = 'block';
+                                }
+                            }
+                        }
+                    }
+                });
+
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: false,
+                });
             })();
         </script>
         <?php
+        echo ob_get_clean();
     }
 }
