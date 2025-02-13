@@ -174,7 +174,7 @@ class Commission {
             return new WP_Error( 'invalid_product', __( 'Product not found', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
-        $product_price = is_null( $price ) ? (float) $product->get_price() : (float) $price;
+        $product_price = is_null( $price ) ? floatval( $product->get_price() ) : floatval( $price );
         $vendor_id     = (int) dokan_get_vendor_by_product( $product, true );
         $product_id    = $product->get_id();
 
@@ -562,11 +562,12 @@ class Commission {
      *     @type int       $vendor_id      Vendor id. Default ''. Accepted values numbers.
      *     @type int       $category_id    Product category id. Default 0'. Accepted values numbers.
      * }
-     * @param boolean $auto_save If true, it will save the calculated commission automatically to the given `$order_item_id`. Default 'false`. Accepted values boolean.
+     * @param boolean $auto_save                              If true, it will save the calculated commission automatically to the given `$order_item_id`. Default 'false`. Accepted values boolean.
+     * @param boolean $override_total_amount_by_product_price If true, it will override the `$total_amount` by the product price if the `$total_amount` is empty and `$order_item_id` is empty. Default 'true`. Accepted values boolean.
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
-    public function get_commission( $args = [], $auto_save = false ) {
+    public function get_commission( $args = [], $auto_save = false, $override_total_amount_by_product_price = true ) {
         $order_item_id  = ! empty( $args['order_item_id'] ) ? $args['order_item_id'] : '';
         $total_amount   = ! empty( $args['total_amount'] ) ? $args['total_amount'] : 0;
         $total_quantity = ! empty( $args['total_quantity'] ) ? $args['total_quantity'] : 1;
@@ -589,12 +590,16 @@ class Commission {
          * Also there is an issue when 100% coupon is applied see the below link for more details
          *
          * @see https://github.com/getdokan/dokan/pull/2440#issuecomment-2488159960
+         *
+         * When using a decimal comma separator, the decimal value doesn’t work for simple products, and variable products display as zero. (both regular price & discounted price).
+         *
+         * @see https://github.com/getdokan/dokan-pro/issues/4049 6'th issue.
          */
-        if ( ! empty( $product_id ) && empty( $total_amount ) && empty( $order_item_id ) ) {
+        if ( ! empty( $product_id ) && empty( $total_amount ) && empty( $order_item_id ) && $override_total_amount_by_product_price ) {
             $product = dokan()->product->get( $product_id );
 
             // If product price is empty the setting the price as 0
-            $total_amount = $product && $product->get_price() && ! empty( $product->get_price() ) ? $product->get_price() : 0;
+            $total_amount = $product && $product->get_price() && ! empty( $product->get_price() ) ? floatval( $product->get_price() ) : 0;
         }
 
         $order_item_strategy = new OrderItem( $order_item_id, $total_amount, $total_quantity );

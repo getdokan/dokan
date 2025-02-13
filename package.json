@@ -52,7 +52,9 @@
     "qrcode.react": "^4.0.1"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^27.9.0",
+    "@tailwindcss/forms": "^0.5.9",
+    "@tailwindcss/typography": "^0.5.15",
+    "@wordpress/scripts": "^30.7.0",
     "chartjs-adapter-moment": "^1.0.1",
     "@automattic/color-studio": "^2.5.0",
     "debounce": "^1.2.1",
@@ -64,7 +66,9 @@
     "mini-css-extract-plugin": "^2.7.6",
     "papaparse": "^5.4.1",
     "replace-in-file": "^6.3.5",
+    "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.3.3",
+    "tailwindcss-scoped-preflight": "^3.4.5",
     "vue": "^2.7.14",
     "vue-chartjs": "^3.5.1",
     "vue-color": "^2.8.1",
@@ -81,6 +85,22 @@
     "wp-readme-to-markdown": "^1.0.1"
   },
   "dependencies": {
-    "@wordpress/i18n": "^5.8.0"
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@getdokan/dokan-ui": "github:getdokan/dokan-ui#dokan-plugin",
+    "@headlessui/react": "^2.2.0",
+    "@wordpress/api-fetch": "^7.14.0",
+    "@wordpress/components": "^28.9.0",
+    "@wordpress/data": "^10.9.0",
+    "@wordpress/dataviews": "^4.10.0",
+    "@wordpress/dom-ready": "^4.9.0",
+    "@wordpress/element": "^6.9.0",
+    "@wordpress/hooks": "^4.9.0",
+    "@wordpress/i18n": "^5.8.0",
+    "@wordpress/plugins": "^7.10.0",
+    "@wordpress/url": "^4.15.0",
+    "react-router-dom": "^6.27.0",
+    "tailwind-merge": "^2.5.5",
+    "usehooks-ts": "^3.1.0"
   }
 }

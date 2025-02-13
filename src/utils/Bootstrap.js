@@ -4,11 +4,11 @@ import Moment from 'moment'
 import Notifications from 'vue-notification'
 import ListTable from 'vue-wp-list-table';
 import Multiselect from 'vue-multiselect'
-import API_Helper from '@/utils/Api'
+import API_Helper from '@dokan/utils/Api'
 import ChartJS from 'vue-chartjs'
 import Mixin from './Mixin'
 import Debounce from 'debounce'
-import VersionCompare from '@/utils/VersionCompare'
+import VersionCompare from '@dokan/utils/VersionCompare'
 import { parse } from 'papaparse'
 
 window.__ = function( text, domain ) {
