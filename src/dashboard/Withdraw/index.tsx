@@ -5,7 +5,6 @@ import { useWithdrawRequests } from './Hooks/useWithdrawRequests';
 import Balance from './Balance';
 import PaymentDetails from './PaymentDetails';
 import PaymentMethods from './PaymentMethods';
-import { DokanToaster } from '@getdokan/dokan-ui';
 import { useEffect } from '@wordpress/element';
 import { useCurrentUser } from "@dokan/hooks";
 
@@ -55,8 +54,6 @@ const Index = () => {
                     bodyData={ withdrawSettings }
                 />
             </div>
-
-            <DokanToaster />
         </>
     );
 };
