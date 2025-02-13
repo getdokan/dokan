@@ -19,7 +19,7 @@
                 <label class="!p-0 m-0 !mb-[6px] block" for="_subscription_product_admin_commission_type">
                     {{__( 'Apply Parent Category Commission to All Subcategories ', 'dokan-lite' )}}
 
-                    <span class="dokan-tooltips-help tips" v-tooltip :title="__( 'When enabled, changing a parent category\'s commission rate will automatically update all its subscription. Disable this option to maintain independent commission rates for subcategories', 'dokan-lite' )">
+                    <span class="dokan-tooltips-help tips" v-tooltip :title="__( 'When enabled, changing a parent category\'s commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories', 'dokan-lite' )">
                         <i class="fas fa-question-circle"></i>
                     </span>
                 </label>
