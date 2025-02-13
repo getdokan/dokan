@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Admin\Status\Status;
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -62,6 +63,16 @@ class AdminDashboardController extends DokanRESTAdminController {
 						),
 					),
 				),
+            )
+        );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/status', array(
+                array(
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => array( $this, 'get_status' ),
+                    'permission_callback' => array( $this, 'check_permission' ),
+                    'args'                => array(),
+                ),
             )
         );
     }
@@ -162,6 +173,16 @@ class AdminDashboardController extends DokanRESTAdminController {
         unset( $rss );
 
         return rest_ensure_response( $feeds );
+    }
+
+    public function get_status( $request ) {
+        /**
+         * @var Status $status
+         */
+        $status = dokan_get_container()->get( Status::class );
+        $content = $status->render();
+
+        return rest_ensure_response( $content );
     }
 
     /**
