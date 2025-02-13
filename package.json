@@ -88,23 +88,14 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@getdokan/dokan-ui": "^1.0.19",
     "@wordpress/api-fetch": "^7.14.0",
-    "@wordpress/components": "^28.9.0",
-    "@wordpress/data": "^10.9.0",
     "@wordpress/url": "^4.15.0",
     "@wordpress/dataviews": "^4.10.0",
     "@headlessui/react": "^2.2.0",
-    "@wordpress/api-fetch": "^7.14.0",
-    "@wordpress/components": "^28.9.0",
-    "@wordpress/data": "^10.9.0",
     "@wordpress/dom-ready": "^4.9.0",
-    "@wordpress/element": "^6.9.0",
-    "@wordpress/hooks": "^4.9.0",
-    "@wordpress/i18n": "^5.8.0",
     "@wordpress/plugins": "^7.10.0",
     "react-router-dom": "^6.27.0",
     "tailwind-merge": "^2.5.5",
     "usehooks-ts": "^3.1.0",
-    "@wordpress/url": "^4.15.0",
     "wp-readme-to-markdown": "^1.0.1"
   }
 }
