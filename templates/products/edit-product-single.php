@@ -312,7 +312,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                                         wc_price(
                                                                             dokan()->commission->get_earning_by_product( $post_id ),
                                                                             [
-                                                                                'decimals' => wc_get_price_decimals() + 2,
+                                                                                'decimals' => wc_get_price_decimals(),
                                                                             ]
                                                                         )
                                                                     );
