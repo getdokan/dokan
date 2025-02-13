@@ -123,10 +123,15 @@ function RequestWithdrawBtn( {
                 withdrawRequests.refresh();
             } )
             .catch( ( err ) => {
+                let message = __( 'Failed to create withdraw.', 'dokan' );
+
+                if ( err?.message ) {
+                    // @ts-ignore
+                    message = <RawHTML>{ err?.message }</RawHTML>;
+                }
+
                 toast( {
-                    title:
-                        err?.message ??
-                        __( 'Failed to create withdraw.', 'dokan' ),
+                    title: message,
                     type: 'error',
                 } );
                 console.error( 'Error creating withdraw:', err );
