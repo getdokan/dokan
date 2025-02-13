@@ -1,6 +1,7 @@
 import { withRouter } from '../../../routing';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import Layout from './Layout';
+import ModulePage from '../pages/modules';
 
 export type DokanAdminRoute = {
     id: string;
@@ -10,7 +11,18 @@ export type DokanAdminRoute = {
 };
 
 const getAdminRoutes = () => {
-    let routes: Array< DokanAdminRoute > = [];
+    let routes: Array< DokanAdminRoute > = [
+        {
+            id: 'dokan-dashboard',
+            element: <h3>Dashboard</h3>,
+            path: '/',
+        },
+        {
+            id: 'pro-modules',
+            element: <ModulePage />,
+            path: '/pro-modules',
+        },
+    ];
 
     // @ts-ignore
     routes = wp.hooks.applyFilters(

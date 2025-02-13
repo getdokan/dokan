@@ -109,7 +109,7 @@ class Dashboard implements Hookable {
         $settings = $this->settings();
 
         ob_start();
-        echo '<div class="wrap"><div id="dokan-admin-dashboard" class="dokan-layout" data-settings="' . esc_attr( wp_json_encode( $settings ) ) . '">' . esc_html__( 'Loading...', 'dokan-lite' ) . '</div></div>';
+        echo '<div class="wrap"><div id="dokan-admin-dashboard" class="dokan-layout">' . esc_html__( 'Loading...', 'dokan-lite' ) . '</div></div>';
         echo ob_get_clean();
     }
 
@@ -216,5 +216,12 @@ class Dashboard implements Hookable {
         foreach ( $this->styles() as $handle ) {
             wp_enqueue_style( $handle );
         }
+
+        // Localize the settings.
+        wp_add_inline_script(
+            $this->script_key, 'const dokanAdminDashboardSettings = ' . wp_json_encode(
+                $this->settings()
+            ), 'before'
+        );
     }
 }
