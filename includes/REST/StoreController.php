@@ -87,6 +87,7 @@ class StoreController extends WP_REST_Controller {
                     'methods'             => WP_REST_Server::EDITABLE,
                     'callback'            => [ $this, 'update_store' ],
                     'permission_callback' => [ $this, 'update_store_permissions_check' ],
+                    'args'                => $this->get_store_update_params(),
                 ],
             ]
         );
@@ -999,5 +1000,176 @@ class StoreController extends WP_REST_Controller {
         );
 
         return array_merge( parent::get_collection_params(), $params );
+    }
+
+    /**
+     * Updated query params for the store.
+     *
+     * @since DOKAN_PRO_SINCE
+     *
+     * @return array Query parameters for the store update.
+     */
+    public function get_store_update_params(): array {
+        $params = [
+            'id'                        => [
+                'description'       => esc_html__( 'Unique identifier for the vendor.', 'dokan-lite' ),
+                'type'              => 'integer',
+                'required'          => true,
+                'sanitize_callback' => 'absint',
+            ],
+            'first_name'                => [
+                'description'       => esc_html__( 'Store owner first name.', 'dokan-lite' ),
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'last_name'                 => [
+                'description'       => esc_html__( 'Store owner last name.', 'dokan-lite' ),
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'user_nicename'             => [
+                'description'       => esc_html__( 'User nice name.', 'dokan-lite' ),
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'user_pass'                 => [
+                'description' => esc_html__( 'User password.', 'dokan-lite' ),
+                'type'        => 'string',
+            ],
+            'email'                     => [
+                'description'       => esc_html__( 'Store email address.', 'dokan-lite' ),
+                'type'              => 'string',
+                'format'            => 'email',
+                'validate_callback' => 'sanitize_email',
+            ],
+            'store_name'                => [
+                'description'       => esc_html__( 'Store name.', 'dokan-lite' ),
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'phone'                     => [
+                'description'       => esc_html__( 'Store phone number.', 'dokan-lite' ),
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'show_email'                => [
+                'description' => esc_html__( 'Show email in store.', 'dokan-lite' ),
+                'type'        => 'boolean',
+                'default'     => false,
+            ],
+            'gravatar_id'               => [
+                'description' => esc_html__( 'Gravatar ID.', 'dokan-lite' ),
+                'type'        => 'integer',
+            ],
+            'banner_id'                 => [
+                'description' => esc_html__( 'Banner ID.', 'dokan-lite' ),
+                'type'        => 'integer',
+            ],
+            'enable_tnc'                => [
+                'description' => esc_html__( 'Enable terms and conditions.', 'dokan-lite' ),
+                'type'        => 'boolean',
+            ],
+            'store_tnc'                 => [
+                'description' => esc_html__( 'Store terms and conditions.', 'dokan-lite' ),
+                'type'        => 'string',
+            ],
+            'icon'                      => [
+                'description' => esc_html__( 'Store icon.', 'dokan-lite' ),
+                'type'        => 'string',
+            ],
+            'social'                    => [
+                'description' => esc_html__( 'Social profiles.', 'dokan-lite' ),
+                'type'        => 'object',
+                'properties'  => [
+                    'fb'        => [ 'type' => 'string' ],
+                    'twitter'   => [ 'type' => 'string' ],
+                    'pinterest' => [ 'type' => 'string' ],
+                    'linkedin'  => [ 'type' => 'string' ],
+                    'youtube'   => [ 'type' => 'string' ],
+                    'instagram' => [ 'type' => 'string' ],
+                ],
+            ],
+            'payment'                   => [
+                'description' => esc_html__( 'Payment settings.', 'dokan-lite' ),
+                'type'        => 'object',
+                'properties'  => [
+                    'paypal' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'email'  => [
+                                'type'   => 'string',
+                                'format' => 'email'
+                            ],
+                        ],
+                    ],
+                    'bank' => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'ac_name'        => [ 'type' => 'string' ],
+                            'ac_number'      => [ 'type' => 'string' ],
+                            'bank_name'      => [ 'type' => 'string' ],
+                            'bank_addr'      => [ 'type' => 'string' ],
+                            'routing_number' => [ 'type' => 'string' ],
+                            'iban'           => [ 'type' => 'string' ],
+                            'swift'          => [ 'type' => 'string' ],
+                        ],
+                    ],
+                ],
+            ],
+            'address'                   => [
+                'description' => esc_html__( 'Store address.', 'dokan-lite' ),
+                'type'        => 'object',
+                'properties'  => [
+                    'street_1' => [ 'type' => 'string' ],
+                    'street_2' => [ 'type' => 'string' ],
+                    'city'     => [ 'type' => 'string' ],
+                    'zip'      => [ 'type' => 'string' ],
+                    'state'    => [ 'type' => 'string' ],
+                    'country'  => [ 'type' => 'string' ],
+                ],
+            ],
+            'store_open_close'          => [
+                'description'      => esc_html__( 'Store timing settings.', 'dokan-lite' ),
+                'type'             => 'object',
+                'properties'       => [
+                    'enabled'      => [ 'type' => 'boolean' ],
+                    'open_notice'  => [ 'type' => 'string' ],
+                    'close_notice' => [ 'type' => 'string' ],
+                    'time'         => [ 'type' => 'array' ],
+                ],
+            ],
+            // Admin only fields
+            'enabled'                   => [
+                'description' => esc_html__( 'Enable selling.', 'dokan-lite' ),
+                'type'        => 'boolean',
+            ],
+            'featured'                  => [
+                'description' => esc_html__( 'Featured vendor.', 'dokan-lite' ),
+                'type'        => 'boolean',
+            ],
+            'trusted'                   => [
+                'description' => esc_html__( 'Trusted vendor.', 'dokan-lite' ),
+                'type'        => 'boolean',
+            ],
+            'admin_commission_type'     => [
+                'description' => esc_html__( 'Commission type.', 'dokan-lite' ),
+                'type'        => 'string',
+                'enum'        => [ 'percentage', 'flat' ],
+            ],
+            'admin_commission'          => [
+                'description' => esc_html__( 'Admin commission amount.', 'dokan-lite' ),
+                'type'        => [ 'number', 'string' ],
+            ],
+            'admin_additional_fee'      => [
+                'description' => esc_html__( 'Admin additional fee.', 'dokan-lite' ),
+                'type'        => [ 'number', 'string' ],
+            ],
+            'admin_category_commission' => [
+                'description' => esc_html__( 'Category wise commission.', 'dokan-lite' ),
+                'type'        => 'object',
+            ],
+        ];
+
+        return apply_filters( 'dokan_rest_api_store_update_params', $params );
     }
 }
