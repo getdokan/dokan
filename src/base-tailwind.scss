@@ -8,6 +8,11 @@
         --colors-primary-500: var(--dokan-button-border-color, #F05025);
         --wp-components-color-accent: var(--dokan-button-background-color, #F05025);
     }
+    // This is a hack to fix headless ui flickering during .dokan-layout class addition with MutationObserver.
+    // This is a temporary fix until headless ui provides a better solution.
+    #headlessui-portal-root {
+        display: none;
+    }
     .bg-primary-500 {
         @apply bg-dokan-btn focus:outline-dokan-btn;
     }
