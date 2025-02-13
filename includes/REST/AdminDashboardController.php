@@ -167,7 +167,7 @@ class AdminDashboardController extends DokanRESTAdminController {
     /**
      * Support SimplePie class in WP 5.5+
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.10
      *
      * @param array  $response    HTTP response.
      * @param array  $parsed_args HTTP request arguments.
