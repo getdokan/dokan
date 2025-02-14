@@ -4,7 +4,7 @@
  * Support for Elementor Store Widgets
  *
  * @since 3.0.0
- *
+ * @deprecated 3.0.0
  * @param array             $default_widget_args
  * @param \Widget_WordPress $widget_wordpress
  *

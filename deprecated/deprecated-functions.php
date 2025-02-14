@@ -4,7 +4,7 @@
  * Wrapper for wc_doing_it_wrong.
  *
  * @since 3.0.0
- *
+ * @deprecated 3.0.0
  * @param string $function_name Function used.
  * @param string $message Message to log.
  * @param string $version Version the message was added in.
@@ -37,11 +37,12 @@ function dokan_get_product_status( $status ) {
 }
 
 /**
- * Load depericated widget class dynamically
+ * Load deprecated widget class dynamically
  *
  * @since 3.0.0
  *
  * @return void
+ * @deprecated 3.0.0 Use WeDevs\Dokan\Widgets\Manager class instead of this function
  */
 function dokan_depricated_widget_classes() {
     global $wp_widget_factory;
@@ -63,7 +64,11 @@ function dokan_depricated_widget_classes() {
 add_action( 'woocommerce_before_main_content', 'dokan_depricated_widget_classes' );
 
 /**
- * Depricated function for render seller metabox in product
+ * Deprecated function for render seller metabox in product
+ *
+ * @since 3.0.0
+ *
+ * @deprecated 3.0.0 Use \WeDevs\Dokan\Admin\Hooks::seller_meta_box_content instead of this function
  *
  * @param object $post
  *
