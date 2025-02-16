@@ -88,8 +88,9 @@ export class CommissionPage extends AdminPage {
         await this.click(setupWizardAdmin.skipThisStep);
 
         // recommended
-        await this.disableSwitcherSetupWizard(setupWizardAdmin.wooCommerceConversionTracking);
+        await this.disableSwitcherSetupWizard(setupWizardAdmin.storeGrowth);
         await this.disableSwitcherSetupWizard(setupWizardAdmin.weMail);
+        await this.disableSwitcherSetupWizard(setupWizardAdmin.wooCommerceConversionTracking);
         await this.disableSwitcherSetupWizard(setupWizardAdmin.texty);
         await this.click(setupWizardAdmin.continueRecommended);
 
