@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import getSettings from '../../settings/getSettings';
 import { Modal } from '@getdokan/dokan-ui';
-import { useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import Card from './Card';
 import UpgradeModal from './UpgradeModal';
 
@@ -17,8 +17,8 @@ export type DokanModule = {
 const ModulePage = () => {
     const [ showModal, setShowModal ] = useState( true );
 
-    const modules = getSettings( 'pro-modules' )
-        .modules satisfies DokanModule[];
+    const [ modules, setModules ] = useState< DokanModule[] >( [] );
+    const [ filter, setFilter ] = useState< Array< string > >( [] );
 
     const colors = [
         'green',
@@ -44,6 +44,13 @@ const ModulePage = () => {
         },
         {} as Record< string, string >
     ) satisfies Record< string, string >;
+
+    useEffect( () => {
+        const allModules = getSettings( 'pro-modules' )
+            .modules satisfies DokanModule[];
+
+        setModules( allModules );
+    }, [] );
 
     // Tailwind CSS classes for tags, without it we can not have dynamic classes generated in css.
     const className =
