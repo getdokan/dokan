@@ -1,6 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { Modal } from '@getdokan/dokan-ui';
 import { RawHTML } from '@wordpress/element';
+import getSettings from '../../settings/getSettings';
 
 const UpgradeModal = ( {
     isOpen,
@@ -9,6 +10,8 @@ const UpgradeModal = ( {
     isOpen: boolean;
     onClose: () => void;
 } ) => {
+    const upgradeURL = getSettings( 'pro-modules' ).upgrade_url as string;
+
     return (
         <Modal
             className="max-w-sm"
@@ -151,6 +154,7 @@ const UpgradeModal = ( {
                         className="bg-[#7047EB] rounded-[3px] p-[10px_18px] text-[.75rem] font-normal font-sans my-[30px] inline-block text-white no-underline hover:bg-[#573cff] cursor-pointer"
                         target="_blank"
                         rel="noopener noreferrer"
+                        href={ upgradeURL }
                     >
                         { __( 'Upgrade to Pro', 'dokan-lite' ) }
                     </a>

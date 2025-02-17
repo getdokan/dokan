@@ -33,38 +33,41 @@ class Modules extends AbstractPage {
 	 */
 	public function settings(): array {
 		return [
-            [
-                'title' => __( 'Auction Integration', 'dokan-lite' ),
-                'image' => DOKAN_PLUGIN_ASSEST . '/images/modules/auction.svg',
-                'description'  => __( 'A plugin that combined WooCommerce simple auction and Dokan plugin.', 'dokan-lite' ),
-                'tags' => [
-                    'Product Management',
-                    'Integration',
-                ],
-                'actions' => [
-                    'docs' => 'https://dokan.co/docs/wordpress/modules/woocommerce-auctions-frontend-multivendor-marketplace/',
-                    'video' => '',
-                ],
-                'requires' => [
-                    'WooCommerce Simple Auctions',
-                ],
-            ],
-            [
-                'title' => __( 'Color Scheme Customizer', 'dokan-lite' ),
-                'image' => DOKAN_PLUGIN_ASSEST . '/images/modules/color-scheme-customizer.svg',
-                'description'  => __( 'A Dokan plugin Add-on to Customize Colors of Dokan Dashboard', 'dokan-lite' ),
-                'tags' => [
-                    'UI & UX',
-                ],
-                'actions' => [
-                    'docs' => 'https://dokan.co/docs/wordpress/modules/color-scheme/',
-                    'video' => '',
-                ],
-                'requires' => [
-                    'WooCommerce Simple Auctions',
-                ],
-            ],
-        ];
+            'upgrade_url' => 'https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+            'modules' => [
+				[
+					'title' => __( 'Auction Integration', 'dokan-lite' ),
+					'image' => DOKAN_PLUGIN_ASSEST . '/images/modules/auction.svg',
+					'description'  => __( 'A plugin that combined WooCommerce simple auction and Dokan plugin.', 'dokan-lite' ),
+					'tags' => [
+						'Product Management',
+						'Integration',
+					],
+					'actions' => [
+						'docs' => 'https://dokan.co/docs/wordpress/modules/woocommerce-auctions-frontend-multivendor-marketplace/',
+						'video' => '',
+					],
+					'requires' => [
+						'WooCommerce Simple Auctions',
+					],
+				],
+				[
+					'title' => __( 'Color Scheme Customizer', 'dokan-lite' ),
+					'image' => DOKAN_PLUGIN_ASSEST . '/images/modules/color-scheme-customizer.svg',
+					'description'  => __( 'A Dokan plugin Add-on to Customize Colors of Dokan Dashboard', 'dokan-lite' ),
+					'tags' => [
+						'UI & UX',
+					],
+					'actions' => [
+						'docs' => 'https://dokan.co/docs/wordpress/modules/color-scheme/',
+						'video' => '',
+					],
+					'requires' => [
+						'WooCommerce Simple Auctions',
+					],
+				],
+			],
+		];
 	}
 
 	/**

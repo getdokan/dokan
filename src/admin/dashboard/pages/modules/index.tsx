@@ -17,7 +17,8 @@ export type DokanModule = {
 const ModulePage = () => {
     const [ showModal, setShowModal ] = useState( true );
 
-    const modules = getSettings( 'pro-modules' ) satisfies DokanModule[];
+    const modules = getSettings( 'pro-modules' )
+        .modules satisfies DokanModule[];
 
     const colors = [
         'green',
