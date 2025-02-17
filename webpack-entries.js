@@ -1,6 +1,8 @@
 const entryPoints = {
     'dokan-tailwind': './src/tailwind.css',
+
     frontend: './src/dashboard/index.tsx',
+    'dokan-admin-dashboard': './src/admin/dashboard/index.tsx',
     'vue-frontend': './src/frontend/main.js',
     'vue-admin': './src/admin/main.js',
     'vue-bootstrap': './src/utils/Bootstrap.js',
@@ -44,6 +46,7 @@ const entryPoints = {
     'page-views': './assets/src/js/page-views.js',
     'dokan-setup-wizard-commission':
         './assets/src/js/setup-wizard/commission/index.js',
+    // Category commission component styles.
     'dokan-category-commission': '/src/admin/components/Commission/index.js',
     'core-store': '/src/stores/core/store.ts',
     'dokan-status': '/src/Status/index.tsx',

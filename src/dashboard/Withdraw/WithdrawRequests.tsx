@@ -1,5 +1,5 @@
 import { useWithdrawRequests } from './Hooks/useWithdrawRequests';
-import { Button, DokanToaster } from '@getdokan/dokan-ui';
+import { Button } from '@getdokan/dokan-ui';
 import RequestList from './RequestList';
 import { useEffect, useState } from '@wordpress/element';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -50,7 +50,7 @@ function WithdrawRequests() {
         } );
     }, [ location.search, currentUser?.data ] );
 
-    const Table = () => {
+    const Content = () => {
         return (
             <>
                 <div className="flex sm:flex-col md:flex-row md:justify-between">
@@ -124,10 +124,8 @@ function WithdrawRequests() {
     return (
         <>
             <div className="dokan-withdraw-wrapper dokan-react-withdraw space-y-6">
-                <Table />
+                <Content />
             </div>
-
-            <DokanToaster />
         </>
     );
 }
