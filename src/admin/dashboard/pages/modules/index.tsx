@@ -1,8 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import getSettings from '../../settings/getSettings';
-import { twMerge } from 'tailwind-merge';
+import { Modal } from '@getdokan/dokan-ui';
+import { useState } from '@wordpress/element';
+import Card from './Card';
+import UpgradeModal from './UpgradeModal';
 
-type DokanModule = {
+export type DokanModule = {
     image: string;
     title: string;
     description: string;
@@ -12,6 +15,8 @@ type DokanModule = {
 };
 
 const ModulePage = () => {
+    const [ showModal, setShowModal ] = useState( true );
+
     const modules = getSettings( 'pro-modules' ) satisfies DokanModule[];
 
     const colors = [
@@ -37,7 +42,15 @@ const ModulePage = () => {
             return acc;
         },
         {} as Record< string, string >
-    );
+    ) satisfies Record< string, string >;
+
+    // Tailwind CSS classes for tags, without it we can not have dynamic classes generated in css.
+    const className =
+        'bg-green-100 text-green-800 bg-blue-100 text-blue-800 bg-orange-100 text-orange-800 bg-red-100 text-red-800 bg-yellow-100 text-yellow-800 bg-purple-100 text-purple-800 bg-indigo-100 text-indigo-800 bg-amber-100 text-amber-800 bg-pink-100 text-pink-800 bg-teal-100 text-teal-800 bg-gray-100 text-gray-800';
+
+    const handleCardToggle = ( toggle: boolean ) => {
+        setShowModal( toggle );
+    };
 
     return (
         <>
@@ -66,64 +79,19 @@ const ModulePage = () => {
 
             <div className="modules-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 p-6">
                 { modules.map( ( module: DokanModule, index ) => (
-                    <div
+                    <Card
                         key={ index }
-                        className="module-card border border-gray-300 rounded-md p-4 bg-white shadow"
-                    >
-                        <img
-                            src={ module.image }
-                            alt={ module.title }
-                            className="module-image w-24 object-cover rounded-sm mb-4 aspect-3/2"
-                        />
-
-                        <h3 className="mt-0 mb-2 text-lg font-semibold">
-                            { module.title }
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-4">
-                            { module.description }
-                        </p>
-                        <div className="module-tags flex gap-2 mb-3">
-                            { module.tags.map( ( tag, tagIndex ) => (
-                                <span
-                                    key={ tagIndex }
-                                    className={ twMerge(
-                                        'module-tag px-2.5 py-1 rounded-full text-xs font-semibold',
-                                        `bg-${ mapedTagswithColors[ tag ] }-100 text-${ mapedTagswithColors[ tag ] }-800`
-                                    ) }
-                                >
-                                    { tag }
-                                </span>
-                            ) ) }
-                        </div>
-                        <div className="module-actions flex gap-4 items-center mt-4">
-                            { module.actions &&
-                                Object.entries( module.actions ).map(
-                                    ( [ action, value ], actionIndex ) => (
-                                        <a
-                                            key={ actionIndex }
-                                            href={ value }
-                                            className="text-gray-500 text-sm no-underline"
-                                        >
-                                            { 'docs' === action
-                                                ? __( 'Docs', 'dokan-lite' )
-                                                : __( 'Video', 'dokan-lite' ) }
-                                        </a>
-                                    )
-                                ) }
-                            <div className="toggle-container ml-auto">
-                                <label className="toggle-switch relative inline-block w-10 h-5">
-                                    <input
-                                        type="checkbox"
-                                        className="opacity-0 w-0 h-0"
-                                        defaultChecked
-                                    />
-                                    <span className="slider absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 transition-all duration-400 rounded-full before:absolute before:content-[''] before:h-4 before:w-4 before:left-0.5 before:bottom-0.5 before:bg-white before:transition-all before:duration-400 before:rounded-full checked:bg-blue-500 checked:before:translate-x-5"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                        module={ module }
+                        onChange={ handleCardToggle }
+                        colors={ mapedTagswithColors }
+                    />
                 ) ) }
             </div>
+
+            <UpgradeModal
+                isOpen={ showModal }
+                onClose={ () => setShowModal( false ) }
+            />
         </>
     );
 };
