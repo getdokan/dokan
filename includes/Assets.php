@@ -621,8 +621,6 @@ class Assets {
             ];
         }
 
-
-
         return $scripts;
     }
 
