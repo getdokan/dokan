@@ -370,104 +370,94 @@ function dokan_get_seller_id_by_order( $order ) {
 
     return apply_filters( 'dokan_get_seller_id_by_order', 0, $items );
 }
-
 /**
  * Get bootstrap label class based on order status
  *
- * @param string $status
+ * @param string $status Order status with or without wc- prefix
  *
- * @return string
+ * @return string Bootstrap class name
  */
-function dokan_get_order_status_class( $status ) {
-    $order_status_class = '';
-    switch ( $status ) {
-        case 'completed':
-        case 'wc-completed':
-            $order_status_class = 'success';
-            break;
+function dokan_get_order_status_class( string $status ): string {
+    // Status to bootstrap class mapping
+    $status_class_map = [
+        'completed'      => 'success',
+        'pending'       => 'danger',
+        'failed'        => 'danger',
+        'on-hold'       => 'warning',
+        'processing'    => 'info',
+        'refunded'      => 'default',
+        'cancelled'     => 'default',
+        'checkout-draft' => 'default',
+    ];
 
-        case 'pending':
-        case 'wc-pending':
-        case 'failed':
-        case 'wc-failed':
-            $order_status_class = 'danger';
-            break;
+    // Allow modifying status class mappings
+    $status_class_map = apply_filters( 'dokan_order_status_class_mapping', $status_class_map );
 
-        case 'on-hold':
-        case 'wc-on-hold':
-            $order_status_class = 'warning';
-            break;
+    // Remove 'wc-' prefix if present for comparison
+    $clean_status = str_replace( 'wc-', '', $status );
 
-        case 'processing':
-        case 'wc-processing':
-            $order_status_class = 'info';
-            break;
+    // Check if status exists in WooCommerce
+    $wc_statuses = array_keys( wc_get_order_statuses() );
+    $wc_clean_statuses = array_map(
+        function ( $status ) {
+			return str_replace( 'wc-', '', $status );
+		}, $wc_statuses
+    );
 
-        case 'refunded':
-        case 'wc-refunded':
-        case 'cancelled':
-        case 'wc-cancelled':
-        case 'checkout-draft':
-            $order_status_class = 'default';
-            break;
+    // If status doesn't exist in WooCommerce, return default
+    if ( ! in_array( $clean_status, $wc_clean_statuses, true ) ) {
+        return apply_filters( 'dokan_get_order_status_class', 'default', $status );
     }
+
+    // Get the class from mapping or return default
+    $order_status_class = $status_class_map[ $clean_status ] ?? 'default';
 
     return apply_filters( 'dokan_get_order_status_class', $order_status_class, $status );
 }
-
 /**
  * Get translated string of order status
  *
- * @param string $status
+ * @param string $status Order status with or without wc- prefix
  *
- * @return string
+ * @return string Translated status text
  */
-function dokan_get_order_status_translated( $status ) {
-    $translated_order_status = '';
-    switch ( $status ) {
-        case 'completed':
-        case 'wc-completed':
-            $translated_order_status = __( 'Completed', 'dokan-lite' );
-            break;
+function dokan_get_order_status_translated( string $status ): string {
+    // Default translations mapping
+    $status_translations = [
+        'completed'      => __( 'Completed', 'dokan-lite' ),
+        'pending'        => __( 'Pending Payment', 'dokan-lite' ),
+        'on-hold'        => __( 'On-hold', 'dokan-lite' ),
+        'processing'     => __( 'Processing', 'dokan-lite' ),
+        'refunded'       => __( 'Refunded', 'dokan-lite' ),
+        'cancelled'      => __( 'Cancelled', 'dokan-lite' ),
+        'failed'         => __( 'Failed', 'dokan-lite' ),
+        'checkout-draft' => __( 'Draft', 'dokan-lite' ),
+    ];
 
-        case 'pending':
-        case 'wc-pending':
-            $translated_order_status = __( 'Pending Payment', 'dokan-lite' );
-            break;
+    // Allow modifying status translations
+    $status_translations = apply_filters( 'dokan_order_status_translations', $status_translations );
 
-        case 'on-hold':
-        case 'wc-on-hold':
-            $translated_order_status = __( 'On-hold', 'dokan-lite' );
-            break;
+    // Remove 'wc-' prefix if present
+    $clean_status = str_replace( 'wc-', '', $status );
 
-        case 'processing':
-        case 'wc-processing':
-            $translated_order_status = __( 'Processing', 'dokan-lite' );
-            break;
+    // Check if status exists in WooCommerce
+    $wc_statuses = array_keys( wc_get_order_statuses() );
+    $wc_clean_statuses = array_map(
+        function ( $status ) {
+			return str_replace( 'wc-', '', $status );
+		}, $wc_statuses
+    );
 
-        case 'refunded':
-        case 'wc-refunded':
-            $translated_order_status = __( 'Refunded', 'dokan-lite' );
-            break;
-
-        case 'cancelled':
-        case 'wc-cancelled':
-            $translated_order_status = __( 'Cancelled', 'dokan-lite' );
-            break;
-
-        case 'failed':
-        case 'wc-failed':
-            $translated_order_status = __( 'Failed', 'dokan-lite' );
-            break;
-
-        case 'checkout-draft':
-            $translated_order_status = __( 'Draft', 'dokan-lite' );
-            break;
+    // If status doesn't exist in WooCommerce, return empty string
+    if ( ! in_array( $clean_status, $wc_clean_statuses, true ) ) {
+        return apply_filters( 'dokan_get_order_status_translated', '', $status );
     }
+
+    // Get translation from mapping or use WooCommerce's translation
+    $translated_order_status = $status_translations[ $clean_status ] ?? wc_get_order_status_name( $clean_status );
 
     return apply_filters( 'dokan_get_order_status_translated', $translated_order_status, $status );
 }
-
 /**
  * Get product items list from order seperated by given glue
  *
