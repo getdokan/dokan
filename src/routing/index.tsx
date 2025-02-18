@@ -5,6 +5,7 @@ import { isValidElement, cloneElement, createElement } from '@wordpress/element'
 import { useNavigate, useParams, useLocation, redirect, replace, useMatches, useNavigation, createSearchParams } from 'react-router-dom';
 import Withdraw from "../Dashboard/Withdraw";
 import WithdrawRequests from "../Dashboard/Withdraw/WithdrawRequests";
+import Statement from "./Statement/Statement";
 
 export function withRouter(Component) {
     function ComponentWithRouterProp(props) {
@@ -44,16 +45,16 @@ export function withRouter(Component) {
 const getRoutes = () => {
     let routes: Array< DokanRoute > = [];
 
-    // routes.push(
-    //     {
-    //         id: 'dokan-base',
-    //         title: __( 'Dashboard', 'dokan-lite' ),
-    //         element: <h1>Dashboard body</h1>,
-    //         path: '/',
-    //         exact: true,
-    //         order: 10,
-    //     }
-    // );
+    routes.push(
+        {
+            id: 'dokan-base',
+            title: __( 'Dashboard', 'dokan-lite' ),
+            element: Statement,
+            path: '/',
+            exact: true,
+            order: 10,
+        }
+    );
 
     routes.push(
         {

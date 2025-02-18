@@ -32,6 +32,7 @@ function dokan_get_dashboard_nav(): array {
             'url'        => dokan_get_navigation_url(),
             'pos'        => 10,
             'permission' => 'dokan_view_overview_menu',
+            'react_route' => '',
         ],
         'products'  => [
             'title'      => __( 'Products', 'dokan-lite' ),

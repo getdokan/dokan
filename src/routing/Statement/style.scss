@@ -1,0 +1,21 @@
+@use '../../../node_modules/@getdokan/dokan-ui/dist/dokan-ui.css';
+@use '../../base-tailwind';
+@config './statement-tailwind-config.js';
+
+#report-statement {
+    &.dokan-dashboard-datatable {
+        .dataviews-wrapper {
+            height: fit-content;
+
+            .dataviews__view-actions {
+                display: none;
+            }
+        }
+    }
+
+    table.dataviews-view-table {
+        th {
+            background-color: #f9fafb;
+        }
+    }
+}
