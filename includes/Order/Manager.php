@@ -287,19 +287,14 @@ class Manager {
         $counts      = Cache::get( $cache_key, $cache_group );
 
         if ( false === $counts ) {
-            $counts = [
-                'wc-pending'        => 0,
-                'wc-completed'      => 0,
-                'wc-on-hold'        => 0,
-                'wc-processing'     => 0,
-                'wc-refunded'       => 0,
-                'wc-cancelled'      => 0,
-                'wc-failed'         => 0,
-                'wc-checkout-draft' => 0,
-                'total'             => 0,
-            ];
-            $counts = apply_filters( 'dokan_order_status_count', $counts );
+            // Filter hook to allow adding custom statuses to whitelist
+            $dokan_order_statuses = $this->get_dokan_order_statuses();
+            // Initialize counts array with filtered statuses
+            $counts = array_fill_keys( array_keys( $dokan_order_statuses ), 0 );
+            // Add total separately since it's not an order status
+            $counts['total'] = 0;
 
+            $status_list = "'" . implode( "','", array_keys( $dokan_order_statuses ) ) . "'";
             $order_table_name = OrderUtil::get_order_table_name();
             if ( OrderUtil::is_hpos_enabled() ) {
                 // HPOS usage is enabled.
@@ -310,7 +305,8 @@ class Manager {
                     LEFT JOIN $order_table_name p ON do.order_id = p.id
                     WHERE
                         do.seller_id = %d AND
-                        p.status != 'trash'
+                        p.status != 'trash' AND
+                        do.order_status IN ({$status_list})
                     GROUP BY do.order_status",
                     [ $seller_id ]
                 );
@@ -324,7 +320,8 @@ class Manager {
                     LEFT JOIN $order_table_name p ON do.order_id = p.ID
                     WHERE
                         do.seller_id = %d AND
-                        p.post_status != 'trash'
+                        p.post_status != 'trash' AND
+                        do.order_status IN ({$status_list})
                     GROUP BY do.order_status",
                     [ $seller_id ]
                 );
@@ -341,7 +338,8 @@ class Manager {
                     }
                 }
             }
-
+            // Final filter for the complete counts array
+            $counts = apply_filters( 'dokan_order_status_count', $counts );
             $counts = (object) $counts;
             Cache::set( $cache_key, $counts, $cache_group );
         }
@@ -957,5 +955,23 @@ class Manager {
         }
 
         return false;
+    }
+
+    /**
+     * Dokan whitelisted order statuses
+     *
+     * @since DOKAN_SINCE
+     */
+
+    public function get_dokan_order_statuses(): array {
+        $exclude_statuses = (array) apply_filters( 'dokan_vendor_dashboard_excluded_order_statuses', [ 'wc-checkout-draft' ] );
+
+        // Convert the indexed array to an associative array where the values become keys & Get WooCommerce order statuses.
+        $exclude_statuses  = array_flip( $exclude_statuses );
+        $wc_order_statuses = wc_get_order_statuses();
+
+        // Remove keys from $wc_order_statuses that are found in $exclude_statuses.
+
+        return array_diff_key( $wc_order_statuses, $exclude_statuses );
     }
 }
