@@ -4,6 +4,7 @@ import { useEffect, useState } from '@wordpress/element';
 import Card from './Card';
 import UpgradeModal from './UpgradeModal';
 import CategorySelector from './CategorySelector';
+import SearchBox from './SearchBox';
 
 export type DokanModule = {
     image: string;
@@ -19,6 +20,7 @@ const ModulePage = () => {
 
     const [ modules, setModules ] = useState< DokanModule[] >( [] );
     const [ filter, setFilter ] = useState< Array< string > >( [] );
+    const [ search, setSearch ] = useState< string >( '' );
 
     const colors = [
         'green',
@@ -69,11 +71,26 @@ const ModulePage = () => {
         setModules( allModules );
     }, [ allModules ] );
 
+    const searchInModules = (
+        searchTerms: string,
+        searchModules: DokanModule[]
+    ): DokanModule[] => {
+        if ( searchTerms.length === 0 ) {
+            return searchModules;
+        }
+
+        return searchModules.filter( ( module: DokanModule ) => {
+            return module.title
+                .toLowerCase()
+                .includes( searchTerms.toLowerCase() );
+        } );
+    };
+
     useEffect( () => {
         let filteredModules: Array< DokanModule > = allModules;
 
         if ( filter.length === 0 ) {
-            setModules( allModules );
+            setModules( searchInModules( search, allModules ) );
             return;
         }
 
@@ -81,8 +98,8 @@ const ModulePage = () => {
             return module.tags.some( ( tag ) => filter.includes( tag ) );
         } );
 
-        setModules( filteredModules );
-    }, [ allModules, filter ] );
+        setModules( searchInModules( search, filteredModules ) );
+    }, [ allModules, filter, search ] );
 
     // Tailwind CSS classes for tags, without it we can not have dynamic classes generated in css.
     const className =
@@ -129,6 +146,12 @@ const ModulePage = () => {
                         categories={ tagsCount }
                         onChange={ ( cat ) => setFilter( cat ) }
                         selectedCategories={ filter }
+                    />
+                    <SearchBox
+                        className="bg-white border border-gray-300"
+                        setSearch={ ( currentState ) =>
+                            setSearch( currentState )
+                        }
                     />
                 </div>
             </div>

@@ -1,7 +1,7 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
-import { Dropdown, SimpleCheckboxGroup } from '@getdokan/dokan-ui';
+import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
 import { __, sprintf } from '@wordpress/i18n';
-import { Fragment, RawHTML, useState } from '@wordpress/element';
+import { RawHTML } from '@wordpress/element';
 
 interface CategorySelectorProps {
     categories: Record< string, number >;
