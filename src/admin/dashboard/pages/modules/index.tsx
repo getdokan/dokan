@@ -36,8 +36,9 @@ const ModulePage = () => {
         'gray',
     ];
 
-    const allModules = getSettings( 'pro-modules' )
-        .modules satisfies DokanModule[];
+    const allModules = getSettings( 'pro-modules' ).modules.sort( ( a, b ) =>
+        a.title.localeCompare( b.title )
+    ) satisfies DokanModule[];
 
     const tags = allModules
         .map( ( module: DokanModule ) => module.tags )
@@ -103,7 +104,7 @@ const ModulePage = () => {
 
     // Tailwind CSS classes for tags, without it we can not have dynamic classes generated in css.
     const className =
-        'bg-green-100 text-green-800 bg-blue-100 text-blue-800 bg-orange-100 text-orange-800 bg-red-100 text-red-800 bg-yellow-100 text-yellow-800 bg-purple-100 text-purple-800 bg-indigo-100 text-indigo-800 bg-amber-100 text-amber-800 bg-pink-100 text-pink-800 bg-teal-100 text-teal-800 bg-gray-100 text-gray-800';
+        'bg-green-50 text-green-800 bg-blue-50 text-blue-800 bg-orange-50 text-orange-800 bg-red-50 text-red-800 bg-yellow-50 text-yellow-800 bg-purple-50 text-purple-800 bg-indigo-50 text-indigo-800 bg-amber-50 text-amber-800 bg-pink-50 text-pink-800 bg-teal-50 text-teal-800 bg-gray-50 text-gray-800';
 
     const handleCardToggle = ( toggle: boolean ) => {
         setShowModal( toggle );
