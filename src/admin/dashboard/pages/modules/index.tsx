@@ -9,6 +9,7 @@ import SearchBox from './SearchBox';
 export type DokanModule = {
     image: string;
     title: string;
+    url: string;
     description: string;
     tags: string[];
     actions?: Record< string, string >;
