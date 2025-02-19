@@ -964,6 +964,17 @@ class Manager {
      */
 
     public function get_dokan_order_statuses(): array {
+        /**
+         * Filter the list of order statuses to exclude.
+         *
+         * This filter allows developers to modify the array of order statuses that
+         * should be excluded from the displayed list. It is useful for removing
+         * statuses dynamically based on specific conditions or configurations.
+         *
+         * @since 3.10.4
+         *
+         * @param array $exclude_statuses Array of order status slugs to be excluded.
+         */
         $exclude_statuses = (array) apply_filters( 'dokan_vendor_dashboard_excluded_order_statuses', [ 'wc-checkout-draft' ] );
 
         // Convert the indexed array to an associative array where the values become keys & Get WooCommerce order statuses.
