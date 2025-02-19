@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import getSettings from '../../settings/getSettings';
 import { useEffect, useState } from '@wordpress/element';
 import Card from './Card';
@@ -37,8 +37,8 @@ const ModulePage = () => {
         'gray',
     ];
 
-    const allModules = getSettings( 'pro-modules' ).modules.sort( ( a, b ) =>
-        a.title.localeCompare( b.title )
+    const allModules: DokanModule[] = getSettings( 'pro-modules' ).modules.sort(
+        ( a, b ) => a.title.localeCompare( b.title )
     ) satisfies DokanModule[];
 
     const tags = allModules
@@ -123,11 +123,15 @@ const ModulePage = () => {
                 </h1>
             </div>
 
-            <div className="navbar flex py-3 items-center">
-                <div className="navbar-left flex items-center mr-auto">
-                    <div className="navbar-tabs flex items-center">
-                        <div className="mr-4 py-2 border-b-2 border-blue-500 text-[#1a9ed4] font-semibold cursor-pointer">
-                            { __( 'My Modules (40)', 'dokan-lite' ) }
+            <div className="flex py-3 items-center justify-between flex-wrap gap-y-4">
+                <div className="flex items-center">
+                    <div className="flex items-center">
+                        <div className="mr-4 py-2 border-b-2 border-[#1a9ed4] text-[#1a9ed4] font-semibold cursor-pointer">
+                            { sprintf(
+                                // translators: %s: total number of modules
+                                __( 'My Modules (%s)', 'dokan-lite' ),
+                                allModules.length
+                            ) }
                         </div>
                         <div
                             className="mx-4 py-2 cursor-pointer"
@@ -139,7 +143,11 @@ const ModulePage = () => {
                             className="mx-4 py-2 cursor-pointer"
                             onClick={ () => setShowModal( true ) }
                         >
-                            { __( 'Inactive (40)', 'dokan-lite' ) }
+                            { sprintf(
+                                // translators: %s: total number of modules
+                                __( 'Inactive (%s)', 'dokan-lite' ),
+                                allModules.length
+                            ) }
                         </div>
                     </div>
                 </div>
