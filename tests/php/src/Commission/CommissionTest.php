@@ -113,23 +113,23 @@ class CommissionTest extends WP_UnitTestCase {
      */
     public function test_fixed_commission_calculation_works_properly_for_smaller_amount_then_commission_amount_in_global() {
         $commission_global_options = [
-            "shipping_fee_recipient"           => "admin",
-            "tax_fee_recipient"                => "admin",
-            "shipping_tax_fee_recipient"       => "admin",
-            "new_seller_enable_selling"        => "on",
-            "commission_type"                  => "fixed",
-            "admin_percentage"                 => "5",
-            "additional_fee"                   => "5",
-            "order_status_change"              => "on",
-            "commission_category_based_values" => [
-                "all"   => [
-                    "flat"       => "",
-                    "percentage" => "",
+            'shipping_fee_recipient'           => 'admin',
+            'tax_fee_recipient'                => 'admin',
+            'shipping_tax_fee_recipient'       => 'admin',
+            'new_seller_enable_selling'        => 'on',
+            'commission_type'                  => 'fixed',
+            'admin_percentage'                 => '5',
+            'additional_fee'                   => '5',
+            'order_status_change'              => 'on',
+            'commission_category_based_values' => [
+                'all'   => [
+                    'flat'       => '',
+                    'percentage' => '',
                 ],
-                "items" => [
+                'items' => [
                     $this->category_ids[0] => [
-                        "flat"       => "5",
-                        "percentage" => "10",
+                        'flat'       => '5',
+                        'percentage' => '10',
                     ],
                 ],
             ],
@@ -196,24 +196,24 @@ class CommissionTest extends WP_UnitTestCase {
                         'flat'       => 5,
                     ],
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => "fixed",
-                        "admin_percentage"                 => "5",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => 'fixed',
+                        'admin_percentage'                 => '5',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_1' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -223,14 +223,14 @@ class CommissionTest extends WP_UnitTestCase {
                         'dokan_admin_percentage_type' => 'fixed',
                         'dokan_admin_additional_fee'  => 5,
                         'category_commissions'        => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_2' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -255,24 +255,24 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 2,
                     'product_setting' => '',
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => "fixed",
-                        "admin_percentage"                 => "5",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => 'fixed',
+                        'admin_percentage'                 => '5',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_0' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -282,14 +282,14 @@ class CommissionTest extends WP_UnitTestCase {
                         'type'                 => CategoryBased::SOURCE,
                         'flat'                 => 5,
                         'category_commissions' => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_3' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -311,24 +311,24 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 3,
                     'product_setting' => '',
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => "fixed",
-                        "admin_percentage"                 => "10",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => 'fixed',
+                        'admin_percentage'                 => '10',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_4' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -351,16 +351,16 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 4,
                     'product_setting' => '',
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => Flat::SOURCE,
-                        "admin_percentage"                 => "10",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [],
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => Flat::SOURCE,
+                        'admin_percentage'                 => '10',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [],
                     ],
                     'vendor_settings' => [],
                     'category_id'     => 'category_4',
@@ -380,16 +380,16 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 5,
                     'product_setting' => '',
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => Flat::SOURCE,
-                        "admin_percentage"                 => "10",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [],
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => Flat::SOURCE,
+                        'admin_percentage'                 => '10',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [],
                     ],
                     'vendor_settings' => [
                         'percentage'           => 10,
@@ -413,16 +413,16 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 6,
                     'product_setting' => '',
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => Flat::SOURCE,
-                        "admin_percentage"                 => "10",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [],
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => Flat::SOURCE,
+                        'admin_percentage'                 => '10',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [],
                     ],
                     'vendor_settings' => [
                         'percentage'           => 10,
@@ -446,16 +446,16 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 7,
                     'product_setting' => '',
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => Combine::SOURCE,
-                        "admin_percentage"                 => "10",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [],
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => Combine::SOURCE,
+                        'admin_percentage'                 => '10',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [],
                     ],
                     'vendor_settings' => [],
                     'category_id'     => 'category_4',
@@ -479,16 +479,16 @@ class CommissionTest extends WP_UnitTestCase {
                         'flat'       => 5,
                     ],
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => Combine::SOURCE,
-                        "admin_percentage"                 => "10",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [],
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => Combine::SOURCE,
+                        'admin_percentage'                 => '10',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [],
                     ],
                     'vendor_settings' => [],
                     'category_id'     => 'category_4',
@@ -512,16 +512,16 @@ class CommissionTest extends WP_UnitTestCase {
                         'flat'       => 5,
                     ],
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => Combine::SOURCE,
-                        "admin_percentage"                 => "10",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [],
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => Combine::SOURCE,
+                        'admin_percentage'                 => '10',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [],
                     ],
                     'vendor_settings' => [],
                     'category_id'     => 'category_4',
@@ -541,24 +541,24 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 10,
                     'product_setting' => '',
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => "fixed",
-                        "admin_percentage"                 => "10",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => 'fixed',
+                        'admin_percentage'                 => '10',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_4' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -581,24 +581,24 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 2,
                     'product_setting' => '',
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => "fixed",
-                        "admin_percentage"                 => "5",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => 'fixed',
+                        'admin_percentage'                 => '5',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_0' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -608,14 +608,14 @@ class CommissionTest extends WP_UnitTestCase {
                         'type'                 => CategoryBased::SOURCE,
                         'flat'                 => 5,
                         'category_commissions' => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_3' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -637,24 +637,24 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 10,
                     'product_setting' => '',
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => "fixed",
-                        "admin_percentage"                 => "10",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => 'fixed',
+                        'admin_percentage'                 => '10',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_4' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -677,24 +677,24 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 11,
                     'product_setting' => '',
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => Fixed::SOURCE,
-                        "admin_percentage"                 => "5",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => Fixed::SOURCE,
+                        'admin_percentage'                 => '5',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_0' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -704,14 +704,14 @@ class CommissionTest extends WP_UnitTestCase {
                         'type'                 => CategoryBased::SOURCE,
                         'flat'                 => 5,
                         'category_commissions' => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_3' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -733,24 +733,24 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 12,
                     'product_setting' => '',
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => "fixed",
-                        "admin_percentage"                 => "5",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => 'fixed',
+                        'admin_percentage'                 => '5',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_0' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -760,14 +760,14 @@ class CommissionTest extends WP_UnitTestCase {
                         'type'                 => Flat::SOURCE,
                         'flat'                 => 5,
                         'category_commissions' => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_3' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -789,24 +789,24 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 13,
                     'product_setting' => '',
                     'global_setting'  => [
-                        "shipping_fee_recipient"           => "admin",
-                        "tax_fee_recipient"                => "admin",
-                        "shipping_tax_fee_recipient"       => "admin",
-                        "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => "fixed",
-                        "admin_percentage"                 => "5",
-                        "additional_fee"                   => "5",
-                        "order_status_change"              => "on",
-                        "product_category_style"           => 'single',
-                        "commission_category_based_values" => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => 'fixed',
+                        'admin_percentage'                 => '5',
+                        'additional_fee'                   => '5',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_0' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -816,14 +816,14 @@ class CommissionTest extends WP_UnitTestCase {
                         'type'                 => Percentage::SOURCE,
                         'flat'                 => 5,
                         'category_commissions' => [
-                            "all"   => [
-                                "flat"       => "",
-                                "percentage" => "",
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
                             ],
-                            "items" => [
+                            'items' => [
                                 'category_3' => [
-                                    "flat"       => "5",
-                                    "percentage" => "10",
+                                    'flat'       => '5',
+                                    'percentage' => '10',
                                 ],
                             ],
                         ],
@@ -875,7 +875,6 @@ class CommissionTest extends WP_UnitTestCase {
             ]
         );
         $vendor = dokan()->vendor->get( $vendor->ID );
-
 
         $customer = $this->factory()->user->create_and_get(
             [
@@ -935,7 +934,6 @@ class CommissionTest extends WP_UnitTestCase {
             ]
         );
         $vendor = dokan()->vendor->get( $vendor->ID );
-
 
         $customer = $this->factory()->user->create_and_get(
             [
@@ -1011,7 +1009,6 @@ class CommissionTest extends WP_UnitTestCase {
         );
         $vendor = dokan()->vendor->get( $vendor->ID );
 
-
         $customer = $this->factory()->user->create_and_get(
             [
                 'role' => 'customer',
@@ -1034,7 +1031,6 @@ class CommissionTest extends WP_UnitTestCase {
         $product->save_meta_data();
         $product->save();
 
-
         $product = dokan()->product->get( $product->get_id() );
 
         // Saving settings...
@@ -1042,23 +1038,29 @@ class CommissionTest extends WP_UnitTestCase {
         $vendor_setting  = Builder::build( Builder::TYPE_VENDOR, $vendor->get_id() );
         $global_setting  = Builder::build( Builder::TYPE_GLOBAL, $chosen_cat );
 
-        $product_setting->save( [
-            'type'                 => isset( $settings[ 'product_setting' ]['type'] ) ? $settings[ 'product_setting' ]['type'] : '',
-            'percentage'           => isset( $settings[ 'product_setting' ]['percentage'] ) ? $settings[ 'product_setting' ]['percentage'] : '',
-            'flat'                 => isset( $settings[ 'product_setting' ]['flat'] ) ? $settings[ 'product_setting' ]['flat'] : '',
-        ] );
-        $vendor_setting->save( [
-            'type'                 => isset( $settings[ 'vendor_settings' ]['type'] ) ? $settings[ 'vendor_settings' ]['type'] : '',
-            'percentage'           => isset( $settings[ 'vendor_settings' ]['percentage'] ) ? $settings[ 'vendor_settings' ]['percentage'] : '',
-            'flat'                 => isset( $settings[ 'vendor_settings' ]['flat'] ) ? $settings[ 'vendor_settings' ]['flat'] : '',
-            'category_commissions' => isset( $settings[ 'vendor_settings' ]['category_commissions'] ) ? $settings[ 'vendor_settings' ]['category_commissions'] : '',
-        ] );
-        $global_setting->save( [
-            'type'                 => isset( $settings[ 'global_setting' ]['commission_type'] ) ? $settings[ 'global_setting' ]['commission_type'] : '',
-            'percentage'           => isset( $settings[ 'global_setting' ]['admin_percentage'] ) ? $settings[ 'global_setting' ]['admin_percentage'] : '',
-            'flat'                 => isset( $settings[ 'global_setting' ]['additional_fee'] ) ? $settings[ 'global_setting' ]['additional_fee'] : '',
-            'category_commissions' => isset( $settings[ 'global_setting' ]['commission_category_based_values'] ) ? $settings[ 'global_setting' ]['commission_category_based_values'] : '',
-        ] );
+        $product_setting->save(
+            [
+                'type'                 => isset( $settings['product_setting']['type'] ) ? $settings['product_setting']['type'] : '',
+                'percentage'           => isset( $settings['product_setting']['percentage'] ) ? $settings['product_setting']['percentage'] : '',
+                'flat'                 => isset( $settings['product_setting']['flat'] ) ? $settings['product_setting']['flat'] : '',
+            ]
+        );
+        $vendor_setting->save(
+            [
+                'type'                 => isset( $settings['vendor_settings']['type'] ) ? $settings['vendor_settings']['type'] : '',
+                'percentage'           => isset( $settings['vendor_settings']['percentage'] ) ? $settings['vendor_settings']['percentage'] : '',
+                'flat'                 => isset( $settings['vendor_settings']['flat'] ) ? $settings['vendor_settings']['flat'] : '',
+                'category_commissions' => isset( $settings['vendor_settings']['category_commissions'] ) ? $settings['vendor_settings']['category_commissions'] : '',
+            ]
+        );
+        $global_setting->save(
+            [
+                'type'                 => isset( $settings['global_setting']['commission_type'] ) ? $settings['global_setting']['commission_type'] : '',
+                'percentage'           => isset( $settings['global_setting']['admin_percentage'] ) ? $settings['global_setting']['admin_percentage'] : '',
+                'flat'                 => isset( $settings['global_setting']['additional_fee'] ) ? $settings['global_setting']['additional_fee'] : '',
+                'category_commissions' => isset( $settings['global_setting']['commission_category_based_values'] ) ? $settings['global_setting']['commission_category_based_values'] : '',
+            ]
+        );
 
         dokan_override_product_author( $product, $vendor->get_id() );
 
@@ -1129,5 +1131,145 @@ class CommissionTest extends WP_UnitTestCase {
 
         $this->assertEquals( $commission->get_admin_commission(), $saved_commission_cross_check->get_admin_commission() );
         $this->assertEquals( $commission->get_vendor_earning(), $saved_commission_cross_check->get_vendor_earning() );
+    }
+
+    public function variable_product_settings_data_provider() {
+        return [
+            [
+                [
+                    'data_set'        => 1,
+                    'product_setting' => [
+                        'percentage' => '',
+                        'type'       => 'fixed',
+                        'flat'       => '',
+                    ],
+                    'global_setting'  => [
+                        'shipping_fee_recipient'           => 'admin',
+                        'tax_fee_recipient'                => 'admin',
+                        'shipping_tax_fee_recipient'       => 'admin',
+                        'new_seller_enable_selling'        => 'on',
+                        'commission_type'                  => 'category_based',
+                        'admin_percentage'                 => '',
+                        'additional_fee'                   => '',
+                        'order_status_change'              => 'on',
+                        'product_category_style'           => 'single',
+                        'commission_category_based_values' => [
+                            'all'   => [
+                                'flat'       => '0',
+                                'percentage' => 5,
+                            ],
+                            'items' => [
+                                'category_1' => [
+                                    'flat'       => '0',
+                                    'percentage' => '10',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'vendor_settings' => [
+                        'dokan_admin_percentage'      => '',
+                        'dokan_admin_percentage_type' => 'fixed',
+                        'dokan_admin_additional_fee'  => '',
+                        'category_commissions'        => [
+                            'all'   => [
+                                'flat'       => '',
+                                'percentage' => '',
+                            ],
+                            'items' => [
+                                'category_2' => [
+                                    'flat'       => '5',
+                                    'percentage' => '10',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'category_id'     => 'category_1',
+                    'total_price'     => 100,
+                    'total_quantity'  => 1,
+
+                ],
+                [
+                    'strategy_source'           => GlobalStrategy::SOURCE,
+                    'calculator_source'         => CategoryBased::SOURCE,
+                    'is_applicable'             => true,
+                    'admin_commission'          => 10,
+                    'per_item_admin_commission' => 10,
+                    'vendor_earning'            => 90,
+                    'total_quantity'            => 1,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider variable_product_settings_data_provider
+     *
+     * @test
+     *
+     * @return void
+     */
+    public function test_get_earning_by_product_method_for_variable_product( $settings, $expected ) {
+        if ( isset( $settings['vendor_settings']['category_commissions'] ) ) {
+            $settings['global_setting']['commission_category_based_values']['items'] = $this->replace_categoty_id( $settings['global_setting']['commission_category_based_values']['items'] );
+        }
+
+        if ( isset( $settings['vendor_settings']['category_commissions'] ) ) {
+            $settings['vendor_settings']['category_commissions']['items'] = $this->replace_categoty_id( $settings['vendor_settings']['category_commissions']['items'] );
+        }
+
+        $vendor = $this->factory()->user->create_and_get(
+            [
+                'role' => 'seller',
+            ]
+        );
+        $vendor = dokan()->vendor->get( $vendor->ID );
+
+        $customer = $this->factory()->user->create_and_get(
+            [
+                'role' => 'customer',
+            ]
+        );
+
+        wp_set_current_user( $customer->ID );
+
+        $index      = str_replace( 'category_', '', $settings['category_id'] );
+        $chosen_cat = $this->category_ids[ $index ];
+
+        $product = WC_Helper_Product::create_variation_product();
+        $product->set_category_ids( $this->category_ids );
+
+        $vendor->save_commission_settings( $settings['vendor_settings'] );
+        update_option( 'dokan_selling', $settings['global_setting'] );
+
+        dokan_override_product_author( $product, $vendor->get_id() );
+
+        foreach ( $product->get_children() as $child_id ) {
+            $product_child = wc_get_product( $child_id );
+            $product_child->set_regular_price( $settings['total_price'] );
+            $product_child->save();
+        }
+
+        $product->update_meta_data( 'chosen_product_cat', [ $chosen_cat ] );
+        $product->save_meta_data();
+        $product->save();
+
+        dokan()->product->save_commission_settings( $product->get_id(), $settings['product_setting'] );
+
+        $product = dokan()->product->get( $product->get_id() );
+
+        $variation_products = array_map(
+            function ( $variation_id ) {
+                return wc_get_product( $variation_id );
+            },
+            $product->get_children()
+        );
+
+        foreach ( $variation_products as $variation_product ) {
+            $vendor_earning   = dokan()->commission->get_earning_by_product( $variation_product, 'seller' );
+            $admin_commission = dokan()->commission->get_earning_by_product( $variation_product, 'admin' );
+
+            $this->assertEquals( $expected['admin_commission'], $admin_commission );
+            $this->assertEquals( $expected['vendor_earning'], $vendor_earning );
+        }
     }
 }

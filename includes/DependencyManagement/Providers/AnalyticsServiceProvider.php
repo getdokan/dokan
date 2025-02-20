@@ -32,6 +32,7 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Analytics\Reports\Customers\QueryFilter::class,
         \WeDevs\Dokan\Analytics\Reports\Customers\Stats\QueryFilter::class,
         \WeDevs\Dokan\Analytics\Reports\Stock\QueryFilter::class,
+        \WeDevs\Dokan\Analytics\Assets::class,
     ];
 
     /**
@@ -57,20 +58,8 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
      */
     public function register(): void {
         foreach ( $this->services as $service ) {
-            $definition = $this->getContainer()
-                ->addShared(
-                    $service, function () use ( $service ) {
-						return new $service();
-					}
-                );
-            $this->add_tags( $definition, self::TAGS );
-        }
-        $this->add_with_implements_tags( \WeDevs\Dokan\Analytics\Assets::class );
-    }
-
-    private function add_tags( DefinitionInterface $definition, $tags ) {
-        foreach ( $tags as $tag ) {
-            $definition = $definition->addTag( $tag );
+            $definition = $this->share_with_implements_tags( $service );
+            $this->add_tags( $definition, $this->tags );
         }
     }
 }
