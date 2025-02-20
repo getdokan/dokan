@@ -3,7 +3,7 @@
 /**
  * Checks if the theme sidebar is enabled on store page
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.1.0
  *
  * @return bool
  */
