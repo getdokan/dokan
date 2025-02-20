@@ -17,8 +17,6 @@ class Assets implements Hookable {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
         }
 
-		add_filter( 'woocommerce_admin_shared_settings', [ $this, 'localize_wc_admin_settings' ] );
-
 		( new VendorDashboardManager() )->register_hooks();
         ( new Reports\DataStoreCacheModifier() )->register_hooks();
 	}
@@ -86,6 +84,12 @@ class Assets implements Hookable {
 		$asset = include DOKAN_DIR . '/assets/js/vendor-dashboard/reports/index.asset.php';
 
 		wp_register_script( 'vendor_analytics_script', $frontend_script, $asset['dependencies'] ?? [], $asset['version'] ?? '', true );
+
+        wp_localize_script(
+            'vendor_analytics_script',
+            'vendorSharedSettings',
+            $this->localize_wc_admin_settings( [] )
+        );
 
 		$dep = array(
 			'wc-components',
