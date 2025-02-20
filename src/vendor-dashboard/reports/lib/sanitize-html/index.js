@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { sanitize } from 'dompurify';
+import { sanitize } from '@wordpress/sanitize';
 
 export const ALLOWED_TAGS = [ 'a', 'b', 'em', 'i', 'strong', 'p', 'br' ];
 export const ALLOWED_ATTR = [ 'target', 'href', 'rel', 'name', 'download' ];

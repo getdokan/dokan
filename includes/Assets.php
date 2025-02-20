@@ -357,8 +357,17 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product-style.css' ),
             ],
             'dokan-tailwind'                => [
-                'src'       => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
-                'version'   => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
+            ],
+            'dokan-react-frontend'          => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
+            ],
+            'dokan-react-components'        => [
+                'deps'    => [ 'wp-components' ],
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
         ];
 
@@ -372,6 +381,8 @@ class Assets {
      */
     public function get_scripts() {
         global $wp_version;
+
+        $frontend_shipping_asset = require DOKAN_DIR . '/assets/js/frontend.asset.php';
 
         $suffix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
         $asset_url      = DOKAN_PLUGIN_ASSEST;
@@ -514,60 +525,89 @@ class Assets {
                 'deps'    => [ 'jquery', 'wp-i18n', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
                 'version' => filemtime( $asset_path . 'js/vue-frontend.js' ),
             ],
-
-            'dokan-login-form-popup'   => [
+            'dokan-login-form-popup'    => [
                 'src'     => $asset_url . '/js/login-form-popup.js',
                 'deps'    => [ 'dokan-modal', 'wp-i18n' ],
                 'version' => filemtime( $asset_path . 'js/login-form-popup.js' ),
             ],
-            'dokan-sweetalert2'        => [
+            'dokan-sweetalert2'         => [
                 'src'     => $asset_url . '/vendors/sweetalert2/sweetalert2.all.min.js',
                 'deps'    => [ 'dokan-modal', 'wp-i18n' ],
                 'version' => filemtime( $asset_path . 'vendors/sweetalert2/sweetalert2.all.min.js' ),
             ],
-            'dokan-util-helper'        => [
+            'dokan-util-helper'         => [
                 'src'       => $asset_url . '/js/helper.js',
                 'deps'      => [ 'jquery', 'dokan-sweetalert2', 'moment' ],
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
-            'dokan-promo-notice-js'    => [
+            'dokan-promo-notice-js'     => [
                 'src'     => $asset_url . '/js/dokan-promo-notice.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
             ],
-            'dokan-admin-notice-js'    => [
+            'dokan-admin-notice-js'     => [
                 'src'     => $asset_url . '/js/dokan-admin-notice.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/dokan-admin-notice.js' ),
             ],
-            'dokan-reverse-withdrawal' => [
+            'dokan-reverse-withdrawal'  => [
                 'src'     => $asset_url . '/js/reverse-withdrawal.js',
                 'deps'    => [ 'jquery', 'dokan-util-helper', 'dokan-vue-vendor', 'dokan-date-range-picker' ],
                 'version' => filemtime( $asset_path . 'js/reverse-withdrawal.js' ),
             ],
-            'product-category-ui'      => [
+            'product-category-ui'       => [
                 'src'     => $asset_url . '/js/product-category-ui.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/product-category-ui.js' ),
             ],
-            'dokan-vendor-address'     => [
+            'dokan-vendor-address'      => [
                 'src'     => $asset_url . '/js/vendor-address.js',
                 'deps'    => [ 'jquery', 'wc-address-i18n' ],
                 'version' => filemtime( $asset_path . 'js/vendor-address.js' ),
             ],
-            'dokan-admin-product'      => [
+            'dokan-admin-product'       => [
                 'src'       => $asset_url . '/js/dokan-admin-product.js',
                 'deps'      => [ 'jquery', 'dokan-vue-vendor', 'selectWoo' ],
                 'version'   => filemtime( $asset_path . 'js/dokan-admin-product.js' ),
                 'in_footer' => false,
             ],
-            'dokan-frontend'           => [
+            'dokan-frontend'            => [
                 'src'     => $asset_url . '/js/dokan-frontend.js',
                 'deps'    => [ 'jquery' ],
                 'version' => filemtime( $asset_path . 'js/dokan-frontend.js' ),
             ],
+            'dokan-react-frontend'      => [
+                'src'     => $asset_url . '/js/frontend.js',
+                'deps'    => array_merge( $frontend_shipping_asset['dependencies'], [ 'wp-core-data', 'dokan-react-components' ] ),
+                'version' => $frontend_shipping_asset['version'],
+            ],
+            'dokan-utilities'           => [
+                'deps'    => [],
+                'src'     => $asset_url . '/js/utilities.js',
+                'version' => filemtime( $asset_path . 'js/utilities.js' ),
+            ],
+            'dokan-hooks'               => [
+                'deps'    => [],
+                'src'     => $asset_url . '/js/hooks.js',
+                'version' => filemtime( $asset_path . 'js/hooks.js' ),
+            ],
         ];
+
+        $components_asset_file = DOKAN_DIR . '/assets/js/components.asset.php';
+        if ( file_exists( $components_asset_file ) ) {
+            $components_asset = require $components_asset_file;
+
+            // Register React components.
+            $scripts['dokan-react-components'] = [
+                'version' => $components_asset['version'],
+                'src'     => $asset_url . '/js/components.js',
+                'deps'    => array_merge(
+                    $components_asset['dependencies'],
+                    [ 'dokan-utilities', 'dokan-hooks' ]
+                ),
+            ];
+        }
 
         return $scripts;
     }
@@ -647,7 +687,8 @@ class Assets {
                 'routeComponents' => [ 'default' => null ],
                 'routes'          => $this->get_vue_frontend_routes(),
                 'urls'            => [
-                    'assetsUrl' => DOKAN_PLUGIN_ASSEST,
+                    'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
+                    'dashboardUrl' => dokan_get_navigation_url(),
                 ],
             ]
         );
