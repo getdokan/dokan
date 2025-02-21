@@ -361,12 +361,14 @@ class Commission {
             return $earning;
         }
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $result = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT `net_amount`, `order_total` FROM {$wpdb->dokan_orders} WHERE `order_id` = %d",
                 $order_id
             )
         );
+        // phpcs:enable
 
         if ( ! $result ) {
             return null;
