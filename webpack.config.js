@@ -1,35 +1,36 @@
 const path = require( 'path' );
-const entryPoints = require( './webpack-entries' );
 const { VueLoaderPlugin } = require( 'vue-loader' );
+const entryPoints = require( './webpack-entries' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
-const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const isProduction = process.env.NODE_ENV === 'production';
-const WooCommerceDependencyExtractionWebpackPlugin = require( '@woocommerce/dependency-extraction-webpack-plugin' );
+const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
+const { requestToExternal, requestToHandle } = require( './webpack-dependency-mapping' );
+const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
 
 const updatedConfig = {
     mode: defaultConfig.mode,
     entry: {
         ...entryPoints,
-        'components': {
+        components: {
             import: '@dokan/components/index.tsx',
         },
-        'utilities': {
+        utilities: {
             import: '@dokan/utilities/index.ts',
         },
-        'hooks': {
+        hooks: {
             import: '@dokan/hooks/index.tsx',
         },
         'dokan-status': '/src/Status/index.tsx',
     },
     output: {
-        path: path.resolve(__dirname, './assets/js'),
+        path: path.resolve( __dirname, './assets/js' ),
         filename: '[name].js',
         clean: true,
         devtoolNamespace: 'dokan',
         library: {
             name: [ 'dokan', '[name]' ],
-            type: 'window'
-        }
+            type: 'window',
+        },
     },
 
     resolve: {
@@ -44,11 +45,11 @@ const updatedConfig = {
         },
         extensions: [ '.json', '.js', '.jsx', '.ts', '.tsx' ],
         alias: {
-            'vue$': 'vue/dist/vue.esm.js',
-            '@dokan': path.resolve('./src/'),
-            'frontend': path.resolve('./src/frontend/'),
-            'admin': path.resolve('./src/admin/'),
-            'reports': path.resolve(
+            vue$: 'vue/dist/vue.esm.js',
+            '@dokan': path.resolve( './src/' ),
+            frontend: path.resolve( './src/frontend/' ),
+            admin: path.resolve( './src/admin/' ),
+            reports: path.resolve(
                 __dirname + '/src/vendor-dashboard/reports'
             ),
         },
@@ -58,24 +59,38 @@ const updatedConfig = {
         jquery: 'jQuery',
         'chart.js': 'Chart',
         moment: 'moment',
+        '@woocommerce/blocks-registry': [ 'wc', 'wcBlocksRegistry' ],
+        '@woocommerce/settings': [ 'wc', 'wcSettings' ],
+        '@woocommerce/block-data': [ 'wc', 'wcBlocksData' ],
+        '@woocommerce/shared-context': [ 'wc', 'wcSharedContext' ],
+        '@woocommerce/shared-hocs': [ 'wc', 'wcSharedHocs' ],
+        '@woocommerce/price-format': [ 'wc', 'priceFormat' ],
+        '@woocommerce/blocks-checkout': [ 'wc', 'blocksCheckout' ],
+        '@dokan/components': [ 'dokan', 'components' ],
+        '@dokan/utilities': [ 'dokan', 'utilities' ],
+        '@dokan/hooks': [ 'dokan', 'hooks' ],
     },
 
     plugins: [
-        ...defaultConfig.plugins,
-        new MiniCssExtractPlugin(
-            {
-                filename: ( { chunk } ) => {
-                    if ( chunk.name.match( /\/modules\// ) ) {
-                        return `${ chunk.name.replace( '/js/', '/css/' ) }.css`;
-                    }
-
-                    return '../css/[name].css';
-                },
-            }
+        ...defaultConfig.plugins.filter(
+            ( plugin ) =>
+                plugin.constructor.name !== 'DependencyExtractionWebpackPlugin'
         ),
-        new WooCommerceDependencyExtractionWebpackPlugin(),
+        new MiniCssExtractPlugin( {
+            filename: ( { chunk } ) => {
+                if ( chunk.name.match( /\/modules\// ) ) {
+                    return `${ chunk.name.replace( '/js/', '/css/' ) }.css`;
+                }
+
+                return '../css/[name].css';
+            },
+        } ),
 
         new VueLoaderPlugin(),
+        new DependencyExtractionWebpackPlugin( {
+            requestToExternal,
+            requestToHandle,
+        } ),
     ],
 
     module: {
@@ -91,13 +106,13 @@ const updatedConfig = {
                 use: [
                     MiniCssExtractPlugin.loader,
                     {
-                        loader: "css-loader",
+                        loader: 'css-loader',
                         options: {
                             sourceMap: ! isProduction,
                         },
                     },
                     {
-                        loader: "less-loader",
+                        loader: 'less-loader',
                         options: {
                             sourceMap: ! isProduction,
                         },
@@ -108,12 +123,12 @@ const updatedConfig = {
                 test: /\.(bmp|png|jpe?g|gif|webp)$/i,
                 type: 'asset/resource',
                 generator: {
-                    filename: '../images/[name][ext][query]'
+                    filename: '../images/[name][ext][query]',
                 },
             },
             {
                 test: /\.svg/,
-                type: 'asset/inline'
+                type: 'asset/inline',
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i,
@@ -121,12 +136,12 @@ const updatedConfig = {
                 generator: {
                     filename: '../font/[name].[ext]',
                 },
-            }
-        ]
+            },
+        ],
     },
-}
+};
 
-if (!isProduction) {
+if ( ! isProduction ) {
     updatedConfig.devServer = {
         devMiddleware: {
             writeToDisk: true,
