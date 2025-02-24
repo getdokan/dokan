@@ -230,11 +230,6 @@ class Assets {
                 'component' => 'VendorCapabilities',
             ],
             [
-                'path'      => '/pro-modules',
-                'name'      => 'ProModules',
-                'component' => 'ProModules',
-            ],
-            [
                 'path'      => '/changelog',
                 'name'      => 'ChangeLog',
                 'component' => 'ChangeLog',

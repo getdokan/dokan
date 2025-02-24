@@ -19,9 +19,15 @@ class Modules extends AbstractPage {
 	 * @inheritDoc
 	 */
 	public function menu( string $capability, string $position ): array {
+        $is_pro_exists = dokan()->is_pro_exists();
+
+        if ( $is_pro_exists ) {
+            return [];
+        }
+
 		return [
             'page_title' => __( 'Dokan Modules', 'dokan-lite' ),
-            'menu_title' => __( 'Lite Modules', 'dokan-lite' ),
+            'menu_title' => __( 'Modules', 'dokan-lite' ),
             'route'      => 'pro-modules',
             'capability' => $capability,
             'position'   => 30,
