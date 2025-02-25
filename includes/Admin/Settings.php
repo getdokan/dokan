@@ -126,6 +126,15 @@ class Settings {
             $settings[ $section['id'] ] = apply_filters( 'dokan_get_settings_values', $this->sanitize_options( get_option( $section['id'], [] ), 'read' ), $section['id'] );
         }
 
+        $new_seller_enable_selling_statuses = ! empty( $settings['dokan_selling']['new_seller_enable_selling'] ) ? $settings['dokan_selling']['new_seller_enable_selling'] : 'automatically';
+
+        /**
+         * This is the mapper of enabled selling admin setting option for before and after of DOKAN_SINCE
+         */
+        if ( ! in_array( $new_seller_enable_selling_statuses, $settings, true ) ) {
+            $settings['dokan_selling']['new_seller_enable_selling'] = dokan_get_new_seller_enable_selling_status( $settings['dokan_selling']['new_seller_enable_selling'] );
+        }
+
         wp_send_json_success( $settings );
     }
 
@@ -630,8 +639,9 @@ class Settings {
                     'name'    => 'new_seller_enable_selling',
                     'label'   => __( 'Enable Selling', 'dokan-lite' ),
                     'desc'    => __( 'Immediately enable selling for newly registered vendors', 'dokan-lite' ),
-                    'type'    => 'switcher',
-                    'default' => 'on',
+                    'type'    => 'select',
+                    'options' => dokan_new_seller_enable_selling_statuses(),
+                    'default' => 'automatically',
                     'tooltip' => __( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ),
                 ],
                 'one_step_product_create'     => [
