@@ -4,6 +4,104 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.14.9',
+        'released' => '2025-02-12',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Rollback support for product statues on dokan pro deactivation.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Improved dokan_is_user_seller function by adding strict comparison to differentiate between vendor and staff.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Fix earning suggestion in vendor dashboard when product edit page loads initially.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fix vendor earning suggestion currency, currency position, decimal separator in vendor dashboard product edit page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fix vendor earning suggestion for invalid product price.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Tax calculation for shipping based on tax status',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.8',
+        'released' => '2025-01-29',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Missing parameters support added for the reverse-withdrawal API endpoints.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Missing parameters support added for the Settings API endpoints.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Fixed an error when navigating to the product edit page with an invalid (non-numeric) product ID.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a misspelling typo vendor contact form input field.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed and updated analytics cache modifier for seller analytics filter.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.6',
+        'released' => '2025-01-09',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Translations on Admin Commission Setup Wizard, Withdraw, Withdraw Log, Add Reverse Withdraw, Dummy Data, and Vendor Single pages were not working due to wrong text-domains.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.5',
+        'released' => '2025-01-06',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Improvement vendor setup wizard ui.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improvement withdraw approved email template.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Dokan admin settings page responsive & update ui design.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.14.4',
         'released' => '2024-12-27',
         'changes'  => [

@@ -255,12 +255,23 @@
 
     @media only screen and (max-width: 375px) {
         .dokan-admin-notices {
+            .notice-content{
+                flex-direction: column;
+                align-items: start !important;
+                gap: 1rem;
+            }
             .dokan-notice-slides {
                 min-height: 245px;
 
                 .dokan-admin-notice {
+                    align-items: start;
+                    padding: 10px 20px;
                     .dokan-message {
-                        margin: 0 0 0 23px;
+                        div{
+                            max-height: 50px;
+                            overflow: auto;
+                        }
+                        margin: 0;
                     }
                 }
             }
@@ -276,21 +287,33 @@
 
     @media screen and (min-width: 376px) and (max-width: 576px) {
         .dokan-admin-notices {
+
+            .notice-content{
+                flex-direction: column;
+                align-items: start !important;
+                gap: 1rem;
+                height: 195px;
+            }
             .dokan-notice-slides {
                 min-height: 195px;
 
                 .dokan-admin-notice {
+                    align-items: start;
+                    padding: 10px  20px;
                     .dokan-message {
-                        margin: 0 0 0 23px;
+                        div{
+                            max-height: 50px;
+                            overflow: scroll;
+                        }
+                        margin: 0;
                     }
                 }
             }
 
             .slide-notice {
-                bottom: 0;
-                right: 10px;
+                right: 3rem;
                 padding: 3px 8px;
-                top: unset;
+                top: 2rem;
             }
         }
     }
@@ -340,4 +363,12 @@
             }
         }
     }
+}
+
+
+
+// wp dokan logo styles
+
+#adminmenu #toplevel_page_dokan .wp-menu-image.svg {
+    background-size: 17px;
 }

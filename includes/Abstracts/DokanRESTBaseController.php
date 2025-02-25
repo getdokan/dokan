@@ -7,7 +7,7 @@ use WP_REST_Controller;
 /**
  * Base REST Controller for Dokan
  *
- * @since DOKAN_PRO_SINCE
+ * @since 3.14.4
  *
  * @package dokan
  */
@@ -23,7 +23,7 @@ abstract class DokanRESTBaseController extends WP_REST_Controller {
     /**
      * Format item's collection for response
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.4
      *
      * @param object $response
      * @param object $request

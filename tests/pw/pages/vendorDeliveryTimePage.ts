@@ -148,15 +148,16 @@ export class VendorDeliveryTimePage extends CustomerPage {
                 await this.click(deliveryTimeCustomer.delivery);
                 await this.click(deliveryTimeCustomer.deliveryTimeInput);
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.deliveryTime, deliveryTimeCustomer.deliveryDate(deliveryTime.date));
-                await this.selectByNumber(deliveryTimeCustomer.timePicker, 1);
+                await this.selectByNumber(deliveryTimeCustomer.timePicker, 0);
                 break;
 
             case 'store-pickup':
                 await this.click(deliveryTimeCustomer.storePickup);
                 await this.click(deliveryTimeCustomer.deliveryTimeInput);
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.deliveryTime, deliveryTimeCustomer.deliveryDate(deliveryTime.date));
-                await this.selectByNumber(deliveryTimeCustomer.timePicker, 1);
-                await this.selectByNumber(deliveryTimeCustomer.locationPicker, 1);
+                await this.selectByNumber(deliveryTimeCustomer.timePicker, 0);
+                await this.selectByNumber(deliveryTimeCustomer.locationPicker, 0);
+                await this.toBeVisible(deliveryTimeCustomer.storeLocation);
                 break;
 
             default:

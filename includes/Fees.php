@@ -124,7 +124,7 @@ class Fees {
     /**
      * Get processing fee
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.4
      *
      * @param WC_Order $order
      *
