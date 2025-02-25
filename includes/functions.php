@@ -4279,13 +4279,15 @@ function dokan_get_new_product_url() {
  *
  * @return array
  */
-function dokan_new_seller_enable_selling_statuses() {
-    return apply_filters(
-        'dokan_new_seller_enable_selling_statuses', [
-            'automatically' => __( 'Automatically', 'dokan-lite' ),
-            'manually'      => __( 'Manually', 'dokan-lite' ),
-        ]
-    );
+if ( ! function_exists( 'dokan_new_seller_enable_selling_statuses' ) ) {
+    function dokan_new_seller_enable_selling_statuses() {
+        return apply_filters(
+            'dokan_new_seller_enable_selling_statuses', [
+                'automatically' => __( 'Automatically', 'dokan-lite' ),
+                'manually'      => __( 'Manually', 'dokan-lite' ),
+            ]
+        );
+    }
 }
 
 /**
