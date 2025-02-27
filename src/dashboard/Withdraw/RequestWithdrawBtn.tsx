@@ -134,7 +134,6 @@ function RequestWithdrawBtn( {
                     title: message,
                     type: 'error',
                 } );
-                console.error( 'Error creating withdraw:', err );
             } );
     };
 
