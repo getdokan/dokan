@@ -203,14 +203,14 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
  */
 function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'booking', 'auction' ] ) {
     // get all function arguments as key => value pairs
-    $args = get_defined_vars();
+    $args = apply_filters( 'dokan_count_posts_args', get_defined_vars() );
 
     $cache_group = "seller_product_data_$user_id";
     $cache_key   = 'count_posts_' . md5( wp_json_encode( $args ) );
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
-        $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id );
+        $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id, $exclude_product_types );
 
         if ( ! $results ) {
             global $wpdb;
@@ -262,7 +262,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'bo
 /**
  * Count stock product type from a user
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.2.5
  *
  * @param string $post_type
  * @param int    $user_id
@@ -275,11 +275,11 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_pr
     global $wpdb;
 
     $cache_group = 'seller_product_stock_data_' . $user_id;
-    $cache_key   = "count_stock_posts_{$user_id}_{$post_type}_{$stock_type}";
+    $cache_key   = apply_filters( 'dokan_count_stock_posts_cache_key', "count_stock_posts_{$user_id}_{$post_type}_{$stock_type}", $post_type, $user_id, $stock_type );
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
-        $results = apply_filters( 'dokan_count_posts_' . $stock_type, null, $post_type, $user_id );
+        $results = apply_filters( 'dokan_count_posts_' . $stock_type, null, $post_type, $user_id, $stock_type, $exclude_product_types );
         $exclude_product_types_text = "'" . implode( "', '", esc_sql( $exclude_product_types ) ) . "'";
 
         if ( ! $results ) {
@@ -3575,7 +3575,7 @@ function dokan_clear_product_caches( $product ) {
 /**
  * Check which vendor info should be hidden
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.4
  *
  * @param string $option
  *
@@ -3849,7 +3849,7 @@ if ( ! function_exists( 'dokan_date_time_format' ) ) {
 /**
  * Get threshold day for a user
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.2.2
  *
  * @param int $user_id
  *
@@ -4123,7 +4123,7 @@ function dokan_bool_to_on_off( $bool ) {
 /**
  * Check is 12-hour format in current setup.
  *
- * @since DOKAN_PRO_SINCE
+ * @since 3.6.0
  *
  * @return bool
  */

@@ -448,20 +448,28 @@ class Manager {
     }
 
     /**
+     * Get all child orders of a parent order
+     *
      * @param int|WC_Order $parent_order
+     * @param array $args
      *
      * @return WC_Order[]
      */
-    public function get_child_orders( $parent_order ) {
+    public function get_child_orders( $parent_order, array $args = [] ) {
         $parent_order_id = is_numeric( $parent_order ) ? $parent_order : $parent_order->get_id();
+        $default_args = [
+			'type'   => 'shop_order',
+			'parent' => $parent_order_id,
+			'limit'  => -1,
+		];
 
-        return wc_get_orders(
-            [
-                'type'   => 'shop_order',
-                'parent' => $parent_order_id,
-                'limit'  => -1,
-            ]
+        $args = apply_filters(
+            'dokan_get_child_orders_args',
+            wp_parse_args( $args, $default_args ),
+            $parent_order_id
         );
+
+        return wc_get_orders( $args );
     }
 
     /**
