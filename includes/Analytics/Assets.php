@@ -81,9 +81,19 @@ class Assets implements Hookable {
 	public function register_scripts() {
 		$frontend_script = DOKAN_PLUGIN_ASSEST . '/js/vendor-dashboard/reports/index.js';
 
-		$asset = include DOKAN_DIR . '/assets/js/vendor-dashboard/reports/index.asset.php';
+		$asset            = include DOKAN_DIR . '/assets/js/vendor-dashboard/reports/index.asset.php';
+        $dependencies     = $asset['dependencies'] ?? [];
+        $component_handle = 'dokan-react-components';
+        $version          = $asset['version'] ?? '';
+        $dependencies[]   = $component_handle;
 
-		wp_register_script( 'vendor_analytics_script', $frontend_script, $asset['dependencies'] ?? [], $asset['version'] ?? '', true );
+		wp_register_script(
+            'vendor_analytics_script',
+            $frontend_script,
+            $dependencies,
+            $version,
+            true
+        );
 
         wp_localize_script(
             'vendor_analytics_script',
@@ -98,11 +108,17 @@ class Assets implements Hookable {
 			// 'wc-product-editor',
 			'wp-components',
 			'wc-experimental',
+            $component_handle,
 		);
 
 		$frontend_style = DOKAN_PLUGIN_ASSEST . '/js/vendor-dashboard/reports/index.css';
 
-		wp_register_style( 'vendor_analytics_style', $frontend_style, $dep, $asset['version'] ?? '' );
+		wp_register_style(
+            'vendor_analytics_style',
+            $frontend_style,
+            $dep,
+            $version
+        );
 	}
 
     /**

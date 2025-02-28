@@ -300,12 +300,6 @@
             button.components-button.woocommerce-dropdown-button {
                 height: 100%;
             }
-
-            .woocommerce-calendar {
-                .CalendarMonthGrid_month__horizontal {
-                    width: 290px;
-                }
-            }
         }
 
         .components-popover {
@@ -497,5 +491,24 @@
     .woocommerce-ellipsis-menu__item {
         display: flex;
         align-items: center;
+    }
+}
+
+.woocommerce-calendar {
+    .CalendarMonthGrid_month__horizontal {
+        width: 290px;
+    }
+
+    .CalendarMonth_table td {
+        padding: 8px;
+    }
+
+    .CalendarMonth {
+        padding: 0 !important;
+    }
+
+    .CalendarDay__selected_span,
+    .CalendarDay__hovered_span {
+        background: var(--wp-admin-theme-color) !important;
     }
 }
