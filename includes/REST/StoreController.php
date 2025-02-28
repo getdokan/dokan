@@ -1005,7 +1005,7 @@ class StoreController extends WP_REST_Controller {
     /**
      * Updated query params for the store.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.10
      *
      * @return array Query parameters for the store update.
      */
