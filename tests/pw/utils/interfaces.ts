@@ -1564,7 +1564,7 @@ export interface productAdvertisement {
     };
 }
 
-// product form manager 
+// product form manager
 
 export interface block {
     currentLabel: string;

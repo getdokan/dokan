@@ -10,14 +10,14 @@ use WeDevs\Dokan\Contracts\Hookable;
  * @since 3.13.0
  */
 class DataStoreModifier implements Hookable {
-    /**
-     * QueryFilter constructor.
-     * Registers the hooks on instantiation.
-     */
-    public function __construct() {
-        $this->register_hooks();
-    }
 
+    /**
+     * Register hooks for the data store modifier.
+     * @inheritDoc
+     * @since 3.13.0
+     *
+     * @return void
+     */
     public function register_hooks(): void {
         add_filter( 'woocommerce_data_stores', [ $this, 'modify_wc_products_stats_datastore' ], 20 );
     }

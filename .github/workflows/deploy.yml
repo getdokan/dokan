@@ -19,7 +19,7 @@ jobs:
                 tools: composer:v2
             - name: Build
               run: |
-                composer install --no-dev
+                composer install --no-dev -o
                 npm install
                 npm run build
             - name: Install SVN ( Subversion )
@@ -31,7 +31,6 @@ jobs:
               uses: 10up/action-wordpress-plugin-deploy@stable
               with:
                 generate-zip: true
-                dry-run: ${{ env.DRY_RUN }}
               env:
                 SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
                 SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
@@ -39,6 +38,6 @@ jobs:
             - name: Create GitHub release
               uses: softprops/action-gh-release@v2
               with:
-                files: ${{github.workspace}}/${{ github.event.repository.name }}.zip
+                files: ${{steps.deploy.outputs.zip-path}}
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
