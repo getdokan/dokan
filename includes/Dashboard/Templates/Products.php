@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Dashboard\Templates;
 
+use WeDevs\Dokan\Utilities\ProductUtil;
 use WeDevs\Dokan\ProductCategory\Helper;
 
 /**
@@ -255,7 +256,14 @@ class Products {
             ]
         );
 
-        dokan_get_template_part( 'products/products-listing', '', [ 'bulk_statuses' => $bulk_statuses ] );
+        dokan_get_template_part(
+            'products/products-listing',
+            '',
+            [
+                'bulk_statuses' => $bulk_statuses,
+                'should_render' => ProductUtil::dokan_should_skip_product_listing_render(),
+            ]
+        );
     }
 
     /**

@@ -9,7 +9,6 @@ class VendorDashboardManager implements Hookable {
 	public function register_hooks(): void {
 		add_filter( 'woocommerce_rest_check_permissions', [ $this, 'woocommerce_rest_check_permissions' ], 20, 4 );
 
-		// Dummy hook for testing.
 		add_filter( 'dokan_product_listing_template_render', [ $this, 'control_product_listing_render' ] );
 		add_action( 'dokan_dashboard_content_inside_before', [ $this, 'add_dashboard_content' ] );
 
