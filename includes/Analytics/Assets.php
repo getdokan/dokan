@@ -17,9 +17,6 @@ class Assets implements Hookable {
         if ( ! is_admin() ) {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
         }
-
-		( new VendorDashboardManager() )->register_hooks();
-        ( new Reports\DataStoreCacheModifier() )->register_hooks();
 	}
 
 	/**

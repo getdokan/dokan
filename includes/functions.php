@@ -64,7 +64,7 @@ function dokan_get_current_user_id() {
 /**
  * Check if a user is seller
  *
- * @since DOKAN_SINCE Added `$exclude_staff` as optional parameter
+ * @since 3.14.9 Added `$exclude_staff` as optional parameter
  *
  * @param int  $user_id       User ID
  * @param bool $exclude_staff Exclude staff
@@ -167,29 +167,6 @@ function dokan_is_seller_dashboard() {
 }
 
 /**
- * Check if analytics is enabled for the current seller.
- *
- * This checks if the seller is enabled and the analytics toggle option is set to "yes".
- *
- * @since DOKAN_SINCE
- *
- * @return bool True if analytics is enabled, false otherwise.
- */
-function dokan_is_analytics_enabled(): bool {
-    $is_seller_enabled    = dokan_is_seller_enabled( dokan_get_current_user_id() );
-    $is_analytics_enabled = 'yes' === get_option( Analytics::TOGGLE_OPTION_NAME, 'no' );
-
-    /**
-     * Filter to modify the analytics enabled status for the current seller.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param bool $is_enabled Whether analytics is enabled for the current seller.
-     */
-    return apply_filters( 'dokan_is_analytics_enabled', ( $is_seller_enabled && $is_analytics_enabled ) );
-}
-
-/**
  * Redirect to login page if not already logged in
  *
  * @return void
@@ -227,14 +204,14 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
  */
 function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'booking', 'auction' ] ) {
     // get all function arguments as key => value pairs
-    $args = get_defined_vars();
+    $args = apply_filters( 'dokan_count_posts_args', get_defined_vars() );
 
     $cache_group = "seller_product_data_$user_id";
     $cache_key   = 'count_posts_' . md5( wp_json_encode( $args ) );
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
-        $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id );
+        $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id, $exclude_product_types );
 
         if ( ! $results ) {
             global $wpdb;
@@ -286,7 +263,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'bo
 /**
  * Count stock product type from a user
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.2.5
  *
  * @param string $post_type
  * @param int    $user_id
@@ -299,11 +276,11 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_pr
     global $wpdb;
 
     $cache_group = 'seller_product_stock_data_' . $user_id;
-    $cache_key   = "count_stock_posts_{$user_id}_{$post_type}_{$stock_type}";
+    $cache_key   = apply_filters( 'dokan_count_stock_posts_cache_key', "count_stock_posts_{$user_id}_{$post_type}_{$stock_type}", $post_type, $user_id, $stock_type );
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
-        $results = apply_filters( 'dokan_count_posts_' . $stock_type, null, $post_type, $user_id );
+        $results = apply_filters( 'dokan_count_posts_' . $stock_type, null, $post_type, $user_id, $stock_type, $exclude_product_types );
         $exclude_product_types_text = "'" . implode( "', '", esc_sql( $exclude_product_types ) ) . "'";
 
         if ( ! $results ) {
@@ -1096,7 +1073,7 @@ function dokan_is_seller_trusted( $user_id ) {
 /**
  * Get store page url of a seller
  *
- * @since DOKAN_SINCE Added `$tab` optional parameter.
+ * @since 3.14.9 Added `$tab` optional parameter.
  *
  * @param int $user_id
  * @param string $tab Tab endpoint (Optional). Default is empty.
@@ -1123,7 +1100,7 @@ function dokan_get_store_url( $user_id, $tab = '' ) {
      * Filter hook for the store URL before returning.
      *
      * @since 3.9.0
-     * @since DOKAN_SINCE Added `$tab` parameter
+     * @since 3.14.9 Added `$tab` parameter
      *
      * @param string $store_url        The default store URL
      * @param string $custom_store_url The custom store URL
@@ -3599,7 +3576,7 @@ function dokan_clear_product_caches( $product ) {
 /**
  * Check which vendor info should be hidden
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.4
  *
  * @param string $option
  *
@@ -3873,7 +3850,7 @@ if ( ! function_exists( 'dokan_date_time_format' ) ) {
 /**
  * Get threshold day for a user
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.2.2
  *
  * @param int $user_id
  *
@@ -4147,7 +4124,7 @@ function dokan_bool_to_on_off( $bool ) {
 /**
  * Check is 12-hour format in current setup.
  *
- * @since DOKAN_PRO_SINCE
+ * @since 3.6.0
  *
  * @return bool
  */
