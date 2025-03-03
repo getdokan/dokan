@@ -201,7 +201,7 @@ class Hooks {
             wp_send_json_error( $result->get_error_message(), $result->get_error_code() );
         }
 
-        do_action( 'dokan_after_withdraw_request', $user_id, $amount, $method );
+        do_action( 'dokan_after_withdraw_request', $user_id, $amount, $method, $result->get_id() );
 
         wp_send_json_success( __( 'Withdraw request successful.', 'dokan-lite' ) );
     }
