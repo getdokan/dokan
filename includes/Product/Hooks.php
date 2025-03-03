@@ -51,7 +51,7 @@ class Hooks {
     /**
      * Callback for Ajax Action Initialization
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.8.2
      * @return void
      */
     public function store_product_search_action() {
@@ -172,7 +172,7 @@ class Hooks {
     /**
      * Output the store product sorting options
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.8.2
      * @return void
      */
     public function store_products_orderby() {

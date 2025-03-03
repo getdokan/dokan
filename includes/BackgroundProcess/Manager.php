@@ -10,7 +10,7 @@ use WeDevs\Dokan\Vendor\ChangeProductStatus as ChangeVendorProductStatus;
 /**
  * Background Process Manager Class.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.7.10
  *
  * @property ChangeVendorProductStatus $change_vendor_product_status Instance of WeDevs\Dokan\Vendor\ChangeProductStatus class
  */
@@ -29,7 +29,7 @@ class Manager {
     /**
      * Initialize classes to chainable container.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.7.10
      *
      * @return void
      */
@@ -43,7 +43,7 @@ class Manager {
     /**
      * Initialize hooks.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.7.10
      *
      * @return void
      */
@@ -54,7 +54,7 @@ class Manager {
     /**
      * Show variable products author updated notice.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.7.10
      *
      * @param array $notices
      *
