@@ -153,7 +153,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
             }
             ?>
 
-            <header class="dokan-dashboard-header dokan-clearfix">
+            <header class="dokan-dashboard-header dokan-ai-prompt">
                 <h1 class="entry-title">
                     <?php
                     if ( $new_product || 'auto-draft' === $post->post_status ) {
@@ -208,6 +208,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     do_action( 'dokan_edit_product_after_view_product_button', $product );
                     ?>
                 </h1>
+                <div id="ai-prompt-app">SVG</div>
             </header><!-- .entry-header -->
 
             <div class="product-edit-new-container product-edit-container">

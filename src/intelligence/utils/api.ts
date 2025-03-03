@@ -1,19 +1,9 @@
-import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
-
-export interface Field {
-    id: string;
-    title: string;
-    type: 'input' | 'section'; // Update types based on API response
-}
 
 export const API_ENDPOINTS = {
     GENERATE: '/dokan/v1/ai/generate',
 };
-export const generateAiContent = async (
-    prompt: string,
-    field: Field
-): Promise< string > => {
+export const generateAiContent = async ( prompt: string, field = {} ) => {
     const data = await apiFetch( {
         path: API_ENDPOINTS.GENERATE,
         method: 'POST',
@@ -23,11 +13,9 @@ export const generateAiContent = async (
         },
         data: {
             prompt,
-            id: field.id,
-            type: field.type,
+            payload: field,
         },
     } );
     // @ts-ignore
-    const content = data.response || data;
-    return content || __( 'No content generated', 'dokan' );
+    return data.response;
 };

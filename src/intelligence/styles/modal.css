@@ -20,5 +20,26 @@ body:has(.dokan-ai-prompt-icon) .mce-path {
     padding: 10px;
 }
 body:has(.dokan-ai-modal) .z-10[aria-modal="true"][data-headlessui-state="open"] {
-    z-index: 1000;
+    z-index: 99999;
+}
+body:has(.dokan-ai-modal) .bg-opacity-75 {
+    opacity: 0.75;
+}
+
+.dokan-dashboard header.dokan-ai-prompt {
+    margin: 0 0 10px 0;
+    border-bottom: 1px solid #EDEDED;
+    padding: 0 0 10px 0;
+    line-height: 1.25;
+}
+.dokan-dashboard header.dokan-ai-prompt {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px !important;
+}
+.dokan-dashboard header.dokan-ai-prompt h1 {
+    margin: 0 !important;
+    padding: 0 !important;
+    border-bottom: none !important;
 }

@@ -28,24 +28,9 @@ const setElementPosition = (
     container.style.top = `${ position }px`;
 };
 const initializeDokanAI = () => {
-    // @ts-ignore
-    const fields = window.dokanAiSettings.fields;
-
-    if ( fields && Array.isArray( fields ) && fields.length > 0 ) {
-        fields.forEach( ( field ) => {
-            const targetField = document.getElementById( field.id );
-            if ( targetField ) {
-                const container = document.createElement( 'div' );
-                container.id = `dokan-ai-root-${ field.id }`;
-                container.className = 'dokan-ai-prompt-icon';
-                targetField.parentNode.appendChild( container );
-                // @ts-ignore
-                targetField.parentNode.style.cssText = 'position:relative;';
-                // render the DokanAI component
-                createRoot( container ).render( <DokanAI field={ field } /> );
-                setElementPosition( targetField, container, field );
-            }
-        } );
+    const container = document.getElementById( 'ai-prompt-app' );
+    if ( container ) {
+        createRoot( container ).render( <DokanAI field={ [] } /> );
     }
 };
 
