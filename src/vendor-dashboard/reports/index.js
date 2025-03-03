@@ -19,7 +19,6 @@ import { PageLayout, EmbedLayout, PrimaryLayout as NoticeArea } from "./layout";
 // import "./xstate.js";
 import { ErrorBoundary } from "./error-boundary";
 // import { error } from "console";
-import "./seller-filter";
 // const appRoot = document.getElementById("root");
 const settingsGroup = "wc_admin";
 const hydrateUser = getAdminSetting("currentUserData");

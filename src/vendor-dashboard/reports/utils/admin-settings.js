@@ -5,7 +5,7 @@ import { __ } from "@wordpress/i18n";
 import { getSetting } from "@woocommerce/settings";
 
 // Remove mutable data from settings object to prevent access. Data stores should be used instead.
-const mutableSources = ["wcAdminSettings", "preloadSettings"];
+const mutableSources = ["wcAdminSettings", "preloadSettings", "vendorSharedSettings"];
 const adminSettings = getSetting("admin", {});
 
 const ADMIN_SETTINGS_SOURCE = Object.keys(adminSettings).reduce(
