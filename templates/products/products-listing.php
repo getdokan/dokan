@@ -1,4 +1,6 @@
 <?php
+    use WeDevs\Dokan\Utilities\ProductUtil;
+
     global $post;
 ?>
 
@@ -32,7 +34,7 @@
             do_action( 'dokan_dashboard_content_inside_before' );
             do_action( 'dokan_before_listing_product' );
 
-            if ( dokan_should_skip_product_listing_render() ) {
+            if ( ProductUtil::dokan_should_skip_product_listing_render() ) {
                 return;
             }
             ?>

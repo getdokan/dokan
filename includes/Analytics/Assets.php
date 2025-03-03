@@ -4,10 +4,11 @@ namespace WeDevs\Dokan\Analytics;
 
 use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Contracts\Hookable;
+use WeDevs\Dokan\Utilities\ReportUtil;
 
 class Assets implements Hookable {
 	public function register_hooks(): void {
-        if ( ! dokan_is_analytics_enabled() ) {
+        if ( ! ReportUtil::dokan_is_analytics_enabled() ) {
             return;
         }
 
@@ -28,9 +29,9 @@ class Assets implements Hookable {
 	 * @return array
 	 */
 	public function localize_wc_admin_settings( $settings ) {
-        $settings['vendorBalance']      = dokan_get_seller_balance( dokan_get_current_user_id(), 2 );
+        $settings['vendorBalance']      = dokan_get_seller_balance( dokan_get_current_user_id() );
         $settings['stockStatuses']      = wc_get_product_stock_status_options();
-        $settings['isAnalyticsEnabled'] = dokan_is_analytics_enabled();
+        $settings['isAnalyticsEnabled'] = ReportUtil::dokan_is_analytics_enabled();
 
         $preload_data           = [];
         $preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', array() );
