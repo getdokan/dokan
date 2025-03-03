@@ -96,7 +96,6 @@ class Report extends Component {
     }
     const Container = report.component;
 
-    console.log("Component Props", this.props);
     const props = {
       ...this.props,
       query: {

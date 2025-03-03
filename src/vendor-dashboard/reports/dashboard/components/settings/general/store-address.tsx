@@ -45,7 +45,7 @@ export function getStoreAddressValidator(/* locale: Locale = {} */) {
     if (!values.countryState.trim().length) {
       errors.countryState = __(
         "Please select a country / region",
-        "woocommerce"
+        'dokan-lite'
       );
     }
 
@@ -323,7 +323,7 @@ export function StoreAddress({
   return (
     <div className="woocommerce-store-address-fields">
       <SelectControl
-        label={__("Country / Region", "woocommerce") + " *"}
+        label={__("Country / Region", 'dokan-lite') + " *"}
         required
         autoComplete="new-password" // disable autocomplete and autofill
         getSearchExpression={(query: string) => {
@@ -342,7 +342,7 @@ export function StoreAddress({
       {!locale?.address_1?.hidden && (
         <TextControl
           id={"woocommerce-store-address-form-address_1"}
-          label={locale?.address_1?.label || __("Address", "woocommerce")}
+          label={locale?.address_1?.label || __("Address", 'dokan-lite')}
           autoComplete="address-line1"
           {...getInputProps("addressLine1")}
         />
@@ -351,7 +351,7 @@ export function StoreAddress({
       {!locale?.postcode?.hidden && (
         <TextControl
           id={"woocommerce-store-address-form-postcode"}
-          label={locale?.postcode?.label || __("Post code", "woocommerce")}
+          label={locale?.postcode?.label || __("Post code", 'dokan-lite')}
           autoComplete="postal-code"
           {...getInputProps("postCode")}
         />
@@ -360,7 +360,7 @@ export function StoreAddress({
       {!locale?.city?.hidden && (
         <TextControl
           id={"woocommerce-store-address-form-city"}
-          label={locale?.city?.label || __("City", "woocommerce")}
+          label={locale?.city?.label || __("City", 'dokan-lite')}
           {...getInputProps("city")}
           autoComplete="address-level2"
         />

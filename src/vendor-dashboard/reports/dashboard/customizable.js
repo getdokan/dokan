@@ -2,14 +2,14 @@
  * External dependencies
  */
 import { __, sprintf } from '@wordpress/i18n';
-import { useMemo } from '@wordpress/element';
+import {Fragment, useEffect, useMemo} from '@wordpress/element';
 import { compose } from '@wordpress/compose';
 import { partial } from 'lodash';
 import { Dropdown, Button } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
 import { Icon, plusCircleFilled } from '@wordpress/icons';
 import { withSelect } from '@wordpress/data';
-import { H } from '@woocommerce/components';
+import {H, ReportFilters} from '@woocommerce/components';
 import { SETTINGS_STORE_NAME, useUserPreferences } from '@woocommerce/data';
 import { getQuery } from '@woocommerce/navigation';
 import {
@@ -29,7 +29,6 @@ import {
 // import './style.scss';
 import defaultSections from './default-sections';
 import Section from './section';
-import ReportFilters from '../analytics/components/report-filters';
 import { dokanConfig } from '../dokan-config.js';
 
 const DASHBOARD_FILTERS_FILTER = 'dokan_analytics_dashboard_report_filters';
@@ -83,7 +82,6 @@ const mergeSectionsWithDefaults = ( prefSections ) => {
 
 const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
     const { updateUserPreferences, ...userPrefs } = useUserPreferences();
-    console.log( 'User pref sections-->', userPrefs.dashboard_sections );
 
     const sections = useMemo(
         () => mergeSectionsWithDefaults( userPrefs.dashboard_sections ),
@@ -194,7 +192,7 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
                 renderToggle={ ( { onToggle, isOpen } ) => (
                     <Button
                         onClick={ onToggle }
-                        title={ __( 'Add more sections', 'woocommerce' ) }
+                        title={ __( 'Add more sections', 'dokan-lite' ) }
                         aria-expanded={ isOpen }
                     >
                         <Icon icon={ plusCircleFilled } />
@@ -202,7 +200,7 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
                 ) }
                 renderContent={ ( { onToggle } ) => (
                     <>
-                        <H>{ __( 'Dashboard Sections', 'woocommerce' ) }</H>
+                        <H>{ __( 'Dashboard Sections', 'dokan-lite' ) }</H>
                         <div className="woocommerce-dashboard-section__add-more-choices">
                             { hiddenSections.map( ( section ) => {
                                 return (
@@ -217,7 +215,7 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
                                             /* translators: %s: dashboard section titles which are hidden, this button allows unhiding them */
                                             __(
                                                 'Add %s section',
-                                                'woocommerce'
+                                                'dokan-lite'
                                             ),
                                             section.title
                                         ) }
@@ -260,7 +258,7 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
             .map( ( section ) => section.key );
 
         return (
-            <>
+            <Fragment>
                 <ReportFilters
                     report="dashboard"
                     query={ {
@@ -272,6 +270,7 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
                     isoDateFormat={ isoDateFormat }
                     filters={ filters }
                 />
+
                 { sections.map( ( section, index ) => {
                     if ( section.isVisible ) {
                         return (
@@ -310,15 +309,59 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
                     return null;
                 } ) }
                 { renderAddMore() }
-            </>
+            </Fragment>
         );
     };
+
+    // Filter name for anchor handler
+    const ANCHOR_HANDLER_FILTER = 'dokan_should_convert_anchors',
+        shouldConvert = applyFilters( ANCHOR_HANDLER_FILTER, true );
+
+    if ( shouldConvert ) {  // Check if conversion should proceed.
+        useEffect( () => {
+            const container = document.querySelector( '.customizable-dashboard' );
+            if ( ! container ) return;
+
+            const interceptClicks = ( event ) => {
+                const link = event.target.closest( 'a' );
+                if ( ! link || link.closest( '.woocommerce-filters' ) ) {
+                    return;
+                }
+
+                // Prevent default and history update for non-filter links.
+                event.preventDefault();
+                event.stopPropagation();
+            };
+
+            const handleBeforeUnload = ( event ) => {
+                const activeElement = document.activeElement;
+                if ( activeElement &&
+                    activeElement.closest( '.customizable-dashboard' ) &&
+                    ! activeElement.closest( '.woocommerce-filters' ) ) {
+                    event.preventDefault();
+                    event.returnValue = '';
+                }
+            };
+
+            container.addEventListener( 'click', interceptClicks, true );
+
+            // Hold redirection for active elements.
+            window.addEventListener( 'beforeunload', handleBeforeUnload );
+
+            return () => {
+                container.removeEventListener( 'click', interceptClicks, true );
+                window.removeEventListener( 'beforeunload', handleBeforeUnload );
+            };
+        }, [] );
+    }
 
     return (
         <CurrencyContext.Provider
             value={ getFilteredCurrencyInstance( getQuery() ) }
         >
-            { renderDashboardReports() }
+            <div className='customizable-dashboard'>
+                { renderDashboardReports() }
+            </div>
         </CurrencyContext.Provider>
     );
 };
