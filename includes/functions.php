@@ -2676,7 +2676,7 @@ function dokan_delete_user_details( $user_id, $reassign ) {
  *
  * @param int $vendor_id
  *
- * @return \Dokan_Vendor
+ * @return WeDevs\Dokan\Vendor\Vendor
  */
 function dokan_get_vendor( $vendor_id = null ) {
     if ( ! $vendor_id ) {
