@@ -374,7 +374,7 @@ class Manager {
     }
 
     /**
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.0
      *
      * @return int|null
      */

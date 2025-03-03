@@ -256,7 +256,7 @@ $price_kses = apply_filters(
         /**
          * Render product listing product type symbol.
          *
-         * @since DOKAN_PRO_SINCE
+         * @since 3.13.1
          *
          * @param string     $product_type
          * @param WC_Product $product

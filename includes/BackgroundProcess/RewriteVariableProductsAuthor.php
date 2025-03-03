@@ -13,7 +13,7 @@ use WC_Background_Process;
 /**
  * RewriteVariableProductsAuthor Class.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.7.10
  */
 class RewriteVariableProductsAuthor extends WC_Background_Process {
 
@@ -31,7 +31,7 @@ class RewriteVariableProductsAuthor extends WC_Background_Process {
      *
      * Updater will still run via cron job if this fails for any reason.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.7.10
      *
      * @return void
      */
@@ -49,7 +49,7 @@ class RewriteVariableProductsAuthor extends WC_Background_Process {
     /**
      * Perform updates.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.7.10
      *
      * @param array $args
      *
@@ -70,7 +70,7 @@ class RewriteVariableProductsAuthor extends WC_Background_Process {
     /**
      * Rewrite variable product variations author IDs.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.7.10
      *
      * @param int $page
      *
@@ -105,7 +105,7 @@ class RewriteVariableProductsAuthor extends WC_Background_Process {
     /**
      * Complete the process.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.7.10
      *
      * @return void
      */

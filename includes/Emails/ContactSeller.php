@@ -18,7 +18,7 @@ class ContactSeller extends WC_Email {
     /**
      * Reply email
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.15
      *
      * @var string
      */

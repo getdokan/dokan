@@ -4,10 +4,10 @@ Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
 Requires at least: 6.5
 Tested up to: 6.7.1
-WC requires at least: 8.0.0
-WC tested up to: 9.6.0
+WC requires at least: 8.5.0
+WC tested up to: 9.6.1
 Requires PHP: 7.4
-Stable tag: 3.14.8
+Stable tag: 3.14.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -343,6 +343,16 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+
+= v3.14.9 ( Feb 12, 2025 ) =
+
+- **fix:** Fix earning suggestion in vendor dashboard when product edit page loads initially.
+- **fix:** Fix vendor earning suggestion currency, currency position, decimal separator in vendor dashboard product edit page.
+- **fix:** Fix vendor earning suggestion for invalid product price.
+- **fix:** Tax calculation for shipping based on tax status
+- **feat:** Rollback support for product statues on dokan pro deactivation.
+- **refactor:** Improved dokan_is_user_seller function by adding strict comparison to differentiate between vendor and staff.
+
 = v3.14.8 ( Jan 29, 2025 ) =
 
 - **update:** Missing parameters support added for the reverse-withdrawal API endpoints.

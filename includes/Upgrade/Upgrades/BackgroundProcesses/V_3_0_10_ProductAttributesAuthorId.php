@@ -7,7 +7,7 @@ use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
 /**
  * Dokan Product attribute author id updater class
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.10
  */
 class V_3_0_10_ProductAttributesAuthorId extends DokanBackgroundProcesses {
 
@@ -16,7 +16,7 @@ class V_3_0_10_ProductAttributesAuthorId extends DokanBackgroundProcesses {
      *
      * @param mixed $item
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.10
      *
      * @return mixed
      */
@@ -38,7 +38,7 @@ class V_3_0_10_ProductAttributesAuthorId extends DokanBackgroundProcesses {
      *
      * @param $paged
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.10
      *
      * @return array|boolean
      */

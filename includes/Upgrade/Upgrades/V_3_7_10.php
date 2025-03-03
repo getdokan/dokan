@@ -9,14 +9,14 @@ use WeDevs\Dokan\Abstracts\DokanUpgrader;
 /**
  * Upgrader Class.
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.7.10
  */
 class V_3_7_10 extends DokanUpgrader {
 
     /**
      * Rewrite variable product variations author IDs.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.7.10
      *
      * @return void
      */

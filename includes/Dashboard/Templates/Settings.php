@@ -723,7 +723,7 @@ class Settings {
     /**
      * Check if a seller is connected to a payment method
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.5.1
      *
      * @param $payment_method_id
      * @param $seller_id
@@ -775,7 +775,7 @@ class Settings {
         /**
          * Get if user with id $seller_id is connected to the payment method having $payment_method_id
          *
-         * @since DOKAN_PRO_SINCE
+         * @since 3.5.1
          *
          * @param bool   $is_connected
          * @param string $payment_method_id

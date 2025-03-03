@@ -165,7 +165,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     /**
                      * Render the contents before product edit status label.
                      *
-                     * @since DOKAN_PRO_SINCE
+                     * @since 3.13.1
                      *
                      * @param \WC_Product $product
                      */
@@ -180,7 +180,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     /**
                      * Render the contents after product edit status label.
                      *
-                     * @since DOKAN_PRO_SINCE
+                     * @since 3.13.1
                      *
                      * @param \WC_Product $product
                      */

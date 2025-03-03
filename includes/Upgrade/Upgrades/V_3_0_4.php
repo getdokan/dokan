@@ -9,7 +9,7 @@ class V_3_0_4 extends DokanUpgrader {
     /**
      * Get table_name and columns in key value pair
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.4
      *
      * @return array
      */
@@ -25,7 +25,7 @@ class V_3_0_4 extends DokanUpgrader {
     /**
      * Update various dokan tables
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.4
      *
      * @return void
      */

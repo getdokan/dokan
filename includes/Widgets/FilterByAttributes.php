@@ -23,7 +23,7 @@ class FilterByAttributes extends WP_Widget {
     /**
      * Front-end display of widget.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.5.0
      *
      * @param array $args     Widget arguments.
      * @param array $instance Saved values from database.
@@ -72,7 +72,7 @@ class FilterByAttributes extends WP_Widget {
     /**
      * Back-end widget form.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.5.0
      *
      * @param array $instance Previously saved values from database.
      *
@@ -132,7 +132,7 @@ class FilterByAttributes extends WP_Widget {
     /**
      * Sanitize widget form values as they are saved.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.5.0
      *
      * @param array $new_instance Values just sent to be saved.
      * @param array $old_instance Previously saved values from database.
@@ -155,7 +155,7 @@ class FilterByAttributes extends WP_Widget {
     /**
      * Get this widget taxonomy.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.5.0
      *
      * @param array $instance Array of instance options.
      *

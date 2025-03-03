@@ -10,21 +10,21 @@ class Update_Category_Commission {
     /**
      * The batch size for processing categories
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      */
     const BATCH_SIZE = 20;
 
     /**
      * The hook name for processing batches
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      */
     const PROCESS_BATCH_HOOK = 'process_category_batch';
     const PROCESS_BATCH_HOOK_CREATOR = 'process_category_batch_creator';
 
     /**
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      */
     const PROCESS_ITEM_HOOK = 'process_category_item';
 
@@ -40,7 +40,7 @@ class Update_Category_Commission {
     /**
      * Start the batch processing
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -81,7 +81,7 @@ class Update_Category_Commission {
     /**
      * Process a batch of categories
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int $page_number Current page number
      *
@@ -101,7 +101,7 @@ class Update_Category_Commission {
     /**
      * Schedule the next batch of categories
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int $page_number Next page number to process
      *
@@ -135,7 +135,7 @@ class Update_Category_Commission {
     /**
      * Get a batch of categories.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int $page_number Page number to fetch
      *
@@ -174,7 +174,7 @@ class Update_Category_Commission {
     /**
      * Process a single category.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int $term Category term object
      *
@@ -212,7 +212,7 @@ class Update_Category_Commission {
     /**
      * Check if processing is currently running.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */

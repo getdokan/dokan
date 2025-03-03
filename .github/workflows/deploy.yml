@@ -31,7 +31,6 @@ jobs:
               uses: 10up/action-wordpress-plugin-deploy@stable
               with:
                 generate-zip: true
-                dry-run: ${{ env.DRY_RUN }}
               env:
                 SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
                 SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}

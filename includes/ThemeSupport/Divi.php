@@ -88,7 +88,7 @@ class Divi {
     /**
      * Set current page for the query
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.5
      *
      * @see https://github.com/weDevsOfficial/dokan/issues/838
      *

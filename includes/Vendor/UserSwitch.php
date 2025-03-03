@@ -10,14 +10,14 @@ use user_switching;
 /**
 * User Switching functionality
 *
-* @since  DOKAN_LITE_SINCE
+* @since  3.0.6
 */
 class UserSwitch {
 
     /**
      * Load automatically when class initiate
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      */
     public function __construct() {
         add_filter( 'dokan_admin_localize_script', [ $this, 'add_localize_data' ], 15 );
@@ -28,7 +28,7 @@ class UserSwitch {
     /**
      * Is feature active or not
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      *
      * @return boolean
      */
@@ -45,7 +45,7 @@ class UserSwitch {
     /**
      * Add localize scription for loading if feature available or not
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      *
      * @return array
      */
@@ -58,7 +58,7 @@ class UserSwitch {
     /**
      * Populate switch url for user
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      *
      * @return array
      */
@@ -85,7 +85,7 @@ class UserSwitch {
     /**
      * Switch to or Switch Back to user message in vendor dashboard
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      *
      * @return void
      */

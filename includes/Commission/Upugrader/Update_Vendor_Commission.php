@@ -22,7 +22,7 @@ class Update_Vendor_Commission {
     /**
      * Initialize the processor
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      */
     public function init_hooks() {
         add_action( self::PROCESS_BATCH_HOOK_CREATOR, [ $this, 'process_batch_creator' ], 10, 2 );
@@ -33,7 +33,7 @@ class Update_Vendor_Commission {
     /**
      * Start the batch processing
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -71,7 +71,7 @@ class Update_Vendor_Commission {
     /**
      * Process a batch of vendors
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int $page_number Current page number
      * @param int $max_pages   Total number of pages
@@ -91,7 +91,7 @@ class Update_Vendor_Commission {
     /**
      * Get a batch of vendors
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int $page_number Page number to fetch
      *
@@ -109,7 +109,7 @@ class Update_Vendor_Commission {
     /**
      * Schedule an individual vendor for processing
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int $vendor_id
      *
@@ -126,7 +126,7 @@ class Update_Vendor_Commission {
     /**
      * Process a single vendor
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int $vendor_id Vendor ID
      *
@@ -170,7 +170,7 @@ class Update_Vendor_Commission {
     /**
      * Log vendor update status
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int    $vendor_id
      * @param bool   $success
@@ -192,7 +192,7 @@ class Update_Vendor_Commission {
     /**
      * Check if processing is currently running
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
