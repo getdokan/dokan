@@ -3,16 +3,15 @@
 namespace WeDevs\Dokan\Intelligence\REST;
 
 use Exception;
-use WeDevs\Dokan\Abstracts\DokanRESTController;
-use WeDevs\Dokan\Abstracts\DokanRESTVendorController;
 use WeDevs\Dokan\Intelligence\Services\EngineFactory;
 use WeDevs\Dokan\Intelligence\Utils\PromptUtils;
+use WeDevs\Dokan\REST\DokanBaseVendorController;
 use WP_Error;
 use WP_REST_Server;
 
 
 defined( 'ABSPATH' ) || exit();
-class AIRequestController extends DokanRESTVendorController {
+class AIRequestController extends DokanBaseVendorController {
     /**
      * Version
      *
