@@ -109,7 +109,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
                     'description' => __( 'Share essentials', 'dokan-lite' ),
                     'type'        => 'boolean',
                     'context'     => [ 'view', 'edit' ],
-                    'required'    => false,
+                    'required'    => true,
                 ],
                 'plugins' => [
                     'description' => __( 'Plugins to install', 'dokan-lite' ),
@@ -128,7 +128,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
                             ],
                         ],
                     ],
-                    'required'    => false,
+                    'required'    => true,
                 ],
             ],
         ];
