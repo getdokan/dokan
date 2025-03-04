@@ -1011,7 +1011,7 @@ class SetupWizard {
      * @param string $plugin_id   Plugin id used for background install.
      * @param array  $plugin_info Plugin info array containing name and repo-slug, and optionally file if different from [repo-slug].php.
      */
-    protected function install_plugin( $plugin_id, $plugin_info ) {
+    public function install_plugin( $plugin_id, $plugin_info ) {
         // Make sure we don't trigger multiple simultaneous installs.
         if ( get_option( 'woocommerce_setup_background_installing_' . $plugin_id ) ) {
             return;
