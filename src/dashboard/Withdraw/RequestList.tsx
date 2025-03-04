@@ -269,7 +269,6 @@ function RequestList( {
                             className="bg-gray-50 hover:bg-gray-100"
                             onClick={ () => setIsOpen( false ) }
                             disabled={ withdrawHook.isLoading }
-                            loading={ withdrawHook.isLoading }
                             label={ __( 'No', 'dokan' ) }
                         />
 
