@@ -4,6 +4,18 @@
 
 // Reset unwanted table styles but keep structure intact
 @layer base {
+    :root {
+        --colors-primary-500: var(--dokan-button-border-color, #F05025);
+        --wp-components-color-accent: var(--dokan-button-background-color, #F05025);
+    }
+    // This is a hack to fix headless ui flickering during .dokan-layout class addition with MutationObserver.
+    // This is a temporary fix until headless ui provides a better solution.
+    #headlessui-portal-root {
+        display: none;
+    }
+    .bg-primary-500 {
+        @apply bg-dokan-btn focus:outline-dokan-btn;
+    }
     .dokan-layout {
         table:not(.dataviews-view-table),
         table:not(.dataviews-view-table) th,
@@ -19,5 +31,24 @@
             vertical-align: inherit;
             box-sizing: border-box;
         }
+
+        a:focus, button:focus, .button.alt:focus, input:focus, textarea:focus, input[type="button"]:focus, input[type="reset"]:focus, input[type="submit"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="url"]:focus, input[type="password"]:focus, input[type="search"]:focus {
+            outline-color: var(--dokan-button-border-color, #F05025);
+        }
+
+        input[type=checkbox] {
+            @apply before:!content-[''] mt-1;
+        }
+    }
+
+    button[data-headlessui-state="checked"] {
+        &:hover, &:focus {
+            background-color: var(--dokan-button-background-color, #F05025) !important;
+        }
+    }
+    div[data-headlessui-state="open"][role="dialog"] {
+        // we are using z-index: 999 to make sure the modal is on top of everything except dokan ui toast
+        // When changing this value, make sure to check if toast is still on top of the modal
+        z-index: 999;
     }
 }

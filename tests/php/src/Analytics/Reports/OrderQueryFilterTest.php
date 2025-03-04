@@ -3,6 +3,7 @@ namespace WeDevs\Dokan\Test\Analytics\Reports;
 
 use Mockery;
 use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter;
+use WeDevs\Dokan\Commission;
 use WeDevs\Dokan\Test\Analytics\Reports\ReportTestCase;
 
 /**
@@ -66,6 +67,7 @@ class OrderQueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         foreach ( $mocking_methods as $method ) {
             $service->shouldReceive( $method )
@@ -92,6 +94,21 @@ class OrderQueryFilterTest extends ReportTestCase {
 		$order_id = $this->create_multi_vendor_order();
 
         $this->set_order_meta_for_dokan( $order_id, $expected_data );
+        $mock_commission = Mockery::mock( Commission::class );
+
+        dokan()->get_container()->extend( 'commission' )->setConcrete( $mock_commission );
+
+        $mock_commission->shouldReceive( 'get_earning_by_order' )->andReturnUsing(
+            function ( $order, $context = 'seller' ) use ( $expected_data ) {
+                if ( $order->get_meta( 'has_sub_order' ) ) {
+                    return 0;
+                }
+                if ( $context === 'admin' ) {
+                    return $expected_data['admin_commission'];
+                }
+                return $expected_data['vendor_earning'];
+			}
+        );
 
 		$this->run_all_pending();
 
@@ -102,7 +119,7 @@ class OrderQueryFilterTest extends ReportTestCase {
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
 
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
-
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
         remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
         $service->shouldReceive( 'should_filter_by_vendor_id' )
@@ -120,7 +137,15 @@ class OrderQueryFilterTest extends ReportTestCase {
 
         foreach ( $sub_ids as $index => $s_id ) {
             $sub_order = wc_get_order( $s_id );
-            $order_data = $report_data[ $index ];
+            $order_data = array_reduce(
+                $report_data, function ( $carry, $item ) use ( $s_id ) {
+					if ( $item['order_id'] === $s_id ) {
+						$carry = $item;
+					}
+
+                    return $carry;
+				}, null
+            );
 
             $this->assertEquals( $s_id, $order_data['order_id'] );
             $this->assertEquals( floatval( $sub_order->get_total() ), $order_data['total_sales'] );
@@ -147,6 +172,7 @@ class OrderQueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+		dokan_get_container()->get( QueryFilter::class )->register_hooks( );
 
         $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnUsing(
@@ -184,6 +210,7 @@ class OrderQueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+		dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnTrue();
@@ -214,6 +241,7 @@ class OrderQueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+		dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnFalse();

@@ -97,7 +97,7 @@ export default class summaryReport implements Reporter {
                 }
                 break;
             case 'flaky':
-                // summary.flaky_tests.push(test.title);
+                summary.flaky_tests.push(test.title);
                 const index = summary.failed_tests.indexOf(test.title);
                 if (index !== -1) {
                     summary.failed_tests.splice(index, 1);

@@ -1,3 +1,4 @@
+export { default as DokanModal } from './modals/DokanModal';
 export { default as DataViews } from './dataviews/DataViewTable';
 export { default as SortableList } from './sortable-list';
 
@@ -7,3 +8,6 @@ export {
     filterSortAndPaginate,
     isItemValid
 } from '@wordpress/dataviews/wp';
+export { default as PriceHtml } from './PriceHtml';
+export { default as DateTimeHtml } from './DateTimeHtml';
+export { default as Filter } from './Filter';

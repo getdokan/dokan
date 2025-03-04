@@ -230,11 +230,6 @@ class Assets {
                 'component' => 'VendorCapabilities',
             ],
             [
-                'path'      => '/pro-modules',
-                'name'      => 'ProModules',
-                'component' => 'ProModules',
-            ],
-            [
                 'path'      => '/changelog',
                 'name'      => 'ChangeLog',
                 'component' => 'ChangeLog',
@@ -579,7 +574,7 @@ class Assets {
             ],
             'dokan-react-frontend'      => [
                 'src'     => $asset_url . '/js/frontend.js',
-                'deps'    => $frontend_shipping_asset['dependencies'],
+                'deps'    => array_merge( $frontend_shipping_asset['dependencies'], [ 'wp-core-data', 'dokan-react-components' ] ),
                 'version' => $frontend_shipping_asset['version'],
             ],
             'dokan-utilities'           => [
@@ -606,6 +601,18 @@ class Assets {
                     $components_asset['dependencies'],
                     [ 'dokan-utilities', 'dokan-hooks' ]
                 ),
+            ];
+        }
+
+        $core_store_asset_file = DOKAN_DIR . '/assets/js/core-store.asset.php';
+        if ( file_exists( $core_store_asset_file ) ) {
+            $core_store_asset = require $core_store_asset_file;
+
+            // Register React components.
+            $scripts['dokan-stores-core'] = [
+                'version' => $core_store_asset['version'],
+                'src'     => $asset_url . '/js/core-store.js',
+                'deps'    => $core_store_asset['dependencies'],
             ];
         }
 

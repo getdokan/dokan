@@ -15,7 +15,7 @@ const SubSection = ( { element }: { element: StatusElement } ) => {
                 ) }
             </div>
             <div className="bg-gray-50 flex flex-col gap-4 px-4 py-5 sm:p-6">
-                { element.children.map( ( child ) => {
+                { ( element?.children || [] ).map( ( child ) => {
                     return (
                         <SettingsParser
                             element={ child }

@@ -8,7 +8,7 @@
 - [Component Properties](#component-properties)
 
 ## Introduction
-The Dokan `SortableList` component provide a `flexible` and `reusable` `drag-and-drop` interface for managing `sortable lists`, `grids`, and `horizontal` layouts. Built on top of `@dnd-kit`, these components offer seamless integration with Dokan's existing component ecosystem.
+The Dokan `SortableList` component provide a `flexible` and `reusable` `drag-and-drop` interface for managing `sortable lists`, `grids`, and `horizontal` layouts. Built on top of `@dnd-kit`, these components offer seamless integration with `Dokan's` existing component ecosystem.
 
 ## Data Structures
 The `SortableList` component accommodates an `array` data type for its `items` property, which can follow `three primary array data structure patterns`:
@@ -17,13 +17,14 @@ The `SortableList` component accommodates an `array` data type for its `items` p
 Basic array of `primitive` values without additional `properties`.
 
 ```tsx
-const simpleItems = [
+const [ simpleItems, setSimpleItems ] = useState([
     __( 'Item 1', 'dokan-lite' ),
     __( 'Item 2', 'dokan-lite' ),
     __( 'Item 3', 'dokan-lite' )
-];
+]);
 
 const handleOrderUpdate = ( updatedItems ) => {
+    setSimpleItems( [ ...updatedItems ] ); // Update items array.
     console.log( updatedItems ); // Get updated items array.
     // Handle any additional logic after order update
 };
@@ -45,13 +46,14 @@ const handleOrderUpdate = ( updatedItems ) => {
 `Array of objects` with basic properties but `no explicit order tracking`.
 
 ```tsx
-const objectItems = [
+const [ objectItems, setObjectItems ] = useState([
     { id: 1, name: __( 'Item 1', 'dokan-lite' ) },
     { id: 2, name: __( 'Item 2', 'dokan-lite' ) },
     { id: 3, name: __( 'Item 3', 'dokan-lite' ) }
-];
+]);
 
 const handleOrderUpdate = ( updatedItems ) => {
+    setObjectItems( [ ...updatedItems ] ); // Update items array.
     console.log( updatedItems ); // Get updated items array.
     // Handle any additional logic after order update
 };
@@ -73,13 +75,14 @@ const handleOrderUpdate = ( updatedItems ) => {
 `Array of objects` that include an order property for `explicit order tracking`.
 
 ```tsx
-const orderedItems = [
+const [ orderedItems, setOrderedItems ] = useState([
     { id: 1, title: 'First Task', content: __( 'Do something', 'dokan-lite' ), sort_order: 1 },
     { id: 2, title: 'Second Task', content: __( 'Do something else', 'dokan-lite' ), sort_order: 2 },
     { id: 3, title: 'Third Task', content: __( 'Another task', 'dokan-lite' ), sort_order: 3 }
-];
+]);
 
 const handleOrderUpdate = ( updatedItems ) => {
+    setOrderedItems( [ ...updatedItems ] ); // Update items array.
     console.log( updatedItems ); // Get updated items array.
     // Handle any additional logic after order update
 };
@@ -109,7 +112,7 @@ For both `Dokan Free and Pro` versions, we must register the `dokan-react-compon
 
 ```tsx
 import { useState } from '@wordpress/element';
-import SortableList from '@/components/sortable-list';
+import SortableList from '@dokan/components/sortable-list';
 ```
 
 #### Step 2: Set Up Your State Management
@@ -173,7 +176,7 @@ const renderItem = ( item ) => (
 
 #### SortableList Props
 
-**items (array):** The data array to be `rendered` in the `sortable` list. Can be an array of `single items`, array of `objects` with or without `ordering`.  
+**items (array):** The data array to be `rendered` in the `sortable` list. Can be an array of `single items`, array of `objects` with or without `ordering`.
 
 **namespace (string):** Unique identifier for the `sortable container`. Used for filtering and slots.
 

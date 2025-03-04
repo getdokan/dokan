@@ -1,8 +1,15 @@
 import { Slot } from '@wordpress/components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Header = ( { title = '' } ) => {
+    const params = useParams();
     const navigate = useNavigate();
+
+    // @ts-ignore
+    title = wp.hooks.applyFilters(
+        'dokan-vendor-dashboard-header-title',
+        title
+    );
 
     return (
         <div className="@container/header flex flex-col gap-4">
@@ -26,7 +33,7 @@ const Header = ( { title = '' } ) => {
                 <div className="dokan-header-actions grid grid-cols-2 flex-wrap gap-2.5 md:justify-end">
                     <Slot
                         name="dokan-header-actions"
-                        fillProps={ { navigate } }
+                        fillProps={ { navigate, params } }
                     />
                 </div>
             </div>

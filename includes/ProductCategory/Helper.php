@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\ProductCategory;
 
+use WC_Product;
 use WeDevs\Dokan\ProductCategory\Categories;
 
 /**
@@ -34,7 +35,13 @@ class Helper {
     }
 
     /**
-     * Returns products category.
+     * Returns products category. If the category selection is single, it will return the first category of the product.
+     * If the category selection is multiple, it will return all the categories of the product.
+     * If the category selection is single and the product has multiple categories, it will return the first category.
+     * If you want to get the chosen category of a product as it is saved in the database and not considering the category selection setting,
+     * then use the function self::get_product_chosen_category
+     *
+     * @see self::get_product_chosen_category
      *
      * @since 3.6.2
      *
@@ -64,7 +71,7 @@ class Helper {
         }
 
         // get product terms
-        $terms = wp_get_post_terms( $post_id, 'product_cat', [ 'fields' => 'ids' ] );
+        $terms = self::get_product_terms( $post_id );
 
         $chosen_cat = self::generate_chosen_categories( $terms );
 
@@ -255,15 +262,44 @@ class Helper {
 
     /**
      * Returns the chosen category of a product.
+     * The purpose of this function is to get the chosen category of a product. It will return the category ids as saved
+     * in the database. it will not consider if the setting in dokan setting is single or multiple category selection.
+     * It will return the saved category ids as it is. And if the product is a variation product, it will find the parent
+     * product id and return the chosen category of the parent product.
+     *
+     * It is not recommended to use this function to get the chosen category of a product by the chosen category setting.
+     * Instead, use the function self::get_saved_products_category
+     *
+     * @see self::get_saved_products_category
      *
      * @since 3.7.0
      *
-     * @param int $product_id
+     * @param int $product
      *
      * @return array
      */
-    public static function get_product_chosen_category( $product_id ) {
-        return get_post_meta( $product_id, 'chosen_product_cat', true );
+    public static function get_product_chosen_category( $product ) {
+        if ( ! $product instanceof WC_Product ) {
+            $product = wc_get_product( $product );
+        }
+
+        if ( ! $product ) {
+            return [];
+        }
+
+        $product_id = ( 'variation' === $product->get_type() || 'subscription_variation' === $product->get_type() ) ? $product->get_parent_id() : $product->get_id();
+
+        $chosen_product_cat = get_post_meta( $product_id, 'chosen_product_cat', true );
+
+        if ( ! is_array( $chosen_product_cat ) ) {
+            return [];
+        }
+
+        return array_filter(
+            $chosen_product_cat, function ( $item ) {
+				return ! empty( $item );
+			}
+        );
     }
 
     /**
@@ -277,12 +313,31 @@ class Helper {
      */
     public static function generate_and_set_chosen_categories( $product_id, $chosen_categories = [] ) {
         if ( empty( $chosen_categories ) ) {
-            $terms             = wp_get_post_terms( $product_id, 'product_cat', [ 'fields' => 'ids' ] );
+            $terms             = self::get_product_terms( $product_id );
             $chosen_categories = self::generate_chosen_categories( $terms );
         }
 
         self::set_object_terms_from_chosen_categories( $product_id, $chosen_categories );
 
         return $chosen_categories;
+    }
+
+    /**
+     * @param int|WC_Product $product
+     *
+     * @return array|\WP_Error
+     */
+    public static function get_product_terms( $product ) {
+        if ( ! $product instanceof WC_Product ) {
+            $product = wc_get_product( $product );
+        }
+
+        if ( ! $product ) {
+            return [];
+        }
+
+        $product_id = ( 'variation' === $product->get_type() || 'subscription_variation' === $product->get_type() ) ? $product->get_parent_id() : $product->get_id();
+
+        return wp_get_post_terms( $product_id, 'product_cat', [ 'fields' => 'ids' ] );
     }
 }

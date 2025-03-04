@@ -39,7 +39,9 @@
         ?>
 
         <article class="dashboard-content-area">
-        <?php esc_html_e( 'Locading...', 'dokan-lite' ); ?>
+            <div id="dokan-vendor-dashboard-root" class="dokan-layout">
+                <?php esc_html_e( 'Locading...', 'dokan-lite' ); ?>
+            </div>
         </article><!-- .dashboard-content-area -->
 
         <?php

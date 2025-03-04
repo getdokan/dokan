@@ -26,11 +26,6 @@ class NewDashboard {
             'wp_enqueue_scripts',
             [ $this, 'enqueue_scripts' ]
         );
-
-        add_action(
-            'wp_footer',
-            [ $this, 'fix_headless_ui_portal' ]
-        );
     }
 
 	/**
@@ -80,36 +75,19 @@ class NewDashboard {
             return;
         }
 
-	    $wc_instance = WCAdminAssets::get_instance();
-	    $wc_instance->register_scripts();
+		    $wc_instance = WCAdminAssets::get_instance();
+        $wc_instance->register_scripts();
+
+        $dokan_frontend = [
+            'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+        ];
 
         wp_enqueue_script( 'dokan-react-frontend' );
         wp_enqueue_style( 'dokan-react-frontend' );
-    }
-
-    /**
-     * Fix headless UI portal.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function fix_headless_ui_portal() {
-        global $wp;
-
-        if ( ! dokan_is_seller_dashboard() || ! isset( $wp->query_vars['new'] ) ) {
-            return;
-        }
-
-        ?>
-        <script>
-            (function() {
-                const portal = document.getElementById( 'headlessui-portal-root' );
-                if ( portal ) {
-                    portal.classList.add( 'dokan-layout' );
-                }
-            })();
-        </script>
-        <?php
+        wp_localize_script(
+            'dokan-react-frontend',
+            'dokanFrontend',
+            apply_filters( 'dokan_react_frontend_localized_args', $dokan_frontend ),
+        );
     }
 }

@@ -4,6 +4,92 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.14.10',
+        'released' => '2025-02-28',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Prevented wrong store URL generation for staff managers on admin dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Restoring parent order with restore related child orders.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Store settings API data storing inconsistencies.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.9',
+        'released' => '2025-02-12',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Rollback support for product statues on dokan pro deactivation.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Improved dokan_is_user_seller function by adding strict comparison to differentiate between vendor and staff.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Fix earning suggestion in vendor dashboard when product edit page loads initially.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fix vendor earning suggestion currency, currency position, decimal separator in vendor dashboard product edit page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fix vendor earning suggestion for invalid product price.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Tax calculation for shipping based on tax status',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.8',
+        'released' => '2025-01-29',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Missing parameters support added for the reverse-withdrawal API endpoints.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Missing parameters support added for the Settings API endpoints.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Fixed an error when navigating to the product edit page with an invalid (non-numeric) product ID.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a misspelling typo vendor contact form input field.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed and updated analytics cache modifier for seller analytics filter.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.14.6',
         'released' => '2025-01-09',
         'changes'  => [

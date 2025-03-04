@@ -1,10 +1,10 @@
 import { DataViews } from '@wordpress/dataviews/wp';
 import { Slot } from "@wordpress/components";
-import { ViewportDimensions } from '@/Hooks/ViewportDimensions';
+import { ViewportDimensions } from '@dokan/hooks/ViewportDimensions';
 import type { Action, Field, SupportedLayouts, View } from "@wordpress/dataviews/src/types";
-import { kebabCase, snakeCase } from "@/utilities";
+import { kebabCase, snakeCase } from "@dokan/utilities";
 import { useEffect } from "@wordpress/element";
-import { useWindowDimensions } from "@/hooks";
+import { useWindowDimensions } from "@dokan/hooks";
 import './style.scss';
 
 type ItemWithId = { id: string };

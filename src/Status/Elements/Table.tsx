@@ -30,7 +30,7 @@ const Table = ( { element }: { element: StatusElement } ) => {
                     </thead>
                 ) }
                 <tbody className="divide-y divide-gray-200 bg-white">
-                    { element.children.map( ( child ) => {
+                    { ( element?.children || [] ).map( ( child ) => {
                         return (
                             <SettingsParser
                                 element={ child }

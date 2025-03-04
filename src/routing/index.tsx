@@ -3,6 +3,8 @@ import {__} from "@wordpress/i18n";
 import {DokanRoute} from "../Layout";
 import { isValidElement, cloneElement, createElement } from '@wordpress/element';
 import { useNavigate, useParams, useLocation, redirect, replace, useMatches, useNavigation, createSearchParams } from 'react-router-dom';
+import Withdraw from "../Dashboard/Withdraw";
+import WithdrawRequests from "../Dashboard/Withdraw/WithdrawRequests";
 
 export function withRouter(Component) {
     function ComponentWithRouterProp(props) {
@@ -52,6 +54,28 @@ const getRoutes = () => {
     //         order: 10,
     //     }
     // );
+
+    routes.push(
+        {
+            id: 'dokan-withdraw',
+            title: __( 'Withdraw', 'dokan-lite' ),
+            element: <Withdraw/>,
+            path: '/withdraw',
+            exact: true,
+            order: 10,
+        }
+    );
+
+    routes.push(
+        {
+            id: 'dokan-withdraw-requests',
+            title: __( 'Withdraw', 'dokan-lite' ),
+            element: <WithdrawRequests/>,
+            path: '/withdraw-requests',
+            exact: true,
+            order: 10,
+        }
+    );
 
     // @ts-ignore
     routes = wp.hooks.applyFilters('dokan-dashboard-routes', routes) as Array<DokanRoute>;
