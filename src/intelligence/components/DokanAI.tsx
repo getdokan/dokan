@@ -3,17 +3,23 @@ import { Modal, SimpleInput, TextArea } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
+import ResponseHistory from './ResponseHistory';
 
 const DokanAI = () => {
     const [ isOpen, setIsOpen ] = useState( false );
     const [ prompt, setPrompt ] = useState( '' );
     const [ error, setError ] = useState( '' );
     const [ regenerateModal, setRegenerateModal ] = useState( false );
+    const [ responseHistory, setResponseHistory ] = useState( {
+        post_title: [],
+        post_excerpt: [],
+        post_content: [],
+    } );
 
-    const [ response, setResponse ] = useState( {
-        post_title: '',
-        post_excerpt: '',
-        post_content: '',
+    const [ historyIndex, setHistoryIndex ] = useState( {
+        post_title: 0,
+        post_excerpt: 0,
+        post_content: 0,
     } );
 
     const [ isLoading, setIsLoading ] = useState( false );
@@ -26,14 +32,19 @@ const DokanAI = () => {
 
     const onClose = () => {
         setIsOpen( false );
-        setResponse( {
-            post_title: '',
-            post_excerpt: '',
-            post_content: '',
-        } );
         setPrompt( '' );
         setError( '' );
         setRegenerateModal( false );
+        setResponseHistory( {
+            post_title: [],
+            post_excerpt: [],
+            post_content: [],
+        } );
+        setHistoryIndex( {
+            post_title: 0,
+            post_excerpt: 0,
+            post_content: 0,
+        } );
     };
 
     const generateContent = async () => {
@@ -47,10 +58,15 @@ const DokanAI = () => {
             const content = await generateAiContent( prompt, {
                 json_format: 'true',
             } );
-            setResponse( {
-                post_title: content.title,
-                post_excerpt: content.short_description,
-                post_content: content.long_description,
+            setResponseHistory( {
+                post_title: [ content.title ],
+                post_excerpt: [ content.short_description ],
+                post_content: [ content.long_description ],
+            } );
+            setHistoryIndex( {
+                post_title: 0,
+                post_excerpt: 0,
+                post_content: 0,
             } );
         } catch ( err ) {
             setError( err.message );
@@ -61,7 +77,7 @@ const DokanAI = () => {
 
     const refineContent = async ( field: string ) => {
         setError( '' );
-        const refineField = response[ field ];
+        const refineField = responseHistory[ field ][ historyIndex[ field ] ];
         if ( ! refineField.trim() ) {
             setError( __( 'Please enter a prompt.', 'dokan' ) );
             return;
@@ -71,15 +87,74 @@ const DokanAI = () => {
             const content = await generateAiContent( refineField, {
                 field,
             } );
-            setResponse( {
-                ...response,
-                [ field ]: content,
-            } as any );
+            setResponseHistory( ( prevState ) => {
+                return {
+                    ...prevState,
+                    [ field ]: [ content, ...prevState[ field ] ],
+                };
+            } );
+            setHistoryIndex( ( prevState ) => {
+                return {
+                    ...prevState,
+                    [ field ]: 0,
+                };
+            } );
         } catch ( err ) {
             setError( err.message );
         } finally {
             setIsLoading( false );
         }
+    };
+
+    const inputHandler = ( value: any, field: string ) => {
+        setResponseHistory( ( prevState ) => {
+            return {
+                ...prevState,
+                [ field ]: responseHistory[ field ].map(
+                    ( item: string, index: number ) => {
+                        if ( index === historyIndex[ field ] ) {
+                            return value;
+                        }
+                        return item;
+                    }
+                ),
+            };
+        } );
+    };
+
+    const prevHandler = ( field: string ) => {
+        if ( historyIndex[ field ] === 0 ) {
+            return;
+        }
+        setHistoryIndex( ( prevState ) => {
+            return {
+                ...prevState,
+                [ field ]: prevState[ field ] - 1,
+            };
+        } );
+    };
+
+    const nextHandler = ( field: string ) => {
+        if ( historyIndex[ field ] < responseHistory[ field ].length - 1 ) {
+            setHistoryIndex( ( prevState ) => {
+                return {
+                    ...prevState,
+                    [ field ]: prevState[ field ] + 1,
+                };
+            } );
+        }
+    };
+
+    const getHistoryLabel = ( field: string ) => {
+        const totalHistory = responseHistory[ field ].length;
+        if ( totalHistory === 0 ) {
+            return '';
+        }
+        return `${ historyIndex[ field ] + 1 }/${ totalHistory }`;
+    };
+
+    const getInputValue = ( field: string ) => {
+        return responseHistory[ field ][ historyIndex[ field ] ];
     };
 
     const insertHandler = ( force = false ) => {
@@ -94,13 +169,23 @@ const DokanAI = () => {
             return;
         }
 
-        if ( ! response.post_title.trim() ) {
+        if ( ! responseHistory.post_title.length ) {
+            setError( __( 'Invalid input data', 'dokan' ) );
             return;
         }
 
-        updateWordPressField( response.post_title, 'post_title' );
-        updateWordPressField( response.post_excerpt, 'post_excerpt' );
-        updateWordPressField( response.post_content, 'post_content' );
+        updateWordPressField(
+            responseHistory.post_title[ historyIndex.post_title ],
+            'post_title'
+        );
+        updateWordPressField(
+            responseHistory.post_excerpt[ historyIndex.post_excerpt ],
+            'post_excerpt'
+        );
+        updateWordPressField(
+            responseHistory.post_content[ historyIndex.post_content ],
+            'post_content'
+        );
         onClose();
     };
 
@@ -134,26 +219,33 @@ const DokanAI = () => {
                 onClose={ onClose }
             >
                 <Modal.Title className="border border-b border-gray-200 border-solid">
-                    { __( 'Craft your product information', 'dokan' ) }
+                    { __( 'Craft your product information', 'dokan-lite' ) }
                 </Modal.Title>
 
                 <Modal.Content>
                     { error && <div className="text-red-600">{ error }</div> }
-                    { response.post_title ? (
+                    { responseHistory.post_title.length ? (
                         <div>
-                            <div className="font-semibold mb-2">
-                                { __( 'Product Title', 'dokan-lite' ) }
+                            <div className="mb-2 flex items-center justify-between">
+                                <p className="font-semibold m-0">
+                                    { __( 'Product Title', 'dokan-lite' ) }
+                                </p>
+                                <ResponseHistory
+                                    history={ getHistoryLabel( 'post_title' ) }
+                                    prev={ () => prevHandler( 'post_title' ) }
+                                    next={ () => nextHandler( 'post_title' ) }
+                                />
                             </div>
                             <div className="mb-2">
                                 <SimpleInput
                                     className="!bg-white !border !border-solid !border-gray-300"
                                     onChange={ ( e ) => {
-                                        setResponse( {
-                                            ...response,
-                                            post_title: e.target.value,
-                                        } );
+                                        inputHandler(
+                                            e.target.value,
+                                            'post_title'
+                                        );
                                     } }
-                                    value={ response.post_title }
+                                    value={ getInputValue( 'post_title' ) }
                                 />
                             </div>
                             <button
@@ -164,66 +256,104 @@ const DokanAI = () => {
                             >
                                 { __( 'Refine', 'dokan-lite' ) }
                             </button>
-                            <div className="font-semibold mt-4">
-                                { __( 'Short Description', 'dokan-lite' ) }
+                            { /* Short Description Section */ }
+                            <div className="mt-4">
+                                <div className="mt-4 flex items-center justify-between">
+                                    <p className="font-semibold m-0">
+                                        { __(
+                                            'Short Description',
+                                            'dokan-lite'
+                                        ) }
+                                    </p>
+                                    <ResponseHistory
+                                        history={ getHistoryLabel(
+                                            'post_excerpt'
+                                        ) }
+                                        prev={ () =>
+                                            prevHandler( 'post_excerpt' )
+                                        }
+                                        next={ () =>
+                                            nextHandler( 'post_excerpt' )
+                                        }
+                                    />
+                                </div>
+                                <div
+                                    className="mb-2 h-48 border border-solid border-gray-300 rounded p-2.5 overflow-auto"
+                                    contentEditable={ true }
+                                    onBlur={ ( e ) => {
+                                        inputHandler(
+                                            e.target.innerHTML,
+                                            'post_excerpt'
+                                        );
+                                    } }
+                                    dangerouslySetInnerHTML={ {
+                                        __html: getInputValue( 'post_excerpt' ),
+                                    } }
+                                ></div>
+                                <button
+                                    type="button"
+                                    onClick={ () =>
+                                        refineContent( 'post_excerpt' )
+                                    }
+                                    disabled={ isLoading }
+                                    className="dokan-btn dokan-btn-default !px-5"
+                                >
+                                    { __( 'Refine', 'dokan-lite' ) }
+                                </button>
                             </div>
-                            <div
-                                className="mb-2 h-48 border border-solid border-gray-300 rounded p-2.5 overflow-auto"
-                                contentEditable={ true }
-                                onBlur={ ( e ) => {
-                                    setResponse( {
-                                        ...response,
-                                        // @ts-ignore
-                                        post_excerpt: e.target.innerHTML,
-                                    } );
-                                } }
-                                dangerouslySetInnerHTML={ {
-                                    __html: response.post_excerpt,
-                                } }
-                            ></div>
-                            <button
-                                type="button"
-                                onClick={ () =>
-                                    refineContent( 'post_excerpt' )
-                                }
-                                disabled={ isLoading }
-                                className="dokan-btn dokan-btn-default !px-5"
-                            >
-                                { __( 'Refine', 'dokan-lite' ) }
-                            </button>
-                            <div className="font-semibold mt-4">
-                                { __( 'Long Description', 'dokan-lite' ) }
+                            { /* Long Description Section */ }
+                            <div className="mt-4">
+                                <div className="flex items-center justify-between">
+                                    <p className="font-semibold m-0">
+                                        { __(
+                                            'Long Description',
+                                            'dokan-lite'
+                                        ) }
+                                    </p>
+                                    <ResponseHistory
+                                        history={ getHistoryLabel(
+                                            'post_content'
+                                        ) }
+                                        prev={ () =>
+                                            prevHandler( 'post_content' )
+                                        }
+                                        next={ () =>
+                                            nextHandler( 'post_content' )
+                                        }
+                                    />
+                                </div>
+                                <div
+                                    className="mb-2 h-48 border border-solid border-gray-300 rounded p-2.5 overflow-auto"
+                                    contentEditable={ true }
+                                    onBlur={ ( e ) => {
+                                        inputHandler(
+                                            e.target.innerHTML,
+                                            'post_content'
+                                        );
+                                    } }
+                                    dangerouslySetInnerHTML={ {
+                                        __html: getInputValue( 'post_content' ),
+                                    } }
+                                ></div>
+                                <button
+                                    type="button"
+                                    onClick={ () =>
+                                        refineContent( 'post_content' )
+                                    }
+                                    disabled={ isLoading }
+                                    className="dokan-btn dokan-btn-default !px-5"
+                                >
+                                    { __( 'Refine', 'dokan-lite' ) }
+                                </button>
                             </div>
-                            <div
-                                className="mb-2 h-48 border border-solid border-gray-300 rounded p-2.5 overflow-auto"
-                                contentEditable={ true }
-                                onBlur={ ( e ) => {
-                                    setResponse( {
-                                        ...response,
-                                        // @ts-ignore
-                                        post_content: e.target.innerHTML,
-                                    } );
-                                } }
-                                dangerouslySetInnerHTML={ {
-                                    __html: response.post_content,
-                                } }
-                            ></div>
-                            <button
-                                type="button"
-                                onClick={ () =>
-                                    refineContent( 'post_content' )
-                                }
-                                disabled={ isLoading }
-                                className="dokan-btn dokan-btn-default !px-5"
-                            >
-                                { __( 'Refine', 'dokan-lite' ) }
-                            </button>
+
                             <p className="text-sm mt-4 mb-2">
                                 { __(
                                     '** If you think the outcome doesn’t match your choice then you can regenerate all again',
                                     'dokan-lite'
                                 ) }
                             </p>
+
                             <button
                                 className="dokan-btn dokan-btn-default !px-5"
                                 type="button"
@@ -274,7 +404,7 @@ const DokanAI = () => {
                         >
                             { __( 'Cancel', 'dokan-lite' ) }
                         </button>
-                        { response.post_title ? (
+                        { responseHistory.post_title.length ? (
                             <button
                                 className="dokan-btn dokan-btn-theme !px-5"
                                 disabled={ isLoading }
@@ -337,5 +467,4 @@ const DokanAI = () => {
         </>
     );
 };
-
 export default DokanAI;
