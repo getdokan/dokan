@@ -225,8 +225,7 @@ export const dbUtils = {
         return res;
     },
 
-    async addStoreBiographyAndMapLocation(sellerId: string) {
-        await dbUtils.updateUserMeta(sellerId, 'dokan_profile_settings', { vendor_biography: 'test biography' });
+    async addStoreMapLocation(sellerId: string) {
         await dbUtils.updateUserMeta(sellerId, 'dokan_profile_settings', { find_address: 'New York, NY, USA' });
         await dbUtils.setUserMeta(sellerId, 'dokan_geo_latitude', '40.7127753', false);
         await dbUtils.setUserMeta(sellerId, 'dokan_geo_longitude', '-74.0059728', false);

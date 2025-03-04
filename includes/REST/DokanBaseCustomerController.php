@@ -1,15 +1,17 @@
 <?php
 
-namespace WeDevs\Dokan\Abstracts;
+namespace WeDevs\Dokan\REST;
+
+use WeDevs\Dokan\REST\DokanBaseController;
 
 /**
  * Customer REST Controller for Dokan
  *
- * @since 3.14.4
+ * @since DOKAN_SINCE
  *
  * @package dokan
  */
-abstract class DokanRESTCustomerController extends DokanRESTBaseController {
+abstract class DokanBaseCustomerController extends DokanBaseController {
 
     /**
      * Endpoint base.
@@ -21,7 +23,7 @@ abstract class DokanRESTCustomerController extends DokanRESTBaseController {
     /**
      * Check if user has customer permission.
      *
-     * @since 3.14.4
+     * @since DOKAN_SINCE
      *
      * @return bool
      */

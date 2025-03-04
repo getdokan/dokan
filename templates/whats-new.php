@@ -4,6 +4,26 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.14.10',
+        'released' => '2025-02-28',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Prevented wrong store URL generation for staff managers on admin dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Restoring parent order with restore related child orders.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Store settings API data storing inconsistencies.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.14.9',
         'released' => '2025-02-12',
         'changes'  => [
