@@ -208,7 +208,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     do_action( 'dokan_edit_product_after_view_product_button', $product );
                     ?>
                 </h1>
-                <div id="ai-prompt-app">SVG</div>
+                <div id="ai-prompt-app"></div>
             </header><!-- .entry-header -->
 
             <div class="product-edit-new-container product-edit-container">
