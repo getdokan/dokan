@@ -5,7 +5,7 @@
  * An email sent to the vendor when a order is completed.
  *
  * @class       VendorCompletedOrder
- * @version     DOKAN_LITE_SINCE
+ * @version     3.2.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

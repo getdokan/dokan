@@ -13,23 +13,42 @@ use WeDevs\Dokan\Contracts\Hookable;
 class DataStoreCacheModifier implements Hookable {
 
     /**
+     * Setup analytics entities
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    protected function get_entities(): array {
+        return apply_filters(
+            'dokan_analytics_datastore_entities',
+            [
+                'orders',
+                'orders_stats',
+                'products_stats',
+                'coupons_stats',
+                'taxes_stats',
+                'variations_stats',
+                'products',
+                'revenue_stats',
+                'revenue',
+                'variations',
+            ]
+        );
+    }
+
+    /**
      * Register hooks for modify vendor specific analytics data.
      * This method will be called automatically to register the hooks.
+     *
+     * @since DOKAN_SINCE
      *
      * @return void
      */
     public function register_hooks(): void {
-        add_filter( 'woocommerce_analytics_orders_query_args', [ $this, 'add_query_param' ] );
-        add_filter( 'woocommerce_analytics_orders_stats_query_args', [ $this, 'add_query_param' ] );
-        add_filter( 'woocommerce_analytics_products_stats_query_args', [ $this, 'add_query_param' ] );
-        add_filter( 'woocommerce_analytics_coupons_stats_query_args', [ $this, 'add_query_param' ] );
-        add_filter( 'woocommerce_analytics_taxes_stats_query_args', [ $this, 'add_query_param' ] );
-        add_filter( 'woocommerce_analytics_variations_stats_query_args', [ $this, 'add_query_param' ] );
-
-        add_filter( 'woocommerce_analytics_products_query_args', [ $this, 'add_query_param' ] );
-        add_filter( 'woocommerce_analytics_revenue_stats_query_args', [ $this, 'add_query_param' ] );
-        add_filter( 'woocommerce_analytics_revenue_query_args', [ $this, 'add_query_param' ] );
-        add_filter( 'woocommerce_analytics_variations_query_args', [ $this, 'add_query_param' ] );
+        foreach ( $this->get_entities() as $entity ) {
+            add_filter( "woocommerce_analytics_{$entity}_query_args", [ $this, 'add_query_param' ] );
+        }
     }
 
     /**
@@ -40,7 +59,27 @@ class DataStoreCacheModifier implements Hookable {
      * @return array
      */
     public function add_query_param( array $params ): array {
-        $params['seller_id'] = dokan()->get_container()->get( QueryFilter::class )->get_vendor_id();
+        $seller_id = (int) dokan()->get_container()->get( QueryFilter::class )->get_vendor_id();
+
+        // If seller ID is not set, return the original params.
+        if ( ! $this->is_valid_seller_id( $seller_id ) ) {
+            return $params;
+        }
+
+        $params['seller_id'] = $seller_id;
         return $params;
+    }
+
+    /**
+     * Check if report can be filtered.
+     *
+     * @param int $seller_id Seller ID.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected function is_valid_seller_id( int $seller_id ): bool {
+        return $seller_id > 0;
     }
 }

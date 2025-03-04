@@ -1,5 +1,6 @@
 <?php
 
+use WeDevs\Dokan\Utilities\ReportUtil;
 use WeDevs\Dokan\Dashboard\Templates\Dashboard;
 
 /**
@@ -32,7 +33,7 @@ function dokan_get_dashboard_nav(): array {
         'dashboard' => [
             'title'      => __( 'Dashboard', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-tachometer-alt"></i>',
-            'url'        => dokan_get_navigation_url() . ( dokan_is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
+            'url'        => dokan_get_navigation_url() . ( ReportUtil::dokan_is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
             'pos'        => 10,
             'permission' => 'dokan_view_overview_menu',
         ],
@@ -214,7 +215,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
         /**
          * Filters a menu key according to slug if needed.
          *
-         * @since DOKAN_PRO_SINCE
+         * @since 3.10.0
          *
          * @param string $menu_key
          */

@@ -592,7 +592,7 @@ function dokan_get_translated_product_stock_status( $stock = false ) {
 /**
  * Get dokan store products filter catalog orderby
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.2.7
  *
  * @return array
  */
@@ -639,23 +639,4 @@ function dokan_store_product_catalog_orderby() {
     );
 
     return $orderby_options;
-}
-
-/**
- * Check if product listing should be rendered.
- *
- * @since DOKAN_SINCE
- *
- * @return bool
- */
-function dokan_should_skip_product_listing_render(): bool {
-
-    /**
-     * Filter to control product listing template rendering.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param bool $should_render Whether to render the product listing template.
-     */
-    return apply_filters( 'dokan_product_listing_template_render', false );
 }
