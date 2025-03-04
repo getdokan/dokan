@@ -38,7 +38,7 @@ if ( isset( $_GET['product_id'] ) ) {
             '',
             array(
                 'deleted' => false,
-                'message' => __( 'This product is no longer available', 'dokan-lite' )
+                'message' => __( 'This product is no longer available', 'dokan-lite' ),
             )
         );
         return;
