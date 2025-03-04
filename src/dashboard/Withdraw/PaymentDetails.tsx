@@ -64,7 +64,7 @@ function PaymentDetails( {
                                     { __( 'Last Payment', 'dokan' ) }
                                 </h4>
                                 { bodyData?.data?.last_withdraw?.id ? (
-                                    <p className="flex">
+                                    <div className="flex">
                                         <strong>
                                             <PriceHtml
                                                 price={
@@ -91,7 +91,7 @@ function PaymentDetails( {
                                             { bodyData?.data?.last_withdraw
                                                 ?.method_title ?? '' }
                                         </strong>
-                                    </p>
+                                    </div>
                                 ) : (
                                     <p className="text-gray-600">
                                         { __(

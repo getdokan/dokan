@@ -1,3 +1,9 @@
+### v3.14.10 ( Feb 28, 2025 ) ###
+
+- **fix:** Prevented wrong store URL generation for staff managers on admin dashboard.
+- **fix:** Restoring parent order with restore related child orders.
+- **fix:** Store settings API data storing inconsistencies.
+
 ### v3.14.9 ( Feb 12, 2025 ) ###
 
 - **fix:** Fix earning suggestion in vendor dashboard when product edit page loads initially.
