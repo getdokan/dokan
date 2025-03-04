@@ -6,10 +6,9 @@ import { updateWordPressField } from '../utils/dom';
 
 const DokanAI = () => {
     const [ isOpen, setIsOpen ] = useState( false );
-    const [ prompt, setPrompt ] = useState(
-        'Generate me all the product related details for iPhone 15 pro max'
-    );
+    const [ prompt, setPrompt ] = useState( '' );
     const [ error, setError ] = useState( '' );
+    const [ regenerateModal, setRegenerateModal ] = useState( false );
 
     const [ response, setResponse ] = useState( {
         post_title: '',
@@ -34,6 +33,7 @@ const DokanAI = () => {
         } );
         setPrompt( '' );
         setError( '' );
+        setRegenerateModal( false );
     };
 
     const generateContent = async () => {
@@ -82,7 +82,22 @@ const DokanAI = () => {
         }
     };
 
-    const insertHandler = () => {
+    const insertHandler = ( force = false ) => {
+        // get title from post_title field
+        const existingTitle = document.querySelector(
+            '#post_title'
+        ) as HTMLInputElement;
+
+        if ( existingTitle.value && ! force ) {
+            setIsOpen( false );
+            setRegenerateModal( true );
+            return;
+        }
+
+        if ( ! response.post_title.trim() ) {
+            return;
+        }
+
         updateWordPressField( response.post_title, 'post_title' );
         updateWordPressField( response.post_excerpt, 'post_excerpt' );
         updateWordPressField( response.post_content, 'post_content' );
@@ -263,7 +278,7 @@ const DokanAI = () => {
                             <button
                                 className="dokan-btn dokan-btn-theme !px-5"
                                 disabled={ isLoading }
-                                onClick={ insertHandler }
+                                onClick={ () => insertHandler() }
                             >
                                 { __( 'Insert', 'dokan-lite' ) }
                             </button>
@@ -280,6 +295,44 @@ const DokanAI = () => {
                         ) }
                     </div>
                 </Modal.Footer>
+            </Modal>
+            <Modal
+                className="max-w-md dokan-ai-modal"
+                isOpen={ regenerateModal }
+                onClose={ () => setRegenerateModal( false ) }
+            >
+                <Modal.Content>
+                    <div className="text-center p-10">
+                        <div className="text-xl font-semibold mb-4">
+                            { __(
+                                'Insert Generated Information?',
+                                'dokan-lite'
+                            ) }
+                        </div>
+                        <p>
+                            { __(
+                                'Are you sure you want to insert the generated information? If you insert then your current product information will be updated with the generated content.',
+                                'dokan-lite'
+                            ) }
+                        </p>
+                        <div className="mt-4 flex gap-4 justify-center">
+                            <button
+                                className="dokan-btn dokan-btn-theme !px-5"
+                                type="button"
+                                onClick={ () => setRegenerateModal( false ) }
+                            >
+                                { __( 'Cancel', 'dokan-lite' ) }
+                            </button>
+                            <button
+                                className="dokan-btn dokan-btn-default !px-5"
+                                type="button"
+                                onClick={ () => insertHandler( true ) }
+                            >
+                                { __( 'Yes, Insert', 'dokan-lite' ) }
+                            </button>
+                        </div>
+                    </div>
+                </Modal.Content>
             </Modal>
         </>
     );
