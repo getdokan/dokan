@@ -12,9 +12,9 @@ const DokanAI = () => {
     const [ error, setError ] = useState( '' );
 
     const [ response, setResponse ] = useState( {
-        title: '',
-        short_description: '',
-        long_description: '',
+        post_title: '',
+        post_excerpt: '',
+        post_content: '',
     } );
 
     const [ isLoading, setIsLoading ] = useState( false );
@@ -28,9 +28,9 @@ const DokanAI = () => {
     const onClose = () => {
         setIsOpen( false );
         setResponse( {
-            title: '',
-            short_description: '',
-            long_description: '',
+            post_title: '',
+            post_excerpt: '',
+            post_content: '',
         } );
         setPrompt( '' );
         setError( '' );
@@ -44,8 +44,37 @@ const DokanAI = () => {
         }
         setIsLoading( true );
         try {
-            const content = await generateAiContent( prompt );
-            setResponse( content as any );
+            const content = await generateAiContent( prompt, {
+                json_format: 'true',
+            } );
+            setResponse( {
+                post_title: content.title,
+                post_excerpt: content.short_description,
+                post_content: content.long_description,
+            } );
+        } catch ( err ) {
+            setError( err.message );
+        } finally {
+            setIsLoading( false );
+        }
+    };
+
+    const refineContent = async ( field: string ) => {
+        setError( '' );
+        const refineField = response[ field ];
+        if ( ! refineField.trim() ) {
+            setError( __( 'Please enter a prompt.', 'dokan' ) );
+            return;
+        }
+        setIsLoading( true );
+        try {
+            const content = await generateAiContent( refineField, {
+                field,
+            } );
+            setResponse( {
+                ...response,
+                [ field ]: content,
+            } as any );
         } catch ( err ) {
             setError( err.message );
         } finally {
@@ -54,9 +83,9 @@ const DokanAI = () => {
     };
 
     const insertHandler = () => {
-        updateWordPressField( response.title, 'post_title' );
-        updateWordPressField( response.short_description, 'post_excerpt' );
-        updateWordPressField( response.long_description, 'post_content' );
+        updateWordPressField( response.post_title, 'post_title' );
+        updateWordPressField( response.post_excerpt, 'post_excerpt' );
+        updateWordPressField( response.post_content, 'post_content' );
         onClose();
     };
 
@@ -95,7 +124,7 @@ const DokanAI = () => {
 
                 <Modal.Content>
                     { error && <div className="text-red-600">{ error }</div> }
-                    { response.title ? (
+                    { response.post_title ? (
                         <div>
                             <div className="font-semibold mb-2">
                                 { __( 'Product Title', 'dokan-lite' ) }
@@ -106,14 +135,16 @@ const DokanAI = () => {
                                     onChange={ ( e ) => {
                                         setResponse( {
                                             ...response,
-                                            title: e.target.value,
+                                            post_title: e.target.value,
                                         } );
                                     } }
-                                    value={ response.title }
+                                    value={ response.post_title }
                                 />
                             </div>
                             <button
                                 type="button"
+                                onClick={ () => refineContent( 'post_title' ) }
+                                disabled={ isLoading }
                                 className="dokan-btn dokan-btn-default !px-5"
                             >
                                 { __( 'Refine', 'dokan-lite' ) }
@@ -128,15 +159,19 @@ const DokanAI = () => {
                                     setResponse( {
                                         ...response,
                                         // @ts-ignore
-                                        short_description: e.target.innerHTML,
+                                        post_excerpt: e.target.innerHTML,
                                     } );
                                 } }
                                 dangerouslySetInnerHTML={ {
-                                    __html: response.short_description,
+                                    __html: response.post_excerpt,
                                 } }
                             ></div>
                             <button
                                 type="button"
+                                onClick={ () =>
+                                    refineContent( 'post_excerpt' )
+                                }
+                                disabled={ isLoading }
                                 className="dokan-btn dokan-btn-default !px-5"
                             >
                                 { __( 'Refine', 'dokan-lite' ) }
@@ -151,15 +186,19 @@ const DokanAI = () => {
                                     setResponse( {
                                         ...response,
                                         // @ts-ignore
-                                        long_description: e.target.innerHTML,
+                                        post_content: e.target.innerHTML,
                                     } );
                                 } }
                                 dangerouslySetInnerHTML={ {
-                                    __html: response.long_description,
+                                    __html: response.post_content,
                                 } }
                             ></div>
                             <button
                                 type="button"
+                                onClick={ () =>
+                                    refineContent( 'post_content' )
+                                }
+                                disabled={ isLoading }
                                 className="dokan-btn dokan-btn-default !px-5"
                             >
                                 { __( 'Refine', 'dokan-lite' ) }
@@ -194,6 +233,7 @@ const DokanAI = () => {
                                 ) }
                             </p>
                             <TextArea
+                                disabled={ isLoading }
                                 className="min-h-48 bg-white"
                                 input={ {
                                     id: 'dokan-ai-prompt',
@@ -219,7 +259,7 @@ const DokanAI = () => {
                         >
                             { __( 'Cancel', 'dokan-lite' ) }
                         </button>
-                        { response.title ? (
+                        { response.post_title ? (
                             <button
                                 className="dokan-btn dokan-btn-theme !px-5"
                                 disabled={ isLoading }

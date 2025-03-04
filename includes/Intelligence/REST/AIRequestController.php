@@ -66,13 +66,17 @@ class AIRequestController extends DokanRESTVendorController {
     }
 
     public function handle_request( $request ) {
-        $prompt  = $request->get_param( 'prompt' ) ?? '';
-        $args = $request->get_param( 'payload' ) ?? [];
-        $args['json_format'] = true;
+        $prompt  = $request->get_param( 'prompt' );
+        $args = wp_parse_args(
+            $request->get_param( 'payload' ), [
+				'field' => '',
+			]
+        );
 
         // Resolve the appropriate service based on the AI engine
 		try {
             $service = EngineFactory::create();
+            $prompt = PromptUtils::prepare_prompt( $args['field'], $prompt );
             // Process using the dynamically resolved service
             $response = $service->process( $prompt, $args );
 

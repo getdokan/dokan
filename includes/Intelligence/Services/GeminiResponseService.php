@@ -81,9 +81,16 @@ class GeminiResponseService extends BaseAIService {
             return $response;
         }
 
+        $response = $response['candidates'][0]['content']['parts'][0]['text'];
+
+        // if response type of string
+        if ( gettype( $response ) === 'string' ) {
+            $response = preg_replace( '/^"(.*)"$/', '$1', $response );
+        }
+
         return apply_filters(
             'dokan_ai_gemini_response_json', [
-				'response' => json_decode( $response['candidates'][0]['content']['parts'][0]['text'] ),
+				'response' => isset( $args['json_format'] ) ? json_decode( $response ) : $response,
 				'prompt' => $prompt,
 			]
         );

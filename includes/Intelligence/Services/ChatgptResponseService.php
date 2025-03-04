@@ -73,9 +73,16 @@ class ChatgptResponseService extends BaseAIService {
             return $response;
         }
 
+        $response = $response['choices'][0]['message']['content'];
+
+        // if response type of string
+        if ( gettype( $response ) === 'string' ) {
+            $response = preg_replace( '/^"(.*)"$/', '$1', $response );
+        }
+
         return apply_filters(
             'dokan_ai_chatgpt_response_json', [
-				'response' => json_decode( $response['choices'][0]['message']['content'] ),
+				'response' => isset( $args['json_format'] ) ? json_decode( $response ) : $response,
 				'prompt' => $prompt,
 			]
         );
