@@ -62,10 +62,6 @@ class Menu {
             }
 
             if ( ! dokan()->is_pro_exists() ) {
-                $submenu[ $slug ][] = [ __( 'Modules', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/pro-modules' ];
-            }
-
-            if ( ! dokan()->is_pro_exists() ) {
                 $submenu[ $slug ][] = [ __( 'PRO Features', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/premium' ];
             }
         }

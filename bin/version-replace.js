@@ -3,7 +3,6 @@ const replace = require( 'replace-in-file' );
 
 const pluginFiles = [
     'assets/src/**/*',
-    'deprecated/**/*',
     'includes/**/*',
     'templates/**/*',
     'src/**/*',

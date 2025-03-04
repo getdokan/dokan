@@ -10,7 +10,6 @@ const pluginFiles = [
     'languages/',
     'templates/',
     'lib/',
-    'deprecated/',
     'vendor/',
     'CHANGELOG.md',
     'readme.txt',
