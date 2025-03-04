@@ -36,10 +36,12 @@ body:has(.dokan-ai-modal) .bg-opacity-75 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
     margin-bottom: 25px !important;
 }
 .dokan-dashboard header.dokan-ai-prompt h1 {
     margin: 0 !important;
     padding: 0 !important;
     border-bottom: none !important;
+    width: 100%;
 }
