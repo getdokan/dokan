@@ -282,8 +282,6 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function includes() {
-        require_once DOKAN_DIR . '/deprecated/deprecated-functions.php';
-        require_once DOKAN_DIR . '/deprecated/deprecated-hooks.php';
         require_once DOKAN_INC_DIR . '/functions.php';
 
         if ( ! function_exists( 'dokan_pro' ) ) {
@@ -297,7 +295,6 @@ final class WeDevs_Dokan {
         require_once DOKAN_INC_DIR . '/wc-functions.php';
 
         require_once DOKAN_INC_DIR . '/wc-template.php';
-        require_once DOKAN_DIR . '/deprecated/deprecated-classes.php';
 
         if ( is_admin() ) {
             require_once DOKAN_INC_DIR . '/Admin/functions.php';
