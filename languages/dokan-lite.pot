@@ -1,14 +1,14 @@
 # Copyright (c) 2025 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.14.9\n"
+"Project-Id-Version: Dokan 3.14.10\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-11T05:20:49+00:00\n"
+"POT-Creation-Date: 2025-02-28T09:11:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -1085,7 +1085,7 @@ msgid "Email Address"
 msgstr ""
 
 #: includes/Admin/Settings.php:915
-#: includes/Admin/UserProfile.php:208
+#: includes/Admin/UserProfile.php:216
 #: templates/account/update-customer-to-vendor.php:48
 #: templates/account/vendor-registration.php:45
 #: templates/global/seller-registration-form.php:54
@@ -1225,7 +1225,7 @@ msgid "Store"
 msgstr ""
 
 #: includes/Admin/SetupWizard.php:197
-#: includes/Admin/UserProfile.php:298
+#: includes/Admin/UserProfile.php:306
 msgid "Selling"
 msgstr ""
 
@@ -1463,7 +1463,7 @@ msgstr ""
 msgid "Not Available"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:84
+#: includes/Admin/UserProfile.php:90
 #: includes/Privacy.php:226
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:218
 #: includes/Vendor/SetupWizard.php:277
@@ -1473,98 +1473,98 @@ msgstr ""
 msgid "Country"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:88
+#: includes/Admin/UserProfile.php:94
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:222
 msgid "Select a country&hellip;"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:91
+#: includes/Admin/UserProfile.php:97
 msgid "State/County"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:92
+#: includes/Admin/UserProfile.php:98
 msgid "State/County or state code"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:97
+#: includes/Admin/UserProfile.php:103
 msgid "Dokan Options"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:102
+#: includes/Admin/UserProfile.php:108
 msgid "Banner"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:114
+#: includes/Admin/UserProfile.php:120
 #: templates/settings/store-form.php:72
 msgid "Upload banner"
 msgstr ""
 
 #. translators: %1$s: banner width, %2$s: banner height in integers
 #. translators: 1) store banner width 2) store banner height
-#: includes/Admin/UserProfile.php:119
+#: includes/Admin/UserProfile.php:125
 #: templates/settings/store-form.php:86
 msgid "Upload a banner for your store. Banner size is (%1$sx%2$s) pixels."
 msgstr ""
 
-#: includes/Admin/UserProfile.php:131
+#: includes/Admin/UserProfile.php:137
 #: includes/REST/ReverseWithdrawalController.php:681
 msgid "Store name"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:138
+#: includes/Admin/UserProfile.php:144
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Store URL"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:146
+#: includes/Admin/UserProfile.php:154
 #: includes/Privacy.php:222
 msgid "Address 1"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:153
+#: includes/Admin/UserProfile.php:161
 #: includes/Privacy.php:223
 msgid "Address 2"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:160
+#: includes/Admin/UserProfile.php:168
 msgid "Town/City"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:167
+#: includes/Admin/UserProfile.php:175
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:210
 msgid "Zip Code"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:233
+#: includes/Admin/UserProfile.php:241
 msgid "Payment Options : "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:238
+#: includes/Admin/UserProfile.php:246
 msgid "Paypal Email "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:246
+#: includes/Admin/UserProfile.php:254
 msgid "Skrill Email "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:255
+#: includes/Admin/UserProfile.php:263
 msgid "Bank name "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:261
+#: includes/Admin/UserProfile.php:269
 msgid "Account Name "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:267
+#: includes/Admin/UserProfile.php:275
 msgid "Account Number "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:273
+#: includes/Admin/UserProfile.php:281
 msgid "Bank Address "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:279
+#: includes/Admin/UserProfile.php:287
 #: includes/Privacy.php:278
 #: includes/Vendor/SettingsApi/Settings/Pages/Payments/Gateways/Bank.php:83
 #: includes/Withdraw/functions.php:297
@@ -1574,43 +1574,43 @@ msgstr ""
 msgid "Routing Number"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:285
+#: includes/Admin/UserProfile.php:293
 msgid "Bank IBAN "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:291
+#: includes/Admin/UserProfile.php:299
 msgid "Bank Swift "
 msgstr ""
 
-#: includes/Admin/UserProfile.php:303
+#: includes/Admin/UserProfile.php:311
 msgid "Enable Adding Products"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:306
+#: includes/Admin/UserProfile.php:314
 msgid "Enable or disable product adding capability"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:311
+#: includes/Admin/UserProfile.php:319
 msgid "Publishing"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:316
+#: includes/Admin/UserProfile.php:324
 msgid "Publish product directly"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:319
+#: includes/Admin/UserProfile.php:327
 msgid "Bypass pending, publish products directly"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:324
+#: includes/Admin/UserProfile.php:332
 msgid "Featured vendor"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:329
+#: includes/Admin/UserProfile.php:337
 msgid "Mark as featured vendor"
 msgstr ""
 
-#: includes/Admin/UserProfile.php:332
+#: includes/Admin/UserProfile.php:340
 msgid "This vendor will be marked as a featured vendor."
 msgstr ""
 
@@ -1815,7 +1815,7 @@ msgid "reCAPTCHA verification failed!"
 msgstr ""
 
 #: includes/Ajax.php:359
-#: includes/REST/StoreController.php:838
+#: includes/REST/StoreController.php:839
 msgid "Email sent successfully!"
 msgstr ""
 
@@ -3950,19 +3950,19 @@ msgstr ""
 msgid "(no name)"
 msgstr ""
 
-#: includes/Order/Admin/Hooks.php:532
+#: includes/Order/Admin/Hooks.php:536
 msgid "Toggle Sub-orders"
 msgstr ""
 
-#: includes/Order/Admin/Hooks.php:558
+#: includes/Order/Admin/Hooks.php:562
 msgid "Commissions"
 msgstr ""
 
-#: includes/Order/Admin/Hooks.php:568
+#: includes/Order/Admin/Hooks.php:572
 msgid "Sub orders"
 msgstr ""
 
-#: includes/Order/Admin/Hooks.php:568
+#: includes/Order/Admin/Hooks.php:572
 msgid "Related orders"
 msgstr ""
 
@@ -5422,11 +5422,11 @@ msgstr ""
 #: includes/REST/ProductController.php:91
 #: includes/REST/ProductController.php:136
 #: includes/REST/StoreController.php:63
-#: includes/REST/StoreController.php:98
-#: includes/REST/StoreController.php:115
-#: includes/REST/StoreController.php:142
-#: includes/REST/StoreController.php:176
-#: includes/REST/StoreController.php:208
+#: includes/REST/StoreController.php:99
+#: includes/REST/StoreController.php:116
+#: includes/REST/StoreController.php:143
+#: includes/REST/StoreController.php:177
+#: includes/REST/StoreController.php:209
 #: includes/REST/WithdrawController.php:90
 #: includes/REST/WithdrawController.php:947
 msgid "Unique identifier for the object."
@@ -6215,73 +6215,161 @@ msgstr ""
 msgid "Reassign the deleted user's posts and links to this user ID."
 msgstr ""
 
-#: includes/REST/StoreController.php:152
+#: includes/REST/StoreController.php:153
 #: templates/widgets/store-contact-form.php:15
 #: assets/js/vue-admin.js:2
 msgid "Your Name"
 msgstr ""
 
-#: includes/REST/StoreController.php:158
+#: includes/REST/StoreController.php:159
 msgid "Your email"
 msgstr ""
 
-#: includes/REST/StoreController.php:163
+#: includes/REST/StoreController.php:164
 msgid "Your Message"
 msgstr ""
 
-#: includes/REST/StoreController.php:181
+#: includes/REST/StoreController.php:182
 msgid "Status for the store object."
 msgstr ""
 
-#: includes/REST/StoreController.php:212
+#: includes/REST/StoreController.php:213
 msgid "Get Best Selling Products Category."
 msgstr ""
 
-#: includes/REST/StoreController.php:339
+#: includes/REST/StoreController.php:340
 msgid "Invalid user ID for reassignment."
 msgstr ""
 
-#: includes/REST/StoreController.php:538
-#: includes/REST/StoreController.php:941
+#: includes/REST/StoreController.php:539
+#: includes/REST/StoreController.php:942
 msgid "No store found"
 msgstr ""
 
-#: includes/REST/StoreController.php:556
-#: includes/REST/StoreController.php:575
+#: includes/REST/StoreController.php:557
+#: includes/REST/StoreController.php:576
 msgid "No reviews found"
 msgstr ""
 
-#: includes/REST/StoreController.php:767
+#: includes/REST/StoreController.php:768
 msgid "This email address is not valid"
 msgstr ""
 
-#: includes/REST/StoreController.php:810
+#: includes/REST/StoreController.php:811
 msgid "No vendor is found to be send an email."
 msgstr ""
 
-#: includes/REST/StoreController.php:857
+#: includes/REST/StoreController.php:858
 msgid "Status parameter must be active or inactive"
 msgstr ""
 
-#: includes/REST/StoreController.php:863
+#: includes/REST/StoreController.php:864
 msgid "No vendor found for updating status"
 msgstr ""
 
-#: includes/REST/StoreController.php:891
+#: includes/REST/StoreController.php:892
 msgid "No items found for bulk updating"
 msgstr ""
 
-#: includes/REST/StoreController.php:975
+#: includes/REST/StoreController.php:976
 msgid "Status of the store"
 msgstr ""
 
-#: includes/REST/StoreController.php:982
+#: includes/REST/StoreController.php:983
 msgid "Store List Order By"
 msgstr ""
 
-#: includes/REST/StoreController.php:988
-#: includes/REST/StoreController.php:994
+#: includes/REST/StoreController.php:989
+#: includes/REST/StoreController.php:995
 msgid "Store List Order"
+msgstr ""
+
+#: includes/REST/StoreController.php:1015
+msgid "Unique identifier for the vendor."
+msgstr ""
+
+#: includes/REST/StoreController.php:1021
+msgid "Store owner first name."
+msgstr ""
+
+#: includes/REST/StoreController.php:1026
+msgid "Store owner last name."
+msgstr ""
+
+#: includes/REST/StoreController.php:1031
+msgid "User nice name."
+msgstr ""
+
+#: includes/REST/StoreController.php:1036
+msgid "User password."
+msgstr ""
+
+#: includes/REST/StoreController.php:1040
+msgid "Store email address."
+msgstr ""
+
+#: includes/REST/StoreController.php:1046
+msgid "Store name."
+msgstr ""
+
+#: includes/REST/StoreController.php:1051
+msgid "Store phone number."
+msgstr ""
+
+#: includes/REST/StoreController.php:1056
+msgid "Show email in store."
+msgstr ""
+
+#: includes/REST/StoreController.php:1061
+msgid "Gravatar ID."
+msgstr ""
+
+#: includes/REST/StoreController.php:1065
+msgid "Banner ID."
+msgstr ""
+
+#: includes/REST/StoreController.php:1069
+msgid "Enable terms and conditions."
+msgstr ""
+
+#: includes/REST/StoreController.php:1073
+msgid "Store terms and conditions."
+msgstr ""
+
+#: includes/REST/StoreController.php:1077
+msgid "Store icon."
+msgstr ""
+
+#: includes/REST/StoreController.php:1081
+msgid "Social profiles."
+msgstr ""
+
+#: includes/REST/StoreController.php:1093
+msgid "Store address."
+msgstr ""
+
+#: includes/REST/StoreController.php:1106
+msgid "Enable selling."
+msgstr ""
+
+#: includes/REST/StoreController.php:1110
+msgid "Featured vendor."
+msgstr ""
+
+#: includes/REST/StoreController.php:1114
+msgid "Trusted vendor."
+msgstr ""
+
+#: includes/REST/StoreController.php:1118
+msgid "Admin commission amount."
+msgstr ""
+
+#: includes/REST/StoreController.php:1122
+msgid "Admin additional fee."
+msgstr ""
+
+#: includes/REST/StoreController.php:1126
+msgid "Category wise commission."
 msgstr ""
 
 #: includes/REST/StoreSettingController.php:110

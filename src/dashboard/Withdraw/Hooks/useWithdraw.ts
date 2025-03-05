@@ -39,7 +39,6 @@ export const useWithdraw = (): UseWithdrawReturn => {
                         ? err
                         : new Error( 'Failed to create withdraw' )
                 );
-                console.error( 'Error creating withdraw:', err );
                 throw err;
             } finally {
                 setIsLoading( false );
@@ -68,7 +67,6 @@ export const useWithdraw = (): UseWithdrawReturn => {
                         ? err
                         : new Error( 'Failed to update withdraw' )
                 );
-                console.error( 'Error updating withdraw:', err );
                 throw err;
             } finally {
                 setIsLoading( false );

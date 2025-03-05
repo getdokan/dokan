@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\REST;
 
 use WeDevs\Dokan\Vendor\Vendor;
-use Dokan_REST_Product_Controller;
 use WP_Error;
 use WP_Query;
 use WP_REST_Controller;
@@ -511,7 +510,7 @@ class StoreController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_store_products( $request ) {
-        $product_controller = new Dokan_REST_Product_Controller();
+        $product_controller = new ProductController();
 
         $request->set_param( 'status', [ 'publish' ] );
         $request->set_param( 'author', $request['id'] );
@@ -1005,7 +1004,7 @@ class StoreController extends WP_REST_Controller {
     /**
      * Updated query params for the store.
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.10
      *
      * @return array Query parameters for the store update.
      */

@@ -8,10 +8,12 @@ import { twMerge } from 'tailwind-merge';
 import RequestWithdrawBtn from './RequestWithdrawBtn';
 import { useWithdrawSettings } from './Hooks/useWithdrawSettings';
 import { useCurrentUser } from "@dokan/hooks";
+import { useBalance } from "./Hooks/useBalance";
 
 function WithdrawRequests() {
     const useWithdrawRequestHook = useWithdrawRequests( true );
     const withdrawSettings = useWithdrawSettings();
+    const balance = useBalance();
     const currentUser = useCurrentUser();
 
     const navigate = useNavigate();
@@ -95,6 +97,7 @@ function WithdrawRequests() {
                         <RequestWithdrawBtn
                             settings={ withdrawSettings }
                             withdrawRequests={ useWithdrawRequestHook }
+                            balanceData={ balance }
                         />
                         <Button
                             color="gray"
