@@ -2,10 +2,25 @@ const path = require( 'path' );
 const { VueLoaderPlugin } = require( 'vue-loader' );
 const entryPoints = require( './webpack-entries' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
-const isProduction = process.env.NODE_ENV === 'production';
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
-const { requestToExternal, requestToHandle } = require( './webpack-dependency-mapping' );
+const isProduction = process.env.NODE_ENV === 'production';
 const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
+
+const requestToExternal = ( request ) => {
+    const match = request.match( /^@dokan\/stores\/(.+)$/ );
+    if ( match ) {
+        return [ 'dokan', match[ 1 ] + '-store' ];
+    }
+    // Add more custom mappings as needed
+};
+
+const requestToHandle = ( request ) => {
+    const match = request.match( /^@dokan\/stores\/(.+)$/ );
+    if ( match ) {
+        return `dokan-stores-${ match[ 1 ] }`;
+    }
+    // Add more custom mappings as needed
+};
 
 const updatedConfig = {
     mode: defaultConfig.mode,
@@ -20,7 +35,6 @@ const updatedConfig = {
         hooks: {
             import: '@dokan/hooks/index.tsx',
         },
-        'dokan-status': '/src/Status/index.tsx',
     },
     output: {
         path: path.resolve( __dirname, './assets/js' ),
@@ -35,23 +49,11 @@ const updatedConfig = {
 
     resolve: {
         ...defaultConfig.resolve,
-        fallback: {
-            // Reduce bundle size by omitting Node crypto library.
-            // See https://github.com/woocommerce/woocommerce-admin/pull/5768
-            crypto: 'empty',
-            // Ignore fs, path to skip resolve errors for @automattic/calypso-config
-            fs: false,
-            path: false,
-        },
-        extensions: [ '.json', '.js', '.jsx', '.ts', '.tsx' ],
         alias: {
             vue$: 'vue/dist/vue.esm.js',
             '@dokan': path.resolve( './src/' ),
             frontend: path.resolve( './src/frontend/' ),
             admin: path.resolve( './src/admin/' ),
-            reports: path.resolve(
-                __dirname + '/src/vendor-dashboard/reports'
-            ),
         },
     },
 
@@ -59,16 +61,6 @@ const updatedConfig = {
         jquery: 'jQuery',
         'chart.js': 'Chart',
         moment: 'moment',
-        '@woocommerce/blocks-registry': [ 'wc', 'wcBlocksRegistry' ],
-        '@woocommerce/settings': [ 'wc', 'wcSettings' ],
-        '@woocommerce/block-data': [ 'wc', 'wcBlocksData' ],
-        '@woocommerce/shared-context': [ 'wc', 'wcSharedContext' ],
-        '@woocommerce/shared-hocs': [ 'wc', 'wcSharedHocs' ],
-        '@woocommerce/price-format': [ 'wc', 'priceFormat' ],
-        '@woocommerce/blocks-checkout': [ 'wc', 'blocksCheckout' ],
-        '@dokan/components': [ 'dokan', 'components' ],
-        '@dokan/utilities': [ 'dokan', 'utilities' ],
-        '@dokan/hooks': [ 'dokan', 'hooks' ],
     },
 
     plugins: [
@@ -94,7 +86,6 @@ const updatedConfig = {
     ],
 
     module: {
-        ...defaultConfig.module,
         rules: [
             ...defaultConfig.module.rules,
             {

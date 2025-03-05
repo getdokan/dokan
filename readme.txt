@@ -3,11 +3,11 @@ Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
 Requires at least: 6.5
-Tested up to: 6.7.1
+Tested up to: 6.7.2
 WC requires at least: 8.5.0
-WC tested up to: 9.6.1
+WC tested up to: 9.7.0
 Requires PHP: 7.4
-Stable tag: 3.14.9
+Stable tag: 3.14.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -344,6 +344,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v3.14.10 ( Feb 28, 2025 ) =
+
+- **fix:** Prevented wrong store URL generation for staff managers on admin dashboard.
+- **fix:** Restoring parent order with restore related child orders.
+- **fix:** Store settings API data storing inconsistencies.
+
 = v3.14.9 ( Feb 12, 2025 ) =
 
 - **fix:** Fix earning suggestion in vendor dashboard when product edit page loads initially.
@@ -370,10 +376,6 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **update:** Improvement vendor setup wizard ui.
 - **update:** Improvement withdraw approved email template.
 - **update:** Dokan admin settings page responsive & update ui design.
-
-= v3.14.4 ( Dec 27, 2024 ) =
-
-- **fix:** Added tweaks to improve system stability and smoothness.
 
 [CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
 

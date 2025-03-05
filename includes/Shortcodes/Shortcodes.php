@@ -17,7 +17,7 @@ class Shortcodes {
      *  Register Dokan shortcodes
      *
      * @since 3.0.0
-     * @since DOKAN_SINCE Added dokan-customer-migration shortcode.
+     * @since 3.14.10 Added dokan-customer-migration shortcode.
      *
      * @return void
      */

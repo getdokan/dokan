@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\Admin\Dashboard\Dashboard;
+use WeDevs\Dokan\Admin\Dashboard\Pages\Modules;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Status;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
@@ -14,6 +15,7 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
 
 	protected $services = [
         Dashboard::class,
+        Modules::class,
         Status::class,
 	];
 
