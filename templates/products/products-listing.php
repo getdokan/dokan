@@ -1,12 +1,5 @@
 <?php
-/**
- * Product Listing Template.
- *
- * @var array $bulk_statuses
- * @var bool  $should_render
- */
-
-global $post;
+    global $post;
 ?>
 
 <?php do_action( 'dokan_dashboard_wrap_start' ); ?>
@@ -38,11 +31,6 @@ global $post;
              */
             do_action( 'dokan_dashboard_content_inside_before' );
             do_action( 'dokan_before_listing_product' );
-
-            // Check if the product listing should be rendered.
-            if ( $should_render ) {
-                return;
-            }
             ?>
 
                 <article class="dokan-product-listing-area">

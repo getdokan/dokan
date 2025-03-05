@@ -32,4 +32,27 @@ class ReportUtil {
          */
         return apply_filters( 'dokan_is_analytics_enabled', ( $is_seller_enabled && $is_analytics_enabled ) );
     }
+
+    /**
+     * Check if product listing is belongs to Report menu
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function is_report_products_url(): bool {
+
+        $path = isset( $_GET['path'] ) ? sanitize_text_field( wp_unslash( $_GET['path'] ) ) : ''; // phpcs:ignore
+
+        $should_render = $path === '/analytics/products';
+
+        /**
+         * Filter to control product listing template rendering.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool $should_render Whether to render the product listing template.
+         */
+        return apply_filters( 'dokan_is_report_products_url', $should_render );
+    }
 }

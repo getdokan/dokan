@@ -9,7 +9,6 @@ class VendorDashboardManager implements Hookable {
 	public function register_hooks(): void {
 		add_filter( 'woocommerce_rest_check_permissions', [ $this, 'woocommerce_rest_check_permissions' ], 20, 4 );
 
-		add_filter( 'dokan_product_listing_template_render', [ $this, 'control_product_listing_render' ] );
 		add_action( 'dokan_dashboard_content_inside_before', [ $this, 'add_dashboard_content' ] );
 
 		add_filter( 'woocommerce_rest_product_object_query', [ $this, 'product_query_args' ], 10, 2 );
@@ -19,21 +18,6 @@ class VendorDashboardManager implements Hookable {
 
 		add_filter( 'woocommerce_rest_report_sort_performance_indicators', [ $this, 'sort_performance_indicators' ] );
 	}
-
-    /**
-     * Determine whether to hide the product listing on the analytics report page.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param bool $render Whether to render the product listing.
-     *
-     * @return bool True to hide product listing on analytics report page, original $render otherwise.
-     */
-    public function control_product_listing_render( bool $render ): bool {
-        $path = isset( $_GET['path'] ) ? sanitize_text_field( wp_unslash( $_GET['path'] ) ) : ''; // phpcs:ignore
-
-        return $path !== '/analytics/products' ? $render : true;
-    }
 
 	/**
      * Add a dummy content to the dashboard.
