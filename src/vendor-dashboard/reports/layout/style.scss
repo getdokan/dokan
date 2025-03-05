@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "./../stylesheets/abstracts/index";
 @import "./../stylesheets/custom";
 
@@ -276,3 +278,224 @@
 }
 
 /******** Custom Styles *********/
+.dokan-dashboard-content {
+    .woocommerce-summary__item-container {
+        .woocommerce-summary__item {
+            &:focus {
+                outline: none;
+                box-shadow: none;
+            }
+        }
+    }
+
+    .woocommerce-layout__header {
+        top: 0;
+    }
+
+    .woocommerce-filters__basic-filters {
+        .woocommerce-filters-filter {
+            min-width: 30%;
+
+            .components-dropdown,
+            button.components-button.woocommerce-dropdown-button {
+                height: 100%;
+            }
+
+            .woocommerce-calendar {
+                .CalendarMonthGrid_month__horizontal {
+                    width: 290px;
+                }
+            }
+        }
+
+        .components-popover {
+            z-index: 1001;
+
+            .woocommerce-segmented-selection {
+                margin: 0;
+            }
+
+            .woocommerce-segmented-selection__item {
+                label {
+                    margin: 0;
+                }
+            }
+        }
+    }
+
+    .woocommerce-dashboard__chart-block-wrapper {
+        .components-surface {
+            &.components-card {
+                box-shadow: inset rgba(0, 0, 0, 0.1) 0 0 0 1px;
+            }
+        }
+    }
+
+    .woocommerce-dashboard__dashboard-leaderboards {
+        .woocommerce-table__table {
+            table {
+                td {
+                    background: transparent;
+                }
+            }
+        }
+    }
+
+    .woocommerce-dashboard-section {
+        .woocommerce-section-header {
+            padding: 13px 0;
+        }
+
+        .woocommerce-dashboard__dashboard-charts {
+            .woocommerce-chart {
+                margin: 0;
+            }
+
+            hr[role="presentation"] {
+                width: 60%;
+            }
+
+            .components-input-control__backdrop {
+                border: none;
+            }
+        }
+
+        // @see: /woocommerce/assets/client/admin/chunks/9966.style.css
+        .woocommerce-dashboard__columns {
+            display: grid;
+            grid-template-columns: calc(50% - 12px) calc(50% - 12px);
+            grid-column-gap: 24px;
+
+            > div {
+                @for $i from 1 through 14 {
+                    &:nth-child(#{$i}) {
+                        @if $i % 2 == 0 {
+                            grid-column: 2 / 3;
+                        } @else {
+                            grid-column: 1 / 2;
+                        }
+
+                        // Using math.div() for proper division
+                        $row-start: math.div($i + 1, 2);
+                        grid-row: #{$row-start} / #{$row-start + 1};
+
+                        @media (max-width: 960px) {
+                            grid-column: 1 / 2;
+                            grid-row: #{$i} / #{$i + 1};
+                        }
+                    }
+                }
+            }
+
+            .components-card {
+                .woocommerce-ellipsis-menu__toggle {
+                    padding: 0;
+                }
+            }
+
+            @media (max-width: 960px) {
+                grid-template-columns: 100%;
+            }
+        }
+    }
+
+    .components-card__body {
+        table {
+            margin: 0;
+        }
+    }
+
+    .woocommerce-layout {
+        padding: 0 1px 1px 0;
+
+        a {
+            &:focus {
+                outline: none;
+            }
+        }
+
+        .woocommerce-chart {
+            .woocommerce-chart__header {
+                h2 {
+                    margin-bottom: 0;
+                }
+
+                .components-input-control__backdrop {
+                    border: none;
+                }
+            }
+        }
+
+        .woocommerce-table__table {
+            table {
+                tr {
+                    .woocommerce-table__item.is-checkbox-column {
+                        background: transparent;
+                    }
+
+                    .woocommerce-table__item {
+                        vertical-align: middle;
+                    }
+
+                    th[role='columnheader'] {
+                        vertical-align: middle;
+                    }
+
+                    &:nth-child(2n) {
+                        td {
+                            &.woocommerce-table__item {
+                                background-color: transparent;
+
+                                &.is-sorted {
+                                    background-color: #f0f0f0;
+                                }
+                            }
+                        }
+                    }
+
+                    &:hover {
+                        &:nth-child(2n) {
+                            td {
+                                &.woocommerce-table__item {
+                                    &.is-sorted {
+                                        background-color: transparent;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .woocommerce-table__summary {
+            .woocommerce-table__summary-item {
+                margin: 0 8px;
+            }
+        }
+
+        .dokan-analytics-vendor-earning-section {
+            width: 100%;
+            text-align: right;
+
+            .vendor-earning-title {
+                gap: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+
+                .vendor-earning {
+                    color: #f05025;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+}
+
+.components-popover__content {
+    .woocommerce-ellipsis-menu__item {
+        display: flex;
+        align-items: center;
+    }
+}

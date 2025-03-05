@@ -4,17 +4,19 @@ namespace WeDevs\Dokan\Analytics;
 
 use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Contracts\Hookable;
+use WeDevs\Dokan\Utilities\ReportUtil;
 
 class Assets implements Hookable {
 	public function register_hooks(): void {
+        if ( ! ReportUtil::is_analytics_enabled() ) {
+            return;
+        }
+
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_all_scripts' ], 8 );
 
-		if ( ! is_admin() ) {
-			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
-		}
-		add_filter( 'woocommerce_admin_shared_settings', [ $this, 'localize_wc_admin_settings' ] );
-
-		( new VendorDashboardManager() )->register_hooks();
+        if ( ! is_admin() ) {
+            add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
+        }
 	}
 
 	/**
@@ -24,10 +26,14 @@ class Assets implements Hookable {
 	 * @return array
 	 */
 	public function localize_wc_admin_settings( $settings ) {
-		$preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', array() );
-		$preload_data = [];
+        $settings['vendorBalance']      = dokan_get_seller_balance( dokan_get_current_user_id() );
+        $settings['stockStatuses']      = wc_get_product_stock_status_options();
+        $settings['isAnalyticsEnabled'] = ReportUtil::is_analytics_enabled();
 
-		if ( ! empty( $preload_data_endpoints ) ) {
+        $preload_data           = [];
+        $preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', array() );
+
+        if ( ! empty( $preload_data_endpoints ) ) {
 			// @see https://github.com/woocommerce/woocommerce/blob/f469bba6f28edd8616b5423755c6559912d47a4a/plugins/woocommerce/src/Internal/Admin/Settings.php#L140-L146
 			$preload_data = array_reduce(
 				array_values( $preload_data_endpoints ),
@@ -77,6 +83,12 @@ class Assets implements Hookable {
 
 		wp_register_script( 'vendor_analytics_script', $frontend_script, $asset['dependencies'] ?? [], $asset['version'] ?? '', true );
 
+        wp_localize_script(
+            'vendor_analytics_script',
+            'vendorSharedSettings',
+            $this->localize_wc_admin_settings( [] )
+        );
+
 		$dep = array(
 			'wc-components',
 			'wc-admin-layout',
@@ -100,10 +112,10 @@ class Assets implements Hookable {
 		wp_enqueue_script( 'vendor_analytics_script' );
 		wp_localize_script(
             'vendor_analytics_script', 'vendorAnalyticsDokanConfig', [
-				'seller_id' => dokan_get_current_user_id(),
+				'seller_id'        => dokan_get_current_user_id(),
 				'orderListPageUlr' => dokan_get_navigation_url( 'orders' ),
 			]
 		);
-		wp_enqueue_style( 'vendor_analytics_style' );
+        wp_enqueue_style( 'vendor_analytics_style' );
 	}
 }

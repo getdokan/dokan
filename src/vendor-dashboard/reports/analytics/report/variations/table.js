@@ -18,6 +18,7 @@ import ReportTable from "../../components/report-table";
 import { isLowStock } from "../products/utils";
 import { getVariationName } from "../../../lib/async-requests";
 import { getAdminSetting } from "reports/utils/admin-settings";
+import { mapToDashboardRoute } from "../../../helper";
 
 const EXPERIMENTAL_VARIATIONS_REPORT_TABLE_TITLE_FILTER =
   "experimental_dokan_analytics_variations_report_table_title";
@@ -117,10 +118,12 @@ class VariationsReportTable extends Component {
         sku,
       } = extendedInfo;
       const name = getFullVariationName(row);
-      const ordersLink = getNewPath(persistedQuery, "/analytics/orders", {
-        filter: "advanced",
-        variation_includes: variationId,
-      });
+      const ordersLink = mapToDashboardRoute(
+        getNewPath( persistedQuery, '/analytics/orders', {
+          filter: 'advanced',
+          product_includes: variationId,
+        } )
+      );
       const editPostLink = getAdminLink(
         `post.php?post=${productId}&action=edit`
       );

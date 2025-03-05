@@ -1,12 +1,13 @@
 /**
  * External dependencies
  */
-import { Component, Suspense, lazy } from "@wordpress/element";
 import { Spinner } from "@woocommerce/components";
+import { Component, Suspense, lazy } from "@wordpress/element";
 
 /**
  * Internal dependencies
  */
+import VendorEarning from "./components/vendor-earning";
 // import './style.scss';
 
 const CustomizableDashboard = lazy(() =>
@@ -18,8 +19,9 @@ class Dashboard extends Component {
     const { path, query } = this.props;
 
     return (
-      <Suspense fallback={<Spinner />}>
-        <CustomizableDashboard query={query} path={path} />
+      <Suspense fallback={ <Spinner /> } >
+        <VendorEarning query={ query } />
+        <CustomizableDashboard query={ query } path={ path } />
       </Suspense>
     );
   }

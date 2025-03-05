@@ -33,6 +33,8 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Analytics\Reports\Customers\Stats\QueryFilter::class,
         \WeDevs\Dokan\Analytics\Reports\Stock\QueryFilter::class,
         \WeDevs\Dokan\Analytics\Assets::class,
+        \WeDevs\Dokan\Analytics\VendorDashboardManager::class,
+        \WeDevs\Dokan\Analytics\Reports\DataStoreCacheModifier::class,
     ];
 
     /**
