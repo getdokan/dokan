@@ -12,7 +12,7 @@ class Assets implements Hookable {
             return;
         }
 
-		add_action( 'wp_enqueue_scripts', [ $this, 'register_all_scripts' ], 8 );
+		add_action( 'init', [ $this, 'register_all_scripts' ] );
 
         if ( ! is_admin() ) {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
@@ -25,7 +25,7 @@ class Assets implements Hookable {
 	 * @param array $settings
 	 * @return array
 	 */
-	public function localize_wc_admin_settings( $settings ) {
+	public function localize_wc_admin_settings( $settings = [] ) {
         $settings['vendorBalance']      = dokan_get_seller_balance( dokan_get_current_user_id() );
         $settings['stockStatuses']      = wc_get_product_stock_status_options();
         $settings['isAnalyticsEnabled'] = ReportUtil::is_analytics_enabled();
@@ -96,7 +96,7 @@ class Assets implements Hookable {
         wp_localize_script(
             'vendor_analytics_script',
             'vendorSharedSettings',
-            $this->localize_wc_admin_settings( [] )
+            $this->localize_wc_admin_settings()
         );
 
 		$dep = array(
