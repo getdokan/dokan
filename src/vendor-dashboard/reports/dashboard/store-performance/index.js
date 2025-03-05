@@ -308,7 +308,7 @@ class StorePerformance extends Component {
             <EllipsisMenu
                 label={ __(
                     'Choose which analytics to display and the section name',
-                    'woocommerce'
+                    'dokan-lite'
                 ) }
                 renderContent={ ( { onToggle } ) => (
                     <Fragment>

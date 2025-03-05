@@ -51,7 +51,7 @@ import Notices from './notices';
 // import { TransientNotices } from "./transient-notices";
 import { getAdminSetting } from 'reports/utils/admin-settings';
 import { usePageClasses } from './hooks/use-page-classes';
-import { mapToDashboardRoute } from '../helper';
+import { mapToDashboardRoute, handleAnalyticsLinkPrevention, shouldBlockNavigation } from '../helper';
 // import "reports/activity-panel";
 // import "reports/mobile-banner";
 // import "./navigation";
@@ -232,6 +232,11 @@ const Layout = compose(
 )( LayoutSwitchWrapper );
 
 const _PageLayout = () => {
+    if ( shouldBlockNavigation() ) {
+        return; // Prevent analytics app rendering if analytics path not found.
+    }
+
+    handleAnalyticsLinkPrevention(); // Prevent url redirection if analytics path found.
     const { currentUserCan } = useUser();
     const pages = usePages();
 
@@ -245,7 +250,6 @@ const _PageLayout = () => {
                 { pages
                     //   .filter((page) => !page.capability || currentUserCan(page.capability))
                     .map( ( page ) => {
-                        console.log( 'Route-->', page );
                         return (
                             <Route
                                 key={ page.path }

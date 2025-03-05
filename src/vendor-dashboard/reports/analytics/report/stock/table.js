@@ -15,11 +15,15 @@ import { CurrencyContext } from "@woocommerce/currency";
  */
 import ReportTable from "../../components/report-table";
 import { isLowStock } from "./utils";
-import { getAdminSetting } from "reports/utils/admin-settings";
+import { getAdminSetting } from "./../../../utils/admin-settings";
+import { mapToDashboardRoute } from "../../../helper";
 
-const stockStatuses = getAdminSetting("stockStatuses", {});
+const stockStatuses = getAdminSetting( 'stockStatuses', {
+    'instock'     : __( 'In stock', 'dokan-lite' ),
+    'outofstock'  : __( 'Out of stock', 'dokan-lite' ),
+    'onbackorder' : __( 'On backorder', 'dokan-lite' )
+});
 
-console.log("Stock Statuses-->", stockStatuses);
 class StockReportTable extends Component {
   constructor() {
     super();
@@ -32,25 +36,25 @@ class StockReportTable extends Component {
   getHeadersContent() {
     return [
       {
-        label: __("Product / Variation", "woocommerce"),
+        label: __("Product / Variation", 'dokan-lite'),
         key: "title",
         required: true,
         isLeftAligned: true,
         isSortable: true,
       },
       {
-        label: __("SKU", "woocommerce"),
+        label: __("SKU", 'dokan-lite'),
         key: "sku",
         isSortable: true,
       },
       {
-        label: __("Status", "woocommerce"),
+        label: __("Status", 'dokan-lite'),
         key: "stock_status",
         isSortable: true,
         defaultSort: true,
       },
       {
-        label: __("Stock", "woocommerce"),
+        label: __("Stock", 'dokan-lite'),
         key: "stock_quantity",
         isSortable: true,
       },
@@ -74,13 +78,11 @@ class StockReportTable extends Component {
 
       const name = decodeEntities(product.name);
 
-      const productDetailLink = getNewPath(
-        persistedQuery,
-        "/analytics/products",
-        {
-          filter: "single_product",
+      const productDetailLink = mapToDashboardRoute(
+        getNewPath( persistedQuery, '/analytics/products', {
+          filter: 'single_product',
           products: parentId || id,
-        }
+        } )
       );
 
       const nameLink = (
@@ -98,7 +100,7 @@ class StockReportTable extends Component {
         lowStockAmount
       ) ? (
         <Link href={editProductLink} type="wp-admin">
-          {_x("Low", "Indication of a low quantity", "woocommerce")}
+          {_x("Low", "Indication of a low quantity", 'dokan-lite')}
         </Link>
       ) : (
         <Link href={editProductLink} type="wp-admin">
@@ -126,7 +128,7 @@ class StockReportTable extends Component {
                 "number",
                 stockQuantity
               )
-            : __("N/A", "woocommerce"),
+            : __("N/A", 'dokan-lite'),
           value: stockQuantity,
         },
       ];
@@ -144,23 +146,23 @@ class StockReportTable extends Component {
     const currency = this.context.getCurrencyConfig();
     return [
       {
-        label: _n("Product", "Products", products, "woocommerce"),
+        label: _n("Product", "Products", products, 'dokan-lite'),
         value: formatValue(currency, "number", products),
       },
       {
-        label: __("Out of stock", "woocommerce"),
+        label: __("Out of stock", 'dokan-lite'),
         value: formatValue(currency, "number", outofstock),
       },
       {
-        label: __("Low stock", "woocommerce"),
+        label: __("Low stock", 'dokan-lite'),
         value: formatValue(currency, "number", lowstock),
       },
       {
-        label: __("On backorder", "woocommerce"),
+        label: __("On backorder", 'dokan-lite'),
         value: formatValue(currency, "number", onbackorder),
       },
       {
-        label: __("In stock", "woocommerce"),
+        label: __("In stock", 'dokan-lite'),
         value: formatValue(currency, "number", instock),
       },
     ];
@@ -188,7 +190,7 @@ class StockReportTable extends Component {
           order: query.order || "asc",
           type: query.type || "all",
         }}
-        title={__("Stock", "woocommerce")}
+        title={__("Stock", 'dokan-lite')}
         filters={filters}
         advancedFilters={advancedFilters}
       />

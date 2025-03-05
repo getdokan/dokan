@@ -2,6 +2,7 @@
  * External dependencies
  */
 import { Component } from "@wordpress/element";
+import { applyFilters } from "@wordpress/hooks";
 import PropTypes from "prop-types";
 import { __, sprintf } from "@wordpress/i18n";
 import { Card, CardBody, CardHeader } from "@wordpress/components";
@@ -20,12 +21,6 @@ import ReportChart from "../../analytics/components/report-chart";
 // import './block.scss';
 
 class ChartBlock extends Component {
-  handleChartClick = () => {
-    const { selectedChart } = this.props;
-
-    getHistory().push(this.getChartPath(selectedChart));
-  };
-
   getChartPath(chart) {
     return getNewPath(
       { chart: chart.key },
@@ -42,11 +37,20 @@ class ChartBlock extends Component {
       return null;
     }
 
+    const LEGEND_HANDLER_FILTER = 'dokan_handle_chart_legends_availability',
+      CHART_REDIRECTION_HANDLER_FILTER = 'dokan_handle_chart_redirection';
+
     return (
       <div
         role="presentation"
         className="woocommerce-dashboard__chart-block-wrapper"
-        onClick={this.handleChartClick}
+        onClick={ applyFilters(
+          CHART_REDIRECTION_HANDLER_FILTER,
+          () => {}, // default handler
+          selectedChart,
+          getHistory,
+          this.getChartPath
+        ) }
       >
         <Card className="woocommerce-dashboard__chart-block">
           <CardHeader>
@@ -61,7 +65,7 @@ class ChartBlock extends Component {
             >
               {sprintf(
                 /* translators: %s is the chart type */
-                __("%s Report", "woocommerce"),
+                __("%s Report", 'dokan-lite'),
                 selectedChart.label
               )}
             </a>
@@ -69,7 +73,7 @@ class ChartBlock extends Component {
               charts={charts}
               endpoint={endpoint}
               query={query}
-              interactiveLegend={false}
+              interactiveLegend={applyFilters(LEGEND_HANDLER_FILTER, false)}
               legendPosition="bottom"
               path={path}
               selectedChart={selectedChart}

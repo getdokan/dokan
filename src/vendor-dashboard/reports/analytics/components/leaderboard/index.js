@@ -64,8 +64,6 @@ export class Leaderboard extends Component {
 
         const rows = this.getFormattedRows();
 
-        console.log( 'Leaderboard rows', rows );
-
         if ( ! isRequesting && rows.length === 0 ) {
             return (
                 <Card className={ classes }>
@@ -83,7 +81,7 @@ export class Leaderboard extends Component {
                         <EmptyTable>
                             { __(
                                 'No data recorded for the selected time period.',
-                                'woocommerce'
+                                'dokan-lite'
                             ) }
                         </EmptyTable>
                     </CardBody>

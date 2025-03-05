@@ -33,28 +33,28 @@ const { addCesSurveyForAnalytics } = dispatch(CES_STORE_KEY);
 export const charts = applyFilters(TAXES_REPORT_CHARTS_FILTER, [
   {
     key: "total_tax",
-    label: __("Total tax", "woocommerce"),
+    label: __("Total tax", 'dokan-lite'),
     order: "desc",
     orderby: "total_tax",
     type: "currency",
   },
   {
     key: "order_tax",
-    label: __("Order tax", "woocommerce"),
+    label: __("Order tax", 'dokan-lite'),
     order: "desc",
     orderby: "order_tax",
     type: "currency",
   },
   {
     key: "shipping_tax",
-    label: __("Shipping tax", "woocommerce"),
+    label: __("Shipping tax", 'dokan-lite'),
     order: "desc",
     orderby: "shipping_tax",
     type: "currency",
   },
   {
     key: "orders_count",
-    label: __("Orders", "woocommerce"),
+    label: __("Orders", 'dokan-lite'),
     order: "desc",
     orderby: "orders_count",
     type: "number",
@@ -76,15 +76,15 @@ export const advancedFilters = applyFilters(
     title: _x(
       "Taxes match <select/> filters",
       "A sentence describing filters for Taxes. See screen shot for context: https://cloudup.com/cSsUY9VeCVJ",
-      "woocommerce"
+      'dokan-lite'
     ),
   }
 );
 
 const filterValues = [
-  { label: __("All taxes", "woocommerce"), value: "all" },
+  { label: __("All taxes", 'dokan-lite'), value: "all" },
   {
-    label: __("Comparison", "woocommerce"),
+    label: __("Comparison", 'dokan-lite'),
     value: "compare-taxes",
     chartMode: "item-comparison",
     settings: {
@@ -98,11 +98,11 @@ const filterValues = [
       labels: {
         helpText: __(
           "Check at least two tax codes below to compare",
-          "woocommerce"
+          'dokan-lite'
         ),
-        placeholder: __("Search for tax codes to compare", "woocommerce"),
-        title: __("Compare Tax Codes", "woocommerce"),
-        update: __("Compare", "woocommerce"),
+        placeholder: __("Search for tax codes to compare", 'dokan-lite'),
+        title: __("Compare Tax Codes", 'dokan-lite'),
+        update: __("Compare", 'dokan-lite'),
       },
       onClick: addCesSurveyForAnalytics,
     },
@@ -111,7 +111,7 @@ const filterValues = [
 
 if (Object.keys(advancedFilters.filters).length) {
   filterValues.push({
-    label: __("Advanced filters", "woocommerce"),
+    label: __("Advanced filters", 'dokan-lite'),
     value: "advanced",
   });
 }
@@ -128,7 +128,7 @@ if (Object.keys(advancedFilters.filters).length) {
  */
 export const filters = applyFilters(TAXES_REPORT_FILTERS_FILTER, [
   {
-    label: __("Show", "woocommerce"),
+    label: __("Show", 'dokan-lite'),
     staticParams: ["chartType", "paged", "per_page"],
     param: "filter",
     showFilters: () => true,
