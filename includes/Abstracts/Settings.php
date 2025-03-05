@@ -23,7 +23,7 @@ abstract class Settings extends SettingsElement {
 	 *
 	 * @var string $storage_key Storage Key.
 	 */
-	protected $storage_key = 'dokan_driver_';
+	protected $storage_key = 'dokan_lite_';
 
 	/**
 	 * Populate settings.
@@ -110,7 +110,7 @@ abstract class Settings extends SettingsElement {
 			$updated = update_user_meta( get_current_user_id(), $this->storage_key, $data );
 		}
 
-		do_action( 'dokan_driver_settings_after_save_' . $this->storage_key, $data );
+		do_action( 'dokan_lite_settings_after_save_' . $this->storage_key, $data );
 
 		return (bool) $updated;
 	}

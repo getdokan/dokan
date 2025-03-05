@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Admin\OnboardingSetup;
+namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 
 interface StepInterface {
     public function get_id();
@@ -9,5 +9,6 @@ interface StepInterface {
 
     public function scripts(): array;
     public function styles(): array;
-
+    public function settings(): array;
+    public function option_dispatcher(): array;
 }
