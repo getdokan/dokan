@@ -1,9 +1,8 @@
 import Logo from './Logo';
-import OnboardingLayout from './OnboardingLayout';
 
 const WelcomeScreen = () => {
     return (
-        <OnboardingLayout>
+        <div className='shadow-xl flex items-center justify-center rounded-2xl overflow-hidden bg-white w-[65%] mx-auto h-[532px]'>
             <div className='flex flex-col items-center justify-center py-16 px-6 text-center'>
                 <div className='mb-8'>
                     <Logo />
@@ -14,11 +13,11 @@ const WelcomeScreen = () => {
                 <p className='text-gray-600 max-w-lg mb-10'>
                     Ready to revolutionize online selling? We're excited to help you create a marketplace that stands out! Let's start with a few quick questions.
                 </p>
-                <button className='bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-8 rounded-lg transition-colors'>
+                <button className='bg-dokan-btn hover:bg-dokan-btn-hover text-white rounded py-3 px-8'>
                     Start Journey
                 </button>
             </div>
-        </OnboardingLayout>
+        </div>
     )
 }
 

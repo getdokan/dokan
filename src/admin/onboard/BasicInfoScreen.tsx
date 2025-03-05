@@ -1,29 +1,46 @@
-import Logo from './Logo';
-import OnboardingLayout from './OnboardingLayout';
-import { useState } from '@wordpress/element';
+import {useState} from '@wordpress/element';
+import {SimpleInput} from '@getdokan/dokan-ui';
 
 const BasicInfoScreen = () => {
-    const [storeUrl, setStoreUrl] = useState('marketplace.dokan.com/store/name')
-    const [shareDiagnostics, setShareDiagnostics] = useState(true)
+    const [storeUrl, setStoreUrl] = useState(
+        'marketplace.dokan.com/store/name'
+    );
+    const [shareDiagnostics, setShareDiagnostics] = useState(true);
 
     return (
-        <OnboardingLayout>
             <div className='p-8 md:p-10'>
                 <div className='mb-8'>
-                    <Logo />
                 </div>
-                <h1 className='text-2xl md:text-3xl font-bold mb-10'>Basic Information</h1>
+                <h1 className="text-2xl md:text-3xl font-bold mb-10">
+                    Basic Information
+                </h1>
 
                 <div className='space-y-8'>
                     <div>
                         <label className='block text-lg font-medium mb-4'>
                             Choose how vendor store URLs will appear
                         </label>
-                        <input
-                            type='text'
+                        {/*<input*/}
+                        {/*    type='text'*/}
+                        {/*    value={storeUrl}*/}
+                        {/*    onChange={(e) => setStoreUrl(e.target.value)}*/}
+                        {/*    className='w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 outline-none'*/}
+                        {/*/>*/}
+                        <SimpleInput
                             value={storeUrl}
+                            addOnLeft={"https://dokan-dev.test/"}
+                            addOnRight={"store"}
+                            input={
+                                {
+                                    id: "login-storename",
+                                    name: "storename",
+                                    type: "text",
+                                    autoComplete: "off",
+                                    placeholder: "daraz"
+                                }
+                            }
                             onChange={(e) => setStoreUrl(e.target.value)}
-                            className='w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 outline-none'
+                            className="w-[80%] md:w-[50%] pl-[12rem] "
                         />
                         <div className='flex items-center mt-2 text-sm text-gray-500'>
                             <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-1' viewBox='0 0 20 20' fill='currentColor'>
@@ -62,7 +79,6 @@ const BasicInfoScreen = () => {
                     </button>
                 </div>
             </div>
-        </OnboardingLayout>
     )
 }
 
