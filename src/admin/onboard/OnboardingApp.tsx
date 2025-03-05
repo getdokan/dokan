@@ -7,30 +7,53 @@ import SuccessScreen from './SuccessScreen';
 import { useState } from '@wordpress/element';
 
 const OnboardingApp = () => {
-    const [currentStep, setCurrentStep] = useState(0)
+    const [ currentStep, setCurrentStep ] = useState( 0 );
 
-    const screens = [
-        <WelcomeScreen key='welcome' />,
-        <MarketplaceGoalScreen key='goal' />,
-        <AddonsScreen key='addons' />,
-        <BasicInfoScreen key='basic' />,
-        <LoadingScreen key='loading' />,
-        <SuccessScreen key='success' />
-    ];
+    const goToNextStep = () => {
+        setCurrentStep( prevStep => Math.min( prevStep + 1, 5 ) );
+    };
+
+    const goToPrevStep = () => {
+        setCurrentStep( prevStep => Math.max( prevStep - 1, 0 ) );
+    };
+
+    const goToStep = ( step ) => {
+        setCurrentStep( step );
+    };
+
+    const renderCurrentScreen = () => {
+        switch ( currentStep ) {
+            case 0:
+                return <WelcomeScreen onNext={ goToNextStep } />;
+            case 1:
+                return <BasicInfoScreen onNext={ goToNextStep } />;
+            case 2:
+                return <MarketplaceGoalScreen onNext={ goToNextStep } onBack={ goToPrevStep } />;
+            case 3:
+                return <AddonsScreen onNext={ goToNextStep } onBack={ goToPrevStep } onSkip={ goToNextStep } />;
+            case 4:
+                return <LoadingScreen />;
+            case 5:
+                return <SuccessScreen />;
+            default:
+                return <WelcomeScreen onNext={ goToNextStep } />;
+        }
+    };
 
     return (
         <div>
-            {screens[currentStep]}
+            {/*{ screens[ currentStep ] }*/}
+            { renderCurrentScreen() }
 
-            {/* Navigation controls for demo purposes */}
+            {/* Navigation dots for demo purposes */}
             <div className='fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-full shadow-lg p-2 flex space-x-2'>
-                {screens.map((_, index) => (
+                {[0, 1, 2, 3, 4, 5].map((step) => (
                     <button
-                        key={index}
+                        key={step}
                         className={`w-3 h-3 rounded-full ${
-                            currentStep === index ? 'bg-indigo-600' : 'bg-gray-300'
+                            currentStep === step ? 'bg-indigo-600' : 'bg-gray-300'
                         }`}
-                        onClick={() => setCurrentStep(index)}
+                        onClick={() => goToStep(step)}
                     />
                 ))}
             </div>

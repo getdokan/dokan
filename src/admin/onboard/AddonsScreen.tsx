@@ -1,9 +1,10 @@
 import Logo from './Logo';
+import { __ } from '@wordpress/i18n';
+import { Button } from  '@getdokan/dokan-ui';
 import { useState } from '@wordpress/element';
-import OnboardingLayout from './OnboardingLayout';
 
-const AddonsScreen = () => {
-    const [selectedAddons, setSelectedAddons] = useState(['analytics', 'reports'])
+const AddonsScreen = ({ onNext, onBack, onSkip }) => {
+    const [selectedAddons, setSelectedAddons] = useState( [ 'analytics', 'reports' ] );
 
     const addons = [
         { id: 'analytics', icon: '📊', title: 'Woocommerce Conversion Tracking', description: 'Monitor your sales funnel and optimize marketing ROI' },
@@ -23,12 +24,14 @@ const AddonsScreen = () => {
     }
 
     return (
-        <OnboardingLayout>
-            <div className='p-8 md:p-10'>
+        <div className={`min-h-screen flex items-center justify-center`}>
+            <div className='p-8 md:p-10 max-w-4xl'>
                 <div className='mb-8'>
-                    <Logo />
+                    <Logo/>
                 </div>
-                <h1 className='text-2xl md:text-3xl font-bold mb-6'>Enhance Your Marketplace with these Recommended Add-ons</h1>
+                <h1 className='text-2xl md:text-3xl font-bold mb-6'>
+                    {__('Enhance Your Marketplace with these Recommended Add-ons', 'dokan')}
+                </h1>
 
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-10'>
                     {addons.map(addon => (
@@ -39,7 +42,8 @@ const AddonsScreen = () => {
                             }`}
                             onClick={() => toggleAddon(addon.id)}
                         >
-                            <div className='flex-shrink-0 w-10 h-10 bg-indigo-100 text-indigo-600 rounded flex items-center justify-center mr-4'>
+                            <div
+                                className='flex-shrink-0 w-10 h-10 bg-indigo-100 text-indigo-600 rounded flex items-center justify-center mr-4'>
                                 {addon.icon}
                             </div>
                             <div className='flex-grow'>
@@ -56,24 +60,34 @@ const AddonsScreen = () => {
                 </div>
 
                 <div className='flex justify-between'>
-                    <button className='text-gray-600 font-medium py-2 px-4'>Skip</button>
+                    <Button onClick={onBack}
+                            className='flex items-center text-gray-600 font-medium border-0 shadow-none'>
+                        <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-1' viewBox='0 0 20 20'
+                             fill='currentColor'>
+                            <path fillRule='evenodd'
+                                  d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
+                                  clipRule='evenodd'/>
+                        </svg>
+                        {__('Back', 'dokan')}
+                    </Button>
                     <div className='flex space-x-4'>
-                        <button className='flex items-center text-gray-600 font-medium'>
-                            <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-1' viewBox='0 0 20 20' fill='currentColor'>
-                                <path fillRule='evenodd' d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z' clipRule='evenodd' />
+                        <Button onClick={onSkip} className='text-gray-600 font-medium py-2 px-4 border-0 shadow-none'>
+                            {__('Skip', 'dokan')}
+                        </Button>
+                        <Button onClick={onNext}
+                                className='bg-dokan-btn hover:bg-dokan-btn-hover text-white rounded-md py-3 px-8 flex items-center'>
+                            {__('Next', 'dokan')}
+                            <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 ml-1' viewBox='0 0 20 20'
+                                 fill='currentColor'>
+                                <path fillRule='evenodd'
+                                      d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
+                                      clipRule='evenodd'/>
                             </svg>
-                            Back
-                        </button>
-                        <button className='bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg flex items-center transition-colors'>
-                            Next
-                            <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 ml-1' viewBox='0 0 20 20' fill='currentColor'>
-                                <path fillRule='evenodd' d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z' clipRule='evenodd' />
-                            </svg>
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>
-        </OnboardingLayout>
+        </div>
     )
 }
 
