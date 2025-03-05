@@ -7,8 +7,6 @@ use WeDevs\Dokan\REST\AdminOnboardingController;
 use WeDevs\Dokan\Test\DokanTestCase;
 use WP_REST_Request;
 use WP_REST_Server;
-use Mockery;
-use ReflectionClass;
 
 class AdminOnboardingControllerTest extends DokanTestCase {
 	/**
