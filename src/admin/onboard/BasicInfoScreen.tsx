@@ -32,8 +32,16 @@ const BasicInfoScreen = ({ onNext }) => {
                         {/*/>*/}
                         <SimpleInput
                             value={ storeUrl }
-                            addOnLeft={ "https://dokan-dev.test/" }
-                            addOnRight={ "store" }
+                            addOnLeft={
+                                <span className="inline-flex items-center bg-gray-50 px-3 text-gray-900 sm:text-sm rouned-bl absolute left-0 top-0 h-full rounded-bl rounded-tl w-max">
+                                    https://dokan-dev.test/
+                                </span>
+                            }
+                            addOnRight={
+                                <span className="inline-flex items-center bg-gray-50 px-3 text-gray-900 sm:text-sm rouned-bl absolute right-0 top-0 h-full rounded-bl rounded-tl">
+                                    store
+                                </span>
+                            }
                             input={
                                 {
                                     id: "login-storename",
@@ -44,7 +52,7 @@ const BasicInfoScreen = ({ onNext }) => {
                                 }
                             }
                             onChange={ (e) => setStoreUrl( e.target.value ) }
-                            className="w-[80%] md:w-[50%] pl-[12rem]"
+                            className="w-[80%] md:w-full pl-[12rem] block"
                         />
                         <div className='flex items-center mt-2 text-sm text-gray-500'>
                             <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-1' viewBox='0 0 20 20' fill='currentColor'>
