@@ -15,7 +15,7 @@ class ProductUtil {
      *
      * @return bool
      */
-    public static function dokan_should_skip_product_listing_render(): bool {
+    public static function should_skip_product_listing_render(): bool {
 
         /**
          * Filter to control product listing template rendering.
