@@ -29,6 +29,7 @@ const entryPoints = {
     'login-form-popup': './assets/src/js/login-form-popup.js',
     'dokan-maps-compat': './assets/src/js/dokan-maps-compat.js',
     'dokan-admin': './assets/src/js/admin.js',
+    'dokan-admin-onboard': '/src/admin/onboard/index.tsx',
     'dokan-setup-no-wc': [ './assets/src/js/setup-no-wc.js' ],
     helper: './assets/src/js/helper.js',
     'dokan-frontend': './assets/src/js/dokan-frontend.js',

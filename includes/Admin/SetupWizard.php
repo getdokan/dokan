@@ -36,7 +36,9 @@ class SetupWizard {
 
         if ( current_user_can( 'manage_woocommerce' ) ) {
             add_action( 'admin_menu', [ $this, 'admin_menus' ] );
+            add_action( 'init', [ $this, 'register_admin_scripts' ] );
             add_action( 'admin_init', [ $this, 'setup_wizard' ], 99 );
+//            add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
 
             if ( get_transient( 'dokan_setup_wizard_no_wc' ) && defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '4.6.0', '<' ) ) { // todo: temporary fix, will add this feature again in future release
                 add_filter( 'dokan_admin_setup_wizard_steps', [ SetupWizardNoWC::class, 'add_wc_steps_to_wizard' ] );
@@ -150,6 +152,57 @@ class SetupWizard {
     }
 
     /**
+     * Enqueue scripts for admin onboarding setup.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function register_admin_scripts() {
+        $script_assets = DOKAN_DIR . '/assets/js/dokan-admin-onboard.asset.php';
+        if ( file_exists( $script_assets ) ) {
+            $onboard_asset = require $script_assets;
+            $dependencies  = $onboard_asset['dependencies'] ?? [];
+            $version       = $onboard_asset['version'] ?? '';
+
+            wp_register_style(
+                'dokan-admin-onboard-app',
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-onboard.css',
+                [],
+                $version
+            );
+
+            wp_register_script(
+                'dokan-admin-onboard-app',
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-onboard.js',
+                $dependencies,
+                $version,
+                true
+            );
+
+//            wp_localize_script(
+//                'dokan-request-a-quote-vendor-dashboard-app',
+//                'dokanRequestQuote',
+//                [
+//                    'wc_shop_url' => esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ),
+//                ]
+//            );
+        }
+    }
+
+    /**
+     * Enqueue scripts for admin onboarding setup.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function enqueue_admin_scripts() {
+        wp_enqueue_style( 'dokan-admin-onboard-app' );
+        wp_enqueue_script( 'dokan-admin-onboard-app' );
+    }
+
+    /**
      * Helper method to get postcode configurations from `WC()->countries->get_country_locale()`.
      * We don't use `wp_list_pluck` because it will throw notices when postcode configuration is not defined for a country.
      *
@@ -242,8 +295,9 @@ class SetupWizard {
      */
     protected function set_setup_wizard_template() {
         $this->setup_wizard_header();
-        $this->setup_wizard_steps();
-        $this->setup_wizard_content();
+//        $this->setup_wizard_steps();
+//        $this->setup_wizard_content();
+//        echo '<div id="admin-onboarding-root"></div>';
         $this->setup_wizard_footer();
     }
 
@@ -274,7 +328,8 @@ class SetupWizard {
             $this->current_step = sanitize_key( wp_unslash( $_GET['step'] ) );
         }
 
-        $this->enqueue_scripts();
+//        $this->enqueue_scripts();
+        $this->enqueue_admin_scripts();
 
         if (
             isset( $_POST['_wpnonce'], $_POST['save_step'] )
@@ -323,9 +378,9 @@ class SetupWizard {
         </head>
         <body class="wc-setup dokan-admin-setup-wizard wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : ''; ?>">
         <?php
-        $logo_url = ( ! empty( $this->custom_logo ) ) ? $this->custom_logo : plugins_url( 'assets/images/dokan-logo.png', DOKAN_FILE );
+//        $logo_url = ( ! empty( $this->custom_logo ) ) ? $this->custom_logo : plugins_url( 'assets/images/dokan-logo.png', DOKAN_FILE );
         ?>
-        <h1 id="wc-logo"><a href="https://dokan.co/wordpress/"><img src="<?php echo esc_url( $logo_url ); ?>" alt="Dokan Logo" width="135" height="auto"/></a></h1>
+<!--        <h1 id="wc-logo"><a href="https://dokan.co/wordpress/"><img src="--><?php //echo esc_url( $logo_url ); ?><!--" alt="Dokan Logo" width="135" height="auto"/></a></h1>-->
         <?php
     }
 
