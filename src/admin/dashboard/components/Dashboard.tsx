@@ -14,11 +14,6 @@ export type DokanAdminRoute = {
 const getAdminRoutes = () => {
     let routes: Array< DokanAdminRoute > = [
         {
-            id: 'dokan-dashboard',
-            element: <h3>Dashboard</h3>,
-            path: '/',
-        },
-        {
             id: 'pro-modules',
             element: <ModulePage />,
             path: '/pro-modules',

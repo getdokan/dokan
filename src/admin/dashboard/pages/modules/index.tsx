@@ -117,7 +117,7 @@ const ModulePage = () => {
 
     return (
         <>
-            <div className="header py-5">
+            <div className="header py-3">
                 <h1 className="text-2xl font-semibold">
                     { __( 'Modules', 'dokan-lite' ) }
                 </h1>
@@ -129,23 +129,7 @@ const ModulePage = () => {
                         <div className="mr-4 py-2 border-b-2 border-[#1a9ed4] text-[#1a9ed4] font-semibold cursor-pointer">
                             { sprintf(
                                 // translators: %s: total number of modules
-                                __( 'My Modules (%s)', 'dokan-lite' ),
-                                allModules.length
-                            ) }
-                        </div>
-                        <div
-                            className="mx-4 py-2 cursor-pointer"
-                            onClick={ () => setShowModal( true ) }
-                        >
-                            { __( 'Active (0)', 'dokan-lite' ) }
-                        </div>
-                        <div
-                            className="mx-4 py-2 cursor-pointer"
-                            onClick={ () => setShowModal( true ) }
-                        >
-                            { sprintf(
-                                // translators: %s: total number of modules
-                                __( 'Inactive (%s)', 'dokan-lite' ),
+                                __( 'Pro Modules (%s)', 'dokan-lite' ),
                                 allModules.length
                             ) }
                         </div>
