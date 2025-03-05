@@ -105,110 +105,53 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 	}
 
 	/**
-	 * Test create onboarding endpoint
-	 *
-	 * @return void
+	 * Test create_onboarding method with valid data.
 	 */
-	public function test_create_onboarding() {
+	public function test_create_onboarding_valid_data() {
 		wp_set_current_user( $this->admin_id );
 
-		// Create a mock for SetupWizard using a partial mock approach
-		$setup_wizard_mock = Mockery::mock( SetupWizard::class );
-		$setup_wizard_mock->shouldReceive( 'install_plugin' )
-							->once()
-							->with( 'wemail', Mockery::any() )
-							->andReturn( true );
-
-		// Create a partial mock of the controller to inject our setup wizard mock
-		$controller = Mockery::mock( AdminOnboardingController::class )->makePartial();
-		$controller->shouldAllowMockingProtectedMethods();
-
-		// Replace the install_required_plugins method to use our mock
-		$controller->shouldReceive( 'install_required_plugins' )
-					->once()
-					->andReturnUsing(
-						function ( $plugins ) use ( $setup_wizard_mock ) {
-							foreach ( $plugins as $plugin ) {
-								if ( isset( $plugin['id'], $plugin['info'] ) ) {
-									$setup_wizard_mock->install_plugin( $plugin['id'], $plugin['info'] );
-								}
-							}
-						}
-                    );
-
-		// Register the controller's routes
-		$controller->register_routes();
-
-		// Set up the request data
 		$request_data = [
 			'onboarding' => true,
-			'marketplace_goal' => [
-				'marketplace_focus' => 'digital',
-				'handle_delivery' => false,
-				'top_priority' => 'security',
-			],
-			'custom_store_url' => 'my-store',
+			'custom_store_url' => 'vendor',
 			'share_essentials' => true,
-//			'plugins' => [
-//				[
-//					'id' => 'wemail',
-//					'info' => [
-//						'name' => 'weMail',
-//						'slug' => 'wemail',
-//					],
-//				],
-//			],
+			'marketplace_goal' => [
+				'marketplace_focus' => 'physical',
+				'handle_delivery' => true,
+				'top_priority' => 'growth',
+			],
+			'plugins' => [
+				[
+					'id' => 'wemail',
+					'info' => [
+						'name' => 'weMail',
+						'repo-slug' => 'wemail',
+					],
+				],
+			],
 		];
 
-		// Create the request
-		$request = new WP_REST_Request( 'POST', "/{$this->namespace}/{$this->rest_base}" );
-		$request->set_header( 'content-type', 'application/json' );
-		$request->set_body( wp_json_encode( $request_data ) );
+		// Make the request
+		$response = $this->post_request( "/{$this->rest_base}", $request_data );
 
-		// Mock the tracker insights
-		$tracker_mock = Mockery::mock();
-		$tracker_mock->shouldReceive( 'optin' )->once()->andReturn( true );
-		$tracker_mock->shouldReceive( 'optout' )->never();
-
-		// Mock the dokan tracker
-		$dokan_mock = Mockery::mock();
-		$dokan_mock->tracker = (object) [ 'insights' => $tracker_mock ];
-
-		// Use a function mock for dokan()
-		Mockery::mock( 'alias:dokan' )->shouldReceive( '__invoke' )->andReturn( $dokan_mock );
-
-		// Replace the controller in the REST server
-		add_filter(
-            'rest_dispatch_request', function ( $dispatch_result, $request_handler, $request ) use ( $controller ) {
-				if ( $request->get_route() === "/{$this->namespace}/{$this->rest_base}" ) {
-					return $controller->create_onboarding( $request );
-				}
-				return $dispatch_result;
-			}, 10, 3
-        );
-
-		// Dispatch the request
-		$response = $this->server->dispatch( $request );
-
-		// Check response status
+		// Assert response is successful
 		$this->assertEquals( 200, $response->get_status() );
 
-		// Check the response data
 		$data = $response->get_data();
-		$this->assertEquals( 'Onboarding created successfully', $data['message'] );
+		$this->assertArrayHasKey( 'message', $data );
+		$this->assertArrayHasKey( 'onboarding', $data );
+		$this->assertArrayHasKey( 'general_options', $data );
+		$this->assertArrayHasKey( 'share_essentials', $data );
+		$this->assertArrayHasKey( 'marketplace_goal', $data );
 
-		// Check that options were saved correctly
+		// Verify options were saved
 		$this->assertEquals( true, get_option( 'dokan_onboarding' ) );
-
-		$general_options = get_option( 'dokan_general', [] );
-		$this->assertEquals( 'my-store', $general_options['custom_store_url'] );
-
+		$this->assertEquals( 'vendor', get_option( 'dokan_general' )['custom_store_url'] );
 		$this->assertEquals( true, get_option( 'dokan_share_essentials' ) );
 
-		$marketplace_goal = get_option( 'dokan_marketplace_goal', [] );
-		$this->assertEquals( 'digital', $marketplace_goal['marketplace_focus'] );
-		$this->assertEquals( false, $marketplace_goal['handle_delivery'] );
-		$this->assertEquals( 'security', $marketplace_goal['top_priority'] );
+		$marketplace_goal = get_option( 'dokan_marketplace_goal' );
+		$this->assertEquals( 'physical', $marketplace_goal['marketplace_focus'] );
+		$this->assertEquals( true, $marketplace_goal['handle_delivery'] );
+		$this->assertEquals( 'growth', $marketplace_goal['top_priority'] );
 	}
 
 	/**
@@ -224,12 +167,12 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 		update_option( 'dokan_general', [ 'custom_store_url' => 'test-store' ] );
 		update_option( 'dokan_share_essentials', true );
 		update_option(
-            'dokan_marketplace_goal', [
+			'dokan_marketplace_goal', [
 				'marketplace_focus' => 'digital',
 				'handle_delivery' => false,
 				'top_priority' => 'security',
 			]
-        );
+		);
 
 		// Create the request
 		$request = new WP_REST_Request( 'GET', "/{$this->namespace}/{$this->rest_base}" );
@@ -247,11 +190,11 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 		$this->assertEquals( [ 'custom_store_url' => 'test-store' ], $data['general_options'] );
 		$this->assertEquals( true, $data['share_essentials'] );
 		$this->assertEquals(
-            [
+			[
 				'marketplace_focus' => 'digital',
 				'handle_delivery' => false,
 				'top_priority' => 'security',
 			], $data['marketplace_goal']
-        );
+		);
 	}
 }

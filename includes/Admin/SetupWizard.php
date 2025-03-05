@@ -936,7 +936,7 @@ class SetupWizard {
      * @param string $plugin_id   Plugin id used for background install.
      * @param array  $plugin_info Plugin info array containing name and repo-slug, and optionally file if different from [repo-slug].php.
      */
-    protected function install_plugin( $plugin_id, $plugin_info ) {
+    public function install_plugin( $plugin_id, $plugin_info ) {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             return;
         }

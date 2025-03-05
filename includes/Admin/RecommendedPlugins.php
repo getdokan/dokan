@@ -23,20 +23,20 @@ class RecommendedPlugins {
      */
     public function __construct() {
         $this->plugins = [
-            [
-                'type'        => 'store_growth',
-                'title'       => __( 'StoreGrowth', 'dokan-lite' ),
-                'description' => __( 'Best WooCommerce Marketing Solution!', 'dokan-lite' ),
-                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
-                'img_alt'     => __( 'StoreGrowth logo', 'dokan-lite' ),
-                'plugins'     => [
-                    [
-                        'name'     => __( 'StoreGrowth', 'dokan-lite' ),
-                        'slug'     => 'storegrowth-sales-booster',
-                        'basename' => 'storegrowth-sales-booster/storegrowth-sales-booster.php',
-                    ],
-                ],
-            ],
+//            [
+//                'type'        => 'store_growth',
+//                'title'       => __( 'StoreGrowth', 'dokan-lite' ),
+//                'description' => __( 'Best WooCommerce Marketing Solution!', 'dokan-lite' ),
+//                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
+//                'img_alt'     => __( 'StoreGrowth logo', 'dokan-lite' ),
+//                'plugins'     => [
+//                    [
+//                        'name'     => __( 'StoreGrowth', 'dokan-lite' ),
+//                        'slug'     => 'storegrowth-sales-booster',
+//                        'basename' => 'storegrowth-sales-booster/storegrowth-sales-booster.php',
+//                    ],
+//                ],
+//            ],
             [
                 'type'        => 'wemail',
                 'title'       => __( 'weMail', 'dokan-lite' ),
