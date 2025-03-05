@@ -250,7 +250,6 @@ const _PageLayout = () => {
                 { pages
                     //   .filter((page) => !page.capability || currentUserCan(page.capability))
                     .map( ( page ) => {
-                        console.log( 'Route-->', page );
                         return (
                             <Route
                                 key={ page.path }

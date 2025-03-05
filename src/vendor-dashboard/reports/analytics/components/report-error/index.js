@@ -15,7 +15,7 @@ import { EmptyContent } from '@woocommerce/components';
 function ReportError( { className } ) {
     const title = __(
         'There was an error getting your stats. Please try again.',
-        'woocommerce'
+        'dokan-lite'
     );
     const actionLabel = __( 'Reload', 'dokan-lite' );
     const actionCallback = () => {

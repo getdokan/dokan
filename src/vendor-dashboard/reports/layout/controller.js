@@ -1,6 +1,7 @@
 /**
  * External dependencies
  */
+import { doAction } from '@wordpress/hooks';
 import { Suspense, lazy } from "@wordpress/element";
 import { useRef, useEffect, useState } from "react";
 import { parse, stringify } from "qs";
@@ -25,17 +26,9 @@ import { Spinner } from "@woocommerce/components";
 /**
  * Internal dependencies
  */
-import getReports from "../analytics/report/get-reports";
 import { getAdminSetting } from "reports/utils/admin-settings";
-import { isFeatureEnabled } from "reports/utils/features";
 import { NoMatch } from "./NoMatch";
 
-const AnalyticsReport = lazy(() =>
-  import(/* webpackChunkName: "analytics-report" */ "../analytics/report")
-);
-const AnalyticsSettings = lazy(() =>
-  import(/* webpackChunkName: "analytics-settings" */ "../analytics/settings")
-);
 const Dashboard = lazy(() =>
   import(/* webpackChunkName: "dashboard" */ "../dashboard")
 );
@@ -49,74 +42,18 @@ export const getPages = () => {
   const pages = [];
   const initialBreadcrumbs = [["", getAdminSetting("woocommerceTranslation")]];
 
-  //   pages.push({
-  //     container: Homescreen,
-  //     path: "/",
-  //     breadcrumbs: [...initialBreadcrumbs, __("Home", "woocommerce")],
-  //     wpOpenMenu: "toplevel_page_woocommerce",
-  //     navArgs: {
-  //       id: "woocommerce-home",
-  //     },
-  //     capability: "manage_woocommerce",
-  //   });
-
-  if (window.wcAdminFeatures?.analytics || true) {
+  if ( getAdminSetting( 'isAnalyticsEnabled' ) ) {
     pages.push({
-      container: Dashboard,
-      path: "/analytics/overview",
-      breadcrumbs: [
+      container   : Dashboard,
+      path        : "/analytics/overview",
+      breadcrumbs : [
         ...initialBreadcrumbs,
-        ["/analytics/overview", __("Analytics", "woocommerce")],
-        __("Overview", "woocommerce"),
+        [ "/analytics/overview", __( "Analytics", 'dokan-lite' ) ],
+        __( "Overview", 'dokan-lite' ),
       ],
-      wpOpenMenu: "toplevel_page_wc-admin-path--analytics-overview",
-      navArgs: {
-        id: "woocommerce-analytics-overview",
-      },
-      capability: "dokandar",
-    });
-    // pages.push({
-    //   container: AnalyticsSettings,
-    //   path: "/analytics/settings",
-    //   breadcrumbs: [
-    //     ...initialBreadcrumbs,
-    //     ["/analytics/revenue", __("Analytics", "woocommerce")],
-    //     __("Settings", "woocommerce"),
-    //   ],
-    //   wpOpenMenu: "toplevel_page_wc-admin-path--analytics-overview",
-    //   navArgs: {
-    //     id: "woocommerce-analytics-settings",
-    //   },
-    //   capability: "dokandar",
-    // });
-    pages.push({
-      container: AnalyticsReport,
-      path: "/customers",
-      breadcrumbs: [...initialBreadcrumbs, __("Customers", "woocommerce")],
-      wpOpenMenu: "toplevel_page_woocommerce",
-      navArgs: {
-        id: "woocommerce-analytics-customers",
-      },
-      capability: "dokandar",
-    });
-    pages.push({
-      container: AnalyticsReport,
-      path: "/analytics/:report",
-      breadcrumbs: ({ match }) => {
-        const report = find(getReports(), {
-          report: match.params.report,
-        });
-        if (!report) {
-          return [];
-        }
-        return [
-          ...initialBreadcrumbs,
-          ["/analytics/revenue", __("Analytics", "woocommerce")],
-          report.title,
-        ];
-      },
-      wpOpenMenu: "toplevel_page_wc-admin-path--analytics-overview",
-      capability: "dokandar",
+      wpOpenMenu  : "toplevel_page_wc-admin-path--analytics-overview",
+      navArgs     : { id : "woocommerce-analytics-overview" },
+      capability  : "dokandar",
     });
   }
 
@@ -126,12 +63,12 @@ export const getPages = () => {
    * @filter dokan_analytics_pages_list
    * @param {Array.<Object>} pages Array page objects.
    */
-  const filteredPages = applyFilters(PAGES_FILTER, pages);
+  const filteredPages = applyFilters( PAGES_FILTER, pages, getAdminSetting( 'isAnalyticsEnabled' ) );
 
   filteredPages.push({
     container: NoMatch,
     path: "*",
-    breadcrumbs: [...initialBreadcrumbs, __("Not allowed", "woocommerce")],
+    breadcrumbs: [...initialBreadcrumbs, __("Not allowed", 'dokan-lite')],
     wpOpenMenu: "toplevel_page_woocommerce",
   });
 
@@ -197,6 +134,8 @@ export const Controller = ({ ...props }) => {
       if (prevProps.match.url !== props.match.url) {
         window.document.documentElement.scrollTop = 0;
       }
+
+      doAction( 'dokan_analytics_route_handler', props.match.url );
     }
   }, [props, prevProps]);
 
