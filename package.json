@@ -45,6 +45,7 @@
     "@wordpress/i18n": "^5.8.0",
     "@wordpress/plugins": "^7.10.0",
     "@wordpress/url": "^4.15.0",
+    "dompurify": "^3.2.4",
     "fs-extra": "^11.2.0",
     "path": "^0.12.7",
     "prop-types": "^15.8.1",

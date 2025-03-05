@@ -6,13 +6,13 @@ use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter;
 use WeDevs\Dokan\Analytics\Reports\Orders\Stats\QueryFilter as StatsQueryFilter;
 use WeDevs\Dokan\Analytics\Reports\Orders\Stats\ScheduleListener;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
-use WeDevs\Dokan\ThirdParty\Packages\League\Container\Definition\DefinitionInterface;
+
 
 class AnalyticsServiceProvider extends BaseServiceProvider {
     /**
      * Tags for services added to the container.
      */
-    public const TAGS = [ 'analytics-service', 'common-service' ];
+    protected $tags = [ 'analytics-service' ];
 
     protected $services = [
         ScheduleListener::class,
@@ -36,24 +36,6 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Analytics\VendorDashboardManager::class,
         \WeDevs\Dokan\Analytics\Reports\DataStoreCacheModifier::class,
     ];
-
-    /**
-     * {@inheritDoc}
-     *
-     * Check if the service provider can provide the given service alias.
-     *
-     * @param string $alias The service alias to check.
-     * @return bool True if the service provider can provide the service, false otherwise.
-     */
-    public function provides( string $alias ): bool {
-        $is_resolved = in_array( $alias, $this->services, true ) || in_array( $alias, self::TAGS, true );
-
-        if ( $is_resolved ) {
-            return true;
-        }
-
-        return parent::provides( $alias );
-    }
 
     /**
      * Register the classes.
