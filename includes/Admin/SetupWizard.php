@@ -27,6 +27,15 @@ class SetupWizard {
     private $deferred_actions = [];
 
     /**
+     * Instance of RecommendedPlugins class for managing plugin recommendations.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var RecommendedPlugins Handles the retrieval and management of recommended plugins
+     */
+    private RecommendedPlugins $recommended_plugins;
+
+    /**
      * Hook in tabs.
      */
     public function __construct() {
@@ -35,6 +44,8 @@ class SetupWizard {
         }
 
         if ( current_user_can( 'manage_woocommerce' ) ) {
+            $this->recommended_plugins = new RecommendedPlugins();
+
             add_action( 'admin_menu', [ $this, 'admin_menus' ] );
             add_action( 'init', [ $this, 'register_admin_scripts' ] );
             add_action( 'admin_init', [ $this, 'setup_wizard' ], 99 );
@@ -754,58 +765,8 @@ class SetupWizard {
             <ul class="recommended-step">
                 <?php
                 if ( $this->user_can_install_plugin() ) {
-                    if ( ! $this->is_wc_conversion_tracking_active() ) {
-                        $this->display_recommended_item(
-                            [
-                                'type'        => 'wc_conversion_tracking',
-                                'title'       => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                                'description' => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
-                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
-                                'img_alt'     => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
-                                'plugins'     => [
-                                    [
-                                        'name' => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                                        'slug' => 'woocommerce-conversion-tracking',
-                                    ],
-                                ],
-                            ]
-                        );
-                    }
-
-                    if ( ! $this->is_wemail_active() ) {
-                        $this->display_recommended_item(
-                            [
-                                'type'        => 'wemail',
-                                'title'       => __( 'weMail', 'dokan-lite' ),
-                                'description' => __( 'Simplified Email  Marketing Solution for WordPress!', 'dokan-lite' ),
-                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wemail-logo.png',
-                                'img_alt'     => __( 'weMail logo', 'dokan-lite' ),
-                                'plugins'     => [
-                                    [
-                                        'name' => __( 'weMail', 'dokan-lite' ),
-                                        'slug' => 'wemail',
-                                    ],
-                                ],
-                            ]
-                        );
-                    }
-
-                    if ( ! $this->is_texty_active() ) {
-                        $this->display_recommended_item(
-                            [
-                                'type'        => 'texty',
-                                'title'       => __( 'Texty', 'dokan-lite' ),
-                                'description' => __( 'SMS Notification for WordPress, WooCommerce, Dokan and more', 'dokan-lite' ),
-                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/texty-logo.png',
-                                'img_alt'     => __( 'Texty logo', 'dokan-lite' ),
-                                'plugins'     => [
-                                    [
-                                        'name' => __( 'Texty', 'dokan-lite' ),
-                                        'slug' => 'texty',
-                                    ],
-                                ],
-                            ]
-                        );
+                    foreach ( $this->recommended_plugins->get() as $plugin ) {
+                        $this->display_recommended_item( $plugin );
                     }
                 }
                 ?>
@@ -827,41 +788,25 @@ class SetupWizard {
      * @return void
      */
     public function dokan_setup_recommended_save() {
-        check_admin_referer( 'dokan-setup' );
+        foreach ( $this->recommended_plugins->get() as $plugin ) {
+            if ( ! $this->should_install_plugin( $plugin ) ) {
+                continue;
+            }
 
-        $setup_wc_conversion_tracking = isset( $_POST['setup_wc_conversion_tracking'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_wc_conversion_tracking'] ) );
-        $setup_wemail                 = isset( $_POST['setup_wemail'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_wemail'] ) );
-        $setup_texty                  = isset( $_POST['setup_texty'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_texty'] ) );
+            $plugin_details = $plugin['plugins'][0] ?? null;
 
-        if ( $setup_wc_conversion_tracking && ! $this->is_wc_conversion_tracking_active() ) {
+            if ( ! $plugin_details ) {
+                continue;
+            }
+
+            $plugin_details_arr = explode( '/', $plugin_details['basename'] ?? '' );
+
             $this->install_plugin(
-                'woocommerce-conversion-tracking',
+                $plugin_details['slug'],
                 [
-                    'name'      => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                    'repo-slug' => 'woocommerce-conversion-tracking',
-                    'file'      => 'conversion-tracking.php',
-                ]
-            );
-        }
-
-        if ( $setup_wemail && ! $this->is_wemail_active() ) {
-            $this->install_plugin(
-                'wemail',
-                [
-                    'name'      => __( 'weMail', 'dokan-lite' ),
-                    'repo-slug' => 'wemail',
-                    'file'      => 'wemail.php',
-                ]
-            );
-        }
-
-        if ( $setup_texty && ! $this->is_texty_active() ) {
-            $this->install_plugin(
-                'texty',
-                [
-                    'name'      => __( 'Texty', 'dokan-lite' ),
-                    'repo-slug' => 'texty',
-                    'file'      => 'texty.php',
+                    'name'      => $plugin_details['name'] ?? '',
+                    'repo-slug' => $plugin_details_arr[0] ?? '',
+                    'file'      => $plugin_details_arr[1] ?? '',
                 ]
             );
         }
@@ -880,6 +825,27 @@ class SetupWizard {
 
         wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
+    }
+
+    /**
+     * Determines if a plugin should be installed based on POST data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $plugin Plugin configuration array
+     *
+     * @return bool
+     */
+    private function should_install_plugin( array $plugin ): bool {
+        check_admin_referer( 'dokan-setup' );
+
+        $setup_key = 'setup_' . $plugin['type'];
+
+        if ( ! isset( $_POST[ $setup_key ] ) ) {
+            return false;
+        }
+
+        return 'yes' === sanitize_text_field( wp_unslash( $_POST[ $setup_key ] ) );
     }
 
     /**
@@ -946,52 +912,11 @@ class SetupWizard {
             return false;
         }
 
-        if ( $this->is_wc_conversion_tracking_active() ) {
-            return false;
-        }
-
-        if ( $this->is_wemail_active() ) {
-            return false;
-        }
-
-        if ( $this->is_texty_active() ) {
+        if ( ! count( $this->recommended_plugins->get() ) ) {
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * Check if WC Conversion Tracking is active or not
-     *
-     * @since 2.8.7
-     *
-     * @return bool
-     */
-    protected function is_wc_conversion_tracking_active() {
-        return is_plugin_active( 'woocommerce-conversion-tracking/conversion-tracking.php' );
-    }
-
-    /**
-     * Check if weMail is active or not
-     *
-     * @since 3.0.0
-     *
-     * @return bool
-     */
-    protected function is_wemail_active() {
-        return is_plugin_active( 'wemail/wemail.php' );
-    }
-
-    /**
-     * Check if texty is active or not
-     *
-     * @since 3.2.11
-     *
-     * @return bool
-     */
-    protected function is_texty_active() {
-        return is_plugin_active( 'texty/texty.php' );
     }
 
     /**
@@ -1067,6 +992,10 @@ class SetupWizard {
      * @param array  $plugin_info Plugin info array containing name and repo-slug, and optionally file if different from [repo-slug].php.
      */
     public function install_plugin( $plugin_id, $plugin_info ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
         // Make sure we don't trigger multiple simultaneous installs.
         if ( get_option( 'woocommerce_setup_background_installing_' . $plugin_id ) ) {
             return;

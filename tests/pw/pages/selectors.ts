@@ -2716,8 +2716,9 @@ export const selector = {
 
                 // Recommended
                 recommendedHeading: '//h1[normalize-space()="Recommended for All Dokan Marketplaces"]',
-                wooCommerceConversionTracking: '//label[@for="dokan_recommended_wc_conversion_tracking"]',
+                storeGrowth: '//label[@for="dokan_recommended_store_growth"]',
                 weMail: '//label[@for="dokan_recommended_wemail"]',
+                wooCommerceConversionTracking: '//label[@for="dokan_recommended_wc_conversion_tracking"]',
                 texty: '//label[@for="dokan_recommended_texty"]',
                 continueRecommended: '.button-primary',
 
@@ -7194,8 +7195,7 @@ export const selector = {
                 satellite: '//button[normalize-space()="Satellite"]',
                 fullScreenToggle: '//button[@title="Toggle fullscreen view"]',
                 pegman: '//button[@title="Drag Pegman onto the map to open Street View"]',
-                zoomIn: '//button[@title="Zoom in"]',
-                zoomOut: '//button[@title="Zoom out"]',
+                mapCameraControls: '//button[@title="Map camera controls"]',
                 productOnMap: {
                     productPin: '//div[@id="dokan-geolocation-locations-map"]//img[contains(@src, "maps.gstatic.com/mapfiles/transparent.png")]/../..//div[@role="button"]',
                     productCluster: '//div[@id="dokan-geolocation-locations-map"]//div[contains(@style, "dokan-pro/modules/geolocation/assets/images")]',

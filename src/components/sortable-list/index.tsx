@@ -28,6 +28,7 @@ import {
 } from '@dnd-kit/sortable';
 
 import { Slot } from "@wordpress/components";
+import { Fragment } from "@wordpress/element";
 import { snakeCase, kebabCase } from "@dokan/utilities";
 import SortableItem from './SortableItem';
 import type { Announcements, ScreenReaderInstructions } from "@dnd-kit/core";
@@ -47,6 +48,8 @@ interface SortableListProps<T> {
     renderItem?: (item: T) => JSX.Element;
     orderProperty?: keyof T;
     className?: string;
+    dragSelector?: string;
+    wrapperElement?: string | null;
     activationConstraint?: PointerActivationConstraint;
     strategy?: StrategyType;
     keyExtractor?: (item: T) => UniqueIdentifier;
@@ -76,15 +79,21 @@ interface SortableListProps<T> {
 }
 
 const SortableList = <T extends object>( props: SortableListProps<T> ): JSX.Element => {
+    if ( ! props.namespace ) {
+        throw new Error( 'Namespace is required for the SortableList component' );
+    }
+
     const {
         items,
         namespace,
         onChange,
         renderItem,
+        dragSelector,
         orderProperty,
         className = '',
         activationConstraint,
         strategy = 'vertical',
+        wrapperElement: WrapperElement = 'div',
         keyExtractor = item => (item as any)?.id || item,
         gridColumns = 4,
         disabled,
@@ -120,10 +129,10 @@ const SortableList = <T extends object>( props: SortableListProps<T> ): JSX.Elem
 
         if ( active?.id !== over?.id ) {
             const oldIndex = items.findIndex(
-                item => keyExtractor( item ) === active.id
+                item => keyExtractor( item ) === active?.id
             );
             const newIndex = items.findIndex(
-                item => keyExtractor( item ) === over.id
+                item => keyExtractor( item ) === over?.id
             );
 
             const newItems = arrayMove( items, oldIndex, newIndex );
@@ -148,19 +157,27 @@ const SortableList = <T extends object>( props: SortableListProps<T> ): JSX.Elem
             case 'horizontal':
                 return 'flex flex-row items-center';
             case 'grid':
-                return `grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-${ gridColumns }`;
+                return `grid grid-cols-1 sm:grid-cols-2 md:grid-cols-${ gridColumns } lg:grid-cols-${ gridColumns }`;
             case 'vertical':
             default:
                 return 'flex flex-col';
         }
     };
 
+    const ContainerElement = WrapperElement || Fragment;
+    const SectionElement = WrapperElement || Fragment;
+    const containerProps = WrapperElement ? {
+        id: containerNamespace,
+        className: `dokan-sortable-container`,
+        dataFilterId: `dokan_${ snakeCase( namespace ) }_sortable_container`,
+    } : {};
+
+    const sectionProps = WrapperElement ? {
+        className: `${getLayoutClasses()} gap-4 ${className}`,
+    } : {};
+
     return (
-        <div
-            id={ containerNamespace }
-            className={ `dokan-sortable-container` }
-            data-filter-id={ `dokan_${ snakeCase( namespace ) }_sortable_container` }
-        >
+        <ContainerElement { ...containerProps }>
             <Slot
                 name={ `dokan-before-sortable-${ containerNamespace }` }
                 fillProps={{ items, strategy }}
@@ -178,23 +195,24 @@ const SortableList = <T extends object>( props: SortableListProps<T> ): JSX.Elem
                     id={ sortableId }
                     disabled={ disabled }
                 >
-                    <div className={ `${ getLayoutClasses() } gap-4 ${ className }` }>
+                    <SectionElement { ...sectionProps }>
                         { items.map( ( item ) => (
                             <SortableItem
                                 id={ keyExtractor( item ) }
                                 key={ keyExtractor( item ) }
+                                dragSelector={ dragSelector }
                                 renderItem={ () => renderItem ? renderItem( item ) : null }
                             />
                         )) }
-                    </div>
+                    </SectionElement>
                 </SortableContext>
             </DndContext>
 
             <Slot
-                name={ `dokan-after-sortable-${ containerNamespace }` }
                 fillProps={{ items, strategy }}
+                name={ `dokan-after-sortable-${ containerNamespace }` }
             />
-        </div>
+        </ContainerElement>
     );
 };
 
