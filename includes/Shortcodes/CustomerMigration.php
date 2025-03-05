@@ -14,7 +14,7 @@ class CustomerMigration extends DokanShortcode {
      * Shortcode name.
      *
      * @since 3.7.25 (PRO)
-     * @since DOKAN_SINCE Migration from DokanPro
+     * @since 3.14.10 Migration from DokanPro
      *
      * @var string Shortcode name
      */
@@ -24,7 +24,7 @@ class CustomerMigration extends DokanShortcode {
      * Render [dokan-customer-migration] shortcode
      *
      * @since 3.7.25 (PRO)
-     * @since DOKAN_SINCE Migration from DokanPro
+     * @since 3.14.10 Migration from DokanPro
      *
      * @param array $atts
      *

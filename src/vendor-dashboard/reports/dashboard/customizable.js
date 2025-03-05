@@ -2,14 +2,14 @@
  * External dependencies
  */
 import { __, sprintf } from '@wordpress/i18n';
-import {Fragment, useEffect, useMemo} from '@wordpress/element';
+import { Fragment, useEffect, useMemo } from '@wordpress/element';
 import { compose } from '@wordpress/compose';
 import { partial } from 'lodash';
 import { Dropdown, Button } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
 import { Icon, plusCircleFilled } from '@wordpress/icons';
 import { withSelect } from '@wordpress/data';
-import {H, ReportFilters} from '@woocommerce/components';
+import { H, ReportFilters } from '@woocommerce/components';
 import { SETTINGS_STORE_NAME, useUserPreferences } from '@woocommerce/data';
 import { getQuery } from '@woocommerce/navigation';
 import {
@@ -270,7 +270,6 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
                     isoDateFormat={ isoDateFormat }
                     filters={ filters }
                 />
-
                 { sections.map( ( section, index ) => {
                     if ( section.isVisible ) {
                         return (
@@ -317,10 +316,15 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
     const ANCHOR_HANDLER_FILTER = 'dokan_should_convert_anchors',
         shouldConvert = applyFilters( ANCHOR_HANDLER_FILTER, true );
 
-    if ( shouldConvert ) {  // Check if conversion should proceed.
+    if ( shouldConvert ) {
+        // Check if conversion should proceed.
         useEffect( () => {
-            const container = document.querySelector( '.customizable-dashboard' );
-            if ( ! container ) return;
+            const container = document.querySelector(
+                '.customizable-dashboard'
+            );
+            if ( ! container ) {
+                return;
+            }
 
             const interceptClicks = ( event ) => {
                 const link = event.target.closest( 'a' );
@@ -335,9 +339,11 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
 
             const handleBeforeUnload = ( event ) => {
                 const activeElement = document.activeElement;
-                if ( activeElement &&
+                if (
+                    activeElement &&
                     activeElement.closest( '.customizable-dashboard' ) &&
-                    ! activeElement.closest( '.woocommerce-filters' ) ) {
+                    ! activeElement.closest( '.woocommerce-filters' )
+                ) {
                     event.preventDefault();
                     event.returnValue = '';
                 }
@@ -350,7 +356,10 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
 
             return () => {
                 container.removeEventListener( 'click', interceptClicks, true );
-                window.removeEventListener( 'beforeunload', handleBeforeUnload );
+                window.removeEventListener(
+                    'beforeunload',
+                    handleBeforeUnload
+                );
             };
         }, [] );
     }
@@ -359,7 +368,7 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
         <CurrencyContext.Provider
             value={ getFilteredCurrencyInstance( getQuery() ) }
         >
-            <div className='customizable-dashboard'>
+            <div className="customizable-dashboard">
                 { renderDashboardReports() }
             </div>
         </CurrencyContext.Provider>

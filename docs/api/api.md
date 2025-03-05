@@ -21,7 +21,7 @@ These controllers extend the core `WP_REST_Controller` and provide predefined fu
 
 ## Creating a REST Controller
 
-To create a new REST controller, extend one of the Dokan base controllers and override the required methods from `WP_REST_Controller`.
+To create a new REST controller, extend one of the Dokan base controllers.
 
 ### Extending a Dokan Base Controller
 

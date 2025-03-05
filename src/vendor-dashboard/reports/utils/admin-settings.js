@@ -1,21 +1,24 @@
 /**
  * External dependencies
  */
-import { __ } from "@wordpress/i18n";
-import { getSetting } from "@woocommerce/settings";
+import { __ } from '@wordpress/i18n';
+import { getSetting } from '@woocommerce/settings';
 
 // Remove mutable data from settings object to prevent access. Data stores should be used instead.
-const mutableSources = ["wcAdminSettings", "preloadSettings"];
-const adminSettings = { ...getSetting("admin", {}), ...( vendorSharedSettings ?? {} ) };
+const mutableSources = [ 'wcAdminSettings', 'preloadSettings' ];
+const adminSettings = {
+    ...getSetting( 'admin', {} ),
+    ...( vendorSharedSettings ?? {} ),
+};
 
-const ADMIN_SETTINGS_SOURCE = Object.keys(adminSettings).reduce(
-  (source, key) => {
-    if (!mutableSources.includes(key)) {
-      source[key] = adminSettings[key];
-    }
-    return source;
-  },
-  {}
+const ADMIN_SETTINGS_SOURCE = Object.keys( adminSettings ).reduce(
+    ( source, key ) => {
+        if ( ! mutableSources.includes( key ) ) {
+            source[ key ] = adminSettings[ key ];
+        }
+        return source;
+    },
+    {}
 );
 
 /**
@@ -34,25 +37,32 @@ const ADMIN_SETTINGS_SOURCE = Object.keys(adminSettings).reduce(
  * @return {*}  The value present in the settings state for the given
  *                   name.
  */
-export function getAdminSetting(name, fallback = false, filter = (val) => val) {
-  if (mutableSources.includes(name)) {
-    throw new Error(
-      __("Mutable settings should be accessed via data store.", 'dokan-lite')
-    );
-  }
-  const value = ADMIN_SETTINGS_SOURCE.hasOwnProperty(name)
-    ? ADMIN_SETTINGS_SOURCE[name]
-    : fallback;
-  return filter(value, fallback);
+export function getAdminSetting(
+    name,
+    fallback = false,
+    filter = ( val ) => val
+) {
+    if ( mutableSources.includes( name ) ) {
+        throw new Error(
+            __(
+                'Mutable settings should be accessed via data store.',
+                'dokan-lite'
+            )
+        );
+    }
+    const value = ADMIN_SETTINGS_SOURCE.hasOwnProperty( name )
+        ? ADMIN_SETTINGS_SOURCE[ name ]
+        : fallback;
+    return filter( value, fallback );
 }
 
-export const ADMIN_URL = getSetting("adminUrl");
-export const COUNTRIES = getSetting("countries");
-export const CURRENCY = getSetting("currency");
-export const LOCALE = getSetting("locale");
-export const SITE_TITLE = getSetting("siteTitle");
-export const WC_ASSET_URL = getSetting("wcAssetUrl");
-export const ORDER_STATUSES = getAdminSetting("orderStatuses");
+export const ADMIN_URL = getSetting( 'adminUrl' );
+export const COUNTRIES = getSetting( 'countries' );
+export const CURRENCY = getSetting( 'currency' );
+export const LOCALE = getSetting( 'locale' );
+export const SITE_TITLE = getSetting( 'siteTitle' );
+export const WC_ASSET_URL = getSetting( 'wcAssetUrl' );
+export const ORDER_STATUSES = getAdminSetting( 'orderStatuses' );
 
 /**
  * Sets a value to a property on the settings state.
@@ -69,11 +79,14 @@ export const ORDER_STATUSES = getAdminSetting("orderStatuses");
  *                                           to sanitize the setting (eg.
  *                                           ensure it's a number)
  */
-export function setAdminSetting(name, value, filter = (val) => val) {
-  if (mutableSources.includes(name)) {
-    throw new Error(
-      __("Mutable settings should be mutated via data store.", 'dokan-lite')
-    );
-  }
-  ADMIN_SETTINGS_SOURCE[name] = filter(value);
+export function setAdminSetting( name, value, filter = ( val ) => val ) {
+    if ( mutableSources.includes( name ) ) {
+        throw new Error(
+            __(
+                'Mutable settings should be mutated via data store.',
+                'dokan-lite'
+            )
+        );
+    }
+    ADMIN_SETTINGS_SOURCE[ name ] = filter( value );
 }

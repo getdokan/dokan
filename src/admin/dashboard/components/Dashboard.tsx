@@ -1,6 +1,8 @@
 import { withRouter } from '../../../routing';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import Layout from './Layout';
+import ModulePage from '../pages/modules';
+import { useMutationObserver } from '../../../hooks';
 
 export type DokanAdminRoute = {
     id: string;
@@ -10,7 +12,13 @@ export type DokanAdminRoute = {
 };
 
 const getAdminRoutes = () => {
-    let routes: Array< DokanAdminRoute > = [];
+    let routes: Array< DokanAdminRoute > = [
+        {
+            id: 'pro-modules',
+            element: <ModulePage />,
+            path: '/pro-modules',
+        },
+    ];
 
     // @ts-ignore
     routes = wp.hooks.applyFilters(
@@ -44,6 +52,31 @@ const Dashboard = () => {
     } );
 
     const router = createHashRouter( mapedRoutes );
+
+    useMutationObserver(
+        document.body,
+        ( mutations ) => {
+            for ( const mutation of mutations ) {
+                if ( mutation.type !== 'childList' ) {
+                    continue;
+                }
+                // @ts-ignore
+                for ( const node of mutation.addedNodes ) {
+                    if ( node.id === 'headlessui-portal-root' ) {
+                        node.classList.add( 'dokan-layout' );
+                        node.style.display = 'block';
+                    }
+
+                    if (
+                        node.hasAttribute( 'data-radix-popper-content-wrapper' )
+                    ) {
+                        node.classList.add( 'dokan-layout' );
+                    }
+                }
+            }
+        },
+        { childList: true }
+    );
 
     return (
         <>

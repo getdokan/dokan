@@ -17,13 +17,14 @@ The `SortableList` component accommodates an `array` data type for its `items` p
 Basic array of `primitive` values without additional `properties`.
 
 ```tsx
-const simpleItems = [
+const [ simpleItems, setSimpleItems ] = useState([
     __( 'Item 1', 'dokan-lite' ),
     __( 'Item 2', 'dokan-lite' ),
     __( 'Item 3', 'dokan-lite' )
-];
+]);
 
 const handleOrderUpdate = ( updatedItems ) => {
+    setSimpleItems( [ ...updatedItems ] ); // Update items array.
     console.log( updatedItems ); // Get updated items array.
     // Handle any additional logic after order update
 };
@@ -45,13 +46,14 @@ const handleOrderUpdate = ( updatedItems ) => {
 `Array of objects` with basic properties but `no explicit order tracking`.
 
 ```tsx
-const objectItems = [
+const [ objectItems, setObjectItems ] = useState([
     { id: 1, name: __( 'Item 1', 'dokan-lite' ) },
     { id: 2, name: __( 'Item 2', 'dokan-lite' ) },
     { id: 3, name: __( 'Item 3', 'dokan-lite' ) }
-];
+]);
 
 const handleOrderUpdate = ( updatedItems ) => {
+    setObjectItems( [ ...updatedItems ] ); // Update items array.
     console.log( updatedItems ); // Get updated items array.
     // Handle any additional logic after order update
 };
@@ -73,13 +75,14 @@ const handleOrderUpdate = ( updatedItems ) => {
 `Array of objects` that include an order property for `explicit order tracking`.
 
 ```tsx
-const orderedItems = [
+const [ orderedItems, setOrderedItems ] = useState([
     { id: 1, title: 'First Task', content: __( 'Do something', 'dokan-lite' ), sort_order: 1 },
     { id: 2, title: 'Second Task', content: __( 'Do something else', 'dokan-lite' ), sort_order: 2 },
     { id: 3, title: 'Third Task', content: __( 'Another task', 'dokan-lite' ), sort_order: 3 }
-];
+]);
 
 const handleOrderUpdate = ( updatedItems ) => {
+    setOrderedItems( [ ...updatedItems ] ); // Update items array.
     console.log( updatedItems ); // Get updated items array.
     // Handle any additional logic after order update
 };
