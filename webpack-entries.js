@@ -50,6 +50,7 @@ const entryPoints = {
     // Category commission component styles.
     'dokan-category-commission': '/src/admin/components/Commission/index.js',
     'dokan-status': '/src/Status/index.tsx',
+    'dokan-admin-analytics': './assets/src/js/dokan-admin-analytics.js',
     'vendor-dashboard/reports/index': './src/vendor-dashboard/reports/index.js',
 };
 
