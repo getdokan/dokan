@@ -19,7 +19,7 @@ class ReportUtil {
      *
      * @return bool True if analytics is enabled, false otherwise.
      */
-    public static function dokan_is_analytics_enabled(): bool {
+    public static function is_analytics_enabled(): bool {
         $is_seller_enabled    = dokan_is_seller_enabled( dokan_get_current_user_id() );
         $is_analytics_enabled = 'yes' === get_option( Analytics::TOGGLE_OPTION_NAME, 'no' );
 

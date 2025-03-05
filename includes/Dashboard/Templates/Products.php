@@ -261,7 +261,7 @@ class Products {
             '',
             [
                 'bulk_statuses' => $bulk_statuses,
-                'should_render' => ProductUtil::dokan_should_skip_product_listing_render(),
+                'should_render' => ProductUtil::should_skip_product_listing_render(),
             ]
         );
     }

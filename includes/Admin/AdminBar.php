@@ -154,7 +154,7 @@ class AdminBar {
                 'parent' => 'site-name',
                 'id'     => 'view-dashboard',
                 'title'  => __( 'Visit Vendor Dashboard', 'dokan-lite' ),
-                'href'   => get_permalink( $vendor_dashboard ) . ( ReportUtil::dokan_is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
+                'href'   => get_permalink( $vendor_dashboard ) . ( ReportUtil::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
             ];
         }
 
