@@ -251,8 +251,10 @@ class Products {
      */
     public function render_product_listing_template( $action ) {
         if ( ReportUtil::is_report_products_url() ) {
+            dokan_get_template_part( 'dashboard/dashboard' );
             return;
         }
+
         $bulk_statuses = apply_filters(
             'dokan_bulk_product_statuses', [
                 '-1'     => __( 'Bulk Actions', 'dokan-lite' ),
