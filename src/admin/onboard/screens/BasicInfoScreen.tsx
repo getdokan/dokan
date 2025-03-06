@@ -1,8 +1,8 @@
+import React, { useEffect, useState } from 'react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
 import { Button, SimpleInput } from '@getdokan/dokan-ui';
-import Logo from '@dokan/admin/onboard/Logo';
-import WarningIcon from '@dokan/admin/onboard/icons/WarningIcon';
+import Logo from '../Logo';
+import WarningIcon from '../icons/WarningIcon';
 
 interface BasicInfoScreenProps {
     onNext: () => void;
@@ -11,12 +11,12 @@ interface BasicInfoScreenProps {
     onUpdate: ( storeUrl: string, shareDiagnostics: boolean ) => void;
 }
 
-const BasicInfoScreen = ( {
+const BasicInfoScreen: React.FC< BasicInfoScreenProps > = ( {
     onNext,
     storeUrl,
     shareDiagnostics,
     onUpdate,
-}: BasicInfoScreenProps ) => {
+} ) => {
     const [ localStoreUrl, setLocalStoreUrl ] = useState( storeUrl || 'store' );
     const [ localShareDiagnostics, setLocalShareDiagnostics ] = useState(
         shareDiagnostics !== undefined ? shareDiagnostics : true
@@ -25,7 +25,7 @@ const BasicInfoScreen = ( {
     // Update the parent component when values change
     useEffect( () => {
         onUpdate( localStoreUrl, localShareDiagnostics );
-    }, [ localStoreUrl, localShareDiagnostics ] );
+    }, [ localStoreUrl, localShareDiagnostics, onUpdate ] );
 
     const handleNext = () => {
         // Ensure values are updated before proceeding
@@ -34,8 +34,8 @@ const BasicInfoScreen = ( {
     };
 
     return (
-        <div className={ `min-h-screen flex items-center justify-center` }>
-            <div className="p-8 md:p-10  md:w-[70%]">
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="p-8 md:p-10 md:w-[70%]">
                 <div className="mb-8">
                     <Logo />
                 </div>
@@ -80,8 +80,8 @@ const BasicInfoScreen = ( {
                             <span>
                                 Vendor Store URL will be (
                                 <span className="text-indigo-600">
-                                    https://dokan-dev.test/
-                                    { localStoreUrl }/vendor-name
+                                    https://dokan-dev.test/{ localStoreUrl }
+                                    /vendor-name
                                 </span>
                                 )
                             </span>

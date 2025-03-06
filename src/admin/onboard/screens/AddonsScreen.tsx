@@ -1,4 +1,4 @@
-import Logo from './Logo';
+import Logo from '../Logo';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@getdokan/dokan-ui';
 import { useEffect, useState } from '@wordpress/element';

@@ -1,147 +1,109 @@
-import WelcomeScreen from './WelcomeScreen';
-import MarketplaceGoalScreen from './MarketplaceGoalScreen';
-import AddonsScreen from './AddonsScreen';
-import BasicInfoScreen from './BasicInfoScreen';
-import LoadingScreen from './LoadingScreen';
-import SuccessScreen from './SuccessScreen';
-import { useEffect, useState } from '@wordpress/element';
-import apiFetch from '@wordpress/api-fetch';
-import { IOnboard } from '@dokan/admin/onboard/types';
+import React, { useEffect, useState } from 'react';
+import {
+    fetchOnboardingData,
+    formatPlugins,
+    submitOnboardingData,
+} from './utility/api';
+import { FormData, OnboardingData } from './types';
+import WelcomeScreen from './screens/WelcomeScreen';
+import BasicInfoScreen from './screens/BasicInfoScreen';
+import MarketplaceGoalScreen from './screens/MarketplaceGoalScreen';
+import AddonsScreen from './screens/AddonsScreen';
+import LoadingScreen from './screens/LoadingScreen';
+import SuccessScreen from './screens/SuccessScreen';
+import ErrorMessage from './components/ErrorMessage';
+import StepIndicator from './components/StepIndicator';
+import './tailwind.scss';
 
-// Define types for our API data
-const OnboardingApp = () => {
+const defaultFormData: FormData = {
+    custom_store_url: 'store',
+    share_essentials: true,
+    marketplace_goal: {
+        marketplace_focus: 'physical',
+        handle_delivery: 'vendor',
+        top_priority: 'sales',
+    },
+    plugins: [],
+};
+
+const OnboardingApp: React.FC = () => {
+    // State management
     const [ currentStep, setCurrentStep ] = useState( 0 );
     const [ isLoading, setIsLoading ] = useState( false );
     const [ apiError, setApiError ] = useState( '' );
-    const [ initialData, setInitialData ] = useState< IOnboard | null >( null );
+    const [ initialData, setInitialData ] = useState< OnboardingData | null >(
+        null
+    );
+    const [ formData, setFormData ] = useState< FormData >( defaultFormData );
 
-    // Form data state
-    const [ formData, setFormData ] = useState( {
-        // Basic info
-        custom_store_url: 'store',
-        share_essentials: true,
-
-        // Marketplace goal
-        marketplace_goal: {
-            marketplace_focus: 'physical',
-            handle_delivery: 'vendor',
-            top_priority: 'sales',
-        },
-
-        // Selected plugins/addons
-        plugins: [] as Array< {
-            id: string;
-            info: {
-                name: string;
-                'repo-slug': string;
-                [ key: string ]: any;
-            };
-        } >,
-    } );
-
-    // Fetch initial data when component mounts
-    useEffect( () => {
-        fetchOnboardingData();
-    }, [] );
-
-    const formatPlugins = ( plugins: any[] ) => {
-        return plugins.map( ( plugin ) => {
-            //  $plugin_details_arr = explode( '/', $plugin_details['basename'] ?? '' );
-            const pluginDetails = plugin?.plugins[ 0 ]?.basename.split( '/' );
-            return {
-                id: plugin?.plugins[ 0 ]?.slug,
-                info: {
-                    name: plugin?.plugins[ 0 ]?.name,
-                    'repo-slug': pluginDetails[ 0 ] || '',
-                    file: pluginDetails[ 1 ] || '',
-                },
-            };
-        } );
-    };
-
-    const fetchOnboardingData = async () => {
+    // Fetch initial data
+    const loadInitialData = async () => {
         try {
             setIsLoading( true );
-            const response = await apiFetch< IOnboard >( {
-                path: '/dokan/v1/admin-onboarding',
-                method: 'GET',
-            } );
+            setApiError( '' );
 
+            const response = await fetchOnboardingData();
             setInitialData( response );
 
-            // Initialize form data with values from API if available
             if ( response ) {
                 setFormData( {
                     custom_store_url:
                         response.general_options?.custom_store_url || 'store',
                     share_essentials:
-                        response.share_essentials !== undefined
+                        typeof response.share_essentials === 'string'
                             ? response.share_essentials === '1'
-                            : true,
+                            : Boolean( response.share_essentials ),
                     marketplace_goal: {
                         marketplace_focus:
                             response.marketplace_goal?.marketplace_focus ||
                             'physical',
                         handle_delivery:
-                            response.marketplace_goal?.handle_delivery,
+                            response.marketplace_goal?.handle_delivery ||
+                            'vendor',
                         top_priority:
                             response.marketplace_goal?.top_priority || 'sales',
                     },
-                    plugins: formatPlugins( response.plugins ) || [],
+                    plugins: formatPlugins( response.plugins || [] ),
                 } );
 
-                const isAlreadyOnboarded = response?.onboarding;
-                if ( isAlreadyOnboarded ) {
-                    setCurrentStep( 5 ); // Show success screen if already onboarded
+                // Skip to success screen if already onboarded
+                if ( response?.onboarding ) {
+                    setCurrentStep( 5 );
                 }
             }
-
-            setIsLoading( false );
         } catch ( error ) {
             console.error( 'Error fetching onboarding data:', error );
             setApiError(
                 'Failed to load initial data. Please refresh the page.'
             );
-            setIsLoading( false );
-        }
-    };
-
-    const submitOnboardingData = async () => {
-        setIsLoading( true );
-        setCurrentStep( 4 ); // Show loading screen
-
-        try {
-            // Prepare the data for submission
-            const submitData = {
-                onboarding: true,
-                marketplace_goal: formData.marketplace_goal,
-                custom_store_url: formData.custom_store_url,
-                share_essentials: formData.share_essentials,
-                plugins: formData.plugins,
-            };
-
-            // Send the data to the API
-            const response = await apiFetch( {
-                path: '/dokan/v1/admin-onboarding',
-                method: 'POST',
-                data: submitData,
-            } );
-
-            console.log( 'Onboarding completed successfully:', response );
-
-            // Move to success screen
-            setCurrentStep( 5 );
-        } catch ( error ) {
-            console.error( 'Error submitting onboarding data:', error );
-            setApiError( 'Failed to save onboarding data. Please try again.' );
-            // Go back to previous step
-            setCurrentStep( 3 );
         } finally {
             setIsLoading( false );
         }
     };
 
-    // Update form data handlers for each section
+    // Load data on mount
+    useEffect( () => {
+        loadInitialData();
+    }, [] );
+
+    // Handle form submission
+    const handleSubmit = async () => {
+        setIsLoading( true );
+        setCurrentStep( 4 ); // Show loading screen
+
+        try {
+            await submitOnboardingData( formData );
+            setCurrentStep( 5 ); // Success screen
+        } catch ( error ) {
+            console.error( 'Error submitting onboarding data:', error );
+            setApiError( 'Failed to save onboarding data. Please try again.' );
+            setCurrentStep( 3 ); // Back to addons screen
+        } finally {
+            setIsLoading( false );
+        }
+    };
+
+    // Update handlers
     const updateBasicInfo = ( storeUrl: string, shareEssentials: boolean ) => {
         setFormData( ( prevData ) => ( {
             ...prevData,
@@ -166,27 +128,25 @@ const OnboardingApp = () => {
     };
 
     const updateSelectedPlugins = ( pluginIds: string[] ) => {
-        // Filter the full plugins list to include only selected ones
-        console.log( 'Selected plugin IDs:', pluginIds );
-        const selectedPlugins =
-            initialData?.plugins.filter( ( plugin ) =>
-                pluginIds.includes( plugin?.plugins?.[ 0 ]?.slug )
-            ) || [];
+        if ( ! initialData?.plugins?.length ) {
+            return;
+        }
 
-        console.log( 'Selected plugins:', selectedPlugins );
+        const selectedPlugins = initialData.plugins.filter( ( plugin ) =>
+            pluginIds.includes( plugin?.plugins?.[ 0 ]?.slug )
+        );
 
-        const formattedPlugins = formatPlugins( selectedPlugins );
-        console.log( 'Formatted plugins:', formattedPlugins );
         setFormData( ( prevData ) => ( {
             ...prevData,
-            plugins: formattedPlugins,
+            plugins: formatPlugins( selectedPlugins ),
         } ) );
     };
 
+    // Navigation handlers
     const goToNextStep = () => {
         if ( currentStep === 3 ) {
-            // Submit data when moving from addon screen to loading screen
-            submitOnboardingData();
+            // Submit data when leaving addons screen
+            handleSubmit();
         } else {
             setCurrentStep( ( prevStep ) => Math.min( prevStep + 1, 5 ) );
         }
@@ -196,30 +156,20 @@ const OnboardingApp = () => {
         setCurrentStep( ( prevStep ) => Math.max( prevStep - 1, 0 ) );
     };
 
-    const goToStep = ( step: number ) => {
-        setCurrentStep( step );
-    };
-
+    // Render the current screen
     const renderCurrentScreen = () => {
         // Show loading screen while fetching initial data
         if ( isLoading && currentStep === 0 ) {
             return <LoadingScreen />;
         }
 
-        // Display error message if API request failed
+        // Display error message if API request failed and not on success screen
         if ( apiError && currentStep !== 5 ) {
-            // You could create an ErrorScreen component or handle errors differently
             return (
-                <div className="error-message p-8 text-center">
-                    <h2 className="text-xl text-red-600 mb-4">Error</h2>
-                    <p>{ apiError }</p>
-                    <button
-                        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-                        onClick={ fetchOnboardingData }
-                    >
-                        Try Again
-                    </button>
-                </div>
+                <ErrorMessage
+                    message={ apiError }
+                    onRetry={ loadInitialData }
+                />
             );
         }
 
@@ -245,8 +195,6 @@ const OnboardingApp = () => {
                         }
                         deliveryMethod={
                             formData.marketplace_goal.handle_delivery
-                                ? 'marketplace'
-                                : 'vendor'
                         }
                         priority={ formData.marketplace_goal.top_priority }
                         onUpdate={ updateMarketplaceGoal }
@@ -278,21 +226,11 @@ const OnboardingApp = () => {
         <div>
             { renderCurrentScreen() }
 
-            { /* Navigation dots */ }
-            <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-full shadow-lg p-2 flex space-x-2">
-                { [ 0, 1, 2, 3, 4, 5 ].map( ( step ) => (
-                    <button
-                        key={ step }
-                        className={ `w-3 h-3 rounded-full ${
-                            currentStep === step
-                                ? 'bg-indigo-600'
-                                : 'bg-gray-300'
-                        }` }
-                        onClick={ () => goToStep( step ) }
-                        disabled={ isLoading }
-                    />
-                ) ) }
-            </div>
+            <StepIndicator
+                currentStep={ currentStep }
+                onStepChange={ setCurrentStep }
+                isDisabled={ isLoading }
+            />
         </div>
     );
 };

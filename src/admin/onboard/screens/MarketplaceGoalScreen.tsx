@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Logo from './Logo';
-import RadioCard from './RadioCard';
+import Logo from '../Logo';
+import RadioCard from '../RadioCard';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@getdokan/dokan-ui';
 
