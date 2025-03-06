@@ -114,7 +114,7 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 			'share_essentials' => true,
 			'marketplace_goal' => [
 				'marketplace_focus' => 'physical',
-				'handle_delivery' => true,
+				'handle_delivery' => 'marketplace',
 				'top_priority' => 'growth',
 			],
 			'plugins' => [
@@ -167,7 +167,7 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 		update_option(
 			'dokan_marketplace_goal', [
 				'marketplace_focus' => 'digital',
-				'handle_delivery' => false,
+				'handle_delivery' => 'marketplace',
 				'top_priority' => 'security',
 			]
 		);
@@ -190,7 +190,7 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 		$this->assertEquals(
 			[
 				'marketplace_focus' => 'digital',
-				'handle_delivery' => false,
+				'handle_delivery' => 'marketplace',
 				'top_priority' => 'security',
 			], $data['marketplace_goal']
 		);
