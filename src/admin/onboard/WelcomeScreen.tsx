@@ -1,6 +1,6 @@
 import Logo from './Logo';
-import { __ } from '@wordpress/i18n';
-import { Button } from  '@getdokan/dokan-ui';
+import {__} from '@wordpress/i18n';
+import {Button} from '@getdokan/dokan-ui';
 
 const WelcomeScreen = ({ onNext }) => {
     return (
@@ -18,7 +18,8 @@ const WelcomeScreen = ({ onNext }) => {
                             {__('Ready to revolutionize online selling? We\'re excited to help you create a marketplace that stands out! Let\'s start with a few quick questions.', 'dokan')}
                         </p>
                     </div>
-                    <Button onClick={ onNext } className='bg-dokan-btn hover:bg-dokan-btn-hover text-white rounded-md py-3 px-8'>
+                    <Button onClick={onNext}
+                            className='bg-[#7047EB]  text-white rounded-md py-3 px-8'>
                         { __( 'Start Journey', 'dokan' ) }
                     </Button>
                 </div>

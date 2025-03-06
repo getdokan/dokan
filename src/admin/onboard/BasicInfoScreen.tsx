@@ -6,7 +6,7 @@ import WarningIcon from "@dokan/admin/onboard/icons/WarningIcon";
 
 const BasicInfoScreen = ({ onNext }) => {
     const [ storeUrl, setStoreUrl ] = useState(
-        'name'
+        'store'
     );
     const [ shareDiagnostics, setShareDiagnostics ] = useState(true);
 
@@ -39,8 +39,9 @@ const BasicInfoScreen = ({ onNext }) => {
                                 </span>
                             }
                             addOnRight={
-                                <span className="inline-flex items-center bg-gray-50 px-3 text-gray-900 sm:text-sm rouned-bl absolute right-0 top-0 h-full rounded-bl rounded-tl">
-                                    name
+                                <span
+                                    className="inline-flex items-center bg-gray-50 px-3 text-gray-900 sm:text-sm rouned-bl absolute right-0 top-0 h-full rounded-bl rounded-tl w-max">
+                                    vendor-name
                                 </span>
                             }
                             input={
@@ -55,14 +56,14 @@ const BasicInfoScreen = ({ onNext }) => {
                             onChange={ (e) => setStoreUrl( e.target.value ) }
                             className="w-[80%] md:w-full pl-[12rem] block"
                         />
-                        <div className='flex items-center gap-2 mt-2 text-sm text-gray-500'>
+                        <div className='flex items-center gap-2 mt-6 text-sm text-gray-500'>
                             <WarningIcon/>
                             <span>Vendor Store URL will be (<span className='text-indigo-600'>https://marketplace.dokan.com/store/name</span>)</span>
                         </div>
                     </div>
 
-                    <div className='flex items-start space-x-4'>
-                        <div className='flex-shrink-0 pt-0.5'>
+                    <div className='flex items-center space-x-4 space-y-8'>
+                        <div className='flex-shrink-0 mb-2'>
                             {/*<div*/}
                             {/*    className={`w-5 h-5 rounded border flex items-center justify-center cursor-pointer ${*/}
                             {/*        shareDiagnostics ? 'bg-indigo-600 border-indigo-600' : 'border-gray-300'*/}
@@ -75,15 +76,15 @@ const BasicInfoScreen = ({ onNext }) => {
                                 type="checkbox"
                                 defaultChecked={ shareDiagnostics }
                                 aria-describedby="comments-description"
-                                className='border border-gray-300 rounded  p-3 bg-dokan-btn hover:bg-dokan-btn-hover text-white cursor-pointer text-sm'
+                                className='rounded p-2 w-5 h-5 bg-[#7047EB] text-white cursor-pointer text-sm'
                                 onChange={(e) => shareDiagnostics(!shareDiagnostics)}
                             />
                         </div>
-                        <div>
-                            <h3 className='text-base font-medium'>
+                        <div className="flex flex-col gap-1">
+                            <h3 className='text-sm font-medium'>
                                 {__('Help Us Tailor Your Marketplace', 'dokan')}
                             </h3>
-                            <p className='text-sm text-gray-500'>
+                            <p className='text-sm text-gray-500 lg:max-w-[400px]'>
                                 {__('Allow Dokan Multivendor Marketplace to collect non-sensitive diagnostic data and usage information.', 'dokan')}
                             </p>
                         </div>
@@ -91,7 +92,7 @@ const BasicInfoScreen = ({ onNext }) => {
                 </div>
 
                 <div className='flex justify-end mt-12'>
-                    <Button onClick={ onNext } className='bg-dokan-btn hover:bg-dokan-btn-hover text-white py-3 px-8 flex items-center rounded-md'>
+                    <Button onClick={onNext} className='bg-[#7047EB] text-white py-3 px-8 flex items-center rounded-md'>
                         { __( 'Next', 'dokan' ) }
                         <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 ml-1' viewBox='0 0 20 20' fill='currentColor'>
                             <path fillRule='evenodd' d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z' clipRule='evenodd' />
