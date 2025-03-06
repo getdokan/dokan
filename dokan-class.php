@@ -17,6 +17,7 @@ use WeDevs\Dokan\DependencyManagement\Container;
  * @property WeDevs\Dokan\Withdraw\Manager $withdraw Instance of WeDevs\Dokan\Withdraw\Manager class
  * @property WeDevs\Dokan\Frontend\Frontend $frontend_manager Instance of \WeDevs\Dokan\Frontend\Frontend class
  * @property WeDevs\Dokan\Registration $registration Instance of WeDevs\Dokan\Registration class
+ * @property WeDevs\Dokan\Utilities\AdminSettingsUtil $admin_settings_util of WeDevs\Dokan\Utilities\AdminSettingsUtil class
  */
 final class WeDevs_Dokan {
 

@@ -1378,7 +1378,7 @@ function dokan_admin_user_register( $user_id ) {
     $role = reset( $user->roles );
 
     if ( $role === 'seller' ) {
-        $enabled = 'automatically' === dokan_get_new_seller_enable_selling_status();
+        $enabled = 'automatically' === dokan_get_container()->get( 'admin_settings_util' )->get_new_seller_enable_selling_status();
         update_user_meta( $user_id, 'dokan_enable_selling', $enabled ? 'yes' : 'no' );
     }
 }
@@ -4242,7 +4242,7 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
         $vendor->set_address( $data['address'] );
         $vendor->save();
 
-        if ( 'automatically' === dokan_get_new_seller_enable_selling_status() ) {
+        if ( 'automatically' === dokan_get_container()->get( 'admin_settings_util' )->get_new_seller_enable_selling_status() ) {
             $vendor->make_active();
         } else {
             $vendor->make_inactive();
@@ -4270,49 +4270,4 @@ function dokan_get_new_product_url() {
         ],
         dokan_get_navigation_url( 'new-product' )
     );
-}
-
-/**
- * Dokan new seller enable selling statuses.
- *
- * @since DOKAN_SINCE
- *
- * @return array
- */
-if ( ! function_exists( 'dokan_new_seller_enable_selling_statuses' ) ) {
-    function dokan_new_seller_enable_selling_statuses() {
-        return apply_filters(
-            'dokan_new_seller_enable_selling_statuses', [
-                'automatically' => __( 'Automatically', 'dokan-lite' ),
-                'manually'      => __( 'Manually', 'dokan-lite' ),
-            ]
-        );
-    }
-}
-
-/**
- * Get new seller selling status setting.
- * We are placing this function here because this function may access from admin and front-end both.
- *
- * @since DOKAN_SINCE
- *
- * @param string $status
- *
- * @return string
- */
-if ( ! function_exists( 'dokan_get_new_seller_enable_selling_status' ) ) {
-    function dokan_get_new_seller_enable_selling_status( $status = '' ) {
-        // Before this feature the default was 'on'
-        if ( empty( $status ) ) {
-            $status = dokan_get_option( 'new_seller_enable_selling', 'dokan_selling', 'on' );
-        }
-
-        if ( $status === 'on' ) {
-            $status = 'automatically';
-        } elseif ( $status === 'off' ) {
-            $status = 'manually';
-        }
-
-        return apply_filters( 'dokan_new_seller_enable_selling_status', $status );
-    }
 }
