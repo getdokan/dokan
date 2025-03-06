@@ -2,7 +2,7 @@
     <div class="dokan-dashboard">
         <h1>{{ __( 'Dashboard', 'dokan-lite' ) }}</h1>
         <AdminNotice></AdminNotice>
-        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
+<!--        <UpgradeBanner v-if="! hasPro"></UpgradeBanner>-->
 
         <div class="widgets-wrapper">
 
@@ -125,7 +125,7 @@ let Currency    = dokan_get_lib('Currency');
 let AdminNotice = dokan_get_lib('AdminNotice');
 
 import Chart from "admin/components/Chart.vue"
-import UpgradeBanner from "admin/components/UpgradeBanner.vue"
+// import UpgradeBanner from "admin/components/UpgradeBanner.vue"
 
 export default {
 
@@ -136,7 +136,7 @@ export default {
         Loading,
         Chart,
         Currency,
-        UpgradeBanner,
+        // UpgradeBanner,
         AdminNotice,
     },
 

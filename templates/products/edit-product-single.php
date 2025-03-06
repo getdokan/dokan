@@ -29,8 +29,21 @@ if ( isset( $post->ID ) && $post->ID && 'product' === $post->post_type ) {
 }
 
 if ( isset( $_GET['product_id'] ) ) {
-    $post_id        = intval( $_GET['product_id'] );
-    $post           = get_post( $post_id );
+    $post_id = intval( $_GET['product_id'] );
+    $post    = get_post( $post_id );
+
+    if ( ! $post instanceof WP_Post ) {
+        dokan_get_template_part(
+            'global/dokan-error',
+            '',
+            array(
+                'deleted' => false,
+                'message' => __( 'This product is no longer available', 'dokan-lite' )
+            )
+        );
+        return;
+    }
+
     $post_status    = $post->post_status;
     $auto_draft     = 'auto-draft' === $post_status;
     $post_title     = $auto_draft ? '' : $post->post_title;
@@ -152,7 +165,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     /**
                      * Render the contents before product edit status label.
                      *
-                     * @since DOKAN_PRO_SINCE
+                     * @since 3.13.1
                      *
                      * @param \WC_Product $product
                      */
@@ -167,7 +180,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     /**
                      * Render the contents after product edit status label.
                      *
-                     * @since DOKAN_PRO_SINCE
+                     * @since 3.13.1
                      *
                      * @param \WC_Product $product
                      */
@@ -292,14 +305,13 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         class="vendor-earning simple-product"
                                                         data-commission="<?php echo esc_attr( dokan()->commission->get_earning_by_product( $post_id ) ); ?>"
                                                         data-product-id="<?php echo esc_attr( $post_id ); ?>">
-                                                            ( <?php esc_html_e( ' You Earn : ', 'dokan-lite' ); ?><?php echo esc_html( get_woocommerce_currency_symbol() ); ?>
+                                                            ( <?php esc_html_e( ' You Earn : ', 'dokan-lite' ); ?>
                                                                 <span class="vendor-price">
                                                                     <?php
                                                                     echo wp_kses_post(
                                                                         wc_price(
                                                                             dokan()->commission->get_earning_by_product( $post_id ),
                                                                             [
-                                                                                'currency' => get_woocommerce_currency_symbol(),
                                                                                 'decimals' => wc_get_price_decimals() + 2,
                                                                             ]
                                                                         )

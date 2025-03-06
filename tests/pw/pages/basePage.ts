@@ -374,6 +374,14 @@ export class BasePage {
         }
     }
 
+    // click if enabled
+    async clickIfEnabled(selector: string): Promise<void> {
+        const isEnabled = await this.isEnabled(selector);
+        if (isEnabled) {
+            await this.click(selector);
+        }
+    }
+
     // click and wait for response if visible
     async clickAndWaitForResponseIfVisible(subUrl: string, selector: string): Promise<void> {
         const isVisible = await this.isVisible(selector);
@@ -723,7 +731,8 @@ export class BasePage {
 
     // clear input field and type
     async clearAndTypeByPage(selector: string, text: string): Promise<void> {
-        await this.clearInputFieldByMultipleClick(selector);
+        await this.clearInputField(selector);
+        // await this.clearInputFieldByMultipleClick(selector);
         await this.type(selector, text);
     }
 

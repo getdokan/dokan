@@ -990,7 +990,7 @@ class Settings {
     /**
      * Add settings nonce to localized vars
      *
-     * @since DOKNA_LITE_SINCE
+     * @since 3.0.6
      *
      * @param array $vars
      *
@@ -1005,7 +1005,7 @@ class Settings {
     /**
      * Get refreshed options for a admin setting
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      *
      * @return void
      */

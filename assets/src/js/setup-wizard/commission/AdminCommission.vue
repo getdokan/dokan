@@ -111,10 +111,10 @@
 
             fixedCOmmissionhandler(data) {
                 if (data.fixed === '') {
-                    data.fixed = this.fixedCommission.fixed ?? 0;
+                    data.fixed =  0;
                 }
                 if (data.percentage === '') {
-                    data.percentage = this.fixedCommission.percentage ?? 0;
+                    data.percentage = 0;
                 }
 
                 this.fixedCommission = data;

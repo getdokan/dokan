@@ -1564,6 +1564,24 @@ export interface productAdvertisement {
     };
 }
 
+// product form manager
+
+export interface block {
+    currentLabel: string;
+    label: string;
+    description: string;
+    productType: string;
+    productCategory: string;
+}
+export interface field {
+    block: any;
+    currentLabel: any;
+    label: any;
+    type: any;
+    placeholder: any;
+    helpContent: any;
+}
+
 // wholesale customers
 export interface wholesale {
     wholesaleRequestSendMessage: string;
