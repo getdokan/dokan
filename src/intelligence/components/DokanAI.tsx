@@ -214,7 +214,7 @@ const DokanAI = () => {
             </div>
 
             <Modal
-                className="max-w-xl dokan-ai-modal"
+                className="max-w-xl dokan-ai-modal dokan-layout"
                 isOpen={ isOpen }
                 onClose={ onClose }
             >
@@ -427,7 +427,7 @@ const DokanAI = () => {
                 </Modal.Footer>
             </Modal>
             <Modal
-                className="max-w-md dokan-ai-modal"
+                className="max-w-md dokan-ai-modal dokan-layout"
                 isOpen={ regenerateModal }
                 onClose={ () => setRegenerateModal( false ) }
             >
