@@ -27,6 +27,7 @@ phpunit.xml.dist
 phpunit.xml
 .editorconfig
 .eslintrc
+.svnignore
 .php_cs
 .phpunit.result.cache
 .prettierrc.js
