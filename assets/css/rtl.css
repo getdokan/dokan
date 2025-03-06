@@ -237,6 +237,27 @@
   margin-right: -25px;
   margin-left: 0;
 }
+/*Adjusted RTL issue on the vendor dashboard withdrawal menu - Dokan Support*/
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container .dokan-w5 {
+    position: absolute;
+    right: 80%!important;
+    top: 50%;
+    transform: translate(10px, -50%);
+    width: 20%!important;
+    float: right!important;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container .dokan-w5 a{
+	float:left!important;
+}
+.dokan-dashboard .content-area {
+    width: 100%!important;
+}
+#dokan-request-withdraw-button{
+	float:left!important;
+}
+.dokan-withdraw-content .dokan-withdraw-area .dokan-panel-body .dokan-panel-inner-container .dokan-w5 button{
+    float:left!important;
+}
 @media (min-width: 1200px) {
   .dokan-single-store .profile-frame .profile-info-box .profile-info-summery-wrapper .profile-info-summery .profile-info .store-social-wrapper {
     left: 20px !important;
