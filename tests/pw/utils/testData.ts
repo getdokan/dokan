@@ -2340,15 +2340,15 @@ export const data = {
             paletteValues: {
                 default: {
                     buttonText: '#FFFFFF',
-                    buttonBackground: '#F05025',
-                    buttonBorder: '#DA502B',
+                    buttonBackground: '#7047EB',
+                    buttonBorder: '#370EB1',
                     buttonHoverText: '#FFFFFF',
-                    buttonHoverBackground: '#DD3B0F',
-                    buttonHoverBorder: '#C83811',
-                    dashboardSidebarMenuText: '#CFCFCF',
-                    dashboardSidebarBackground: '#1B233B',
+                    buttonHoverBackground: '#502BBF',
+                    buttonHoverBorder: '#370EB1',
+                    dashboardSidebarMenuText: '#DACEFF',
+                    dashboardSidebarBackground: '#322067',
                     dashboardSidebarActiveMenuText: '#FFFFFF',
-                    dashboardSidebarActiveMenuBackground: '#F05025',
+                    dashboardSidebarActiveMenuBackground: '#7047EB',
                 },
                 tree: {
                     buttonText: '#FFFFFF', // rgb(255, 255, 255)
@@ -2369,7 +2369,7 @@ export const data = {
                     buttonHoverText: '#FFFFFF', // White
                     buttonHoverBackground: '#0056B3', // Egyptian Blue
                     buttonHoverBorder: '#004085', // Indigo Dye
-                    dashboardSidebarMenuText: '#CFCFCF', // Silver
+                    dashboardSidebarMenuText: '#DACEFF', // Silver
                     dashboardSidebarBackground: '#343A40', // Oil
                     dashboardSidebarActiveMenuText: '#FFFFFF', // White
                     dashboardSidebarActiveMenuBackground: '#007BFF', // Azure
