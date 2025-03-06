@@ -124,10 +124,18 @@ class QueryFilter extends OrdersQueryFilter {
     public function add_select_subquery_for_total( $clauses ) {
         $table_name = $this->get_dokan_table();
         $types = $this->get_order_and_refund_types_to_include();
+        $commission = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN admin_commission ELSE 0 END)";
+        $vendor_earning = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN vendor_earning ELSE 0 END)";
 
-        $clauses[] = ', sum(vendor_earning) as total_vendor_earning, sum(vendor_gateway_fee) as total_vendor_gateway_fee, sum(vendor_discount) as total_vendor_discount, sum(admin_commission) as total_admin_commission, sum(admin_gateway_fee) as total_admin_gateway_fee, sum(admin_discount) as total_admin_discount, sum(admin_subsidy) as total_admin_subsidy';
-        $clauses[] = ", SUM( {$table_name}.admin_commission ) / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_admin_commission";
-        $clauses[] = ", SUM( {$table_name}.vendor_earning ) / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_vendor_earning";
+        $clauses[] = "$vendor_earning  as total_vendor_earning";
+        $clauses[] = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN vendor_gateway_fee ELSE 0 END) as total_vendor_gateway_fee";
+        $clauses[] = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN vendor_discount ELSE 0 END) as total_vendor_discount";
+        $clauses[] = "$commission as total_admin_commission";
+        $clauses[] = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN admin_gateway_fee ELSE 0 END) as total_admin_gateway_fee";
+        $clauses[] = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN admin_discount ELSE 0 END) as total_admin_discount";
+        $clauses[] = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN admin_subsidy ELSE 0 END) as total_admin_subsidy";
+        $clauses[] = " $commission / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_admin_commission";
+        $clauses[] = "$vendor_earning / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_vendor_earning";
 
         return $clauses;
     }

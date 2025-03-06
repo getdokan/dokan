@@ -2113,7 +2113,7 @@ export const payloads = {
         gravatar: '',
         show_more_ptab: 'yes',
         store_ppp: 12,
-        enable_tnc: 'off',
+        enable_tnc: false,
         store_tnc: '',
         show_min_order_discount: '',
         store_seo: [],
@@ -3641,6 +3641,7 @@ export const payloads = {
         productAddon: 'product_addon',
         productAdvertising: 'product_advertising',
         productEnquiry: 'product_enquiry',
+        productFormManager: 'product_form_customization',
         productSubscription: 'vsp',
         productQa: 'product_qa',
         rankMath: 'rank_math',
@@ -3737,7 +3738,7 @@ export const payloads = {
             social: [],
             payment: [],
             phone: '0123456789',
-            show_email: 'no',
+            show_email: 'yes',
             address: [],
             location: '',
             banner: '',
@@ -3745,7 +3746,7 @@ export const payloads = {
             gravatar: '',
             show_more_tpab: 'yes',
             show_ppp: 12,
-            enable_tnc: 'off',
+            enable_tnc: 'on',
             store_seo: [],
             dokan_store_time: [],
             enabled: 'yes',
@@ -3787,11 +3788,11 @@ export const payloads = {
         location: '40.7127753,-74.0059728',
         banner_id: 0,
         gravatar_id: 0,
-        enable_tnc: 'yes',
+        enable_tnc: true,
         store_tnc: 'test Vendor terms and conditions',
-        featured: 'yes',
-        enabled: 'yes',
-        trusted: 'yes', // publish product directly
+        featured: true,
+        enabled: true,
+        trusted: true, // publish product directly
         payment: {
             paypal: {
                 email: 'paypal@g.c',
@@ -3905,10 +3906,6 @@ export const payloads = {
     }),
 
     updateStore: () => ({
-        // email: faker.internet.email(),
-        // store_name: faker.person.firstName(),
-        // first_name: faker.person.firstName(),
-        // last_name: faker.person.lastName(),
         social: {
             fb: 'https://www.facebook.com/',
             twitter: 'https://www.twitter.com/',
@@ -3920,7 +3917,7 @@ export const payloads = {
             threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
-        show_email: 'yes',
+        show_email: true,
         address: {
             street_1: 'abc street',
             street_2: 'xyz street',
@@ -3932,11 +3929,11 @@ export const payloads = {
         location: '40.7127753,-74.0059728',
         banner_id: 0,
         gravatar_id: 0,
-        enable_tnc: 'yes',
+        enable_tnc: true,
         store_tnc: 'test Vendor terms and conditions',
-        featured: 'yes',
-        enabled: 'yes',
-        trusted: 'yes', // publish product directly
+        featured: true,
+        enabled: true,
+        trusted: true, // publish product directly
         payment: {
             paypal: {
                 email: 'paypal@g.c',
@@ -4062,7 +4059,7 @@ export const payloads = {
             threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
-        show_email: 'yes',
+        show_email: true,
         address: {
             street_1: 'abc street',
             street_2: 'xyz street',
@@ -4077,10 +4074,10 @@ export const payloads = {
         gravatar: 0,
         gravatar_id: 0,
 
-        enable_tnc: 'on',
+        enable_tnc: true,
         store_tnc: 'test Vendor terms and conditions',
         featured: 'yes',
-        enabled: 'yes',
+        enabled: true,
         payment: {
             paypal: {
                 email: 'paypal@g.c',
@@ -4139,12 +4136,12 @@ export const payloads = {
     },
 
     storeResetFields: {
-        featured: 'yes',
-        enabled: 'yes',
-        trusted: 'yes',
-        enable_tnc: 'yes',
-        show_email: 'yes',
-        sale_only_here: 'yes',
+        featured: true,
+        enabled: true,
+        trusted: true,
+        enable_tnc: true,
+        show_email: true,
+        sale_only_here: true,
         store_open_close: {
             enabled: 'yes',
         },
@@ -4201,7 +4198,7 @@ export const payloads = {
     },
 
     createStore1: {
-        user_login: VENDOR,
+        user_login: VENDOR ,
         user_pass: USER_PASSWORD,
         user_nicename: `${VENDOR}store`, // store url
         email: `${VENDOR}@email.com`,
@@ -4221,7 +4218,7 @@ export const payloads = {
             threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
-        show_email: 'yes',
+        show_email: true,
         address: {
             street_1: 'abc street',
             street_2: 'xyz street',
@@ -4233,11 +4230,11 @@ export const payloads = {
         location: '40.7127753,-74.0059728',
         banner_id: 0,
         gravatar_id: 0,
-        enable_tnc: 'yes',
+        enable_tnc: true,
         store_tnc: 'test Vendor terms and conditions',
-        featured: 'yes',
-        enabled: 'yes',
-        trusted: 'yes', // publish product directly
+        featured: true,
+        enabled: true,
+        trusted: true, // publish product directly
         payment: {
             paypal: {
                 email: 'paypal@g.c',
@@ -4313,7 +4310,7 @@ export const payloads = {
         vat_number: faker.string.alphanumeric(10),
         bank_name: faker.string.alphanumeric(7),
         bank_iban: faker.finance.iban(),
-        vendor_biography: 'test vendor biography', // todo: api does not support this field create enhancement
+        vendor_biography: 'test vendor biography',
         categories: [
             {
                 // id: 74,
@@ -4372,7 +4369,7 @@ export const payloads = {
             threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
-        show_email: 'yes',
+        show_email: true,
         address: {
             street_1: 'abc street',
             street_2: 'xyz street',
@@ -4384,11 +4381,11 @@ export const payloads = {
         location: '40.7127753,-74.0059728',
         banner_id: 0,
         gravatar_id: 0,
-        enable_tnc: 'yes',
+        enable_tnc: true,
         store_tnc: 'test Vendor terms and conditions',
-        featured: 'yes',
-        enabled: 'yes',
-        trusted: 'yes', // publish product directly
+        featured: true,
+        enabled: true,
+        trusted: true, // publish product directly
         payment: {
             paypal: {
                 email: 'paypal@g.c',

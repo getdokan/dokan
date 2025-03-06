@@ -382,7 +382,7 @@ class Hooks {
     /**
      * Change order item display meta key.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.8.0
      * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
      * @param string $display_key
@@ -400,7 +400,7 @@ class Hooks {
     /**
      * Change order item display meta value.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.8.0
      * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
      * @param string $display_value
@@ -466,7 +466,11 @@ class Hooks {
             return;
         }
 
-        $child_orders = dokan()->order->get_child_orders( $order->get_id() );
+        $child_orders = dokan()->order->get_child_orders(
+            $order->get_id(), [
+				'status' => [ 'trash' ],
+			]
+        );
         if ( ! $child_orders ) {
             return;
         }
