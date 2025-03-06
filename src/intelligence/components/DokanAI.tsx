@@ -191,7 +191,7 @@ const DokanAI = () => {
 
     return (
         <>
-            <div className="text-dokan-primary">
+            <div className="text-dokan-primary cursor-pointer text-primary-500">
                 <svg
                     role={ 'button' }
                     onClick={ handleLabelClick }

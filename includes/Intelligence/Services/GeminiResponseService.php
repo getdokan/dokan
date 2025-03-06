@@ -27,7 +27,7 @@ class GeminiResponseService extends BaseAIService {
                     Format the response as follows:
                     {
                       "title": "<Compelling product title optimized for SEO>",
-                      "short_description": "<A concise, keyword-rich summary (50-100 words) that attracts buyers and improves search engine visibility>",
+                      "short_description": "<A concise, keyword-rich summary (minimum 50-100 words) that attracts buyers and improves search engine visibility>",
                       "long_description": "<A detailed, engaging product long description including features, benefits, use cases, and persuasive copywriting techniques>"
                     }
 
@@ -58,7 +58,7 @@ class GeminiResponseService extends BaseAIService {
             'generationConfig' => [
                 'stopSequences' => [ 'Title' ],
                 'temperature' => 0.7,
-                'maxOutputTokens' => (int) dokan_get_option( 'dokan_ai_max_tokens_for_marketplace', 'dokan_ai', '250' ),
+                // 'maxOutputTokens' => (int) dokan_get_option( 'dokan_ai_max_tokens_for_marketplace', 'dokan_ai', '1000' ),
                 'topP' => 0.8,
                 'topK' => 10,
             ],

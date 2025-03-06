@@ -35,7 +35,7 @@ class ChatgptResponseService extends BaseAIService {
                     Format the response as follows:
                     {
                       "title": "<Compelling product title optimized for SEO>",
-                      "short_description": "<A concise, keyword-rich summary (50-100 words) that attracts buyers and improves search engine visibility>",
+                      "short_description": "<A concise, keyword-rich summary (minimum 50-100 words) that attracts buyers and improves search engine visibility>",
                       "long_description": "<A detailed, engaging product long description including features, benefits, use cases, and persuasive copywriting techniques>"
                     }
 
@@ -52,7 +52,7 @@ class ChatgptResponseService extends BaseAIService {
         return [
             'model' => dokan_get_option( 'dokan_ai_chatgpt_model', 'dokan_ai', 'gpt-3.5-turbo' ),
             'messages' => $messages,
-            'max_tokens' => (int) dokan_get_option( 'dokan_ai_max_tokens_for_marketplace', 'dokan_ai', '250' ),
+            // 'max_tokens' => (int) dokan_get_option( 'dokan_ai_max_tokens_for_marketplace', 'dokan_ai', '1000' ),
             'temperature' => 0.7,
         ];
     }
