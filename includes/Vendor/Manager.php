@@ -502,4 +502,36 @@ class Manager {
 
         return $this->get_vendors( $args );
     }
+
+    /**
+     * Enable a vendor.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $vendor_id
+     *
+     * @return array
+     */
+    public function active( $vendor_id ) {
+        $vendor     = new Vendor();
+        $vendor->id = $vendor_id;
+
+        return $vendor->make_active();
+    }
+
+    /**
+     * Disable a vendor.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $vendor_id
+     *
+     * @return array
+     */
+    public function inactive( $vendor_id ) {
+        $vendor     = new Vendor();
+        $vendor->id = $vendor_id;
+
+        return $vendor->make_inactive();
+    }
 }
