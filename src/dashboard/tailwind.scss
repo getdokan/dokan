@@ -1,0 +1,8 @@
+@use '../base-tailwind';
+@config './../../base-tailwind.config.js';
+
+#headlessui-portal-root {
+    [role-dialog] {
+        z-index: 9999;
+    }
+}
