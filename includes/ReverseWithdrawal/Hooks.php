@@ -51,16 +51,16 @@ class Hooks {
      *
      * @since DOKAN_PRO_SINCE
      *
-     * @param bool $escape
+     * @param bool $needs_validation Whether to skip cart validation.
      *
      * @return bool
      */
-    public function skip_cart_validation_for_reverse_withdraw( bool $escape ): bool {
-        if ( wc_string_to_bool( $escape ) ) {
-            return $escape;
+    public function skip_cart_validation_for_reverse_withdraw( bool $needs_validation ): bool {
+        if ( ! $needs_validation || ! Helper::has_reverse_withdrawal_payment_in_cart() ) {
+            return $needs_validation;
         }
 
-        return Helper::has_reverse_withdrawal_payment_in_cart();
+        return false;
     }
 
     /**
