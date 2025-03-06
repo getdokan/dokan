@@ -302,7 +302,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
             $manage_stock = $data['_manage_stock'];
             $backorders   = wc_clean( $data['_backorders'] );
         }
-    
+
         update_post_meta( $post_id, '_manage_stock', $manage_stock );
         update_post_meta( $post_id, '_backorders', $backorders );
         if ( $stock_status ) {
@@ -312,7 +312,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
                 dokan_log( 'product stock update exception' );
             }
         }
-    
+
         // Retrieve original stock value from the hidden field
         $original_stock = isset( $data['_original_stock'] ) ? wc_stock_amount( wc_clean( $data['_original_stock'] ) ) : '';
         // Clean the current stock value
@@ -326,7 +326,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
                 wc_update_product_stock( $post_id, $stock_amount );
             }
         }
-    
+
         // Update low stock amount regardless of stock changes
         $_low_stock_amount = isset( $data['_low_stock_amount'] ) ? wc_clean( $data['_low_stock_amount'] ) : '';
         $_low_stock_amount = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $_low_stock_amount ) ) : '';
@@ -939,7 +939,7 @@ add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
  * Show more products from current seller
  *
  * @since 2.5
- * @since DOKAN_LITE_SINCE added filter 'dokan_get_more_products_per_page'
+ * @since 3.2.2 added filter 'dokan_get_more_products_per_page'
  *
  * @param int|string $seller_id
  * @param int|string $posts_per_page

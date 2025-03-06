@@ -7,7 +7,7 @@ use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
 /**
  * Dokan Product attribute author id updater class
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.1.1
  */
 class V_3_1_1_RefundTableUpdate extends DokanBackgroundProcesses {
 
@@ -25,7 +25,7 @@ class V_3_1_1_RefundTableUpdate extends DokanBackgroundProcesses {
      *
      * @param mixed $item
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.1.1
      *
      * @return mixed
      */

@@ -452,7 +452,7 @@ class Commission {
      *
      * @deprecated 3.14.0 Use dokan()->fees->get_processing_fee instead.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.4
      *
      * @param WC_Order $order
      *
@@ -467,7 +467,7 @@ class Commission {
     /**
      * Get all the orders to be processed
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.4
      *
      * @param WC_Order $order
      *
