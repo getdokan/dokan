@@ -1379,7 +1379,7 @@ function dokan_admin_user_register( $user_id ) {
 
     if ( $role === 'seller' ) {
         $enabled = 'automatically' === dokan_get_container()->get( 'admin_settings_util' )->get_new_seller_enable_selling_status();
-        update_user_meta( $user_id, 'dokan_enable_selling', $enabled ? 'yes' : 'no' );
+        $enabled ? dokan()->vendor->active( $user_id ) : dokan()->vendor->inactive( $user_id );
     }
 }
 
