@@ -165,7 +165,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     /**
                      * Render the contents before product edit status label.
                      *
-                     * @since DOKAN_PRO_SINCE
+                     * @since 3.13.1
                      *
                      * @param \WC_Product $product
                      */
@@ -180,7 +180,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     /**
                      * Render the contents after product edit status label.
                      *
-                     * @since DOKAN_PRO_SINCE
+                     * @since 3.13.1
                      *
                      * @param \WC_Product $product
                      */
@@ -305,14 +305,13 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         class="vendor-earning simple-product"
                                                         data-commission="<?php echo esc_attr( dokan()->commission->get_earning_by_product( $post_id ) ); ?>"
                                                         data-product-id="<?php echo esc_attr( $post_id ); ?>">
-                                                            ( <?php esc_html_e( ' You Earn : ', 'dokan-lite' ); ?><?php echo esc_html( get_woocommerce_currency_symbol() ); ?>
+                                                            ( <?php esc_html_e( ' You Earn : ', 'dokan-lite' ); ?>
                                                                 <span class="vendor-price">
                                                                     <?php
                                                                     echo wp_kses_post(
                                                                         wc_price(
                                                                             dokan()->commission->get_earning_by_product( $post_id ),
                                                                             [
-                                                                                'currency' => get_woocommerce_currency_symbol(),
                                                                                 'decimals' => wc_get_price_decimals() + 2,
                                                                             ]
                                                                         )

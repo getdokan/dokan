@@ -10,25 +10,6 @@ use WeDevs\Dokan\Contracts\Hookable;
  * @since 3.14.7
  */
 class CacheKeyModifier implements Hookable {
-
-    /**
-     * Report entities to modify.
-     *
-     * @since 3.14.7
-     *
-     * @var array
-     */
-    protected array $entities;
-
-    /**
-     * CacheKeyModifier constructor.
-     * Registers the hooks on instantiation.
-     */
-    public function __construct() {
-        $this->setup_entities();
-        $this->register_hooks();
-    }
-
     /**
      * Setup analytics entities
      *
@@ -37,10 +18,10 @@ class CacheKeyModifier implements Hookable {
      * WC apply filters from @see https://github.com/woocommerce/woocommerce/blob/be602de39d39878085e752f30ec1dabf16b0d642/plugins/woocommerce/src/Admin/API/Reports/GenericQuery.php#L77
      * WC reports generation pattern @see https://github.com/woocommerce/woocommerce/blob/be602de39d39878085e752f30ec1dabf16b0d642/plugins/woocommerce/src/Admin/API/Reports/Products/Controller.php#L53
      *
-     * @return void
+     * @return array
      */
-    protected function setup_entities(): void {
-        $this->entities = apply_filters(
+    protected function get_entities(): array {
+        return apply_filters(
             'dokan_analytics_entities_for_query_args',
             [
                 'categories',
@@ -70,7 +51,7 @@ class CacheKeyModifier implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
-        foreach ( $this->entities as $entity ) {
+        foreach ( $this->get_entities() as $entity ) {
             add_filter( "woocommerce_analytics_{$entity}_query_args", [ $this, 'apply_seller_filter' ] );
         }
     }
