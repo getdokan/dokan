@@ -1,11 +1,12 @@
-import { __ } from "@wordpress/i18n";
-import { useState } from '@wordpress/element';
-import { SimpleInput, Button } from '@getdokan/dokan-ui';
+import {__} from "@wordpress/i18n";
+import {useState} from '@wordpress/element';
+import {Button, SimpleInput} from '@getdokan/dokan-ui';
 import Logo from "@dokan/admin/onboard/Logo";
+import WarningIcon from "@dokan/admin/onboard/icons/WarningIcon";
 
 const BasicInfoScreen = ({ onNext }) => {
     const [ storeUrl, setStoreUrl ] = useState(
-        'marketplace.dokan.com/store/name'
+        'name'
     );
     const [ shareDiagnostics, setShareDiagnostics ] = useState(true);
 
@@ -21,7 +22,7 @@ const BasicInfoScreen = ({ onNext }) => {
 
                 <div className='space-y-8'>
                     <div>
-                        <label className='block text-lg font-medium mb-4'>
+                        <label className='block text-sm font-medium mb-4'>
                             { __('Choose how vendor store URLs will appear', 'dokan' ) }
                         </label>
                         {/*<input*/}
@@ -39,7 +40,7 @@ const BasicInfoScreen = ({ onNext }) => {
                             }
                             addOnRight={
                                 <span className="inline-flex items-center bg-gray-50 px-3 text-gray-900 sm:text-sm rouned-bl absolute right-0 top-0 h-full rounded-bl rounded-tl">
-                                    store
+                                    name
                                 </span>
                             }
                             input={
@@ -54,10 +55,8 @@ const BasicInfoScreen = ({ onNext }) => {
                             onChange={ (e) => setStoreUrl( e.target.value ) }
                             className="w-[80%] md:w-full pl-[12rem] block"
                         />
-                        <div className='flex items-center mt-2 text-sm text-gray-500'>
-                            <svg xmlns='http://www.w3.org/2000/svg' className='h-5 w-5 mr-1' viewBox='0 0 20 20' fill='currentColor'>
-                                <path fillRule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z' clipRule='evenodd' />
-                            </svg>
+                        <div className='flex items-center gap-2 mt-2 text-sm text-gray-500'>
+                            <WarningIcon/>
                             <span>Vendor Store URL will be (<span className='text-indigo-600'>https://marketplace.dokan.com/store/name</span>)</span>
                         </div>
                     </div>
@@ -76,7 +75,7 @@ const BasicInfoScreen = ({ onNext }) => {
                                 type="checkbox"
                                 defaultChecked={ shareDiagnostics }
                                 aria-describedby="comments-description"
-                                className='border border-gray-300 rounded'
+                                className='border border-gray-300 rounded  p-3 bg-dokan-btn hover:bg-dokan-btn-hover text-white cursor-pointer text-sm'
                                 onChange={(e) => shareDiagnostics(!shareDiagnostics)}
                             />
                         </div>
