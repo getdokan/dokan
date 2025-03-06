@@ -41,6 +41,26 @@ class Hooks {
 
         // vendor dashboard navigation url
         add_filter( 'dokan_get_dashboard_nav', [ $this, 'add_reverse_withdrawal_nav' ], 10 );
+
+        // Skip cart validation for reverse withdrawal
+        add_filter( 'dokan_stripe_express_needs_cart_validation', [ $this, 'skip_cart_validation_for_reverse_withdraw' ], 10 );
+    }
+
+    /**
+     * Skip cart validation for reverse withdrawal
+     *
+     * @since DOKAN_PRO_SINCE
+     *
+     * @param bool $escape
+     *
+     * @return bool
+     */
+    public function skip_cart_validation_for_reverse_withdraw( bool $escape ): bool {
+        if ( wc_string_to_bool( $escape ) ) {
+            return $escape;
+        }
+
+        return Helper::has_reverse_withdrawal_payment_in_cart();
     }
 
     /**
