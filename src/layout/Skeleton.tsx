@@ -5,7 +5,7 @@ const Skeleton = () => {
                 aria-hidden="true"
                 className="inline w-10 h-10 text-gray-200 animate-spin dark:text-gray-600"
                 viewBox="0 0 100 101"
-                fill="var(--dokan-button-secondary-border-color)"
+                fill="var(--colors-primary-600)"
                 xmlns="http://www.w3.org/2000/svg"
             >
                 <path
