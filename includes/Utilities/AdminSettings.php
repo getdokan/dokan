@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Utilities;
 
-class AdminSettingsUtil {
+class AdminSettings {
 
     /**
      * Get new seller selling status setting.

@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Admin;
 
 use stdClass;
+use WeDevs\Dokan\Utilities\AdminSettings;
 
 /**
  * Setup wizard class
@@ -490,13 +491,13 @@ class SetupWizard {
 
         $args = apply_filters(
             'dokan_admin_setup_wizard_step_setup_selling_template_args', [
-                'new_seller_enable_selling' => dokan_get_container()->get( 'admin_settings_util' )->get_new_seller_enable_selling_status(),
+                'new_seller_enable_selling' => dokan_get_container()->get( AdminSettings::class )->get_new_seller_enable_selling_status(),
                 'commission_type'           => $commission_type,
                 'admin_percentage'          => $admin_percentage,
                 'order_status_change'       => $order_status_change,
                 'dokan_commission_types'    => $dokan_commission_types,
                 'setup_wizard'              => $this,
-                'new_seller_enable_selling_statuses' => dokan_get_container()->get( 'admin_settings_util' )->new_seller_enable_selling_statuses(),
+                'new_seller_enable_selling_statuses' => dokan_get_container()->get( AdminSettings::class )->new_seller_enable_selling_statuses(),
             ]
         );
 
@@ -539,7 +540,7 @@ class SetupWizard {
         check_admin_referer( 'dokan-setup' );
 
         $options                              = get_option( 'dokan_selling', [] );
-        $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? dokan_get_container()->get( 'admin_settings_util' )->get_new_seller_enable_selling_status( sanitize_text_field( wp_unslash( $_POST['new_seller_enable_selling'] ) ) ) : 'automatically';
+        $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? dokan_get_container()->get( AdminSettings::class )->get_new_seller_enable_selling_status( sanitize_text_field( wp_unslash( $_POST['new_seller_enable_selling'] ) ) ) : 'automatically';
         $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
 
         update_option( 'dokan_selling', $options );

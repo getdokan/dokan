@@ -1378,7 +1378,7 @@ function dokan_admin_user_register( $user_id ) {
     $role = reset( $user->roles );
 
     if ( $role === 'seller' ) {
-        $enabled = 'automatically' === dokan_get_container()->get( 'admin_settings_util' )->get_new_seller_enable_selling_status();
+        $enabled = 'automatically' === dokan_get_container()->get( \WeDevs\Dokan\Utilities\AdminSettings::class )->get_new_seller_enable_selling_status();
         update_user_meta( $user_id, 'dokan_enable_selling', $enabled ? 'yes' : 'no' );
     }
 }
@@ -4242,7 +4242,7 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
         $vendor->set_address( $data['address'] );
         $vendor->save();
 
-        if ( 'automatically' === dokan_get_container()->get( 'admin_settings_util' )->get_new_seller_enable_selling_status() ) {
+        if ( 'automatically' === dokan_get_container()->get( \WeDevs\Dokan\Utilities\AdminSettings::class )->get_new_seller_enable_selling_status() ) {
             $vendor->make_active();
         } else {
             $vendor->make_inactive();
