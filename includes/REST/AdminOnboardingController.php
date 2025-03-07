@@ -84,7 +84,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
                         ],
                         'handle_delivery' => [
                             'description' => __( 'Handle delivery', 'dokan-lite' ),
-                            'type'        => 'boolean',
+                            'type' => 'string',
                             'context'     => [ 'view', 'edit' ],
                             'required'    => true,
                         ],
@@ -311,7 +311,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
         $goal_data = $data['marketplace_goal'];
 
         $marketplace_goal['marketplace_focus'] = $goal_data['marketplace_focus'] ?? '';
-        $marketplace_goal['handle_delivery'] = $goal_data['handle_delivery'] ?? false;
+        $marketplace_goal['handle_delivery'] = $goal_data['handle_delivery'] ?? '';
         $marketplace_goal['top_priority'] = $goal_data['top_priority'] ?? '';
 
         /**
