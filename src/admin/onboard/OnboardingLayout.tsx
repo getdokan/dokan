@@ -1,11 +1,13 @@
-const OnboardingLayout = ({ children, className = '' }) => {
+const OnboardingLayout = ( { children, className = '' } ) => {
     return (
-        <div className='min-h-screen bg-gradient-to-br from-blue-50 via-white to-pink-50 flex items-center justify-center p-4'>
-            <div className={ `w-full max-w-4xl bg-white rounded-2xl shadow-lg overflow-hidden ${ className }` }>
-                {children}
+        <div className={ `min-h-screen dokan-onboard-welcome flex ` }>
+            <div
+                className={ `drop-shadow-lg rounded-2xl  overflow-hidden bg-white sm:w-[65%] m-auto h-[532px] border border-solid border-[#E9E9E9] flex items-center justify-center ${ className }` }
+            >
+                { children }
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default OnboardingLayout;

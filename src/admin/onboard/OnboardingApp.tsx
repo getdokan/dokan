@@ -12,7 +12,6 @@ import LoadingScreen from './screens/LoadingScreen';
 import SuccessScreen from './screens/SuccessScreen';
 import ErrorMessage from './components/ErrorMessage';
 import StepIndicator from './components/StepIndicator';
-import './tailwind.scss';
 
 const defaultFormData = {
     custom_store_url: 'store',

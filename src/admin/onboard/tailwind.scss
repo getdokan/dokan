@@ -1,3 +1,14 @@
 @config './onboarding-tailwind.config.js';
 @import './../../base-tailwind';
 //@import '@getdokan/dokan-ui/dist/dokan-ui.css';
+.dokan-admin-setup-wizard {
+    margin: 0;
+
+    .dokan-onboard-welcome {
+        background-image: url("/assets/images/onboarding-bg.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}
+

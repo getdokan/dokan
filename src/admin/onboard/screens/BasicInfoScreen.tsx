@@ -1,6 +1,6 @@
 import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { SimpleInput } from '@getdokan/dokan-ui';
+import { SimpleCheckbox, SimpleInput } from '@getdokan/dokan-ui';
 import Logo from '../Logo';
 import WarningIcon from '../icons/WarningIcon';
 import NextButton from '@dokan/admin/onboard/components/NextButton';
@@ -61,7 +61,7 @@ const BasicInfoScreen = ( {
             ? siteUrl.slice( 0, maxUrlLength ) + '...'
             : siteUrl;
     return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-screen  flex items-center justify-center">
             <div className="p-8 md:p-10  ">
                 <div className="mb-8">
                     <Logo />
@@ -123,16 +123,23 @@ const BasicInfoScreen = ( {
 
                     <div className="flex items-center space-x-4 space-y-8">
                         <div className="flex-shrink-0 mb-2">
-                            <input
-                                type="checkbox"
+                            <SimpleCheckbox
+                                input={ {
+                                    id: 'localShareDiagnostics',
+                                    name: 'localShareDiagnostics',
+                                    type: 'checkbox',
+                                } }
                                 checked={ localShareDiagnostics }
-                                aria-describedby="comments-description"
-                                className="rounded p-2 w-5 h-5 bg-[#7047EB] text-white cursor-pointer text-sm"
                                 onChange={ () =>
                                     setLocalShareDiagnostics(
                                         ! localShareDiagnostics
                                     )
                                 }
+                                className={ `w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 ${
+                                    localShareDiagnostics
+                                        ? 'bg-indigo-600 border-indigo-600'
+                                        : ''
+                                }` }
                             />
                         </div>
                         <div className="flex flex-col gap-1">
