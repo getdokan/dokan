@@ -49,7 +49,7 @@ class SetupWizard {
             add_action( 'admin_menu', [ $this, 'admin_menus' ] );
             add_action( 'init', [ $this, 'register_admin_scripts' ] );
             add_action( 'admin_init', [ $this, 'setup_wizard' ], 99 );
-//            add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
+            add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
 
             if ( get_transient( 'dokan_setup_wizard_no_wc' ) && defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '4.6.0', '<' ) ) { // todo: temporary fix, will add this feature again in future release
                 add_filter( 'dokan_admin_setup_wizard_steps', [ SetupWizardNoWC::class, 'add_wc_steps_to_wizard' ] );
@@ -196,16 +196,8 @@ class SetupWizard {
                 [
                     'site_url'                  => esc_url( get_site_url() ),
                     'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=dokan' ) ),
-
-                ] );
-
-//            wp_localize_script(
-//                'dokan-request-a-quote-vendor-dashboard-app',
-//                'dokanRequestQuote',
-//                [
-//                    'wc_shop_url' => esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ),
-//                ]
-//            );
+                ]
+            );
         }
     }
 
@@ -314,9 +306,10 @@ class SetupWizard {
      */
     protected function set_setup_wizard_template() {
         $this->setup_wizard_header();
-//        $this->setup_wizard_steps();
-//        $this->setup_wizard_content();
-//        echo '<div id="admin-onboarding-root"></div>';
+        if ( ! is_admin() ) {
+            $this->setup_wizard_steps();
+            $this->setup_wizard_content();
+        }
         $this->setup_wizard_footer();
     }
 
@@ -347,8 +340,7 @@ class SetupWizard {
             $this->current_step = sanitize_key( wp_unslash( $_GET['step'] ) );
         }
 
-//        $this->enqueue_scripts();
-        $this->enqueue_admin_scripts();
+        is_admin() ? $this->enqueue_admin_scripts() : $this->enqueue_scripts();
 
         if (
             isset( $_POST['_wpnonce'], $_POST['save_step'] )
@@ -396,10 +388,6 @@ class SetupWizard {
             ?>
         </head>
         <body class="wc-setup dokan-admin-setup-wizard wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : ''; ?>">
-        <?php
-//        $logo_url = ( ! empty( $this->custom_logo ) ) ? $this->custom_logo : plugins_url( 'assets/images/dokan-logo.png', DOKAN_FILE );
-        ?>
-<!--        <h1 id="wc-logo"><a href="https://dokan.co/wordpress/"><img src="--><?php //echo esc_url( $logo_url ); ?><!--" alt="Dokan Logo" width="135" height="auto"/></a></h1>-->
         <?php
     }
 
@@ -801,7 +789,7 @@ class SetupWizard {
                 continue;
             }
 
-            $plugin_details = $plugin['plugins'][0] ?? null;
+            $plugin_details = $plugin ?? null;
 
             if ( ! $plugin_details ) {
                 continue;
@@ -812,7 +800,7 @@ class SetupWizard {
             $this->install_plugin(
                 $plugin_details['slug'],
                 [
-                    'name'      => $plugin_details['name'] ?? '',
+                    'name'      => $plugin_details['title'] ?? '',
                     'repo-slug' => $plugin_details_arr[0] ?? '',
                     'file'      => $plugin_details_arr[1] ?? '',
                 ]
@@ -952,7 +940,7 @@ class SetupWizard {
                 name="<?php echo esc_attr( 'setup_' . $type ); ?>"
                 value="yes"
                 checked
-                data-plugins="<?php echo esc_attr( wp_json_encode( isset( $item_info['plugins'] ) ? $item_info['plugins'] : null ) ); ?>"
+                data-plugins="<?php echo esc_attr( wp_json_encode( isset( $item_info ) ? $item_info : null ) ); ?>"
             />
             <label for="<?php echo esc_attr( 'dokan_recommended_' . $type ); ?>">
                 <img
