@@ -201,7 +201,7 @@ class Manager {
 
         if ( current_user_can( 'manage_woocommerce' ) ) {
             if ( isset( $data['enabled'] ) && dokan_validate_boolean( $data['enabled'] ) ) {
-                $vendor->update_meta( 'dokan_enable_selling', 'yes' );
+                $vendor->make_active();
             }
 
             if ( isset( $data['featured'] ) && dokan_validate_boolean( $data['featured'] ) ) {
@@ -501,5 +501,37 @@ class Manager {
         $args = wp_parse_args( $args, $defaults );
 
         return $this->get_vendors( $args );
+    }
+
+    /**
+     * Enable a vendor.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $vendor_id
+     *
+     * @return array
+     */
+    public function active( $vendor_id ) {
+        $vendor     = new Vendor();
+        $vendor->id = $vendor_id;
+
+        return $vendor->make_active();
+    }
+
+    /**
+     * Disable a vendor.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $vendor_id
+     *
+     * @return array
+     */
+    public function inactive( $vendor_id ) {
+        $vendor     = new Vendor();
+        $vendor->id = $vendor_id;
+
+        return $vendor->make_inactive();
     }
 }

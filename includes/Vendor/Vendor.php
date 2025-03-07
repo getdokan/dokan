@@ -949,7 +949,11 @@ class Vendor {
 
         do_action( 'dokan_vendor_enabled', $this->get_id() );
 
-        return $this->to_array();
+        if ( ! empty( $this->data ) ) {
+            return $this->to_array();
+        }
+
+        return [];
     }
 
     /**
@@ -967,7 +971,11 @@ class Vendor {
 
         do_action( 'dokan_vendor_disabled', $this->get_id() );
 
-        return $this->to_array();
+        if ( ! empty( $this->data ) ) {
+            return $this->to_array();
+        }
+
+        return [];
     }
 
     /**
