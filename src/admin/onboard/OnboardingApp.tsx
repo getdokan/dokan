@@ -4,7 +4,6 @@ import {
     formatPlugins,
     submitOnboardingData,
 } from './utility/api';
-import { FormData, OnboardingData } from './types';
 import WelcomeScreen from './screens/WelcomeScreen';
 import BasicInfoScreen from './screens/BasicInfoScreen';
 import MarketplaceGoalScreen from './screens/MarketplaceGoalScreen';
@@ -15,7 +14,7 @@ import ErrorMessage from './components/ErrorMessage';
 import StepIndicator from './components/StepIndicator';
 import './tailwind.scss';
 
-const defaultFormData: FormData = {
+const defaultFormData = {
     custom_store_url: 'store',
     share_essentials: true,
     marketplace_goal: {
@@ -26,15 +25,13 @@ const defaultFormData: FormData = {
     plugins: [],
 };
 
-const OnboardingApp: React.FC = () => {
+const OnboardingApp = () => {
     // State management
     const [ currentStep, setCurrentStep ] = useState( 0 );
     const [ isLoading, setIsLoading ] = useState( false );
     const [ apiError, setApiError ] = useState( '' );
-    const [ initialData, setInitialData ] = useState< OnboardingData | null >(
-        null
-    );
-    const [ formData, setFormData ] = useState< FormData >( defaultFormData );
+    const [ initialData, setInitialData ] = useState( null );
+    const [ formData, setFormData ] = useState( defaultFormData );
     const [ hasPlugins, setHasPlugins ] = useState( true );
 
     // Fetch initial data
@@ -92,12 +89,17 @@ const OnboardingApp: React.FC = () => {
     }, [] );
 
     // Handle form submission
-    const handleSubmit = async () => {
+    const handleSubmit = async ( skipPlugins = false ) => {
         setIsLoading( true );
         setCurrentStep( 4 ); // Show loading screen
 
         try {
-            await submitOnboardingData( formData );
+            // If skipPlugins is true, submit form data without plugins
+            const dataToSubmit = skipPlugins
+                ? { ...formData, plugins: [] }
+                : formData;
+
+            await submitOnboardingData( dataToSubmit );
             setCurrentStep( 5 ); // Success screen
         } catch ( error ) {
             console.error( 'Error submitting onboarding data:', error );
@@ -110,7 +112,7 @@ const OnboardingApp: React.FC = () => {
     };
 
     // Update handlers
-    const updateBasicInfo = ( storeUrl: string, shareEssentials: boolean ) => {
+    const updateBasicInfo = ( storeUrl, shareEssentials ) => {
         setFormData( ( prevData ) => ( {
             ...prevData,
             custom_store_url: storeUrl,
@@ -118,11 +120,7 @@ const OnboardingApp: React.FC = () => {
         } ) );
     };
 
-    const updateMarketplaceGoal = (
-        focus: string,
-        deliveryHandling: string,
-        priority: string
-    ) => {
+    const updateMarketplaceGoal = ( focus, deliveryHandling, priority ) => {
         setFormData( ( prevData ) => ( {
             ...prevData,
             marketplace_goal: {
@@ -133,7 +131,7 @@ const OnboardingApp: React.FC = () => {
         } ) );
     };
 
-    const updateSelectedPlugins = ( pluginIds: string[] ) => {
+    const updateSelectedPlugins = ( pluginIds ) => {
         if ( ! initialData?.plugins?.length ) {
             return;
         }
@@ -154,13 +152,13 @@ const OnboardingApp: React.FC = () => {
         if ( currentStep === 2 ) {
             // If no plugins, skip AddonsScreen and submit
             if ( ! hasPlugins ) {
-                handleSubmit();
+                handleSubmit( false );
                 return;
             }
         }
         // When moving from AddonsScreen (step 3) to next step
         else if ( currentStep === 3 ) {
-            handleSubmit();
+            handleSubmit( false );
             return;
         }
 
@@ -170,6 +168,12 @@ const OnboardingApp: React.FC = () => {
 
     const goToPrevStep = () => {
         setCurrentStep( ( prevStep ) => Math.max( prevStep - 1, 0 ) );
+    };
+
+    // Handle skip from addons screen - don't submit plugins
+    const skipAddonsStep = () => {
+        // Submit form data with empty plugins array
+        handleSubmit( true );
     };
 
     // Render the current screen
@@ -222,10 +226,8 @@ const OnboardingApp: React.FC = () => {
                     <AddonsScreen
                         onNext={ goToNextStep }
                         onBack={ goToPrevStep }
-                        onSkip={ goToNextStep }
-                        selectedAddons={ formData.plugins.map(
-                            ( plugin ) => plugin.id
-                        ) }
+                        onSkip={ skipAddonsStep }
+                        selectedAddons={ [] }
                         availableAddons={ initialData?.plugins || [] }
                         onUpdate={ updateSelectedPlugins }
                     />

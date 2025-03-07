@@ -7,37 +7,6 @@ import NextButton from '@dokan/admin/onboard/components/NextButton';
 import React from 'react';
 import SinglePlugin from '@dokan/admin/onboard/components/SinglePlugin';
 
-interface Addon {
-    id: string;
-    icon?: string;
-    title: string;
-    description: string;
-    info?: {
-        name: string;
-        slug: string;
-        [ key: string ]: any;
-    };
-}
-
-interface AddonsScreenProps {
-    onNext: () => void;
-    onBack: () => void;
-    onSkip: () => void;
-    selectedAddons: string[];
-    availableAddons: Array< {
-        id: string;
-        title: string;
-        description: string;
-        img_url: string;
-        img_alt: string;
-        plugins: {
-            name: string;
-            slug: string;
-        }[];
-    } >;
-    onUpdate: ( addonIds: string[] ) => void;
-}
-
 const AddonsScreen = ( {
     onNext,
     onBack,
@@ -45,12 +14,12 @@ const AddonsScreen = ( {
     selectedAddons = [],
     availableAddons = [],
     onUpdate,
-}: AddonsScreenProps ) => {
+} ) => {
     const [ localSelectedAddons, setLocalSelectedAddons ] =
-        useState< string[] >( selectedAddons );
+        useState( selectedAddons );
 
-    // Map API addons to UI  format if available
-    const displayAddons: Addon[] =
+    // Map API addons to UI format if available
+    const displayAddons =
         availableAddons.length > 0
             ? availableAddons.map( ( addon ) => ( {
                   id: addon?.plugins[ 0 ]?.slug,
@@ -68,7 +37,7 @@ const AddonsScreen = ( {
         onUpdate( localSelectedAddons );
     }, [ localSelectedAddons ] );
 
-    const toggleAddon = ( id: string ) => {
+    const toggleAddon = ( id ) => {
         if ( localSelectedAddons.includes( id ) ) {
             setLocalSelectedAddons(
                 localSelectedAddons.filter( ( item ) => item !== id )
@@ -82,6 +51,11 @@ const AddonsScreen = ( {
         // Ensure selected addons are updated before proceeding
         onUpdate( localSelectedAddons );
         onNext();
+    };
+
+    const handleSkip = () => {
+        // Skip without updating the selected addons
+        onSkip();
     };
 
     return (
@@ -98,10 +72,7 @@ const AddonsScreen = ( {
                 </h1>
                 <p className="text-sm text-gray-500 mb-5">
                     { __(
-                        'We recommend some plugins for the marketplace. You can' +
-                            'select from the following suggestions and based on your' +
-                            'selection we will install and activate them for you so that' +
-                            'your experience remains flawless',
+                        'We recommend some plugins for the marketplace. You can select from the following suggestions and based on your selection we will install and activate them for you so that your experience remains flawless',
                         'dokan'
                     ) }
                 </p>
@@ -124,7 +95,7 @@ const AddonsScreen = ( {
 
                     <div className="flex space-x-4 sm:w-auto w-full justify-end">
                         <Button
-                            onClick={ onSkip }
+                            onClick={ handleSkip }
                             className="text-gray-600 font-medium py-2 px-4 border-0 shadow-none"
                         >
                             { __( 'Skip', 'dokan' ) }
