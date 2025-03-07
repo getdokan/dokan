@@ -29,6 +29,8 @@ class Assets implements Hookable {
         $settings['vendorBalance']      = dokan_get_seller_balance( dokan_get_current_user_id() );
         $settings['stockStatuses']      = wc_get_product_stock_status_options();
         $settings['isAnalyticsEnabled'] = ReportUtil::is_analytics_enabled();
+        $settings['lastDayOfTheMonth']  = dokan_current_datetime()->format( 'Y-m-d' );
+        $settings['firstDayOfTheMonth'] = dokan_current_datetime()->modify( 'first day of this month' )->format( 'Y-m-d' );
 
         $preload_data           = [];
         $preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', array() );
