@@ -8,14 +8,11 @@ import { FormData, OnboardingData } from '../types';
  */
 export const formatPlugins = ( plugins: any[] ) => {
     return plugins.map( ( plugin ) => {
-        const pluginDetails = plugin?.plugins[ 0 ]?.basename?.split( '/' ) || [
-            '',
-            '',
-        ];
+        const pluginDetails = plugin?.basename?.split( '/' ) || [ '', '' ];
         return {
-            id: plugin?.plugins[ 0 ]?.slug,
+            id: plugin?.slug,
             info: {
-                name: plugin?.plugins[ 0 ]?.name,
+                name: plugin?.title,
                 'repo-slug': pluginDetails[ 0 ] || '',
                 file: pluginDetails[ 1 ] || '',
             },

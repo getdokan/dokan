@@ -51,12 +51,13 @@ export interface MarketplaceGoal {
 }
 
 export interface Plugin {
-    id?: string;
-    title?: string;
-    description?: string;
-    img_url?: string;
-    img_alt?: string;
-    plugins: PluginDetail[];
+    type: string;
+    title: string;
+    description: string;
+    img_url: string;
+    img_alt: string;
+    slug: string;
+    basename: string;
 }
 
 export interface PluginDetail {

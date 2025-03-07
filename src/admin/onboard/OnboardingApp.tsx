@@ -65,7 +65,7 @@ const OnboardingApp = () => {
                         top_priority:
                             response.marketplace_goal?.top_priority || 'sales',
                     },
-                    plugins: formatPlugins( response.plugins || [] ),
+                    plugins: response.plugins || [],
                 } );
 
                 // Skip to success screen if already onboarded
@@ -136,7 +136,7 @@ const OnboardingApp = () => {
         }
 
         const selectedPlugins = initialData.plugins.filter( ( plugin ) =>
-            pluginIds.includes( plugin?.plugins?.[ 0 ]?.slug )
+            pluginIds.includes( plugin.slug )
         );
 
         setFormData( ( prevData ) => ( {

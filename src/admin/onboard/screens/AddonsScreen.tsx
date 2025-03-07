@@ -4,7 +4,6 @@ import { Button } from '@getdokan/dokan-ui';
 import { useEffect, useState } from '@wordpress/element';
 import BackButton from '@dokan/admin/onboard/components/BackButton';
 import NextButton from '@dokan/admin/onboard/components/NextButton';
-import React from 'react';
 import SinglePlugin from '@dokan/admin/onboard/components/SinglePlugin';
 
 const AddonsScreen = ( {
@@ -22,13 +21,13 @@ const AddonsScreen = ( {
     const displayAddons =
         availableAddons.length > 0
             ? availableAddons.map( ( addon ) => ( {
-                  id: addon?.plugins[ 0 ]?.slug,
+                  id: addon?.slug,
                   icon: addon?.img_url,
                   title: addon?.title || 'Plugin',
                   description:
                       addon?.description ||
                       'Enhance your marketplace with this plugin',
-                  info: addon?.plugins[ 0 ],
+                  info: addon,
               } ) )
             : [];
 
