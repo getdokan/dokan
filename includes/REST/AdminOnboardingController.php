@@ -236,7 +236,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
      * @return WP_REST_Response
      */
     public function get_onboarding( WP_REST_Request $request ): WP_REST_Response {
-        $onboarding = get_option( 'dokan_onboarding', [] );
+        $onboarding = get_option( 'dokan_onboarding', false );
         $general_options = get_option( 'dokan_general', [] );
         $share_essentials = get_option( 'dokan_share_essentials', false );
         $marketplace_goal = get_option( 'dokan_marketplace_goal', [] );
