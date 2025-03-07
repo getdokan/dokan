@@ -20,64 +20,57 @@ class Coupon {
         add_action( 'woocommerce_removed_coupon', [ $this, 'remove_coupon_info_from_cart_item' ] );
         add_filter( 'woocommerce_coupon_get_apply_quantity', [ $this, 'intercept_wc_coupon' ], 15, 4 );
         add_action( 'dokan_wc_coupon_applied', [ $this, 'save_item_coupon_discount' ], 10, 3 );
-        add_filter( 'woocommerce_pre_delete_order_item', [ $this, 'remove_coupon_info_from_order_item' ], 10, 2 );
+        add_action( 'woocommerce_before_delete_order_item', [ $this, 'remove_coupon_info_from_order_item' ] );
     }
 
     /**
      * Remove coupon info from an order item when a coupon is removed.
      *
-     * @param mixed $check
-     * @param WC_Data $data
+     * @param int $item_id
      *
-     * @return mixed
+     * @return void
      * @throws Exception
      */
-    public function remove_coupon_info_from_order_item( $check, WC_Data $data ) {
-        if ( $data instanceof WC_Order_Item_Coupon ) {
-            if ( ! $data->get_order_id() ) {
-                return $check;
-            }
-            $removed_coupon = $data->get_code();
-            $order = wc_get_order( $data->get_order_id() );
-            if ( ! $order ) {
-                return $check;
-            }
-            $order_items = $order->get_items();
-
-            $product_ids = [];
-
-            foreach ( $order_items as $order_item ) {
-                $item = $order_item->get_meta( self::DOKAN_COUPON_META_KEY, true );
-
-                if ( isset( $item[ $removed_coupon ] ) ) {
-                    unset( $item[ $removed_coupon ] );
-                    wc_update_order_item_meta( $order_item->get_id(), self::DOKAN_COUPON_META_KEY, $item );
-                    $product_ids[] = $order_item->get_product_id();
-                }
-            }
-            // Remove coupon with child orders
-            if ( $order->get_meta( 'has_sub_order' ) ) {
-                $this->remove_coupon_from_child_orders( $order, $removed_coupon );
-            } else {
-                // Remove coupon from child order items
-                $parent_order = wc_get_order( $order->get_parent_id() );
-                if ( ! empty( $product_ids ) && $parent_order ) {
-                    $order_items = $parent_order->get_items();
-                    foreach ( $order_items as $order_item ) {
-                        /** @var WC_Order_Item_Product $order_item */
-                        if ( in_array( $order_item->get_product_id(), $product_ids, true ) ) {
-                            $item = $order_item->get_meta( self::DOKAN_COUPON_META_KEY, true );
-                            if ( isset( $item[ $removed_coupon ] ) ) {
-                                unset( $item[ $removed_coupon ] );
-                                wc_update_order_item_meta( $order_item->get_id(), self::DOKAN_COUPON_META_KEY, $item );
-                            }
-                        }
-                    }
-                }
-            }
+    public function remove_coupon_info_from_order_item( $item_id ) {
+        $data = new WC_Order_Item_Coupon( $item_id );
+        if ( ! $data->get_order_id() ) {
+            return;
         }
 
-        return $check;
+        $removed_coupon = $data->get_code();
+        $order = wc_get_order( $data->get_order_id() );
+        $order_items = $order->get_items();
+
+        $product_ids = [];
+		foreach ( $order_items as $order_item ) {
+			$item = $order_item->get_meta( self::DOKAN_COUPON_META_KEY, true );
+
+			if ( isset( $item[ $removed_coupon ] ) ) {
+				unset( $item[ $removed_coupon ] );
+				wc_update_order_item_meta( $order_item->get_id(), self::DOKAN_COUPON_META_KEY, $item );
+				$product_ids[] = $order_item->get_product_id();
+			}
+		}
+        // Remove coupon with child orders
+		if ( $order->get_meta( 'has_sub_order' ) ) {
+			$this->remove_coupon_from_child_orders( $order, $removed_coupon );
+		} else {
+			// Remove coupon from child order items
+			$parent_order = wc_get_order( $order->get_parent_id() );
+			if ( ! empty( $product_ids ) && $parent_order ) {
+				$order_items = $parent_order->get_items();
+				foreach ( $order_items as $order_item ) {
+					/** @var WC_Order_Item_Product $order_item */
+					if ( in_array( $order_item->get_product_id(), $product_ids, true ) ) {
+						$item = $order_item->get_meta( self::DOKAN_COUPON_META_KEY, true );
+						if ( isset( $item[ $removed_coupon ] ) ) {
+							unset( $item[ $removed_coupon ] );
+							wc_update_order_item_meta( $order_item->get_id(), self::DOKAN_COUPON_META_KEY, $item );
+						}
+					}
+				}
+			}
+		}
     }
 
     /**
