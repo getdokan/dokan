@@ -143,17 +143,9 @@ class Coupon {
      */
     protected function save_coupon_data_to_cart_item( WC_Coupon $coupon, WC_Discounts $discounts, $item ): void {
         $cart = WC()->cart;
-        $coupon_codes = $cart->get_applied_coupons();
         $item_key = $item->object['key'];
         $item_object = $cart->cart_contents[ $item_key ];
-
         $coupon_info = $item_object[ self::DOKAN_COUPON_META_KEY ] ?? [];
-        $coupon_info = array_filter(
-            $coupon_info,
-            function ( $coupon_temp ) use ( $coupon_codes ) {
-                return in_array( $coupon_temp['coupon_code'], $coupon_codes, true );
-            }
-        );
 
         $item_wise_discounts = $discounts->get_discounts();
 
