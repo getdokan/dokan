@@ -25,3 +25,8 @@ webpack.config.js
 composer.lock
 composer.json
 .editorconfig
+.wordpress-org
+.distignore
+docs
+CHANGELOG.md
+DEVELOPER.md

@@ -1,3 +1,52 @@
+### v3.14.10 ( Feb 28, 2025 ) ###
+
+- **fix:** Prevented wrong store URL generation for staff managers on admin dashboard.
+- **fix:** Restoring parent order with restore related child orders.
+- **fix:** Store settings API data storing inconsistencies.
+
+### v3.14.9 ( Feb 12, 2025 ) ###
+
+- **fix:** Fix earning suggestion in vendor dashboard when product edit page loads initially.
+- **fix:** Fix vendor earning suggestion currency, currency position, decimal separator in vendor dashboard product edit page.
+- **fix:** Fix vendor earning suggestion for invalid product price.
+- **fix:** Tax calculation for shipping based on tax status
+- **feat:** Rollback support for product statues on dokan pro deactivation.
+- **refactor:** Improved dokan_is_user_seller function by adding strict comparison to differentiate between vendor and staff.
+
+### v3.14.8 ( Jan 29, 2025 ) ###
+
+- **update:** Missing parameters support added for the reverse-withdrawal API endpoints.
+- **update:** Missing parameters support added for the Settings API endpoints.
+- **fix:** Fixed an error when navigating to the product edit page with an invalid (non-numeric) product ID.
+- **fix:** Fixed a misspelling typo vendor contact form input field.
+- **fix:** Fixed and updated analytics cache modifier for seller analytics filter.
+
+### v3.14.6 ( Jan 09, 2025 ) ###
+
+- **fix:** Translations on Admin Commission Setup Wizard, Withdraw, Withdraw Log, Add Reverse Withdraw, Dummy Data, and Vendor Single pages were not working due to wrong text-domains.
+
+### v3.14.5 ( Jan 06, 2025 ) ###
+
+- **update:** Improvement vendor setup wizard ui.
+- **update:** Improvement withdraw approved email template.
+- **update:** Dokan admin settings page responsive & update ui design.
+
+### v3.14.4 ( Dec 27, 2024 ) ###
+
+- **fix:** Added tweaks to improve system stability and smoothness.
+
+### v3.14.3 ( Dec 11, 2024 ) ###
+
+- **update:** Updated Dokan admin header to display current pro plan and version with upgrading option.
+
+### v3.14.2 ( Dec 06, 2024 ) ###
+
+- **update:** Added commission setting option in product bulk edit for Admin.
+
+### v3.14.1 ( Dec 04, 2024 ) ###
+
+- **fix:** Fixed a issue in the commission upgrader to deal with empty values for product and vendor.
+
 ### v3.14.0 ( Dec 02, 2024 ) ###
 
 - **new:** Commission amount now displayed in the product list within the admin dashboard.
@@ -14,7 +63,7 @@
 - **update:** As per new branding of Dokan Multivendor Plugin, full product is rebranded with new theme color.
 - **fix:** Moved the vendor edit page from Dokan Pro to Dokan Lite and eliminated the commission setting from the WordPress default user profile page.
 - **fix:** Removed the commission from every category, introducing category-based commission in global settings, vendor settings, Dokan subscription products, and the admin setup wizard.
-- 
+
 ### v3.13.1 ( Nov 11, 2024 ) ###
 
 - **update:** Compatibility with the Printful Integration Module added.

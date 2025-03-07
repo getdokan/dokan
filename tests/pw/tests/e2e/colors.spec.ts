@@ -23,6 +23,7 @@ test.describe('Color scheme customizer test', () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.colors, dbData.dokan.colorsSettings);
         await apiUtils.activateModules(payloads.moduleIds.colorSchemeCustomizer, payloads.adminAuth);
         await aPage.close();
+        await apiUtils.dispose();
     });
 
     test('admin can enable color scheme customizer module', { tag: ['@pro', '@admin'] }, async () => {

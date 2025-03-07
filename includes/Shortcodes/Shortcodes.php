@@ -17,6 +17,7 @@ class Shortcodes {
      *  Register Dokan shortcodes
      *
      * @since 3.0.0
+     * @since 3.14.10 Added dokan-customer-migration shortcode.
      *
      * @return void
      */
@@ -29,6 +30,7 @@ class Shortcodes {
 				'dokan-my-orders'            => new MyOrders(),
 				'dokan-stores'               => new Stores(),
 				'dokan-vendor-registration'  => new VendorRegistration(),
+				'dokan-customer-migration'   => new CustomerMigration(),
 			]
         );
     }
