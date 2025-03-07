@@ -539,8 +539,9 @@ class SetupWizard {
     public function dokan_setup_selling_save() {
         check_admin_referer( 'dokan-setup' );
 
-        $options                              = get_option( 'dokan_selling', [] );
-        $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? dokan_get_container()->get( AdminSettings::class )->get_new_seller_enable_selling_status( sanitize_text_field( wp_unslash( $_POST['new_seller_enable_selling'] ) ) ) : 'automatically';
+        $options = get_option( 'dokan_selling', [] );
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+        $options['new_seller_enable_selling'] = dokan_get_container()->get( AdminSettings::class )->get_new_seller_enable_selling_status( sanitize_text_field( wp_unslash( $_POST['new_seller_enable_selling'] ) ) ?? 'automatically' );
         $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
 
         update_option( 'dokan_selling', $options );
