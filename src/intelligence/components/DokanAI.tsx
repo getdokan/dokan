@@ -201,7 +201,12 @@ const DokanAI = () => {
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                 >
-                    <rect width="40" height="40" rx="5" fill="currentColor" />
+                    <rect
+                        width="40"
+                        height="40"
+                        rx="5"
+                        fill="var(--colors-primary-600, currentColor)"
+                    />
                     <path
                         d="M18.0064 11.0266C18.2625 9.98897 19.7376 9.98897 19.9938 11.0266V11.0266C21.0872 15.4557 24.5455 18.9139 28.9747 20.0073V20.0073C30.0123 20.2634 30.0123 21.7386 28.9747 21.9947V21.9947C24.5455 23.0881 21.0872 26.5463 19.9938 30.9754V30.9754C19.7376 32.0131 18.2625 32.0131 18.0064 30.9754V30.9754C16.9129 26.5463 13.4546 23.0881 9.02549 21.9947V21.9947C7.98784 21.7386 7.98784 20.2634 9.02549 20.0073V20.0073C13.4546 18.9139 16.9129 15.4557 18.0064 11.0266V11.0266Z"
                         fill="white"
@@ -224,10 +229,11 @@ const DokanAI = () => {
 
                 <Modal.Content>
                     { error && (
-                        <SimpleAlert className="mb-4 overflow-auto" color={ 'red' }>
-                            <div className="text-wrap">
-                                { error }
-                            </div>
+                        <SimpleAlert
+                            className="mb-4 overflow-auto"
+                            color={ 'red' }
+                        >
+                            <div className="text-wrap">{ error }</div>
                         </SimpleAlert>
                     ) }
                     { responseHistory.post_title.length ? (
