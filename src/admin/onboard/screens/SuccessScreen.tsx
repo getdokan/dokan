@@ -4,7 +4,7 @@ import { Button } from '@getdokan/dokan-ui';
 import OnboardingLayout from '../OnboardingLayout';
 
 const SuccessScreen = () => {
-    const { origin, pathname } = window.location;
+    const redirectUrl = window?.onboardingData?.dokan_admin_dashboard_url;
     return (
         <OnboardingLayout>
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
@@ -19,8 +19,8 @@ const SuccessScreen = () => {
                 </p>
                 <Button
                     link={ true }
-                    href={ `${ origin + pathname }?page=dokan` }
-                    className="bg-dokan-btn hover:bg-dokan-btn-hover text-white rounded-md py-3 px-8 flex items-center"
+                    href={ redirectUrl }
+                    className="bg-[#7047EB] text-white rounded-md py-3 px-8 flex items-center"
                 >
                     { __( 'Explore Dashboard', 'dokan' ) }
                 </Button>

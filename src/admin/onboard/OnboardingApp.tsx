@@ -35,6 +35,7 @@ const OnboardingApp: React.FC = () => {
         null
     );
     const [ formData, setFormData ] = useState< FormData >( defaultFormData );
+    const [ hasPlugins, setHasPlugins ] = useState( true );
 
     // Fetch initial data
     const loadInitialData = async () => {
@@ -44,6 +45,11 @@ const OnboardingApp: React.FC = () => {
 
             const response = await fetchOnboardingData();
             setInitialData( response );
+
+            // Check if there are plugins available
+            const pluginsAvailable =
+                response?.plugins && response.plugins.length > 0;
+            setHasPlugins( pluginsAvailable );
 
             if ( response ) {
                 setFormData( {
@@ -96,7 +102,8 @@ const OnboardingApp: React.FC = () => {
         } catch ( error ) {
             console.error( 'Error submitting onboarding data:', error );
             setApiError( 'Failed to save onboarding data. Please try again.' );
-            setCurrentStep( 3 ); // Back to addons screen
+            // Go back to previous screen (either addons or marketplace goal)
+            setCurrentStep( hasPlugins ? 3 : 2 );
         } finally {
             setIsLoading( false );
         }
@@ -143,12 +150,22 @@ const OnboardingApp: React.FC = () => {
 
     // Navigation handlers
     const goToNextStep = () => {
-        if ( currentStep === 3 ) {
-            // Submit data when leaving addons screen
-            handleSubmit();
-        } else {
-            setCurrentStep( ( prevStep ) => Math.min( prevStep + 1, 5 ) );
+        // When moving from marketplace goal screen (step 2) to next step
+        if ( currentStep === 2 ) {
+            // If no plugins, skip AddonsScreen and submit
+            if ( ! hasPlugins ) {
+                handleSubmit();
+                return;
+            }
         }
+        // When moving from AddonsScreen (step 3) to next step
+        else if ( currentStep === 3 ) {
+            handleSubmit();
+            return;
+        }
+
+        // Normal step progression
+        setCurrentStep( ( prevStep ) => Math.min( prevStep + 1, 5 ) );
     };
 
     const goToPrevStep = () => {
@@ -200,7 +217,8 @@ const OnboardingApp: React.FC = () => {
                     />
                 );
             case 3:
-                return (
+                // Only show AddonsScreen if there are plugins
+                return hasPlugins ? (
                     <AddonsScreen
                         onNext={ goToNextStep }
                         onBack={ goToPrevStep }
@@ -211,6 +229,8 @@ const OnboardingApp: React.FC = () => {
                         availableAddons={ initialData?.plugins || [] }
                         onUpdate={ updateSelectedPlugins }
                     />
+                ) : (
+                    <LoadingScreen />
                 );
             case 4:
                 return <LoadingScreen />;
@@ -228,7 +248,10 @@ const OnboardingApp: React.FC = () => {
             <StepIndicator
                 currentStep={ currentStep }
                 onStepChange={ setCurrentStep }
-                isDisabled={ isLoading }
+                isDisabled={
+                    isLoading || ( ! hasPlugins && currentStep === 3 )
+                }
+                totalSteps={ hasPlugins ? 6 : 5 }
             />
         </div>
     );

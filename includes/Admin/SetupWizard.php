@@ -190,6 +190,14 @@ class SetupWizard {
                 $version,
                 true
             );
+            wp_localize_script(
+                'dokan-admin-onboard-app',
+                'onboardingData',
+                [
+                    'site_url'                  => esc_url( get_site_url() ),
+                    'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=dokan' ) ),
+
+                ] );
 
 //            wp_localize_script(
 //                'dokan-request-a-quote-vendor-dashboard-app',

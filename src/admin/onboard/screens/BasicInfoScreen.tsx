@@ -4,6 +4,7 @@ import { SimpleInput } from '@getdokan/dokan-ui';
 import Logo from '../Logo';
 import WarningIcon from '../icons/WarningIcon';
 import NextButton from '@dokan/admin/onboard/components/NextButton';
+import { applyFilters } from '@wordpress/hooks';
 
 interface BasicInfoScreenProps {
     onNext: () => void;
@@ -51,10 +52,17 @@ const BasicInfoScreen = ( {
         onUpdate( localStoreUrl, localShareDiagnostics );
         onNext();
     };
-    const siteUrl = window.location.origin;
+    const siteUrl = window?.onboardingData?.site_url;
+    // filter hook for max url length
+
+    const maxUrlLength = applyFilters( 'dokan_onboarding_max_url_length', 40 );
+    const siteUrlWidth =
+        siteUrl?.length > maxUrlLength
+            ? siteUrl.slice( 0, maxUrlLength ) + '...'
+            : siteUrl;
     return (
         <div className="min-h-screen flex items-center justify-center">
-            <div className="p-8 md:p-10 md:w-[70%]">
+            <div className="p-8 md:p-10  ">
                 <div className="mb-8">
                     <Logo />
                 </div>
@@ -77,13 +85,13 @@ const BasicInfoScreen = ( {
                             required={ true }
                             value={ localStoreUrl }
                             addOnLeft={
-                                <span className="inline-flex items-center bg-gray-50 px-3 text-gray-900 sm:text-sm rouned-bl absolute left-0 top-0 h-full rounded-bl rounded-tl w-max">
-                                    { siteUrl }
+                                <span className="md:inline-flex hidden items-center bg-gray-50 px-3 text-xs text-gray-900 sm:text-sm rouned-bl absolute left-0 top-0 h-full rounded-bl rounded-tl w-max">
+                                    { siteUrlWidth }
                                 </span>
                             }
                             addOnRight={
-                                <span className="inline-flex items-center bg-gray-50 px-3 text-gray-900 sm:text-sm rouned-bl absolute right-0 top-0 h-full rounded-bl rounded-tl w-max">
-                                    vendor-name
+                                <span className="md:inline-flex hidden items-center bg-gray-50 px-3 text-gray-900 text-xs sm:text-sm rouned-bl absolute right-0 top-0 h-full rounded-bl rounded-tl w-max">
+                                    { __( 'vendor-name', 'dokan' ) }
                                 </span>
                             }
                             input={ {
@@ -94,7 +102,7 @@ const BasicInfoScreen = ( {
                             } }
                             errors={ error && [ error ] }
                             onChange={ onHandleInputChange }
-                            className={ `w-[80%] md:w-full pl-[12rem] mb-2 block focus:ring-0 focus:outline-gray-300 focus:ring-0 ${
+                            className={ `md:w-[80%] md:w-full sm:pl-[12rem] pl-6  mb-2 block focus:ring-0 focus:outline-gray-300 focus:ring-0 ${
                                 error
                                     ? 'focus:outline-red-500'
                                     : 'focus:outline-blue-500'
@@ -105,7 +113,8 @@ const BasicInfoScreen = ( {
                             <span>
                                 Vendor Store URL will be (
                                 <span className="text-indigo-600">
-                                    { siteUrl }/{ localStoreUrl }/vendor-name
+                                    { siteUrl }/{ localStoreUrl }/
+                                    { __( 'vendor-name', 'dokan' ) }
                                 </span>
                                 )
                             </span>
