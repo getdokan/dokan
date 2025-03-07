@@ -1,5 +1,5 @@
 import { useState, RawHTML } from '@wordpress/element';
-import { Modal, SimpleInput, TextArea } from '@getdokan/dokan-ui';
+import { Modal, SimpleInput, TextArea, SimpleAlert } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
@@ -223,7 +223,13 @@ const DokanAI = () => {
                 </Modal.Title>
 
                 <Modal.Content>
-                    { error && <div className="text-red-600">{ error }</div> }
+                    { error && (
+                        <SimpleAlert className="mb-4 overflow-auto" color={ 'red' }>
+                            <div className="text-wrap">
+                                { error }
+                            </div>
+                        </SimpleAlert>
+                    ) }
                     { responseHistory.post_title.length ? (
                         <div>
                             <div className="mb-2 flex items-center justify-between">
@@ -371,7 +377,7 @@ const DokanAI = () => {
                                     'dokan-lite'
                                 ) }
                             </div>
-                            <p className="text-sm">
+                            <p className="text-sm mb-2">
                                 { __(
                                     'You can generate your product title, short description, long description all at once with this prompt. Type your prompt below',
                                     'dokan-lite'

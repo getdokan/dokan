@@ -81,9 +81,16 @@ class AIRequestController extends DokanBaseVendorController {
 
             return rest_ensure_response( $response );
         } catch ( Exception $e ) {
+            if ( $e->getCode() === 401 ) {
+                return new WP_Error(
+                    'dokan_ai_service_error',
+                    esc_html__( 'Invalid API key', 'dokan-lite' ),
+                    [ 'status' => 401 ]
+                );
+            }
             return new WP_Error(
                 'dokan_ai_service_error',
-                sprintf( '%s %s', esc_html__( 'Error resolving service:', 'dokan-lite' ), esc_html( $e->getMessage() ) ),
+                esc_html( $e->getMessage() ),
                 [ 'status' => 500 ]
             );
         }

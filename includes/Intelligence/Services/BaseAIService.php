@@ -81,16 +81,19 @@ abstract class BaseAIService implements AIServiceInterface {
                 'timeout' => 60,
 			]
         );
-
+        $codes = [
+			'invalid_api_key' => 401,
+			'insufficient_quota' => 429,
+		];
         if ( is_wp_error( $response ) ) {
-            throw new Exception( esc_html( $response->get_error_message() ) );
+            throw new Exception( esc_html( $response->get_error_message() ), $codes[ $response->get_error_code() ] ?? 500 ); // phpcs:ignore
         }
 
         $response_body = wp_remote_retrieve_body( $response );
         $data = json_decode( $response_body, true );
 
         if ( isset( $data['error'] ) ) {
-            throw new Exception( esc_html( $data['error']['message'] ?? __( 'Error resolving API Request', 'dokan-lite' ) ) );
+            throw new Exception( esc_html( $data['error']['message'] ), $codes[ $data['error']['code'] ] ?? 500 ); // phpcs:ignore
         }
 
         return $data;
