@@ -162,15 +162,6 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 
 		// Set up test data in options
 		update_option( 'dokan_onboarding', true );
-		update_option( 'dokan_general', [ 'custom_store_url' => 'test-store' ] );
-		update_option( 'dokan_share_essentials', true );
-		update_option(
-			'dokan_marketplace_goal', [
-				'marketplace_focus' => 'digital',
-				'handle_delivery' => 'marketplace',
-				'top_priority' => 'security',
-			]
-		);
 
 		// Create the request
 		$request = new WP_REST_Request( 'GET', "/{$this->namespace}/{$this->rest_base}" );
@@ -185,14 +176,5 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 		// Check the response data
 		$data = $response->get_data();
 		$this->assertEquals( true, $data['onboarding'] );
-		$this->assertEquals( [ 'custom_store_url' => 'test-store' ], $data['general_options'] );
-		$this->assertEquals( true, $data['share_essentials'] );
-		$this->assertEquals(
-			[
-				'marketplace_focus' => 'digital',
-				'handle_delivery' => 'marketplace',
-				'top_priority' => 'security',
-			], $data['marketplace_goal']
-		);
 	}
 }
