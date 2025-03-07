@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { VENDOR_ID } = process.env;
+const { VENDOR_ID, PRODUCT_ID } = process.env;
 
 test.describe('Stores test', () => {
     let admin: StoresPage;
@@ -77,6 +77,7 @@ test.describe('Stores test', () => {
     });
 
     test('admin can view vendor orders', { tag: ['@lite', '@admin'] }, async () => {
+        await apiUtils.createOrder(PRODUCT_ID, payloads.createOrder, payloads.vendorAuth);
         await admin.viewVendor(data.predefined.vendorStores.vendor1, 'orders');
     });
 

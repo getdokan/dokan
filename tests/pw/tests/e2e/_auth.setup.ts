@@ -1,9 +1,10 @@
 import { test as setup, expect, request } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
+import { ProductsPage } from '@pages/productsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
-// import { dbUtils } from '@utils/dbUtils';
+import { dbUtils } from '@utils/dbUtils';
 import { helpers } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
@@ -38,12 +39,13 @@ setup.describe('add & authenticate users', () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth, true);
         // add open-close time
         await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
+
         // add review
         if (DOKAN_PRO) {
-            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.customerAuth);
+            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
         }
         // add map location
-        // await dbUtils.addStoreMapLocation(sellerId);
+        await dbUtils.addStoreBiographyAndMapLocation(sellerId);
 
         helpers.createEnvVar('VENDOR_ID', sellerId);
     });
@@ -59,10 +61,10 @@ setup.describe('add & authenticate users', () => {
         await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
         // add review
         if (DOKAN_PRO) {
-            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.customerAuth);
+            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
         }
         // add map location
-        // await dbUtils.addStoreMapLocation(sellerId);
+        await dbUtils.addStoreBiographyAndMapLocation(sellerId);
 
         helpers.createEnvVar('VENDOR2_ID', sellerId);
     });
@@ -75,6 +77,9 @@ setup.describe('add & authenticate users', () => {
     setup('authenticate vendor', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
+        const productsPage = new ProductsPage(page);
+        const nonce = await productsPage.getProductEditNonce();
+        helpers.createEnvVar('PRODUCT_EDIT_NONCE', nonce);
     });
 
     setup('authenticate customer2', { tag: ['@lite'] }, async ({ page }) => {

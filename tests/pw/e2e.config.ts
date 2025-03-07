@@ -50,14 +50,14 @@ export default defineConfig({
     reporter: CI
         ? [
               //   ['github'],
-              ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
-              //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
+              //   ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
+              ['blob', { open: 'outputDir', outputDir: 'playwright-report/e2e/blob-report' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
           ]
         : [
+              //   ['blob', { open: 'outputDir', outputDir: 'playwright-report/e2e/blob-report' }],
               ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
-              //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
           ],

@@ -7,7 +7,6 @@ import { payloads } from '@utils/payloads';
 const { VENDOR_ID } = process.env;
 
 test.describe('ShipStation test', () => {
-    test.skip(true, 'remove after pr is merged');
     let admin: ShipStationPage;
     let vendor: ShipStationPage;
     let aPage: Page, vPage: Page;
@@ -39,12 +38,12 @@ test.describe('ShipStation test', () => {
     // vendor
 
     test('vendor can generate ShipStation credentials', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await apiUtils.deleteShipStationCredential(VENDOR_ID, payloads.vendorAuth); //todo: handle test re-run issue
+        await apiUtils.deleteShipStationCredential(VENDOR_ID, payloads.vendorAuth);
         await vendor.generateShipStationCredentials();
     });
 
     test('vendor can revoke ShipStation credentials', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await apiUtils.createShipStationCredential(VENDOR_ID, payloads.vendorAuth); //todo: handle test re-run issue
+        await apiUtils.createShipStationCredential(VENDOR_ID, payloads.vendorAuth);
         await vendor.revokeShipStationCredentials();
     });
 

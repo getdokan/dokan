@@ -155,7 +155,7 @@
                         :disabled="loading"
                     >
                         <img :src="loader" alt='' :class="loading ? 'is-loading' : 'not-loading'">
-                        {{ __( 'Save', 'dokan' ) }}
+                        {{ __( 'Save', 'dokan-lite' ) }}
                     </button>
                 </div>
             </div>
@@ -350,7 +350,7 @@ export default {
                 paged: 1,
                 search: search
             } ).done( ( response ) => {
-                self.allVendors = [ { vendorId: 0, store_name: self.__( 'Select vendor', 'dokan' ) } ].concat( response.map((item) => {
+                self.allVendors = [ { vendorId: 0, store_name: self.__( 'Select vendor', 'dokan-lite' ) } ].concat( response.map((item) => {
                     return {
                         vendorId: item.id,
                         store_name: item.store_name

@@ -245,7 +245,7 @@ export default {
                 let message = window.dokan_handle_ajax_error( jqXHR );
                 if ( message ) {
                     Swal.fire(
-                        self.__( 'Something went wrong', 'dokan' ),
+                        self.__( 'Something went wrong', 'dokan-lite' ),
                         message,
                         'error'
                     );
@@ -370,7 +370,7 @@ export default {
                     let message = window.dokan_handle_ajax_error( jqXHR );
                     if ( message ) {
                         Swal.fire(
-                            self.__( 'Something went wrong', 'dokan' ),
+                            self.__( 'Something went wrong', 'dokan-lite' ),
                             message,
                             'error'
                         );

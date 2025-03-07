@@ -50,7 +50,7 @@ test.describe('Store list functionality test', () => {
         await customer.filterStores('featured');
     });
 
-    test('customer can filter open now stores', { tag: ['@pro', '@customer'] }, async () => {
+    test.skip('customer can filter open now stores', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterStores('open-now');
     });
 

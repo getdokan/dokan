@@ -321,7 +321,7 @@ ul {
         }
 
         .dokan-notice {
-            background: rgba(223, 0, 0, 0.05);
+            background: rgba(239, 234, 255, 1);
             margin: -15px -20px 0;
             padding: 15px 15px 0;
         }

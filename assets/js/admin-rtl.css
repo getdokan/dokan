@@ -250,7 +250,7 @@
   cursor: context-menu;
   top: 80px;
   left: -10px;
-  z-index: 1;
+  z-index: 99999;
   background-color: #fff;
   padding: 20px;
   border-radius: 3px;

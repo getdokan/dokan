@@ -22,7 +22,7 @@ echo " \n\n";
 
 // translators: 1) product title
 echo sprintf( esc_html__( 'Your product %s', 'dokan-lite' ), esc_html( $data['{product_title}'] ) );
-echo esc_html__( 'has been approved by one of our admin, congrats!', 'dokan-lite' );
+echo esc_html__( ' has been approved by one of our admin, congrats!', 'dokan-lite' );
 echo " \n\n";
 
 // translators: 1) product url

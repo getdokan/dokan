@@ -497,7 +497,7 @@ export const selector = {
                     address: '//div[@class="tab-link"]//a[contains(text(), "Address")]',
                     paymentOptions: '//div[@class="tab-link"]//a[contains(text(), "Payment Options")]',
                     addNewVendorCloseModal: '.modal-close',
-                    next: '.button.button-primary',
+                    next: 'footer.modal-footer .button.button-primary',
 
                     // Account Info
 

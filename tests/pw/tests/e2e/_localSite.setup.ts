@@ -2,7 +2,7 @@ import { test } from '@playwright/test';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { SITE_PATH } = process.env;
+const { SITE_PATH, SKIP_DOKAN } = process.env;
 
 test.describe('setup local site', () => {
     test('download wordpress', { tag: ['@lite'] }, async () => {
@@ -35,8 +35,9 @@ test.describe('setup local site', () => {
     });
 });
 
-test.describe.skip('setup dokan test site', () => {
-    test('install plugin (woocommece)', { tag: ['@pro'] }, async () => {
+test.describe('setup dokan test site', () => {
+    test.skip(SKIP_DOKAN, 'Skipping dokan test setup');
+    test('install plugin (woocommerce)', { tag: ['@pro'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(data.installWp.plugins.woocommerce));
     });
 
