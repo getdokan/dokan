@@ -2,7 +2,9 @@ import OnboardingLayout from '../OnboardingLayout';
 
 export const LoadingScreen = () => {
     return (
-        <OnboardingLayout className={ `!bg-transparent shadow-none` }>
+        <OnboardingLayout
+            className={ `!bg-transparent shadow-none drop-shadow-none rounded-none border-none` }
+        >
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
                 <div className="mb-8">
                     <svg
