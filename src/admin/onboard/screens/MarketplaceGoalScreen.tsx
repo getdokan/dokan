@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Logo from '../Logo';
 import RadioCard from '../RadioCard';
 import { __ } from '@wordpress/i18n';
-import { Button } from '@getdokan/dokan-ui';
+import NextButton from '@dokan/admin/onboard/components/NextButton';
+import BackButton from '@dokan/admin/onboard/components/BackButton';
 
 interface MarketplaceGoalScreenProps {
     onNext: () => void;
@@ -16,6 +17,55 @@ interface MarketplaceGoalScreenProps {
         priority: string
     ) => void;
 }
+
+const marketplaceFocus = [
+    {
+        label: __( 'Digital Products', 'dokan' ),
+        value: 'digital',
+    },
+    {
+        label: __( 'Physical Products', 'dokan' ),
+        value: 'physical',
+    },
+    {
+        label: __( 'Services', 'dokan' ),
+        value: 'services',
+    },
+    {
+        label: __( 'Subscriptions', 'dokan' ),
+        value: 'subscriptions',
+    },
+];
+
+const deliveryMethods = [
+    {
+        label: __( 'Marketplace Handles Delivery', 'dokan' ),
+        value: 'marketplace',
+    },
+    {
+        label: __( 'Vendors manage their deliveries', 'dokan' ),
+        value: 'vendor',
+    },
+    {
+        label: __( 'No Delivery Needed (Digital product)', 'dokan' ),
+        value: 'none',
+    },
+];
+
+const priorities = [
+    {
+        label: __( 'International market reach', 'dokan' ),
+        value: 'international',
+    },
+    {
+        label: __( 'Maximizing sales conversion', 'dokan' ),
+        value: 'sales',
+    },
+    {
+        label: __( 'Local store management', 'dokan' ),
+        value: 'local',
+    },
+];
 
 const MarketplaceGoalScreen = ( {
     onNext,
@@ -62,36 +112,19 @@ const MarketplaceGoalScreen = ( {
                             ) }
                         </h2>
                         <div className="flex flex-wrap gap-4">
-                            <RadioCard
-                                label="Digital Products"
-                                checked={ localMarketplaceType === 'digital' }
-                                onChange={ () =>
-                                    setLocalMarketplaceType( 'digital' )
-                                }
-                            />
-                            <RadioCard
-                                label="Physical Products"
-                                checked={ localMarketplaceType === 'physical' }
-                                onChange={ () =>
-                                    setLocalMarketplaceType( 'physical' )
-                                }
-                            />
-                            <RadioCard
-                                label="Services"
-                                checked={ localMarketplaceType === 'services' }
-                                onChange={ () =>
-                                    setLocalMarketplaceType( 'services' )
-                                }
-                            />
-                            <RadioCard
-                                label="Subscriptions"
-                                checked={
-                                    localMarketplaceType === 'subscriptions'
-                                }
-                                onChange={ () =>
-                                    setLocalMarketplaceType( 'subscriptions' )
-                                }
-                            />
+                            { marketplaceFocus.map( ( focus ) => (
+                                <RadioCard
+                                    width={ 'w-[160px]' }
+                                    key={ focus.value }
+                                    label={ focus.label }
+                                    checked={
+                                        localMarketplaceType === focus.value
+                                    }
+                                    onChange={ () =>
+                                        setLocalMarketplaceType( focus.value )
+                                    }
+                                />
+                            ) ) }
                         </div>
                     </div>
 
@@ -103,30 +136,19 @@ const MarketplaceGoalScreen = ( {
                             ) }
                         </h2>
                         <div className="flex flex-wrap gap-4">
-                            <RadioCard
-                                label="Marketplace Handles Delivery"
-                                checked={
-                                    localDeliveryMethod === 'marketplace'
-                                }
-                                onChange={ () =>
-                                    setLocalDeliveryMethod( 'marketplace' )
-                                }
-                            />
-                            <RadioCard
-                                label="Vendors manage their deliveries"
-                                checked={ localDeliveryMethod === 'vendor' }
-                                onChange={ () =>
-                                    setLocalDeliveryMethod( 'vendor' )
-                                }
-                            />
-                            <RadioCard
-                                label="No Delivery Needed"
-                                description="(Digital product)"
-                                checked={ localDeliveryMethod === 'none' }
-                                onChange={ () =>
-                                    setLocalDeliveryMethod( 'none' )
-                                }
-                            />
+                            { deliveryMethods.map( ( method ) => (
+                                <RadioCard
+                                    width={ 'w-[180px]' }
+                                    key={ method.value }
+                                    label={ method.label }
+                                    checked={
+                                        localDeliveryMethod === method.value
+                                    }
+                                    onChange={ () =>
+                                        setLocalDeliveryMethod( method.value )
+                                    }
+                                />
+                            ) ) }
                         </div>
                     </div>
 
@@ -135,71 +157,24 @@ const MarketplaceGoalScreen = ( {
                             { __( "What's your top priority?", 'dokan' ) }
                         </h2>
                         <div className="flex flex-wrap gap-4">
-                            <RadioCard
-                                label="International market reach"
-                                checked={ localPriority === 'international' }
-                                onChange={ () =>
-                                    setLocalPriority( 'international' )
-                                }
-                            />
-                            <RadioCard
-                                label="Maximizing sales conversion"
-                                checked={ localPriority === 'sales' }
-                                onChange={ () => setLocalPriority( 'sales' ) }
-                            />
-                            <RadioCard
-                                label="Local store management"
-                                checked={ localPriority === 'local' }
-                                onChange={ () => setLocalPriority( 'local' ) }
-                            />
-                            <RadioCard
-                                label="Security and compliance"
-                                checked={ localPriority === 'security' }
-                                onChange={ () =>
-                                    setLocalPriority( 'security' )
-                                }
-                            />
+                            { priorities.map( ( priority ) => (
+                                <RadioCard
+                                    width={ 'w-[160px]' }
+                                    key={ priority.value }
+                                    label={ priority.label }
+                                    checked={ localPriority === priority.value }
+                                    onChange={ () =>
+                                        setLocalPriority( priority.value )
+                                    }
+                                />
+                            ) ) }
                         </div>
                     </div>
                 </div>
 
                 <div className="flex justify-between mt-12">
-                    <Button
-                        onClick={ onBack }
-                        className="flex items-center text-gray-600 font-medium border-0 shadow-none"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5 mr-1"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path
-                                fillRule="evenodd"
-                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                        { __( 'Back', 'dokan' ) }
-                    </Button>
-                    <Button
-                        onClick={ handleNext }
-                        className="bg-dokan-btn hover:bg-dokan-btn-hover text-white rounded-md py-3 px-8"
-                    >
-                        { __( 'Next', 'dokan' ) }
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5 ml-1"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path
-                                fillRule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                    </Button>
+                    <BackButton onBack={ onBack } />
+                    <NextButton handleNext={ handleNext } />
                 </div>
             </div>
         </div>

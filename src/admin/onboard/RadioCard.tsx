@@ -1,18 +1,17 @@
-import React from 'react';
-
-const RadioCard = ({label, description, checked, onChange}) => {
+const RadioCard = ( { label, description, checked, onChange, width } ) => {
     return (
         <div
-            className={`border rounded-lg p-5 max-w-[180px] min-h-[85px] flex-col cursor-pointer transition-colors flex gap-2 items-start ${
-                checked ? 'border-indigo-600' : 'border-gray-300'
-            }`}
-            onClick={onChange}
+            className={ `border rounded-lg p-5 ${ width } min-h-[85px] flex-col cursor-pointer transition-colors flex gap-2 items-start ${
+                checked ? 'border-[#7047EB]' : 'border-gray-300'
+            }` }
+            onClick={ onChange }
         >
-
-            <div className={`w-6 h-6 rounded-full flex  items-center justify-center ${
-                checked ? 'bg-indigo-600' : 'border-2 border-gray-300'
-            }`}>
-                {checked ? (
+            <div
+                className={ `w-6 h-6 rounded-full flex  items-center justify-center ${
+                    checked ? 'bg-[#7047EB]' : 'border-2 border-gray-300'
+                }` }
+            >
+                { checked ? (
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="14"
@@ -28,11 +27,15 @@ const RadioCard = ({label, description, checked, onChange}) => {
                     </svg>
                 ) : (
                     <div className="w-2 h-2 rounded-full bg-white"></div>
-                )}
+                ) }
             </div>
             <div className="">
-                <div className="text-sm text-gray-500">{label}</div>
-                {description && <div className="text-sm text-gray-500 mt-1">{description}</div>}
+                <div className="text-sm text-gray-500">{ label }</div>
+                { description && (
+                    <div className="text-sm text-gray-500 mt-1">
+                        { description }
+                    </div>
+                ) }
             </div>
         </div>
     );

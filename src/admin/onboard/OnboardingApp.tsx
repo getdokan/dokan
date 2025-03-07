@@ -72,7 +72,6 @@ const OnboardingApp: React.FC = () => {
                 }
             }
         } catch ( error ) {
-            console.error( 'Error fetching onboarding data:', error );
             setApiError(
                 'Failed to load initial data. Please refresh the page.'
             );

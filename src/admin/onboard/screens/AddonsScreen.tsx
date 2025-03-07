@@ -2,6 +2,9 @@ import Logo from '../Logo';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@getdokan/dokan-ui';
 import { useEffect, useState } from '@wordpress/element';
+import BackButton from '@dokan/admin/onboard/components/BackButton';
+import NextButton from '@dokan/admin/onboard/components/NextButton';
+import React from 'react';
 
 interface Addon {
     id: string;
@@ -157,24 +160,8 @@ const AddonsScreen = ( {
                 </div>
 
                 <div className="flex justify-between">
-                    <Button
-                        onClick={ onBack }
-                        className="flex items-center text-gray-600 font-medium border-0 shadow-none"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5 mr-1"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path
-                                fillRule="evenodd"
-                                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                        { __( 'Back', 'dokan' ) }
-                    </Button>
+                    <BackButton onBack={ onBack } />
+
                     <div className="flex space-x-4">
                         <Button
                             onClick={ onSkip }
@@ -182,24 +169,7 @@ const AddonsScreen = ( {
                         >
                             { __( 'Skip', 'dokan' ) }
                         </Button>
-                        <Button
-                            onClick={ handleNext }
-                            className="bg-dokan-btn hover:bg-dokan-btn-hover text-white rounded-md py-3 px-8 flex items-center"
-                        >
-                            { __( 'Next', 'dokan' ) }
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5 ml-1"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                        </Button>
+                        <NextButton handleNext={ handleNext } />
                     </div>
                 </div>
             </div>

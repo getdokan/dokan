@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { Button, SimpleInput } from '@getdokan/dokan-ui';
+import { SimpleInput } from '@getdokan/dokan-ui';
 import Logo from '../Logo';
 import WarningIcon from '../icons/WarningIcon';
+import NextButton from '@dokan/admin/onboard/components/NextButton';
 
 interface BasicInfoScreenProps {
     onNext: () => void;
@@ -11,16 +12,29 @@ interface BasicInfoScreenProps {
     onUpdate: ( storeUrl: string, shareDiagnostics: boolean ) => void;
 }
 
-const BasicInfoScreen: React.FC< BasicInfoScreenProps > = ( {
+const BasicInfoScreen = ( {
     onNext,
     storeUrl,
     shareDiagnostics,
     onUpdate,
-} ) => {
+}: BasicInfoScreenProps ) => {
     const [ localStoreUrl, setLocalStoreUrl ] = useState( storeUrl || 'store' );
     const [ localShareDiagnostics, setLocalShareDiagnostics ] = useState(
         shareDiagnostics !== undefined ? shareDiagnostics : true
     );
+    const [ error, setError ] = useState( '' );
+
+    const onHandleInputChange = (
+        e: React.ChangeEvent< HTMLInputElement >
+    ) => {
+        const value = e.target.value;
+        if ( ! value || value.length === 0 ) {
+            setError( __( 'Please enter a valid store URL.', 'dokan' ) );
+        } else {
+            setError( '' );
+        }
+        setLocalStoreUrl( value );
+    };
 
     // Update the parent component when values change
     useEffect( () => {
@@ -28,11 +42,16 @@ const BasicInfoScreen: React.FC< BasicInfoScreenProps > = ( {
     }, [ localStoreUrl, localShareDiagnostics, onUpdate ] );
 
     const handleNext = () => {
+        // Validate store URL
+        if ( ! localStoreUrl || localStoreUrl.length === 0 ) {
+            setError( __( 'Please enter a valid store URL.', 'dokan' ) );
+            return;
+        }
         // Ensure values are updated before proceeding
         onUpdate( localStoreUrl, localShareDiagnostics );
         onNext();
     };
-
+    const siteUrl = window.location.origin;
     return (
         <div className="min-h-screen flex items-center justify-center">
             <div className="p-8 md:p-10 md:w-[70%]">
@@ -45,17 +64,21 @@ const BasicInfoScreen: React.FC< BasicInfoScreenProps > = ( {
 
                 <div className="space-y-8 md:w-[39rem] w-full">
                     <div>
-                        <label className="block text-sm font-medium mb-4">
+                        <label
+                            className="block text-sm font-medium mb-4"
+                            htmlFor="storename"
+                        >
                             { __(
                                 'Choose how vendor store URLs will appear',
                                 'dokan'
                             ) }
                         </label>
                         <SimpleInput
+                            required={ true }
                             value={ localStoreUrl }
                             addOnLeft={
                                 <span className="inline-flex items-center bg-gray-50 px-3 text-gray-900 sm:text-sm rouned-bl absolute left-0 top-0 h-full rounded-bl rounded-tl w-max">
-                                    https://dokan-dev.test/
+                                    { siteUrl }
                                 </span>
                             }
                             addOnRight={
@@ -64,24 +87,25 @@ const BasicInfoScreen: React.FC< BasicInfoScreenProps > = ( {
                                 </span>
                             }
                             input={ {
-                                id: 'login-storename',
+                                id: 'storename',
                                 name: 'storename',
                                 type: 'text',
                                 autoComplete: 'off',
-                                placeholder: 'store',
                             } }
-                            onChange={ ( e ) =>
-                                setLocalStoreUrl( e.target.value )
-                            }
-                            className="w-[80%] md:w-full pl-[12rem] block"
+                            errors={ error && [ error ] }
+                            onChange={ onHandleInputChange }
+                            className={ `w-[80%] md:w-full pl-[12rem] mb-2 block focus:ring-0 focus:outline-gray-300 focus:ring-0 ${
+                                error
+                                    ? 'focus:outline-red-500'
+                                    : 'focus:outline-blue-500'
+                            } border-gray-300 rounded-md` }
                         />
                         <div className="flex items-center gap-2 mt-6 text-sm text-gray-500">
                             <WarningIcon />
                             <span>
                                 Vendor Store URL will be (
                                 <span className="text-indigo-600">
-                                    https://dokan-dev.test/{ localStoreUrl }
-                                    /vendor-name
+                                    { siteUrl }/{ localStoreUrl }/vendor-name
                                 </span>
                                 )
                             </span>
@@ -120,24 +144,7 @@ const BasicInfoScreen: React.FC< BasicInfoScreenProps > = ( {
                 </div>
 
                 <div className="flex justify-end mt-12">
-                    <Button
-                        onClick={ handleNext }
-                        className="bg-[#7047EB] text-white py-3 px-8 flex items-center rounded-md"
-                    >
-                        { __( 'Next', 'dokan' ) }
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5 ml-1"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path
-                                fillRule="evenodd"
-                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                    </Button>
+                    <NextButton handleNext={ handleNext } />
                 </div>
             </div>
         </div>
