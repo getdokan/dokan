@@ -31,7 +31,7 @@ const SinglePlugin = ( {
     return (
         <div
             key={ addon.id }
-            className={ `border rounded-lg p-4 sm:gap-4 gap-1 flex items-center cursor-pointer transition-colors ${
+            className={ `border rounded-lg p-4 sm:gap-4 gap-2 flex items-start cursor-pointer transition-colors ${
                 isSelected
                     ? 'border-indigo-600 bg-indigo-50'
                     : 'border-gray-300'
@@ -45,9 +45,9 @@ const SinglePlugin = ( {
                     className="w-6 h-6"
                 />
             </div>
-            <div className="">
-                <h3 className="font-medium">{ addon.title }</h3>
-                <p className="sm:text-sm text-xs text-gray-500">
+            <div className="flex flex-col gap-1">
+                <h3 className="font-medium capitalize">{ addon.title }</h3>
+                <p className="sm:text-sm text-xs text-gray-500 leading-4">
                     { addon.description }
                 </p>
             </div>
