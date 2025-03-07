@@ -7,6 +7,7 @@ use WC_Discounts;
 use WC_Order;
 use WC_Cart;
 use WC_Order_Item_Product;
+use WC_Order_Item_Coupon;
 use WC_Data;
 use Exception;
 
@@ -32,7 +33,10 @@ class Coupon {
      * @throws Exception
      */
     public function remove_coupon_info_from_order_item( $check, WC_Data $data ) {
-        if ( $data instanceof \WC_Order_Item_Coupon ) {
+        if ( $data instanceof WC_Order_Item_Coupon ) {
+            if ( ! $data->get_order_id() ) {
+                return $check;
+            }
             $removed_coupon = $data->get_code();
             $order = wc_get_order( $data->get_order_id() );
             if ( ! $order ) {
@@ -53,7 +57,7 @@ class Coupon {
             }
             // Remove coupon with child orders
             if ( $order->get_meta( 'has_sub_order' ) ) {
-                $this->remove_coupon_into_child_orders( $order, $removed_coupon );
+                $this->remove_coupon_from_child_orders( $order, $removed_coupon );
             } else {
                 // Remove coupon from child order items
                 $parent_order = wc_get_order( $order->get_parent_id() );
@@ -212,7 +216,7 @@ class Coupon {
 
         // apply coupon sub order
         if ( $order->get_meta( 'has_sub_order' ) ) {
-            $this->process_coupon_into_child_orders( $order, $coupon );
+            $this->apply_coupon_to_child_orders( $order, $coupon );
         }
     }
 
@@ -225,7 +229,7 @@ class Coupon {
     * @return void
     * @throws Exception
     */
-    public function process_coupon_into_child_orders( WC_Order $order, WC_Coupon $coupon ): void {
+    public function apply_coupon_to_child_orders( WC_Order $order, WC_Coupon $coupon ): void {
         $sub_orders = dokan()->order->get_child_orders( $order->get_id() );
         foreach ( $sub_orders as $sub_order ) {
             // Check if the coupon is already applied
@@ -245,7 +249,7 @@ class Coupon {
      * @param string $removed_coupon
      * @return void
      */
-    private function remove_coupon_into_child_orders( WC_Order $order, string $removed_coupon ) {
+    private function remove_coupon_from_child_orders( WC_Order $order, string $removed_coupon ) {
         $sub_orders = dokan()->order->get_child_orders( $order->get_id() );
         foreach ( $sub_orders as $sub_order ) {
             $used_coupons = $sub_order->get_coupon_codes();
