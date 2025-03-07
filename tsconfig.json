@@ -3,6 +3,7 @@
         "baseUrl": ".",
         "paths": {
             "@dokan/*": ["src/*"]
-        }
+        },
+      "jsx": "react"
     }
 }
