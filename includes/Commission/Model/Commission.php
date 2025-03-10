@@ -409,7 +409,7 @@ class Commission {
             $vendor_net_earning += floatval( $item_price_after_discount ) - $admin_net_commission;
 
             $this->set_vendor_discount( $this->get_vendor_discount() + $dokan_coupon_info->get_vendor_discount() );
-            $this->set_admin_discount( $this->get_vendor_discount() + $dokan_coupon_info->get_vendor_discount() );
+            $this->set_admin_discount( $this->get_admin_discount() + $dokan_coupon_info->get_admin_discount() );
         }
 
         $this->set_net_admin_commission( $admin_net_commission );

@@ -7,18 +7,39 @@ use WC_Order_Item;
 use WeDevs\Dokan\Vendor\Coupon;
 use WeDevs\Dokan\Vendor\DokanOrderLineItemCouponInfo;
 
+/**
+ * Class OrderLineItemCommission - Calculate order line item commission
+ *
+ * @since DOKAN_SINCE
+ */
 class OrderLineItemCommission {
 
     private WC_Order_Item $item;
-
     const VENDOR_ID_META_KEY = '_dokan_vendor_id';
     private WC_Order $order;
 
+    /**
+     * OrderLineItemCommission constructor.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Order_Item $item
+     * @param \WC_Order      $order
+     */
     public function __construct( WC_Order_Item $item, WC_Order $order ) {
         $this->item  = $item;
         $this->order = $order;
     }
 
+    /**
+     * Calculate order line item commission.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $auto_save
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Commission|null
+     */
     public function calculate( $auto_save = false ) {
         $vendor_id             = (int) $this->order->get_meta( self::VENDOR_ID_META_KEY );
         $line_item_commissions = [];
@@ -33,7 +54,12 @@ class OrderLineItemCommission {
         $item_price = $refund ? floatval( $item_price ) - floatval( $refund ) : $item_price;
 
         $dokan_coupon_info = $this->item->get_meta( Coupon::DOKAN_COUPON_META_KEY, true );
+
         /**
+         * Prepare coupon info for commission calculation.
+         *
+         * @since DOKAN_SINCE
+         *
          * @var DokanOrderLineItemCouponInfo[] $dokan_coupon_infos
          */
         $dokan_coupon_infos = [];
