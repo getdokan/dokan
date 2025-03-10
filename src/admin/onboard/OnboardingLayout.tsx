@@ -1,8 +1,8 @@
 const OnboardingLayout = ( { children, className = '' } ) => {
     return (
-        <div className={ `min-h-screen dokan-onboard-welcome flex ` }>
+        <div className="min-h-screen dokan-onboard-radial-gradient flex items-center justify-center p-4">
             <div
-                className={ `drop-shadow-lg rounded-2xl  overflow-hidden bg-white sm:w-[744px] m-auto h-[532px] border border-solid border-[#E9E9E9] flex items-center justify-center ${ className }` }
+                className={ `w-full max-w-4xl bg-white rounded-2xl shadow-lg overflow-hidden ${ className }` }
             >
                 { children }
             </div>

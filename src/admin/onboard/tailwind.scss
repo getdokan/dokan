@@ -13,3 +13,28 @@
     }
 }
 
+
+.dokan-onboard-radial-gradient {
+    background: radial-gradient(farthest-corner, #FFE0EE, #EAF6FF, #FFF9EA, #FAFAFA, #F5F7F2);
+    background-size: 200% 200%;
+    animation: moveGradient 15s infinite linear alternate;
+}
+
+
+@keyframes moveGradient {
+    0% {
+        background-position: 0% 0%;
+    }
+    25% {
+        background-position: 100% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    75% {
+        background-position: 0% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
