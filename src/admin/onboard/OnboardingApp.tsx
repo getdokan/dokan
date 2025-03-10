@@ -11,7 +11,6 @@ import AddonsScreen from './screens/AddonsScreen';
 import LoadingScreen from './screens/LoadingScreen';
 import SuccessScreen from './screens/SuccessScreen';
 import ErrorMessage from './components/ErrorMessage';
-import StepIndicator from './components/StepIndicator';
 
 const defaultFormData = {
     custom_store_url: 'store',
@@ -246,14 +245,14 @@ const OnboardingApp = () => {
         <div>
             { renderCurrentScreen() }
 
-            <StepIndicator
-                currentStep={ currentStep }
-                onStepChange={ setCurrentStep }
-                isDisabled={
-                    isLoading || ( ! hasPlugins && currentStep === 3 )
-                }
-                totalSteps={ hasPlugins ? 6 : 5 }
-            />
+            { /*<StepIndicator*/ }
+            { /*    currentStep={ currentStep }*/ }
+            { /*    onStepChange={ setCurrentStep }*/ }
+            { /*    isDisabled={*/ }
+            { /*        isLoading || ( ! hasPlugins && currentStep === 3 )*/ }
+            { /*    }*/ }
+            { /*    totalSteps={ hasPlugins ? 6 : 5 }*/ }
+            { /*/>*/ }
         </div>
     );
 };

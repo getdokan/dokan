@@ -196,8 +196,8 @@ class AdminOnboardingController extends DokanBaseAdminController {
         }
 
         $response_data = [
-            'message'          => __( 'Onboarding created successfully', 'dokan-lite' ),
-            'onboarding'       => get_option( 'dokan_onboarding', [] ),
+            'message'    => __( 'Onboarding created successfully', 'dokan-lite' ),
+            'onboarding' => get_option( 'dokan_onboarding', false ),
             'general_options'  => get_option( 'dokan_general', [] ),
             'share_essentials' => get_option( 'dokan_share_essentials', false ),
             'marketplace_goal' => get_option( 'dokan_marketplace_goal', [] ),
