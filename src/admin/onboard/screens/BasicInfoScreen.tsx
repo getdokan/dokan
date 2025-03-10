@@ -13,24 +13,28 @@ interface BasicInfoScreenProps {
     onUpdate: ( storeUrl: string, shareDiagnostics: boolean ) => void;
 }
 
-const BasicInfoScreen = ( {
-    onNext,
-    storeUrl,
-    shareDiagnostics,
-    onUpdate,
-}: BasicInfoScreenProps ) => {
-    const [ localStoreUrl, setLocalStoreUrl ] = useState( storeUrl || 'store' );
-    const [ localShareDiagnostics, setLocalShareDiagnostics ] = useState(
-        shareDiagnostics !== undefined ? shareDiagnostics : true
-    );
+const BasicInfoScreen = ( { onNext, onUpdate }: BasicInfoScreenProps ) => {
+    const [ localStoreUrl, setLocalStoreUrl ] = useState( 'store' );
+    const [ localShareDiagnostics, setLocalShareDiagnostics ] =
+        useState( true );
     const [ error, setError ] = useState( '' );
+    // format the localStoreUrl as slug
+    const formatStoreUrl = ( url: string ) => {
+        return url
+            .toLowerCase()
+            .replace( /[^a-z0-9]+/g, '-' )
+            .replace( /-+/g, '-' )
+            .replace( /^-|-$/g, '' );
+    };
 
     const onHandleInputChange = (
         e: React.ChangeEvent< HTMLInputElement >
     ) => {
         const value = e.target.value;
-        if ( ! value || value.length === 0 ) {
+        if ( formatStoreUrl( value ) !== value ) {
             setError( __( 'Please enter a valid store URL.', 'dokan' ) );
+        } else if ( ! value ) {
+            setError( __( 'Please enter a store URL.', 'dokan' ) );
         } else {
             setError( '' );
         }
@@ -61,8 +65,8 @@ const BasicInfoScreen = ( {
             ? siteUrl.slice( 0, maxUrlLength ) + '...'
             : siteUrl;
     return (
-        <div className="min-h-screen  flex items-center justify-center">
-            <div className="p-8 md:p-10  ">
+        <div className="min-h-screen  flex  items-center justify-center max-h-[280px]">
+            <div className="p-8 md:p-10  sm:w-[50rem] w-full">
                 <div className="mb-8">
                     <Logo />
                 </div>
@@ -70,7 +74,7 @@ const BasicInfoScreen = ( {
                     { __( 'Basic Information', 'dokan' ) }
                 </h1>
 
-                <div className="space-y-8 md:w-[39rem] w-full">
+                <div className="space-y-8 md:w-[30rem]  w-full">
                     <div>
                         <label
                             className="block text-sm font-medium mb-4"
@@ -102,18 +106,19 @@ const BasicInfoScreen = ( {
                             } }
                             errors={ error && [ error ] }
                             onChange={ onHandleInputChange }
-                            className={ `md:w-[80%] md:w-full sm:pl-[12rem] pl-6  mb-2 block focus:ring-0 focus:outline-gray-300 focus:ring-0 ${
+                            className={ `sm:pl-[11rem] pl-6  mb-2 block focus:ring-0 focus:outline-gray-300 focus:ring-0 ${
                                 error
                                     ? 'focus:outline-red-500'
                                     : 'focus:outline-blue-500'
                             } border-gray-300 rounded-md` }
                         />
-                        <div className="flex items-center gap-2 mt-6 text-sm text-gray-500">
+                        <div className="flex items-center gap-1 mt-6 text-sm text-gray-500">
                             <WarningIcon />
                             <span>
                                 Vendor Store URL will be (
                                 <span className="text-indigo-600">
-                                    { siteUrl }/{ localStoreUrl }/
+                                    { siteUrl }/
+                                    { formatStoreUrl( localStoreUrl ) }/
                                     { __( 'vendor-name', 'dokan' ) }
                                 </span>
                                 )
@@ -159,8 +164,11 @@ const BasicInfoScreen = ( {
                     </div>
                 </div>
 
-                <div className="flex justify-end mt-12">
-                    <NextButton handleNext={ handleNext } />
+                <div className="flex justify-end mt-12 w-full">
+                    <NextButton
+                        disabled={ !! error }
+                        handleNext={ handleNext }
+                    />
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from '@wordpress/element';
 import Logo from '../Logo';
 import RadioCard from '../RadioCard';
 import { __ } from '@wordpress/i18n';
@@ -70,16 +70,11 @@ const priorities = [
 const MarketplaceGoalScreen = ( {
     onNext,
     onBack,
-    marketplaceType = 'physical',
-    deliveryMethod = 'vendor',
-    priority = 'sales',
     onUpdate,
 }: MarketplaceGoalScreenProps ) => {
-    const [ localMarketplaceType, setLocalMarketplaceType ] =
-        useState( marketplaceType );
-    const [ localDeliveryMethod, setLocalDeliveryMethod ] =
-        useState( deliveryMethod );
-    const [ localPriority, setLocalPriority ] = useState( priority );
+    const [ localMarketplaceType, setLocalMarketplaceType ] = useState();
+    const [ localDeliveryMethod, setLocalDeliveryMethod ] = useState();
+    const [ localPriority, setLocalPriority ] = useState();
 
     // Update parent component when values change
     useEffect( () => {
@@ -92,10 +87,14 @@ const MarketplaceGoalScreen = ( {
         onUpdate( localMarketplaceType, localDeliveryMethod, localPriority );
         onNext();
     };
-
+    const isDisabledNextButton = useMemo( () => {
+        return (
+            ! localMarketplaceType || ! localDeliveryMethod || ! localPriority
+        );
+    }, [ localMarketplaceType, localDeliveryMethod, localPriority ] );
     return (
         <div className="min-h-screen flex items-center justify-center">
-            <div className="p-8 md:p-10 max-w-4xl">
+            <div className="p-8 md:p-10 sm:w-[54rem] w-full">
                 <div className="mb-8">
                     <Logo />
                 </div>
@@ -174,7 +173,10 @@ const MarketplaceGoalScreen = ( {
 
                 <div className="flex justify-between mt-12">
                     <BackButton onBack={ onBack } />
-                    <NextButton handleNext={ handleNext } />
+                    <NextButton
+                        handleNext={ handleNext }
+                        disabled={ isDisabledNextButton }
+                    />
                 </div>
             </div>
         </div>

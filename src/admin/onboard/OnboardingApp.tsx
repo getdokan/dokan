@@ -48,29 +48,13 @@ const OnboardingApp = () => {
 
             if ( response ) {
                 setFormData( {
-                    custom_store_url:
-                        response.general_options?.custom_store_url || 'store',
-                    share_essentials:
-                        typeof response.share_essentials === 'string'
-                            ? response.share_essentials === '1'
-                            : Boolean( response.share_essentials ),
-                    marketplace_goal: {
-                        marketplace_focus:
-                            response.marketplace_goal?.marketplace_focus ||
-                            'physical',
-                        handle_delivery:
-                            response.marketplace_goal?.handle_delivery ||
-                            'vendor',
-                        top_priority:
-                            response.marketplace_goal?.top_priority || 'sales',
-                    },
                     plugins: response.plugins || [],
                 } );
 
                 // Skip to success screen if already onboarded
-                if ( response?.onboarding ) {
-                    setCurrentStep( 5 );
-                }
+                // if ( response?.onboarding ) {
+                //     setCurrentStep( 5 );
+                // }
             }
         } catch ( error ) {
             setApiError(
@@ -198,8 +182,6 @@ const OnboardingApp = () => {
                 return (
                     <BasicInfoScreen
                         onNext={ goToNextStep }
-                        storeUrl={ formData.custom_store_url }
-                        shareDiagnostics={ formData.share_essentials }
                         onUpdate={ updateBasicInfo }
                     />
                 );
@@ -208,13 +190,6 @@ const OnboardingApp = () => {
                     <MarketplaceGoalScreen
                         onNext={ goToNextStep }
                         onBack={ goToPrevStep }
-                        marketplaceType={
-                            formData.marketplace_goal.marketplace_focus
-                        }
-                        deliveryMethod={
-                            formData.marketplace_goal.handle_delivery
-                        }
-                        priority={ formData.marketplace_goal.top_priority }
                         onUpdate={ updateMarketplaceGoal }
                     />
                 );
