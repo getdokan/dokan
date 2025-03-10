@@ -134,13 +134,13 @@ class OrderItem implements InterfaceSetting {
             $setting['meta_data'] = [];
         }
 
-        $setting = apply_filters( 'dokan_order_line_item_commission_save_before', $this->order_item_id, $setting );
+        $setting = apply_filters( 'dokan_order_line_item_commission_save_before', $setting, $this->order_item_id );
 
         wc_add_order_item_meta( $this->order_item_id, '_dokan_commission_type', $setting['type'] );
         wc_add_order_item_meta( $this->order_item_id, '_dokan_commission_rate', $setting['percentage'] );
         wc_add_order_item_meta( $this->order_item_id, '_dokan_additional_fee', $setting['flat'] );
         wc_add_order_item_meta( $this->order_item_id, 'dokan_commission_meta', $setting['meta_data'] );
 
-        return apply_filters( 'dokan_order_line_item_commission_save_after', $this->order_item_id, $this->get() );
+        return apply_filters( 'dokan_order_line_item_commission_save_after', $this->get(), $this->order_item_id );
     }
 }
