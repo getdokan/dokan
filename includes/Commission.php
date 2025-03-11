@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan;
 
 use WC_Order;
+use WC_Order_Factory;
 use WC_Product;
 use WeDevs\Dokan\Commission\Calculator;
 use WeDevs\Dokan\Commission\OrderCommission;
@@ -545,12 +546,13 @@ class Commission {
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
     public function get_commission( $args = [], $auto_save = false ) {
-        $order_item_id  = ! empty( $args['order_item_id'] ) ? $args['order_item_id'] : '';
-        $total_amount   = ! empty( $args['total_amount'] ) ? $args['total_amount'] : 0;
-        $total_quantity = ! empty( $args['total_quantity'] ) ? $args['total_quantity'] : 1;
-        $product_id     = ! empty( $args['product_id'] ) ? $args['product_id'] : 0;
-        $vendor_id      = ! empty( $args['vendor_id'] ) ? $args['vendor_id'] : '';
-        $category_id    = ! empty( $args['category_id'] ) ? $args['category_id'] : 0;
+        $order_item_id    = ! empty( $args['order_item_id'] ) ? $args['order_item_id'] : '';
+        $total_amount     = ! empty( $args['total_amount'] ) ? $args['total_amount'] : 0;
+        $total_quantity   = ! empty( $args['total_quantity'] ) ? $args['total_quantity'] : 1;
+        $product_id       = ! empty( $args['product_id'] ) ? $args['product_id'] : 0;
+        $vendor_id        = ! empty( $args['vendor_id'] ) ? $args['vendor_id'] : '';
+        $category_id      = ! empty( $args['category_id'] ) ? $args['category_id'] : 0;
+        $coupon_discounts = ! empty( $args['coupon_discounts'] ) ? $args['coupon_discounts'] : [];
 
         // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
 		if ( ! empty( $product_id ) && empty( $category_id ) ) {
@@ -587,6 +589,14 @@ class Commission {
 
         $context = new Calculator( $strategies );
         $commission_data = $context->calculate_commission( $total_amount, $total_quantity );
+
+        if ( ! empty( $coupon_discounts ) && ! empty( $order_item_id ) ) {
+            /**
+             * @var \WC_Order_Item_Product $item
+             */
+            $item = WC_Order_Factory::get_order_item( $order_item_id );
+            $commission_data->with_coupon_discounts( $coupon_discounts, $item->get_total() );
+        }
 
         if ( ! empty( $order_item_id ) && $auto_save && $commission_data->get_source() !== $order_item_strategy::SOURCE ) {
             $parameters       = $commission_data->get_parameters() ?? [];

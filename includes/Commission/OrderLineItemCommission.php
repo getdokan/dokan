@@ -79,8 +79,9 @@ class OrderLineItemCommission {
                 'total_amount'   => $item_price,
                 'total_quantity' => $this->item->get_quantity(),
                 'vendor_id'      => $vendor_id,
+                'coupon_discounts' => $dokan_coupon_infos,
             ],
             $auto_save
-        )->with_coupon_discounts( $dokan_coupon_infos, $this->item->get_total() );
+        );
     }
 }
