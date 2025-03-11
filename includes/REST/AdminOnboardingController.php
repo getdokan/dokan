@@ -65,31 +65,31 @@ class AdminOnboardingController extends DokanBaseAdminController {
             'type'       => 'object',
             'properties' => [
                 'onboarding' => [
-                    'description' => __( 'Onboarding data', 'dokan-lite' ),
+                    'description' => esc_html__( 'Onboarding data', 'dokan-lite' ),
                     'type'        => 'boolean',
                     'context'     => [ 'view', 'edit' ],
                     'required'    => true,
                 ],
                 'marketplace_goal' => [
-                    'description' => __( 'Marketplace goal', 'dokan-lite' ),
+                    'description' => esc_html__( 'Marketplace goal', 'dokan-lite' ),
                     'type'        => 'object',
                     'context'     => [ 'view', 'edit' ],
                     'required'    => true,
                     'properties'  => [
                         'marketplace_focus' => [
-                            'description' => __( 'Marketplace focus', 'dokan-lite' ),
+                            'description' => esc_html__( 'Marketplace focus', 'dokan-lite' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                             'required'    => true,
                         ],
                         'handle_delivery' => [
-                            'description' => __( 'Handle delivery', 'dokan-lite' ),
+                            'description' => esc_html__( 'Handle delivery', 'dokan-lite' ),
                             'type' => 'string',
                             'context'     => [ 'view', 'edit' ],
                             'required'    => true,
                         ],
                         'top_priority' => [
-                            'description' => __( 'Top priority', 'dokan-lite' ),
+                            'description' => esc_html__( 'Top priority', 'dokan-lite' ),
                             'type'        => 'string',
                             'context'     => [ 'view', 'edit' ],
                             'required'    => true,
@@ -97,30 +97,30 @@ class AdminOnboardingController extends DokanBaseAdminController {
                     ],
                 ],
                 'custom_store_url' => [
-                    'description' => __( 'Custom store URL', 'dokan-lite' ),
+                    'description' => esc_html__( 'Custom store URL', 'dokan-lite' ),
                     'type'        => 'string',
                     'context'     => [ 'view', 'edit' ],
                     'required'    => false,
                 ],
                 'share_essentials' => [
-                    'description' => __( 'Share essentials', 'dokan-lite' ),
+                    'description' => esc_html__( 'Share essentials', 'dokan-lite' ),
                     'type'        => 'boolean',
                     'context'     => [ 'view', 'edit' ],
                     'required'    => true,
                 ],
                 'plugins' => [
-                    'description' => __( 'Plugins to install', 'dokan-lite' ),
+                    'description' => esc_html__( 'Plugins to install', 'dokan-lite' ),
                     'type'        => 'array',
                     'context'     => [ 'view', 'edit' ],
                     'items'       => [
                         'type'       => 'object',
                         'properties' => [
                             'id'   => [
-                                'description' => __( 'Plugin ID', 'dokan-lite' ),
+                                'description' => esc_html__( 'Plugin ID', 'dokan-lite' ),
                                 'type'        => 'string',
                             ],
                             'info' => [
-                                'description' => __( 'Plugin info', 'dokan-lite' ),
+                                'description' => esc_html__( 'Plugin info', 'dokan-lite' ),
                                 'type'        => 'object',
                             ],
                         ],
@@ -154,12 +154,12 @@ class AdminOnboardingController extends DokanBaseAdminController {
         if ( ! isset( $data['onboarding'] ) ) {
             return new WP_Error(
                 'invalid_request',
-                __( 'Invalid request', 'dokan-lite' ),
+                esc_html__( 'Invalid request', 'dokan-lite' ),
                 [ 'status' => 400 ]
             );
         }
 
-        $onboarding = $data['onboarding'];
+        $onboarding      = $data['onboarding'];
         $general_options = get_option( 'dokan_general', [] );
 
         /**
@@ -171,10 +171,8 @@ class AdminOnboardingController extends DokanBaseAdminController {
          */
         do_action( 'dokan_before_save_admin_onboarding', $data );
 
-        // Save the onboarding data to the database
         update_option( 'dokan_onboarding', $onboarding );
 
-        // Update custom store URL if provided
         if ( isset( $data['custom_store_url'] ) ) {
             $general_options['custom_store_url'] = ! empty( $data['custom_store_url'] )
                 ? sanitize_text_field( wp_unslash( $data['custom_store_url'] ) )
@@ -183,21 +181,18 @@ class AdminOnboardingController extends DokanBaseAdminController {
             update_option( 'dokan_general', $general_options );
         }
 
-        // Update share essentials
         $share_essentials = isset( $data['share_essentials'] ) ? (bool) $data['share_essentials'] : false;
         $this->update_share_essentials( $share_essentials );
 
-        // Update marketplace goal option
+        // Update marketplace goal & install required plugins
         $this->update_marketplace_goal( $data );
-
-        // Install required plugins
         if ( isset( $data['plugins'] ) && is_array( $data['plugins'] ) ) {
             $this->install_required_plugins( $data['plugins'] );
         }
 
         $response_data = [
-            'message'    => __( 'Onboarding created successfully', 'dokan-lite' ),
-            'onboarding' => get_option( 'dokan_onboarding', false ),
+            'message'          => esc_html__( 'Onboarding created successfully', 'dokan-lite' ),
+            'onboarding'       => get_option( 'dokan_onboarding', false ),
             'general_options'  => get_option( 'dokan_general', [] ),
             'share_essentials' => get_option( 'dokan_share_essentials', false ),
             'marketplace_goal' => get_option( 'dokan_marketplace_goal', [] ),
@@ -302,11 +297,11 @@ class AdminOnboardingController extends DokanBaseAdminController {
         }
 
         $marketplace_goal = get_option( 'dokan_marketplace_goal', [] );
-        $goal_data = $data['marketplace_goal'];
+        $goal_data        = $data['marketplace_goal'];
 
         $marketplace_goal['marketplace_focus'] = $goal_data['marketplace_focus'] ?? '';
-        $marketplace_goal['handle_delivery'] = $goal_data['handle_delivery'] ?? '';
-        $marketplace_goal['top_priority'] = $goal_data['top_priority'] ?? '';
+        $marketplace_goal['handle_delivery']   = $goal_data['handle_delivery'] ?? '';
+        $marketplace_goal['top_priority']      = $goal_data['top_priority'] ?? '';
 
         /**
          * Filter the marketplace goal data before saving.
