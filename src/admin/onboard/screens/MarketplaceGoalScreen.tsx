@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import DokanLogo from '../DokanLogo';
 import RadioCard from '../RadioCard';
 import { __ } from '@wordpress/i18n';
@@ -84,11 +84,9 @@ const MarketplaceGoalScreen = ( {
         onUpdate( localMarketplaceType, localDeliveryMethod, localPriority );
         onNext();
     };
-    const isDisabledNextButton = useMemo( () => {
-        return (
-            ! localMarketplaceType || ! localDeliveryMethod || ! localPriority
-        );
-    }, [ localMarketplaceType, localDeliveryMethod, localPriority ] );
+    const isDisabledNextButton =
+        ! localMarketplaceType || ! localDeliveryMethod || ! localPriority;
+
     return (
         <div className="min-h-screen flex items-center justify-center">
             <div className="p-8 md:p-10 sm:w-[54rem] w-full">
