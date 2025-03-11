@@ -38,8 +38,9 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 		parent::setUp();
 
 		global $wp_rest_server;
-		$this->server = $wp_rest_server = new WP_REST_Server();
-		do_action( 'rest_api_init' );
+        $wp_rest_server = new WP_REST_Server();
+        $this->server   = $wp_rest_server;
+        do_action( 'rest_api_init' );
 
 		// Create an admin user
 		$this->admin_id = self::factory()->user->create(
