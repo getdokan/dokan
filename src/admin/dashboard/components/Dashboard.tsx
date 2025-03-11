@@ -3,6 +3,7 @@ import { createHashRouter, RouterProvider } from 'react-router-dom';
 import Layout from './Layout';
 import ModulePage from '../pages/modules';
 import { useMutationObserver } from '../../../hooks';
+import SetupGuide from '../pages/setup-guide';
 
 export type DokanAdminRoute = {
     id: string;
@@ -13,6 +14,11 @@ export type DokanAdminRoute = {
 
 const getAdminRoutes = () => {
     let routes: Array< DokanAdminRoute > = [
+        {
+            id: 'setup',
+            element: <SetupGuide />,
+            path: '/setup',
+        },
         {
             id: 'pro-modules',
             element: <ModulePage />,
