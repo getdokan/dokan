@@ -11,18 +11,19 @@ const SuccessScreen = () => {
                 <div className="mb-8">
                     <DokanLogo />
                 </div>
-                <h1 className="text-3xl font-bold mb-4">
-                    { __( 'Congratulations! 🎉', 'dokan-lite' ) }
-                </h1>
-                <p className="text-xl mb-10">
-                    { __( "You're all set to start selling.", 'dokan-lite' ) }
-                </p>
+                <div className={`success-heading mb-2`}>
+                    <h1 className="text-3xl font-bold mb-4 leading-[48px]">
+                        { __( 'Congratulations! 🎉', 'dokan-lite' ) }
+                        <br />
+                        { __( "You're all set to start selling.", 'dokan-lite' ) }
+                    </h1>
+                </div>
                 <Button
-                    link={ true }
-                    href={ redirectUrl }
+                    link={true}
+                    href={redirectUrl}
                     className="bg-[#7047EB] text-white rounded-md py-3 px-8 flex items-center"
                 >
-                    { __( 'Explore Dashboard', 'dokan-lite' ) }
+                    {__('Explore Dashboard', 'dokan-lite')}
                 </Button>
             </div>
         </OnBoardLayout>

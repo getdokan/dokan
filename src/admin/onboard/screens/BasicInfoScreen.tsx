@@ -72,17 +72,17 @@ const BasicInfoScreen = ( { onNext, onUpdate }: BasicInfoScreenProps ) => {
     return (
         <div className="min-h-screen flex items-center justify-center max-h-[280px]">
             <div className="p-8 md:p-10 sm:w-[50rem] w-full">
-                <div className="mb-8">
+                <div className="mb-12">
                     <DokanLogo />
                 </div>
-                <h1 className="text-2xl md:text-3xl font-bold mb-10">
+                <h1 className="text-2xl md:text-3xl font-bold mb-8">
                     { __( 'Basic Information', 'dokan-lite' ) }
                 </h1>
 
                 <div className="space-y-8 md:w-[30rem]  w-full">
                     <div>
                         <label
-                            className="block text-sm font-medium mb-4"
+                            className="block text-md font-medium mb-4"
                             htmlFor="storename"
                         >
                             { __(

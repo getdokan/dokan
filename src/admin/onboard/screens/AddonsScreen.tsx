@@ -58,7 +58,7 @@ const AddonsScreen = ( {
     return (
         <div className={ `min-h-screen flex items-center justify-center` }>
             <div className="p-8 md:p-10 max-w-4xl">
-                <div className="mb-8">
+                <div className="mb-12">
                     <DokanLogo />
                 </div>
                 <h1 className="text-2xl md:text-3xl font-bold mb-2">
@@ -67,7 +67,7 @@ const AddonsScreen = ( {
                         'dokan-lite'
                     ) }
                 </h1>
-                <p className="text-sm text-gray-500 mb-5">
+                <p className="text-sm text-gray-500 mb-8">
                     { __(
                         'We recommend some plugins for the marketplace. You can select from the following suggestions and based on your selection we will install and activate them for you so that your experience remains flawless',
                         'dokan-lite'

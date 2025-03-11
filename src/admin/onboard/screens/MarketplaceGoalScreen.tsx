@@ -90,10 +90,10 @@ const MarketplaceGoalScreen = ( {
     return (
         <div className="min-h-screen flex items-center justify-center">
             <div className="p-8 md:p-10 sm:w-[54rem] w-full">
-                <div className="mb-8">
+                <div className="mb-12">
                     <DokanLogo />
                 </div>
-                <h1 className="text-2xl md:text-3xl font-bold mb-10">
+                <h1 className="text-2xl md:text-3xl font-bold mb-8">
                     { __( 'Marketplace Goal', 'dokan-lite' ) }
                 </h1>
 
