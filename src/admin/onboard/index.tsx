@@ -1,7 +1,7 @@
 import './tailwind.scss';
 import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
-import OnboardingApp from './OnboardingApp';
+import OnBoardApp from './OnBoardApp';
 
 domReady(function () {
     const setUpWizardRoot = document.querySelector( '.dokan-admin-setup-wizard' );
@@ -14,7 +14,7 @@ domReady(function () {
         const rootElement = document.querySelector( '#admin-onboard-root' );
 
         const root = createRoot( rootElement );
-        root.render( <OnboardingApp /> );
+        root.render( <OnBoardApp /> );
     } else {
         console.error( 'Setup wizard root element not found' );
     }

@@ -8,9 +8,6 @@ import BackButton from '@dokan/admin/onboard/components/BackButton';
 interface MarketplaceGoalScreenProps {
     onNext: () => void;
     onBack: () => void;
-    marketplaceType: string;
-    deliveryMethod: string;
-    priority: string;
     onUpdate: (
         focus: string,
         deliveryHandling: string,

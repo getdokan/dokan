@@ -1,11 +1,11 @@
 import Logo from '../Logo';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@getdokan/dokan-ui';
-import OnboardingLayout from '@dokan/admin/onboard/OnboardingLayout';
+import OnBoardLayout from '@dokan/admin/onboard/OnBoardLayout';
 
 const WelcomeScreen = ( { onNext } ) => {
     return (
-        <OnboardingLayout>
+        <OnBoardLayout>
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
                 <div className="md:mb-10 mb-5">
                     <Logo />
@@ -31,7 +31,7 @@ const WelcomeScreen = ( { onNext } ) => {
                     { __( 'Start Journey', 'dokan' ) }
                 </Button>
             </div>
-        </OnboardingLayout>
+        </OnBoardLayout>
     );
 };
 

@@ -1,8 +1,8 @@
-import OnboardingLayout from '../OnboardingLayout';
+import OnBoardLayout from '../OnBoardLayout';
 
 export const LoadingScreen = () => {
     return (
-        <OnboardingLayout
+        <OnBoardLayout
             className={ `!bg-transparent shadow-none drop-shadow-none rounded-none border-none` }
         >
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
@@ -89,7 +89,7 @@ export const LoadingScreen = () => {
                     </span>
                 </div>
             </div>
-        </OnboardingLayout>
+        </OnBoardLayout>
     );
 };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from '@wordpress/element';
 import {
     fetchOnboardingData,
     formatPlugins,
@@ -18,7 +18,7 @@ const defaultFormData = {
     plugins: [],
 };
 
-const OnboardingApp = () => {
+const OnBoardApp = () => {
     // State management
     const [ currentStep, setCurrentStep ] = useState( 0 );
     const [ isLoading, setIsLoading ] = useState( false );
@@ -231,4 +231,4 @@ const OnboardingApp = () => {
     );
 };
 
-export default OnboardingApp;
+export default OnBoardApp;

@@ -1,12 +1,12 @@
 import Logo from '../Logo';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@getdokan/dokan-ui';
-import OnboardingLayout from '../OnboardingLayout';
+import OnBoardLayout from '../OnBoardLayout';
 
 const SuccessScreen = () => {
     const redirectUrl = window?.onboardingData?.dokan_admin_dashboard_url;
     return (
-        <OnboardingLayout>
+        <OnBoardLayout>
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
                 <div className="mb-8">
                     <Logo />
@@ -25,7 +25,7 @@ const SuccessScreen = () => {
                     { __( 'Explore Dashboard', 'dokan' ) }
                 </Button>
             </div>
-        </OnboardingLayout>
+        </OnBoardLayout>
     );
 };
 

@@ -8,8 +8,6 @@ import { applyFilters } from '@wordpress/hooks';
 
 interface BasicInfoScreenProps {
     onNext: () => void;
-    storeUrl: string;
-    shareDiagnostics: boolean;
     onUpdate: ( storeUrl: string, shareDiagnostics: boolean ) => void;
 }
 
