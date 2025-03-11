@@ -11,15 +11,10 @@ import AddonsScreen from './screens/AddonsScreen';
 import LoadingScreen from './screens/LoadingScreen';
 import SuccessScreen from './screens/SuccessScreen';
 import ErrorMessage from './components/ErrorMessage';
+import { Plugin } from '@dokan/admin/onboard/types';
 
 const defaultFormData = {
     custom_store_url: 'store',
-    share_essentials: true,
-    marketplace_goal: {
-        marketplace_focus: 'physical',
-        handle_delivery: 'vendor',
-        top_priority: 'sales',
-    },
     plugins: [],
 };
 
@@ -29,7 +24,10 @@ const OnboardingApp = () => {
     const [ isLoading, setIsLoading ] = useState( false );
     const [ apiError, setApiError ] = useState( '' );
     const [ initialData, setInitialData ] = useState( null );
-    const [ formData, setFormData ] = useState( defaultFormData );
+    const [ formData, setFormData ] = useState< {
+        custom_store_url: string;
+        plugins: Plugin[] | [];
+    } >( defaultFormData );
     const [ hasPlugins, setHasPlugins ] = useState( true );
 
     // Fetch initial data
@@ -48,6 +46,7 @@ const OnboardingApp = () => {
 
             if ( response ) {
                 setFormData( {
+                    custom_store_url: 'store',
                     plugins: response.plugins || [],
                 } );
 

@@ -85,7 +85,7 @@ export const LoadingScreen = () => {
                         ></path>
                     </svg>
                     <span className="text-lg font-medium text-gray-700">
-                        Creating your new marketplace...
+                        { __( 'Creating your new marketplace…', 'dokan' ) }
                     </span>
                 </div>
             </div>

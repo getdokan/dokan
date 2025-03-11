@@ -35,12 +35,6 @@ export interface PluginPlugin {
 // types.ts
 export interface OnboardingData {
     onboarding: boolean;
-    general_options: {
-        custom_store_url: string;
-        [ key: string ]: any;
-    };
-    share_essentials: boolean | string;
-    marketplace_goal: MarketplaceGoal;
     plugins: Plugin[];
 }
 
