@@ -49,9 +49,9 @@ const OnBoardApp = () => {
 
             if ( response ) {
                 // Skip to success screen if already onboarded
-                // if ( response?.onboarding ) {
-                //     setCurrentStep( 5 );
-                // }
+                if ( response?.onboarding ) {
+                    setCurrentStep( 5 );
+                }
             }
         } catch ( error ) {
             setApiError(
@@ -211,20 +211,7 @@ const OnBoardApp = () => {
         }
     };
 
-    return (
-        <div>
-            { renderCurrentScreen() }
-
-            { /*<StepIndicator*/ }
-            { /*    currentStep={ currentStep }*/ }
-            { /*    onStepChange={ setCurrentStep }*/ }
-            { /*    isDisabled={*/ }
-            { /*        isLoading || ( ! hasPlugins && currentStep === 3 )*/ }
-            { /*    }*/ }
-            { /*    totalSteps={ hasPlugins ? 6 : 5 }*/ }
-            { /*/>*/ }
-        </div>
-    );
+    return <div>{ renderCurrentScreen() }</div>;
 };
 
 export default OnBoardApp;
