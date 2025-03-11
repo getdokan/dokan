@@ -23,33 +23,23 @@ class RecommendedPlugins {
      */
     public function __construct() {
         $this->plugins = [
-//            [
-//                'type'        => 'store_growth',
-//                'title'       => __( 'StoreGrowth', 'dokan-lite' ),
-//                'description' => __( 'Best WooCommerce Marketing Solution!', 'dokan-lite' ),
-//                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
-//                'img_alt'     => __( 'StoreGrowth logo', 'dokan-lite' ),
-//                'plugins'     => [
-//                    [
-//                        'name'     => __( 'StoreGrowth', 'dokan-lite' ),
-//                        'slug'     => 'storegrowth-sales-booster',
-//                        'basename' => 'storegrowth-sales-booster/storegrowth-sales-booster.php',
-//                    ],
-//                ],
-//            ],
+            // [
+            //     'type'        => 'store_growth',
+            //     'title'       => __( 'StoreGrowth', 'dokan-lite' ),
+            //     'description' => __( 'Best WooCommerce Marketing Solution!', 'dokan-lite' ),
+            //     'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
+            //     'img_alt'     => __( 'StoreGrowth logo', 'dokan-lite' ),
+            //     'slug'        => 'storegrowth-sales-booster',
+            //     'basename'    => 'storegrowth-sales-booster/storegrowth-sales-booster.php',
+            // ],
             [
                 'type'        => 'wemail',
                 'title'       => __( 'weMail', 'dokan-lite' ),
                 'description' => __( 'Simplified Email  Marketing Solution for WordPress!', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wemail-logo.png',
                 'img_alt'     => __( 'weMail logo', 'dokan-lite' ),
-                'plugins'     => [
-                    [
-                        'name'     => __( 'weMail', 'dokan-lite' ),
-                        'slug'     => 'wemail',
-                        'basename' => 'wemail/wemail.php',
-                    ],
-                ],
+                'slug'        => 'wemail',
+                'basename'    => 'wemail/wemail.php',
             ],
             [
                 'type'        => 'wc_conversion_tracking',
@@ -57,13 +47,8 @@ class RecommendedPlugins {
                 'description' => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
                 'img_alt'     => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
-                'plugins'     => [
-                    [
-                        'name'     => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                        'slug'     => 'woocommerce-conversion-tracking',
-                        'basename' => 'woocommerce-conversion-tracking/conversion-tracking.php',
-                    ],
-                ],
+                'slug'        => 'woocommerce-conversion-tracking',
+                'basename'    => 'woocommerce-conversion-tracking/conversion-tracking.php',
             ],
             [
                 'type'        => 'texty',
@@ -71,13 +56,8 @@ class RecommendedPlugins {
                 'description' => __( 'SMS Notification for WordPress, WooCommerce, Dokan and more!', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/texty-logo.png',
                 'img_alt'     => __( 'Texty logo', 'dokan-lite' ),
-                'plugins'     => [
-                    [
-                        'name'     => __( 'Texty', 'dokan-lite' ),
-                        'slug'     => 'texty',
-                        'basename' => 'texty/texty.php',
-                    ],
-                ],
+                'slug'        => 'texty',
+                'basename'    => 'texty/texty.php',
             ],
         ];
     }
@@ -119,7 +99,7 @@ class RecommendedPlugins {
         $recommended_plugins = array_filter(
             $enlisted_plugins,
             function ( $plugin ) {
-                return isset( $plugin['plugins'][0]['basename'] ) && ! $this->is_active( $plugin['plugins'][0]['basename'] );
+                return isset( $plugin['basename'] ) && ! $this->is_active( $plugin['basename'] );
             }
         );
 
