@@ -1,5 +1,5 @@
 import { useEffect, useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import {__, sprintf} from '@wordpress/i18n';
 import { SimpleCheckbox, SimpleInput } from '@getdokan/dokan-ui';
 import DokanLogo from '../DokanLogo';
 import WarningIcon from '../icons/WarningIcon';
@@ -30,9 +30,9 @@ const BasicInfoScreen = ( { onNext, onUpdate }: BasicInfoScreenProps ) => {
     ) => {
         const value = e.target.value;
         if ( formatStoreUrl( value ) !== value ) {
-            setError( __( 'Please enter a valid store URL.', 'dokan' ) );
+            setError( __( 'Please enter a valid store URL.', 'dokan-lite' ) );
         } else if ( ! value ) {
-            setError( __( 'Please enter a store URL.', 'dokan' ) );
+            setError( __( 'Please enter a store URL.', 'dokan-lite' ) );
         } else {
             setError( '' );
         }
@@ -47,29 +47,36 @@ const BasicInfoScreen = ( { onNext, onUpdate }: BasicInfoScreenProps ) => {
     const handleNext = () => {
         // Validate store URL
         if ( ! localStoreUrl || localStoreUrl.length === 0 ) {
-            setError( __( 'Please enter a valid store URL.', 'dokan' ) );
+            setError( __( 'Please enter a valid store URL.', 'dokan-lite' ) );
             return;
         }
         // Ensure values are updated before proceeding
         onUpdate( localStoreUrl, localShareDiagnostics );
         onNext();
     };
-    const siteUrl = window?.onboardingData?.site_url;
-    // filter hook for max url length
 
-    const maxUrlLength = applyFilters( 'dokan_onboarding_max_url_length', 40 );
-    const siteUrlWidth =
+    const siteUrl      = onboardingData?.site_url;
+    const maxUrlLength = 40;
+    let siteUrlContent =
         siteUrl?.length > maxUrlLength
             ? siteUrl.slice( 0, maxUrlLength ) + '...'
             : siteUrl;
+
+    siteUrlContent = applyFilters(
+        'dokan_onboarding_site_url',
+        siteUrlContent,
+        maxUrlLength,
+        siteUrl
+    );
+
     return (
-        <div className="min-h-screen  flex  items-center justify-center max-h-[280px]">
-            <div className="p-8 md:p-10  sm:w-[50rem] w-full">
+        <div className="min-h-screen flex items-center justify-center max-h-[280px]">
+            <div className="p-8 md:p-10 sm:w-[50rem] w-full">
                 <div className="mb-8">
                     <DokanLogo />
                 </div>
                 <h1 className="text-2xl md:text-3xl font-bold mb-10">
-                    { __( 'Basic Information', 'dokan' ) }
+                    { __( 'Basic Information', 'dokan-lite' ) }
                 </h1>
 
                 <div className="space-y-8 md:w-[30rem]  w-full">
@@ -80,7 +87,7 @@ const BasicInfoScreen = ( { onNext, onUpdate }: BasicInfoScreenProps ) => {
                         >
                             { __(
                                 'Choose how vendor store URLs will appear',
-                                'dokan'
+                                'dokan-lite'
                             ) }
                         </label>
                         <SimpleInput
@@ -88,12 +95,15 @@ const BasicInfoScreen = ( { onNext, onUpdate }: BasicInfoScreenProps ) => {
                             value={ localStoreUrl }
                             addOnLeft={
                                 <span className="md:inline-flex hidden items-center bg-gray-50 px-3 text-xs text-gray-900 sm:text-sm rouned-bl absolute left-0 top-0 h-full rounded-bl rounded-tl w-max">
-                                    { siteUrlWidth }/
+                                    { sprintf(
+                                        __( '%s/', 'dokan-lite' ),
+                                        siteUrlContent
+                                    ) }
                                 </span>
                             }
                             addOnRight={
                                 <span className="md:inline-flex hidden items-center bg-gray-50 px-3 text-gray-900 text-xs sm:text-sm rouned-bl absolute right-0 top-0 h-full rounded-bl rounded-tl w-max">
-                                    { __( '/vendor-name', 'dokan' ) }
+                                    { __( '/vendor-name', 'dokan-lite' ) }
                                 </span>
                             }
                             input={ {
@@ -156,13 +166,13 @@ const BasicInfoScreen = ( { onNext, onUpdate }: BasicInfoScreenProps ) => {
                             <h3 className="text-sm font-medium">
                                 { __(
                                     'Help Us Tailor Your Marketplace',
-                                    'dokan'
+                                    'dokan-lite'
                                 ) }
                             </h3>
                             <p className="text-sm text-gray-500 lg:max-w-[400px]">
                                 { __(
                                     'Allow Dokan Multivendor Marketplace to collect non-sensitive diagnostic data and usage information.',
-                                    'dokan'
+                                    'dokan-lite'
                                 ) }
                             </p>
                         </div>
