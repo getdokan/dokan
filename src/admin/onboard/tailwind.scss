@@ -6,20 +6,18 @@
     margin: 0;
 
     .dokan-onboard-welcome {
-        background-image: url("/assets/images/onboarding-bg.jpg");
+        background-image: url("/assets/images/onboard-bg.jpg");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
     }
 }
 
-
 .dokan-onboard-radial-gradient {
     background: radial-gradient(farthest-corner, #FFE0EE, #EAF6FF, #FFF9EA, #FAFAFA, #F5F7F2);
     background-size: 200% 200%;
     animation: moveGradient 15s infinite linear alternate;
 }
-
 
 @keyframes moveGradient {
     0% {

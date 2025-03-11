@@ -940,7 +940,7 @@ class SetupWizard {
                 name="<?php echo esc_attr( 'setup_' . $type ); ?>"
                 value="yes"
                 checked
-                data-plugins="<?php echo esc_attr( wp_json_encode( isset( $item_info ) ? $item_info : null ) ); ?>"
+                data-plugins="<?php echo esc_attr( wp_json_encode( $item_info ?? null ) ); ?>"
             />
             <label for="<?php echo esc_attr( 'dokan_recommended_' . $type ); ?>">
                 <img

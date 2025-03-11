@@ -62,16 +62,16 @@
         },
         {
             "name": "appsero/updater",
-            "version": "v2.3.3",
+            "version": "v2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Appsero/updater.git",
-                "reference": "0c899f2e6b5894b695751d738151a98461cdb198"
+                "reference": "098e9d8384601f43e222c28ac1269d05bc59e6f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Appsero/updater/zipball/0c899f2e6b5894b695751d738151a98461cdb198",
-                "reference": "0c899f2e6b5894b695751d738151a98461cdb198",
+                "url": "https://api.github.com/repos/Appsero/updater/zipball/098e9d8384601f43e222c28ac1269d05bc59e6f2",
+                "reference": "098e9d8384601f43e222c28ac1269d05bc59e6f2",
                 "shasum": ""
             },
             "type": "library",
@@ -93,9 +93,9 @@
             "description": "Appsero client updater module",
             "support": {
                 "issues": "https://github.com/Appsero/updater/issues",
-                "source": "https://github.com/Appsero/updater/tree/v2.3.3"
+                "source": "https://github.com/Appsero/updater/tree/v2.3.2"
             },
-            "time": "2025-03-10T03:42:43+00:00"
+            "time": "2025-01-09T06:34:29+00:00"
         },
         {
             "name": "jakeasmith/http_build_url",
@@ -912,12 +912,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "bcefd1ebb188c4099116743f67abf7c36abc1015"
+                "reference": "80ccb1a7640995edf1b87a4409fa584cd5869469"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/bcefd1ebb188c4099116743f67abf7c36abc1015",
-                "reference": "bcefd1ebb188c4099116743f67abf7c36abc1015",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/80ccb1a7640995edf1b87a4409fa584cd5869469",
+                "reference": "80ccb1a7640995edf1b87a4409fa584cd5869469",
                 "shasum": ""
             },
             "require": {
@@ -975,11 +975,11 @@
                     "type": "open_collective"
                 },
                 {
-                    "url": "https://thanks.dev/u/gh/phpcompatibility",
+                    "url": "https://thanks.dev/phpcompatibility",
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-03-03T03:03:54+00:00"
+            "time": "2025-01-16T22:34:19+00:00"
         },
         {
             "name": "phpcsstandards/phpcsextra",
@@ -987,12 +987,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-                "reference": "cf28c840b04985ef6a9aabb15ef14dd7b9d3b550"
+                "reference": "31ef149a1ee85ec0d355e58418d78d927e89d185"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/cf28c840b04985ef6a9aabb15ef14dd7b9d3b550",
-                "reference": "cf28c840b04985ef6a9aabb15ef14dd7b9d3b550",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/31ef149a1ee85ec0d355e58418d78d927e89d185",
+                "reference": "31ef149a1ee85ec0d355e58418d78d927e89d185",
                 "shasum": ""
             },
             "require": {
@@ -1058,11 +1058,11 @@
                     "type": "open_collective"
                 },
                 {
-                    "url": "https://thanks.dev/u/gh/phpcsstandards",
+                    "url": "https://thanks.dev/phpcsstandards",
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-03-03T01:39:12+00:00"
+            "time": "2024-11-11T18:03:33+00:00"
         },
         {
             "name": "phpcsstandards/phpcsutils",
@@ -1151,7 +1151,7 @@
                     "type": "open_collective"
                 },
                 {
-                    "url": "https://thanks.dev/u/gh/phpcsstandards",
+                    "url": "https://thanks.dev/phpcsstandards",
                     "type": "thanks_dev"
                 }
             ],
@@ -1482,12 +1482,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "7fcb3793ca4cf63ad51605747e52b32ad788f61c"
+                "reference": "5375e77dc94f0b4824b9d01330314fe29069c894"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7fcb3793ca4cf63ad51605747e52b32ad788f61c",
-                "reference": "7fcb3793ca4cf63ad51605747e52b32ad788f61c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/5375e77dc94f0b4824b9d01330314fe29069c894",
+                "reference": "5375e77dc94f0b4824b9d01330314fe29069c894",
                 "shasum": ""
             },
             "require": {
@@ -1577,7 +1577,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-04T12:16:09+00:00"
+            "time": "2025-02-25T13:33:21+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2549,12 +2549,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "82a9ec27b3eaf2e41fe658d44b7dcc4a8e4bd3a1"
+                "reference": "bf2b64d008ce8ed1f8cf83c4042571f1109969d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/82a9ec27b3eaf2e41fe658d44b7dcc4a8e4bd3a1",
-                "reference": "82a9ec27b3eaf2e41fe658d44b7dcc4a8e4bd3a1",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/bf2b64d008ce8ed1f8cf83c4042571f1109969d2",
+                "reference": "bf2b64d008ce8ed1f8cf83c4042571f1109969d2",
                 "shasum": ""
             },
             "require": {
@@ -2626,7 +2626,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-03-09T23:43:06+00:00"
+            "time": "2025-02-24T11:14:14+00:00"
         },
         {
             "name": "tareq1988/wp-php-cs-fixer",
