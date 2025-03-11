@@ -14,13 +14,13 @@ const WelcomeScreen = ( { onNext } ) => {
                     <h1 className="sm:text-3xl md:text-4xl text-base font-bold mb-4 md:mb-7 md:leading-[1.3]">
                         { __(
                             'Welcome to Your New Multi-Vendor Marketplace!',
-                            'dokan'
+                            'dokan-lite'
                         ) }
                     </h1>
                     <p className="mb-16 px-5 text-sm sm:text-base text-[#575757]">
                         { __(
                             "Ready to revolutionize online selling? We're excited to help you create a marketplace that stands out! Let's start with a few quick questions.",
-                            'dokan'
+                            'dokan-lite'
                         ) }
                     </p>
                 </div>
@@ -28,7 +28,7 @@ const WelcomeScreen = ( { onNext } ) => {
                     onClick={ onNext }
                     className="bg-[#7047EB]  text-white rounded-md py-3 px-8"
                 >
-                    { __( 'Start Journey', 'dokan' ) }
+                    { __( 'Start Journey', 'dokan-lite' ) }
                 </Button>
             </div>
         </OnBoardLayout>

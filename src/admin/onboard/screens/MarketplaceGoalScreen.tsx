@@ -17,49 +17,49 @@ interface MarketplaceGoalScreenProps {
 
 const marketplaceFocus = [
     {
-        label: __( 'Digital Products', 'dokan' ),
+        label: __( 'Digital Products', 'dokan-lite' ),
         value: 'digital',
     },
     {
-        label: __( 'Physical Products', 'dokan' ),
+        label: __( 'Physical Products', 'dokan-lite' ),
         value: 'physical',
     },
     {
-        label: __( 'Services', 'dokan' ),
+        label: __( 'Services', 'dokan-lite' ),
         value: 'services',
     },
     {
-        label: __( 'Subscriptions', 'dokan' ),
+        label: __( 'Subscriptions', 'dokan-lite' ),
         value: 'subscriptions',
     },
 ];
 
 const deliveryMethods = [
     {
-        label: __( 'Marketplace Handles Delivery', 'dokan' ),
+        label: __( 'Marketplace Handles Delivery', 'dokan-lite' ),
         value: 'marketplace',
     },
     {
-        label: __( 'Vendors manage their deliveries', 'dokan' ),
+        label: __( 'Vendors manage their deliveries', 'dokan-lite' ),
         value: 'vendor',
     },
     {
-        label: __( 'No Delivery Needed (Digital product)', 'dokan' ),
+        label: __( 'No Delivery Needed (Digital product)', 'dokan-lite' ),
         value: 'none',
     },
 ];
 
 const priorities = [
     {
-        label: __( 'International market reach', 'dokan' ),
+        label: __( 'International market reach', 'dokan-lite' ),
         value: 'international',
     },
     {
-        label: __( 'Maximizing sales conversion', 'dokan' ),
+        label: __( 'Maximizing sales conversion', 'dokan-lite' ),
         value: 'sales',
     },
     {
-        label: __( 'Local store management', 'dokan' ),
+        label: __( 'Local store management', 'dokan-lite' ),
         value: 'local',
     },
 ];
@@ -96,7 +96,7 @@ const MarketplaceGoalScreen = ( {
                     <DokanLogo />
                 </div>
                 <h1 className="text-2xl md:text-3xl font-bold mb-10">
-                    { __( 'Marketplace Goal', 'dokan' ) }
+                    { __( 'Marketplace Goal', 'dokan-lite' ) }
                 </h1>
 
                 <div className="space-y-8">
@@ -104,7 +104,7 @@ const MarketplaceGoalScreen = ( {
                         <h2 className="text-lg font-medium mb-4">
                             { __(
                                 "What's the primary focus of your marketplace?",
-                                'dokan'
+                                'dokan-lite'
                             ) }
                         </h2>
                         <div className="flex flex-wrap gap-4">
@@ -128,7 +128,7 @@ const MarketplaceGoalScreen = ( {
                         <h2 className="text-lg font-medium mb-4">
                             { __(
                                 'How do you plan to handle deliveries?',
-                                'dokan'
+                                'dokan-lite'
                             ) }
                         </h2>
                         <div className="flex flex-wrap gap-4">
@@ -150,7 +150,7 @@ const MarketplaceGoalScreen = ( {
 
                     <div>
                         <h2 className="text-lg font-medium mb-4">
-                            { __( "What's your top priority?", 'dokan' ) }
+                            { __( "What's your top priority?", 'dokan-lite' ) }
                         </h2>
                         <div className="flex flex-wrap gap-4">
                             { priorities.map( ( priority ) => (

@@ -64,13 +64,13 @@ const AddonsScreen = ( {
                 <h1 className="text-2xl md:text-3xl font-bold mb-2">
                     { __(
                         'Enhance Your Marketplace with these Recommended Add-ons',
-                        'dokan'
+                        'dokan-lite'
                     ) }
                 </h1>
                 <p className="text-sm text-gray-500 mb-5">
                     { __(
                         'We recommend some plugins for the marketplace. You can select from the following suggestions and based on your selection we will install and activate them for you so that your experience remains flawless',
-                        'dokan'
+                        'dokan-lite'
                     ) }
                 </p>
 
@@ -95,7 +95,7 @@ const AddonsScreen = ( {
                             onClick={ handleSkip }
                             className="text-gray-600 font-medium py-2 px-4 border-0 shadow-none"
                         >
-                            { __( 'Skip', 'dokan' ) }
+                            { __( 'Skip', 'dokan-lite' ) }
                         </Button>
                         <NextButton handleNext={ handleNext } />
                     </div>

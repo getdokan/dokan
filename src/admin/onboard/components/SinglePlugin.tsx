@@ -1,19 +1,3 @@
-// Helper function for addon icons
-function getAddonIcon( id: string ): string {
-    const icons: { [ key: string ]: string } = {
-        analytics: '📊',
-        social: '🔔',
-        automation: '🛒',
-        email: '✉️',
-        loyalty: '🏆',
-        reports: '📈',
-        wemail: '📧',
-        'dokan-pro': '🛍️',
-    };
-
-    return icons[ id ] || '🔌';
-}
-
 const SinglePlugin = ( {
     addon,
     isSelected,
@@ -38,7 +22,7 @@ const SinglePlugin = ( {
         >
             <div className="flex-shrink-0 w-10 h-10 bg-indigo-100 text-indigo-600 rounded flex items-center justify-center">
                 <img
-                    src={ addon.icon || getAddonIcon( addon.id ) }
+                    src={ addon.icon }
                     alt={ addon.title }
                     className="w-6 h-6"
                 />

@@ -15,7 +15,7 @@ const NextButton = ( {
             onClick={ handleNext }
             className="bg-[#7047EB] text-white py-2 sm:py-3 px-4 sm:px-8 flex items-center rounded-md"
         >
-            { __( 'Next', 'dokan' ) }
+            { __( 'Next', 'dokan-lite' ) }
             <NextIcon />
         </Button>
     );
