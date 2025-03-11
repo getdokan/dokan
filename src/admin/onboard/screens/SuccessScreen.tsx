@@ -7,7 +7,7 @@ const SuccessScreen = () => {
     const redirectUrl = window?.onboardingData?.dokan_admin_dashboard_url;
     return (
         <OnboardingLayout>
-            <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+            <div className="flex flex-col items-center justify-center h-full py-16 px-6 text-center">
                 <div className="mb-8">
                     <Logo />
                 </div>

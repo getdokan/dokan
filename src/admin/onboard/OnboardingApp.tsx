@@ -11,10 +11,16 @@ import AddonsScreen from './screens/AddonsScreen';
 import LoadingScreen from './screens/LoadingScreen';
 import SuccessScreen from './screens/SuccessScreen';
 import ErrorMessage from './components/ErrorMessage';
-import { Plugin } from '@dokan/admin/onboard/types';
+import { FormData } from './types';
 
 const defaultFormData = {
     custom_store_url: 'store',
+    share_essentials: true,
+    marketplace_goal: {
+        marketplace_focus: '',
+        handle_delivery: '',
+        top_priority: '',
+    },
     plugins: [],
 };
 
@@ -24,10 +30,7 @@ const OnboardingApp = () => {
     const [ isLoading, setIsLoading ] = useState( false );
     const [ apiError, setApiError ] = useState( '' );
     const [ initialData, setInitialData ] = useState( null );
-    const [ formData, setFormData ] = useState< {
-        custom_store_url: string;
-        plugins: Plugin[] | [];
-    } >( defaultFormData );
+    const [ formData, setFormData ] = useState< FormData >( defaultFormData );
     const [ hasPlugins, setHasPlugins ] = useState( true );
 
     // Fetch initial data
@@ -45,11 +48,6 @@ const OnboardingApp = () => {
             setHasPlugins( pluginsAvailable );
 
             if ( response ) {
-                setFormData( {
-                    custom_store_url: 'store',
-                    plugins: response.plugins || [],
-                } );
-
                 // Skip to success screen if already onboarded
                 // if ( response?.onboarding ) {
                 //     setCurrentStep( 5 );
@@ -83,7 +81,6 @@ const OnboardingApp = () => {
             await submitOnboardingData( dataToSubmit );
             setCurrentStep( 5 ); // Success screen
         } catch ( error ) {
-            console.error( 'Error submitting onboarding data:', error );
             setApiError( 'Failed to save onboarding data. Please try again.' );
             // Go back to previous screen (either addons or marketplace goal)
             setCurrentStep( hasPlugins ? 3 : 2 );
@@ -199,7 +196,6 @@ const OnboardingApp = () => {
                         onNext={ goToNextStep }
                         onBack={ goToPrevStep }
                         onSkip={ skipAddonsStep }
-                        selectedAddons={ [] }
                         availableAddons={ initialData?.plugins || [] }
                         onUpdate={ updateSelectedPlugins }
                     />

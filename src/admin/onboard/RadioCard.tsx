@@ -1,7 +1,7 @@
 const RadioCard = ( { label, description, checked, onChange, width } ) => {
     return (
         <div
-            className={ `border rounded-lg p-5 ${ width } h-[7rem] justify-between flex-col cursor-pointer transition-colors flex gap-2 items-start ${
+            className={ `border rounded-lg p-3 ${ width } h-[7rem] justify-between flex-col cursor-pointer transition-colors flex gap-2 items-start ${
                 checked ? 'border-[#7047EB]' : 'border-gray-300'
             }` }
             onClick={ onChange }

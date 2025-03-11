@@ -10,12 +10,10 @@ const AddonsScreen = ( {
     onNext,
     onBack,
     onSkip,
-    selectedAddons = [],
     availableAddons = [],
     onUpdate,
 } ) => {
-    const [ localSelectedAddons, setLocalSelectedAddons ] =
-        useState( selectedAddons );
+    const [ localSelectedAddons, setLocalSelectedAddons ] = useState( [] );
 
     // Map API addons to UI format if available
     const displayAddons =
@@ -37,9 +35,9 @@ const AddonsScreen = ( {
     }, [ localSelectedAddons ] );
 
     const toggleAddon = ( id ) => {
-        if ( localSelectedAddons.includes( id ) ) {
+        if ( localSelectedAddons?.includes( id ) ) {
             setLocalSelectedAddons(
-                localSelectedAddons.filter( ( item ) => item !== id )
+                localSelectedAddons?.filter( ( item ) => item !== id )
             );
         } else {
             setLocalSelectedAddons( [ ...localSelectedAddons, id ] );
