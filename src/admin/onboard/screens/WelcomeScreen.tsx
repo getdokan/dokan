@@ -1,4 +1,4 @@
-import DokanLogo from '../Logo';
+import DokanLogo from '../DokanLogo';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@getdokan/dokan-ui';
 import OnBoardLayout from '@dokan/admin/onboard/OnBoardLayout';

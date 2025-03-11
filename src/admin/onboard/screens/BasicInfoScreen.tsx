@@ -1,7 +1,7 @@
 import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { SimpleCheckbox, SimpleInput } from '@getdokan/dokan-ui';
-import DokanLogo from '../Logo';
+import DokanLogo from '../DokanLogo';
 import WarningIcon from '../icons/WarningIcon';
 import NextButton from '@dokan/admin/onboard/components/NextButton';
 import { applyFilters } from '@wordpress/hooks';

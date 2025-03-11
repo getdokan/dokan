@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from '@wordpress/element';
-import DokanLogo from '../Logo';
+import DokanLogo from '../DokanLogo';
 import RadioCard from '../RadioCard';
 import { __ } from '@wordpress/i18n';
 import NextButton from '@dokan/admin/onboard/components/NextButton';
