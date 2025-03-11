@@ -49,7 +49,7 @@ const OnBoardApp = () => {
 
             if ( response ) {
                 // Skip to success screen if already onboarded
-                if ( response?.onboarding ) {
+                if ( Boolean( parseInt( response?.onboarding ) ) ) {
                     setCurrentStep( 5 );
                 }
             }

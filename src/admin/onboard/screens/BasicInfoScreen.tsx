@@ -1,7 +1,7 @@
 import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { SimpleCheckbox, SimpleInput } from '@getdokan/dokan-ui';
-import Logo from '../Logo';
+import DokanLogo from '../Logo';
 import WarningIcon from '../icons/WarningIcon';
 import NextButton from '@dokan/admin/onboard/components/NextButton';
 import { applyFilters } from '@wordpress/hooks';
@@ -66,7 +66,7 @@ const BasicInfoScreen = ( { onNext, onUpdate }: BasicInfoScreenProps ) => {
         <div className="min-h-screen  flex  items-center justify-center max-h-[280px]">
             <div className="p-8 md:p-10  sm:w-[50rem] w-full">
                 <div className="mb-8">
-                    <Logo />
+                    <DokanLogo />
                 </div>
                 <h1 className="text-2xl md:text-3xl font-bold mb-10">
                     { __( 'Basic Information', 'dokan' ) }
@@ -88,12 +88,12 @@ const BasicInfoScreen = ( { onNext, onUpdate }: BasicInfoScreenProps ) => {
                             value={ localStoreUrl }
                             addOnLeft={
                                 <span className="md:inline-flex hidden items-center bg-gray-50 px-3 text-xs text-gray-900 sm:text-sm rouned-bl absolute left-0 top-0 h-full rounded-bl rounded-tl w-max">
-                                    { siteUrlWidth }
+                                    { siteUrlWidth }/
                                 </span>
                             }
                             addOnRight={
                                 <span className="md:inline-flex hidden items-center bg-gray-50 px-3 text-gray-900 text-xs sm:text-sm rouned-bl absolute right-0 top-0 h-full rounded-bl rounded-tl w-max">
-                                    { __( 'vendor-name', 'dokan' ) }
+                                    { __( '/vendor-name', 'dokan' ) }
                                 </span>
                             }
                             input={ {

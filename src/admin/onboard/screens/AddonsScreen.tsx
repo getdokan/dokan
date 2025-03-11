@@ -1,4 +1,4 @@
-import Logo from '../Logo';
+import DokanLogo from '../Logo';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@getdokan/dokan-ui';
 import { useEffect, useState } from '@wordpress/element';
@@ -59,7 +59,7 @@ const AddonsScreen = ( {
         <div className={ `min-h-screen flex items-center justify-center` }>
             <div className="p-8 md:p-10 max-w-4xl">
                 <div className="mb-8">
-                    <Logo />
+                    <DokanLogo />
                 </div>
                 <h1 className="text-2xl md:text-3xl font-bold mb-2">
                     { __(

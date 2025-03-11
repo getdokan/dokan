@@ -1,4 +1,4 @@
-import Logo from '../Logo';
+import DokanLogo from '../Logo';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@getdokan/dokan-ui';
 import OnBoardLayout from '../OnBoardLayout';
@@ -9,7 +9,7 @@ const SuccessScreen = () => {
         <OnBoardLayout>
             <div className="flex flex-col items-center h-full justify-center py-16 px-6 text-center">
                 <div className="mb-8">
-                    <Logo />
+                    <DokanLogo />
                 </div>
                 <h1 className="text-3xl font-bold mb-4">
                     { __( 'Congratulations! 🎉', 'dokan' ) }

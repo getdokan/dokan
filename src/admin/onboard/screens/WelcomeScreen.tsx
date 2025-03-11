@@ -1,4 +1,4 @@
-import Logo from '../Logo';
+import DokanLogo from '../Logo';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@getdokan/dokan-ui';
 import OnBoardLayout from '@dokan/admin/onboard/OnBoardLayout';
@@ -8,7 +8,7 @@ const WelcomeScreen = ( { onNext } ) => {
         <OnBoardLayout>
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
                 <div className="md:mb-10 mb-5">
-                    <Logo />
+                    <DokanLogo />
                 </div>
                 <div className="welcome-content max-w-[450px]">
                     <h1 className="sm:text-3xl md:text-4xl text-base font-bold mb-4 md:mb-7 md:leading-[1.3]">
