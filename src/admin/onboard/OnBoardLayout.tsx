@@ -1,4 +1,4 @@
-const OnboardingLayout = ( { children, className = '' } ) => {
+const OnBoardLayout = ({ children, className = '' } ) => {
     return (
         <div className="min-h-screen dokan-onboard-radial-gradient flex items-center justify-center p-4">
             <div
@@ -10,4 +10,4 @@ const OnboardingLayout = ( { children, className = '' } ) => {
     );
 };
 
-export default OnboardingLayout;
+export default OnBoardLayout;
