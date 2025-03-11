@@ -113,16 +113,20 @@ const BasicInfoScreen = ( { onNext, onUpdate }: BasicInfoScreenProps ) => {
                         <div className="flex items-center gap-1 mt-6 text-sm text-gray-500">
                             <WarningIcon />
                             <span>
-                                { __(
-                                    'Vendor Store URL will be (',
-                                    'dokan-lite'
-                                ) }
-                                <span className="text-indigo-600">
-                                    { siteUrl }/
-                                    { formatStoreUrl( localStoreUrl ) }/
-                                    { __( 'vendor-name', 'dokan-lite' ) }
-                                </span>
-                                { __( ')', 'dokan-lite' ) }
+                                <span
+                                    dangerouslySetInnerHTML={ {
+                                        __html: sprintf(
+                                            /* translators: %1$s: site URL, %2$s: store URL, %3$s: vendor name */
+                                            __(
+                                                'Vendor Store URL will be (<span class="text-indigo-600">%1$s/%2$s/%3$s</span>)',
+                                                'dokan-lite'
+                                            ),
+                                            siteUrl,
+                                            formatStoreUrl( localStoreUrl ),
+                                            __( 'vendor-name', 'dokan-lite' )
+                                        ),
+                                    } }
+                                />
                             </span>
                         </div>
                     </div>
