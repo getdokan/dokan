@@ -94,4 +94,17 @@ class Vendor implements InterfaceSetting {
         delete_user_meta( $this->vendor->get_id(), 'dokan_admin_additional_fee' );
         delete_user_meta( $this->vendor->get_id(), 'admin_category_commission' );
     }
+
+    /**
+     * Updates and returns default setting.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $setting
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Setting
+     */
+    public function update( array $setting ): Setting {
+        return $this->save( $setting );
+    }
 }

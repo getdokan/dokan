@@ -75,4 +75,17 @@ class GlobalSetting implements InterfaceSetting {
 
         return $this->get();
     }
+
+    /**
+     * Updates and returns default setting.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $setting
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Setting
+     */
+    public function update( array $setting ): Setting {
+        return $this->save( $setting );
+    }
 }

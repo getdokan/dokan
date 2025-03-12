@@ -15,6 +15,7 @@ use WeDevs\Dokan\Commission\Strategies\Product;
 use WeDevs\Dokan\Commission\Strategies\Vendor;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WP_Error;
+use WeDevs\Dokan\Commission\Model\Commission as CommissionModel;
 
 /**
  * Dokan Commission Class
@@ -604,18 +605,33 @@ class Commission {
         }
 
         if ( ! empty( $order_item_id ) && $auto_save && $commission_data->get_source() !== $order_item_strategy::SOURCE ) {
-            $parameters       = $commission_data->get_parameters() ?? [];
-            $percentage       = $parameters['percentage'] ?? 0;
-            $flat             = $parameters['flat'] ?? 0;
-
-            $order_item_strategy->save_line_item_commission_to_meta(
-                $commission_data->get_type() ?? DefaultSetting::TYPE,
-                $percentage,
-                $flat,
-                $commission_data->get_data()
-            );
+            $this->save_order_line_item_commission( $order_item_strategy, $commission_data );
         }
 
         return $commission_data;
+    }
+
+    /**
+     * Save order line item commission.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WeDevs\Dokan\Commission\Strategies\OrderItem $order_item_strategy
+     *
+     * @param \WeDevs\Dokan\Commission\Model\Commission     $commission_data
+     *
+     * @return void
+     */
+    public function save_order_line_item_commission( OrderItem $order_item_strategy, CommissionModel $commission_data ) {
+        $parameters = $commission_data->get_parameters() ?? [];
+        $percentage = $parameters['percentage'] ?? 0;
+        $flat       = $parameters['flat'] ?? 0;
+
+        $order_item_strategy->save_line_item_commission_to_meta(
+            $commission_data->get_type() ?? DefaultSetting::TYPE,
+            $percentage,
+            $flat,
+            $commission_data->get_data()
+        );
     }
 }
