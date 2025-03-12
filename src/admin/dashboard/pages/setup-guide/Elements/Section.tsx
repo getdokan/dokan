@@ -8,34 +8,32 @@ const Section = ( { element }: { element: SettingsElement } ): JSX.Element => {
     return (
         <section aria-labelledby="settings-section-heading" key={ element.id }>
             <div className="bg-white sm:rounded-md">
-                <div className="py-6 px-4 sm:p-6">
-                    <div>
-                        <h2
-                            id={ element.hook_key }
-                            className="text-lg leading-6 font-medium text-gray-900"
-                        >
-                            { element.title }
-                        </h2>
-                        <p className="mt-1 text-sm text-gray-500">
-                            { element.description }
-                        </p>
-                    </div>
+                <div className={ `mb-4` }>
+                    <h2
+                        id={ element.hook_key }
+                        className="text-3xl font-bold text-gray-900 leading-5"
+                    >
+                        { element.title }
+                    </h2>
+                    <p className="mt-1 text-sm text-gray-500 leading-5">
+                        { element.description }
+                    </p>
+                </div>
 
-                    <div className="mt-6 grid grid-cols-4 gap-6">
-                        { element.children.map( ( child ) => {
-                            return (
-                                <SettingsParser
-                                    element={ child }
-                                    key={
-                                        element.hook_key +
-                                        '-' +
-                                        child.id +
-                                        '-parser'
-                                    }
-                                />
-                            );
-                        } ) }
-                    </div>
+                <div className="grid grid-cols-4 gap-6">
+                    { element.children.map( ( child ) => {
+                        return (
+                            <SettingsParser
+                                element={ child }
+                                key={
+                                    element.hook_key +
+                                    '-' +
+                                    child.id +
+                                    '-parser'
+                                }
+                            />
+                        );
+                    } ) }
                 </div>
             </div>
         </section>

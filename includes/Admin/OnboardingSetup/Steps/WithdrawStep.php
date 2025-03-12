@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\ComponentFactory;
+
 class WithdrawStep extends AbstractStep {
 
     /**
@@ -45,7 +47,37 @@ class WithdrawStep extends AbstractStep {
 	 * @inheritDoc
 	 */
 	public function describe_settings(): void {
-        $this->set_title( __( 'Withdraw', 'dokan-lite' ) );
+        $this
+            ->set_title( __( 'Withdraw', 'dokan-lite' ) )
+            ->add(
+                ComponentFactory::section( 'withdraw' )
+                    ->set_title( __( 'Withdraw', 'dokan-lite' ) )
+            )
+            ->add(
+                ComponentFactory::sub_section( 'paypal-heading' )
+                    ->set_title( __( 'Paypal', 'dokan-lite' ) )
+                    ->set_description( __( 'Enable PayPal for your vendor as a withdraw method', 'dokan-lite' ) )
+            )
+            ->add(
+                ComponentFactory::sub_section( 'bank-transfer-heading' )
+                    ->set_title( __( 'Bank Transfer', 'dokan-lite' ) )
+                    ->set_description( __( 'Enable Bank Transfer for your vendor as a withdraw method', 'dokan-lite' ) )
+            )
+            ->add(
+                ComponentFactory::sub_section( 'skrill-heading' )
+                    ->set_title( __( 'Skrill', 'dokan-lite' ) )
+                    ->set_description( __( 'Enable Skrill for your vendor as a withdraw method', 'dokan-lite' ) )
+            )
+            ->add(
+                ComponentFactory::sub_section( 'minimum-withdraw-limits-heading' )
+                    ->set_title( __( 'Minimum Withdraw Limits', 'dokan-lite' ) )
+                    ->set_description( __( 'Set the minimum balance required before vendors can request withdrawals', 'dokan-lite' ) )
+            )
+            ->add(
+                ComponentFactory::sub_section( 'withdraw-order-status-heading' )
+                    ->set_title( __( 'Order Status for Withdraw', 'dokan-lite' ) )
+                    ->set_description( __( 'Define which order status makes funds eligible for withdrawal', 'dokan-lite' ) )
+            );
     }
 
 	public function settings(): array {

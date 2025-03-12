@@ -7,9 +7,9 @@ import SettingsParser from './Elements/SettingsParser';
 import { Step } from './index';
 import RadioButton from './Elements/Fields/RadioButton';
 import SwitchElement from './Elements/Fields/SwitchElement';
-// import NextButton from './components/NextButton';
-// import BackButton from './components/BackButton';
-// import { Button } from "@getdokan/dokan-ui";
+import NextButton from './components/NextButton';
+import BackButton from './components/BackButton';
+import { Button } from "@getdokan/dokan-ui";
 
 export type SettingsElementDependency = {
     key?: string;
@@ -165,8 +165,8 @@ const StepSettings = ( { step }: { step: Step } ) => {
 
     return (
         <>
-            <div className="h-full px-20 py-12">
-                <main className="max-w-7xl mx-auto pb-10 lg:py-5 lg:px-0">
+            <div className="h-full px-24 py-12 min-h-[500px]">
+                <main className="max-w-7xl mx-auto h-full">
                     <div className="w-full">
                         <RadioButton
                             title=" Contact Form on Store Page"
@@ -217,33 +217,22 @@ const StepSettings = ( { step }: { step: Step } ) => {
                         </div>
                     </div>
 
-                    { /*<div className="sticky flex justify-between flex-wrap bottom-0 mt-5 p-5 pr-0">*/ }
-                    { /*    /!*<BackButton onBack={ onBack } />*!/*/ }
-
-                    { /*    <div className="flex space-x-4 sm:w-auto w-full justify-end">*/ }
-                    { /*        /!*<Button*!/*/ }
-                    { /*        /!*    onClick={ handleSkip }*!/*/ }
-                    { /*        /!*    className="text-gray-600 font-medium py-2 px-4 border-0 shadow-none"*!/*/ }
-                    { /*        /!*>*!/*/ }
-                    { /*        /!*    {__('Skip', 'dokan-lite')}*!/*/ }
-                    { /*        /!*</Button>*!/*/ }
-                    { /*        <NextButton disabled={ isSaving } handleNext={ saveSettings }>*/ }
-                    { /*            { isSaving ? __( 'Saving..', 'dokan-lite' ) : __( 'Next', 'dokan-lite' ) }*/ }
-                    { /*        </NextButton>*/ }
-                    { /*    </div>*/ }
-                    { /*</div>*/ }
-
-                    <div className="sticky flex justify-between flex-wrap bottom-0 mt-5 p-5 pr-0">
-                        <button
-                            type="button"
-                            disabled={ isSaving }
-                            onClick={ saveSettings }
-                            className="inline-flex shadow shadow-gray-800/30 items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    <div className="sticky flex gap-7 sm:w-auto w-full justify-end flex-wrap top-full pr-0">
+                        <BackButton
+                            // onBack={ onBack }
+                            className={ `mr-auto` }
+                            onBack={ () => {} }
+                        />
+                        <Button
+                            // onClick={ handleSkip }
+                            onClick={ () => {} }
+                            className="text-[#393939] text-base font-medium py-2 px-4 border-0 shadow-none"
                         >
-                            { isSaving
-                                ? __( 'Saving..', 'dokan-lite' )
-                                : __( 'Next', 'dokan-lite' ) }
-                        </button>
+                            { __( 'Skip', 'dokan-lite' ) }
+                        </Button>
+                        <NextButton disabled={ isSaving } handleNext={ saveSettings } className={ `m-0` }>
+                            { isSaving ? __( 'Saving...', 'dokan-lite' ) : __( 'Next', 'dokan-lite' ) }
+                        </NextButton>
                     </div>
                 </main>
             </div>
