@@ -120,7 +120,8 @@ class Dashboard implements Hookable {
      */
     public function settings(): array {
         $settings = [
-            'nonce' => wp_create_nonce( 'dokan_admin_dashboard' ),
+            'nonce'         => wp_create_nonce( 'dokan_admin_dashboard' ),
+            'dashboard_url' => admin_url( 'admin.php?page=dokan' ),
         ];
 
         foreach ( $this->get_pages() as $page ) {
