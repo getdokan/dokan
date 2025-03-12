@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from '@wordpress/element';
 
 const RadioButton = ( { title, description } ) => {
     const [ selected, setSelected ] = useState( 'show' ); // Default to 'show'
@@ -16,10 +16,10 @@ const RadioButton = ( { title, description } ) => {
             <div className="flex">
                 { /* Hide button */ }
                 <button
-                    className={ `px-6 py-2 text-sm font-medium rounded-l-md border border-gray-200 ${
+                    className={ `px-6 py-2 text-sm font-medium rounded-l-md border ${
                         selected === 'hide'
-                            ? 'bg-purple-600 text-white'
-                            : 'bg-white text-gray-800'
+                            ? 'bg-[#7047EB] text-white border-[#7047EB]'
+                            : 'bg-white text-[#25252D] border-gray-200'
                     }` }
                     onClick={ () => setSelected( 'hide' ) }
                 >
@@ -28,10 +28,10 @@ const RadioButton = ( { title, description } ) => {
 
                 { /* Show button */ }
                 <button
-                    className={ `px-6 py-2 text-sm font-medium rounded-r-md border border-gray-200 ${
+                    className={ `px-6 py-2 text-sm font-medium rounded-r-md border ${
                         selected === 'show'
-                            ? 'bg-purple-600 text-white'
-                            : 'bg-white text-gray-800'
+                            ? 'bg-[#7047EB] text-white border-[#7047EB]'
+                            : 'bg-white text-[#25252D] border-gray-200'
                     }` }
                     onClick={ () => setSelected( 'show' ) }
                 >

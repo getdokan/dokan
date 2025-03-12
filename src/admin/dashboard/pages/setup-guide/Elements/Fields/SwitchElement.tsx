@@ -1,4 +1,4 @@
-import React, { useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 
 /**
  * SwitchElement Component
@@ -31,14 +31,18 @@ const SwitchElement = ( {
         <div className="border-b border-gray-200 py-4 w-full">
             <div className="flex justify-between w-full items-center">
                 <div className="flex flex-col">
-                    <h3 className="text-base font-medium text-gray-800">
-                        { title }
-                    </h3>
-                    <p className="text-sm text-gray-500 mt-1">
-                        { description }
-                    </p>
+                    { title && (
+                        <h3 className="text-base font-medium text-gray-800">
+                            { title }
+                        </h3>
+                    ) }
+                    { description && (
+                        <p className="text-sm text-gray-500 mt-1">
+                            { description }
+                        </p>
+                    ) }
                 </div>
-                <div className="flex gap-1">
+                <div className="flex items-center gap-1">
                     <button
                         className="relative inline-flex h-6 w-11 items-center rounded-full focus:outline-none"
                         onClick={ handleToggle }
@@ -47,7 +51,7 @@ const SwitchElement = ( {
                     >
                         <span
                             className={ `absolute w-11 h-6 rounded-full transition ${
-                                isEnabled ? 'bg-purple-600' : 'bg-gray-300'
+                                isEnabled ? 'bg-[#7047EB]' : 'bg-gray-300'
                             }` }
                         />
                         <span
@@ -60,7 +64,7 @@ const SwitchElement = ( {
                         </span>
                     </button>
 
-                    <span className="ml-2 text-sm text-gray-600">
+                    <span className="ml-2 text-sm text-gray-900 font-medium">
                         { isEnabled ? 'Enabled' : 'Disabled' }
                     </span>
                 </div>
