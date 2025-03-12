@@ -5,6 +5,8 @@ import Menu from './Elements/Menu';
 import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import { Step } from './index';
+import RadioButton from './Elements/Fields/RadioButton';
+import SwitchElement from './Elements/Fields/SwitchElement';
 // import NextButton from './components/NextButton';
 // import BackButton from './components/BackButton';
 // import { Button } from "@getdokan/dokan-ui";
@@ -165,68 +167,82 @@ const StepSettings = ( { step }: { step: Step } ) => {
         <>
             <div className="h-full px-20 py-12">
                 <main className="max-w-7xl mx-auto pb-10 lg:py-5 lg:px-0">
+                    <div className="w-full">
+                        <RadioButton
+                            title=" Contact Form on Store Page"
+                            description="Display a contact form on vendor store pages for customer inquiries"
+                        />
+                        <SwitchElement
+                            title={ 'PayPal' }
+                            description={
+                                'Enable PayPal for your vendor as a withdraw method'
+                            }
+                            defaultEnabled={ true }
+                            onChange={ ( value ) => console.log( value ) }
+                        />
+                    </div>
                     <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-                        {pages && '' !== selectedPage && pages.length > 0 && (
+                        { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
                                 key="admin-settings-menu"
-                                pages={pages}
-                                loading={loading}
-                                activePage={selectedPage}
-                                onMenuClick={onMenuClick}
+                                pages={ pages }
+                                loading={ loading }
+                                activePage={ selectedPage }
+                                onMenuClick={ onMenuClick }
                             />
-                        )}
+                        ) }
 
                         <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-                            {tabs && '' !== selectedTab && (
+                            { tabs && '' !== selectedTab && (
                                 <Tab
                                     key="admin-settings-tab"
-                                    tabs={tabs}
-                                    loading={loading}
-                                    selectedTab={selectedTab}
-                                    onTabClick={onTabClick}
+                                    tabs={ tabs }
+                                    loading={ loading }
+                                    selectedTab={ selectedTab }
+                                    onTabClick={ onTabClick }
                                 />
-                            )}
+                            ) }
 
-                            {elements.map((element: SettingsElement) => {
+                            { elements.map( ( element: SettingsElement ) => {
                                 return (
                                     <SettingsParser
                                         key={
                                             element.hook_key +
                                             '-settings-parser'
                                         }
-                                        element={element}
+                                        element={ element }
                                     />
                                 );
-                            })}
+                            } ) }
                         </div>
                     </div>
 
-                    {/*<div className="sticky flex justify-between flex-wrap bottom-0 mt-5 p-5 pr-0">*/}
-                    {/*    /!*<BackButton onBack={ onBack } />*!/*/}
+                    { /*<div className="sticky flex justify-between flex-wrap bottom-0 mt-5 p-5 pr-0">*/ }
+                    { /*    /!*<BackButton onBack={ onBack } />*!/*/ }
 
-                    {/*    <div className="flex space-x-4 sm:w-auto w-full justify-end">*/}
-                    {/*        /!*<Button*!/*/}
-                    {/*        /!*    onClick={ handleSkip }*!/*/}
-                    {/*        /!*    className="text-gray-600 font-medium py-2 px-4 border-0 shadow-none"*!/*/}
-                    {/*        /!*>*!/*/}
-                    {/*        /!*    {__('Skip', 'dokan-lite')}*!/*/}
-                    {/*        /!*</Button>*!/*/}
-                    {/*        <NextButton disabled={ isSaving } handleNext={ saveSettings }>*/}
-                    {/*            { isSaving ? __( 'Saving..', 'dokan-lite' ) : __( 'Next', 'dokan-lite' ) }*/}
-                    {/*        </NextButton>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
+                    { /*    <div className="flex space-x-4 sm:w-auto w-full justify-end">*/ }
+                    { /*        /!*<Button*!/*/ }
+                    { /*        /!*    onClick={ handleSkip }*!/*/ }
+                    { /*        /!*    className="text-gray-600 font-medium py-2 px-4 border-0 shadow-none"*!/*/ }
+                    { /*        /!*>*!/*/ }
+                    { /*        /!*    {__('Skip', 'dokan-lite')}*!/*/ }
+                    { /*        /!*</Button>*!/*/ }
+                    { /*        <NextButton disabled={ isSaving } handleNext={ saveSettings }>*/ }
+                    { /*            { isSaving ? __( 'Saving..', 'dokan-lite' ) : __( 'Next', 'dokan-lite' ) }*/ }
+                    { /*        </NextButton>*/ }
+                    { /*    </div>*/ }
+                    { /*</div>*/ }
 
                     <div className="sticky flex justify-between flex-wrap bottom-0 mt-5 p-5 pr-0">
                         <button
                             type="button"
-                            disabled={isSaving}
-                            onClick={saveSettings}
+                            disabled={ isSaving }
+                            onClick={ saveSettings }
                             className="inline-flex shadow shadow-gray-800/30 items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
-                            {isSaving
-                                ? __('Saving..', 'dokan-lite')
-                                : __('Next', 'dokan-lite')}
+                            { isSaving
+                                ? __( 'Saving..', 'dokan-lite' )
+                                : __( 'Next', 'dokan-lite' ) }
                         </button>
                     </div>
                 </main>
