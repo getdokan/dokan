@@ -152,26 +152,24 @@ const BasicInfoScreen = ( {
                         />
                         <div className="flex items-center gap-1 mt-6 text-sm text-gray-500">
                             <WarningIcon />
-                            <span>
-                                <span
-                                    dangerouslySetInnerHTML={ {
-                                        __html: sprintf(
-                                            /* translators: %1$s: site URL, %2$s: store URL, %3$s: vendor name */
-                                            __(
-                                                'Vendor Store URL will be (<span class="text-indigo-600">%1$s/%2$s/%3$s</span>)',
-                                                'dokan-lite'
-                                            ),
-                                            siteUrl,
-                                            localStoreUrl,
-                                            __( 'vendor-name', 'dokan-lite' )
+                            <span
+                                dangerouslySetInnerHTML={ {
+                                    __html: sprintf(
+                                        /* translators: %1$s: site URL, %2$s: store URL, %3$s: vendor name */
+                                        __(
+                                            'Vendor Store URL will be (<span class="text-indigo-600">%1$s/%2$s/%3$s</span>)',
+                                            'dokan-lite'
                                         ),
-                                    } }
-                                />
-                            </span>
+                                        siteUrl,
+                                        localStoreUrl,
+                                        __( 'vendor-name', 'dokan-lite' )
+                                    ),
+                                } }
+                            />
                         </div>
                     </div>
 
-                    <div className="flex items-center space-x-4 space-y-8">
+                    <div className="flex items-center gap-2 space-y-8">
                         <div className="flex-shrink-0 mb-2">
                             <SimpleCheckbox
                                 input={ {
@@ -194,7 +192,7 @@ const BasicInfoScreen = ( {
                             />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <h3 className="text-sm font-medium">
+                            <h3 className="text-sm text-[#575757] font-medium">
                                 { __(
                                     'Help Us Tailor Your Marketplace',
                                     'dokan-lite'

@@ -208,7 +208,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
          */
         $response_data = apply_filters( 'dokan_admin_onboarding_response', $response_data, $data );
         // flush rewrite rules for custom store URL
-        flush_rewrite_rules();
+        do_action( 'woocommerce_flush_rewrite_rules' );
         /**
          * Fires after saving onboarding data.
          *
