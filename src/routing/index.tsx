@@ -1,6 +1,6 @@
-import NotFound from '../Layout/404';
+import NotFound from '../layout/404';
 import { __ } from '@wordpress/i18n';
-import { DokanRoute } from '../Layout';
+import { DokanRoute } from '../layout';
 import {
     isValidElement,
     cloneElement,
@@ -20,7 +20,7 @@ import Withdraw from '../dashboard/withdraw';
 import WithdrawRequests from '../dashboard/withdraw/WithdrawRequests';
 import coreStore from '@dokan/stores/core';
 import { useSelect } from '@wordpress/data';
-import Forbidden from '@dokan/layout/403';
+import Forbidden from '../layout/403';
 
 export function withRouter( Component, capabilities = [] ) {
     function ComponentWithRouterProp( props ) {
