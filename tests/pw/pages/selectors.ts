@@ -250,15 +250,6 @@ export const selector = {
                 paragraph2: '//a[@class="dokan-insights-data-we-collect"]/../..//p[@class="description"]',
             },
 
-            // promo banner
-            promoBanner: {
-                promoBanner: '.dokan-promo-banner',
-                bannerThumbnail: '.dokan-promo-banner .thumbnail',
-                promoContent: '.dokan-promo-banner .content',
-                upgradeToPremium: '.btn-upgrade',
-                closePromoBanner: '.close-banner',
-            },
-
             //table loader
             loader: 'div.table-loader',
 
@@ -497,7 +488,7 @@ export const selector = {
                     address: '//div[@class="tab-link"]//a[contains(text(), "Address")]',
                     paymentOptions: '//div[@class="tab-link"]//a[contains(text(), "Payment Options")]',
                     addNewVendorCloseModal: '.modal-close',
-                    next: '.button.button-primary',
+                    next: 'footer.modal-footer .button.button-primary',
 
                     // Account Info
 
@@ -2047,6 +2038,7 @@ export const selector = {
                     geolocation: '//div[@class="nav-title" and contains(text(),"Geolocation")]',
                     productReportAbuse: '//div[@class="nav-title" and contains(text(),"Product Report Abuse")]',
                     printful: '//div[@class="nav-title" and contains(text(),"Printful")]',
+                    productFormManager: '//div[@class="nav-title" and contains(text(),"Product Form Manager")]',
                     singleProductMultiVendor: '//div[@class="nav-title" and contains(text(),"Single Product MultiVendor")]',
                     vendorSubscription: '//div[@class="nav-title" and contains(text(),"Vendor Subscription")]',
                     vendorAnalytics: '//div[@class="nav-title" and contains(text(),"Vendor Analytics")]',
@@ -2543,6 +2535,66 @@ export const selector = {
                     reasonsForAbuseReportSingle: (reason: string) => `//li[contains(text(),'${reason}')]//span[@class="dashicons dashicons-no-alt remove-item"]`,
                     reasonsForAbuseReportInput: '.regular-text',
                     reasonsForAbuseReportAdd: '.dokan-repetable-add-item-btn',
+                },
+
+                // Product Form Manager
+                productFormManager: {
+                    resetAll: '//a[normalize-space(text())="Reset All"]',
+
+                    blockSection: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..`,
+                    enableBlock: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//div[contains(@class,'block-header-toggle')]//label[@class="switch tips"]`,
+                    editBlock: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//span[normalize-space(text())="Edit Block"]/..`,
+                    deleteBlock: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//button[contains(@class,'delete-button')]`,
+
+                    blockContents: {
+                        label: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//input[@id="input-label"]`,
+                        description: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//input[@id="input-desc"]`,
+
+                        specificProductTypeDropdown: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//label[normalize-space()="Specific Product Type"]/..//div[@class="multiselect__select"]`,
+                        productType: (productType: string) => `//div[@role="combobox" and contains(@class,'multiselect multiselect--active') ]//ul[@role="listbox"]//span[normalize-space(text())="${productType}"]`,
+                        selectedProductType: (blockName: string, productType: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//label[normalize-space()="Specific Product Type"]/..//span[@class="multiselect__single" and normalize-space(text())="${productType}"]`,
+
+                        specificProductCategoryDropdown: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//label[normalize-space()="Specific Product Category"]/..//div[@class="multiselect__select"]`,
+                        inputProductCategory: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//input[@placeholder="All Product Categories"]`,
+                        searchedResult: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//label[normalize-space()="Specific Product Category"]/..//span[@class="multiselect__option multiselect__option--highlight"]/..`,
+                        selectedProductCategory: (blockName: string, productType: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//label[normalize-space()="Specific Product Category"]/..//span[@class="multiselect__single" and normalize-space(text())="${productType}"]`,
+
+                        cancel: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../..//button[@id="input-Cancel"]`,
+                        done: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../..//button[@id="input-submit"]`,
+                    },
+
+                    addField: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//span[normalize-space(text())='Add Field']/..`,
+
+                    fieldSection: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..`,
+                    enableField: (blockName: string, fieldName: string) =>
+                        `(//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..//span[normalize-space(text())='Enabled']/..//label[@class="switch tips"])[last()]`, //todo: resolve the issue
+                    requireField: (blockName: string, fieldName: string) =>
+                        `(//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..//span[normalize-space(text())='Required']/..//label[@class="switch tips"])[last()]`,
+                    editField: (blockName: string, fieldName: string) => `(//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..//button[contains(@class,'field-edit-button')])[last()]`,
+
+                    fieldContents: {
+                        label: (blockName: string, fieldName: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id="field-input-label"]`,
+                        type: (blockName: string, fieldName: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//select[@id="field-input-type"]`,
+                        placeholder: (blockName: string, fieldName: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id='input-placeholder']`,
+                        helpContent: (blockName: string, fieldName: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id='input-help-content']`,
+                        cancel: (blockName: string, fieldName: string) =>
+                            `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//button[@id="input-Cancel"]`,
+                        done: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//button[@id="input-submit"]`,
+                    },
+
+                    // edit custom field
+                    editCustomField: '//div[@role="menu"]//span[normalize-space()="Edit"]',
+                    deleteCustomField: '//div[@role="menu"]//span[normalize-space()="Delete"]',
+                    confirmRemove: 'button.swal2-confirm',
+                    cancelRemove: 'button.swal2-cancel',
+
+                    createCustomBlock: '//button[contains(.,"Create Custom Block")]',
                 },
 
                 // Single Product Multi Vendor
@@ -6913,22 +6965,25 @@ export const selector = {
                 editBillingAddress: '//h3[contains(text(),"Billing address")]/..//a[@class="edit"]',
                 firstName: '#billing_first_name',
                 lastName: '#billing_last_name',
-                companyName: '#billing_company',
                 euFields: {
                     companyID: '#billing_dokan_company_id_number',
                     vatOrTaxNumber: '#billing_dokan_vat_number',
                     nameOfBank: '#billing_dokan_bank_name',
                     bankIban: '#billing_dokan_bank_iban',
                 },
-                countryOrRegion: '(//span[@class="select2-selection__arrow"])[1]',
-                countryOrRegionInput: '.select2-search.select2-search--dropdown .select2-search__field',
-                countryOrRegionValues: '.select2-results ul li',
+                country: '//select[@id="billing_country"]/..//span[@class="select2-selection__arrow"]',
+                countryInput: '.select2-search.select2-search--dropdown .select2-search__field',
+                countryValues: '.select2-results ul li',
+                countryValue: (country: string) => `//li[contains(@class,"select2-results__option") and normalize-space(text())="${country}"]`,
+                selectedCountry: '//span[@id="select2-billing_country-container"]',
                 streetAddress: '#billing_address_1',
                 streetAddress2: '#billing_address_2',
                 city: '#billing_city',
-                state: '(//span[@class="select2-selection__arrow"])[2]',
+                state: '//select[@id="billing_state"]/..//span[@class="select2-selection__arrow"]',
                 stateInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 stateValues: '.select2-results ul li',
+                stateValue: (state: string) => `//li[contains(@class,"select2-results__option")and normalize-space(text())="${state}"]`,
+                selectedState: '//span[@id="select2-billing_state-container"]',
                 zipCode: '#billing_postcode',
                 phone: '#billing_phone',
                 email: '#billing_email',
@@ -6942,16 +6997,19 @@ export const selector = {
                 editShippingAddress: '//h3[contains(text(),"Shipping address")]/..//a[@class="edit"]',
                 firstName: '#shipping_first_name',
                 lastName: '#shipping_last_name',
-                companyName: '#shipping_company',
-                countryOrRegion: '(//span[@class="select2-selection__arrow"])[1]',
-                countryOrRegionInput: '.select2-search.select2-search--dropdown .select2-search__field',
-                countryOrRegionValues: '.select2-results ul li',
+                country: '//select[@id="shipping_country"]/..//span[@class="select2-selection__arrow"]',
+                countryInput: '.select2-search.select2-search--dropdown .select2-search__field',
+                countryValues: '.select2-results ul li',
+                countryValue: (country: string) => `//li[contains(@class,"select2-results__option") and normalize-space(text())="${country}"]`,
+                selectedCountry: '//span[@id="select2-shipping_country-container"]',
                 streetAddress: '#shipping_address_1',
                 streetAddress2: '#shipping_address_2',
                 city: '#shipping_city',
-                state: '(//span[@class="select2-selection__arrow"])[2]',
+                state: '//select[@id="shipping_state"]/..//span[@class="select2-selection__arrow"]',
                 stateInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 stateValues: '.select2-results ul li',
+                stateValue: (state: string) => `//li[contains(@class,"select2-results__option")and normalize-space(text())="${state}"]`,
+                selectedState: '//span[@id="select2-shipping_state-container"]',
                 zipCode: '#shipping_postcode',
                 saveAddress: '//button[@name="save_address"]',
 
@@ -7136,8 +7194,7 @@ export const selector = {
                 satellite: '//button[normalize-space()="Satellite"]',
                 fullScreenToggle: '//button[@title="Toggle fullscreen view"]',
                 pegman: '//button[@title="Drag Pegman onto the map to open Street View"]',
-                zoomIn: '//button[@title="Zoom in"]',
-                zoomOut: '//button[@title="Zoom out"]',
+                mapCameraControls: '//button[@title="Map camera controls"]',
                 productOnMap: {
                     productPin: '//div[@id="dokan-geolocation-locations-map"]//img[contains(@src, "maps.gstatic.com/mapfiles/transparent.png")]/../..//div[@role="button"]',
                     productCluster: '//div[@id="dokan-geolocation-locations-map"]//div[contains(@style, "dokan-pro/modules/geolocation/assets/images")]',
@@ -8038,8 +8095,9 @@ export const selector = {
             deliveryTimeInputHidden: '//input[@class="delivery-time-date-picker flatpickr-input"]',
             deliveryDate: (date: string) => `//div[contains(@class,"flatpickr-calendar animate open")]//div[@class="dayContainer"]//span[contains(@class,"flatpickr-day") and @aria-label="${date}"]`,
 
-            timePicker: 'select.delivery-time-slot-picker',
-            locationPicker: 'select.delivery-store-location-picker',
+            timePicker: '//option[normalize-space()="Select time slot"]/..',
+            locationPicker: '//option[normalize-space()="Select store location"]/..',
+            storeLocation: 'div.store-address.vendor-info',
 
             orderDetails: {
                 deliveryTimeDetails: 'div#dokan-delivery-time-slot-order-details',

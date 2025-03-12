@@ -2,30 +2,15 @@
 
 namespace WeDevs\Dokan\Abstracts;
 
+use WeDevs\Dokan\REST\DokanBaseVendorController;
+
 /**
  * Vendor REST Controller for Dokan
  *
- * @since DOKAN_PRO_SINCE
+ * @since 3.14.4
+ * @deprecated DOKAN_SINCE Use \WeDevs\Dokan\REST\DokanBaseVendorController instead.
  *
  * @package dokan
  */
-abstract class DokanRESTVendorController extends DokanRESTBaseController {
-
-    /**
-     * Endpoint base.
-     *
-     * @var string
-     */
-    protected $rest_base = 'vendor';
-
-    /**
-     * Check if user has vendor permission.
-     *
-     * @since DOKAN_PRO_SINCE
-     *
-     * @return bool
-     */
-    public function check_permission() {
-        return current_user_can( 'dokandar' );
-    }
+abstract class DokanRESTVendorController extends DokanBaseVendorController {
 }
