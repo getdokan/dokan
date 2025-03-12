@@ -1,3 +1,12 @@
+### v3.14.11 ( Mar 13, 2025 ) ###
+
+- **update:** Dokan now displays prices based on the decimal points setup in WooCommerce.
+- **update:** Added charge and receivable amount in withdraw email templates.
+- **fix:** Resolve an issue when displaying admin earning in admin order list.
+- **fix:** Dokan registration form asset loading issue on Elementor My Account widget.
+- **fix:** Resolved an issue where revoking access to digital product content from order details page reverts on page reload.
+- **fix:** Vendor setup wizard form validation added to properly handle countries without states.
+
 ### v3.14.10 ( Feb 28, 2025 ) ###
 
 - **fix:** Prevented wrong store URL generation for staff managers on admin dashboard.
