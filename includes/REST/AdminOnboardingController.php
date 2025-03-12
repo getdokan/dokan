@@ -207,7 +207,8 @@ class AdminOnboardingController extends DokanBaseAdminController {
          * @param array $data The request data.
          */
         $response_data = apply_filters( 'dokan_admin_onboarding_response', $response_data, $data );
-
+        // flush rewrite rules for custom store URL
+        flush_rewrite_rules();
         /**
          * Fires after saving onboarding data.
          *

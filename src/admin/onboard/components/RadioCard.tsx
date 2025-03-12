@@ -1,42 +1,15 @@
-const SinglePlugin = ( {
-    addon,
-    isSelected,
-    toggleAddon,
-}: {
-    addon: {
-        id: string;
-        title: string;
-        description: string;
-        icon?: string;
-    };
-    isSelected: boolean;
-    toggleAddon: ( id: string ) => void;
-} ) => {
+const RadioCard = ( { label, description, checked, onChange, width } ) => {
     return (
         <div
-            key={ addon.id }
-            className={ `border rounded-lg p-4 gap-2 flex items-start cursor-pointer transition-colors ${
-                isSelected ? 'border-indigo-600 ' : 'border-gray-300'
+            className={ `border rounded-lg p-3 ${ width } h-[85px] justify-between flex-col cursor-pointer transition-colors flex gap-2 items-start ${
+                checked ? 'border-[#7047EB]' : 'border-gray-300'
             }` }
-            onClick={ () => toggleAddon( addon.id ) }
+            onClick={ onChange }
         >
-            <div className="flex-shrink-0 w-10 h-10 bg-indigo-100 text-indigo-600 rounded flex items-center justify-center">
-                <img
-                    src={ addon.icon }
-                    alt={ addon.title }
-                    className="w-6 h-6"
-                />
-            </div>
-            <div className="flex flex-col gap-1">
-                <h3 className="font-medium text-xs ">{ addon.title }</h3>
-                <p className=" text-xs text-gray-500 leading-4">
-                    { addon.description }
-                </p>
-            </div>
             <div
-                className={ `min-w-[25px] h-[25px] rounded-full flex  items-center justify-center` }
+                className={ `w-5 h-5 rounded-full flex  items-center justify-center` }
             >
-                { isSelected ? (
+                { checked ? (
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="19"
@@ -73,8 +46,16 @@ const SinglePlugin = ( {
                     </svg>
                 ) }
             </div>
+            <div className="">
+                <div className="text-xs text-[#25252D]">{ label }</div>
+                { description && (
+                    <div className="text-xs text-[#25252D] mt-1">
+                        { description }
+                    </div>
+                ) }
+            </div>
         </div>
     );
 };
 
-export default SinglePlugin;
+export default RadioCard;

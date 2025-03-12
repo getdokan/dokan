@@ -4,7 +4,7 @@ import OnBoardLayout from '../OnBoardLayout';
 export const LoadingScreen = () => {
     return (
         <OnBoardLayout
-            className={ `!bg-transparent shadow-none drop-shadow-none rounded-none border-none` }
+            className={ `!bg-transparent !shadow-none  rounded-none border-none` }
         >
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
                 <div className="mb-8">

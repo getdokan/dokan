@@ -57,7 +57,7 @@ const AddonsScreen = ( {
 
     return (
         <div className={ `min-h-screen flex items-center justify-center` }>
-            <div className="p-8 md:p-10 max-w-4xl">
+            <div className="p-8 md:p-10 max-w-3xl">
                 <div className="mb-12">
                     <DokanLogo />
                 </div>

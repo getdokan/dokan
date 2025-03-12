@@ -8,7 +8,7 @@ const WelcomeScreen = ( { onNext } ) => {
         <OnBoardLayout>
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center h-full">
                 <div className="md:mb-8 mb-5">
-                    <DokanLogo/>
+                    <DokanLogo />
                 </div>
                 <div className="welcome-content max-w-[450px]">
                     <h1 className="sm:text-2xl md:text-3xl text-base font-bold mb-4 md:mb-6 md:leading-[1.3] px-8">
@@ -25,10 +25,10 @@ const WelcomeScreen = ( { onNext } ) => {
                     </p>
                 </div>
                 <Button
-                    onClick={onNext}
-                    className="bg-[#7047EB]  text-white rounded-md py-3 px-8"
+                    onClick={ onNext }
+                    className="bg-[#7047EB]  text-white rounded-md py-3 px-8 hover:bg-indigo-600 flex items-center"
                 >
-                    {__('Start Journey', 'dokan-lite')}
+                    { __( 'Start Journey', 'dokan-lite' ) }
                 </Button>
             </div>
         </OnBoardLayout>

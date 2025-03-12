@@ -6,7 +6,7 @@ const BackButton = ( { onBack }: { onBack: () => void } ) => {
     return (
         <Button
             onClick={ onBack }
-            className="flex items-center text-base md:text-lg text-gray-600 font-medium border-0 shadow-none p-0"
+            className="flex text-[#393939] items-center text-base md:text-sm font-medium border-0 shadow-none p-0 focus:outline-none focus:ring-0 hover:bg-transparent"
         >
             <BackIcon />
             { __( 'Back', 'dokan-lite' ) }

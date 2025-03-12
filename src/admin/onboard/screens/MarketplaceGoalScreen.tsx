@@ -1,6 +1,6 @@
 import { useEffect, useState } from '@wordpress/element';
 import DokanLogo from '../DokanLogo';
-import RadioCard from '../RadioCard';
+import RadioCard from '../components/RadioCard';
 import { __ } from '@wordpress/i18n';
 import NextButton from '@dokan/admin/onboard/components/NextButton';
 import BackButton from '@dokan/admin/onboard/components/BackButton';
@@ -13,6 +13,11 @@ interface MarketplaceGoalScreenProps {
         deliveryHandling: string,
         priority: string
     ) => void;
+    marketplaceGoal: {
+        marketplace_focus: string;
+        handle_delivery: string;
+        top_priority: string;
+    };
 }
 
 const marketplaceFocus = [
@@ -68,10 +73,17 @@ const MarketplaceGoalScreen = ( {
     onNext,
     onBack,
     onUpdate,
+    marketplaceGoal,
 }: MarketplaceGoalScreenProps ) => {
-    const [ localMarketplaceType, setLocalMarketplaceType ] = useState();
-    const [ localDeliveryMethod, setLocalDeliveryMethod ] = useState();
-    const [ localPriority, setLocalPriority ] = useState();
+    const [ localMarketplaceType, setLocalMarketplaceType ] = useState(
+        marketplaceGoal?.marketplace_focus
+    );
+    const [ localDeliveryMethod, setLocalDeliveryMethod ] = useState(
+        marketplaceGoal?.handle_delivery
+    );
+    const [ localPriority, setLocalPriority ] = useState(
+        marketplaceGoal?.top_priority
+    );
 
     // Update parent component when values change
     useEffect( () => {
@@ -108,7 +120,7 @@ const MarketplaceGoalScreen = ( {
                         <div className="flex flex-wrap gap-4">
                             { marketplaceFocus.map( ( focus ) => (
                                 <RadioCard
-                                    width={ 'w-[160px]' }
+                                    width={ 'w-[137px]' }
                                     key={ focus.value }
                                     label={ focus.label }
                                     checked={
@@ -132,7 +144,7 @@ const MarketplaceGoalScreen = ( {
                         <div className="flex flex-wrap gap-4">
                             { deliveryMethods.map( ( method ) => (
                                 <RadioCard
-                                    width={ 'w-[180px]' }
+                                    width={ 'w-[157px]' }
                                     key={ method.value }
                                     label={ method.label }
                                     checked={
@@ -153,7 +165,7 @@ const MarketplaceGoalScreen = ( {
                         <div className="flex flex-wrap gap-4">
                             { priorities.map( ( priority ) => (
                                 <RadioCard
-                                    width={ 'w-[160px]' }
+                                    width={ 'w-[137px]' }
                                     key={ priority.value }
                                     label={ priority.label }
                                     checked={ localPriority === priority.value }

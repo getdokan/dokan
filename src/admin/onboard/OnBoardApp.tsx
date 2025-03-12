@@ -179,6 +179,8 @@ const OnBoardApp = () => {
                     <BasicInfoScreen
                         onNext={ goToNextStep }
                         onUpdate={ updateBasicInfo }
+                        stateUrl={ formData.custom_store_url }
+                        shareDiagnostics={ formData.share_essentials }
                     />
                 );
             case 2:
@@ -187,6 +189,7 @@ const OnBoardApp = () => {
                         onNext={ goToNextStep }
                         onBack={ goToPrevStep }
                         onUpdate={ updateMarketplaceGoal }
+                        marketplaceGoal={ formData.marketplace_goal }
                     />
                 );
             case 3:
