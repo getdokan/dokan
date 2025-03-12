@@ -1,16 +1,14 @@
-import './styles/modal.css';
-import '@getdokan/dokan-ui/dist/dokan-ui.css';
+import './tailwind.scss';
 import DokanAI from './components/DokanAI';
 import { createRoot } from '@wordpress/element';
+import domReady from '@wordpress/dom-ready';
 
-const initializeDokanAI = () => {
+domReady( () => {
     const container = document.getElementById( 'ai-prompt-app' );
     if ( container ) {
-        createRoot( container ).render( <DokanAI field={ [] } /> );
+        createRoot( container ).render( <DokanAI /> );
     }
-};
-
-document.addEventListener( 'DOMContentLoaded', initializeDokanAI );
+} );
 
 /**
  * Todo: We need to check/observe the dynamic element e.i. when react mount/unmount element which is in AI supported IDs.

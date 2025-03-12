@@ -1,4 +1,4 @@
-import { useState, RawHTML } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import { Modal, SimpleInput, TextArea, SimpleAlert } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
@@ -230,6 +230,8 @@ const DokanAI = () => {
                 <Modal.Content>
                     { error && (
                         <SimpleAlert
+                            label="Error!"
+                            type="danger"
                             className="mb-4 overflow-auto"
                             color={ 'red' }
                         >
@@ -251,7 +253,7 @@ const DokanAI = () => {
                             <div className="mb-2">
                                 <SimpleInput
                                     className="!bg-white !border !border-solid !border-gray-300"
-                                    onChange={ ( e ) => {
+                                    onChange={ ( e: any ) => {
                                         inputHandler(
                                             e.target.value,
                                             'post_title'
@@ -395,7 +397,7 @@ const DokanAI = () => {
                                 input={ {
                                     id: 'dokan-ai-prompt',
                                     value: prompt,
-                                    onChange: ( e ) =>
+                                    onChange: ( e: any ) =>
                                         setPrompt( e.target.value ),
                                     placeholder: __(
                                         'Enter prompt',

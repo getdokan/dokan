@@ -1,31 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import '@getdokan/dokan-ui/dist/dokan-ui.css';
 
-.dokan-ai-prompt-icon {
-    position: absolute;
-    right: 10px;
-    cursor: pointer;
-    height: 24px;
-    display: flex;
-    width: 24px;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
-}
-.dokan-ai-modal button.absolute {
-    background: transparent;
-}
-body:has(.dokan-ai-prompt-icon) .mce-path {
-    padding: 10px;
-}
 body:has(.dokan-ai-modal) .z-10[aria-modal="true"][data-headlessui-state="open"] {
     z-index: 99999;
 }
 body:has(.dokan-ai-modal) .bg-opacity-75 {
     opacity: 0.75;
 }
-
+.dokan-ai-modal button.absolute {
+    background: transparent;
+}
 .dokan-dashboard header.dokan-ai-prompt {
     margin: 0 0 10px 0;
     border-bottom: 1px solid #EDEDED;
