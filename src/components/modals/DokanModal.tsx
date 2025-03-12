@@ -1,4 +1,4 @@
-import { __ } from  '@wordpress/i18n';
+import { __, sprintf } from  '@wordpress/i18n';
 import { Slot } from '@wordpress/components';
 import { kebabCase } from '@dokan/utilities';
 import { debounce } from '@wordpress/compose';
@@ -101,7 +101,7 @@ const DokanModal = ({
                                     <DialogIcon />
                                 </div>
                             )}
-                            <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                            <div className="mt-3 sm:ml-4 sm:mt-0 text-left">
                                 <h3 className="text-base font-semibold text-gray-900"
                                     dangerouslySetInnerHTML={
                                         {__html: confirmationTitle || __('Delete Confirmation', 'dokan-lite')}
