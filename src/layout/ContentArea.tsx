@@ -1,5 +1,5 @@
 import Sidebar from './Sidebar';
-import {Slot} from "@wordpress/components";
+import { Slot } from '@wordpress/components';
 
 const ContentArea = ( { children } ) => {
     return (

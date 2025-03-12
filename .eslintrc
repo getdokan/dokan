@@ -5,6 +5,9 @@
             "node": {
                 "paths": [ "src" ],
                 "extensions": [ ".js", ".jsx", ".ts", ".tsx", ".vue" ]
+            },
+            "typescript": {
+                "project": "./tsconfig.json"
             }
         }
     }
