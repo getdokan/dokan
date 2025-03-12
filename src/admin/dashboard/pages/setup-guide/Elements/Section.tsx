@@ -6,8 +6,8 @@ const Section = ( { element }: { element: SettingsElement } ): JSX.Element => {
         return <></>;
     }
     return (
-        <section aria-labelledby="payment-details-heading" key={ element.id }>
-            <div className="bg-white shadow sm:rounded-md">
+        <section aria-labelledby="settings-section-heading" key={ element.id }>
+            <div className="bg-white sm:rounded-md">
                 <div className="py-6 px-4 sm:p-6">
                     <div>
                         <h2

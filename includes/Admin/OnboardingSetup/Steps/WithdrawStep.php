@@ -2,30 +2,28 @@
 
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\ComponentFactory;
-
-class BasicStep extends AbstractStep {
+class WithdrawStep extends AbstractStep {
 
     /**
      * The step ID.
      *
      * @var string The step ID.
      */
-    protected $id = 'basic';
+    protected $id = 'withdraw';
 
     /**
      * The step priority.
      *
      * @var int The step priority.
      */
-    protected int $priority = 1;
+    protected int $priority = 30;
 
     /**
      * The storage key.
      *
      * @var string The storage key.
      */
-    protected $storage_key = 'dokan_admin_onboarding_setup_step_basic';
+    protected $storage_key = 'dokan_admin_onboarding_setup_step_withdraw';
 
     /**
      * @inheritDoc
@@ -47,12 +45,7 @@ class BasicStep extends AbstractStep {
 	 * @inheritDoc
 	 */
 	public function describe_settings(): void {
-        $this
-            ->set_title( __( 'Basic', 'dokan-lite' ) )
-            ->add(
-                ComponentFactory::section( 'basic' )
-                    ->set_title( __( 'Basic Settings', 'dokan-lite' ) )
-            );
+        $this->set_title( __( 'Withdraw', 'dokan-lite' ) );
     }
 
 	public function settings(): array {

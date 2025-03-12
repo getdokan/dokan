@@ -1,6 +1,7 @@
 import { useEffect, useState } from '@wordpress/element';
 import getSettings from '../../settings/getSettings';
 import StepSettings from './StepSettings';
+import { __ } from '@wordpress/i18n';
 
 export type Step = {
     title: string;
@@ -27,16 +28,18 @@ const SetupGuide = ( props ) => {
 
     return (
         <div className="grid grid-cols-12 gap-4">
-            <div className="flex flex-col col-span-3 space-y-4 rounded-lg">
-                <h3 className="text-2xl font-bold">Setup Guide</h3>
-                <ol className="relative text-gray-500 border-s ml-5 border-gray-200 dark:border-gray-700 dark:text-gray-400">
+            <div className="flex flex-col col-span-3 space-y-4 rounded-lg pl-10 pt-8">
+                <h3 className="text-2xl font-bold leading-6 pb-10">
+                    { __( 'Setup Guide', 'dokan-lite' ) }
+                </h3>
+                <ol className="relative text-gray-500 border-s-2 border-dashed ml-5 border-gray-200 dark:border-gray-700 dark:text-gray-400">
                     { steps.map( ( step, index ) => {
                         return (
-                            <li key={ index } className="mb-10 ms-6">
+                            <li key={ index } className="mb-14 ms-10 last:mb-0 flex items-center">
                                 { step.is_completed ? (
-                                    <span className="absolute flex items-center justify-center w-8 h-8 bg-purple-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-purple-900">
+                                    <span className="absolute flex items-center justify-center w-12 h-12 bg-[#7047EB] rounded-full -start-6 dark:bg-white">
                                         <svg
-                                            className="w-3.5 h-3.5 text-purple-500 dark:text-purple-400"
+                                            className="w-3.5 h-3.5 text-white dark:text-black"
                                             aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
@@ -52,11 +55,11 @@ const SetupGuide = ( props ) => {
                                         </svg>
                                     </span>
                                 ) : (
-                                    <span className="absolute flex items-center justify-center w-8 h-8 bg-gray-50 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-900">
+                                    <span className={ `absolute flex items-center justify-center w-12 h-12 border bg-white text-base text-black leading-5 rounded-full -start-6` }>
                                         { index + 1 }
                                     </span>
                                 ) }
-                                <h4 className="font-medium leading-tight">
+                                <h4 className={ `font-semibold leading-5 text-base ${ currentStep?.id === step.id ? 'text-[#7047EB]' : 'text-black' }` }>
                                     { step.title }
                                 </h4>
                             </li>
@@ -67,9 +70,9 @@ const SetupGuide = ( props ) => {
             <div className="col-span-9 bg-white">
                 { isAllStepsCompleted ? (
                     <div className="flex flex-col items-center justify-center h-full">
-                        <h2 className="text-3xl font-bold">Congratulations!</h2>
+                        <h2 className="text-3xl font-bold">{ __( 'Congratulations!', 'dokan-lite' ) }</h2>
                         <p className="text-gray-500">
-                            You have completed all the steps
+                            { __( 'You have completed all the steps', 'dokan-lite' ) }
                         </p>
                     </div>
                 ) : (
