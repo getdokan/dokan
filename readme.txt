@@ -344,7 +344,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
-= v3.14.11 ( Mar 13, 2025 ) =
+= v3.14.11 ( Mar 14, 2025 ) =
 
 - **update:** Dokan now displays prices based on the decimal points setup in WooCommerce.
 - **update:** Added charge and receivable amount in withdraw email templates.

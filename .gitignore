@@ -20,3 +20,6 @@ phpcs-report.txt
 #unwanted webpack files
 /assets/js/
 /assets/css/
+!/assets/css/vue-vendor.css
+!/assets/css/vue-frontend.css
+!/assets/css/wp-version-before-5-3.css
