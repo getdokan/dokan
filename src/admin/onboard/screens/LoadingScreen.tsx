@@ -1,3 +1,4 @@
+import { __ } from '@wordpress/i18n';
 import OnBoardLayout from '../OnBoardLayout';
 
 export const LoadingScreen = () => {
@@ -85,7 +86,7 @@ export const LoadingScreen = () => {
                         ></path>
                     </svg>
                     <span className="text-lg font-medium text-gray-700">
-                        Creating your new marketplace...
+                        { __( 'Preparing your resources', 'dokan-lite' ) }
                     </span>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from '@wordpress/element';
-import {__, sprintf} from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { SimpleCheckbox, SimpleInput } from '@getdokan/dokan-ui';
 import DokanLogo from '../DokanLogo';
 import WarningIcon from '../icons/WarningIcon';
@@ -25,14 +25,12 @@ const BasicInfoScreen = ( { onNext, onUpdate }: BasicInfoScreenProps ) => {
             .replace( /^-|-$/g, '' );
     };
 
-    const onHandleInputChange = (
-        e: React.ChangeEvent< HTMLInputElement >
-    ) => {
-        const value = e.target.value;
+    const onHandleInputChange = ( event ) => {
+        const value = event.target.value;
         if ( formatStoreUrl( value ) !== value ) {
-            setError( __( 'Please enter a valid store URL.', 'dokan-lite' ) );
+            setError( __( 'Incorrect URL format. Please do not use any special characters.', 'dokan-lite' ) );
         } else if ( ! value ) {
-            setError( __( 'Please enter a store URL.', 'dokan-lite' ) );
+            setError( __( 'Please enter a valid input', 'dokan-lite' ) );
         } else {
             setError( '' );
         }
@@ -47,7 +45,7 @@ const BasicInfoScreen = ( { onNext, onUpdate }: BasicInfoScreenProps ) => {
     const handleNext = () => {
         // Validate store URL
         if ( ! localStoreUrl || localStoreUrl.length === 0 ) {
-            setError( __( 'Please enter a valid store URL.', 'dokan-lite' ) );
+            setError( __( 'Incorrect URL format. Please do not use any special characters.', 'dokan-lite' ) );
             return;
         }
         // Ensure values are updated before proceeding
