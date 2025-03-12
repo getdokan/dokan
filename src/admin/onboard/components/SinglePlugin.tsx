@@ -28,7 +28,7 @@ const SinglePlugin = ( {
                 />
             </div>
             <div className="flex flex-col gap-1">
-                <h3 className="font-medium text-xs ">{ addon.title }</h3>
+                <h3 className="font-semibold text-xs ">{ addon.title }</h3>
                 <p className=" text-xs text-gray-500 leading-4">
                     { addon.description }
                 </p>
