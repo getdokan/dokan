@@ -980,7 +980,7 @@
                 symbol: dokan.currency_format_symbol,
                 decimal: dokan.currency_format_decimal_sep,
                 thousand: dokan.currency_format_thousand_sep,
-                precision: 4,
+                precision: dokan.currency_format_num_decimals,
                 format: dokan.currency_format,
             } );
         },
