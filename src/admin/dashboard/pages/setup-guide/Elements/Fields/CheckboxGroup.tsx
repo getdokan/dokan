@@ -1,6 +1,6 @@
 import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
 
-const DokanCheckboxGroup = ( {
+const CheckboxGroup = ( {
     options = [],
     defaultValue = [],
     name = 'checkboxGroup',
@@ -29,4 +29,4 @@ const DokanCheckboxGroup = ( {
     );
 };
 
-export default DokanCheckboxGroup;
+export default CheckboxGroup;

@@ -53,7 +53,7 @@ class BasicStep extends AbstractStep {
                 Factory::section( 'basic' )
                     ->set_title( __( 'Basic Settings', 'dokan-lite' ) )
                     ->add(
-                        Factory::field( 'shipping-fee-recipient',  )
+                        Factory::field( 'shipping-fee-recipient', 'recipient_selector' )
                             ->set_title( __( 'Shipping Fee Recipient', 'dokan-lite' ) )
                             ->set_description( __( 'Choose who receives shipping charges - Admin keeps all shipping fees or Vendors receive fees for their products', 'dokan-lite' ) )
 

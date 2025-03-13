@@ -3,6 +3,7 @@ import Select from './Select';
 import Password from './Password';
 import Tel from './Tel';
 import { SettingsElement } from '../../StepSettings';
+import RecipientSelector from './RecipientSelector';
 
 const FieldParser = ( { element }: { element: SettingsElement } ) => {
     // TODO: add support for custom input fields and custom hook.
@@ -15,6 +16,13 @@ const FieldParser = ( { element }: { element: SettingsElement } ) => {
             return <Password key={ element.hook_key } element={ element } />;
         case 'tel':
             return <Tel key={ element.hook_key } element={ element } />;
+        case 'recipient_selector':
+            return (
+                <RecipientSelector
+                    key={ element.hook_key }
+                    element={ element }
+                />
+            );
         case 'checkbox':
         case 'color':
         case 'date':

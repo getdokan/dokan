@@ -7,6 +7,7 @@ use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Checkbox;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Number;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Password;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Radio;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\RecipientSelector;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Select;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Tel;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Text;
@@ -50,6 +51,7 @@ class Field extends SettingsElement {
 		'radio'    => Radio::class,
 		'tel'      => Tel::class,
 		'password' => Password::class,
+        'recipient_selector' => RecipientSelector::class,
 	);
 
 	/**

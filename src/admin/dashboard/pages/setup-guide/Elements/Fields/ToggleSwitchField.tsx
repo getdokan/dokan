@@ -1,7 +1,7 @@
 // Reusable toggle switch component
 import { ToggleSwitch } from '@getdokan/dokan-ui';
 
-const DokanToggleSwitch = ( {
+const ToggleSwitchField = ( {
     enabled,
     onChange,
     label = 'Enabled',
@@ -28,4 +28,4 @@ const DokanToggleSwitch = ( {
     );
 };
 
-export default DokanToggleSwitch;
+export default ToggleSwitchField;

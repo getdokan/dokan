@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Admin\OnboardingSetup\Components;
 use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Checkbox;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Radio;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\RecipientSelector;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Select;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Tel;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Text;
@@ -60,7 +61,7 @@ class ComponentFactory {
      * @param string $id ID.
      * @param string $type Field Type.
      *
-     * @return Text|Number|Checkbox|Radio|Select|Tel
+     * @return Text|Number|Checkbox|Radio|Select|Tel|RecipientSelector
      */
     public static function field( string $id, string $type = 'text' ): SettingsElement {
         $field = new Field( $id, $type );

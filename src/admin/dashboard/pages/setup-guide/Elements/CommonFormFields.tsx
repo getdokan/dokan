@@ -1,9 +1,9 @@
 // Reusable section component
-import DokanToggleSwitch from './Fields/DokanToggleSwitch';
+import ToggleSwitchField from './Fields/ToggleSwitchField';
 import RadioButton from './Fields/RadioButton';
 import { useState } from '@wordpress/element';
 import CurrencyInput from './Fields/CurrencyInput';
-import DokanCheckboxGroup from './Fields/DokanCheckboxGroup';
+import CheckboxGroup from './Fields/CheckboxGroup';
 import RecipientSelector from './Fields/RecipientSelector';
 
 // Main shipping settings component that uses all the reusable components
@@ -48,7 +48,7 @@ const CommonFormFields = () => {
 
             { /* Vendors can change Order Status */ }
 
-            <DokanToggleSwitch
+            <ToggleSwitchField
                 title={ 'Vendors can change Order Status' }
                 description={ 'Allow vendors to change order status' }
                 enabled={ vendorChangeOrderStatus }
@@ -66,7 +66,7 @@ const CommonFormFields = () => {
                 } }
             />
             <CurrencyInput onChange={ () => {} } value={ 0 } />
-            <DokanCheckboxGroup
+            <CheckboxGroup
                 onChange={ () => {} }
                 defaultValue={ [] }
                 name={ 'test' }

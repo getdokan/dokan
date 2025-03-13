@@ -15,10 +15,10 @@ const RadioButton = ( {
             <div className="flex">
                 { /* Hide button */ }
                 <button
-                    className={ `px-6 py-2 text-sm font-semibold rounded-l-md border border-gray-200 ${
+                    className={ `px-6 py-2 text-sm font-semibold rounded-l-md border  ${
                         selectedValue === 'hide'
-                            ? 'bg-[#7047EB] text-white'
-                            : 'bg-white text-gray-800'
+                            ? 'bg-[#7047EB] border-[#7047EB] text-white'
+                            : 'bg-white text-gray-800 border-gray-200'
                     }` }
                     onClick={ () => onChange( 'hide' ) }
                 >
@@ -27,10 +27,10 @@ const RadioButton = ( {
 
                 { /* Show button */ }
                 <button
-                    className={ `px-6 py-2 text-sm font-semibold rounded-r-md border border-gray-200 ${
+                    className={ `px-6 py-2 text-sm font-semibold rounded-r-md border  ${
                         selectedValue === 'show'
-                            ? 'bg-[#7047EB] text-white'
-                            : 'bg-white text-gray-800'
+                            ? 'bg-[#7047EB] border-[#7047EB] text-white'
+                            : 'bg-white text-gray-800 border-gray-200'
                     }` }
                     onClick={ () => onChange( 'show' ) }
                 >
