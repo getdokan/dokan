@@ -104,7 +104,7 @@ const BasicInfoScreen = ( {
                     { __( 'Basic Information', 'dokan-lite' ) }
                 </h1>
 
-                <div className="space-y-8 md:w-[30rem] w-full">
+                <div className="space-y-8  w-full">
                     <div>
                         <label
                             className="block text-md font-medium mb-4"
