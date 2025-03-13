@@ -5,8 +5,7 @@ import Menu from './Elements/Menu';
 import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import { Step } from './index';
-import RadioButton from './Elements/Fields/RadioButton';
-import SwitchElement from './Elements/Fields/SwitchElement';
+import CommonFormFields from './Elements/CommonFormFields';
 // import NextButton from './components/NextButton';
 // import BackButton from './components/BackButton';
 // import { Button } from "@getdokan/dokan-ui";
@@ -168,18 +167,7 @@ const StepSettings = ( { step }: { step: Step } ) => {
             <div className="h-full px-20 py-12">
                 <main className="max-w-7xl mx-auto pb-10 lg:py-5 lg:px-0">
                     <div className="w-full">
-                        <RadioButton
-                            title=" Contact Form on Store Page"
-                            description="Display a contact form on vendor store pages for customer inquiries"
-                        />
-                        <SwitchElement
-                            title={ 'PayPal' }
-                            description={
-                                'Enable PayPal for your vendor as a withdraw method'
-                            }
-                            defaultEnabled={ true }
-                            onChange={ ( value ) => console.log( value ) }
-                        />
+                        <CommonFormFields />
                     </div>
                     <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
                         { pages && '' !== selectedPage && pages.length > 0 && (
