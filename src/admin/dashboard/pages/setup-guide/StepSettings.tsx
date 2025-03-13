@@ -44,7 +44,19 @@ export type SettingsElement = {
     dependencies?: Array< SettingsElementDependency >;
 };
 
-const StepSettings = ( { step }: { step: Step } ) => {
+const StepSettings = (
+    {
+        steps,
+        updateStep,
+        currentStep,
+        setCurrentStep,
+    }: {
+        steps: Step[],
+        updateStep: ( steps: Step[] ) => void,
+        currentStep: Step,
+        setCurrentStep: ( step: Step ) => void,
+    }
+) => {
     const [ allSettings, setAllSettings ] = useState< SettingsElement[] >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ isSaving, setIsSaving ] = useState< boolean >( false );
@@ -57,14 +69,14 @@ const StepSettings = ( { step }: { step: Step } ) => {
     const [ elements, setElements ] = useState< SettingsElement[] >( [] );
 
     useEffect( () => {
-        if ( ! step ) {
+        if ( ! currentStep?.id ) {
             return;
         }
 
         setLoading( true );
 
         apiFetch< SettingsElement[] >( {
-            path: '/dokan/v1/admin/setup-guide/' + step.id,
+            path: '/dokan/v1/admin/setup-guide/' + currentStep.id,
         } )
             .then( ( data ) => {
                 setAllSettings( data );
@@ -73,7 +85,7 @@ const StepSettings = ( { step }: { step: Step } ) => {
             .catch( ( err ) => {
                 console.error( err );
             } );
-    }, [ step ] );
+    }, [ currentStep ] );
 
     useEffect( () => {
         if ( ! loading ) {
@@ -158,13 +170,54 @@ const StepSettings = ( { step }: { step: Step } ) => {
         setSelectedTab( tab );
     };
 
+    // const saveSettings = () => {
+    //     setIsSaving( true );
+    // };
+
     const saveSettings = () => {
         setIsSaving( true );
+
+        let nextStep = steps.find( ( step ) => step.id === currentStep?.next_step );
+        if ( ! nextStep ) {
+            // Find the first incomplete step
+            nextStep = steps.find( ( step ) => ! step?.is_completed );
+        }
+
+        if ( nextStep ) {
+            const updatedSteps = steps.map( ( step ) => {
+                if ( step?.id === currentStep?.id ) {
+                    return { ...step, is_completed: true };
+                }
+                return step;
+            } );
+
+            updateStep( updatedSteps );
+            setCurrentStep( nextStep );
+        }
+
+        setIsSaving( false );
+    };
+
+    const handleSkip = () => {
+        let nextStep = steps.find( ( step ) => step?.id === currentStep?.next_step );
+        if ( ! nextStep ) {
+            // Find the first incomplete step
+            nextStep = steps.find( ( step ) => ! step?.is_completed );
+        }
+
+        if ( nextStep ) {
+            setCurrentStep( nextStep );
+        }
+    };
+
+    const handleBack = () => {
+        const previousStep = steps.find( ( step ) => step?.id === currentStep?.previous_step );
+        setCurrentStep( previousStep );
     };
 
     return (
         <>
-            <div className="h-full px-24 py-12 min-h-[500px]">
+            <div className="h-full px-28 py-16">
                 <main className="max-w-7xl mx-auto h-full">
                     <div className="w-full">
                         <CommonFormFields />
@@ -206,15 +259,15 @@ const StepSettings = ( { step }: { step: Step } ) => {
                     </div>
 
                     <div className="sticky flex gap-7 sm:w-auto w-full justify-end flex-wrap top-full pr-0">
-                        <BackButton
-                            // onBack={ onBack }
-                            className={ `mr-auto` }
-                            onBack={ () => {} }
-                        />
+                        { currentStep?.previous_step && (
+                            <BackButton
+                                onBack={ handleBack }
+                                className={ `mr-auto focus:ring-0` }
+                            />
+                        ) }
                         <Button
-                            // onClick={ handleSkip }
-                            onClick={ () => {} }
-                            className="text-[#393939] text-base font-medium py-2 px-4 border-0 shadow-none"
+                            onClick={ handleSkip }
+                            className="text-[#393939] text-base font-medium py-2 px-4 border-0 shadow-none focus:ring-0"
                         >
                             { __( 'Skip', 'dokan-lite' ) }
                         </Button>

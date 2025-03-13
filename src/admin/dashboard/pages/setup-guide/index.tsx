@@ -1,7 +1,9 @@
 import { useEffect, useState } from '@wordpress/element';
 import getSettings from '../../settings/getSettings';
+import { Button } from '@getdokan/dokan-ui';
 import StepSettings from './StepSettings';
-import { __ } from '@wordpress/i18n';
+import {__, sprintf} from '@wordpress/i18n';
+import HomeIcon from './icons/HomeIcon';
 
 export type Step = {
     title: string;
@@ -13,6 +15,7 @@ export type Step = {
 
 const SetupGuide = ( props ) => {
     const [ steps, setSteps ] = useState< Step[] >( [] );
+    const [ currentStep, setCurrentStep ] = useState< Step >( {} );
 
     useEffect( () => {
         const allSteps: Step[] = getSettings( 'setup' ).steps;
@@ -20,9 +23,13 @@ const SetupGuide = ( props ) => {
         setSteps( allSteps );
     }, [] );
 
+    useEffect(() => {
+        setCurrentStep( steps.find( ( step ) => ! step.is_completed ) );
+    }, [ steps ] );
+
     const isAllStepsCompleted = steps.every( ( step ) => step.is_completed );
 
-    const currentStep = steps.find( ( step ) => ! step.is_completed );
+    // const currentStep = steps.find( ( step ) => ! step.is_completed );
 
     console.log( isAllStepsCompleted, currentStep );
 
@@ -69,14 +76,37 @@ const SetupGuide = ( props ) => {
             </div>
             <div className="col-span-9 bg-white">
                 { isAllStepsCompleted ? (
-                    <div className="flex flex-col items-center justify-center h-full">
-                        <h2 className="text-3xl font-bold">{ __( 'Congratulations!', 'dokan-lite' ) }</h2>
-                        <p className="text-gray-500">
-                            { __( 'You have completed all the steps', 'dokan-lite' ) }
-                        </p>
+                    // <div className="min-h-screen flex flex-col items-center justify-center h-full">
+                    <div className="min-h-[800px] flex flex-col items-center justify-center h-full">
+                        <div className={ `complete-icon mb-8` }>
+                            <HomeIcon />
+                        </div>
+                        <div className={`complete-content space-y-3 text-center mb-7`}>
+                            <h2 className="text-2xl font-bold">
+                                { __( 'Your Marketplace is  ready to explore', 'dokan-lite' ) }
+                            </h2>
+                            <p className="text-gray-500 text-lg leading-5">
+                                { sprintf(
+                                    __( '%1$s of %1$s tasks completed', 'dokan-lite' ),
+                                    steps.length
+                                ) }
+                            </p>
+                        </div>
+                        <Button
+                            link={ true }
+                            href={ dokanAdminDashboardSettings?.dashboard_url }
+                            className={ `bg-[#7047EB] text-white text-base font-medium py-2.5 px-5 flex items-center rounded-md m-0` }
+                        >
+                            { __( 'Visit Dokan Dashboard', 'dokan-lite' ) }
+                        </Button>
                     </div>
                 ) : (
-                    <StepSettings step={ currentStep } />
+                    <StepSettings
+                        steps={ steps }
+                        updateStep={ setSteps }
+                        currentStep={ currentStep }
+                        setCurrentStep={ setCurrentStep }
+                    />
                 ) }
             </div>
         </div>
