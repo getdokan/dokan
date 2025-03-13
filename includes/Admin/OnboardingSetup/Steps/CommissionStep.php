@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\ComponentFactory;
+
 class CommissionStep extends AbstractStep {
 
     /**
@@ -45,7 +47,22 @@ class CommissionStep extends AbstractStep {
 	 * @inheritDoc
 	 */
 	public function describe_settings(): void {
-        $this->set_title( __( 'Commission', 'dokan-lite' ) );
+        $this
+            ->set_title( __( 'Commission', 'dokan-lite' ) )
+            ->add(
+                ComponentFactory::section( 'commission' )
+                    ->set_title( __( 'Commission', 'dokan-lite' ) )
+            )
+            ->add(
+                ComponentFactory::sub_section( 'commission-type-heading' )
+                    ->set_title( __( 'Commission Type', 'dokan-lite' ) )
+                    ->set_description( __( 'Select a commission type for your marketplace', 'dokan-lite' ) )
+            )
+            ->add(
+                ComponentFactory::sub_section( 'admin-commission-heading' )
+                    ->set_title( __( 'Admin Commission', 'dokan-lite' ) )
+                    ->set_description( __( 'Amount you get from each sale', 'dokan-lite' ) )
+            );
     }
 
 	public function settings(): array {

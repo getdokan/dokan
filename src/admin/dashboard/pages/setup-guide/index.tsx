@@ -15,6 +15,7 @@ export type Step = {
 
 const SetupGuide = ( props ) => {
     const [ steps, setSteps ] = useState< Step[] >( [] );
+    const [ currentStep, setCurrentStep ] = useState< Step >( {} );
 
     useEffect( () => {
         const allSteps: Step[] = getSettings( 'setup' ).steps;
@@ -22,9 +23,13 @@ const SetupGuide = ( props ) => {
         setSteps( allSteps );
     }, [] );
 
+    useEffect(() => {
+        setCurrentStep( steps.find( ( step ) => ! step.is_completed ) );
+    }, [ steps ] );
+
     const isAllStepsCompleted = steps.every( ( step ) => step.is_completed );
 
-    const currentStep = steps.find( ( step ) => ! step.is_completed );
+    // const currentStep = steps.find( ( step ) => ! step.is_completed );
 
     console.log( isAllStepsCompleted, currentStep );
 
@@ -72,7 +77,7 @@ const SetupGuide = ( props ) => {
             <div className="col-span-9 bg-white">
                 { isAllStepsCompleted ? (
                     // <div className="min-h-screen flex flex-col items-center justify-center h-full">
-                    <div className="min-h-[900px] flex flex-col items-center justify-center h-full">
+                    <div className="min-h-[800px] flex flex-col items-center justify-center h-full">
                         <div className={ `complete-icon mb-8` }>
                             <HomeIcon />
                         </div>
@@ -96,7 +101,12 @@ const SetupGuide = ( props ) => {
                         </Button>
                     </div>
                 ) : (
-                    <StepSettings step={ currentStep } />
+                    <StepSettings
+                        steps={ steps }
+                        updateStep={ setSteps }
+                        currentStep={ currentStep }
+                        setCurrentStep={ setCurrentStep }
+                    />
                 ) }
             </div>
         </div>
