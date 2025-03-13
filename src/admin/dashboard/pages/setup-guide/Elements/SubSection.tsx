@@ -11,19 +11,19 @@ const SubSection = ( {
     }
     return (
         <div className="col-span-4">
-            <div>
+            <div className={ `mb-6` }>
                 <h2
                     id={ element.hook_key }
-                    className="text-lg leading-6 font-medium text-gray-900"
+                    className="text-base leading-6 font-semibold text-gray-900"
                 >
                     { element.title }
                 </h2>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1.5 text-sm text-[#828282]">
                     { element.description }
                 </p>
             </div>
 
-            <div className="mt-6 grid grid-cols-4 gap-6">
+            <div className="mb-7 grid grid-cols-4 gap-6">
                 { element.children.map( ( child ) => {
                     return (
                         <SettingsParser

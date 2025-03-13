@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\ComponentFactory;
+
 class AppearanceStep extends AbstractStep {
 
     /**
@@ -45,7 +47,33 @@ class AppearanceStep extends AbstractStep {
 	 * @inheritDoc
 	 */
 	public function describe_settings(): void {
-        $this->set_title( __( 'Appearance', 'dokan-lite' ) );
+        $this->set_title( __( 'Appearance', 'dokan-lite' ) )
+            ->add(
+                ComponentFactory::section( 'appearance' )
+                    ->set_title( __( 'Appearance', 'dokan-lite' ) )
+            )
+            ->add(
+                ComponentFactory::sub_section( 'contact-form-heading' )
+                    ->set_title( __( 'Contact Form on Store Page', 'dokan-lite' ) )
+                    ->set_description( __( 'Display a contact form on vendor store pages for customer inquiries', 'dokan-lite' ) )
+            )
+            ->add(
+                ComponentFactory::sub_section( 'store-sidebar-heading' )
+                    ->set_title( __( 'Store Sidebar From Theme', 'dokan-lite' ) )
+                    ->set_description( __( 'Show/hide the sidebar on vendor store pages', 'dokan-lite' ) )
+            )
+            ->add(
+                ComponentFactory::sub_section( 'email-address-heading' )
+                    ->set_title( __( 'Email Address', 'dokan-lite' ) )
+            )
+            ->add(
+                ComponentFactory::sub_section( 'Phone Number-heading' )
+                    ->set_title( __( 'Phone Number', 'dokan-lite' ) )
+            )
+            ->add(
+                ComponentFactory::sub_section( 'store-address-heading' )
+                    ->set_title( __( 'Store Address', 'dokan-lite' ) )
+            );
     }
 
 	public function settings(): array {

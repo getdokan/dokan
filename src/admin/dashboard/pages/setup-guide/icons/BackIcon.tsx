@@ -9,7 +9,7 @@ const BackIcon = () => {
         >
             <path
                 d="M10.6453 12.8857L6.64526 8.88574L10.6453 4.88574"
-                stroke="#828282"
+                stroke="#393939"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
