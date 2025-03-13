@@ -77,7 +77,7 @@ class AppearanceStep extends AbstractStep {
     }
 
 	public function settings(): array {
-		return [ 1, 2, 3 ];
+		return [];
 	}
 
     /**
