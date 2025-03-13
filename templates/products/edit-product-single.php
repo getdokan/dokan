@@ -138,7 +138,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
         do_action( 'dokan_before_product_content_area' );
         ?>
 
-        <div class="dokan-dashboard-content dokan-product-edit">
+        <div class="dokan-dashboard-content dokan-product-edit dokan-layout">
 
             <?php
             /**

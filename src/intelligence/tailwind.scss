@@ -1,16 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@use '../base-tailwind';
+@config './tailwind.config.js';
 @import '@getdokan/dokan-ui/dist/dokan-ui.css';
 
-body:has(.dokan-ai-modal) .z-10[aria-modal="true"][data-headlessui-state="open"] {
+div[data-headlessui-state=open][role=dialog] {
     z-index: 99999;
-}
-body:has(.dokan-ai-modal) .bg-opacity-75 {
-    opacity: 0.75;
-}
-.dokan-ai-modal button.absolute {
-    background: transparent;
 }
 .dokan-dashboard header.dokan-ai-prompt {
     margin: 0 0 10px 0;

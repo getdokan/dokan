@@ -1,9 +1,10 @@
 import { useState } from '@wordpress/element';
-import { Modal, SimpleInput, TextArea, SimpleAlert } from '@getdokan/dokan-ui';
+import { Modal, SimpleInput, TextArea, Button } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
 import ResponseHistory from './ResponseHistory';
+import { useMutationObserver } from '../../hooks';
 
 const DokanAI = () => {
     const [ isOpen, setIsOpen ] = useState( false );
@@ -189,6 +190,27 @@ const DokanAI = () => {
         onClose();
     };
 
+    useMutationObserver(
+        document.body,
+        ( mutations ) => {
+            for ( const mutation of mutations ) {
+                if ( mutation.type !== 'childList' ) {
+                    continue;
+                }
+                // @ts-ignore
+                for ( const node of mutation.addedNodes ) {
+                    if ( node.id !== 'headlessui-portal-root' ) {
+                        continue;
+                    }
+
+                    node.classList.add( 'dokan-layout' );
+                    node.style.display = 'block';
+                }
+            }
+        },
+        { childList: true }
+    );
+
     return (
         <>
             <div className="text-dokan-primary cursor-pointer text-primary-500">
@@ -205,7 +227,7 @@ const DokanAI = () => {
                         width="40"
                         height="40"
                         rx="5"
-                        fill="var(--colors-primary-600, currentColor)"
+                        fill="var(--colors-primary-500, currentColor)"
                     />
                     <path
                         d="M18.0064 11.0266C18.2625 9.98897 19.7376 9.98897 19.9938 11.0266V11.0266C21.0872 15.4557 24.5455 18.9139 28.9747 20.0073V20.0073C30.0123 20.2634 30.0123 21.7386 28.9747 21.9947V21.9947C24.5455 23.0881 21.0872 26.5463 19.9938 30.9754V30.9754C19.7376 32.0131 18.2625 32.0131 18.0064 30.9754V30.9754C16.9129 26.5463 13.4546 23.0881 9.02549 21.9947V21.9947C7.98784 21.7386 7.98784 20.2634 9.02549 20.0073V20.0073C13.4546 18.9139 16.9129 15.4557 18.0064 11.0266V11.0266Z"
@@ -219,40 +241,40 @@ const DokanAI = () => {
             </div>
 
             <Modal
-                className="max-w-xl dokan-ai-modal dokan-layout"
+                className="max-w-xl dokan-ai-modal dokan-layout rounded-lg"
                 isOpen={ isOpen }
                 onClose={ onClose }
+                showXButton={ false }
             >
-                <Modal.Title className="border border-b border-gray-200 border-solid">
+                <Modal.Title className="border-b">
                     { __( 'Craft your product information', 'dokan-lite' ) }
                 </Modal.Title>
 
                 <Modal.Content>
                     { error && (
-                        <SimpleAlert
-                            label="Error!"
-                            type="danger"
-                            className="mb-4 overflow-auto"
-                            color={ 'red' }
+                        <div
+                            className="mb-4 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500"
+                            role="alert"
                         >
-                            <div className="text-wrap">{ error }</div>
-                        </SimpleAlert>
+                            <span className="font-bold text-wrap">Error</span>{ ' ' }
+                            { error }
+                        </div>
                     ) }
                     { responseHistory.post_title.length ? (
                         <div>
                             <div className="mb-2 flex items-center justify-between">
-                                <p className="font-semibold m-0">
+                                <div className="font-semibold text-gray-800">
                                     { __( 'Product Title', 'dokan-lite' ) }
-                                </p>
+                                </div>
                                 <ResponseHistory
                                     history={ getHistoryLabel( 'post_title' ) }
                                     prev={ () => prevHandler( 'post_title' ) }
                                     next={ () => nextHandler( 'post_title' ) }
                                 />
                             </div>
-                            <div className="mb-2">
+                            <div className="mb-3">
                                 <SimpleInput
-                                    className="!bg-white !border !border-solid !border-gray-300"
+                                    className="bg-white"
                                     onChange={ ( e: any ) => {
                                         inputHandler(
                                             e.target.value,
@@ -262,23 +284,23 @@ const DokanAI = () => {
                                     value={ getInputValue( 'post_title' ) }
                                 />
                             </div>
-                            <button
-                                type="button"
+                            <Button
+                                color="secondary"
                                 onClick={ () => refineContent( 'post_title' ) }
                                 disabled={ isLoading }
-                                className="dokan-btn dokan-btn-default !px-5"
+                                className="dokan-btn dokan-btn-default"
                             >
                                 { __( 'Refine', 'dokan-lite' ) }
-                            </button>
+                            </Button>
                             { /* Short Description Section */ }
-                            <div className="mt-4">
-                                <div className="mt-4 flex items-center justify-between">
-                                    <p className="font-semibold m-0">
+                            <div className="my-4">
+                                <div className="mb-2 flex items-center justify-between">
+                                    <div className="font-semibold text-gray-800">
                                         { __(
                                             'Short Description',
                                             'dokan-lite'
                                         ) }
-                                    </p>
+                                    </div>
                                     <ResponseHistory
                                         history={ getHistoryLabel(
                                             'post_excerpt'
@@ -292,7 +314,7 @@ const DokanAI = () => {
                                     />
                                 </div>
                                 <div
-                                    className="mb-2 h-48 border border-solid border-gray-300 rounded p-2.5 overflow-auto"
+                                    className="mb-3 h-48 border border-solid border-gray-300 rounded p-2.5 overflow-auto"
                                     contentEditable={ true }
                                     onBlur={ ( e ) => {
                                         inputHandler(
@@ -304,26 +326,26 @@ const DokanAI = () => {
                                         __html: getInputValue( 'post_excerpt' ),
                                     } }
                                 ></div>
-                                <button
-                                    type="button"
+                                <Button
+                                    color="secondary"
                                     onClick={ () =>
                                         refineContent( 'post_excerpt' )
                                     }
                                     disabled={ isLoading }
-                                    className="dokan-btn dokan-btn-default !px-5"
+                                    className="dokan-btn dokan-btn-default"
                                 >
                                     { __( 'Refine', 'dokan-lite' ) }
-                                </button>
+                                </Button>
                             </div>
                             { /* Long Description Section */ }
                             <div className="mt-4">
-                                <div className="flex items-center justify-between">
-                                    <p className="font-semibold m-0">
+                                <div className="mb-2 flex items-center justify-between">
+                                    <div className="font-semibold text-gray-800">
                                         { __(
                                             'Long Description',
                                             'dokan-lite'
                                         ) }
-                                    </p>
+                                    </div>
                                     <ResponseHistory
                                         history={ getHistoryLabel(
                                             'post_content'
@@ -337,7 +359,7 @@ const DokanAI = () => {
                                     />
                                 </div>
                                 <div
-                                    className="mb-2 h-48 border border-solid border-gray-300 rounded p-2.5 overflow-auto"
+                                    className="mb-3 h-48 border border-solid border-gray-300 rounded p-2.5 overflow-auto"
                                     contentEditable={ true }
                                     onBlur={ ( e ) => {
                                         inputHandler(
@@ -349,33 +371,33 @@ const DokanAI = () => {
                                         __html: getInputValue( 'post_content' ),
                                     } }
                                 ></div>
-                                <button
-                                    type="button"
+                                <Button
+                                    color="secondary"
                                     onClick={ () =>
                                         refineContent( 'post_content' )
                                     }
                                     disabled={ isLoading }
-                                    className="dokan-btn dokan-btn-default !px-5"
+                                    className="dokan-btn dokan-btn-default"
                                 >
                                     { __( 'Refine', 'dokan-lite' ) }
-                                </button>
+                                </Button>
                             </div>
 
-                            <p className="text-sm mt-4 mb-2">
+                            <p className="text-sm mt-4 mb-3">
                                 { __(
                                     '** If you think the outcome doesn’t match your choice then you can regenerate all again',
                                     'dokan-lite'
                                 ) }
                             </p>
 
-                            <button
-                                className="dokan-btn dokan-btn-default !px-5"
-                                type="button"
+                            <Button
+                                color="secondary"
+                                className="dokan-btn dokan-btn-default"
                                 disabled={ isLoading }
                                 onClick={ generateContent }
                             >
                                 { __( 'Refine All', 'dokan-lite' ) }
-                            </button>
+                            </Button>
                         </div>
                     ) : (
                         <div>
@@ -385,7 +407,7 @@ const DokanAI = () => {
                                     'dokan-lite'
                                 ) }
                             </div>
-                            <p className="text-sm mb-2">
+                            <p className="text-sm mb-3">
                                 { __(
                                     'You can generate your product title, short description, long description all at once with this prompt. Type your prompt below',
                                     'dokan-lite'
@@ -408,34 +430,36 @@ const DokanAI = () => {
                         </div>
                     ) }
                 </Modal.Content>
-                <Modal.Footer className="border border-t border-gray-200 border-solid">
+                <Modal.Footer className="border-t">
                     <div className="flex gap-4 justify-end">
-                        <button
-                            className="dokan-btn dokan-btn-default !px-5"
-                            type="button"
+                        <Button
+                            className="dokan-btn dokan-btn-default"
+                            color="secondary"
                             disabled={ isLoading }
                             onClick={ onClose }
                         >
                             { __( 'Cancel', 'dokan-lite' ) }
-                        </button>
+                        </Button>
                         { responseHistory.post_title.length ? (
-                            <button
-                                className="dokan-btn dokan-btn-theme !px-5"
+                            <Button
+                                color="primary"
+                                className="dokan-btn dokan-btn-theme"
                                 disabled={ isLoading }
                                 onClick={ () => insertHandler() }
                             >
                                 { __( 'Insert', 'dokan-lite' ) }
-                            </button>
+                            </Button>
                         ) : (
-                            <button
-                                className="dokan-btn dokan-btn-theme !px-5"
+                            <Button
+                                color="primary"
+                                className="dokan-btn dokan-btn-theme"
                                 disabled={ isLoading }
                                 onClick={ generateContent }
                             >
                                 { isLoading
                                     ? __( 'Generating…', 'dokan-lite' )
                                     : __( 'Generate', 'dokan-lite' ) }
-                            </button>
+                            </Button>
                         ) }
                     </div>
                 </Modal.Footer>
@@ -443,10 +467,11 @@ const DokanAI = () => {
             <Modal
                 className="max-w-md dokan-ai-modal dokan-layout"
                 isOpen={ regenerateModal }
+                showXButton={ false }
                 onClose={ () => setRegenerateModal( false ) }
             >
                 <Modal.Content>
-                    <div className="text-center p-10">
+                    <div className="text-center p-5">
                         <div className="text-xl font-semibold mb-4">
                             { __(
                                 'Insert Generated Information?',
@@ -460,20 +485,20 @@ const DokanAI = () => {
                             ) }
                         </p>
                         <div className="mt-4 flex gap-4 justify-center">
-                            <button
-                                className="dokan-btn dokan-btn-theme !px-5"
-                                type="button"
+                            <Button
+                                color="secondary"
+                                className="dokan-btn dokan-btn-default"
                                 onClick={ () => setRegenerateModal( false ) }
                             >
                                 { __( 'Cancel', 'dokan-lite' ) }
-                            </button>
-                            <button
-                                className="dokan-btn dokan-btn-default !px-5"
-                                type="button"
+                            </Button>
+                            <Button
+                                color="primary"
+                                className="dokan-btn dokan-btn-theme"
                                 onClick={ () => insertHandler( true ) }
                             >
                                 { __( 'Yes, Insert', 'dokan-lite' ) }
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </Modal.Content>

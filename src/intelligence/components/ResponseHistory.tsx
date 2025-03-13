@@ -19,7 +19,7 @@ const ResponseHistory = ( { prev, next, history } ) => {
                     d="M15.75 19.5 8.25 12l7.5-7.5"
                 />
             </svg>
-            <span>{ history }</span>
+            <span className="text-sm">{ history }</span>
             <svg
                 onClick={ next }
                 xmlns="http://www.w3.org/2000/svg"
