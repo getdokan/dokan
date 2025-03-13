@@ -34,8 +34,8 @@ const SetupGuide = ( props ) => {
     console.log( isAllStepsCompleted, currentStep );
 
     return (
-        <div className="grid grid-cols-12 gap-4">
-            <div className="flex flex-col col-span-3 space-y-4 rounded-lg pl-10 pt-8">
+        <div className="grid grid-cols-12 gap-6">
+            <div className="flex flex-col col-span-3 space-y-4 rounded-lg pl-10 pt-8 bg-white shadow">
                 <h3 className="text-2xl font-bold leading-6 pb-10">
                     { __( 'Setup Guide', 'dokan-lite' ) }
                 </h3>
@@ -44,7 +44,7 @@ const SetupGuide = ( props ) => {
                         return (
                             <li key={ index } className="mb-14 ms-10 last:mb-0 flex items-center">
                                 { step.is_completed ? (
-                                    <span className="absolute flex items-center justify-center w-12 h-12 bg-[#7047EB] rounded-full -start-6 dark:bg-white">
+                                    <span className="absolute flex items-center justify-center w-12 h-12 bg-[#7047EB] rounded-full -start-6">
                                         <svg
                                             className="w-3.5 h-3.5 text-white dark:text-black"
                                             aria-hidden="true"
@@ -62,7 +62,7 @@ const SetupGuide = ( props ) => {
                                         </svg>
                                     </span>
                                 ) : (
-                                    <span className={ `absolute flex items-center justify-center w-12 h-12 border bg-white text-base text-black leading-5 rounded-full -start-6` }>
+                                    <span className={ `absolute flex items-center justify-center w-12 h-12 border border-[#7047EB] bg-white text-base text-black leading-5 rounded-full -start-6` }>
                                         { index + 1 }
                                     </span>
                                 ) }
@@ -74,10 +74,9 @@ const SetupGuide = ( props ) => {
                     } ) }
                 </ol>
             </div>
-            <div className="col-span-9 bg-white">
+            <div className="col-span-9 bg-white shadow rounded-lg">
                 { isAllStepsCompleted ? (
-                    // <div className="min-h-screen flex flex-col items-center justify-center h-full">
-                    <div className="min-h-[800px] flex flex-col items-center justify-center h-full">
+                    <div className="min-h-screen flex flex-col items-center justify-center h-full">
                         <div className={ `complete-icon mb-8` }>
                             <HomeIcon />
                         </div>
