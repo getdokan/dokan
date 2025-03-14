@@ -5,10 +5,9 @@ import Menu from './Elements/Menu';
 import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import { Step } from './index';
-import CommonFormFields from './Elements/CommonFormFields';
 import NextButton from './components/NextButton';
 import BackButton from './components/BackButton';
-import { Button } from "@getdokan/dokan-ui";
+import { Button } from '@getdokan/dokan-ui';
 
 export type SettingsElementDependency = {
     key?: string;
@@ -40,23 +39,22 @@ export type SettingsElement = {
     increment?: number;
     hook_key?: string;
     dependency_key?: string;
+    label?: string;
     children?: Array< SettingsElement >;
     dependencies?: Array< SettingsElementDependency >;
 };
 
-const StepSettings = (
-    {
-        steps,
-        updateStep,
-        currentStep,
-        setCurrentStep,
-    }: {
-        steps: Step[],
-        updateStep: ( steps: Step[] ) => void,
-        currentStep: Step,
-        setCurrentStep: ( step: Step ) => void,
-    }
-) => {
+const StepSettings = ( {
+    steps,
+    updateStep,
+    currentStep,
+    setCurrentStep,
+}: {
+    steps: Step[];
+    updateStep: ( steps: Step[] ) => void;
+    currentStep: Step;
+    setCurrentStep: ( step: Step ) => void;
+} ) => {
     const [ allSettings, setAllSettings ] = useState< SettingsElement[] >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ isSaving, setIsSaving ] = useState< boolean >( false );
@@ -177,7 +175,9 @@ const StepSettings = (
     const saveSettings = () => {
         setIsSaving( true );
 
-        let nextStep = steps.find( ( step ) => step.id === currentStep?.next_step );
+        let nextStep = steps.find(
+            ( step ) => step.id === currentStep?.next_step
+        );
         if ( ! nextStep ) {
             // Find the first incomplete step
             nextStep = steps.find( ( step ) => ! step?.is_completed );
@@ -199,7 +199,9 @@ const StepSettings = (
     };
 
     const handleSkip = () => {
-        let nextStep = steps.find( ( step ) => step?.id === currentStep?.next_step );
+        let nextStep = steps.find(
+            ( step ) => step?.id === currentStep?.next_step
+        );
         if ( ! nextStep ) {
             // Find the first incomplete step
             nextStep = steps.find( ( step ) => ! step?.is_completed );
@@ -211,7 +213,9 @@ const StepSettings = (
     };
 
     const handleBack = () => {
-        const previousStep = steps.find( ( step ) => step?.id === currentStep?.previous_step );
+        const previousStep = steps.find(
+            ( step ) => step?.id === currentStep?.previous_step
+        );
         setCurrentStep( previousStep );
     };
 
@@ -219,9 +223,9 @@ const StepSettings = (
         <>
             <div className="h-full px-28 py-16">
                 <main className="max-w-7xl mx-auto h-full">
-                    <div className="w-full">
-                        <CommonFormFields />
-                    </div>
+                    { /*<div className="w-full">*/ }
+                    { /*    <CommonFormFields />*/ }
+                    { /*</div>*/ }
                     <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
                         { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
@@ -233,7 +237,7 @@ const StepSettings = (
                             />
                         ) }
 
-                        <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+                        <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-12">
                             { tabs && '' !== selectedTab && (
                                 <Tab
                                     key="admin-settings-tab"
@@ -271,8 +275,14 @@ const StepSettings = (
                         >
                             { __( 'Skip', 'dokan-lite' ) }
                         </Button>
-                        <NextButton disabled={ isSaving } handleNext={ saveSettings } className={ `m-0` }>
-                            { isSaving ? __( 'Saving...', 'dokan-lite' ) : __( 'Next', 'dokan-lite' ) }
+                        <NextButton
+                            disabled={ isSaving }
+                            handleNext={ saveSettings }
+                            className={ `m-0` }
+                        >
+                            { isSaving
+                                ? __( 'Saving…', 'dokan-lite' )
+                                : __( 'Next', 'dokan-lite' ) }
                         </NextButton>
                     </div>
                 </main>

@@ -4,6 +4,8 @@ namespace WeDevs\Dokan\Admin\OnboardingSetup\Components;
 
 use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Checkbox;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\CheckboxGroup;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\CurrencyInput;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Number;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Password;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Radio;
@@ -11,6 +13,9 @@ use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\RecipientSelector;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Select;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Tel;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Text;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\RadioButton;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\ToggleSwitchField;
+
 
 /**
  * Settings element Field.
@@ -52,6 +57,10 @@ class Field extends SettingsElement {
 		'tel'      => Tel::class,
 		'password' => Password::class,
         'recipient_selector' => RecipientSelector::class,
+        'radio_button'   => RadioButton::class,
+        'toggle_switch'  => ToggleSwitchField::class,
+        'checkbox_group' => CheckboxGroup::class,
+        'currency_input' => CurrencyInput::class,
 	);
 
 	/**

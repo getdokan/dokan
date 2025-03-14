@@ -1,11 +1,33 @@
+import { useEffect, useState } from '@wordpress/element';
+
 const RadioButton = ( {
     title,
     description,
-    selectedValue = 'hide',
+    selectedValue,
     onChange,
+    name = 'radio_button',
+    default: defaultValue = 'hide',
 } ) => {
+    // Initialize state with selectedValue or defaultValue
+    const [ selected, setSelected ] = useState( selectedValue || defaultValue );
+
+    // Update local state when selectedValue prop changes
+    useEffect( () => {
+        if ( selectedValue !== undefined ) {
+            setSelected( selectedValue );
+        }
+    }, [ selectedValue ] );
+
+    // Handle selection change
+    const handleChange = ( value ) => {
+        setSelected( value );
+        if ( onChange ) {
+            onChange( value );
+        }
+    };
+
     return (
-        <div className="border bor-[#E9E9E9] flex justify-between items-center p-4 w-full">
+        <div className="border border-[#E9E9E9] flex justify-between items-center p-4 w-full rounded-md">
             <div className="">
                 <h2 className="text-base leading-6 font-semibold text-gray-900">
                     { title }
@@ -15,28 +37,35 @@ const RadioButton = ( {
             <div className="flex">
                 { /* Hide button */ }
                 <button
-                    className={ `px-6 py-2 text-sm font-semibold rounded-l-md border  ${
-                        selectedValue === 'hide'
+                    type="button"
+                    className={ `px-6 py-2 text-sm font-semibold rounded-l-md border ${
+                        selected === 'hide'
                             ? 'bg-[#7047EB] border-[#7047EB] text-white'
                             : 'bg-white text-gray-800 border-gray-200'
                     }` }
-                    onClick={ () => onChange( 'hide' ) }
+                    onClick={ () => handleChange( 'hide' ) }
+                    aria-pressed={ selected === 'hide' }
                 >
                     Hide
                 </button>
 
                 { /* Show button */ }
                 <button
-                    className={ `px-6 py-2 text-sm font-semibold rounded-r-md border  ${
-                        selectedValue === 'show'
+                    type="button"
+                    className={ `px-6 py-2 text-sm font-semibold rounded-r-md border ${
+                        selected === 'show'
                             ? 'bg-[#7047EB] border-[#7047EB] text-white'
                             : 'bg-white text-gray-800 border-gray-200'
                     }` }
-                    onClick={ () => onChange( 'show' ) }
+                    onClick={ () => handleChange( 'show' ) }
+                    aria-pressed={ selected === 'show' }
                 >
                     Show
                 </button>
             </div>
+
+            { /* Hidden input for form submission */ }
+            <input type="hidden" name={ name } value={ selected } />
         </div>
     );
 };
