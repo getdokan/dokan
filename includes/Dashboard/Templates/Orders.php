@@ -50,7 +50,19 @@ class Orders {
      * @return void
      */
     public function order_listing_status_filter() {
-        dokan_get_template_part( 'orders/orders-status-filter' );
+        $show_edit_url = false;
+        if ( isset( $_GET['order_id'] ) ) {
+            $order = wc_get_order( absint( wp_unslash( $_GET['order_id'] ) ) );
+            if ( $order instanceof \WC_Order ) {
+                $order_source_type = strtolower( $order->get_meta( '_wc_order_attribution_source_type', true ) );
+                $order_vendor_id   = absint( $order->get_meta( '_dokan_vendor_id', true ) );
+
+                // Check if the order is attributed to a vendor and the current user is the vendor
+                $show_edit_url = ( 'vendor' === $order_source_type ) && ( $order_vendor_id === dokan_get_current_user_id() ) && $order->is_editable();
+            }
+        }
+
+        dokan_get_template_part( 'orders/orders-status-filter', '', array( 'show_edit_url' => $show_edit_url ) );
     }
 
     /**
