@@ -2,7 +2,7 @@ import Text from './Text';
 import Select from './Select';
 import Password from './Password';
 import Tel from './Tel';
-import { SettingsElement } from '../../StepSettings';
+import { SettingsProps } from '../../StepSettings';
 import RecipientSelector from './RecipientSelector';
 import { useState } from '@wordpress/element';
 import RadioButton from './RadioButton';
@@ -10,7 +10,7 @@ import ToggleSwitchField from './ToggleSwitchField';
 import CurrencyInput from './CurrencyInput';
 import CheckboxGroup from './CheckboxGroup';
 
-const FieldParser = ( { element }: { element: SettingsElement } ) => {
+const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
     // TODO: add support for custom input fields and custom hook.
     const [ value, setValue ] = useState( element.value || element.default );
 
@@ -24,72 +24,35 @@ const FieldParser = ( { element }: { element: SettingsElement } ) => {
     };
     switch ( element.variant ) {
         case 'text':
-            return <Text key={ element.hook_key } element={ element } />;
+            return (
+                <Text
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                />
+            );
         case 'select':
-            return <Select key={ element.hook_key } element={ element } />;
+            return (
+                <Select
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                />
+            );
         case 'password':
-            return <Password key={ element.hook_key } element={ element } />;
+            return (
+                <Password
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                />
+            );
         case 'tel':
-            return <Tel key={ element.hook_key } element={ element } />;
-        case 'recipient_selector':
             return (
-                <RecipientSelector
-                    selectedValue={ value }
-                    onChange={ handleChange }
-                    title={ element.title }
-                    description={ element.description }
-                    options={ element.options }
-                    name={ element.id }
-                    default={ element.default }
-                />
-            );
-        case 'radio_button':
-            return (
-                <RadioButton
-                    title={ element.title }
-                    description={ element.description }
-                    selectedValue={ value }
-                    onChange={ handleChange }
-                    name={ element.id }
-                    default={ element.default }
-                />
-            );
-        case 'toggle_switch':
-            return (
-                <ToggleSwitchField
-                    enabled={ value }
-                    onChange={ handleChange }
-                    title={ element.title }
-                    description={ element.description }
-                    name={ element.id }
-                    default={ Boolean( element.default ) }
-                />
-            );
-        case 'checkbox_group':
-            return (
-                <CheckboxGroup
+                <Tel
                     key={ element.hook_key }
-                    title={ element.title }
-                    description={ element.description }
-                    options={ element.options || [] }
-                    defaultValue={ element.default || [] }
-                    name={ element.id }
-                    onChange={ handleChange }
-                />
-            );
-        case 'currency_input':
-            return (
-                <CurrencyInput
-                    key={ element.hook_key }
-                    title={ element.title }
-                    description={ element.description }
-                    name={ element.id }
-                    value={ value }
-                    onChange={ handleChange }
-                    currency={ element.currency || '$' }
-                    placeholder={
-                        String( element.placeholder ) || 'Enter amount'
-                    }
+                    element={ element }
+                    onValueChange={ onValueChange }
                 />
             );
         case 'checkbox':
@@ -108,7 +71,13 @@ const FieldParser = ( { element }: { element: SettingsElement } ) => {
         case 'url':
         case 'week':
         default:
-            return <Text key={ element.hook_key } element={ element } />;
+            return (
+                <Text
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                />
+            );
     }
 };
 

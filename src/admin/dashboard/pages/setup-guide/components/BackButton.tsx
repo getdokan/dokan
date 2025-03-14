@@ -1,5 +1,5 @@
 import { Button } from '@getdokan/dokan-ui';
-import BackIcon from '../icons/BackIcon';
+import BackIcon from '../../../icons/BackIcon';
 import { __ } from '@wordpress/i18n';
 
 const BackButton = (

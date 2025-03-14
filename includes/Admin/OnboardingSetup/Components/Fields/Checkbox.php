@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields;
 
+use WeDevs\Dokan\Abstracts\SettingsElement;
+
 /**
  * Checkbox Field.
  */
