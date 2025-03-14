@@ -2,12 +2,15 @@ import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
 import { useEffect, useState } from '@wordpress/element';
 
 const CheckboxGroup = ( {
-    options = [],
-    defaultValue = [],
-    name = 'checkboxGroup',
-    onChange = () => {},
-    title = 'Checkbox Group',
-    description = 'Select options from the list',
+    element: {
+        options = [],
+        defaultValue = [],
+        name = 'checkboxGroup',
+        onChange = () => {},
+        title = 'Checkbox Group',
+        description = 'Select options from the list',
+    },
+    onValueChange,
 } ) => {
     // State to track selected values
     const [ selectedValues, setSelectedValues ] = useState( defaultValue );

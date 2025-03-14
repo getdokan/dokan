@@ -4,24 +4,14 @@ import Password from './Password';
 import Tel from './Tel';
 import { SettingsProps } from '../../StepSettings';
 import RecipientSelector from './RecipientSelector';
-import { useState } from '@wordpress/element';
 import RadioButton from './RadioButton';
 import ToggleSwitchField from './ToggleSwitchField';
-import CurrencyInput from './CurrencyInput';
 import CheckboxGroup from './CheckboxGroup';
+import CurrencyInput from './CurrencyInput';
 
 const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
     // TODO: add support for custom input fields and custom hook.
-    const [ value, setValue ] = useState( element.value || element.default );
 
-    if ( ! element || ! element.type ) {
-        return null;
-    }
-
-    const handleChange = ( newValue ) => {
-        setValue( newValue );
-        // You might want to dispatch this change to your state management system
-    };
     switch ( element.variant ) {
         case 'text':
             return (
@@ -52,6 +42,46 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                 <Tel
                     key={ element.hook_key }
                     element={ element }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'recipient_selector':
+            return (
+                <RecipientSelector
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'radio_button':
+            return (
+                <RadioButton
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'toggle_switch':
+            return (
+                <ToggleSwitchField
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'checkbox_group':
+            return (
+                <CheckboxGroup
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'currency':
+            return (
+                <CurrencyInput
+                    element={ element }
+                    key={ element.hook_key }
                     onValueChange={ onValueChange }
                 />
             );

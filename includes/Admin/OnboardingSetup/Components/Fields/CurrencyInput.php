@@ -12,7 +12,7 @@ class CurrencyInput extends Text {
      *
      * @var string $input_type Input Type.
      */
-    protected $input_type = 'currency_input';
+    protected $input_type = 'currency';
 
     /**
      * Currency symbol.

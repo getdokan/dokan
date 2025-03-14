@@ -3,12 +3,14 @@ import { ToggleSwitch } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 
 const ToggleSwitchField = ( {
-    enabled,
-    onChange,
-    title,
-    description,
-    name = 'toggle_switch',
-    default: defaultValue = false,
+    element: {
+        enabled,
+        onChange,
+        title,
+        description,
+        name = 'toggle_switch',
+        default: defaultValue = false,
+    },
 } ) => {
     // Initialize state with enabled prop or defaultValue
     const [ isEnabled, setIsEnabled ] = useState(

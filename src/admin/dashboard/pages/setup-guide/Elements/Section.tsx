@@ -1,4 +1,4 @@
-import { SettingsElement, SettingsProps } from '../StepSettings';
+import { SettingsProps } from '../StepSettings';
 import SettingsParser from './SettingsParser';
 
 const Section = ( { element, onValueChange }: SettingsProps ): JSX.Element => {
@@ -20,22 +20,17 @@ const Section = ( { element, onValueChange }: SettingsProps ): JSX.Element => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-4 gap-6">
-                    { element.children.map( ( child ) => {
-                        return (
-                            <SettingsParser
-                                element={ child }
-                                key={
-                                    element.hook_key +
-                                    '-' +
-                                    child.id +
-                                    '-parser'
-                                }
-                                onValueChange={ onValueChange }
-                            />
-                        );
-                    } ) }
-                </div>
+                { element.children.map( ( child ) => {
+                    return (
+                        <SettingsParser
+                            element={ child }
+                            key={
+                                element.hook_key + '-' + child.id + '-parser'
+                            }
+                            onValueChange={ onValueChange }
+                        />
+                    );
+                } ) }
             </div>
         </section>
     );

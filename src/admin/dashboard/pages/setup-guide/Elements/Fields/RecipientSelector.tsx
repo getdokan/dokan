@@ -1,36 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from '@wordpress/element';
 import SelectorCard from './SelectorCard';
 import AdminIcon from '../../components/icons/AdminIcon';
 import VendorIcon from '../../components/icons/VendorIcon';
 
-/**
- * RecipientSelector Component
- *
- * A visual selector component that displays icon-based selection cards
- *
- * @param {Object}   props               - Component props
- * @param {string}   props.selectedValue - Currently selected value
- * @param {Function} props.onChange      - Change handler function
- * @param {string}   props.title         - Title of the selector
- * @param {string}   props.description   - Description text
- * @param {Array}    props.options       - Optional options array from backend
- * @param {string}   props.name          - Field name
- * @param {string}   props.default       - Default value
- * @return {JSX.Element} RecipientSelector component
- */
-const RecipientSelector = ( {
-    selectedValue,
-    onChange,
-    title,
-    description,
-    options = [
-        { value: 'admin', title: 'Admin' },
-        { value: 'vendor', title: 'Vendor' },
-    ],
-    name = 'recipient_selector',
-    default: defaultValue = 'admin',
-} ) => {
-    // Initialize state with selectedValue or defaultValue
+const RecipientSelector = ( { element, onValueChange } ) => {
+    const {
+        title,
+        description,
+        default: defaultValue,
+        options,
+        value: selectedValue,
+    } = element;
+
     const [ selected, setSelected ] = useState( selectedValue || defaultValue );
 
     // Update local state when selectedValue prop changes
@@ -43,8 +24,8 @@ const RecipientSelector = ( {
     // Handle selection change
     const handleChange = ( value ) => {
         setSelected( value );
-        if ( onChange ) {
-            onChange( value );
+        if ( onValueChange ) {
+            onValueChange( value );
         }
     };
 
@@ -72,20 +53,20 @@ const RecipientSelector = ( {
                 </p>
             </div>
             <div className="flex flex-wrap gap-4">
-                { options.map( ( option ) => (
+                { options?.map( ( option ) => (
                     <SelectorCard
                         key={ option.value }
                         value={ option.value }
                         title={ option.title }
                         selected={ selected === option.value }
                         onChange={ handleChange }
-                        icon={ renderIcon( option.value ) }
+                        icon={ renderIcon( option?.value ) }
                     />
                 ) ) }
             </div>
 
             { /* Hidden input for form submission */ }
-            <input type="hidden" name={ name } value={ selected } />
+            <input type="hidden" name={ element.id } value={ selected } />
         </div>
     );
 };

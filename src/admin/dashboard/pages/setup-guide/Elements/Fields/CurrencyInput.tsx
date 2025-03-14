@@ -1,26 +1,30 @@
 import { SimpleInput } from '@getdokan/dokan-ui';
+import { useState } from '@wordpress/element';
 
-const CurrencyInput = ( {
-    name = 'currency',
-    label = 'Currency',
-    placeholder = 'Enter amount',
-    type = 'text',
-    value,
-    onChange,
-    currency = '$',
-    className = '',
-    title = 'Currency',
-    description = 'Enter the currency for your store',
-} ) => {
-    // Handle the input change
-    const handleChange = ( e ) => {
-        if ( onChange ) {
-            // We can add more validation here if needed
-            // For example, only allowing numbers and decimal points
-            onChange( e.target.value );
-        }
+const CurrencyInput = ( { element, onValueChange } ) => {
+    const {
+        name = 'currency',
+        placeholder = 'Enter amount',
+        type = 'text',
+        onChange,
+        currency = '$',
+        className = '',
+        title = 'Currency',
+        description = 'Enter the currency for your store',
+    } = element;
+
+    const [ value, setValue ] = useState( element.value );
+
+    const handleValueChange = ( event ) => {
+        setValue( event.target.value );
+        onValueChange( {
+            ...element,
+            value: event.target.value,
+        } );
     };
-
+    if ( ! element.display ) {
+        return <></>;
+    }
     return (
         <div className="border bor-[#E9E9E9] flex justify-between items-center flex-wrap p-4 w-full">
             <div className="flex flex-col">
@@ -47,8 +51,8 @@ const CurrencyInput = ( {
                 }
                 required
                 value={ value }
-                onChange={ handleChange }
-                className={ `w-32 h-12 focus:outline-none ${ className }` }
+                onChange={ handleValueChange }
+                className={ `w-32 h-12 focus:outline-none` }
             />
         </div>
     );

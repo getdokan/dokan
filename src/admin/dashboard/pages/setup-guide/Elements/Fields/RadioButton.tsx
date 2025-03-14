@@ -1,16 +1,24 @@
 import { useEffect, useState } from '@wordpress/element';
 
-const RadioButton = ( {
-    title,
-    description,
-    selectedValue,
-    onChange,
-    name = 'radio_button',
-    default: defaultValue = 'hide',
-} ) => {
+const RadioButton = (
+    {
+        element: {
+            title,
+            description,
+            selectedValue,
+            name = 'radio_button',
+            default: defaultValue = 'hide',
+            value,
+        },
+    },
+    onValueChange
+) => {
     // Initialize state with selectedValue or defaultValue
     const [ selected, setSelected ] = useState( selectedValue || defaultValue );
 
+    if ( ! element.display ) {
+        return <></>;
+    }
     // Update local state when selectedValue prop changes
     useEffect( () => {
         if ( selectedValue !== undefined ) {
@@ -21,8 +29,8 @@ const RadioButton = ( {
     // Handle selection change
     const handleChange = ( value ) => {
         setSelected( value );
-        if ( onChange ) {
-            onChange( value );
+        if ( onValueChange ) {
+            onValueChange( value );
         }
     };
 
