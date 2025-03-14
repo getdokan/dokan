@@ -273,7 +273,7 @@ const DokanAI = () => {
             </div>
 
             <Modal
-                className="max-w-xl dokan-ai-modal dokan-layout rounded-lg"
+                className="max-w-2xl dokan-ai-modal dokan-layout rounded-lg"
                 isOpen={ isOpen }
                 onClose={ onClose }
                 showXButton={ false }
@@ -345,7 +345,7 @@ const DokanAI = () => {
                                     />
                                 </div>
                                 <div
-                                    className="mb-3 focus:outline-none h-48 border border-gray-300 rounded p-2.5 overflow-auto"
+                                    className="mb-3 focus:outline-none h-36 border border-gray-300 rounded p-2.5 overflow-auto"
                                     contentEditable={ true }
                                     onBlur={ ( e ) => {
                                         inputHandler(
