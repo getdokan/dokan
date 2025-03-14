@@ -106,8 +106,6 @@ class Dashboard implements Hookable {
      * @return void
      */
     public function render_dashboard_page(): void {
-        $settings = $this->settings();
-
         ob_start();
         echo '<div class="wrap"><div id="dokan-admin-dashboard" class="dokan-layout">' . esc_html__( 'Loading...', 'dokan-lite' ) . '</div></div>';
         echo ob_get_clean();
