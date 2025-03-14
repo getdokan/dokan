@@ -17,6 +17,9 @@ const Text = ( { element } ) => {
             >
                 { element.title }
             </label>
+            <p className="text-sm text-gray-500">
+                { element.description }
+            </p>
             <input
                 type="text"
                 onChange={ onValueChange }

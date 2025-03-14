@@ -54,34 +54,34 @@ class WithdrawStep extends AbstractStep {
                     ->set_title( __( 'Withdraw', 'dokan-lite' ) )
             )
             ->add(
-                ComponentFactory::sub_section( 'paypal-heading' )
-                    ->set_title( __( 'Paypal', 'dokan-lite' ) )
-                    ->set_description( __( 'Enable PayPal for your vendor as a withdraw method', 'dokan-lite' ) )
+                ComponentFactory::field( 'bank-transfer', 'toggle_switch' )
+                                ->set_title( __( 'Enable Bank Transfer', 'dokan-lite' ) )
+                                ->set_description( __( 'Allow vendors to withdraw their earnings via bank transfer', 'dokan-lite' ) )
             )
             ->add(
-                ComponentFactory::sub_section( 'bank-transfer-heading' )
+                ComponentFactory::field( 'bank-transfer-heading', 'toggle_switch' )
                     ->set_title( __( 'Bank Transfer', 'dokan-lite' ) )
                     ->set_description( __( 'Enable Bank Transfer for your vendor as a withdraw method', 'dokan-lite' ) )
             )
             ->add(
-                ComponentFactory::sub_section( 'skrill-heading' )
+                ComponentFactory::field( 'skrill-heading', 'toggle_switch' )
                     ->set_title( __( 'Skrill', 'dokan-lite' ) )
                     ->set_description( __( 'Enable Skrill for your vendor as a withdraw method', 'dokan-lite' ) )
             )
             ->add(
-                ComponentFactory::sub_section( 'minimum-withdraw-limits-heading' )
+                ComponentFactory::field( 'minimum-withdraw-limits-heading', 'currency_input' )
                     ->set_title( __( 'Minimum Withdraw Limits', 'dokan-lite' ) )
                     ->set_description( __( 'Set the minimum balance required before vendors can request withdrawals', 'dokan-lite' ) )
             )
             ->add(
-                ComponentFactory::sub_section( 'withdraw-order-status-heading' )
+                ComponentFactory::field( 'withdraw-order-status-heading', 'toggle_switch' )
                     ->set_title( __( 'Order Status for Withdraw', 'dokan-lite' ) )
                     ->set_description( __( 'Define which order status makes funds eligible for withdrawal', 'dokan-lite' ) )
             );
     }
 
 	public function settings(): array {
-		return [ 1, 2, 3 ];
+		return [];
 	}
 
     /**

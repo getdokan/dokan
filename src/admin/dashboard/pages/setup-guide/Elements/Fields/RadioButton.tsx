@@ -1,51 +1,73 @@
-import { useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 
-const RadioButton = ( { title, description } ) => {
-    const [ selected, setSelected ] = useState( 'show' ); // Default to 'show'
+const RadioButton = ( {
+    title,
+    description,
+    selectedValue,
+    onChange,
+    name = 'radio_button',
+    default: defaultValue = 'hide',
+} ) => {
+    // Initialize state with selectedValue or defaultValue
+    const [ selected, setSelected ] = useState( selectedValue || defaultValue );
+
+    // Update local state when selectedValue prop changes
+    useEffect( () => {
+        if ( selectedValue !== undefined ) {
+            setSelected( selectedValue );
+        }
+    }, [ selectedValue ] );
+
+    // Handle selection change
+    const handleChange = ( value ) => {
+        setSelected( value );
+        if ( onChange ) {
+            onChange( value );
+        }
+    };
 
     return (
-        <div className="bg-white border border-gray-200 rounded p-4 w-full flex justify-between items-center">
-            <div className="flex flex-col gap-1">
-                { /* Button Title */ }
-                <h4 className="text-sm font-medium text-gray-800">{ title }</h4>
-                { /* Button Description */ }
-                <p className="text-xs text-gray-500">{ description }</p>
+        <div className="border border-[#E9E9E9] flex justify-between items-center p-4 w-full rounded-md">
+            <div className="">
+                <h2 className="text-base leading-6 font-semibold text-gray-900">
+                    { title }
+                </h2>
+                <p className="mt-1.5 text-sm text-[#828282]">{ description }</p>
             </div>
-
-            { /* Radio Button Section */ }
             <div className="flex">
                 { /* Hide button */ }
                 <button
-                    className={ `px-6 py-2 text-sm font-medium rounded-l-md border ${
+                    type="button"
+                    className={ `px-6 py-2 text-sm font-semibold rounded-l-md border ${
                         selected === 'hide'
-                            ? 'bg-[#7047EB] text-white border-[#7047EB]'
-                            : 'bg-white text-[#25252D] border-gray-200'
+                            ? 'bg-[#7047EB] border-[#7047EB] text-white'
+                            : 'bg-white text-gray-800 border-gray-200'
                     }` }
-                    onClick={ () => setSelected( 'hide' ) }
+                    onClick={ () => handleChange( 'hide' ) }
+                    aria-pressed={ selected === 'hide' }
                 >
                     Hide
                 </button>
 
                 { /* Show button */ }
                 <button
-                    className={ `px-6 py-2 text-sm font-medium rounded-r-md border ${
+                    type="button"
+                    className={ `px-6 py-2 text-sm font-semibold rounded-r-md border ${
                         selected === 'show'
-                            ? 'bg-[#7047EB] text-white border-[#7047EB]'
-                            : 'bg-white text-[#25252D] border-gray-200'
+                            ? 'bg-[#7047EB] border-[#7047EB] text-white'
+                            : 'bg-white text-gray-800 border-gray-200'
                     }` }
-                    onClick={ () => setSelected( 'show' ) }
+                    onClick={ () => handleChange( 'show' ) }
+                    aria-pressed={ selected === 'show' }
                 >
                     Show
                 </button>
             </div>
+
+            { /* Hidden input for form submission */ }
+            <input type="hidden" name={ name } value={ selected } />
         </div>
     );
 };
 
 export default RadioButton;
-
-// Usage example:
-// <RadioButton
-//   title="Contact Form on Store Page"
-//   description="Display a contact form on vendor store pages for customer inquiries"
-// />

@@ -6,7 +6,10 @@ const Section = ( { element }: { element: SettingsElement } ): JSX.Element => {
         return <></>;
     }
     return (
-        <section aria-labelledby="settings-section-heading" key={ element.id }>
+        <section
+            aria-labelledby="settings-section-heading md:grid-col-12"
+            key={ element.id }
+        >
             <div className="bg-white sm:rounded-md">
                 <div className={ `mb-4` }>
                     <h2
@@ -20,21 +23,16 @@ const Section = ( { element }: { element: SettingsElement } ): JSX.Element => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-4 gap-6">
-                    { element.children.map( ( child ) => {
-                        return (
-                            <SettingsParser
-                                element={ child }
-                                key={
-                                    element.hook_key +
-                                    '-' +
-                                    child.id +
-                                    '-parser'
-                                }
-                            />
-                        );
-                    } ) }
-                </div>
+                { element.children.map( ( child ) => {
+                    return (
+                        <SettingsParser
+                            element={ child }
+                            key={
+                                element.hook_key + '-' + child.id + '-parser'
+                            }
+                        />
+                    );
+                } ) }
             </div>
         </section>
     );
