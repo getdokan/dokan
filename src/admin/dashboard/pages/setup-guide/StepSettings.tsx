@@ -83,21 +83,6 @@ const StepSettings = ( { step }: { step: Step } ) => {
     };
 
     /**
-     * Update settings state with the updated element.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param {SettingsElement} element Element to update.
-     */
-    const updateSettings = ( element: SettingsElement ) => {
-        const updatedSettings = allSettings.map( ( item ) =>
-            item.id === element.id ? element : item
-        );
-
-        setAllSettings( [ ...updatedSettings ] );
-    };
-
-    /**
      * Update settings value and apply dependencies.
      *
      * @since DOKAN_SINCE
@@ -227,6 +212,23 @@ const StepSettings = ( { step }: { step: Step } ) => {
 
     const saveSettings = () => {
         setIsSaving( true );
+        apiFetch< SettingsElement[] >( {
+            path: '/dokan/v1/admin/setup-guide/' + step.id,
+            method: 'POST',
+            data: allSettings,
+        } )
+            .then( ( response ) => {
+                setSettings( response );
+                setIsSaving( false );
+                setNeedSaving( false );
+
+                // TODO: go to next step if available
+            } )
+            .catch( ( err ) => {
+                console.error( err );
+                setIsSaving( false );
+                // TODO: show error message in the UI
+            } );
     };
 
     return (
