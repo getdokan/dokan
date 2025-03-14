@@ -1,11 +1,13 @@
 import { useEffect, useState } from '@wordpress/element';
-import { useDispatch, useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import Menu from './Elements/Menu';
 import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import { Step } from './index';
+import settingsDependencyParser from '../../utils/settingsDependencyParser';
+import settingsDependencyApplicator from '../../utils/settingsDependencyApplicator';
+import settingsElementFinderReplacer from '../../utils/settingsElementFinderReplacer';
 
 export type SettingsElementDependency = {
     key?: string;
@@ -41,10 +43,19 @@ export type SettingsElement = {
     dependencies?: Array< SettingsElementDependency >;
 };
 
+export interface SettingsProps {
+    element: SettingsElement;
+    onValueChange: ( element: SettingsElement ) => void;
+}
+
 const StepSettings = ( { step }: { step: Step } ) => {
     const [ allSettings, setAllSettings ] = useState< SettingsElement[] >( [] );
+    const [ dependencies, setDependencies ] = useState<
+        SettingsElementDependency[]
+    >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ isSaving, setIsSaving ] = useState< boolean >( false );
+    const [ needSaving, setNeedSaving ] = useState< boolean >( false );
 
     const [ pages, setPages ] = useState< SettingsElement[] >( [] );
     const [ selectedPage, setSelectedPage ] = useState< string >( '' );
@@ -52,6 +63,65 @@ const StepSettings = ( { step }: { step: Step } ) => {
     const [ tabs, setTabs ] = useState< SettingsElement[] >( [] );
     const [ selectedTab, setSelectedTab ] = useState< string >( '' );
     const [ elements, setElements ] = useState< SettingsElement[] >( [] );
+
+    /**
+     * Set settings and dependencies to the state after fetching from the API.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {SettingsElement[]} settings Settings array.
+     */
+    const setSettings = ( settings: SettingsElement[] ) => {
+        const extractedDependencies = settingsDependencyParser( settings );
+        const modifiedSettings = settingsDependencyApplicator(
+            [ ...settings ],
+            extractedDependencies
+        );
+
+        setDependencies( [ ...extractedDependencies ] );
+        setAllSettings( [ ...modifiedSettings ] );
+    };
+
+    /**
+     * Update settings state with the updated element.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {SettingsElement} element Element to update.
+     */
+    const updateSettings = ( element: SettingsElement ) => {
+        const updatedSettings = allSettings.map( ( item ) =>
+            item.id === element.id ? element : item
+        );
+
+        setAllSettings( [ ...updatedSettings ] );
+    };
+
+    /**
+     * Update settings value and apply dependencies.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {SettingsElement} element Element to update.
+     */
+    const updateSettingsValue = ( element: SettingsElement ) => {
+        const updatedSettings = settingsElementFinderReplacer(
+            [ ...allSettings ],
+            element
+        );
+        const updatedDependencies = settingsDependencyParser( [
+            ...updatedSettings,
+        ] );
+
+        const modifiedSettings = settingsDependencyApplicator(
+            [ ...updatedSettings ],
+            updatedDependencies
+        );
+
+        setDependencies( [ ...updatedDependencies ] );
+        setAllSettings( [ ...modifiedSettings ] );
+        setNeedSaving( true );
+    };
 
     useEffect( () => {
         if ( ! step ) {
@@ -64,7 +134,7 @@ const StepSettings = ( { step }: { step: Step } ) => {
             path: '/dokan/v1/admin/setup-guide/' + step.id,
         } )
             .then( ( data ) => {
-                setAllSettings( data );
+                setSettings( data );
                 setLoading( false );
             } )
             .catch( ( err ) => {
@@ -86,7 +156,7 @@ const StepSettings = ( { step }: { step: Step } ) => {
                 selectedPage === '' ? pages[ 0 ].id : selectedPage
             );
         }
-    }, [ pages, loading ] );
+    }, [ pages, loading, selectedPage ] );
 
     useEffect( () => {
         if ( loading ) {
@@ -110,7 +180,7 @@ const StepSettings = ( { step }: { step: Step } ) => {
         if ( tabs?.length > 0 ) {
             setSelectedTab( selectedTab === '' ? tabs[ 0 ].id : selectedTab );
         }
-    }, [ tabs, loading ] );
+    }, [ tabs, loading, selectedTab ] );
 
     useEffect( () => {
         if ( loading ) {
@@ -193,6 +263,7 @@ const StepSettings = ( { step }: { step: Step } ) => {
                                             '-settings-parser'
                                         }
                                         element={ element }
+                                        onValueChange={ updateSettingsValue }
                                     />
                                 );
                             } ) }

@@ -1,11 +1,10 @@
-import { SettingsElement } from '../StepSettings';
+import { SettingsProps } from '../StepSettings';
 import SettingsParser from './SettingsParser';
 
 const FieldGroup = ( {
     element,
-}: {
-    element: SettingsElement;
-} ): JSX.Element => {
+    onValueChange,
+}: SettingsProps ): JSX.Element => {
     if ( ! element.display ) {
         return <></>;
     }
@@ -31,6 +30,7 @@ const FieldGroup = ( {
                             key={
                                 element.hook_key + '-' + child.id + '-parser'
                             }
+                            onValueChange={ onValueChange }
                         />
                     );
                 } ) }

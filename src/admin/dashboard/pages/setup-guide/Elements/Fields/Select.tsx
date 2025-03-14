@@ -1,12 +1,12 @@
 import { Listbox, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { useDispatch } from '@wordpress/data';
+import { SettingsProps } from '../../StepSettings';
 function classNames( ...classes ) {
     return classes.filter( Boolean ).join( ' ' );
 }
 
-const Select = ( { element } ) => {
+const Select = ( { element, onValueChange }: SettingsProps ) => {
     const [ value, setValue ] = useState( element.value );
     const [ selectedOption, setSelectedOption ] = useState(
         ( element.options.find( ( option ) => option?.value === value ) ||
@@ -20,7 +20,11 @@ const Select = ( { element } ) => {
 
     useEffect( () => {
         setValue( selectedOption.value );
-    }, [ selectedOption ] );
+        onValueChange( {
+            ...element,
+            value: selectedOption.value,
+        } );
+    }, [ element, onValueChange, selectedOption ] );
 
     if ( ! element.display ) {
         return <></>;

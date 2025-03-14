@@ -1,11 +1,15 @@
-import { useDispatch, useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
+import { SettingsProps } from '../../StepSettings';
 
-const Tel = ( { element } ) => {
+const Tel = ( { element, onValueChange }: SettingsProps ) => {
     const [ value, setValue ] = useState( element.value );
 
-    const onValueChange = ( event ) => {
+    const handleValueChange = ( event ) => {
         setValue( event.target.value );
+        onValueChange( {
+            ...element,
+            value: event.target.value,
+        } );
     };
     if ( ! element.display ) {
         return <></>;
@@ -20,7 +24,7 @@ const Tel = ( { element } ) => {
             </label>
             <input
                 type="tel"
-                onChange={ onValueChange }
+                onChange={ handleValueChange }
                 pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
                 name={ element.hook_key }
                 id={ element.hook_key }
