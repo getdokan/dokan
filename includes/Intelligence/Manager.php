@@ -19,7 +19,7 @@ class Manager {
     public function get_engines(): array {
         return apply_filters(
             'dokan_ai_supported_engines', [
-				'chatgpt' => __( 'ChatGPT', 'dokan-lite' ),
+				'chatgpt' => __( 'Open AI', 'dokan-lite' ),
 				'gemini'  => __( 'Gemini', 'dokan-lite' ),
 			]
         );

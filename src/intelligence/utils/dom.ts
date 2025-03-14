@@ -6,7 +6,7 @@ declare global {
 
 export const updateWordPressField = (
     content: string,
-    field: any
+    field: string
 ): boolean => {
     try {
         let success = false;
@@ -63,16 +63,13 @@ export const updateWordPressField = (
         };
 
         // Get the target element
-        const targetElement = findTargetElement( field.id );
+        const targetElement = findTargetElement( field );
 
         if ( targetElement ) {
             // Check if it's a TinyMCE editor
-            const isTinyMCE =
-                targetElement.closest( '.wp-editor-wrap' ) !== null;
-
-            if ( isTinyMCE ) {
+            if ( targetElement.closest( '.wp-editor-wrap' ) !== null ) {
                 // Try TinyMCE first
-                success = updateTinyMCEEditor( field.id );
+                success = updateTinyMCEEditor( field );
 
                 // Fallback to regular textarea if TinyMCE fails
                 if (

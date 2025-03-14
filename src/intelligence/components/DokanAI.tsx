@@ -1,31 +1,84 @@
-import { useState, RawHTML } from '@wordpress/element';
-import { Modal } from '@getdokan/dokan-ui';
+import { useState } from '@wordpress/element';
+import { Modal, SimpleInput, TextArea, Button } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
+import ResponseHistory from './ResponseHistory';
+import { useMutationObserver } from '../../hooks';
 
-const DokanAI = ( { field } ) => {
+const DokanAI = () => {
     const [ isOpen, setIsOpen ] = useState( false );
     const [ prompt, setPrompt ] = useState( '' );
     const [ error, setError ] = useState( '' );
+    const [ regenerateModal, setRegenerateModal ] = useState( false );
+    const [ responseHistory, setResponseHistory ] = useState( {
+        post_title: [],
+        post_excerpt: [],
+        post_content: [],
+    } );
 
-    const [ response, setResponse ] = useState( '' );
-    const [ responseHistory, setResponseHistory ] = useState< string[] >( [] );
-    const [ currentIndex, setCurrentIndex ] = useState( 0 );
+    const [ historyIndex, setHistoryIndex ] = useState( {
+        post_title: 0,
+        post_excerpt: 0,
+        post_content: 0,
+    } );
+
     const [ isLoading, setIsLoading ] = useState( false );
+
+    const resetIndex = () => {
+        setHistoryIndex( {
+            post_title: 0,
+            post_excerpt: 0,
+            post_content: 0,
+        } );
+    };
 
     const handleLabelClick = ( event: any ) => {
         event.preventDefault();
         event.stopPropagation();
         setIsOpen( true );
+
+        // if title exists
+        const title = document.querySelector(
+            '#post_title'
+        ) as HTMLInputElement;
+        const postExcerpt = document.querySelector(
+            '#post_excerpt'
+        ) as HTMLInputElement;
+        const postContent = document.querySelector(
+            '#post_content'
+        ) as HTMLInputElement;
+
+        const previousData = {
+            post_title: [],
+            post_excerpt: [],
+            post_content: [],
+        } as any;
+        if ( title.value ) {
+            previousData.post_title = [ title.value ];
+            setPrompt( title.value );
+        }
+        if ( postExcerpt.value ) {
+            previousData.post_excerpt = [ postExcerpt.value ];
+        }
+        if ( postContent.value ) {
+            previousData.post_content = [ postContent.value ];
+        }
+        setResponseHistory( previousData );
+        resetIndex();
     };
 
     const onClose = () => {
         setIsOpen( false );
-        setResponse( '' );
         setPrompt( '' );
         setError( '' );
-        setResponseHistory( [] );
+        setRegenerateModal( false );
+        setResponseHistory( {
+            post_title: [],
+            post_excerpt: [],
+            post_content: [],
+        } );
+        resetIndex();
     };
 
     const generateContent = async () => {
@@ -36,12 +89,15 @@ const DokanAI = ( { field } ) => {
         }
         setIsLoading( true );
         try {
-            const content = await generateAiContent( prompt, field );
-            setResponse( content );
-            setResponseHistory( ( prevState ) => {
-                return [ ...prevState, content ];
+            const content = await generateAiContent( prompt, {
+                json_format: 'true',
             } );
-            setCurrentIndex( responseHistory.length );
+            setResponseHistory( {
+                post_title: [ content.title ],
+                post_excerpt: [ content.short_description ],
+                post_content: [ content.long_description ],
+            } );
+            resetIndex();
         } catch ( err ) {
             setError( err.message );
         } finally {
@@ -49,28 +105,152 @@ const DokanAI = ( { field } ) => {
         }
     };
 
-    const handlePrevious = () => {
-        if ( currentIndex > 0 ) {
-            setResponse( responseHistory[ currentIndex - 1 ] );
-            setCurrentIndex( currentIndex - 1 );
+    const refineContent = async ( field: string ) => {
+        setError( '' );
+        let refineField = responseHistory[ field ][ historyIndex[ field ] ];
+        if ( ! refineField.trim() ) {
+            setError( __( 'Please enter a prompt.', 'dokan' ) );
+            return;
+        }
+
+        if ( field !== 'post_title' ) {
+            refineField = `${ refineField } \n
+            product title is ${
+                responseHistory.post_title[ historyIndex.post_title ]
+            }`;
+        }
+
+        setIsLoading( true );
+        try {
+            const content = await generateAiContent( refineField, {
+                field,
+            } );
+            setResponseHistory( ( prevState ) => {
+                return {
+                    ...prevState,
+                    [ field ]: [ content, ...prevState[ field ] ],
+                };
+            } );
+            setHistoryIndex( ( prevState ) => {
+                return {
+                    ...prevState,
+                    [ field ]: 0,
+                };
+            } );
+        } catch ( err ) {
+            setError( err.message );
+        } finally {
+            setIsLoading( false );
         }
     };
 
-    const handleNext = () => {
-        if ( currentIndex < responseHistory.length - 1 ) {
-            setResponse( responseHistory[ currentIndex + 1 ] );
-            setCurrentIndex( currentIndex + 1 );
+    const inputHandler = ( value: any, field: string ) => {
+        setResponseHistory( ( prevState ) => {
+            return {
+                ...prevState,
+                [ field ]: responseHistory[ field ].map(
+                    ( item: string, index: number ) => {
+                        if ( index === historyIndex[ field ] ) {
+                            return value;
+                        }
+                        return item;
+                    }
+                ),
+            };
+        } );
+    };
+
+    const prevHandler = ( field: string ) => {
+        if ( historyIndex[ field ] === 0 ) {
+            return;
+        }
+        setHistoryIndex( ( prevState ) => {
+            return {
+                ...prevState,
+                [ field ]: prevState[ field ] - 1,
+            };
+        } );
+    };
+
+    const nextHandler = ( field: string ) => {
+        if ( historyIndex[ field ] < responseHistory[ field ].length - 1 ) {
+            setHistoryIndex( ( prevState ) => {
+                return {
+                    ...prevState,
+                    [ field ]: prevState[ field ] + 1,
+                };
+            } );
         }
     };
 
-    const insertHandler = () => {
-        updateWordPressField( response, field );
+    const getHistoryLabel = ( field: string ) => {
+        const totalHistory = responseHistory[ field ].length;
+        if ( totalHistory === 0 ) {
+            return '';
+        }
+        return `${ historyIndex[ field ] + 1 }/${ totalHistory }`;
+    };
+
+    const getInputValue = ( field: string ) => {
+        return responseHistory[ field ][ historyIndex[ field ] ];
+    };
+
+    const insertHandler = ( force = false ) => {
+        // get title from post_title field
+        const existingTitle = document.querySelector(
+            '#post_title'
+        ) as HTMLInputElement;
+
+        if ( existingTitle.value && ! force ) {
+            setIsOpen( false );
+            setRegenerateModal( true );
+            return;
+        }
+
+        if ( ! responseHistory.post_title.length ) {
+            setError( __( 'Invalid input data', 'dokan' ) );
+            return;
+        }
+
+        updateWordPressField(
+            responseHistory.post_title[ historyIndex.post_title ],
+            'post_title'
+        );
+        updateWordPressField(
+            responseHistory.post_excerpt[ historyIndex.post_excerpt ],
+            'post_excerpt'
+        );
+        updateWordPressField(
+            responseHistory.post_content[ historyIndex.post_content ],
+            'post_content'
+        );
         onClose();
     };
 
+    useMutationObserver(
+        document.body,
+        ( mutations ) => {
+            for ( const mutation of mutations ) {
+                if ( mutation.type !== 'childList' ) {
+                    continue;
+                }
+                // @ts-ignore
+                for ( const node of mutation.addedNodes ) {
+                    if ( node.id !== 'headlessui-portal-root' ) {
+                        continue;
+                    }
+
+                    node.classList.add( 'dokan-layout' );
+                    node.style.display = 'block';
+                }
+            }
+        },
+        { childList: true }
+    );
+
     return (
         <>
-            <div className="text-dokan-primary">
+            <div className="text-dokan-primary cursor-pointer text-primary-500">
                 <svg
                     role={ 'button' }
                     onClick={ handleLabelClick }
@@ -93,129 +273,260 @@ const DokanAI = ( { field } ) => {
             </div>
 
             <Modal
-                className="max-w-xl dokan-ai-modal"
+                className="max-w-2xl dokan-ai-modal dokan-layout rounded-lg"
                 isOpen={ isOpen }
                 onClose={ onClose }
+                showXButton={ false }
             >
-                <Modal.Title className="border border-b border-gray-200 border-solid">
-                    { field.title }
+                <Modal.Title className="border-b">
+                    { __( 'Craft your product information', 'dokan-lite' ) }
                 </Modal.Title>
-                <Modal.Content className="min-h-48">
+
+                <Modal.Content>
                     { error && (
-                        <div className="mb-2 bg-red-100 text-red-700 p-3 rounded-lg text-sm border border-red-300">
+                        <div
+                            className="mb-4 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500"
+                            role="alert"
+                        >
+                            <span className="font-bold text-wrap">Error</span>{ ' ' }
                             { error }
                         </div>
                     ) }
-                    { response ? (
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center">
-                                <div className="text-sm font-medium text-gray-700">
-                                    { __( 'Result:', 'dokan' ) }
-                                    { ` ${ currentIndex + 1 } / ${
-                                        responseHistory.length
-                                    }` }
+                    { responseHistory.post_title.length ? (
+                        <div>
+                            <div className="mb-2 flex items-center justify-between">
+                                <div className="font-semibold text-gray-800">
+                                    { __( 'Product Title', 'dokan-lite' ) }
                                 </div>
-                                { responseHistory.length > 1 && (
-                                    <div className="flex">
-                                        <svg
-                                            onClick={ handlePrevious }
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth={ 1.5 }
-                                            stroke="currentColor"
-                                            className={ `size-6 cursor-pointer ${
-                                                currentIndex === 0
-                                                    ? 'text-gray-300'
-                                                    : 'text-gray-700'
-                                            }` }
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="M15.75 19.5 8.25 12l7.5-7.5"
-                                            />
-                                        </svg>
-                                        <svg
-                                            onClick={ handleNext }
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth={ 1.5 }
-                                            stroke="currentColor"
-                                            className={ `size-6 cursor-pointer ${
-                                                currentIndex ===
-                                                responseHistory.length - 1
-                                                    ? 'text-gray-300'
-                                                    : 'text-gray-700'
-                                            }` }
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="m8.25 4.5 7.5 7.5-7.5 7.5"
-                                            />
-                                        </svg>
+                                <ResponseHistory
+                                    history={ getHistoryLabel( 'post_title' ) }
+                                    prev={ () => prevHandler( 'post_title' ) }
+                                    next={ () => nextHandler( 'post_title' ) }
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <SimpleInput
+                                    className="bg-white focus:outline-none"
+                                    onChange={ ( e: any ) => {
+                                        inputHandler(
+                                            e.target.value,
+                                            'post_title'
+                                        );
+                                    } }
+                                    value={ getInputValue( 'post_title' ) }
+                                />
+                            </div>
+                            <Button
+                                color="secondary"
+                                onClick={ () => refineContent( 'post_title' ) }
+                                disabled={ isLoading }
+                            >
+                                { __( 'Refine', 'dokan-lite' ) }
+                            </Button>
+                            { /* Short Description Section */ }
+                            <div className="my-4">
+                                <div className="mb-2 flex items-center justify-between">
+                                    <div className="font-semibold text-gray-800">
+                                        { __(
+                                            'Short Description',
+                                            'dokan-lite'
+                                        ) }
                                     </div>
+                                    <ResponseHistory
+                                        history={ getHistoryLabel(
+                                            'post_excerpt'
+                                        ) }
+                                        prev={ () =>
+                                            prevHandler( 'post_excerpt' )
+                                        }
+                                        next={ () =>
+                                            nextHandler( 'post_excerpt' )
+                                        }
+                                    />
+                                </div>
+                                <div
+                                    className="mb-3 focus:outline-none h-36 border border-gray-300 rounded p-2.5 overflow-auto"
+                                    contentEditable={ true }
+                                    onBlur={ ( e ) => {
+                                        inputHandler(
+                                            e.target.innerHTML,
+                                            'post_excerpt'
+                                        );
+                                    } }
+                                    dangerouslySetInnerHTML={ {
+                                        __html: getInputValue( 'post_excerpt' ),
+                                    } }
+                                ></div>
+                                <Button
+                                    color="secondary"
+                                    onClick={ () =>
+                                        refineContent( 'post_excerpt' )
+                                    }
+                                    disabled={ isLoading }
+                                >
+                                    { __( 'Refine', 'dokan-lite' ) }
+                                </Button>
+                            </div>
+                            { /* Long Description Section */ }
+                            <div className="mt-4">
+                                <div className="mb-2 flex items-center justify-between">
+                                    <div className="font-semibold text-gray-800">
+                                        { __(
+                                            'Long Description',
+                                            'dokan-lite'
+                                        ) }
+                                    </div>
+                                    <ResponseHistory
+                                        history={ getHistoryLabel(
+                                            'post_content'
+                                        ) }
+                                        prev={ () =>
+                                            prevHandler( 'post_content' )
+                                        }
+                                        next={ () =>
+                                            nextHandler( 'post_content' )
+                                        }
+                                    />
+                                </div>
+                                <div
+                                    className="mb-3 h-48 focus:outline-none border border-gray-300 rounded p-2.5 overflow-auto"
+                                    contentEditable={ true }
+                                    onBlur={ ( e ) => {
+                                        inputHandler(
+                                            e.target.innerHTML,
+                                            'post_content'
+                                        );
+                                    } }
+                                    dangerouslySetInnerHTML={ {
+                                        __html: getInputValue( 'post_content' ),
+                                    } }
+                                ></div>
+                                <Button
+                                    color="secondary"
+                                    onClick={ () =>
+                                        refineContent( 'post_content' )
+                                    }
+                                    disabled={ isLoading }
+                                >
+                                    { __( 'Refine', 'dokan-lite' ) }
+                                </Button>
+                            </div>
+
+                            <p className="text-sm mt-4 mb-3">
+                                { __(
+                                    '** If you think the outcome doesn’t match your choice then you can regenerate all again',
+                                    'dokan-lite'
+                                ) }
+                            </p>
+
+                            <Button
+                                color="secondary"
+                                disabled={ isLoading }
+                                onClick={ generateContent }
+                            >
+                                { __( 'Refine All', 'dokan-lite' ) }
+                            </Button>
+                        </div>
+                    ) : (
+                        <div>
+                            <div className="font-semibold mb-2">
+                                { __(
+                                    'Generate product information',
+                                    'dokan-lite'
                                 ) }
                             </div>
-                            <div className="rounded border border-solid border-gray-200 bg-gray-50 p-4 max-h-48 overflow-y-auto text-gray-700 text-base shadow-inner">
-                                <RawHTML>{ response }</RawHTML>
-                            </div>
+                            <p className="text-sm mb-3">
+                                { __(
+                                    'You can generate your product title, short description, long description all at once with this prompt. Type your prompt below',
+                                    'dokan-lite'
+                                ) }
+                            </p>
+                            <TextArea
+                                disabled={ isLoading }
+                                className="min-h-48 bg-white focus:outline-none"
+                                input={ {
+                                    id: 'dokan-ai-prompt',
+                                    value: prompt,
+                                    onChange: ( e: any ) =>
+                                        setPrompt( e.target.value ),
+                                    placeholder: __(
+                                        'Enter prompt',
+                                        'dokan-lite'
+                                    ),
+                                } }
+                            />
                         </div>
-                    ) : (
-                        <textarea
-                            className="w-full p-4 border border-solid border-gray-200 rounded shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-all placeholder-gray-400 text-base resize-none"
-                            value={ prompt }
-                            onChange={ ( e ) => setPrompt( e.target.value ) }
-                            disabled={ isLoading }
-                            placeholder={ __(
-                                'Write a tagline or keywords here…',
-                                'dokan'
-                            ) }
-                            rows={ 5 }
-                        />
                     ) }
                 </Modal.Content>
-                <Modal.Footer className="border border-t border-gray-200 border-solid">
-                    { response ? (
-                        <div className="flex gap-4 justify-end">
-                            <button
-                                className="dokan-btn dokan-btn-default !px-5"
-                                type="button"
+                <Modal.Footer className="border-t">
+                    <div className="flex gap-4 justify-end">
+                        <Button
+                            color="secondary"
+                            disabled={ isLoading }
+                            onClick={ onClose }
+                        >
+                            { __( 'Cancel', 'dokan-lite' ) }
+                        </Button>
+                        { responseHistory.post_title.length ? (
+                            <Button
+                                color="primary"
+                                disabled={ isLoading }
+                                onClick={ () => insertHandler() }
+                            >
+                                { __( 'Insert', 'dokan-lite' ) }
+                            </Button>
+                        ) : (
+                            <Button
+                                color="primary"
                                 disabled={ isLoading }
                                 onClick={ generateContent }
                             >
                                 { isLoading
-                                    ? __( 'Generating…', 'dokan' )
-                                    : __( 'Refine', 'dokan' ) }
-                            </button>
-                            <button
-                                className="dokan-btn dokan-btn-theme !px-5"
-                                type="button"
-                                disabled={ isLoading }
-                                onClick={ insertHandler }
-                            >
-                                { __( 'Insert', 'dokan' ) }
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="flex gap-4 justify-end">
-                            <button
-                                className="dokan-btn dokan-btn-theme !px-5"
-                                disabled={ isLoading }
-                                onClick={ generateContent }
-                            >
-                                { isLoading
-                                    ? __( 'Generating…', 'dokan' )
-                                    : __( 'Generate Text', 'dokan' ) }
-                            </button>
-                        </div>
-                    ) }
+                                    ? __( 'Generating…', 'dokan-lite' )
+                                    : __( 'Generate', 'dokan-lite' ) }
+                            </Button>
+                        ) }
+                    </div>
                 </Modal.Footer>
+            </Modal>
+            <Modal
+                className="max-w-md dokan-ai-modal dokan-layout"
+                isOpen={ regenerateModal }
+                showXButton={ false }
+                onClose={ () => setRegenerateModal( false ) }
+            >
+                <Modal.Content>
+                    <div className="text-center p-5">
+                        <div className="text-xl font-semibold mb-4">
+                            { __(
+                                'Insert Generated Information?',
+                                'dokan-lite'
+                            ) }
+                        </div>
+                        <p>
+                            { __(
+                                'Are you sure you want to insert the generated information? If you insert then your current product information will be updated with the generated content.',
+                                'dokan-lite'
+                            ) }
+                        </p>
+                        <div className="mt-4 flex gap-4 justify-center">
+                            <Button
+                                color="secondary"
+                                onClick={ () => setRegenerateModal( false ) }
+                            >
+                                { __( 'Cancel', 'dokan-lite' ) }
+                            </Button>
+                            <Button
+                                color="primary"
+                                onClick={ () => insertHandler( true ) }
+                            >
+                                { __( 'Yes, Insert', 'dokan-lite' ) }
+                            </Button>
+                        </div>
+                    </div>
+                </Modal.Content>
             </Modal>
         </>
     );
 };
-
 export default DokanAI;

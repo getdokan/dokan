@@ -18,6 +18,29 @@ class GeminiResponseService extends BaseAIService {
     }
 
     protected function get_payload( string $prompt, array $args = [] ): array {
+        if ( isset( $args['json_format'] ) ) {
+            $pre_prompt = 'You are an AI assistant specializing in WooCommerce and e-commerce product descriptions.
+                    Your task is to generate SEO-optimized content that helps increase sales and search rankings.
+
+                    Always return the response in strict JSON format without any markdown or special characters.
+
+                    Format the response as follows:
+                    {
+                      "title": "<Compelling product title optimized for SEO>",
+                      "short_description": "<A concise, keyword-rich summary (minimum 50-100 words) that attracts buyers and improves search engine visibility>",
+                      "long_description": "<A detailed, engaging product long description including features, benefits, use cases, and persuasive copywriting techniques>"
+                    }
+
+                    Guidelines:
+                    - Using <p></p> tags for paragraphs instead of newlines.
+                    - Do not use markdown formatting (** or `#` or `>` characters).
+                    - Do not include backticks (` or ```) or any non-JSON syntax.
+                    - Do not add extra commentary or explanations—only return the JSON object.
+                    - Ensure readability with short sentences, bullet points, and clear formatting.
+                    - Highlight key features (if need), unique selling points, and benefits.';
+
+            $prompt = $pre_prompt . PHP_EOL . $prompt;
+        }
         return [
             'contents' => [
                 [
@@ -35,7 +58,7 @@ class GeminiResponseService extends BaseAIService {
             'generationConfig' => [
                 'stopSequences' => [ 'Title' ],
                 'temperature' => 0.7,
-                'maxOutputTokens' => (int) dokan_get_option( 'dokan_ai_max_tokens_for_marketplace', 'dokan_ai', '250' ),
+                // 'maxOutputTokens' => (int) dokan_get_option( 'dokan_ai_max_tokens_for_marketplace', 'dokan_ai', '1000' ),
                 'topP' => 0.8,
                 'topK' => 10,
             ],
@@ -58,9 +81,16 @@ class GeminiResponseService extends BaseAIService {
             return $response;
         }
 
+        $response = $response['candidates'][0]['content']['parts'][0]['text'];
+
+        // if response type of string
+        if ( gettype( $response ) === 'string' ) {
+            $response = preg_replace( '/^"(.*)"$/', '$1', $response );
+        }
+
         return apply_filters(
             'dokan_ai_gemini_response_json', [
-				'response' => $response['candidates'][0]['content']['parts'][0]['text'] ?? '',
+				'response' => isset( $args['json_format'] ) ? json_decode( $response ) : $response,
 				'prompt' => $prompt,
 			]
         );

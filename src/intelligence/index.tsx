@@ -1,55 +1,14 @@
-import './styles/modal.css';
-import '@getdokan/dokan-ui/dist/dokan-ui.css';
+import './tailwind.scss';
 import DokanAI from './components/DokanAI';
 import { createRoot } from '@wordpress/element';
+import domReady from '@wordpress/dom-ready';
 
-const setElementPosition = (
-    targetField: HTMLElement,
-    container: HTMLElement,
-    field: any
-) => {
-    if ( ! container ) {
-        return;
+domReady( () => {
+    const container = document.getElementById( 'ai-prompt-app' );
+    if ( container ) {
+        createRoot( container ).render( <DokanAI /> );
     }
-    const parent = targetField.parentElement; // Nearest positioned parent
-    const titleRect = targetField.getBoundingClientRect();
-    const parentRect = parent.getBoundingClientRect();
-
-    let position = titleRect.top - parentRect.top;
-
-    if ( targetField.tagName === 'INPUT' ) {
-        position += titleRect.height / 4;
-    } else if ( field.type === 'editor' ) {
-        position = 10;
-    } else {
-        position = titleRect.height - 5;
-    }
-
-    container.style.top = `${ position }px`;
-};
-const initializeDokanAI = () => {
-    // @ts-ignore
-    const fields = window.dokanAiSettings.fields;
-
-    if ( fields && Array.isArray( fields ) && fields.length > 0 ) {
-        fields.forEach( ( field ) => {
-            const targetField = document.getElementById( field.id );
-            if ( targetField ) {
-                const container = document.createElement( 'div' );
-                container.id = `dokan-ai-root-${ field.id }`;
-                container.className = 'dokan-ai-prompt-icon';
-                targetField.parentNode.appendChild( container );
-                // @ts-ignore
-                targetField.parentNode.style.cssText = 'position:relative;';
-                // render the DokanAI component
-                createRoot( container ).render( <DokanAI field={ field } /> );
-                setElementPosition( targetField, container, field );
-            }
-        } );
-    }
-};
-
-document.addEventListener( 'DOMContentLoaded', initializeDokanAI );
+} );
 
 /**
  * Todo: We need to check/observe the dynamic element e.i. when react mount/unmount element which is in AI supported IDs.
