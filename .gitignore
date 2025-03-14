@@ -3,7 +3,6 @@ build
 npm-debug.log
 .DS_Store
 includes/.DS_Store
-.DS_Store
 .idea
 /includes/.DS_Store
 plugin-deploy.sh
@@ -19,17 +18,8 @@ phpcs-report.txt
 .phpunit.result.cache
 
 #unwanted webpack files
-assets/js/admin.js
-assets/js/dokan-admin-product-style.js
-assets/js/dokan-product-category-ui.js
-assets/js/dokan-promo-notice.js.LICENSE.txt
-assets/js/global-admin.js
-assets/js/plugin.js
-assets/js/reverse-withdrawal-style.js
-assets/js/rtl.js
-assets/js/setup-no-wc-style.js
-assets/js/setup.js
-assets/js/style.js
-assets/js/vue-admin.js.LICENSE.txt
-assets/js/vue-bootstrap.js.LICENSE.txt
-assets/js/vue-frontend.js.LICENSE.txt
+/assets/js/
+/assets/css/
+!/assets/css/vue-vendor.css
+!/assets/css/vue-frontend.css
+!/assets/css/wp-version-before-5-3.css

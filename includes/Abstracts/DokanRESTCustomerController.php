@@ -2,30 +2,15 @@
 
 namespace WeDevs\Dokan\Abstracts;
 
+use WeDevs\Dokan\REST\DokanBaseCustomerController;
+
 /**
  * Customer REST Controller for Dokan
  *
  * @since 3.14.4
+ * @deprecated 3.14.11 Use \WeDevs\Dokan\REST\DokanBaseCustomerController instead.
  *
  * @package dokan
  */
-abstract class DokanRESTCustomerController extends DokanRESTBaseController {
-
-    /**
-     * Endpoint base.
-     *
-     * @var string
-     */
-    protected $rest_base = 'customer';
-
-    /**
-     * Check if user has customer permission.
-     *
-     * @since 3.14.4
-     *
-     * @return bool
-     */
-    public function check_permission() {
-        return is_user_logged_in();
-    }
+abstract class DokanRESTCustomerController extends DokanBaseCustomerController {
 }
