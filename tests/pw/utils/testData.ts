@@ -2841,10 +2841,10 @@ export const data = {
 
         // debugInfo
         debugInfo: {
-            WP_DEBUG: true,
-            SCRIPT_DEBUG: true,
-            WP_DEBUG_LOG: true,
-            WP_DEBUG_DISPLAY: true,
+            WP_DEBUG: false,
+            SCRIPT_DEBUG: false,
+            WP_DEBUG_LOG: false,
+            WP_DEBUG_DISPLAY: false,
         },
 
         // site info
