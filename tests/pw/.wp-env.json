@@ -8,10 +8,10 @@
             "plugins": ["WP-API/Basic-Auth", "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip", "../../"],
             "themes": ["https://downloads.wordpress.org/theme/storefront.latest-stable.zip"],
             "config": {
-                "WP_DEBUG": "true",
-                "SCRIPT_DEBUG": "true",
-                "WP_DEBUG_LOG": "true",
-                "WP_DEBUG_DISPLAY": "true"
+                "WP_DEBUG": "false",
+                "SCRIPT_DEBUG": "false",
+                "WP_DEBUG_LOG": "false",
+                "WP_DEBUG_DISPLAY": "false"
             },
             "mappings": {
                 ".htaccess": ".htaccess",
