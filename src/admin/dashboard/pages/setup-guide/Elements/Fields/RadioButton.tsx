@@ -16,9 +16,6 @@ const RadioButton = (
     // Initialize state with selectedValue or defaultValue
     const [ selected, setSelected ] = useState( selectedValue || defaultValue );
 
-    if ( ! element.display ) {
-        return <></>;
-    }
     // Update local state when selectedValue prop changes
     useEffect( () => {
         if ( selectedValue !== undefined ) {
@@ -29,9 +26,6 @@ const RadioButton = (
     // Handle selection change
     const handleChange = ( value ) => {
         setSelected( value );
-        if ( onValueChange ) {
-            onValueChange( value );
-        }
     };
 
     return (

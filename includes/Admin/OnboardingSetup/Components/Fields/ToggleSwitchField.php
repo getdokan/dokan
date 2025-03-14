@@ -75,11 +75,11 @@ class ToggleSwitchField extends Radio {
     /**
      * Set default value.
      *
-     * @param bool $default Default value.
+     * @param string $default Default value.
      *
      * @return ToggleSwitchField
      */
-    public function set_default( bool $default ): ToggleSwitchField {
+    public function set_default( $default ): ToggleSwitchField {
         $this->default = $default;
 
         return $this;

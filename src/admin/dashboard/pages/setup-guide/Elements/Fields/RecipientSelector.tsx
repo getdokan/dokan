@@ -24,9 +24,6 @@ const RecipientSelector = ( { element, onValueChange } ) => {
     // Handle selection change
     const handleChange = ( value ) => {
         setSelected( value );
-        if ( onValueChange ) {
-            onValueChange( value );
-        }
     };
 
     // Render the appropriate icon based on value and selection state

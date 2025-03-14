@@ -71,16 +71,16 @@ class BasicStep extends AbstractStep {
                                ->set_default( 'admin' )
                     )
                     ->add(
-                        Factory::field( 'can-update-order-status', 'currency_input' )
+                        Factory::field( 'can-update-order-status', 'toggle_switch' )
                                ->set_title( __( 'Vendors can change order status', 'dokan-lite' ) )
                                ->set_description( __( 'Allow vendors to update order statuses (processing, completed, etc.) for their products', 'dokan-lite' ) )
-                               ->set_default( true ) )
+                               ->set_default( true )
+                    )
                     ->add(
-                        Factory::field( 'can-selling-directly', 'toggle_switch' )
+                        Factory::field( 'can-selling-directly', 'radio_button' )
                                ->set_title( __( 'New Vendor Selling Directly', 'dokan-lite' ) )
                                ->set_description( __( 'Automatically enable selling capabilities for newly registered vendors', 'dokan-lite' ) )
                                ->set_default( false )
-                               ->set_label( __( 'Enable selling for new vendors', 'dokan-lite' ) )
                     )
                     ->add(
                         Factory::field( 'admin-commission-withdraw', 'toggle_switch' )
