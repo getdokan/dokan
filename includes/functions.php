@@ -2,7 +2,6 @@
 
 use WeDevs\Dokan\Cache;
 use WeDevs\Dokan\Utilities\OrderUtil;
-use Automattic\WooCommerce\Internal\Admin\Analytics;
 
 /**
  * Dokan Admin menu position

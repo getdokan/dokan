@@ -28,11 +28,7 @@ export default [
 		orders_count: 54,
 		name: 'awesome shirt',
 		_links: {
-			product: [
-				{
-					href: 'https://example.com/wp-json/wc-analytics/products/20',
-				},
-			],
+			product: [],
 		},
 	},
 	{
@@ -42,11 +38,7 @@ export default [
 		orders_count: 41,
 		name: 'awesome pants',
 		_links: {
-			product: [
-				{
-					href: 'https://example.com/wp-json/wc-analytics/products/22',
-				},
-			],
+			product: [],
 		},
 	},
 	{
@@ -56,11 +48,7 @@ export default [
 		orders_count: 28,
 		name: 'awesome hat',
 		_links: {
-			product: [
-				{
-					href: 'https://example.com/wp-json/wc-analytics/products/23',
-				},
-			],
+			product: [],
 		},
 	},
 	{
@@ -70,11 +58,7 @@ export default [
 		orders_count: 14,
 		name: 'awesome sticker',
 		_links: {
-			product: [
-				{
-					href: 'https://example.com/wp-json/wc-analytics/products/24',
-				},
-			],
+			product: [],
 		},
 	},
 	{
@@ -84,11 +68,7 @@ export default [
 		orders_count: 1,
 		name: 'awesome button',
 		_links: {
-			product: [
-				{
-					href: 'https://example.com/wp-json/wc-analytics/products/25',
-				},
-			],
+			product: [],
 		},
 	},
 ];
