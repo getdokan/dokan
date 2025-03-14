@@ -229,10 +229,10 @@ const StepSettings = (
         setSelectedTab( tab );
     };
 
-    const saveSettings = () => {
+    const saveSettingsAndHandleNext = () => {
         setIsSaving( true );
         apiFetch< SettingsElement[] >( {
-            path: '/dokan/v1/admin/setup-guide/' + step.id,
+            path: '/dokan/v1/admin/setup-guide/' + currentStep.id,
             method: 'POST',
             data: allSettings,
         } )
@@ -241,7 +241,7 @@ const StepSettings = (
                 setIsSaving( false );
                 setNeedSaving( false );
 
-                // TODO: go to next step if available
+                handleNext();
             } )
             .catch( ( err ) => {
                 console.error( err );
@@ -250,8 +250,6 @@ const StepSettings = (
             } );
     };
     const handleNext = () => {
-        setIsSaving( true );
-
         let nextStep = steps.find( ( step ) => step.id === currentStep?.next_step );
         if ( ! nextStep ) {
             nextStep = steps.find( ( step ) => ! step?.is_completed );
@@ -268,8 +266,6 @@ const StepSettings = (
             updateStep( updatedSteps );
             setCurrentStep( nextStep );
         }
-
-        setIsSaving( false );
     };
 
     const handleSkip = () => {
@@ -342,7 +338,7 @@ const StepSettings = (
                             { __( 'Skip', 'dokan-lite' ) }
                         </Button>
                         {/*<NextButton disabled={ isSaving } handleNext={ saveSettings } className={ `m-0` }>*/}
-                        <NextButton disabled={ isSaving } handleNext={ handleNext } className={ `m-0` }>
+                        <NextButton disabled={ isSaving } handleNext={ saveSettingsAndHandleNext } className={ `m-0` }>
                             { isSaving ? __( 'Saving...', 'dokan-lite' ) : __( 'Next', 'dokan-lite' ) }
                         </NextButton>
                     </div>

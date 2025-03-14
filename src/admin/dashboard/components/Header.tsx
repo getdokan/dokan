@@ -52,7 +52,7 @@ const Header = () => {
                 </button>
 
                 {/*<div className="hidden group-hover:block absolute top-full right-0 mt-3 z-50 bg-white rounded-md border border-gray-200 shadow-lg w-64 py-4 px-5 transition-all">*/}
-                {/*{ showDropdown && (*/}
+                { showDropdown && (
                     <div className="absolute top-full right-0 mt-3 z-50 bg-white rounded-md border border-gray-200 shadow-lg w-64 py-4 px-5 transition-all">
                         {/* Arrow indicator */}
                         <div className="absolute -top-2 right-3 w-4 h-4 bg-white transform rotate-45 border-t border-l border-gray-200"></div>
@@ -79,7 +79,7 @@ const Header = () => {
                             ) ) }
                         </div>
                     </div>
-                {/*) }*/}
+                ) }
             </div>
         </div>
     );
