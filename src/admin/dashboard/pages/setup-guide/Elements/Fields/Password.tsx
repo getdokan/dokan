@@ -1,10 +1,15 @@
 import { useState } from '@wordpress/element';
+import { SettingsProps } from '../../StepSettings';
 
-const Password = ( { element } ) => {
+const Password = ( { element, onValueChange }: SettingsProps ) => {
     const [ value, setValue ] = useState( element.value );
 
-    const onValueChange = ( event ) => {
+    const handleValueChange = ( event ) => {
         setValue( event.target.value );
+        onValueChange( {
+            ...element,
+            value: event.target.value,
+        } );
     };
     if ( ! element.display ) {
         return <></>;
@@ -19,7 +24,7 @@ const Password = ( { element } ) => {
             </label>
             <input
                 type="password"
-                onChange={ onValueChange }
+                onChange={ handleValueChange }
                 name={ element.hook_key }
                 id={ element.hook_key }
                 placeholder={ element?.placeholder }

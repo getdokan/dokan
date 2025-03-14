@@ -1,7 +1,7 @@
-import { SettingsElement } from '../StepSettings';
+import { SettingsElement, SettingsProps } from '../StepSettings';
 import SettingsParser from './SettingsParser';
 
-const Section = ( { element }: { element: SettingsElement } ): JSX.Element => {
+const Section = ( { element, onValueChange }: SettingsProps ): JSX.Element => {
     if ( ! element.display ) {
         return <></>;
     }
@@ -31,6 +31,7 @@ const Section = ( { element }: { element: SettingsElement } ): JSX.Element => {
                                     child.id +
                                     '-parser'
                                 }
+                                onValueChange={ onValueChange }
                             />
                         );
                     } ) }

@@ -5,6 +5,9 @@ import Menu from './Elements/Menu';
 import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import { Step } from './index';
+import settingsDependencyParser from '../../utils/settingsDependencyParser';
+import settingsDependencyApplicator from '../../utils/settingsDependencyApplicator';
+import settingsElementFinderReplacer from '../../utils/settingsElementFinderReplacer';
 import NextButton from './components/NextButton';
 import BackButton from './components/BackButton';
 import { Button } from "@getdokan/dokan-ui";
@@ -43,6 +46,11 @@ export type SettingsElement = {
     dependencies?: Array< SettingsElementDependency >;
 };
 
+export interface SettingsProps {
+    element: SettingsElement;
+    onValueChange: ( element: SettingsElement ) => void;
+}
+
 const StepSettings = (
     {
         steps,
@@ -57,8 +65,12 @@ const StepSettings = (
     }
 ) => {
     const [ allSettings, setAllSettings ] = useState< SettingsElement[] >( [] );
+    const [ dependencies, setDependencies ] = useState<
+        SettingsElementDependency[]
+    >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ isSaving, setIsSaving ] = useState< boolean >( false );
+    const [ needSaving, setNeedSaving ] = useState< boolean >( false );
 
     const [ pages, setPages ] = useState< SettingsElement[] >( [] );
     const [ selectedPage, setSelectedPage ] = useState< string >( '' );
@@ -66,6 +78,50 @@ const StepSettings = (
     const [ tabs, setTabs ] = useState< SettingsElement[] >( [] );
     const [ selectedTab, setSelectedTab ] = useState< string >( '' );
     const [ elements, setElements ] = useState< SettingsElement[] >( [] );
+
+    /**
+     * Set settings and dependencies to the state after fetching from the API.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {SettingsElement[]} settings Settings array.
+     */
+    const setSettings = ( settings: SettingsElement[] ) => {
+        const extractedDependencies = settingsDependencyParser( settings );
+        const modifiedSettings = settingsDependencyApplicator(
+            [ ...settings ],
+            extractedDependencies
+        );
+
+        setDependencies( [ ...extractedDependencies ] );
+        setAllSettings( [ ...modifiedSettings ] );
+    };
+
+    /**
+     * Update settings value and apply dependencies.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {SettingsElement} element Element to update.
+     */
+    const updateSettingsValue = ( element: SettingsElement ) => {
+        const updatedSettings = settingsElementFinderReplacer(
+            [ ...allSettings ],
+            element
+        );
+        const updatedDependencies = settingsDependencyParser( [
+            ...updatedSettings,
+        ] );
+
+        const modifiedSettings = settingsDependencyApplicator(
+            [ ...updatedSettings ],
+            updatedDependencies
+        );
+
+        setDependencies( [ ...updatedDependencies ] );
+        setAllSettings( [ ...modifiedSettings ] );
+        setNeedSaving( true );
+    };
 
     useEffect( () => {
         if ( ! currentStep?.id ) {
@@ -78,7 +134,7 @@ const StepSettings = (
             path: '/dokan/v1/admin/setup-guide/' + currentStep.id,
         } )
             .then( ( data ) => {
-                setAllSettings( data );
+                setSettings( data );
                 setLoading( false );
             } )
             .catch( ( err ) => {
@@ -100,7 +156,7 @@ const StepSettings = (
                 selectedPage === '' ? pages[ 0 ].id : selectedPage
             );
         }
-    }, [ pages, loading ] );
+    }, [ pages, loading, selectedPage ] );
 
     useEffect( () => {
         if ( loading ) {
@@ -124,7 +180,7 @@ const StepSettings = (
         if ( tabs?.length > 0 ) {
             setSelectedTab( selectedTab === '' ? tabs[ 0 ].id : selectedTab );
         }
-    }, [ tabs, loading ] );
+    }, [ tabs, loading, selectedTab ] );
 
     useEffect( () => {
         if ( loading ) {
@@ -173,10 +229,26 @@ const StepSettings = (
         setSelectedTab( tab );
     };
 
-    // const saveSettings = () => {
-    //     setIsSaving( true );
-    // };
+    const saveSettings = () => {
+        setIsSaving( true );
+        apiFetch< SettingsElement[] >( {
+            path: '/dokan/v1/admin/setup-guide/' + step.id,
+            method: 'POST',
+            data: allSettings,
+        } )
+            .then( ( response ) => {
+                setSettings( response );
+                setIsSaving( false );
+                setNeedSaving( false );
 
+                // TODO: go to next step if available
+            } )
+            .catch( ( err ) => {
+                console.error( err );
+                setIsSaving( false );
+                // TODO: show error message in the UI
+            } );
+    };
     const handleNext = () => {
         setIsSaving( true );
 
@@ -215,7 +287,6 @@ const StepSettings = (
         const previousStep = steps.find( ( step ) => step?.id === currentStep?.previous_step );
         setCurrentStep( previousStep );
     };
-
     return (
         <>
             <div className="h-full px-28 py-16">
@@ -249,7 +320,8 @@ const StepSettings = (
                                             element.hook_key +
                                             '-settings-parser'
                                         }
-                                        element={element}
+                                        element={ element }
+                                        onValueChange={ updateSettingsValue }
                                     />
                                 );
                             })}
