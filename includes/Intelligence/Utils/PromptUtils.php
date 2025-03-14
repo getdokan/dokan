@@ -29,7 +29,7 @@ class PromptUtils {
         $personalized_prompt = self::get_personalized_prompt( $id );
 
         if ( $personalized_prompt ) {
-            $prompt = $personalized_prompt . ' ' . $prompt;
+            $prompt = $personalized_prompt . ' ' . $prompt . ' and output as same input format';
         }
 
         return apply_filters( 'dokan_ai_get_prompt', $prompt, $personalized_prompt );

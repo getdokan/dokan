@@ -25,10 +25,47 @@ const DokanAI = () => {
 
     const [ isLoading, setIsLoading ] = useState( false );
 
+    const resetIndex = () => {
+        setHistoryIndex( {
+            post_title: 0,
+            post_excerpt: 0,
+            post_content: 0,
+        } );
+    };
+
     const handleLabelClick = ( event: any ) => {
         event.preventDefault();
         event.stopPropagation();
         setIsOpen( true );
+
+        // if title exists
+        const title = document.querySelector(
+            '#post_title'
+        ) as HTMLInputElement;
+        const postExcerpt = document.querySelector(
+            '#post_excerpt'
+        ) as HTMLInputElement;
+        const postContent = document.querySelector(
+            '#post_content'
+        ) as HTMLInputElement;
+
+        const previousData = {
+            post_title: [],
+            post_excerpt: [],
+            post_content: [],
+        } as any;
+        if ( title.value ) {
+            previousData.post_title = [ title.value ];
+            setPrompt( title.value );
+        }
+        if ( postExcerpt.value ) {
+            previousData.post_excerpt = [ postExcerpt.value ];
+        }
+        if ( postContent.value ) {
+            previousData.post_content = [ postContent.value ];
+        }
+        setResponseHistory( previousData );
+        resetIndex();
     };
 
     const onClose = () => {
@@ -41,11 +78,7 @@ const DokanAI = () => {
             post_excerpt: [],
             post_content: [],
         } );
-        setHistoryIndex( {
-            post_title: 0,
-            post_excerpt: 0,
-            post_content: 0,
-        } );
+        resetIndex();
     };
 
     const generateContent = async () => {
@@ -64,11 +97,7 @@ const DokanAI = () => {
                 post_excerpt: [ content.short_description ],
                 post_content: [ content.long_description ],
             } );
-            setHistoryIndex( {
-                post_title: 0,
-                post_excerpt: 0,
-                post_content: 0,
-            } );
+            resetIndex();
         } catch ( err ) {
             setError( err.message );
         } finally {
@@ -78,11 +107,19 @@ const DokanAI = () => {
 
     const refineContent = async ( field: string ) => {
         setError( '' );
-        const refineField = responseHistory[ field ][ historyIndex[ field ] ];
+        let refineField = responseHistory[ field ][ historyIndex[ field ] ];
         if ( ! refineField.trim() ) {
             setError( __( 'Please enter a prompt.', 'dokan' ) );
             return;
         }
+
+        if ( field !== 'post_title' ) {
+            refineField = `${ refineField } \n
+            product title is ${
+                responseHistory.post_title[ historyIndex.post_title ]
+            }`;
+        }
+
         setIsLoading( true );
         try {
             const content = await generateAiContent( refineField, {
@@ -223,12 +260,7 @@ const DokanAI = () => {
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                 >
-                    <rect
-                        width="40"
-                        height="40"
-                        rx="5"
-                        fill="var(--colors-primary-500, currentColor)"
-                    />
+                    <rect width="40" height="40" rx="5" fill="currentColor" />
                     <path
                         d="M18.0064 11.0266C18.2625 9.98897 19.7376 9.98897 19.9938 11.0266V11.0266C21.0872 15.4557 24.5455 18.9139 28.9747 20.0073V20.0073C30.0123 20.2634 30.0123 21.7386 28.9747 21.9947V21.9947C24.5455 23.0881 21.0872 26.5463 19.9938 30.9754V30.9754C19.7376 32.0131 18.2625 32.0131 18.0064 30.9754V30.9754C16.9129 26.5463 13.4546 23.0881 9.02549 21.9947V21.9947C7.98784 21.7386 7.98784 20.2634 9.02549 20.0073V20.0073C13.4546 18.9139 16.9129 15.4557 18.0064 11.0266V11.0266Z"
                         fill="white"
@@ -274,7 +306,7 @@ const DokanAI = () => {
                             </div>
                             <div className="mb-3">
                                 <SimpleInput
-                                    className="bg-white"
+                                    className="bg-white focus:outline-none"
                                     onChange={ ( e: any ) => {
                                         inputHandler(
                                             e.target.value,
@@ -288,7 +320,6 @@ const DokanAI = () => {
                                 color="secondary"
                                 onClick={ () => refineContent( 'post_title' ) }
                                 disabled={ isLoading }
-                                className="dokan-btn dokan-btn-default"
                             >
                                 { __( 'Refine', 'dokan-lite' ) }
                             </Button>
@@ -314,7 +345,7 @@ const DokanAI = () => {
                                     />
                                 </div>
                                 <div
-                                    className="mb-3 h-48 border border-solid border-gray-300 rounded p-2.5 overflow-auto"
+                                    className="mb-3 focus:outline-none h-48 border border-gray-300 rounded p-2.5 overflow-auto"
                                     contentEditable={ true }
                                     onBlur={ ( e ) => {
                                         inputHandler(
@@ -332,7 +363,6 @@ const DokanAI = () => {
                                         refineContent( 'post_excerpt' )
                                     }
                                     disabled={ isLoading }
-                                    className="dokan-btn dokan-btn-default"
                                 >
                                     { __( 'Refine', 'dokan-lite' ) }
                                 </Button>
@@ -359,7 +389,7 @@ const DokanAI = () => {
                                     />
                                 </div>
                                 <div
-                                    className="mb-3 h-48 border border-solid border-gray-300 rounded p-2.5 overflow-auto"
+                                    className="mb-3 h-48 focus:outline-none border border-gray-300 rounded p-2.5 overflow-auto"
                                     contentEditable={ true }
                                     onBlur={ ( e ) => {
                                         inputHandler(
@@ -377,7 +407,6 @@ const DokanAI = () => {
                                         refineContent( 'post_content' )
                                     }
                                     disabled={ isLoading }
-                                    className="dokan-btn dokan-btn-default"
                                 >
                                     { __( 'Refine', 'dokan-lite' ) }
                                 </Button>
@@ -392,7 +421,6 @@ const DokanAI = () => {
 
                             <Button
                                 color="secondary"
-                                className="dokan-btn dokan-btn-default"
                                 disabled={ isLoading }
                                 onClick={ generateContent }
                             >
@@ -415,7 +443,7 @@ const DokanAI = () => {
                             </p>
                             <TextArea
                                 disabled={ isLoading }
-                                className="min-h-48 bg-white"
+                                className="min-h-48 bg-white focus:outline-none"
                                 input={ {
                                     id: 'dokan-ai-prompt',
                                     value: prompt,
@@ -433,7 +461,6 @@ const DokanAI = () => {
                 <Modal.Footer className="border-t">
                     <div className="flex gap-4 justify-end">
                         <Button
-                            className="dokan-btn dokan-btn-default"
                             color="secondary"
                             disabled={ isLoading }
                             onClick={ onClose }
@@ -443,7 +470,6 @@ const DokanAI = () => {
                         { responseHistory.post_title.length ? (
                             <Button
                                 color="primary"
-                                className="dokan-btn dokan-btn-theme"
                                 disabled={ isLoading }
                                 onClick={ () => insertHandler() }
                             >
@@ -452,7 +478,6 @@ const DokanAI = () => {
                         ) : (
                             <Button
                                 color="primary"
-                                className="dokan-btn dokan-btn-theme"
                                 disabled={ isLoading }
                                 onClick={ generateContent }
                             >
@@ -487,14 +512,12 @@ const DokanAI = () => {
                         <div className="mt-4 flex gap-4 justify-center">
                             <Button
                                 color="secondary"
-                                className="dokan-btn dokan-btn-default"
                                 onClick={ () => setRegenerateModal( false ) }
                             >
                                 { __( 'Cancel', 'dokan-lite' ) }
                             </Button>
                             <Button
                                 color="primary"
-                                className="dokan-btn dokan-btn-theme"
                                 onClick={ () => insertHandler( true ) }
                             >
                                 { __( 'Yes, Insert', 'dokan-lite' ) }
