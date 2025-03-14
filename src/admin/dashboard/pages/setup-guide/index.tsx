@@ -3,7 +3,7 @@ import getSettings from '../../settings/getSettings';
 import { Button } from '@getdokan/dokan-ui';
 import StepSettings from './StepSettings';
 import {__, sprintf} from '@wordpress/i18n';
-import HomeIcon from './icons/HomeIcon';
+import HomeIcon from '../../icons/HomeIcon';
 
 export type Step = {
     title: string;
@@ -23,19 +23,11 @@ const SetupGuide = ( props ) => {
         setSteps( allSteps );
     }, [] );
 
-    useEffect(() => {
-        setCurrentStep( steps.find( ( step ) => ! step.is_completed ) );
-    }, [ steps ] );
-
     const isAllStepsCompleted = steps.every( ( step ) => step.is_completed );
-
-    // const currentStep = steps.find( ( step ) => ! step.is_completed );
-
-    console.log( isAllStepsCompleted, currentStep );
 
     return (
         <div className="grid grid-cols-12 gap-6">
-            <div className="flex flex-col col-span-3 space-y-4 rounded-lg pl-10 pt-8 bg-white shadow">
+            <div className="flex flex-col col-span-3 space-y-4 rounded-lg pl-12 pt-10 bg-white shadow">
                 <h3 className="text-2xl font-bold leading-6 pb-10">
                     { __( 'Setup Guide', 'dokan-lite' ) }
                 </h3>
@@ -93,7 +85,7 @@ const SetupGuide = ( props ) => {
                         </div>
                         <Button
                             link={ true }
-                            href={ dokanAdminDashboardSettings?.dashboard_url }
+                            href={ dokanAdminDashboardSettings?.header_info?.dashboard_url }
                             className={ `bg-[#7047EB] text-white text-base font-medium py-2.5 px-5 flex items-center rounded-md m-0` }
                         >
                             { __( 'Visit Dokan Dashboard', 'dokan-lite' ) }

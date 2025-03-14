@@ -153,6 +153,10 @@ const StepSettings = (
         }
     }, [ allSettings, pages, selectedPage, tabs, selectedTab, loading ] );
 
+    useEffect(() => {
+        setCurrentStep( steps.find( ( step ) => ! step.is_completed ) );
+    }, [] );
+
     const onMenuClick = ( page: string ) => {
         if ( ! page ) {
             return;
@@ -173,12 +177,11 @@ const StepSettings = (
     //     setIsSaving( true );
     // };
 
-    const saveSettings = () => {
+    const handleNext = () => {
         setIsSaving( true );
 
         let nextStep = steps.find( ( step ) => step.id === currentStep?.next_step );
         if ( ! nextStep ) {
-            // Find the first incomplete step
             nextStep = steps.find( ( step ) => ! step?.is_completed );
         }
 
@@ -200,7 +203,6 @@ const StepSettings = (
     const handleSkip = () => {
         let nextStep = steps.find( ( step ) => step?.id === currentStep?.next_step );
         if ( ! nextStep ) {
-            // Find the first incomplete step
             nextStep = steps.find( ( step ) => ! step?.is_completed );
         }
 
@@ -267,7 +269,8 @@ const StepSettings = (
                         >
                             { __( 'Skip', 'dokan-lite' ) }
                         </Button>
-                        <NextButton disabled={ isSaving } handleNext={ saveSettings } className={ `m-0` }>
+                        {/*<NextButton disabled={ isSaving } handleNext={ saveSettings } className={ `m-0` }>*/}
+                        <NextButton disabled={ isSaving } handleNext={ handleNext } className={ `m-0` }>
                             { isSaving ? __( 'Saving...', 'dokan-lite' ) : __( 'Next', 'dokan-lite' ) }
                         </NextButton>
                     </div>
