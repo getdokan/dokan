@@ -1,37 +1,32 @@
-import { useEffect, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import { ToggleSwitch } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 
-const ToggleSwitchField = ( {
-    element: {
+const ToggleSwitchField = ( { element, onValueChange } ) => {
+    const {
         enabled,
         onChange,
         title,
         description,
         name = 'toggle_switch',
         default: defaultValue = false,
-    },
-} ) => {
+        value = false,
+    } = element;
+    // Handle toggle change
+    const handleChange = ( checked ) => {
+        setIsEnabled( checked );
+
+        console.log( 'Selected value:', checked );
+        onValueChange( {
+            ...element,
+            value: checked,
+        } );
+    };
+
     // Initialize state with enabled prop or defaultValue
     const [ isEnabled, setIsEnabled ] = useState(
         typeof enabled !== 'undefined' ? enabled : defaultValue
     );
-
-    // Update local state when enabled prop changes
-    useEffect( () => {
-        if ( typeof enabled !== 'undefined' ) {
-            setIsEnabled( enabled );
-        }
-    }, [ enabled ] );
-
-    // Handle toggle change
-    const handleChange = ( checked ) => {
-        setIsEnabled( checked );
-        if ( onChange ) {
-            onChange( checked );
-        }
-    };
-
     return (
         <div className="border border-[#E9E9E9] flex justify-between items-center p-4 w-full rounded-md">
             <div className="flex flex-col">

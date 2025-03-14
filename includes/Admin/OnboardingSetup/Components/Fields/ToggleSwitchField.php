@@ -93,7 +93,6 @@ class ToggleSwitchField extends Radio {
     public function populate(): array {
         $data            = parent::populate();
         $data['default'] = $this->get_default();
-        $data['label']   = $this->get_label();
         $data['options'] = $this->get_options();
 
         return $data;
@@ -108,25 +107,4 @@ class ToggleSwitchField extends Radio {
         return (bool) $this->default;
     }
 
-    /**
-     * Get switch label.
-     *
-     * @return string
-     */
-    public function get_label(): string {
-        return $this->label;
-    }
-
-    /**
-     * Set switch label.
-     *
-     * @param string $label Switch label.
-     *
-     * @return ToggleSwitchField
-     */
-    public function set_label( string $label ): ToggleSwitchField {
-        $this->label = $label;
-
-        return $this;
-    }
 }

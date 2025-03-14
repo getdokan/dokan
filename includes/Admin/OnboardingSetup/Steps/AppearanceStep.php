@@ -18,7 +18,7 @@ class AppearanceStep extends AbstractStep {
      *
      * @var int The step priority.
      */
-    protected int $priority = 40;
+    protected int $priority = 0;
 
     /**
      * The storage key.
@@ -53,26 +53,9 @@ class AppearanceStep extends AbstractStep {
                     ->set_title( __( 'Appearance', 'dokan-lite' ) )
             )
             ->add(
-                ComponentFactory::sub_section( 'contact-form-heading' )
-                    ->set_title( __( 'Contact Form on Store Page', 'dokan-lite' ) )
-                    ->set_description( __( 'Display a contact form on vendor store pages for customer inquiries', 'dokan-lite' ) )
-            )
-            ->add(
-                ComponentFactory::sub_section( 'store-sidebar-heading' )
-                    ->set_title( __( 'Store Sidebar From Theme', 'dokan-lite' ) )
-                    ->set_description( __( 'Show/hide the sidebar on vendor store pages', 'dokan-lite' ) )
-            )
-            ->add(
-                ComponentFactory::sub_section( 'email-address-heading' )
-                    ->set_title( __( 'Email Address', 'dokan-lite' ) )
-            )
-            ->add(
-                ComponentFactory::sub_section( 'Phone Number-heading' )
-                    ->set_title( __( 'Phone Number', 'dokan-lite' ) )
-            )
-            ->add(
-                ComponentFactory::sub_section( 'store-address-heading' )
+                ComponentFactory::field( 'store-address-heading', 'radio_button' )
                     ->set_title( __( 'Store Address', 'dokan-lite' ) )
+                                ->set_description( __( 'Display the store address on vendor store pages', 'dokan-lite' ) )
             );
     }
 

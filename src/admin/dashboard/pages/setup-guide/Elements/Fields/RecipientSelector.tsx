@@ -1,4 +1,4 @@
-import { useEffect, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import SelectorCard from './SelectorCard';
 import AdminIcon from '../../components/icons/AdminIcon';
 import VendorIcon from '../../components/icons/VendorIcon';
@@ -14,16 +14,14 @@ const RecipientSelector = ( { element, onValueChange } ) => {
 
     const [ selected, setSelected ] = useState( selectedValue || defaultValue );
 
-    // Update local state when selectedValue prop changes
-    useEffect( () => {
-        if ( selectedValue !== undefined ) {
-            setSelected( selectedValue );
-        }
-    }, [ selectedValue ] );
-
     // Handle selection change
-    const handleChange = ( value ) => {
-        setSelected( value );
+    const handleChange = ( newValue ) => {
+        setSelected( newValue );
+        console.log( 'Selected value:', newValue );
+        onValueChange( {
+            ...element,
+            selectedValue: newValue,
+        } );
     };
 
     // Render the appropriate icon based on value and selection state

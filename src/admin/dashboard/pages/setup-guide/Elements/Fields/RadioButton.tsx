@@ -1,35 +1,28 @@
-import { useEffect, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 
-const RadioButton = (
-    {
-        element: {
-            title,
-            description,
-            selectedValue,
-            name = 'radio_button',
-            default: defaultValue = 'hide',
-            value,
-        },
-    },
-    onValueChange
-) => {
-    // Initialize state with selectedValue or defaultValue
-    const [ selected, setSelected ] = useState( selectedValue || defaultValue );
-
-    // Update local state when selectedValue prop changes
-    useEffect( () => {
-        if ( selectedValue !== undefined ) {
-            setSelected( selectedValue );
-        }
-    }, [ selectedValue ] );
+const RadioButton = ( { element, onValueChange } ) => {
+    // Initialize state with selectedValue or default
+    const {
+        title,
+        description,
+        name = 'radio_button',
+        default,
+        value,
+        options,
+    } = element;
+    const [ selected, setSelected ] = useState( default );
 
     // Handle selection change
-    const handleChange = ( value ) => {
-        setSelected( value );
+    const handleChange = ( newValue ) => {
+        setSelected( newValue );
+        console.log( 'Selected value:', newValue );
+        onValueChange( {
+            ...element,
+            value: newValue,
+        } );
     };
-
     return (
-        <div className="border border-[#E9E9E9] flex justify-between items-center p-4 w-full rounded-md">
+        <div className="border border-[#E9E9E9] flex justify-between items-center p-4 w-full ">
             <div className="">
                 <h2 className="text-base leading-6 font-semibold text-gray-900">
                     { title }
@@ -37,33 +30,21 @@ const RadioButton = (
                 <p className="mt-1.5 text-sm text-[#828282]">{ description }</p>
             </div>
             <div className="flex">
-                { /* Hide button */ }
-                <button
-                    type="button"
-                    className={ `px-6 py-2 text-sm font-semibold rounded-l-md border ${
-                        selected === 'hide'
-                            ? 'bg-[#7047EB] border-[#7047EB] text-white'
-                            : 'bg-white text-gray-800 border-gray-200'
-                    }` }
-                    onClick={ () => handleChange( 'hide' ) }
-                    aria-pressed={ selected === 'hide' }
-                >
-                    Hide
-                </button>
-
-                { /* Show button */ }
-                <button
-                    type="button"
-                    className={ `px-6 py-2 text-sm font-semibold rounded-r-md border ${
-                        selected === 'show'
-                            ? 'bg-[#7047EB] border-[#7047EB] text-white'
-                            : 'bg-white text-gray-800 border-gray-200'
-                    }` }
-                    onClick={ () => handleChange( 'show' ) }
-                    aria-pressed={ selected === 'show' }
-                >
-                    Show
-                </button>
+                { options?.map( ( option ) => (
+                    <button
+                        key={ option.value }
+                        type="button"
+                        className={ `px-6 py-2 text-sm font-semibold  border ${
+                            selected === option.value
+                                ? 'bg-[#7047EB] border-[#7047EB] text-white'
+                                : 'bg-white text-gray-800 border-gray-200'
+                        }` }
+                        onClick={ () => handleChange( option.value ) }
+                        aria-pressed={ selected === option.value }
+                    >
+                        { option.title }
+                    </button>
+                ) ) }
             </div>
 
             { /* Hidden input for form submission */ }

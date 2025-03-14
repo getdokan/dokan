@@ -60,35 +60,29 @@ class BasicStep extends AbstractStep {
                             ->set_default( 'admin' )
                     )->add(
                         Factory::field( 'product-tax-fee', 'recipient_selector' )
-                               ->set_title( __( 'Product Tax Fee Recipient', 'dokan-lite' ) )
-                               ->set_description( __( 'Determine who collects product taxes - Admin manages all tax collection or Vendors handle their product taxes', 'dokan-lite' ) )
-                               ->set_default( 'admin' )
+                            ->set_title( __( 'Product Tax Fee Recipient', 'dokan-lite' ) )
+                            ->set_description( __( 'Determine who collects product taxes - Admin manages all tax collection or Vendors handle their product taxes', 'dokan-lite' ) )
+                            ->set_default( 'admin' )
                     )
                     ->add(
                         Factory::field( 'shipping-tax-fee', 'recipient_selector' )
-                               ->set_title( __( 'Shipping Tax Fee Recipient', 'dokan-lite' ) )
-                               ->set_description( __( 'Select who receives shipping tax - Admin centralizes all shipping tax or Vendors collect shipping tax for their orders', 'dokan-lite' ) )
-                               ->set_default( 'admin' )
+                            ->set_title( __( 'Shipping Tax Fee Recipient', 'dokan-lite' ) )
+                            ->set_description( __( 'Select who receives shipping tax - Admin centralizes all shipping tax or Vendors collect shipping tax for their orders', 'dokan-lite' ) )
+                            ->set_default( 'admin' )
                     )
                     ->add(
                         Factory::field( 'can-update-order-status', 'toggle_switch' )
-                               ->set_title( __( 'Vendors can change order status', 'dokan-lite' ) )
-                               ->set_description( __( 'Allow vendors to update order statuses (processing, completed, etc.) for their products', 'dokan-lite' ) )
-                               ->set_default( true )
+                            ->set_title( __( 'Vendors can change order status', 'dokan-lite' ) )
+                            ->set_description( __( 'Allow vendors to update order statuses (processing, completed, etc.) for their products', 'dokan-lite' ) )
+                            ->set_default( true )
                     )
                     ->add(
                         Factory::field( 'can-selling-directly', 'radio_button' )
-                               ->set_title( __( 'New Vendor Selling Directly', 'dokan-lite' ) )
-                               ->set_description( __( 'Automatically enable selling capabilities for newly registered vendors', 'dokan-lite' ) )
-                               ->set_default( false )
+                            ->set_title( __( 'New Vendor Selling Directly', 'dokan-lite' ) )
+                            ->set_description( __( 'Automatically enable selling capabilities for newly registered vendors', 'dokan-lite' ) )
+                            ->set_default( false )
                     )
-                    ->add(
-                        Factory::field( 'admin-commission-withdraw', 'toggle_switch' )
-                               ->set_title( __( 'Admin Commission from Withdraw', 'dokan-lite' ) )
-                               ->set_description( __( 'Calculate commission when vendor withdraws their earning', 'dokan-lite' ) )
-                               ->set_default( false )
-                               ->set_label( __( 'Deduct commission on withdrawal', 'dokan-lite' ) )
-                    )
+
             );
     }
 
