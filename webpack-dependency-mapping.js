@@ -114,9 +114,9 @@ const wooRequestToHandle = ( request ) => {
 /**
  * Given a request string, returns the external name for the packages.
  *
- * @param  request string Request string.
+ * @param request string Request string.
  *
- * @return {string[]} External name for the package.
+ * @returns {string[]} External name for the package.
  */
 const requestToExternal = ( request ) => {
     const dokan = request.match( /^@dokan\/stores\/(.+)$/ );
@@ -136,9 +136,9 @@ const requestToExternal = ( request ) => {
 /**
  * Given a request string, returns the handle name.
  *
- * @param  request string Request string.
+ * @param request string Request string.
  *
- * @return {string} Handle name for the package.
+ * @returns {string} Handle name for the package.
  */
 const requestToHandle = ( request ) => {
     const dokan = request.match( /^@dokan\/stores\/(.+)$/ );
