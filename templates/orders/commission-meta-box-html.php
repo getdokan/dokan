@@ -8,6 +8,7 @@
  * @var object $data
  * @var float $total_commission
  * @var array $all_commission_types
+ * @var \WeDevs\Dokan\Commission\OrderCommission $order_commission
  *
  * @since DOKAN_LITE
  *
@@ -225,6 +226,20 @@ foreach ( $order->get_refunds() as $refund ) {
                         <?php
                         echo wc_price(
                             $net_amount, array(
+								'currency' => $order->get_currency(),
+								'decimals' => wc_get_price_decimals() + 2,
+                            )
+                        );
+						?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label"><?php esc_html_e( 'Subsidy:', 'dokan-lite' ); ?></td>
+                    <td width="1%"></td>
+                    <td class="total">
+                        <?php
+                        echo wc_price(
+                            $order_commission->get_admin_subsidy(), array(
 								'currency' => $order->get_currency(),
 								'decimals' => wc_get_price_decimals() + 2,
                             )
