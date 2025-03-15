@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Order\Admin;
 use Exception;
 use WC_Data_Store;
 use WC_Order;
+use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Utilities\OrderUtil;
 use WP_Post;
 
@@ -605,12 +606,16 @@ class Hooks {
         $total_commission     = (float) $order_total - (float) $net_amount;
         $all_commission_types = array_merge( dokan_commission_types(), dokan()->commission->get_legacy_commission_types() );
 
+        $order_commission = new OrderCommission( $order );
+        $order_commission->retrieve();
+
         dokan_get_template_part(
             'orders/commission-meta-box-html', '', [
                 'order'                => $order,
                 'data'                 => $data,
                 'total_commission'     => $total_commission,
                 'all_commission_types' => $all_commission_types,
+                'order_commission'     => $order_commission,
             ]
         );
     }

@@ -3,8 +3,10 @@
 namespace WeDevs\Dokan;
 
 use WC_Order;
+use WC_Order_Factory;
 use WC_Product;
 use WeDevs\Dokan\Commission\Calculator;
+use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Commission\Settings\DefaultSetting;
 use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
 use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
@@ -13,6 +15,7 @@ use WeDevs\Dokan\Commission\Strategies\Product;
 use WeDevs\Dokan\Commission\Strategies\Vendor;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WP_Error;
+use WeDevs\Dokan\Commission\Model\Commission as CommissionModel;
 
 /**
  * Dokan Commission Class
@@ -231,33 +234,10 @@ class Commission {
             return $earning_or_commission;
         }
 
-        $earning_or_commission   = 0;
-        $vendor_id = (int) $order->get_meta( '_dokan_vendor_id' );
+        $order_commission = new OrderCommission( $order );
+        $order_commission->calculate( true );
 
-        foreach ( $order->get_items() as $item_id => $item ) {
-            $product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
-            $refund     = $order->get_total_refunded_for_item( $item_id );
-
-            if ( dokan_is_admin_coupon_applied( $order, $vendor_id, $product_id ) && dokan()->is_pro_exists() ) {
-                $earning_or_commission += dokan_pro()->coupon->get_earning_by_admin_coupon( $order, $item, $context, $item->get_product(), $vendor_id, $refund );
-            } else {
-                $item_price = apply_filters( 'dokan_earning_by_order_item_price', $item->get_total(), $item, $order );
-                $item_price = $refund ? floatval( $item_price ) - floatval( $refund ) : $item_price;
-
-                $item_earning_or_commission = $this->get_commission(
-                    [
-                        'order_item_id' => $item->get_id(),
-                        'product_id' => $product_id,
-                        'total_amount' => $item_price,
-                        'total_quantity' => $item->get_quantity(),
-                        'vendor_id' => $vendor_id,
-                    ],
-                    true
-                );
-                $item_earning_or_commission = 'admin' === $context ? $item_earning_or_commission->get_admin_commission() : $item_earning_or_commission->get_vendor_earning();
-                $earning_or_commission      += floatval( $item_earning_or_commission );
-            }
-        }
+        $earning_or_commission = 'admin' === $context ? $order_commission->get_admin_total_earning() : $order_commission->get_vendor_total_earning();
 
         if ( $context === dokan()->fees->get_shipping_fee_recipient( $order ) ) {
             $earning_or_commission += $order->get_shipping_total() - $order->get_total_shipping_refunded();
@@ -568,12 +548,13 @@ class Commission {
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
     public function get_commission( $args = [], $auto_save = false, $override_total_amount_by_product_price = true ) {
-        $order_item_id  = ! empty( $args['order_item_id'] ) ? $args['order_item_id'] : '';
-        $total_amount   = ! empty( $args['total_amount'] ) ? $args['total_amount'] : 0;
-        $total_quantity = ! empty( $args['total_quantity'] ) ? $args['total_quantity'] : 1;
-        $product_id     = ! empty( $args['product_id'] ) ? $args['product_id'] : 0;
-        $vendor_id      = ! empty( $args['vendor_id'] ) ? $args['vendor_id'] : '';
-        $category_id    = ! empty( $args['category_id'] ) ? $args['category_id'] : 0;
+        $order_item_id    = ! empty( $args['order_item_id'] ) ? $args['order_item_id'] : '';
+        $total_amount     = ! empty( $args['total_amount'] ) ? $args['total_amount'] : 0;
+        $total_quantity   = ! empty( $args['total_quantity'] ) ? $args['total_quantity'] : 1;
+        $product_id       = ! empty( $args['product_id'] ) ? $args['product_id'] : 0;
+        $vendor_id        = ! empty( $args['vendor_id'] ) ? $args['vendor_id'] : '';
+        $category_id      = ! empty( $args['category_id'] ) ? $args['category_id'] : 0;
+        $coupon_discounts = ! empty( $args['coupon_discounts'] ) ? $args['coupon_discounts'] : [];
 
         // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
 		if ( ! empty( $product_id ) && empty( $category_id ) ) {
@@ -615,19 +596,42 @@ class Commission {
         $context = new Calculator( $strategies );
         $commission_data = $context->calculate_commission( $total_amount, $total_quantity );
 
-        if ( ! empty( $order_item_id ) && $auto_save && $commission_data->get_source() !== $order_item_strategy::SOURCE ) {
-            $parameters       = $commission_data->get_parameters() ?? [];
-            $percentage       = $parameters['percentage'] ?? 0;
-            $flat             = $parameters['flat'] ?? 0;
+        if ( ! empty( $coupon_discounts ) && ! empty( $order_item_id ) ) {
+            /**
+             * @var \WC_Order_Item_Product $item
+             */
+            $item = WC_Order_Factory::get_order_item( $order_item_id );
+            $commission_data->with_coupon_discounts( $coupon_discounts, $item->get_total() );
+        }
 
-            $order_item_strategy->save_line_item_commission_to_meta(
-                $commission_data->get_type() ?? DefaultSetting::TYPE,
-                $percentage,
-                $flat,
-                $commission_data->get_data()
-            );
+        if ( ! empty( $order_item_id ) && $auto_save ) {
+            $this->save_order_line_item_commission( $order_item_strategy, $commission_data );
         }
 
         return $commission_data;
+    }
+
+    /**
+     * Save order line item commission.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WeDevs\Dokan\Commission\Strategies\OrderItem $order_item_strategy
+     *
+     * @param \WeDevs\Dokan\Commission\Model\Commission     $commission_data
+     *
+     * @return void
+     */
+    public function save_order_line_item_commission( OrderItem $order_item_strategy, CommissionModel $commission_data ) {
+        $parameters = $commission_data->get_parameters() ?? [];
+        $percentage = $parameters['percentage'] ?? 0;
+        $flat       = $parameters['flat'] ?? 0;
+
+        $order_item_strategy->save_line_item_commission_to_meta(
+            $commission_data->get_type() ?? DefaultSetting::TYPE,
+            $percentage,
+            $flat,
+            $commission_data->get_data()
+        );
     }
 }
