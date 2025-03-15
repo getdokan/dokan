@@ -604,7 +604,7 @@ class Commission {
             $commission_data->with_coupon_discounts( $coupon_discounts, $item->get_total() );
         }
 
-        if ( ! empty( $order_item_id ) && $auto_save && $commission_data->get_source() !== $order_item_strategy::SOURCE ) {
+        if ( ! empty( $order_item_id ) && $auto_save ) {
             $this->save_order_line_item_commission( $order_item_strategy, $commission_data );
         }
 
