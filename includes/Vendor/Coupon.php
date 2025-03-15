@@ -10,6 +10,9 @@ use WC_Order_Item_Product;
 use WC_Order_Item_Coupon;
 use WC_Data;
 use Exception;
+use WeDevs\Dokan\Commission\OrderCommission;
+use Automattic\WooCommerce\Utilities\ArrayUtil;
+use Automattic\WooCommerce\Utilities\StringUtil;
 
 class Coupon {
 
@@ -21,6 +24,8 @@ class Coupon {
         add_filter( 'woocommerce_coupon_get_apply_quantity', [ $this, 'intercept_wc_coupon' ], 15, 4 );
         add_action( 'dokan_wc_coupon_applied', [ $this, 'save_item_coupon_discount' ], 10, 3 );
         add_action( 'woocommerce_before_delete_order_item', [ $this, 'remove_coupon_info_from_order_item' ] );
+        add_action( 'wp_ajax_woocommerce_remove_order_coupon', [ $this, 'overwrite_woocommerce_remove_order_coupon_method' ], 9 );
+        add_action( 'dokan_coupon_item_removed_from_order_via_ajax', [ $this, 'adjust_admin_commission_and_vendor_earning_after_coupon_removed' ] );
     }
 
     /**
@@ -325,5 +330,157 @@ class Coupon {
         }
 
         $cart->set_cart_contents( $cart_contents );
+    }
+
+    /**
+     * Overwrite WooCommerce's remove_order_coupon method.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function overwrite_woocommerce_remove_order_coupon_method() {
+        remove_action( 'wp_ajax_woocommerce_remove_order_coupon', [ \WC_AJAX::class, 'remove_order_coupon' ] );
+        $this->remove_order_coupon();
+    }
+
+    /**
+     * Remove a coupon from an order on ajax request.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function remove_order_coupon() {
+        check_ajax_referer( 'order-item', 'security' );
+
+        if ( ! current_user_can( 'edit_shop_orders' ) ) {
+            wp_die( - 1 );
+        }
+
+        $response = [];
+
+        try {
+            $order_id           = isset( $_POST['order_id'] ) ? absint( $_POST['order_id'] ) : 0;
+            $order              = wc_get_order( $order_id );
+            $calculate_tax_args = [
+                'country'  => isset( $_POST['country'] ) ? wc_strtoupper( wc_clean( wp_unslash( $_POST['country'] ) ) ) : '',
+                'state'    => isset( $_POST['state'] ) ? wc_strtoupper( wc_clean( wp_unslash( $_POST['state'] ) ) ) : '',
+                'postcode' => isset( $_POST['postcode'] ) ? wc_strtoupper( wc_clean( wp_unslash( $_POST['postcode'] ) ) ) : '',
+                'city'     => isset( $_POST['city'] ) ? wc_strtoupper( wc_clean( wp_unslash( $_POST['city'] ) ) ) : '',
+            ];
+
+            if ( ! $order ) {
+                throw new \Exception( __( 'Invalid order', 'dokan-lite' ) );
+            }
+
+            $coupon = ArrayUtil::get_value_or_default( $_POST, 'coupon' );
+            if ( StringUtil::is_null_or_whitespace( $coupon ) ) {
+                throw new Exception( __( 'Invalid coupon', 'dokan-lite' ) );
+            }
+
+            $code = wc_format_coupon_code( wp_unslash( $coupon ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            if ( $order->remove_coupon( $code ) ) {
+                // translators: %s coupon code.
+                $order->add_order_note( esc_html( sprintf( __( 'Coupon removed: "%s".', 'dokan-lite' ), $code ) ), 0, true );
+            }
+            $order->calculate_taxes( $calculate_tax_args );
+            $order->calculate_totals( false );
+
+            ob_start();
+            include dirname( WC_PLUGIN_FILE ) . '/includes/admin/meta-boxes/views/html-order-items.php';
+            $response['html'] = ob_get_clean();
+
+            ob_start();
+            $notes = wc_get_order_notes( [ 'order_id' => $order_id ] );
+            include dirname( WC_PLUGIN_FILE ) . '/includes/admin/meta-boxes/views/html-order-notes.php';
+            $response['notes_html'] = ob_get_clean();
+        } catch ( Exception $e ) {
+            wp_send_json_error( [ 'error' => $e->getMessage() ] );
+        }
+
+        do_action( 'dokan_coupon_item_removed_from_order_via_ajax', $order->get_id() );
+
+        // wp_send_json_success must be outside the try block not to break phpunit tests.
+        wp_send_json_success( $response );
+    }
+
+    /**
+     * Adjust admin commission and vendor earning after coupon removed.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $order_id
+     *
+     * @return void
+     */
+    public function adjust_admin_commission_and_vendor_earning_after_coupon_removed( $order_id ) {
+        $order = wc_get_order( $order_id );
+
+        if ( ! $order || $order instanceof WC_Subscription ) {
+            return;
+        }
+
+        $targeted_order = dokan()->order->get_child_orders( $order_id );
+
+        if ( empty( $targeted_order ) ) {
+            $targeted_order[] = $order;
+        }
+
+        foreach ( $targeted_order as $order ) {
+            $this->adjust_admin_commission_and_vendor_earning( $order );
+        }
+    }
+
+    /**
+     * Adjust admin commission and vendor earning.
+     *
+     * @param WC_Order $order
+     *
+     * @return void
+     */
+    protected function adjust_admin_commission_and_vendor_earning( $order ) {
+        global $wpdb;
+        $order_total = $order->get_total();
+
+        $order_commission = new OrderCommission( $order );
+        $order_commission->calculate( true );
+
+        $context        = 'seller';
+        $vendor_earning = $order_commission->get_vendor_total_earning();
+
+        if ( $context === dokan()->fees->get_shipping_fee_recipient( $order ) ) {
+            $vendor_earning += $order->get_shipping_total() - $order->get_total_shipping_refunded();
+        }
+
+        if ( $context === dokan()->fees->get_tax_fee_recipient( $order->get_id() ) ) {
+            $vendor_earning += ( ( floatval( $order->get_total_tax() ) - floatval( $order->get_total_tax_refunded() ) ) - ( floatval( $order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $order ) ) ) );
+        }
+
+        if ( $context === dokan()->fees->get_shipping_tax_fee_recipient( $order ) ) {
+            $vendor_earning += ( floatval( $order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $order ) ) );
+        }
+
+        $wpdb->update(
+            $wpdb->dokan_orders,
+            [
+                'order_total' => (float) $order_total,
+                'net_amount'  => (float) $vendor_earning,
+            ],
+            [ 'order_id' => (int) $order->get_id() ],
+            [ '%f', '%f' ],
+            [ '%d' ]
+        );
+
+        $wpdb->update(
+            $wpdb->dokan_vendor_balance,
+            [ 'debit' => (float) $vendor_earning ],
+            [
+                'trn_id'   => (int) $order->get_id(),
+                'trn_type' => 'dokan_orders',
+            ],
+            [ '%f' ],
+            [ '%d', '%s' ]
+        );
     }
 }
