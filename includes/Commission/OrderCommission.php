@@ -62,6 +62,32 @@ class OrderCommission {
     }
 
     /**
+     * Retrieve order commission.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return $this
+     */
+    public function retrieve() {
+
+        foreach ( $this->order->get_items() as $item_id => $item ) {
+            $line_item_commission = new OrderLineItemCommission( $item, $this->order );
+            $commission           = $line_item_commission->retrieve();
+
+            $this->admin_commission     += $commission->get_admin_commission();
+            $this->admin_net_commission += $commission->get_net_admin_commission();
+            $this->admin_discount       += $commission->get_admin_discount();
+            $this->admin_subsidy        += $commission->get_admin_subsidy();
+
+            $this->vendor_discount    += $commission->get_vendor_discount();
+            $this->vendor_earnign     += $commission->get_vendor_earning();
+            $this->vendor_net_earnign += $commission->get_net_vendor_earning();
+        }
+
+        return $this;
+    }
+
+    /**
      * Get admin discount.
      *
      * @since DOKAN_SINCE
@@ -328,5 +354,24 @@ class OrderCommission {
         }
 
         return 0;
+    }
+
+    /**
+     * Get data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_data() {
+        return [
+            'admin_commission'     => $this->get_admin_commission(),
+            'admin_net_commission' => $this->get_admin_net_commission(),
+            'admin_discount'       => $this->get_admin_discount(),
+            'admin_subsidy'        => $this->get_admin_subsidy(),
+            'vendor_discount'      => $this->get_vendor_discount(),
+            'vendor_earning'       => $this->get_vendor_earning(),
+            'vendor_net_earning'   => $this->get_vendor_net_earning(),
+        ];
     }
 }
