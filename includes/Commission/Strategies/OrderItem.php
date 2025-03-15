@@ -122,35 +122,4 @@ class OrderItem extends AbstractStrategy {
             ]
         );
     }
-
-    /**
-     * Save order item commission meta data.
-     *
-     * @since 3.14.0
-     *
-     * @param string    $type
-     * @param int|float $percentage
-     * @param int|float $flat
-     * @param array     $meta_data
-     *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
-     */
-    public function update_line_item_commission_to_meta( $type, $percentage, $flat, $meta_data ) {
-        $settings = Builder::build(
-            Builder::TYPE_ORDER_ITEM,
-            [
-                'id'    => $this->order_item_id,
-                'price' => $this->total_amount,
-            ]
-        );
-
-        return $settings->update(
-            [
-                'type'       => $type,
-                'percentage' => $percentage,
-                'flat'       => $flat,
-                'meta_data'  => $meta_data  ,
-            ]
-        );
-    }
 }
