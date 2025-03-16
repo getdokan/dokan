@@ -19,18 +19,26 @@ const Section = ( { element, onValueChange }: SettingsProps ): JSX.Element => {
                         { element.description }
                     </p>
                 </div>
-
-                { element.children.map( ( child ) => {
-                    return (
-                        <SettingsParser
-                            element={ child }
-                            key={
-                                element.hook_key + '-' + child.id + '-parser'
-                            }
-                            onValueChange={ onValueChange }
-                        />
-                    );
-                } ) }
+                <div
+                    className={
+                        'flex flex-col  divide-y border border-[#E9E9E9] divide-gray-200'
+                    }
+                >
+                    { element.children.map( ( child ) => {
+                        return (
+                            <SettingsParser
+                                element={ child }
+                                key={
+                                    element.hook_key +
+                                    '-' +
+                                    child.id +
+                                    '-parser'
+                                }
+                                onValueChange={ onValueChange }
+                            />
+                        );
+                    } ) }
+                </div>
             </div>
         </section>
     );

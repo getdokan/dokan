@@ -1,22 +1,14 @@
 import { useState } from '@wordpress/element';
 import { ToggleSwitch } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
+import { SettingsProps } from '../../StepSettings';
 
-const ToggleSwitchField = ( { element, onValueChange } ) => {
-    const {
-        enabled,
-        onChange,
-        title,
-        description,
-        name = 'toggle_switch',
-        default: defaultValue = false,
-        value = false,
-    } = element;
+const ToggleSwitchField = ( { element, onValueChange }: SettingsProps ) => {
     // Handle toggle change
     const handleChange = ( checked ) => {
         setIsEnabled( checked );
 
-        console.log( 'Selected value:', checked );
+        const { value } = element;
         onValueChange( {
             ...element,
             value: checked,
@@ -24,17 +16,16 @@ const ToggleSwitchField = ( { element, onValueChange } ) => {
     };
 
     // Initialize state with enabled prop or defaultValue
-    const [ isEnabled, setIsEnabled ] = useState(
-        typeof enabled !== 'undefined' ? enabled : defaultValue
-    );
+    const { default: defaultValue } = element;
+    const [ isEnabled, setIsEnabled ] = useState( Boolean( defaultValue ) );
     return (
-        <div className="border border-[#E9E9E9] flex justify-between items-center p-4 w-full rounded-md">
-            <div className="flex flex-col">
-                <h2 className="text-base leading-6 font-semibold text-gray-900">
-                    { title }
+        <div className=" flex justify-between items-center p-4 w-full ">
+            <div className="flex-col flex gap-1">
+                <h2 className="text-sm leading-6 font-semibold text-gray-900">
+                    { element?.title }
                 </h2>
-                <p className="mt-1.5 text-sm text-[#828282] mb-2">
-                    { description }
+                <p className=" text-sm font-normal text-[#828282]">
+                    { element?.description }
                 </p>
             </div>
             <ToggleSwitch
@@ -51,7 +42,7 @@ const ToggleSwitchField = ( { element, onValueChange } ) => {
             { /* Hidden input for form submission */ }
             <input
                 type="hidden"
-                name={ name }
+                name={ element?.id }
                 value={ isEnabled ? '1' : '0' }
             />
         </div>

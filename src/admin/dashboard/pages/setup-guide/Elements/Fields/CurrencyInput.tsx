@@ -26,7 +26,7 @@ const CurrencyInput = ( { element, onValueChange } ) => {
         return <></>;
     }
     return (
-        <div className="border bor-[#E9E9E9] flex justify-between items-center flex-wrap p-4 w-full">
+        <div className=" flex justify-between items-center flex-wrap  w-full">
             <div className="flex flex-col">
                 <h2 className="text-base leading-6 font-semibold text-gray-900">
                     { title }

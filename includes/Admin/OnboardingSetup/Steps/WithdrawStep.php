@@ -74,7 +74,7 @@ class WithdrawStep extends AbstractStep {
                     ->set_description( __( 'Set the minimum balance required before vendors can request withdrawals', 'dokan-lite' ) )
             )
             ->add(
-                ComponentFactory::field( 'withdraw-order-status-heading', 'toggle_switch' )
+                ComponentFactory::field( 'withdraw-order-status-heading', 'checkbox_group' )
                     ->set_title( __( 'Order Status for Withdraw', 'dokan-lite' ) )
                     ->set_description( __( 'Define which order status makes funds eligible for withdrawal', 'dokan-lite' ) )
             );

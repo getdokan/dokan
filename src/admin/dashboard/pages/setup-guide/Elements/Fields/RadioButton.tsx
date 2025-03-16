@@ -1,44 +1,44 @@
 import { useState } from '@wordpress/element';
+import { SettingsProps } from '../../StepSettings';
 
-const RadioButton = ( { element, onValueChange } ) => {
+const RadioButton = ( { element, onValueChange }: SettingsProps ) => {
     // Initialize state with selectedValue or default
-    const {
-        title,
-        description,
-        name = 'radio_button',
-        default,
-        value,
-        options,
-    } = element;
-    const [ selected, setSelected ] = useState( default );
+
+    const [ selected, setSelected ] = useState(
+        element.value || element.default
+    );
 
     // Handle selection change
     const handleChange = ( newValue ) => {
         setSelected( newValue );
-        console.log( 'Selected value:', newValue );
+        const { value } = element;
         onValueChange( {
             ...element,
             value: newValue,
         } );
     };
     return (
-        <div className="border border-[#E9E9E9] flex justify-between items-center p-4 w-full ">
-            <div className="">
-                <h2 className="text-base leading-6 font-semibold text-gray-900">
-                    { title }
+        <div className=" flex justify-between items-center p-4 w-full ">
+            <div className="flex-col flex gap-1 w-[70%]">
+                <h2 className="text-sm leading-6 font-semibold text-gray-900">
+                    { element?.title }
                 </h2>
-                <p className="mt-1.5 text-sm text-[#828282]">{ description }</p>
+                <p className=" text-sm font-normal text-[#828282]">
+                    { element?.description }
+                </p>
             </div>
-            <div className="flex">
-                { options?.map( ( option ) => (
+            <div className="flex ">
+                { element?.options?.map( ( option, index ) => (
                     <button
                         key={ option.value }
                         type="button"
-                        className={ `px-6 py-2 text-sm font-semibold  border ${
-                            selected === option.value
-                                ? 'bg-[#7047EB] border-[#7047EB] text-white'
-                                : 'bg-white text-gray-800 border-gray-200'
-                        }` }
+                        className={ `px-6 py-2  text-sm font-semibold  border
+                         ${ index === 0 ? 'rounded-l-md' : 'rounded-r-md' }
+                         ${
+                             selected === option.value
+                                 ? 'bg-[#7047EB] border-[#7047EB] text-white'
+                                 : 'bg-white text-gray-800 border-gray-200'
+                         }` }
                         onClick={ () => handleChange( option.value ) }
                         aria-pressed={ selected === option.value }
                     >
@@ -48,7 +48,7 @@ const RadioButton = ( { element, onValueChange } ) => {
             </div>
 
             { /* Hidden input for form submission */ }
-            <input type="hidden" name={ name } value={ selected } />
+            <input type="hidden" name={ element?.id } value={ selected } />
         </div>
     );
 };

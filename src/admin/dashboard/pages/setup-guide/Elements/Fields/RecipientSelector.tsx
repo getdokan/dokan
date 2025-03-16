@@ -2,17 +2,11 @@ import { useState } from '@wordpress/element';
 import SelectorCard from './SelectorCard';
 import AdminIcon from '../../components/icons/AdminIcon';
 import VendorIcon from '../../components/icons/VendorIcon';
+import { SettingsProps } from '../../StepSettings';
 
-const RecipientSelector = ( { element, onValueChange } ) => {
-    const {
-        title,
-        description,
-        default: defaultValue,
-        options,
-        value: selectedValue,
-    } = element;
-
-    const [ selected, setSelected ] = useState( selectedValue || defaultValue );
+const RecipientSelector = ( { element, onValueChange }: SettingsProps ) => {
+    const { default: defaultValue } = element;
+    const [ selected, setSelected ] = useState( defaultValue );
 
     // Handle selection change
     const handleChange = ( newValue ) => {
@@ -38,17 +32,17 @@ const RecipientSelector = ( { element, onValueChange } ) => {
     };
 
     return (
-        <div className="mb-3">
-            <div className="mb-3">
-                <h2 className="text-base leading-6 font-semibold text-gray-900">
-                    { title }
+        <div className="p-4">
+            <div className="flex-col flex gap-1 w-[70%]">
+                <h2 className="text-sm leading-6 font-semibold text-gray-900">
+                    { element?.title }
                 </h2>
-                <p className="mt-1.5 text-sm text-[#828282] mb-2">
-                    { description }
+                <p className=" text-sm font-normal text-[#828282]">
+                    { element?.description }
                 </p>
             </div>
             <div className="flex flex-wrap gap-4">
-                { options?.map( ( option ) => (
+                { element?.options?.map( ( option ) => (
                     <SelectorCard
                         key={ option.value }
                         value={ option.value }
@@ -59,9 +53,6 @@ const RecipientSelector = ( { element, onValueChange } ) => {
                     />
                 ) ) }
             </div>
-
-            { /* Hidden input for form submission */ }
-            <input type="hidden" name={ element.id } value={ selected } />
         </div>
     );
 };

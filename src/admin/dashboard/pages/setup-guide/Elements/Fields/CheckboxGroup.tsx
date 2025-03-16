@@ -1,17 +1,9 @@
 import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
 import { useEffect, useState } from '@wordpress/element';
+import { SettingsProps } from '../../StepSettings';
 
-const CheckboxGroup = ( {
-    element: {
-        options = [],
-        defaultValue = [],
-        name = 'checkboxGroup',
-        onChange = () => {},
-        title = 'Checkbox Group',
-        description = 'Select options from the list',
-    },
-    onValueChange,
-} ) => {
+const CheckboxGroup = ( { element, onValueChange }: SettingsProps ) => {
+    const { default: defaultValue, value } = element;
     // State to track selected values
     const [ selectedValues, setSelectedValues ] = useState( defaultValue );
 
@@ -23,24 +15,33 @@ const CheckboxGroup = ( {
     // Handle change and propagate to parent component
     const handleChange = ( values ) => {
         setSelectedValues( values );
-        onChange( values );
+        onValueChange( {
+            ...element,
+            value: values,
+        } );
     };
 
     return (
-        <div className="border bor-[#E9E9E9] flex justify-between flex-col items-start p-4 w-full">
+        <div className=" flex justify-between flex-col items-start p-4 w-full">
             <div className="flex flex-col mb-4 w-full">
                 <h2 className="text-base leading-6 font-semibold text-gray-900">
-                    { title }
+                    { element?.title }
                 </h2>
                 <p className="mt-1.5 text-sm text-[#828282] mb-2">
-                    { description }
+                    { element?.description }
                 </p>
             </div>
             <SimpleCheckboxGroup
-                defaultValue={ selectedValues }
-                name={ name }
+                defaultValue={ [] }
+                name={ element?.id }
                 onChange={ handleChange }
-                options={ options }
+                options={ [
+                    ...element?.options,
+                    {
+                        value: 'all',
+                        label: 'Select All',
+                    },
+                ] }
                 className="focus:outline-none outline-none w-full"
             />
         </div>

@@ -61,7 +61,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     onValueChange={ onValueChange }
                 />
             );
-        case 'toggle_switch':
+        case 'radio':
             return (
                 <ToggleSwitchField
                     element={ element }
@@ -94,7 +94,6 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
         case 'hidden':
         case 'image':
         case 'month':
-        case 'radio':
         case 'range':
         case 'search':
         case 'time':

@@ -10,13 +10,13 @@ const SelectorCard = ( { value, title, selected = false, onChange, icon } ) => {
     };
     return (
         <button
-            className={ `relative border rounded-md p-3 flex flex-col gap-3 items-start  w-40 h-28 ${
+            className={ `relative border rounded-md p-3 flex flex-col gap-3  items-start  w-36  ${
                 selected ? 'border-[#7047EB] ' : 'border-[#E9E9E9]'
             }` }
             onClick={ handleClick }
         >
             <div
-                className={ `p-4  border  rounded-lg flex items-center justify-center ${
+                className={ `p-3  border  rounded-lg flex items-center justify-center ${
                     selected
                         ? 'bg-[#F1EDFD] border-[#E5E0F2]'
                         : 'bg-[#F8F9F8] border-[#E9E9E9]'
