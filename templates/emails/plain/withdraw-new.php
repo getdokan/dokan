@@ -20,27 +20,27 @@ esc_attr_e( 'Hi,', 'dokan-lite' );
 echo " \n";
 
 // translators: 1) user name
-echo sprintf( esc_html__( 'A new withdraw request has been made by - %s', 'dokan-lite' ), esc_html( $data['username'] ) );
+echo sprintf( esc_html__( 'A new withdraw request has been made by - %s', 'dokan-lite' ), esc_html( $data['{store_name}'] ) );
 echo " \n";
 
 // translators: 1) withdraw request amount
-echo sprintf( esc_html__( 'Request Amount : %s', 'dokan-lite' ), esc_html( $data['amount'] ) );
+echo sprintf( esc_html__( 'Request Amount : %s', 'dokan-lite' ), esc_html( $data['{amount}'] ) );
 echo " \n";
 
 // translators: 1) withdraw payment method
-echo sprintf( esc_html__( 'Payment Method : %s', 'dokan-lite' ), esc_html( $data['method'] ) );
+echo sprintf( esc_html__( 'Payment Method : %s', 'dokan-lite' ), esc_html( $data['{method}'] ) );
 echo " \n";
 
 // translators: 1) user name
-echo sprintf( esc_html__( 'Username : %s', 'dokan-lite' ), esc_html( $data['username'] ) );
+echo sprintf( esc_html__( 'Store Name : %s', 'dokan-lite' ), esc_html( $data['{store_name}'] ) );
 echo " \n";
 
 // translators: 1) vendor profile url
-echo sprintf( esc_html__( 'Profile : %s', 'dokan-lite' ), esc_url( $data['profile_url'] ) );
+echo sprintf( esc_html__( 'Profile : %s', 'dokan-lite' ), esc_url( $data['{profile_url}'] ) );
 echo " \n";
 
 // translators: 1) with menu url
-echo sprintf( esc_html__( 'You can approve or deny it by going here : %s', 'dokan-lite' ), esc_html( $data['withdraw_page'] ) );
+echo sprintf( esc_html__( 'You can approve or deny it by going here : %s', 'dokan-lite' ), esc_html( $data['{withdraw_page}'] ) );
 echo " \n";
 
 echo "\n\n----------------------------------------\n\n";

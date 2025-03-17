@@ -1,142 +1,125 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
-import { helpers } from '@utils/helpers';
-// import { shipping } from '@utils/interfaces';
+import { shipping, shippingZone } from '@utils/interfaces';
 
-export class shippingPage extends AdminPage {
+// selectors
+const woocommerceSettings = selector.admin.wooCommerce.settings;
+const generalSettings = selector.admin.wooCommerce.settings.general;
+const shippingSettings = selector.admin.wooCommerce.settings.shipping;
+
+export class ShippingPage extends AdminPage {
     constructor(page: Page) {
         super(page);
     }
 
-    // Shipping Methods
-
-    // Admin Setup Woocommerce Settings
-    async setWoocommerceShippingSettings(data: any) {
-        await this.enablePasswordInputField(data);
-        await this.addShippingMethod(data.shipping.shippingMethods.flatRate);
-        await this.addShippingMethod(data.shipping.shippingMethods.freeShipping);
-        await this.addShippingMethod(data.shipping.shippingMethods.tableRateShipping);
-        await this.addShippingMethod(data.shipping.shippingMethods.distanceRateShipping);
-        await this.addShippingMethod(data.shipping.shippingMethods.vendorShipping);
-        await this.deleteShippingMethod(data.shipping.shippingMethods.flatRate);
-        await this.deleteShippingZone(data.shipping.shippingZone);
+    async goToShippingSettings() {
+        await this.goIfNotThere(data.subUrls.backend.wc.shippingSettings);
     }
 
-    // Enable-Disable Shipping
+    // admin enable disable shipping
     async enableShipping(enable = true) {
         await this.goToWooCommerceSettings();
-        await this.click(selector.admin.wooCommerce.settings.enableShipping);
-        enable
-            ? await this.setDropdownOptionSpan(selector.admin.wooCommerce.settings.enableShippingValues, data.shipping.enableShipping)
-            : await this.setDropdownOptionSpan(selector.admin.wooCommerce.settings.enableShippingValues, data.shipping.disableShipping);
-        await this.click(selector.admin.wooCommerce.settings.generalSaveChanges);
-        await this.toContainText(selector.admin.wooCommerce.settings.updatedSuccessMessage, data.shipping.saveSuccessMessage);
+        await this.click(generalSettings.enableShipping);
+        if (enable) {
+            await this.setDropdownOptionSpan(generalSettings.enableShippingValues, data.shipping.enableShipping);
+        } else {
+            await this.setDropdownOptionSpan(generalSettings.enableShippingValues, data.shipping.disableShipping);
+        }
+        await this.removeAttribute(generalSettings.generalSaveChanges, 'disabled');
+        await this.click(generalSettings.generalSaveChanges);
+        await this.toContainText(woocommerceSettings.updatedSuccessMessage, data.shipping.saveSuccessMessage);
     }
 
-    // Admin Add Shipping Method
-    async addShippingMethod(shipping: any) {
-        await this.goToWooCommerceSettings();
+    // admin add shipping zone
+    async addShippingZone(shippingZone: shippingZone) {
+        await this.goToShippingSettings();
 
-        await this.click(selector.admin.wooCommerce.settings.shipping);
+        // add shipping zone
+        await this.clickAndWaitForLoadState(shippingSettings.addShippingZone);
+        // zone
+        await this.clearAndType(shippingSettings.zoneName, shippingZone.zoneName);
+        // zone regions
+        await this.click(shippingSettings.zoneRegionsInput);
+        await this.clearAndType(shippingSettings.zoneRegionsInput, shippingZone.zoneRegion);
+        await this.click(shippingSettings.zoneRegionsSearchedResult(shippingZone.zoneRegion));
+        await this.press(data.key.escape);
 
-        const zoneIsVisible = await this.isVisible(selector.admin.wooCommerce.settings.shippingZoneCell(shipping.shippingZone));
-        if (!zoneIsVisible) {
-            // Add Shipping Zone
-            await this.click(selector.admin.wooCommerce.settings.addShippingZone);
-            await this.clearAndType(selector.admin.wooCommerce.settings.zoneName, shipping.shippingZone);
-            // await this.selectByValue(selector.admin.wooCommerce.settings.zoneRegions, shippingCountry) //use select values  'country:US',
-            await this.click(selector.admin.wooCommerce.settings.zoneRegions);
-            await this.type(selector.admin.wooCommerce.settings.zoneRegions, shipping.shippingCountry);
-            await this.press(data.key.enter);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, shippingSettings.saveShippingZone);
+    }
+
+    // admin add shipping method
+    async addShippingMethod(zoneId: string, shipping: shipping, edit: boolean = false) {
+        await this.goIfNotThere(data.subUrls.backend.wc.shippingZone(zoneId));
+
+        if (!edit) {
+            // add shipping method
+            await this.click(shippingSettings.addShippingMethods);
+            await this.toBeVisible(shippingSettings.shippingMethodModal);
+            await this.click(shippingSettings.shippingMethod(shipping.selectMethodName));
+            await this.clickAndWaitForResponse(data.subUrls.ajax, shippingSettings.continue);
         } else {
-            // Edit Shipping Zone
-            await this.hover(selector.admin.wooCommerce.settings.shippingZoneCell(shipping.shippingZone));
-            await this.click(selector.admin.wooCommerce.settings.editShippingMethod(shipping.shippingZone));
+            // edit shipping method
+            await this.click(shippingSettings.editShippingMethod(shipping.methodName));
         }
 
-        const methodIsVisible = await this.isVisible(selector.admin.wooCommerce.settings.shippingMethodCell(helpers.replaceAndCapitalize(shipping.shippingMethod)));
-        if (!methodIsVisible) {
-            // Add Shipping Method
-            await this.click(selector.admin.wooCommerce.settings.addShippingMethods);
-            await this.selectByValue(selector.admin.wooCommerce.settings.shippingMethod, shipping.selectShippingMethod);
-            await this.click(selector.admin.wooCommerce.settings.addShippingMethod);
-        }
-
-        // Edit Shipping Method Options
-        await this.hover(selector.admin.wooCommerce.settings.shippingMethodCell(shipping.shippingMethod));
-        await this.click(selector.admin.wooCommerce.settings.editShippingMethod(shipping.shippingMethod));
-
-        switch (shipping.selectShippingMethod) {
-            // Flat Rate
+        switch (shipping.selectMethodName) {
+            // flat rate
             case 'flat_rate':
-                await this.clearAndType(selector.admin.wooCommerce.settings.flatRateMethodTitle, shipping.shippingMethod);
-                await this.selectByValue(selector.admin.wooCommerce.settings.flatRateTaxStatus, shipping.taxStatus);
-                await this.clearAndType(selector.admin.wooCommerce.settings.flatRateCost, shipping.shippingCost);
+                await this.clearAndType(shippingSettings.flatRateMethodTitle, shipping.methodName);
+                await this.selectByValue(shippingSettings.flatRateTaxStatus, shipping.taxStatus as string);
+                await this.clearAndType(shippingSettings.flatRateCost, shipping.shippingCost as string);
                 break;
 
-            // Free Shipping
+            // free shipping
             case 'free_shipping':
-                await this.clearAndType(selector.admin.wooCommerce.settings.freeShippingTitle, shipping.shippingMethod);
-                // await this.selectByValue(selector.admin.wooCommerce.settings.freeShippingRequires, shipping.freeShippingRequires)
-                // await this.clearAndType(selector.admin.wooCommerce.settings.freeShippingMinimumOrderAmount,shipping.freeShippingMinimumOrderAmount)
-                // await this.check(selector.admin.wooCommerce.settings.freeShippingCouponsDiscounts)
+                await this.clearAndType(shippingSettings.freeShippingTitle, shipping.methodName);
+                await this.selectByValue(shippingSettings.freeShippingRequires, shipping.freeShippingRequires as string);
+                if (shipping.freeShippingRequires !== 'coupon') {
+                    await this.clearAndType(shippingSettings.freeShippingMinimumOrderAmount, shipping.freeShippingMinimumOrderAmount as string);
+                    await this.check(shippingSettings.freeShippingCouponsDiscounts);
+                }
                 break;
 
-            // Local Pickup
-            case 'local_pickup':
-                await this.clearAndType(selector.admin.wooCommerce.settings.localPickupTitle, shipping.shippingMethod);
-                await this.selectByValue(selector.admin.wooCommerce.settings.localPickupTaxStatus, shipping.taxStatus);
-                await this.clearAndType(selector.admin.wooCommerce.settings.localPickupCost, shipping.shippingCost);
+            // vendor table rate shipping
+            case 'vendor_table_rate_shipping':
+                await this.clearAndType(shippingSettings.vendorTableRateShippingMethodTitle, shipping.methodName);
                 break;
 
-            // Dokan Table Rate Shipping
-            case 'dokan_table_rate_shipping':
-                await this.clearAndType(selector.admin.wooCommerce.settings.dokanTableRateShippingMethodTitle, shipping.shippingMethod);
+            // zone distance rate shipping
+            case 'vendor_distance_rate_shipping':
+                await this.clearAndType(shippingSettings.vendorDistanceRateShippingMethodTitle, shipping.methodName);
                 break;
 
-            // Dokan Distance Rate Shipping
-            case 'dokan_distance_rate_shipping':
-                await this.clearAndType(selector.admin.wooCommerce.settings.dokanDistanceRateShippingMethodTitle, shipping.shippingMethod);
-                break;
-
-            // Vendor Shipping
-            case 'dokan_vendor_shipping':
-                await this.clearAndType(selector.admin.wooCommerce.settings.vendorShippingMethodTitle, shipping.shippingMethod);
-                await this.selectByValue(selector.admin.wooCommerce.settings.vendorShippingTaxStatus, shipping.taxStatus);
+            // zone shipping
+            case 'vendor_vendor_shipping':
+                await this.clearAndType(shippingSettings.vendorShippingMethodTitle, shipping.methodName);
+                await this.selectByValue(shippingSettings.vendorShippingTaxStatus, shipping.taxStatus as string);
                 break;
 
             default:
                 break;
         }
 
-        await this.click(selector.admin.wooCommerce.settings.shippingMethodSaveChanges);
-        await this.toBeVisible(selector.admin.wooCommerce.settings.shippingMethodCell(shipping.shippingMethod));
+        await this.clickAndWaitForResponse(data.subUrls.ajax, shippingSettings.createAndSave);
+        await this.toBeVisible(shippingSettings.shippingMethodRow(shipping.methodName));
     }
 
-    // Admin Delete Shipping Zone
-    async deleteShippingZone(shippingZone: string) {
-        await this.click(selector.admin.wooCommerce.settings.shipping);
+    // admin delete shipping zone
+    async deleteShippingZone(zoneName: string) {
+        await this.goto(data.subUrls.backend.wc.shippingSettings);
 
-        await this.hover(selector.admin.wooCommerce.settings.shippingZoneCell(shippingZone));
-        await this.clickAndAccept(selector.admin.wooCommerce.settings.deleteShippingZone(shippingZone));
-
-        const shippingZoneIsVisible = await this.isVisible(selector.admin.wooCommerce.settings.shippingZoneCell(shippingZone));
-        expect(shippingZoneIsVisible).toBe(false);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, shippingSettings.deleteShippingZone(zoneName));
+        await this.notToBeVisible(shippingSettings.shippingZoneRow(zoneName));
     }
 
-    // Admin Delete Shipping Method
-    async deleteShippingMethod(shipping: any) {
-        await this.click(selector.admin.wooCommerce.settings.shipping);
+    // admin delete shipping method
+    async deleteShippingMethod(zoneName: string, methodName: string) {
+        await this.goto(data.subUrls.backend.wc.shippingSettings);
 
-        await this.hover(selector.admin.wooCommerce.settings.shippingZoneCell(shipping.shippingZone));
-        await this.click(selector.admin.wooCommerce.settings.editShippingZone(shipping.shippingZone));
-        await this.hover(selector.admin.wooCommerce.settings.shippingMethodCell(shipping.shippingMethod));
-        await this.click(selector.admin.wooCommerce.settings.deleteShippingMethod(shipping.shippingMethod));
-        await this.click(selector.admin.wooCommerce.settings.shippingZoneSaveChanges);
-
-        const shippingMethodIsVisible = await this.isVisible(selector.admin.wooCommerce.settings.shippingMethodCell(shipping.shippingMethod));
-        expect(shippingMethodIsVisible).toBe(false);
+        await this.click(shippingSettings.editShippingZone(zoneName));
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, shippingSettings.deleteShippingMethod(methodName));
+        await this.notToBeVisible(shippingSettings.shippingMethodRow(methodName));
     }
 }

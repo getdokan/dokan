@@ -31,7 +31,8 @@ class ProductCache {
         add_action( 'woocommerce_attribute_updated', [ $this, 'clear_seller_product_caches' ], 20 );
         add_action( 'woocommerce_attribute_deleted', [ $this, 'clear_seller_product_caches' ], 20 );
 
-        add_action( 'dokan_product_updated', [ $this, 'clear_single_product_caches' ], 20 );
+        add_action( 'dokan_product_updated', [ $this, 'clear_single_product_caches' ], 999 );
+        add_action( 'dokan_new_product_added', [ $this, 'clear_single_product_caches' ], 999 );
         add_action( 'dokan_bulk_product_status_change', [ $this, 'cache_clear_bulk_product_status_change' ], 20, 2 );
     }
 
@@ -70,6 +71,12 @@ class ProductCache {
      * @return void
      */
     public static function delete( $seller_id ) {
+        $proceed = apply_filters( 'dokan_product_cache_delete_all_data', true, $seller_id );
+
+        if ( ! $proceed ) {
+            return;
+        }
+
         Cache::invalidate_group( 'product_data' );
         Cache::invalidate_group( "seller_product_data_{$seller_id}" );
         Cache::invalidate_group( "seller_product_stock_data_{$seller_id}" );

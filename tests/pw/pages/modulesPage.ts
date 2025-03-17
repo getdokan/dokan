@@ -2,6 +2,10 @@ import { Page, expect } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
+import { modules } from '@utils/interfaces';
+
+// selectors
+const modulesAdmin = selector.admin.dokan.modules;
 
 export class ModulesPage extends AdminPage {
     constructor(page: Page) {
@@ -11,86 +15,87 @@ export class ModulesPage extends AdminPage {
     // modules
 
     // modules render properly
-    async adminModulesRenderProperly() {
+    async adminModulesRenderProperly(moduleStats: modules['moduleStats']) {
         await this.goIfNotThere(data.subUrls.backend.dokan.modules);
 
         // modules text is visible
-        await this.toBeVisible(selector.admin.dokan.modules.pro.moduleText);
+        await this.toBeVisible(modulesAdmin.pro.moduleText);
 
         // module plan elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.modules.pro.modulePlan);
+        await this.multipleElementVisible(modulesAdmin.pro.modulePlan);
 
         // navTab elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.modules.pro.navTabs);
+        await this.multipleElementVisible(modulesAdmin.pro.navTabs);
 
         // module filter  is visible
-        await this.toBeVisible(selector.admin.dokan.modules.pro.moduleFilter);
+        await this.toBeVisible(modulesAdmin.pro.moduleFilter);
 
         // modules search is visible
-        await this.toBeVisible(selector.admin.dokan.modules.pro.searchBox);
+        await this.toBeVisible(modulesAdmin.pro.searchBox);
 
         // modules view mode switcher is visible
-        await this.toBeVisible(selector.admin.dokan.modules.pro.moduleViewMode);
+        await this.toBeVisible(modulesAdmin.pro.moduleViewMode);
 
         // module cards and card details are visible
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCard, 39);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleIcon, 39);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCheckbox, 39);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleName, 39);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleDescription, 39);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleActivationSwitch, 39);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleDocs, 38);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleVideos, 17);
+        await this.toHaveCount(modulesAdmin.pro.moduleCard, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleIcon, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleCheckbox, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleName, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleDescription, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleActivationSwitch, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleDocs, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleVideos, moduleStats.modulesVideoLink);
 
         // module category tags are visible
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.productManagement, 13);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.integration, 6);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.uiUx, 2);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.shipping, 3);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.storeManagement, 10);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.payment, 7);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.orderManagement, 2);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.vendorManagement, 1);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.productManagement, moduleStats.productManagement);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.integration, moduleStats.integration);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.uiUx, moduleStats.uiUx);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.shipping, moduleStats.shipping);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.storeManagement, moduleStats.storeManagement);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.payment, moduleStats.payment);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.orderManagement, moduleStats.orderManagement);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.vendorManagement, moduleStats.vendorManagement);
     }
 
     // search module
     async searchModule(moduleName: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.modules);
-        await this.clickIfVisible(selector.admin.dokan.modules.pro.clearFilter);
-        await this.clearAndType(selector.admin.dokan.modules.pro.searchBox, moduleName);
-        await this.toBeVisible(selector.admin.dokan.modules.pro.moduleCardByName(moduleName));
+        await this.clickIfVisible(modulesAdmin.pro.clearFilter);
+        await this.clearAndType(modulesAdmin.pro.searchBox, moduleName);
+        await this.toHaveCount(modulesAdmin.pro.moduleCard, 1);
+        await this.toBeVisible(modulesAdmin.pro.moduleCardByName(moduleName));
     }
 
     // filter modules
     async filterModules(category: string) {
         await this.goto(data.subUrls.backend.dokan.modules);
 
-        await this.hover(selector.admin.dokan.modules.pro.moduleFilter);
-        await this.click(selector.admin.dokan.modules.pro.moduleFilterCheckBox(category));
-        const numOfModules = await this.countLocator(selector.admin.dokan.modules.pro.moduleCard);
-        const numOfCategoryTag = await this.countLocator(selector.admin.dokan.modules.pro.moduleCategoryTag(category));
+        await this.hover(modulesAdmin.pro.moduleFilter);
+        await this.click(modulesAdmin.pro.moduleFilterCheckBox(category));
+        const numOfModules = await this.countLocator(modulesAdmin.pro.moduleCard);
+        const numOfCategoryTag = await this.countLocator(modulesAdmin.pro.moduleCategoryTag(category));
         expect(numOfModules).toBe(numOfCategoryTag);
     }
 
     // activate deactivate module
     async activateDeactivateModule(moduleName: string) {
         await this.searchModule(moduleName);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.modules, selector.admin.dokan.modules.pro.moduleActivationSwitch);
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.modules, modulesAdmin.pro.moduleActivationSwitch);
     }
 
     // modules bulk action
     async moduleBulkAction(action: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.modules);
 
-        await this.click(selector.admin.dokan.modules.pro.firstModuleCheckbox);
-        await this.click(selector.admin.dokan.modules.pro.selectAllBulkAction);
+        await this.click(modulesAdmin.pro.firstModuleCheckbox);
+        await this.click(modulesAdmin.pro.selectAllBulkAction);
         switch (action) {
             case 'activate':
-                await this.clickAndWaitForResponse(data.subUrls.api.dokan.modules, selector.admin.dokan.modules.pro.activeAll);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.modules, modulesAdmin.pro.activeAll);
                 break;
 
             case 'deactivate':
-                await this.clickAndWaitForResponse(data.subUrls.api.dokan.modules, selector.admin.dokan.modules.pro.deActivateAll);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.modules, modulesAdmin.pro.deActivateAll);
                 break;
 
             default:
@@ -101,22 +106,22 @@ export class ModulesPage extends AdminPage {
     // module view layout
     async moduleViewLayout(style: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.modules);
-        const currentStyle = await this.getClassValue(selector.admin.dokan.modules.pro.currentLayout);
+        const currentStyle = await this.getClassValue(modulesAdmin.pro.currentLayout);
         if (!currentStyle?.includes(style)) {
-            await this.click(selector.admin.dokan.modules.pro.moduleViewMode);
-            await this.toHaveClass(selector.admin.dokan.modules.pro.currentLayout, style);
+            await this.click(modulesAdmin.pro.moduleViewMode);
+            await this.toHaveClass(modulesAdmin.pro.currentLayout, style);
         }
     }
 
     // inactive module exists
     async inActiveModuleExists() {
         await this.goIfNotThere(data.subUrls.backend.dokan.modules);
-        await this.click(selector.admin.dokan.modules.pro.navTabs.inActive);
-        const noModulesMessage = await this.isVisible(selector.admin.dokan.modules.pro.noModulesFound);
+        await this.click(modulesAdmin.pro.navTabs.inActive);
+        const noModulesMessage = await this.isVisible(modulesAdmin.pro.noModulesFound);
         if (noModulesMessage) {
-            await this.toContainText(selector.admin.dokan.modules.pro.noModulesFound, data.modules.noModuleMessage);
+            await this.toContainText(modulesAdmin.pro.noModulesFound, data.modules.noModuleMessage);
         } else {
-            const inActiveModuleNames = await this.getMultipleElementTexts(selector.admin.dokan.modules.pro.moduleName);
+            const inActiveModuleNames = await this.getMultipleElementTexts(modulesAdmin.pro.moduleName);
             throw new Error('Inactive modules: ' + inActiveModuleNames);
         }
     }

@@ -2,10 +2,12 @@
 //COVERAGE_TAG: POST /dokan/v2/orders/(?P<id>[\d]+)/downloads
 //COVERAGE_TAG: DELETE /dokan/v2/orders/(?P<id>[\d]+)/downloads
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
+import { data } from '@utils/testData';
 
 test.describe('order downloads api test', () => {
     let apiUtils: ApiUtils;
@@ -13,9 +15,9 @@ test.describe('order downloads api test', () => {
     let orderId: string;
     let downloadId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
-        const [responseBody] = await apiUtils.uploadMedia('../../tests/pw/utils/sampleData/avatar.png', payloads.mimeTypes.png, payloads.adminAuth); // todo: update image path
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+        const [responseBody] = await apiUtils.uploadMedia(data.image.avatar, payloads.mimeTypes.png, payloads.adminAuth);
         const downloads = [
             {
                 id: String(responseBody.id),
@@ -28,21 +30,28 @@ test.describe('order downloads api test', () => {
         [, downloadId] = await apiUtils.createOrderDownload(orderId, [downloadableProductId]);
     });
 
-    test('get all order downloads @v2 @lite', async () => {
+    test.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    test('get all order downloads', { tag: ['@lite', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllOrderDownloads(orderId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.orderDownloadsSchema.orderDownloadsSchema);
     });
 
-    test('create order downloads @v2 @lite', async () => {
+    test('create order downloads', { tag: ['@lite', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createOrderDownload(orderId), { data: { ids: [downloadableProductId] } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.orderDownloadsSchema.createOrderDownloadSchema);
     });
 
-    test('delete order downloads @v2 @lite', async () => {
+    test('delete order downloads', { tag: ['@lite', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteOrderDownload(orderId), { data: { permission_id: downloadId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.orderDownloadsSchema.deleteOrderDownloadSchema);
     });
 });

@@ -74,13 +74,12 @@ class AsyncRequests {
             return;
         }
 
-        $vendors = isset( $args['data'] ) ? $args['data'] : [];
+        $vendors = $args['data'] ?? [];
         if ( empty( $vendors ) || ! is_array( $vendors ) ) {
             return;
         }
 
         $failed_actions = new FailedActions();
-        $invoice_email  = new ReverseWithdrawalInvoice();
         foreach ( $vendors as $vendor_id ) {
             // maybe take action
             $failed_actions->ensure_reverse_pay_actions( $vendor_id );
@@ -94,8 +93,6 @@ class AsyncRequests {
                 // no need to send invoice email, coz vendor has no due
                 continue;
             }
-
-            $invoice_email->trigger( $vendor_id, $due_status );
 
             do_action( 'dokan_reverse_withdrawal_invoice_email_sent', $vendor_id, $due_status, dokan_current_datetime()->format( 'Y-m-d' ) );
         }

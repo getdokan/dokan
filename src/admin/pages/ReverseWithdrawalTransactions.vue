@@ -437,7 +437,6 @@ export default {
 
 .dokan-reverse-withdrawal-transactions {
     .dokan-reverse-withdrawal-fact-card {
-        margin: 0px -10px;
         display: flex;
         flex-wrap: wrap;
     }

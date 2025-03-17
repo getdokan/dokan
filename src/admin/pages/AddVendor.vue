@@ -6,7 +6,7 @@
                     <ul class="tab-list">
                         <li v-for="(tab, index) in tabs" :key="index" :class="{'tab-title': true, 'active': currentTab === tab.name, 'last': tab.name === 'VendorPaymentFields'}">
                             <div class="tab-link">
-                                <a href="#" @click.prevent="currentTab = tab.name" :class="{'first': tab.name === 'VendorAccountFields'}">
+                                <a href="#" @click.prevent="currentTab = tab.name" class='flex' :class="{'first': tab.name === 'VendorAccountFields'}">
                                     <span :class="[ tab.icon ]"></span>
                                     {{tab.label}}
                                 </a>
@@ -15,7 +15,7 @@
                     </ul>
                 </div>
 
-                <div class="tab-contents" v-if="currentTab">
+                <div class="tab-contents mt-2" v-if="currentTab">
 
                     <div class="loading" v-if="isLoading">
                         <loading></loading>
@@ -183,12 +183,7 @@ export default {
                         if ( result.value ) {
                             this.$root.$emit( 'addAnotherVendor' );
                         } else if ( result.dismiss === Swal.DismissReason.cancel ) {
-
-                            if ( this.hasPro ) {
-                                this.$router.push( { path: 'vendors/' + response.id, query:{ edit: 'true' } } );
-                            } else {
-                                window.location.replace( `${dokan.urls.adminRoot}user-edit.php?user_id=${response.id}` );
-                            }
+                            this.$router.push( { path: 'vendors/' + response.id, query:{ edit: 'true' } } );
                         }
                     } );
                 } )
@@ -396,6 +391,8 @@ export default {
             .dokan-form-group {
                 margin: 0 10px;
                 overflow: hidden;
+                display: flex;
+                flex-wrap: wrap;
 
                 &:after,
                 &:before {

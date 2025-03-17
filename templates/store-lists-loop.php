@@ -47,15 +47,15 @@
                                     <?php endif ?>
 
                                     <div class="store-data <?php echo esc_attr( $store_open_is_on ); ?>">
-                                        <h2><a href="<?php echo esc_attr( $store_url ); ?>"><?php echo esc_html( $store_name ); ?></a> <?php apply_filters( 'dokan_store_list_loop_after_store_name', $vendor ); ?></h2>
+                                        <h2><a href="<?php echo esc_attr( $store_url ); ?>"><?php echo esc_html( $store_name ); ?></a> <?php do_action( 'dokan_store_list_loop_after_store_name', $vendor ); ?></h2>
 
                                         <?php if ( ! empty( $store_rating['count'] ) ) : ?>
                                             <div class="dokan-seller-rating"
                                                 title="
                                                 <?php
-                                                    echo sprintf(
+                                                    printf(
                                                         // translators: 1) seller rating
-                                                        esc_attr__( 'Rated %s out of 5', 'dokan-lite' ), number_format_i18n( $store_rating['rating'] )
+                                                        esc_attr__( 'Rated %s out of 5', 'dokan-lite' ), esc_html( number_format_i18n( $store_rating['rating'] ) )
                                                     );
                                                 ?>
                                                 ">

@@ -7,77 +7,92 @@
 //COVERAGE_TAG: DELETE /dokan/v1/admin/support-ticket/(?P<id>[\d]+)/comment
 //COVERAGE_TAG: PUT /dokan/v1/admin/support-ticket/batch
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
-const { VENDOR_ID, CUSTOMER_ID } = global as any;
+const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
 test.describe('support ticket api test', () => {
     let apiUtils: ApiUtils;
     let supportTicketId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
-        [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, store_id: VENDOR_ID });
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+        [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { ...payloads.createSupportTicket.meta, store_id: VENDOR_ID } });
     });
 
-    test('get all support ticket customers @pro', async () => {
+    test.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    test('get all support ticket customers', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllSupportTicketCustomers);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.supportTicketsSchema.supportTicketCustomerSchema);
     });
 
-    test('get all support tickets @pro', async () => {
+    test('get all support tickets', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllSupportTickets);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.supportTicketsSchema.supportTicketsSchema);
     });
 
-    test('get single support ticket @pro', async () => {
+    test('get single support ticket', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleSupportTicket(supportTicketId), { params: { vendor_id: VENDOR_ID } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.supportTicketsSchema.singleSupportTicketSchema);
     });
 
-    test('create a support ticket comment @pro', async () => {
+    test('create a support ticket comment', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createSupportTicketComment(supportTicketId), { data: payloads.createSupportTicketComment });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.supportTicketsSchema.supportTicketCommentSchema);
     });
 
-    test('update a support ticket status @pro', async () => {
+    test('update a support ticket status', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateSupportTicketStatus(supportTicketId), { data: payloads.updateSupportTicketStatus });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.supportTicketsSchema.supportTicketStatusSchema);
 
         // reopen support ticket
         await apiUtils.updateSupportTicketStatus(supportTicketId, 'open');
     });
 
-    test('update a support ticket email notification @pro', async () => {
+    test('update a support ticket email notification', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateSupportTicketEmailNotification(supportTicketId), { data: payloads.updateSupportTicketEmailNotification });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.supportTicketsSchema.supportTicketEmailSchema);
     });
 
-    test('delete a support ticket comment @pro', async () => {
+    test('delete a support ticket comment', { tag: ['@pro'] }, async () => {
         const supportTicketCommentId = await apiUtils.createSupportTicketComment(supportTicketId, payloads.createSupportTicketComment);
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteSupportTicketComment(supportTicketCommentId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.supportTicketsSchema.deleteSupportTicketSchema);
     });
 
-    test('update batch support tickets @pro', async () => {
+    test('update batch support tickets', { tag: ['@pro'] }, async () => {
         const allSupportTicketIds = (await apiUtils.getAllSupportTickets()).map((a: { ID: unknown }) => a.ID);
+        // console.log(allSupportTicketIds);
+
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchSupportTickets, { data: { close: allSupportTicketIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.supportTicketsSchema.batchUpdateSupportTicketSchema);
 
         // reopen all support tickets
-        for (const supportTicketId of allSupportTicketIds) {
-            await apiUtils.updateSupportTicketStatus(supportTicketId, 'open');
-        }
+        // for (const supportTicketId of allSupportTicketIds) {
+        //     await apiUtils.updateSupportTicketStatus(supportTicketId, 'open');
+        // }
     });
 });

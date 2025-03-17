@@ -5,35 +5,42 @@ global $wpdb;
 
     <div class="panel-group" id="accordion">
         <?php
-        $download_permissions = $wpdb->get_results(
-            $wpdb->prepare(
-                "
-                SELECT * FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions
-                WHERE order_id = %d ORDER BY product_id
-            ", $order->get_id()
-            )
-        );
+        $data_store           = WC_Data_Store::load( 'customer-download' );
+        $download_permissions = array();
+        if ( 0 !== $order->get_id() ) {
+            $download_permissions = $data_store->get_downloads(
+                array(
+                    'order_id' => $order->get_id(),
+                    'orderby'  => 'product_id',
+                )
+            );
+        }
 
-        $product    = null;
-        $loop       = 0;
-        $file_count = 1;
+        $product      = null;
+        $loop         = 0;
+        $file_counter = 1;
 
         if ( $download_permissions && count( $download_permissions ) > 0 ) {
             foreach ( $download_permissions as $download ) {
-                if ( ! $product || $product->get_id() !== (int) $download->product_id ) {
-                    $product    = wc_get_product( absint( $download->product_id ) );
-                    $file_count = 1;
+                if ( ! $product || $product->get_id() !== $download->get_product_id() ) {
+                    $product      = wc_get_product( $download->get_product_id() );
+                    $file_counter = 1;
                 }
 
-                // don't show permissions to files that have since been removed
-                if ( ! $product || ! $product->exists() || ! $product->has_file( $download->download_id ) ) {
+                // don't show permissions to files that have since been removed.
+                if ( ! $product || ! $product->exists() || ! $product->has_file( $download->get_download_id() ) ) {
                     continue;
                 }
 
+                // Show file title instead of count if set.
+                $file = $product->get_file( $download->get_download_id() );
+                // translators: file name.
+                $file_count = number_format_i18n( $file_counter );
+
                 include 'order-download-permission-html.php';
 
-                $loop++;
-                $file_count++;
+                ++$loop;
+                ++$file_counter;
             }
         }
         ?>
@@ -41,36 +48,14 @@ global $wpdb;
 
     <div class="toolbar dokan-clearfix">
 
-        <div class="dokan-w7" style="margin-right: 5px;">
-            <select name="grant_access_id" class="grant_access_id dokan-select2 dokan-form-control" data-placeholder="<?php esc_attr_e( 'Choose a downloadable product&hellip;', 'dokan-lite' ); ?>" multiple="multiple">
-                <?php
-                echo '<option value=""></option>';
-                global $wpdb;
-                $user_id = dokan_get_current_user_id();
-
-                $products = $wpdb->get_results(
-                    $wpdb->prepare(
-                        "SELECT $wpdb->posts.* FROM $wpdb->posts
-                        INNER JOIN $wpdb->postmeta
-                            ON ( $wpdb->posts.ID = $wpdb->postmeta.post_id )
-                        WHERE $wpdb->posts.post_author=%d
-                            AND ( $wpdb->postmeta.meta_key = '_downloadable' AND $wpdb->postmeta.meta_value = 'yes' )
-                            AND $wpdb->posts.post_type IN ( 'product', 'product_variation' )
-                            AND $wpdb->posts.post_status = 'publish'
-                        GROUP BY $wpdb->posts.ID
-                        ORDER BY $wpdb->posts.post_parent ASC, $wpdb->posts.post_title ASC", $user_id
-                    )
-                );
-
-                if ( $products ) {
-                    foreach ( $products as $product ) {
-                        $product_object = wc_get_product( $product->ID );
-                        $product_name   = $product_object->get_formatted_name();
-
-                        echo '<option value="' . esc_attr( $product->ID ) . '">' . esc_html( $product_name ) . '</option>';
-                    }
-                }
-                ?>
+        <div class="dokan-w12" style="margin-bottom: 5px;">
+            <select
+                id="grant_access_id"
+                class="grant_access_id dokan-form-control"
+                name="grant_access_id[]"
+                multiple="multiple"
+                style="width: 100%;"
+                data-placeholder="<?php esc_attr_e( 'Search for a downloadable product&hellip;', 'dokan-lite' ); ?>">
             </select>
         </div>
 

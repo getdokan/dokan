@@ -107,7 +107,7 @@
                 </label>
                 <span class="description">
                     <?php
-                    wp_kses(
+                    echo wp_kses(
                         sprintf(
                             /* translators: %1$s: opening anchor tag with link, %2$s: closing anchor tag */
                             __( 'Want to help make Dokan even more awesome? Allow Dokan Multivendor Marketplace to collect non-sensitive diagnostic data and usage information. %1$sWhat we collect%2$s', 'dokan-lite' ),
@@ -126,7 +126,7 @@
                 </span>
                 <p id="collection-info" class="description" style="display:none;">
                     <?php
-                    wp_kses(
+                    echo wp_kses(
                         sprintf(
                             /* translators: %1$s: Appsero hypertext with link, %2$s: opening anchor tag with link, %3$s: closing anchor tag */
                             __( 'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked. We are using %1$s to collect your data. %2$sLearn more%3$s about how %1$s collects and handles your data.', 'dokan-lite' ),

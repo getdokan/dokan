@@ -37,21 +37,14 @@ class Registration {
             return $error;
         }
 
-        $nonce_check = apply_filters( 'dokan_register_nonce_check', true );
-
-        if ( $nonce_check ) {
-            $nonce_value = isset( $_POST['_wpnonce'] ) ? sanitize_key( $_POST['_wpnonce'] ) : '';
-            $nonce_value = isset( $_POST['woocommerce-register-nonce'] ) ? sanitize_key( $_POST['woocommerce-register-nonce'] ) : $nonce_value;
-
-            if ( empty( $nonce_value ) || ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
-                return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed', 'dokan-lite' ) );
-            }
+        if ( ! $this->validate_nonce() ) {
+            return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed', 'dokan-lite' ) );
         }
 
         $allowed_roles = apply_filters( 'dokan_register_user_role', [ 'customer', 'seller' ] );
 
         // is the role name allowed or user is trying to manipulate?
-        if ( isset( $_POST['role'] ) && ! in_array( $_POST['role'], $allowed_roles, true ) ) {
+        if ( empty( $_POST['role'] ) || ( ! in_array( $_POST['role'], $allowed_roles, true ) ) ) {
             return new WP_Error( 'role-error', __( 'Cheating, eh?', 'dokan-lite' ) );
         }
 
@@ -92,10 +85,7 @@ class Registration {
      * @return array
      */
     public function set_new_vendor_names( $data ) {
-        $nonce_value = isset( $_POST['_wpnonce'] ) ? sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $nonce_value = isset( $_POST['woocommerce-register-nonce'] ) ? sanitize_key( wp_unslash( $_POST['woocommerce-register-nonce'] ) ) : $nonce_value; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
-        if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
+		if ( ! $this->validate_nonce() ) {
             return $data;
         }
 
@@ -124,10 +114,8 @@ class Registration {
      * @return void
      */
     public function save_vendor_info( $user_id, $data ) {
-        $nonce_value = isset( $_POST['_wpnonce'] ) ? sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $nonce_value = isset( $_POST['woocommerce-register-nonce'] ) ? sanitize_key( wp_unslash( $_POST['woocommerce-register-nonce'] ) ) : $nonce_value; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-        if ( ! wp_verify_nonce( $nonce_value, 'woocommerce-register' ) ) {
+        if ( ! $this->validate_nonce() ) {
             return;
         }
 
@@ -157,9 +145,8 @@ class Registration {
         // Intially add values on profile completion progress bar
         $dokan_settings['profile_completion']['store_name']    = 10;
         $dokan_settings['profile_completion']['phone']         = 10;
-        $dokan_settings['profile_completion']['address']       = 10;
         $dokan_settings['profile_completion']['next_todo']     = 'banner_val';
-        $dokan_settings['profile_completion']['progress']      = 30;
+        $dokan_settings['profile_completion']['progress']      = 20;
         $dokan_settings['profile_completion']['progress_vals'] = [
             'banner_val'          => 15,
             'profile_picture_val' => 15,
@@ -176,9 +163,78 @@ class Registration {
             ],
         ];
 
+        $dokan_settings = $this->check_and_set_address_profile_completion( $user_id, $dokan_settings, $dokan_settings );
+
         update_user_meta( $user_id, 'dokan_profile_settings', $dokan_settings );
         update_user_meta( $user_id, 'dokan_store_name', $dokan_settings['store_name'] );
 
         do_action( 'dokan_new_seller_created', $user_id, $dokan_settings );
     }
+
+    /**
+     * Adds address profile completion value in dokan settings.
+     *
+     * @3.10.2
+     *
+     * @param int   $vendor_id
+     * @param array $new_dokan_settings
+     * @param array $old_profile_settings
+     *
+     * @return array
+     */
+    public function check_and_set_address_profile_completion( $vendor_id, $new_dokan_settings, $old_profile_settings ) {
+        // Check address and add manually values on Profile Completion also increase progress value
+        if ( ! empty( $new_dokan_settings['profile_completion']['progress_vals']['address_val'] ) ) {
+            $new_dokan_settings['profile_completion']['address'] = $new_dokan_settings['profile_completion']['progress_vals']['address_val'];
+        }
+
+        if ( empty( $new_dokan_settings['address']['street_1'] ) ) {
+            unset( $new_dokan_settings['profile_completion']['address'] );
+        }
+
+        if ( empty( $new_dokan_settings['address']['city'] ) && ! empty( $new_dokan_settings['profile_completion']['address'] ) ) {
+            unset( $new_dokan_settings['profile_completion']['address'] );
+        }
+
+        if ( empty( $new_dokan_settings['address']['zip'] ) && ! empty( $new_dokan_settings['profile_completion']['address'] ) ) {
+            unset( $new_dokan_settings['profile_completion']['address'] );
+        }
+
+        if ( empty( $new_dokan_settings['address']['country'] ) && ! empty( $new_dokan_settings['profile_completion']['address'] ) ) {
+            unset( $new_dokan_settings['profile_completion']['address'] );
+        } else {
+            $country = isset( $new_dokan_settings['address']['country'] ) ? $new_dokan_settings['address']['country'] : '';
+
+            if ( isset( $states[ $country ] ) && is_array( $states[ $country ] ) && empty( $new_dokan_settings['address']['state'] ) && ! empty( $new_dokan_settings['profile_completion']['address'] ) ) {
+                unset( $new_dokan_settings['profile_completion']['address'] );
+            }
+        }
+
+        if ( ! empty( $new_dokan_settings['profile_completion']['address'] ) ) {
+            $progress = empty( $old_profile_settings['profile_completion']['progress'] ) ? 0 : $old_profile_settings['profile_completion']['progress'];
+            $new_dokan_settings['profile_completion']['progress'] = $progress + $new_dokan_settings['profile_completion']['progress_vals']['address_val'];
+        }
+
+        return $new_dokan_settings;
+    }
+
+    /**
+     * Validate nonce for seller registration.
+     * This function checks the nonce value to ensure the request is valid and secure.
+     * If the "dokan_register_nonce_check" filter returns false, the validation is bypassed,
+     * third-party developers to override the nonce check if necessary.
+     *
+     * @return bool True if nonce is valid or validation is bypassed, false otherwise.
+     */
+	protected function validate_nonce() {
+		if ( apply_filters( 'dokan_register_nonce_check', true ) ) {
+			$nonce_value = isset( $_POST['_wpnonce'] ) ? sanitize_key( $_POST['_wpnonce'] ) : '';
+			$nonce_value = isset( $_POST['woocommerce-register-nonce'] ) ? sanitize_key( $_POST['woocommerce-register-nonce'] ) : $nonce_value;
+
+			return ! empty( $nonce_value ) && wp_verify_nonce( $nonce_value, 'woocommerce-register' );
+		}
+
+		// Bypass validation if the filter returns false
+		return true;
+	}
 }

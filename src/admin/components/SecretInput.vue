@@ -8,7 +8,7 @@
                 @blur="addBlurryEffect"
                 :type="inputType"
                 :value="value"
-                @input="handleInput"
+                @input="onInput"
                 ref="secretInput"
                 :disabled="isDisabled"
                 :id="inputId"
@@ -27,6 +27,7 @@
 
 <script>
 export default {
+    name: 'SecretInput',
     props: ['type', 'value', 'disabled', 'isSecret', 'copyBtn', 'classes', 'id', 'name'],
 
     data() {
@@ -44,8 +45,8 @@ export default {
     },
 
     methods: {
-        handleInput (e) {
-            this.$emit('input', e.target.value)
+        onInput(event) {
+            this.$emit('input', event.target.value);
         },
         addBlurryEffect( evt ) {
             this.hide = true;

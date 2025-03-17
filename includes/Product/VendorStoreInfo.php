@@ -68,6 +68,7 @@ class VendorStoreInfo {
                 'default'           => 'off',
                 'class'             => 'show_vendor_info',
                 'sanitize_callback' => 'sanitize_text_field',
+                'is_lite'           => true,
             ],
         ];
 

@@ -4,7 +4,7 @@
             // Set date range data.
             let localeData = {
                 format      : dokan_get_daterange_picker_format(),
-                ...dokan_helper.locale
+                ...dokan_helper.daterange_picker_local
             };
 
             // Date range picker handler.

@@ -3,25 +3,61 @@ export {};
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
-            // [key: string]: string
+            [key: string]: string;
             ADMIN: string;
             ADMIN_PASSWORD: string;
             VENDOR: string;
             VENDOR2: string;
-            USER_PASSWORD: string;
             CUSTOMER: string;
+            CUSTOMER2: string;
+            USER_PASSWORD: string;
             ADMIN_ID: string;
             VENDOR_ID: string;
             VENDOR2_ID: string;
             CUSTOMER_ID: string;
+            CUSTOMER2_ID: string;
             PRODUCT_ID: string;
-            V2_PRODUCT_ID: string;
+            PRODUCT_ID_V2: string;
+            PRODUCT_EDIT_NONCE: string;
+            CATEGORY_ID: string;
+            ATTRIBUTE_ID: string;
+            TAG_ID: string;
+            LOCAL: boolean;
+            CI: boolean;
             GMAP: string;
-            DOKAN_PRO: string;
+            MAPBOX: string;
+            LICENSE_KEY: string;
+            VONAGE_API_KEY: string;
+            VONAGE_API_SECRET: string;
+            FB_APP_ID: string;
+            FB_APP_SECRET: string;
+            TALKJS_APP_ID: string;
+            TALKJS_APP_SECRET: string;
+            PRINTFUL_APP_ID: string;
+            PRINTFUL_APP_SECRET: string;
+            RECAPTCHA_SITE_KEY: string;
+            RECAPTCHA_SECRET_KEY: string;
+            TEST_PUBLISH_KEY_STRIPE: string;
+            TEST_SECRET_KEY_STRIPE: string;
+            TEST_CLIENT_ID_STRIPE: string;
+            SANDBOX_CLIENT_ID_MANGOPAY: string;
+            SANDBOX_API_KEY_MANGOPAY: string;
+            TEST_KEY_ID_RAZORPAY: string;
+            TEST_KEY_SECRET_RAZORPAY: string;
+            TEST_PUBLISH_KEY_STRIPE_EXPRESS: string;
+            TEST_SECRET_KEY_STRIPE_EXPRESS: string;
+            TEST_MERCHANT_ID_PAYPAL_MARKETPLACE: string;
+            TEST_CLIENT_ID_PAYPAL_MARKETPLACE: string;
+            TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE: string;
+            DOKAN_PRO: boolean;
+            SITE_LANGUAGE: string;
+            SITE_TITLE: string;
+            SITE_PATH: string;
             BASE_URL: string;
+            ADMIN_EMAIL: string;
             QUERY: string;
-            HEADLESS: string;
-            SLOWMO: string;
+            NON_HEADLESS: string;
+            SLOWMO: number;
             DEVTOOLS: string;
             RETRY_TIMES: string;
             TIME_OUT: string;
@@ -38,6 +74,10 @@ declare global {
             DB_PREFIX: string;
             API_TEST_RESULT: string;
             E2E_TEST_RESULT: string;
+            API_COVERAGE: string;
+            E2E_COVERAGE: string;
+            SKIP_DOKAN: boolean;
+            REPORT_TYPE: string;
         }
     }
 }

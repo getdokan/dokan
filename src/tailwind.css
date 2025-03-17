@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input[type=checkbox] {
+    @apply before:!content-[''] mt-1;
+}
+a {
+    color: #0073aa;
+}
+a:hover, a:active, a:focus {
+    color: #0096dd;
+}
+table.wp-list-table.widefat.fixed {
+    position: static;
+}
+
+.tablenav.top {
+    margin-bottom: 10px;
+}

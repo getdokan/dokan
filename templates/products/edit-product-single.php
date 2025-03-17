@@ -29,8 +29,21 @@ if ( isset( $post->ID ) && $post->ID && 'product' === $post->post_type ) {
 }
 
 if ( isset( $_GET['product_id'] ) ) {
-    $post_id        = intval( $_GET['product_id'] );
-    $post           = get_post( $post_id );
+    $post_id = intval( $_GET['product_id'] );
+    $post    = get_post( $post_id );
+
+    if ( ! $post instanceof WP_Post ) {
+        dokan_get_template_part(
+            'global/dokan-error',
+            '',
+            array(
+                'deleted' => false,
+                'message' => __( 'This product is no longer available', 'dokan-lite' )
+            )
+        );
+        return;
+    }
+
     $post_status    = $post->post_status;
     $auto_draft     = 'auto-draft' === $post_status;
     $post_title     = $auto_draft ? '' : $post->post_title;
@@ -50,7 +63,14 @@ if ( isset( $_GET['product_id'] ) && 0 === absint( $_GET['product_id'] ) ) {
 
     $product->set_name( $post_title );
     $product->set_status( $post_status );
-    $post_id        = $product->save();
+    $post_id = $product->save();
+    wp_update_post(
+        [
+            'ID'          => $post_id,
+            'post_author' => dokan_get_current_user_id(),
+        ]
+    );
+
     $post           = get_post( $post_id );
     $from_shortcode = true;
     $new_product    = true;
@@ -141,10 +161,31 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     } else {
                         esc_html_e( 'Edit Product', 'dokan-lite' );
                     }
+
+                    /**
+                     * Render the contents before product edit status label.
+                     *
+                     * @since 3.13.1
+                     *
+                     * @param \WC_Product $product
+                     */
+                    do_action( 'dokan_before_product_edit_status_label', $product );
                     ?>
+
                     <span class="dokan-label <?php echo esc_attr( dokan_get_post_status_label_class( $post->post_status ) ); ?> dokan-product-status-label">
                         <?php echo esc_html( dokan_get_post_status( $post->post_status ) ); ?>
                     </span>
+
+                    <?php
+                    /**
+                     * Render the contents after product edit status label.
+                     *
+                     * @since 3.13.1
+                     *
+                     * @param \WC_Product $product
+                     */
+                    do_action( 'dokan_after_product_edit_status_label', $product );
+                    ?>
 
                     <?php if ( $post->post_status === 'publish' ) : ?>
                         <span class="dokan-right">
@@ -155,6 +196,17 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     <?php if ( $_visibility === 'hidden' ) : ?>
                         <span class="dokan-right dokan-label dokan-label-default dokan-product-hidden-label"><i class="far fa-eye-slash"></i> <?php esc_html_e( 'Hidden', 'dokan-lite' ); ?></span>
                     <?php endif; ?>
+
+                    <?php
+                    /**
+                     * Render the contents after view product button.
+                     *
+                     * @since 3.13.1
+                     *
+                     * @param \WC_Product $product
+                     */
+                    do_action( 'dokan_edit_product_after_view_product_button', $product );
+                    ?>
                 </h1>
             </header><!-- .entry-header -->
 
@@ -234,12 +286,41 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                                     <?php do_action( 'dokan_product_edit_after_title', $post, $post_id ); ?>
 
+                                    <div class="dokan-form-group">
+                                        <?php
+                                        $data = Helper::get_saved_products_category( $post_id );
+                                        $data['from'] = 'edit_product';
+
+                                        dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
+                                        ?>
+                                    </div>
+
                                     <div class="show_if_simple dokan-clearfix show_if_external">
 
                                         <div class="dokan-form-group dokan-clearfix dokan-price-container">
 
                                             <div class="content-half-part regular-price">
-                                                <label for="_regular_price" class="form-label"><?php esc_html_e( 'Price', 'dokan-lite' ); ?></label>
+                                                <label for="_regular_price" class="form-label"><?php esc_html_e( 'Price', 'dokan-lite' ); ?>
+                                                    <span
+                                                        class="vendor-earning simple-product"
+                                                        data-commission="<?php echo esc_attr( dokan()->commission->get_earning_by_product( $post_id ) ); ?>"
+                                                        data-product-id="<?php echo esc_attr( $post_id ); ?>">
+                                                            ( <?php esc_html_e( ' You Earn : ', 'dokan-lite' ); ?>
+                                                                <span class="vendor-price">
+                                                                    <?php
+                                                                    echo wp_kses_post(
+                                                                        wc_price(
+                                                                            dokan()->commission->get_earning_by_product( $post_id ),
+                                                                            [
+                                                                                'decimals' => wc_get_price_decimals(),
+                                                                            ]
+                                                                        )
+                                                                    );
+                                                                    ?>
+                                                                </span>
+                                                            )
+                                                    </span>
+                                                </label>
                                                 <div class="dokan-input-group">
                                                     <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
                                                     <?php
@@ -248,7 +329,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         '_regular_price',
                                                         [
                                                             'class'       => 'dokan-product-regular-price',
-                                                            'placeholder' => __( '0.00', 'dokan-lite' ),
+															'placeholder' => sprintf( '%.0' . get_option( 'woocommerce_price_num_decimals' ) . 'f', 0 ),
                                                         ],
                                                         'price'
                                                     );
@@ -271,7 +352,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         '_sale_price',
                                                         [
                                                             'class'       => 'dokan-product-sales-price',
-                                                            'placeholder' => __( '0.00', 'dokan-lite' ),
+                                                            'placeholder' => sprintf( '%.0' . get_option( 'woocommerce_price_num_decimals' ) . 'f', 0 ),
                                                         ],
                                                         'price'
                                                     );
@@ -304,14 +385,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                     </div>
 
                                     <div class="dokan-form-group">
-                                    <?php
-                                        do_action( 'dokan_product_edit_after_pricing', $post, $post_id );
-
-                                        $data = Helper::get_saved_products_category( $post_id );
-                                        $data['from'] = 'edit_product';
-
-                                        dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
-                                    ?>
+                                    <?php do_action( 'dokan_product_edit_after_pricing', $post, $post_id ); ?>
                                     </div>
 
                                     <div class="dokan-form-group">

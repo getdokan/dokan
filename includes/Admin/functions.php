@@ -84,7 +84,7 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
 
     if ( 'day' === $group_by ) {
         $group_by_query = "YEAR(p.{$date_field}), MONTH(p.{$date_field}), DAY(p.{$date_field})";
-        $date_where     = " AND DATE(p.{$date_field}) >= '{$start_date}' AND DATE(p.${date_field}) <= '{$end_date}'";
+        $date_where     = " AND DATE(p.{$date_field}) >= '{$start_date}' AND DATE(p.{$date_field}) <= '{$end_date}'";
     } else {
         $group_by_query = "YEAR(p.{$date_field}), MONTH(p.{$date_field})";
         $date_where     = " AND DATE(p.{$date_field}) >= '{$start_date}' AND DATE(p.{$date_field}) <= '{$end_date}'";
@@ -109,7 +109,7 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
                     {$date_where}
             GROUP BY {$group_by_query}";
 
-    $data = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL
+    $data = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
     return apply_filters( 'dokan_get_admin_report_data', $data, $group_by, $year, $start, $end, $seller_id );
 }
@@ -433,7 +433,7 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
                 $date_where
             GROUP BY $group_by_query";
 
-    $data = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL
+    $data = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
     // Prepare data for report
     $order_counts    = dokan_prepare_chart_data( $data, 'order_date', 'total_orders', $chart_interval, $start_date_to_time, $group_by );

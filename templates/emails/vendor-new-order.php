@@ -33,7 +33,7 @@ $order_url = esc_url(
     <p>
         <?php
         // translators: 1) order formatted billing full name
-        printf( __( 'You have received an order from %s.', 'dokan-lite' ), $order->get_formatted_billing_full_name() );
+        printf( esc_html__( 'You have received an order from %s.', 'dokan-lite' ), esc_html( $order->get_formatted_billing_full_name() ) );
         ?>
     </p>
 
@@ -78,7 +78,7 @@ $order_url = esc_url(
             if ( $item_totals ) {
                 $i = 0;
                 foreach ( $item_totals as $total ) {
-                    $i ++;
+                    ++$i;
                     ?>
                     <tr>
                         <th class="td" scope="row" colspan="2" style="text-align:<?php echo esc_attr( $text_align ); ?>; <?php echo ( 1 === $i ) ? 'border-top-width: 4px;' : ''; ?>"><?php echo wp_kses_post( $total['label'] ); ?></th>
@@ -113,6 +113,13 @@ do_action( 'woocommerce_email_order_meta', $order, $sent_to_admin, $plain_text, 
  * @hooked WC_Emails::email_address() Shows email address
  */
 do_action( 'woocommerce_email_customer_details', $order, $sent_to_admin, $plain_text, $email );
+
+/**
+ * Show user-defined additional content - this is set in each email's settings.
+ */
+if ( $additional_content ) {
+    echo wp_kses_post( wpautop( wptexturize( $additional_content ) ) );
+}
 
 /**
  * @hooked WC_Emails::email_footer() Output the email footer

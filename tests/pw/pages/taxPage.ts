@@ -1,45 +1,51 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { tax } from '@utils/interfaces';
+
+// selectors
+const woocommerceSettings = selector.admin.wooCommerce.settings;
+const generalSettings = selector.admin.wooCommerce.settings.general;
+const taxSettings = selector.admin.wooCommerce.settings.tax;
 
 export class TaxPage extends AdminPage {
     constructor(page: Page) {
         super(page);
     }
 
-    // Tax methods
-
-    // Admin Enable-Disable Tax
-    async enableTax(enable = true) {
-        await this.goToWooCommerceSettings();
-        enable ? await this.check(selector.admin.wooCommerce.settings.enableTaxes) : await this.uncheck(selector.admin.wooCommerce.settings.enableTaxes);
-        await this.click(selector.admin.wooCommerce.settings.generalSaveChanges);
-        await this.toContainText(selector.admin.wooCommerce.settings.updatedSuccessMessage, data.tax.saveSuccessMessage);
+    async goToTaxSettings() {
+        await this.goIfNotThere(data.subUrls.backend.wc.taxSettings);
     }
 
-    // Admin Add Standard Tax Rate
-    async addStandardTaxRate(tax: tax) {
+    // admin enable disable tax
+    async enableTax(enable = true) {
         await this.goToWooCommerceSettings();
-
-        // Enable Tax
-        await this.enableTax();
-
-        // Set Tax Rate
-        await this.click(selector.admin.wooCommerce.settings.tax);
-        await this.click(selector.admin.wooCommerce.settings.standardRates);
-        const taxIsVisible = await this.isVisible(selector.admin.wooCommerce.settings.taxRate);
-        if (!taxIsVisible) {
-            await this.click(selector.admin.wooCommerce.settings.insertRow);
+        if (enable) {
+            await this.check(generalSettings.enableTaxes);
+        } else {
+            await this.uncheck(woocommerceSettings.general.enableTaxes);
         }
-        await this.clearAndType(selector.admin.wooCommerce.settings.taxRate, tax.taxRate);
-        await this.click(selector.admin.wooCommerce.settings.taxTable);
+        await this.removeAttribute(generalSettings.generalSaveChanges, 'disabled');
+        await this.click(generalSettings.generalSaveChanges);
+        await this.toContainText(woocommerceSettings.updatedSuccessMessage, data.tax.saveSuccessMessage);
+    }
 
-        await this.click(selector.admin.wooCommerce.settings.taxRateSaveChanges);
+    // admin add standard tax rate
+    async addStandardTaxRate(tax: tax) {
+        await this.goToTaxSettings();
 
-        const newTaxRate = await this.getElementValue(selector.admin.wooCommerce.settings.taxRate);
-        // expect(newTaxRate).toBe(String(Number(tax.taxRate).toPrecision(5)))
-        expect(newTaxRate).toBe(tax.taxRate);
+        // set tax rate
+        await this.click(taxSettings.standardRates);
+        await this.click(taxSettings.insertRow);
+
+        const rowCount = await this.getElementCount(taxSettings.taxTableRow);
+        await this.clearAndType(taxSettings.taxRate(rowCount), tax.taxRate);
+        await this.clearAndType(taxSettings.priority(rowCount), tax.priority);
+        await this.click(taxSettings.taxTable);
+
+        await this.click(taxSettings.taxRateSaveChanges);
+        const taxRate = await this.getElementValue(taxSettings.taxRate(rowCount));
+        this.toBeEqual(Number(taxRate), Number(tax.taxRate));
     }
 }

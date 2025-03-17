@@ -1,12 +1,158 @@
 import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
+import { CustomerPage } from '@pages/customerPage';
 import { selector } from '@pages/selectors';
+import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
 import { vendor } from '@utils/interfaces';
+import { dokanSettings, vendorSetupWizard } from '@utils/interfaces';
 
-export class vendorVerificationsPage extends AdminPage {
+// selectors
+const settingsAdmin = selector.admin.dokan.settings;
+const verificationsAdmin = selector.admin.dokan.verifications;
+const verificationsVendor = selector.vendor.vVerificationSettings;
+const setupWizardVendor = selector.vendor.vSetup;
+const singleStoreCustomer = selector.customer.cSingleStore;
+
+export class VendorVerificationsPage extends AdminPage {
     constructor(page: Page) {
         super(page);
+    }
+
+    customerPage = new CustomerPage(this.page);
+
+    // enable vendor verification module
+    async enableVendorVerificationModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.notToBeVisible(selector.admin.dokan.menus.verifications);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.vendorVerification);
+
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.subMenus.verification);
+    }
+
+    // disable vendor verification module
+    async disableVendorVerificationModule() {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(selector.admin.dokan.menus.verifications);
+
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.verifications, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(verificationsAdmin.verificationsDiv);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.vendorVerification);
+
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.hover(selector.vendor.vDashboard.menus.primary.settings);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.subMenus.verification);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.settingsVerification);
+        await this.notToBeVisible(verificationsVendor.verificationSettingsDiv);
+    }
+
+    // verification methods
+
+    async changeVerifiedIcon(icon: string, storeName: string) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.vendorVerification);
+
+        await this.click(settingsAdmin.vendorVerification.verifiedIconByIcon(icon));
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
+
+        // single store page
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.toBeVisible(singleStoreCustomer.storeProfile.verifiedIconByIcon(icon));
+    }
+
+    // update verification method status
+    async updateVerificationMethodStatus(methodName: string, status: string) {
+        await this.goToDokanSettings();
+        await this.reload();
+        await this.click(settingsAdmin.menus.vendorVerification);
+
+        const response =
+            status === 'enable'
+                ? await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(methodName))
+                : await this.disableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(methodName));
+        if (response) {
+            await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage);
+        }
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
+    }
+
+    // update verification method fields
+    async updateVerificationMethod(verificationMethod: dokanSettings['vendorVerification']['verificationMethodDetails']) {
+        await this.clearAndType(settingsAdmin.vendorVerification.addNewVerification.label, verificationMethod.title);
+        await this.clearAndType(settingsAdmin.vendorVerification.addNewVerification.helpText, verificationMethod.help_text);
+        if (verificationMethod.required) {
+            await this.check(settingsAdmin.vendorVerification.addNewVerification.required);
+        }
+    }
+
+    // add Verification Method
+    async addVendorVerificationMethod(verificationMethod: dokanSettings['vendorVerification']['verificationMethodDetails']) {
+        await this.goToDokanSettings();
+        await this.reload();
+        await this.click(settingsAdmin.menus.vendorVerification);
+
+        await this.click(settingsAdmin.vendorVerification.addNewVerification.addNewVerification);
+        await this.updateVerificationMethod(verificationMethod);
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.addNewVerification.create, 201);
+        await this.toBeVisible(settingsAdmin.vendorVerification.methodCreateSuccessMessage);
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
+    }
+
+    // edit Verification Method
+    async editVendorVerificationMethod(methodName: string, verificationMethod: dokanSettings['vendorVerification']['verificationMethodDetails']) {
+        await this.goToDokanSettings();
+        await this.reload();
+        await this.click(settingsAdmin.menus.vendorVerification);
+
+        await this.hover(settingsAdmin.vendorVerification.verificationMethodRow(methodName));
+        await this.click(settingsAdmin.vendorVerification.editVerificationMethod(methodName));
+        await this.updateVerificationMethod(verificationMethod);
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.addNewVerification.update);
+        await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage);
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
+    }
+
+    // delete Verification Method
+    async deleteVendorVerificationMethod(methodName: string) {
+        await this.goToDokanSettings();
+        await this.reload();
+        await this.click(settingsAdmin.menus.vendorVerification);
+
+        await this.hover(settingsAdmin.vendorVerification.verificationMethodRow(methodName));
+        await this.click(settingsAdmin.vendorVerification.deleteVerificationMethod(methodName));
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.confirmDelete, 204);
+        await this.toBeVisible(settingsAdmin.vendorVerification.methodDeleteSuccessMessage);
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
     }
 
     // verification requests
@@ -14,321 +160,261 @@ export class vendorVerificationsPage extends AdminPage {
     // verification requests render properly
     async adminVerificationsRenderProperly() {
         await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+        const noVerificationRequests = await this.isVisible(verificationsAdmin.noRowsFound);
 
-        // tools text is visible
-        await this.toBeVisible(selector.admin.dokan.verifications.verificationRequestsText);
+        if (noVerificationRequests) {
+            await this.toContainText(verificationsAdmin.noRowsFound, 'No requests found.');
+            console.log('No verification request found');
+        } else {
+            // verification requests text is visible
+            await this.toBeVisible(verificationsAdmin.verificationRequestsText);
 
-        // navTab elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.verifications.navTabs);
+            // navTab elements are visible
+            const { tabByStatus, ...navTabs } = verificationsAdmin.navTabs;
+            await this.multipleElementVisible(navTabs);
 
-        // verification table elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.verifications.table);
+            // bulk action elements are visible
+            await this.multipleElementVisible(verificationsAdmin.bulkActions);
+
+            // filter elements are visible
+            await this.toBeVisible(verificationsAdmin.filters.filterByVendors);
+            await this.toBeVisible(verificationsAdmin.filters.filterByMethods);
+
+            // verification table elements are visible
+            await this.multipleElementVisible(verificationsAdmin.table);
+        }
     }
 
-    // approve verification requests
-    async approveVerificationRequest(storeName: string, verificationType: string, action: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+    // verification requests
+    async filterVerificationRequests(input: string, action: string): Promise<void> {
+        await this.goto(data.subUrls.backend.dokan.verifications);
 
-        const verificationRequestIsExists = await this.isVisible(selector.admin.dokan.verifications.vendorRow(storeName));
+        // reset pervious filter if visible
+        await this.clickIfVisible(verificationsAdmin.filters.reset);
 
-        if (!verificationRequestIsExists) {
-            console.log('No pending verification request found!!');
-            return;
-        }
+        switch (action) {
+            case 'by-status': {
+                await this.clickAndWaitForLoadState(verificationsAdmin.navTabs.tabByStatus(input));
+                return;
+            }
 
-        await this.hover(selector.admin.dokan.verifications.vendorRow(storeName));
-
-        switch (verificationType) {
-            case 'id':
-                if (action === 'approve') {
-                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.idRequest.approveRequest(storeName));
-                } else {
-                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.idRequest.rejectRequest(storeName));
-                }
+            case 'by-vendor':
+                await this.click(verificationsAdmin.filters.filterByVendors);
+                await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, verificationsAdmin.filters.filterInput, input);
+                await this.toContainText(verificationsAdmin.filters.result, input);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.filters.filteredResult(input));
                 break;
 
-            case 'address':
-                if (action === 'approve') {
-                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.addressRequest.approveRequest(storeName));
-                } else {
-                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.addressRequest.rejectRequest(storeName));
-                }
-
-                break;
-
-            case 'company':
-                if (action === 'approve') {
-                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.companyRequest.approveRequest(storeName));
-                } else {
-                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.companyRequest.rejectRequest(storeName));
-                }
-
+            case 'by-verification-method':
+                await this.click(verificationsAdmin.filters.filterByMethods);
+                await this.typeAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, verificationsAdmin.filters.filterInput, input);
+                await this.toContainText(verificationsAdmin.filters.result, input);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.filters.filteredResult(input));
                 break;
 
             default:
                 break;
         }
+        await this.notToHaveText(verificationsAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(verificationsAdmin.noRowsFound);
     }
 
-    // disapprove verification requests
-    async disapproveVerificationRequest(storeName: string, verificationType: string) {
+    // reset filter
+    async resetFilter() {
+        // await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+        await this.toBeVisible(verificationsAdmin.filters.reset);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.filters.reset);
+        await this.notToBeVisible(verificationsAdmin.filters.reset);
+    }
+
+    // add note to verification request
+    async addNoteVerificationRequest(requestId: string, note: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+        await this.reloadIfVisible(verificationsAdmin.filters.reset); // todo: need to resolve this from all verification tests
 
-        await this.clickAndWaitForLoadState(selector.admin.dokan.verifications.navTabs.approved);
+        await this.click(verificationsAdmin.verificationRequestAddNote(requestId));
+        await this.clearAndType(verificationsAdmin.addNote, note);
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.updateNote);
+    }
 
-        const verificationRequestIsExists = await this.isVisible(selector.admin.dokan.verifications.vendorRow(storeName));
-        if (!verificationRequestIsExists) {
-            console.log('No approved verification request found!!');
-            return;
-        }
+    // view verification request document
+    async viewVerificationRequestDocument(requestId: string): Promise<void> {
+        await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+        await this.reloadIfVisible(verificationsAdmin.filters.reset);
+        await this.forceLinkToSameTab(verificationsAdmin.verificationRequestDocument(requestId));
+        const documentLink = (await this.getAttributeValue(verificationsAdmin.verificationRequestDocument(requestId), 'href')) as string;
+        await this.clickAndWaitForUrl(documentLink, verificationsAdmin.verificationRequestDocument(requestId));
+        await this.toHaveAttribute('body img', 'src', documentLink);
+    }
 
-        await this.hover(selector.admin.dokan.verifications.vendorRow(storeName));
+    // update verification request
+    async updateVerificationRequest(requestId: string, action: string): Promise<void> {
+        await this.goto(data.subUrls.backend.dokan.verifications); // todo: why goto doesn't reload page in verification tests
 
-        switch (verificationType) {
-            case 'id':
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.idRequest.disapproveRequest(storeName));
+        switch (action) {
+            case 'approve':
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.verificationRequestApprove(requestId));
+                await this.notToBeVisible(verificationsAdmin.verificationRequestCell(requestId));
+                await this.clickAndWaitForLoadState(verificationsAdmin.navTabs.approved);
                 break;
 
-            case 'address':
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.addressRequest.disapproveRequest(storeName));
-                break;
-
-            case 'company':
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.companyRequest.disapproveRequest(storeName));
+            case 'reject':
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.verificationRequestReject(requestId));
+                await this.notToBeVisible(verificationsAdmin.verificationRequestCell(requestId));
+                await this.clickAndWaitForLoadState(verificationsAdmin.navTabs.rejected);
                 break;
 
             default:
                 break;
         }
+        await this.toBeVisible(verificationsAdmin.verificationRequestCell(requestId));
+    }
+
+    // verification request bulk action
+    async verificationRequestBulkAction(action: string): Promise<void> {
+        await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+        await this.reloadIfVisible(verificationsAdmin.filters.reset);
+
+        // ensure row exists
+        await this.notToBeVisible(verificationsAdmin.noRowsFound);
+
+        await this.click(verificationsAdmin.bulkActions.selectAll);
+        await this.selectByValue(verificationsAdmin.bulkActions.selectAction, action);
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.bulkActions.applyAction);
     }
 
     // vendor
 
     // vendor verifications render properly
-    async vendorVerificationsSettingsRenderProperly() {
+    async vendorVerificationsSettingsRenderProperly(methodName: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
 
         // verification text is visible
-        await this.toBeVisible(selector.vendor.vVerificationSettings.verificationText);
+        await this.toBeVisible(verificationsVendor.verificationText);
 
         // visit store link is visible
-        await this.toBeVisible(selector.vendor.vVerificationSettings.visitStore);
+        await this.toBeVisible(verificationsVendor.visitStore);
 
-        // verification div and heading text
+        // verification method
+        await this.toBeVisible(verificationsVendor.verificationMethodDiv(methodName));
+        await this.toBeVisible(verificationsVendor.startVerification(methodName));
 
-        // id
-        await this.toBeVisible(selector.vendor.vVerificationSettings.id.idVerificationDiv);
-        await this.toBeVisible(selector.vendor.vVerificationSettings.id.idVerificationText);
+        await this.click(verificationsVendor.startVerification(methodName));
 
-        // address
-        await this.toBeVisible(selector.vendor.vVerificationSettings.address.addressVerificationDiv);
-        await this.toBeVisible(selector.vendor.vVerificationSettings.address.addressVerificationText);
-
-        // company
-        await this.toBeVisible(selector.vendor.vVerificationSettings.company.companyVerificationDiv);
-        await this.toBeVisible(selector.vendor.vVerificationSettings.company.companyVerificationText);
-
-        // verification request is pending
-
-        // id
-        const idRequestIsPending = await this.isVisible(selector.vendor.vVerificationSettings.id.idPendingFeedback);
-        if (idRequestIsPending) {
-            await this.toContainText(selector.vendor.vVerificationSettings.id.idPendingFeedback, 'Your ID verification request is pending');
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.cancelIdVerificationRequest);
-        }
-
-        // address
-        const addressRequestIsPending = await this.isVisible(selector.vendor.vVerificationSettings.address.addressPendingFeedback);
-        if (addressRequestIsPending) {
-            await this.toContainText(selector.vendor.vVerificationSettings.address.addressPendingFeedback, 'Your Address verification request is pending');
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.cancelAddressVerificationRequest);
-        }
-
-        // company
-        const companyRequestIsPending = await this.isVisible(selector.vendor.vVerificationSettings.company.companyPendingFeedback);
-        if (companyRequestIsPending) {
-            await this.toContainText(selector.vendor.vVerificationSettings.company.companyPendingFeedback, 'Your company verification request is pending');
-            await this.toBeVisible(selector.vendor.vVerificationSettings.company.cancelCompanyVerificationRequest);
-        }
-
-        // verification request is approved
-
-        // id
-        const idRequestIsApproved = await this.isVisible(selector.vendor.vVerificationSettings.id.idApproveFeedback);
-        if (idRequestIsApproved) {
-            await this.toContainText(selector.vendor.vVerificationSettings.id.idApproveFeedback, 'Your ID verification request is approved');
-        }
-
-        // address
-        const addressRequestIsApproved = await this.isVisible(selector.vendor.vVerificationSettings.address.addressApproveFeedback);
-        if (addressRequestIsApproved) {
-            await this.toContainText(selector.vendor.vVerificationSettings.address.addressApproveFeedback, 'Your Address verification request is approved');
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.startAddressVerification);
-        }
-
-        // company
-        const companyRequestIsApproved = await this.isVisible(selector.vendor.vVerificationSettings.company.companyApproveFeedback);
-        if (companyRequestIsApproved) {
-            await this.toContainText(selector.vendor.vVerificationSettings.company.companyApproveFeedback, 'Your company verification request is approved');
-            await this.toBeVisible(selector.vendor.vVerificationSettings.company.startCompanyVerification);
-        }
-
-        // no verification request is submitted
-
-        // id
-        if (!idRequestIsPending && !idRequestIsApproved) {
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.startIdVerification);
-
-            await this.click(selector.vendor.vVerificationSettings.id.startIdVerification);
-
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.passport);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.nationalIdCard);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.drivingLicense);
-            const previousUploadedPhotoIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.previousUploadedPhoto);
-            previousUploadedPhotoIsVisible && (await this.toBeVisible(selector.vendor.vVerificationSettings.id.uploadPhoto));
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.submitId);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.cancelSubmitId);
-        }
-
-        // address
-        if (!addressRequestIsPending && !addressRequestIsApproved) {
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.startAddressVerification);
-
-            await this.click(selector.vendor.vVerificationSettings.address.startAddressVerification);
-
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.street);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.street2);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.city);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.postOrZipCode);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.country);
-            const previousUploadedResidenceProofIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.address.previousUploadedResidenceProof);
-            !previousUploadedResidenceProofIsVisible && (await this.toBeVisible(selector.vendor.vVerificationSettings.address.uploadResidenceProof));
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.submitAddress);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.cancelSubmitAddress);
-        }
-
-        // company
-        if (!companyRequestIsPending && !companyRequestIsApproved) {
-            await this.toBeVisible(selector.vendor.vVerificationSettings.company.startCompanyVerification);
-
-            await this.click(selector.vendor.vVerificationSettings.company.startCompanyVerification);
-
-            await this.toBeVisible(selector.vendor.vVerificationSettings.company.uploadFiles);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.company.submitCompanyInfo);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.company.cancelSubmitCompanyInfo);
-        }
+        await this.toBeVisible(verificationsVendor.verificationMethodHelpText(methodName));
+        await this.toBeVisible(verificationsVendor.uploadFiles(methodName));
+        await this.toBeVisible(verificationsVendor.submit(methodName));
+        await this.toBeVisible(verificationsVendor.cancelSubmit(methodName));
     }
 
-    // vendor send id verification request
-    async sendIdVerificationRequest(verification: vendor['verification']): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
-
-        const idRequestIsApproved = await this.isVisible(selector.vendor.vVerificationSettings.id.idApproveFeedback);
-        if (idRequestIsApproved) {
-            return;
-        }
-
-        // cancel previous verification request if any
-        const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.cancelIdVerificationRequest);
-        if (cancelRequestIsVisible) {
-            await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.id.cancelIdVerificationRequest);
-            await this.toContainText(selector.vendor.vVerificationSettings.id.idUpdateSuccessMessage, verification.idRequestSubmitCancel);
-        }
-
-        // id verification
-        await this.click(selector.vendor.vVerificationSettings.id.startIdVerification);
-        await this.wait(0.5); // todo: resolve this
-
-        // remove previously uploaded image
-        const uploadPhotoBtnIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.uploadPhoto);
-        if (!uploadPhotoBtnIsVisible) {
-            // await this.hover(selector.vendor.vVerificationSettings.id.previousUploadedPhoto); // todo:  not working: playwright issue
-            // await this.click(selector.vendor.vVerificationSettings.id.removePreviousUploadedPhoto);
-
-            await this.setAttributeValue('.gravatar-wrap', 'class', 'gravatar-wrap dokan-hide');
-            await this.setAttributeValue('.gravatar-button-area.dokan-hide', 'class', 'gravatar-button-area');
-        }
-
-        await this.click(selector.vendor.vVerificationSettings.id.uploadPhoto);
-        await this.uploadMedia(verification.file);
-
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.id.submitId);
-        await this.toContainText(selector.vendor.vVerificationSettings.id.idUpdateSuccessMessage, verification.idRequestSubmitSuccessMessage);
-    }
-
-    // vendor send address verification request
-    async sendAddressVerificationRequest(verification: vendor['verification']): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
-
-        // cancel previous verification request if any
-        const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.address.cancelAddressVerificationRequest);
-        if (cancelRequestIsVisible) {
-            await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.address.cancelAddressVerificationRequest);
-            await this.toContainText(selector.vendor.vVerificationSettings.address.addressUpdateSuccessMessage, verification.addressRequestSubmitCancel);
-        }
-
-        // address verification
-        await this.click(selector.vendor.vVerificationSettings.address.startAddressVerification);
-        await this.clearAndType(selector.vendor.vVerificationSettings.address.street, verification.street1);
-        await this.clearAndType(selector.vendor.vVerificationSettings.address.street2, verification.street2);
-        await this.clearAndType(selector.vendor.vVerificationSettings.address.city, verification.city);
-        await this.clearAndType(selector.vendor.vVerificationSettings.address.postOrZipCode, verification.zipCode);
-        await this.selectByValue(selector.vendor.vVerificationSettings.address.country, verification.country);
-        await this.selectByValue(selector.vendor.vVerificationSettings.address.state, verification.state);
-
-        // remove previously uploaded image
-        const uploadProofBtnIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.address.uploadResidenceProof);
-        if (!uploadProofBtnIsVisible) {
-            await this.removeAttribute('div.proof-button-area', 'style');
-            await this.setAttributeValue('div.vendor_img_container', 'style', 'display: none;');
-        }
-
-        await this.click(selector.vendor.vVerificationSettings.address.uploadResidenceProof);
-        await this.uploadMedia(verification.file);
-
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.address.submitAddress);
-        await this.toContainText(selector.vendor.vVerificationSettings.address.addressUpdateSuccessMessage, verification.addressRequestSubmitSuccessMessage);
-    }
-
-    // vendor send company verification request
-    async sendCompanyVerificationRequest(verification: vendor['verification']): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
-
-        // cancel previous verification request if any
-        const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.company.cancelCompanyVerificationRequest);
-        if (cancelRequestIsVisible) {
-            await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.company.cancelCompanyVerificationRequest);
-            await this.toContainText(selector.vendor.vVerificationSettings.company.companyInfoUpdateSuccessMessage, verification.companyRequestSubmitCancel);
-        }
-
-        // company verification
-        await this.click(selector.vendor.vVerificationSettings.company.startCompanyVerification);
-        await this.wait(1);
-
-        // remove previously uploaded company file
-        const UploadedCompanyFileIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.company.uploadedFileFirst);
-        if (UploadedCompanyFileIsVisible) {
-            await this.click(selector.vendor.vVerificationSettings.company.uploadedFileFirst);
-        }
-
-        await this.click(selector.vendor.vVerificationSettings.company.uploadFiles);
-        await this.uploadMedia(verification.file);
-
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.company.submitCompanyInfo);
-        await this.toContainText(selector.vendor.vVerificationSettings.company.companyInfoUpdateSuccessMessage, verification.companyRequestSubmitSuccessMessage);
-    }
-
-    // upload media // todo: move to base-page and merge with wpUploadFile
-    async uploadMedia(file: string) {
-        await this.wait(0.5);
-        const uploadedMediaIsVisible = await this.isVisible(selector.wpMedia.uploadedMediaFirst);
-        if (uploadedMediaIsVisible) {
-            await this.click(selector.wpMedia.uploadedMediaFirst);
+    // vendor submit verification request
+    async submitVerificationRequest(verification: vendor['verification'], setupWizard = false): Promise<void> {
+        if (!setupWizard) {
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
+            await this.reload(); // todo: need to resolve this
         } else {
-            await this.uploadFile(selector.wpMedia.selectFilesInput, file);
-            const isSelectDisabled = await this.isDisabled(selector.wpMedia.select);
-            isSelectDisabled && (await this.click(selector.wpMedia.selectUploadedMedia));
-            await this.click(selector.wpMedia.select);
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
+            await this.click(setupWizardVendor.letsGo);
+            await this.completeAddressStep(data.vendorSetupWizard);
+            // await this.click(setupWizardVendor.skipTheStepStoreSetup);
+            await this.click(setupWizardVendor.skipTheStepPaymentSetup);
         }
+
+        await this.click(verificationsVendor.startVerification(verification.method));
+        await this.click(verificationsVendor.uploadFiles(verification.method));
+        await this.uploadMedia(verification.file);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, verificationsVendor.submit(verification.method));
+
+        await this.toBeVisible(verificationsVendor.requestCreateSuccessMessage);
+        await this.toBeVisible(verificationsVendor.verificationStatus(verification.method, 'pending'));
+    }
+
+    // vendor cancel verification request
+    async cancelVerificationRequest(verificationMethod: string, setupWizard = false): Promise<void> {
+        if (!setupWizard) {
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
+            await this.reload(); // todo: need to resolve this
+        } else {
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
+            await this.click(setupWizardVendor.letsGo);
+            await this.completeAddressStep(data.vendorSetupWizard);
+            // await this.click(setupWizardVendor.skipTheStepStoreSetup);
+            await this.click(setupWizardVendor.skipTheStepPaymentSetup);
+        }
+
+        await this.click(verificationsVendor.cancelVerification(verificationMethod));
+        await this.clickAndWaitForResponse(data.subUrls.ajax, verificationsVendor.confirmCancelRequest);
+        await this.toBeVisible(verificationsVendor.requestCancelSuccessMessage);
+    }
+
+    // vendor view verification request document
+    async vendorViewVerificationRequestDocument(methodName: string, setupWizard = false): Promise<void> {
+        if (!setupWizard) {
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
+        } else {
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
+            await this.click(setupWizardVendor.letsGo);
+            await this.completeAddressStep(data.vendorSetupWizard);
+            // await this.click(setupWizardVendor.skipTheStepStoreSetup);
+            await this.click(setupWizardVendor.skipTheStepPaymentSetup);
+        }
+        await this.forceLinkToSameTab(verificationsVendor.verificationRequestDocument(methodName));
+        const documentLink = (await this.getAttributeValue(verificationsVendor.verificationRequestDocument(methodName), 'href')) as string;
+        await this.clickAndWaitForUrl(documentLink, verificationsVendor.verificationRequestDocument(methodName));
+        await this.toHaveAttribute('body img', 'src', documentLink);
+    }
+
+    // vendor view verification request notes
+    async viewVerificationRequestNote(methodName: string, note: string, setupWizard = false): Promise<void> {
+        if (!setupWizard) {
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
+        } else {
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
+            await this.click(setupWizardVendor.letsGo);
+            await this.completeAddressStep(data.vendorSetupWizard);
+            // await this.click(setupWizardVendor.skipTheStepStoreSetup);
+            await this.click(setupWizardVendor.skipTheStepPaymentSetup);
+        }
+
+        await this.toContainText(verificationsVendor.verificationRequestNote(methodName), note);
+    }
+
+    // vendor view required verification request
+    async viewRequiredVerificationMethod(requiredMethod: string, nonRequiredMethod: string) {
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
+        await this.click(setupWizardVendor.letsGo);
+        await this.completeAddressStep(data.vendorSetupWizard); // todo: why cant we skip this
+        // await this.click(setupWizardVendor.skipTheStepStoreSetup);
+        await this.click(setupWizardVendor.skipTheStepPaymentSetup);
+
+        await this.toBeVisible(verificationsVendor.verificationMethodDiv(requiredMethod));
+        await this.notToBeVisible(verificationsVendor.verificationMethodDiv(nonRequiredMethod));
+    }
+
+    async completeAddressStep(setupWizardData: vendorSetupWizard) {
+        await this.clearAndType(setupWizardVendor.street1, setupWizardData.street1);
+        await this.clearAndType(setupWizardVendor.street2, setupWizardData.street2);
+        await this.clearAndType(setupWizardVendor.city, setupWizardData.city);
+        await this.clearAndType(setupWizardVendor.zipCode, setupWizardData.zipCode);
+        await this.click(setupWizardVendor.country);
+        await this.type(setupWizardVendor.countryInput, setupWizardData.country);
+        await this.toContainText(setupWizardVendor.highlightedResult, setupWizardData.country);
+        await this.press(data.key.enter);
+        await this.click(setupWizardVendor.state);
+        await this.type(setupWizardVendor.stateInput, setupWizardData.state);
+        await this.click(setupWizardVendor.continueStoreSetup);
+    }
+
+    // customer
+
+    async viewVerifiedBadge(storeName: string) {
+        // store listing page
+        await this.goIfNotThere(data.subUrls.frontend.storeListing);
+        await this.customerPage.searchStore(storeName);
+        await this.toBeVisible(singleStoreCustomer.storeProfile.verifiedIcon);
+
+        // single store page
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.toBeVisible(singleStoreCustomer.storeProfile.verifiedIcon);
     }
 }

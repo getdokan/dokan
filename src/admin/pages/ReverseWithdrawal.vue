@@ -7,7 +7,7 @@
         <AdminNotice />
         <hr class="wp-header-end">
 
-        <div class="dokan-reverse-withdrawal-fact-card">
+        <div class="dokan-reverse-withdrawal-fact-card mt-[-20px]">
             <CardFunFact :count="counts.credit" icon="fas fa-comments-dollar" is_currency :title="__('Total Collected', 'dokan-lite')" />
             <CardFunFact :count="counts.balance" icon="fas fa-coins" is_currency :title="__('Remaining Balance', 'dokan-lite')" />
             <CardFunFact :count="counts.total_transactions" icon="fas fa-info"  :title="__( 'Total Transactions', 'dokan-lite' )" />
@@ -489,7 +489,6 @@ export default {
 
 .dokan-reverse-withdrawal {
     .dokan-reverse-withdrawal-fact-card {
-        margin: 0px -10px;
         display: flex;
         flex-wrap: wrap;
     }

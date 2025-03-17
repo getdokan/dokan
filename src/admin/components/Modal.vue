@@ -146,7 +146,7 @@ export default {
     .modal-body {
         min-height: 100px;
         padding: 15px;
-        overflow-y: scroll;
+        overflow-y: auto;
     }
 
     footer {

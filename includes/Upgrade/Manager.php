@@ -32,7 +32,7 @@ class Manager {
      * @return bool
      */
     public function has_ongoing_process() {
-        return ! ! get_option( $this->is_upgrading_db_key, false );
+        return (bool) get_option( $this->is_upgrading_db_key, false );
     }
 
     /**
@@ -112,4 +112,3 @@ class Manager {
         do_action( 'dokan_upgrade_finished' );
     }
 }
-

@@ -102,13 +102,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
 
             $object->save();
 
-            //Update post author
-            wp_update_post(
-                array(
-					'ID' => $object->get_id(),
-					'post_author' => dokan_get_current_user_id(),
-                )
-            );
+            $this->update_post_author_if_needed( $request, $object->get_id() );
 
             /**
              * Fires after a single object is created or updated via the REST API.
@@ -149,6 +143,9 @@ abstract class DokanRESTController extends WP_REST_Controller {
             }
 
             $object->save();
+
+            $this->update_post_author_if_needed( $request, $object->get_id() );
+
             $this->update_additional_fields_for_object( $object, $request );
 
             /**
@@ -452,6 +449,36 @@ abstract class DokanRESTController extends WP_REST_Controller {
         }
 
         return $response;
+    }
+
+    /**
+     * Update post author if requested.
+     *
+     * @since 3.10.3
+     *
+     * @param WP_REST_Request $request Request object.
+     * @param int $object_id Object ID.
+     *
+     * @return void
+     */
+    public function update_post_author_if_needed( WP_REST_Request $request, int $object_id ) {
+        $author_id = dokan_get_current_user_id();
+
+        if ( current_user_can( 'manage_options' ) ) {
+            $post_author = absint( $request->get_param( 'post_author' ) );
+            $author      = new \WP_User( $post_author );
+
+            // phpcs:ignore WordPress.WP.Capabilities.Unknown
+            $author_id = ( ! empty( $post_author ) && $author->exists() && user_can( $author->ID, 'dokan_add_product' ) ) ? $author->ID : $author_id;
+        }
+
+        //Update post author
+        wp_update_post(
+            array(
+                'ID'          => $object_id,
+                'post_author' => $author_id,
+            )
+        );
     }
 
     /**

@@ -73,6 +73,20 @@
             this.setCorrectProductId();
 
             $( 'body' ).trigger( 'dokan-product-editor-loaded', this );
+
+            $( "input.dokan-product-regular-price, input.dokan-product-sales-price" ).on( 'keyup', _.debounce( () => {
+                Dokan_Editor.dokan_show_earning_suggestion( Dokan_Editor.earning_suggestion_callbak );
+            }, 750 ) );
+
+            if ( wp && wp.hooks && wp.hooks.addAction ) {
+                wp.hooks.addAction( 'dokan_selected_multistep_category', 'dokan-get-product-earning-suggestion', function() {
+                    Dokan_Editor.dokan_show_earning_suggestion( Dokan_Editor.earning_suggestion_callbak );
+                } );
+
+                wp.hooks.addAction( 'dokan_removed_multistep_category', 'dokan-get-product-earning-suggestion', function() {
+                    Dokan_Editor.dokan_show_earning_suggestion( Dokan_Editor.earning_suggestion_callbak );
+                } );
+            }
         },
 
         setCorrectProductId : function () {
@@ -289,6 +303,13 @@
                     searching: function() {
                         return dokan.i18n_searching;
                     }
+                },
+                escapeMarkup: function (markup) { return markup; },
+                templateResult: function (item) {
+                    return `<span>${item.text}</span>`;
+                },
+                templateSelection: function (item) {
+                    return item.text;
                 },
             });
         },
@@ -916,6 +937,76 @@
             });
 
             downloadable_frame.open();
+        },
+
+        dokan_show_earning_suggestion: function( callback ) {
+            let commission = $('span.vendor-earning').attr( 'data-commission' );
+            let product_id = $( 'span.vendor-earning' ).attr( 'data-product-id' );
+            let product_price = $( 'input.dokan-product-regular-price' ).val();
+            let sale_price = $( 'input.dokan-product-sales-price' ).val();
+            let earning_suggestion = $('.simple-product span.vendor-price');
+            let category_ids = $('input[name="chosen_product_cat[]"]').map(function() {
+                return $(this).val();
+            }).get();
+
+            let priceAmount = sale_price ? sale_price : product_price;
+
+            jQuery.ajax({
+                url: window.dokan.rest.root + `dokan/v1/commission`,
+                beforeSend: function ( xhr ) {
+                    xhr.setRequestHeader( 'X-WP-Nonce', window.dokan.rest.nonce );
+                },
+                type: 'GET',
+                data: {
+                    product_id: product_id,
+                    amount: priceAmount ? Dokan_Editor.unformatMoney( priceAmount ) : 0,
+                    // vendor_id
+                    category_ids,
+                    context: 'seller'
+                }
+            }).done( ( response ) => {
+                if ( ! isNaN( response ) ) {
+                    earning_suggestion.html( Dokan_Editor.formatMoney( response ) );
+                }
+
+                if ( typeof callback === 'function' ) {
+                    callback();
+                }
+            } );
+        },
+
+        formatMoney( amount ) {
+            return accounting.formatMoney( amount, {
+                symbol: dokan.currency_format_symbol,
+                decimal: dokan.currency_format_decimal_sep,
+                thousand: dokan.currency_format_thousand_sep,
+                precision: dokan.currency_format_num_decimals,
+                format: dokan.currency_format,
+            } );
+        },
+
+        unformatMoney( amount ) {
+            return accounting.unformat( amount, dokan.mon_decimal_point );
+        },
+
+        earning_suggestion_callbak: function() {
+
+            if ( $( '#product_type' ).val() == 'simple' || $( '#product_type' ).text() == '' ) {
+                let vandorPrice = $(
+                    '.simple-product span.vendor-price'
+                ).text();
+                vandorPrice = Dokan_Editor.unformatMoney( vandorPrice );
+
+                if ( vandorPrice < 0 ) {
+                    $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
+                    $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
+                    $( 'button[type=submit]' ).attr( 'disabled', 'disabled' );
+                } else {
+                    $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
+                    $( 'input[type=submit]' ).removeAttr( 'disabled');
+                    $( 'button[type=submit]' ).removeAttr( 'disabled');
+                }
+            }
         }
     };
 

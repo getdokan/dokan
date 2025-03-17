@@ -94,17 +94,8 @@ class Manager {
         unset( $args['status'] );
         unset( $args['featured'] );
 
-        $cache_group = 'vendors';
-        $cache_key   = 'vendors_' . md5( wp_json_encode( $args ) );
-        $user_query  = Cache::get( $cache_key, $cache_group );
-
-        if ( false === $user_query ) {
-            $user_query = new WP_User_Query( $args );
-
-            Cache::set( $cache_key, $user_query, $cache_group );
-        }
-
-        $results = $user_query->get_results();
+        $user_query = new WP_User_Query( $args );
+        $results    = $user_query->get_results();
 
         $this->total_users = $user_query->total_users;
 
@@ -334,6 +325,14 @@ class Manager {
             if ( isset( $data['admin_commission'] ) && ( is_numeric( wc_format_decimal( $data['admin_commission'] ) ) || '' === $data['admin_commission'] ) ) {
                 $vendor->update_meta( 'dokan_admin_percentage', wc_format_decimal( $data['admin_commission'] ) );
             }
+
+            if ( isset( $data['admin_additional_fee'] ) && ( is_numeric( wc_format_decimal( $data['admin_additional_fee'] ) ) || '' === $data['admin_additional_fee'] ) ) {
+                $vendor->update_meta( 'dokan_admin_additional_fee', wc_format_decimal( $data['admin_additional_fee'] ) );
+            }
+
+            if ( isset( $data['admin_category_commission'] ) ) {
+                $vendor->update_meta( 'admin_category_commission', wc_clean( $data['admin_category_commission'] ) );
+            }
         }
 
         // update vendor store data
@@ -438,11 +437,28 @@ class Manager {
             }
         }
 
+        /**
+         * Fires before a vendor is updated.
+         *
+         * @since 2.9.10
+         *
+         * @param int   $vendor_id The ID of the vendor being updated.
+         * @param array $data      The array of vendor data being updated.
+         */
         do_action( 'dokan_before_update_vendor', $vendor->get_id(), $data );
 
         $vendor->save();
 
-        do_action( 'dokan_update_vendor', $vendor->get_id() );
+        /**
+         * Fires after a vendor has been updated.
+         *
+         * @since 2.9.10
+         * @since 3.12.4 added $data parameter
+         *
+         * @param int   $vendor_id The ID of the vendor that was updated.
+         * @param array $data      The array of vendor data that was updated.
+         */
+        do_action( 'dokan_update_vendor', $vendor->get_id(), $data );
 
         return $vendor->get_id();
     }

@@ -160,6 +160,78 @@ jQuery(function($) {
         return false;
     });
 
+    $("#grant_access_id").select2({
+        allowClear: true,
+        minimumInputLength: 3,
+        ajax: {
+            url: dokan.ajaxurl,
+            dataType: 'json',
+            delay: 500,
+            data: function (params) {
+                return {
+                    q: params.term, // search term
+                    action: 'dokan_search_downloadable_products',
+                    _nonce: dokan.search_downloadable_products_nonce,
+                    page: params.page || 1
+                };
+            },
+            processResults: function( data ) {
+                var options = [];
+                if ( data ) {
+                    $.each( data, function( index, text ) {
+                        options.push( { id: index, text: text  } );
+                    });
+                }
+                return {
+                    results: options,
+                    pagination: {
+                        more: options.length == 0 ? false : true
+                    }
+                };
+            },
+            cache: true
+        },
+        language: {
+            errorLoading: function() {
+                return dokan.i18n_searching;
+            },
+            inputTooLong: function( args ) {
+                var overChars = args.input.length - args.maximum;
+
+                if ( 1 === overChars ) {
+                    return dokan.i18n_input_too_long_1;
+                }
+
+                return dokan.i18n_input_too_long_n.replace( '%qty%', overChars );
+            },
+            inputTooShort: function( args ) {
+                var remainingChars = args.minimum - args.input.length;
+
+                if ( 1 === remainingChars ) {
+                    return dokan.i18n_input_too_short_1;
+                }
+
+                return dokan.i18n_input_too_short_n.replace( '%qty%', remainingChars );
+            },
+            loadingMore: function() {
+                return dokan.i18n_load_more;
+            },
+            maximumSelected: function( args ) {
+                if ( args.maximum === 1 ) {
+                    return dokan.i18n_selection_too_long_1;
+                }
+
+                return dokan.i18n_selection_too_long_n.replace( '%qty%', args.maximum );
+            },
+            noResults: function() {
+                return dokan.i18n_no_matches;
+            },
+            searching: function() {
+                return dokan.i18n_searching;
+            }
+        },
+    });
+
 });
 
 /*global woocommerce_admin_meta_boxes, woocommerce_admin, accounting */

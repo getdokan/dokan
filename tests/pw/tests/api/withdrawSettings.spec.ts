@@ -4,45 +4,55 @@
 //COVERAGE_TAG: POST /dokan/v2/withdraw/disbursement
 //COVERAGE_TAG: POST /dokan/v2/withdraw/disbursement/disable
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('withdraw api test', () => {
     let apiUtils: ApiUtils;
 
-    test.beforeAll(({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
-    test('get withdraw settings @v2 @lite', async () => {
+    test.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    test('get withdraw settings', { tag: ['@lite', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawSettings);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.withdrawSettingsSchema.withdrawSettingsSchema);
     });
 
-    test('get withdraw summary @v2 @lite', async () => {
+    test('get withdraw summary', { tag: ['@lite', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawSummary);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.withdrawSettingsSchema.withdrawSummarySchema);
     });
 
-    test('get withdraw disbursement settings @v2 @pro', async () => {
+    test('get withdraw disbursement settings', { tag: ['@pro', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawDisbursementSettings);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.withdrawSettingsSchema.withdrawDisbursementSettingsSchema);
     });
 
-    test('update withdraw disbursement settings @v2 @pro', async () => {
+    test('update withdraw disbursement settings', { tag: ['@pro', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateWithdrawDisbursementSettings, { data: payloads.updateWithdrawDisbursementSettings });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.withdrawSettingsSchema.updateWithdrawDisbursementSettingsSchema);
     });
 
-    test('disable withdraw disbursement @v2 @pro', async () => {
+    test('disable withdraw disbursement', { tag: ['@pro', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.disableWithdrawDisbursement);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.withdrawSettingsSchema.disableWithdrawDisbursementSettingsSchema);
     });
 });

@@ -6,6 +6,9 @@ const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const isProduction = process.env.NODE_ENV === 'production';
 
 const entryPoint = {
+  // Dokan tailwind css
+  'dokan-tailwind': './src/tailwind.css',
+
   'vue-frontend': './src/frontend/main.js',
   'vue-admin': './src/admin/main.js',
   'vue-bootstrap': './src/utils/Bootstrap.js',
@@ -13,6 +16,7 @@ const entryPoint = {
     './src/utils/vue-vendor.js',
   ],
   'dokan-promo-notice': './src/promo-notice/main.js',
+  'dokan-admin-notice': './src/admin/notice/main.js',
   'reverse-withdrawal': './assets/src/js/reverse-withdrawal.js',
   'product-category-ui': './assets/src/js/product-category-ui.js',
   'dokan-admin-product': './assets/src/js/dokan-admin-product.js',
@@ -50,6 +54,10 @@ const entryPoint = {
   'reverse-withdrawal-style': '/assets/src/less/reverse-withdrawal.less',
   'dokan-product-category-ui': '/assets/src/less/dokan-product-category-ui.less',
   'dokan-admin-product-style': '/assets/src/less/dokan-admin-product.less',
+  'page-views': './assets/src/js/page-views.js',
+  'dokan-setup-wizard-commission': './assets/src/js/setup-wizard/commission/index.js',
+  // Category commission component styles.
+  'dokan-category-commission': '/src/admin/components/Commission/index.js',
 };
 
 const updatedConfig = {
@@ -77,6 +85,7 @@ const updatedConfig = {
   },
 
   plugins: [
+      ...defaultConfig.plugins,
     new MiniCssExtractPlugin(
       {
         filename: ( { chunk } ) => {
@@ -94,16 +103,13 @@ const updatedConfig = {
 
   module: {
     rules: [
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-      },
+      ...defaultConfig.module.rules,
       {
         test: /\.vue$/,
         loader: 'vue-loader',
       },
       {
-        test: /\.(less|css)$/i,
+        test: /\.(less)$/i,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -137,7 +143,7 @@ const updatedConfig = {
         generator: {
           filename: '../font/[name].[ext]',
         },
-      },
+      }
     ]
   },
 }

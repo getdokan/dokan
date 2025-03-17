@@ -4,60 +4,70 @@
 //COVERAGE_TAG: PUT /dokan/v1/refunds/(?P<id>[\d]+)/approve
 //COVERAGE_TAG: PUT /dokan/v1/refunds/batch
 
-import { test, expect, APIResponse } from '@playwright/test';
+import { test, expect, request, APIResponse } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('refunds api test', () => {
     let apiUtils: ApiUtils;
-    // let orderId: string;
     let refundId: string;
     let orderResponseBody: APIResponse;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         [, orderResponseBody] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-processing', payloads.vendorAuth);
-        [, refundId] = await dbUtils.createRefund(orderResponseBody);
+        [, refundId] = await dbUtils.createRefundRequest(orderResponseBody); // todo: replace by woocommerce api
     });
 
-    test('get all refunds @pro', async () => {
+    test.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    test('get all refunds', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds, { headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.refundsSchema.refundsSchema);
     });
 
-    test('get all refunds by status @pro', async () => {
+    test('get all refunds by status', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds, { params: { status: 'pending' }, headers: payloads.vendorAuth }); // pending, cancelled, completed
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.refundsSchema.refundsSchema);
     });
 
-    test('cancel a refund @pro', async () => {
+    test('cancel a refund', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.cancelRefund(refundId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.refundsSchema.refundSchema);
     });
 
-    test('delete a refund @pro', async () => {
+    test('delete a refund', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteRefund(refundId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.refundsSchema.refundSchema);
     });
 
-    test('approve a refund @pro', async () => {
-        const [, refundId] = await dbUtils.createRefund(orderResponseBody);
+    test('approve a refund', { tag: ['@pro'] }, async () => {
+        const [, refundId] = await dbUtils.createRefundRequest(orderResponseBody);
         const [response, responseBody] = await apiUtils.put(endPoints.approveRefund(refundId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.refundsSchema.refundSchema);
     });
 
-    test('update batch refunds @pro', async () => {
-        await dbUtils.createRefund(orderResponseBody);
+    test('update batch refunds', { tag: ['@pro'] }, async () => {
+        await dbUtils.createRefundRequest(orderResponseBody);
         const allPendingRefundsIds = (await apiUtils.getAllRefunds('pending', payloads.vendorAuth)).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRefunds, { data: { cancelled: allPendingRefundsIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.refundsSchema.batchUpdateRefundsSchema);
     });
 });

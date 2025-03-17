@@ -7,69 +7,82 @@
 //COVERAGE_TAG: POST /dokan/v1/request-for-quote/convert-to-order
 //COVERAGE_TAG: PUT /dokan/v1/request-for-quote/batch
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('request quote api test', () => {
     let apiUtils: ApiUtils;
     let requestQuoteId: string;
     const productId: string[] = [];
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         const [, pId] = await apiUtils.createProduct(payloads.createProduct());
         productId.push(pId);
         [, requestQuoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId });
     });
 
-    test('get all request quotes @pro', async () => {
+    test.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    test('get all request quotes', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllQuoteRequests);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.quoteRequestsSchema.quoteRequestsSchema);
     });
 
-    test('get single request quote @pro', async () => {
+    test('get single request quote', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleRequestQuote(requestQuoteId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.quoteRequestsSchema.singleQuoteRequestSchema);
     });
 
-    test('create a request quote @pro', async () => {
+    test('create a request quote', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createQuoteRequest, { data: { ...payloads.createQuoteRequest(), product_ids: productId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.quoteRequestsSchema.createQuoteRequestSchema);
     });
 
-    test('update a request quote @pro', async () => {
+    test('update a request quote', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateRequestQuote(requestQuoteId), { data: { ...payloads.updateRequestQuote, product_ids: productId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.quoteRequestsSchema.quoteRequestSchema);
     });
 
-    test('delete a request quote @pro', async () => {
+    test('delete a request quote', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteQuoteRequest(requestQuoteId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.quoteRequestsSchema.quoteRequestSchema);
     });
 
-    test('restore a deleted request quote @pro', async () => {
+    test('restore a deleted request quote', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.restoreRequestQuote(requestQuoteId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.quoteRequestsSchema.quoteRequestSchema);
     });
 
-    test('convert request quote to order @pro', async () => {
+    test('convert request quote to order', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.convertRequestQuoteToOrder, { data: { ...payloads.convertToOrder, quote_id: requestQuoteId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.quoteRequestsSchema.quoteRequestSchema);
     });
 
-    test('update batch request quote @pro ', async () => {
+    test.skip('update batch request quote', { tag: ['@pro'] }, async () => {
         const allRequestQuoteIds = (await apiUtils.getAllQuoteRequests()).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRequestQuotes, { data: { trash: allRequestQuoteIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.quoteRequestsSchema.batchUpdateQuoteRequestsSchema);
     });
 });

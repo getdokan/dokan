@@ -63,6 +63,7 @@ ul.dokan_tabs {
   border-bottom: 1px solid @borderColor;
   margin-bottom: 20px;
   line-height: 24px;
+  margin-left: 0;
 
   > li {
     margin-bottom: -1px !important;
@@ -170,7 +171,7 @@ a.dokan-btn-theme,
 input[type='submit'].dokan-btn-success,
 a.dokan-btn-success,
 .dokan-btn-success {
-  .button-variant(#fff; @brand-success; darken(@brand-success, 5%));
+  .button-variant(#fff; @brand-success; darken(@brand-success, 5%)) !important;
 }
 
 input[type='submit'].dokan-btn-default,

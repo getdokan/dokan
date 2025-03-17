@@ -19,13 +19,15 @@
                 :is-secret="false"
             />
             <secret-input
-                v-model="fieldValue[fieldData.name]"
+                :value="fieldValue[fieldData.name]"
+                @input="event => inputValueHandler( event )"
                 :type='fieldData.type'
                 v-if="fieldData.type === 'text'"
             />
             <textarea
                 class="large"
-                v-model="fieldValue[fieldData.name]"
+                :value="fieldValue[fieldData.name]"
+                @input="event => inputValueHandler( event.target.value )"
                 v-if="fieldData.type === 'textarea'"
             ></textarea>
             <template v-if="fieldData.type === 'radio'">
@@ -76,6 +78,18 @@
                 }
 
                 return false;
+            },
+
+            inputValueHandler( value ) {
+                let data = dokan.hooks.applyFilters(
+                    'dokanFieldComponentInputValue',
+                    value,
+                    this.fieldValue[this.fieldData.name],
+                    this.fieldData.name,
+                    this.fieldData.is_lite ?? false
+                );
+
+                this.$set( this.fieldValue, this.fieldData.name, data );
             },
         },
     }

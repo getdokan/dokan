@@ -25,7 +25,7 @@ $field_class     = dokan_is_seller_dashboard() ? 'dokan-w5' : '';
 <div class="dokan-form-group">
     <label class="<?php echo esc_attr( $label_class ); ?> dokan-control-label" for="setting_address"><?php esc_html_e( 'Address', 'dokan-lite' ); ?></label>
 
-    <div class="<?php echo esc_attr( $field_class ); ?> dokan-text-left dokan-address-fields">
+    <div id="dokan-address-fields-wrapper" class="<?php echo esc_attr( $field_class ); ?> dokan-text-left dokan-address-fields">
         <?php if ( $seller_address_fields['street_1'] ) { ?>
             <div class="dokan-form-group">
                 <label class="control-label" for="dokan_address[street_1]"><?php esc_html_e( 'Street ', 'dokan-lite' ); ?>
@@ -178,7 +178,7 @@ $field_class     = dokan_is_seller_dashboard() ? 'dokan-w5' : '';
                         $required_attr = 'required';
                     }
                     ?>
-                    <select <?php echo esc_attr( $required_attr ); ?> <?php echo esc_attr( $disabled ); ?> name="dokan_address[state]" class="dokan-form-control" id="dokan_address_state">
+                    <select <?php echo esc_attr( $required_attr ); ?> <?php echo esc_attr( $disabled ); ?> name="dokan_address[state]" class="dokan-form-control wc-enhanced-select" id="dokan_address_state">
                         <?php dokan_state_dropdown( $states[ $address_country ], $address_state ); ?>
                     </select>
                 <?php } ?>

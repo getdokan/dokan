@@ -80,7 +80,7 @@ class RadioImageControl extends \WP_Customize_Control {
                     <label for="<?php echo esc_attr( $this->id ) . esc_attr( $value ); ?>">
                         <?php
                         if ( isset( $label['svg'] ) ) {
-                            echo $label['svg'];
+                            echo $label['svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                         } else {
                             ?>
                             <img src="<?php echo esc_html( $label['src'] ); ?>" alt="<?php echo esc_attr( $label['label'] ); ?>" title="<?php echo esc_attr( $label['label'] ); ?>">

@@ -7,30 +7,27 @@
                 <div class="wp-list-table widefat dokan-modules">
                     <template v-if="modules.length > 0">
                         <div class="plugin-card" v-for="module in modules">
-                            <div class="plugin-card-top">
-                                <div class="name column-name">
-                                    <h3>
-                                        <a :href="module.modLink" target="_blank" class="plugin-name">{{ module.name }}</a>
-                                        <a :href="module.modLink" target="_blank" class="plugin-name">
-                                            <img class="plugin-icon" :src="module.thumbnail" :alt="module.name" />
-                                        </a>
-                                    </h3>
+                            <div class='flex p-5'>
+                                <div class='w-[128px h-[128px]'>
+                                    <a :href="module.modLink" target="_blank" class="">
+                                        <img class="w-[128px] h-[128px] max-w-[128px]" :src="module.thumbnail" :alt="module.name" />
+                                    </a>
                                 </div>
-
-                                <div class="action-links">
-                                    <ul class="plugin-action-buttons">
-                                        <li @click="togglePopup(true)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="42" height="20"><rect width="42" height="20" rx="10" fill="#c0c3c6"/><circle cx="6" cy="6" r="6" transform="translate(6 4)" fill="#fff"/></svg>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="desc column-description">
-                                    <p v-html="module.description"></p>
-                                </div>
-
-                                <div class="card-footer">
-                                    <a :href="module.docLink" target="_blank">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
+                                <div class='flex justify-between w-[calc(100%-128px)]'>
+                                    <div class='ml-5'>
+                                        <a :href="module.modLink" target="_blank" class="plugin-name text-[1.3em]">{{ module.name }}</a>
+                                        <p class='mt-3' v-html="module.description"></p>
+                                    </div>
+                                    <div class='flex flex-col justify-between'>
+                                        <div class="">
+                                            <ul class="plugin-action-buttons">
+                                                <li @click="togglePopup(true)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="42" height="20"><rect width="42" height="20" rx="10" fill="#c0c3c6"/><circle cx="6" cy="6" r="6" transform="translate(6 4)" fill="#fff"/></svg>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <a :href="module.docLink" target="_blank">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

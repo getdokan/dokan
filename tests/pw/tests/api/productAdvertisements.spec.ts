@@ -5,56 +5,67 @@
 //COVERAGE_TAG: DELETE /dokan/v1/product_adv/(?P<id>[\d]+)
 //COVERAGE_TAG: PUT /dokan/v1/product_adv/batch
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('product advertisement api test', () => {
     let apiUtils: ApiUtils;
     let productAdvertisementId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         [, productAdvertisementId] = await apiUtils.createProductAdvertisement(payloads.createProduct());
     });
 
-    test('get all advertised product stores @pro', async () => {
+    test.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    test('get all advertised product stores', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllProductAdvertisementStores);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.productAdvertisementsSchema.advertisedProductStoresSchema);
     });
 
-    test('get all advertised product @pro', async () => {
+    test('get all advertised product', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllProductAdvertisements);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.productAdvertisementsSchema.advertisedProductsSchema);
     });
 
-    test('create a product advertisement @pro', async () => {
+    test('create a product advertisement', { tag: ['@pro'] }, async () => {
         const [body, productId] = await apiUtils.createProduct(payloads.createProduct());
         const sellerId = body.store.id;
         const [response, responseBody] = await apiUtils.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.productAdvertisementsSchema.createAdvertisedProductSchema);
     });
 
-    test('expire a product advertisement @pro', async () => {
+    test('expire a product advertisement', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.expireProductAdvertisement(productAdvertisementId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.productAdvertisementsSchema.expireProductAdvertisementSchema);
     });
 
-    test('delete a product advertisement @pro', async () => {
+    test('delete a product advertisement', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteProductAdvertisement(productAdvertisementId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.productAdvertisementsSchema.deleteProductAdvertisementSchema);
     });
 
-    test('update batch product advertisements @pro', async () => {
+    test('update batch product advertisements', { tag: ['@pro'] }, async () => {
         const allProductAdvertisementIds = (await apiUtils.getAllProductAdvertisements()).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchProductAdvertisements, { data: { ids: allProductAdvertisementIds, action: 'delete' } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.productAdvertisementsSchema.updateBatchProductAdvertisementSchema);
     });
 });

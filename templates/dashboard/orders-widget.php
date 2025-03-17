@@ -6,6 +6,14 @@
  *
  * @since   2.4
  *
+ * @var string $orders_url Order Url.
+ * @var string $completed_url Completed Order Url.
+ * @var string $pending_url Pending Order Url.
+ * @var string $processing_url Processing Order Url.
+ * @var string $cancelled_url Cancelled Order Url.
+ * @var string $refunded_url Refunded Order Url.
+ * @var string $on_hold_url On Hold Order Url.
+ *
  * @package dokan
  */
 ?>
@@ -21,32 +29,32 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo esc_url( add_query_arg( [ 'order_status' => 'wc-completed' ], $orders_url ) ); ?>" style="color: <?php echo esc_attr( $order_data[0]['color'] ); ?>">
+                <a href="<?php echo esc_url( $completed_url ); ?>" style="color: <?php echo esc_attr( $order_data[0]['color'] ); ?>">
                     <span class="title"><?php esc_attr_e( 'Completed', 'dokan-lite' ); ?></span> <span class="count"><?php echo esc_html( number_format_i18n( $orders_count->{'wc-completed'}, 0 ) ); ?></span>
                 </a>
             </li>
             <li>
-                <a href="<?php echo esc_url( add_query_arg( [ 'order_status' => 'wc-pending' ], $orders_url ) ); ?>" style="color: <?php echo esc_attr( $order_data[1]['color'] ); ?>">
+                <a href="<?php echo esc_url( $pending_url ); ?>" style="color: <?php echo esc_attr( $order_data[1]['color'] ); ?>">
                     <span class="title"><?php esc_attr_e( 'Pending', 'dokan-lite' ); ?></span> <span class="count"><?php echo esc_html( number_format_i18n( $orders_count->{'wc-pending'}, 0 ) ); ?></span>
                 </a>
             </li>
             <li>
-                <a href="<?php echo esc_url( add_query_arg( [ 'order_status' => 'wc-processing' ], $orders_url ) ); ?>" style="color: <?php echo esc_attr( $order_data[2]['color'] ); ?>">
+                <a href="<?php echo esc_url( $processing_url ); ?>" style="color: <?php echo esc_attr( $order_data[2]['color'] ); ?>">
                     <span class="title"><?php esc_attr_e( 'Processing', 'dokan-lite' ); ?></span> <span class="count"><?php echo esc_html( number_format_i18n( $orders_count->{'wc-processing'}, 0 ) ); ?></span>
                 </a>
             </li>
             <li>
-                <a href="<?php echo esc_url( add_query_arg( [ 'order_status' => 'wc-cancelled' ], $orders_url ) ); ?>" style="color: <?php echo esc_attr( $order_data[3]['color'] ); ?>">
+                <a href="<?php echo esc_url( $cancelled_url ); ?>" style="color: <?php echo esc_attr( $order_data[3]['color'] ); ?>">
                     <span class="title"><?php esc_html_e( 'Cancelled', 'dokan-lite' ); ?></span> <span class="count"><?php echo esc_html( number_format_i18n( $orders_count->{'wc-cancelled'}, 0 ) ); ?></span>
                 </a>
             </li>
             <li>
-                <a href="<?php echo esc_url( add_query_arg( [ 'order_status' => 'wc-refunded' ], $orders_url ) ); ?>" style="color: <?php echo esc_attr( $order_data[4]['color'] ); ?>">
+                <a href="<?php echo esc_url( $refunded_url ); ?>" style="color: <?php echo esc_attr( $order_data[4]['color'] ); ?>">
                     <span class="title"><?php esc_html_e( 'Refunded', 'dokan-lite' ); ?></span> <span class="count"><?php echo esc_html( number_format_i18n( $orders_count->{'wc-refunded'}, 0 ) ); ?></span>
                 </a>
             </li>
             <li>
-                <a href="<?php echo esc_url( add_query_arg( [ 'order_status' => 'wc-on-hold' ], $orders_url ) ); ?>" style="color: <?php echo esc_attr( $order_data[5]['color'] ); ?>">
+                <a href="<?php echo esc_url( $on_hold_url ); ?>" style="color: <?php echo esc_attr( $order_data[5]['color'] ); ?>">
                     <span class="title"><?php esc_html_e( 'On hold', 'dokan-lite' ); ?></span> <span class="count"><?php echo esc_html( number_format_i18n( $orders_count->{'wc-on-hold'}, 0 ) ); ?></span>
                 </a>
             </li>

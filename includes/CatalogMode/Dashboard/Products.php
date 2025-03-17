@@ -30,6 +30,7 @@ class Products {
         add_action( 'dokan_product_edit_after_options', [ $this, 'render_product_section' ], 99, 1 );
         // save catalog mode section data
         add_action( 'dokan_product_updated', [ $this, 'save_catalog_mode_data' ], 13 );
+        add_action( 'dokan_new_product_added', [ $this, 'save_catalog_mode_data' ], 13 );
     }
 
     /**

@@ -48,6 +48,7 @@ class Settings {
                 'type'               => 'switcher',
                 'default'            => 'off',
                 'refresh_after_save' => true,
+                'is_lite'            => true,
             ],
             'payment_gateways' => [
                 'name'    => 'payment_gateways',
@@ -56,6 +57,7 @@ class Settings {
                 'type'    => 'multicheck',
                 'options' => SettingsHelper::get_reverse_withrawal_payment_gateways(),
                 'default' => [ 'cod' => 'cod' ],
+                'is_lite' => true,
             ],
             'billing_type' => [
                 'name'    => 'billing_type',
@@ -64,6 +66,7 @@ class Settings {
                 'type'    => 'select',
                 'options' => SettingsHelper::get_billing_type_options(),
                 'default' => 'by_amount',
+                'is_lite' => true,
             ],
             'reverse_balance_threshold' => [
                 'name'    => 'reverse_balance_threshold',
@@ -78,6 +81,7 @@ class Settings {
                         'equal' => 'by_amount',
                     ],
                 ],
+                'is_lite' => true,
             ],
             'monthly_billing_day' => [
                 'name'    => 'monthly_billing_day',
@@ -93,6 +97,7 @@ class Settings {
                         'equal' => 'by_month',
                     ],
                 ],
+                'is_lite' => true,
             ],
             'due_period' => [
                 'name'    => 'due_period',
@@ -103,6 +108,7 @@ class Settings {
                 'max'     => 28,
                 'step'    => 1,
                 'default' => '7',
+                'is_lite' => true,
             ],
             'failed_actions' => [
                 'name'    => 'failed_actions',
@@ -111,6 +117,7 @@ class Settings {
                 'type'    => 'multicheck',
                 'options' => SettingsHelper::get_failed_payment_actions(),
                 'default' => [ 'enable_catalog_mode' => 'enable_catalog_mode' ],
+                'is_lite' => true,
             ],
             'display_notice' => [
                 'name'    => 'display_notice',
@@ -118,6 +125,7 @@ class Settings {
                 'desc'    => esc_html__( 'Display notice to pay reverse withdrawal balance during grace period under vendor dashboard.', 'dokan-lite' ),
                 'type'    => 'switcher',
                 'default' => 'on',
+                'is_lite' => true,
             ],
         ];
 
@@ -129,6 +137,7 @@ class Settings {
                 'desc'    => esc_html__( 'Check this checkbox if you want to send an announcement during the grace period. Note that a maximum of one announcement will be sent during a single billing period.', 'dokan-lite' ),
                 'type'    => 'switcher',
                 'default' => 'off',
+                'is_lite' => true,
             ];
         }
 

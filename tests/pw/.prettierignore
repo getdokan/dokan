@@ -18,7 +18,8 @@ Thumbs.db
 *_spec3.json
 
 # Custom files
-TODO.ts
+.wp-env.json
+.wp-env.override
 TODO.md
 
 

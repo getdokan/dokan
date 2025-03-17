@@ -1,19 +1,25 @@
 //COVERAGE_TAG: GET /dokan/v1/request-for-quote/roles
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
+import { schemas } from '@utils/schemas';
 
 test.describe('roles api test', () => {
     let apiUtils: ApiUtils;
 
-    test.beforeAll(({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
-    test('get all user roles @pro', async () => {
+    test.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    test('get all user roles', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllUserRoles);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.rolesSchema);
     });
 });

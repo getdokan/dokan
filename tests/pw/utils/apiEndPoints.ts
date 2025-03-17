@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
-const { SERVER_URL } = process.env;
+// const { BASE_URL, SERVER_URL } = process.env;
+const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL : process.env.BASE_URL + '/wp-json';
 
 export const endPoints = {
     serverUrl: `${SERVER_URL}`,
@@ -122,7 +123,7 @@ export const endPoints = {
     // product reviews
     getAllProductReviews: `${SERVER_URL}/dokan/v1/reviews`,
     getProductReviewSummary: `${SERVER_URL}/dokan/v1/reviews/summary`,
-    updateReview: (reviewId: string) => `${SERVER_URL}/dokan/v1/reviews/${reviewId}`,
+    updateProductReview: (reviewId: string) => `${SERVER_URL}/dokan/v1/reviews/${reviewId}`,
 
     // store reviews
     getStoreReviews: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/reviews`,
@@ -215,6 +216,7 @@ export const endPoints = {
     getAllReverseWithdrawalStores: `${SERVER_URL}/dokan/v1/reverse-withdrawal/stores`,
     getAllReverseWithdrawalStoreBalance: `${SERVER_URL}/dokan/v1/reverse-withdrawal/stores-balance`,
     getAllReverseWithdrawalTransactions: `${SERVER_URL}/dokan/v1/reverse-withdrawal/transactions`,
+    createReverseWithdrawalTransactions: `${SERVER_URL}/dokan/v1/reverse-withdrawal/transactions`,
 
     // modules
     getAllModules: `${SERVER_URL}/dokan/v1/admin/modules`,
@@ -242,6 +244,7 @@ export const endPoints = {
     getAdminPromoNotices: `${SERVER_URL}/dokan/v1/admin/notices/promo`,
     getAdminLogs: `${SERVER_URL}/dokan/v1/admin/logs`,
     getAdminExportLogs: `${SERVER_URL}/dokan/v1/admin/logs/export`,
+    getAdminSettings: `${SERVER_URL}/dokan/v1/admin/option`,
 
     // seller badge
     getVerifiedSellerVerificationTypes: `${SERVER_URL}/dokan/v1/seller-badge/verification-types`,
@@ -281,6 +284,15 @@ export const endPoints = {
     getVendorStaffCapabilities: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
     updateVendorStaffCapabilities: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
 
+    // vendor subscriptions
+    getAllVendorSubscriptions: `${SERVER_URL}/dokan/v1/subscription`,
+    getAllVendorSubscriptionPackages: `${SERVER_URL}/dokan/v1/subscription/packages`,
+    getAllVendorSubscriptionNonRecurringPackages: `${SERVER_URL}/dokan/v1/subscription/nonrecurring-packages`,
+    getVendorActiveSubscriptionPackage: (sellerId: string) => `${SERVER_URL}/dokan/v1/subscription/vendor/${sellerId}`,
+    updateVendorSubscription: (sellerId: string) => `${SERVER_URL}/dokan/v1/subscription/${sellerId}`,
+    updateBatchVendorSubscriptions: `${SERVER_URL}/dokan/v1/subscription/batch`, // method: active, cancel
+    saveVendorSubscriptionProductCommission: `${SERVER_URL}/dokan/v1/subscription/save-commission`,
+
     // v2
 
     // rank math
@@ -290,6 +302,8 @@ export const endPoints = {
     createDuplicateProduct: (productId: string) => `${SERVER_URL}/dokan/v2/products/${productId}/duplicate`,
 
     getAllProductsV2: `${SERVER_URL}/dokan/v2/products`,
+    getAllLinkedProducts: (productId: string) => `${SERVER_URL}/dokan/v2/products/linked-products?term=${productId}`,
+
     getAllOrdersV2: `${SERVER_URL}/dokan/v2/products`,
 
     // product filter
@@ -324,6 +338,51 @@ export const endPoints = {
     getSpmvSettings: `${SERVER_URL}/dokan/v1/spmv-product/settings`,
     getSpmvProducts: `${SERVER_URL}/dokan/v1/spmv-product/search`,
     addToStore: `${SERVER_URL}/dokan/v1/spmv-product/add-to-store`, // post
+
+    // product question answers
+    getAllProductQuestions: `${SERVER_URL}/dokan/v1/product-questions`,
+    getSingleProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
+    createProductQuestion: `${SERVER_URL}/dokan/v1/product-questions`,
+    updateProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
+    deleteProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
+    updateBatchProductQuestions: `${SERVER_URL}/dokan/v1/product-questions/bulk_action`, // method: delete, read, unread
+
+    getAllProductQuestionAnswers: `${SERVER_URL}/dokan/v1/product-answers`,
+    getSingleProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+    createProductQuestionAnswer: `${SERVER_URL}/dokan/v1/product-answers`,
+    updateProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+    deleteProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+
+    // vendor verification
+    getAllVerificationMethods: `${SERVER_URL}/dokan/v1/verification-methods`,
+    getSingleVerificationMethod: (methodId: string) => `${SERVER_URL}/dokan/v1/verification-methods/${methodId}`,
+    createVerificationMethod: `${SERVER_URL}/dokan/v1/verification-methods`,
+    updateVerificationMethod: (methodId: string) => `${SERVER_URL}/dokan/v1/verification-methods/${methodId}`,
+    deleteVerificationMethod: (methodId: string) => `${SERVER_URL}/dokan/v1/verification-methods/${methodId}`,
+
+    getAllVerificationRequests: `${SERVER_URL}/dokan/v1/verification-requests`,
+    getSingleVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
+    createVerificationRequest: `${SERVER_URL}/dokan/v1/verification-requests`,
+    updateVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
+    deleteVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
+
+    // commission
+    getCommission: `${SERVER_URL}/dokan/v1/commission`,
+
+    // shipping status
+    getShippingStatus: `${SERVER_URL}/dokan/v1/shipping-status`,
+    getAllShipments: (orderId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}`,
+    createShipment: (orderId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}`,
+    getSingleShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
+    updateShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
+
+    // ShipStation
+    getShipStationCredential: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/credentials/${vendorId}`,
+    createShipStationCredential: `${SERVER_URL}/dokan/v1/shipstation/credentials/create`,
+    deleteShipStationCredential: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/credentials/${vendorId}`,
+    getShipStationOrderStatusSettings: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/order-statuses/${vendorId}`,
+    createShipStationOrderStatusSettings: `${SERVER_URL}/dokan/v1/shipstation/order-statuses`,
+    deleteShipStationOrderStatusSettings: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/order-statuses/${vendorId}`,
 
     wc: {
         // coupons
@@ -403,21 +462,13 @@ export const endPoints = {
         deleteCategory: (categoryId: string) => `${SERVER_URL}/wc/v3/products/categories/${categoryId}`,
         updateBatchCategories: `${SERVER_URL}/wc/v3/products/categories/batch`,
 
-        // product shipping class
-        getAllShippingClasses: `${SERVER_URL}/wc/v3/products/shipping_classes`,
-        getSingleShippingClass: (shippingClassId: string) => `${SERVER_URL}/wc/v3/products/shipping_classes/${shippingClassId}`,
-        createShippingClass: `${SERVER_URL}/wc/v3/products/shipping_classes`,
-        updateShippingClass: (shippingClassId: string) => `${SERVER_URL}/wc/v3/products/shipping_classes/${shippingClassId}`,
-        deleteShippingClass: (shippingClassId: string) => `${SERVER_URL}/wc/v3/products/shipping_classes/${shippingClassId}`,
-        updateBatchShippingClass: `${SERVER_URL}/wc/v3/products/shipping_classes/batch`,
-
         // product tags
         getAllTags: `${SERVER_URL}/wc/v3/products/tags`,
         getSingleTag: (tagId: string) => `${SERVER_URL}/wc/v3/products/tags/${tagId}`,
         createTag: `${SERVER_URL}/wc/v3/products/tags`,
         updateTag: (tagId: string) => `${SERVER_URL}/wc/v3/products/tags/${tagId}`,
         deleteTag: (tagId: string) => `${SERVER_URL}/wc/v3/products/tags/${tagId}`,
-        updateBatchTag: `${SERVER_URL}/wc/v3/products/tags/batch`,
+        updateBatchTags: `${SERVER_URL}/wc/v3/products/tags/batch`,
 
         // product reviews
         getAllReviews: `${SERVER_URL}/wc/v3/products/reviews`,
@@ -468,6 +519,14 @@ export const endPoints = {
         // shipping methods
         getAllShippingMethods: `${SERVER_URL}/wc/v3/shipping_methods`,
         getSingleShippingMethod: (shippingId: string) => `${SERVER_URL}/wc/v3/shipping_methods/${shippingId}`,
+
+        // shipping class
+        getAllShippingClasses: `${SERVER_URL}/wc/v3/products/shipping_classes`,
+        getSingleShippingClass: (shippingClassId: string) => `${SERVER_URL}/wc/v3/products/shipping_classes/${shippingClassId}`,
+        createShippingClass: `${SERVER_URL}/wc/v3/products/shipping_classes`,
+        updateShippingClass: (classId: string) => `${SERVER_URL}/wc/v3/products/shipping_classes/${classId}`,
+        deleteShippingClass: (classId: string) => `${SERVER_URL}/wc/v3/products/shipping_classes/${classId}`,
+        updateBatchShippingClass: `${SERVER_URL}/wc/v3/products/shipping_classes/batch`,
 
         // payment gateways
         getAllPaymentGateways: `${SERVER_URL}/wc/v3/payment_gateways`,
@@ -523,10 +582,10 @@ export const endPoints = {
 
         productAddons: {
             getAllProductAddons: `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons`,
-            getSingleProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons${productId}`,
+            getSingleProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons/${productId}`,
             createProductAddon: `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons`,
-            updateProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons${productId}`,
-            deleteProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons${productId}`,
+            updateProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons/${productId}`,
+            deleteProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons/${productId}`,
         },
     },
 
@@ -566,9 +625,25 @@ export const endPoints = {
         // posts
         getAllPosts: `${SERVER_URL}/wp/v2/posts`,
         getSinglePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
-        createPost: `${SERVER_URL}/wp/v2/pots/posts`,
+        createPost: `${SERVER_URL}/wp/v2/posts`,
         createCustomPost: (postType: string) => `${SERVER_URL}/wp/v2/${postType}`,
         updatePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
         deletePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
+
+        // widgets
+        getAllWidgets: `${SERVER_URL}/wp/v2/widgets`,
+        getSingleWidget: (widgetId: string) => `${SERVER_URL}/wp/v2/widgets/${widgetId}`,
+        createWidget: `${SERVER_URL}/wp/v2/widgets`,
+        updateWidget: (widgetId: string) => `${SERVER_URL}/wp/v2/widgets/${widgetId}`,
+        deleteWidget: (widgetId: string) => `${SERVER_URL}/wp/v2/widgets/${widgetId}`,
+
+        // widget types
+        getAllWidgetTypes: `${SERVER_URL}/wp/v2/widget-types`,
+        getSingleWidgetType: (widgetId: string) => `${SERVER_URL}/wp/v2/widget-types/${widgetId}`,
+
+        // sidebars
+        getAllSidebars: `${SERVER_URL}/wp/v2/sidebars`,
+        getSingleSidebar: (sideBarId: string) => `${SERVER_URL}/wp/v2/sidebars/${sideBarId}`,
+        updateSidebar: (sideBarId: string) => `${SERVER_URL}/wp/v2/sidebars/${sideBarId}`,
     },
 };

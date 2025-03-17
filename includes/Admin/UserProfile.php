@@ -65,8 +65,6 @@ class UserProfile {
         $publishing            = get_user_meta( $user->ID, 'dokan_publishing', true );
         $store_settings        = dokan_get_store_info( $user->ID );
         $banner                = ! empty( $store_settings['banner'] ) ? absint( $store_settings['banner'] ) : 0;
-        $admin_commission      = get_user_meta( $user->ID, 'dokan_admin_percentage', true );
-        $admin_commission_type = get_user_meta( $user->ID, 'dokan_admin_percentage_type', true );
         $feature_seller        = get_user_meta( $user->ID, 'dokan_feature_seller', true );
 
         $social_fields = dokan_get_social_profile_fields();
@@ -80,7 +78,12 @@ class UserProfile {
         $address_state     = isset( $store_settings['address']['state'] ) ? $store_settings['address']['state'] : '';
         $banner_width      = dokan_get_vendor_store_banner_width();
         $banner_height     = dokan_get_vendor_store_banner_height();
-        $admin_commission  = ( 'flat' === $admin_commission_type ) ? wc_format_localized_price( $admin_commission ) : wc_format_localized_decimal( $admin_commission );
+
+        $shop_slug = $user->data->user_nicename ?? '';
+        if ( user_can( $user->ID, 'vendor_staff' ) ) {
+            $vendor    = new \WP_User( get_user_meta( $user->ID, '_vendor_id', true ) );
+            $shop_slug = $vendor->data->user_nicename ?? '';
+        }
 
         $country_state = array(
             'country' => array(
@@ -117,7 +120,7 @@ class UserProfile {
                                 <a href="#" class="dokan-banner-drag button button-primary"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
                                 <p class="description">
                                     <?php
-                                    echo sprintf(
+                                    printf(
                                         /* translators: %1$s: banner width, %2$s: banner height in integers */
                                         esc_attr__( 'Upload a banner for your store. Banner size is (%1$sx%2$s) pixels.', 'dokan-lite' ),
                                         esc_attr( $banner_width ),
@@ -137,13 +140,15 @@ class UserProfile {
                     </td>
                 </tr>
 
-                <tr>
-                    <th><?php esc_html_e( 'Store URL', 'dokan-lite' ); ?></th>
-                    <td>
-                        <input type="text" name="dokan_store_url" data-vendor="<?php echo esc_attr( $user->ID ); ?>" class="regular-text" id="seller-url" value="<?php echo esc_attr( $user->data->user_nicename ); ?>"><strong id="url-alart-mgs"></strong>
-                        <p><small><?php echo esc_url( home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) ); ?>/<strong id="url-alart"><?php echo esc_attr( $user->data->user_nicename ); ?></strong></small></p>
-                    </td>
-                </tr>
+                    <tr>
+                        <th><?php esc_html_e( 'Store URL', 'dokan-lite' ); ?></th>
+                        <td>
+                            <?php if ( ! user_can( $user, 'vendor_staff' ) ) : ?>
+                                <input type="text" name="dokan_store_url" data-vendor="<?php echo esc_attr( $user->ID ); ?>" class="regular-text" id="seller-url" value="<?php echo esc_attr( $user->data->user_nicename ); ?>"><strong id="url-alart-mgs"></strong>
+                            <?php endif; ?>
+                            <p><small><?php echo esc_url( home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) ); ?>/<strong id="url-alart"><?php echo esc_attr( $shop_slug ); ?></strong></small></p>
+                        </td>
+                    </tr>
 
                 <tr>
                     <th><?php esc_html_e( 'Address 1', 'dokan-lite' ); ?></th>
@@ -320,26 +325,6 @@ class UserProfile {
                         </label>
 
                         <p class="description"><?php esc_html_e( 'Bypass pending, publish products directly', 'dokan-lite' ); ?></p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th><?php esc_html_e( 'Admin Commission Type ', 'dokan-lite' ); ?></th>
-                    <td>
-                        <select id="dokan_admin_percentage_type" name="dokan_admin_percentage_type">
-                            <?php foreach ( dokan_commission_types() as $key => $value ) : ?>
-                                <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $admin_commission_type, $key ); ?>><?php echo esc_attr( $value ); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <p class="description"><?php esc_html_e( 'Set the commmission type admin gets from this seller', 'dokan-lite' ); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th><?php esc_html_e( 'Admin Commission ', 'dokan-lite' ); ?></th>
-                    <td>
-                        <input type="text" class="wc_input_price small-text" id="admin-commission" name="dokan_admin_percentage" value="<?php echo esc_attr( $admin_commission ); ?>">
-                        <?php do_action( 'dokan_seller_meta_fields_after_admin_commission', $user ); ?>
-                        <p class="combine-commission-description"><?php esc_html_e( 'It will override the default commission admin gets from each sales', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
 

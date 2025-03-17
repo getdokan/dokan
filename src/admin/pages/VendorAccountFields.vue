@@ -6,19 +6,19 @@
 
         <div class="content-body">
             <div class="vendor-image" v-if="! getId()">
-                <div class="picture">
-                    <p class="picture-header">{{ __( 'Vendor Picture', 'dokan-lite' ) }}</p>
+                <div class="picture flex flex-col justify-center">
+                    <p class="picture-header mb-4">{{ __( 'Vendor Picture', 'dokan-lite' ) }}</p>
 
                     <div class="profile-image">
                         <upload-image @uploadedImage="uploadGravatar" :croppingWidth="150" :croppingHeight="150" />
                     </div>
 
-                    <p class="picture-footer"
+                    <p class="picture-footer mt-4"
                         v-html="sprintf( __( 'You can change your profile picture on %s', 'dokan-lite' ), '<a href=\'https://gravatar.com/\' target=\'_blank\'>Gravatar</a>' )"
                     />
                 </div>
 
-                <div :class="['picture banner', {'has-banner': vendorInfo.banner_id}]">
+                <div class='!pt-0 !flex !flex-col !justify-center !items-center' :class="['picture banner', {'has-banner': vendorInfo.banner_id}]">
                     <div class="banner-image">
                         <upload-image @uploadedImage="uploadBanner" :showButton="showButton" :buttonLabel="__( 'Upload Banner', 'dokan-lite' )" />
                     </div>
@@ -49,7 +49,13 @@
                         :class="{'dokan-form-input': true, 'has-error': getError('store_name')}"
                         :placeholder="getError( 'store_name' ) ? __( 'Store Name is required', 'dokan-lite' ) : __( 'Store Name', 'dokan-lite' )">
                 </div>
-
+                <div v-if="this.vendorInfo.categories" class="column">
+                    <label for="store-category">{{ __( 'Store Category', 'dokan-lite' ) }}</label>
+                    <StoreCategory
+                        :categories=vendorInfo.categories
+                        @categories='( categories ) => vendorInfo.categories = categories'
+                    />
+                </div>
                 <div class="column" v-if="! getId()">
                     <label for="user-nicename">{{ __( 'Store URL', 'dokan-lite') }}</label>
                     <input type="text" id="user-nicename" class="dokan-form-input" v-model="vendorInfo.user_nicename" :placeholder="__( 'Store Url', 'dokan-lite')">
@@ -97,7 +103,11 @@
 
 
                         <div class="checkbox-left notify-vendor">
-                            <switches @input="sendEmail" :enabled="true" value="notify_vendor"></switches>
+                            <switches
+                                @input="sendEmail"
+                                :enabled="true === vendorInfo.notify_vendor"
+                                value="notify_vendor"
+                            ></switches>
                             <span class="desc">{{ __( 'Send the vendor an email about their account.', 'dokan-lite' ) }}</span>
                         </div>
                     </div>
@@ -139,14 +149,16 @@ import { debounce } from "debounce";
 import Switches from "admin/components/Switches.vue";
 import UploadImage from "admin/components/UploadImage.vue";
 import PasswordGenerator from "admin/components/PasswordGenerator.vue";
+import StoreCategory from 'admin/components/StoreCategory.vue';
 
 export default {
     name: 'VendorAccountFields',
 
     components: {
+        StoreCategory,
         Switches,
         UploadImage,
-        PasswordGenerator
+        PasswordGenerator,
     },
 
     props: {

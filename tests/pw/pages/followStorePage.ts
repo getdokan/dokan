@@ -9,6 +9,36 @@ export class FollowStorePage extends CustomerPage {
         super(page);
     }
 
+    // enable follow store module
+    async enableFollowStoreModule() {
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.followers);
+
+        // my account menu
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.vendors);
+    }
+
+    // disable follow store module
+    async disableFollowStoreModule() {
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.followers);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.followers);
+        await this.toBeVisible(selector.frontend.pageNotFound);
+
+        // my account menu
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.notToBeVisible(selector.customer.cMyAccount.menus.vendors);
+
+        // my account menu page
+        await this.goto(data.subUrls.frontend.followingStores);
+        await this.toBeVisible(selector.frontend.pageNotFound);
+    }
+
     // vendor Followers
 
     // vendor followers render properly
@@ -31,7 +61,7 @@ export class FollowStorePage extends CustomerPage {
     // customer
 
     async customerFollowedVendorsRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.vendors);
+        await this.goIfNotThere(data.subUrls.frontend.followingStores);
 
         const noVendorsFound = await this.isVisible(selector.customer.cVendors.noVendorFound);
         if (noVendorsFound) {
@@ -42,36 +72,27 @@ export class FollowStorePage extends CustomerPage {
         await this.notToHaveCount(selector.customer.cVendors.storeCard.storeCardDiv, 0);
     }
 
-    // follow vendor
-    async followStore(storeName: string, followLocation: string): Promise<void> {
-        let currentFollowStatus: boolean;
+    // customer view followed vendors
+    async customerViewFollowedVendors(storeName: string) {
+        await this.goIfNotThere(data.subUrls.frontend.followingStores, 'domcontentloaded', true);
+        await this.toBeVisible(selector.customer.cVendors.followedStore(storeName));
+    }
 
-        switch (followLocation) {
+    // follow vendor
+    async followUnfollowStore(storeName: string, status: string, location: string): Promise<void> {
+        switch (location) {
             // store listing page
             case 'storeListing':
                 await this.searchStore(storeName);
-                currentFollowStatus = await this.hasText(selector.customer.cStoreList.currentFollowStatus(storeName), 'Following');
-                // unfollow if not already
-                if (currentFollowStatus) {
-                    await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(storeName));
-                    await this.toContainText(selector.customer.cStoreList.currentFollowStatus(storeName), 'Follow');
-                }
                 await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(storeName));
-                await this.toContainText(selector.customer.cStoreList.currentFollowStatus(storeName), 'Following');
+                await this.toContainText(selector.customer.cStoreList.currentFollowStatus(storeName), status);
                 break;
 
             // single store page
             case 'singleStore':
                 await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
-                currentFollowStatus = await this.hasText(selector.customer.cStoreList.currentFollowStatusSingleStore, 'Following');
-
-                // unfollow if not already
-                if (currentFollowStatus) {
-                    await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStoreSingleStore);
-                    await this.toContainText(selector.customer.cStoreList.currentFollowStatusSingleStore, 'Follow');
-                }
                 await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStoreSingleStore);
-                await this.toContainText(selector.customer.cStoreList.currentFollowStatusSingleStore, 'Following');
+                await this.toContainText(selector.customer.cStoreList.currentFollowStatusSingleStore, status);
                 break;
 
             default:

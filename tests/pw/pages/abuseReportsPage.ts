@@ -1,9 +1,13 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
 import { product } from '@utils/interfaces';
+
+// selectors
+const abuseReportAdmin = selector.admin.dokan.abuseReports;
+const abuseReportCustomer = selector.customer.cSingleProduct.reportAbuse;
 
 export class AbuseReportsPage extends AdminPage {
     constructor(page: Page) {
@@ -12,61 +16,97 @@ export class AbuseReportsPage extends AdminPage {
 
     // abuse reports
 
+    // enable report abuse module
+    async enableReportAbuseModule(productName: string) {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(selector.admin.dokan.menus.abuseReports);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.productReportAbuse);
+
+        // single product page
+        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.toBeVisible(abuseReportCustomer.reportAbuse);
+    }
+
+    // disable report abuse module
+    async disableReportAbuseModule(productName: string) {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(selector.admin.dokan.menus.abuseReports);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.productReportAbuse);
+
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.abuseReports);
+        await this.notToBeVisible(abuseReportAdmin.abuseReportsText);
+
+        // single product page
+        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.notToBeVisible(abuseReportCustomer.reportAbuse);
+    }
+
     // abuse report render properly
     async adminAbuseReportRenderProperly() {
         await this.goIfNotThere(data.subUrls.backend.dokan.abuseReports);
 
         // abuse reports text is visible
-        await this.toBeVisible(selector.admin.dokan.abuseReports.abuseReportsText);
+        await this.toBeVisible(abuseReportAdmin.abuseReportsText);
 
         // bulk action elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.abuseReports.bulkActions);
+        await this.multipleElementVisible(abuseReportAdmin.bulkActions);
 
         // filter elements are visible
-        const { filterInput, ...filters } = selector.admin.dokan.abuseReports.filters;
+        const { filterInput, reset, filteredResult, ...filters } = abuseReportAdmin.filters;
         await this.multipleElementVisible(filters);
 
         // abuse report table elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.abuseReports.table);
+        await this.multipleElementVisible(abuseReportAdmin.table);
     }
 
     // abuse report details
     async abuseReportDetails() {
         await this.goIfNotThere(data.subUrls.backend.dokan.abuseReports);
-        await this.click(selector.admin.dokan.abuseReports.abuseReportFirstCell);
+        await this.click(abuseReportAdmin.abuseReportFirstCell);
 
         // abuse report modal elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.abuseReports.abuseReportModal);
-        await this.click(selector.admin.dokan.abuseReports.abuseReportModal.closeModal);
+        await this.multipleElementVisible(abuseReportAdmin.abuseReportModal);
+        await this.click(abuseReportAdmin.abuseReportModal.closeModal);
     }
 
     // filter abuse reports
     async filterAbuseReports(input: string, action: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.abuseReports);
+        await this.goto(data.subUrls.backend.dokan.abuseReports);
 
         switch (action) {
             case 'by-reason':
-                await this.selectByLabelAndWaitForResponse(data.subUrls.api.dokan.abuseReports, selector.admin.dokan.abuseReports.filters.filterByAbuseReason, input);
+                await this.selectByLabelAndWaitForResponse(data.subUrls.api.dokan.abuseReports, abuseReportAdmin.filters.filterByAbuseReason, input);
                 break;
 
             case 'by-product':
-                await this.click(selector.admin.dokan.abuseReports.filters.filterByProduct);
-                await this.typeAndWaitForResponse(data.subUrls.api.wc.wcProducts, selector.admin.dokan.abuseReports.filters.filterInput, input);
-                await this.pressAndWaitForResponse(data.subUrls.api.dokan.abuseReports, data.key.enter);
+                await this.click(abuseReportAdmin.filters.filterByProduct);
+                await this.typeAndWaitForResponse(data.subUrls.api.wc.products, abuseReportAdmin.filters.filterInput, input);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.abuseReports, abuseReportAdmin.filters.filteredResult(input));
                 break;
 
             case 'by-vendor':
-                await this.click(selector.admin.dokan.abuseReports.filters.filterByVendors);
-                await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.abuseReports.filters.filterInput, input);
-                await this.pressAndWaitForResponse(data.subUrls.api.dokan.abuseReports, data.key.enter);
+                await this.click(abuseReportAdmin.filters.filterByVendors);
+                await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, abuseReportAdmin.filters.filterInput, input);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.abuseReports, abuseReportAdmin.filters.filteredResult(input));
                 break;
 
             default:
                 break;
         }
+        await this.notToHaveText(abuseReportAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(abuseReportAdmin.noRowsFound);
 
-        const count = (await this.getElementText(selector.admin.dokan.abuseReports.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        //clear filter
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.abuseReports, abuseReportAdmin.filters.reset);
     }
 
     // abuse report bulk action
@@ -74,37 +114,35 @@ export class AbuseReportsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.abuseReports);
 
         // ensure row exists
-        await this.notToBeVisible(selector.admin.dokan.abuseReports.noRowsFound);
+        await this.notToBeVisible(abuseReportAdmin.noRowsFound);
 
-        await this.click(selector.admin.dokan.abuseReports.bulkActions.selectAll);
-        await this.selectByValue(selector.admin.dokan.abuseReports.bulkActions.selectAction, action);
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.abuseReports, selector.admin.dokan.abuseReports.bulkActions.applyAction);
+        await this.click(abuseReportAdmin.bulkActions.selectAll);
+        await this.selectByValue(abuseReportAdmin.bulkActions.selectAction, action);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.abuseReports, abuseReportAdmin.bulkActions.applyAction);
     }
 
     // customer report product
-    async reportProduct(productName: string, report: product['report']): Promise<void> {
-        // await this.goToProductDetails(productName);
-        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName))); // for non logged user scenario, to load db changes
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cSingleProduct.reportAbuse.reportAbuse);
+    async reportProduct(productName: string, report: product['report'], needLogin = false): Promise<void> {
+        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.clickAndWaitForResponse(data.subUrls.ajax, abuseReportCustomer.reportAbuse);
         // non logged user
-        const isNonLoggedUser = await this.isVisible(selector.customer.cSingleProduct.reportAbuse.nonLoggedUser.userName);
-        if (isNonLoggedUser) {
-            await this.clearAndType(selector.customer.cSingleProduct.reportAbuse.nonLoggedUser.userName, report.username);
-            await this.clearAndType(selector.customer.cSingleProduct.reportAbuse.nonLoggedUser.userPassword, report.password);
-            await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cSingleProduct.reportAbuse.nonLoggedUser.login);
+        if (needLogin) {
+            await this.clearAndType(abuseReportCustomer.nonLoggedUser.userName, report.username);
+            await this.clearAndType(abuseReportCustomer.nonLoggedUser.userPassword, report.password);
+            await this.clickAndWaitForResponse(data.subUrls.ajax, abuseReportCustomer.nonLoggedUser.login);
         }
 
-        await this.click(selector.customer.cSingleProduct.reportAbuse.reportReasonByName(report.reportReason));
-        await this.clearAndType(selector.customer.cSingleProduct.reportAbuse.reportDescription, report.reportReasonDescription);
+        await this.click(abuseReportCustomer.reportReasonByName(report.reportReason));
+        await this.clearAndType(abuseReportCustomer.reportDescription, report.reportReasonDescription);
         // is guest
-        const isGuest = await this.isVisible(selector.customer.cSingleProduct.reportAbuse.guestName);
+        const isGuest = await this.isVisible(abuseReportCustomer.guestName);
         if (isGuest) {
-            await this.clearAndType(selector.customer.cSingleProduct.reportAbuse.guestName, report.guestName());
-            await this.clearAndType(selector.customer.cSingleProduct.reportAbuse.guestEmail, report.guestEmail());
+            await this.clearAndType(abuseReportCustomer.guestName, report.guestName());
+            await this.clearAndType(abuseReportCustomer.guestEmail, report.guestEmail());
         }
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cSingleProduct.reportAbuse.reportSubmit);
-        await this.toContainText(selector.customer.cSingleProduct.reportAbuse.reportSubmitSuccessMessage, report.reportSubmitSuccessMessage);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, abuseReportCustomer.reportSubmit);
+        await this.toContainText(abuseReportCustomer.reportSubmitSuccessMessage, report.reportSubmitSuccessMessage);
         // close popup
-        await this.click(selector.customer.cSingleProduct.reportAbuse.confirmReportSubmit);
+        await this.click(abuseReportCustomer.confirmReportSubmit);
     }
 }

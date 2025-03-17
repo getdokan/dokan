@@ -3,7 +3,7 @@
         <div class="withdraw-requests">
             <h1>{{ __( 'Withdraw Requests', 'dokan-lite' ) }}</h1>
             <AdminNotice></AdminNotice>
-            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
+<!--            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>-->
 
             <modal
                 :title="__( 'Update Note', 'dokan-lite' )"
@@ -11,7 +11,7 @@
                 @close="showModal = false"
             >
                 <template slot="body">
-                    <textarea v-model="editing.note" rows="3"></textarea>
+                    <textarea class='p-2' v-model="editing.note" rows="3"></textarea>
                 </template>
 
                 <template slot="footer">
@@ -68,6 +68,14 @@
 
                 <template slot="method_title" slot-scope="data">
                     <div class="method_title_inner" v-html="getPaymentTitle(data.row.method, data.row)"></div>
+                </template>
+
+                <template slot="charge" slot-scope="data">
+                    <currency :amount="data.row.charge"></currency>
+                </template>
+
+                <template slot="payable" slot-scope="data">
+                    <currency :amount="data.row.receivable"></currency>
                 </template>
 
                 <template slot="method_details" slot-scope="data">
@@ -153,7 +161,7 @@ let AdminNotice       = dokan_get_lib('AdminNotice');
 const DateRangePicker = dokan_get_lib('DateRangePicker');
 
 import $ from 'jquery';
-import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+// import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
 export default {
 
@@ -163,7 +171,7 @@ export default {
         ListTable,
         Modal,
         Currency,
-        UpgradeBanner,
+        // UpgradeBanner,
         AdminNotice,
         DateRangePicker,
     },
@@ -220,6 +228,8 @@ export default {
                 'amount': { label: this.__( 'Amount', 'dokan-lite' ) },
                 'status': { label: this.__( 'Status', 'dokan-lite' ) },
                 'method_title': { label: this.__( 'Method', 'dokan-lite' ) },
+                'charge': { label: this.__( 'Charge', 'dokan-lite' ) },
+                'payable': { label: this.__( 'Payable', 'dokan-lite' ) },
                 'method_details': { label: this.__( 'Details', 'dokan-lite' ) },
                 'note': { label: this.__( 'Note', 'dokan-lite' ) },
                 'created': { label: this.__( 'Date', 'dokan-lite' ) },
@@ -825,7 +835,7 @@ export default {
         showErrorAlert( message ) {
             let self = this;
             swal.fire(
-                self.__( 'Something went wrong', 'dokan' ),
+                self.__( 'Something went wrong', 'dokan-lite' ),
                 message,
                 'error'
             );

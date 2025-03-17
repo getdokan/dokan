@@ -369,6 +369,7 @@ class Manager {
             return false;
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $order_id = $wpdb->get_var( $wpdb->prepare( "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE order_id=%d LIMIT 1", $order_id ) );
 
         return wc_string_to_bool( $order_id );
@@ -387,12 +388,12 @@ class Manager {
     public function is_seller_has_order( $seller_id, $order_id ) {
         global $wpdb;
 
-        return 1 === (int) $wpdb->get_var(
-                $wpdb->prepare(
-                    "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_id = %d LIMIT 1",
-                    [ $seller_id, $order_id ]
-                )
-            );
+        return 1 === (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $wpdb->prepare(
+                "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_id = %d LIMIT 1",
+                [ $seller_id, $order_id ]
+            )
+        );
     }
 
     /**
@@ -447,20 +448,28 @@ class Manager {
     }
 
     /**
+     * Get all child orders of a parent order
+     *
      * @param int|WC_Order $parent_order
+     * @param array $args
      *
      * @return WC_Order[]
      */
-    public function get_child_orders( $parent_order ) {
+    public function get_child_orders( $parent_order, array $args = [] ) {
         $parent_order_id = is_numeric( $parent_order ) ? $parent_order : $parent_order->get_id();
+        $default_args = [
+			'type'   => 'shop_order',
+			'parent' => $parent_order_id,
+			'limit'  => -1,
+		];
 
-        return wc_get_orders(
-            [
-                'type'   => 'shop_order',
-                'parent' => $parent_order_id,
-                'limit'  => -1,
-            ]
+        $args = apply_filters(
+            'dokan_get_child_orders_args',
+            wp_parse_args( $args, $default_args ),
+            $parent_order_id
         );
+
+        return wc_get_orders( $args );
     }
 
     /**
@@ -487,6 +496,7 @@ class Manager {
             $where_format[]     = '%d';
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $deleted = $wpdb->delete( $wpdb->prefix . 'dokan_orders', $where, $where_format );
         if ( false === $deleted ) {
             dokan_log( sprintf( '[DeleteSellerOrder] Error while deleting dokan order table data, order_id: %d, Database Error: %s  ', $order_id, $wpdb->last_error ) );
@@ -495,7 +505,7 @@ class Manager {
         }
 
         // delete from dokan refund table -> order_id
-        $deleted = $wpdb->query(
+        $deleted = $wpdb->query(  // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "DELETE FROM `{$wpdb->prefix}dokan_refund` WHERE order_id = %d",
                 [ $order_id ]
@@ -508,7 +518,7 @@ class Manager {
         do_action( 'dokan_after_deleting_seller_order', $order_id );
 
         // delete data from vendor balance table -> trn_id, trn_type: dokan_orders, dokan_refund, dokan_withdraw
-        $deleted = $wpdb->query(
+        $deleted = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "DELETE FROM `{$wpdb->prefix}dokan_vendor_balance`
                 WHERE trn_id = %d AND trn_type in ( %s, %s, %s )",
@@ -520,7 +530,7 @@ class Manager {
         }
 
         // delete data from reverse withdrawal table -> order_id, trn_type: order_commission, manual_order_commission, order_refund
-        $deleted = $wpdb->query(
+        $deleted = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "DELETE FROM `{$wpdb->prefix}dokan_reverse_withdrawal`
                 WHERE trn_id = %d AND trn_type in ( %s, %s, %s )",
@@ -644,7 +654,10 @@ class Manager {
             dokan_log( 'Created sub order : #' . $order->get_id() );
 
             do_action( 'dokan_checkout_update_order_meta', $order->get_id(), $seller_id );
-        } catch ( Exception $e ) {
+        } catch ( \Throwable $e ) {
+            dokan_log( 'Error in create_sub_order: ' . $e->getMessage() );
+            dokan_log( 'Stack trace: ' . $e->getTraceAsString() );
+            dokan_log( 'Backtrace at error: ' . wp_debug_backtrace_summary() );
             return new WP_Error( 'dokan-suborder-error', $e->getMessage() );
         }
     }
@@ -781,23 +794,9 @@ class Manager {
             }
             dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
 
-            $item = new \WC_Order_Item_Shipping();
-            $item->set_props(
-                [
-                    'method_title' => $shipping_method->get_name(),
-                    'method_id'    => $shipping_method->get_method_id(),
-                    'total'        => $shipping_method->get_total(),
-                    'taxes'        => $shipping_method->get_taxes(),
-                ]
-            );
+            $item = clone $shipping_method;
+            $item->set_id( 0 );
             $shipping_totals += $shipping_method->get_total();
-            $metadata        = $shipping_method->get_meta_data();
-
-            if ( $metadata ) {
-                foreach ( $metadata as $meta ) {
-                    $item->add_meta_data( $meta->key, $meta->value );
-                }
-            }
             $order->add_item( $item );
         }
         $order->set_shipping_total( $shipping_totals );
@@ -881,7 +880,13 @@ class Manager {
      * @return void
      */
     public function maybe_split_orders( $parent_order_id, $force_create = false ) {
-        $parent_order = $this->get( $parent_order_id );
+        if ( is_a( $parent_order_id, 'WC_Order' ) ) {
+            $parent_order    = $parent_order_id;
+            $parent_order_id = $parent_order->get_id();
+        } else {
+            $parent_order = $this->get( $parent_order_id );
+        }
+
         if ( ! $parent_order ) {
             //dokan_log( sprintf( 'Invalid Order ID #%d found. Skipping from here.', $parent_order_id ) );
             return;
@@ -921,10 +926,7 @@ class Manager {
             $parent_order->update_meta_data( '_dokan_vendor_id', $seller_id );
             $parent_order->save();
 
-            // if the request is made from rest api then insert the order data to the sync table
-            if ( defined( 'REST_REQUEST' ) ) {
-                do_action( 'dokan_checkout_update_order_meta', $parent_order_id, $seller_id );
-            }
+            do_action( 'dokan_checkout_update_order_meta', $parent_order_id, $seller_id );
 
             return;
         }

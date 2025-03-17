@@ -1,7 +1,7 @@
 <template>
     <div :class="['postbox', 'dokan-postbox', { 'closed': !showing }, extraClass]">
         <div class="postbox-header">
-            <h2 class="hndle"><span>{{ title }}</span></h2>
+            <h2 class="hndle font-bold"><span>{{ title }}</span></h2>
             <div class="handle-actions hide-if-no-js">
                 <button type="button" class="handlediv" aria-expanded="false" @click="showing = !showing">
                     <span class="toggle-indicator" aria-hidden="true"></span>

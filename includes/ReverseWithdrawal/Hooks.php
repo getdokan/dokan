@@ -40,7 +40,7 @@ class Hooks {
         add_action( 'woocommerce_order_status_changed', [ $this, 'process_order_status_changed' ], 10, 3 );
 
         // vendor dashboard navigation url
-        add_filter( 'dokan_get_dashboard_nav', [ $this, 'add_reverse_withdrawal_nav' ], 10, 2 );
+        add_filter( 'dokan_get_dashboard_nav', [ $this, 'add_reverse_withdrawal_nav' ], 10 );
     }
 
     /**

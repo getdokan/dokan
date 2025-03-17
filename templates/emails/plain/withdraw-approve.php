@@ -17,7 +17,7 @@ echo esc_html( wp_strip_all_tags( $email_heading ) );
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
 // translators: 1) user name
-echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['username'] ) );
+echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['{store_name}'] ) );
 echo " \n";
 
 esc_html_e( 'Your withdraw request has been approved, congrats!', 'dokan-lite' );
@@ -27,14 +27,14 @@ esc_html_e( 'You sent a withdraw request of:', 'dokan-lite' );
 echo " \n";
 
 // translators: 1) withdraw amount
-echo sprintf( esc_html__( 'Amount : %s', 'dokan-lite' ), esc_html( $data['amount'] ) );
+echo sprintf( esc_html__( 'Amount : %s', 'dokan-lite' ), esc_html( $data['{amount}'] ) );
 echo " \n";
 
 // translators: 1) withdraw method
-echo sprintf( esc_html__( 'Method : %s', 'dokan-lite' ), esc_html( $data['method'] ) );
+echo sprintf( esc_html__( 'Method : %s', 'dokan-lite' ), esc_html( $data['{method}'] ) );
 echo " \n";
 
-esc_html_e( 'We\'ll transfer this amount to your preferred destination shortly.', 'dokan-lite' );
+esc_html_e( 'We\'ll transfer this amount to your preferred withdrawal method shortly.', 'dokan-lite' );
 echo " \n";
 
 esc_html_e( 'Thanks for being with us.', 'dokan-lite' );

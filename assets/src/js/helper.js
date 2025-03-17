@@ -3,7 +3,7 @@
   /**
    * Gets i18n date format
    *
-   * @since DOKAN_PRO_SINCE
+   * @since 3.2.7
    */
   window.dokan_get_i18n_date_format = function ( format = true ) {
     if( ! format ) {
@@ -46,7 +46,7 @@
   /**
    * Get i18n time format.
    *
-   * @since DOKAN_PRO_SINCE
+   * @since 3.3.7
    *
    * @param {string|boolean} format Time format.
    *
@@ -110,7 +110,7 @@
   /**
    * Get formatted time.
    *
-   * @since DOKAN_PRO_SINCE
+   * @since 3.3.7
    *
    * @param {string} time   Time.
    * @param {string} format Time format type.
@@ -262,6 +262,7 @@
       showCancelButton  : true,
       confirmButtonColor:'#28a745',
       cancelButtonColor :'#dc3545',
+      ...dokan_helper.sweetalert_local
     };
 
     const args   = { ...defaults, ...options };

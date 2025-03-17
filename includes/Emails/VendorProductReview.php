@@ -32,7 +32,7 @@ class VendorProductReview extends WC_Email {
      * @since 3.9.2
      */
     public function __construct() {
-        $this->id             = 'dokan_contact_seller';
+        $this->id             = 'dokan_product_review';
         $this->title          = __( 'Dokan Vendor Product Review', 'dokan-lite' );
         $this->description    = __( 'After a product has been reviewed, an email is sent to the vendor containing information about the review. The email may include details such as the reviewer’s name, the product’s name and description, the review rating, and the review text. The email may also contain a link to the review page where the vendor can view the review and respond to it if necessary.', 'dokan-lite' );
         $this->template_html  = 'emails/vendor-product-review.php';
@@ -217,7 +217,7 @@ class VendorProductReview extends WC_Email {
                 'placeholder' => __( 'N/A', 'dokan-lite' ),
                 'type'        => 'textarea',
                 'default'     => $this->get_default_additional_content(),
-                'desc_tip'    => false,
+                'desc_tip'    => true,
             ],
             'email_type'         => [
                 'title'       => __( 'Email type', 'dokan-lite' ),
