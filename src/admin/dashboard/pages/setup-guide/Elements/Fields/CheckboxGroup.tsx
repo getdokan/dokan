@@ -20,7 +20,9 @@ const CheckboxGroup = ( { element, onValueChange }: SettingsProps ) => {
             value: values,
         } );
     };
-
+    if ( ! element.display ) {
+        return <></>;
+    }
     return (
         <div
             id={ element.hook_key + '_div' }

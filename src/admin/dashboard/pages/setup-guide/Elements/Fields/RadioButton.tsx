@@ -1,4 +1,4 @@
-import { useState } from '@wordpress/element';
+import React, { useState } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
 
 const RadioButton = ( { element, onValueChange }: SettingsProps ) => {
@@ -16,6 +16,10 @@ const RadioButton = ( { element, onValueChange }: SettingsProps ) => {
             value: newValue,
         } );
     };
+
+    if ( ! element.display ) {
+        return <></>;
+    }
     return (
         <div className=" flex justify-between items-center gap-y-4 p-4 flex-wrap w-full ">
             <div className="flex-col flex gap-1 sm:w-[70%] xs:w-full">

@@ -1,9 +1,12 @@
 import { useState } from '@wordpress/element';
 import { ToggleSwitch } from '@getdokan/dokan-ui';
-import { __ } from '@wordpress/i18n';
 import { SettingsProps } from '../../StepSettings';
 
 const ToggleSwitchField = ( { element, onValueChange }: SettingsProps ) => {
+    // Initialize state with enabled prop or defaultValue
+    const { default: defaultValue } = element;
+    const [ isEnabled, setIsEnabled ] = useState( Boolean( defaultValue ) );
+
     // Handle toggle change
     const handleChange = ( checked ) => {
         setIsEnabled( checked );
@@ -14,9 +17,9 @@ const ToggleSwitchField = ( { element, onValueChange }: SettingsProps ) => {
         } );
     };
 
-    // Initialize state with enabled prop or defaultValue
-    const { default: defaultValue } = element;
-    const [ isEnabled, setIsEnabled ] = useState( Boolean( defaultValue ) );
+    if ( ! element.display ) {
+        return <></>;
+    }
     return (
         <div
             id={ element.hook_key + '_div' }
@@ -30,15 +33,7 @@ const ToggleSwitchField = ( { element, onValueChange }: SettingsProps ) => {
                     { element?.description }
                 </p>
             </div>
-            <ToggleSwitch
-                checked={ isEnabled }
-                onChange={ handleChange }
-                label={
-                    isEnabled
-                        ? __( 'Enabled', 'dokan-lite' )
-                        : __( 'Disabled', 'dokan-lite' )
-                }
-            />
+            <ToggleSwitch checked={ isEnabled } onChange={ handleChange } />
         </div>
     );
 };
