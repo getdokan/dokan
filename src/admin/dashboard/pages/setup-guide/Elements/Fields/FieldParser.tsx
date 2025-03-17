@@ -1,5 +1,4 @@
 import Text from './Text';
-import Select from './Select';
 import Password from './Password';
 import Tel from './Tel';
 import { SettingsProps } from '../../StepSettings';
@@ -23,7 +22,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
             );
         case 'select':
             return (
-                <Select
+                <CheckboxGroup
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
@@ -69,14 +68,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     onValueChange={ onValueChange }
                 />
             );
-        case 'checkbox_group':
-            return (
-                <CheckboxGroup
-                    element={ element }
-                    key={ element.hook_key }
-                    onValueChange={ onValueChange }
-                />
-            );
+
         case 'currency':
             return (
                 <CurrencyInput

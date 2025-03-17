@@ -1,22 +1,12 @@
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { useState } from '@wordpress/element';
+import { SettingsProps } from '../../StepSettings';
 
-const CurrencyInput = ( { element, onValueChange } ) => {
-    const {
-        name = 'currency',
-        placeholder = 'Enter amount',
-        type = 'text',
-        onChange,
-        currency = '$',
-        className = '',
-        title = 'Currency',
-        description = 'Enter the currency for your store',
-    } = element;
-
-    const [ value, setValue ] = useState( element.value );
+const CurrencyInput = ( { element, onValueChange }: SettingsProps ) => {
+    const [ localValue, setLocalValue ] = useState( element.value );
 
     const handleValueChange = ( event ) => {
-        setValue( event.target.value );
+        setLocalValue( event.target.value );
         onValueChange( {
             ...element,
             value: event.target.value,
@@ -26,31 +16,30 @@ const CurrencyInput = ( { element, onValueChange } ) => {
         return <></>;
     }
     return (
-        <div className=" flex justify-between items-center flex-wrap  w-full">
+        <div className=" flex justify-between p-4 items-center flex-wrap  w-full">
             <div className="flex flex-col">
-                <h2 className="text-base leading-6 font-semibold text-gray-900">
-                    { title }
+                <h2 className="text-sm leading-6 font-semibold text-gray-900">
+                    { element?.title }
                 </h2>
-                <p className="mt-1.5 text-sm text-[#828282] mb-2">
-                    { description }
+                <p className=" text-sm font-normal text-[#828282]">
+                    { element?.description }
                 </p>
             </div>
             <SimpleInput
                 input={ {
                     autoComplete: 'off',
-                    id: name,
-                    name,
-                    placeholder,
-                    type: 'number', // Changed to number for better mobile input experience
-                    step: '0.01', // Allow decimal values for currency
+                    id: element?.id,
+                    name: element?.id,
+                    placeholder: element?.placeholder,
+                    type: element.type,
                 } }
                 addOnLeft={
                     <span className="w-7 h-7 flex justify-center items-center">
-                        { currency }
+                        { element?.currency }
                     </span>
                 }
                 required
-                value={ value }
+                value={ String( localValue ) }
                 onChange={ handleValueChange }
                 className={ `w-32 h-12 focus:outline-none` }
             />

@@ -52,31 +52,51 @@ class WithdrawStep extends AbstractStep {
             ->add(
                 ComponentFactory::section( 'withdraw' )
                     ->set_title( __( 'Withdraw', 'dokan-lite' ) )
-            )
-            ->add(
-                ComponentFactory::field( 'bank-transfer', 'toggle_switch' )
-                                ->set_title( __( 'Enable Bank Transfer', 'dokan-lite' ) )
-                                ->set_description( __( 'Allow vendors to withdraw their earnings via bank transfer', 'dokan-lite' ) )
-            )
-            ->add(
-                ComponentFactory::field( 'bank-transfer-heading', 'toggle_switch' )
-                    ->set_title( __( 'Bank Transfer', 'dokan-lite' ) )
-                    ->set_description( __( 'Enable Bank Transfer for your vendor as a withdraw method', 'dokan-lite' ) )
-            )
-            ->add(
-                ComponentFactory::field( 'skrill-heading', 'toggle_switch' )
-                    ->set_title( __( 'Skrill', 'dokan-lite' ) )
-                    ->set_description( __( 'Enable Skrill for your vendor as a withdraw method', 'dokan-lite' ) )
-            )
-            ->add(
-                ComponentFactory::field( 'minimum-withdraw-limits-heading', 'currency_input' )
-                    ->set_title( __( 'Minimum Withdraw Limits', 'dokan-lite' ) )
-                    ->set_description( __( 'Set the minimum balance required before vendors can request withdrawals', 'dokan-lite' ) )
-            )
-            ->add(
-                ComponentFactory::field( 'withdraw-order-status-heading', 'checkbox_group' )
-                    ->set_title( __( 'Order Status for Withdraw', 'dokan-lite' ) )
-                    ->set_description( __( 'Define which order status makes funds eligible for withdrawal', 'dokan-lite' ) )
+                    ->add(
+                        ComponentFactory::field( 'bank-transfer', 'radio' )
+                                        ->set_title( __( 'Enable Bank Transfer', 'dokan-lite' ) )
+                                        ->set_description( __( 'Allow vendors to withdraw their earnings via bank transfer', 'dokan-lite' ) )
+                    )
+                    ->add(
+                        ComponentFactory::field( 'bank-transfer-heading', 'radio' )
+                                        ->set_title( __( 'Bank Transfer', 'dokan-lite' ) )
+                                        ->set_description( __( 'Enable Bank Transfer for your vendor as a withdraw method', 'dokan-lite' ) )
+                    )
+                    ->add(
+                        ComponentFactory::field( 'skrill-heading', 'radio' )
+                                        ->set_title( __( 'Skrill', 'dokan-lite' ) )
+                                        ->set_description( __( 'Enable Skrill for your vendor as a withdraw method', 'dokan-lite' ) )
+                    )
+                    ->add(
+                        ComponentFactory::field( 'minimum-withdraw-limits-heading', 'currency_input' )
+                                        ->set_title( __( 'Minimum Withdraw Limits', 'dokan-lite' ) )
+                                        ->set_description( __( 'Set the minimum balance required before vendors can request withdrawals', 'dokan-lite' ) )
+                    )
+                    ->add(
+                        ComponentFactory::field( 'withdraw-order-status-heading', 'select' )
+                                        ->set_options(
+                                            [
+                                                [
+                                                    'value' => 'wc-completed',
+                                                    'title' => __( 'Completed', 'dokan-lite' ),
+                                                ],
+                                                [
+                                                    'value' => 'wc-processing',
+                                                    'title' => __( 'Processing', 'dokan-lite' ),
+                                                ],
+                                                [
+                                                    'value' => 'wc-on-hold',
+                                                    'title' => __( 'On Hold', 'dokan-lite' ),
+                                                ],
+                                                [
+                                                    'value' => 'wc-cancelled',
+                                                    'title' => __( 'Cancelled', 'dokan-lite' ),
+                                                ],
+                                            ]
+                                        )
+                                        ->set_title( __( 'Order Status for Withdraw', 'dokan-lite' ) )
+                                        ->set_description( __( 'Define which order status makes funds eligible for withdrawal', 'dokan-lite' ) )
+                    )
             );
     }
 

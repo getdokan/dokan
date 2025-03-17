@@ -8,7 +8,7 @@ const Section = ( { element, onValueChange }: SettingsProps ): JSX.Element => {
     return (
         <section aria-labelledby="settings-section-heading" key={ element.id }>
             <div className="bg-white sm:rounded-md">
-                <div className={ `mb-4` }>
+                <div className={ `mb-8` }>
                     <h2
                         id={ element.hook_key }
                         className="text-3xl font-bold text-gray-900 leading-5"
@@ -21,7 +21,7 @@ const Section = ( { element, onValueChange }: SettingsProps ): JSX.Element => {
                 </div>
                 <div
                     className={
-                        'flex flex-col  divide-y border border-[#E9E9E9] divide-gray-200'
+                        'flex flex-col  divide-y border border-[#E9E9E9] mb-8 divide-gray-200'
                     }
                 >
                     { element.children.map( ( child ) => {

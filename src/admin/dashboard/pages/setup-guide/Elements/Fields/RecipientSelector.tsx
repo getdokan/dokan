@@ -14,7 +14,7 @@ const RecipientSelector = ( { element, onValueChange }: SettingsProps ) => {
         console.log( 'Selected value:', newValue );
         onValueChange( {
             ...element,
-            selectedValue: newValue,
+            value: newValue,
         } );
     };
 
@@ -33,7 +33,7 @@ const RecipientSelector = ( { element, onValueChange }: SettingsProps ) => {
 
     return (
         <div className="p-4">
-            <div className="flex-col flex gap-1 w-[70%]">
+            <div className="flex-col flex gap-1 mb-4">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
                     { element?.title }
                 </h2>

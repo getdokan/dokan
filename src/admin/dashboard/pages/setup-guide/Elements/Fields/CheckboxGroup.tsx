@@ -3,9 +3,9 @@ import { useEffect, useState } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
 
 const CheckboxGroup = ( { element, onValueChange }: SettingsProps ) => {
-    const { default: defaultValue, value } = element;
+    const { default: defaultValue } = element;
     // State to track selected values
-    const [ selectedValues, setSelectedValues ] = useState( defaultValue );
+    const [ selectedValues, setSelectedValues ] = useState( [] );
 
     // Initialize with default values
     useEffect( () => {
@@ -24,24 +24,23 @@ const CheckboxGroup = ( { element, onValueChange }: SettingsProps ) => {
     return (
         <div className=" flex justify-between flex-col items-start p-4 w-full">
             <div className="flex flex-col mb-4 w-full">
-                <h2 className="text-base leading-6 font-semibold text-gray-900">
+                <h2 className="text-sm leading-6 font-semibold text-gray-900">
                     { element?.title }
                 </h2>
-                <p className="mt-1.5 text-sm text-[#828282] mb-2">
+                <p className=" text-sm font-normal text-[#828282]">
                     { element?.description }
                 </p>
             </div>
             <SimpleCheckboxGroup
-                defaultValue={ [] }
                 name={ element?.id }
                 onChange={ handleChange }
-                options={ [
-                    ...element?.options,
-                    {
-                        value: 'all',
-                        label: 'Select All',
-                    },
-                ] }
+                defaultValue={ selectedValues }
+                options={
+                    element?.options?.map( ( option ) => ( {
+                        label: option.title,
+                        value: option.value,
+                    } ) ) || []
+                }
                 className="focus:outline-none outline-none w-full"
             />
         </div>
