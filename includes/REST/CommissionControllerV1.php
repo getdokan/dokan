@@ -133,7 +133,9 @@ class CommissionControllerV1 extends DokanRESTController {
                 'product_id'     => $product_id,
                 'vendor_id'      => $vendor_id,
                 'category_id'    => $category_id,
-            ]
+            ],
+            false,
+            false,
         );
 
         $data = 'seller' === $context ? $commission_or_earning->get_vendor_earning() : $commission_or_earning->get_admin_commission();

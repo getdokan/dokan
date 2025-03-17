@@ -1,5 +1,5 @@
 import { RawHTML } from '@wordpress/element';
-import '../Definitions/window-types';
+import '../definitions/window-types';
 import { dateI18n, getSettings } from '@wordpress/date';
 
 function DateTimeHtml( {

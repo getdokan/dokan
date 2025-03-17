@@ -176,7 +176,7 @@ const renderItem = ( item ) => (
 
 #### SortableList Props
 
-**items (array):** The data array to be `rendered` in the `sortable` list. Can be an array of `single items`, array of `objects` with or without `ordering`.  
+**items (array):** The data array to be `rendered` in the `sortable` list. Can be an array of `single items`, array of `objects` with or without `ordering`.
 
 **namespace (string):** Unique identifier for the `sortable container`. Used for filtering and slots.
 

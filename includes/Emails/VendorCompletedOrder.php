@@ -11,7 +11,7 @@ use WeDevs\Dokan\Vendor\Vendor;
  * An email sent to the admin when a order is completed for.
  *
  * @class       VendorCompletedOrder
- * @version     DOKAN_LITE_SINCE
+ * @version     3.2.2
  * @package     Dokan/Classes/Emails
  * @author      weDevs
  * @extends     WC_Email
@@ -48,7 +48,7 @@ class VendorCompletedOrder extends WC_Email {
     /**
      * Get email subject.
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  3.2.2
      * @return string
      */
     public function get_default_subject() {
@@ -58,7 +58,7 @@ class VendorCompletedOrder extends WC_Email {
     /**
      * Get email heading.
      *
-     * @since  DOKAN_LITE_SINCE
+     * @since  3.2.2
      * @return string
      */
     public function get_default_heading() {

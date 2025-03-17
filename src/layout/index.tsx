@@ -86,7 +86,7 @@ const Layout = ( {
     return (
         <ThemeProvider>
             <SlotFillProvider>
-            <div className="dokan-layout">
+            <div className="dokan-dashboard-layout">
                 { headerComponent ? (
                     headerComponent
                 ) : (

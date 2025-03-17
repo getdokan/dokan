@@ -4,6 +4,7 @@ import Layout from '../layout';
 import getRoutes, { withRouter } from '../routing';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import './tailwind.scss';
+import { useMutationObserver } from '../hooks';
 
 const App = () => {
     const routes = getRoutes();
@@ -27,6 +28,27 @@ const App = () => {
     } );
 
     const router = createHashRouter( mapedRoutes );
+
+    useMutationObserver(
+        document.body,
+        ( mutations ) => {
+            for ( const mutation of mutations ) {
+                if ( mutation.type !== 'childList' ) {
+                    continue;
+                }
+                // @ts-ignore
+                for ( const node of mutation.addedNodes ) {
+                    if ( node.id !== 'headlessui-portal-root' ) {
+                        continue;
+                    }
+
+                    node.classList.add( 'dokan-layout' );
+                    node.style.display = 'block';
+                }
+            }
+        },
+        { childList: true }
+    );
 
     return (
         <>

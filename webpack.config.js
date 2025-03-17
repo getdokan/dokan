@@ -2,8 +2,10 @@ const path = require( 'path' );
 const { VueLoaderPlugin } = require( 'vue-loader' );
 const entryPoints = require( './webpack-entries' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
-const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const isProduction = process.env.NODE_ENV === 'production';
+const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
+const { requestToExternal, requestToHandle } = require( './webpack-dependency-mapping' );
+const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
 
 const updatedConfig = {
     mode: defaultConfig.mode,
@@ -18,10 +20,6 @@ const updatedConfig = {
         hooks: {
             import: '@dokan/hooks/index.tsx',
         },
-        stores: {
-            import: '@dokan/stores/index.ts',
-        },
-        'dokan-status': '/src/Status/index.tsx',
     },
     output: {
         path: path.resolve( __dirname, './assets/js' ),
@@ -48,10 +46,23 @@ const updatedConfig = {
         jquery: 'jQuery',
         'chart.js': 'Chart',
         moment: 'moment',
+        '@woocommerce/blocks-registry': [ 'wc', 'wcBlocksRegistry' ],
+        '@woocommerce/settings': [ 'wc', 'wcSettings' ],
+        '@woocommerce/block-data': [ 'wc', 'wcBlocksData' ],
+        '@woocommerce/shared-context': [ 'wc', 'wcSharedContext' ],
+        '@woocommerce/shared-hocs': [ 'wc', 'wcSharedHocs' ],
+        '@woocommerce/price-format': [ 'wc', 'priceFormat' ],
+        '@woocommerce/blocks-checkout': [ 'wc', 'blocksCheckout' ],
+        '@dokan/components': [ 'dokan', 'components' ],
+        '@dokan/utilities': [ 'dokan', 'utilities' ],
+        '@dokan/hooks': [ 'dokan', 'hooks' ],
     },
 
     plugins: [
-        ...defaultConfig.plugins,
+        ...defaultConfig.plugins.filter(
+            ( plugin ) =>
+                plugin.constructor.name !== 'DependencyExtractionWebpackPlugin'
+        ),
         new MiniCssExtractPlugin( {
             filename: ( { chunk } ) => {
                 if ( chunk.name.match( /\/modules\// ) ) {
@@ -63,6 +74,10 @@ const updatedConfig = {
         } ),
 
         new VueLoaderPlugin(),
+        new DependencyExtractionWebpackPlugin( {
+            requestToExternal,
+            requestToHandle,
+        } ),
     ],
 
     module: {
