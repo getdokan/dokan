@@ -5,8 +5,8 @@ import { SettingsProps } from '../../StepSettings';
 import RecipientSelector from './RecipientSelector';
 import RadioButton from './RadioButton';
 import ToggleSwitchField from './ToggleSwitchField';
-import CheckboxGroup from './CheckboxGroup';
 import CurrencyInput from './CurrencyInput';
+import Select from './Select';
 
 const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
     // TODO: add support for custom input fields and custom hook.
@@ -22,7 +22,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
             );
         case 'select':
             return (
-                <CheckboxGroup
+                <Select
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }

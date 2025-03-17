@@ -80,7 +80,7 @@ class BasicStep extends AbstractStep {
                         Factory::field( 'can-selling-directly', 'radio_button' )
                             ->set_title( __( 'New Vendor Selling Directly', 'dokan-lite' ) )
                             ->set_description( __( 'Automatically enable selling capabilities for newly registered vendors', 'dokan-lite' ) )
-                            ->set_default( false )
+                            ->set_default( 'show' )
                     )
 
             );

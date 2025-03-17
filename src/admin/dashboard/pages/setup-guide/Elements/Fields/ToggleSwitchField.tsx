@@ -8,7 +8,6 @@ const ToggleSwitchField = ( { element, onValueChange }: SettingsProps ) => {
     const handleChange = ( checked ) => {
         setIsEnabled( checked );
 
-        const { value } = element;
         onValueChange( {
             ...element,
             value: checked,
@@ -19,7 +18,10 @@ const ToggleSwitchField = ( { element, onValueChange }: SettingsProps ) => {
     const { default: defaultValue } = element;
     const [ isEnabled, setIsEnabled ] = useState( Boolean( defaultValue ) );
     return (
-        <div className=" flex justify-between items-center p-4 w-full ">
+        <div
+            id={ element.hook_key + '_div' }
+            className=" flex justify-between flex-wrap items-center p-4 gap-y-4 w-full "
+        >
             <div className="flex-col flex gap-1">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
                     { element?.title }
@@ -36,14 +38,6 @@ const ToggleSwitchField = ( { element, onValueChange }: SettingsProps ) => {
                         ? __( 'Enabled', 'dokan-lite' )
                         : __( 'Disabled', 'dokan-lite' )
                 }
-                color="primary"
-            />
-
-            { /* Hidden input for form submission */ }
-            <input
-                type="hidden"
-                name={ element?.id }
-                value={ isEnabled ? '1' : '0' }
             />
         </div>
     );

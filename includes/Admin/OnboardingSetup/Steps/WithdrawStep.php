@@ -92,10 +92,30 @@ class WithdrawStep extends AbstractStep {
                                                     'value' => 'wc-cancelled',
                                                     'title' => __( 'Cancelled', 'dokan-lite' ),
                                                 ],
+
                                             ]
                                         )
                                         ->set_title( __( 'Order Status for Withdraw', 'dokan-lite' ) )
                                         ->set_description( __( 'Define which order status makes funds eligible for withdrawal', 'dokan-lite' ) )
+                    )
+                    ->add(
+                        ComponentFactory::field( 'commission_type', 'select' )
+                                        ->set_title( __( 'Commission Type', 'dokan-lite' ) )
+                                        ->set_description( __( 'Select the commission type for your vendors', 'dokan-lite' ) )
+                                        ->set_options(
+                                            [
+                                                [
+                                                    'value' => 'percentage',
+                                                    'title' => __( 'Percentage', 'dokan-lite' ),
+                                                ],
+                                                [
+                                                    'value' => 'fixed',
+                                                    'title' => __( 'Fixed', 'dokan-lite' ),
+                                                ],
+                                            ]
+                                        )
+                                        ->set_default( 'percentage' )
+
                     )
             );
     }

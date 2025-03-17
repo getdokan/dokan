@@ -5,6 +5,10 @@ const Section = ( { element, onValueChange }: SettingsProps ): JSX.Element => {
     if ( ! element.display ) {
         return <></>;
     }
+
+    const isAllChildrenFields = element?.children?.every( ( child ) => {
+        return child?.type === 'field';
+    } );
     return (
         <section aria-labelledby="settings-section-heading" key={ element.id }>
             <div className="bg-white sm:rounded-md">
@@ -20,9 +24,11 @@ const Section = ( { element, onValueChange }: SettingsProps ): JSX.Element => {
                     </p>
                 </div>
                 <div
-                    className={
-                        'flex flex-col  divide-y border border-[#E9E9E9] mb-8 divide-gray-200'
-                    }
+                    className={ `flex flex-col ${
+                        isAllChildrenFields
+                            ? 'divide-y border border-[#E9E9E9] mb-8 divide-gray-200'
+                            : ''
+                    }` }
                 >
                     { element.children.map( ( child ) => {
                         return (

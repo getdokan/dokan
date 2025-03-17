@@ -51,11 +51,50 @@ class AppearanceStep extends AbstractStep {
             ->add(
                 ComponentFactory::section( 'appearance' )
                     ->set_title( __( 'Appearance', 'dokan-lite' ) )
-            )
-            ->add(
-                ComponentFactory::field( 'store-address-heading', 'radio_button' )
-                    ->set_title( __( 'Store Address', 'dokan-lite' ) )
-                                ->set_description( __( 'Display the store address on vendor store pages', 'dokan-lite' ) )
+                    ->add(
+                        ComponentFactory::sub_section( 'store-info' )
+                                        ->set_title( __( 'Store Info', 'dokan-lite' ) )
+                                        ->add(
+                                            ComponentFactory::field( 'store-info', 'radio_button' )
+                                                            ->set_title( __( 'Show Store Info', 'dokan-lite' ) )
+                                                            ->set_description( __( 'Display store information on the vendor\'s store page.', 'dokan-lite' ) )
+                                                            ->set_default( 'hide' )
+                                        )
+                                        ->add(
+                                            ComponentFactory::field( 'store-info-heading', 'radio_button' )
+                                                            ->set_title( __( 'Store Info Heading', 'dokan-lite' ) )
+                                                            ->set_description( __( 'Display store information heading on the vendor\'s store page.', 'dokan-lite' ) )
+                                                            ->set_default( 'show' )
+                                        )
+                                        ->add(
+                                            ComponentFactory::field( 'store-info-description', 'radio_button' )
+                                                            ->set_title( __( 'Store Info Description', 'dokan-lite' ) )
+                                                            ->set_description( __( 'Display store information description on the vendor\'s store page.', 'dokan-lite' ) )
+                                                            ->set_default( 'hide' )
+                                        )
+                    )
+                    ->add(
+                        ComponentFactory::sub_section( 'vendor-info' )
+                                        ->set_title( __( 'Store Banner', 'dokan-lite' ) )
+                                        ->add(
+                                            ComponentFactory::field( 'store-banner', 'radio_button' )
+                                                            ->set_title( __( 'Show Store Banner', 'dokan-lite' ) )
+                                                            ->set_description( __( 'Display store banner on the vendor\'s store page.', 'dokan-lite' ) )
+                                                            ->set_default( 'show' )
+                                        )
+                                        ->add(
+                                            ComponentFactory::field( 'store-banner-heading', 'radio_button' )
+                                                            ->set_title( __( 'Store Banner Heading', 'dokan-lite' ) )
+                                                            ->set_description( __( 'Display store banner heading on the vendor\'s store page.', 'dokan-lite' ) )
+                                                            ->set_default( 'hide' )
+                                        )
+                                        ->add(
+                                            ComponentFactory::field( 'store-banner-description', 'radio_button' )
+                                                            ->set_title( __( 'Store Banner Description', 'dokan-lite' ) )
+                                                            ->set_description( __( 'Display store banner description on the vendor\'s store page.', 'dokan-lite' ) )
+                                                            ->set_default( 'show' )
+                                        )
+                    )
             );
     }
 

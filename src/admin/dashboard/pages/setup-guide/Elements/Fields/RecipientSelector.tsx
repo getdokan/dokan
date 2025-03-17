@@ -11,7 +11,6 @@ const RecipientSelector = ( { element, onValueChange }: SettingsProps ) => {
     // Handle selection change
     const handleChange = ( newValue ) => {
         setSelected( newValue );
-        console.log( 'Selected value:', newValue );
         onValueChange( {
             ...element,
             value: newValue,
@@ -32,8 +31,11 @@ const RecipientSelector = ( { element, onValueChange }: SettingsProps ) => {
     };
 
     return (
-        <div className="p-4">
-            <div className="flex-col flex gap-1 mb-4">
+        <div
+            id={ element.hook_key + '_div' }
+            className="p-4 flex flex-col gap-y-4"
+        >
+            <div className="flex-col flex gap-1">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
                     { element?.title }
                 </h2>

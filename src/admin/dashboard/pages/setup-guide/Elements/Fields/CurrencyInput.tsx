@@ -16,7 +16,10 @@ const CurrencyInput = ( { element, onValueChange }: SettingsProps ) => {
         return <></>;
     }
     return (
-        <div className=" flex justify-between p-4 items-center flex-wrap  w-full">
+        <div
+            id={ element.hook_key + '_div' }
+            className=" flex justify-between p-4 items-center flex-wrap  w-full"
+        >
             <div className="flex flex-col">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
                     { element?.title }
@@ -30,7 +33,7 @@ const CurrencyInput = ( { element, onValueChange }: SettingsProps ) => {
                     autoComplete: 'off',
                     id: element?.id,
                     name: element?.id,
-                    placeholder: element?.placeholder,
+                    placeholder: String( element?.placeholder ),
                     type: element.type,
                 } }
                 addOnLeft={
