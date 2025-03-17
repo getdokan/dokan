@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Vendor;
 
+use Automattic\WooCommerce\Internal\Orders\CouponsController;
 use WC_Coupon;
 use WC_Discounts;
 use WC_Order;
@@ -25,6 +26,8 @@ class Coupon {
         add_action( 'dokan_wc_coupon_applied', [ $this, 'save_item_coupon_discount' ], 10, 3 );
         add_action( 'woocommerce_before_delete_order_item', [ $this, 'remove_coupon_info_from_order_item' ] );
         add_action( 'wp_ajax_woocommerce_remove_order_coupon', [ $this, 'overwrite_woocommerce_remove_order_coupon_method' ], 9 );
+        add_action( 'wp_ajax_woocommerce_add_coupon_discount', [ $this, 'overwrite_woocommerce_add_coupon_discount_method' ], 9 );
+        add_action( 'dokan_coupon_item_added_in_order_via_ajax', [ $this, 'adjust_admin_commission_and_vendor_earning_after_coupon_removed' ] );
         add_action( 'dokan_coupon_item_removed_from_order_via_ajax', [ $this, 'adjust_admin_commission_and_vendor_earning_after_coupon_removed' ] );
     }
 
@@ -345,6 +348,18 @@ class Coupon {
     }
 
     /**
+     * Overwrite WooCommerce's add_coupon_discount_method method.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function overwrite_woocommerce_add_coupon_discount_method() {
+        remove_action( 'wp_ajax_woocommerce_add_coupon_discount', [ \WC_AJAX::class, 'add_coupon_discount' ] );
+        $this->add_coupon_discount();
+    }
+
+    /**
      * Remove a coupon from an order on ajax request.
      *
      * @since DOKAN_SINCE
@@ -482,5 +497,42 @@ class Coupon {
             [ '%f' ],
             [ '%d', '%s' ]
         );
+    }
+
+    /**
+     * Add order discount via Ajax.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function add_coupon_discount() {
+        check_ajax_referer( 'order-item', 'security' );
+
+        if ( ! current_user_can( 'edit_shop_orders' ) ) {
+            wp_die( - 1 );
+        }
+
+        $response = [];
+
+        try {
+            $order = wc_get_container()->get( CouponsController::class )->add_coupon_discount( $_POST );
+
+            ob_start();
+            include dirname( WC_PLUGIN_FILE ) . '/includes/admin/meta-boxes/views/html-order-items.php';
+            $response['html'] = ob_get_clean();
+
+            ob_start();
+            $notes = wc_get_order_notes( [ 'order_id' => $order->get_id() ] );
+            include dirname( WC_PLUGIN_FILE ) . '/includes/admin/meta-boxes/views/html-order-notes.php';
+            $response['notes_html'] = ob_get_clean();
+        } catch ( Exception $e ) {
+            wp_send_json_error( [ 'error' => $e->getMessage() ] );
+        }
+
+        do_action( 'dokan_coupon_item_added_in_order_via_ajax', $order->get_id() );
+
+        // wp_send_json_success must be outside the try block not to break phpunit tests.
+        wp_send_json_success( $response );
     }
 }
