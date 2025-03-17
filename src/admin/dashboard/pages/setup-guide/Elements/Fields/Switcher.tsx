@@ -3,8 +3,11 @@ import { ToggleSwitch } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { SettingsProps } from '../../StepSettings';
 
-const ToggleSwitchField = ( { element, onValueChange }: SettingsProps ) => {
-    // Handle toggle change
+const Switcher = ({ element, onValueChange }: SettingsProps ) => {
+    if ( ! element.display ) {
+        return <></>;
+    }
+
     const handleChange = ( checked ) => {
         setIsEnabled( checked );
 
@@ -43,4 +46,4 @@ const ToggleSwitchField = ( { element, onValueChange }: SettingsProps ) => {
     );
 };
 
-export default ToggleSwitchField;
+export default Switcher;

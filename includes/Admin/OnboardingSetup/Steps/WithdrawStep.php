@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\ComponentFactory;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\ComponentFactory as Factory;
 
 class WithdrawStep extends AbstractStep {
 
@@ -18,7 +18,7 @@ class WithdrawStep extends AbstractStep {
      *
      * @var int The step priority.
      */
-    protected int $priority = 30;
+    protected int $priority = 0;
 
     /**
      * The storage key.
@@ -47,77 +47,71 @@ class WithdrawStep extends AbstractStep {
 	 * @inheritDoc
 	 */
 	public function describe_settings(): void {
-        $this
-            ->set_title( __( 'Withdraw', 'dokan-lite' ) )
-            ->add(
-                ComponentFactory::section( 'withdraw' )
-                    ->set_title( __( 'Withdraw', 'dokan-lite' ) )
-                    ->add(
-                        ComponentFactory::field( 'bank-transfer', 'radio' )
-                                        ->set_title( __( 'Enable Bank Transfer', 'dokan-lite' ) )
-                                        ->set_description( __( 'Allow vendors to withdraw their earnings via bank transfer', 'dokan-lite' ) )
-                    )
-                    ->add(
-                        ComponentFactory::field( 'bank-transfer-heading', 'radio' )
-                                        ->set_title( __( 'Bank Transfer', 'dokan-lite' ) )
-                                        ->set_description( __( 'Enable Bank Transfer for your vendor as a withdraw method', 'dokan-lite' ) )
-                    )
-                    ->add(
-                        ComponentFactory::field( 'skrill-heading', 'radio' )
-                                        ->set_title( __( 'Skrill', 'dokan-lite' ) )
-                                        ->set_description( __( 'Enable Skrill for your vendor as a withdraw method', 'dokan-lite' ) )
-                    )
-                    ->add(
-                        ComponentFactory::field( 'minimum-withdraw-limits-heading', 'currency_input' )
-                                        ->set_title( __( 'Minimum Withdraw Limits', 'dokan-lite' ) )
-                                        ->set_description( __( 'Set the minimum balance required before vendors can request withdrawals', 'dokan-lite' ) )
-                    )
-                    ->add(
-                        ComponentFactory::field( 'withdraw-order-status-heading', 'select' )
-                                        ->set_options(
-                                            [
-                                                [
-                                                    'value' => 'wc-completed',
-                                                    'title' => __( 'Completed', 'dokan-lite' ),
-                                                ],
-                                                [
-                                                    'value' => 'wc-processing',
-                                                    'title' => __( 'Processing', 'dokan-lite' ),
-                                                ],
-                                                [
-                                                    'value' => 'wc-on-hold',
-                                                    'title' => __( 'On Hold', 'dokan-lite' ),
-                                                ],
-                                                [
-                                                    'value' => 'wc-cancelled',
-                                                    'title' => __( 'Cancelled', 'dokan-lite' ),
-                                                ],
+        $default_methods = [
+            'paypal' => 'paypal',
+            'bank'   => '',
+            'skrill' => '',
+        ];
 
-                                            ]
-                                        )
-                                        ->set_title( __( 'Order Status for Withdraw', 'dokan-lite' ) )
-                                        ->set_description( __( 'Define which order status makes funds eligible for withdrawal', 'dokan-lite' ) )
-                    )
-                    ->add(
-                        ComponentFactory::field( 'commission_type', 'select' )
-                                        ->set_title( __( 'Commission Type', 'dokan-lite' ) )
-                                        ->set_description( __( 'Select the commission type for your vendors', 'dokan-lite' ) )
-                                        ->set_options(
-                                            [
-                                                [
-                                                    'value' => 'percentage',
-                                                    'title' => __( 'Percentage', 'dokan-lite' ),
-                                                ],
-                                                [
-                                                    'value' => 'fixed',
-                                                    'title' => __( 'Fixed', 'dokan-lite' ),
-                                                ],
-                                            ]
-                                        )
-                                        ->set_default( 'percentage' )
+        $default_status = [
+            'wc-completed'  => 'wc-completed',
+            'wc-processing' => '',
+            'wc-on-hold'    => '',
+        ];
 
-                    )
-            );
+        $withdraw_status  = dokan_get_option( 'withdraw_order_status', 'dokan_withdraw', $default_status );
+        $withdraw_limits  = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', '50' );
+        $withdraw_methods = dokan_get_option(
+            'withdraw_methods',
+            'dokan_withdraw',
+            apply_filters( 'dokan_settings_withdraw_methods_default', $default_methods )
+        );
+
+        $this->set_title( esc_html__( 'Withdraw', 'dokan-lite' ) )
+             ->add(
+                 Factory::section( 'withdraw-methods' )
+                     ->set_title( esc_html__( 'Withdraw', 'dokan-lite' ) )
+                     ->add(
+                         Factory::field( 'paypal', 'switch' )
+                             ->set_title( esc_html__( 'PayPal', 'dokan-lite' ) )
+                             ->set_description( esc_html__( 'Enable PayPal for your vendor as a withdraw method', 'dokan-lite' ) )
+                             ->add_option( esc_html__( 'Enabled', 'dokan-lite' ), 'paypal' )
+                             ->add_option( esc_html__( 'Disabled', 'dokan-lite' ), '' )
+                             ->set_default( $withdraw_methods['paypal'] ?? $default_methods['paypal'] )
+                     )
+                     ->add(
+                         Factory::field( 'bank', 'switch' )
+                             ->set_title( esc_html__( 'Bank Transfer', 'dokan-lite' ) )
+                             ->set_description( esc_html__( 'Enable Bank Transfer for your vendor as a withdraw method', 'dokan-lite' ) )
+                             ->add_option( esc_html__( 'Enabled', 'dokan-lite' ), 'bank' )
+                             ->add_option( esc_html__( 'Disabled', 'dokan-lite' ), '' )
+                             ->set_default( $withdraw_methods['bank'] ?? $default_methods['bank'] )
+                     )
+                     ->add(
+                         Factory::field( 'skrill', 'switch' )
+                             ->set_title( esc_html__( 'Skrill', 'dokan-lite' ) )
+                             ->set_description( esc_html__( 'Enable Skrill for your vendor as a withdraw method', 'dokan-lite' ) )
+                             ->add_option( esc_html__( 'Enabled', 'dokan-lite' ), 'skrill' )
+                             ->add_option( esc_html__( 'Disabled', 'dokan-lite' ), '' )
+                             ->set_default( $withdraw_methods['skrill'] ?? $default_methods['skrill'] )
+                     )
+                     ->add(
+                         Factory::field( 'withdraw_limit', 'currency' )
+                             ->set_title( esc_html__( 'Minimum Withdraw Limits', 'dokan-lite' ) )
+                             ->set_description( esc_html__( 'Set the minimum balance required before vendors can request withdrawals', 'dokan-lite' ) )
+//                             ->set_currency( get_woocommerce_currency_symbol() )
+                             ->set_default( $withdraw_limits )
+                     )
+                     ->add(
+                         Factory::field( 'withdraw_order_status', 'checkbox' )
+                             ->set_title( esc_html__( 'Order Status for Withdraw', 'dokan-lite' ) )
+                             ->set_description( esc_html__( 'Define which order status makes funds eligible for withdrawal', 'dokan-lite' ) )
+                             ->add_option( esc_html__( 'Completed', 'dokan-lite' ), 'wc-completed' )
+                             ->add_option( esc_html__( 'Processing', 'dokan-lite' ), 'wc-processing' )
+                             ->add_option( esc_html__( 'On Hold', 'dokan-lite' ), 'wc-on-hold' )
+                             ->set_default( 'wc-completed' )
+                     )
+             );
     }
 
 	public function settings(): array {
