@@ -18,7 +18,7 @@ const RadioButton = ( { element, onValueChange }: SettingsProps ) => {
     };
     return (
         <div className=" flex justify-between items-center gap-y-4 p-4 flex-wrap w-full ">
-            <div className="flex-col flex gap-1 sm:w-[70%]">
+            <div className="flex-col flex gap-1 sm:w-[70%] xs:w-full">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
                     { element?.title }
                 </h2>

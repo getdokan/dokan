@@ -20,10 +20,10 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
     };
     return (
         <div
-            className="flex justify-between p-4 flex-wrap"
+            className="flex justify-between p-4  flex-wrap "
             id={ element.hook_key + '_div' }
         >
-            <div className="flex flex-col mb-4 w-full sm:w-[70%]">
+            <div className="flex flex-col mb-4 sm:w-[70%]">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
                     { element?.title }
                 </h2>
@@ -31,7 +31,7 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
                     { element?.description }
                 </p>
             </div>
-            <div className="max-w-[11rem]">
+            <div className="w-[11rem]">
                 <SimpleSelect
                     name={ element?.id }
                     label={ '' }
