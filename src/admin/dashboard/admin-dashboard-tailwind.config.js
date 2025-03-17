@@ -1,4 +1,4 @@
-import baseConfig from '@dokan/root/base-tailwind.config';
+import baseConfig from './../../../base-tailwind.config';
 
 /** @type {import('tailwindcss').Config} */
 const updatedConfig = {

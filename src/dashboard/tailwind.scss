@@ -1,5 +1,5 @@
 @use '../base-tailwind';
-@config '@dokan/root/base-tailwind.config.js';
+@config './../../base-tailwind.config.js';
 
 #headlessui-portal-root {
     [role-dialog] {
