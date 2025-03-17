@@ -392,10 +392,6 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         <label for="product_tag_edit" class="form-label"><?php esc_html_e( 'Brand', 'dokan-lite' ); ?></label>
                                         <?php
                                         $terms_brand = wp_get_post_terms( $post_id, 'product_brand', array( 'fields' => 'all' ) );
-
-                                        $drop_down_tags = array(
-                                            'hide_empty' => 0,
-                                        );
                                         ?>
                                         <select multiple="multiple" id="product_brand_edit" name="product_brand[]" class="product_brand_search dokan-form-control" data-placeholder="Select Brand">
                                             <?php if ( ! empty( $terms_brand ) ) : ?>
