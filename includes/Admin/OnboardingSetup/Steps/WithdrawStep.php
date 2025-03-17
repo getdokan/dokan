@@ -18,7 +18,7 @@ class WithdrawStep extends AbstractStep {
      *
      * @var int The step priority.
      */
-    protected int $priority = 0;
+    protected int $priority = 30;
 
     /**
      * The storage key.
