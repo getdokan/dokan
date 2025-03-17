@@ -3,8 +3,8 @@ import {__} from "@wordpress/i18n";
 import {DokanRoute} from "../Layout";
 import { isValidElement, cloneElement, createElement } from '@wordpress/element';
 import { useNavigate, useParams, useLocation, redirect, replace, useMatches, useNavigation, createSearchParams } from 'react-router-dom';
-import Withdraw from "../Dashboard/Withdraw";
-import WithdrawRequests from "../Dashboard/Withdraw/WithdrawRequests";
+import Withdraw from "../dashboard/withdraw";
+import WithdrawRequests from "../dashboard/withdraw/WithdrawRequests";
 
 export function withRouter(Component) {
     function ComponentWithRouterProp(props) {
