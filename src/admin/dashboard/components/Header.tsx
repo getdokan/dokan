@@ -45,15 +45,18 @@ const Header = () => {
                 <button
                     onPointerEnter={ () => setShowDropdown( true ) }
                     onPointerLeave={ () => setShowDropdown( false ) }
-                    className={ `relative bg-[#e4e6eb] p-2 w-8 h-8 rounded-full transition-colors duration-300 ${ showDropdown ? 'hover:bg-[#0C5F9A]' : '' }` }
+                    className={ `relative p-2 w-8 h-8 rounded-full transition-colors duration-300 ${ showDropdown ? 'bg-[#0C5F9A]' : 'bg-[#e4e6eb]' }` }
                 >
                     <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-red-500 rounded-full ring-2 ring-white"></span>
-                    <HelpIcon className={ `${ showDropdown ? 'hover:fill-white' : '' }` }/>
+                    <HelpIcon className={ `${ showDropdown ? 'fill-white' : '' }` }/>
                 </button>
 
-                {/*<div className="hidden group-hover:block absolute top-full right-0 mt-3 z-50 bg-white rounded-md border border-gray-200 shadow-lg w-64 py-4 px-5 transition-all">*/}
                 { showDropdown && (
-                    <div className="absolute top-full right-0 mt-3 z-50 bg-white rounded-md border border-gray-200 shadow-lg w-64 py-4 px-5 transition-all">
+                    <div
+                        onPointerEnter={ () => setShowDropdown( true ) }
+                        onPointerLeave={ () => setShowDropdown( false ) }
+                        className="min-w-72 absolute top-full right-0 mt-5 z-50 bg-white rounded-md border border-gray-200 shadow-lg w-64 py-4 px-5 transition-opacity transition-transform duration-300 before:bottom-full before:left-0 before:content-[''] before:absolute before:w-full before:h-12"
+                    >
                         {/* Arrow indicator */}
                         <div className="absolute -top-2 right-3 w-4 h-4 bg-white transform rotate-45 border-t border-l border-gray-200"></div>
 
@@ -66,12 +69,12 @@ const Header = () => {
                                     href={ item?.url }
                                     target={ item?.external ? "_blank" : "_self" }
                                     rel={ item?.external ? "noopener noreferrer" : "" }
-                                    className="flex items-center text-gray-700 hover:text-[#7047EB] font-medium gap-2.5 group transition"
+                                    className="flex items-center text-gray-900 font-semibold text-base hover:text-[#7047EB] font-medium gap-2.5 group transition"
                                 >
-                                    <div className={ `w-9 h-9 flex items-center justify-center rounded-full hover:text-[#7047EB] transition ${ item?.active ? 'bg-[#EFEAFF]' : 'bg-[#E4E6EB]' } hover:bg-[#EFEAFF]` }>
-                                        <IconMapping iconKey={ item?.icon } className={ `w-5 h-5 ${ item?.active ? 'fill-[#7047EB]' : 'group-hover:fill-[#7047EB]' }` } />
+                                    <div className={ `w-10 h-10 flex items-center justify-center rounded-full hover:text-[#7047EB] transition ${ item?.active ? 'bg-[#EFEAFF]' : 'bg-[#E4E6EB]' } group-hover:!bg-[#EFEAFF]` }>
+                                        <IconMapping iconKey={ item?.icon } className={ `w-5 h-5 ${ item?.active ? '!fill-[#7047EB]' : 'group-hover:fill-[#7047EB]' }` } />
                                     </div>
-                                    <span className={ `text-sm ${ item?.active ? 'text-[#7047EB]' : '' }` } dangerouslySetInnerHTML={{ __html: item?.title }}></span>
+                                    <span className={ `${ item?.active ? 'text-[#7047EB]' : '' }` } dangerouslySetInnerHTML={{ __html: item?.title }}></span>
                                     { item?.active && (
                                         <span className="w-1.5 h-1.5 rounded-full bg-[#7047EB]"></span>
                                     ) }
