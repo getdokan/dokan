@@ -15,7 +15,11 @@
  * @package dokan
  */
 
-$total_commission = 0 > $total_commission ? 0 : $total_commission;
+if ( $order_commission->get_admin_commission() ) {
+    $total_commission = $order_commission->get_admin_commission();
+} else {
+    $total_commission = 0 > $total_commission ? 0 : $total_commission;
+}
 
 $order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
 $net_amount  = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;

@@ -93,13 +93,13 @@ class OrderLineItemCommission {
         foreach ( $order_items as $order_item ) {
             $commission_meta = $order_item->get_meta( 'dokan_commission_meta', true );
 
-            $commission_data->set_admin_commission( $commission_data->get_admin_commission() + floatval( $commission_meta['admin_commission'] ) );
-            $commission_data->set_net_admin_commission( $commission_data->get_net_admin_commission() + floatval( $commission_meta['admin_net_commission'] ) );
-            $commission_data->set_admin_discount( $commission_data->get_admin_discount() + floatval( $commission_meta['admin_discount'] ) );
-            $commission_data->set_admin_subsidy( $commission_data->get_admin_subsidy() + floatval( $commission_meta['admin_subsidy'] ) );
-            $commission_data->set_vendor_discount( $commission_data->get_vendor_discount() + floatval( $commission_meta['vendor_discount'] ) );
-            $commission_data->set_vendor_earning( $commission_data->get_vendor_earning() + floatval( $commission_meta['vendor_earning'] ) );
-            $commission_data->set_net_vendor_earning( $commission_data->get_net_vendor_earning() + floatval( $commission_meta['vendor_net_earning'] ) );
+            $commission_data->set_admin_commission( $commission_data->get_admin_commission() + floatval( $commission_meta['admin_commission'] ?? 0 ) );
+            $commission_data->set_net_admin_commission( $commission_data->get_net_admin_commission() + floatval( $commission_meta['admin_net_commission'] ?? 0 ) );
+            $commission_data->set_admin_discount( $commission_data->get_admin_discount() + floatval( $commission_meta['admin_discount'] ?? 0 ) );
+            $commission_data->set_admin_subsidy( $commission_data->get_admin_subsidy() + floatval( $commission_meta['admin_subsidy'] ?? 0 ) );
+            $commission_data->set_vendor_discount( $commission_data->get_vendor_discount() + floatval( $commission_meta['vendor_discount'] ?? 0 ) );
+            $commission_data->set_vendor_earning( $commission_data->get_vendor_earning() + floatval( $commission_meta['vendor_earning'] ?? 0 ) );
+            $commission_data->set_net_vendor_earning( $commission_data->get_net_vendor_earning() + floatval( $commission_meta['vendor_net_earning'] ?? 0 ) );
         }
 
         return $commission_data;
