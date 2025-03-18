@@ -318,6 +318,7 @@ const DokanAI = () => {
                             </div>
                             <Button
                                 color="secondary"
+                                className="!bg-gray-200"
                                 onClick={ () => refineContent( 'post_title' ) }
                                 disabled={ isLoading }
                             >
@@ -359,6 +360,7 @@ const DokanAI = () => {
                                 ></div>
                                 <Button
                                     color="secondary"
+                                    className="!bg-gray-200"
                                     onClick={ () =>
                                         refineContent( 'post_excerpt' )
                                     }
@@ -403,6 +405,7 @@ const DokanAI = () => {
                                 ></div>
                                 <Button
                                     color="secondary"
+                                    className="!bg-gray-200"
                                     onClick={ () =>
                                         refineContent( 'post_content' )
                                     }
@@ -421,6 +424,7 @@ const DokanAI = () => {
 
                             <Button
                                 color="secondary"
+                                className="!bg-gray-200"
                                 disabled={ isLoading }
                                 onClick={ generateContent }
                             >
@@ -462,6 +466,7 @@ const DokanAI = () => {
                     <div className="flex gap-4 justify-end">
                         <Button
                             color="secondary"
+                            className="!bg-gray-200"
                             disabled={ isLoading }
                             onClick={ onClose }
                         >
@@ -512,6 +517,7 @@ const DokanAI = () => {
                         <div className="mt-4 flex gap-4 justify-center">
                             <Button
                                 color="secondary"
+                                className="bg-gray-50 hover:bg-gray-100"
                                 onClick={ () => setRegenerateModal( false ) }
                             >
                                 { __( 'Cancel', 'dokan-lite' ) }
