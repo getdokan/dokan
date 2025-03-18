@@ -35,7 +35,21 @@ class Number extends Text {
 	 */
 	protected $step = 0.1;
 
-	/**
+    /**
+     * Field suffix.
+     *
+     * @var float $suffix Suffix.
+     */
+    protected $suffix;
+
+    /**
+     * Field prefix.
+     *
+     * @var float $prefix Prefix.
+     */
+    protected $prefix;
+
+    /**
 	 * Get minimum value.
 	 *
 	 * @return float
@@ -78,6 +92,50 @@ class Number extends Text {
 
 		return $this;
 	}
+
+    /**
+     * Get field suffix.
+     *
+     * @return string
+     */
+    public function get_suffix(): ?string {
+        return $this->suffix;
+    }
+
+    /**
+     * Set field suffix.
+     *
+     * @param string $suffix
+     *
+     * @return Number
+     */
+    public function set_suffix( string $suffix ): Number {
+        $this->suffix = $suffix;
+
+        return $this;
+    }
+
+    /**
+     * Get field prefix.
+     *
+     * @return string
+     */
+    public function get_prefix(): ?string {
+        return $this->prefix;
+    }
+
+    /**
+     * Set field prefix.
+     *
+     * @param string $prefix
+     *
+     * @return Number
+     */
+    public function set_prefix( string $prefix ): Number {
+        $this->prefix = $prefix;
+
+        return $this;
+    }
 
 	/**
 	 * Get step value.

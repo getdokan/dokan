@@ -7,12 +7,12 @@ namespace WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields;
  *
  * Custom field that provides radio options as button.
  */
-class RadioButton extends Radio {
+class RadioBox extends Radio {
 
     /**
      * Input Type.
      *
      * @var string $input_type Input Type.
      */
-    protected $input_type = 'radio_button';
+    protected $input_type = 'radio_box';
 }

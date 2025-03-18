@@ -96,20 +96,20 @@ class WithdrawStep extends AbstractStep {
                              ->set_default( $withdraw_methods['skrill'] ?? $default_methods['skrill'] )
                      )
                      ->add(
-                         Factory::field( 'withdraw_limit', 'currency' )
+                         Factory::field( 'withdraw_limit', 'number' )
                              ->set_title( esc_html__( 'Minimum Withdraw Limits', 'dokan-lite' ) )
                              ->set_description( esc_html__( 'Set the minimum balance required before vendors can request withdrawals', 'dokan-lite' ) )
-//                             ->set_currency( get_woocommerce_currency_symbol() )
+                             ->set_prefix( get_woocommerce_currency_symbol() )
                              ->set_default( $withdraw_limits )
                      )
                      ->add(
-                         Factory::field( 'withdraw_order_status', 'checkbox' )
+                         Factory::field( 'withdraw_order_status', 'multicheck' )
                              ->set_title( esc_html__( 'Order Status for Withdraw', 'dokan-lite' ) )
                              ->set_description( esc_html__( 'Define which order status makes funds eligible for withdrawal', 'dokan-lite' ) )
                              ->add_option( esc_html__( 'Completed', 'dokan-lite' ), 'wc-completed' )
                              ->add_option( esc_html__( 'Processing', 'dokan-lite' ), 'wc-processing' )
                              ->add_option( esc_html__( 'On Hold', 'dokan-lite' ), 'wc-on-hold' )
-                             ->set_default( 'wc-completed' )
+                             ->set_default( $withdraw_status )
                      )
              );
     }

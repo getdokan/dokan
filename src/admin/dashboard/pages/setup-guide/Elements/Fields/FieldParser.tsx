@@ -7,6 +7,7 @@ import Radio from './Radio';
 import Switcher from './Switcher';
 import CurrencyInput from './CurrencyInput';
 import Select from './Select';
+import CheckboxGroup from "./CheckboxGroup";
 
 const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
     // TODO: add support for custom input fields and custom hook.
@@ -73,6 +74,14 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
         case 'switch':
             return (
                 <Switcher
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'checkbox_group':
+            return (
+                <CheckboxGroup
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
