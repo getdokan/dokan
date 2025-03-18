@@ -3,11 +3,7 @@ import { ToggleSwitch } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { SettingsProps } from '../../StepSettings';
 
-const Switcher = ({ element, onValueChange }: SettingsProps ) => {
-    if ( ! element.display ) {
-        return <></>;
-    }
-
+const Switcher = ( { element, onValueChange }: SettingsProps ) => {
     const handleChange = ( checked ) => {
         setIsEnabled( checked );
 
@@ -20,6 +16,11 @@ const Switcher = ({ element, onValueChange }: SettingsProps ) => {
     // Initialize state with enabled prop or defaultValue
     const { default: defaultValue } = element;
     const [ isEnabled, setIsEnabled ] = useState( Boolean( defaultValue ) );
+
+    if ( ! element.display ) {
+        return <></>;
+    }
+
     return (
         <div
             id={ element.hook_key + '_div' }

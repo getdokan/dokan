@@ -20,7 +20,7 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
     };
     return (
         <div
-            className="flex justify-between p-4  flex-wrap "
+            className="flex justify-between p-4   "
             id={ element.hook_key + '_div' }
         >
             <div className="flex flex-col mb-4 w-full sm:w-[70%]">

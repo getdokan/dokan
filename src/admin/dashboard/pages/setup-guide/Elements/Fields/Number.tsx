@@ -2,9 +2,8 @@ import { SimpleInput } from '@getdokan/dokan-ui';
 import { useState } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
 
-const CurrencyInput = ( { element, onValueChange }: SettingsProps ) => {
+const Number = ( { element, onValueChange }: SettingsProps ) => {
     const [ localValue, setLocalValue ] = useState( element.value );
-
     const handleValueChange = ( event ) => {
         setLocalValue( event.target.value );
         onValueChange( {
@@ -15,6 +14,7 @@ const CurrencyInput = ( { element, onValueChange }: SettingsProps ) => {
     if ( ! element.display ) {
         return <></>;
     }
+    const hasPrefix = element?.prefix && element?.prefix !== '';
     return (
         <div
             id={ element.hook_key + '_div' }
@@ -37,17 +37,26 @@ const CurrencyInput = ( { element, onValueChange }: SettingsProps ) => {
                     type: element.type,
                 } }
                 addOnLeft={
-                    <span className="w-7 h-7 flex justify-center items-center">
-                        { element?.currency }
-                    </span>
+                    <span
+                        className="w-7 h-7 flex justify-center items-center"
+                        dangerouslySetInnerHTML={ { __html: element?.prefix } }
+                    />
                 }
+                // addOnRight={
+                //     <span
+                //         className="w-7 h-7 flex justify-center items-center"
+                //         dangerouslySetInnerHTML={ { __html: element?.suffix } }
+                //     />
+                // }
                 required
                 value={ String( localValue ) }
                 onChange={ handleValueChange }
-                className={ `w-32 h-12 focus:outline-none` }
+                className={ `w-32 h-12  focus:outline-none ${
+                    hasPrefix ? '!pl-16' : ''
+                }` }
             />
         </div>
     );
 };
 
-export default CurrencyInput;
+export default Number;

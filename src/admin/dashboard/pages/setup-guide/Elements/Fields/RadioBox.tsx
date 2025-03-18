@@ -4,9 +4,10 @@ import AdminIcon from '../../components/icons/AdminIcon';
 import VendorIcon from '../../components/icons/VendorIcon';
 import { SettingsProps } from '../../StepSettings';
 
-const RecipientSelector = ( { element, onValueChange }: SettingsProps ) => {
-    const { default: defaultValue } = element;
-    const [ selected, setSelected ] = useState( defaultValue );
+const RadioBox = ( { element, onValueChange }: SettingsProps ) => {
+    const [ selected, setSelected ] = useState(
+        element?.value || element?.default
+    );
 
     // Handle selection change
     const handleChange = ( newValue ) => {
@@ -23,13 +24,15 @@ const RecipientSelector = ( { element, onValueChange }: SettingsProps ) => {
 
         if ( value === 'admin' ) {
             return <AdminIcon selected={ isSelected } />;
-        } else if ( value === 'vendor' ) {
+        } else if ( value === 'seller' ) {
             return <VendorIcon selected={ isSelected } />;
         }
 
         return null;
     };
-
+    if ( ! element.display ) {
+        return <></>;
+    }
     return (
         <div
             id={ element.hook_key + '_div' }
@@ -59,4 +62,4 @@ const RecipientSelector = ( { element, onValueChange }: SettingsProps ) => {
     );
 };
 
-export default RecipientSelector;
+export default RadioBox;

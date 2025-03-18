@@ -44,6 +44,8 @@ export type SettingsElement = {
     dependency_key?: string;
     children?: Array< SettingsElement >;
     dependencies?: Array< SettingsElementDependency >;
+    prefix?: string;
+    suffix?: string;
 };
 
 export interface SettingsProps {

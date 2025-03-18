@@ -53,11 +53,7 @@ class WithdrawStep extends AbstractStep {
             'skrill' => '',
         ];
 
-        $default_status = [
-            'wc-completed'  => 'wc-completed',
-            'wc-processing' => '',
-            'wc-on-hold'    => '',
-        ];
+        $default_status = [ 'wc-completed' => 'wc-completed' ];
 
         $withdraw_status  = dokan_get_option( 'withdraw_order_status', 'dokan_withdraw', $default_status );
         $withdraw_limits  = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', '50' );
@@ -112,6 +108,8 @@ class WithdrawStep extends AbstractStep {
                              ->set_default( $withdraw_status )
                      )
              );
+
+        error_log( print_r( $withdraw_status, 1 ) );
     }
 
 	public function settings(): array {

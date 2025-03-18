@@ -2,12 +2,12 @@ import Text from './Text';
 import Password from './Password';
 import Tel from './Tel';
 import { SettingsProps } from '../../StepSettings';
-import RecipientSelector from './RecipientSelector';
+import RadioBox from './RadioBox';
 import Radio from './Radio';
 import Switcher from './Switcher';
-import CurrencyInput from './CurrencyInput';
+import Number from './Number';
 import Select from './Select';
-import CheckboxGroup from "./CheckboxGroup";
+import MultiCheck from './MultiCheck';
 
 const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
     // TODO: add support for custom input fields and custom hook.
@@ -45,16 +45,14 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     onValueChange={ onValueChange }
                 />
             );
-        case 'recipient_selector':
+        case 'radio_box':
             return (
-                <RecipientSelector
+                <RadioBox
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
                 />
             );
-        case 'radio_button':
-
         case 'radio':
             return (
                 <Radio
@@ -63,9 +61,9 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     onValueChange={ onValueChange }
                 />
             );
-        case 'currency':
+        case 'number':
             return (
-                <CurrencyInput
+                <Number
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
@@ -79,9 +77,9 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     onValueChange={ onValueChange }
                 />
             );
-        case 'checkbox_group':
+        case 'multicheck':
             return (
-                <CheckboxGroup
+                <MultiCheck
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
