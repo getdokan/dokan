@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             rel="<?php echo esc_attr( absint( $download->product_id ) ) . ',' . esc_attr( $download->download_id ); ?>"
             class="revoke_access btn btn-danger btn-sm pull-right"
             data-order-id="<?php echo esc_attr( $download->order_id ); ?>"
-            data-permission-id="<?php echo esc_attr( $download->permission_id ); ?>"
+            data-permission-id="<?php echo esc_attr( $download->get_id() ); ?>"
             data-nonce="<?php echo esc_attr( wp_create_nonce( 'revoke-access' ) ); ?>"
         >
             <?php esc_html_e( 'Revoke Access', 'dokan-lite' ); ?>
