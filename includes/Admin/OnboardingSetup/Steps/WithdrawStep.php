@@ -27,6 +27,8 @@ class WithdrawStep extends AbstractStep {
      */
     protected $storage_key = 'dokan_admin_onboarding_setup_step_withdraw';
 
+    protected $settings_options = [ 'dokan_withdraw' ];
+
     /**
      * @inheritDoc
      */
@@ -71,25 +73,28 @@ class WithdrawStep extends AbstractStep {
                          Factory::field( 'paypal', 'switch' )
                              ->set_title( esc_html__( 'PayPal', 'dokan-lite' ) )
                              ->set_description( esc_html__( 'Enable PayPal for your vendor as a withdraw method', 'dokan-lite' ) )
-                             ->add_option( esc_html__( 'Enabled', 'dokan-lite' ), 'paypal' )
-                             ->add_option( esc_html__( 'Disabled', 'dokan-lite' ), '' )
-                             ->set_default( $withdraw_methods['paypal'] ?? $default_methods['paypal'] )
+                             ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'paypal' )
+                             ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), '' )
+                             ->set_default( $default_methods['paypal'] )
+                             ->set_value( $withdraw_methods['paypal'] )
                      )
                      ->add(
                          Factory::field( 'bank', 'switch' )
                              ->set_title( esc_html__( 'Bank Transfer', 'dokan-lite' ) )
                              ->set_description( esc_html__( 'Enable Bank Transfer for your vendor as a withdraw method', 'dokan-lite' ) )
-                             ->add_option( esc_html__( 'Enabled', 'dokan-lite' ), 'bank' )
-                             ->add_option( esc_html__( 'Disabled', 'dokan-lite' ), '' )
-                             ->set_default( $withdraw_methods['bank'] ?? $default_methods['bank'] )
+                             ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'bank' )
+                             ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), '' )
+                             ->set_default( $default_methods['bank'] )
+                             ->set_value( $withdraw_methods['bank'] )
                      )
                      ->add(
                          Factory::field( 'skrill', 'switch' )
                              ->set_title( esc_html__( 'Skrill', 'dokan-lite' ) )
                              ->set_description( esc_html__( 'Enable Skrill for your vendor as a withdraw method', 'dokan-lite' ) )
-                             ->add_option( esc_html__( 'Enabled', 'dokan-lite' ), 'skrill' )
-                             ->add_option( esc_html__( 'Disabled', 'dokan-lite' ), '' )
-                             ->set_default( $withdraw_methods['skrill'] ?? $default_methods['skrill'] )
+                             ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'skrill' )
+                             ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), '' )
+                             ->set_default( $default_methods['skrill'] )
+                             ->set_value( $withdraw_methods['skrill'] )
                      )
                      ->add(
                          Factory::field( 'withdraw_limit', 'number' )
@@ -108,8 +113,6 @@ class WithdrawStep extends AbstractStep {
                              ->set_default( $withdraw_status )
                      )
              );
-
-        error_log( print_r( $withdraw_status, 1 ) );
     }
 
 	public function settings(): array {
@@ -120,7 +123,6 @@ class WithdrawStep extends AbstractStep {
      * @inheritDoc
      */
     public function option_dispatcher( $data ): void {
-        parent::option_dispatcher( $data );
         // TODO: Implement option_dispatcher() method.
     }
 }

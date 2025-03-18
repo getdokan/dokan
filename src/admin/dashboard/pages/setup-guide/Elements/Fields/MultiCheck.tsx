@@ -5,7 +5,6 @@ import { SettingsProps } from '../../StepSettings';
 const MultiCheck = ( { element, onValueChange }: SettingsProps ) => {
     const [ selectedValues, setSelectedValues ] = useState( [] );
 
-    console.log( { element } );
     // Handle change and propagate to parent component
     const handleChange = ( values ) => {
         setSelectedValues( values );

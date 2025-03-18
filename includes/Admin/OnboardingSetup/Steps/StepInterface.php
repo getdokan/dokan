@@ -19,6 +19,15 @@ interface StepInterface {
     public function get_id(): string;
 
     /**
+     * Get settings options to check for.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string[] The settings options.
+     */
+    public function get_settings_options(): array;
+
+    /**
      * Get the step priority.
      *
      * @since DOKAN_SINCE

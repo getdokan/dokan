@@ -4,18 +4,22 @@ import { __ } from '@wordpress/i18n';
 import { SettingsProps } from '../../StepSettings';
 
 const Switcher = ( { element, onValueChange }: SettingsProps ) => {
+    const enableState = element?.enable_state
+    const disableState = element?.disable_state
+
     const handleChange = ( checked ) => {
         setIsEnabled( checked );
 
         onValueChange( {
             ...element,
-            value: checked,
+            value: checked ? enableState.value : disableState.value,
         } );
     };
 
+    const initialEnabled = element?.value ? element?.value=== enableState?.value : element?.default === enableState?.value;
+
     // Initialize state with enabled prop or defaultValue
-    const { default: defaultValue } = element;
-    const [ isEnabled, setIsEnabled ] = useState( Boolean( defaultValue ) );
+    const [ isEnabled, setIsEnabled ] = useState( initialEnabled )
 
     if ( ! element.display ) {
         return <></>;
@@ -37,11 +41,7 @@ const Switcher = ( { element, onValueChange }: SettingsProps ) => {
             <ToggleSwitch
                 checked={ isEnabled }
                 onChange={ handleChange }
-                label={
-                    isEnabled
-                        ? __( 'Enabled', 'dokan-lite' )
-                        : __( 'Disabled', 'dokan-lite' )
-                }
+                label={ isEnabled ? enableState.label : disableState.label }
             />
         </div>
     );

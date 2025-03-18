@@ -20,6 +20,8 @@ class CommissionStep extends AbstractStep {
      */
     protected int $priority = 10;
 
+    protected $settings_options = [ 'dokan_selling' ];
+
     /**
      * The storage key.
      *
@@ -62,6 +64,24 @@ class CommissionStep extends AbstractStep {
                             ->add_option( esc_html__( 'Category Based', 'dokan-lite' ), 'category_based' )
                             ->set_default( $commission_type )
                     )
+                    ->add(
+                        Factory::field( 'admin_commission', 'radio' )
+                            ->set_title( __( 'Admin Commission', 'dokan-lite' ) )
+                            ->set_description( esc_html__( 'Amount you get from each sale', 'dokan-lite' ) )
+                            ->add_dependency( 'commission.commission_type', 'category_based', true, 'display', 'hide', '!==' )
+                            ->add_dependency( 'commission.commission_type', 'category_based', true, 'display', 'show', '===' )
+                            ->set_default( 2500 )
+                    )
+                    ->add(
+                        Factory::field( 'fixed_commission', 'radio_box' )
+                            ->set_title( __( 'Fixed Commission', 'dokan-lite' ) )
+                            ->set_description( esc_html__( 'Fixed you get from each sale', 'dokan-lite' ) )
+                            ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'seller' )
+                            ->add_option( esc_html__( 'Admin', 'dokan-lite' ), 'admin' )
+                            ->add_dependency( 'commission.commission_type', 'fixed', true, 'display', 'hide', '!==' )
+                            ->add_dependency( 'commission.commission_type', 'fixed', true, 'display', 'show', '===' )
+                            ->set_default( 'seller' )
+                    )
             );
     }
 
@@ -73,7 +93,6 @@ class CommissionStep extends AbstractStep {
      * @inheritDoc
      */
     public function option_dispatcher( $data ): void {
-        parent::option_dispatcher( $data );
         // TODO: Implement option_dispatcher() method.
     }
 }

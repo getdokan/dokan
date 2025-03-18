@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields;
 
+use WeDevs\Dokan\Abstracts\SettingsElement;
+
 /**
  * Switcher Field.
  *
@@ -17,24 +19,34 @@ class Switcher extends Radio {
     protected $input_type = 'switch';
 
     /**
-     * Active value.
+     * Options.
      *
-     * @var string $active_value Active value.
+     * @var array $options Options.
      */
+    protected $states = array();
 
-    protected $active_value = 'true';
-
+    /**
+     * Get options.
+     *
+     * @return array
+     */
+    public function get_states(): array {
+        return $this->states;
+    }
 
     /**
      * Set active value.
      *
-     * @param string $value Active value.
+     * @param string $label Enable state label.
+     * @param string $value Enable state value.
      *
      * @return Switcher
      */
-
-    public function set_active_value( string $value ): Switcher {
-        $this->active_value = $value;
+    public function set_enable_state( string $label, string $value ): Switcher {
+        $this->states['enable'] = array(
+            'value' => $value,
+            'title' => $label,
+        );
 
         return $this;
     }
@@ -42,11 +54,29 @@ class Switcher extends Radio {
     /**
      * Get active value.
      *
-     * @return string
+     * @return array
+     */
+    public function get_enable_state(): array {
+        return $this->states['enable'];
+    }
+
+    public function set_disable_state( string $label, string $value ): Switcher {
+        $this->states['disable'] = array(
+            'value' => $value,
+            'title' => $label,
+        );
+
+        return $this;
+    }
+
+    /**
+     * Get active value.
+     *
+     * @return array
      */
 
-    public function get_active_value(): string {
-        return $this->active_value;
+    public function get_disable_state(): array {
+        return $this->states['disable'];
     }
 
     /**
@@ -55,10 +85,10 @@ class Switcher extends Radio {
      * @return array
      */
     public function populate(): array {
-        $data                 = parent::populate();
-        $data['default']      = $this->get_default();
-        $data['options']      = $this->get_options();
-        $data['active_value'] = $this->get_active_value();
+        $data                  = parent::populate();
+        $data['default']       = $this->get_default();
+        $data['enable_state']  = $this->get_enable_state();
+        $data['disable_state'] = $this->get_disable_state();
 
         return $data;
     }
