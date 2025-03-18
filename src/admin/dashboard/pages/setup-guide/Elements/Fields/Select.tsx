@@ -18,20 +18,25 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
             value: selectedValue,
         } );
     };
+
+    if ( ! element.display ) {
+        return <></>;
+    }
+
     return (
         <div
-            className="flex justify-between p-4   "
+            className="flex justify-between p-4"
             id={ element.hook_key + '_div' }
         >
-            <div className="flex flex-col mb-4 w-full sm:w-[70%]">
+            <div className="flex flex-col sm:w-[70%]">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
                     { element?.title }
                 </h2>
-                <p className=" text-sm font-normal text-[#828282]">
+                <p className="text-sm font-normal text-[#828282]">
                     { element?.description }
                 </p>
             </div>
-            <div className="w-[11rem]">
+            <div className="flex w-[11rem]">
                 <SimpleSelect
                     name={ element?.id }
                     label={ '' }
