@@ -581,6 +581,8 @@ class Hooks {
                 'core'
             );
         }
+
+        wp_enqueue_style( 'dokan-admin-commission-suborder' );
     }
 
     /**
