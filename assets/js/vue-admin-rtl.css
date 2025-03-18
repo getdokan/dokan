@@ -402,13 +402,13 @@
   box-shadow: none;
   background: #825eed;
   color: #fff;
-  border-color: var(--dokan-button-background-color, #7047EB);
+  border-color: #7047EB;
   font-size: 16px;
   padding: 0 1rem;
 }
 .dokan-pro-features .vendor-capabilities-banner a:hover {
   color: #fff;
-  background: var(--dokan-button-background-color, #7047EB);
+  background: #7047EB;
 }
 .dokan-pro-features a {
   transition: all 0.2s ease;
