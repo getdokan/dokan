@@ -3,8 +3,8 @@ import Password from './Password';
 import Tel from './Tel';
 import { SettingsProps } from '../../StepSettings';
 import RecipientSelector from './RecipientSelector';
-import RadioButton from './RadioButton';
-import ToggleSwitchField from './ToggleSwitchField';
+import Radio from './Radio';
+import Switcher from './Switcher';
 import CurrencyInput from './CurrencyInput';
 import Select from './Select';
 
@@ -53,25 +53,26 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                 />
             );
         case 'radio_button':
-            return (
-                <RadioButton
-                    element={ element }
-                    key={ element.hook_key }
-                    onValueChange={ onValueChange }
-                />
-            );
+
         case 'radio':
             return (
-                <ToggleSwitchField
+                <Radio
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
                 />
             );
-
         case 'currency':
             return (
                 <CurrencyInput
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'switch':
+            return (
+                <Switcher
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }

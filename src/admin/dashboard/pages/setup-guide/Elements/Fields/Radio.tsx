@@ -1,14 +1,15 @@
 import React, { useState } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
 
-const RadioButton = ( { element, onValueChange }: SettingsProps ) => {
-    // Initialize state with selectedValue or default
-
+const Radio = ({ element, onValueChange }: SettingsProps ) => {
     const [ selected, setSelected ] = useState(
         element.value || element.default
     );
 
-    // Handle selection change
+    if ( ! element.display ) {
+        return <></>;
+    }
+
     const handleChange = ( newValue ) => {
         setSelected( newValue );
         onValueChange( {
@@ -53,4 +54,4 @@ const RadioButton = ( { element, onValueChange }: SettingsProps ) => {
     );
 };
 
-export default RadioButton;
+export default Radio;

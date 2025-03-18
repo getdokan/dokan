@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\ComponentFactory;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\ComponentFactory as Factory;
 
 class AppearanceStep extends AbstractStep {
 
@@ -18,7 +18,7 @@ class AppearanceStep extends AbstractStep {
      *
      * @var int The step priority.
      */
-    protected int $priority = 0;
+    protected int $priority = 40;
 
     /**
      * The storage key.
@@ -47,53 +47,65 @@ class AppearanceStep extends AbstractStep {
 	 * @inheritDoc
 	 */
 	public function describe_settings(): void {
-        $this->set_title( __( 'Appearance', 'dokan-lite' ) )
+        $contact_seller = dokan_get_option( 'contact_seller', 'dokan_appearance', 'on' );
+        $theme_sidebar  = dokan_get_option( 'enable_theme_store_sidebar', 'dokan_appearance', 'off' );
+
+        $default_vendor_info = [
+            'email'   => '',
+            'phone'   => '',
+            'address' => '',
+        ];
+
+        $vendor_info = dokan_get_option( 'hide_vendor_info', 'dokan_appearance', $default_vendor_info );
+
+        $this->set_title( esc_html__( 'Appearance', 'dokan-lite' ) )
             ->add(
-                ComponentFactory::section( 'appearance' )
-                    ->set_title( __( 'Appearance', 'dokan-lite' ) )
+                Factory::section( 'dokan-appearance' )
+                    ->set_title( esc_html__( 'Appearance', 'dokan-lite' ) )
                     ->add(
-                        ComponentFactory::sub_section( 'store-info' )
-                                        ->set_title( __( 'Store Info', 'dokan-lite' ) )
-                                        ->add(
-                                            ComponentFactory::field( 'store-info', 'radio_button' )
-                                                            ->set_title( __( 'Show Store Info', 'dokan-lite' ) )
-                                                            ->set_description( __( 'Display store information on the vendor\'s store page.', 'dokan-lite' ) )
-                                                            ->set_default( 'hide' )
-                                        )
-                                        ->add(
-                                            ComponentFactory::field( 'store-info-heading', 'radio_button' )
-                                                            ->set_title( __( 'Store Info Heading', 'dokan-lite' ) )
-                                                            ->set_description( __( 'Display store information heading on the vendor\'s store page.', 'dokan-lite' ) )
-                                                            ->set_default( 'show' )
-                                        )
-                                        ->add(
-                                            ComponentFactory::field( 'store-info-description', 'radio_button' )
-                                                            ->set_title( __( 'Store Info Description', 'dokan-lite' ) )
-                                                            ->set_description( __( 'Display store information description on the vendor\'s store page.', 'dokan-lite' ) )
-                                                            ->set_default( 'hide' )
-                                        )
+                        Factory::sub_section( 'store-info' )
+                            ->set_title( esc_html__( 'Store Info', 'dokan-lite' ) )
+                            ->add(
+                                Factory::field( 'contact_seller', 'radio' )
+                                    ->set_title( esc_html__( 'Contact Form on Store Page', 'dokan-lite' ) )
+                                    ->set_description( esc_html__( 'Display a contact form on vendor store pages for customer inquiries', 'dokan-lite' ) )
+                                    ->add_option( esc_html__( 'Hide', 'dokan-lite' ), 'off' )
+                                    ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'on' )
+                                    ->set_default( $contact_seller )
+                            )
+                            ->add(
+                                Factory::field( 'enable_theme_store_sidebar', 'radio' )
+                                    ->set_title( esc_html__( 'Store Sidebar From Theme', 'dokan-lite' ) )
+                                    ->set_description( esc_html__( 'Show/hide the sidebar on vendor store pages', 'dokan-lite' ) )
+                                    ->add_option( esc_html__( 'Hide', 'dokan-lite' ), 'off' )
+                                    ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'on' )
+                                    ->set_default( $theme_sidebar )
+                            )
                     )
                     ->add(
-                        ComponentFactory::sub_section( 'vendor-info' )
-                                        ->set_title( __( 'Store Banner', 'dokan-lite' ) )
-                                        ->add(
-                                            ComponentFactory::field( 'store-banner', 'radio_button' )
-                                                            ->set_title( __( 'Show Store Banner', 'dokan-lite' ) )
-                                                            ->set_description( __( 'Display store banner on the vendor\'s store page.', 'dokan-lite' ) )
-                                                            ->set_default( 'show' )
-                                        )
-                                        ->add(
-                                            ComponentFactory::field( 'store-banner-heading', 'radio_button' )
-                                                            ->set_title( __( 'Store Banner Heading', 'dokan-lite' ) )
-                                                            ->set_description( __( 'Display store banner heading on the vendor\'s store page.', 'dokan-lite' ) )
-                                                            ->set_default( 'hide' )
-                                        )
-                                        ->add(
-                                            ComponentFactory::field( 'store-banner-description', 'radio_button' )
-                                                            ->set_title( __( 'Store Banner Description', 'dokan-lite' ) )
-                                                            ->set_description( __( 'Display store banner description on the vendor\'s store page.', 'dokan-lite' ) )
-                                                            ->set_default( 'show' )
-                                        )
+                        Factory::sub_section( 'vendor-info' )
+                            ->set_title( esc_html__( 'Vendor Info on Product Page', 'dokan-lite' ) )
+                            ->add(
+                                Factory::field( 'email', 'radio' )
+                                    ->set_title( esc_html__( 'Email Address', 'dokan-lite' ) )
+                                    ->add_option( esc_html__( 'Hide', 'dokan-lite' ), '' )
+                                    ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'email' )
+                                    ->set_default( $vendor_info['email'] ?? $default_vendor_info['email'] )
+                            )
+                            ->add(
+                                Factory::field( 'phone', 'radio' )
+                                    ->set_title( esc_html__( 'Phone Number', 'dokan-lite' ) )
+                                    ->add_option( esc_html__( 'Hide', 'dokan-lite' ), '' )
+                                    ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'phone' )
+                                    ->set_default( $vendor_info['phone'] ?? $default_vendor_info['phone'] )
+                            )
+                            ->add(
+                                Factory::field( 'address', 'radio' )
+                                    ->set_title( esc_html__( 'Store Address', 'dokan-lite' ) )
+                                    ->add_option( esc_html__( 'Hide', 'dokan-lite' ), '' )
+                                    ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'address' )
+                                    ->set_default( $vendor_info['address'] ?? $default_vendor_info['address'] )
+                            )
                     )
             );
     }

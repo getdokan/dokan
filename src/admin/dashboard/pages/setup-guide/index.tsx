@@ -27,7 +27,7 @@ const SetupGuide = ( props ) => {
 
     return (
         <div className="grid grid-cols-12 gap-6">
-            <div className="flex flex-col col-span-3 space-y-4 rounded-lg pl-12 pt-10 bg-white shadow">
+            <div className="flex flex-col col-span-3 space-y-4 rounded-lg pl-12 py-10 bg-white shadow">
                 <h3 className="text-2xl font-bold leading-6 pb-10">
                     { __( 'Setup Guide', 'dokan-lite' ) }
                 </h3>

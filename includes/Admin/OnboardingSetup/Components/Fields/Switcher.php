@@ -3,16 +3,16 @@
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields;
 
 /**
- * RadioButton Field.
+ * Switcher Field.
  *
- * Custom field that provides radio options as button.
+ * Custom field that provides a toggle switch for boolean values.
  */
-class RadioButton extends Radio {
+class Switcher extends Radio {
 
     /**
      * Input Type.
      *
      * @var string $input_type Input Type.
      */
-    protected $input_type = 'radio_button';
+    protected $input_type = 'switch';
 }
