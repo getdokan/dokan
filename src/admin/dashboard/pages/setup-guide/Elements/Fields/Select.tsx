@@ -4,6 +4,11 @@ import { SimpleSelect } from '@getdokan/dokan-ui';
 
 const Select = ( { element, onValueChange }: SettingsProps ) => {
     const [ selectedOption, setSelectedOption ] = useState( [] );
+
+    if ( ! element.display ) {
+        return <></>;
+    }
+
     const onHandleChange = ( event ) => {
         const selectedValue = event?.target?.value;
 
@@ -20,7 +25,7 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
 
     return (
         <div
-            className="flex justify-between p-4 flex-wrap "
+            className="flex justify-between p-4"
             id={ element.hook_key + '_div' }
         >
             <div className="flex flex-col sm:w-[70%]">

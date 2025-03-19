@@ -208,6 +208,8 @@ class Number extends Text {
 		$data['minimum']     = $this->get_minimum();
 		$data['maximum']     = $this->get_maximum();
 		$data['step']        = $this->get_step();
+        $data['suffix'] = $this->get_suffix();
+        $data['prefix'] = $this->get_prefix();
 
 		return $data;
 	}

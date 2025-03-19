@@ -1,16 +1,9 @@
 import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
-import { useEffect, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
 
-const CheckboxGroup = ( { element, onValueChange }: SettingsProps ) => {
-    const { default: defaultValue } = element;
-    // State to track selected values
+const MultiCheck = ( { element, onValueChange }: SettingsProps ) => {
     const [ selectedValues, setSelectedValues ] = useState( [] );
-
-    // Initialize with default values
-    useEffect( () => {
-        setSelectedValues( defaultValue );
-    }, [ defaultValue ] );
 
     // Handle change and propagate to parent component
     const handleChange = ( values ) => {
@@ -39,17 +32,18 @@ const CheckboxGroup = ( { element, onValueChange }: SettingsProps ) => {
             <SimpleCheckboxGroup
                 name={ element?.id }
                 onChange={ handleChange }
-                defaultValue={ selectedValues }
+                defaultValue={ Object.values( element?.default ) }
                 options={
                     element?.options?.map( ( option ) => ( {
                         label: option.title,
                         value: option.value,
                     } ) ) || []
                 }
+                value={ selectedValues }
                 className="focus:outline-none outline-none w-full"
             />
         </div>
     );
 };
 
-export default CheckboxGroup;
+export default MultiCheck;

@@ -33,6 +33,8 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
      */
     protected $storage_key = 'dokan_admin_onboarding_setup_step';
 
+    protected $settings_options = [];
+
     /**
      * Get the step ID.
      *
@@ -53,7 +55,8 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
      */
     public function register_hooks(): void {
         add_filter( 'dokan_admin_setup_guide_steps', [ $this, 'enlist' ] );
-        add_action( 'dokan_settings_after_save_' . $this->storage_key, [ $this, 'option_dispatcher' ] );
+        add_action( 'dokan_settings_after_save_' . $this->storage_key, [ $this, 'dispatch' ] );
+        add_action( 'updated_option', [ $this, 'listen_for_settings_save' ], 10, 3 );
     }
 
     /**
@@ -129,6 +132,12 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
      */
 	abstract public function settings(): array;
 
+	abstract public function option_dispatcher( $data ): void;
+
+    public function get_settings_options(): array {
+        return apply_filters('dokan_admin_setup_guide_step_' . $this->get_id() . '_options',  $this->settings_options );
+    }
+
     /**
      * Get the settings options.
      *
@@ -149,7 +158,23 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
      *
      * @return void
      */
-    public function option_dispatcher( $data ): void {
+    public function dispatch( $data ): void {
+        remove_action( 'updated_option', [ $this, 'listen_for_settings_save' ] );
+        $this->mark_as_complete();
+        $this->option_dispatcher( $data );
+        add_action( 'updated_option', [ $this, 'listen_for_settings_save' ], 10, 3 );
+    }
+
+    public function listen_for_settings_save( $option ) {
+        if ( ! in_array( $option, $this->get_settings_options() ) ) {
+            return;
+        }
+
+        $this->mark_as_complete();
+        delete_option( $this->storage_key );
+    }
+
+    public function mark_as_complete() {
         update_option( $this->storage_key . '_completed', true );
     }
 }

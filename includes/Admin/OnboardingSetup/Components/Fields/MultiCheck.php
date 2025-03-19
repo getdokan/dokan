@@ -120,6 +120,7 @@ class MultiCheck extends Field {
     public function populate(): array {
         $data            = parent::populate();
         $data['default'] = $this->get_default();
+        $data['options'] = $this->get_options();
 
         return $data;
     }

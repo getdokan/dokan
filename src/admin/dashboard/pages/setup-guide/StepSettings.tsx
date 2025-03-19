@@ -30,9 +30,9 @@ export type SettingsElement = {
     icon?: string;
     title?: string;
     description?: string;
-    value?: string | Array< string | number | number[] >;
+    value?: string | number | Array< string | number | number[] >;
     default?: string;
-    options?: [];
+    options?: Array< { title: string; value: string | number } >;
     readonly?: boolean;
     disabled?: boolean;
     placeholder?: string | number;
@@ -44,6 +44,16 @@ export type SettingsElement = {
     dependency_key?: string;
     children?: Array< SettingsElement >;
     dependencies?: Array< SettingsElementDependency >;
+    prefix?: string;
+    suffix?: string;
+    enable_state?: {
+        label: string;
+        value: string | number;
+    };
+    disable_state?: {
+        label: string;
+        value: string | number;
+    };
 };
 
 export interface SettingsProps {

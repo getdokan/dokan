@@ -20,6 +20,8 @@ class AppearanceStep extends AbstractStep {
      */
     protected int $priority = 40;
 
+    protected $settings_options = [ 'dokan_appearance' ];
+
     /**
      * The storage key.
      *
@@ -118,7 +120,6 @@ class AppearanceStep extends AbstractStep {
      * @inheritDoc
      */
     public function option_dispatcher( $data ): void {
-        parent::option_dispatcher( $data );
         // TODO: Implement option_dispatcher() method.
     }
 }
