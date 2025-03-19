@@ -184,6 +184,7 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/AdminReportController.php'           => 'WeDevs\Dokan\REST\AdminReportController',
                 DOKAN_DIR . '/includes/REST/AdminDashboardController.php'        => 'WeDevs\Dokan\REST\AdminDashboardController',
                 DOKAN_DIR . '/includes/REST/AdminMiscController.php'             => 'WeDevs\Dokan\REST\AdminMiscController',
+                DOKAN_DIR . '/includes/REST/AdminSetupGuideController.php'       => 'WeDevs\Dokan\REST\AdminSetupGuideController',
                 DOKAN_DIR . '/includes/REST/StoreController.php'                 => '\WeDevs\Dokan\REST\StoreController',
                 DOKAN_DIR . '/includes/REST/ProductController.php'               => '\WeDevs\Dokan\REST\ProductController',
                 DOKAN_DIR . '/includes/REST/ProductControllerV2.php'             => '\WeDevs\Dokan\REST\ProductControllerV2',
