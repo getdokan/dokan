@@ -264,11 +264,16 @@ class Dashboard implements Hookable {
      * @return void
      */
     public function register_scripts() {
-        $script = require DOKAN_DIR . '/assets/js/dokan-admin-dashboard.asset.php';
+        $admin_dashboard_script = require DOKAN_DIR . '/assets/js/dokan-admin-dashboard.asset.php';
+        $setup_guide_script     = require DOKAN_DIR . '/assets/js/setup-guide-banner.asset.php';
 
         // Register the main script.
-        wp_register_script( $this->script_key, DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-dashboard.js', $script['dependencies'], $script['version'], true );
-        wp_register_style( $this->script_key, DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-dashboard.css', [], $script['version'] );
+        wp_register_script( $this->script_key, DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-dashboard.js', $admin_dashboard_script['dependencies'], $admin_dashboard_script['version'], true );
+        wp_register_style( $this->script_key, DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-dashboard.css', [], $admin_dashboard_script['version'] );
+
+        // Register the setup guide banner script.
+        wp_register_script( 'dokan-setup-guide-banner', DOKAN_PLUGIN_ASSEST . '/js/setup-guide-banner.js', $setup_guide_script['dependencies'], $setup_guide_script['version'], true );
+        wp_register_style( 'dokan-setup-guide-banner', DOKAN_PLUGIN_ASSEST . '/css/setup-guide-banner.css', [], $setup_guide_script['version'] );
 
         // Register all other scripts.
         foreach ( $this->get_pages() as $page ) {
@@ -286,7 +291,15 @@ class Dashboard implements Hookable {
     public function enqueue_scripts() {
         $screen = get_current_screen();
 
-        if ( $screen->id !== 'toplevel_page_dokan' && $screen->id !== 'dokan_page_dokan-dashboard' ) {
+        if ( $screen->id !== 'toplevel_page_dokan' ) {
+            return;
+        }
+
+        // Enqueue the setup guide banner script.
+        wp_enqueue_style( 'dokan-setup-guide-banner' );
+        wp_enqueue_script( 'dokan-setup-guide-banner' );
+
+        if ( $screen->id !== 'dokan_page_dokan-dashboard' ) {
             return;
         }
 

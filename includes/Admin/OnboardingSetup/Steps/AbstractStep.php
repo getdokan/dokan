@@ -159,25 +159,22 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
      * @return void
      */
     public function dispatch( $data ): void {
-        remove_action( 'updated_option', [ $this, 'listen_for_settings_save' ], 10, 3 );
+        remove_action( 'updated_option', [ $this, 'listen_for_settings_save' ] );
         $this->mark_as_complete();
         $this->option_dispatcher( $data );
         add_action( 'updated_option', [ $this, 'listen_for_settings_save' ], 10, 3 );
     }
 
-    public function listen_for_settings_save( $option, $old_value, $value ) {
+    public function listen_for_settings_save( $option ) {
         if ( ! in_array( $option, $this->get_settings_options() ) ) {
             return;
         }
 
         $this->mark_as_complete();
+        delete_option( $this->storage_key );
     }
 
     public function mark_as_complete() {
         update_option( $this->storage_key . '_completed', true );
     }
-
-
-
-
 }
