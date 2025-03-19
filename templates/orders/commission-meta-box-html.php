@@ -39,7 +39,7 @@ foreach ( $order->get_refunds() as $refund ) {
 }
 ?>
 
-<div id="dokan-order-items" class="postbox" style='border: none'>
+<div id="dokan-order-items" class="dokan-order-metabox-items postbox" style='border: none'>
     <div class="postbox-header">
         <div class="handle-actions hide-if-no-js">
             <button type="button" class="handle-order-higher" aria-disabled="false" aria-describedby="dokan-order-items-handle-order-higher-description">
