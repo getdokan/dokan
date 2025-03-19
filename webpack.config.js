@@ -37,7 +37,6 @@ const updatedConfig = {
         alias: {
             vue$: 'vue/dist/vue.esm.js',
             '@dokan': path.resolve( './src/' ),
-            '@dokan/root': path.resolve( './' ),
             frontend: path.resolve( './src/frontend/' ),
             admin: path.resolve( './src/admin/' ),
         },
