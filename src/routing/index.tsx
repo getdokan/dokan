@@ -1,6 +1,6 @@
 import NotFound from '../layout/404';
-import { __ } from '@wordpress/i18n';
 import { DokanRoute } from '../layout';
+import routes from './routes';
 import {
     isValidElement,
     cloneElement,
@@ -16,8 +16,6 @@ import {
     useNavigation,
     createSearchParams,
 } from 'react-router-dom';
-import Withdraw from '../dashboard/withdraw';
-import WithdrawRequests from '../dashboard/withdraw/WithdrawRequests';
 import coreStore from '@dokan/stores/core';
 import { useSelect } from '@wordpress/data';
 import Forbidden from '../layout/403';
@@ -70,49 +68,19 @@ export function withRouter( Component, capabilities = [] ) {
 }
 
 const getRoutes = () => {
-    let routes: Array< DokanRoute > = [];
-
-    // routes.push(
-    //     {
-    //         id: 'dokan-base',
-    //         title: __( 'Dashboard', 'dokan-lite' ),
-    //         element: <h1>Dashboard body</h1>,
-    //         path: '/',
-    //         exact: true,
-    //         order: 10,
-    //     }
-    // );
-
-    routes.push( {
-        id: 'dokan-withdraw',
-        title: __( 'Withdraw', 'dokan-lite' ),
-        element: <Withdraw />,
-        path: '/withdraw',
-        exact: true,
-        order: 10,
-    } );
-
-    routes.push( {
-        id: 'dokan-withdraw-requests',
-        title: __( 'Withdraw', 'dokan-lite' ),
-        element: <WithdrawRequests />,
-        path: '/withdraw-requests',
-        exact: true,
-        order: 10,
-    } );
-
     // @ts-ignore
-    routes = wp.hooks.applyFilters(
+    const filteredRoutes = wp.hooks.applyFilters(
         'dokan-dashboard-routes',
         routes
     ) as Array< DokanRoute >;
-    routes.push( {
+
+    filteredRoutes.push( {
         id: 'dokan-404',
         element: <NotFound />,
         path: '*',
     } );
 
-    return routes;
+    return filteredRoutes;
 };
 
 export default getRoutes;
