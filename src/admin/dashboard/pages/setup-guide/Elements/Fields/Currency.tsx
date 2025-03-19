@@ -29,46 +29,44 @@ const Currency = ( { element, onValueChange }: SettingsProps ) => {
     return (
         <div
             id={ element.hook_key + '_div' }
-            className="w-full @container/currency"
+            className=" @container/currency grid grid-cols-12 p-4 gap-1"
         >
-            <div className="flex justify-between flex-wrap w-full p-4 gap-4">
-                <div className="flex flex-col w-[70%]">
-                    <h2 className="text-sm @sm/currency:text-base leading-6 font-semibold text-gray-900">
-                        { element?.title }
-                    </h2>
-                    <p className="text-xs @sm/currency:text-sm font-normal text-[#828282] mt-1">
-                        { element?.description }
-                    </p>
-                </div>
-                <div className="@sm:w-36  ">
-                    <MaskedInput
-                        addOnLeft={ currencySymbol }
-                        value={ String( localValue ) }
-                        onChange={ ( e ) => {
-                            debouncedWithdrawAmount( e.target.value );
-                        } }
-                        maskRule={ {
-                            numeral: true,
-                            numeralDecimalMark:
-                                window?.dokanWithdrawDashboard?.currency
-                                    ?.decimal ?? '.',
-                            delimiter:
-                                window?.dokanWithdrawDashboard?.currency
-                                    ?.thousand ?? ',',
-                            numeralDecimalScale:
-                                window?.dokanWithdrawDashboard?.currency
-                                    ?.precision ?? 2,
-                        } }
-                        input={ {
-                            autoComplete: 'off',
-                            id: element?.id,
-                            name: element?.id,
-                            placeholder: String( element?.placeholder ),
-                            type: element.type,
-                        } }
-                        className={ ` h-12 rounded-r rounded-l-none` }
-                    />
-                </div>
+            <div className="flex flex-col @sm/currency:col-span-8 col-span-12 gap-1">
+                <h2 className="text-sm @sm/currency:text-base leading-6 font-semibold text-gray-900">
+                    { element?.title }
+                </h2>
+                <p className="text-xs @sm/currency:text-sm font-normal text-[#828282] mt-1">
+                    { element?.description }
+                </p>
+            </div>
+            <div className="@sm/currency:col-span-4 col-span-12 flex items-center @sm/currency:justify-end">
+                <MaskedInput
+                    addOnLeft={ currencySymbol }
+                    value={ String( localValue ) }
+                    onChange={ ( e ) => {
+                        debouncedWithdrawAmount( e.target.value );
+                    } }
+                    maskRule={ {
+                        numeral: true,
+                        numeralDecimalMark:
+                            window?.dokanWithdrawDashboard?.currency?.decimal ??
+                            '.',
+                        delimiter:
+                            window?.dokanWithdrawDashboard?.currency
+                                ?.thousand ?? ',',
+                        numeralDecimalScale:
+                            window?.dokanWithdrawDashboard?.currency
+                                ?.precision ?? 2,
+                    } }
+                    input={ {
+                        autoComplete: 'off',
+                        id: element?.id,
+                        name: element?.id,
+                        placeholder: String( element?.placeholder ),
+                        type: element.type,
+                    } }
+                    className={ `w-24 h-12 rounded-r rounded-l-none` }
+                />
             </div>
         </div>
     );
