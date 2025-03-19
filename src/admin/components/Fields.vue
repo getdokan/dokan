@@ -105,6 +105,7 @@
                     <category-based-commission
                         :value="watchCategoryCommission"
                         @change="onCategoryUpdate"
+                        :resetSubCategory="fieldValue?.reset_sub_category_when_edit_all_category && fieldValue?.reset_sub_category_when_edit_all_category === 'on'"
                     />
                 </div>
 
