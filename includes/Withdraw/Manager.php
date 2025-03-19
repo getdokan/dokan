@@ -191,6 +191,8 @@ class Manager {
             return new WP_Error( 'dokan_withdraw_unable_to_insert', __( 'Could not add new withdraw approval request.', 'dokan-lite' ) );
         }
 
+        $withdraw_id = $wpdb->insert_id;
+
         /**
          * After completed withdraw request
          *
@@ -202,7 +204,7 @@ class Manager {
          * @param float  $amount
          * @param string $method
          */
-        do_action( 'dokan_after_withdraw_request', $data['user_id'], $data['amount'], $data['method'] );
+        do_action( 'dokan_after_withdraw_request', $data['user_id'], $data['amount'], $data['method'], $withdraw_id );
 
         return true;
     }

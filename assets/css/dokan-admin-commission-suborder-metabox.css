@@ -102,15 +102,15 @@
 .dokan-order-metabox-items .postbox-header {
     display: none;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper {
+.dokan-order-metabox-items .dokan_order_items_wrapper {
     margin: 0;
     overflow-x: auto;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items {
     width: 100%;
     background: #fff;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items thead th {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items thead th {
     text-align: left;
     padding: 1em;
     font-weight: 400;
@@ -119,67 +119,67 @@
     -webkit-touch-callout: none;
     user-select: none;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items thead th.sortable {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items thead th.sortable {
     cursor: pointer;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items thead th:last-child {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items thead th:last-child {
     padding-right: 2em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items thead th:first-child {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items thead th:first-child {
     padding-left: 2em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items thead th .wc-arrow {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items thead th .wc-arrow {
     float: right;
     position: relative;
     margin-right: -1em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tbody th,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tbody th,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td {
     padding: 1.5em 1em 1em;
     text-align: left;
     line-height: 1.5em;
     vertical-align: top;
     border-bottom: 1px solid #f8f8f8;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tbody th textarea,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td textarea {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tbody th textarea,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td textarea {
     width: 100%;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tbody th select,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td select {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tbody th select,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td select {
     width: 50%;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tbody th input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tbody th textarea,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td textarea {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tbody th input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tbody th textarea,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td textarea {
     font-size: 14px;
     padding: 4px;
     color: #555;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tbody th:last-child,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td:last-child {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tbody th:last-child,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td:last-child {
     padding-right: 2em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tbody th:first-child,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td:first-child {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tbody th:first-child,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td:first-child {
     padding-left: 2em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tbody tr:last-child td {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tbody tr:last-child td {
     border-bottom: 1px solid #dfdfdf;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tbody tr:first-child td {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tbody tr:first-child td {
     border-top: 8px solid #f8f8f8;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tbody#order_line_items tr:first-child td {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tbody#order_line_items tr:first-child td {
     border-top: none;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td.thumb {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.thumb {
     text-align: left;
     width: 38px;
     padding-bottom: 1.5em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td.thumb .wc-order-item-thumbnail {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.thumb .wc-order-item-thumbnail {
     width: 38px;
     height: 38px;
     border: 2px solid #e8e8e8;
@@ -190,7 +190,7 @@
     display: block;
     text-align: center;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td.thumb .wc-order-item-thumbnail:empty::before {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.thumb .wc-order-item-thumbnail:empty::before {
     font-family: Dashicons;
     speak: never;
     font-weight: 400;
@@ -211,86 +211,86 @@
     line-height: 38px;
     display: block;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td.thumb .wc-order-item-thumbnail img {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.thumb .wc-order-item-thumbnail img {
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
     position: relative;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td.name .wc-order-item-sku,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td.name .wc-order-item-variation {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.name .wc-order-item-sku,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.name .wc-order-item-variation {
     display: block;
     margin-top: 0.5em;
     font-size: 0.92em !important;
     color: #888;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item {
     min-width: 200px;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .center,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .variation-id {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .center,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .variation-id {
     text-align: center;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class {
     text-align: right;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class label {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class label {
     white-space: nowrap;
     color: #999;
     font-size: 0.833em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost label input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost label input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost label input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax label input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity label input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax label input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class label input {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost label input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost label input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost label input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax label input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity label input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax label input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class label input {
     display: inline;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class input {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class input {
     width: 70px;
     vertical-align: middle;
     text-align: right;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost select,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost select,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost select,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax select,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity select,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax select,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class select {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost select,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost select,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost select,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax select,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity select,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax select,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class select {
     width: 85px;
     height: 26px;
     vertical-align: middle;
     font-size: 1em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .split-input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .split-input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .split-input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .split-input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .split-input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .split-input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .split-input {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .split-input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .split-input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .split-input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .split-input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .split-input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .split-input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .split-input {
     display: inline-block;
     background: #fff;
     border: 1px solid #ddd;
@@ -301,35 +301,35 @@
     line-height: 1em;
     text-align: right;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .split-input div.input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .split-input div.input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .split-input div.input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .split-input div.input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .split-input div.input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .split-input div.input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .split-input div.input {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .split-input div.input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .split-input div.input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .split-input div.input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .split-input div.input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .split-input div.input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .split-input div.input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .split-input div.input {
     width: 100%;
     box-sizing: border-box;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .split-input div.input label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .split-input div.input label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .split-input div.input label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .split-input div.input label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .split-input div.input label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .split-input div.input label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .split-input div.input label {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .split-input div.input label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .split-input div.input label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .split-input div.input label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .split-input div.input label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .split-input div.input label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .split-input div.input label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .split-input div.input label {
     font-size: 0.75em;
     padding: 4px 6px 0;
     color: #555;
     display: block;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .split-input div.input input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .split-input div.input input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .split-input div.input input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .split-input div.input input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .split-input div.input input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .split-input div.input input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .split-input div.input input {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .split-input div.input input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .split-input div.input input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .split-input div.input input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .split-input div.input input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .split-input div.input input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .split-input div.input input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .split-input div.input input {
     width: 100%;
     box-sizing: border-box;
     border: 0;
@@ -339,222 +339,222 @@
     color: #555;
     background: 0 0;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .split-input div.input input::-webkit-input-placeholder,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .split-input div.input input::-webkit-input-placeholder,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .split-input div.input input::-webkit-input-placeholder,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .split-input div.input input::-webkit-input-placeholder,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .split-input div.input input::-webkit-input-placeholder,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .split-input div.input input::-webkit-input-placeholder,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .split-input div.input input::-webkit-input-placeholder {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .split-input div.input input::-webkit-input-placeholder,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .split-input div.input input::-webkit-input-placeholder,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .split-input div.input input::-webkit-input-placeholder,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .split-input div.input input::-webkit-input-placeholder,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .split-input div.input input::-webkit-input-placeholder,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .split-input div.input input::-webkit-input-placeholder,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .split-input div.input input::-webkit-input-placeholder {
     color: #ddd;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .split-input div.input:first-child,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .split-input div.input:first-child,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .split-input div.input:first-child,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .split-input div.input:first-child,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .split-input div.input:first-child,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .split-input div.input:first-child,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .split-input div.input:first-child {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .split-input div.input:first-child,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .split-input div.input:first-child,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .split-input div.input:first-child,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .split-input div.input:first-child,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .split-input div.input:first-child,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .split-input div.input:first-child,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .split-input div.input:first-child {
     border-bottom: 1px dashed #ddd;
     background: #fff;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .split-input div.input:first-child label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .split-input div.input:first-child label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .split-input div.input:first-child label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .split-input div.input:first-child label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .split-input div.input:first-child label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .split-input div.input:first-child label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .split-input div.input:first-child label {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .split-input div.input:first-child label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .split-input div.input:first-child label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .split-input div.input:first-child label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .split-input div.input:first-child label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .split-input div.input:first-child label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .split-input div.input:first-child label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .split-input div.input:first-child label {
     color: #ccc;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .split-input div.input:first-child input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .split-input div.input:first-child input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .split-input div.input:first-child input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .split-input div.input:first-child input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .split-input div.input:first-child input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .split-input div.input:first-child input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .split-input div.input:first-child input {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .split-input div.input:first-child input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .split-input div.input:first-child input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .split-input div.input:first-child input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .split-input div.input:first-child input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .split-input div.input:first-child input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .split-input div.input:first-child input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .split-input div.input:first-child input {
     color: #ccc;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .view,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .view,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .view,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .view,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .view,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .view,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .view {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .view,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .view,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .view,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .view,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .view,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .view,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .view {
     white-space: nowrap;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .edit,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .edit,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .edit,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .edit,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .edit,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .edit,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .edit {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .edit,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .edit,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .edit,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .edit,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .edit,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .edit,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .edit {
     text-align: left;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost del,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost small.times,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost del,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost small.times,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost del,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost small.times,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax del,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax small.times,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity del,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity small.times,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax del,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax small.times,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class del,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class small.times {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost del,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost small.times,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost del,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost small.times,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost del,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost small.times,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax del,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax small.times,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity del,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity small.times,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax del,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax small.times,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class del,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class small.times {
     font-size: 0.92em !important;
     color: #888;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .wc-order-item-taxes,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .wc-order-item-refund-fields,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .wc-order-item-taxes {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .wc-order-item-taxes,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .wc-order-item-refund-fields,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .wc-order-item-taxes {
     margin: 0;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .wc-order-item-refund-fields label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .wc-order-item-taxes label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .wc-order-item-refund-fields label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .wc-order-item-taxes label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .wc-order-item-refund-fields label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .wc-order-item-taxes label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .wc-order-item-refund-fields label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .wc-order-item-taxes label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .wc-order-item-refund-fields label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .wc-order-item-taxes label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .wc-order-item-refund-fields label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .wc-order-item-taxes label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .wc-order-item-refund-fields label,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .wc-order-item-taxes label {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .wc-order-item-refund-fields label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .wc-order-item-taxes label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .wc-order-item-refund-fields label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .wc-order-item-taxes label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .wc-order-item-refund-fields label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .wc-order-item-taxes label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .wc-order-item-refund-fields label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .wc-order-item-taxes label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .wc-order-item-refund-fields label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .wc-order-item-taxes label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .wc-order-item-refund-fields label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .wc-order-item-taxes label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .wc-order-item-refund-fields label,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .wc-order-item-taxes label {
     display: block;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax .wc-order-item-discount,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class .wc-order-item-discount {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax .wc-order-item-discount,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class .wc-order-item-discount {
     display: block;
     margin-top: 0.5em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .cost small.times,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .item_cost small.times,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_cost small.times,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .line_tax small.times,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity small.times,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax small.times,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .tax_class small.times {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .cost small.times,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .item_cost small.times,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_cost small.times,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .line_tax small.times,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity small.times,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax small.times,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .tax_class small.times {
     margin-right: 0.25em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity {
     text-align: center;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .quantity input {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity input {
     text-align: center;
     width: 50px;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items span.subtotal {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items span.subtotal {
     opacity: 0.5;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td.tax_class,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items th.tax_class {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.tax_class,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items th.tax_class {
     text-align: left;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .calculated {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .calculated {
     border-color: #ae8ca2;
     border-style: dotted;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.meta {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.meta {
     width: 100%;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.display_meta,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.meta {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.display_meta,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.meta {
     margin: 0.5em 0 0;
     font-size: 0.92em !important;
     color: #888;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.display_meta tr th,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.meta tr th {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.display_meta tr th,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.meta tr th {
     border: 0;
     padding: 0 4px 0.5em 0;
     line-height: 1.5em;
     width: 20%;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.display_meta tr td,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.meta tr td {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.display_meta tr td,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.meta tr td {
     padding: 0 4px 0.5em 0;
     border: 0;
     line-height: 1.5em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.display_meta tr td input,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.meta tr td input {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.display_meta tr td input,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.meta tr td input {
     width: 100%;
     margin: 0;
     position: relative;
     border-bottom: 0;
     box-shadow: none;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.display_meta tr td textarea,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.meta tr td textarea {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.display_meta tr td textarea,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.meta tr td textarea {
     width: 100%;
     height: 4em;
     margin: 0;
     box-shadow: none;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.display_meta tr td input:focus + textarea,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.meta tr td input:focus + textarea {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.display_meta tr td input:focus + textarea,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.meta tr td input:focus + textarea {
     border-top-color: #999;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.display_meta tr td p,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.meta tr td p {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.display_meta tr td p,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.meta tr td p {
     margin: 0 0 0.5em;
     line-height: 1.5em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.display_meta tr td p:last-child,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items table.meta tr td p:last-child {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.display_meta tr td p:last-child,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items table.meta tr td p:last-child {
     margin: 0;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items .refund_by {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .refund_by {
     border-bottom: 1px dotted #999;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tr.fee .thumb div {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tr.fee .thumb div {
     display: block;
     text-indent: -9999px;
     position: relative;
@@ -565,7 +565,7 @@
     vertical-align: middle;
     margin: 0 auto;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tr.fee .thumb div::before {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tr.fee .thumb div::before {
     font-family: WooCommerce;
     speak: never;
     font-weight: 400;
@@ -583,7 +583,7 @@
     content: "\e007";
     color: #ccc;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tr.refund .thumb div {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tr.refund .thumb div {
     display: block;
     text-indent: -9999px;
     position: relative;
@@ -594,7 +594,7 @@
     vertical-align: middle;
     margin: 0 auto;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tr.refund .thumb div::before {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tr.refund .thumb div::before {
     font-family: WooCommerce;
     speak: never;
     font-weight: 400;
@@ -612,7 +612,7 @@
     content: "\e014";
     color: #ccc;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tr.shipping .thumb div {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tr.shipping .thumb div {
     display: block;
     text-indent: -9999px;
     position: relative;
@@ -623,7 +623,7 @@
     vertical-align: middle;
     margin: 0 auto;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tr.shipping .thumb div::before {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tr.shipping .thumb div::before {
     font-family: WooCommerce;
     speak: never;
     font-weight: 400;
@@ -641,16 +641,16 @@
     content: "\e01a";
     color: #ccc;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tr.shipping .shipping_method,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items tr.shipping .shipping_method_name {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tr.shipping .shipping_method,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tr.shipping .shipping_method_name {
     width: 100%;
     margin: 0 0 0.5em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items th.line_tax {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items th.line_tax {
     white-space: nowrap;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td.line_tax .delete-order-tax,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items th.line_tax .delete-order-tax {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.line_tax .delete-order-tax,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items th.line_tax .delete-order-tax {
     display: block;
     text-indent: -9999px;
     position: relative;
@@ -661,8 +661,8 @@
     visibility: hidden;
     margin: 3px -18px 0 0;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td.line_tax .delete-order-tax::before,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items th.line_tax .delete-order-tax::before {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.line_tax .delete-order-tax::before,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items th.line_tax .delete-order-tax::before {
     font-family: Dashicons;
     speak: never;
     font-weight: 400;
@@ -681,21 +681,21 @@
     content: "\f153";
     color: #999;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td.line_tax .delete-order-tax:hover::before,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items th.line_tax .delete-order-tax:hover::before {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.line_tax .delete-order-tax:hover::before,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items th.line_tax .delete-order-tax:hover::before {
     color: #a00;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items td.line_tax:hover .delete-order-tax,
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items th.line_tax:hover .delete-order-tax {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.line_tax:hover .delete-order-tax,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items th.line_tax:hover .delete-order-tax {
     visibility: visible;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items small.refunded {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items small.refunded {
     display: block;
     color: #a00;
     white-space: nowrap;
     margin-top: 0.5em;
 }
-.dokan-order-metabox-items .woocommerce_order_items_wrapper table.woocommerce_order_items small.refunded::before {
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items small.refunded::before {
     font-family: Dashicons;
     speak: never;
     font-weight: 400;

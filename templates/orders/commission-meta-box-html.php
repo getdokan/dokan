@@ -60,8 +60,8 @@ foreach ( $order->get_refunds() as $refund ) {
         </div>
     </div>
     <div class="inside">
-        <div class="woocommerce_order_items_wrapper wc-order-items-editable">
-            <table cellpadding="0" cellspacing="0" class="woocommerce_order_items">
+        <div class="dokan_order_items_wrapper wc-order-items-editable">
+            <table cellpadding="0" cellspacing="0" class="dokan_order_items">
                 <thead>
                 <tr>
                     <th colspan="2">Item</th>
@@ -177,7 +177,7 @@ foreach ( $order->get_refunds() as $refund ) {
                                     echo wc_price(
                                         $original_commission, array(
 											'currency' => $order->get_currency(),
-											'decimals' => wc_get_price_decimals() + 2,
+											'decimals' => wc_get_price_decimals(),
                                         )
                                     );
 									?>
@@ -191,7 +191,7 @@ foreach ( $order->get_refunds() as $refund ) {
                                         echo wc_price(
                                             $commission_refunded, array(
 												'currency' => $order->get_currency(),
-												'decimals' => wc_get_price_decimals() + 2,
+												'decimals' => wc_get_price_decimals(),
                                             )
                                         );
 										?>
@@ -217,7 +217,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         echo wc_price(
                             $order_total, array(
 								'currency' => $order->get_currency(),
-								'decimals' => wc_get_price_decimals() + 2,
+								'decimals' => wc_get_price_decimals(),
                             )
                         );
 						?>
@@ -231,7 +231,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         echo wc_price(
                             $net_amount, array(
 								'currency' => $order->get_currency(),
-								'decimals' => wc_get_price_decimals() + 2,
+								'decimals' => wc_get_price_decimals(),
                             )
                         );
 						?>
@@ -260,7 +260,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         echo wc_price(
                             $shipping_fee, array(
 								'currency' => $order->get_currency(),
-								'decimals' => wc_get_price_decimals() + 2,
+								'decimals' => wc_get_price_decimals(),
                             )
                         );
 						?>
@@ -272,7 +272,7 @@ foreach ( $order->get_refunds() as $refund ) {
                             echo wc_price(
                                 $shipping_fee_refunded, array(
 									'currency' => $order->get_currency(),
-									'decimals' => wc_get_price_decimals() + 2,
+									'decimals' => wc_get_price_decimals(),
                                 )
                             );
 							?>
@@ -292,7 +292,7 @@ foreach ( $order->get_refunds() as $refund ) {
                             echo wc_price(
                                 $product_tax_fee, array(
 									'currency' => $order->get_currency(),
-									'decimals' => wc_get_price_decimals() + 2,
+									'decimals' => wc_get_price_decimals(),
                                 )
                             );
 							?>
@@ -304,7 +304,7 @@ foreach ( $order->get_refunds() as $refund ) {
                                 echo wc_price(
                                     $product_tax_fee_refunded, array(
 										'currency' => $order->get_currency(),
-										'decimals' => wc_get_price_decimals() + 2,
+										'decimals' => wc_get_price_decimals(),
                                     )
                                 );
 								?>
@@ -324,7 +324,7 @@ foreach ( $order->get_refunds() as $refund ) {
                             echo wc_price(
                                 $shipping_tax_fee, array(
 									'currency' => $order->get_currency(),
-									'decimals' => wc_get_price_decimals() + 2,
+									'decimals' => wc_get_price_decimals(),
                                 )
                             );
 							?>
@@ -336,7 +336,7 @@ foreach ( $order->get_refunds() as $refund ) {
                                 echo wc_price(
                                     $shipping_tax_fee_refunded, array(
 										'currency' => $order->get_currency(),
-										'decimals' => wc_get_price_decimals() + 2,
+										'decimals' => wc_get_price_decimals(),
                                     )
                                 );
 								?>
@@ -363,7 +363,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         echo wc_price(
                             $total_commission, array(
 								'currency' => $order->get_currency(),
-								'decimals' => wc_get_price_decimals() + 2,
+								'decimals' => wc_get_price_decimals(),
                             )
                         );
 						?>

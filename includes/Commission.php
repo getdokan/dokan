@@ -240,7 +240,7 @@ class Commission {
         $earning_or_commission = 'admin' === $context ? $order_commission->get_admin_total_earning() : $order_commission->get_vendor_total_earning();
 
         if ( $context === dokan()->fees->get_shipping_fee_recipient( $order ) ) {
-            $earning_or_commission += $order->get_shipping_total() - $order->get_total_shipping_refunded();
+            $earning_or_commission += floatval( $order->get_shipping_total() ) - $order->get_total_shipping_refunded();
         }
 
         if ( $context === dokan()->fees->get_tax_fee_recipient( $order->get_id() ) ) {

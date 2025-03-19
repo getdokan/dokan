@@ -8,7 +8,7 @@ use WeDevs\Dokan\REST\DokanBaseCustomerController;
  * Customer REST Controller for Dokan
  *
  * @since 3.14.4
- * @deprecated DOKAN_SINCE Use \WeDevs\Dokan\REST\DokanBaseCustomerController instead.
+ * @deprecated 3.14.11 Use \WeDevs\Dokan\REST\DokanBaseCustomerController instead.
  *
  * @package dokan
  */

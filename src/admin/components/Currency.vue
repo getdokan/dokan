@@ -8,7 +8,7 @@ export default {
 
     methods: {
         formattedPrice(value) {
-            return accounting.formatMoney( value, {...dokan.currency, precision:  dokan.currency.precision+ 2} );
+            return accounting.formatMoney( value, {...dokan.currency, precision:  dokan.currency.precision} );
         }
     }
 };
