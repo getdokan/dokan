@@ -1,3 +1,3 @@
 export * from './ChangeCase';
 export * from './Accounting';
-export * from './date';
+export * from '@woocommerce/date';
