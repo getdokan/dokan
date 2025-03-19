@@ -76,7 +76,6 @@ const wooRequestToExternal = ( request ) => {
             settings: [ 'wc', 'wcSettings' ],
         };
 
-
         if ( irregularExternalMap[ handle ] ) {
             return irregularExternalMap[ handle ];
         }
