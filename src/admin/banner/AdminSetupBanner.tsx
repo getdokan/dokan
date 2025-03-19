@@ -8,7 +8,6 @@ const AdminSetupBanner = () => {
 
     useEffect( () => {
         const allSteps: Step[] = getSettings( 'setup' ).steps;
-        console.log( 'allSteps', allSteps );
         setSteps( allSteps );
     }, [] );
 
@@ -18,7 +17,7 @@ const AdminSetupBanner = () => {
     const isNoStepsCompleted = completedSteps === 0;
     const setupGuideUrl = dokanSetupGuideBanner?.setup_guide_url;
     return (
-        <div className="bg-white rounded-lg shadow-md p-6 my-4 mb-6 mr-[20px]">
+        <div className="bg-white rounded-lg  p-5 my-4  mr-[20px]">
             <div className="flex items-center flex-wrap justify-between">
                 <div className="flex items-center flex-wrap gap-6">
                     <div className="bg-primary-600 w-18 h-18 rounded-full p-3">
