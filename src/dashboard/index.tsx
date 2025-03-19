@@ -38,12 +38,16 @@ const App = () => {
                 }
                 // @ts-ignore
                 for ( const node of mutation.addedNodes ) {
-                    if ( node.id !== 'headlessui-portal-root' ) {
-                        continue;
+                    if ( node.id === 'headlessui-portal-root' ) {
+                        node.classList.add( 'dokan-layout' );
+                        node.style.display = 'block';
                     }
 
-                    node.classList.add( 'dokan-layout' );
-                    node.style.display = 'block';
+                    if (
+                        node.hasAttribute( 'data-radix-popper-content-wrapper' )
+                    ) {
+                        node.classList.add( 'dokan-layout' );
+                    }
                 }
             }
         },
