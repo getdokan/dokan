@@ -14,7 +14,7 @@ function WithdrawRequests() {
     const useWithdrawRequestHook = useWithdrawRequests( true );
     const withdrawSettings = useWithdrawSettings();
     const balance = useBalance();
-    const currentUser = useCurrentUser();
+    const { currentUser } = useCurrentUser();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -23,7 +23,7 @@ function WithdrawRequests() {
     const validStatuses = [ 'pending', 'approved', 'cancelled' ];
 
     useEffect( () => {
-        if ( ! currentUser?.data || ! currentUser?.data?.id ) {
+        if ( ! currentUser?.id ) {
             return;
         }
         const queryParams = new URLSearchParams( location.search );
@@ -50,7 +50,7 @@ function WithdrawRequests() {
             status,
             user_id: 1,
         } );
-    }, [ location.search, currentUser?.data ] );
+    }, [ location.search, currentUser ] );
 
     const Content = () => {
         return (
@@ -116,7 +116,6 @@ function WithdrawRequests() {
                     status={ statusParam }
                     loading={
                         useWithdrawRequestHook.isLoading ||
-                        currentUser.isLoading ||
                         withdrawSettings.isLoading
                     }
                 />
