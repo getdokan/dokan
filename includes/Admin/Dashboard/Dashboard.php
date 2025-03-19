@@ -305,6 +305,14 @@ class Dashboard implements Hookable {
         if ( $screen->id === 'toplevel_page_dokan' ) {
             wp_enqueue_style( 'dokan-setup-guide-banner' );
             wp_enqueue_script( 'dokan-setup-guide-banner' );
+
+            wp_localize_script(
+                'dokan-setup-guide-banner',
+                'dokanSetupGuideBanner',
+                [
+                    'setup_guide_url' => admin_url( 'admin.php?page=dokan-dashboard#/setup' ),
+                ]
+            );
         }
 
         if ( $screen->id !== 'toplevel_page_dokan' && $screen->id !== 'dokan_page_dokan-dashboard' ) {

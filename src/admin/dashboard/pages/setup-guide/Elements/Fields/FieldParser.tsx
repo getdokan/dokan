@@ -5,7 +5,7 @@ import { SettingsProps } from '../../StepSettings';
 import RadioBox from './RadioBox';
 import Radio from './Radio';
 import Switcher from './Switcher';
-import Number from './Number';
+import Currency from './Currency';
 import Select from './Select';
 import MultiCheck from './MultiCheck';
 
@@ -63,7 +63,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
             );
         case 'number':
             return (
-                <Number
+                <Currency
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
