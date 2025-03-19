@@ -275,6 +275,16 @@ class Dashboard implements Hookable {
         wp_register_script( 'dokan-setup-guide-banner', DOKAN_PLUGIN_ASSEST . '/js/setup-guide-banner.js', $setup_guide_script['dependencies'], $setup_guide_script['version'], true );
         wp_register_style( 'dokan-setup-guide-banner', DOKAN_PLUGIN_ASSEST . '/css/setup-guide-banner.css', [], $setup_guide_script['version'] );
 
+        $data = [
+            'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+        ];
+
+        wp_localize_script(
+            $this->script_key,
+            'dokanAdminDashboard',
+            $data,
+        );
+
         // Register all other scripts.
         foreach ( $this->get_pages() as $page ) {
             $page->register();
@@ -291,15 +301,13 @@ class Dashboard implements Hookable {
     public function enqueue_scripts() {
         $screen = get_current_screen();
 
-        if ( $screen->id !== 'toplevel_page_dokan' ) {
-            return;
+        // Enqueue the setup guide banner script.
+        if ( $screen->id === 'toplevel_page_dokan' ) {
+            wp_enqueue_style( 'dokan-setup-guide-banner' );
+            wp_enqueue_script( 'dokan-setup-guide-banner' );
         }
 
-        // Enqueue the setup guide banner script.
-        wp_enqueue_style( 'dokan-setup-guide-banner' );
-        wp_enqueue_script( 'dokan-setup-guide-banner' );
-
-        if ( $screen->id !== 'dokan_page_dokan-dashboard' ) {
+        if ( $screen->id !== 'toplevel_page_dokan' && $screen->id !== 'dokan_page_dokan-dashboard' ) {
             return;
         }
 

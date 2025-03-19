@@ -1,11 +1,10 @@
 import { useState } from '@wordpress/element';
 import { ToggleSwitch } from '@getdokan/dokan-ui';
-import { __ } from '@wordpress/i18n';
 import { SettingsProps } from '../../StepSettings';
 
 const Switcher = ( { element, onValueChange }: SettingsProps ) => {
-    const enableState = element?.enable_state
-    const disableState = element?.disable_state
+    const enableState = element?.enable_state;
+    const disableState = element?.disable_state;
 
     const handleChange = ( checked ) => {
         setIsEnabled( checked );
@@ -16,10 +15,12 @@ const Switcher = ( { element, onValueChange }: SettingsProps ) => {
         } );
     };
 
-    const initialEnabled = element?.value ? element?.value=== enableState?.value : element?.default === enableState?.value;
+    const initialEnabled = element?.value
+        ? element?.value === enableState?.value
+        : element?.default === enableState?.value;
 
     // Initialize state with enabled prop or defaultValue
-    const [ isEnabled, setIsEnabled ] = useState( initialEnabled )
+    const [ isEnabled, setIsEnabled ] = useState( initialEnabled );
 
     if ( ! element.display ) {
         return <></>;

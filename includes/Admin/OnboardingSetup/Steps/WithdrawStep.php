@@ -32,7 +32,18 @@ class WithdrawStep extends AbstractStep {
     /**
      * @inheritDoc
      */
-	public function register(): void {}
+    public function register(): void {
+
+        $data = [
+            'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+        ];
+
+        wp_localize_script(
+            'dokan-admin-dashboard',
+            'dokanWithdrawDashboard',
+            $data,
+        );
+    }
 
     /**
      * @inheritDoc

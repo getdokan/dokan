@@ -49,10 +49,10 @@ const RadioBox = ( { element, onValueChange }: SettingsProps ) => {
             <div className="flex flex-wrap gap-4">
                 { element?.options?.map( ( option ) => (
                     <SelectorCard
-                        key={ option.value }
-                        value={ option.value }
-                        title={ option.title }
-                        selected={ selected === option.value }
+                        key={ option?.value }
+                        value={ option?.value }
+                        title={ option?.title }
+                        selected={ selected === option?.value }
                         onChange={ handleChange }
                         icon={ renderIcon( option?.value ) }
                     />
