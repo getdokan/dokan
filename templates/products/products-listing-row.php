@@ -230,6 +230,15 @@ $price_kses = apply_filters(
         } else {
             echo '<span class="na">&ndash;</span>';
         }
+        /**
+         * Fire an action to add extra content after earning column in product listing table
+         *
+         * @since 3.14.11
+         *
+         * @param \WC_Product $product Current product.
+         * @param float $earning Current product's earning.
+         */
+        do_action( 'dokan_product_list_table_after_column_content_earning', $product, $earning );
         ?>
     </td>
     <td data-title="<?php esc_attr_e( 'Type', 'dokan-lite' ); ?>">
