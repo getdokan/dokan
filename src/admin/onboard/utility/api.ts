@@ -2,6 +2,7 @@
 import apiFetch from '@wordpress/api-fetch';
 import { FormData, OnboardingData } from '../types';
 
+const apiPath = '/dokan/v1/admin/onboarding';
 /**
  * Format plugins from API response format to form data format
  * @param plugins
@@ -25,7 +26,7 @@ export const formatPlugins = ( plugins: any[] ) => {
  */
 export const fetchOnboardingData = async (): Promise< OnboardingData > => {
     return await apiFetch( {
-        path: '/dokan/v1/admin-onboarding',
+        path: apiPath,
         method: 'GET',
     } );
 };
@@ -46,7 +47,7 @@ export const submitOnboardingData = async (
     };
 
     return await apiFetch( {
-        path: '/dokan/v1/admin-onboarding',
+        path: apiPath,
         method: 'POST',
         data: submitData,
     } );
