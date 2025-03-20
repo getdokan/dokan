@@ -1,4 +1,4 @@
-import { useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import { Modal, SimpleInput, TextArea, Button } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
@@ -16,6 +16,7 @@ const DokanAI = () => {
         post_excerpt: [],
         post_content: [],
     } );
+    const [ isEditMode, setIsEditMode ] = useState( false );
 
     const [ historyIndex, setHistoryIndex ] = useState( {
         post_title: 0,
@@ -68,8 +69,7 @@ const DokanAI = () => {
         resetIndex();
     };
 
-    const onClose = () => {
-        setIsOpen( false );
+    const startOver = () => {
         setPrompt( '' );
         setError( '' );
         setRegenerateModal( false );
@@ -79,6 +79,11 @@ const DokanAI = () => {
             post_content: [],
         } );
         resetIndex();
+    };
+
+    const onClose = () => {
+        setIsOpen( false );
+        startOver();
     };
 
     const generateContent = async () => {
@@ -207,7 +212,7 @@ const DokanAI = () => {
             return;
         }
 
-        if ( ! responseHistory.post_title.length ) {
+        if ( ! isEditMode ) {
             setError( __( 'Invalid input data', 'dokan' ) );
             return;
         }
@@ -248,9 +253,17 @@ const DokanAI = () => {
         { childList: true }
     );
 
+    useEffect( () => {
+        if ( responseHistory.post_title.length ) {
+            setIsEditMode( true );
+        } else {
+            setIsEditMode( false );
+        }
+    }, [ responseHistory.post_title ] );
+
     return (
         <>
-            <div className="text-dokan-primary cursor-pointer text-primary-500">
+            <div className="text-dokan-primary cursor-pointer">
                 <svg
                     role={ 'button' }
                     onClick={ handleLabelClick }
@@ -273,13 +286,39 @@ const DokanAI = () => {
             </div>
 
             <Modal
-                className="max-w-2xl dokan-ai-modal dokan-layout rounded-lg"
+                className="max-w-2xl"
                 isOpen={ isOpen }
                 onClose={ onClose }
                 showXButton={ false }
             >
-                <Modal.Title className="border-b">
-                    { __( 'Craft your product information', 'dokan-lite' ) }
+                <Modal.Title className="border-b flex justify-between items-center">
+                    <p>
+                        { __( 'Craft your product information', 'dokan-lite' ) }
+                    </p>
+                    { isEditMode && (
+                        <Button
+                            color="primary"
+                            onClick={ startOver }
+                            className="flex gap-2 items-center"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={ 1.5 }
+                                stroke="currentColor"
+                                className="h-4 w-4"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                                />
+                            </svg>
+
+                            { __( 'Start Over', 'dokan-lite' ) }
+                        </Button>
+                    ) }
                 </Modal.Title>
 
                 <Modal.Content>
@@ -292,7 +331,7 @@ const DokanAI = () => {
                             { error }
                         </div>
                     ) }
-                    { responseHistory.post_title.length ? (
+                    { isEditMode ? (
                         <div>
                             <div className="mb-2 flex items-center justify-between">
                                 <div className="font-semibold text-gray-800">
@@ -417,19 +456,23 @@ const DokanAI = () => {
 
                             <p className="text-sm mt-4 mb-3">
                                 { __(
-                                    '** If you think the outcome doesn’t match your choice then you can regenerate all again',
+                                    '** If you think the outcome doesn’t match your choice then you can',
                                     'dokan-lite'
                                 ) }
-                            </p>
 
-                            <Button
-                                color="secondary"
-                                className="!bg-gray-200"
-                                disabled={ isLoading }
-                                onClick={ generateContent }
-                            >
-                                { __( 'Refine All', 'dokan-lite' ) }
-                            </Button>
+                                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events */ }
+                                <span
+                                    tabIndex={ 0 }
+                                    role="button"
+                                    onClick={ generateContent }
+                                    className="text-dokan-primary mx-1 underline"
+                                >
+                                    { __(
+                                        'regenerate all again',
+                                        'dokan-lite'
+                                    ) }
+                                </span>
+                            </p>
                         </div>
                     ) : (
                         <div>
@@ -472,7 +515,7 @@ const DokanAI = () => {
                         >
                             { __( 'Cancel', 'dokan-lite' ) }
                         </Button>
-                        { responseHistory.post_title.length ? (
+                        { isEditMode ? (
                             <Button
                                 color="primary"
                                 disabled={ isLoading }
@@ -495,7 +538,7 @@ const DokanAI = () => {
                 </Modal.Footer>
             </Modal>
             <Modal
-                className="max-w-md dokan-ai-modal dokan-layout"
+                className="max-w-md"
                 isOpen={ regenerateModal }
                 showXButton={ false }
                 onClose={ () => setRegenerateModal( false ) }
@@ -517,7 +560,7 @@ const DokanAI = () => {
                         <div className="mt-4 flex gap-4 justify-center">
                             <Button
                                 color="secondary"
-                                className="bg-gray-50 hover:bg-gray-100"
+                                className="!bg-gray-200"
                                 onClick={ () => setRegenerateModal( false ) }
                             >
                                 { __( 'Cancel', 'dokan-lite' ) }
