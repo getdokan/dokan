@@ -55,7 +55,7 @@ const AdminSetupBanner = () => {
                         }
                     } }
                     color="primary"
-                    className="text-white bg-[#6F4CEB] text-base font-medium h-[48px] w-[169px] py-2 px-[25px] rounded-[4px] flex items-center"
+                    className="text-white bg-[#6F4CEB] text-base font-medium h-[48px] w-[169px] py-2 px-[25px] rounded-md flex items-center"
                 >
                     { isNoStepsCompleted
                         ? __( 'Start Setup', 'dokan-lite' )

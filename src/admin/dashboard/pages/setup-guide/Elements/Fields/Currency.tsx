@@ -6,11 +6,12 @@ import { useDebounceCallback } from 'usehooks-ts';
 const Currency = ( { element, onValueChange }: SettingsProps ) => {
     const [ localValue, setLocalValue ] = useState( element.value );
 
-    const handleValueChange = ( event ) => {
-        setLocalValue( event.target.value );
+    const handleValueChange = ( newValue ) => {
+        setLocalValue( newValue );
+        console.log( 'event', newValue );
         onValueChange( {
             ...element,
-            value: event.target.value,
+            value: newValue,
         } );
     };
 
@@ -29,7 +30,7 @@ const Currency = ( { element, onValueChange }: SettingsProps ) => {
     return (
         <div
             id={ element.hook_key + '_div' }
-            className=" @container/currency grid grid-cols-12 p-4 gap-1"
+            className=" @container/currency grid grid-cols-12 p-4 gap-2"
         >
             <div className="flex flex-col @sm/currency:col-span-8 col-span-12 gap-1">
                 <h2 className="text-sm @sm/currency:text-base leading-6 font-semibold text-gray-900">
