@@ -47,15 +47,15 @@ class Settings implements Hookable {
                 'label'   => __( 'Engine', 'dokan-lite' ),
                 'type'    => 'select',
                 'options' => dokan()->get_container()->get( Manager::class )->get_engines(),
-                'desc'    => __( 'Select AI engine', 'dokan-lite' ),
+                'desc'    => __( 'Select which AI provider to use for generating content.', 'dokan-lite' ),
                 'default' => 'chatgpt',
             ],
             'dokan_ai_chatgpt_model' => [
                 'name'    => 'dokan_ai_chatgpt_model',
-                'label'   => __( 'ChatGPT Model', 'dokan-lite' ),
+                'label'   => __( 'Model', 'dokan-lite' ),
                 'type'    => 'select',
                 'options' => ChatgptResponseService::get_models(),
-                'desc'    => __( 'Select your model', 'dokan-lite' ),
+                'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
                 'default' => 'gpt-3.5-turbo',
                 'show_if' => [
                     'dokan_ai_engine' => [
@@ -65,10 +65,10 @@ class Settings implements Hookable {
             ],
             'dokan_ai_gemini_model' => [
                 'name'    => 'dokan_ai_gemini_model',
-                'label'   => __( 'Gemini Model', 'dokan-lite' ),
+                'label'   => __( 'Model', 'dokan-lite' ),
                 'type'    => 'select',
                 'options' => GeminiResponseService::get_models(),
-                'desc'    => __( 'Select your model', 'dokan-lite' ),
+                'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
                 'default' => 'gemini-1.5-flash',
                 'show_if' => [
                     'dokan_ai_engine' => [
@@ -80,7 +80,8 @@ class Settings implements Hookable {
                 'name'    => 'dokan_ai_gemini_api_key',
                 'label'   => __( 'Gemini API Key', 'dokan-lite' ),
                 'type'    => 'text',
-                'desc'    => __( 'Enter your API key', 'dokan-lite' ),
+                /* translators: 1: OpenAi Link */
+                'desc'    => sprintf( __( 'You can get your API Keys in your <a href="%s" target="_blank"> AI Studio Account.</a>', 'dokan-lite' ), 'https://aistudio.google.com/app/apikey' ),
                 'default' => '',
                 'secret_text' => true,
                 'show_if' => [
@@ -88,12 +89,14 @@ class Settings implements Hookable {
                         'equal' => 'gemini',
                     ],
                 ],
+                'tooltip' => __( 'Your API key provides secure access to the AI service. Usage costs will be charged to the connected account.', 'dokan-lite' ),
             ],
             'dokan_ai_chatgpt_api_key' => [
                 'name'    => 'dokan_ai_chatgpt_api_key',
-                'label'   => __( 'ChatGPT API Key', 'dokan-lite' ),
+                'label'   => __( 'OpenAI API Key', 'dokan-lite' ),
                 'type'    => 'text',
-                'desc'    => __( 'Enter your API key', 'dokan-lite' ),
+                /* translators: 1: OpenAi Link */
+                'desc'    => sprintf( __( 'You can get your API Keys in your <a href="%s" target="_blank">OpenAI Account.</a>', 'dokan-lite' ), 'https://platform.openai.com/api-keys' ),
                 'default' => '',
                 'secret_text' => true,
                 'show_if' => [
@@ -101,13 +104,7 @@ class Settings implements Hookable {
                         'equal' => 'chatgpt',
                     ],
                 ],
-            ],
-            'dokan_ai_max_tokens_for_marketplace' => [
-                'name'    => 'dokan_ai_max_tokens_for_marketplace',
-                'label'   => __( 'Max Output Tokens for Marketplace', 'dokan-lite' ),
-                'type'    => 'number',
-                'desc'    => __( 'Set the maximum number of tokens for marketplace.', 'dokan-lite' ),
-                'default' => '250',
+                'tooltip' => __( 'Your API key provides secure access to the AI service. Usage costs will be charged to the connected account.', 'dokan-lite' ),
             ],
         ];
 
