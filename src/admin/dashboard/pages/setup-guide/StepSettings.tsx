@@ -299,7 +299,7 @@ const StepSettings = ( {
     };
     return (
         <>
-            <div className="h-full @sm/main:px-28 @sm/main:py-16 p-4">
+            <div className="h-full @4xl/main:px-28 @4xl/main:py-16 p-4">
                 <main className="max-w-7xl mx-auto h-full">
                     <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
                         { pages && '' !== selectedPage && pages.length > 0 && (

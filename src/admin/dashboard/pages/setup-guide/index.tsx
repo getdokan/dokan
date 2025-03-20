@@ -27,7 +27,7 @@ const SetupGuide = ( props ) => {
 
     return (
         <div className="grid grid-cols-12 gap-6 @container/main">
-            <div className="@sm/main:col-span-3 col-span-12 flex flex-col  space-y-4 rounded-lg pl-12 py-10 bg-white shadow">
+            <div className="@3xl/main:col-span-3 @xl/main:col-span-4 col-span-12 flex flex-col  space-y-4 rounded-lg @5xl/main:pl-12 @5xl/main:py-10 p-4 bg-white shadow">
                 <h3 className="text-2xl font-bold leading-6 pb-10">
                     { __( 'Setup Guide', 'dokan-lite' ) }
                 </h3>
@@ -77,7 +77,7 @@ const SetupGuide = ( props ) => {
                     } ) }
                 </ol>
             </div>
-            <div className="@sm/main:col-span-9  col-span-12 bg-white shadow rounded-lg">
+            <div className="@3xl/main:col-span-9 @xl/main:col-span-8 col-span-12 bg-white shadow rounded-lg">
                 { isAllStepsCompleted ? (
                     <div className="min-h-screen flex flex-col items-center justify-center h-full">
                         <div className={ `complete-icon mb-8` }>
