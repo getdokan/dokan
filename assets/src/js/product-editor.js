@@ -209,6 +209,90 @@
         },
 
         bindProductTagDropdown: function () {
+            $(".product_brand_search").select2({
+                allowClear: false,
+                minimumInputLength: 0,
+                maximumSelectionLength: -1,
+                ajax: {
+                    url: dokan.ajaxurl,
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term,
+                            action: 'dokan_json_search_products_brands',
+                            security: dokan.search_products_brands_nonce,
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function ( data ) {
+                        const options = [];
+                        if ( data ) {
+                            $.each( data, function ( index, text ) {
+                                options.push( {
+                                    id: text[ 0 ],
+                                    text: text[ 1 ],
+                                } );
+                            } );
+                        }
+                        return {
+                            results: options,
+                            pagination: {
+                                more: options.length == 0 ? false : true
+                            },
+                        };
+                    },
+                    cache: true,
+                },
+                language: {
+                    errorLoading: function() {
+                        return dokan.i18n_searching;
+                    },
+                    inputTooLong: function( args ) {
+                        var overChars = args.input.length - args.maximum;
+
+                        if ( 1 === overChars ) {
+                            return dokan.i18n_input_too_long_1;
+                        }
+
+                        return dokan.i18n_input_too_long_n.replace( '%qty%', overChars );
+                    },
+                    inputTooShort: function( args ) {
+                        var remainingChars = args.minimum - args.input.length;
+
+                        if ( 1 === remainingChars ) {
+                            return dokan.i18n_input_too_short_1;
+                        }
+
+                        return dokan.i18n_input_too_short_n.replace( '%qty%', remainingChars );
+                    },
+                    loadingMore: function() {
+                        return dokan.i18n_load_more;
+                    },
+                    maximumSelected: function( args ) {
+                        if ( args.maximum === 1 ) {
+                            return dokan.i18n_selection_too_long_1;
+                        }
+
+                        return dokan.i18n_selection_too_long_n.replace( '%qty%', args.maximum );
+                    },
+                    noResults: function() {
+                        return dokan.i18n_no_matches;
+                    },
+                    searching: function() {
+                        return dokan.i18n_searching;
+                    }
+                },
+                escapeMarkup: function ( markup ) {
+                    return markup;
+                },
+                templateResult: function ( item ) {
+                    return `<span>${ item.text }</span>`;
+                },
+                templateSelection: function ( item ) {
+                    return item.text.replaceAll( '—', '' );
+                },
+            });
             $(".product_tag_search").select2({
                 allowClear: false,
                 tags: ( dokan.product_vendors_can_create_tags && 'on' === dokan.product_vendors_can_create_tags ),

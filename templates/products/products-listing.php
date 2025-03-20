@@ -174,6 +174,14 @@
                                                     'include_children' => false,
                                                 );
                                             }
+                                            if ( isset( $_GET['product_brand'] ) && intval( $_GET['product_brand'] ) !== -1 ) {
+                                                $args['tax_query'][] = array(
+                                                    'taxonomy' => 'product_brand',
+                                                    'field' => 'id',
+                                                    'terms' => intval( $_GET['product_brand'] ),
+                                                    'include_children' => false,
+                                                );
+                                            }
 
                                             if ( ! empty( $_GET['product_type'] ) ) {
                                                 $product_type = sanitize_text_field( wp_unslash( $_GET['product_type'] ) );

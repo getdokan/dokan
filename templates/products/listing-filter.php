@@ -4,6 +4,7 @@
  * filter template
  *
  * @var int|string           $product_cat
+ * @var int|string           $product_brand
  * @var array<string,string> $product_types
  * @var string               $product_search_name
  * @var string|int           $date
@@ -59,6 +60,30 @@ do_action( 'dokan_product_listing_filter_before_form' );
                 </select>
             </div>
         <?php endif; ?>
+
+        <div class="dokan-form-group">
+            <?php
+            wp_dropdown_categories(
+                apply_filters(
+                    'dokan_product_brand_dropdown_args',
+                    [
+                        'show_option_none' => __( '- Select a brand -', 'dokan-lite' ),
+                        'hierarchical'     => 1,
+                        'hide_empty'       => 0,
+                        'name'             => 'product_brand',
+                        'id'               => 'product_brand',
+                        'taxonomy'         => 'product_brand',
+                        'orderby'          => 'name',
+                        'order'            => 'ASC',
+                        'title_li'         => '',
+                        'class'            => 'product_brand dokan-form-control chosen',
+                        'exclude'          => '',
+                        'selected'         => $product_brand,
+                    ]
+                )
+            );
+            ?>
+        </div>
 
         <?php do_action( 'dokan_product_listing_filter_from_end', [] ); ?>
 
