@@ -12,19 +12,13 @@ use WP_Error;
  * @since DOKAN_SINCE
  */
 class AdminOnboardingController extends DokanBaseAdminController {
-    /**
-     * API namespace
-     *
-     * @var string
-     */
-    protected $namespace = 'dokan/v1';
 
     /**
      * API base
      *
      * @var string
      */
-    protected $rest_base = 'admin-onboarding';
+    protected $rest_base = 'onboarding';
 
     /**
      * Register routes

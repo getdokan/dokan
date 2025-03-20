@@ -17,12 +17,12 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 	/**
 	 * @var string
 	 */
-	protected $namespace = 'dokan/v1';
+    protected $namespace = 'dokan/v1/admin';
 
 	/**
 	 * @var string
 	 */
-	protected $rest_base = 'admin-onboarding';
+    protected $rest_base = 'onboarding';
 
 	/**
 	 * @var int
@@ -31,8 +31,8 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 
 	/**
 	 * Setup test environment
-	 *
-	 * @return void
+     * @test
+     * @return void
 	 */
 	public function setUp(): void {
 		parent::setUp();
@@ -56,7 +56,7 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 
 	/**
 	 * Test if the endpoint exists
-	 *
+     * @test
 	 * @return void
 	 */
 	public function test_if_endpoint_exists() {
@@ -68,7 +68,7 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 
 	/**
 	 * Test register routes
-	 *
+     * @test
 	 * @return void
 	 */
 	public function test_register_routes() {
@@ -83,7 +83,7 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 
 	/**
 	 * Test Permission Callback
-	 *
+     * @test
 	 * @return void
 	 */
 	public function test_permission_callback() {
@@ -105,7 +105,8 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 
 	/**
 	 * Test create_onboarding method with valid data.
-	 */
+     * @test
+     */
 	public function test_create_onboarding_valid_data() {
 		wp_set_current_user( $this->admin_id );
 
@@ -155,7 +156,7 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 
 	/**
 	 * Test get onboarding endpoint
-	 *
+	 * @test
 	 * @return void
 	 */
 	public function test_get_onboarding() {
