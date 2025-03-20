@@ -11,6 +11,7 @@
 3. **Filter** - Standardized filtering interface
 4. **SortableList** - Drag-and-drop interface for managing sortable items
 5. **Label Components** - Status label badges in different styles (Warning, Info, Success, Danger)
+6. **Alert Components** - Contextual alert notifications with different severity levels
 
 ## Important Dependencies
 
@@ -80,6 +81,7 @@ externals: {
 |        |      |___ filter/           # Filter component 
 |        |      |___ sortable-list/    # Sortable list component
 |        |      |___ label/            # Label components
+|        |      |___ alert/            # Alert components
 |        |      |___ your-component/   # Your new component directory
 |        |      |     |___ index.tsx
 |        |      |     |___ style.scss
@@ -104,6 +106,12 @@ export {
     SuccessLabel, 
     DangerLabel 
 } from './label/Label';
+export {
+    InfoAlert,
+    WarningAlert,
+    SuccessAlert,
+    DangerAlert
+} from './alert/Alert';
 export { default as ComponentName } from './YourComponent';
 ```
 
@@ -152,3 +160,74 @@ Each label type applies specific styling appropriate for its semantic meaning:
 - **DangerLabel** - Red background with matching text and ring
 
 The labels use Tailwind CSS for styling and maintain a consistent design language throughout the Dokan interface.
+
+## Alert Components
+
+`Dokan` provides semantic alert components for displaying notifications, warnings, or informational messages to users. These components are built on top of the `SimpleAlert` component from `@getdokan/dokan-ui`.
+
+### Available Alert Components
+
+- **InfoAlert** - Blue styled alert for informational messages
+- **WarningAlert** - Yellow styled alert for warning messages
+- **SuccessAlert** - Green styled alert for success messages
+- **DangerAlert** - Red styled alert for error or critical messages
+
+### Usage Example
+
+```jsx
+import { 
+  InfoAlert, 
+  WarningAlert, 
+  SuccessAlert, 
+  DangerAlert 
+} from '@dokan/components';
+
+const AlertExample = () => {
+  return (
+    <div className="space-y-4">
+      <InfoAlert label="Information Message">
+        <div className="text-sm mt-1">
+          Additional information about this message.
+        </div>
+      </InfoAlert>
+      
+      <WarningAlert label="Warning Message">
+        <div className="text-sm mt-1">
+          Please pay attention to this warning.
+        </div>
+      </WarningAlert>
+      
+      <SuccessAlert label="Success Message">
+        <div className="text-sm mt-1">
+          The operation completed successfully.
+        </div>
+      </SuccessAlert>
+      
+      <DangerAlert label="Error Message">
+        <div className="text-sm mt-1">
+          There was a problem with your request.
+        </div>
+      </DangerAlert>
+    </div>
+  );
+};
+```
+
+### Alert Component Properties
+
+All Alert components accept the following props:
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `label` | `string` | Yes | The main heading text of the alert |
+| `children` | `ReactNode` | No | Optional content to be displayed below the heading |
+| `className` | `string` | No | Additional CSS classes for custom styling |
+
+Each alert type applies semantic styling appropriate for its meaning:
+
+- **InfoAlert** - Blue styling for informational content
+- **WarningAlert** - Yellow styling for warnings that require attention
+- **SuccessAlert** - Green styling for success messages
+- **DangerAlert** - Red styling for errors or critical issues
+
+The alerts use predefined CSS classes (`dokan-alert-info`, `dokan-alert-warning`, etc.) which should be defined in your theme's stylesheets to maintain consistent appearance.

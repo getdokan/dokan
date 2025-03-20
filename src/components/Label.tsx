@@ -6,7 +6,7 @@ import type { BadgeProps } from '@getdokan/dokan-ui/dist/components/Badge';
 
 export const WarningLabel = ( { label, ...props }: Partial< BadgeProps > ) => (
     <Badge
-        className="ring-1 ring-inset bg-dokan-warning text-dokan-warning ring-dokan-warning"
+        className="dokan-warning"
         color="yellow"
         label={ label }
         { ...props }
@@ -14,17 +14,12 @@ export const WarningLabel = ( { label, ...props }: Partial< BadgeProps > ) => (
 );
 
 export const InfoLabel = ( { label, ...props }: Partial< BadgeProps > ) => (
-    <Badge
-        className="ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info"
-        color="blue"
-        label={ label }
-        { ...props }
-    />
+    <Badge className="dokan-info" color="blue" label={ label } { ...props } />
 );
 
 export const SuccessLabel = ( { label, ...props }: Partial< BadgeProps > ) => (
     <Badge
-        className="ring-1 ring-inset bg-dokan-success text-dokan-success ring-dokan-success"
+        className="dokan-success"
         color="green"
         label={ label }
         { ...props }
@@ -32,12 +27,7 @@ export const SuccessLabel = ( { label, ...props }: Partial< BadgeProps > ) => (
 );
 
 export const DangerLabel = ( { label, ...props }: Partial< BadgeProps > ) => (
-    <Badge
-        className="ring-1 ring-inset bg-dokan-danger text-dokan-danger ring-dokan-danger"
-        color="red"
-        label={ label }
-        { ...props }
-    />
+    <Badge className="dokan-danger" color="red" label={ label } { ...props } />
 );
 
 export default {

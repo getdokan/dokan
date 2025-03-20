@@ -39,6 +39,39 @@
         input[type=checkbox] {
             @apply before:!content-[''] mt-1;
         }
+
+        .dokan-info {
+            @apply ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info;
+        }
+
+        .dokan-success {
+            @apply ring-1 ring-inset bg-dokan-success text-dokan-success ring-dokan-success;
+        }
+
+        .dokan-warning {
+            @apply ring-1 ring-inset bg-dokan-warning text-dokan-warning ring-dokan-warning;
+        }
+
+        .dokan-danger {
+            @apply ring-1 ring-inset bg-dokan-danger text-dokan-danger ring-dokan-danger;
+        }
+
+        .dokan-alert-info {
+            @apply ring-1 ring-inset bg-dokan-info text-dokan-info-light ring-dokan-info;
+        }
+
+        .dokan-alert-success {
+            @apply ring-1 ring-inset bg-dokan-success text-dokan-success-light ring-dokan-success;
+        }
+
+        .dokan-alert-warning {
+            @apply ring-1 ring-inset bg-dokan-warning text-dokan-warning-light ring-dokan-warning;
+        }
+
+        .dokan-alert-danger {
+            @apply ring-1 ring-inset bg-dokan-danger text-dokan-danger-light ring-dokan-danger;
+        }
+
     }
 
     button[data-headlessui-state="checked"] {
