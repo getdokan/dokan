@@ -33,6 +33,21 @@ const baseConfig = {
                             hover: 'var(--dokan-button-tertiary-hover-background-color, var(--dokan-button-text-color, #ffffff))',
                         },
                     },
+                    info: {
+                        DEFAULT: 'var(--dokan-info-background-color, #E9F9FF)',
+                    },
+                    success: {
+                        DEFAULT:
+                            'var(--dokan-success-background-color, #DAF8E6)',
+                    },
+                    warning: {
+                        DEFAULT:
+                            'var(--dokan-warning-background-color, #FFFBEB)',
+                    },
+                    danger: {
+                        DEFAULT:
+                            'var(--dokan-danger-background-color, #FEF3F3)',
+                    },
                 },
             },
             textColor: {
@@ -55,6 +70,18 @@ const baseConfig = {
                             hover: 'var(--dokan-button-tertiary-hover-text-color, var(--dokan-button-background-color, #7047EB))',
                         },
                     },
+                    info: {
+                        DEFAULT: 'var(--dokan-info-text-color, #0B76B7)',
+                    },
+                    success: {
+                        DEFAULT: 'var(--dokan-success-text-color, #004434)',
+                    },
+                    warning: {
+                        DEFAULT: 'var(--dokan-warning-text-color, #9D5425)',
+                    },
+                    danger: {
+                        DEFAULT: 'var(--dokan-danger-text-color, #BC1C21)',
+                    },
                 },
             },
             borderColor: {
@@ -73,6 +100,18 @@ const baseConfig = {
                             hover: 'var(--dokan-button-tertiary-hover-border-color, var(--dokan-button-border-color, #7047EB))',
                         },
                     },
+                    info: {
+                        DEFAULT: 'var(--dokan-info-border-color, #E9F9FFFF)',
+                    },
+                    success: {
+                        DEFAULT: 'var(--dokan-success-border-color, #DAF8E6FF)',
+                    },
+                    warning: {
+                        DEFAULT: 'var(--dokan-warning-border-color, #FFFBEBFF)',
+                    },
+                    danger: {
+                        DEFAULT: 'var(--dokan-danger-border-color, #FEF3F3FF)',
+                    },
                 },
             },
             colors: {
@@ -80,6 +119,10 @@ const baseConfig = {
                 dokan: {
                     sidebar: 'var(--dokan-button-background-color, #322067)',
                     btn: 'var(--dokan-button-background-color, #7047EB)',
+                    info: 'var(--dokan-info-color, #0B76B7)',
+                    success: 'var(--dokan-success-color, #004434)',
+                    warning: 'var(--dokan-warning-color, #9D5425)',
+                    danger: 'var(--dokan-danger-color, #BC1C21)',
                 },
             },
         },
