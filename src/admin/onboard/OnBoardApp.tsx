@@ -1,56 +1,68 @@
 import { useEffect, useState } from '@wordpress/element';
-import {
-    fetchOnboardingData,
-    formatPlugins,
-    submitOnboardingData,
-} from './utility/api';
 import WelcomeScreen from './screens/WelcomeScreen';
 import BasicInfoScreen from './screens/BasicInfoScreen';
 import MarketplaceGoalScreen from './screens/MarketplaceGoalScreen';
 import AddonsScreen from './screens/AddonsScreen';
 import LoadingScreen from './screens/LoadingScreen';
 import SuccessScreen from './screens/SuccessScreen';
-import ErrorMessage from './components/ErrorMessage';
-import { FormData } from './types';
+import { OnboardingStep } from './types';
+import {
+    getNextStep,
+    getPreviousStep,
+    insertLoadingAfter,
+    skipToSuccess,
+} from './utility/stepUtils';
+import {
+    formatPlugins,
+    getOnboardingData,
+    postOnboardingData,
+} from '@dokan/admin/onboard/utility/api';
 
-const defaultFormData = {
-    custom_store_url: 'store',
-    share_essentials: true,
-    marketplace_goal: {
-        marketplace_focus: '',
-        handle_delivery: '',
-        top_priority: '',
-    },
-    plugins: [],
-};
+const OnboardingApp = () => {
+    // Current step state
+    const [ currentStep, setCurrentStep ] = useState< OnboardingStep >(
+        OnboardingStep.WELCOME
+    );
 
-const OnBoardApp = () => {
-    // State management
-    const [ currentStep, setCurrentStep ] = useState( 0 );
+    // Data states
+    const [ initialData, setInitialData ] = useState( null );
     const [ isLoading, setIsLoading ] = useState( false );
     const [ apiError, setApiError ] = useState( '' );
-    const [ initialData, setInitialData ] = useState( null );
-    const [ formData, setFormData ] = useState< FormData >( defaultFormData );
     const [ hasPlugins, setHasPlugins ] = useState( true );
 
+    // Form data
+    const [ formData, setFormData ] = useState( {
+        custom_store_url: 'store',
+        share_essentials: true,
+        marketplace_goal: {
+            marketplace_focus: 'physical',
+            handle_delivery: 'vendor',
+            top_priority: 'sales',
+        },
+        plugins: [],
+    } );
+
     // Fetch initial data
-    const loadInitialData = async () => {
+    useEffect( () => {
+        fetchOnboardingData();
+    }, [] );
+
+    const fetchOnboardingData = async () => {
         try {
             setIsLoading( true );
-            setApiError( '' );
-
-            const response = await fetchOnboardingData();
+            const response = await getOnboardingData();
             setInitialData( response );
 
-            // Check if there are plugins available
+            // Check if plugins are available
             const pluginsAvailable =
                 response?.plugins && response.plugins.length > 0;
             setHasPlugins( pluginsAvailable );
 
+            // Initialize form data
             if ( response ) {
-                // Skip to success screen if already onboarded
-                if ( Boolean( parseInt( response?.onboarding ) ) ) {
-                    setCurrentStep( 5 );
+                // Skip to success if already onboarded
+                if ( Boolean( response.onboarding ) ) {
+                    setCurrentStep( skipToSuccess() );
                 }
             }
         } catch ( error ) {
@@ -62,45 +74,44 @@ const OnBoardApp = () => {
         }
     };
 
-    // Load data on mount
-    useEffect( () => {
-        loadInitialData();
-    }, [] );
-
-    // Handle form submission
-    const handleSubmit = async ( skipPlugins = false ) => {
+    const submitOnboardingData = async ( skipPlugins = false ) => {
+        // Show loading screen
+        setCurrentStep( insertLoadingAfter( currentStep ) );
         setIsLoading( true );
-        setCurrentStep( 4 ); // Show loading screen
 
         try {
-            // If skipPlugins is true, submit form data without plugins
-            const dataToSubmit = skipPlugins
-                ? { ...formData, plugins: [] }
-                : formData;
+            // Prepare the data for submission
+            const submitData = {
+                onboarding: true,
+                marketplace_goal: formData.marketplace_goal,
+                custom_store_url: formData.custom_store_url,
+                share_essentials: formData.share_essentials,
+                plugins: skipPlugins ? [] : formData.plugins,
+            };
+            // Send the data to the API
+            await postOnboardingData( submitData );
 
-            await submitOnboardingData( dataToSubmit );
-            setCurrentStep( 5 ); // Success screen
+            // Go to success
+            setCurrentStep( skipToSuccess() );
         } catch ( error ) {
             setApiError( 'Failed to save onboarding data. Please try again.' );
-            // Go back to previous screen (either addons or marketplace goal)
-            setCurrentStep( hasPlugins ? 3 : 2 );
         } finally {
             setIsLoading( false );
         }
     };
 
-    // Update handlers
+    // Form update handlers
     const updateBasicInfo = ( storeUrl, shareEssentials ) => {
-        setFormData( ( prevData ) => ( {
-            ...prevData,
+        setFormData( ( prev ) => ( {
+            ...prev,
             custom_store_url: storeUrl,
             share_essentials: shareEssentials,
         } ) );
     };
 
     const updateMarketplaceGoal = ( focus, deliveryHandling, priority ) => {
-        setFormData( ( prevData ) => ( {
-            ...prevData,
+        setFormData( ( prev ) => ( {
+            ...prev,
             marketplace_goal: {
                 marketplace_focus: focus,
                 handle_delivery: deliveryHandling,
@@ -125,96 +136,116 @@ const OnBoardApp = () => {
     };
 
     // Navigation handlers
-    const goToNextStep = () => {
-        // When moving from marketplace goal screen (step 2) to next step
-        if ( currentStep === 2 ) {
-            // If no plugins, skip AddonsScreen and submit
-            if ( ! hasPlugins ) {
-                handleSubmit( false );
-                return;
-            }
-        }
-        // When moving from AddonsScreen (step 3) to next step
-        else if ( currentStep === 3 ) {
-            handleSubmit( false );
+    const handleNext = () => {
+        const current = currentStep;
+
+        // Handle special cases
+        if ( current === OnboardingStep.MARKETPLACE_GOAL && ! hasPlugins ) {
+            // If no plugins, skip directly to submission
+            submitOnboardingData( false );
             return;
         }
 
-        // Normal step progression
-        setCurrentStep( ( prevStep ) => Math.min( prevStep + 1, 5 ) );
+        if ( current === OnboardingStep.ADDONS ) {
+            // Submit data when finishing addon selection
+            submitOnboardingData( false );
+            return;
+        }
+
+        // Normal progression
+        setCurrentStep( getNextStep( currentStep, hasPlugins ) );
     };
 
-    const goToPrevStep = () => {
-        setCurrentStep( ( prevStep ) => Math.max( prevStep - 1, 0 ) );
+    const handleBack = () => {
+        setCurrentStep( getPreviousStep( currentStep, hasPlugins ) );
     };
 
-    // Handle skip from addons screen - don't submit plugins
-    const skipAddonsStep = () => {
-        // Submit form data with empty plugins array
-        handleSubmit( true );
+    const handleSkip = () => {
+        // For addon screen, skip means submit without plugins
+        if ( currentStep === OnboardingStep.ADDONS ) {
+            submitOnboardingData( true );
+        } else {
+            setCurrentStep( getNextStep( currentStep, hasPlugins ) );
+        }
     };
 
     // Render the current screen
     const renderCurrentScreen = () => {
-        // Show loading screen while fetching initial data
-        if ( isLoading && currentStep === 0 ) {
+        // Show loading while fetching initial data
+        if ( isLoading && currentStep === OnboardingStep.WELCOME ) {
             return <LoadingScreen />;
         }
 
-        // Display error message if API request failed and not on success screen
-        if ( apiError && currentStep !== 5 ) {
+        // Handle error display (except on success screen)
+        if ( apiError && currentStep !== OnboardingStep.SUCCESS ) {
             return (
-                <ErrorMessage
-                    message={ apiError }
-                    onRetry={ loadInitialData }
-                />
+                <div className="error-message p-8 text-center">
+                    <h2 className="text-xl text-red-600 mb-4">Error</h2>
+                    <p>{ apiError }</p>
+                    <button
+                        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                        onClick={ fetchOnboardingData }
+                    >
+                        Try Again
+                    </button>
+                </div>
             );
         }
 
+        // Render the appropriate screen
         switch ( currentStep ) {
-            case 0:
-                return <WelcomeScreen onNext={ goToNextStep } />;
-            case 1:
+            case OnboardingStep.WELCOME:
+                return <WelcomeScreen onNext={ handleNext } />;
+
+            case OnboardingStep.BASIC_INFO:
                 return (
                     <BasicInfoScreen
-                        onNext={ goToNextStep }
-                        onUpdate={ updateBasicInfo }
-                        stateUrl={ formData.custom_store_url }
+                        onNext={ handleNext }
+                        storeUrl={ formData.custom_store_url }
                         shareDiagnostics={ formData.share_essentials }
+                        onUpdate={ updateBasicInfo }
                     />
                 );
-            case 2:
+
+            case OnboardingStep.MARKETPLACE_GOAL:
                 return (
                     <MarketplaceGoalScreen
-                        onNext={ goToNextStep }
-                        onBack={ goToPrevStep }
+                        onNext={ handleNext }
+                        onBack={ handleBack }
+                        marketplaceType={
+                            formData.marketplace_goal.marketplace_focus
+                        }
+                        deliveryMethod={
+                            formData.marketplace_goal.handle_delivery
+                        }
+                        priority={ formData.marketplace_goal.top_priority }
                         onUpdate={ updateMarketplaceGoal }
-                        marketplaceGoal={ formData.marketplace_goal }
                     />
                 );
-            case 3:
-                // Only show AddonsScreen if there are plugins
-                return hasPlugins ? (
+
+            case OnboardingStep.ADDONS:
+                return (
                     <AddonsScreen
-                        onNext={ goToNextStep }
-                        onBack={ goToPrevStep }
-                        onSkip={ skipAddonsStep }
+                        onNext={ handleNext }
+                        onBack={ handleBack }
+                        onSkip={ handleSkip }
                         availableAddons={ initialData?.plugins || [] }
                         onUpdate={ updateSelectedPlugins }
                     />
-                ) : (
-                    <LoadingScreen />
                 );
-            case 4:
+
+            case OnboardingStep.LOADING:
                 return <LoadingScreen />;
-            case 5:
+
+            case OnboardingStep.SUCCESS:
                 return <SuccessScreen />;
+
             default:
-                return <WelcomeScreen onNext={ goToNextStep } />;
+                return <WelcomeScreen onNext={ handleNext } />;
         }
     };
 
     return <div>{ renderCurrentScreen() }</div>;
 };
 
-export default OnBoardApp;
+export default OnboardingApp;

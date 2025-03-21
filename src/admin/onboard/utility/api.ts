@@ -24,7 +24,7 @@ export const formatPlugins = ( plugins: any[] ) => {
 /**
  * Fetch onboarding data from the API
  */
-export const fetchOnboardingData = async (): Promise< OnboardingData > => {
+export const getOnboardingData = async (): Promise< OnboardingData > => {
     return await apiFetch( {
         path: apiPath,
         method: 'GET',
@@ -35,7 +35,7 @@ export const fetchOnboardingData = async (): Promise< OnboardingData > => {
  * Submit onboarding data to the API
  * @param formData
  */
-export const submitOnboardingData = async (
+export const postOnboardingData = async (
     formData: FormData
 ): Promise< any > => {
     const submitData = {

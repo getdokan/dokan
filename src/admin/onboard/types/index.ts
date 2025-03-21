@@ -34,7 +34,7 @@ export interface PluginPlugin {
 
 // types.ts
 export interface OnboardingData {
-    onboarding: boolean;
+    onboarding: '1' | '0';
     plugins: Plugin[];
 }
 
@@ -75,4 +75,13 @@ export interface FormData {
             [ key: string ]: any;
         };
     }[];
+}
+
+export enum OnboardingStep {
+    WELCOME = 'welcome',
+    BASIC_INFO = 'basic_info',
+    MARKETPLACE_GOAL = 'marketplace_goal',
+    ADDONS = 'addons',
+    LOADING = 'loading',
+    SUCCESS = 'success',
 }
