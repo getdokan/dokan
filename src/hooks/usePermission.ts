@@ -4,7 +4,7 @@ import coreStore from '@dokan/stores/core';
 type CapType = string | string[];
 
 export const usePermission = ( cap: CapType = 'dokandar' ) => {
-    const hasPermission = useSelect(
+    return useSelect(
         ( select ) => {
             if ( typeof cap === 'string' ) {
                 return select( coreStore ).hasCap( cap );
@@ -18,6 +18,4 @@ export const usePermission = ( cap: CapType = 'dokandar' ) => {
         },
         [ cap ]
     );
-
-    return { hasPermission };
 };

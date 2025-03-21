@@ -7,8 +7,12 @@ import { useSelect } from '@wordpress/data';
 import coreStore from '@dokan/stores/core';
 
 const App = () => {
-    const hasPermission = useSelect( ( select ) => {
-        return select( coreStore ).hasCap( 'dokandar' );
+    const isVendorStaff = useSelect( ( select ) => {
+        return select( coreStore ).isVendorStaff();
+    }, [] );
+    
+    const getStoreSettings = useSelect( ( select ) => {
+        return select( coreStore ).getStoreSettings();
     }, [] );
 
     const currentUser = useSelect( ( select ) => {
@@ -29,7 +33,7 @@ import { useCurrentUser } from '@dokan/hooks/useCurrentUser';
 */
 
 const App = () => {
-    const { hasPermission } = usePermission('dokander'); // you can pass string as single permission or pass string[] array for multiple permission checking
+    const isDokandar = usePermission('dokandar'); // you can pass string as single permission or pass string[] array for multiple permission checking
     const { currentUser } = useCurrentUser();
 }
 
