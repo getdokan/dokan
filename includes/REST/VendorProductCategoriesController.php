@@ -102,5 +102,4 @@ class VendorProductCategoriesController extends WC_REST_Product_Categories_Contr
         // Get category using parent method
         return parent::get_item( $request );
     }
-
 }
