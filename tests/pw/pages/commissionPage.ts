@@ -1,8 +1,8 @@
-import { Page } from '@playwright/test';
-import { AdminPage } from '@pages/adminPage';
-import { selector } from '@pages/selectors';
-import { data } from '@utils/testData';
-import { commission } from '@utils/interfaces';
+import {Page} from '@playwright/test';
+import {AdminPage} from '@pages/adminPage';
+import {selector} from '@pages/selectors';
+import {data} from '@utils/testData';
+import {commission} from '@utils/interfaces';
 
 // selectors
 const setupWizardAdmin = selector.admin.dokan.setupWizard;
@@ -88,8 +88,9 @@ export class CommissionPage extends AdminPage {
         await this.click(setupWizardAdmin.skipThisStep);
 
         // recommended
-        await this.disableSwitcherSetupWizard(setupWizardAdmin.wooCommerceConversionTracking);
+        // await this.disableSwitcherSetupWizard(setupWizardAdmin.storeGrowth);
         await this.disableSwitcherSetupWizard(setupWizardAdmin.weMail);
+        await this.disableSwitcherSetupWizard(setupWizardAdmin.wooCommerceConversionTracking);
         await this.disableSwitcherSetupWizard(setupWizardAdmin.texty);
         await this.click(setupWizardAdmin.continueRecommended);
 
