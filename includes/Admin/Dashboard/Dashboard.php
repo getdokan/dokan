@@ -310,8 +310,9 @@ class Dashboard implements Hookable {
                 'dokan-setup-guide-banner',
                 'dokanSetupGuideBanner',
                 [
-                    'setup_guide_url' => admin_url( 'admin.php?page=dokan-dashboard#/setup' ),
-                    'asset_url' => DOKAN_PLUGIN_ASSEST,
+                    'asset_url'                      => DOKAN_PLUGIN_ASSEST,
+                    'setup_guide_url'                => admin_url( 'admin.php?page=dokan-dashboard#/setup' ),
+                    'is_setup_guide_steps_completed' => get_option( 'dokan_admin_setup_guide_steps_completed', false ),
                 ]
             );
         }

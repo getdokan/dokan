@@ -20,6 +20,14 @@ class BasicStep extends AbstractStep {
      */
     protected int $priority = 1;
 
+    /**
+     * The step skippable or not.
+     * The default is true.
+     *
+     * @var bool $skippable The step skippable or not.
+     */
+    protected bool $skippable = false;
+
     protected $settings_options = [ 'dokan_selling' ];
 
     /**

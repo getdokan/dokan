@@ -7,6 +7,10 @@ import { __ } from '@wordpress/i18n';
 const AdminSetupBanner = () => {
     const [ steps, setSteps ] = useState< Step[] >( [] );
 
+    if ( dokanSetupGuideBanner?.is_setup_guide_steps_completed ) {
+        return;
+    }
+
     useEffect( () => {
         const allSteps: Step[] = getSettings( 'setup' ).steps;
         setSteps( allSteps );
@@ -18,6 +22,7 @@ const AdminSetupBanner = () => {
     const isNoStepsCompleted = completedSteps === 0;
     const setupGuideUrl = dokanSetupGuideBanner?.setup_guide_url;
     const dokanAssetUrl = dokanSetupGuideBanner?.asset_url;
+
     return (
         <div className="bg-white rounded-lg  p-5 my-4  mr-[20px]">
             <div className="flex items-center flex-wrap gap-y-4 justify-between">

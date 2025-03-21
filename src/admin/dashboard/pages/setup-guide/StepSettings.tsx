@@ -72,6 +72,7 @@ const StepSettings = ( {
     updateStep: ( steps: Step[] ) => void;
     currentStep: Step;
     setCurrentStep: ( step: Step ) => void;
+    handleStepsChange: ( steps: Step[] ) => void;
 } ) => {
     const [ allSettings, setAllSettings ] = useState< SettingsElement[] >( [] );
     const [ dependencies, setDependencies ] = useState<
@@ -307,17 +308,15 @@ const StepSettings = ( {
             nextStep = steps.find( ( step ) => ! step?.is_completed );
         }
 
-        if ( nextStep ) {
-            const updatedSteps = steps.map( ( step ) => {
-                if ( step?.id === currentStep?.id ) {
-                    return { ...step, is_completed: true };
-                }
-                return step;
-            } );
+        const updatedSteps = steps.map( ( step ) => {
+            if ( step?.id === currentStep?.id ) {
+                return { ...step, is_completed: true };
+            }
+            return step;
+        } );
 
-            updateStep( updatedSteps );
-            setCurrentStep( nextStep );
-        }
+        updateStep( updatedSteps );
+        setCurrentStep( nextStep );
     };
 
     const handleSkip = () => {
@@ -415,12 +414,17 @@ const StepSettings = ( {
                                 className={ `mr-auto focus:ring-0` }
                             />
                         ) }
-                        <Button
-                            onClick={ handleSkip }
-                            className="text-[#393939] text-base font-medium py-2 px-4 border-0 shadow-none focus:ring-0"
-                        >
-                            { __( 'Skip', 'dokan-lite' ) }
-                        </Button>
+                        {
+                            // Show skip button only if the current step is skippable
+                            currentStep?.skippable && (
+                                <Button
+                                    onClick={ handleSkip }
+                                    className="text-[#393939] text-base font-medium py-2 px-4 border-0 shadow-none focus:ring-0"
+                                >
+                                    { __( 'Skip', 'dokan-lite' ) }
+                                </Button>
+                            )
+                        }
                         <NextButton
                             disabled={ isSaving || loading }
                             handleNext={ saveSettingsAndHandleNext }
