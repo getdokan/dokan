@@ -92,6 +92,18 @@ const StepSettings = ( {
     const [ prevStepId, setPrevStepId ] = useState< string | null >( null );
     const [ showSkeleton, setShowSkeleton ] = useState< boolean >( true );
 
+    // Step specific skeleton states
+    const [ stepSkeletonStates, setStepSkeletonStates ] = useState<
+        Record< string, boolean >
+    >( {} );
+
+    // Error handling states
+    const [ error, setError ] = useState< {
+        message: string;
+        code?: string;
+    } | null >( null );
+    const [ showError, setShowError ] = useState< boolean >( false );
+
     // Ref for the content container to scroll to top
     const contentRef = useRef< HTMLDivElement >( null );
 
@@ -103,14 +115,44 @@ const StepSettings = ( {
      * @param {SettingsElement[]} settings Settings array.
      */
     const setSettings = ( settings: SettingsElement[] ) => {
-        const extractedDependencies = settingsDependencyParser( settings );
-        const modifiedSettings = settingsDependencyApplicator(
-            [ ...settings ],
-            extractedDependencies
-        );
+        try {
+            const extractedDependencies = settingsDependencyParser( settings );
+            const modifiedSettings = settingsDependencyApplicator(
+                [ ...settings ],
+                extractedDependencies
+            );
 
-        setDependencies( [ ...extractedDependencies ] );
-        setAllSettings( [ ...modifiedSettings ] );
+            setDependencies( [ ...extractedDependencies ] );
+            setAllSettings( [ ...modifiedSettings ] );
+        } catch ( err ) {
+            console.error( 'Error processing settings:', err );
+            handleError( err );
+        }
+    };
+
+    /**
+     * Handle and display errors properly
+     *
+     * @param {any} err Error object
+     */
+    const handleError = ( err: any ) => {
+        const errorMessage = err?.message || 'Something went wrong';
+        const errorCode = err?.code || 'unknown_error';
+
+        setError( { message: errorMessage, code: errorCode } );
+        setShowError( true );
+
+        // Auto-hide error after 5 seconds
+        setTimeout( () => {
+            setShowError( false );
+        }, 5000 );
+    };
+
+    /**
+     * Dismiss the error message
+     */
+    const dismissError = () => {
+        setShowError( false );
     };
 
     /**
@@ -121,22 +163,27 @@ const StepSettings = ( {
      * @param {SettingsElement} element Element to update.
      */
     const updateSettingsValue = ( element: SettingsElement ) => {
-        const updatedSettings = settingsElementFinderReplacer(
-            [ ...allSettings ],
-            element
-        );
-        const updatedDependencies = settingsDependencyParser( [
-            ...updatedSettings,
-        ] );
+        try {
+            const updatedSettings = settingsElementFinderReplacer(
+                [ ...allSettings ],
+                element
+            );
+            const updatedDependencies = settingsDependencyParser( [
+                ...updatedSettings,
+            ] );
 
-        const modifiedSettings = settingsDependencyApplicator(
-            [ ...updatedSettings ],
-            updatedDependencies
-        );
+            const modifiedSettings = settingsDependencyApplicator(
+                [ ...updatedSettings ],
+                updatedDependencies
+            );
 
-        setDependencies( [ ...updatedDependencies ] );
-        setAllSettings( [ ...modifiedSettings ] );
-        setNeedSaving( true );
+            setDependencies( [ ...updatedDependencies ] );
+            setAllSettings( [ ...modifiedSettings ] );
+            setNeedSaving( true );
+        } catch ( err ) {
+            console.error( 'Error updating settings value:', err );
+            handleError( err );
+        }
     };
 
     /**
@@ -148,8 +195,12 @@ const StepSettings = ( {
         }
 
         try {
-            // Start loading with skeleton
+            // Start loading with skeleton specific to this step
             setLoading( true );
+            setStepSkeletonStates( ( prevState ) => ( {
+                ...prevState,
+                [ currentStep.id ]: true,
+            } ) );
             setShowSkeleton( true );
 
             // Scroll to top smoothly when changing steps
@@ -160,19 +211,44 @@ const StepSettings = ( {
                 } );
             }
 
-            // Fetch data
-            const data = await apiFetch< SettingsElement[] >( {
-                path: '/dokan/v1/admin/setup-guide/' + currentStep.id,
+            // Fetch data with timeout handling
+            const timeoutPromise = new Promise( ( _, reject ) =>
+                setTimeout(
+                    () => reject( new Error( 'Request timed out' ) ),
+                    30000
+                )
+            );
+
+            const fetchPromise = apiFetch< SettingsElement[] >( {
+                path: '/dokan/v1/admin/setup-gui/' + currentStep.id,
             } );
+
+            // Use Promise.race to implement timeout
+            const data = ( await Promise.race( [
+                fetchPromise,
+                timeoutPromise,
+            ] ) ) as SettingsElement[];
 
             // Process data
             setSettings( data );
+            setError( null );
 
             // Hide skeleton when data is ready
+            setStepSkeletonStates( ( prevState ) => ( {
+                ...prevState,
+                [ currentStep.id ]: false,
+            } ) );
             setShowSkeleton( false );
             setLoading( false );
         } catch ( err ) {
-            console.error( err );
+            console.error( 'Error fetching step data:', err );
+            handleError( err );
+
+            // Hide skeleton on error too
+            setStepSkeletonStates( ( prevState ) => ( {
+                ...prevState,
+                [ currentStep.id ]: false,
+            } ) );
             setShowSkeleton( false );
             setLoading( false );
         }
@@ -207,10 +283,13 @@ const StepSettings = ( {
             setTabs(
                 pages
                     ?.find( ( child ) => child.id === selectedPage )
-                    ?.children.filter( ( child ) => child.type === 'tab' )
+                    ?.children?.filter( ( child ) => child.type === 'tab' ) ||
+                    []
             );
         } else {
-            setTabs( allSettings?.filter( ( child ) => child.type === 'tab' ) );
+            setTabs(
+                allSettings?.filter( ( child ) => child.type === 'tab' ) || []
+            );
         }
     }, [ allSettings, pages, selectedPage, loading ] );
 
@@ -228,34 +307,49 @@ const StepSettings = ( {
             return;
         }
 
-        if ( ! pages?.length && ! tabs?.length ) {
-            setElements( allSettings );
-        } else if ( pages?.length && ! tabs?.length && '' !== selectedPage ) {
-            setElements(
-                pages.find( ( child ) => child.id === selectedPage ).children
-            );
-        } else if ( ! pages?.length && tabs?.length && '' !== selectedTab ) {
-            setElements(
-                tabs.find( ( child ) => child.id === selectedTab ).children
-            );
-        } else if (
-            pages?.length &&
-            tabs?.length &&
-            '' !== selectedPage &&
-            '' !== selectedTab
-        ) {
-            setElements(
-                tabs.find( ( child ) => child.id === selectedTab ).children
-            );
+        try {
+            if ( ! pages?.length && ! tabs?.length ) {
+                setElements( allSettings || [] );
+            } else if (
+                pages?.length &&
+                ! tabs?.length &&
+                '' !== selectedPage
+            ) {
+                const page = pages.find(
+                    ( child ) => child.id === selectedPage
+                );
+                setElements( page?.children || [] );
+            } else if (
+                ! pages?.length &&
+                tabs?.length &&
+                '' !== selectedTab
+            ) {
+                const tab = tabs.find( ( child ) => child.id === selectedTab );
+                setElements( tab?.children || [] );
+            } else if (
+                pages?.length &&
+                tabs?.length &&
+                '' !== selectedPage &&
+                '' !== selectedTab
+            ) {
+                const tab = tabs.find( ( child ) => child.id === selectedTab );
+                setElements( tab?.children || [] );
+            }
+        } catch ( err ) {
+            console.error( 'Error setting elements:', err );
+            setElements( [] );
         }
     }, [ allSettings, pages, selectedPage, tabs, selectedTab, loading ] );
 
     useEffect( () => {
         // Set initial step when component mounts
-        if ( ! prevStepId ) {
-            setCurrentStep( steps.find( ( step ) => ! step.is_completed ) );
+        if ( ! prevStepId && steps.length > 0 ) {
+            const initialStep = steps.find( ( step ) => ! step.is_completed );
+            if ( initialStep ) {
+                setCurrentStep( initialStep );
+            }
         }
-    }, [] );
+    }, [ steps ] );
 
     const onMenuClick = ( page: string ) => {
         if ( ! page ) {
@@ -274,6 +368,13 @@ const StepSettings = ( {
     };
 
     /**
+     * Retry loading the current step data.
+     */
+    const retryLoading = () => {
+        fetchStepData();
+    };
+
+    /**
      * Save settings and handle next step navigation.
      */
     const saveSettingsAndHandleNext = async () => {
@@ -289,11 +390,12 @@ const StepSettings = ( {
             setSettings( response );
             setNeedSaving( false );
             setIsSaving( false );
+            setError( null );
             handleNext();
         } catch ( err ) {
-            console.error( err );
+            console.error( 'Error saving settings:', err );
+            handleError( err );
             setIsSaving( false );
-            // TODO: show error message in the UI
         }
     };
 
@@ -316,7 +418,9 @@ const StepSettings = ( {
         } );
 
         updateStep( updatedSteps );
-        setCurrentStep( nextStep );
+        if ( nextStep ) {
+            setCurrentStep( nextStep );
+        }
     };
 
     const handleSkip = () => {
@@ -342,7 +446,16 @@ const StepSettings = ( {
         const previousStep = steps.find(
             ( step ) => step?.id === currentStep?.previous_step
         );
-        setCurrentStep( previousStep );
+        if ( previousStep ) {
+            setCurrentStep( previousStep );
+        }
+    };
+
+    // Check if skeleton should be shown for current step
+    const shouldShowSkeleton = () => {
+        return currentStep?.id
+            ? stepSkeletonStates[ currentStep.id ]
+            : showSkeleton;
     };
 
     return (
@@ -353,12 +466,45 @@ const StepSettings = ( {
             >
                 <main className="max-w-7xl mx-auto h-full relative transition-all duration-500 ease">
                     { /* Show skeleton loader while loading */ }
-                    { showSkeleton ? (
+                    { shouldShowSkeleton() ? (
                         <div className="transition-all duration-300">
                             <SkeletonLoader
                                 showTabs={ tabs && tabs.length > 0 }
                                 showMenu={ pages && pages.length > 0 }
                             />
+                        </div>
+                    ) : error && elements.length === 0 ? (
+                        /* Error state with retry option */
+                        <div className="flex flex-col items-center justify-center py-12">
+                            <div className="text-red-500 text-xl mb-4">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-12 w-12 mx-auto mb-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={ 2 }
+                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                                <p className="text-center">
+                                    Failed to load settings
+                                </p>
+                            </div>
+                            <p className="text-gray-600 mb-6 text-center">
+                                { error.message ||
+                                    'There was a problem loading the step data.' }
+                            </p>
+                            <Button
+                                onClick={ retryLoading }
+                                className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2"
+                            >
+                                Retry Loading
+                            </Button>
                         </div>
                     ) : (
                         /* Main content */
@@ -375,7 +521,7 @@ const StepSettings = ( {
                                     />
                                 ) }
 
-                            <div className=" lg:col-span-12">
+                            <div className="lg:col-span-12">
                                 { tabs && '' !== selectedTab && (
                                     <Tab
                                         key="admin-settings-tab"
@@ -426,7 +572,11 @@ const StepSettings = ( {
                             )
                         }
                         <NextButton
-                            disabled={ isSaving || loading }
+                            disabled={
+                                isSaving ||
+                                loading ||
+                                ( showError && error && elements.length === 0 )
+                            }
                             handleNext={ saveSettingsAndHandleNext }
                             className={ `m-0` }
                         >
