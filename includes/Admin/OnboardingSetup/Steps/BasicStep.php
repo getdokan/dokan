@@ -59,10 +59,6 @@ class BasicStep extends AbstractStep {
         ];
 
         $dokan_selling = get_option( 'dokan_selling', $default_selling );
-        // true if the option is 'on'
-        // false if the option is 'off'
-        $order_status_change = $dokan_selling['order_status_change'] ?? $default_selling['order_status_change'];
-        $enable_selling      = $dokan_selling['new_seller_enable_selling'] ?? $default_selling['new_seller_enable_selling'];
 
         $this
             ->set_title( esc_html__( 'Basic', 'dokan-lite' ) )

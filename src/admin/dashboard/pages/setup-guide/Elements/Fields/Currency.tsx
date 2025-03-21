@@ -66,7 +66,7 @@ const Currency = ( { element, onValueChange }: SettingsProps ) => {
                         placeholder: String( element?.placeholder ),
                         type: element.type,
                     } }
-                    className={ `w-24 h-12 rounded-r rounded-l-none` }
+                    className={ `w-24 h-12 rounded-r rounded-l-none border-l-0 focus:border-gray-300` }
                 />
             </div>
         </div>
