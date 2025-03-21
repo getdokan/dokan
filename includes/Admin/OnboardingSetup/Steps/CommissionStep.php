@@ -32,7 +32,7 @@ class CommissionStep extends AbstractStep {
     /**
      * @inheritDoc
      */
-    public function register(): void {
+	public function register(): void {
         wp_localize_script(
             'dokan-admin-dashboard',
             'adminWithdrawData',
@@ -43,18 +43,18 @@ class CommissionStep extends AbstractStep {
     /**
      * @inheritDoc
      */
-    public function scripts(): array {
-        return [ 'dokan-fontawesome', 'dokan-accounting' ];
-    }
+	public function scripts(): array {
+		return [ 'dokan-fontawesome', 'dokan-accounting' ];
+	}
 
-    public function styles(): array {
-        return [ 'dokan-fontawesome' ];
-    }
+	public function styles(): array {
+		return [ 'dokan-fontawesome' ];
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function describe_settings(): void {
+	/**
+	 * @inheritDoc
+	 */
+	public function describe_settings(): void {
         $default_selling = [
             'additional_fee'                            => '10',
             'commission_type'                           => 'fixed',
@@ -101,7 +101,7 @@ class CommissionStep extends AbstractStep {
                             ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                             ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
                             ->set_default( $default_selling['reset_sub_category_when_edit_all_category'] )
-                            ->set_value( $dokan_selling['reset_sub_category_when_edit_all_category'] ?? $default_selling['reset_sub_category_when_edit_all_category'] )
+                            ->set_value( $dokan_selling['reset_sub_category_when_edit_all_category'] )
                     )
                     ->add(
                         Factory::field( 'commission_category_based_values', 'category_based_commission' )
@@ -110,14 +110,14 @@ class CommissionStep extends AbstractStep {
                             ->add_dependency( 'commission.commission_type', 'fixed', true, 'display', 'hide', '!==' )
                             ->add_dependency( 'commission.commission_type', 'fixed', true, 'display', 'show', '===' )
                             ->set_reset_subcategory( $dokan_selling['reset_sub_category_when_edit_all_category'] ?? $default_selling['reset_sub_category_when_edit_all_category'] )
-                            ->set_commission( (array) $dokan_selling['commission_category_based_values'] ?? $default_selling['commission_category_based_values'] )
+                            ->set_commission( (array) $dokan_selling['commission_category_based_values'] )
                     )
             );
     }
 
-    public function settings(): array {
-        return [];
-    }
+	public function settings(): array {
+		return [];
+	}
 
     /**
      * @inheritDoc
