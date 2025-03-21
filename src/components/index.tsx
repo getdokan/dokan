@@ -12,3 +12,5 @@ export { default as PriceHtml } from './PriceHtml';
 export { default as DateTimeHtml } from './DateTimeHtml';
 export { default as Filter } from './Filter';
 export { default as Label } from './Label';
+export { default as Button } from './Button';
+export { default as Anchor } from './Anchor';

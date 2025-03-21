@@ -1,18 +1,13 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as React from 'react';
 import { SimpleAlert } from '@getdokan/dokan-ui';
-
-interface AlertProps {
-    label: string;
-    children?: React.ReactNode;
-    className?: string;
-}
+import type { SimpleAlertProps } from '@getdokan/dokan-ui/dist/components/SimpleAlert';
 
 export const InfoAlert = ( {
     label,
     children,
     className = '',
-}: AlertProps ) => (
+}: Partial< SimpleAlertProps > ) => (
     <SimpleAlert
         label={ label }
         color="blue"
@@ -27,7 +22,7 @@ export const WarningAlert = ( {
     label,
     children,
     className = '',
-}: AlertProps ) => (
+}: Partial< SimpleAlertProps > ) => (
     <SimpleAlert
         label={ label }
         color="yellow"
@@ -42,7 +37,7 @@ export const SuccessAlert = ( {
     label,
     children,
     className = '',
-}: AlertProps ) => (
+}: Partial< SimpleAlertProps > ) => (
     <SimpleAlert
         label={ label }
         color="green"
@@ -57,7 +52,7 @@ export const DangerAlert = ( {
     label,
     children,
     className = '',
-}: AlertProps ) => (
+}: Partial< SimpleAlertProps > ) => (
     <SimpleAlert
         label={ label }
         color="red"

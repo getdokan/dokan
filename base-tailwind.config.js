@@ -114,11 +114,66 @@ const baseConfig = {
                     },
                 },
             },
+            ringColor: {
+                dokan: {
+                    btn: {
+                        DEFAULT: 'var(--dokan-button-border-color, #7047EB)',
+                        hover: 'var(--dokan-button-hover-border-color, #370EB1)',
+                        secondary: {
+                            DEFAULT:
+                                'var(--dokan-button-secondary-border-color, var(--dokan-button-border-color, #7047EB))',
+                            hover: 'var(--dokan-button-secondary-hover-border-color, var(--dokan-button-border-color, #7047EB))',
+                        },
+                        tertiary: {
+                            DEFAULT:
+                                'var(--dokan-button-tertiary-border-color, #00000000)',
+                            hover: 'var(--dokan-button-tertiary-hover-border-color, var(--dokan-button-border-color, #7047EB))',
+                        },
+                    },
+                    info: {
+                        DEFAULT: 'var(--dokan-info-border-color, #E9F9FFFF)',
+                    },
+                    success: {
+                        DEFAULT: 'var(--dokan-success-border-color, #DAF8E6FF)',
+                    },
+                    warning: {
+                        DEFAULT: 'var(--dokan-warning-border-color, #FFFBEBFF)',
+                    },
+                    danger: {
+                        DEFAULT: 'var(--dokan-danger-border-color, #FEF3F3FF)',
+                    },
+                },
+            },
+            ringOffsetColor: {
+                dokan: {
+                    btn: 'var(--dokan-button-border-color, #7047EB)',
+                    'btn-secondary': 'var(--dokan-button-secondary-border-color, var(--dokan-button-border-color, #7047EB))',
+                    'btn-tertiary': 'var(--dokan-button-tertiary-border-color, #00000000)',
+                    info: 'var(--dokan-info-border-color, #E9F9FFFF)',
+                    success: 'var(--dokan-success-border-color, #DAF8E6FF)',
+                    warning: 'var(--dokan-warning-border-color, #FFFBEBFF)',
+                    danger: 'var(--dokan-danger-border-color, #FEF3F3FF)',
+                },
+            },
+            outlineColor: {
+                dokan: {
+                    btn: 'var(--dokan-button-border-color, #7047EB)',
+                    'btn-secondary': 'var(--dokan-button-secondary-border-color, var(--dokan-button-border-color, #7047EB))',
+                    'btn-tertiary': 'var(--dokan-button-tertiary-border-color, #00000000)',
+                    info: 'var(--dokan-info-border-color, #E9F9FFFF)',
+                    success: 'var(--dokan-success-border-color, #DAF8E6FF)',
+                    warning: 'var(--dokan-warning-border-color, #FFFBEBFF)',
+                    danger: 'var(--dokan-danger-border-color, #FEF3F3FF)',
+                },
+            },
             colors: {
                 primary: 'var(--dokan-button-background-color, #7047EB)',
+                secondary: 'var(--dokan-button-secondary-background-color, #ffffff)',
                 dokan: {
                     sidebar: 'var(--dokan-button-background-color, #322067)',
                     btn: 'var(--dokan-button-background-color, #7047EB)',
+                    'btn-secondary': 'var(--dokan-button-secondary-background-color, #ffffff)',
+                    'btn-tertiary': 'var(--dokan-button-tertiary-background-color, #00000000)',
                     info: 'var(--dokan-info-color, #0B76B7)',
                     success: 'var(--dokan-success-color, #004434)',
                     warning: 'var(--dokan-warning-color, #9D5425)',

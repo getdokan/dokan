@@ -36,10 +36,116 @@
             outline-color: var(--dokan-button-border-color, #7047EB);
         }
 
+        /* Default link styles (for normal hyperlinks) */
+        a:not(.dokan-btn):not([class*="dokan-btn-"]) {
+            @apply text-dokan-btn transition-colors duration-200;
+
+            &:hover, &:focus {
+                @apply text-dokan-btn-secondary;
+            }
+        }
+
         input[type=checkbox] {
             @apply before:!content-[''] mt-1;
         }
 
+        /* Button Styles */
+        .dokan-btn {
+            @apply bg-dokan-btn text-dokan-btn border-dokan-btn ring-dokan-btn transition-colors duration-200 cursor-pointer rounded px-4 py-2 font-medium ring-1 ring-inset;
+
+            &:hover, &:focus {
+                @apply bg-dokan-btn-hover text-dokan-btn-hover border-dokan-btn-hover;
+            }
+
+            &:disabled {
+                @apply opacity-60 cursor-not-allowed;
+            }
+        }
+
+        .dokan-btn-primary {
+            @apply bg-dokan-btn text-dokan-btn border-dokan-btn ring-dokan-btn transition-colors duration-200;
+
+            &:hover, &:focus {
+                @apply bg-dokan-btn-hover text-dokan-btn-hover border-dokan-btn-hover;
+            }
+        }
+
+        .dokan-btn-secondary {
+            @apply bg-dokan-btn-secondary text-dokan-btn-secondary border-dokan-btn-secondary ring-dokan-btn-secondary transition-colors duration-200;
+
+            &:hover, &:focus {
+                @apply bg-dokan-btn-secondary-hover text-dokan-btn-secondary-hover border-dokan-btn-secondary-hover;
+            }
+        }
+
+        .dokan-btn-tertiary {
+            @apply bg-dokan-btn-tertiary text-dokan-btn-tertiary border-dokan-btn-tertiary ring-dokan-btn-tertiary transition-colors duration-200;
+
+            &:hover, &:focus {
+                @apply bg-dokan-btn-tertiary-hover text-dokan-btn-tertiary-hover border-dokan-btn-tertiary-hover;
+            }
+        }
+
+        .dokan-btn-outline {
+            @apply bg-transparent text-dokan-btn border-dokan-btn ring-dokan-btn transition-colors duration-200;
+
+            &:hover, &:focus {
+                @apply bg-dokan-btn text-white;
+            }
+        }
+
+        /* Status Button Styles */
+        .dokan-btn-info {
+            @apply bg-dokan-info text-dokan-info border-dokan-info ring-dokan-info transition-colors duration-200;
+
+            &:hover, &:focus {
+                @apply bg-blue-600 text-white;
+            }
+        }
+
+        .dokan-btn-success {
+            @apply bg-dokan-success text-dokan-success border-dokan-success ring-dokan-success transition-colors duration-200;
+
+            &:hover, &:focus {
+                @apply bg-green-600 text-white;
+            }
+        }
+
+        .dokan-btn-warning {
+            @apply bg-dokan-warning text-dokan-warning border-dokan-warning ring-dokan-warning transition-colors duration-200;
+
+            &:hover, &:focus {
+                @apply bg-yellow-600 text-white;
+            }
+        }
+
+        .dokan-btn-danger {
+            @apply bg-dokan-danger text-dokan-danger border-dokan-danger ring-dokan-danger transition-colors duration-200;
+
+            &:hover, &:focus {
+                @apply bg-red-600 text-white;
+            }
+        }
+
+        /* Text Link Styles */
+        .dokan-link {
+            @apply text-dokan-btn no-underline transition-colors duration-200;
+
+            &:hover, &:focus {
+                @apply text-dokan-btn-secondary underline;
+            }
+        }
+
+        /* Button Sizes */
+        .dokan-btn-sm {
+            @apply px-2 py-1 text-sm;
+        }
+
+        .dokan-btn-lg {
+            @apply px-6 py-3 text-lg;
+        }
+
+        /* Label Styles */
         .dokan-info {
             @apply ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info;
         }
@@ -56,6 +162,7 @@
             @apply ring-1 ring-inset bg-dokan-danger text-dokan-danger ring-dokan-danger;
         }
 
+        /* Alert Styles */
         .dokan-alert-info {
             @apply ring-1 ring-inset bg-dokan-info text-dokan-info-light ring-dokan-info;
         }
