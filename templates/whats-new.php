@@ -4,6 +4,40 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.14.11',
+        'released' => '2025-03-14',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Dokan now displays prices based on the decimal points setup in WooCommerce.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added charge and receivable amount in withdraw email templates.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Resolve an issue when displaying admin earning in admin order list.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Dokan registration form asset loading issue on Elementor My Account widget.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where revoking access to digital product content from order details page reverts on page reload.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor setup wizard form validation added to properly handle countries without states.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.14.10',
         'released' => '2025-02-28',
         'changes'  => [

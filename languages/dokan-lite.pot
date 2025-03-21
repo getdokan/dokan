@@ -1,14 +1,14 @@
 # Copyright (c) 2025 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.14.10\n"
+"Project-Id-Version: Dokan 3.14.11\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-28T09:11:24+00:00\n"
+"POT-Creation-Date: 2025-03-12T09:04:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -1213,13 +1213,13 @@ msgid "Searching&hellip;"
 msgstr ""
 
 #: includes/Admin/SetupWizard.php:188
-#: includes/Vendor/SetupWizard.php:698
+#: includes/Vendor/SetupWizard.php:700
 msgid "Introduction"
 msgstr ""
 
 #: includes/Admin/SetupWizard.php:192
 #: includes/functions-dashboard-navigation.php:67
-#: includes/Vendor/SetupWizard.php:703
+#: includes/Vendor/SetupWizard.php:705
 #: assets/js/vue-admin.js:2
 msgid "Store"
 msgstr ""
@@ -1234,7 +1234,7 @@ msgid "Recommended"
 msgstr ""
 
 #: includes/Admin/SetupWizard.php:217
-#: includes/Vendor/SetupWizard.php:720
+#: includes/Vendor/SetupWizard.php:722
 msgid "Ready!"
 msgstr ""
 
@@ -1288,7 +1288,7 @@ msgstr ""
 #: includes/Admin/SetupWizard.php:760
 #: includes/Admin/SetupWizardWCAdmin.php:232
 #: includes/Vendor/SetupWizard.php:351
-#: includes/Vendor/SetupWizard.php:558
+#: includes/Vendor/SetupWizard.php:560
 #: templates/admin-setup-wizard/step-commission.php:12
 #: templates/admin-setup-wizard/step-selling.php:32
 #: templates/admin-setup-wizard/step-store.php:153
@@ -1297,7 +1297,7 @@ msgstr ""
 
 #: includes/Admin/SetupWizard.php:678
 #: includes/Vendor/SetupWizard.php:353
-#: includes/Vendor/SetupWizard.php:560
+#: includes/Vendor/SetupWizard.php:562
 #: templates/admin-setup-wizard/step-commission.php:13
 #: templates/admin-setup-wizard/step-selling.php:33
 #: templates/admin-setup-wizard/step-store.php:154
@@ -1381,7 +1381,7 @@ msgstr ""
 #: includes/Admin/SetupWizardNoWC.php:176
 #: includes/functions-dashboard-navigation.php:74
 #: includes/ReverseWithdrawal/Helper.php:70
-#: includes/Vendor/SetupWizard.php:713
+#: includes/Vendor/SetupWizard.php:715
 msgid "Payment"
 msgstr ""
 
@@ -1815,7 +1815,7 @@ msgid "reCAPTCHA verification failed!"
 msgstr ""
 
 #: includes/Ajax.php:359
-#: includes/REST/StoreController.php:839
+#: includes/REST/StoreController.php:838
 msgid "Email sent successfully!"
 msgstr ""
 
@@ -2945,9 +2945,9 @@ msgstr ""
 #: includes/Emails/VendorCompletedOrder.php:158
 #: includes/Emails/VendorNewOrder.php:165
 #: includes/Emails/VendorProductReview.php:188
-#: includes/Emails/VendorWithdrawRequest.php:145
-#: includes/Emails/WithdrawApproved.php:144
-#: includes/Emails/WithdrawCancelled.php:148
+#: includes/Emails/VendorWithdrawRequest.php:150
+#: includes/Emails/WithdrawApproved.php:146
+#: includes/Emails/WithdrawCancelled.php:150
 msgid "Available placeholders: %s"
 msgstr ""
 
@@ -2960,9 +2960,9 @@ msgstr ""
 #: includes/Emails/VendorCompletedOrder.php:161
 #: includes/Emails/VendorNewOrder.php:168
 #: includes/Emails/VendorProductReview.php:191
-#: includes/Emails/VendorWithdrawRequest.php:148
-#: includes/Emails/WithdrawApproved.php:147
-#: includes/Emails/WithdrawCancelled.php:151
+#: includes/Emails/VendorWithdrawRequest.php:153
+#: includes/Emails/WithdrawApproved.php:149
+#: includes/Emails/WithdrawCancelled.php:153
 msgid "Enable/Disable"
 msgstr ""
 
@@ -2975,9 +2975,9 @@ msgstr ""
 #: includes/Emails/VendorCompletedOrder.php:163
 #: includes/Emails/VendorNewOrder.php:170
 #: includes/Emails/VendorProductReview.php:193
-#: includes/Emails/VendorWithdrawRequest.php:150
-#: includes/Emails/WithdrawApproved.php:149
-#: includes/Emails/WithdrawCancelled.php:153
+#: includes/Emails/VendorWithdrawRequest.php:155
+#: includes/Emails/WithdrawApproved.php:151
+#: includes/Emails/WithdrawCancelled.php:155
 msgid "Enable this email notification"
 msgstr ""
 
@@ -2990,9 +2990,9 @@ msgstr ""
 #: includes/Emails/VendorCompletedOrder.php:167
 #: includes/Emails/VendorNewOrder.php:174
 #: includes/Emails/VendorProductReview.php:198
-#: includes/Emails/VendorWithdrawRequest.php:163
-#: includes/Emails/WithdrawApproved.php:153
-#: includes/Emails/WithdrawCancelled.php:157
+#: includes/Emails/VendorWithdrawRequest.php:168
+#: includes/Emails/WithdrawApproved.php:155
+#: includes/Emails/WithdrawCancelled.php:159
 #: assets/js/vue-admin.js:2
 msgid "Subject"
 msgstr ""
@@ -3006,9 +3006,9 @@ msgstr ""
 #: includes/Emails/VendorCompletedOrder.php:175
 #: includes/Emails/VendorNewOrder.php:182
 #: includes/Emails/VendorProductReview.php:206
-#: includes/Emails/VendorWithdrawRequest.php:171
-#: includes/Emails/WithdrawApproved.php:161
-#: includes/Emails/WithdrawCancelled.php:165
+#: includes/Emails/VendorWithdrawRequest.php:176
+#: includes/Emails/WithdrawApproved.php:163
+#: includes/Emails/WithdrawCancelled.php:167
 msgid "Email heading"
 msgstr ""
 
@@ -3021,9 +3021,9 @@ msgstr ""
 #: includes/Emails/VendorCompletedOrder.php:183
 #: includes/Emails/VendorNewOrder.php:190
 #: includes/Emails/VendorProductReview.php:214
-#: includes/Emails/VendorWithdrawRequest.php:179
-#: includes/Emails/WithdrawApproved.php:169
-#: includes/Emails/WithdrawCancelled.php:173
+#: includes/Emails/VendorWithdrawRequest.php:184
+#: includes/Emails/WithdrawApproved.php:171
+#: includes/Emails/WithdrawCancelled.php:175
 msgid "Additional content"
 msgstr ""
 
@@ -3036,9 +3036,9 @@ msgstr ""
 #: includes/Emails/VendorCompletedOrder.php:184
 #: includes/Emails/VendorNewOrder.php:191
 #: includes/Emails/VendorProductReview.php:215
-#: includes/Emails/VendorWithdrawRequest.php:180
-#: includes/Emails/WithdrawApproved.php:170
-#: includes/Emails/WithdrawCancelled.php:174
+#: includes/Emails/VendorWithdrawRequest.php:185
+#: includes/Emails/WithdrawApproved.php:172
+#: includes/Emails/WithdrawCancelled.php:176
 msgid "Text to appear below the main email content."
 msgstr ""
 
@@ -3051,9 +3051,9 @@ msgstr ""
 #: includes/Emails/VendorCompletedOrder.php:186
 #: includes/Emails/VendorNewOrder.php:193
 #: includes/Emails/VendorProductReview.php:217
-#: includes/Emails/VendorWithdrawRequest.php:182
-#: includes/Emails/WithdrawApproved.php:172
-#: includes/Emails/WithdrawCancelled.php:176
+#: includes/Emails/VendorWithdrawRequest.php:187
+#: includes/Emails/WithdrawApproved.php:174
+#: includes/Emails/WithdrawCancelled.php:178
 #: templates/orders/order-tax-html.php:10
 msgid "N/A"
 msgstr ""
@@ -3067,9 +3067,9 @@ msgstr ""
 #: includes/Emails/VendorCompletedOrder.php:192
 #: includes/Emails/VendorNewOrder.php:199
 #: includes/Emails/VendorProductReview.php:223
-#: includes/Emails/VendorWithdrawRequest.php:188
-#: includes/Emails/WithdrawApproved.php:178
-#: includes/Emails/WithdrawCancelled.php:182
+#: includes/Emails/VendorWithdrawRequest.php:193
+#: includes/Emails/WithdrawApproved.php:180
+#: includes/Emails/WithdrawCancelled.php:184
 msgid "Email type"
 msgstr ""
 
@@ -3082,9 +3082,9 @@ msgstr ""
 #: includes/Emails/VendorCompletedOrder.php:194
 #: includes/Emails/VendorNewOrder.php:201
 #: includes/Emails/VendorProductReview.php:225
-#: includes/Emails/VendorWithdrawRequest.php:190
-#: includes/Emails/WithdrawApproved.php:180
-#: includes/Emails/WithdrawCancelled.php:184
+#: includes/Emails/VendorWithdrawRequest.php:195
+#: includes/Emails/WithdrawApproved.php:182
+#: includes/Emails/WithdrawCancelled.php:186
 msgid "Choose which format of email to send."
 msgstr ""
 
@@ -3152,14 +3152,14 @@ msgstr ""
 #: includes/Emails/NewProduct.php:184
 #: includes/Emails/NewProductPending.php:182
 #: includes/Emails/NewSeller.php:147
-#: includes/Emails/VendorWithdrawRequest.php:154
+#: includes/Emails/VendorWithdrawRequest.php:159
 msgid "Recipient(s)"
 msgstr ""
 
 #. translators: 1) Email recipients
 #: includes/Emails/NewProduct.php:187
 #: includes/Emails/NewSeller.php:150
-#: includes/Emails/VendorWithdrawRequest.php:157
+#: includes/Emails/VendorWithdrawRequest.php:162
 msgid "Enter recipients (comma separated) for this email. Defaults to %s."
 msgstr ""
 
@@ -3292,11 +3292,11 @@ msgstr ""
 msgid "These emails are sent to chosen recipient(s) when a vendor send request to withdraw"
 msgstr ""
 
-#: includes/Emails/VendorWithdrawRequest.php:58
+#: includes/Emails/VendorWithdrawRequest.php:59
 msgid "[{site_title}] A New withdrawal request is made by {store_name}"
 msgstr ""
 
-#: includes/Emails/VendorWithdrawRequest.php:68
+#: includes/Emails/VendorWithdrawRequest.php:69
 msgid "New Withdraw Request from - {store_name}"
 msgstr ""
 
@@ -3308,11 +3308,11 @@ msgstr ""
 msgid "These emails are sent to vendor when a vendor withdraw request is approved"
 msgstr ""
 
-#: includes/Emails/WithdrawApproved.php:58
+#: includes/Emails/WithdrawApproved.php:59
 msgid "[{site_title}] Your withdrawal request was approved"
 msgstr ""
 
-#: includes/Emails/WithdrawApproved.php:68
+#: includes/Emails/WithdrawApproved.php:69
 msgid "Withdrawal request for {amount} is approved"
 msgstr ""
 
@@ -3324,11 +3324,11 @@ msgstr ""
 msgid "These emails are sent to vendor when a vendor withdraw request is cancelled"
 msgstr ""
 
-#: includes/Emails/WithdrawCancelled.php:59
+#: includes/Emails/WithdrawCancelled.php:60
 msgid "[{site_title}] Your withdrawal request was cancelled"
 msgstr ""
 
-#: includes/Emails/WithdrawCancelled.php:69
+#: includes/Emails/WithdrawCancelled.php:70
 msgid "Withdrawal request for {amount} is cancelled"
 msgstr ""
 
@@ -5421,12 +5421,12 @@ msgstr ""
 #: includes/REST/ProductController.php:67
 #: includes/REST/ProductController.php:91
 #: includes/REST/ProductController.php:136
-#: includes/REST/StoreController.php:63
-#: includes/REST/StoreController.php:99
-#: includes/REST/StoreController.php:116
-#: includes/REST/StoreController.php:143
-#: includes/REST/StoreController.php:177
-#: includes/REST/StoreController.php:209
+#: includes/REST/StoreController.php:62
+#: includes/REST/StoreController.php:98
+#: includes/REST/StoreController.php:115
+#: includes/REST/StoreController.php:142
+#: includes/REST/StoreController.php:176
+#: includes/REST/StoreController.php:208
 #: includes/REST/WithdrawController.php:90
 #: includes/REST/WithdrawController.php:947
 msgid "Unique identifier for the object."
@@ -6211,164 +6211,164 @@ msgstr ""
 msgid "Formatted Action Taken Message"
 msgstr ""
 
-#: includes/REST/StoreController.php:81
+#: includes/REST/StoreController.php:80
 msgid "Reassign the deleted user's posts and links to this user ID."
 msgstr ""
 
-#: includes/REST/StoreController.php:153
+#: includes/REST/StoreController.php:152
 #: templates/widgets/store-contact-form.php:15
 #: assets/js/vue-admin.js:2
 msgid "Your Name"
 msgstr ""
 
-#: includes/REST/StoreController.php:159
+#: includes/REST/StoreController.php:158
 msgid "Your email"
 msgstr ""
 
-#: includes/REST/StoreController.php:164
+#: includes/REST/StoreController.php:163
 msgid "Your Message"
 msgstr ""
 
-#: includes/REST/StoreController.php:182
+#: includes/REST/StoreController.php:181
 msgid "Status for the store object."
 msgstr ""
 
-#: includes/REST/StoreController.php:213
+#: includes/REST/StoreController.php:212
 msgid "Get Best Selling Products Category."
 msgstr ""
 
-#: includes/REST/StoreController.php:340
+#: includes/REST/StoreController.php:339
 msgid "Invalid user ID for reassignment."
 msgstr ""
 
-#: includes/REST/StoreController.php:539
-#: includes/REST/StoreController.php:942
+#: includes/REST/StoreController.php:538
+#: includes/REST/StoreController.php:941
 msgid "No store found"
 msgstr ""
 
-#: includes/REST/StoreController.php:557
-#: includes/REST/StoreController.php:576
+#: includes/REST/StoreController.php:556
+#: includes/REST/StoreController.php:575
 msgid "No reviews found"
 msgstr ""
 
-#: includes/REST/StoreController.php:768
+#: includes/REST/StoreController.php:767
 msgid "This email address is not valid"
 msgstr ""
 
-#: includes/REST/StoreController.php:811
+#: includes/REST/StoreController.php:810
 msgid "No vendor is found to be send an email."
 msgstr ""
 
-#: includes/REST/StoreController.php:858
+#: includes/REST/StoreController.php:857
 msgid "Status parameter must be active or inactive"
 msgstr ""
 
-#: includes/REST/StoreController.php:864
+#: includes/REST/StoreController.php:863
 msgid "No vendor found for updating status"
 msgstr ""
 
-#: includes/REST/StoreController.php:892
+#: includes/REST/StoreController.php:891
 msgid "No items found for bulk updating"
 msgstr ""
 
-#: includes/REST/StoreController.php:976
+#: includes/REST/StoreController.php:975
 msgid "Status of the store"
 msgstr ""
 
-#: includes/REST/StoreController.php:983
+#: includes/REST/StoreController.php:982
 msgid "Store List Order By"
 msgstr ""
 
-#: includes/REST/StoreController.php:989
-#: includes/REST/StoreController.php:995
+#: includes/REST/StoreController.php:988
+#: includes/REST/StoreController.php:994
 msgid "Store List Order"
 msgstr ""
 
-#: includes/REST/StoreController.php:1015
+#: includes/REST/StoreController.php:1014
 msgid "Unique identifier for the vendor."
 msgstr ""
 
-#: includes/REST/StoreController.php:1021
+#: includes/REST/StoreController.php:1020
 msgid "Store owner first name."
 msgstr ""
 
-#: includes/REST/StoreController.php:1026
+#: includes/REST/StoreController.php:1025
 msgid "Store owner last name."
 msgstr ""
 
-#: includes/REST/StoreController.php:1031
+#: includes/REST/StoreController.php:1030
 msgid "User nice name."
 msgstr ""
 
-#: includes/REST/StoreController.php:1036
+#: includes/REST/StoreController.php:1035
 msgid "User password."
 msgstr ""
 
-#: includes/REST/StoreController.php:1040
+#: includes/REST/StoreController.php:1039
 msgid "Store email address."
 msgstr ""
 
-#: includes/REST/StoreController.php:1046
+#: includes/REST/StoreController.php:1045
 msgid "Store name."
 msgstr ""
 
-#: includes/REST/StoreController.php:1051
+#: includes/REST/StoreController.php:1050
 msgid "Store phone number."
 msgstr ""
 
-#: includes/REST/StoreController.php:1056
+#: includes/REST/StoreController.php:1055
 msgid "Show email in store."
 msgstr ""
 
-#: includes/REST/StoreController.php:1061
+#: includes/REST/StoreController.php:1060
 msgid "Gravatar ID."
 msgstr ""
 
-#: includes/REST/StoreController.php:1065
+#: includes/REST/StoreController.php:1064
 msgid "Banner ID."
 msgstr ""
 
-#: includes/REST/StoreController.php:1069
+#: includes/REST/StoreController.php:1068
 msgid "Enable terms and conditions."
 msgstr ""
 
-#: includes/REST/StoreController.php:1073
+#: includes/REST/StoreController.php:1072
 msgid "Store terms and conditions."
 msgstr ""
 
-#: includes/REST/StoreController.php:1077
+#: includes/REST/StoreController.php:1076
 msgid "Store icon."
 msgstr ""
 
-#: includes/REST/StoreController.php:1081
+#: includes/REST/StoreController.php:1080
 msgid "Social profiles."
 msgstr ""
 
-#: includes/REST/StoreController.php:1093
+#: includes/REST/StoreController.php:1092
 msgid "Store address."
 msgstr ""
 
-#: includes/REST/StoreController.php:1106
+#: includes/REST/StoreController.php:1105
 msgid "Enable selling."
 msgstr ""
 
-#: includes/REST/StoreController.php:1110
+#: includes/REST/StoreController.php:1109
 msgid "Featured vendor."
 msgstr ""
 
-#: includes/REST/StoreController.php:1114
+#: includes/REST/StoreController.php:1113
 msgid "Trusted vendor."
 msgstr ""
 
-#: includes/REST/StoreController.php:1118
+#: includes/REST/StoreController.php:1117
 msgid "Admin commission amount."
 msgstr ""
 
-#: includes/REST/StoreController.php:1122
+#: includes/REST/StoreController.php:1121
 msgid "Admin additional fee."
 msgstr ""
 
-#: includes/REST/StoreController.php:1126
+#: includes/REST/StoreController.php:1125
 msgid "Category wise commission."
 msgstr ""
 
@@ -6901,26 +6901,26 @@ msgstr ""
 msgid "Product successfully duplicated"
 msgstr ""
 
-#: includes/template-tags.php:543
+#: includes/template-tags.php:546
 #: includes/Widgets/StoreCategoryMenu.php:37
 #: includes/Widgets/StoreCategoryMenu.php:81
 msgid "Store Product Category"
 msgstr ""
 
-#: includes/template-tags.php:556
+#: includes/template-tags.php:559
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:238
 #: includes/Widgets/StoreLocation.php:40
 #: includes/Widgets/StoreLocation.php:101
 msgid "Store Location"
 msgstr ""
 
-#: includes/template-tags.php:569
+#: includes/template-tags.php:572
 #: includes/Widgets/StoreOpenClose.php:39
 #: includes/Widgets/StoreOpenClose.php:110
 msgid "Store Time"
 msgstr ""
 
-#: includes/template-tags.php:582
+#: includes/template-tags.php:585
 #: includes/Widgets/StoreContactForm.php:40
 #: includes/Widgets/StoreContactForm.php:117
 msgid "Contact Vendor"
@@ -7440,15 +7440,15 @@ msgstr ""
 msgid "Select an option&hellip;"
 msgstr ""
 
-#: includes/Vendor/SetupWizard.php:536
+#: includes/Vendor/SetupWizard.php:538
 msgid "Payment Setup"
 msgstr ""
 
-#: includes/Vendor/SetupWizard.php:646
+#: includes/Vendor/SetupWizard.php:648
 msgid "Your Store is Ready!"
 msgstr ""
 
-#: includes/Vendor/SetupWizard.php:651
+#: includes/Vendor/SetupWizard.php:653
 msgid "Go to your Store Dashboard!"
 msgstr ""
 
@@ -8522,18 +8522,18 @@ msgstr ""
 #. translators: 1) withdraw method title
 #: templates/emails/plain/withdraw-approve.php:34
 #: templates/emails/plain/withdraw-cancel.php:34
-#: templates/emails/withdraw-approve.php:33
-#: templates/emails/withdraw-cancel.php:35
+#: templates/emails/withdraw-approve.php:38
+#: templates/emails/withdraw-cancel.php:40
 msgid "Method : %s"
 msgstr ""
 
 #: templates/emails/plain/withdraw-approve.php:37
-#: templates/emails/withdraw-approve.php:37
+#: templates/emails/withdraw-approve.php:42
 msgid "We'll transfer this amount to your preferred withdrawal method shortly."
 msgstr ""
 
 #: templates/emails/plain/withdraw-approve.php:40
-#: templates/emails/withdraw-approve.php:39
+#: templates/emails/withdraw-approve.php:44
 msgid "Thanks for being with us."
 msgstr ""
 
@@ -8542,7 +8542,7 @@ msgid "Your withdraw request was cancelled"
 msgstr ""
 
 #: templates/emails/plain/withdraw-cancel.php:37
-#: templates/emails/withdraw-cancel.php:39
+#: templates/emails/withdraw-cancel.php:44
 msgid "Here's the reason, why : "
 msgstr ""
 
@@ -8645,6 +8645,12 @@ msgstr ""
 msgid "Amount : "
 msgstr ""
 
+#. translators: 1) withdraw receivable amount
+#: templates/emails/withdraw-approve.php:33
+#: templates/emails/withdraw-cancel.php:35
+msgid "Receivable amount : %s"
+msgstr ""
+
 #: templates/emails/withdraw-cancel.php:23
 msgid "Your withdraw request was cancelled!"
 msgstr ""
@@ -8662,11 +8668,15 @@ msgid "Request Amount:"
 msgstr ""
 
 #: templates/emails/withdraw-new.php:40
+msgid "Charge:"
+msgstr ""
+
+#: templates/emails/withdraw-new.php:46
 msgid "Payment Method: "
 msgstr ""
 
 #. translators: 1) withdraw page url
-#: templates/emails/withdraw-new.php:50
+#: templates/emails/withdraw-new.php:56
 msgid "You can approve or deny it by going <a href=\"%s\"> here </a>"
 msgstr ""
 
@@ -9302,11 +9312,6 @@ msgstr ""
 
 #: templates/products/edit-product-single.php:308
 msgid " You Earn : "
-msgstr ""
-
-#: templates/products/edit-product-single.php:332
-#: templates/products/edit-product-single.php:355
-msgid "0.00"
 msgstr ""
 
 #: templates/products/edit-product-single.php:342

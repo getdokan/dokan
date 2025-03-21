@@ -8,7 +8,7 @@ use WeDevs\Dokan\REST\DokanBaseAdminController;
 * Admin Dashboard
 *
 * @since 2.8.0
-* @deprecated DOKAN_SINCE Use \WeDevs\Dokan\REST\DokanBaseAdminController instead.
+* @deprecated 3.14.11 Use \WeDevs\Dokan\REST\DokanBaseAdminController instead.
 *
 * @package dokan
 */

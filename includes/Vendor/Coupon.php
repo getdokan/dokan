@@ -10,7 +10,6 @@ use WC_Order_Item_Product;
 use WC_Order_Item_Coupon;
 use WC_Data;
 use Exception;
-
 class Coupon {
 
     public const DOKAN_COUPON_META_KEY = '_dokan_coupon_info';
@@ -161,10 +160,14 @@ class Coupon {
             $discount_amount = $item_wise_discounts[ $coupon->get_code() ][ $item_key ];
 
             $coupon_info[ $coupon->get_code() ] = [
-                'discount'    => $discount_amount,
-                'coupon_code' => $coupon->get_code(),
-                'per_qty_amount'    => $item_object['quantity'] > 0 ? ( $discount_amount / $item_object['quantity'] ) : 0,
-                'quantity'  => $item_object['quantity'],
+                'discount'                         => $discount_amount,
+                'coupon_code'                      => $coupon->get_code(),
+                'per_qty_amount'                   => $item_object['quantity'] > 0 ? ( $discount_amount / $item_object['quantity'] ) : 0,
+                'quantity'                         => $item_object['quantity'],
+                'admin_coupons_enabled_for_vendor' => $coupon->get_meta( 'admin_coupons_enabled_for_vendor', true ),
+                'coupon_commissions_type'          => $coupon->get_meta( 'coupon_commissions_type', true ),
+                'admin_shared_coupon_type'         => $coupon->get_meta( 'admin_shared_coupon_type', true ),
+                'admin_shared_coupon_amount'       => $coupon->get_meta( 'admin_shared_coupon_amount', true ),
             ];
         }
 
@@ -209,10 +212,14 @@ class Coupon {
             $discount_amount = $item_wise_discounts[ $coupon->get_code() ][ $item_key ];
 
             $coupon_info[ $coupon->get_code() ] = [
-                'discount' => $discount_amount,
-                'coupon_code' => $coupon->get_code(),
-                'per_qty_amount' => $order_item->get_quantity() > 0 ? $discount_amount / $order_item->get_quantity() : 0,
-                'quantity' => $order_item->get_quantity(),
+                'discount'                         => $discount_amount,
+                'coupon_code'                      => $coupon->get_code(),
+                'per_qty_amount'                   => $order_item->get_quantity() > 0 ? $discount_amount / $order_item->get_quantity() : 0,
+                'quantity'                         => $order_item->get_quantity(),
+                'admin_coupons_enabled_for_vendor' => $coupon->get_meta( 'admin_coupons_enabled_for_vendor', true ),
+                'coupon_commissions_type'          => $coupon->get_meta( 'coupon_commissions_type', true ),
+                'admin_shared_coupon_type'         => $coupon->get_meta( 'admin_shared_coupon_type', true ),
+                'admin_shared_coupon_amount'       => $coupon->get_meta( 'admin_shared_coupon_amount', true ),
             ];
         }
 

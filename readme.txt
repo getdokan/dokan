@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivend
 Requires at least: 6.5
 Tested up to: 6.7.2
 WC requires at least: 8.5.0
-WC tested up to: 9.7.0
+WC tested up to: 9.7.1
 Requires PHP: 7.4
-Stable tag: 3.14.10
+Stable tag: 3.14.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -344,6 +344,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v3.14.11 ( Mar 14, 2025 ) =
+
+- **update:** Dokan now displays prices based on the decimal points setup in WooCommerce.
+- **update:** Added charge and receivable amount in withdraw email templates.
+- **fix:** Resolve an issue when displaying admin earning in admin order list.
+- **fix:** Dokan registration form asset loading issue on Elementor My Account widget.
+- **fix:** Resolved an issue where revoking access to digital product content from order details page reverts on page reload.
+- **fix:** Vendor setup wizard form validation added to properly handle countries without states.
+
 = v3.14.10 ( Feb 28, 2025 ) =
 
 - **fix:** Prevented wrong store URL generation for staff managers on admin dashboard.
@@ -370,12 +379,6 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 = v3.14.6 ( Jan 09, 2025 ) =
 
 - **fix:** Translations on Admin Commission Setup Wizard, Withdraw, Withdraw Log, Add Reverse Withdraw, Dummy Data, and Vendor Single pages were not working due to wrong text-domains.
-
-= v3.14.5 ( Jan 06, 2025 ) =
-
-- **update:** Improvement vendor setup wizard ui.
-- **update:** Improvement withdraw approved email template.
-- **update:** Dokan admin settings page responsive & update ui design.
 
 [CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
 

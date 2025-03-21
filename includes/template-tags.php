@@ -445,6 +445,9 @@ function dokan_seller_reg_form_fields() {
     $role       = $data['role'];
     $role_style = ( $role === 'customer' ) ? 'display:none' : '';
 
+    // Load vendor registration scripts in the registration form.
+    wp_enqueue_script( 'dokan-vendor-registration' );
+
     dokan_get_template_part(
         'global/seller-registration-form', '', [
             'data'       => $data,

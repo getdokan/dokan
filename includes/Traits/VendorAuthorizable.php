@@ -6,7 +6,7 @@ trait VendorAuthorizable {
     /**
      * Check if user has vendor permission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.11
      *
      * @return bool
      */

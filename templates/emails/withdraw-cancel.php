@@ -31,6 +31,11 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     ?>
     <br>
     <?php
+    // translators: 1) withdraw receivable amount
+    printf( esc_html__( 'Receivable amount : %s', 'dokan-lite' ), esc_html( $data['{receivable_amount}'] ) );
+    ?>
+    <br>
+    <?php
     // translators: 1) withdraw method title
     echo sprintf( esc_html__( 'Method : %s', 'dokan-lite' ), esc_html( $data['{method}'] ) );
     ?>

@@ -140,6 +140,6 @@ class CommissionControllerV1 extends DokanRESTController {
 
         $data = 'seller' === $context ? $commission_or_earning->get_vendor_earning() : $commission_or_earning->get_admin_commission();
 
-        return rest_ensure_response( wc_format_decimal( $data, wc_get_price_decimals() + 2 ) );
+        return rest_ensure_response( wc_format_decimal( $data, wc_get_price_decimals() ) );
     }
 }

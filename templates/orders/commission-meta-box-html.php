@@ -8,13 +8,18 @@
  * @var object $data
  * @var float $total_commission
  * @var array $all_commission_types
+ * @var \WeDevs\Dokan\Commission\OrderCommission $order_commission
  *
  * @since DOKAN_LITE
  *
  * @package dokan
  */
 
-$total_commission = 0 > $total_commission ? 0 : $total_commission;
+if ( $order_commission->get_admin_commission() ) {
+    $total_commission = $order_commission->get_admin_commission();
+} else {
+    $total_commission = 0 > $total_commission ? 0 : $total_commission;
+}
 
 $order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
 $net_amount  = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;
@@ -39,13 +44,13 @@ foreach ( $order->get_refunds() as $refund ) {
 }
 ?>
 
-<div id="woocommerce-order-items" class="postbox" style='border: none'>
+<div id="dokan-order-items" class="dokan-order-metabox-items postbox" style='border: none'>
     <div class="postbox-header">
         <div class="handle-actions hide-if-no-js">
-            <button type="button" class="handle-order-higher" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-higher-description">
+            <button type="button" class="handle-order-higher" aria-disabled="false" aria-describedby="dokan-order-items-handle-order-higher-description">
                 <span class="order-higher-indicator" aria-hidden="true"></span>
             </button>
-            <button type="button" class="handle-order-lower" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-lower-description">
+            <button type="button" class="handle-order-lower" aria-disabled="false" aria-describedby="dokan-order-items-handle-order-lower-description">
                 <span class="screen-reader-text"></span>
                 <span class="order-lower-indicator" aria-hidden="true"></span>
             </button>
@@ -55,8 +60,8 @@ foreach ( $order->get_refunds() as $refund ) {
         </div>
     </div>
     <div class="inside">
-        <div class="woocommerce_order_items_wrapper wc-order-items-editable">
-            <table cellpadding="0" cellspacing="0" class="woocommerce_order_items">
+        <div class="dokan_order_items_wrapper wc-order-items-editable">
+            <table cellpadding="0" cellspacing="0" class="dokan_order_items">
                 <thead>
                 <tr>
                     <th colspan="2">Item</th>
@@ -172,7 +177,7 @@ foreach ( $order->get_refunds() as $refund ) {
                                     echo wc_price(
                                         $original_commission, array(
 											'currency' => $order->get_currency(),
-											'decimals' => wc_get_price_decimals() + 2,
+											'decimals' => wc_get_price_decimals(),
                                         )
                                     );
 									?>
@@ -186,7 +191,7 @@ foreach ( $order->get_refunds() as $refund ) {
                                         echo wc_price(
                                             $commission_refunded, array(
 												'currency' => $order->get_currency(),
-												'decimals' => wc_get_price_decimals() + 2,
+												'decimals' => wc_get_price_decimals(),
                                             )
                                         );
 										?>
@@ -212,7 +217,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         echo wc_price(
                             $order_total, array(
 								'currency' => $order->get_currency(),
-								'decimals' => wc_get_price_decimals() + 2,
+								'decimals' => wc_get_price_decimals(),
                             )
                         );
 						?>
@@ -225,6 +230,20 @@ foreach ( $order->get_refunds() as $refund ) {
                         <?php
                         echo wc_price(
                             $net_amount, array(
+								'currency' => $order->get_currency(),
+								'decimals' => wc_get_price_decimals(),
+                            )
+                        );
+						?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label"><?php esc_html_e( 'Subsidy:', 'dokan-lite' ); ?></td>
+                    <td width="1%"></td>
+                    <td class="total">
+                        <?php
+                        echo wc_price(
+                            $order_commission->get_admin_subsidy(), array(
 								'currency' => $order->get_currency(),
 								'decimals' => wc_get_price_decimals() + 2,
                             )
@@ -241,7 +260,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         echo wc_price(
                             $shipping_fee, array(
 								'currency' => $order->get_currency(),
-								'decimals' => wc_get_price_decimals() + 2,
+								'decimals' => wc_get_price_decimals(),
                             )
                         );
 						?>
@@ -253,7 +272,7 @@ foreach ( $order->get_refunds() as $refund ) {
                             echo wc_price(
                                 $shipping_fee_refunded, array(
 									'currency' => $order->get_currency(),
-									'decimals' => wc_get_price_decimals() + 2,
+									'decimals' => wc_get_price_decimals(),
                                 )
                             );
 							?>
@@ -273,7 +292,7 @@ foreach ( $order->get_refunds() as $refund ) {
                             echo wc_price(
                                 $product_tax_fee, array(
 									'currency' => $order->get_currency(),
-									'decimals' => wc_get_price_decimals() + 2,
+									'decimals' => wc_get_price_decimals(),
                                 )
                             );
 							?>
@@ -285,7 +304,7 @@ foreach ( $order->get_refunds() as $refund ) {
                                 echo wc_price(
                                     $product_tax_fee_refunded, array(
 										'currency' => $order->get_currency(),
-										'decimals' => wc_get_price_decimals() + 2,
+										'decimals' => wc_get_price_decimals(),
                                     )
                                 );
 								?>
@@ -305,7 +324,7 @@ foreach ( $order->get_refunds() as $refund ) {
                             echo wc_price(
                                 $shipping_tax_fee, array(
 									'currency' => $order->get_currency(),
-									'decimals' => wc_get_price_decimals() + 2,
+									'decimals' => wc_get_price_decimals(),
                                 )
                             );
 							?>
@@ -317,7 +336,7 @@ foreach ( $order->get_refunds() as $refund ) {
                                 echo wc_price(
                                     $shipping_tax_fee_refunded, array(
 										'currency' => $order->get_currency(),
-										'decimals' => wc_get_price_decimals() + 2,
+										'decimals' => wc_get_price_decimals(),
                                     )
                                 );
 								?>
@@ -344,7 +363,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         echo wc_price(
                             $total_commission, array(
 								'currency' => $order->get_currency(),
-								'decimals' => wc_get_price_decimals() + 2,
+								'decimals' => wc_get_price_decimals(),
                             )
                         );
 						?>
@@ -355,39 +374,3 @@ foreach ( $order->get_refunds() as $refund ) {
         </div>
     </div>
 </div>
-
-<style>
-    small.refunded-recipient {
-        display: block;
-        color: #a00;
-        white-space: nowrap;
-        font-size: smaller;
-        padding: 0;
-        margin: 0
-    }
-
-    small.refunded-recipient::before {
-        font-family: Dashicons;
-        speak: never;
-        font-weight: 400;
-        font-variant: normal;
-        text-transform: none;
-        line-height: 1;
-        -webkit-font-smoothing: antialiased;
-        margin: 0;
-        text-indent: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        content: "\f171";
-        position: relative;
-        top: auto;
-        left: auto;
-        margin: -1px 4px 0 0;
-        vertical-align: middle;
-        line-height: 1em;
-    }
-</style>
