@@ -62,7 +62,7 @@ class AppearanceStep extends AbstractStep {
 
         $this->set_title( esc_html__( 'Appearance', 'dokan-lite' ) )
             ->add(
-                Factory::section( 'dokan-appearance' )
+                Factory::section( 'appearance' )
                     ->set_title( esc_html__( 'Appearance', 'dokan-lite' ) )
                     ->add(
                         Factory::sub_section( 'store-info' )
@@ -120,6 +120,24 @@ class AppearanceStep extends AbstractStep {
      * @inheritDoc
      */
     public function option_dispatcher( $data ): void {
-        // TODO: Implement option_dispatcher() method.
+        $default_settings = [
+            'contact_seller'             => 'on',
+            'enable_theme_store_sidebar' => 'off',
+            'hide_vendor_info'           => [
+                'email'   => '',
+                'phone'   => '',
+                'address' => '',
+            ],
+        ];
+
+        $dokan_appearance = get_option( 'dokan_appearance', $default_settings );
+
+        $dokan_appearance['contact_seller']              = $data['appearance']['store-info']['contact_seller'] ?? $default_settings['contact_seller'];
+        $dokan_appearance['enable_theme_store_sidebar']  = $data['appearance']['store-info']['enable_theme_store_sidebar'] ?? $default_settings['enable_theme_store_sidebar'];
+        $dokan_appearance['hide_vendor_info']['email']   = $data['appearance']['vendor-info']['email'] ?? $default_settings['hide_vendor_info']['email'];
+        $dokan_appearance['hide_vendor_info']['phone']   = $data['appearance']['vendor-info']['phone'] ?? $default_settings['hide_vendor_info']['phone'];
+        $dokan_appearance['hide_vendor_info']['address'] = $data['appearance']['vendor-info']['address'] ?? $default_settings['hide_vendor_info']['address'];
+
+        update_option( 'dokan_appearance', $dokan_appearance );
     }
 }

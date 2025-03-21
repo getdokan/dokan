@@ -1,7 +1,7 @@
 import React, { useState } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
 
-const Radio = ({ element, onValueChange }: SettingsProps ) => {
+const Radio = ( { element, onValueChange }: SettingsProps ) => {
     const [ selected, setSelected ] = useState(
         element.value || element.default
     );
@@ -22,8 +22,8 @@ const Radio = ({ element, onValueChange }: SettingsProps ) => {
         return <></>;
     }
     return (
-        <div className=" flex justify-between items-center gap-y-4 p-4 flex-wrap w-full ">
-            <div className="flex-col flex gap-1 sm:w-[70%] xs:w-full">
+        <div className=" grid grid-cols-12 p-4 gap-y-4 w-full @container/radio ">
+            <div className=" col-span-12 @md/radio:col-span-8 ">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
                     { element?.title }
                 </h2>
@@ -31,7 +31,7 @@ const Radio = ({ element, onValueChange }: SettingsProps ) => {
                     { element?.description }
                 </p>
             </div>
-            <div className="flex ">
+            <div className=" col-span-12 @md/radio:col-span-4 flex items-center @md/radio:justify-end">
                 { element?.options?.map( ( option, index ) => (
                     <button
                         key={ option?.value }

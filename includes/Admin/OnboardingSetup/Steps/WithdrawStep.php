@@ -78,7 +78,7 @@ class WithdrawStep extends AbstractStep {
 
         $this->set_title( esc_html__( 'Withdraw', 'dokan-lite' ) )
              ->add(
-                 Factory::section( 'withdraw-methods' )
+                 Factory::section( 'withdraw' )
                      ->set_title( esc_html__( 'Withdraw', 'dokan-lite' ) )
                      ->add(
                          Factory::field( 'paypal', 'switch' )
@@ -134,6 +134,30 @@ class WithdrawStep extends AbstractStep {
      * @inheritDoc
      */
     public function option_dispatcher( $data ): void {
-        // TODO: Implement option_dispatcher() method.
+        $default_settings = [
+            'withdraw_order_status' => [ 'wc-completed' => 'wc-completed' ],
+            'withdraw_limit'        => '50',
+            'withdraw_methods'      => apply_filters(
+                'dokan_settings_withdraw_methods_default',
+                [
+                    'paypal' => 'paypal',
+                    'bank'   => '',
+                    'skrill' => '',
+                ]
+            ),
+        ];
+
+        $dokan_appearance = get_option( 'dokan_withdraw', $default_settings );
+        if ( ! empty( $data['withdraw']['withdraw_order_status'] ) ) { // Fill the order status key by value. (as per admin settings)
+            $withdraw_order_status = array_combine( $data['withdraw']['withdraw_order_status'], $data['withdraw']['withdraw_order_status'] );
+        }
+
+        $dokan_appearance['withdraw_order_status']      = $withdraw_order_status ?? $default_settings['withdraw_order_status'];
+        $dokan_appearance['withdraw_limit']             = $data['withdraw']['withdraw_limit'] ?? $default_settings['withdraw_limit'];
+        $dokan_appearance['withdraw_methods']['bank']   = $data['withdraw']['bank'] ?? $default_settings['withdraw_methods']['bank'];
+        $dokan_appearance['withdraw_methods']['paypal'] = $data['withdraw']['paypal'] ?? $default_settings['withdraw_methods']['paypal'];
+        $dokan_appearance['withdraw_methods']['skrill'] = $data['withdraw']['skrill'] ?? $default_settings['withdraw_methods']['skrill'];
+
+        update_option( 'dokan_withdraw', $dokan_appearance );
     }
 }

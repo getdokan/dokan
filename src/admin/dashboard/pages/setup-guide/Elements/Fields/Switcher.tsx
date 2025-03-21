@@ -32,7 +32,7 @@ const Switcher = ( { element, onValueChange }: SettingsProps ) => {
             id={ element.hook_key + '_div' }
             className="grid grid-cols-12 p-4 gap-y-4 w-full @container/switcher"
         >
-            <div className="col-span-12 @md/switcher:col-span-8 gap-1">
+            <div className="col-span-12 @md/switcher:col-span-8 flex flex-col gap-1">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
                     <RawHTML>{element?.title}</RawHTML>
                 </h2>
@@ -42,7 +42,7 @@ const Switcher = ( { element, onValueChange }: SettingsProps ) => {
             </div>
             <div className="col-span-12 @md/switcher:col-span-4 flex items-center @md/switcher:justify-end">
                 <ToggleSwitch
-                    checked={isEnabled }
+                    checked={ isEnabled }
                     onChange={ handleChange }
                     label={ isEnabled ? enableState.label : disableState.label }
                 />
