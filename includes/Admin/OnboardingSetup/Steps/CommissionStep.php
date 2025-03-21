@@ -32,7 +32,7 @@ class CommissionStep extends AbstractStep {
     /**
      * @inheritDoc
      */
-	public function register(): void {
+    public function register(): void {
         wp_localize_script(
             'dokan-admin-dashboard',
             'adminWithdrawData',
@@ -43,18 +43,18 @@ class CommissionStep extends AbstractStep {
     /**
      * @inheritDoc
      */
-	public function scripts(): array {
-		return [ 'dokan-fontawesome', 'dokan-accounting' ];
-	}
+    public function scripts(): array {
+        return [ 'dokan-fontawesome', 'dokan-accounting' ];
+    }
 
-	public function styles(): array {
-		return [ 'dokan-fontawesome' ];
-	}
+    public function styles(): array {
+        return [ 'dokan-fontawesome' ];
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public function describe_settings(): void {
+    /**
+     * @inheritDoc
+     */
+    public function describe_settings(): void {
         $default_selling = [
             'additional_fee'                            => '10',
             'commission_type'                           => 'fixed',
@@ -101,7 +101,7 @@ class CommissionStep extends AbstractStep {
                             ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                             ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
                             ->set_default( $default_selling['reset_sub_category_when_edit_all_category'] )
-                            ->set_value( $dokan_selling['reset_sub_category_when_edit_all_category'] )
+                            ->set_value( $dokan_selling['reset_sub_category_when_edit_all_category'] ?? $default_selling['reset_sub_category_when_edit_all_category'] )
                     )
                     ->add(
                         Factory::field( 'commission_category_based_values', 'category_based_commission' )
@@ -109,37 +109,37 @@ class CommissionStep extends AbstractStep {
                             ->set_description( esc_html__( 'Amount you will get from each sale', 'dokan-lite' ) )
                             ->add_dependency( 'commission.commission_type', 'fixed', true, 'display', 'hide', '!==' )
                             ->add_dependency( 'commission.commission_type', 'fixed', true, 'display', 'show', '===' )
-                            ->set_reset_subcategory( $dokan_selling['reset_sub_category_when_edit_all_category'] )
-                            ->set_commission( $dokan_selling['commission_category_based_values'] )
+                            ->set_reset_subcategory( $dokan_selling['reset_sub_category_when_edit_all_category'] ?? $default_selling['reset_sub_category_when_edit_all_category'] )
+                            ->set_commission( (array) $dokan_selling['commission_category_based_values'] ?? $default_selling['commission_category_based_values'] )
                     )
             );
     }
 
-	public function settings(): array {
-		return [];
-	}
+    public function settings(): array {
+        return [];
+    }
 
     /**
      * @inheritDoc
      */
     public function option_dispatcher( $data ): void {
         // TODO: Implement option_dispatcher() method.
-//        $commission_type = isset( $data['commission']['commission_type'] ) ? sanitize_text_field( $data['commission']['commission_type'] ) : 'fixed';
-//        update_option( 'dokan_commission_type', $commission_type );
-//
-//        if ( $commission_type === 'fixed' ) {
-//            $fixed_commission = isset( $data['commission']['fixed_commission'] ) ? $data['commission']['fixed_commission'] : [];
-//            $admin_percentage = isset( $fixed_commission['percentage'] ) ? floatval( $fixed_commission['percentage'] ) : 10;
-//            $additional_fee   = isset( $fixed_commission['fixed'] ) ? floatval( $fixed_commission['fixed'] ) : 0;
-//
-//            update_option('dokan_admin_percentage', $admin_percentage);
-//            update_option('dokan_additional_fee', $additional_fee);
-//        } else {
-//            $category_commission = isset( $data['commission']['category_commission'] ) ? $data['commission']['category_commission'] : [];
-//            $reset_subcategory = isset( $data['commission']['reset_subcategory'] ) ? (bool) $data['commission']['reset_subcategory'] : true;
-//
-//            update_option('dokan_commission_category_based_values', $category_commission);
-//            update_option('dokan_reset_sub_category', $reset_subcategory);
-//        }
+        //        $commission_type = isset( $data['commission']['commission_type'] ) ? sanitize_text_field( $data['commission']['commission_type'] ) : 'fixed';
+        //        update_option( 'dokan_commission_type', $commission_type );
+        //
+        //        if ( $commission_type === 'fixed' ) {
+        //            $fixed_commission = isset( $data['commission']['fixed_commission'] ) ? $data['commission']['fixed_commission'] : [];
+        //            $admin_percentage = isset( $fixed_commission['percentage'] ) ? floatval( $fixed_commission['percentage'] ) : 10;
+        //            $additional_fee   = isset( $fixed_commission['fixed'] ) ? floatval( $fixed_commission['fixed'] ) : 0;
+        //
+        //            update_option('dokan_admin_percentage', $admin_percentage);
+        //            update_option('dokan_additional_fee', $additional_fee);
+        //        } else {
+        //            $category_commission = isset( $data['commission']['category_commission'] ) ? $data['commission']['category_commission'] : [];
+        //            $reset_subcategory = isset( $data['commission']['reset_subcategory'] ) ? (bool) $data['commission']['reset_subcategory'] : true;
+        //
+        //            update_option('dokan_commission_category_based_values', $category_commission);
+        //            update_option('dokan_reset_sub_category', $reset_subcategory);
+        //        }
     }
 }
