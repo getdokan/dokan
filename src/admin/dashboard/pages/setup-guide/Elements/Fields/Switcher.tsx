@@ -15,9 +15,16 @@ const Switcher = ( { element, onValueChange }: SettingsProps ) => {
         } );
     };
 
-    const initialEnabled = element?.value
-        ? element?.value === enableState?.value
-        : element?.default === enableState?.value;
+    let initialEnabled = false;
+    if ( element.value === enableState?.value ) {
+        initialEnabled = true;
+    } else if ( element.value === disableState?.value ) {
+        initialEnabled = false;
+    } else if ( element.default === enableState?.value ) {
+        initialEnabled = true;
+    } else if ( element.default === disableState?.value ) {
+        initialEnabled = false;
+    }
 
     // Initialize state with enabled prop or defaultValue
     const [ isEnabled, setIsEnabled ] = useState( initialEnabled );

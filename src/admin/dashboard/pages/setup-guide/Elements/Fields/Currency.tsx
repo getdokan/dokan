@@ -8,7 +8,6 @@ const Currency = ( { element, onValueChange }: SettingsProps ) => {
 
     const handleValueChange = ( newValue ) => {
         setLocalValue( newValue );
-        console.log( 'event', newValue );
         onValueChange( {
             ...element,
             value: newValue,

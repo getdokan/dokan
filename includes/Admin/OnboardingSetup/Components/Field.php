@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Admin\OnboardingSetup\Components;
 
 use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Checkbox;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Currency;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\MultiCheck;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Number;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Password;
@@ -57,6 +58,7 @@ class Field extends SettingsElement {
         'radio_box'  => RadioBox::class,
         'switch'     => Switcher::class,
         'multicheck' => MultiCheck::class,
+        'currency' => Currency::class,
 	);
 
 	/**

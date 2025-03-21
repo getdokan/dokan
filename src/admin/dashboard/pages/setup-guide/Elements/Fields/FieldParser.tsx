@@ -61,7 +61,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     onValueChange={ onValueChange }
                 />
             );
-        case 'number':
+        case 'currency':
             return (
                 <Currency
                     element={ element }
@@ -99,6 +99,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
         case 'time':
         case 'url':
         case 'week':
+        case 'number':
         default:
             return (
                 <Text
