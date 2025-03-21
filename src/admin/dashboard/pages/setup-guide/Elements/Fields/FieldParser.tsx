@@ -8,6 +8,8 @@ import Switcher from './Switcher';
 import Number from './Number';
 import Select from './Select';
 import MultiCheck from './MultiCheck';
+import CategoryBasedCommission from "./commission/CategoryBasedCommission";
+import CombineInput from "./Commission/CombineInput";
 
 const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
     // TODO: add support for custom input fields and custom hook.
@@ -80,6 +82,22 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
         case 'multicheck':
             return (
                 <MultiCheck
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'category_based_commission':
+            return (
+                <CategoryBasedCommission
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'combine_input':
+            return (
+                <CombineInput
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }

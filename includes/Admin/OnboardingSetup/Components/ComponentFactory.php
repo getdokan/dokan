@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Admin\OnboardingSetup\Components;
 use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Checkbox;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\CheckboxGroup;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Commission\CategoryBasedCommission;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\CurrencyInput;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Radio;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\RadioButton;
@@ -65,7 +66,7 @@ class ComponentFactory {
      * @param string $id ID.
      * @param string $type Field Type.
      *
-     * @return Text|Number|Checkbox|Radio|Select|Tel|RecipientSelector|RadioButton|ToggleSwitchField|CurrencyInput|CheckboxGroup
+     * @return Text|Number|Checkbox|Radio|Select|Tel|CategoryBasedCommission
      */
     public static function field( string $id, string $type = 'text' ): SettingsElement {
         $field = new Field( $id, $type );

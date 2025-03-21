@@ -1,3 +1,4 @@
+import { RawHTML } from '@wordpress/element';
 import { useState } from '@wordpress/element';
 import { ToggleSwitch } from '@getdokan/dokan-ui';
 import { SettingsProps } from '../../StepSettings';
@@ -29,21 +30,23 @@ const Switcher = ( { element, onValueChange }: SettingsProps ) => {
     return (
         <div
             id={ element.hook_key + '_div' }
-            className=" flex justify-between flex-wrap items-center p-4 gap-y-4 w-full "
+            className="grid grid-cols-12 p-4 gap-y-4 w-full @container/switcher"
         >
-            <div className="flex-col flex gap-1">
+            <div className="col-span-12 @md/switcher:col-span-8 gap-1">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
-                    { element?.title }
+                    <RawHTML>{element?.title}</RawHTML>
                 </h2>
-                <p className=" text-sm font-normal text-[#828282]">
-                    { element?.description }
+                <p className="text-sm font-normal text-[#828282]">
+                    <RawHTML>{element?.description}</RawHTML>
                 </p>
             </div>
-            <ToggleSwitch
-                checked={ isEnabled }
-                onChange={ handleChange }
-                label={ isEnabled ? enableState.label : disableState.label }
-            />
+            <div className="col-span-12 @md/switcher:col-span-4 flex items-center @md/switcher:justify-end">
+                <ToggleSwitch
+                    checked={isEnabled }
+                    onChange={ handleChange }
+                    label={ isEnabled ? enableState.label : disableState.label }
+                />
+            </div>
         </div>
     );
 };

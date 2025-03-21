@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Admin\OnboardingSetup\Components;
 
 use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Checkbox;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Commission\CombineInput;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\MultiCheck;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Number;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Password;
@@ -13,6 +14,7 @@ use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Select;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Switcher;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Tel;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Text;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Commission\CategoryBasedCommission;
 
 
 /**
@@ -47,16 +49,18 @@ class Field extends SettingsElement {
 	 * @var string[] $field_map Map for the Input type.
 	 */
 	private $field_map = array(
-		'text'       => Text::class,
-		'number'     => Number::class,
-		'checkbox'   => Checkbox::class,
-		'select'     => Select::class,
-		'radio'      => Radio::class,
-		'tel'        => Tel::class,
-		'password'   => Password::class,
-        'radio_box'  => RadioBox::class,
-        'switch'     => Switcher::class,
-        'multicheck' => MultiCheck::class,
+		'text'                      => Text::class,
+		'number'                    => Number::class,
+		'checkbox'                  => Checkbox::class,
+		'select'                    => Select::class,
+		'radio'                     => Radio::class,
+		'tel'                       => Tel::class,
+		'password'                  => Password::class,
+        'radio_box'                 => RadioBox::class,
+        'switch'                    => Switcher::class,
+        'multicheck'                => MultiCheck::class,
+        'combine_input'             => CombineInput::class,
+        'category_based_commission' => CategoryBasedCommission::class,
 	);
 
 	/**
