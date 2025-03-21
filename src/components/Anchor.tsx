@@ -18,7 +18,7 @@ export const Anchor = ( {
     return (
         <a
             href={ href }
-            className={ twMerge( 'dokan-link', className ) }
+            className={ twMerge( '!dokan-link', className ) }
             { ...props }
         >
             { children }
