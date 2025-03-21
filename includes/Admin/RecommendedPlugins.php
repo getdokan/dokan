@@ -27,7 +27,7 @@ class RecommendedPlugins {
             //     'type'        => 'store_growth',
             //     'title'       => __( 'StoreGrowth', 'dokan-lite' ),
             //     'description' => __( 'Best WooCommerce Marketing Solution!', 'dokan-lite' ),
-            //     'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
+            //     'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.svg',
             //     'img_alt'     => __( 'StoreGrowth logo', 'dokan-lite' ),
             //     'slug'        => 'storegrowth-sales-booster',
             //     'basename'    => 'storegrowth-sales-booster/storegrowth-sales-booster.php',
