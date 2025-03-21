@@ -11,7 +11,7 @@
 3. **Filter** - Standardized filtering interface
 4. **SortableList** - Drag-and-drop interface for managing sortable items
 5. **Button Components** - Button variants for different contexts (Primary, Secondary, Tertiary, Status-specific)
-6. **Anchor Components** - Link elements styled as buttons for consistent UI
+6. **Anchor Component** - Flexible link component with multiple style variants
 7. **Label Components** - Status label badges in different styles (Warning, Info, Success, Danger)
 8. **Alert Components** - Contextual alert notifications with different severity levels
 
@@ -83,7 +83,7 @@ externals: {
 |        |      |___ filter/           # Filter component 
 |        |      |___ sortable-list/    # Sortable list component
 |        |      |___ Button.tsx        # Button components
-|        |      |___ Anchor.tsx        # Anchor components
+|        |      |___ Anchor.tsx        # Anchor component
 |        |      |___ Label.tsx         # Label components
 |        |      |___ Alert.tsx         # Alert components
 |        |      |___ your-component/   # Your new component directory
@@ -106,6 +106,7 @@ export { default as Filter } from './Filter';
 export { default as SortableList } from './sortable-list'; 
 export { 
     Button,
+    PrimaryButton,
     SecondaryButton,
     TertiaryButton,
     InfoButton,
@@ -113,17 +114,7 @@ export {
     WarningButton,
     DangerButton
 } from './Button';
-export { 
-    Anchor,
-    PrimaryAnchor,
-    SecondaryAnchor,
-    TertiaryAnchor,
-    OutlineAnchor,
-    InfoAnchor,
-    SuccessAnchor,
-    WarningAnchor,
-    DangerAnchor
-} from './Anchor';
+export { default as Anchor } from './Anchor';
 export { 
     WarningLabel, 
     InfoLabel, 
@@ -259,88 +250,60 @@ For more flexibility, you can also use predefined CSS classes directly with nati
 
 These CSS classes provide consistent styling across the interface whether you're using React components or standard HTML elements.
 
-## Anchor Components
+## Anchor Component
 
-`Dokan` provides a set of standardized anchor components that have button-like styling. These are perfect for navigation links that should have the appearance of buttons. They are built on top of the `Link` component from `@getdokan/dokan-ui` and use the same style classes as the Button components.
+`Dokan` provides a flexible Anchor component for creating styled links throughout the interface. The component supports multiple style variants from standard text links to button-styled links.
 
-### Available Anchor Components
+### Default Link Styling
 
-#### Variant Anchors
-- **Anchor** - Primary anchor (default)
-- **PrimaryAnchor** - Primary anchor style
-- **SecondaryAnchor** - Secondary anchor style
-- **TertiaryAnchor** - Tertiary anchor style
-- **OutlineAnchor** - Outline anchor style
+By default, all standard links (`<a>` elements) in Dokan use the following style rules:
+- Normal state: Theme primary color
+- Hover state: Theme secondary color
 
-#### Status-Specific Anchors
-- **InfoAnchor** - Blue styled anchor for informational links
-- **SuccessAnchor** - Green styled anchor for confirmation links
-- **WarningAnchor** - Yellow styled anchor for cautionary links
-- **DangerAnchor** - Red styled anchor for critical links
+This applies automatically to all standard links without any additional classes.
 
-### Usage Example
+### Using the Anchor Component
+
+The Anchor component accepts a `variant` prop that determines its appearance:
 
 ```jsx
-import { 
-  Anchor,
-  PrimaryAnchor,
-  SecondaryAnchor,
-  OutlineAnchor,
-  InfoAnchor,
-  SuccessAnchor,
-  WarningAnchor,
-  DangerAnchor
-} from '@dokan/components';
+import { Anchor } from '@dokan/components';
 
-const AnchorsExample = () => {
-  return (
-    <div className="flex flex-wrap gap-4">
-      {/* Variant Anchors */}
-      <Anchor href="/dashboard">Dashboard</Anchor>
-      <PrimaryAnchor href="/products">Products</PrimaryAnchor>
-      <SecondaryAnchor href="/orders">Orders</SecondaryAnchor>
-      <OutlineAnchor href="/settings">Settings</OutlineAnchor>
-      
-      {/* Status Anchors */}
-      <InfoAnchor href="/help">Help Center</InfoAnchor>
-      <SuccessAnchor href="/complete">Complete Setup</SuccessAnchor>
-      <WarningAnchor href="/verify">Verify Account</WarningAnchor>
-      <DangerAnchor href="/delete">Delete Account</DangerAnchor>
-      
-      {/* Anchor Sizes */}
-      <Anchor href="/link1" className="dokan-btn-sm">Small Anchor</Anchor>
-      <Anchor href="/link2">Default Size</Anchor>
-      <Anchor href="/link3" className="dokan-btn-lg">Large Anchor</Anchor>
-    </div>
-  );
-};
+// Standard text link (default)
+<Anchor href="/path">Text Link</Anchor>
 ```
 
 ### Anchor Component Properties
 
-All Anchor components accept the following props:
+The Anchor component accepts the following props:
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
 | `href` | `string` | Yes | The URL to navigate to |
 | `children` | `ReactNode` | Yes | The content to be displayed within the anchor |
 | `className` | `string` | No | Additional CSS classes for custom styling |
-| `variant` | `"primary" \| "secondary" \| "tertiary" \| "outline" \| "info" \| "success" \| "warning" \| "danger"` | No | The style variant of the anchor |
+| `variant` | `"link" \| "primary" \| "secondary" \| "tertiary" \| "outline" \| "info" \| "success" \| "warning" \| "danger"` | No | The style variant of the anchor (default: "link") |
 | `...props` | `LinkProps` | No | Any additional props from the Link component |
-
-The Anchor components use the same Tailwind CSS classes as the Button components, providing a consistent look for both interactive elements while maintaining proper semantic HTML (links vs. buttons).
 
 ### CSS Classes for Anchors
 
-You can also apply the button styling directly to anchor elements using CSS classes:
+You can also apply styling directly to anchor elements using CSS classes:
 
 ```html
-<a href="/dashboard" class="dokan-btn inline-block">Dashboard</a>
-<a href="/products" class="dokan-btn dokan-btn-primary inline-block">Products</a>
-<a href="/orders" class="dokan-btn dokan-btn-success inline-block">Orders</a>
+<!-- Standard text link -->
+<a href="/path" class="dokan-link">Text Link</a>
+
+<!-- Button-styled links -->
+<a href="/path" class="dokan-btn inline-block">Default Button Link</a>
+<a href="/path" class="dokan-btn dokan-btn-primary inline-block">Primary Button Link</a>
+<a href="/path" class="dokan-btn dokan-btn-secondary inline-block">Secondary Button Link</a>
+
+<!-- Status-specific links -->
+<a href="/path" class="dokan-btn dokan-btn-info inline-block">Info Button Link</a>
+<a href="/path" class="dokan-btn dokan-btn-success inline-block">Success Button Link</a>
 ```
 
-Note the addition of `inline-block` class which helps anchors render properly with button styling.
+Note: When using button styling with anchor elements, include the `inline-block` class for proper rendering.
 
 ## Label Components
 
