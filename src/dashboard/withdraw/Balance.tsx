@@ -1,8 +1,8 @@
 import { Card } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
-import PriceHtml from '../../Components/PriceHtml';
+import PriceHtml from '../../components/PriceHtml';
 import { UseBalanceReturn } from './Hooks/useBalance';
-import '../../Definitions/window-types';
+import '../../definitions/window-types';
 import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
 import RequestWithdrawBtn from './RequestWithdrawBtn';

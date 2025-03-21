@@ -3,7 +3,7 @@ import WooCommerceAccounting from './woocommerce-accounting.d';
 
 /**
  * To get dokan supports just import like a normal js file
- * Ex: import '../path.../src/Definitions/window-types';
+ * Ex: import '../path.../src/definitions/window-types';
  */
 
 interface Currency {

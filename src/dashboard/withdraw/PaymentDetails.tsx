@@ -1,7 +1,7 @@
 import { Button, Card } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
-import PriceHtml from '../../Components/PriceHtml';
-import DateTimeHtml from '../../Components/DateTimeHtml';
+import PriceHtml from '../../components/PriceHtml';
+import DateTimeHtml from '../../components/DateTimeHtml';
 import { UseBalanceReturn } from './Hooks/useBalance';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
 import RequestList from './RequestList';

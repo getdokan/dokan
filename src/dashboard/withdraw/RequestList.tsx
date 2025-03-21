@@ -1,8 +1,8 @@
 import { Button, Modal, useToast } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import PriceHtml from '../../Components/PriceHtml';
-import DateTimeHtml from '../../Components/DateTimeHtml';
+import PriceHtml from '../../components/PriceHtml';
+import DateTimeHtml from '../../components/DateTimeHtml';
 import { useWithdraw } from './Hooks/useWithdraw';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
 import { isEqual } from 'lodash';
