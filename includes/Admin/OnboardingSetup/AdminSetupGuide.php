@@ -17,6 +17,13 @@ class AdminSetupGuide {
     protected array $steps = [];
 
     /**
+     * The setup completed option.
+     *
+     * @var string
+     */
+    protected string $setup_completed_option = 'dokan_admin_setup_guide_steps_completed';
+
+    /**
      * Get all steps.
      *
      * @since DOKAN_SINCE
@@ -68,6 +75,7 @@ class AdminSetupGuide {
                 'title'         => $step->get_title(),
                 'id'            => $step->get_id(),
                 'is_completed'  => $step->is_completed(),
+                'skippable'     => $step->get_skippable(),
                 'previous_step' => $index > 0 ? $steps[ $index - 1 ]->get_id() : '',
                 'next_step'     => $index < count( $steps ) - 1 ? $steps[ $index + 1 ]->get_id() : '',
             ];
@@ -84,6 +92,11 @@ class AdminSetupGuide {
      * @return bool
      */
     public function is_setup_complete(): bool {
+        // TODO: make this extensible by adding a filter.
+        if ( $this->get_setup_complete() ) {
+            return true;
+        }
+
         $steps = $this->get_steps();
 
         foreach ( $steps as $step ) {
@@ -93,6 +106,30 @@ class AdminSetupGuide {
         }
 
         return true;
+    }
+
+    /**
+     * Set the setup complete.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool $value The value to set.
+     *
+     * @return bool
+     */
+    public function set_setup_complete( bool $value = true ): bool {
+        return update_option( $this->setup_completed_option, $value );
+    }
+
+    /**
+     * Get the setup complete from option.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function get_setup_complete(): bool {
+        return get_option( $this->setup_completed_option, false );
     }
 
     /**

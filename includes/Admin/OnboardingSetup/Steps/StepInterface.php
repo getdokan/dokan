@@ -37,6 +37,15 @@ interface StepInterface {
     public function get_priority(): int;
 
     /**
+     * Get the step skippable or not.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function get_skippable(): bool;
+
+    /**
      * Register the step scripts and styles.
      *
      * @since DOKAN_SINCE

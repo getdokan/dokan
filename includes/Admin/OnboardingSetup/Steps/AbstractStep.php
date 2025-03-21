@@ -27,6 +27,14 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     protected int $priority = 100;
 
     /**
+     * The step skippable or not.
+     * The default is true.
+     *
+     * @var bool $skippable The step skippable or not.
+     */
+    protected bool $skippable = true;
+
+    /**
      * The storage key.
      *
      * @var string
@@ -83,6 +91,17 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
      */
     public function get_priority(): int {
         return $this->priority;
+    }
+
+    /**
+     * Get the step skippable or not.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function get_skippable(): bool {
+        return apply_filters( $this->storage_key . '_skippable', $this->skippable );
     }
 
     /**

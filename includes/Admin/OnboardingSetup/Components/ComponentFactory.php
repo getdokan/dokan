@@ -4,16 +4,18 @@ namespace WeDevs\Dokan\Admin\OnboardingSetup\Components;
 
 use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Checkbox;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\MultiCheck;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Currency;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Password;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\CheckboxGroup;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Commission\CategoryBasedCommission;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\CurrencyInput;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Radio;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\RadioButton;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\RecipientSelector;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\RadioBox;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Select;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Switcher;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Tel;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Text;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\ToggleSwitchField;
 
 class ComponentFactory {
     /**
@@ -66,7 +68,7 @@ class ComponentFactory {
      * @param string $id ID.
      * @param string $type Field Type.
      *
-     * @return Text|Number|Checkbox|Radio|Select|Tel|CategoryBasedCommission
+     * @return Text|Number|Checkbox|Radio|Select|Tel|Password|RadioBox|Switcher|MultiCheck|Currency|CategoryBasedCommission
      */
     public static function field( string $id, string $type = 'text' ): SettingsElement {
         $field = new Field( $id, $type );
