@@ -1,14 +1,22 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react';
+import { twMerge } from 'tailwind-merge';
 import { Button as DokanUIButton } from '@getdokan/dokan-ui';
 import type { ButtonProps } from '@getdokan/dokan-ui/dist/components/Button';
 
 // Base Button component that handles all variants
-export const Button = ( { className, children, ...props }: Partial< ButtonProps > ) => {
+export const Button = ( {
+    className,
+    children,
+    ...props
+}: Partial< ButtonProps > ) => {
     return (
         <DokanUIButton
             color="purple"
-            className={ `transition-colors duration-200 ease-in-out ring-1 ring-inset bg-dokan-btn text-dokan-btn border border-dokan-btn ring-dokan-btn hover:bg-dokan-btn-hover hover:text-dokan-btn-hover ${ className }` }
+            className={ twMerge(
+                'transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn',
+                className
+            ) }
             { ...props }
         >
             { children }
@@ -24,7 +32,10 @@ export const SecondaryButton = ( {
 }: Partial< ButtonProps > ) => (
     <DokanUIButton
         color="blue"
-        className={ `transition-colors duration-200 ease-in-out ring-1 ring-inset bg-dokan-btn-secondary text-dokan-btn-secondary border border-dokan-btn-secondary ring-dokan-btn-secondary hover:bg-dokan-btn-secondary-hover hover:text-dokan-btn-secondary-hover ${ className }` }
+        className={ twMerge(
+            'transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-secondary',
+            className
+        ) }
         { ...props }
     >
         { children }
@@ -37,7 +48,10 @@ export const TertiaryButton = ( {
 }: Partial< ButtonProps > ) => (
     <DokanUIButton
         color="purple"
-        className={ `transition-colors duration-200 ease-in-out ring-1 ring-inset bg-dokan-btn-tertiary text-dokan-btn-tertiary border border-dokan-btn-tertiary ring-dokan-btn-tertiary hover:bg-dokan-btn-tertiary-hover hover:text-dokan-btn-tertiary-hover ${ className }` }
+        className={ twMerge(
+            'transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-tertiary',
+            className
+        ) }
         { ...props }
     >
         { children }
@@ -52,7 +66,10 @@ export const InfoButton = ( {
 }: Partial< ButtonProps > ) => (
     <DokanUIButton
         color="blue"
-        className={ `transition-colors duration-200 ease-in-out ring-1 ring-inset bg-dokan-info text-dokan-info border border-dokan-info ring-dokan-info hover:bg-blue-600 hover:text-white ${ className }` }
+        className={ twMerge(
+            'transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-info',
+            className
+        ) }
         { ...props }
     >
         { children }
@@ -65,7 +82,10 @@ export const SuccessButton = ( {
 }: Partial< ButtonProps > ) => (
     <DokanUIButton
         color="green"
-        className={ `transition-colors duration-200 ease-in-out ring-1 ring-inset bg-dokan-success text-dokan-success border border-dokan-success ring-dokan-success hover:bg-green-600 hover:text-white ${ className }` }
+        className={ twMerge(
+            'transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-success',
+            className
+        ) }
         { ...props }
     >
         { children }
@@ -78,7 +98,10 @@ export const WarningButton = ( {
 }: Partial< ButtonProps > ) => (
     <DokanUIButton
         color="yellow"
-        className={ `transition-colors duration-200 ease-in-out ring-1 ring-inset bg-dokan-warning text-dokan-warning border border-dokan-warning ring-dokan-warning hover:bg-yellow-600 hover:text-white ${ className }` }
+        className={ twMerge(
+            'transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-warning',
+            className
+        ) }
         { ...props }
     >
         { children }
@@ -91,7 +114,10 @@ export const DangerButton = ( {
 }: Partial< ButtonProps > ) => (
     <DokanUIButton
         color="red"
-        className={ `transition-colors duration-200 ease-in-out ring-1 ring-inset bg-dokan-danger text-dokan-danger border border-dokan-danger ring-dokan-danger hover:bg-red-600 hover:text-white ${ className }` }
+        className={ twMerge(
+            'transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-danger',
+            className
+        ) }
         { ...props }
     >
         { children }
