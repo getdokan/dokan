@@ -6,7 +6,7 @@ The `Dokan Core Store` is a `WordPress Data Store` that provides access to the c
 import { useSelect } from '@wordpress/data';
 import coreStore from '@dokan/stores/core';
 
-export const usePermission = () => {
+const App = () => {
     const hasPermission = useSelect( ( select ) => {
         return select( coreStore ).hasCap( 'dokandar' );
     }, [] );
@@ -14,7 +14,23 @@ export const usePermission = () => {
     const currentUser = useSelect( ( select ) => {
         return select( coreStore ).getCurrentUser();
     }, [] );
-
-    return { hasPermission, currentUser };
 };
+```
+
+## Use Dokan Hooks
+
+```js
+import { usePermission, useCurrentUser } from '@dokan/hooks';
+
+/*
+// or import separately
+import { usePermission } from '@dokan/hooks/usePermission';
+import { useCurrentUser } from '@dokan/hooks/useCurrentUser';
+*/
+
+const App = () => {
+    const { hasPermission } = usePermission('dokander'); // you can pass string as single permission or pass string[] array for multiple permission checking
+    const { currentUser } = useCurrentUser();
+}
+
 ```
