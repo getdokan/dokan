@@ -188,8 +188,6 @@ const baseConfig = {
                 dokan: {
                     sidebar: 'var(--dokan-button-background-color, #322067)',
                     btn: 'var(--dokan-button-background-color, #7047EB)',
-                    'btn-secondary': 'var(--dokan-button-secondary-background-color, #ffffff)',
-                    'btn-tertiary': 'var(--dokan-button-tertiary-background-color, #00000000)',
                     anchor: 'var(--dokan-anchor-color, #7047EB)',
                     'anchor-hover': 'var(--dokan-anchor-hover-color, #502BBF)',
                     info: 'var(--dokan-info-color, #0B76B7)',
