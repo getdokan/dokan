@@ -376,25 +376,25 @@ const AlertExample = () => {
   return (
     <div className="space-y-4">
       <InfoAlert label="Information Message">
-        <div className="text-sm mt-1">
+        <div className="text-sm mt-1 font-light">
           Additional information about this message.
         </div>
       </InfoAlert>
       
       <WarningAlert label="Warning Message">
-        <div className="text-sm mt-1">
+        <div className="text-sm mt-1 font-light">
           Please pay attention to this warning.
         </div>
       </WarningAlert>
       
       <SuccessAlert label="Success Message">
-        <div className="text-sm mt-1">
+        <div className="text-sm mt-1 font-light">
           The operation completed successfully.
         </div>
       </SuccessAlert>
       
       <DangerAlert label="Error Message">
-        <div className="text-sm mt-1">
+        <div className="text-sm mt-1 font-light">
           There was a problem with your request.
         </div>
       </DangerAlert>
