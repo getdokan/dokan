@@ -11,7 +11,7 @@ import { useCurrentUser } from "@dokan/hooks";
 const Index = () => {
     const useWithdrawRequestHook = useWithdrawRequests( true );
     const withdrawSettings = useWithdrawSettings();
-    const { currentUser } = useCurrentUser();
+    const currentUser = useCurrentUser();
     const balance = useBalance();
 
     useEffect( () => {

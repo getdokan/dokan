@@ -14,7 +14,7 @@ function WithdrawRequests() {
     const useWithdrawRequestHook = useWithdrawRequests( true );
     const withdrawSettings = useWithdrawSettings();
     const balance = useBalance();
-    const { currentUser } = useCurrentUser();
+    const currentUser = useCurrentUser();
 
     const navigate = useNavigate();
     const location = useLocation();

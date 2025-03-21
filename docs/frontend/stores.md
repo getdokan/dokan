@@ -34,7 +34,7 @@ import { useCurrentUser } from '@dokan/hooks/useCurrentUser';
 
 const App = () => {
     const isDokandar = usePermission('dokandar'); // you can pass string as single permission or pass string[] array for multiple permission checking
-    const { currentUser } = useCurrentUser();
+    const currentUser = useCurrentUser();
 }
 
 ```
