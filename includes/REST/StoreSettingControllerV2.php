@@ -50,7 +50,13 @@ class StoreSettingControllerV2 extends StoreSettingController {
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_settings_group' ],
 					'permission_callback' => [ $this, 'get_settings_permission_callback' ],
-                    'args'                => [],
+                    'args'                => [
+                        'group_id' => [
+                            'description' => __( 'Unique identifier for the settings group.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'required'    => true,
+                        ],
+                    ],
                 ],
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
@@ -68,6 +74,18 @@ class StoreSettingControllerV2 extends StoreSettingController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_single_settings' ],
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+                    'args'                => [
+                        'group_id' => [
+                            'description' => __( 'Unique identifier for the settings group.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'required'    => true,
+                        ],
+                        'id' => [
+                            'description' => __( 'Unique identifier for the setting.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'required'    => true,
+                        ],
+                    ],
                 ],
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
@@ -85,6 +103,23 @@ class StoreSettingControllerV2 extends StoreSettingController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_single_settings_field' ],
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+                    'args'                => [
+                        'group_id' => [
+                            'description' => __( 'Unique identifier for the settings group.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'required'    => true,
+                        ],
+                        'parent_id' => [
+                            'description' => __( 'Unique identifier for the parent setting.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'required'    => true,
+                        ],
+                        'id' => [
+                            'description' => __( 'Unique identifier for the setting field.', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'required'    => true,
+                        ],
+                    ],
                 ],
                 [
                     'methods'             => WP_REST_Server::EDITABLE,

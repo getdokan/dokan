@@ -25,7 +25,7 @@ export class LiveSearch extends BasePage {
     // disable live search module
     async disableLiveSearchModule() {
         // dokan settings
-        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.gotoUntilNetworkidle(data.subUrls.backend.dokan.settings, { waitUntil: 'domcontentloaded' }, true);
         await this.notToBeVisible(selector.admin.dokan.settings.menus.liveSearch);
 
         // my account

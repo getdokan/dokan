@@ -37,7 +37,7 @@
 
     <?php
     /**
-     * @since DOKAN_LITE_SINCE Insert action on botton of payment settings form
+     * @since 3.4.3 Insert action on botton of payment settings form
      */
     do_action( 'dokan_payment_settings_form_bottom', $current_user, $profile_info );
 
@@ -45,7 +45,7 @@
         ?>
         <div class="dokan-form-group">
             <div class="dokan-w4 ajax_prev save dokan-text-left">
-                <input type="submit" name="dokan_update_payment_settings" class="dokan-btn dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Update Settings', 'dokan-lite' ); ?>">
+                <input type="submit" name="dokan_update_payment_settings" class="dokan-btn dokan-btn-theme" value="<?php esc_attr_e( 'Update Settings', 'dokan-lite' ); ?>">
             </div>
         </div>
     <?php endif; ?>

@@ -1173,6 +1173,7 @@ export const data = {
                 setupWizard: '?page=dokan-seller-setup',
                 dashboard: 'dashboard',
                 products: 'dashboard/products',
+                productEdit: (productId: string, nonce: string) => `dashboard/products/?product_id=${productId}&action=edit&_dokan_edit_product_nonce=${nonce}`,
                 spmv: 'dashboard/products-search',
                 orders: 'dashboard/orders',
                 userSubscriptions: 'dashboard/user-subscription',
@@ -2339,15 +2340,15 @@ export const data = {
             paletteValues: {
                 default: {
                     buttonText: '#FFFFFF',
-                    buttonBackground: '#F05025',
-                    buttonBorder: '#DA502B',
+                    buttonBackground: '#7047EB',
+                    buttonBorder: '#370EB1',
                     buttonHoverText: '#FFFFFF',
-                    buttonHoverBackground: '#DD3B0F',
-                    buttonHoverBorder: '#C83811',
-                    dashboardSidebarMenuText: '#CFCFCF',
-                    dashboardSidebarBackground: '#1B233B',
+                    buttonHoverBackground: '#502BBF',
+                    buttonHoverBorder: '#370EB1',
+                    dashboardSidebarMenuText: '#DACEFF',
+                    dashboardSidebarBackground: '#322067',
                     dashboardSidebarActiveMenuText: '#FFFFFF',
-                    dashboardSidebarActiveMenuBackground: '#F05025',
+                    dashboardSidebarActiveMenuBackground: '#7047EB',
                 },
                 tree: {
                     buttonText: '#FFFFFF', // rgb(255, 255, 255)
@@ -2368,7 +2369,7 @@ export const data = {
                     buttonHoverText: '#FFFFFF', // White
                     buttonHoverBackground: '#0056B3', // Egyptian Blue
                     buttonHoverBorder: '#004085', // Indigo Dye
-                    dashboardSidebarMenuText: '#CFCFCF', // Silver
+                    dashboardSidebarMenuText: '#DACEFF', // Silver
                     dashboardSidebarBackground: '#343A40', // Oil
                     dashboardSidebarActiveMenuText: '#FFFFFF', // White
                     dashboardSidebarActiveMenuBackground: '#007BFF', // Azure
@@ -2591,6 +2592,7 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // Printful Settings
         printful: {
             settingTitle: 'Printful Settings',
             clientId: PRINTFUL_APP_ID,
@@ -2606,6 +2608,43 @@ export const data = {
             optionNames: ['Size Guide Popup Text Color', 'Size Guide Popup Background Color', 'Size Guide Tab Background Color', 'Size Guide Active Tab Background Color', 'Size Guide Button Text Color'],
             optionValues: ['#000000', '#FFFFFF', '#EEEEEE', '#DDDDDD', '#1064A9'],
             saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
+        // Product form manager settings
+        productFormManager: {
+            settingTitle: 'Product Form Manager Settings',
+            customBlock: () => ({
+                currentLabel: 'Custom Block',
+                label: `test_block_${faker.string.nanoid(5)}`,
+                description: 'test Description',
+                productType: 'Simple',
+                productCategory: 'Uncategorized',
+            }),
+
+            updateBlock: {
+                currentLabel: '',
+                label: `test_block_${faker.string.nanoid(5)}`,
+                description: 'updated test Description',
+                productType: 'Variable',
+                productCategory: 'clothings',
+            },
+
+            customField: () => ({
+                block: 'Custom Block',
+                currentLabel: 'Custom Field',
+                label: `test_field_${faker.string.nanoid(5)}`,
+                type: 'checkbox', // 'text', 'number', 'reach_text', 'date_picker', 'date_range_picker', 'time_picker', 'select', 'multiselect', 'radio', 'checkbox', 'image', 'file'
+                placeholder: 'test placeholder',
+                helpContent: 'test help content',
+            }),
+
+            updateField: {
+                currentLabel: '',
+                label: `test_field_${faker.string.nanoid(5)}`,
+                filedType: 'number',
+                placeHolder: 'updated test placeholder',
+                helpContent: 'updated test help content',
+            },
         },
 
         // Vendor Subscription Settings

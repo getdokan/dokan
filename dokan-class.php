@@ -1,5 +1,6 @@
 <?php
 
+use WeDevs\Dokan\Contracts\Hookable;
 use WeDevs\Dokan\DependencyManagement\Container;
 
 /**
@@ -24,7 +25,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.14.4';
+    public $version = '3.14.10';
 
     /**
      * Instance of self
@@ -268,6 +269,11 @@ final class WeDevs_Dokan {
         add_action( 'in_plugin_update_message-dokan-lite/dokan.php', [ \WeDevs\Dokan\Install\Installer::class, 'in_plugin_update_message' ] );
 
         add_action( 'widgets_init', [ $this, 'register_widgets' ] );
+
+        $hooks = $this->get_container()->get( Hookable::class );
+        foreach ( $hooks as $hook ) {
+            $hook->register_hooks();
+        }
     }
 
     /**
@@ -276,8 +282,6 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function includes() {
-        require_once DOKAN_DIR . '/deprecated/deprecated-functions.php';
-        require_once DOKAN_DIR . '/deprecated/deprecated-hooks.php';
         require_once DOKAN_INC_DIR . '/functions.php';
 
         if ( ! function_exists( 'dokan_pro' ) ) {
@@ -291,7 +295,6 @@ final class WeDevs_Dokan {
         require_once DOKAN_INC_DIR . '/wc-functions.php';
 
         require_once DOKAN_INC_DIR . '/wc-template.php';
-        require_once DOKAN_DIR . '/deprecated/deprecated-classes.php';
 
         if ( is_admin() ) {
             require_once DOKAN_INC_DIR . '/Admin/functions.php';
