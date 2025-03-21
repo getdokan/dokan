@@ -12,7 +12,7 @@ export const InfoAlert = ( {
         label={ label }
         color="blue"
         type="info"
-        className={ `ring-1 ring-inset dokan-alert-info ${ className }` }
+        className={ `ring-1 ring-inset !dokan-alert-info ${ className }` }
     >
         { children }
     </SimpleAlert>
@@ -27,7 +27,7 @@ export const WarningAlert = ( {
         label={ label }
         color="yellow"
         type="warning"
-        className={ `ring-1 ring-inset dokan-alert-warning ${ className }` }
+        className={ `ring-1 ring-inset !dokan-alert-warning ${ className }` }
     >
         { children }
     </SimpleAlert>
@@ -42,7 +42,7 @@ export const SuccessAlert = ( {
         label={ label }
         color="green"
         type="success"
-        className={ `ring-1 ring-inset dokan-alert-success ${ className }` }
+        className={ `ring-1 ring-inset !dokan-alert-success ${ className }` }
     >
         { children }
     </SimpleAlert>
@@ -57,7 +57,7 @@ export const DangerAlert = ( {
         label={ label }
         color="red"
         type="danger"
-        className={ `ring-1 ring-inset dokan-alert-danger ${ className }` }
+        className={ `ring-1 ring-inset !dokan-alert-danger ${ className }` }
     >
         { children }
     </SimpleAlert>
