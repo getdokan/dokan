@@ -6,7 +6,6 @@ import { SettingsProps } from '../../../StepSettings';
 // import Switches from '../../../components/Switches';
 
 const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
-    console.log( element, ':::::::::::::::::::::element' );
     const [ categories, setCategories ] = useState( [] );
     const [ renderCategories, setRenderCategories ] = useState( [] );
     const [ openRows, setOpenRows ] = useState( [] );
