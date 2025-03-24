@@ -18,13 +18,6 @@ class CategoryBasedCommission extends Field {
     protected $input_type = 'category_based_commission';
 
     /**
-     * Commission Data.
-     *
-     * @var array $commission Commission data with all and items properties.
-     */
-    protected $commission;
-
-    /**
      * Reset subcategory flag.
      *
      * @var string $reset_subcategory Whether to apply parent category commission to subcategories.
@@ -38,28 +31,6 @@ class CategoryBasedCommission extends Field {
      */
     public function __construct( string $id ) {
         $this->id = $id;
-    }
-
-    /**
-     * Get Commission Data.
-     *
-     * @return array
-     */
-    public function get_commission(): array {
-        return $this->commission;
-    }
-
-    /**
-     * Set Commission Data.
-     *
-     * @param array $commission Commission data.
-     *
-     * @return CategoryBasedCommission
-     */
-    public function set_commission( array $commission ): CategoryBasedCommission {
-        $this->commission = $commission;
-
-        return $this;
     }
 
     /**
@@ -103,7 +74,7 @@ class CategoryBasedCommission extends Field {
     public function populate(): array {
         $categories_controller     = new Categories();
         $data                      = parent::populate();
-        $data['commission']        = $this->get_commission();
+        $data['value']             = $this->get_value();
         $data['categories']        = $categories_controller->get();
         $data['reset_subcategory'] = $this->get_reset_subcategory();
 
