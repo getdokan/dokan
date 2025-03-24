@@ -1,40 +1,13 @@
-import { useState, useEffect } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
-import { Button, SimpleInput } from '@getdokan/dokan-ui';
+import { useState } from '@wordpress/element';
+import { __, sprintf } from '@wordpress/i18n';
+import { MaskedInput } from '@getdokan/dokan-ui';
 import { debounce } from '@wordpress/compose';
 import { SettingsProps } from '../../../StepSettings';
-// import Switches from '../../../components/Switches';
 
 const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
-    const [ categories, setCategories ] = useState( [] );
-    const [ renderCategories, setRenderCategories ] = useState( [] );
-    const [ openRows, setOpenRows ] = useState( [] );
-    const [ allCategoryEnabled, setAllCategoryEnabled ] = useState( true );
-    const [ commission, setCommission ] = useState( {} );
-    const [ resetSubCategory, setResetSubCategory ] = useState( true );
-
     const { currency } = adminWithdrawData;
     const getCurrencySymbol = currency?.symbol;
 
-    useEffect(() => {
-        // Initialize commission data from element
-        if ( element?.commission ) {
-            setCommission( { ...element?.commission } );
-        }
-
-        if ( element?.reset_subcategory ) {
-            setResetSubCategory( element.reset_subcategory );
-        }
-
-        setCategories( element.categories );
-        setRenderCategories( Object.values( getCategories( element.categories ) ) );
-
-        if ( element?.commission?.items && Object.values( element.commission.items ).length ) {
-            setAllCategoryEnabled(false);
-        }
-    }, [element]);
-
-    // Get hierarchical categories
     const getCategories = (categoriesData) => {
         const result = [];
         const categoryMap = {};
@@ -64,6 +37,17 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
         return result;
     };
 
+    const categories = element?.categories || {};
+    const commissionValues = element?.value || {};
+    const resetCategoryVal = element?.reset_subcategory || 'on';
+    const renderCategories = Object.values( getCategories( categories ) );
+    const hasCommissionItems = Object.values( commissionValues?.items || {} ).length;
+    const resetSubCategory = resetCategoryVal !== 'off';
+
+    const [ openRows, setOpenRows ] = useState( [] );
+    const [ commission, setCommission ] = useState( { ...commissionValues } );
+    const [ allCategoryEnabled, setAllCategoryEnabled ] = useState( ! hasCommissionItems );
+
     // Toggle category row
     const catRowClick = (item) => {
         const termId = Number(item.term_id);
@@ -92,7 +76,7 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
 
     // Get children of a category
     const getChildren = (parentId) => {
-        const categoriesArray = Object.values(categories);
+        const categoriesArray = Object.values( categories );
 
         const children = categoriesArray.filter(item => {
             return item.parents.includes(Number(parentId));
@@ -165,7 +149,7 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
         // Emit change to parent component
         onValueChange({
             ...element,
-            commission: {
+            value: {
                 ...commission,
                 items: { ...commission?.items, [termId]: {
                     ...commission?.items?.[termId] || commission?.all,
@@ -177,17 +161,16 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
 
     // Handle all category commission change
     const handleAllCategoryChange = debounce((value, commissionType) => {
-        if (commissionType === 'percentage') {
-            value = validatePercentage(unFormatValue(value));
+        if ( commissionType === 'percentage' ) {
+            value = validatePercentage( unFormatValue( value ) );
         } else {
-            value = unFormatValue(value);
+            value = unFormatValue( value );
         }
 
         setCommission(prevCommission => {
             const newCommission = { ...prevCommission };
             newCommission.all = { ...newCommission?.all, [commissionType]: value };
 
-            // Clear items if resetSubCategory is true
             if (resetSubCategory) {
                 newCommission.items = {};
             }
@@ -195,39 +178,15 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
             return newCommission;
         });
 
-        // Emit change to parent component
         onValueChange({
             ...element,
-            commission: {
+            value: {
                 ...commission,
                 all: { ...commission?.all, [commissionType]: value },
                 items: resetSubCategory ? {} : commission?.items
             }
         });
     }, 700);
-
-    // Handle reset subcategory toggle
-    const handleResetToggle = (value) => {
-        const confirmTitle = value
-            ? __("Enable Commission Inheritance Setting?", "dokan-lite")
-            : __("Disable Commission Inheritance Setting?", "dokan-lite");
-
-        const htmlText = value
-            ? __("Parent category commission changes will automatically update all subcategories. Existing rates will remain unchanged until parent category is modified.", "dokan-lite")
-            : __("Subcategories will maintain their independent commission rates when parent category rates are changed.", "dokan-lite");
-
-        const confirmBtnText = value ? __("Enable", "dokan-lite") : __("Disable", "dokan-lite");
-
-        // In a real implementation, you'd use a confirmation dialog here
-        // For now, we'll just update the state
-        setResetSubCategory(value);
-
-        // Emit change to parent component
-        onValueChange({
-            ...element,
-            reset_subcategory: value
-        });
-    };
 
     // Format and unformat values
     const unFormatValue = (value) => {
@@ -299,22 +258,8 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
         return null;
     }
 
-    // const [ number, setNumber ] = useState( `10.0000` );
-
     return (
         <div className="p-4 flex flex-col gap-y-4">
-            {/*<div className="flex justify-between mb-4 p-0 m-0">*/}
-            {/*    <label className="p-0 m-0 mb-[6px] block">*/}
-            {/*        {__("Apply Parent Category Commission to All Subcategories", "dokan-lite")}*/}
-            {/*    </label>*/}
-            {/*    /!*<input type={`text`} value={ number } onChange={ ( e ) => ( setNumber(e.target.value) ) } />*!/*/}
-            {/*    <SimpleInput*/}
-            {/*        value={ number }*/}
-            {/*        onChange={ ( e ) => ( setNumber(e.target.value) ) }*/}
-            {/*    />*/}
-            {/*    /!*<Switches enabled={resetSubCategory} onChange={handleResetToggle} />*!/*/}
-            {/*</div>*/}
-
             { ( element?.title || element?.description ) && (
                 <div className="flex-col flex gap-1">
                     <h2 className="text-sm leading-6 font-semibold text-gray-900">
@@ -350,35 +295,48 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
                                 className="p-1 bg-transparent border-none cursor-pointer"
                                 onClick={() => setAllCategoryEnabled(!allCategoryEnabled)}
                             >
-                                <i className={`far ${!allCategoryEnabled ? "fa-minus-square text-black" : "fa-plus-square text-[#4C19E6]"}`}></i>
+                                <i className={`far ${ ! allCategoryEnabled ? "fa-minus-square text-black" : "fa-plus-square text-[#4C19E6]" }` }></i>
                             </button>
-                            <p className="text-[14px] m-0">{
-                                __( "All Categories", "dokan-lite" ) }
+                            <p className="text-[14px] m-0">
+                                { __( "All Categories", "dokan-lite" ) }
                             </p>
                         </div>
 
                         <div className="flex flex-row w-1/2 border-0 border-b-[1px] border-[#e9e9ea] border-solid">
                             <div className="w-1/2 flex justify-start items-center box-border">
-                                <SimpleInput
+                                <MaskedInput
                                     value={ formatValue( commission?.all?.percentage ) }
                                     onChange={ ( e ) => handleAllCategoryChange( e.target.value, 'percentage' ) }
-                                    className="wc_input_decimal min-h-full !border-0 w-[100%] pl-[5px] pr-0 pt-0 pb-0 ring-0 focus:ring-0 focus:!outline-none"
+                                    maskRule={ {
+                                        numeral: true,
+                                        delimiter: currency?.thousand ?? ',',
+                                        numeralDecimalMark: currency?.decimal ?? '.',
+                                        numeralDecimalScale: currency?.precision ?? 2,
+                                    } }
+                                    className={ `px-4 border-0 shadow-none focus:ring-0` }
                                 />
                                 <div className="h-full border-l-[1px] border-r-[1px] flex justify-center items-center bg-gray-100">
-                                    <span className="pl-2 pr-2">{__("%", "dokan-lite")}</span>
+                                    <span className="pl-2 pr-2">{ __( "%", "dokan-lite" ) }</span>
                                 </div>
                             </div>
-                            <div className="h-full border-l-[1px] border-r-[1px] md:border-0 bg-transparent flex justify-center items-center">
-                                <span className="p-2">{__("+" , "dokan-lite")}</span>
+                            <div className="h-full border-l-[1px] border-r-[1px] -ml-1 md:border-0 bg-transparent flex justify-center items-center">
+                                <span className="p-2">{ __( "+" , "dokan-lite" ) }</span>
                             </div>
                             <div className="w-1/2 flex justify-start items-center box-border">
                                 <div className="h-full border-r-[1px] border-l-[1px] flex justify-center items-center bg-gray-100">
                                     <span className="pl-2 pr-2">{ getCurrencySymbol }</span>
                                 </div>
-                                <SimpleInput
+                                <MaskedInput
+                                    // addOnLeft={ getCurrencySymbol }
                                     value={ formatValue( commission?.all?.flat ) }
                                     onChange={ ( e ) => handleAllCategoryChange( e.target.value, 'flat' ) }
-                                    className="wc_input_price min-h-full !border-0 w-[100%] pl-[5px] pr-0 pt-0 pb-0 ring-0 focus:ring-0 focus:!outline-none"
+                                    maskRule={ {
+                                        numeral: true,
+                                        delimiter: currency?.thousand ?? ',',
+                                        numeralDecimalMark: currency?.decimal ?? '.',
+                                        numeralDecimalScale: currency?.precision ?? 2,
+                                    } }
+                                    className={ `px-4 border-0 shadow-none focus:ring-0` }
                                 />
                             </div>
                         </div>
@@ -403,39 +361,55 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
                                     <button
                                         type="button"
                                         className={ `p-1 bg-transparent border-none cursor-pointer ${ ! item.children.length ? "disabled:cursor-not-allowed text-gray-300" : "cursor-pointer text-[#4C19E6]" }` }
-                                        disabled={ ! item.children.length }
                                         onClick={ () => catRowClick( item ) }
+                                        disabled={ ! item.children.length }
                                     >
                                         <i className={`far ${ openRows.includes( Number( item.term_id ) ) ? "fa-minus-square text-black" : "fa-plus-square" }` }></i>
                                     </button>
                                     <p className="text-[14px] text-black m-0">
-                                        <span title={item.name} dangerouslySetInnerHTML={{ __html: item.name }}></span>
-                                        <span className="text-[12px] text-gray-500 ml-1" title={__("Category ID", "dokan")}>#{item.term_id}</span>
+                                        <span title={ item.name } dangerouslySetInnerHTML={{ __html: item.name }}></span>
+                                        <span className="text-[12px] text-gray-500 ml-1" title={ __( "Category ID", "dokan" ) }>
+                                            { sprintf( __( '#%s', 'dokan' ), item.term_id ) }
+                                        </span>
                                     </p>
                                 </div>
 
                                 <div className="w-1/2 flex min-h-[3rem] border-0 border-solid border-[#e9e9ea]">
                                     <div className="w-1/2 flex justify-start items-center box-border">
-                                        <SimpleInput
-                                            className="wc_input_price min-h-full focus:shadow-none border-0 pl-[5px] pr-0 pt-0 pb-0 w-[100%] ring-0 focus:ring-0 focus:!outline-none"
+                                        <MaskedInput
+                                            // addOnLeft={ getCurrencySymbol }
                                             value={ formatValue( getCommissionValue( 'percentage', item.term_id ) ) }
                                             onChange={ ( e ) => handleCommissionItemChange( e.target.value, 'percentage', item.term_id ) }
+                                            maskRule={ {
+                                                numeral: true,
+                                                delimiter: currency?.thousand ?? ',',
+                                                numeralDecimalMark: currency?.decimal ?? '.',
+                                                numeralDecimalScale: currency?.precision ?? 2,
+                                            } }
+                                            className={ `px-4 border-0 shadow-none focus:ring-0` }
                                         />
                                         <div className="h-full border-l-[1px] border-r-[1px] flex justify-center items-center bg-gray-100">
                                             <span className="pl-2 pr-2">{__("%", "dokan-lite")}</span>
                                         </div>
                                     </div>
-                                    <div className="h-full border-l-[1px] border-r-[1px] md:border-0 bg-transparent flex justify-center items-center">
+                                    <div className="h-full border-l-[1px] border-r-[1px] -ml-1 md:border-0 bg-transparent flex justify-center items-center">
                                         <span className="p-2">{__("+" , "dokan-lite")}</span>
                                     </div>
                                     <div className="w-1/2 flex justify-start items-center box-border">
                                         <div className="h-full border-r-[1px] border-l-[1px] flex justify-center items-center bg-gray-100">
                                             <span className="pl-2 pr-2">{ getCurrencySymbol }</span>
                                         </div>
-                                        <SimpleInput
-                                            className="wc_input_price min-h-full focus:shadow-none border-0 pl-[5px] pr-0 pt-0 pb-0 w-[100%] ring-0 focus:ring-0 focus:!outline-none"
+                                        <MaskedInput
+                                            // addOnLeft={ getCurrencySymbol }
                                             value={ formatValue( getCommissionValue( 'flat', item.term_id ) ) }
                                             onChange={ ( e ) => handleCommissionItemChange( e.target.value, 'flat', item.term_id ) }
+                                            maskRule={ {
+                                                numeral: true,
+                                                delimiter: currency?.thousand ?? ',',
+                                                numeralDecimalMark: currency?.decimal ?? '.',
+                                                numeralDecimalScale: currency?.precision ?? 2,
+                                            } }
+                                            className={ `px-4 border-0 shadow-none focus:ring-0` }
                                         />
                                     </div>
                                 </div>

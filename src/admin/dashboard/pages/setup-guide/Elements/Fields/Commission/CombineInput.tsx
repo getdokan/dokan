@@ -1,31 +1,17 @@
-import { debounce } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { RawHTML } from '@wordpress/element';
+import { debounce } from '@wordpress/compose';
 import { SettingsProps } from '../../StepSettings';
 import { useState, useEffect } from '@wordpress/element';
 import { MaskedInput, SimpleInput } from "@getdokan/dokan-ui";
 
 const CombineInput = ({ element, onValueChange }: SettingsProps) => {
-    const [ values, setValues ] = useState( {
-        percentage: '',
-        fixed: ''
-    } );
+    const [ values, setValues ] = useState( element.value );
 
     const { currency } = adminWithdrawData;
     const getCurrencySymbol = currency?.symbol;
 
-    // Initialize values from element
-    useEffect( () => {
-        if ( element ) {
-            setValues( {
-                percentage : element.percentage || '',
-                fixed      : element.fixed || ''
-            } );
-        }
-    }, [ element ] );
-
-    // Handle change for percentage input
-    const handlePercentageChange = debounce( ( value ) => {
+    const handlePercentageChange = ( value ) => {
         // Validate percentage (0-100)
         let validatedValue = value;
         if ( value !== '' ) {
@@ -37,33 +23,33 @@ const CombineInput = ({ element, onValueChange }: SettingsProps) => {
 
         setValues( prev => ( {
             ...prev,
-            percentage: validatedValue
+            admin_percentage : parseFloat( unFormatValue( validatedValue ) )
         } ) );
 
-        // Emit change to parent component
         onValueChange( {
             ...element,
-            percentage: validatedValue,
-            fixed: values.fixed
+            value: {
+                ...values,
+                admin_percentage : parseFloat( unFormatValue( validatedValue ) ),
+            }
         } );
-    }, 500 );
+    };
 
-    // Handle change for fixed input
-    const handleFixedChange = debounce( ( value ) => {
+    const handleFixedChange = ( value ) => {
         setValues( prev => ( {
             ...prev,
-            fixed: value
+            additional_fee : parseFloat( unFormatValue( value ) )
         } ) );
 
-        // Emit change to parent component
         onValueChange( {
             ...element,
-            percentage: values.percentage,
-            fixed: value
+            value: {
+                ...values,
+                additional_fee : parseFloat( unFormatValue( value ) )
+            }
         } );
-    }, 500 );
+    };
 
-    // Format and unformat values
     const unFormatValue = ( value ) => {
         if ( value === '' ) {
             return value;
@@ -77,8 +63,8 @@ const CombineInput = ({ element, onValueChange }: SettingsProps) => {
         return String( value ).replace( /[^0-9.-]/g, '' );
     };
 
-    const formatValue = (value) => {
-        if (value === '') {
+    const formatValue = ( value ) => {
+        if ( value === '' ) {
             return value;
         }
 
@@ -95,13 +81,17 @@ const CombineInput = ({ element, onValueChange }: SettingsProps) => {
         return value;
     };
 
+    // Apply to debounce for percentage and fixed amount change.
+    const debounceWithPercentageAmountChange = debounce( handlePercentageChange, 500 );
+    const debounceWithFixedAmountChange = debounce( handleFixedChange, 500 );
+
     if ( ! element.display ) {
         return null;
     }
 
     return (
         <div
-            id={element.hook_key + '_div'}
+            id={ element.hook_key + '_div' }
             className=" @container/currency grid grid-cols-12 p-4 gap-2"
         >
             <div className="flex flex-col @sm/currency:col-span-8 col-span-12 gap-1">
@@ -114,10 +104,10 @@ const CombineInput = ({ element, onValueChange }: SettingsProps) => {
             </div>
             <div className="@sm/currency:col-span-4 col-span-12 flex items-center @sm/currency:justify-end space-x-2">
                 <MaskedInput
-                    value={ formatValue( values.percentage ) }
-                    onChange={ ( e ) => handlePercentageChange( e.target.value ) }
+                    value={ formatValue( values.admin_percentage ) }
                     addOnRight={ <span>{ __( '%', 'dokan-lite' ) }</span> }
-                    className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0` }
+                    onChange={ ( e ) => debounceWithPercentageAmountChange( e.target.value ) }
+                    className={ `w-24 h-10 rounded rounded-r-none focus:border-gray-300 focus:ring-0` }
                 />
 
                 <div className="text-gray-500 text-lg">
@@ -126,12 +116,12 @@ const CombineInput = ({ element, onValueChange }: SettingsProps) => {
 
                 <MaskedInput
                     addOnLeft={ getCurrencySymbol }
-                    value={ formatValue( values.fixed ) }
-                    onChange={ ( e ) => handleFixedChange( e.target.value ) }
+                    value={ formatValue( values.additional_fee ) }
+                    onChange={ ( e ) => debounceWithFixedAmountChange( e.target.value ) }
                     maskRule={ {
                         numeral: true,
-                        numeralDecimalMark: currency?.decimal ?? '.',
                         delimiter: currency?.thousand ?? ',',
+                        numeralDecimalMark: currency?.decimal ?? '.',
                         numeralDecimalScale: currency?.precision ?? 2,
                     } }
                     className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 border-l-0` }

@@ -17,18 +17,18 @@ class CombineInput extends Field {
     protected $input_type = 'combine_input';
 
     /**
-     * Fixed value.
+     * Additional fee.
      *
-     * @var string $fixed Fixed value.
+     * @var string $additional_fee Fixed value.
      */
-    protected $fixed;
+    protected $additional_fee = '';
 
     /**
      * Percentage value.
      *
-     * @var string $percentage Percentage value.
+     * @var string $admin_percentage Percentage value.
      */
-    protected $percentage;
+    protected $admin_percentage = '';
 
     /**
      * Constructor.
@@ -44,19 +44,19 @@ class CombineInput extends Field {
      *
      * @return string
      */
-    public function get_fixed(): string {
-        return $this->fixed;
+    public function get_additional_fee(): string {
+        return $this->additional_fee;
     }
 
     /**
      * Set fixed value.
      *
-     * @param string $fixed Fixed value.
+     * @param string $additional_fee Fixed value.
      *
      * @return CombineInput
      */
-    public function set_fixed( string $fixed ): CombineInput {
-        $this->fixed = $fixed;
+    public function set_additional_fee( string $additional_fee ): CombineInput {
+        $this->additional_fee = $additional_fee;
 
         return $this;
     }
@@ -66,8 +66,8 @@ class CombineInput extends Field {
      *
      * @return string
      */
-    public function get_percentage(): string {
-        return $this->percentage;
+    public function get_admin_percentage(): string {
+        return $this->admin_percentage;
     }
 
     /**
@@ -77,8 +77,8 @@ class CombineInput extends Field {
      *
      * @return CombineInput
      */
-    public function set_percentage( string $percentage ): CombineInput {
-        $this->percentage = $percentage;
+    public function set_admin_percentage( string $percentage ): CombineInput {
+        $this->admin_percentage = $percentage;
 
         return $this;
     }
@@ -100,9 +100,10 @@ class CombineInput extends Field {
      * @return array
      */
     public function populate(): array {
-        $data               = parent::populate();
-        $data['fixed']      = $this->get_fixed();
-        $data['percentage'] = $this->get_percentage();
+        $data                     = parent::populate();
+        $data['additional_fee']   = $this->get_additional_fee();
+        $data['admin_percentage'] = $this->get_admin_percentage();
+        $data['value']            = $this->get_value();
 
         return $data;
     }
@@ -115,18 +116,7 @@ class CombineInput extends Field {
      * @return array
      */
     public function sanitize_element( $data ): array {
-        if ( ! is_array( $data ) ) {
-            return [
-                'fixed'      => '',
-                'percentage' => ''
-            ];
-        }
-
-        return [
-            'fixed'      => isset( $data['fixed'] ) ? sanitize_text_field( $data['fixed'] ) : '',
-            'percentage' => isset( $data['percentage'] ) ? sanitize_text_field( $data['percentage'] ) : '',
-        ];
-//        return wc_clean( parent::sanitize_element( $data ) );
+        return wc_clean( parent::sanitize_element( $data ) );
     }
 
     /**

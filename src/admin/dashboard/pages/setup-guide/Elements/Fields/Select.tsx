@@ -3,11 +3,8 @@ import { SettingsProps } from '../../StepSettings';
 import { SimpleSelect } from '@getdokan/dokan-ui';
 
 const Select = ( { element, onValueChange }: SettingsProps ) => {
-    const [ selectedOption, setSelectedOption ] = useState( [] );
-
-    if ( ! element.display ) {
-        return <></>;
-    }
+    const initialValue = element.value ? element.value : element.default;
+    const [ selectedOption, setSelectedOption ] = useState( initialValue );
 
     const onHandleChange = ( event ) => {
         const selectedValue = event?.target?.value;
