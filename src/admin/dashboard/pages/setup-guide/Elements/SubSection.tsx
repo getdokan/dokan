@@ -9,9 +9,11 @@ const SubSection = ( {
     if ( ! element.display ) {
         return <></>;
     }
+
     const isAllChildrenFields = element?.children?.every( ( child ) => {
         return child.type === 'field';
     } );
+
     return (
         <div className="col-span-4">
             <div className={ `mb-6` }>

@@ -20,6 +20,11 @@ class CommissionStep extends AbstractStep {
      */
     protected int $priority = 10;
 
+    /**
+     * The settings options.
+     *
+     * @var array The settings options.
+     */
     protected $settings_options = [ 'dokan_selling' ];
 
     /**
@@ -41,6 +46,9 @@ class CommissionStep extends AbstractStep {
 		return [];
 	}
 
+    /**
+     * @inheritDoc
+     */
 	public function styles(): array {
 		return [];
 	}
@@ -85,6 +93,9 @@ class CommissionStep extends AbstractStep {
             );
     }
 
+    /**
+     * @inheritDoc
+     */
 	public function settings(): array {
 		return [];
 	}

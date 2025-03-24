@@ -92,20 +92,18 @@ class AdminSetupGuide {
      * @return bool
      */
     public function is_setup_complete(): bool {
-        // TODO: make this extensible by adding a filter.
-        if ( $this->get_setup_complete() ) {
-            return true;
-        }
+        $setup_complete = $this->get_setup_complete();
 
-        $steps = $this->get_steps();
-
-        foreach ( $steps as $step ) {
-            if ( ! $step->is_completed() ) {
-                return false;
+        if ( ! $setup_complete ) {
+            foreach ( $this->get_steps() as $step ) {
+                if ( ! $step->is_completed() ) {
+                    $setup_complete = false;
+                    break;
+                }
             }
         }
 
-        return true;
+        return apply_filters( 'dokan_admin_setup_guide_is_setup_complete', $setup_complete );
     }
 
     /**

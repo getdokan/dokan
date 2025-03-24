@@ -10,6 +10,7 @@ const Section = ( { element, onValueChange }: SettingsProps ): JSX.Element => {
     const isAllChildrenFields = element?.children?.every( ( child ) => {
         return child?.type === 'field';
     } );
+
     return (
         <section aria-labelledby="settings-section-heading" key={ element.id }>
             <div className="bg-white sm:rounded-md">

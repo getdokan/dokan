@@ -20,6 +20,11 @@ class AppearanceStep extends AbstractStep {
      */
     protected int $priority = 40;
 
+    /**
+     * The settings options.
+     *
+     * @var array The settings options.
+     */
     protected $settings_options = [ 'dokan_appearance' ];
 
     /**
@@ -41,6 +46,9 @@ class AppearanceStep extends AbstractStep {
 		return [];
 	}
 
+    /**
+     * @inheritDoc
+     */
 	public function styles(): array {
 		return [];
 	}
@@ -112,6 +120,9 @@ class AppearanceStep extends AbstractStep {
             );
     }
 
+    /**
+     * @inheritDoc
+     */
 	public function settings(): array {
 		return [];
 	}

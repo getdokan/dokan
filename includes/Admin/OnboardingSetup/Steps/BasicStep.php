@@ -28,6 +28,11 @@ class BasicStep extends AbstractStep {
      */
     protected bool $skippable = false;
 
+    /**
+     * The settings options.
+     *
+     * @var array The settings options.
+     */
     protected $settings_options = [ 'dokan_selling' ];
 
     /**
@@ -49,6 +54,9 @@ class BasicStep extends AbstractStep {
 		return [];
 	}
 
+    /**
+     * @inheritDoc
+     */
 	public function styles(): array {
 		return [];
 	}
@@ -116,6 +124,9 @@ class BasicStep extends AbstractStep {
             );
     }
 
+    /**
+     * @inheritDoc
+     */
     public function settings(): array {
         return [];
     }

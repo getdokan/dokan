@@ -1,5 +1,3 @@
-import React from 'react';
-
 const AdminIcon = ( { selected = false }: { selected?: boolean } ) => {
     return (
         <svg
