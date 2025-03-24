@@ -111,10 +111,12 @@ class CommissionStep extends AbstractStep {
                             ->add_dependency( 'commission.commission_type', 'fixed', true, 'display', 'show', '===' )
                             ->set_admin_percentage( $dokan_selling['admin_percentage'] ?? $default_settings['admin_percentage'] )
                             ->set_additional_fee( $dokan_selling['additional_fee'] ?? $default_settings['additional_fee'] )
-                            ->set_value( [
-                                'additional_fee'   => $dokan_selling['additional_fee'] ?? $default_settings['additional_fee'],
-                                'admin_percentage' => $dokan_selling['admin_percentage'] ?? $default_settings['admin_percentage'],
-                            ] )
+                            ->set_value(
+                                [
+                                    'additional_fee'   => $dokan_selling['additional_fee'] ?? $default_settings['additional_fee'],
+                                    'admin_percentage' => $dokan_selling['admin_percentage'] ?? $default_settings['admin_percentage'],
+                                ]
+                            )
                     )
                     ->add(
                         Factory::field( 'reset_sub_category_when_edit_all_category', 'switch' )
