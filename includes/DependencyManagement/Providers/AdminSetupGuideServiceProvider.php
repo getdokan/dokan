@@ -18,13 +18,16 @@ class AdminSetupGuideServiceProvider extends BaseServiceProvider {
      */
     protected $tags = [ 'admin-setup-guide-service' ];
 
-	protected $services = [
+    /**
+     * Services to register.
+     */
+    protected $services = [
         AdminSetupGuide::class,
         BasicStep::class,
         CommissionStep::class,
         WithdrawStep::class,
         AppearanceStep::class,
-	];
+    ];
 
 	/**
      * Register the classes.

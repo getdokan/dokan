@@ -193,7 +193,7 @@ class Dashboard implements Hookable {
                         'external' => false,
                     ],
                 ]
-            )
+            ),
         ];
 
         if ( dokan()->is_pro_exists() ) {

@@ -80,9 +80,12 @@ class WithdrawStep extends AbstractStep {
             );
     }
 
-	public function settings(): array {
-		return [];
-	}
+    /**
+     * @inheritDoc
+     */
+    public function settings(): array {
+        return [];
+    }
 
     /**
      * @inheritDoc

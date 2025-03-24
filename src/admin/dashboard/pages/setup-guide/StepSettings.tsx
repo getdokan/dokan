@@ -10,7 +10,7 @@ import settingsDependencyApplicator from '../../utils/settingsDependencyApplicat
 import settingsElementFinderReplacer from '../../utils/settingsElementFinderReplacer';
 import NextButton from './components/NextButton';
 import BackButton from './components/BackButton';
-import { Button } from "@getdokan/dokan-ui";
+import { Button } from '@getdokan/dokan-ui';
 
 export type SettingsElementDependency = {
     key?: string;
@@ -283,33 +283,34 @@ const StepSettings = (
         const previousStep = steps.find( ( step ) => step?.id === currentStep?.previous_step );
         setCurrentStep( previousStep );
     };
+
     return (
         <>
             <div className="h-full px-28 py-16">
                 <main className="max-w-7xl mx-auto h-full">
                     <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-                        {pages && '' !== selectedPage && pages.length > 0 && (
+                        { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
                                 key="admin-settings-menu"
-                                pages={pages}
-                                loading={loading}
-                                activePage={selectedPage}
-                                onMenuClick={onMenuClick}
+                                pages={ pages }
+                                loading={ loading }
+                                activePage={ selectedPage }
+                                onMenuClick={ onMenuClick }
                             />
-                        )}
+                        ) }
 
                         <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-12">
-                            {tabs && '' !== selectedTab && (
+                            { tabs && '' !== selectedTab && (
                                 <Tab
                                     key="admin-settings-tab"
-                                    tabs={tabs}
-                                    loading={loading}
-                                    selectedTab={selectedTab}
-                                    onTabClick={onTabClick}
+                                    tabs={ tabs }
+                                    loading={ loading }
+                                    onTabClick={ onTabClick }
+                                    selectedTab={ selectedTab }
                                 />
-                            )}
+                            ) }
 
-                            {elements.map((element: SettingsElement) => {
+                            { elements.map( ( element: SettingsElement ) => {
                                 return (
                                     <SettingsParser
                                         key={
@@ -320,7 +321,7 @@ const StepSettings = (
                                         onValueChange={ updateSettingsValue }
                                     />
                                 );
-                            })}
+                            } ) }
                         </div>
                     </div>
 
@@ -337,7 +338,6 @@ const StepSettings = (
                         >
                             { __( 'Skip', 'dokan-lite' ) }
                         </Button>
-                        {/*<NextButton disabled={ isSaving } handleNext={ saveSettings } className={ `m-0` }>*/}
                         <NextButton disabled={ isSaving } handleNext={ saveSettingsAndHandleNext } className={ `m-0` }>
                             { isSaving ? __( 'Saving...', 'dokan-lite' ) : __( 'Next', 'dokan-lite' ) }
                         </NextButton>
