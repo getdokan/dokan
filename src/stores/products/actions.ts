@@ -1,13 +1,9 @@
-import { Product, Category } from './types';
+import { Product } from './types';
 
 export const SET_ITEMS = 'SET_ITEMS';
 export const SET_QUERY = 'SET_QUERY';
 export const SET_ERROR = 'SET_ERROR';
 export const SET_LOADING = 'SET_LOADING';
-export const SET_CATEGORIES = 'SET_CATEGORIES';
-export const SET_CATEGORY_QUERY = 'SET_CATEGORY_QUERY';
-export const SET_CATEGORY_ERROR = 'SET_CATEGORY_ERROR';
-export const SET_CATEGORIES_LOADING = 'SET_CATEGORIES_LOADING';
 
 interface SetItemsAction {
     type: typeof SET_ITEMS;
@@ -32,38 +28,11 @@ interface SetLoadingAction {
     isLoading: boolean;
 }
 
-interface SetCategoriesAction {
-    type: typeof SET_CATEGORIES;
-    categories: Record< number, Category >;
-}
-
-interface SetCategoryQueryAction {
-    type: typeof SET_CATEGORY_QUERY;
-    queryId: string;
-    ids: number[];
-    totalCount: number;
-    totalPages: number;
-}
-
-interface SetCategoryErrorAction {
-    type: typeof SET_CATEGORY_ERROR;
-    error: Error;
-}
-
-interface SetCategoriesLoadingAction {
-    type: typeof SET_CATEGORIES_LOADING;
-    isLoading: boolean;
-}
-
 export type ActionTypes =
     | SetItemsAction
     | SetQueryAction
     | SetErrorAction
-    | SetLoadingAction
-    | SetCategoriesAction
-    | SetCategoryQueryAction
-    | SetCategoryErrorAction
-    | SetCategoriesLoadingAction;
+    | SetLoadingAction;
 
 export const actions = {
     setItems: ( items: Record< number, Product > ): SetItemsAction => ( {
@@ -91,38 +60,6 @@ export const actions = {
 
     setLoading: ( isLoading: boolean ): SetLoadingAction => ( {
         type: SET_LOADING,
-        isLoading,
-    } ),
-
-    setCategories: (
-        categories: Record< number, Category >
-    ): SetCategoriesAction => ( {
-        type: SET_CATEGORIES,
-        categories,
-    } ),
-
-    setCategoryQuery: (
-        queryId: string,
-        ids: number[],
-        totalCount: number,
-        totalPages: number
-    ): SetCategoryQueryAction => ( {
-        type: SET_CATEGORY_QUERY,
-        queryId,
-        ids,
-        totalCount,
-        totalPages,
-    } ),
-
-    setCategoryError: ( error: Error ): SetCategoryErrorAction => ( {
-        type: SET_CATEGORY_ERROR,
-        error,
-    } ),
-
-    setCategoriesLoading: (
-        isLoading: boolean
-    ): SetCategoriesLoadingAction => ( {
-        type: SET_CATEGORIES_LOADING,
         isLoading,
     } ),
 };

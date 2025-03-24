@@ -1,52 +1,52 @@
-import { State } from './types';
 import { DEFAULT_STATE } from './state';
 import {
     ActionTypes,
-    SET_ERROR,
-    SET_ITEMS,
-    SET_LOADING,
-    SET_QUERY,
+    SET_CATEGORIES,
+    SET_CATEGORIES_LOADING,
+    SET_CATEGORY_ERROR,
+    SET_CATEGORY_QUERY,
 } from './actions';
+import { State } from './types';
 
 export const reducer = (
     state: State = DEFAULT_STATE,
     action: ActionTypes
 ): State => {
     switch ( action.type ) {
-        case SET_ITEMS:
+        case SET_CATEGORIES:
             return {
                 ...state,
-                items: {
-                    ...state.items,
-                    ...action.items,
+                categories: {
+                    ...state.categories,
+                    ...action.categories,
                 },
-                error: null,
+                categoryError: null,
             };
 
-        case SET_QUERY:
+        case SET_CATEGORY_QUERY:
             return {
                 ...state,
-                queries: {
-                    ...state.queries,
+                categoryQueries: {
+                    ...state.categoryQueries,
                     [ action.queryId ]: {
                         ids: action.ids,
                         totalCount: action.totalCount,
                         totalPages: action.totalPages,
                     },
                 },
-                error: null,
+                categoryError: null,
             };
 
-        case SET_ERROR:
+        case SET_CATEGORY_ERROR:
             return {
                 ...state,
-                error: action.error,
+                categoryError: action.error,
             };
 
-        case SET_LOADING:
+        case SET_CATEGORIES_LOADING:
             return {
                 ...state,
-                isLoading: action.isLoading,
+                isCategoriesLoading: action.isLoading,
             };
 
         default:

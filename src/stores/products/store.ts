@@ -5,12 +5,7 @@ import { resolvers } from './ resolvers';
 import { STORE_NAME } from './constants';
 import { actions } from './actions';
 import { QueryParams, Select } from './types';
-import {
-    CategoriesHookData,
-    CategoryHookData,
-    ProductHookData,
-    ProductsHookData,
-} from './hooks';
+import { ProductHookData, ProductsHookData } from './hooks';
 
 const store = createReduxStore( STORE_NAME, {
     reducer,
@@ -43,32 +38,6 @@ export function useProduct( id: number ): ProductHookData {
             product: select( STORE_NAME ).getItem( id ),
             isLoading: select( STORE_NAME ).isLoading(),
             error: select( STORE_NAME ).getError(),
-        } ),
-        [ id ]
-    );
-}
-
-export function useCategories( query: QueryParams = {} ): CategoriesHookData {
-    return useSelect(
-        ( select: Select ) => ( {
-            categories: select( STORE_NAME ).getCategories( query ),
-            totalItems:
-                select( STORE_NAME ).getCategoryQueryTotalCount( query ),
-            totalPages:
-                select( STORE_NAME ).getCategoryQueryTotalPages( query ),
-            isLoading: select( STORE_NAME ).isCategoriesLoading(),
-            error: select( STORE_NAME ).getCategoryError(),
-        } ),
-        [ JSON.stringify( query ) ]
-    );
-}
-
-export function useCategory( id: number ): CategoryHookData {
-    return useSelect(
-        ( select: Select ) => ( {
-            category: select( STORE_NAME ).getCategory( id ),
-            isLoading: select( STORE_NAME ).isCategoriesLoading(),
-            error: select( STORE_NAME ).getCategoryError(),
         } ),
         [ id ]
     );
