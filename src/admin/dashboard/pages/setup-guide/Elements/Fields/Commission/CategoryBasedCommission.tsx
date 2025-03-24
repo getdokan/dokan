@@ -1,3 +1,4 @@
+import { RawHTML } from '@wordpress/element';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { MaskedInput } from '@getdokan/dokan-ui';
@@ -8,29 +9,24 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
     const { currency } = adminWithdrawData;
     const getCurrencySymbol = currency?.symbol;
 
-    const getCategories = (categoriesData) => {
+    const getCategories = ( categoriesData ) => {
         const result = [];
         const categoryMap = {};
 
-        // First, create a map of categories using term_id as the key
-        for (const term_id in categoriesData) {
-            categoryMap[term_id] = categoriesData[term_id];
+        for ( const term_id in categoriesData ) {
+            categoryMap[ term_id ] = categoriesData[ term_id ];
         }
 
-        // Iterate through the categories to rearrange them
-        for (const term_id in categoryMap) {
-            const category = categoryMap[term_id];
+        for ( const term_id in categoryMap ) { // Re-arrange categories.
+            const category = categoryMap[ term_id ];
 
-            // If the category has a parent (parent_id is not 0), find its parent and insert it after the parent
-            if (category.parent_id !== '0') {
-                const parent = categoryMap[category.parent_id];
-                const parentIndex = result.indexOf(parent);
+            if ( category.parent_id !== '0' ) {
+                const parent = categoryMap[ category.parent_id ];
+                const parentIndex = result.indexOf( parent );
 
-                // Insert the child category right after its parent
-                result.splice(parentIndex + 1, 0, category);
+                result.splice( parentIndex + 1, 0, category ); // Insert the child category right after its parent.
             } else {
-                // If it's a top-level category (parent_id is 0), add it to the result
-                result.push(category);
+                result.push( category ); // Insert the child category right after its parent.
             }
         }
 
@@ -48,53 +44,47 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
     const [ commission, setCommission ] = useState( { ...commissionValues } );
     const [ allCategoryEnabled, setAllCategoryEnabled ] = useState( ! hasCommissionItems );
 
-    // Toggle category row
-    const catRowClick = (item) => {
-        const termId = Number(item.term_id);
+    const catRowClick = ( item ) => {
+        const termId = Number( item?.term_id );
 
-        if (openRows.includes(termId)) {
-            // Remove the parent
-            setOpenRows(prevRows => {
-                const newRows = [...prevRows];
-                const index = newRows.indexOf(termId);
-                newRows.splice(index, 1);
+        if ( openRows.includes( termId ) ) {
+            setOpenRows( prevRows => {
+                const newRows = [ ...prevRows ];
+                const index = newRows.indexOf( termId );
+                newRows.splice( index, 1 );
 
-                // Remove all children
-                getChildren(item.term_id).forEach(child => {
-                    const childIndex = newRows.indexOf(Number(child));
-                    if (childIndex !== -1) {
-                        newRows.splice(childIndex, 1);
+                getChildren( item?.term_id ).forEach( child => {
+                    const childIndex = newRows.indexOf( Number( child ) );
+                    if ( childIndex !== -1 ) {
+                        newRows.splice( childIndex, 1 );
                     }
                 });
 
                 return newRows;
             });
         } else {
-            setOpenRows(prevRows => [...prevRows, termId]);
+            setOpenRows( prevRows => [ ...prevRows, termId ] );
         }
     };
 
-    // Get children of a category
-    const getChildren = (parentId) => {
+    const getChildren = ( parentId ) => {
         const categoriesArray = Object.values( categories );
 
-        const children = categoriesArray.filter(item => {
-            return item.parents.includes(Number(parentId));
+        const children = categoriesArray.filter( item => {
+            return item?.parents?.includes( Number( parentId ) );
         });
 
-        return children.map(item => item.term_id);
+        return children.map( item => item?.term_id );
     };
 
-    // Check if a category row should be shown
-    const showCatRow = (item) => {
-        if (Number(item.parent_id) === 0) {
+    const showCatRow = ( item ) => {
+        if ( Number( item?.parent_id ) === 0 ) {
             return true;
         }
 
-        return openRows.includes(Number(item.parent_id));
+        return openRows.includes( Number( item?.parent_id ) );
     };
 
-    // Get commission value for a category
     const getCommissionValue = ( commissionType, termId ) => {
         if ( commission?.items?.hasOwnProperty( termId ) ) {
             return commission?.items[ termId ][ commissionType ];
@@ -103,12 +93,11 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
         return commission?.all?.[ commissionType ];
     };
 
-    // Handle commission change for a specific category
-    const handleCommissionItemChange = debounce((value, commissionType, termId) => {
-        if (commissionType === 'percentage') {
-            value = validatePercentage(unFormatValue(value));
+    const handleCommissionItemChange = debounce( ( value, commissionType, termId ) => {
+        if ( commissionType === 'percentage' ) {
+            value = validatePercentage( unFormatValue( value ) );
         } else {
-            value = unFormatValue(value);
+            value = unFormatValue( value );
         }
 
         setCommission( prevCommission => {
@@ -119,59 +108,55 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
                 ? { ...newCommission?.all }
                 : { flat: '', percentage: '' };
 
-            if (commissions.hasOwnProperty(termId)) {
-                data = { ...commissions[termId] };
+            if ( commissions.hasOwnProperty( termId ) ) {
+                data = { ...commissions[ termId ] };
             }
 
-            data[commissionType] = value;
-            commissions[termId] = data;
+            data[ commissionType ] = value;
+            commissions[ termId ] = data;
 
             newCommission.items = commissions;
-
-            // Update child categories if resetSubCategory is true
-            if (resetSubCategory) {
-                const allNestedChildrenIds = getChildren(termId);
-                allNestedChildrenIds.forEach(id => {
-                    newCommission.items[id] = { ...data };
+            if ( resetSubCategory ) { // Update child categories if resetSubCategory is true.
+                const allNestedChildrenIds = getChildren( termId );
+                allNestedChildrenIds.forEach( id => {
+                    newCommission.items[ id ] = { ...data };
                 });
             }
 
-            // Remove categories with same values as 'all'
-            Object.keys(newCommission?.items).forEach(key => {
-                if (isEqual(newCommission?.items[key], newCommission?.all)) {
-                    delete newCommission?.items[key];
+            Object.keys( newCommission?.items ).forEach(key => { // Remove categories with same values as 'all'.
+                if ( isEqual( newCommission?.items[ key ], newCommission?.all ) ) {
+                    delete newCommission?.items[ key ];
                 }
             });
 
             return newCommission;
         });
 
-        // Emit change to parent component
-        onValueChange({
+        onValueChange( {
             ...element,
             value: {
                 ...commission,
-                items: { ...commission?.items, [termId]: {
-                    ...commission?.items?.[termId] || commission?.all,
-                    [commissionType]: value
+                items: { ...commission?.items, [ termId ]: {
+                    ...commission?.items?.[ termId ] || commission?.all,
+                    [ commissionType ]: value
                 }}
             }
         });
-    }, 700);
+    }, 700 );
 
     // Handle all category commission change
-    const handleAllCategoryChange = debounce((value, commissionType) => {
+    const handleAllCategoryChange = debounce( ( value, commissionType ) => {
         if ( commissionType === 'percentage' ) {
             value = validatePercentage( unFormatValue( value ) );
         } else {
             value = unFormatValue( value );
         }
 
-        setCommission(prevCommission => {
+        setCommission( prevCommission => {
             const newCommission = { ...prevCommission };
-            newCommission.all = { ...newCommission?.all, [commissionType]: value };
+            newCommission.all = { ...newCommission?.all, [ commissionType ]: value };
 
-            if (resetSubCategory) {
+            if ( resetSubCategory ) {
                 newCommission.items = {};
             }
 
@@ -182,24 +167,22 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
             ...element,
             value: {
                 ...commission,
-                all: { ...commission?.all, [commissionType]: value },
+                all: { ...commission?.all, [ commissionType ]: value },
                 items: resetSubCategory ? {} : commission?.items
             }
         });
     }, 700);
 
-    // Format and unformat values
-    const unFormatValue = (value) => {
+    const unFormatValue = ( value ) => {
         if ( value === '' ) {
             return value;
         }
 
-        // Use accounting.js if available, otherwise simple conversion
         if ( window.accounting ) {
             return String( window.accounting.unformat( value, currency?.decimal || '.' ) );
         }
 
-        return String(value).replace(/[^0-9.-]/g, '');
+        return String( value ).replace( /[^0-9.-]/g, '' );
     };
 
     const formatValue = ( value ) => {
@@ -210,14 +193,13 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
         return window.accounting.formatNumber( value, currency?.precision, currency?.thousand, currency?.decimal );
     };
 
-    // Validate percentage value
-    const validatePercentage = (percentage) => {
-        if (percentage === '') {
+    const validatePercentage = ( percentage ) => {
+        if ( percentage === '' ) {
             return percentage;
         }
 
-        const numVal = Number(percentage);
-        if (numVal < 0 || numVal > 100) {
+        const numVal = Number( percentage );
+        if ( numVal < 0 || numVal > 100 ) {
             return '';
         }
 
@@ -226,32 +208,27 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
 
     // Check if two objects are equal
     const isEqual = ( value1, value2 ) => {
-        // Check if the values are strictly equal
-        if (value1 === value2) return true;
+        if ( value1 === value2 ) return true; // Check if the values are strictly equal
 
-        // Check if either value is null or undefined
-        if (value1 == null || value2 == null) return false;
+        if ( value1 == null || value2 == null ) return false; // Check if either value is null or undefined
 
-        // Check if the types are different
-        if (typeof value1 !== typeof value2) return false;
+        if ( typeof value1 !== typeof value2 ) return false; // Check if the types are different
 
-        // Handle plain objects
-        if (typeof value1 === 'object' && typeof value2 === 'object') {
-            const keys1 = Object.keys(value1);
-            const keys2 = Object.keys(value2);
+        if ( typeof value1 === 'object' && typeof value2 === 'object' ) { // Handle plain objects
+            const keys1 = Object.keys( value1 );
+            const keys2 = Object.keys( value2 );
 
-            if (keys1.length !== keys2.length) return false;
+            if ( keys1.length !== keys2.length ) return false;
 
-            for (let key of keys1) {
-                if (!keys2.includes(key)) return false;
-                if (!isEqual(value1[key], value2[key])) return false;
+            for ( let key of keys1 ) {
+                if ( ! keys2.includes( key ) ) return false;
+                if ( ! isEqual( value1[ key ], value2[ key ] ) ) return false;
             }
 
             return true;
         }
 
-        // For all other types, return false
-        return false;
+        return false; // For all other types, return false
     };
 
     if ( ! element.display ) {
@@ -259,51 +236,57 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
     }
 
     return (
-        <div className="p-4 flex flex-col gap-y-4">
+        <div className='p-4 flex flex-col gap-y-4'>
             { ( element?.title || element?.description ) && (
-                <div className="flex-col flex gap-1">
-                    <h2 className="text-sm leading-6 font-semibold text-gray-900">
-                        {element?.title}
+                <div className='flex-col flex gap-1'>
+                    <h2 className='text-sm leading-6 font-semibold text-gray-900'>
+                        <RawHTML>{ element?.title }</RawHTML>
                     </h2>
-                    <p className="text-sm font-normal text-[#828282]">
-                        {element?.description}
+                    <p className='text-sm font-normal text-[#828282]'>
+                        <RawHTML>{ element?.description }</RawHTML>
                     </p>
                 </div>
             )}
 
-            <div className="relative">
-                <div className="hidden md:flex bg-gray-100 min-h-[3rem] text-gray-500 border-[0.957434px] border-b-0 items-center">
-                    <div className="w-1/2 pl-3 flex h-[3rem] items-center border-r-[0.957434px]">
-                        <p className="text-xs">{__("Category", "dokan-lite")}</p>
+            <div className='relative'>
+                <div className='hidden md:flex bg-gray-100 min-h-[3rem] text-gray-500 border-[0.957434px] border-b-0 items-center'>
+                    <div className='w-1/2 pl-3 flex h-[3rem] items-center border-r-[0.957434px]'>
+                        <p className='text-xs'>{
+                            __( 'Category', 'dokan-lite' ) }
+                        </p>
                     </div>
-                    <div className="flex w-1/2">
-                        <div className="w-1/2 mr-20">
-                            <p className="text-xs text-center">{__("Percentage", "dokan-lite")}</p>
+                    <div className='flex w-1/2'>
+                        <div className='w-1/2 mr-20'>
+                            <p className='text-xs text-center'>
+                                { __( 'Percentage', 'dokan-lite' ) }
+                            </p>
                         </div>
-                        <div className="w-1/2">
-                            <p className="text-xs text-center">{__("Flat", "dokan-lite")}</p>
+                        <div className='w-1/2'>
+                            <p className='text-xs text-center'>
+                                { __( 'Flat', 'dokan-lite' ) }
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <div className={ `flex flex-col max-h-[500px] overflow-y-auto border-[1px] text-[14px] border-[#e9e9ea] border-solid ${ !allCategoryEnabled ? 'border-b-[1px]': 'border-b-0' }` }>
+                <div className={ `flex flex-col max-h-[500px] overflow-y-auto border-[1px] text-[14px] border-[#e9e9ea] border-solid ${ ! allCategoryEnabled ? 'border-b-[1px]': 'border-b-0' }` }>
                     {/* All Categories Row */}
-                    <div className="flex flex-row">
-                        <div className="flex flex-row w-1/2 items-center min-h-[3rem] border-0 border-r-[1px] border-b-[1px] border-[#e9e9ea] border-solid pl-[5px]">
+                    <div className='flex flex-row'>
+                        <div className='flex flex-row w-1/2 items-center min-h-[3rem] border-0 border-r-[1px] border-b-[1px] border-[#e9e9ea] border-solid pl-[5px]'>
                             <button
-                                type="button"
-                                className="p-1 bg-transparent border-none cursor-pointer"
-                                onClick={() => setAllCategoryEnabled(!allCategoryEnabled)}
+                                type='button'
+                                className='p-1 bg-transparent border-none cursor-pointer'
+                                onClick={ () => setAllCategoryEnabled( ! allCategoryEnabled ) }
                             >
-                                <i className={`far ${ ! allCategoryEnabled ? "fa-minus-square text-black" : "fa-plus-square text-[#4C19E6]" }` }></i>
+                                <i className={ `far ${ ! allCategoryEnabled ? 'fa-minus-square text-black' : 'fa-plus-square text-[#4C19E6]' }` }></i>
                             </button>
-                            <p className="text-[14px] m-0">
-                                { __( "All Categories", "dokan-lite" ) }
+                            <p className='text-[14px] m-0'>
+                                { __( 'All Categories', 'dokan-lite' ) }
                             </p>
                         </div>
 
-                        <div className="flex flex-row w-1/2 border-0 border-b-[1px] border-[#e9e9ea] border-solid">
-                            <div className="w-1/2 flex justify-start items-center box-border">
+                        <div className='flex flex-row w-1/2 border-0 border-b-[1px] border-[#e9e9ea] border-solid'>
+                            <div className='w-1/2 flex justify-start items-center box-border'>
                                 <MaskedInput
                                     value={ formatValue( commission?.all?.percentage ) }
                                     onChange={ ( e ) => handleAllCategoryChange( e.target.value, 'percentage' ) }
@@ -315,19 +298,18 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
                                     } }
                                     className={ `px-4 border-0 shadow-none focus:ring-0` }
                                 />
-                                <div className="h-full border-l-[1px] border-r-[1px] flex justify-center items-center bg-gray-100">
-                                    <span className="pl-2 pr-2">{ __( "%", "dokan-lite" ) }</span>
+                                <div className='h-full border-l-[1px] border-r-[1px] flex justify-center items-center bg-gray-100'>
+                                    <span className='pl-2 pr-2'>{ __( '%', 'dokan-lite' ) }</span>
                                 </div>
                             </div>
-                            <div className="h-full border-l-[1px] border-r-[1px] -ml-1 md:border-0 bg-transparent flex justify-center items-center">
-                                <span className="p-2">{ __( "+" , "dokan-lite" ) }</span>
+                            <div className='h-full border-l-[1px] border-r-[1px] -ml-1 md:border-0 bg-transparent flex justify-center items-center'>
+                                <span className='p-2'>{ __( '+' , 'dokan-lite' ) }</span>
                             </div>
-                            <div className="w-1/2 flex justify-start items-center box-border">
-                                <div className="h-full border-r-[1px] border-l-[1px] flex justify-center items-center bg-gray-100">
-                                    <span className="pl-2 pr-2">{ getCurrencySymbol }</span>
+                            <div className='w-1/2 flex justify-start items-center box-border'>
+                                <div className='h-full border-r-[1px] border-l-[1px] flex justify-center items-center bg-gray-100'>
+                                    <span className='pl-2 pr-2'>{ getCurrencySymbol }</span>
                                 </div>
                                 <MaskedInput
-                                    // addOnLeft={ getCurrencySymbol }
                                     value={ formatValue( commission?.all?.flat ) }
                                     onChange={ ( e ) => handleAllCategoryChange( e.target.value, 'flat' ) }
                                     maskRule={ {
@@ -347,37 +329,36 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
                         showCatRow( item ) && (
                             <div
                                 key={ item.term_id }
-                                className="flex flex-row border-0 border-b-[1px] last:border-b-0 border-[#e9e9ea] border-solid"
+                                className='flex flex-row border-0 border-b-[1px] last:border-b-0 border-[#e9e9ea] border-solid'
                             >
-                                <div className="w-1/2 flex flex-row items-center min-h-[3rem] border-0 border-r-[1px] border-[#e9e9ea] border-solid pl-[5px]">
-                                    <div className="flex h-1/2">
+                                <div className='w-1/2 flex flex-row items-center min-h-[3rem] border-0 border-r-[1px] border-[#e9e9ea] border-solid pl-[5px]'>
+                                    <div className='flex h-1/2'>
                                         { item.parents.map( parentId => (
                                             <span
                                                 key={ parentId }
-                                                className="bg-transparent block h-full w-[1px] ml-1"
+                                                className='bg-transparent block h-full w-[1px] ml-1'
                                             ></span>
                                         ) ) }
                                     </div>
                                     <button
-                                        type="button"
-                                        className={ `p-1 bg-transparent border-none cursor-pointer ${ ! item.children.length ? "disabled:cursor-not-allowed text-gray-300" : "cursor-pointer text-[#4C19E6]" }` }
+                                        type='button'
+                                        className={ `p-1 bg-transparent border-none cursor-pointer ${ ! item.children.length ? 'disabled:cursor-not-allowed text-gray-300' : 'cursor-pointer text-[#4C19E6]' }` }
                                         onClick={ () => catRowClick( item ) }
                                         disabled={ ! item.children.length }
                                     >
-                                        <i className={`far ${ openRows.includes( Number( item.term_id ) ) ? "fa-minus-square text-black" : "fa-plus-square" }` }></i>
+                                        <i className={`far ${ openRows.includes( Number( item.term_id ) ) ? 'fa-minus-square text-black' : 'fa-plus-square' }` }></i>
                                     </button>
-                                    <p className="text-[14px] text-black m-0">
+                                    <p className='text-[14px] text-black m-0'>
                                         <span title={ item.name } dangerouslySetInnerHTML={{ __html: item.name }}></span>
-                                        <span className="text-[12px] text-gray-500 ml-1" title={ __( "Category ID", "dokan" ) }>
+                                        <span className='text-[12px] text-gray-500 ml-1' title={ __( 'Category ID', 'dokan' ) }>
                                             { sprintf( __( '#%s', 'dokan' ), item.term_id ) }
                                         </span>
                                     </p>
                                 </div>
 
-                                <div className="w-1/2 flex min-h-[3rem] border-0 border-solid border-[#e9e9ea]">
-                                    <div className="w-1/2 flex justify-start items-center box-border">
+                                <div className='w-1/2 flex min-h-[3rem] border-0 border-solid border-[#e9e9ea]'>
+                                    <div className='w-1/2 flex justify-start items-center box-border'>
                                         <MaskedInput
-                                            // addOnLeft={ getCurrencySymbol }
                                             value={ formatValue( getCommissionValue( 'percentage', item.term_id ) ) }
                                             onChange={ ( e ) => handleCommissionItemChange( e.target.value, 'percentage', item.term_id ) }
                                             maskRule={ {
@@ -388,19 +369,18 @@ const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
                                             } }
                                             className={ `px-4 border-0 shadow-none focus:ring-0` }
                                         />
-                                        <div className="h-full border-l-[1px] border-r-[1px] flex justify-center items-center bg-gray-100">
-                                            <span className="pl-2 pr-2">{__("%", "dokan-lite")}</span>
+                                        <div className='h-full border-l-[1px] border-r-[1px] flex justify-center items-center bg-gray-100'>
+                                            <span className='pl-2 pr-2'>{__('%', 'dokan-lite')}</span>
                                         </div>
                                     </div>
-                                    <div className="h-full border-l-[1px] border-r-[1px] -ml-1 md:border-0 bg-transparent flex justify-center items-center">
-                                        <span className="p-2">{__("+" , "dokan-lite")}</span>
+                                    <div className='h-full border-l-[1px] border-r-[1px] -ml-1 md:border-0 bg-transparent flex justify-center items-center'>
+                                        <span className='p-2'>{__('+' , 'dokan-lite')}</span>
                                     </div>
-                                    <div className="w-1/2 flex justify-start items-center box-border">
-                                        <div className="h-full border-r-[1px] border-l-[1px] flex justify-center items-center bg-gray-100">
-                                            <span className="pl-2 pr-2">{ getCurrencySymbol }</span>
+                                    <div className='w-1/2 flex justify-start items-center box-border'>
+                                        <div className='h-full border-r-[1px] border-l-[1px] flex justify-center items-center bg-gray-100'>
+                                            <span className='pl-2 pr-2'>{ getCurrencySymbol }</span>
                                         </div>
                                         <MaskedInput
-                                            // addOnLeft={ getCurrencySymbol }
                                             value={ formatValue( getCommissionValue( 'flat', item.term_id ) ) }
                                             onChange={ ( e ) => handleCommissionItemChange( e.target.value, 'flat', item.term_id ) }
                                             maskRule={ {

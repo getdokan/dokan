@@ -2,8 +2,8 @@ import { __ } from '@wordpress/i18n';
 import { RawHTML } from '@wordpress/element';
 import { debounce } from '@wordpress/compose';
 import { SettingsProps } from '../../StepSettings';
-import { useState, useEffect } from '@wordpress/element';
-import { MaskedInput, SimpleInput } from "@getdokan/dokan-ui";
+import { useState } from '@wordpress/element';
+import { MaskedInput } from "@getdokan/dokan-ui";
 
 const CombineInput = ({ element, onValueChange }: SettingsProps) => {
     const [ values, setValues ] = useState( element.value );
@@ -107,6 +107,12 @@ const CombineInput = ({ element, onValueChange }: SettingsProps) => {
                     value={ formatValue( values.admin_percentage ) }
                     addOnRight={ <span>{ __( '%', 'dokan-lite' ) }</span> }
                     onChange={ ( e ) => debounceWithPercentageAmountChange( e.target.value ) }
+                    maskRule={ {
+                        numeral: true,
+                        delimiter: currency?.thousand ?? ',',
+                        numeralDecimalMark: currency?.decimal ?? '.',
+                        numeralDecimalScale: currency?.precision ?? 2,
+                    } }
                     className={ `w-24 h-10 rounded rounded-r-none focus:border-gray-300 focus:ring-0` }
                 />
 
