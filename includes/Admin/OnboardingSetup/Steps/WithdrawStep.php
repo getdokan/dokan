@@ -63,7 +63,6 @@ class WithdrawStep extends AbstractStep {
      * @inheritDoc
      */
     public function register(): void {
-
         $data = [
             'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
         ];
@@ -145,9 +144,12 @@ class WithdrawStep extends AbstractStep {
             );
     }
 
-	public function settings(): array {
-		return [];
-	}
+    /**
+     * @inheritDoc
+     */
+    public function settings(): array {
+        return [];
+    }
 
     /**
      * @inheritDoc

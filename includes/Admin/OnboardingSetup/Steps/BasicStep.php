@@ -65,19 +65,21 @@ class BasicStep extends AbstractStep {
     /**
      * @inheritDoc
      */
-    public function register(): void {
-    }
+	public function register(): void {}
 
     /**
      * @inheritDoc
      */
-    public function scripts(): array {
-        return [];
-    }
+	public function scripts(): array {
+		return [];
+	}
 
-    public function styles(): array {
-        return [];
-    }
+    /**
+     * @inheritDoc
+     */
+	public function styles(): array {
+		return [];
+	}
 
     /**
      * @inheritDoc
@@ -138,6 +140,9 @@ class BasicStep extends AbstractStep {
             );
     }
 
+    /**
+     * @inheritDoc
+     */
     public function settings(): array {
         return [];
     }

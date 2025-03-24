@@ -78,6 +78,9 @@ class CommissionStep extends AbstractStep {
         return [ 'dokan-fontawesome', 'dokan-accounting' ];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function styles(): array {
         return [ 'dokan-fontawesome' ];
     }
@@ -139,9 +142,12 @@ class CommissionStep extends AbstractStep {
             );
     }
 
-    public function settings(): array {
-        return [];
-    }
+    /**
+     * @inheritDoc
+     */
+	public function settings(): array {
+		return [];
+	}
 
     /**
      * @inheritDoc

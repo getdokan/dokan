@@ -68,6 +68,9 @@ class AppearanceStep extends AbstractStep {
 		return [];
 	}
 
+    /**
+     * @inheritDoc
+     */
 	public function styles(): array {
 		return [];
 	}
@@ -136,6 +139,9 @@ class AppearanceStep extends AbstractStep {
             );
     }
 
+    /**
+     * @inheritDoc
+     */
 	public function settings(): array {
 		return [];
 	}

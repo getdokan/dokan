@@ -41,6 +41,11 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
      */
     protected $storage_key = 'dokan_admin_onboarding_setup_step';
 
+    /**
+     * The settings options.
+     *
+     * @var array
+     */
     protected $settings_options = [];
 
     /**
@@ -151,10 +156,26 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
      */
 	abstract public function settings(): array;
 
+    /**
+     * Dispatch the options to settings options.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed $data The data to dispatch.
+     *
+     * @return void
+     */
 	abstract public function option_dispatcher( $data ): void;
 
+    /**
+     * Get the settings options.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
     public function get_settings_options(): array {
-        return apply_filters('dokan_admin_setup_guide_step_' . $this->get_id() . '_options',  $this->settings_options );
+        return apply_filters( 'dokan_admin_setup_guide_step_' . $this->get_id() . '_options', $this->settings_options );
     }
 
     /**
@@ -184,8 +205,17 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
         add_action( 'updated_option', [ $this, 'listen_for_settings_save' ], 10, 3 );
     }
 
+    /**
+     * Listen for settings save.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $option The option to listen for.
+     *
+     * @return void
+     */
     public function listen_for_settings_save( $option ) {
-        if ( ! in_array( $option, $this->get_settings_options() ) ) {
+        if ( ! in_array( $option, $this->get_settings_options(), true ) ) {
             return;
         }
 
@@ -193,6 +223,13 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
         delete_option( $this->storage_key );
     }
 
+    /**
+     * Mark the step as complete.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
     public function mark_as_complete() {
         update_option( $this->storage_key . '_completed', true );
     }

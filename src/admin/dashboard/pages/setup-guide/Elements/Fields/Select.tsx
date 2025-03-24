@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from '@wordpress/element';
+import { useState, RawHTML } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
 import { SimpleSelect } from '@getdokan/dokan-ui';
 
@@ -27,10 +27,10 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
         >
             <div className="flex flex-col sm:w-[70%]">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
-                    { element?.title }
+                    <RawHTML>{ element?.title }</RawHTML>
                 </h2>
                 <p className="text-sm font-normal text-[#828282]">
-                    { element?.description }
+                    <RawHTML>{ element?.description }</RawHTML>
                 </p>
             </div>
             <div className="flex w-[11rem]">
@@ -39,8 +39,8 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
                     label={ '' }
                     options={
                         element?.options?.map( ( option ) => ( {
-                            label: option.title,
-                            value: option.value,
+                            label: option?.title,
+                            value: option?.value,
                         } ) ) || []
                     }
                     value={ selectedOption }

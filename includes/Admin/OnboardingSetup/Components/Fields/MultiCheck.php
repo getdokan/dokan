@@ -91,12 +91,12 @@ class MultiCheck extends Field {
     /**
      * Set Default.
      *
-     * @param array $default Default value.
+     * @param array $default_value Default value.
      *
      * @return SettingsElement
      */
-    public function set_default( $default ): SettingsElement {
-        $this->default = $default;
+    public function set_default( $default_value ): SettingsElement {
+        $this->default = $default_value;
 
         return $this;
     }

@@ -1,5 +1,5 @@
 import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
-import { useState } from '@wordpress/element';
+import { useState, RawHTML } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
 
 const MultiCheck = ( { element, onValueChange }: SettingsProps ) => {
@@ -13,9 +13,11 @@ const MultiCheck = ( { element, onValueChange }: SettingsProps ) => {
             value: values,
         } );
     };
+
     if ( ! element.display ) {
         return <></>;
     }
+
     return (
         <div
             id={ element.hook_key + '_div' }
@@ -23,10 +25,10 @@ const MultiCheck = ( { element, onValueChange }: SettingsProps ) => {
         >
             <div className="flex flex-col mb-4 w-full">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
-                    { element?.title }
+                    <RawHTML>{ element?.title }</RawHTML>
                 </h2>
                 <p className=" text-sm font-normal text-[#828282]">
-                    { element?.description }
+                    <RawHTML>{ element?.description }</RawHTML>
                 </p>
             </div>
             <SimpleCheckboxGroup
