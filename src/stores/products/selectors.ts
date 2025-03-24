@@ -1,5 +1,5 @@
-import { State, Product, Category, QueryParams } from './types';
-import { getQueryId } from './utils';
+import { Category, Product, QueryParams, State } from './types';
+import { addQueryArgs, getQueryArgs } from '@wordpress/url';
 
 export const selectors = {
     getItem: ( state: State, id: number ): Product | undefined =>
@@ -9,7 +9,9 @@ export const selectors = {
         state: State,
         query: QueryParams = {}
     ): Product[] | undefined => {
-        const queryId = getQueryId( query );
+        // const queryId = getQueryId( query );
+        const path = addQueryArgs( '/dokan/v2/products', query );
+        const queryId = JSON.stringify( getQueryArgs( path ) );
         const queryResult = state.queries[ queryId ];
 
         if ( ! queryResult ) {
@@ -25,7 +27,8 @@ export const selectors = {
         state: State,
         query: QueryParams = {}
     ): number | undefined => {
-        const queryId = getQueryId( query );
+        const path = addQueryArgs( '/dokan/v2/products', query );
+        const queryId = JSON.stringify( getQueryArgs( path ) );
         return state.queries[ queryId ]?.totalCount;
     },
 
@@ -33,7 +36,9 @@ export const selectors = {
         state: State,
         query: QueryParams = {}
     ): number | undefined => {
-        const queryId = getQueryId( query );
+        // const queryId = getQueryId( query );
+        const path = addQueryArgs( '/dokan/v2/products', query );
+        const queryId = JSON.stringify( getQueryArgs( path ) );
         return state.queries[ queryId ]?.totalPages;
     },
 
@@ -49,7 +54,8 @@ export const selectors = {
         state: State,
         query: QueryParams = {}
     ): Category[] | undefined => {
-        const queryId = getQueryId( query );
+        const path = addQueryArgs( '/dokan/v2/categories', query );
+        const queryId = JSON.stringify( getQueryArgs( path ) );
         const queryResult = state.categoryQueries[ queryId ];
 
         if ( ! queryResult ) {
@@ -65,7 +71,8 @@ export const selectors = {
         state: State,
         query: QueryParams = {}
     ): number | undefined => {
-        const queryId = getQueryId( query );
+        const path = addQueryArgs( '/dokan/v2/categories', query );
+        const queryId = JSON.stringify( getQueryArgs( path ) );
         return state.categoryQueries[ queryId ]?.totalCount;
     },
 
@@ -73,7 +80,8 @@ export const selectors = {
         state: State,
         query: QueryParams = {}
     ): number | undefined => {
-        const queryId = getQueryId( query );
+        const path = addQueryArgs( '/dokan/v2/categories', query );
+        const queryId = JSON.stringify( getQueryArgs( path ) );
         return state.categoryQueries[ queryId ]?.totalPages;
     },
 

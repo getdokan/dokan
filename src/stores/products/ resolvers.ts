@@ -1,12 +1,12 @@
 import apiFetch from '@wordpress/api-fetch';
 import { Category, Product, QueryParams } from './types';
 import { actions } from './actions';
-import { getQueryId } from './utils';
+import { addQueryArgs, getQueryArgs } from '@wordpress/url';
 
 export const resolvers = {
     getItem:
         ( id: number ) =>
-        async ( { dispatch }: { dispatch } ) => {
+        async ( { dispatch } ) => {
             try {
                 const response = await apiFetch< Product >( {
                     path: `/dokan/v2/products/${ id }`,
@@ -20,17 +20,13 @@ export const resolvers = {
 
     getItems:
         ( query: QueryParams = {} ) =>
-        async ( { dispatch }: { dispatch } ) => {
-            const queryId = getQueryId( query );
-
+        async ( { dispatch } ) => {
             dispatch( actions.setLoading( true ) );
             try {
-                const queryArgs = new URLSearchParams(
-                    query as Record< string, string >
-                );
-
+                const path = addQueryArgs( '/dokan/v2/products', query );
+                const queryId = JSON.stringify( getQueryArgs( path ) );
                 const response = await apiFetch< Response >( {
-                    path: '/dokan/v2/products?' + queryArgs.toString(),
+                    path,
                     parse: false,
                 } );
 
@@ -63,17 +59,17 @@ export const resolvers = {
 
     getCategories:
         ( query: QueryParams = {} ) =>
-        async ( { dispatch }: { dispatch } ) => {
-            const queryId = getQueryId( query );
-
+        async ( { dispatch } ) => {
             dispatch( actions.setCategoriesLoading( true ) );
             try {
+                const path = addQueryArgs(
+                    '/dokan/v1/products/categories',
+                    query as Record< string, string >
+                );
+                const queryId = JSON.stringify( getQueryArgs( path ) );
+
                 const response = await apiFetch< Response >( {
-                    path:
-                        '/dokan/v1/products/categories?' +
-                        new URLSearchParams(
-                            query as Record< string, string >
-                        ).toString(),
+                    path,
                     parse: false,
                 } );
 
@@ -88,9 +84,9 @@ export const resolvers = {
                 );
 
                 const normalizedCategories: Record< number, Category > = {};
-                const ids = data.map( ( category ) => {
+                const ids = data?.map( ( category ) => {
                     normalizedCategories[ category.id ] = category;
-                    return category.id;
+                    return category?.id;
                 } );
 
                 dispatch( actions.setCategories( normalizedCategories ) );
@@ -110,7 +106,7 @@ export const resolvers = {
         },
     getCategory:
         ( id: number ) =>
-        async ( { dispatch }: { dispatch } ) => {
+        async ( { dispatch } ) => {
             try {
                 const response = await apiFetch< Category >( {
                     path: `/dokan/v1/products/categories/${ id }`,

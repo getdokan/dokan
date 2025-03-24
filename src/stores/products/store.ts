@@ -1,18 +1,3 @@
-// types.ts
-
-// state.ts
-
-// actions.ts
-
-// selectors.ts
-
-// resolvers.ts
-
-// reducer.ts
-
-// constants.ts
-
-// index.ts
 import { createReduxStore, register, useSelect } from '@wordpress/data';
 import { reducer } from './reducer';
 import { selectors } from './selectors';
@@ -21,10 +6,10 @@ import { STORE_NAME } from './constants';
 import { actions } from './actions';
 import { QueryParams, Select } from './types';
 import {
-    CategoriesHookReturn,
-    CategoryHookReturn,
-    ProductHookReturn,
-    ProductsHookReturn,
+    CategoriesHookData,
+    CategoryHookData,
+    ProductHookData,
+    ProductsHookData,
 } from './hooks';
 
 const store = createReduxStore( STORE_NAME, {
@@ -39,7 +24,7 @@ register( store );
 export * from './types';
 
 // Update hook return types
-export function useProducts( query: QueryParams = {} ): ProductsHookReturn {
+export function useProducts( query: QueryParams = {} ): ProductsHookData {
     return useSelect(
         ( select: Select ) => ( {
             products: select( STORE_NAME ).getItems( query ),
@@ -52,7 +37,7 @@ export function useProducts( query: QueryParams = {} ): ProductsHookReturn {
     );
 }
 
-export function useProduct( id: number ): ProductHookReturn {
+export function useProduct( id: number ): ProductHookData {
     return useSelect(
         ( select: Select ) => ( {
             product: select( STORE_NAME ).getItem( id ),
@@ -63,7 +48,7 @@ export function useProduct( id: number ): ProductHookReturn {
     );
 }
 
-export function useCategories( query: QueryParams = {} ): CategoriesHookReturn {
+export function useCategories( query: QueryParams = {} ): CategoriesHookData {
     return useSelect(
         ( select: Select ) => ( {
             categories: select( STORE_NAME ).getCategories( query ),
@@ -78,7 +63,7 @@ export function useCategories( query: QueryParams = {} ): CategoriesHookReturn {
     );
 }
 
-export function useCategory( id: number ): CategoryHookReturn {
+export function useCategory( id: number ): CategoryHookData {
     return useSelect(
         ( select: Select ) => ( {
             category: select( STORE_NAME ).getCategory( id ),

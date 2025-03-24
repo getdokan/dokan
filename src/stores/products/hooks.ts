@@ -1,8 +1,6 @@
-import { Category, Product, QueryParams, Select } from './types';
-import { useSelect } from '@wordpress/data';
-import { STORE_NAME } from './constants';
+import { Category, Product } from './types';
 
-export interface ProductsHookReturn {
+export interface ProductsHookData {
     products: Product[] | undefined;
     totalItems: number | undefined;
     totalPages: number | undefined;
@@ -10,13 +8,13 @@ export interface ProductsHookReturn {
     error: Error | null;
 }
 
-export interface ProductHookReturn {
+export interface ProductHookData {
     product: Product | undefined;
     isLoading: boolean;
     error: Error | null;
 }
 
-export interface CategoriesHookReturn {
+export interface CategoriesHookData {
     categories: Category[] | undefined;
     totalItems: number | undefined;
     totalPages: number | undefined;
@@ -24,7 +22,7 @@ export interface CategoriesHookReturn {
     error: Error | null;
 }
 
-export interface CategoryHookReturn {
+export interface CategoryHookData {
     category: Category | undefined;
     isLoading: boolean;
     error: Error | null;
