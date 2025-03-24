@@ -1,9 +1,9 @@
 import { useEffect, useState } from '@wordpress/element';
 import getSettings from '../../settings/getSettings';
-import StepSettings, {SettingsElement} from './StepSettings';
+import StepSettings, { SettingsElement } from './StepSettings';
 import StepComponent from './components/StepComponent';
 import CompletedStep from './components/CompletedStep';
-import apiFetch from "@wordpress/api-fetch";
+import apiFetch from '@wordpress/api-fetch';
 
 export type Step = {
     title: string;

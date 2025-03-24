@@ -1,5 +1,6 @@
 import { SettingsProps } from '../StepSettings';
 import SettingsParser from './SettingsParser';
+import { RawHTML } from '@wordpress/element';
 
 const Section = ( { element, onValueChange }: SettingsProps ): JSX.Element => {
     if ( ! element.display ) {
@@ -17,10 +18,10 @@ const Section = ( { element, onValueChange }: SettingsProps ): JSX.Element => {
                         id={ element.hook_key }
                         className="text-3xl font-bold text-gray-900 leading-5"
                     >
-                        { element.title }
+                        <RawHTML>{ element.title }</RawHTML>
                     </h2>
                     <p className="mt-1 text-sm text-gray-500 leading-5">
-                        { element.description }
+                        <RawHTML>{ element.description }</RawHTML>
                     </p>
                 </div>
                 <div

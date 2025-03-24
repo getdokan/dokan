@@ -72,7 +72,6 @@ const StepSettings = ( {
     updateStep: ( steps: Step[] ) => void;
     currentStep: Step;
     setCurrentStep: ( step: Step ) => void;
-    handleStepsChange: ( steps: Step[] ) => void;
 } ) => {
     const [ allSettings, setAllSettings ] = useState< SettingsElement[] >( [] );
     const [ dependencies, setDependencies ] = useState<
@@ -375,19 +374,18 @@ const StepSettings = ( {
                                     />
                                 ) }
 
-                            <div className=" lg:col-span-12">
+                            <div className="space-y-6 lg:col-span-12">
                                 { tabs && '' !== selectedTab && (
                                     <Tab
                                         key="admin-settings-tab"
                                         tabs={ tabs }
                                         loading={ loading }
-                                        selectedTab={ selectedTab }
                                         onTabClick={ onTabClick }
+                                        selectedTab={ selectedTab }
                                     />
                                 ) }
 
-                                { elements.map(
-                                    ( element: SettingsElement ) => {
+                                { elements.map( ( element: SettingsElement ) => {
                                         return (
                                             <SettingsParser
                                                 key={

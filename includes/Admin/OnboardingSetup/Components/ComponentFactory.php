@@ -72,6 +72,4 @@ class ComponentFactory {
 
         return $field->get_input();
     }
-
-
 }

@@ -1,5 +1,6 @@
 import { SettingsProps } from '../StepSettings';
 import SettingsParser from './SettingsParser';
+import { RawHTML } from '@wordpress/element';
 
 const SubSection = ( {
     element,
@@ -18,10 +19,10 @@ const SubSection = ( {
                     id={ element.hook_key }
                     className="text-base leading-6 font-semibold text-gray-900"
                 >
-                    { element.title }
+                    <RawHTML>{ element.title }</RawHTML>
                 </h2>
                 <p className="mt-1.5 text-sm text-[#828282]">
-                    { element.description }
+                    <RawHTML>{ element.description }</RawHTML>
                 </p>
             </div>
 
