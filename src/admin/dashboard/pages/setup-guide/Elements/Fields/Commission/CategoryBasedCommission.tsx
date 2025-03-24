@@ -1,13 +1,11 @@
+import { RawHTML } from '@wordpress/element';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { MaskedInput } from '@getdokan/dokan-ui';
 import { debounce } from '@wordpress/compose';
 import { SettingsProps } from '../../../StepSettings';
 
-const CategoryBasedCommission = ( {
-    element,
-    onValueChange,
-}: SettingsProps ) => {
+const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
     const { currency } = adminWithdrawData;
     const getCurrencySymbol = currency?.symbol;
 
@@ -15,25 +13,20 @@ const CategoryBasedCommission = ( {
         const result = [];
         const categoryMap = {};
 
-        // First, create a map of categories using term_id as the key
         for ( const term_id in categoriesData ) {
             categoryMap[ term_id ] = categoriesData[ term_id ];
         }
 
-        // Iterate through the categories to rearrange them
-        for ( const term_id in categoryMap ) {
+        for ( const term_id in categoryMap ) { // Re-arrange categories.
             const category = categoryMap[ term_id ];
 
-            // If the category has a parent (parent_id is not 0), find its parent and insert it after the parent
             if ( category.parent_id !== '0' ) {
                 const parent = categoryMap[ category.parent_id ];
                 const parentIndex = result.indexOf( parent );
 
-                // Insert the child category right after its parent
-                result.splice( parentIndex + 1, 0, category );
+                result.splice( parentIndex + 1, 0, category ); // Insert the child category right after its parent.
             } else {
-                // If it's a top-level category (parent_id is 0), add it to the result
-                result.push( category );
+                result.push( category ); // Insert the child category right after its parent.
             }
         }
 
@@ -44,65 +37,54 @@ const CategoryBasedCommission = ( {
     const commissionValues = element?.value || {};
     const resetCategoryVal = element?.reset_subcategory || 'on';
     const renderCategories = Object.values( getCategories( categories ) );
-    console.log( 'renderCategories', renderCategories );
-    const hasCommissionItems = Object.values(
-        commissionValues?.items || {}
-    ).length;
+    const hasCommissionItems = Object.values( commissionValues?.items || {} ).length;
     const resetSubCategory = resetCategoryVal !== 'off';
 
     const [ openRows, setOpenRows ] = useState( [] );
     const [ commission, setCommission ] = useState( { ...commissionValues } );
-    const [ allCategoryEnabled, setAllCategoryEnabled ] = useState(
-        ! hasCommissionItems
-    );
+    const [ allCategoryEnabled, setAllCategoryEnabled ] = useState( ! hasCommissionItems );
 
-    // Toggle category row
     const catRowClick = ( item ) => {
-        const termId = Number( item.term_id );
+        const termId = Number( item?.term_id );
 
         if ( openRows.includes( termId ) ) {
-            // Remove the parent
-            setOpenRows( ( prevRows ) => {
+            setOpenRows( prevRows => {
                 const newRows = [ ...prevRows ];
                 const index = newRows.indexOf( termId );
                 newRows.splice( index, 1 );
 
-                // Remove all children
-                getChildren( item.term_id ).forEach( ( child ) => {
+                getChildren( item?.term_id ).forEach( child => {
                     const childIndex = newRows.indexOf( Number( child ) );
                     if ( childIndex !== -1 ) {
                         newRows.splice( childIndex, 1 );
                     }
-                } );
+                });
 
                 return newRows;
-            } );
+            });
         } else {
-            setOpenRows( ( prevRows ) => [ ...prevRows, termId ] );
+            setOpenRows( prevRows => [ ...prevRows, termId ] );
         }
     };
 
-    // Get children of a category
     const getChildren = ( parentId ) => {
         const categoriesArray = Object.values( categories );
 
-        const children = categoriesArray.filter( ( item ) => {
-            return item.parents.includes( Number( parentId ) );
-        } );
+        const children = categoriesArray.filter( item => {
+            return item?.parents?.includes( Number( parentId ) );
+        });
 
-        return children.map( ( item ) => item.term_id );
+        return children.map( item => item?.term_id );
     };
 
-    // Check if a category row should be shown
     const showCatRow = ( item ) => {
-        if ( Number( item.parent_id ) === 0 ) {
+        if ( Number( item?.parent_id ) === 0 ) {
             return true;
         }
 
-        return openRows.includes( Number( item.parent_id ) );
+        return openRows.includes( Number( item?.parent_id ) );
     };
 
-    // Get commission value for a category
     const getCommissionValue = ( commissionType, termId ) => {
         if ( commission?.items?.hasOwnProperty( termId ) ) {
             return commission?.items[ termId ][ commissionType ];
@@ -111,73 +93,56 @@ const CategoryBasedCommission = ( {
         return commission?.all?.[ commissionType ];
     };
 
-    // Handle commission change for a specific category
-    const handleCommissionItemChange = debounce(
-        ( value, commissionType, termId ) => {
-            if ( commissionType === 'percentage' ) {
-                value = validatePercentage( unFormatValue( value ) );
-            } else {
-                value = unFormatValue( value );
+    const handleCommissionItemChange = debounce( ( value, commissionType, termId ) => {
+        if ( commissionType === 'percentage' ) {
+            value = validatePercentage( unFormatValue( value ) );
+        } else {
+            value = unFormatValue( value );
+        }
+
+        setCommission( prevCommission => {
+            const newCommission = { ...prevCommission };
+            const commissions = { ...newCommission?.items };
+
+            let data = resetSubCategory
+                ? { ...newCommission?.all }
+                : { flat: '', percentage: '' };
+
+            if ( commissions.hasOwnProperty( termId ) ) {
+                data = { ...commissions[ termId ] };
             }
 
-            setCommission( ( prevCommission ) => {
-                const newCommission = { ...prevCommission };
-                const commissions = { ...newCommission?.items };
+            data[ commissionType ] = value;
+            commissions[ termId ] = data;
 
-                let data = resetSubCategory
-                    ? { ...newCommission?.all }
-                    : { flat: '', percentage: '' };
+            newCommission.items = commissions;
+            if ( resetSubCategory ) { // Update child categories if resetSubCategory is true.
+                const allNestedChildrenIds = getChildren( termId );
+                allNestedChildrenIds.forEach( id => {
+                    newCommission.items[ id ] = { ...data };
+                });
+            }
 
-                if ( commissions.hasOwnProperty( termId ) ) {
-                    data = { ...commissions[ termId ] };
+            Object.keys( newCommission?.items ).forEach(key => { // Remove categories with same values as 'all'.
+                if ( isEqual( newCommission?.items[ key ], newCommission?.all ) ) {
+                    delete newCommission?.items[ key ];
                 }
+            });
 
-                data[ commissionType ] = value;
-                commissions[ termId ] = data;
+            return newCommission;
+        });
 
-                newCommission.items = commissions;
-
-                // Update child categories if resetSubCategory is true
-                if ( resetSubCategory ) {
-                    const allNestedChildrenIds = getChildren( termId );
-                    allNestedChildrenIds.forEach( ( id ) => {
-                        newCommission.items[ id ] = { ...data };
-                    } );
-                }
-
-                // Remove categories with same values as 'all'
-                Object.keys( newCommission?.items ).forEach( ( key ) => {
-                    if (
-                        isEqual(
-                            newCommission?.items[ key ],
-                            newCommission?.all
-                        )
-                    ) {
-                        delete newCommission?.items[ key ];
-                    }
-                } );
-
-                return newCommission;
-            } );
-
-            // Emit change to parent component
-            onValueChange( {
-                ...element,
-                value: {
-                    ...commission,
-                    items: {
-                        ...commission?.items,
-                        [ termId ]: {
-                            ...( commission?.items?.[ termId ] ||
-                                commission?.all ),
-                            [ commissionType ]: value,
-                        },
-                    },
-                },
-            } );
-        },
-        700
-    );
+        onValueChange( {
+            ...element,
+            value: {
+                ...commission,
+                items: { ...commission?.items, [ termId ]: {
+                    ...commission?.items?.[ termId ] || commission?.all,
+                    [ commissionType ]: value
+                }}
+            }
+        });
+    }, 700 );
 
     // Handle all category commission change
     const handleAllCategoryChange = debounce( ( value, commissionType ) => {
@@ -187,41 +152,34 @@ const CategoryBasedCommission = ( {
             value = unFormatValue( value );
         }
 
-        setCommission( ( prevCommission ) => {
+        setCommission( prevCommission => {
             const newCommission = { ...prevCommission };
-            newCommission.all = {
-                ...newCommission?.all,
-                [ commissionType ]: value,
-            };
+            newCommission.all = { ...newCommission?.all, [ commissionType ]: value };
 
             if ( resetSubCategory ) {
                 newCommission.items = {};
             }
 
             return newCommission;
-        } );
+        });
 
-        onValueChange( {
+        onValueChange({
             ...element,
             value: {
                 ...commission,
                 all: { ...commission?.all, [ commissionType ]: value },
-                items: resetSubCategory ? {} : commission?.items,
-            },
-        } );
-    }, 700 );
+                items: resetSubCategory ? {} : commission?.items
+            }
+        });
+    }, 700);
 
-    // Format and unformat values
     const unFormatValue = ( value ) => {
         if ( value === '' ) {
             return value;
         }
 
-        // Use accounting.js if available, otherwise simple conversion
         if ( window.accounting ) {
-            return String(
-                window.accounting.unformat( value, currency?.decimal || '.' )
-            );
+            return String( window.accounting.unformat( value, currency?.decimal || '.' ) );
         }
 
         return String( value ).replace( /[^0-9.-]/g, '' );
@@ -232,15 +190,9 @@ const CategoryBasedCommission = ( {
             return value;
         }
 
-        return window.accounting.formatNumber(
-            value,
-            currency?.precision,
-            currency?.thousand,
-            currency?.decimal
-        );
+        return window.accounting.formatNumber( value, currency?.precision, currency?.thousand, currency?.decimal );
     };
 
-    // Validate percentage value
     const validatePercentage = ( percentage ) => {
         if ( percentage === '' ) {
             return percentage;
@@ -256,44 +208,27 @@ const CategoryBasedCommission = ( {
 
     // Check if two objects are equal
     const isEqual = ( value1, value2 ) => {
-        // Check if the values are strictly equal
-        if ( value1 === value2 ) {
-            return true;
-        }
+        if ( value1 === value2 ) return true; // Check if the values are strictly equal
 
-        // Check if either value is null or undefined
-        if ( value1 == null || value2 == null ) {
-            return false;
-        }
+        if ( value1 == null || value2 == null ) return false; // Check if either value is null or undefined
 
-        // Check if the types are different
-        if ( typeof value1 !== typeof value2 ) {
-            return false;
-        }
+        if ( typeof value1 !== typeof value2 ) return false; // Check if the types are different
 
-        // Handle plain objects
-        if ( typeof value1 === 'object' && typeof value2 === 'object' ) {
+        if ( typeof value1 === 'object' && typeof value2 === 'object' ) { // Handle plain objects
             const keys1 = Object.keys( value1 );
             const keys2 = Object.keys( value2 );
 
-            if ( keys1.length !== keys2.length ) {
-                return false;
-            }
+            if ( keys1.length !== keys2.length ) return false;
 
-            for ( const key of keys1 ) {
-                if ( ! keys2.includes( key ) ) {
-                    return false;
-                }
-                if ( ! isEqual( value1[ key ], value2[ key ] ) ) {
-                    return false;
-                }
+            for ( let key of keys1 ) {
+                if ( ! keys2.includes( key ) ) return false;
+                if ( ! isEqual( value1[ key ], value2[ key ] ) ) return false;
             }
 
             return true;
         }
 
-        // For all other types, return false
-        return false;
+        return false; // For all other types, return false
     };
 
     if ( ! element.display ) {
