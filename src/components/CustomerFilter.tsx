@@ -4,7 +4,12 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { useCustomerSearch } from '@dokan/hooks';
 import { useState } from '@wordpress/element';
 
-const CustomerFilter = ( { id, selectedCustomer, setSelectedCustomer } ) => {
+const CustomerFilter = ( {
+    id,
+    selectedCustomer,
+    setSelectedCustomer,
+    placeholder = __( 'Filter By Registered Customer', 'dokan' ),
+} ) => {
     const customerHook = useCustomerSearch();
     const [ searchedCustomer, setSearchedCustomer ] = useState( [] );
 
@@ -61,9 +66,7 @@ const CustomerFilter = ( { id, selectedCustomer, setSelectedCustomer } ) => {
 
     return (
         <div>
-            <label htmlFor={ id }>
-                { __( 'Filter By Registered Customer', 'dokan' ) }
-            </label>
+            { placeholder && <label htmlFor={ id }>{ placeholder }</label> }
             <AsyncSearchableSelect
                 id={ id }
                 value={ getValue() }
