@@ -4,6 +4,7 @@ import { RawHTML } from '@wordpress/element';
 
 const SubSection = ( {
     element,
+    getSetting,
     onValueChange,
 }: SettingsProps ): JSX.Element => {
     if ( ! element.display ) {

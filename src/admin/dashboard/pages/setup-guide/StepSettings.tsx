@@ -60,6 +60,7 @@ export type SettingsElement = {
 export interface SettingsProps {
     element: SettingsElement;
     onValueChange: ( element: SettingsElement ) => void;
+    getSetting: ( id: string ) => SettingsElement|undefined;
 }
 
 const StepSettings = ( {
@@ -273,6 +274,17 @@ const StepSettings = ( {
     };
 
     /**
+     * Get a setting by ID.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {String} id Setting ID.
+     */
+    const getSetting = ( id: string ) => {
+        return allSettings.find( ( setting ) => setting.id === id );
+    }
+
+    /**
      * Save settings and handle next step navigation.
      */
     const saveSettingsAndHandleNext = async () => {
@@ -393,6 +405,7 @@ const StepSettings = ( {
                                                     '-settings-parser'
                                                 }
                                                 element={ element }
+                                                getSetting={ getSetting }
                                                 onValueChange={
                                                     updateSettingsValue
                                                 }

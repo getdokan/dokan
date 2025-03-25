@@ -4,13 +4,14 @@ import SubSection from './SubSection';
 import FieldParser from './Fields/FieldParser';
 import FieldGroup from './FiendGroup';
 
-const SettingsParser = ( { element, onValueChange }: SettingsProps ) => {
+const SettingsParser = ( { element, getSetting, onValueChange }: SettingsProps ) => {
     switch ( element.type ) {
         case 'section':
             return (
                 <Section
                     key={ element.hook_key }
                     element={ element }
+                    getSetting={ getSetting }
                     onValueChange={ onValueChange }
                 />
             );
@@ -19,6 +20,7 @@ const SettingsParser = ( { element, onValueChange }: SettingsProps ) => {
                 <SubSection
                     key={ element.hook_key }
                     element={ element }
+                    getSetting={ getSetting }
                     onValueChange={ onValueChange }
                 />
             );
@@ -27,6 +29,7 @@ const SettingsParser = ( { element, onValueChange }: SettingsProps ) => {
                 <FieldParser
                     key={ element.hook_key + '-parser' }
                     element={ element }
+                    getSetting={ getSetting }
                     onValueChange={ onValueChange }
                 />
             );
@@ -35,6 +38,7 @@ const SettingsParser = ( { element, onValueChange }: SettingsProps ) => {
                 <FieldGroup
                     key={ element.hook_key }
                     element={ element }
+                    getSetting={ getSetting }
                     onValueChange={ onValueChange }
                 />
             );

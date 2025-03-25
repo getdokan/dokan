@@ -3,6 +3,7 @@ import SettingsParser from './SettingsParser';
 
 const FieldGroup = ( {
     element,
+    getSetting,
     onValueChange,
 }: SettingsProps ): JSX.Element => {
     if ( ! element.display ) {

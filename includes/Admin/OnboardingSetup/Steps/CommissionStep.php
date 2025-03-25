@@ -136,6 +136,8 @@ class CommissionStep extends AbstractStep {
                             ->set_description( esc_html__( 'Amount you will get from each sale', 'dokan-lite' ) )
                             ->add_dependency( 'commission.commission_type', 'category_based', true, 'display', 'hide', '!==' )
                             ->add_dependency( 'commission.commission_type', 'category_based', true, 'display', 'show', '===' )
+                            ->add_dependency( 'commission.reset_sub_category_when_edit_all_category', 'on', true, 'custom', 'custom', '===' )
+                            ->add_dependency( 'commission.reset_sub_category_when_edit_all_category', 'off', true, 'custom', 'custom', '===' )
                             ->set_reset_subcategory( $dokan_selling['reset_sub_category_when_edit_all_category'] ?? $default_settings['reset_sub_category_when_edit_all_category'] )
                             ->set_value( (array) ( $dokan_selling['commission_category_based_values'] ?? $default_settings['commission_category_based_values'] ) )
                     )

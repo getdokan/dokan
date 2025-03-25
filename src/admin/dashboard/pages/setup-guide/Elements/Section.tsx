@@ -2,7 +2,7 @@ import { SettingsProps } from '../StepSettings';
 import SettingsParser from './SettingsParser';
 import { RawHTML } from '@wordpress/element';
 
-const Section = ( { element, onValueChange }: SettingsProps ): JSX.Element => {
+const Section = ( { element, getSetting, onValueChange }: SettingsProps ): JSX.Element => {
     if ( ! element.display ) {
         return <></>;
     }

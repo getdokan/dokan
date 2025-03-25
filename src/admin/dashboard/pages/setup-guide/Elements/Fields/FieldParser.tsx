@@ -11,7 +11,7 @@ import MultiCheck from './MultiCheck';
 import CategoryBasedCommission from "./commission/CategoryBasedCommission";
 import CombineInput from "./Commission/CombineInput";
 
-const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
+const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) => {
     // TODO: add support for custom input fields and custom hook.
 
     switch ( element.variant ) {

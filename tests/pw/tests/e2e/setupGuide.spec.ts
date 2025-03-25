@@ -94,12 +94,16 @@ test.describe('Setup guide functionality test', () => {
     });
 
     test('should complete the entire setup guide process', async ({ page, context }) => {
+        // Basic Setup Steps
         await page.locator('#setup-guide-banner-root').getByRole('button', { name: 'Start Setup' }).click();
         await page.locator('#dokan_admin_onboarding_setup_step_basic_basic_shipping_fee_recipient_div').getByRole('button', { name: 'Admin' }).click();
         await page.locator('#dokan_admin_onboarding_setup_step_basic_basic_tax_fee_recipient_div').getByRole('button', { name: 'Admin' }).click();
         await page.locator('#dokan_admin_onboarding_setup_step_basic_basic_shipping_tax_fee_recipient_div').getByRole('button', { name: 'Admin' }).click();
         await page.locator('#dokan_admin_onboarding_setup_step_basic_basic_order_status_change_div').getByRole('button').click();
         await page.locator('#dokan_admin_onboarding_setup_step_basic_basic_new_seller_enable_selling_div').getByRole('button').click();
+        await page.getByRole('button', { name: 'Next' }).click();
+
+
     });
 
     // await page.goto('http://dokans.test/wp-login.php?redirect_to=http%3A%2F%2Fdokans.test%2Fwp-admin%2F&reauth=1');
