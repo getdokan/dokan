@@ -35,11 +35,12 @@ class ProductControllerV2 extends ProductController {
         parent::register_routes();
 
         register_rest_route(
-            $this->namespace, '/' . $this->base, [
+            $this->namespace, '/' . $this->base . 'jhj', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_items' ],
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
+                    'args' => $this->get_collection_params(),
                 ],
                 'schema' => [ $this, 'get_item_schema' ],
             ]
@@ -49,7 +50,7 @@ class ProductControllerV2 extends ProductController {
             $this->namespace, '/' . $this->base . '/filter-by-data', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_product_filter_by_data' ],
+                    'callback' => [ $this, 'get_items' ],
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
                 ],
                 'schema' => [ $this, 'get_filter_data_schema' ],
@@ -176,7 +177,7 @@ class ProductControllerV2 extends ProductController {
             'validate_callback' => 'rest_validate_request_arg',
             'required'          => false,
         );
-        $params['include']         = array(
+        $params['include'] = array(
             'description'       => __( 'Limit result set to specific ids.', 'dokan-lite' ),
             'type'              => 'array',
             'items'             => array(
@@ -185,7 +186,7 @@ class ProductControllerV2 extends ProductController {
             'default'           => array(),
             'sanitize_callback' => 'wp_parse_id_list',
         );
-        $params['exclude']         = array(
+        $params['exclude'] = array(
             'description'       => __( 'Ensure result set excludes specific IDs.', 'dokan-lite' ),
             'type'              => 'array',
             'items'             => array(
