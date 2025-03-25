@@ -31,18 +31,3 @@ export interface QueryParams {
 
     [ key: string ]: any;
 }
-
-// Define the shape of our selectors
-export interface StoreSelectors {
-    getCategories: ( query: QueryParams ) => Category[] | undefined;
-    getCategory: ( id: number ) => Category | undefined;
-    getCategoryQueryTotalCount: ( query: QueryParams ) => number | undefined;
-    getCategoryQueryTotalPages: ( query: QueryParams ) => number | undefined;
-    isCategoriesLoading: () => boolean;
-    getCategoryError: () => Error | null;
-}
-
-// Define the shape of the select function
-export interface Select {
-    ( storeName: string ): StoreSelectors;
-}

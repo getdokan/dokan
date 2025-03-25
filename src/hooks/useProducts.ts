@@ -1,5 +1,6 @@
-import { QueryParams, Select, storeName } from '@dokan/stores/products';
+import { QueryParams } from '@dokan/definitions/dokan-product';
 
+import products from '@dokan/stores/products';
 import { useSelect } from '@wordpress/data';
 
 interface Product {
@@ -26,12 +27,12 @@ export interface ProductHookData {
 
 export function useProducts( query: QueryParams = {} ): ProductsHookData {
     return useSelect(
-        ( select: Select ) => ( {
-            products: select( storeName ).getItems( query ),
-            totalItems: select( storeName ).getQueryTotalCount( query ),
-            totalPages: select( storeName ).getQueryTotalPages( query ),
-            isLoading: select( storeName ).isLoading(),
-            error: select( storeName ).getError(),
+        ( select ) => ( {
+            products: select( products ).getItems( query ),
+            totalItems: select( products ).getQueryTotalCount( query ),
+            totalPages: select( products ).getQueryTotalPages( query ),
+            isLoading: select( products ).isLoading(),
+            error: select( products ).getError(),
         } ),
         [ JSON.stringify( query ) ]
     );
@@ -39,10 +40,10 @@ export function useProducts( query: QueryParams = {} ): ProductsHookData {
 
 export function useProduct( id: number ): ProductHookData {
     return useSelect(
-        ( select: Select ) => ( {
-            product: select( storeName ).getItem( id ),
-            isLoading: select( storeName ).isLoading(),
-            error: select( storeName ).getError(),
+        ( select ) => ( {
+            product: select( products ).getItem( id ),
+            isLoading: select( products ).isLoading(),
+            error: select( products ).getError(),
         } ),
         [ id ]
     );

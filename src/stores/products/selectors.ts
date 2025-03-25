@@ -1,4 +1,4 @@
-import { Product, QueryParams, State } from './types';
+import { Product, QueryParams, State } from '@dokan/definitions/dokan-product';
 import { addQueryArgs, getQueryArgs } from '@wordpress/url';
 
 export const selectors = {

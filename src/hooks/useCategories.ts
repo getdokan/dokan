@@ -1,5 +1,5 @@
 import { useSelect } from '@wordpress/data';
-import { Select, storeName } from '@dokan/stores/product-categories';
+import productStore from '@dokan/stores/product-categories';
 
 interface Category {
     id: number;
@@ -38,12 +38,14 @@ export interface CategoryHookData {
 
 export function useCategories( query: QueryParams = {} ): CategoriesHookData {
     return useSelect(
-        ( select: Select ) => ( {
-            categories: select( storeName ).getCategories( query ),
-            totalItems: select( storeName ).getCategoryQueryTotalCount( query ),
-            totalPages: select( storeName ).getCategoryQueryTotalPages( query ),
-            isLoading: select( storeName ).isCategoriesLoading(),
-            error: select( storeName ).getCategoryError(),
+        ( select ) => ( {
+            categories: select( productStore ).getItems( query ),
+            totalItems:
+                select( productStore ).getCategoryQueryTotalCount( query ),
+            totalPages:
+                select( productStore ).getCategoryQueryTotalPages( query ),
+            isLoading: select( productStore ).isCategoriesLoading(),
+            error: select( productStore ).getCategoryError(),
         } ),
         [ JSON.stringify( query ) ]
     );
@@ -51,10 +53,10 @@ export function useCategories( query: QueryParams = {} ): CategoriesHookData {
 
 export function useCategory( id: number ): CategoryHookData {
     return useSelect(
-        ( select: Select ) => ( {
-            category: select( storeName ).getCategory( id ),
-            isLoading: select( storeName ).isCategoriesLoading(),
-            error: select( storeName ).getCategoryError(),
+        ( select ) => ( {
+            category: select( productStore ).getItem( id ),
+            isLoading: select( productStore ).isCategoriesLoading(),
+            error: select( productStore ).getCategoryError(),
         } ),
         [ id ]
     );

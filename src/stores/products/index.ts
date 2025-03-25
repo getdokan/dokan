@@ -3,14 +3,18 @@ import { reducer } from './reducer';
 import { selectors } from './selectors';
 import { resolvers } from './resolvers';
 import { actions } from './actions';
+import { State } from '@dokan/definitions/dokan-product';
 
 export const storeName = 'dokan/products';
-export * from './types';
-const store = createReduxStore( storeName, {
-    reducer,
-    actions,
-    selectors,
-    resolvers,
-} );
+
+const store = createReduxStore< State, typeof actions, typeof selectors >(
+    storeName,
+    {
+        reducer,
+        actions,
+        selectors,
+        resolvers,
+    }
+);
 
 export default store;

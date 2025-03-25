@@ -1,5 +1,9 @@
-import { Category, QueryParams, State } from './types';
 import { addQueryArgs, getQueryArgs } from '@wordpress/url';
+import {
+    Category,
+    QueryParams,
+    State,
+} from '@dokan/definitions/dokan-product-categories';
 
 export const selectors = {
     // Category selectors
