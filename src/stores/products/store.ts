@@ -1,7 +1,7 @@
 import { createReduxStore, register, useSelect } from '@wordpress/data';
 import { reducer } from './reducer';
 import { selectors } from './selectors';
-import { resolvers } from './ resolvers';
+import { resolvers } from './resolvers';
 import { STORE_NAME } from './constants';
 import { actions } from './actions';
 import { QueryParams, Select } from './types';
