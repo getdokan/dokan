@@ -20,6 +20,10 @@ interface FilterProps {
     onReset?: () => void;
     /** Additional class names for the filter container */
     className?: string;
+    /** Additional class names for the filter button */
+    filterBtnClassName?: string;
+    /** Additional class names for the reset button */
+    resetBtnClassName?: string;
 }
 
 const Filter = ( {
@@ -30,6 +34,8 @@ const Filter = ( {
     onFilter = () => {},
     onReset = () => {},
     className = '',
+    filterBtnClassName = '',
+    resetBtnClassName = '',
 }: FilterProps ) => {
     const snakeCaseNamespace = snakeCase( namespace );
     const filterId = `dokan_${ snakeCaseNamespace }_filters`;
@@ -57,7 +63,10 @@ const Filter = ( {
             { showFilter && (
                 <Button
                     color="primary"
-                    className="bg-dokan-btn hover:dokan-btn-hover h-10"
+                    className={ twMerge(
+                        'bg-dokan-btn hover:bg-dokan-btn-hover focus:bg-dokan-btn h-10',
+                        filterBtnClassName
+                    ) }
                     label={ __( 'Filter', 'dokan' ) }
                     onClick={ onFilter }
                 />
@@ -66,7 +75,10 @@ const Filter = ( {
             { showReset && (
                 <Button
                     color="primary"
-                    className="bg-dokan-btn hover:dokan-btn-hover h-10"
+                    className={ twMerge(
+                        'bg-dokan-btn hover:bg-dokan-btn-hover focus:bg-dokan-btn h-10',
+                        resetBtnClassName
+                    ) }
                     label={ __( 'Reset', 'dokan' ) }
                     onClick={ onReset }
                 />
