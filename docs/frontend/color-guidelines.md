@@ -2,7 +2,7 @@
 
 ## Overview
 
-This documentation outlines the color system used in Dokan components and provides guidelines for consistent usage of color classes throughout the application. Dokan implements a semantic color system that aligns colors with their informational meaning.
+This documentation outlines the color system used in Dokan and provides guidelines for consistent usage of color classes throughout the application. Dokan implements a semantic color system that aligns colors with their informational meaning.
 
 ## Semantic Color System
 
@@ -13,66 +13,7 @@ Dokan uses a semantic color system where colors represent specific meanings:
 - **Warning (Yellow)** - Used for alerts that require attention but aren't critical
 - **Danger (Red)** - Used for errors, destructive actions, or critical warnings
 
-## Text Color Classes
-
-To apply semantic colors to text elements, use the following Tailwind CSS classes:
-
-```jsx
-<p className="text-dokan-info">Informational text</p>
-<p className="text-dokan-success">Success text</p>
-<p className="text-dokan-warning">Warning text</p>
-<p className="text-dokan-danger">Danger text</p>
-```
-
-## Badge Component Styling
-
-When using the Badge component from `@getdokan/dokan-ui`, you can apply semantic styling using a combination of Tailwind classes:
-
-```jsx
-// Info Badge
-<Badge
-    color="blue"
-    label="Info"
-    className="ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info"
-/>
-
-// Success Badge
-<Badge
-    color="green"
-    label="Success"
-    className="ring-1 ring-inset bg-dokan-success text-dokan-success ring-dokan-success"
-/>
-
-// Warning Badge
-<Badge
-    color="yellow"
-    label="Warning"
-    className="ring-1 ring-inset bg-dokan-warning text-dokan-warning ring-dokan-warning"
-/>
-
-// Danger Badge
-<Badge
-    color="red"
-    label="Danger"
-    className="ring-1 ring-inset bg-dokan-danger text-dokan-danger ring-dokan-danger"
-/>
-```
-
-## Predefined Label Components
-
-For convenience, Dokan provides prebuilt Label components that encapsulate these styles:
-
-```jsx
-import { InfoLabel, SuccessLabel, WarningLabel, DangerLabel } from '@dokan/components';
-
-// Usage
-<InfoLabel label="Info" />
-<SuccessLabel label="Success" />
-<WarningLabel label="Warning" />
-<DangerLabel label="Danger" />
-```
-
-## Class Structure
+## Base Color Classes
 
 The semantic color classes follow this pattern:
 
@@ -84,19 +25,96 @@ The semantic color classes follow this pattern:
 
 Where `{semantic}` is one of: `info`, `success`, `warning`, or `danger`.
 
-## Badge Styling Structure
+## Component-Specific Classes
 
-The consistent badge styling includes three aspects:
+### Alert Classes
+```jsx
+// Info Alert
+<div className="ring-1 ring-inset !dokan-alert-info">
+  <span className="text-dokan-info">Info message</span>
+</div>
 
-1. **Ring styling**: `ring-1 ring-inset ring-dokan-{semantic}`
-2. **Background color**: `bg-dokan-{semantic}`
-3. **Text color**: `text-dokan-{semantic}`
+// Success Alert
+<div className="ring-1 ring-inset !dokan-alert-success">
+  <span className="text-dokan-success">Success message</span>
+</div>
+
+// Warning Alert
+<div className="ring-1 ring-inset !dokan-alert-warning">
+  <span className="text-dokan-warning">Warning message</span>
+</div>
+
+// Danger Alert
+<div className="ring-1 ring-inset !dokan-alert-danger">
+  <span className="text-dokan-danger">Danger message</span>
+</div>
+```
+
+### Button Classes
+```jsx
+// Primary Button
+<button className="transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn">
+  Primary Action
+</button>
+
+// Secondary Button
+<button className="transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-secondary">
+  Secondary Action
+</button>
+
+// Tertiary Button
+<button className="transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-tertiary">
+  Tertiary Action
+</button>
+
+// Status Buttons
+<button className="transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-info">
+  Info Action
+</button>
+<button className="transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-success">
+  Success Action
+</button>
+<button className="transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-warning">
+  Warning Action
+</button>
+<button className="transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-danger">
+  Danger Action
+</button>
+```
+
+### Label/Badge Classes
+```jsx
+// Info Label
+<span className="dokan-info">Info Label</span>
+
+// Success Label
+<span className="dokan-success">Success Label</span>
+
+// Warning Label
+<span className="dokan-warning">Warning Label</span>
+
+// Danger Label
+<span className="dokan-danger">Danger Label</span>
+```
+
+## Class Structure
+
+### Alert Styling
+- Ring styling: `ring-1 ring-inset`
+- Semantic class: `!dokan-alert-{semantic}`
+
+### Button Styling
+- Base styling: `transition-colors duration-200 ease-in-out ring-1 ring-inset`
+- Semantic class: `dokan-btn-{semantic}`
+
+### Label Styling
+- Semantic class: `dokan-{semantic}`
 
 ## Best Practices
 
 1. **Consistent Usage** - Use colors according to their semantic meaning, not for visual preference.
 2. **Accessible Combinations** - Ensure text colors have sufficient contrast with their backgrounds.
-3. **Predefined Components** - Use the predefined Label components when possible for consistency.
+3. **Class Combinations** - Use the predefined class combinations for consistent styling.
 4. **Semantic Meaning** - Reserve colors for their intended semantic meaning:
     - Green for success/active/positive
     - Blue for information/neutral/in-progress
@@ -105,34 +123,48 @@ The consistent badge styling includes three aspects:
 
 ## Implementation Examples
 
-### Text with Semantic Colors
-
-```jsx
-<div>
-  <p className="text-dokan-info">Your order is being processed.</p>
-  <p className="text-dokan-success">Payment completed successfully!</p>
-  <p className="text-dokan-warning">Your subscription will expire soon.</p>
-  <p className="text-dokan-danger">Failed to connect to the server.</p>
-</div>
-```
-
 ### Status Indicators
-
 ```jsx
 <div className="flex gap-2">
-  <InfoLabel label="Processing" />
-  <SuccessLabel label="Active" />
-  <WarningLabel label="Pending" />
-  <DangerLabel label="Failed" />
+  <span className="dokan-info">Processing</span>
+  <span className="dokan-success">Active</span>
+  <span className="dokan-warning">Pending</span>
+  <span className="dokan-danger">Failed</span>
 </div>
 ```
 
-### Custom Badge Implementation
-
+### Action Buttons
 ```jsx
-<Badge
-  color="blue"
-  label="Custom Status"
-  className="ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info"
-/>
+<div className="flex gap-2">
+  <button className="transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-info">
+    View Details
+  </button>
+  <button className="transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-success">
+    Approve
+  </button>
+  <button className="transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-warning">
+    Review
+  </button>
+  <button className="transition-colors duration-200 ease-in-out ring-1 ring-inset dokan-btn-danger">
+    Delete
+  </button>
+</div>
+```
+
+### Alert Messages
+```jsx
+<div className="space-y-4">
+  <div className="ring-1 ring-inset !dokan-alert-info">
+    <span className="text-dokan-info">All systems are operational</span>
+  </div>
+  <div className="ring-1 ring-inset !dokan-alert-success">
+    <span className="text-dokan-success">Your changes have been saved</span>
+  </div>
+  <div className="ring-1 ring-inset !dokan-alert-warning">
+    <span className="text-dokan-warning">Please review your recent changes</span>
+  </div>
+  <div className="ring-1 ring-inset !dokan-alert-danger">
+    <span className="text-dokan-danger">Failed to connect to the server</span>
+  </div>
+</div>
 ```

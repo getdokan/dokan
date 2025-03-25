@@ -4,35 +4,46 @@ import React from 'react';
 import { Badge } from '@getdokan/dokan-ui';
 import type { BadgeProps } from '@getdokan/dokan-ui/dist/components/Badge';
 
-export const WarningLabel = ( { label, ...props }: Partial< BadgeProps > ) => (
-    <Badge
-        className="dokan-warning"
-        color="yellow"
-        label={ label }
-        { ...props }
-    />
-);
+type LabelVariant = 'info' | 'warning' | 'success' | 'danger';
 
-export const InfoLabel = ( { label, ...props }: Partial< BadgeProps > ) => (
-    <Badge className="dokan-info" color="blue" label={ label } { ...props } />
-);
+interface DokanLabelProps extends Partial< BadgeProps > {
+    variant?: LabelVariant;
+}
 
-export const SuccessLabel = ( { label, ...props }: Partial< BadgeProps > ) => (
-    <Badge
-        className="dokan-success"
-        color="green"
-        label={ label }
-        { ...props }
-    />
-);
+const variantConfig = {
+    info: {
+        color: 'blue',
+        className: 'dokan-info',
+    },
+    warning: {
+        color: 'yellow',
+        className: 'dokan-warning',
+    },
+    success: {
+        color: 'green',
+        className: 'dokan-success',
+    },
+    danger: {
+        color: 'red',
+        className: 'dokan-danger',
+    },
+} as const;
 
-export const DangerLabel = ( { label, ...props }: Partial< BadgeProps > ) => (
-    <Badge className="dokan-danger" color="red" label={ label } { ...props } />
-);
+export const DokanLabel = ( {
+    label,
+    variant = 'info',
+    ...props
+}: DokanLabelProps ) => {
+    const config = variantConfig[ variant ];
 
-export default {
-    WarningLabel,
-    InfoLabel,
-    SuccessLabel,
-    DangerLabel,
+    return (
+        <Badge
+            className={ config.className }
+            color={ config.color }
+            label={ label }
+            { ...props }
+        />
+    );
 };
+
+export default DokanLabel;

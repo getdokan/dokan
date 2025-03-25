@@ -3,69 +3,55 @@ import * as React from 'react';
 import { SimpleAlert } from '@getdokan/dokan-ui';
 import type { SimpleAlertProps } from '@getdokan/dokan-ui/dist/components/SimpleAlert';
 
-export const InfoAlert = ( {
+type AlertVariant = 'info' | 'warning' | 'success' | 'danger';
+
+interface DokanAlertProps extends Partial< SimpleAlertProps > {
+    variant?: AlertVariant;
+}
+
+const variantConfig = {
+    info: {
+        color: 'blue',
+        type: 'info',
+        className: '!dokan-alert-info',
+    },
+    warning: {
+        color: 'yellow',
+        type: 'warning',
+        className: '!dokan-alert-warning',
+    },
+    success: {
+        color: 'green',
+        type: 'success',
+        className: '!dokan-alert-success',
+    },
+    danger: {
+        color: 'red',
+        type: 'danger',
+        className: '!dokan-alert-danger',
+    },
+} as const;
+
+export const DokanAlert = ( {
     label,
     children,
     className = '',
-}: Partial< SimpleAlertProps > ) => (
-    <SimpleAlert
-        label={ label }
-        color="blue"
-        type="info"
-        className={ `ring-1 ring-inset !dokan-alert-info ${ className }` }
-    >
-        { children }
-    </SimpleAlert>
-);
+    variant = 'info',
+    ...props
+}: DokanAlertProps ) => {
+    const config = variantConfig[ variant ];
 
-export const WarningAlert = ( {
-    label,
-    children,
-    className = '',
-}: Partial< SimpleAlertProps > ) => (
-    <SimpleAlert
-        label={ label }
-        color="yellow"
-        type="warning"
-        className={ `ring-1 ring-inset !dokan-alert-warning ${ className }` }
-    >
-        { children }
-    </SimpleAlert>
-);
-
-export const SuccessAlert = ( {
-    label,
-    children,
-    className = '',
-}: Partial< SimpleAlertProps > ) => (
-    <SimpleAlert
-        label={ label }
-        color="green"
-        type="success"
-        className={ `ring-1 ring-inset !dokan-alert-success ${ className }` }
-    >
-        { children }
-    </SimpleAlert>
-);
-
-export const DangerAlert = ( {
-    label,
-    children,
-    className = '',
-}: Partial< SimpleAlertProps > ) => (
-    <SimpleAlert
-        label={ label }
-        color="red"
-        type="danger"
-        className={ `ring-1 ring-inset !dokan-alert-danger ${ className }` }
-    >
-        { children }
-    </SimpleAlert>
-);
-
-export default {
-    InfoAlert,
-    WarningAlert,
-    SuccessAlert,
-    DangerAlert,
+    return (
+        <SimpleAlert
+            label={ label }
+            color={ config.color }
+            type={ config.type }
+            className={ `ring-1 ring-inset ${ config.className } ${ className }` }
+            { ...props }
+        >
+            { children }
+        </SimpleAlert>
+    );
 };
+
+export default DokanAlert;
