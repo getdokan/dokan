@@ -5,12 +5,24 @@ import getRoutes, { withRouter } from '../routing';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import './tailwind.scss';
 import { useMutationObserver } from '../hooks';
+import { useSelect } from '@wordpress/data';
+import coreStore from '@dokan/stores/core';
+import Skeleton from '@dokan/layout/Skeleton';
 
 const App = () => {
     const routes = getRoutes();
+    const loading = useSelect( ( select ) => {
+        // this is to do the eager loading the store.
+        select( coreStore ).getCurrentUser();
+        // @ts-ignore
+        return select( coreStore ).getResolutionState( 'getCurrentUser' );
+    }, [] );
 
     const mapedRoutes = routes.map( ( route ) => {
-        const WithRouterComponent = withRouter( route.element );
+        const WithRouterComponent = withRouter(
+            route.element,
+            route?.capabilities || [ 'dokandar' ]
+        );
 
         return {
             path: route.path,
@@ -38,17 +50,25 @@ const App = () => {
                 }
                 // @ts-ignore
                 for ( const node of mutation.addedNodes ) {
-                    if ( node.id !== 'headlessui-portal-root' ) {
-                        continue;
+                    if ( node.id === 'headlessui-portal-root' ) {
+                        node.classList.add( 'dokan-layout' );
+                        node.style.display = 'block';
                     }
 
-                    node.classList.add( 'dokan-layout' );
-                    node.style.display = 'block';
+                    if (
+                        node.hasAttribute( 'data-radix-popper-content-wrapper' )
+                    ) {
+                        node.classList.add( 'dokan-layout' );
+                    }
                 }
             }
         },
         { childList: true }
     );
+
+    if ( ! loading || loading?.status !== 'finished' ) {
+        return <Skeleton />;
+    }
 
     return (
         <>
@@ -61,6 +81,9 @@ domReady( function () {
     const rootElement = document.querySelector(
         '#dokan-vendor-dashboard-root'
     );
+    if ( ! rootElement ) {
+        return;
+    }
     const root = createRoot( rootElement! );
     root.render( <App /> );
 } );
