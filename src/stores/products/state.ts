@@ -5,5 +5,4 @@ export const DEFAULT_STATE: State = {
     queries: {},
     isLoading: false,
     error: null,
-    categoryError: null,
 };

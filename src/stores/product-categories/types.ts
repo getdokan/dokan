@@ -34,8 +34,6 @@ export interface QueryParams {
 
 // Define the shape of our selectors
 export interface StoreSelectors {
-    getQueryTotalCount: ( query: QueryParams ) => number | undefined;
-    getQueryTotalPages: ( query: QueryParams ) => number | undefined;
     getCategories: ( query: QueryParams ) => Category[] | undefined;
     getCategory: ( id: number ) => Category | undefined;
     getCategoryQueryTotalCount: ( query: QueryParams ) => number | undefined;
