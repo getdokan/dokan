@@ -220,7 +220,7 @@ const StepSettings = ( {
             );
 
             const fetchPromise = apiFetch< SettingsElement[] >( {
-                path: '/dokan/v1/admin/setup-gui/' + currentStep.id,
+                path: '/dokan/v1/admin/setup-guide/' + currentStep.id,
             } );
 
             // Use Promise.race to implement timeout
@@ -393,7 +393,6 @@ const StepSettings = ( {
             setError( null );
             handleNext();
         } catch ( err ) {
-            console.error( 'Error saving settings:', err );
             handleError( err );
             setIsSaving( false );
         }
@@ -500,6 +499,7 @@ const StepSettings = ( {
                                     'There was a problem loading the step data.' }
                             </p>
                             <Button
+                                color="primary"
                                 onClick={ retryLoading }
                                 className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2"
                             >
