@@ -4,7 +4,10 @@ const entryPoints = require( './webpack-entries' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const isProduction = process.env.NODE_ENV === 'production';
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
-const { requestToExternal, requestToHandle } = require( './webpack-dependency-mapping' );
+const {
+    requestToExternal,
+    requestToHandle,
+} = require( './webpack-dependency-mapping' );
 const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
 
 const updatedConfig = {
