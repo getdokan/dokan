@@ -13,22 +13,22 @@ const variantConfig = {
     info: {
         color: 'blue',
         type: 'info',
-        className: '!dokan-alert-info',
+        className: 'dokan-alert-info',
     },
     warning: {
         color: 'yellow',
         type: 'warning',
-        className: '!dokan-alert-warning',
+        className: 'dokan-alert-warning',
     },
     success: {
         color: 'green',
         type: 'success',
-        className: '!dokan-alert-success',
+        className: 'dokan-alert-success',
     },
     danger: {
         color: 'red',
         type: 'danger',
-        className: '!dokan-alert-danger',
+        className: 'dokan-alert-danger',
     },
 } as const;
 
