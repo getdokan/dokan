@@ -117,7 +117,7 @@ Dokan uses a semantic color system where colors represent specific meanings:
 <a className="dokan-link">Link Text</a>
 ```
 
-### 2. Tailwind Classes with Dokan Colors
+### 2. Tailwind Uitility Classes with Dokan Colors
 
 ```jsx
 // Text Colors
