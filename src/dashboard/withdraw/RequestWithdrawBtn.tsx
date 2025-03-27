@@ -9,7 +9,7 @@ import {
     useToast,
 } from '@getdokan/dokan-ui';
 import { RawHTML, useEffect, useState } from '@wordpress/element';
-import '../../Definitions/window-types';
+import '../../definitions/window-types';
 import { useWithdraw } from './Hooks/useWithdraw';
 import { useDebounceCallback } from 'usehooks-ts';
 import { useCharge } from './Hooks/useCharge';
