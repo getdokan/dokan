@@ -10,6 +10,7 @@ use WC_Order_Item_Product;
 use WC_Order_Item_Coupon;
 use WC_Data;
 use Exception;
+
 class Coupon {
 
     public const DOKAN_COUPON_META_KEY = '_dokan_coupon_info';
