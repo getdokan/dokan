@@ -8,9 +8,9 @@ const ForbiddenIcon = ( {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="75"
-            height="98"
-            viewBox="0 0 75 98"
+            width="80"
+            height="105"
+            viewBox="0 0 80 105"
             fill="none"
             className={ `${ className } ${ color }` }
         >
