@@ -61,7 +61,7 @@ const OnboardingApp = () => {
             // Initialize form data
             if ( response ) {
                 // Skip to success if already onboarded
-                if ( Boolean( response.onboarding ) ) {
+                if ( response.onboarding === '1' ) {
                     setCurrentStep( skipToSuccess() );
                 }
             }
