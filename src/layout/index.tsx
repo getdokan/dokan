@@ -2,11 +2,9 @@ import { createContext, useContext, useState } from '@wordpress/element';
 import Header from './Header';
 import Footer from './Footer';
 import ContentArea from './ContentArea';
-import {
-    SlotFillProvider
-} from '@wordpress/components';
+import { SlotFillProvider } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
-import { DokanToaster } from "@getdokan/dokan-ui";
+import { DokanToaster } from '@getdokan/dokan-ui';
 import { useLocation } from 'react-router-dom';
 
 // Create a ThemeContext
@@ -30,6 +28,7 @@ export type DokanRoute = {
     element: JSX.Element | React.ReactNode;
     header?: JSX.Element | React.ReactNode;
     footer?: JSX.Element | React.ReactNode;
+    capabilities?: string[];
     path: string;
     exact?: boolean;
     order?: number;
@@ -40,34 +39,45 @@ interface LayoutProps {
     children: React.ReactNode;
     route: DokanRoute;
     title?: string;
-    headerComponent?: JSX.Element|React.ReactNode;
-    footerComponent?: JSX.Element|React.ReactNode;
+    headerComponent?: JSX.Element | React.ReactNode;
+    footerComponent?: JSX.Element | React.ReactNode;
 }
 
 const handleMenuActiveStates = ( currentPath ) => {
     const menuRoute = currentPath.replace( /^\//, '' ); // Remove leading slash.
-    const menuItem  = document.querySelector( `.dokan-dashboard-menu li[data-react-route='${ menuRoute }']` ) || null;
+    const menuItem =
+        document.querySelector(
+            `.dokan-dashboard-menu li[data-react-route='${ menuRoute }']`
+        ) || null;
 
     // Return if menu item not found.
     if ( ! menuItem ) {
         return;
     }
 
-    document.querySelectorAll( '.dokan-dashboard-menu li' ).forEach( item => {
-        item.classList.remove( 'active' );
-        item.querySelectorAll( '.navigation-submenu li' ).forEach( subItem => {
-            subItem.classList.remove( 'current' );
-        });
-    });
+    document
+        .querySelectorAll( '.dokan-dashboard-menu li' )
+        .forEach( ( item ) => {
+            item.classList.remove( 'active' );
+            item.querySelectorAll( '.navigation-submenu li' ).forEach(
+                ( subItem ) => {
+                    subItem.classList.remove( 'current' );
+                }
+            );
+        } );
 
     // Get parent menu item if this is a submenu item.
     const parentMenuItem = menuItem.closest( '.dokan-dashboard-menu > li' );
-    if ( parentMenuItem ) { // Add `active` to parent menu.
+    if ( parentMenuItem ) {
+        // Add `active` to parent menu.
         parentMenuItem.classList.add( 'active' );
     }
 
-    const subMenuItem = document.querySelector( `.navigation-submenu li[data-react-route='${ menuRoute }']` );
-    if ( subMenuItem ) { // Add `current` to submenu item.
+    const subMenuItem = document.querySelector(
+        `.navigation-submenu li[data-react-route='${ menuRoute }']`
+    );
+    if ( subMenuItem ) {
+        // Add `current` to submenu item.
         subMenuItem.classList.add( 'current' );
     }
 };
@@ -86,17 +96,17 @@ const Layout = ( {
     return (
         <ThemeProvider>
             <SlotFillProvider>
-            <div className="dokan-dashboard-layout">
-                { headerComponent ? (
-                    headerComponent
-                ) : (
-                    <Header title={ title } />
-                ) }
-                <ContentArea>{ children }</ContentArea>
-                { footerComponent ? footerComponent : <Footer /> }
-            </div>
-            <PluginArea scope={route.id} />
-            <DokanToaster />
+                <div className="dokan-dashboard-layout">
+                    { headerComponent ? (
+                        headerComponent
+                    ) : (
+                        <Header title={ title } />
+                    ) }
+                    <ContentArea>{ children }</ContentArea>
+                    { footerComponent ? footerComponent : <Footer /> }
+                </div>
+                <PluginArea scope={ route.id } />
+                <DokanToaster />
             </SlotFillProvider>
         </ThemeProvider>
     );
