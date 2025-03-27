@@ -32,7 +32,7 @@ const variantConfig = {
     },
 } as const;
 
-export const DokanAlert = ( {
+const DokanAlert = ( {
     label,
     children,
     className = '',

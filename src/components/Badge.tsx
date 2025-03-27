@@ -4,36 +4,36 @@ import React from 'react';
 import { Badge } from '@getdokan/dokan-ui';
 import type { BadgeProps } from '@getdokan/dokan-ui/dist/components/Badge';
 
-type LabelVariant = 'info' | 'warning' | 'success' | 'danger';
+type BadgeVariant = 'info' | 'warning' | 'success' | 'danger';
 
-interface DokanLabelProps extends Partial< BadgeProps > {
-    variant?: LabelVariant;
+interface DokanBadgeProps extends Partial< BadgeProps > {
+    variant?: BadgeVariant;
 }
 
 const variantConfig = {
     info: {
         color: 'blue',
-        className: 'dokan-info',
+        className: 'dokan-badge-info',
     },
     warning: {
         color: 'yellow',
-        className: 'dokan-warning',
+        className: 'dokan-badge-warning',
     },
     success: {
         color: 'green',
-        className: 'dokan-success',
+        className: 'dokan-badge-success',
     },
     danger: {
         color: 'red',
-        className: 'dokan-danger',
+        className: 'dokan-badge-danger',
     },
 } as const;
 
-export const DokanLabel = ( {
+const DokanBadge = ( {
     label,
     variant = 'info',
     ...props
-}: DokanLabelProps ) => {
+}: DokanBadgeProps ) => {
     const config = variantConfig[ variant ];
 
     return (
@@ -46,4 +46,4 @@ export const DokanLabel = ( {
     );
 };
 
-export default DokanLabel;
+export default DokanBadge;

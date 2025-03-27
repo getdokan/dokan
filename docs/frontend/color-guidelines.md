@@ -101,11 +101,11 @@ Dokan uses a semantic color system where colors represent specific meanings:
 <button className="dokan-btn-sm">Small Button</button>
 <button className="dokan-btn-lg">Large Button</button>
 
-// Label/Badge Classes
-<span className="dokan-info">Info Label</span>
-<span className="dokan-success">Success Label</span>
-<span className="dokan-warning">Warning Label</span>
-<span className="dokan-danger">Danger Label</span>
+// Badge Classes
+<span className="dokan-badge-info">Info Badge</span>
+<span className="dokan-badge-success">Success Badge</span>
+<span className="dokan-badge-warning">Warning Badge</span>
+<span className="dokan-badge-danger">Danger Badge</span>
 
 // Alert Classes
 <div className="dokan-alert-info">Info Alert</div>
@@ -248,37 +248,37 @@ Dokan uses a semantic color system where colors represent specific meanings:
 }
 ```
 
-### Label Styling with Hover
+### Badge Styling with Hover
 ```css
-.dokan-info {
+.dokan-badge-info {
   @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info transition-colors duration-200;
 }
 
-.dokan-info:hover {
+.dokan-badge-info:hover {
   @apply bg-dokan-info text-dokan-info;
 }
 
-.dokan-success {
+.dokan-badge-success {
   @apply relative ring-1 ring-inset bg-dokan-success text-dokan-success ring-dokan-success transition-colors duration-200;
 }
 
-.dokan-success:hover {
+.dokan-badge-success:hover {
   @apply bg-dokan-success text-dokan-success;
 }
 
-.dokan-warning {
+.dokan-badge-warning {
   @apply relative ring-1 ring-inset bg-dokan-warning text-dokan-warning ring-dokan-warning transition-colors duration-200;
 }
 
-.dokan-warning:hover {
+.dokan-badge-warning:hover {
   @apply bg-dokan-warning text-dokan-warning;
 }
 
-.dokan-danger {
+.dokan-badge-danger {
   @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger ring-dokan-danger transition-colors duration-200;
 }
 
-.dokan-danger:hover {
+.dokan-badge-danger:hover {
   @apply bg-dokan-danger text-dokan-danger;
 }
 ```
@@ -373,10 +373,10 @@ Dokan uses a semantic color system where colors represent specific meanings:
 ### Status Indicators
 ```jsx
 <div className="flex gap-2">
-  <span className="dokan-info">Processing</span>
-  <span className="dokan-success">Active</span>
-  <span className="dokan-warning">Pending</span>
-  <span className="dokan-danger">Failed</span>
+  <span className="dokan-badge-info">Processing</span>
+  <span className="dokan-badge-success">Active</span>
+  <span className="dokan-badge-warning">Pending</span>
+  <span className="dokan-badge-danger">Failed</span>
 </div>
 ```
 

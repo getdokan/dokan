@@ -12,7 +12,7 @@
 4. **SortableList** - Drag-and-drop interface for managing sortable items
 5. **DokanButton** - Unified button component with multiple variants
 6. **Anchor Component** - Flexible link component with multiple style variants
-7. **DokanLabel** - Unified label component for status badges
+7. **DokanBadge** - Unified badge component for status badges
 8. **DokanAlert** - Unified alert component for notifications
 
 ## Important Dependencies
@@ -58,7 +58,7 @@ if (file_exists($script_assets)) {
 For `dokan free & premium version`, we can import the components via `@dokan/components`:
 
 ```js
-import { DataViews, DokanLabel, DokanButton, DokanAlert, Anchor } from '@dokan/components';
+import { DataViews, DokanBadge, DokanButton, DokanAlert, Anchor } from '@dokan/components';
 ```
 
 For external `plugins`, we must include the `dokan-react-components` as scripts dependency and the `@dokan/components` should be introduced as an external resource configuration to resolve the path via `webpack`:
@@ -84,7 +84,7 @@ externals: {
 |        |      |___ sortable-list/    # Sortable list component
 |        |      |___ Button.tsx        # Button component
 |        |      |___ Anchor.tsx        # Anchor component
-|        |      |___ Label.tsx         # Label component
+|        |      |___ Badge.tsx         # Badge component
 |        |      |___ Alert.tsx         # Alert component
 |        |      |___ your-component/   # Your new component directory
 |        |      |     |___ index.tsx
@@ -106,7 +106,7 @@ export { default as Filter } from './Filter';
 export { default as SortableList } from './sortable-list'; 
 export { default as DokanButton } from './Button';
 export { default as Anchor } from './Anchor';
-export { default as DokanLabel } from './Label';
+export { default as DokanBadge } from './Badge';
 export { default as DokanAlert } from './Alert';
 export { default as ComponentName } from './YourComponent';
 ```
@@ -174,11 +174,11 @@ The DokanButton component accepts the following props:
 | `loading` | `boolean` | No | Whether to show a loading indicator |
 | `...props` | `ButtonProps` | No | Any additional props from the Button component |
 
-## Label Component
+## Badge Component
 
-`Dokan` provides a unified label component for displaying status badges in different visual styles. The component is built on top of the `Badge` component from `@getdokan/dokan-ui`.
+`Dokan` provides a unified badge component for displaying status badges in different visual styles. The component is built on top of the `Badge` component from `@getdokan/dokan-ui`.
 
-### Available Label Variants
+### Available Badge Variants
 
 - **info** - Blue styled badge for informational states (default)
 - **warning** - Yellow styled badge for warning states
@@ -188,23 +188,23 @@ The DokanButton component accepts the following props:
 ### Usage Example
 
 ```jsx
-import { DokanLabel } from '@dokan/components';
+import { DokanBadge } from '@dokan/components';
 
 const StatusBadges = () => {
     return (
         <div className="flex space-x-2">
-            <DokanLabel label="Processing" />
-            <DokanLabel variant="success" label="Active" />
-            <DokanLabel variant="warning" label="Pending" />
-            <DokanLabel variant="danger" label="Failed" />
+            <DokanBadge label="Processing" />
+            <DokanBadge variant="success" label="Active" />
+            <DokanBadge variant="warning" label="Pending" />
+            <DokanBadge variant="danger" label="Failed" />
         </div>
     );
 };
 ```
 
-### Label Component Properties
+### Badge Component Properties
 
-The DokanLabel component accepts the following props:
+The DokanBadge component accepts the following props:
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
