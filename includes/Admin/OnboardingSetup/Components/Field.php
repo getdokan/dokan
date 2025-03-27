@@ -58,7 +58,7 @@ class Field extends SettingsElement {
         'radio_box'  => RadioBox::class,
         'switch'     => Switcher::class,
         'multicheck' => MultiCheck::class,
-        'currency' => Currency::class,
+        'currency'   => Currency::class,
 	);
 
 	/**

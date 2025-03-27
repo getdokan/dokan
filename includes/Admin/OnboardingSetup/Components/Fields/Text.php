@@ -10,7 +10,7 @@ use WeDevs\Dokan\Admin\OnboardingSetup\Components\Field;
  */
 class Text extends Field {
 
-    /**set_default
+    /**
      * Default Value.
      *
      * @var string $default Default.
@@ -66,12 +66,12 @@ class Text extends Field {
     /**
      * Set Default.
      *
-     * @param string $default Default value.
+     * @param string $default_value Default value.
      *
      * @return SettingsElement
      */
-    public function set_default( string $default ): SettingsElement {
-        $this->default = $default;
+    public function set_default( string $default_value ): SettingsElement {
+        $this->default = $default_value;
 
         return $this;
     }

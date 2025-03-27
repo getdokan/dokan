@@ -29,11 +29,11 @@ class AdminSetupGuideController extends DokanBaseAdminController {
             '/' . $this->rest_base,
             [
                 [
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_items' ],
-					'permission_callback' => [ $this, 'check_permission' ],
-					'args'                => [],
-				],
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_items' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
+                    'args'                => [],
+                ],
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
                     'callback'            => [ $this, 'set_items_as_completed' ],
@@ -43,12 +43,12 @@ class AdminSetupGuideController extends DokanBaseAdminController {
                             'required' => true,
                             'type'     => 'boolean',
                             'default'  => false,
-                        ]
+                        ],
                     ],
                 ],
 
                 'schema' => [ $this, 'get_public_item_schema' ],
-			]
+            ]
         );
 
         register_rest_route(
@@ -56,16 +56,16 @@ class AdminSetupGuideController extends DokanBaseAdminController {
             '/' . $this->rest_base . '/(?P<id>[\w-]+)',
             [
 				[
-					'methods'  => WP_REST_Server::READABLE,
-					'callback' => [ $this, 'get_item' ],
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_item' ],
 					'permission_callback' => [ $this, 'check_permission' ],
-					'args'     => [],
+					'args'                => [],
 				],
                 [
-                    'methods'  => WP_REST_Server::EDITABLE,
-                    'callback' => [ $this, 'update_item' ],
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_item' ],
                     'permission_callback' => [ $this, 'check_permission' ],
-                    'args'     => [],
+                    'args'                => [],
                 ],
             ]
         );
@@ -183,7 +183,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
 
         return rest_ensure_response(
             [
-                'success' => $request->get_param('setup_completed')
+                'success' => $request->get_param( 'setup_completed' ),
             ]
         );
     }

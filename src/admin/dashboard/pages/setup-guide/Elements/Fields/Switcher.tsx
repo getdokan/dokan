@@ -1,4 +1,4 @@
-import { useState } from '@wordpress/element';
+import { useState, RawHTML } from '@wordpress/element';
 import { ToggleSwitch } from '@getdokan/dokan-ui';
 import { SettingsProps } from '../../StepSettings';
 
@@ -40,10 +40,10 @@ const Switcher = ( { element, onValueChange }: SettingsProps ) => {
         >
             <div className="col-span-12 @md/switcher:col-span-8 flex flex-col gap-1">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">
-                    { element?.title }
+                    <RawHTML>{ element?.title }</RawHTML>
                 </h2>
                 <p className=" text-sm font-normal text-[#828282]">
-                    { element?.description }
+                    <RawHTML>{ element?.description }</RawHTML>
                 </p>
             </div>
             <div className="col-span-12 @md/switcher:col-span-4 flex items-center @md/switcher:justify-end">

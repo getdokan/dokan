@@ -1,9 +1,9 @@
 import { useEffect, useState } from '@wordpress/element';
 import getSettings from '../../settings/getSettings';
-import StepSettings, {SettingsElement} from './StepSettings';
+import StepSettings, { SettingsElement } from './StepSettings';
 import StepComponent from './components/StepComponent';
 import CompletedStep from './components/CompletedStep';
-import apiFetch from "@wordpress/api-fetch";
+import apiFetch from '@wordpress/api-fetch';
 
 export type Step = {
     title: string;
@@ -16,7 +16,7 @@ export type Step = {
 
 const SetupGuide = () => {
     const [ steps, setSteps ] = useState< Step[] >( [] );
-    const [ isAllStepsCompleted, setIsAllStepsCompleted ] = useState<boolean>( false );
+    const [ isAllStepsCompleted, setIsAllStepsCompleted ] = useState< boolean >( false );
 
     const defaultStep = {
         id: '',
@@ -40,11 +40,11 @@ const SetupGuide = () => {
         setSteps(allSteps);
     }, []);
 
-    useEffect(() => {
+    useEffect( () => {
         const isCompleted = steps.every( ( step ) => step.is_completed );
         // You can use this variable or set it to a state if needed
         setIsAllStepsCompleted( isCompleted );
-    }, [steps]);
+    }, [ steps ] );
 
     const handleStepsChange = ( newSteps ) => {
         setSteps( newSteps );
