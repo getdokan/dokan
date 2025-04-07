@@ -5,9 +5,11 @@ import { MaskedInput } from '@getdokan/dokan-ui';
 import { debounce } from '@wordpress/compose';
 import { SettingsProps } from '../../../StepSettings';
 
-const CategoryBasedCommission = ({ element, onValueChange }: SettingsProps) => {
+const CategoryBasedCommission = ({ element, onValueChange, getSetting }: SettingsProps) => {
     const { currency } = adminWithdrawData;
     const getCurrencySymbol = currency?.symbol;
+
+    const testSettings  = getSetting();
 
     const getCategories = ( categoriesData ) => {
         const result = [];

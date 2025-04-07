@@ -59,6 +59,7 @@ export type SettingsElement = {
 
 export interface SettingsProps {
     element: SettingsElement;
+
     onValueChange: ( element: SettingsElement ) => void;
     getSetting: ( id: string ) => SettingsElement|undefined;
 }
@@ -281,7 +282,11 @@ const StepSettings = ( {
      * @param {String} id Setting ID.
      */
     const getSetting = ( id: string ) => {
-        return allSettings.find( ( setting ) => setting.id === id );
+        let found = allSettings.find( ( setting ) => setting.hook_key === id );
+
+        if ( found ) {
+            return found;
+        }
     }
 
     /**
