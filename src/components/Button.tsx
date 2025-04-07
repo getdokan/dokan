@@ -13,7 +13,7 @@ type ButtonVariant =
 
 interface DokanButtonProps extends Partial< ButtonProps > {
     variant?: ButtonVariant;
-    className: string;
+    className?: string;
     children: React.ReactNode;
 }
 
@@ -49,7 +49,7 @@ const variantConfig = {
 } as const;
 
 export const DokanButton = ( {
-    className,
+    className = '',
     children,
     variant = 'primary',
     ...props
