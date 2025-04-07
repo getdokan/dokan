@@ -76,19 +76,19 @@ const baseConfig = {
                     },
                     info: {
                         DEFAULT: 'var(--dokan-info-text-color, #0B76B7)',
-                        'light': 'var(--dokan-info-light-text-color, #637381)',
+                        light: 'var(--dokan-info-light-text-color, #637381)',
                     },
                     success: {
                         DEFAULT: 'var(--dokan-success-text-color, #004434)',
-                        'light': 'var(--dokan-success-light-text-color, #637381)',
+                        light: 'var(--dokan-success-light-text-color, #637381)',
                     },
                     warning: {
                         DEFAULT: 'var(--dokan-warning-text-color, #9D5425)',
-                        'light': 'var(--dokan-warning-light-text-color, #D0915C)',
+                        light: 'var(--dokan-warning-light-text-color, #D0915C)',
                     },
                     danger: {
                         DEFAULT: 'var(--dokan-danger-text-color, #BC1C21)',
-                        'light': 'var(--dokan-danger-light-text-color, #F56060)',
+                        light: 'var(--dokan-danger-light-text-color, #F56060)',
                     },
                 },
             },

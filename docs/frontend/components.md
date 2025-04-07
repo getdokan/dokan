@@ -269,3 +269,147 @@ The DokanAlert component accepts the following props:
 | `children` | `ReactNode` | No | Optional content to be displayed below the heading |
 | `className` | `string` | No | Additional CSS classes for custom styling |
 | `variant` | `"info" \| "warning" \| "success" \| "danger"` | No | Alert style variant (default: "info") |
+
+## Link Component
+
+`Dokan` provides a unified link component for creating consistent and accessible hyperlinks throughout the application. The component extends the native HTML anchor element with Dokan's styling system.
+
+### Usage Example
+
+```jsx
+import { DokanLink } from '@dokan/components';
+
+const LinkExample = () => {
+  return (
+    <div className="space-y-4">
+      {/* Basic Link */}
+      <DokanLink href="/dashboard">
+        Dashboard
+      </DokanLink>
+
+      {/* Link with Custom Class */}
+      <DokanLink 
+        href="/settings" 
+        className="font-semibold"
+      >
+        Settings
+      </DokanLink>
+
+      {/* External Link */}
+      <DokanLink 
+        href="https://example.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        External Link
+      </DokanLink>
+
+      {/* Link with Icon */}
+      <DokanLink href="/notifications">
+        <span className="mr-2">🔔</span>
+        Notifications
+      </DokanLink>
+    </div>
+  );
+};
+```
+
+### Link Component Properties
+
+The Link component accepts the following props:
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `href` | `string` | Yes | The URL the link points to |
+| `children` | `ReactNode` | No | The content to be displayed within the link |
+| `className` | `string` | No | Additional CSS classes for custom styling |
+| `...props` | `AnchorHTMLAttributes` | No | Any additional HTML anchor element props |
+
+### Styling Features
+
+- Automatically applies Dokan's link styling
+- Includes hover and focus states
+- Supports custom styling through className prop
+- Maintains accessibility standards
+- Transitions smoothly between states
+
+### Best Practices
+
+1. **Accessibility**
+   ```jsx
+   // Good
+   <DokanLink href="/page">Page Link</DokanLink>
+
+   // Better - with descriptive text
+   <DokanLink href="/page">Visit the Products Page</DokanLink>
+   ```
+
+2. **External Links**
+   ```jsx
+   // Always include security attributes for external links
+   <DokanLink 
+     href="https://example.com"
+     target="_blank"
+     rel="noopener noreferrer"
+   >
+     External Site
+   </DokanLink>
+   ```
+
+3. **Custom Styling**
+   ```jsx
+   // Combine with other utility classes
+   <DokanLink 
+     href="/profile"
+     className="flex items-center space-x-2"
+   >
+     <span>👤</span>
+     <span>View Profile</span>
+   </DokanLink>
+   ```
+
+4. **Active States**
+   ```jsx
+   // Use with active state classes
+   <DokanLink 
+     href="/current-page"
+     className="active:text-dokan-link-hover"
+   >
+     Current Page
+   </DokanLink>
+   ```
+
+### Common Use Cases
+
+1. **Navigation Links**
+   ```jsx
+   <nav className="space-x-4">
+     <DokanLink href="/dashboard">Dashboard</DokanLink>
+     <DokanLink href="/orders">Orders</DokanLink>
+     <DokanLink href="/products">Products</DokanLink>
+   </nav>
+   ```
+
+2. **Action Links**
+   ```jsx
+   <div className="space-y-2">
+     <DokanLink href="/edit">Edit Profile</DokanLink>
+     <DokanLink href="/settings">Account Settings</DokanLink>
+     <DokanLink href="/help">Help Center</DokanLink>
+   </div>
+   ```
+
+3. **Footer Links**
+   ```jsx
+   <footer className="grid grid-cols-3 gap-4">
+     <div>
+       <h3>Company</h3>
+       <DokanLink href="/about">About Us</DokanLink>
+       <DokanLink href="/careers">Careers</DokanLink>
+       <DokanLink href="/contact">Contact</DokanLink>
+     </div>
+     {/* ... other footer sections ... */}
+   </footer>
+   ```
+
+The DokanLink component is designed to be simple yet flexible, providing a consistent look and feel across the application while maintaining accessibility and usability standards.
