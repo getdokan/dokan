@@ -49,21 +49,21 @@ class Field extends SettingsElement {
 	 *
 	 * @var string[] $field_map Map for the Input type.
 	 */
-	private $field_map = array(
-		'text'                      => Text::class,
-		'number'                    => Number::class,
-		'checkbox'                  => Checkbox::class,
-		'select'                    => Select::class,
-		'radio'                     => Radio::class,
-		'tel'                       => Tel::class,
-		'password'                  => Password::class,
+    private $field_map = array(
+        'text' => Text::class,
+        'number' => Number::class,
+        'checkbox' => Checkbox::class,
+        'select' => Select::class,
+        'radio' => Radio::class,
+        'tel' => Tel::class,
+        'password' 					=> Password::class,
         'radio_box'                 => RadioBox::class,
         'switch'                    => Switcher::class,
         'multicheck'                => MultiCheck::class,
         'currency'                  => Currency::class,
         'combine_input'             => CombineInput::class,
         'category_based_commission' => CategoryBasedCommission::class,
-	);
+    );
 
 	/**
 	 * Constructor.

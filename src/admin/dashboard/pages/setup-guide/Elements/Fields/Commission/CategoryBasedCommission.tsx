@@ -292,10 +292,10 @@ const CategoryBasedCommission = ( {
             { ( element?.title || element?.description ) && (
                 <div className="flex-col flex gap-1">
                     <h2 className="text-sm leading-6 font-semibold text-gray-900">
-                        { element?.title }
+                        <RawHTML>{ element?.title }</RawHTML>
                     </h2>
                     <p className="text-sm font-normal text-[#828282]">
-                        { element?.description }
+                        <RawHTML>{ element?.description }</RawHTML>
                     </p>
                 </div>
             ) }
@@ -391,7 +391,6 @@ const CategoryBasedCommission = ( {
                                     </span>
                                 </div>
                                 <MaskedInput
-                                    // addOnLeft={ getCurrencySymbol }
                                     value={ formatValue(
                                         commission?.all?.flat
                                     ) }
@@ -472,11 +471,11 @@ const CategoryBasedCommission = ( {
                                                     className="text-[12px] text-gray-500 ml-1"
                                                     title={ __(
                                                         'Category ID',
-                                                        'dokan'
+                                                        'dokan-lite'
                                                     ) }
                                                 >
                                                     { sprintf(
-                                                        __( '#%s', 'dokan' ),
+                                                        __( '#%s', 'dokan-lite' ),
                                                         item.term_id
                                                     ) }
                                                 </span>
@@ -486,7 +485,6 @@ const CategoryBasedCommission = ( {
                                         <div className="md:w-1/2 w-full flex min-h-[3rem] border-0 border-solid border-[#e9e9ea]">
                                             <div className="w-1/2 flex justify-start items-center box-border">
                                                 <MaskedInput
-                                                    // addOnLeft={ getCurrencySymbol }
                                                     value={ formatValue(
                                                         getCommissionValue(
                                                             'percentage',
@@ -535,7 +533,6 @@ const CategoryBasedCommission = ( {
                                                     </span>
                                                 </div>
                                                 <MaskedInput
-                                                    // addOnLeft={ getCurrencySymbol }
                                                     value={ formatValue(
                                                         getCommissionValue(
                                                             'flat',
