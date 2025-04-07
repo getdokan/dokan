@@ -676,7 +676,7 @@ class Assets {
              * @param integer default -1
              */
             'maximum_tags_select_length'   => apply_filters( 'dokan_product_tags_select_max_length', - 1 ),  // Filter of maximun a vendor can add tags
-            'modal_header_color'           => '#F05025',
+            'modal_header_color'           => 'var(--dokan-button-background-color, #7047EB)',
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );
