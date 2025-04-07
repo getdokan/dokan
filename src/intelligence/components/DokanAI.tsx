@@ -263,7 +263,7 @@ const DokanAI = () => {
 
     return (
         <>
-            <div className="text-dokan-primary cursor-pointer">
+            <div className="text-dokan-link cursor-pointer">
                 <svg
                     role={ 'button' }
                     onClick={ handleLabelClick }
@@ -299,7 +299,7 @@ const DokanAI = () => {
                         <Button
                             color="primary"
                             onClick={ startOver }
-                            className="flex gap-2 items-center"
+                            className="flex gap-2 items-center dokan-btn"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -324,7 +324,7 @@ const DokanAI = () => {
                 <Modal.Content>
                     { error && (
                         <div
-                            className="mb-4 bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500"
+                            className="mb-4 dokan-alert-danger rounded-lg p-4"
                             role="alert"
                         >
                             <span className="font-bold text-wrap">Error</span>{ ' ' }
@@ -345,7 +345,7 @@ const DokanAI = () => {
                             </div>
                             <div className="mb-3">
                                 <SimpleInput
-                                    className="bg-white focus:outline-none"
+                                    className="bg-white focus:outline-none focus:ring-dokan-btn"
                                     onChange={ ( e: any ) => {
                                         inputHandler(
                                             e.target.value,
@@ -357,7 +357,7 @@ const DokanAI = () => {
                             </div>
                             <Button
                                 color="secondary"
-                                className="!bg-gray-200"
+                                className="dokan-btn-secondary"
                                 onClick={ () => refineContent( 'post_title' ) }
                                 disabled={ isLoading }
                             >
@@ -385,7 +385,7 @@ const DokanAI = () => {
                                     />
                                 </div>
                                 <div
-                                    className="mb-3 focus:outline-none h-36 border border-gray-300 rounded p-2.5 overflow-auto"
+                                    className="mb-3 focus:outline-dokan-btn h-36 border border-gray-300 rounded p-2.5 overflow-auto"
                                     contentEditable={ true }
                                     onBlur={ ( e ) => {
                                         inputHandler(
@@ -399,7 +399,7 @@ const DokanAI = () => {
                                 ></div>
                                 <Button
                                     color="secondary"
-                                    className="!bg-gray-200"
+                                    className="dokan-btn-secondary"
                                     onClick={ () =>
                                         refineContent( 'post_excerpt' )
                                     }
@@ -430,7 +430,7 @@ const DokanAI = () => {
                                     />
                                 </div>
                                 <div
-                                    className="mb-3 h-48 focus:outline-none border border-gray-300 rounded p-2.5 overflow-auto"
+                                    className="mb-3 h-48 focus:outline-dokan-btn border border-gray-300 rounded p-2.5 overflow-auto"
                                     contentEditable={ true }
                                     onBlur={ ( e ) => {
                                         inputHandler(
@@ -444,7 +444,7 @@ const DokanAI = () => {
                                 ></div>
                                 <Button
                                     color="secondary"
-                                    className="!bg-gray-200"
+                                    className="dokan-btn-secondary"
                                     onClick={ () =>
                                         refineContent( 'post_content' )
                                     }
@@ -465,7 +465,7 @@ const DokanAI = () => {
                                     tabIndex={ 0 }
                                     role="button"
                                     onClick={ generateContent }
-                                    className="text-dokan-primary mx-1 underline"
+                                    className="text-dokan-link mx-1 underline"
                                 >
                                     { __(
                                         'regenerate all again',
@@ -490,7 +490,7 @@ const DokanAI = () => {
                             </p>
                             <TextArea
                                 disabled={ isLoading }
-                                className="min-h-48 bg-white focus:outline-none"
+                                className="min-h-48 bg-white focus:outline-none focus:ring-dokan-btn"
                                 input={ {
                                     id: 'dokan-ai-prompt',
                                     value: prompt,
@@ -509,7 +509,7 @@ const DokanAI = () => {
                     <div className="flex gap-4 justify-end">
                         <Button
                             color="secondary"
-                            className="!bg-gray-200"
+                            className="dokan-btn-secondary"
                             disabled={ isLoading }
                             onClick={ onClose }
                         >
@@ -519,6 +519,7 @@ const DokanAI = () => {
                             <Button
                                 color="primary"
                                 disabled={ isLoading }
+                                className="dokan-btn"
                                 onClick={ () => insertHandler() }
                             >
                                 { __( 'Insert', 'dokan-lite' ) }
@@ -528,6 +529,7 @@ const DokanAI = () => {
                                 color="primary"
                                 disabled={ isLoading }
                                 onClick={ generateContent }
+                                className="dokan-btn"
                             >
                                 { isLoading
                                     ? __( 'Generating…', 'dokan-lite' )
@@ -560,13 +562,14 @@ const DokanAI = () => {
                         <div className="mt-4 flex gap-4 justify-center">
                             <Button
                                 color="secondary"
-                                className="!bg-gray-200"
+                                className="dokan-btn-secondary"
                                 onClick={ () => setRegenerateModal( false ) }
                             >
                                 { __( 'Cancel', 'dokan-lite' ) }
                             </Button>
                             <Button
                                 color="primary"
+                                className="dokan-btn"
                                 onClick={ () => insertHandler( true ) }
                             >
                                 { __( 'Yes, Insert', 'dokan-lite' ) }
