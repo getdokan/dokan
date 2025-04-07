@@ -32,6 +32,7 @@ const FieldGroup = ( {
                                 element.hook_key + '-' + child.id + '-parser'
                             }
                             onValueChange={ onValueChange }
+                            getSetting={ getSetting }
                         />
                     );
                 } ) }

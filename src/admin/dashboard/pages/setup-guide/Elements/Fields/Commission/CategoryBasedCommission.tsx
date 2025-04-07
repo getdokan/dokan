@@ -1,15 +1,22 @@
-import { RawHTML } from '@wordpress/element';
-import { useState } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { MaskedInput } from '@getdokan/dokan-ui';
 import { debounce } from '@wordpress/compose';
 import { SettingsProps } from '../../../StepSettings';
 
-const CategoryBasedCommission = ({ element, onValueChange, getSetting }: SettingsProps) => {
+const CategoryBasedCommission = ( {
+    element,
+    onValueChange,
+    getSetting,
+}: SettingsProps ) => {
     const { currency } = adminWithdrawData;
     const getCurrencySymbol = currency?.symbol;
 
-    const testSettings  = getSetting();
+    const testSettings = getSetting(
+        'dokan_admin_onboarding_setup_step_commission_commission_reset_sub_category_when_edit_all_category'
+    );
+
+    console.log( 'testSettings', testSettings );
 
     const getCategories = ( categoriesData ) => {
         const result = [];
@@ -19,7 +26,8 @@ const CategoryBasedCommission = ({ element, onValueChange, getSetting }: Setting
             categoryMap[ term_id ] = categoriesData[ term_id ];
         }
 
-        for ( const term_id in categoryMap ) { // Re-arrange categories.
+        for ( const term_id in categoryMap ) {
+            // Re-arrange categories.
             const category = categoryMap[ term_id ];
 
             if ( category.parent_id !== '0' ) {
@@ -39,44 +47,48 @@ const CategoryBasedCommission = ({ element, onValueChange, getSetting }: Setting
     const commissionValues = element?.value || {};
     const resetCategoryVal = element?.reset_subcategory || 'on';
     const renderCategories = Object.values( getCategories( categories ) );
-    const hasCommissionItems = Object.values( commissionValues?.items || {} ).length;
+    const hasCommissionItems = Object.values(
+        commissionValues?.items || {}
+    ).length;
     const resetSubCategory = resetCategoryVal !== 'off';
 
     const [ openRows, setOpenRows ] = useState( [] );
     const [ commission, setCommission ] = useState( { ...commissionValues } );
-    const [ allCategoryEnabled, setAllCategoryEnabled ] = useState( ! hasCommissionItems );
+    const [ allCategoryEnabled, setAllCategoryEnabled ] = useState(
+        ! hasCommissionItems
+    );
 
     const catRowClick = ( item ) => {
         const termId = Number( item?.term_id );
 
         if ( openRows.includes( termId ) ) {
-            setOpenRows( prevRows => {
+            setOpenRows( ( prevRows ) => {
                 const newRows = [ ...prevRows ];
                 const index = newRows.indexOf( termId );
                 newRows.splice( index, 1 );
 
-                getChildren( item?.term_id ).forEach( child => {
+                getChildren( item?.term_id ).forEach( ( child ) => {
                     const childIndex = newRows.indexOf( Number( child ) );
                     if ( childIndex !== -1 ) {
                         newRows.splice( childIndex, 1 );
                     }
-                });
+                } );
 
                 return newRows;
-            });
+            } );
         } else {
-            setOpenRows( prevRows => [ ...prevRows, termId ] );
+            setOpenRows( ( prevRows ) => [ ...prevRows, termId ] );
         }
     };
 
     const getChildren = ( parentId ) => {
         const categoriesArray = Object.values( categories );
 
-        const children = categoriesArray.filter( item => {
+        const children = categoriesArray.filter( ( item ) => {
             return item?.parents?.includes( Number( parentId ) );
-        });
+        } );
 
-        return children.map( item => item?.term_id );
+        return children.map( ( item ) => item?.term_id );
     };
 
     const showCatRow = ( item ) => {
@@ -95,56 +107,70 @@ const CategoryBasedCommission = ({ element, onValueChange, getSetting }: Setting
         return commission?.all?.[ commissionType ];
     };
 
-    const handleCommissionItemChange = debounce( ( value, commissionType, termId ) => {
-        if ( commissionType === 'percentage' ) {
-            value = validatePercentage( unFormatValue( value ) );
-        } else {
-            value = unFormatValue( value );
-        }
-
-        setCommission( prevCommission => {
-            const newCommission = { ...prevCommission };
-            const commissions = { ...newCommission?.items };
-
-            let data = resetSubCategory
-                ? { ...newCommission?.all }
-                : { flat: '', percentage: '' };
-
-            if ( commissions.hasOwnProperty( termId ) ) {
-                data = { ...commissions[ termId ] };
+    const handleCommissionItemChange = debounce(
+        ( value, commissionType, termId ) => {
+            if ( commissionType === 'percentage' ) {
+                value = validatePercentage( unFormatValue( value ) );
+            } else {
+                value = unFormatValue( value );
             }
 
-            data[ commissionType ] = value;
-            commissions[ termId ] = data;
+            setCommission( ( prevCommission ) => {
+                const newCommission = { ...prevCommission };
+                const commissions = { ...newCommission?.items };
 
-            newCommission.items = commissions;
-            if ( resetSubCategory ) { // Update child categories if resetSubCategory is true.
-                const allNestedChildrenIds = getChildren( termId );
-                allNestedChildrenIds.forEach( id => {
-                    newCommission.items[ id ] = { ...data };
-                });
-            }
+                let data = resetSubCategory
+                    ? { ...newCommission?.all }
+                    : { flat: '', percentage: '' };
 
-            Object.keys( newCommission?.items ).forEach(key => { // Remove categories with same values as 'all'.
-                if ( isEqual( newCommission?.items[ key ], newCommission?.all ) ) {
-                    delete newCommission?.items[ key ];
+                if ( commissions.hasOwnProperty( termId ) ) {
+                    data = { ...commissions[ termId ] };
                 }
-            });
 
-            return newCommission;
-        });
+                data[ commissionType ] = value;
+                commissions[ termId ] = data;
 
-        onValueChange( {
-            ...element,
-            value: {
-                ...commission,
-                items: { ...commission?.items, [ termId ]: {
-                    ...commission?.items?.[ termId ] || commission?.all,
-                    [ commissionType ]: value
-                }}
-            }
-        });
-    }, 700 );
+                newCommission.items = commissions;
+                if ( resetSubCategory ) {
+                    // Update child categories if resetSubCategory is true.
+                    const allNestedChildrenIds = getChildren( termId );
+                    allNestedChildrenIds.forEach( ( id ) => {
+                        newCommission.items[ id ] = { ...data };
+                    } );
+                }
+
+                Object.keys( newCommission?.items ).forEach( ( key ) => {
+                    // Remove categories with same values as 'all'.
+                    if (
+                        isEqual(
+                            newCommission?.items[ key ],
+                            newCommission?.all
+                        )
+                    ) {
+                        delete newCommission?.items[ key ];
+                    }
+                } );
+
+                return newCommission;
+            } );
+
+            onValueChange( {
+                ...element,
+                value: {
+                    ...commission,
+                    items: {
+                        ...commission?.items,
+                        [ termId ]: {
+                            ...( commission?.items?.[ termId ] ||
+                                commission?.all ),
+                            [ commissionType ]: value,
+                        },
+                    },
+                },
+            } );
+        },
+        700
+    );
 
     // Handle all category commission change
     const handleAllCategoryChange = debounce( ( value, commissionType ) => {
@@ -154,26 +180,29 @@ const CategoryBasedCommission = ({ element, onValueChange, getSetting }: Setting
             value = unFormatValue( value );
         }
 
-        setCommission( prevCommission => {
+        setCommission( ( prevCommission ) => {
             const newCommission = { ...prevCommission };
-            newCommission.all = { ...newCommission?.all, [ commissionType ]: value };
+            newCommission.all = {
+                ...newCommission?.all,
+                [ commissionType ]: value,
+            };
 
             if ( resetSubCategory ) {
                 newCommission.items = {};
             }
 
             return newCommission;
-        });
+        } );
 
-        onValueChange({
+        onValueChange( {
             ...element,
             value: {
                 ...commission,
                 all: { ...commission?.all, [ commissionType ]: value },
-                items: resetSubCategory ? {} : commission?.items
-            }
-        });
-    }, 700);
+                items: resetSubCategory ? {} : commission?.items,
+            },
+        } );
+    }, 700 );
 
     const unFormatValue = ( value ) => {
         if ( value === '' ) {
@@ -181,7 +210,9 @@ const CategoryBasedCommission = ({ element, onValueChange, getSetting }: Setting
         }
 
         if ( window.accounting ) {
-            return String( window.accounting.unformat( value, currency?.decimal || '.' ) );
+            return String(
+                window.accounting.unformat( value, currency?.decimal || '.' )
+            );
         }
 
         return String( value ).replace( /[^0-9.-]/g, '' );
@@ -192,7 +223,12 @@ const CategoryBasedCommission = ({ element, onValueChange, getSetting }: Setting
             return value;
         }
 
-        return window.accounting.formatNumber( value, currency?.precision, currency?.thousand, currency?.decimal );
+        return window.accounting.formatNumber(
+            value,
+            currency?.precision,
+            currency?.thousand,
+            currency?.decimal
+        );
     };
 
     const validatePercentage = ( percentage ) => {
@@ -210,21 +246,34 @@ const CategoryBasedCommission = ({ element, onValueChange, getSetting }: Setting
 
     // Check if two objects are equal
     const isEqual = ( value1, value2 ) => {
-        if ( value1 === value2 ) return true; // Check if the values are strictly equal
+        if ( value1 === value2 ) {
+            return true;
+        } // Check if the values are strictly equal
 
-        if ( value1 == null || value2 == null ) return false; // Check if either value is null or undefined
+        if ( value1 == null || value2 == null ) {
+            return false;
+        } // Check if either value is null or undefined
 
-        if ( typeof value1 !== typeof value2 ) return false; // Check if the types are different
+        if ( typeof value1 !== typeof value2 ) {
+            return false;
+        } // Check if the types are different
 
-        if ( typeof value1 === 'object' && typeof value2 === 'object' ) { // Handle plain objects
+        if ( typeof value1 === 'object' && typeof value2 === 'object' ) {
+            // Handle plain objects
             const keys1 = Object.keys( value1 );
             const keys2 = Object.keys( value2 );
 
-            if ( keys1.length !== keys2.length ) return false;
+            if ( keys1.length !== keys2.length ) {
+                return false;
+            }
 
-            for ( let key of keys1 ) {
-                if ( ! keys2.includes( key ) ) return false;
-                if ( ! isEqual( value1[ key ], value2[ key ] ) ) return false;
+            for ( const key of keys1 ) {
+                if ( ! keys2.includes( key ) ) {
+                    return false;
+                }
+                if ( ! isEqual( value1[ key ], value2[ key ] ) ) {
+                    return false;
+                }
             }
 
             return true;

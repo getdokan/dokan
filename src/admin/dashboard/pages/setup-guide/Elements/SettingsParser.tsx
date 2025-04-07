@@ -4,7 +4,11 @@ import SubSection from './SubSection';
 import FieldParser from './Fields/FieldParser';
 import FieldGroup from './FiendGroup';
 
-const SettingsParser = ( { element, getSetting, onValueChange }: SettingsProps ) => {
+const SettingsParser = ( {
+    element,
+    getSetting,
+    onValueChange,
+}: SettingsProps ) => {
     switch ( element.type ) {
         case 'section':
             return (

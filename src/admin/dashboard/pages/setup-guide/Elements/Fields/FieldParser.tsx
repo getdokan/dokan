@@ -8,12 +8,15 @@ import Switcher from './Switcher';
 import Currency from './Currency';
 import Select from './Select';
 import MultiCheck from './MultiCheck';
-import CategoryBasedCommission from "./commission/CategoryBasedCommission";
-import CombineInput from "./Commission/CombineInput";
+import CategoryBasedCommission from './Commission/CategoryBasedCommission';
+import CombineInput from './Commission/CombineInput';
 
-const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) => {
+const FieldParser = ( {
+    element,
+    getSetting,
+    onValueChange,
+}: SettingsProps ) => {
     // TODO: add support for custom input fields and custom hook.
-
     switch ( element.variant ) {
         case 'text':
             return (
@@ -21,7 +24,7 @@ const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) =>
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={getSetting}
+                    getSetting={ getSetting }
                 />
             );
         case 'select':
@@ -30,7 +33,7 @@ const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) =>
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={getSetting}
+                    getSetting={ getSetting }
                 />
             );
         case 'password':
@@ -39,7 +42,7 @@ const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) =>
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={getSetting}
+                    getSetting={ getSetting }
                 />
             );
         case 'tel':
@@ -48,7 +51,7 @@ const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) =>
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={getSetting}
+                    getSetting={ getSetting }
                 />
             );
         case 'radio_box':
@@ -57,7 +60,7 @@ const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) =>
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={getSetting}
+                    getSetting={ getSetting }
                 />
             );
         case 'radio':
@@ -66,7 +69,7 @@ const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) =>
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
-                    getSetting={getSetting}
+                    getSetting={ getSetting }
                 />
             );
         case 'currency':
@@ -75,7 +78,7 @@ const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) =>
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
-                    getSetting={getSetting}
+                    getSetting={ getSetting }
                 />
             );
         case 'switch':
@@ -84,7 +87,7 @@ const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) =>
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
-                    getSetting={getSetting}
+                    getSetting={ getSetting }
                 />
             );
         case 'multicheck':
@@ -93,7 +96,7 @@ const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) =>
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
-                    getSetting={getSetting}
+                    getSetting={ getSetting }
                 />
             );
         case 'category_based_commission':
@@ -102,7 +105,7 @@ const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) =>
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
-                    getSetting={getSetting}
+                    getSetting={ getSetting }
                 />
             );
         case 'combine_input':
@@ -111,7 +114,7 @@ const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) =>
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
-                    getSetting={getSetting}
+                    getSetting={ getSetting }
                 />
             );
         case 'checkbox':
@@ -135,7 +138,7 @@ const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) =>
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={getSetting}
+                    getSetting={ getSetting }
                 />
             );
     }

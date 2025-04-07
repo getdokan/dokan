@@ -44,6 +44,7 @@ const SubSection = ( {
                                 element.hook_key + '-' + child.id + '-parser'
                             }
                             onValueChange={ onValueChange }
+                            getSetting={ getSetting }
                         />
                     );
                 } ) }
