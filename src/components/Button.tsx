@@ -1,5 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import React from 'react';
 import { twMerge } from 'tailwind-merge';
 import { Button as DokanUIButton } from '@getdokan/dokan-ui';
 import type { ButtonProps } from '@getdokan/dokan-ui/dist/components/Button';
@@ -15,6 +13,8 @@ type ButtonVariant =
 
 interface DokanButtonProps extends Partial< ButtonProps > {
     variant?: ButtonVariant;
+    className: string;
+    children: React.ReactNode;
 }
 
 const variantConfig = {

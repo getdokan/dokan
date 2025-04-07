@@ -79,8 +79,8 @@ Dokan uses a semantic color system where colors represent specific meanings:
 
 ### Link Colors
 ```css
---dokan-anchor-color: #7047EB;
---dokan-anchor-hover-color: #322067;
+--dokan-link-color: #7047EB;
+--dokan-link-hover-color: #322067;
 ```
 
 ## Tailwind Utility Classes
@@ -321,12 +321,12 @@ Dokan uses a semantic color system where colors represent specific meanings:
 ### Link Styling with Hover
 ```css
 .dokan-link {
-  @apply relative text-dokan-anchor no-underline transition-colors duration-200;
+  @apply relative text-dokan-link no-underline transition-colors duration-200;
 }
 
 .dokan-link:hover,
 .dokan-link:focus {
-  @apply text-dokan-anchor-hover underline;
+  @apply text-dokan-link-hover underline;
 }
 ```
 

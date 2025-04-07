@@ -38,10 +38,10 @@
 
         /* Default link styles (for normal hyperlinks) */
         a:not(.dokan-btn):not([class*="dokan-btn-"]) {
-            @apply text-dokan-anchor transition-colors duration-200;
+            @apply text-dokan-link transition-colors duration-200;
 
             &:hover, &:focus {
-                @apply text-dokan-anchor-hover;
+                @apply text-dokan-link-hover;
             }
         }
 
@@ -130,10 +130,10 @@
 
     /* Text Link Styles */
     .dokan-link {
-        @apply relative text-dokan-anchor no-underline transition-colors duration-200 #{!important};
+        @apply relative text-dokan-link no-underline transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply text-dokan-anchor-hover underline #{!important};
+            @apply text-dokan-link-hover underline #{!important};
         }
     }
 

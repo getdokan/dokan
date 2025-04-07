@@ -7,6 +7,9 @@ type AlertVariant = 'info' | 'warning' | 'success' | 'danger';
 
 interface DokanAlertProps extends Partial< SimpleAlertProps > {
     variant?: AlertVariant;
+    label: string;
+    className?: string;
+    children?: React.ReactNode;
 }
 
 const variantConfig = {

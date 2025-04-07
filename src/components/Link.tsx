@@ -1,5 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type DokanAnchorProps = React.AnchorHTMLAttributes< HTMLAnchorElement > & {
@@ -8,8 +6,8 @@ type DokanAnchorProps = React.AnchorHTMLAttributes< HTMLAnchorElement > & {
     href: string;
 };
 
-// A single Anchor component that handles all variants
-export const Anchor = ( {
+// A single Link component that handles all variants
+export const DokanLink = ({
     children,
     className = '',
     href,
@@ -26,4 +24,4 @@ export const Anchor = ( {
     );
 };
 
-export default Anchor;
+export default DokanLink;

@@ -11,7 +11,7 @@
 3. **Filter** - Standardized filtering interface
 4. **SortableList** - Drag-and-drop interface for managing sortable items
 5. **DokanButton** - Unified button component with multiple variants
-6. **Anchor Component** - Flexible link component with multiple style variants
+6. **Link Component** - Flexible link component with multiple style variants
 7. **DokanBadge** - Unified badge component for status badges
 8. **DokanAlert** - Unified alert component for notifications
 
@@ -58,7 +58,7 @@ if (file_exists($script_assets)) {
 For `dokan free & premium version`, we can import the components via `@dokan/components`:
 
 ```js
-import { DataViews, DokanBadge, DokanButton, DokanAlert, Anchor } from '@dokan/components';
+import { DataViews, DokanBadge, DokanButton, DokanAlert, Link } from '@dokan/components';
 ```
 
 For external `plugins`, we must include the `dokan-react-components` as scripts dependency and the `@dokan/components` should be introduced as an external resource configuration to resolve the path via `webpack`:
@@ -83,7 +83,7 @@ externals: {
 |        |      |___ filter/           # Filter component 
 |        |      |___ sortable-list/    # Sortable list component
 |        |      |___ Button.tsx        # Button component
-|        |      |___ Anchor.tsx        # Anchor component
+|        |      |___ Link.tsx        # Link component
 |        |      |___ Badge.tsx         # Badge component
 |        |      |___ Alert.tsx         # Alert component
 |        |      |___ your-component/   # Your new component directory
@@ -105,7 +105,7 @@ export { default as DokanModal } from './modals/DokanModal';
 export { default as Filter } from './Filter';
 export { default as SortableList } from './sortable-list'; 
 export { default as DokanButton } from './Button';
-export { default as Anchor } from './Anchor';
+export { default as Link } from './Link';
 export { default as DokanBadge } from './Badge';
 export { default as DokanAlert } from './Alert';
 export { default as ComponentName } from './YourComponent';

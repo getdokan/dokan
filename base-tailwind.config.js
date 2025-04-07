@@ -71,8 +71,8 @@ const baseConfig = {
                         },
                     },
                     anchor: {
-                        DEFAULT: 'var(--dokan-anchor-color, var(--dokan-button-background-color, #7047EB))',
-                        hover: 'var(--dokan-anchor-hover-color, var(--dokan-sidebar-background-color, #6b7280))',
+                        DEFAULT: 'var(--dokan-link-color, var(--dokan-button-background-color, #7047EB))',
+                        hover: 'var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #6b7280))',
                     },
                     info: {
                         DEFAULT: 'var(--dokan-info-text-color, #0B76B7)',
@@ -109,8 +109,8 @@ const baseConfig = {
                         },
                     },
                     anchor: {
-                        DEFAULT: 'var(--dokan-anchor-color, var(--dokan-button-background-color, #7047EB))',
-                        hover: 'var(--dokan-anchor-hover-color, var(--dokan-sidebar-background-color, #322067))',
+                        DEFAULT: 'var(--dokan-link-color, var(--dokan-button-background-color, #7047EB))',
+                        hover: 'var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #322067))',
                     },
                     info: {
                         DEFAULT: 'var(--dokan-info-border-color, #E9F9FFFF)',
@@ -143,8 +143,8 @@ const baseConfig = {
                         },
                     },
                     anchor: {
-                        DEFAULT: 'var(--dokan-anchor-color, var(--dokan-button-background-color, #7047EB))',
-                        hover: 'var(--dokan-anchor-hover-color, var(--dokan-sidebar-background-color, #322067))',
+                        DEFAULT: 'var(--dokan-link-color, var(--dokan-button-background-color, #7047EB))',
+                        hover: 'var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #322067))',
                     },
                     info: {
                         DEFAULT: 'var(--dokan-info-border-color, #E9F9FFFF)',
@@ -165,8 +165,8 @@ const baseConfig = {
                     btn: 'var(--dokan-button-border-color, #7047EB)',
                     'btn-secondary': 'var(--dokan-button-secondary-border-color, var(--dokan-button-border-color, #7047EB))',
                     'btn-tertiary': 'var(--dokan-button-tertiary-border-color, #00000000)',
-                    anchor: 'var(--dokan-anchor-color, var(--dokan-button-background-color, #7047EB))',
-                    'anchor-hover': 'var(--dokan-anchor-hover-color, var(--dokan-sidebar-background-color, #322067))',
+                    anchor: 'var(--dokan-link-color, var(--dokan-button-background-color, #7047EB))',
+                    'anchor-hover': 'var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #322067))',
                     info: 'var(--dokan-info-border-color, #E9F9FFFF)',
                     success: 'var(--dokan-success-border-color, #DAF8E6FF)',
                     warning: 'var(--dokan-warning-border-color, #FFFBEBFF)',
@@ -178,8 +178,8 @@ const baseConfig = {
                     btn: 'var(--dokan-button-border-color, #7047EB)',
                     'btn-secondary': 'var(--dokan-button-secondary-border-color, var(--dokan-button-border-color, #7047EB))',
                     'btn-tertiary': 'var(--dokan-button-tertiary-border-color, #00000000)',
-                    anchor: 'var(--dokan-anchor-color, var(--dokan-button-background-color, #7047EB))',
-                    'anchor-hover': 'var(--dokan-anchor-hover-color, var(--dokan-sidebar-background-color, #322067))',
+                    anchor: 'var(--dokan-link-color, var(--dokan-button-background-color, #7047EB))',
+                    'anchor-hover': 'var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #322067))',
                     info: 'var(--dokan-info-border-color, #E9F9FFFF)',
                     success: 'var(--dokan-success-border-color, #DAF8E6FF)',
                     warning: 'var(--dokan-warning-border-color, #FFFBEBFF)',
