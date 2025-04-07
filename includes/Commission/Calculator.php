@@ -106,7 +106,7 @@ class Calculator {
                  */
                 $item = WC_Order_Factory::get_order_item( $order_item_id );
 
-                return $this->with_coupon_discounts( $dokan_coupon_infos, $item->get_total(), $commission_data );
+                return $this->adjust_commission_with_coupon_discounts( $dokan_coupon_infos, $item->get_total(), $commission_data );
             }
 
             return $commission_data;
@@ -117,7 +117,9 @@ class Calculator {
     }
 
     /**
-     * Calculate commission with coupon discounts
+     * Calculate commission with coupon discounts.
+     *
+     * @since DOKAN_SINCE
      *
      * @param DokanOrderLineItemCouponInfo[] $dokan_coupon_infos
      * @param float|int $item_price_after_discount
@@ -125,7 +127,7 @@ class Calculator {
      *
      * @return void
      */
-    protected function with_coupon_discounts( $dokan_coupon_infos, $item_price_after_discount, $commission_data ): Commission {
+    protected function adjust_commission_with_coupon_discounts( $dokan_coupon_infos, $item_price_after_discount, $commission_data ): Commission {
         $admin_net_commission = 0;
         $vendor_net_earning = 0;
 
