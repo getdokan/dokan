@@ -37,13 +37,13 @@ const CategoryBasedCommission = ( {
         return result;
     };
 
-    // const resetSubCategoryObj = getSetting(
-    //     'dokan_admin_onboarding_setup_step_commission_commission_reset_sub_category_when_edit_all_category'
-    // ) || {};
+    const resetSubCategoryObj = getSetting(
+        'dokan_admin_onboarding_setup_step_commission_commission_reset_sub_category_when_edit_all_category'
+    ) || {};
 
     const categories = element?.categories || {};
     const commissionValues = element?.value || {};
-    const resetCategoryVal = element?.reset_subcategory || 'on';
+    const resetCategoryVal = resetSubCategoryObj?.value || 'on';
     const renderCategories = Object.values( getCategories( categories ) );
     const hasCommissionItems = Object.values(
         commissionValues?.items || {}

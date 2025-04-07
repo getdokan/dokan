@@ -9,6 +9,7 @@
     - [Register Your Field in Field Class](#register-your-field-in-field-class)
     - [Create React Component for Your Field](#create-react-component-for-your-field)
     - [Update FieldParser to Include Your Field](#update-fieldparser-to-include-your-field)
+- [3. Accessing Field Settings](#accessing-field-settings)
 
 ## Introduction
 The Dokan Admin Setup Guide provides a structured, step-by-step onboarding experience for administrators configuring a Dokan marketplace.  
@@ -284,7 +285,7 @@ Create a React component in the frontend `/src/admin/onboarding-setup/elements/f
 import { useState, RawHTML } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
 
-const YourCustomField = ({ element, onValueChange }: SettingsProps) => {
+const YourCustomField = ({ element, getSetting, onValueChange }: SettingsProps) => {
     const [ value, setValue ] = useState( element.value );
 
     const handleValueChange = ( newValue ) => {
@@ -329,7 +330,7 @@ Add your field to the `FieldParser.tsx` component:
 ```tsx
 import YourCustomField from './YourCustomField';
 
-const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
+const FieldParser = ( { element, getSetting, onValueChange }: SettingsProps ) => {
     switch ( element.variant ) {
         case 'text':
             // Existing cases
@@ -339,6 +340,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
+                    getSetting={ getSetting }
                 />
             );
         default:
@@ -347,8 +349,49 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
+                    getSetting={ getSetting }
                 />
             );
     }
 };
+```
+
+### Accessing Field Settings
+
+If field components often need to access values from other settings in the application. The `getSetting()` function provides a convenient way to retrieve settings by their unique `hook_key`.
+
+Each field component in the setup guide receives a `getSetting` function as part of its `props`, which can be used to look up settings by their `hook_key`.
+
+Here's an example of how to use the `getSetting` function within a field component to create dynamic behavior:
+
+```tsx
+import { useState } from '@wordpress/element';
+import { SettingsProps } from '../../../StepSettings';
+
+const YourCustomField = ({ 
+    element, 
+    onValueChange, 
+    getSetting 
+}: SettingsProps) => {
+    // Retrieve another setting's element object by using `hook_key`.
+    const otherSetting = getSetting( 'hook_key' );
+    
+    // Use the value in your component logic
+    const isFeatureEnabled = otherSetting?.value;
+
+    // Component implementation
+    return (
+        <div className="my-field-container">
+            { isFeatureEnabled && (
+                <div className="conditional-section">
+                    {/* Render conditional UI here */}
+               </div>
+            ) }
+            
+            {/* Rest of your field component */}
+        </div>
+    );
+};
+
+export default YourCustomField;
 ```

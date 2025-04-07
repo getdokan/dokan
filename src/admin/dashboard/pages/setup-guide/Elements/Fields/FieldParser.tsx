@@ -10,6 +10,7 @@ import Select from './Select';
 import MultiCheck from './MultiCheck';
 import CategoryBasedCommission from './Commission/CategoryBasedCommission';
 import CombineInput from './Commission/CombineInput';
+import { applyFilters } from '@wordpress/hooks';
 
 const FieldParser = ( {
     element,
@@ -133,13 +134,17 @@ const FieldParser = ( {
         case 'week':
         case 'number':
         default:
-            return (
+            return applyFilters(
+                'dokan_admin_setup_guide_default_field_parser',
                 <Text
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
                     getSetting={ getSetting }
-                />
+                />,
+                element,
+                getSetting,
+                onValueChange
             );
     }
 };
