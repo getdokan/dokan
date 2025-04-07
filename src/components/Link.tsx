@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 
-type DokanAnchorProps = React.AnchorHTMLAttributes< HTMLAnchorElement > & {
+type DokanLinkProps = React.AnchorHTMLAttributes< HTMLAnchorElement > & {
     children?: React.ReactNode;
     className?: string;
     href: string;
@@ -12,7 +12,7 @@ export const DokanLink = ({
     className = '',
     href,
     ...props
-}: DokanAnchorProps ) => {
+}: DokanLinkProps ) => {
     return (
         <a
             href={ href }
