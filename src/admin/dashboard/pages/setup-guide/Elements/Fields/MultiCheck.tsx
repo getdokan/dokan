@@ -22,7 +22,7 @@ const MultiCheck = ( { element, onValueChange }: SettingsProps ) => {
 
     return (
         <div
-            id={ element.hook_key + '_div' }
+            id={ element.hook_key }
             className=" flex justify-between flex-col items-start p-4 w-full"
         >
             <div className="flex flex-col mb-4 w-full">

@@ -91,7 +91,7 @@ const CombineInput = ({ element, onValueChange }: SettingsProps) => {
 
     return (
         <div
-            id={ element.hook_key + '_div' }
+            id={ element.hook_key }
             className=" @container/combine grid grid-cols-12 p-4 gap-2"
         >
             <div className="flex flex-col @xl/combine:col-span-7 col-span-12 gap-1">

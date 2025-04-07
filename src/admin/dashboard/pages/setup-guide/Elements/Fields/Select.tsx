@@ -23,7 +23,7 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
     return (
         <div
             className="flex justify-between p-4"
-            id={ element.hook_key + '_div' }
+            id={ element.hook_key }
         >
             <div className="flex flex-col sm:w-[70%]">
                 <h2 className="text-sm leading-6 font-semibold text-gray-900">

@@ -35,7 +35,7 @@ const Switcher = ( { element, onValueChange }: SettingsProps ) => {
 
     return (
         <div
-            id={ element.hook_key + '_div' }
+            id={ element.hook_key }
             className="grid grid-cols-12 p-4 gap-y-4 w-full @container/switcher"
         >
             <div className="col-span-12 @md/switcher:col-span-8 flex flex-col gap-1">

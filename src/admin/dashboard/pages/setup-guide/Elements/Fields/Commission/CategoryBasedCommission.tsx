@@ -12,12 +12,6 @@ const CategoryBasedCommission = ( {
     const { currency } = adminWithdrawData;
     const getCurrencySymbol = currency?.symbol;
 
-    const testSettings = getSetting(
-        'dokan_admin_onboarding_setup_step_commission_commission_reset_sub_category_when_edit_all_category'
-    );
-
-    console.log( 'testSettings', testSettings );
-
     const getCategories = ( categoriesData ) => {
         const result = [];
         const categoryMap = {};
@@ -42,6 +36,10 @@ const CategoryBasedCommission = ( {
 
         return result;
     };
+
+    // const resetSubCategoryObj = getSetting(
+    //     'dokan_admin_onboarding_setup_step_commission_commission_reset_sub_category_when_edit_all_category'
+    // ) || {};
 
     const categories = element?.categories || {};
     const commissionValues = element?.value || {};
@@ -289,7 +287,7 @@ const CategoryBasedCommission = ( {
     return (
         <div
             className="p-4 flex flex-col gap-y-4"
-            id={ element.hook_key + '_div' }
+            id={ element.hook_key }
         >
             { ( element?.title || element?.description ) && (
                 <div className="flex-col flex gap-1">
