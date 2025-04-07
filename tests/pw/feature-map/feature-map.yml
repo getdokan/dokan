@@ -502,6 +502,7 @@
           vendor can set rma settings (warranty included lifetime): true
           vendor can set rma settings (warranty as addon): true
           vendor can set store seo settings: true
+          vendor can set store seo settings (with meta description): true
 
 - page: 'Setting'
   features:
