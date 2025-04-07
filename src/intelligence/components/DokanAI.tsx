@@ -1,10 +1,11 @@
 import { useEffect, useState } from '@wordpress/element';
-import { Modal, SimpleInput, TextArea, Button } from '@getdokan/dokan-ui';
+import { Modal, SimpleInput, TextArea } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
 import ResponseHistory from './ResponseHistory';
 import { useMutationObserver } from '../../hooks';
+import { DokanAlert, DokanButton } from '@dokan/components';
 
 const DokanAI = () => {
     const [ isOpen, setIsOpen ] = useState( false );
@@ -296,10 +297,9 @@ const DokanAI = () => {
                         { __( 'Craft your product information', 'dokan-lite' ) }
                     </p>
                     { isEditMode && (
-                        <Button
-                            color="primary"
+                        <DokanButton
                             onClick={ startOver }
-                            className="flex gap-2 items-center dokan-btn"
+                            className="flex gap-2 items-center"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -317,19 +317,19 @@ const DokanAI = () => {
                             </svg>
 
                             { __( 'Start Over', 'dokan-lite' ) }
-                        </Button>
+                        </DokanButton>
                     ) }
                 </Modal.Title>
 
                 <Modal.Content>
                     { error && (
-                        <div
-                            className="mb-4 dokan-alert-danger rounded-lg p-4"
-                            role="alert"
+                        <DokanAlert
+                            label={ __( 'Error', 'dokan-lite' ) }
+                            variant="danger"
+                            className="mb-4"
                         >
-                            <span className="font-bold text-wrap">Error</span>{ ' ' }
                             { error }
-                        </div>
+                        </DokanAlert>
                     ) }
                     { isEditMode ? (
                         <div>
@@ -355,14 +355,13 @@ const DokanAI = () => {
                                     value={ getInputValue( 'post_title' ) }
                                 />
                             </div>
-                            <Button
-                                color="secondary"
-                                className="dokan-btn-secondary"
+                            <DokanButton
+                                variant="secondary"
                                 onClick={ () => refineContent( 'post_title' ) }
                                 disabled={ isLoading }
                             >
                                 { __( 'Refine', 'dokan-lite' ) }
-                            </Button>
+                            </DokanButton>
                             { /* Short Description Section */ }
                             <div className="my-4">
                                 <div className="mb-2 flex items-center justify-between">
@@ -397,16 +396,15 @@ const DokanAI = () => {
                                         __html: getInputValue( 'post_excerpt' ),
                                     } }
                                 ></div>
-                                <Button
-                                    color="secondary"
-                                    className="dokan-btn-secondary"
+                                <DokanButton
+                                    variant="secondary"
                                     onClick={ () =>
                                         refineContent( 'post_excerpt' )
                                     }
                                     disabled={ isLoading }
                                 >
                                     { __( 'Refine', 'dokan-lite' ) }
-                                </Button>
+                                </DokanButton>
                             </div>
                             { /* Long Description Section */ }
                             <div className="mt-4">
@@ -442,16 +440,15 @@ const DokanAI = () => {
                                         __html: getInputValue( 'post_content' ),
                                     } }
                                 ></div>
-                                <Button
-                                    color="secondary"
-                                    className="dokan-btn-secondary"
+                                <DokanButton
+                                    variant="secondary"
                                     onClick={ () =>
                                         refineContent( 'post_content' )
                                     }
                                     disabled={ isLoading }
                                 >
                                     { __( 'Refine', 'dokan-lite' ) }
-                                </Button>
+                                </DokanButton>
                             </div>
 
                             <p className="text-sm mt-4 mb-3">
@@ -507,34 +504,29 @@ const DokanAI = () => {
                 </Modal.Content>
                 <Modal.Footer className="border-t">
                     <div className="flex gap-4 justify-end">
-                        <Button
-                            color="secondary"
-                            className="dokan-btn-secondary"
+                        <DokanButton
+                            variant="secondary"
                             disabled={ isLoading }
                             onClick={ onClose }
                         >
                             { __( 'Cancel', 'dokan-lite' ) }
-                        </Button>
+                        </DokanButton>
                         { isEditMode ? (
-                            <Button
-                                color="primary"
+                            <DokanButton
                                 disabled={ isLoading }
-                                className="dokan-btn"
                                 onClick={ () => insertHandler() }
                             >
                                 { __( 'Insert', 'dokan-lite' ) }
-                            </Button>
+                            </DokanButton>
                         ) : (
-                            <Button
-                                color="primary"
+                            <DokanButton
                                 disabled={ isLoading }
                                 onClick={ generateContent }
-                                className="dokan-btn"
                             >
                                 { isLoading
                                     ? __( 'Generating…', 'dokan-lite' )
                                     : __( 'Generate', 'dokan-lite' ) }
-                            </Button>
+                            </DokanButton>
                         ) }
                     </div>
                 </Modal.Footer>
@@ -560,20 +552,18 @@ const DokanAI = () => {
                             ) }
                         </p>
                         <div className="mt-4 flex gap-4 justify-center">
-                            <Button
-                                color="secondary"
-                                className="dokan-btn-secondary"
+                            <DokanButton
+                                variant="secondary"
                                 onClick={ () => setRegenerateModal( false ) }
                             >
                                 { __( 'Cancel', 'dokan-lite' ) }
-                            </Button>
-                            <Button
-                                color="primary"
-                                className="dokan-btn"
+                            </DokanButton>
+
+                            <DokanButton
                                 onClick={ () => insertHandler( true ) }
                             >
                                 { __( 'Yes, Insert', 'dokan-lite' ) }
-                            </Button>
+                            </DokanButton>
                         </div>
                     </div>
                 </Modal.Content>

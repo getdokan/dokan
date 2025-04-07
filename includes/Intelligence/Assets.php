@@ -24,14 +24,14 @@ class Assets implements Hookable {
         wp_register_style(
             'dokan-ai-style',
             DOKAN_PLUGIN_ASSEST . '/css/dokan-intelligence.css',
-            [],
+            [ 'dokan-react-components', 'dokan-react-frontend' ],
             $asset['version']
         );
 
         wp_register_script(
             'dokan-ai-script',
             DOKAN_PLUGIN_ASSEST . '/js/dokan-intelligence.js',
-            $asset['dependencies'],
+            array_merge( $asset['dependencies'], [ 'dokan-react-components' ] ),
             $asset['version'],
             true
         );
