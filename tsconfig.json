@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
+        "baseUrl": "./",
         "paths": {
             "@dokan/*": ["src/*"]
         },
-        "jsx": "react-jsx",
+      "jsx": "react-jsx"
     }
 }
