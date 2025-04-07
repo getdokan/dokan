@@ -73,6 +73,7 @@ class OrderLineItemCommission {
             }
         }
 
+        // TODO: Need refactor, get_commission implementation must be here.
         return dokan()->commission->get_commission(
             [
                 'order_item_id'  => $this->item->get_id(),
@@ -86,6 +87,13 @@ class OrderLineItemCommission {
         );
     }
 
+    /**
+     * Retrieve commission data from order item meta.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Commission
+     */
     public function retrieve() {
         $order_items = $this->order->get_items();
         $commission_data = new Commission();

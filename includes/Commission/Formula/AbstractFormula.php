@@ -34,6 +34,23 @@ abstract class AbstractFormula {
     abstract public function __construct( Setting $settings );
 
     /**
+     * Validate commission rate
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param float $rate
+     *
+     * @return float
+     */
+    public function validate_rate( $rate ) {
+        if ( '' === $rate || ! is_numeric( $rate ) || $rate < 0 ) {
+            $rate = 0.0;
+        }
+
+        return (float) $rate;
+    }
+
+    /**
      * Sets the setting.
      *
      * @since 3.14.0

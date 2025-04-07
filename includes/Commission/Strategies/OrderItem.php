@@ -93,6 +93,17 @@ class OrderItem extends AbstractStrategy {
     }
 
     /**
+     * Returns order item id.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return int|mixed|string
+     */
+    public function get_order_item_id() {
+        return $this->order_item_id;
+    }
+
+    /**
      * Save order item commission meta data.
      *
      * @since 3.14.0

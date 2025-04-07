@@ -239,6 +239,7 @@ class Commission {
 
         $earning_or_commission = 'admin' === $context ? $order_commission->get_admin_total_earning() : $order_commission->get_vendor_total_earning();
 
+        // TODO: check if the code block is repeative and data duplicate.
         if ( $context === dokan()->fees->get_shipping_fee_recipient( $order ) ) {
             $earning_or_commission += floatval( $order->get_shipping_total() ) - $order->get_total_shipping_refunded();
         }
@@ -594,44 +595,21 @@ class Commission {
         ];
 
         $context = new Calculator( $strategies );
-        $commission_data = $context->calculate_commission( $total_amount, $total_quantity );
-
-        if ( ! empty( $coupon_discounts ) && ! empty( $order_item_id ) ) {
-            /**
-             * @var \WC_Order_Item_Product $item
-             */
-            $item = WC_Order_Factory::get_order_item( $order_item_id );
-            $commission_data->with_coupon_discounts( $coupon_discounts, $item->get_total() );
-        }
+        $commission_data = $context->calculate_commission( $total_amount, $total_quantity, $coupon_discounts );
 
         if ( ! empty( $order_item_id ) && $auto_save ) {
-            $this->save_order_line_item_commission( $order_item_strategy, $commission_data );
+            $parameters = $commission_data->get_parameters() ?? [];
+            $percentage = $parameters['percentage'] ?? 0;
+            $flat       = $parameters['flat'] ?? 0;
+
+            $order_item_strategy->save_line_item_commission_to_meta(
+                $commission_data->get_type() ?? DefaultSetting::TYPE,
+                $percentage,
+                $flat,
+                $commission_data->get_data()
+            );
         }
 
         return $commission_data;
-    }
-
-    /**
-     * Save order line item commission.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param \WeDevs\Dokan\Commission\Strategies\OrderItem $order_item_strategy
-     *
-     * @param \WeDevs\Dokan\Commission\Model\Commission     $commission_data
-     *
-     * @return void
-     */
-    public function save_order_line_item_commission( OrderItem $order_item_strategy, CommissionModel $commission_data ) {
-        $parameters = $commission_data->get_parameters() ?? [];
-        $percentage = $parameters['percentage'] ?? 0;
-        $flat       = $parameters['flat'] ?? 0;
-
-        $order_item_strategy->save_line_item_commission_to_meta(
-            $commission_data->get_type() ?? DefaultSetting::TYPE,
-            $percentage,
-            $flat,
-            $commission_data->get_data()
-        );
     }
 }

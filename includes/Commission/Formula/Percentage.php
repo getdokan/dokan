@@ -62,7 +62,7 @@ class Percentage extends AbstractFormula {
      */
     public function calculate() {
         if ( $this->is_applicable() ) {
-            $this->admin_commission = ( $this->get_amount() * dokan()->commission->validate_rate( $this->get_settings()->get_percentage() ) ) / 100;
+            $this->admin_commission = ( $this->get_amount() * $this->validate_rate( $this->get_settings()->get_percentage() ) ) / 100;
         }
 
         $this->per_item_admin_commission = $this->admin_commission / $this->get_quantity();
@@ -121,7 +121,7 @@ class Percentage extends AbstractFormula {
      * @return float
      */
     public function get_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->admin_commission );
+        return $this->validate_rate( $this->admin_commission );
     }
 
     /**
@@ -132,7 +132,7 @@ class Percentage extends AbstractFormula {
      * @return float
      */
     public function get_vendor_earning(): float {
-        return dokan()->commission->validate_rate( $this->vendor_earning );
+        return $this->validate_rate( $this->vendor_earning );
     }
 
     /**
@@ -143,7 +143,7 @@ class Percentage extends AbstractFormula {
      * @return float
      */
     public function get_per_item_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->per_item_admin_commission ) ?? 0;
+        return $this->validate_rate( $this->per_item_admin_commission ) ?? 0;
     }
 
     /**
