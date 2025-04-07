@@ -7,7 +7,6 @@ The CustomerFilter component provides a standardized way to filter content by cu
 - Customer search with autocomplete
 - Selected customer display and management
 - Consistent interface across different views
-- Seamless integration with Filter component
 
 ## Installation
 
@@ -22,8 +21,8 @@ const [selectedCustomer, setSelectedCustomer] = useState({});
 
 <CustomerFilter
   id="dokan-filter-by-customer"
-  selectedCustomer={selectedCustomer}
-  setSelectedCustomer={(selected) => {
+  value={selectedCustomer}
+  onChange={(selected) => {
     setSelectedCustomer(selected);
   }}
 />
@@ -31,12 +30,13 @@ const [selectedCustomer, setSelectedCustomer] = useState({});
 
 #### Props
 
-| Prop         | Type       | Required | Description |
-|--------------|------------|----------|-------------|
-| `id`         | `string`   | Yes      | Unique identifier for the filter group |
-| `selectedCustomer` | `object`   | Yes      | Currently selected customer object with `label` and `value` properties |
-| `setSelectedCustomer` | `function` | Yes      | Callback function to update the selected customer |
-| `placeholder` | `string`   | no       | Custom placeholder text for the search input (default: "Filter by customer") |
+| Prop                  | Type       | Required | Description                                                                |
+|-----------------------|------------|----------|----------------------------------------------------------------------------|
+| `id`                  | `string`   | Yes      | Unique identifier for the filter group                                     |
+| `value`               | `object`   | Yes      | Currently selected customer object with `label` and `value` properties     |
+| `onChange` | `function` | Yes      | Callback function to update the selected customer                          |
+| `placeholder`         | `string`   | no       | Custom placeholder text for the search input |
+| `label`         | `string`   | no       | Custom label text for the search input  |
 
 #### Selected Customer Object Structure
 
@@ -59,11 +59,12 @@ const OrdersList = () => {
     <div>
       <CustomerFilter
         id="dokan-filter-by-customer"
-        key="dokan-filter-by-customer"
-        selectedCustomer={selectedCustomer}
-        setSelectedCustomer={(selected) => {
+        value={selectedCustomer}
+        onChange={(selected) => {
           setSelectedCustomer(selected);
         }}
+        placeholder={ __( 'Search', 'dokan' ) }
+        label={ __( 'Filter By Registered Customer', 'dokan' ) }
       />
     </div>
   );

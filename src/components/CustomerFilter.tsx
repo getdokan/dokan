@@ -1,96 +1,65 @@
 import { AsyncSearchableSelect } from '@getdokan/dokan-ui';
-import { __ } from '@wordpress/i18n';
-import { useDebounceCallback } from 'usehooks-ts';
 import { useCustomerSearch } from '@dokan/hooks';
 import { useState } from '@wordpress/element';
+import { debounce } from '@wordpress/compose';
 
-const CustomerFilter = ( {
-    id,
-    selectedCustomer,
-    setSelectedCustomer,
-    placeholder = __( 'Filter By Registered Customer', 'dokan' ),
-} ) => {
+const CustomerFilter = ( props ) => {
     const customerHook = useCustomerSearch();
     const [ searchedCustomer, setSearchedCustomer ] = useState( [] );
 
-    const debounced = useDebounceCallback( async function ( {
-        inputValue,
-        callback,
-    } ) {
-        await handleCustomrSearch( inputValue, callback );
-    }, 500 );
-
-    const handleCustomrSearch = async ( inputValue: string, callback ) => {
-        try {
-            if ( ! inputValue ) {
-                return;
-            }
-            const searchResults =
-                await customerHook.searchCustomers( inputValue );
-            const resultData = searchResults.map( ( customer ) => {
-                return {
-                    label: customer.name,
-                    value: customer.id,
-                };
-            } );
-
-            setSearchedCustomer( resultData );
-            callback( resultData );
-        } catch ( error ) {
-            console.error( 'Search failed:', error );
-        }
-    };
-
     const getValue = () => {
-        if ( ! selectedCustomer?.value ) {
+        if ( ! props?.value?.value ) {
             return '';
         }
 
         const found = searchedCustomer.find( ( customer ) => {
-            return (
-                Number( customer.value ) === Number( selectedCustomer.value )
-            );
+            return Number( customer.value ) === Number( props?.value.value );
         } );
 
         if ( found ) {
             return found;
-        } else if ( selectedCustomer?.value && selectedCustomer?.label ) {
+        } else if ( props?.value?.value && props?.value?.label ) {
             setSearchedCustomer( ( prevState ) => {
-                return [ ...prevState, { ...selectedCustomer } ];
+                return [ ...prevState, { ...props?.value } ];
             } );
-            return setSelectedCustomer;
+
+            return props?.value;
         }
 
         return '';
     };
 
+    const handleCustomrSearch = debounce(
+        async ( inputValue: string, callback ) => {
+            try {
+                if ( ! inputValue ) {
+                    return;
+                }
+                const searchResults =
+                    await customerHook.searchCustomers( inputValue );
+                const resultData = searchResults.map( ( customer ) => {
+                    return {
+                        label: customer.name,
+                        value: customer.id,
+                    };
+                } );
+
+                setSearchedCustomer( resultData );
+                callback( resultData );
+            } catch ( error ) {
+                console.error( 'Search failed:', error );
+            }
+        },
+        500
+    );
+
     return (
-        <div>
-            { placeholder && <label htmlFor={ id }>{ placeholder }</label> }
-            <AsyncSearchableSelect
-                id={ id }
-                value={ getValue() }
-                defaultOptions={ searchedCustomer }
-                placeholder={ __( 'Search', 'dokan' ) }
-                errors={ [] }
-                onChange={ setSelectedCustomer }
-                isMulti={ false }
-                loadOptions={ (
-                    inputValue: string,
-                    callback: (
-                        options: {
-                            label: string;
-                            value: string;
-                        }[]
-                    ) => void
-                ) => {
-                    debounced( {
-                        inputValue,
-                        callback,
-                    } );
-                } }
-            />
-        </div>
+        <AsyncSearchableSelect
+            { ...props }
+            value={ getValue() }
+            defaultOptions={ searchedCustomer }
+            loadOptions={ handleCustomrSearch }
+        />
     );
 };
 
