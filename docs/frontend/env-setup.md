@@ -1,70 +1,42 @@
 # Dokan Pro Environment Setup
 
 ## Overview
-This documentation describes how to set up the development environment for Dokan Pro. The Dokan Lite path utility provides a function to dynamically determine the correct path to the Dokan Lite installation, ensuring compatibility between Dokan Pro and Lite versions.
+This documentation describes how to set up the development environment for Dokan Pro. The Dokan Pro plugin relies on Dokan Lite for its base configuration and components. This setup ensures consistency between Pro and Lite versions while allowing Pro-specific customizations.
 
-## Installation Paths
-Dokan (Lite and Pro) can be installed in these locations:
-- `wp-content/plugins/dokan-lite` (for Dokan Lite)
-- `wp-content/plugins/dokan` (another path can be for Dokan Lite)
-- `wp-content/plugins/dokan-pro` (for Dokan Pro)
+## Installation Requirements
 
-## Usage
+### Required Software
+- Node.js (>= 16.x)
+- npm
 
-### Import the Utility Function
-```javascript
-const { getDokanLitePath } = require('./src/utils/dokan-path');
-```
+### Plugin Installation
+Dokan Pro requires both Dokan Pro and Dokan Lite to be installed:
 
-### Get the Dokan Path
-```javascript
-const liteLocation = getDokanLitePath();
-```
+#### Dokan Lite Installation
+Dokan Lite must be installed in one of these locations:
+- `wp-content/plugins/dokan-lite`
+- `wp-content/plugins/dokan`
 
-## Function Details
+#### Dokan Pro Installation
+Dokan Pro should be installed in:
+- `wp-content/plugins/dokan-pro`
 
-### `getDokanLitePath()`
-Returns the correct Dokan installation path.
+## Development Setup
 
-**Returns:**
-- `string`: The path to the Dokan installation ('dokan-lite' or 'dokan')
-
-**Throws:**
-- `Error`: If neither 'dokan-lite' nor 'dokan' directory exists
-
-## Error Handling
-The function includes error handling to ensure a valid Dokan installation exists:
-1. First checks for 'dokan-lite' directory
-2. If not found, checks for 'dokan' directory
-3. If neither exists, throws an error with the message "Dokan or Dokan Lite not found"
-
-## Common Use Cases
-- Loading configuration files
-- Setting up build paths
-- Managing asset locations
-- Configuring development environments
-
-## Development Environment Setup
-1. Ensure you have the required dependencies installed:
-   - Node.js (>= 16.x)
-   - npm
-   - WordPress development environment
-
-2. Install dependencies:
+### 1. Install Dependencies
 ```bash
+# Navigate to the Dokan Pro plugin directory
+cd wp-content/plugins/dokan-pro
+
+# Install npm dependencies
 npm install
 ```
 
-3. Build assets:
+### 2. Build Assets
 ```bash
-# For development with watch mode
+# Development mode with watch
 npm run start
 
-# For production build
+# Production build
 npm run build
 ```
-
-4. Configure your development environment:
-   - Set up WordPress debugging mode in `wp-config.php`
-   - Configure your database settings
-   - Set up any required API keys or credentials
