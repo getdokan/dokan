@@ -67,11 +67,9 @@ class OrderLineItemCommission {
      *
      * @since DOKAN_SINCE
      *
-     * @param $auto_save
-     *
      * @return \WeDevs\Dokan\Commission\Model\Commission|null
      */
-    public function calculate( $auto_save = false ) {
+    public function calculate() {
         $refund = $this->order->get_total_refunded_for_item( $this->item->get_id() );
 
         $item_price = apply_filters( 'dokan_earning_by_order_item_price', $this->item->get_subtotal(), $this->item, $this->order );
@@ -107,18 +105,16 @@ class OrderLineItemCommission {
         $context = new Calculator( $strategies );
         $commission_data = $context->calculate_commission( $item_price, $total_quantity, $this->dokan_coupon_infos );
 
-        if ( ! empty( $order_item_id ) && $auto_save ) {
-            $parameters = $commission_data->get_parameters() ?? [];
-            $percentage = $parameters['percentage'] ?? 0;
-            $flat       = $parameters['flat'] ?? 0;
+        $parameters = $commission_data->get_parameters() ?? [];
+        $percentage = $parameters['percentage'] ?? 0;
+        $flat       = $parameters['flat'] ?? 0;
 
-            $order_item_strategy->save_line_item_commission_to_meta(
-                $commission_data->get_type() ?? DefaultSetting::TYPE,
-                $percentage,
-                $flat,
-                $commission_data->get_data()
-            );
-        }
+        $order_item_strategy->save_line_item_commission_to_meta(
+            $commission_data->get_type() ?? DefaultSetting::TYPE,
+            $percentage,
+            $flat,
+            $commission_data->get_data()
+        );
 
         return $commission_data;
     }

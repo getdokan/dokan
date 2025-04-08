@@ -258,7 +258,7 @@ class RecalculateCommissions {
         $order_total = $order->get_total();
 
         $order_commission = new OrderCommission( $order );
-        $order_commission->calculate( true );
+        $order_commission->calculate();
 
         $context        = 'seller';
         $vendor_earning = $order_commission->get_vendor_total_earning();

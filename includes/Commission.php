@@ -235,7 +235,7 @@ class Commission {
         }
 
         $order_commission = new OrderCommission( $order );
-        $order_commission->calculate( true );
+        $order_commission->calculate();
 
         $earning_or_commission = 'admin' === $context ? $order_commission->get_admin_total_earning() : $order_commission->get_vendor_total_earning();
 

@@ -45,10 +45,10 @@ class OrderCommission {
      *
      * @return void
      */
-    public function calculate( $auto_save_commission_into_line_item = false ) {
+    public function calculate() {
         foreach ( $this->order->get_items() as $item_id => $item ) {
             $line_item_commission = new OrderLineItemCommission( $item, $this->order );
-            $commission           = $line_item_commission->calculate( $auto_save_commission_into_line_item );
+            $commission           = $line_item_commission->calculate();
 
             $this->admin_commission     += $commission->get_admin_commission();
             $this->admin_net_commission += $commission->get_net_admin_commission();
