@@ -37,7 +37,7 @@
         }
 
         input[type=checkbox] {
-            @apply before:!content-[''] mt-1;
+            @apply before:!content-[''];
         }
     }
 

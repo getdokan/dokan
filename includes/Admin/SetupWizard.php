@@ -47,6 +47,7 @@ class SetupWizard {
             $this->recommended_plugins = new RecommendedPlugins();
 
             add_action( 'admin_menu', [ $this, 'admin_menus' ] );
+            add_action( 'init', [ $this, 'register_admin_scripts' ] );
             add_action( 'admin_init', [ $this, 'setup_wizard' ], 99 );
 
             if ( get_transient( 'dokan_setup_wizard_no_wc' ) && defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '4.6.0', '<' ) ) { // todo: temporary fix, will add this feature again in future release
@@ -161,6 +162,57 @@ class SetupWizard {
     }
 
     /**
+     * Enqueue scripts for admin onboarding setup.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function register_admin_scripts() {
+        $script_assets = DOKAN_DIR . '/assets/js/dokan-admin-onboard.asset.php';
+        if ( file_exists( $script_assets ) ) {
+            $onboard_asset = require $script_assets;
+            $dependencies  = $onboard_asset['dependencies'] ?? [];
+            $version       = $onboard_asset['version'] ?? '';
+
+            wp_register_style(
+                'dokan-admin-onboard-app',
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-onboard.css',
+                [],
+                $version
+            );
+
+            wp_register_script(
+                'dokan-admin-onboard-app',
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-onboard.js',
+                $dependencies,
+                $version,
+                true
+            );
+            wp_localize_script(
+                'dokan-admin-onboard-app',
+                'onboardingData',
+                [
+                    'site_url'                  => esc_url( get_site_url() ),
+                    'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=dokan' ) ),
+                ]
+            );
+        }
+    }
+
+    /**
+     * Enqueue scripts for admin onboarding setup.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function enqueue_admin_scripts() {
+        wp_enqueue_style( 'dokan-admin-onboard-app' );
+        wp_enqueue_script( 'dokan-admin-onboard-app' );
+    }
+
+    /**
      * Helper method to get postcode configurations from `WC()->countries->get_country_locale()`.
      * We don't use `wp_list_pluck` because it will throw notices when postcode configuration is not defined for a country.
      *
@@ -253,8 +305,10 @@ class SetupWizard {
      */
     protected function set_setup_wizard_template() {
         $this->setup_wizard_header();
-        $this->setup_wizard_steps();
-        $this->setup_wizard_content();
+        if ( ! is_admin() ) {
+            $this->setup_wizard_steps();
+            $this->setup_wizard_content();
+        }
         $this->setup_wizard_footer();
     }
 
@@ -285,7 +339,7 @@ class SetupWizard {
             $this->current_step = sanitize_key( wp_unslash( $_GET['step'] ) );
         }
 
-        $this->enqueue_scripts();
+        is_admin() ? $this->enqueue_admin_scripts() : $this->enqueue_scripts();
 
         if (
             isset( $_POST['_wpnonce'], $_POST['save_step'] )
@@ -333,10 +387,6 @@ class SetupWizard {
             ?>
         </head>
         <body class="wc-setup dokan-admin-setup-wizard wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : ''; ?>">
-        <?php
-        $logo_url = ( ! empty( $this->custom_logo ) ) ? $this->custom_logo : plugins_url( 'assets/images/dokan-logo.png', DOKAN_FILE );
-        ?>
-        <h1 id="wc-logo"><a href="https://dokan.co/wordpress/"><img src="<?php echo esc_url( $logo_url ); ?>" alt="Dokan Logo" width="135" height="auto"/></a></h1>
         <?php
     }
 
@@ -738,7 +788,7 @@ class SetupWizard {
                 continue;
             }
 
-            $plugin_details = $plugin['plugins'][0] ?? null;
+            $plugin_details = $plugin ?? null;
 
             if ( ! $plugin_details ) {
                 continue;
@@ -749,7 +799,7 @@ class SetupWizard {
             $this->install_plugin(
                 $plugin_details['slug'],
                 [
-                    'name'      => $plugin_details['name'] ?? '',
+                    'name'      => $plugin_details['title'] ?? '',
                     'repo-slug' => $plugin_details_arr[0] ?? '',
                     'file'      => $plugin_details_arr[1] ?? '',
                 ]
@@ -889,7 +939,7 @@ class SetupWizard {
                 name="<?php echo esc_attr( 'setup_' . $type ); ?>"
                 value="yes"
                 checked
-                data-plugins="<?php echo esc_attr( wp_json_encode( isset( $item_info['plugins'] ) ? $item_info['plugins'] : null ) ); ?>"
+                data-plugins="<?php echo esc_attr( wp_json_encode( $item_info ?? null ) ); ?>"
             />
             <label for="<?php echo esc_attr( 'dokan_recommended_' . $type ); ?>">
                 <img
