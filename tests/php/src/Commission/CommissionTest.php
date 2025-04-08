@@ -1060,6 +1060,8 @@ class CommissionTest extends WP_UnitTestCase {
             $customer->ID,
             $product
         );
+        $order->update_meta_data( '_dokan_vendor_id', $vendor->get_id() );
+        $order->save_meta_data();
 
         $items = $order->get_items();
         $item  = reset( $items );

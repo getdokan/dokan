@@ -110,13 +110,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $percentage = $parameters['percentage'] ?? 0;
         $flat       = $parameters['flat'] ?? 0;
 
-        $order_item_strategy->save_line_item_commission_to_meta(
-            $commission_data->get_type() ?? DefaultSetting::TYPE,
-            $percentage,
-            $flat,
-            $commission_data->get_data()
-        );
-
         // Saving commission data to line items for further reuse.
         ( new \WeDevs\Dokan\Commission\Settings\OrderItem(
             [

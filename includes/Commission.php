@@ -5,17 +5,10 @@ namespace WeDevs\Dokan;
 use WC_Order;
 use WC_Order_Factory;
 use WC_Product;
-use WeDevs\Dokan\Commission\Calculator;
 use WeDevs\Dokan\Commission\OrderCommission;
-use WeDevs\Dokan\Commission\Settings\DefaultSetting;
-use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
-use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
-use WeDevs\Dokan\Commission\Strategies\OrderItem;
-use WeDevs\Dokan\Commission\Strategies\Product;
-use WeDevs\Dokan\Commission\Strategies\Vendor;
-use WeDevs\Dokan\ProductCategory\Helper;
+use WeDevs\Dokan\Commission\OrderLineItemCommission;
+use WeDevs\Dokan\Commission\ProductCommission;
 use WP_Error;
-use WeDevs\Dokan\Commission\Model\Commission as CommissionModel;
 
 /**
  * Dokan Commission Class
@@ -190,7 +183,14 @@ class Commission {
             ]
         );
 
-        $commission_or_earning = 'admin' === $context ? $commission->get_admin_commission() : $commission->get_vendor_earning();
+        try {
+            $product_commission = new ProductCommission( $product_id, $product_price, 0, $vendor_id );
+            $commission = $product_commission->calculate();
+            $commission_or_earning = 'admin' === $context ? $commission->get_admin_commission() : $commission->get_vendor_earning();
+        } catch ( \Exception $exception ) {
+            $commission_or_earning = 0;
+        }
+
         return apply_filters( 'dokan_get_earning_by_product', $commission_or_earning, $product, $context );
     }
 
@@ -538,67 +538,22 @@ class Commission {
     public function get_commission( $args = [], $auto_save = false, $override_total_amount_by_product_price = true ) {
         $order_item_id    = ! empty( $args['order_item_id'] ) ? $args['order_item_id'] : '';
         $total_amount     = ! empty( $args['total_amount'] ) ? $args['total_amount'] : 0;
-        $total_quantity   = ! empty( $args['total_quantity'] ) ? $args['total_quantity'] : 1;
         $product_id       = ! empty( $args['product_id'] ) ? $args['product_id'] : 0;
         $vendor_id        = ! empty( $args['vendor_id'] ) ? $args['vendor_id'] : '';
         $category_id      = ! empty( $args['category_id'] ) ? $args['category_id'] : 0;
-        $coupon_discounts = ! empty( $args['coupon_discounts'] ) ? $args['coupon_discounts'] : [];
 
+        if ( $order_item_id ) {
+            $order_item = WC_Order_Factory::get_order_item( $order_item_id );
+            $line_item_commission = new OrderLineItemCommission( $order_item, $order_item->get_order() );
 
-
-        // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
-		if ( ! empty( $product_id ) && empty( $category_id ) ) {
-            $product_categories = Helper::get_saved_products_category( $product_id );
-            $chosen_categories  = $product_categories['chosen_cat'];
-            $category_id        = reset( $chosen_categories );
-            $category_id        = $category_id ? $category_id : 0;
+            return $line_item_commission->calculate();
+        } else {
+            try {
+                $product_commission = new ProductCommission( $product_id, $total_amount, $category_id, $vendor_id );
+                return $product_commission->calculate();
+            } catch ( \Exception $e ) {
+                dokan_log( $e->getMessage() );
+            }
         }
-
-        /**
-         * If the $total_amount is empty and $order_item_id is empty then we will calculate the commission based on the product price.
-         * There is a case where the $total_amount is empty and $order_item_id is empty but the $product_id is not empty
-         * In this case, we will calculate the commission based on the product price.
-         * Also there is an issue when 100% coupon is applied see the below link for more details
-         *
-         * @see https://github.com/getdokan/dokan/pull/2440#issuecomment-2488159960
-         *
-         * When using a decimal comma separator, the decimal value doesn’t work for simple products, and variable products display as zero. (both regular price & discounted price).
-         *
-         * @see https://github.com/getdokan/dokan-pro/issues/4049 6'th issue.
-         */
-        if ( ! empty( $product_id ) && empty( $total_amount ) && empty( $order_item_id ) && $override_total_amount_by_product_price ) {
-            $product = dokan()->product->get( $product_id );
-
-            // If product price is empty the setting the price as 0
-            $total_amount = $product && $product->get_price() && ! empty( $product->get_price() ) ? floatval( $product->get_price() ) : 0;
-        }
-
-        $order_item_strategy = new OrderItem( $order_item_id, $total_amount, $total_quantity );
-
-        $strategies = [
-            $order_item_strategy,
-            new Product( $product_id ),
-            new Vendor( $vendor_id, $category_id ),
-            new GlobalStrategy( $category_id ),
-            new DefaultStrategy(),
-        ];
-
-        $context = new Calculator( $strategies );
-        $commission_data = $context->calculate_commission( $total_amount, $total_quantity, $coupon_discounts );
-
-        if ( ! empty( $order_item_id ) && $auto_save ) {
-            $parameters = $commission_data->get_parameters() ?? [];
-            $percentage = $parameters['percentage'] ?? 0;
-            $flat       = $parameters['flat'] ?? 0;
-
-            $order_item_strategy->save_line_item_commission_to_meta(
-                $commission_data->get_type() ?? DefaultSetting::TYPE,
-                $percentage,
-                $flat,
-                $commission_data->get_data()
-            );
-        }
-
-        return $commission_data;
     }
 }
