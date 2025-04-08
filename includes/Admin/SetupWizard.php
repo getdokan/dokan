@@ -49,7 +49,6 @@ class SetupWizard {
             add_action( 'admin_menu', [ $this, 'admin_menus' ] );
             add_action( 'init', [ $this, 'register_admin_scripts' ] );
             add_action( 'admin_init', [ $this, 'setup_wizard' ], 99 );
-            add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
 
             if ( get_transient( 'dokan_setup_wizard_no_wc' ) && defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '4.6.0', '<' ) ) { // todo: temporary fix, will add this feature again in future release
                 add_filter( 'dokan_admin_setup_wizard_steps', [ SetupWizardNoWC::class, 'add_wc_steps_to_wizard' ] );
