@@ -82,17 +82,6 @@ class CategoryBasedCommission extends Field {
     }
 
     /**
-     * Sanitize data for storage.
-     *
-     * @param mixed $data Data for sanitization.
-     *
-     * @return array
-     */
-    public function sanitize_element( $data ) {
-        return wc_clean( parent::sanitize_element( $data ) );
-    }
-
-    /**
      * Escape data for display.
      *
      * @param mixed $data Data for display.
@@ -100,6 +89,6 @@ class CategoryBasedCommission extends Field {
      * @return string
      */
     public function escape_element( $data ) {
-        return esc_html( $data );
+        return $data;
     }
 }

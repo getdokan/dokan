@@ -109,17 +109,6 @@ class CombineInput extends Field {
     }
 
     /**
-     * Sanitize data for storage.
-     *
-     * @param mixed $data Data for sanitization.
-     *
-     * @return array
-     */
-    public function sanitize_element( $data ): array {
-        return wc_clean( parent::sanitize_element( $data ) );
-    }
-
-    /**
      * Escape data for display.
      *
      * @param mixed $data Data for display.
@@ -127,6 +116,6 @@ class CombineInput extends Field {
      * @return string
      */
     public function escape_element( $data ): string {
-        return esc_html( $data );
+        return $data;
     }
 }
