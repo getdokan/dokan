@@ -174,15 +174,6 @@ class Commission {
         $vendor_id     = (int) dokan_get_vendor_by_product( $product, true );
         $product_id    = $product->get_id();
 
-        $commission = $this->get_commission(
-            [
-                'product_id'     => $product_id,
-                'total_amount'   => $product_price,
-                'total_quantity' => 1,
-                'vendor_id'      => $vendor_id,
-            ]
-        );
-
         try {
             $product_commission = new ProductCommission( $product_id, $product_price, 0, $vendor_id );
             $commission = $product_commission->calculate();

@@ -81,13 +81,8 @@ foreach ( $order->get_refunds() as $refund ) {
                     $row_class    = apply_filters( 'woocommerce_admin_html_order_item_class', ! empty( $class ) ? $class : '', $item, $order );
                     $commission   = 0;
 
-                    $commission_data = dokan()->commission->get_commission(
-                        [
-                            'order_item_id' => $item->get_id(),
-                            'total_amount' => $item->get_total(),
-                            'total_quantity' => $item->get_quantity(),
-                        ]
-                    );
+                    $product_commission = new \WeDevs\Dokan\Commission\OrderLineItemCommission( $item, $order );
+                    $commission_data = $product_commission->retrieve();
 
                     $commission_type      = $commission_data->get_type();
                     $admin_commission     = $commission_data->get_admin_commission();

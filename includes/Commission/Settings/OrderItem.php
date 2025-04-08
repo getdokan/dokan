@@ -4,7 +4,6 @@ namespace WeDevs\Dokan\Commission\Settings;
 
 use WeDevs\Dokan\Commission\Formula\CategoryBased;
 use WeDevs\Dokan\Commission\Model\Setting;
-use WeDevs\Dokan\Utilities\OrderUtil;
 
 class OrderItem implements InterfaceSetting {
 

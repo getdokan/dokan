@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\Commission;
 
 use WC_Order;
-use WC_Order_Factory;
 use WC_Order_Item;
 use WeDevs\Dokan\Commission\Model\Commission;
 use WeDevs\Dokan\Commission\Settings\DefaultSetting;
@@ -81,19 +80,14 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $vendor_id        = $this->vendor_id;
         $category_id      = 0;
 
-        // Todo: Product category may change after order is placed, may falfunction if product category is changed and recalculating order commission.
-        // Todo: Expected solution can be save commission setting data in order item meta.
-        // Todo: Need discussion multiple category selection.
         // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
         $product_categories = Helper::get_saved_products_category( $product_id );
         $chosen_categories  = $product_categories['chosen_cat'];
         $category_id        = reset( $chosen_categories );
         $category_id        = $category_id ? $category_id : 0;
 
-        $order_item_strategy = new OrderItem( $order_item_id, $item_price, $total_quantity );
-
         $strategies = [
-            $order_item_strategy,
+            new OrderItem( $order_item_id, $item_price, $total_quantity ),
             new Product( $product_id ),
             new Vendor( $vendor_id, $category_id ),
             new GlobalStrategy( $category_id ),
@@ -143,16 +137,28 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $commission_data->set_net_admin_commission( $commission_data->get_net_admin_commission() + floatval( $commission_meta['admin_net_commission'] ?? 0 ) );
         $commission_data->set_admin_discount( $commission_data->get_admin_discount() + floatval( $commission_meta['admin_discount'] ?? 0 ) );
         $commission_data->set_admin_subsidy( $commission_data->get_admin_subsidy() + floatval( $commission_meta['admin_subsidy'] ?? 0 ) );
+        $commission_data->set_per_item_admin_commission( floatval( $commission_meta['per_item_admin_commission'] ?? 0 ) );
         $commission_data->set_vendor_discount( $commission_data->get_vendor_discount() + floatval( $commission_meta['vendor_discount'] ?? 0 ) );
         $commission_data->set_vendor_earning( $commission_data->get_vendor_earning() + floatval( $commission_meta['vendor_earning'] ?? 0 ) );
         $commission_data->set_net_vendor_earning( $commission_data->get_net_vendor_earning() + floatval( $commission_meta['vendor_net_earning'] ?? 0 ) );
-
-        // Todo: need to set source.
-		//        $commission_data->set_source( $commission_meta->get_source() ?? 0 );
+        $commission_data->set_source( $commission_meta['source'] ?? DefaultStrategy::SOURCE );
+        $commission_data->set_type( $commission_meta['type'] ?? '' );
+        $commission_data->set_total_amount( $commission_meta['total_amount'] ?? 0 );
+        $commission_data->set_total_quantity( $commission_meta['total_quantity'] ?? 0 );
+        $commission_data->set_parameters( $commission_meta['parameters'] ?? [] );
 
         return $commission_data;
     }
 
+    /**
+     * Additional adjustments for commission calculation.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WeDevs\Dokan\Commission\Model\Commission $commission_data
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Commission
+     */
     public function additional_adjustments( Commission $commission_data ): Commission {
         $admin_net_commission = 0;
         $vendor_net_earning = 0;

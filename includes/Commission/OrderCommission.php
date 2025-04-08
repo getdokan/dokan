@@ -396,6 +396,15 @@ class OrderCommission extends AbstractCommissionCalculator {
         ];
     }
 
+    /**
+     * Additional adjustments.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WeDevs\Dokan\Commission\Model\Commission $commission_data
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Commission
+     */
     public function additional_adjustments( Commission $commission_data ): Commission {
         return $commission_data;
     }

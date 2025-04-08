@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use WeDevs\Dokan\Abstracts\DokanRESTController;
+use WeDevs\Dokan\Commission\ProductCommission;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WP_Error;
 use WP_HTTP_Response;
@@ -125,20 +126,13 @@ class CommissionControllerV1 extends DokanRESTController {
         if ( ! is_numeric( $amount ) ) {
             $amount = 0;
         }
-
-        $commission_or_earning = dokan()->commission->get_commission(
-            [
-                'total_amount'   => $amount,
-                'total_quantity' => 1,
-                'product_id'     => $product_id,
-                'vendor_id'      => $vendor_id,
-                'category_id'    => $category_id,
-            ],
-            false,
-            false,
-        );
-
-        $data = 'seller' === $context ? $commission_or_earning->get_vendor_earning() : $commission_or_earning->get_admin_commission();
+        try {
+            $product_commission = new ProductCommission( $product_id, $amount, $category_id, $vendor_id );
+            $commission_or_earning = $product_commission->calculate();
+            $data = 'seller' === $context ? $commission_or_earning->get_vendor_earning() : $commission_or_earning->get_admin_commission();
+        } catch ( \Exception $exception ) {
+            $data = 0;
+        }
 
         return rest_ensure_response( wc_format_decimal( $data, wc_get_price_decimals() ) );
     }
