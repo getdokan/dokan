@@ -187,9 +187,6 @@ const baseConfig = {
                 },
             },
             colors: {
-                primary: 'var(--dokan-button-background-color, #7047EB)',
-                secondary: 'var(--dokan-button-secondary-background-color, #ffffff)',
-                tertiary: 'var(--dokan-button-tertiary-background-color, #00000000)',
                 dokan: {
                     sidebar: 'var(--dokan-button-background-color, #322067)',
                     btn: 'var(--dokan-button-background-color, #7047EB)',
