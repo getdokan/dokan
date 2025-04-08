@@ -36,9 +36,19 @@
             outline-color: var(--dokan-button-border-color, #7047EB);
         }
 
+        /* Default link styles (for normal hyperlinks) */
+        a:not(.dokan-btn):not([class*="dokan-btn-"]) {
+            @apply text-dokan-link transition-colors duration-200;
+
+            &:hover, &:focus {
+                @apply text-dokan-link-hover;
+            }
+        }
+
         input[type=checkbox] {
             @apply before:!content-[''] mt-1;
         }
+
     }
 
     button[data-headlessui-state="checked"] {
@@ -50,5 +60,123 @@
         // we are using z-index: 999 to make sure the modal is on top of everything except dokan ui toast
         // When changing this value, make sure to check if toast is still on top of the modal
         z-index: 999;
+    }
+}
+
+
+@layer utilities {
+
+    /* Button Styles */
+    .dokan-btn {
+        @apply relative bg-dokan-btn text-dokan-btn border-dokan-btn ring-dokan-btn transition-colors duration-200 #{!important};
+
+        &:hover, &:focus {
+            @apply bg-dokan-btn-hover text-dokan-btn-hover border-dokan-btn-hover #{!important};
+        }
+
+        &:disabled {
+            @apply opacity-60 cursor-not-allowed #{!important};
+        }
+    }
+
+    .dokan-btn-secondary {
+        @apply relative bg-dokan-btn-secondary text-dokan-btn-secondary border-dokan-btn-secondary ring-dokan-btn-secondary transition-colors duration-200 #{!important};
+
+        &:hover, &:focus {
+            @apply bg-dokan-btn-secondary-hover text-dokan-btn-secondary-hover border-dokan-btn-secondary-hover #{!important};
+        }
+    }
+
+    .dokan-btn-tertiary {
+        @apply relative bg-dokan-btn-tertiary text-dokan-btn-tertiary border-dokan-btn-tertiary ring-dokan-btn-tertiary transition-colors duration-200 #{!important};
+
+        &:hover, &:focus {
+            @apply bg-dokan-btn-tertiary-hover text-dokan-btn-tertiary-hover border-dokan-btn-tertiary-hover #{!important};
+        }
+    }
+
+    /* Status Button Styles */
+    .dokan-btn-info {
+        @apply relative bg-dokan-info text-dokan-info border-dokan-info ring-dokan-info transition-colors duration-200 #{!important};
+
+        &:hover, &:focus {
+            @apply bg-blue-600 text-white #{!important};
+        }
+    }
+
+    .dokan-btn-success {
+        @apply relative bg-dokan-success text-dokan-success border-dokan-success ring-dokan-success transition-colors duration-200 #{!important};
+
+        &:hover, &:focus {
+            @apply bg-green-600 text-white #{!important};
+        }
+    }
+
+    .dokan-btn-warning {
+        @apply relative bg-dokan-warning text-dokan-warning border-dokan-warning ring-dokan-warning transition-colors duration-200 #{!important};
+
+        &:hover, &:focus {
+            @apply bg-yellow-600 text-white #{!important};
+        }
+    }
+
+    .dokan-btn-danger {
+        @apply relative bg-dokan-danger text-dokan-danger border-dokan-danger ring-dokan-danger transition-colors duration-200 #{!important};
+
+        &:hover, &:focus {
+            @apply bg-red-600 text-white #{!important};
+        }
+    }
+
+    /* Text Link Styles */
+    .dokan-link {
+        @apply relative text-dokan-link no-underline transition-colors duration-200 #{!important};
+
+        &:hover, &:focus {
+            @apply text-dokan-link-hover underline #{!important};
+        }
+    }
+
+    /* Button Sizes */
+    .dokan-btn-sm {
+        @apply relative px-2 py-1 text-sm #{!important};
+    }
+
+    .dokan-btn-lg {
+        @apply relative px-6 py-3 text-lg #{!important};
+    }
+
+    /* Label Styles */
+    .dokan-info {
+        @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info #{!important};
+    }
+
+    .dokan-success {
+        @apply relative ring-1 ring-inset bg-dokan-success text-dokan-success ring-dokan-success #{!important};
+    }
+
+    .dokan-warning {
+        @apply relative ring-1 ring-inset bg-dokan-warning text-dokan-warning ring-dokan-warning #{!important};
+    }
+
+    .dokan-danger {
+        @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger ring-dokan-danger #{!important};
+    }
+
+    /* Alert Styles */
+    .dokan-alert-info {
+        @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info-light ring-dokan-info #{!important};
+    }
+
+    .dokan-alert-success {
+        @apply relative ring-1 ring-inset bg-dokan-success text-dokan-success-light ring-dokan-success #{!important};
+    }
+
+    .dokan-alert-warning {
+        @apply relative ring-1 ring-inset bg-dokan-warning text-dokan-warning-light ring-dokan-warning #{!important};
+    }
+
+    .dokan-alert-danger {
+        @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger-light ring-dokan-danger #{!important};
     }
 }
