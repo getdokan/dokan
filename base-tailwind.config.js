@@ -187,11 +187,12 @@ const baseConfig = {
                 },
             },
             colors: {
-                primary: 'var(--dokan-button-background-color, #7047EB)',
-                secondary: 'var(--dokan-button-secondary-background-color, #ffffff)',
                 dokan: {
                     sidebar: 'var(--dokan-button-background-color, #322067)',
                     btn: 'var(--dokan-button-background-color, #7047EB)',
+                    primary: 'var(--dokan-button-background-color, #F05025)',
+                    secondary: 'var(--dokan-button-secondary-background-color, var(--dokan-button-text-color, #ffffff))',
+                    tertiary: 'var(--dokan-button-tertiary-background-color, #00000000)',
                 },
             },
         },
