@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Admin\Dashboard;
 
 use WeDevs\Dokan\Contracts\Hookable;
+use WeDevs\Dokan\Admin\Notices\Helper;
 
 /**
  * Admin dashboard class.
@@ -119,8 +120,90 @@ class Dashboard implements Hookable {
      * @return array<string, mixed>
      */
     public function settings(): array {
+        $dashboard_url = admin_url( 'admin.php?page=dokan' );
+        $header_info   = [
+            'lite_version'    => DOKAN_PLUGIN_VERSION,
+            'is_pro_exists'   => dokan()->is_pro_exists(),
+            'dashboard_url'   => $dashboard_url,
+            'help_menu_items' => apply_filters(
+                'dokan_admin_setup_guides_help_menu_items',
+                [
+                    [
+                        'id'       => 'whats-new',
+                        'title'    => esc_html__( "What's New", 'dokan-lite' ),
+                        'url'      => $dashboard_url . '#/changelog',
+                        'icon'     => 'whats-new',
+                        'active'   => Helper::dokan_has_new_version(),
+                        'external' => false,
+                    ],
+                    [
+                        'id'       => 'get-support',
+                        'title'    => esc_html__( 'Get Support', 'dokan-lite' ),
+                        'url'      => 'https://wedevs.com/account/tickets/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                        'icon'     => 'support',
+                        'external' => true,
+                    ],
+                    [
+                        'id'       => 'community',
+                        'title'    => esc_html__( 'Community', 'dokan-lite' ),
+                        'url'      => 'https://www.facebook.com/groups/dokanMultivendor',
+                        'icon'     => 'facebook',
+                        'external' => true,
+                    ],
+                    [
+                        'id'       => 'documentation',
+                        'title'    => esc_html__( 'Documentation', 'dokan-lite' ),
+                        'url'      => 'https://wedevs.com/docs/dokan/getting-started/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                        'icon'     => 'documentation',
+                        'external' => true,
+                    ],
+                    [
+                        'id'       => 'faq',
+                        'title'    => esc_html__( 'FAQ', 'dokan-lite' ),
+                        'url'      => 'https://dokan.co/wordpress/faq/',
+                        'icon'     => 'faq',
+                        'external' => true,
+                    ],
+                    [
+                        'id'       => 'basic-fundamental',
+                        'title'    => esc_html__( 'Basic & Fundamental', 'dokan-lite' ),
+                        'url'      => $dashboard_url . '#/help',
+                        'icon'     => 'settings',
+                        'external' => false,
+                    ],
+                    [
+                        'id'       => 'feature-request',
+                        'title'    => __( 'Request a Feature', 'dokan-lite' ),
+                        'url'      => 'https://wedevs.com/account/dokan-feature-requests/',
+                        'icon'     => 'feature-request',
+                        'external' => true,
+                    ],
+                    [
+                        'id'       => 'setup-wizard',
+                        'title'    => __( 'Run Setup Wizard', 'dokan-lite' ),
+                        'url'      => admin_url( 'admin.php?page=dokan-setup' ),
+                        'icon'     => 'setup-wizard',
+                        'external' => false,
+                    ],
+                    [
+                        'id'       => 'import-dummy-data',
+                        'title'    => __( 'Import dummy data', 'dokan-lite' ),
+                        'url'      => $dashboard_url . '#/dummy-data',
+                        'icon'     => 'import-data',
+                        'external' => false,
+                    ],
+                ]
+            ),
+        ];
+
+        if ( dokan()->is_pro_exists() ) {
+            $header_info['pro_version']  = DOKAN_PRO_PLUGIN_VERSION;
+            $header_info['license_plan'] = dokan_pro()->license->get_plan();
+        }
+
         $settings = [
-            'nonce' => wp_create_nonce( 'dokan_admin_dashboard' ),
+            'nonce'       => wp_create_nonce( 'dokan_admin_dashboard' ),
+            'header_info' => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
         ];
 
         foreach ( $this->get_pages() as $page ) {

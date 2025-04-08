@@ -2,6 +2,13 @@
 
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Components;
 
+use WeDevs\Dokan\Abstracts\SettingsElement;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Checkbox;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Radio;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Select;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Tel;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Text;
+
 class ComponentFactory {
     /**
      * Get a new Page object.
@@ -47,4 +54,17 @@ class ComponentFactory {
         return new SubSection( $id );
     }
 
+    /**
+     * Get a new Field object.
+     *
+     * @param string $id ID.
+     * @param string $type Field Type.
+     *
+     * @return Text|Number|Checkbox|Radio|Select|Tel
+     */
+    public static function field( string $id, string $type = 'text' ): SettingsElement {
+        $field = new Field( $id, $type );
+
+        return $field->get_input();
+    }
 }

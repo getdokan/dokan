@@ -1,5 +1,5 @@
-import { useState } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
+import { useState, RawHTML } from '@wordpress/element';
 
 const Text = ( { element, onValueChange }: SettingsProps ) => {
     const [ value, setValue ] = useState( element.value );
@@ -20,8 +20,11 @@ const Text = ( { element, onValueChange }: SettingsProps ) => {
                 htmlFor={ element.hook_key }
                 className="block text-sm font-medium text-gray-700"
             >
-                { element.title }
+                <RawHTML>{ element.title }</RawHTML>
             </label>
+            <p className="text-sm text-gray-500">
+                <RawHTML>{ element.description }</RawHTML>
+            </p>
             <input
                 type="text"
                 onChange={ handleValueChange }

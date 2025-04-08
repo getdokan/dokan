@@ -1,6 +1,9 @@
 import { useEffect, useState } from '@wordpress/element';
 import getSettings from '../../settings/getSettings';
+import { Button } from '@getdokan/dokan-ui';
 import StepSettings from './StepSettings';
+import { __, sprintf } from '@wordpress/i18n';
+import HomeIcon from '../../icons/HomeIcon';
 
 export type Step = {
     title: string;
@@ -12,6 +15,7 @@ export type Step = {
 
 const SetupGuide = ( props ) => {
     const [ steps, setSteps ] = useState< Step[] >( [] );
+    const [ currentStep, setCurrentStep ] = useState< Step >( {} );
 
     useEffect( () => {
         const allSteps: Step[] = getSettings( 'setup' ).steps;
@@ -21,22 +25,23 @@ const SetupGuide = ( props ) => {
 
     const isAllStepsCompleted = steps.every( ( step ) => step.is_completed );
 
-    const currentStep = steps.find( ( step ) => ! step.is_completed );
-
-    console.log( isAllStepsCompleted, currentStep );
-
     return (
-        <div className="grid grid-cols-12 gap-4">
-            <div className="flex flex-col col-span-3 space-y-4 rounded-lg">
-                <h3 className="text-2xl font-bold">Setup Guide</h3>
-                <ol className="relative text-gray-500 border-s ml-5 border-gray-200 dark:border-gray-700 dark:text-gray-400">
+        <div className="grid grid-cols-12 gap-6">
+            <div className="flex flex-col col-span-3 space-y-4 rounded-lg pl-12 pt-10 bg-white shadow">
+                <h3 className="text-2xl font-bold leading-6 pb-10">
+                    { __( 'Setup Guide', 'dokan-lite' ) }
+                </h3>
+                <ol className="relative text-gray-500 border-s-2 border-dashed ml-5 border-gray-200 dark:border-gray-700 dark:text-gray-400">
                     { steps.map( ( step, index ) => {
                         return (
-                            <li key={ index } className="mb-10 ms-6">
+                            <li
+                                key={ index }
+                                className="mb-14 ms-10 last:mb-0 flex items-center"
+                            >
                                 { step.is_completed ? (
-                                    <span className="absolute flex items-center justify-center w-8 h-8 bg-purple-200 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-purple-900">
+                                    <span className="absolute flex items-center justify-center w-12 h-12 bg-[#7047EB] rounded-full -start-6">
                                         <svg
-                                            className="w-3.5 h-3.5 text-purple-500 dark:text-purple-400"
+                                            className="w-3.5 h-3.5 text-white dark:text-black"
                                             aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
@@ -52,11 +57,19 @@ const SetupGuide = ( props ) => {
                                         </svg>
                                     </span>
                                 ) : (
-                                    <span className="absolute flex items-center justify-center w-8 h-8 bg-gray-50 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-900">
+                                    <span
+                                        className={ `absolute flex items-center justify-center w-12 h-12 border border-[#7047EB] bg-white text-base text-black leading-5 rounded-full -start-6` }
+                                    >
                                         { index + 1 }
                                     </span>
                                 ) }
-                                <h4 className="font-medium leading-tight">
+                                <h4
+                                    className={ `font-semibold leading-5 text-base ${
+                                        currentStep?.id === step.id
+                                            ? 'text-[#7047EB]'
+                                            : 'text-black'
+                                    }` }
+                                >
                                     { step.title }
                                 </h4>
                             </li>
@@ -64,16 +77,50 @@ const SetupGuide = ( props ) => {
                     } ) }
                 </ol>
             </div>
-            <div className="col-span-9 bg-white">
+            <div className="col-span-9 bg-white shadow rounded-lg">
                 { isAllStepsCompleted ? (
-                    <div className="flex flex-col items-center justify-center h-full">
-                        <h2 className="text-3xl font-bold">Congratulations!</h2>
-                        <p className="text-gray-500">
-                            You have completed all the steps
-                        </p>
+                    <div className="min-h-screen flex flex-col items-center justify-center h-full">
+                        <div className={ `complete-icon mb-8` }>
+                            <HomeIcon />
+                        </div>
+                        <div
+                            className={ `complete-content space-y-3 text-center mb-7` }
+                        >
+                            <h2 className="text-2xl font-bold">
+                                { __(
+                                    'Your Marketplace is  ready to explore',
+                                    'dokan-lite'
+                                ) }
+                            </h2>
+                            <p className="text-gray-500 text-lg leading-5">
+                                { sprintf(
+                                    /* translators: %1$s: Steps completed counter */
+                                    __(
+                                        '%1$s of %1$s tasks completed',
+                                        'dokan-lite'
+                                    ),
+                                    steps.length
+                                ) }
+                            </p>
+                        </div>
+                        <Button
+                            link={ true }
+                            href={
+                                dokanAdminDashboardSettings?.header_info
+                                    ?.dashboard_url
+                            }
+                            className={ `bg-[#7047EB] text-white text-base font-medium py-2.5 px-5 flex items-center rounded-md m-0` }
+                        >
+                            { __( 'Visit Dokan Dashboard', 'dokan-lite' ) }
+                        </Button>
                     </div>
                 ) : (
-                    <StepSettings step={ currentStep } />
+                    <StepSettings
+                        steps={ steps }
+                        updateStep={ setSteps }
+                        currentStep={ currentStep }
+                        setCurrentStep={ setCurrentStep }
+                    />
                 ) }
             </div>
         </div>
