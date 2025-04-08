@@ -239,19 +239,6 @@ class Commission {
 
         $earning_or_commission = 'admin' === $context ? $order_commission->get_admin_total_earning() : $order_commission->get_vendor_total_earning();
 
-        // TODO: check if the code block is repeative and data duplicate.
-        if ( $context === dokan()->fees->get_shipping_fee_recipient( $order ) ) {
-            $earning_or_commission += floatval( $order->get_shipping_total() ) - $order->get_total_shipping_refunded();
-        }
-
-        if ( $context === dokan()->fees->get_tax_fee_recipient( $order->get_id() ) ) {
-            $earning_or_commission += ( ( floatval( $order->get_total_tax() ) - floatval( $order->get_total_tax_refunded() ) ) - ( floatval( $order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $order ) ) ) );
-        }
-
-        if ( $context === dokan()->fees->get_shipping_tax_fee_recipient( $order ) ) {
-            $earning_or_commission += ( floatval( $order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $order ) ) );
-        }
-
         $earning_or_commission = apply_filters_deprecated( 'dokan_order_admin_commission', [ $earning_or_commission, $order, $context ], '2.9.21', 'dokan_get_earning_by_order' );
 
         return apply_filters( 'dokan_get_earning_by_order', $earning_or_commission, $order, $context );

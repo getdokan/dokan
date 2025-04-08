@@ -48,12 +48,15 @@ class Calculator {
 
         foreach ( $this->strategies as $strategy ) {
             $formula = $strategy->create_formula();
-            if ( $formula->is_applicable() ) {
-                $this->strategy = $strategy;
-                $this->formula  = $formula;
 
-                break;
+            if ( ! $formula->is_applicable() ) {
+                continue;
             }
+
+            $this->strategy = $strategy;
+            $this->formula  = $formula;
+
+            break;
         }
     }
 

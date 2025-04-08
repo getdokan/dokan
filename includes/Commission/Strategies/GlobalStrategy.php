@@ -3,7 +3,7 @@
 namespace WeDevs\Dokan\Commission\Strategies;
 
 use WeDevs\Dokan\Commission\Model\Setting;
-use WeDevs\Dokan\Commission\Settings\Builder;
+use WeDevs\Dokan\Commission\Settings\GlobalSetting;
 
 class GlobalStrategy extends AbstractStrategy {
 
@@ -64,7 +64,7 @@ class GlobalStrategy extends AbstractStrategy {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function get_settings(): Setting {
-        $setting = Builder::build( Builder::TYPE_GLOBAL, $this->get_category_id() );
+        $setting = new GlobalSetting( $this->get_category_id() );
 
         return $setting->get();
     }

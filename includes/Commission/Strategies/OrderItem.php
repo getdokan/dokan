@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\Commission\Strategies;
 
 use WeDevs\Dokan\Commission\Model\Setting;
-use WeDevs\Dokan\Commission\Settings\Builder;
 
 /**
  * If an order has been purchased previously, calculate the earning with the previously stated commission rate.
@@ -81,10 +80,9 @@ class OrderItem extends AbstractStrategy {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function get_settings(): Setting {
-        $settings = Builder::build(
-            Builder::TYPE_ORDER_ITEM,
+        $settings = new \WeDevs\Dokan\Commission\Settings\OrderItem(
             [
-                'id' => $this->order_item_id,
+                'id'    => $this->order_item_id,
                 'price' => $this->total_amount,
             ]
         );
@@ -113,11 +111,12 @@ class OrderItem extends AbstractStrategy {
      * @param int|float $flat
      * @param array     $meta_data
      *
+     * TODO: Need to remove this method.
+     *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save_line_item_commission_to_meta( $type, $percentage, $flat, $meta_data ) {
-        $settings = Builder::build(
-            Builder::TYPE_ORDER_ITEM,
+        $settings = new \WeDevs\Dokan\Commission\Settings\OrderItem(
             [
                 'id'    => $this->order_item_id,
                 'price' => $this->total_amount,

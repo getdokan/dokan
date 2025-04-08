@@ -8,8 +8,8 @@ use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\Commission\Formula\Flat;
 use WeDevs\Dokan\Commission\Formula\Percentage;
 use WeDevs\Dokan\Commission\Calculator;
-use WeDevs\Dokan\Commission\Settings\Builder;
 use WeDevs\Dokan\Commission\Settings\DefaultSetting;
+use WeDevs\Dokan\Commission\Settings\GlobalSetting;
 use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
 use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
 use WeDevs\Dokan\Commission\Strategies\OrderItem;
@@ -1034,9 +1034,9 @@ class CommissionTest extends WP_UnitTestCase {
         $product = dokan()->product->get( $product->get_id() );
 
         // Saving settings...
-        $product_setting = Builder::build( Builder::TYPE_PRODUCT, $product->get_id() );
-        $vendor_setting  = Builder::build( Builder::TYPE_VENDOR, $vendor->get_id() );
-        $global_setting  = Builder::build( Builder::TYPE_GLOBAL, $chosen_cat );
+        $product_setting = new \WeDevs\Dokan\Commission\Settings\Product( $product->get_id() );
+        $vendor_setting  = new \WeDevs\Dokan\Commission\Settings\Vendor( $vendor->get_id() );
+        $global_setting  = new GlobalSetting( $chosen_cat );
 
         $product_setting->save(
             [

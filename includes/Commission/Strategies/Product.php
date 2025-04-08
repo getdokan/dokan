@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\Commission\Strategies;
 
 use WeDevs\Dokan\Commission\Model\Setting;
-use WeDevs\Dokan\Commission\Settings\Builder;
 
 class Product extends AbstractStrategy {
 
@@ -53,7 +52,7 @@ class Product extends AbstractStrategy {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function get_settings(): Setting {
-        $settings = Builder::build( Builder::TYPE_PRODUCT, $this->product_id );
+        $settings = new \WeDevs\Dokan\Commission\Settings\Product( $this->product_id );
 
         return $settings->get();
     }

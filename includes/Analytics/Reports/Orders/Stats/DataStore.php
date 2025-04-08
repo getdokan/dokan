@@ -10,6 +10,7 @@ use Automattic\WooCommerce\Admin\API\Reports\Customers\DataStore as CustomersDat
 use Automattic\WooCommerce\Utilities\OrderUtil;
 use Exception;
 use WeDevs\Dokan\Analytics\Reports\OrderType;
+use WeDevs\Dokan\Commission\OrderCommission;
 
 /**
  * Dokan Orders stats data synchronizer.
@@ -134,31 +135,38 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				break;
 		}
 
+        $order_commission = new OrderCommission( $order );
+        $order_commission->retrieve();
+
 		/**
 		 * Filters order stats data.
 		 *
 		 * @param array $data Data written to order stats lookup table.
-		 * @param WC_Order $order  Order object.
+		 * @param \WC_Order $order  Order object.
 		 *
 		 * @since 3.13.0
 		 */
 		$data = apply_filters(
 			'dokan_analytics_update_order_stats_data',
 			array(
-				'order_id'              => $order->get_id(),
-				'vendor_id'             => (int) self::get_vendor_id_from_order( $order ),
-				'order_type'            => (int) ( ( new OrderType() )->get_type( $order ) ),
-				// Seller Data
-				'vendor_earning'        => $vendor_earning,
-				'vendor_gateway_fee'    => $gateway_fee_provider === 'seller' ? $gateway_fee : '0',
-				'vendor_shipping_fee'   => $shipping_fee_recipient === 'seller' ? $shipping_fee : '0',
-				'vendor_discount'       => $order->get_meta( '_vendor_discount' ),
-				// Admin Data
-				'admin_commission'      => $admin_earning,
-				'admin_gateway_fee'     => $gateway_fee_provider !== 'seller' ? $gateway_fee : '0',
-				'admin_shipping_fee'    => $shipping_fee_recipient !== 'seller' ? $shipping_fee : '0',
-				'admin_discount'        => $order->get_meta( '_admin_discount' ),
-				'admin_subsidy'         => $order->get_meta( '_admin_subsidy' ),
+                'order_id'            => $order->get_id(),
+                'vendor_id'           => (int) self::get_vendor_id_from_order( $order ),
+                'order_type'          => (int) ( ( new OrderType() )->get_type( $order ) ),
+                // Seller Data
+                'vendor_earning'      => $order_commission->get_vendor_earning(),
+                'vendor_gateway_fee'  => $order_commission->get_vendor_gateway_fee(),
+                'vendor_shipping_fee' => $order_commission->get_vendor_shipping_fee(),
+                'vendor_discount'     => $order_commission->get_vendor_discount(),
+                // 'vendor_tax_fee'          => $order_commission->get_vendor_tax_fee(),
+                // 'vendor_shipping_tax_fee' => $order_commission->get_vendor_shipping_tax_fee(),
+                // Admin Data
+                'admin_commission'    => $order_commission->get_admin_commission(),
+                'admin_gateway_fee'   => $order_commission->get_admin_gateway_fee(),
+                'admin_shipping_fee'  => $order_commission->get_admin_shipping_fee(),
+                'admin_discount'      => $order_commission->get_admin_discount(),
+                'admin_subsidy'       => $order_commission->get_admin_subsidy(),
+                // 'admin_tax_fee'           => $order_commission->get_admin_tax_fee(),
+                // 'admin_shipping_tax_fee'  => $order_commission->get_admin_shipping_tax_fee(),
 			),
             $order,
         );

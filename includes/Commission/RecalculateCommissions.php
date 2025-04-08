@@ -14,6 +14,8 @@ class RecalculateCommissions {
     const RECALCULATE_ORDER_ID_OPTION_PREFIX = 'dokan_commission_recalculate_order_id:';
 
     public function __construct() {
+        // Currently we will skip this.
+        return;
 //        add_action( 'wp_ajax_woocommerce_remove_order_coupon', [ $this, 'overwrite_woocommerce_remove_order_coupon_method' ], 9 );
 //        add_action( 'wp_ajax_woocommerce_add_coupon_discount', [ $this, 'overwrite_woocommerce_add_coupon_discount_method' ], 9 );
 //        add_action( 'wp_ajax_woocommerce_remove_order_tax', [ $this, 'overwrite_woocommerce_remove_order_tax_method' ], 9 );

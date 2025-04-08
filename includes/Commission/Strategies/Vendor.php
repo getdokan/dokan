@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\Commission\Strategies;
 
 use WeDevs\Dokan\Commission\Model\Setting;
-use WeDevs\Dokan\Commission\Settings\Builder;
 
 class Vendor extends AbstractStrategy {
 
@@ -77,7 +76,7 @@ class Vendor extends AbstractStrategy {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function get_settings(): Setting {
-        $settings = Builder::build( Builder::TYPE_VENDOR, $this->vendor_id );
+        $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->vendor_id );
         $settings = $settings->get();
         $settings->set_category_id( $this->get_category_id() );
 
