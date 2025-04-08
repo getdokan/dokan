@@ -24,12 +24,19 @@ class Coupon {
     }
 
     /**
-     * Remove coupon info from an order item when a coupon is removed.
+     * Removes coupon information from an order item when a coupon is deleted.
      *
-     * @param int $item_id
+     * This function:
+     * - Retrieves the coupon code from the order item.
+     * - Removes the coupon discount from all applicable items in the order.
+     * - If the order has sub-orders, it ensures the coupon is also removed from all child orders.
+     * - If it's a sub-order, it removes the coupon from relevant items in the parent order.
+     *
+     * @param int $item_id The ID of the order item representing the coupon.
      *
      * @return void
-     * @throws Exception
+     *
+     * @throws Exception If there is an issue initializing the WC_Order_Item_Coupon object.
      */
     public function remove_coupon_info_from_order_item( $item_id ) {
         $data = new WC_Order_Item_Coupon( $item_id );
