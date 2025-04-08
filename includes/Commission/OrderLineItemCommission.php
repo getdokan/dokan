@@ -3,10 +3,10 @@
 namespace WeDevs\Dokan\Commission;
 
 use WC_Order;
+use WC_Order_Factory;
 use WC_Order_Item;
 use WeDevs\Dokan\Commission\Model\Commission;
 use WeDevs\Dokan\Commission\Settings\DefaultSetting;
-use WeDevs\Dokan\Commission\Strategies\AbstractStrategy;
 use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
 use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
 use WeDevs\Dokan\Commission\Strategies\OrderItem;
@@ -21,7 +21,7 @@ use WeDevs\Dokan\Vendor\DokanOrderLineItemCouponInfo;
  *
  * @since DOKAN_SINCE
  */
-class OrderLineItemCommission {
+class OrderLineItemCommission extends AbstractCommissionCalculator {
 
     protected WC_Order_Item $item;
     const VENDOR_ID_META_KEY = '_dokan_vendor_id';
@@ -69,7 +69,7 @@ class OrderLineItemCommission {
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission|null
      */
-    public function calculate() {
+    public function calculate(): Commission {
         $refund = $this->order->get_total_refunded_for_item( $this->item->get_id() );
 
         $item_price = apply_filters( 'dokan_earning_by_order_item_price', $this->item->get_subtotal(), $this->item, $this->order );
@@ -100,10 +100,11 @@ class OrderLineItemCommission {
             new DefaultStrategy(),
         ];
 
-//        $strategy = array_filter( array_map( fn( AbstractStrategy $strategy ) => $strategy->create_formula()->is_applicable() ? $strategy : null, $strategies ) );
+        $this->determine_strategy_to_apply( $strategies );
+        $this->set_price( $item_price );
+        $this->set_quantity( $total_quantity );
 
-        $context = new Calculator( $strategies );
-        $commission_data = $context->calculate_commission( $item_price, $total_quantity, $this->dokan_coupon_infos );
+        $commission_data = $this->calculate_commission();
 
         $parameters = $commission_data->get_parameters() ?? [];
         $percentage = $parameters['percentage'] ?? 0;
@@ -116,6 +117,21 @@ class OrderLineItemCommission {
             $commission_data->get_data()
         );
 
+        // Saving commission data to line items for further reuse.
+        ( new \WeDevs\Dokan\Commission\Settings\OrderItem(
+            [
+                'id'    => $order_item_id,
+                'price' => $item_price,
+            ]
+        ) )->save(
+            [
+                'type'       => $commission_data->get_type() ?? DefaultSetting::TYPE,
+                'percentage' => $percentage,
+                'flat'       => $flat,
+                'meta_data'  => $commission_data->get_data()  ,
+            ]
+        );
+
         return $commission_data;
     }
 
@@ -126,7 +142,7 @@ class OrderLineItemCommission {
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
-    public function retrieve() {
+    public function retrieve(): Commission {
         $commission_data = new Commission();
         $commission_meta = $this->item->get_meta( 'dokan_commission_meta', true );
 
@@ -140,6 +156,56 @@ class OrderLineItemCommission {
 
         // Todo: need to set source.
 		//        $commission_data->set_source( $commission_meta->get_source() ?? 0 );
+
+        return $commission_data;
+    }
+
+    public function additional_adjustments( Commission $commission_data ): Commission {
+        $admin_net_commission = 0;
+        $vendor_net_earning = 0;
+
+        /**
+         * @var DokanOrderLineItemCouponInfo[] $dokan_coupon_info
+         */
+        $dokan_coupon_info = $this->item->get_meta( '_dokan_coupon_info', true );
+
+        if ( ! $dokan_coupon_info || ! is_array( $dokan_coupon_info ) ) {
+            return $commission_data;
+        }
+
+        $line_item_coupon_array = [];
+        if ( ! empty( $dokan_coupon_info ) && is_array( $dokan_coupon_info ) ) {
+            foreach ( $dokan_coupon_info as $coupon_code => $coupon_meta ) {
+                $coupon_line_item = new DokanOrderLineItemCouponInfo();
+                $coupon_line_item->set_coupon_info( $coupon_meta );
+
+                $line_item_coupon_array[] = $coupon_line_item;
+            }
+        }
+
+        foreach ( $line_item_coupon_array as $dokan_coupon_info ) {
+            $commission_params     = $commission_data->get_parameters();
+            $flat                  = $commission_params['flat'] ?? 0;
+            $percent               = $commission_params['percentage'] ?? 0;
+            $admin_commission_rate = $flat + ( $percent / 100 );
+
+            $admin_net_commission += ( ( $commission_data->get_total_amount() - $dokan_coupon_info->get_vendor_discount() ) * $admin_commission_rate ) - $dokan_coupon_info->get_admin_discount();
+            $vendor_net_earning += floatval( $this->item->get_total() ) - $admin_net_commission;
+
+            $commission_data->set_vendor_discount( $commission_data->get_vendor_discount() + $dokan_coupon_info->get_vendor_discount() );
+            $commission_data->set_admin_discount( $commission_data->get_admin_discount() + $dokan_coupon_info->get_admin_discount() );
+        }
+
+        $commission_data->set_net_admin_commission( $admin_net_commission );
+        $commission_data->set_admin_commission( $admin_net_commission );
+        $commission_data->set_net_vendor_earning( $vendor_net_earning );
+        $commission_data->set_per_item_admin_commission( $admin_net_commission / $commission_data->get_total_quantity() );
+
+        if ( $commission_data->get_net_admin_commission() < 0 ) {
+            $commission_data->set_admin_subsidy( abs( $commission_data->get_net_admin_commission() ) );
+            $commission_data->set_admin_commission( 0 );
+            $commission_data->set_per_item_admin_commission( 0 );
+        }
 
         return $commission_data;
     }

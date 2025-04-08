@@ -544,6 +544,8 @@ class Commission {
         $category_id      = ! empty( $args['category_id'] ) ? $args['category_id'] : 0;
         $coupon_discounts = ! empty( $args['coupon_discounts'] ) ? $args['coupon_discounts'] : [];
 
+
+
         // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
 		if ( ! empty( $product_id ) && empty( $category_id ) ) {
             $product_categories = Helper::get_saved_products_category( $product_id );

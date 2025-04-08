@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Commission;
 
 use WC_Order;
+use WeDevs\Dokan\Commission\Model\Commission;
 
 /**
  * Class OrderCommission - Calculate order commission
@@ -11,7 +12,7 @@ use WC_Order;
  *
  * @package WeDevs\Dokan\Commission
  */
-class OrderCommission {
+class OrderCommission extends AbstractCommissionCalculator {
 
     private WC_Order $order;
 
@@ -41,11 +42,9 @@ class OrderCommission {
      *
      * @since DOKAN_SINCE
      *
-     * @param bool $auto_save_commission_into_line_item
-     *
      * @return void
      */
-    public function calculate() {
+    public function calculate(): Model\Commission {
         foreach ( $this->order->get_items() as $item_id => $item ) {
             $line_item_commission = new OrderLineItemCommission( $item, $this->order );
             $commission           = $line_item_commission->calculate();
@@ -59,6 +58,8 @@ class OrderCommission {
             $this->vendor_earnign     += $commission->get_vendor_earning();
             $this->vendor_net_earnign += $commission->get_net_vendor_earning();
         }
+
+        return $this->populate_commission_data();
     }
 
     /**
@@ -68,7 +69,7 @@ class OrderCommission {
      *
      * @return $this
      */
-    public function retrieve() {
+    public function retrieve(): Model\Commission {
 
         foreach ( $this->order->get_items() as $item_id => $item ) {
             $line_item_commission = new OrderLineItemCommission( $item, $this->order );
@@ -84,7 +85,27 @@ class OrderCommission {
             $this->vendor_net_earnign += $commission->get_net_vendor_earning();
         }
 
-        return $this;
+        return $this->populate_commission_data();
+    }
+
+    /**
+     * Populate commission data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Commission
+     */
+    protected function populate_commission_data() {
+        $commission = new Commission();
+        $commission->set_admin_commission( $this->admin_commission )
+            ->set_net_admin_commission( $this->admin_net_commission )
+            ->set_admin_discount( $this->admin_discount )
+            ->set_admin_subsidy( $this->admin_subsidy )
+            ->set_vendor_discount( $this->vendor_discount )
+            ->set_vendor_earning( $this->vendor_earnign )
+            ->set_net_vendor_earning( $this->vendor_net_earnign );
+
+        return $commission;
     }
 
     /**
@@ -373,5 +394,9 @@ class OrderCommission {
             'vendor_earning'       => $this->get_vendor_earning(),
             'vendor_net_earning'   => $this->get_vendor_net_earning(),
         ];
+    }
+
+    public function additional_adjustments( Commission $commission_data ): Commission {
+        return $commission_data;
     }
 }

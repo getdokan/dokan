@@ -7,7 +7,7 @@ use WeDevs\Dokan\Commission\Formula\Combine;
 use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\Commission\Formula\Flat;
 use WeDevs\Dokan\Commission\Formula\Percentage;
-use WeDevs\Dokan\Commission\Calculator;
+use WeDevs\Dokan\Commission\ProductCommission;
 use WeDevs\Dokan\Commission\Settings\DefaultSetting;
 use WeDevs\Dokan\Commission\Settings\GlobalSetting;
 use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
@@ -80,16 +80,8 @@ class CommissionTest extends WP_UnitTestCase {
         $category_id = 15;     // Example cat
         $productPrice = 100.00; // Example product price
 
-        $strategies = [
-            new OrderItem( $orderItemId ),
-            new Product( $productId, $productPrice ),
-            new Vendor( $vendorId, $category_id ),
-            new GlobalStrategy( $category_id ),
-            new DefaultStrategy(),
-        ];
-
-        $context      = new Calculator( $strategies );
-        $commission   = $context->calculate_commission( $productPrice, 1 );
+        $product_commission = new ProductCommission( $productId, $productPrice, $category_id, $vendorId );
+        $commission = $product_commission->calculate();
 
         $this->assertTrue( is_a( $commission, 'WeDevs\Dokan\Commission\Model\Commission' ) );
         $this->assertIsArray( $commission->get_data() );

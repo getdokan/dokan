@@ -2,29 +2,22 @@
 
 namespace WeDevs\Dokan\Commission;
 
-use WC_Order;
-use WC_Order_Item;
 use WeDevs\Dokan\Commission\Model\Commission;
-use WeDevs\Dokan\Commission\Settings\DefaultSetting;
 use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
 use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
-use WeDevs\Dokan\Commission\Strategies\OrderItem;
 use WeDevs\Dokan\Commission\Strategies\Product;
 use WeDevs\Dokan\Commission\Strategies\Vendor;
 use WeDevs\Dokan\Exceptions\DokanException;
 use WeDevs\Dokan\ProductCategory\Helper;
-use WeDevs\Dokan\Vendor\Coupon;
-use WeDevs\Dokan\Vendor\DokanOrderLineItemCouponInfo;
 
 /**
  * Class OrderLineItemCommission - Calculate order line item commission
  *
  * @since DOKAN_SINCE
  */
-class ProductCommission {
+class ProductCommission extends AbstractCommissionCalculator {
 
     protected ?int $product_id;
-    protected ?float $total_amount;
     protected ?int $category_id;
     /**
      * @var int|null
@@ -41,7 +34,7 @@ class ProductCommission {
      * @param int|null $category_id
      */
     public function __construct( int $product_id = 0, ?float $total_amount = null, ?int $category_id = null, ?int $vendor_id = null ) {
-
+        // Todo: fix the through exception.
         if ( ( ! $product_id ) && ( ! $total_amount ) && ( ! $category_id ) ) {
 			throw new DokanException( esc_html__( 'Product ID or Total Amount with category ID is required.', 'dokan-lite' ) );
         }
@@ -88,7 +81,8 @@ class ProductCommission {
             $vendor_id = dokan_get_vendor_by_product( $product_id, true );
         }
 
-        $this->total_amount = $total_amount;
+        $this->price = $total_amount;
+        $this->quantity = 1;
         $this->category_id = $category_id;
         $this->vendor_id = $vendor_id;
     }
@@ -102,7 +96,7 @@ class ProductCommission {
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission|null
      */
-    public function calculate() {
+    public function calculate(): Commission {
         $strategies = [
             new Product( $this->product_id ),
             new Vendor( $this->vendor_id, $this->category_id ),
@@ -110,10 +104,9 @@ class ProductCommission {
             new DefaultStrategy(),
         ];
 
-        $context = new Calculator( $strategies );
-        $commission_data = $context->calculate_commission( $this->total_amount, 1 );
+        $this->determine_strategy_to_apply( $strategies );
 
-        return $commission_data;
+        return $this->calculate_commission();
     }
 
     /**
@@ -123,7 +116,11 @@ class ProductCommission {
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
-    public function retrieve() {
+    public function retrieve(): Commission {
         return $this->calculate();
+    }
+
+    public function additional_adjustments( Commission $commission_data ): Commission {
+        return $commission_data;
     }
 }
