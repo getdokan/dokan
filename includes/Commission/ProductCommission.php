@@ -34,18 +34,11 @@ class ProductCommission extends AbstractCommissionCalculator {
      * @param int|null $category_id
      */
     public function __construct( int $product_id = 0, ?float $total_amount = null, ?int $category_id = null, ?int $vendor_id = null ) {
-        // Todo: fix the through exception.
-        if ( ( ! $product_id ) && ( ! $total_amount ) && ( ! $category_id ) ) {
+        if ( ! $product_id ) {
 			throw new DokanException( esc_html__( 'Product ID or Total Amount with category ID is required.', 'dokan-lite' ) );
         }
 
-        if ( $product_id ) {
-            $this->product_id = $product_id;
-        }
-
-        if ( empty( $total_amount ) && empty( $category_id ) ) {
-            throw new DokanException( esc_html__( 'Total Amount or Category ID is required.', 'dokan-lite' ) );
-        }
+        $this->product_id = $product_id;
 
         if ( $total_amount ) {
             $total_amount = floatval( $total_amount );
@@ -62,12 +55,8 @@ class ProductCommission extends AbstractCommissionCalculator {
         }
 
         if ( empty( $total_amount ) && ! empty( $product_id ) ) {
-            $product = dokan()->product->get( $product_id );
-            if ( $product && $product->get_price() && ! empty( $product->get_price() ) ) {
-                $total_amount = floatval( $product->get_price() );
-            } else {
-                throw new DokanException( esc_html__( 'Product price is required.', 'dokan-lite' ) );
-            }
+            $product = wc_get_product( $product_id );
+            $total_amount = floatval( $product->get_price() );
         }
 
         if ( empty( $category_id ) && ! empty( $product_id ) ) {
@@ -120,6 +109,15 @@ class ProductCommission extends AbstractCommissionCalculator {
         return $this->calculate();
     }
 
+    /**
+     * Additional adjustments to the commission data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WeDevs\Dokan\Commission\Model\Commission $commission_data
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Commission
+     */
     public function additional_adjustments( Commission $commission_data ): Commission {
         return $commission_data;
     }
