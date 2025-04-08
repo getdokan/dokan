@@ -18,7 +18,7 @@ class CommissionStep extends AbstractStep {
      *
      * @var int The step priority.
      */
-    protected int $priority = 10;
+	protected int $priority = 20;
 
     /**
      * The settings options.

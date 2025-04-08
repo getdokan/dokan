@@ -116,6 +116,6 @@ class CombineInput extends Field {
      * @return string
      */
     public function escape_element( $data ): string {
-        return $data;
+	    return esc_html( $data );
     }
 }

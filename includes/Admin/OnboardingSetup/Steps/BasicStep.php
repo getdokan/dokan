@@ -18,7 +18,7 @@ class BasicStep extends AbstractStep {
      *
      * @var int The step priority.
      */
-    protected int $priority = 1;
+	protected int $priority = 10;
 
     /**
      * The step skippable or not.
