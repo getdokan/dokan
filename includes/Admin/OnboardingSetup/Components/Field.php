@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Admin\OnboardingSetup\Components;
 
 use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Checkbox;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Commission\CategoryBasedCommission;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Commission\CombineInput;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Currency;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\MultiCheck;
@@ -15,7 +16,6 @@ use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Select;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Switcher;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Tel;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Text;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Commission\CategoryBasedCommission;
 
 
 /**
@@ -25,45 +25,41 @@ class Field extends SettingsElement {
 
 	/**
 	 * Is children Supported.
-	 *
 	 * @var bool $support_children Children support.
 	 */
 	protected $support_children = false;
 
 	/**
 	 * The Input Element Type.
-	 *
 	 * @var string $input_type The Input Element Type.
 	 */
 	protected $input_type = 'text';
 
 	/**
 	 * The Settings Element Type.
-	 *
 	 * @var string $type Type Field.
 	 */
 	protected $type = 'field';
 
 	/**
 	 * Map for the Input type.
-	 *
 	 * @var string[] $field_map Map for the Input type.
 	 */
-    private $field_map = array(
-        'text' => Text::class,
-        'number' => Number::class,
-        'checkbox' => Checkbox::class,
-        'select' => Select::class,
-        'radio' => Radio::class,
-        'tel' => Tel::class,
-        'password' 					=> Password::class,
-        'radio_box'                 => RadioBox::class,
-        'switch'                    => Switcher::class,
-        'multicheck'                => MultiCheck::class,
-        'currency'                  => Currency::class,
-        'combine_input'             => CombineInput::class,
-        'category_based_commission' => CategoryBasedCommission::class,
-    );
+	private $field_map = array(
+		'text'                      => Text::class,
+		'number'                    => Number::class,
+		'checkbox'                  => Checkbox::class,
+		'select'                    => Select::class,
+		'radio'                     => Radio::class,
+		'tel'                       => Tel::class,
+		'password'                  => Password::class,
+		'radio_box'                 => RadioBox::class,
+		'switch'                    => Switcher::class,
+		'multicheck'                => MultiCheck::class,
+		'currency'                  => Currency::class,
+		'combine_input'             => CombineInput::class,
+		'category_based_commission' => CategoryBasedCommission::class,
+	);
 
 	/**
 	 * Constructor.
@@ -78,7 +74,6 @@ class Field extends SettingsElement {
 
 	/**
 	 * Get input field.
-	 *
 	 * @return SettingsElement
 	 */
 	public function get_input(): SettingsElement {
@@ -87,7 +82,6 @@ class Field extends SettingsElement {
 
 	/**
 	 * Populate The Page Object.
-	 *
 	 * @return array
 	 */
 	public function populate(): array {
@@ -122,6 +116,7 @@ class Field extends SettingsElement {
 
 		try {
 			$reflection_class_name = new \ReflectionClass( $class_name );
+
 			return $reflection_class_name->newInstance( $id );
 		} catch ( \ReflectionException $e ) {
 			return new Text( $id );
