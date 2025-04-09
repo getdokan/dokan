@@ -35,18 +35,22 @@ const baseConfig = {
                     },
                     info: {
                         DEFAULT: 'var(--dokan-info-background-color, #E9F9FF)',
+                        hover: 'var(--dokan-info-text-color, #0B76B7)',
                     },
                     success: {
                         DEFAULT:
                             'var(--dokan-success-background-color, #DAF8E6)',
+                        hover: 'var(--dokan-success-text-color, #004434)',
                     },
                     warning: {
                         DEFAULT:
                             'var(--dokan-warning-background-color, #FFFBEB)',
+                        hover: 'var(--dokan-warning-text-color, #004434)',
                     },
                     danger: {
                         DEFAULT:
                             'var(--dokan-danger-background-color, #FEF3F3)',
+                        hover: 'var(--dokan-danger-text-color, #004434)',
                     },
                 },
             },
@@ -72,22 +76,26 @@ const baseConfig = {
                     },
                     link: {
                         DEFAULT: 'var(--dokan-link-color, var(--dokan-button-background-color, #7047EB))',
-                        hover: 'var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #6b7280))',
+                        hover: 'var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #322067))',
                     },
                     info: {
                         DEFAULT: 'var(--dokan-info-text-color, #0B76B7)',
+                        hover: 'var(--dokan-info-background-color, #E9F9FF)',
                         light: 'var(--dokan-info-light-text-color, #637381)',
                     },
                     success: {
                         DEFAULT: 'var(--dokan-success-text-color, #004434)',
+                        hover: 'var(--dokan-success-background-color, #DAF8E6)',
                         light: 'var(--dokan-success-light-text-color, #637381)',
                     },
                     warning: {
                         DEFAULT: 'var(--dokan-warning-text-color, #9D5425)',
+                        hover: 'var(--dokan-warning-background-color, #FFFBEB)',
                         light: 'var(--dokan-warning-light-text-color, #D0915C)',
                     },
                     danger: {
                         DEFAULT: 'var(--dokan-danger-text-color, #BC1C21)',
+                        hover: 'var(--dokan-danger-background-color, #FEF3F3)',
                         light: 'var(--dokan-danger-light-text-color, #F56060)',
                     },
                 },
