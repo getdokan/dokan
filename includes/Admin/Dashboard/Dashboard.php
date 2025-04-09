@@ -2,8 +2,8 @@
 
 namespace WeDevs\Dokan\Admin\Dashboard;
 
-use WeDevs\Dokan\Contracts\Hookable;
 use WeDevs\Dokan\Admin\Notices\Helper;
+use WeDevs\Dokan\Contracts\Hookable;
 
 /**
  * Admin dashboard class.
@@ -34,7 +34,6 @@ class Dashboard implements Hookable {
         add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
         add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_banner_scripts' ] );
     }
 
     /**
@@ -245,7 +244,10 @@ class Dashboard implements Hookable {
      */
     public function scripts(): array {
         return array_reduce(
-            $this->get_pages(), fn( $carry, $page ) => array_merge( $carry, $page->scripts() ), [ $this->script_key ]
+            $this->get_pages(), fn( $carry, $page ) => array_merge( $carry, $page->scripts() ), [
+                $this->script_key,
+                $this->setup_guide_key,
+            ]
         );
     }
 
@@ -258,7 +260,10 @@ class Dashboard implements Hookable {
      */
     public function styles(): array {
         return array_reduce(
-            $this->get_pages(), fn( $carry, $page ) => array_merge( $carry, $page->styles() ), [ $this->script_key ]
+            $this->get_pages(), fn( $carry, $page ) => array_merge( $carry, $page->styles() ), [
+                $this->script_key,
+                $this->setup_guide_key,
+            ]
         );
     }
 
@@ -389,21 +394,5 @@ class Dashboard implements Hookable {
                 $this->settings()
             ), 'before'
         );
-    }
-
-    /**
-     * Enqueue the banner scripts.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $screen_id The screen ID.
-     *
-     * @return void
-     */
-    public function enqueue_banner_scripts( $screen_id ) {
-        if ( $screen_id === 'toplevel_page_dokan' ) {
-            wp_enqueue_style( 'dokan-setup-guide-banner' );
-            wp_enqueue_script( 'dokan-setup-guide-banner' );
-        }
     }
 }

@@ -503,7 +503,7 @@ const StepSettings = ( {
                                 onClick={ retryLoading }
                                 className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2"
                             >
-                                Retry Loading
+                                { __( 'Retry Loading', 'dokan-lite' ) }
                             </Button>
                         </div>
                     ) : (

@@ -1,4 +1,4 @@
-import { useState, RawHTML } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
 import { SimpleSelect } from '@getdokan/dokan-ui';
 
@@ -18,10 +18,6 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
             value: selectedValue,
         } );
     };
-
-    if ( ! element.display ) {
-        return <></>;
-    }
 
     return (
         <div

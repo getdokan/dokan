@@ -47,7 +47,7 @@ class Field extends SettingsElement {
 	 *
 	 * @var string[] $field_map Map for the Input type.
 	 */
-	private $field_map = array(
+    protected $field_map = array(
 		'text'       => Text::class,
 		'number'     => Number::class,
 		'checkbox'   => Checkbox::class,
@@ -115,6 +115,17 @@ class Field extends SettingsElement {
 	 */
 	private function input_map( string $id, string $input_type ): SettingsElement {
 		$class_name = $this->field_map[ $input_type ] ?? $this->field_map['text'];
+
+        /**
+         * Filters for setup guide field mapper.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param int    $id
+         * @param string $input_type
+         * @param string $class_name
+         */
+        $class_name = apply_filters( 'dokan_admin_setup_guide_field_mapper', $class_name, $id, $input_type );
 
 		try {
 			$reflection_class_name = new \ReflectionClass( $class_name );

@@ -1,8 +1,12 @@
 import { SettingsProps } from '../../StepSettings';
-import { useState, RawHTML } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
 
 const Text = ( { element, onValueChange }: SettingsProps ) => {
     const [ value, setValue ] = useState( element.value );
+
+    if ( ! element.display ) {
+        return <></>;
+    }
 
     const handleValueChange = ( event ) => {
         setValue( event.target.value );
@@ -11,9 +15,7 @@ const Text = ( { element, onValueChange }: SettingsProps ) => {
             value: event.target.value,
         } );
     };
-    if ( ! element.display ) {
-        return <></>;
-    }
+
     return (
         <div className="col-span-4">
             <label

@@ -1,4 +1,4 @@
-import { useState, RawHTML } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
 import SelectorCard from './SelectorCard';
 import AdminIcon from '../../components/icons/AdminIcon';
 import VendorIcon from '../../components/icons/VendorIcon';
@@ -8,6 +8,10 @@ const RadioBox = ( { element, onValueChange }: SettingsProps ) => {
     const [ selected, setSelected ] = useState(
         element?.value || element?.default
     );
+
+    if ( ! element.display ) {
+        return <></>;
+    }
 
     // Handle selection change
     const handleChange = ( newValue ) => {
@@ -34,10 +38,6 @@ const RadioBox = ( { element, onValueChange }: SettingsProps ) => {
 
         return null;
     };
-
-    if ( ! element.display ) {
-        return <></>;
-    }
 
     return (
         <div id={ element.hook_key + '_div' } className="w-full ">
