@@ -109,6 +109,7 @@ class Assets implements Hookable {
 			'wp-components',
 			'wc-experimental',
             $component_handle,
+            'dokan-react-frontend',
 		);
 
 		$frontend_style = DOKAN_PLUGIN_ASSEST . '/js/vendor-dashboard/reports/index.css';
