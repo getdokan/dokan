@@ -45,7 +45,7 @@
         ?>
         <div class="dokan-form-group">
             <div class="dokan-w4 ajax_prev save dokan-text-left">
-                <input type="submit" name="dokan_update_payment_settings" class="dokan-btn dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Update Settings', 'dokan-lite' ); ?>">
+                <input type="submit" name="dokan_update_payment_settings" class="dokan-btn dokan-btn-theme" value="<?php esc_attr_e( 'Update Settings', 'dokan-lite' ); ?>">
             </div>
         </div>
     <?php endif; ?>
