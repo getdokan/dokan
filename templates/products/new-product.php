@@ -307,7 +307,7 @@ do_action( 'dokan_new_product_wrap_before' );
                                 <?php
                                 wp_nonce_field( 'dokan_add_new_product', 'dokan_add_new_product_nonce' );
 
-                                $show_add_new_button = ! function_exists( 'dokan_pro' ) || ! dokan_pro()->module->is_active( 'product_subscription' ) || \DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) !== 1;
+                                $show_add_new_button = ! function_exists( 'dokan_pro' ) || ! dokan_pro()->module->is_active( 'product_subscription' ) || \WeDevs\DokanPro\Modules\Subscription\Helper::get_vendor_remaining_products( dokan_get_current_user_id() ) !== 1;
 
                                 if ( $show_add_new_button ) :
                                     ?>
