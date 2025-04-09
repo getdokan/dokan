@@ -1,10 +1,12 @@
 import { test } from '@playwright/test';
 
+const { BASE_URL } = process.env;
+
 test.describe('Product AI', () => {
     test.use({ storageState: 'playwright/.auth/vendorStorageState.json' });
 
     test('add product title, description', async ({ page }) => {
-      await page.goto('https://dokan.test/dashboard/products/');
+      await page.goto(`${BASE_URL}/dashboard/products/`);
       await page.getByRole('link', { name: 'Add new product' }).click();
       await page.locator('#ai-prompt-app').click();
       await page.getByRole('textbox', { name: 'Enter prompt' }).click();
