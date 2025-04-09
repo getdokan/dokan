@@ -97,34 +97,34 @@
 
     /* Status Button Styles */
     .dokan-btn-info {
-        @apply relative bg-dokan-info text-dokan-info border-dokan-info ring-dokan-info transition-colors duration-200 #{!important};
+        @apply relative bg-dokan-btn-info text-dokan-btn-info border-dokan-btn-info ring-dokan-btn-info transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply bg-dokan-info-hover text-dokan-info-hover border-dokan-info-hover ring-dokan-info-hover #{!important};
+            @apply bg-dokan-btn-info-hover text-dokan-btn-info-hover border-dokan-btn-info-hover ring-dokan-btn-info-hover #{!important};
         }
     }
 
     .dokan-btn-success {
-        @apply relative bg-dokan-success text-dokan-success border-dokan-success ring-dokan-success transition-colors duration-200 #{!important};
+        @apply relative bg-dokan-btn-success text-dokan-btn-success border-dokan-btn-success ring-dokan-btn-success transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply bg-dokan-success-hover text-dokan-success-hover border-dokan-success-hover ring-dokan-success-hover #{!important};
+            @apply bg-dokan-btn-success-hover text-dokan-btn-success-hover border-dokan-btn-success-hover ring-dokan-btn-success-hover #{!important};
         }
     }
 
     .dokan-btn-warning {
-        @apply relative bg-dokan-warning text-dokan-warning border-dokan-warning ring-dokan-warning transition-colors duration-200 #{!important};
+        @apply relative bg-dokan-btn-warning text-dokan-btn-warning border-dokan-btn-warning ring-dokan-btn-warning transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply bg-dokan-warning-hover text-dokan-warning-hover border-dokan-warning-hover ring-dokan-warning-hover #{!important};
+            @apply bg-dokan-btn-warning-hover text-dokan-btn-warning-hover border-dokan-btn-warning-hover ring-dokan-btn-warning-hover #{!important};
         }
     }
 
     .dokan-btn-danger {
-        @apply relative bg-dokan-danger text-dokan-danger border-dokan-danger ring-dokan-danger transition-colors duration-200 #{!important};
+        @apply relative bg-dokan-btn-danger text-dokan-btn-danger border-dokan-btn-danger ring-dokan-btn-danger transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply bg-dokan-danger-hover text-dokan-danger-hover border-dokan-danger-hover ring-dokan-danger-hover #{!important};
+            @apply bg-dokan-btn-danger-hover text-dokan-btn-danger-hover border-dokan-btn-danger-hover ring-dokan-btn-danger-hover #{!important};
         }
     }
 

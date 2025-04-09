@@ -32,6 +32,25 @@ const baseConfig = {
                                 'var(--dokan-button-tertiary-background-color, #00000000)',
                             hover: 'var(--dokan-button-tertiary-hover-background-color, #DACEFF)',
                         },
+                        info: {
+                            DEFAULT: 'var(--dokan-button-info-background-color, #0B76B7)',
+                            hover: 'var(--dokan-button-info-text-color, #0B76B7)',
+                        },
+                        success: {
+                            DEFAULT:
+                                'var(--dokan-button-success-background-color, #DAF8E6)',
+                            hover: 'var(--dokan-button-success-text-color, #004434)',
+                        },
+                        warning: {
+                            DEFAULT:
+                                'var(--dokan-button-warning-background-color, #FFFBEB)',
+                            hover: 'var(--dokan-button-warning-text-color, #9D5425)',
+                        },
+                        danger: {
+                            DEFAULT:
+                                'var(--dokan-button-danger-background-color, #FEF3F3)',
+                            hover: 'var(--dokan-button-danger-text-color, #BC1C21)',
+                        },
                     },
                     info: {
                         DEFAULT: 'var(--dokan-info-background-color, #E9F9FF)',
@@ -72,6 +91,22 @@ const baseConfig = {
                             DEFAULT:
                                 'var(--dokan-button-tertiary-text-color, var(--dokan-button-background-color, #7047EB))',
                             hover: 'var(--dokan-button-tertiary-hover-text-color, var(--dokan-button-background-color, #7047EB))',
+                        },
+                        info: {
+                            DEFAULT: 'var(--dokan-button-info-text-color, #fffffff)',
+                            hover: 'var(--dokan-button-info-background-color, #E9F9FF)',
+                        },
+                        success: {
+                            DEFAULT: 'var(--dokan-button-success-text-color, #004434)',
+                            hover: 'var(--dokan-button-success-background-color, #DAF8E6)',
+                        },
+                        warning: {
+                            DEFAULT: 'var(--dokan-button-warning-text-color, #9D5425)',
+                            hover: 'var(--dokan-button-warning-background-color, #FFFBEB)',
+                        },
+                        danger: {
+                            DEFAULT: 'var(--dokan-button-danger-text-color, #BC1C21)',
+                            hover: 'var(--dokan-button-danger-background-color, #FEF3F3)',
                         },
                     },
                     link: {
@@ -115,6 +150,22 @@ const baseConfig = {
                                 'var(--dokan-button-tertiary-border-color, #00000000)',
                             hover: 'var(--dokan-button-tertiary-hover-border-color, var(--dokan-button-border-color, #7047EB))',
                         },
+                        info: {
+                            DEFAULT: 'var(--dokan-button-info-border-color, #E9F9FFFF)',
+                            hover: 'var(--dokan-button-info-text-color, #0B76B7)',
+                        },
+                        success: {
+                            DEFAULT: 'var(--dokan-button-success-border-color, #DAF8E6FF)',
+                            hover: 'var(--dokan-button-success-text-color, #004434)',
+                        },
+                        warning: {
+                            DEFAULT: 'var(--dokan-button-warning-border-color, #FFFBEBFF)',
+                            hover: 'var(--dokan-button-warning-text-color, #9D5425)',
+                        },
+                        danger: {
+                            DEFAULT: 'var(--dokan-button-danger-border-color, #FEF3F3FF)',
+                            hover: 'var(--dokan-button-danger-text-color, #BC1C21)',
+                        },
                     },
                     link: {
                         DEFAULT: 'var(--dokan-link-color, var(--dokan-button-background-color, #7047EB))',
@@ -152,6 +203,22 @@ const baseConfig = {
                             DEFAULT:
                                 'var(--dokan-button-tertiary-border-color, #00000000)',
                             hover: 'var(--dokan-button-tertiary-hover-border-color, var(--dokan-button-border-color, #7047EB))',
+                        },
+                        info: {
+                            DEFAULT: 'var(--dokan-button-info-border-color, #E9F9FFFF)',
+                            hover: 'var(--dokan-button-info-text-color, #0B76B7)',
+                        },
+                        success: {
+                            DEFAULT: 'var(--dokan-button-success-border-color, #DAF8E6FF)',
+                            hover: 'var(--dokan-button-success-text-color, #004434)',
+                        },
+                        warning: {
+                            DEFAULT: 'var(--dokan-button-warning-border-color, #FFFBEBFF)',
+                            hover: 'var(--dokan-button-warning-text-color, #9D5425)',
+                        },
+                        danger: {
+                            DEFAULT: 'var(--dokan-button-danger-border-color, #FEF3F3FF)',
+                            hover: 'var(--dokan-button-danger-text-color, #BC1C21)',
                         },
                     },
                     link: {
@@ -206,7 +273,7 @@ const baseConfig = {
                 dokan: {
                     sidebar: 'var(--dokan-button-background-color, #322067)',
                     btn: 'var(--dokan-button-background-color, #7047EB)',
-                    primary: 'var(--dokan-button-background-color, #F05025)',
+                    primary: 'var(--dokan-button-background-color, #7047EB)',
                     secondary: 'var(--dokan-button-secondary-background-color, var(--dokan-button-text-color, #ffffff))',
                     tertiary: 'var(--dokan-button-tertiary-background-color, #00000000)',
                 },
