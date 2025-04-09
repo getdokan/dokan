@@ -114,9 +114,12 @@ const DokanAI = () => {
     const refineContent = async ( field: string ) => {
         setError( '' );
         let refineField = responseHistory[ field ][ historyIndex[ field ] ];
-        if ( ! refineField.trim() ) {
-            setError( __( 'Please enter a prompt.', 'dokan' ) );
-            return;
+        if ( ! refineField?.trim() ) {
+            const promptContent = {
+                post_excerpt: 'generate short description',
+                post_content: 'generate long description',
+            };
+            refineField = promptContent[ field ];
         }
 
         if ( field !== 'post_title' ) {
@@ -505,7 +508,7 @@ const DokanAI = () => {
                 <Modal.Footer className="border-t">
                     <div className="flex gap-4 justify-end">
                         <DokanButton
-                            variant="secondary"
+                            variant="danger"
                             disabled={ isLoading }
                             onClick={ onClose }
                         >
@@ -553,7 +556,7 @@ const DokanAI = () => {
                         </p>
                         <div className="mt-4 flex gap-4 justify-center">
                             <DokanButton
-                                variant="secondary"
+                                variant="danger"
                                 onClick={ () => setRegenerateModal( false ) }
                             >
                                 { __( 'Cancel', 'dokan-lite' ) }
