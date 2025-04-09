@@ -157,7 +157,7 @@ const UpgradeModal = ( {
                             <div className="flex justify-center mb-5">
                                 <a
                                     href={ upgradeURL }
-                                    className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-bold py-3 px-8 rounded-lg flex items-center"
+                                    className="bg-yellow-400 hover:bg-yellow-500 !text-gray-800 font-bold py-3 px-8 rounded-lg flex items-center"
                                 >
                                     { __( 'Upgrade to Pro', 'dokan-lite' ) }
                                     <span className="ml-2 text-xl">
@@ -228,13 +228,13 @@ const UpgradeModal = ( {
                             <div className="flex justify-center space-x-8">
                                 <a
                                     href="https://dokan.co/docs/wordpress/"
-                                    className="text-white underline"
+                                    className="!text-white underline"
                                 >
                                     { __( 'Already Upgraded?', 'dokan-lite' ) }
                                 </a>
                                 <a
                                     href="https://calendly.com/dokan-support/30min?back=1"
-                                    className="text-white underline"
+                                    className="!text-white underline"
                                 >
                                     { __(
                                         'Confused? Talk to the Sales Team!',
