@@ -83,7 +83,7 @@
         @apply relative bg-dokan-btn-secondary text-dokan-btn-secondary border-dokan-btn-secondary ring-dokan-btn-secondary transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply bg-dokan-btn-secondary-hover text-dokan-btn-secondary-hover border-dokan-btn-secondary-hover #{!important};
+            @apply bg-dokan-btn-secondary-hover text-dokan-btn-secondary-hover border-dokan-btn-secondary-hover ring-dokan-btn-secondary-hover #{!important};
         }
     }
 
@@ -91,7 +91,7 @@
         @apply relative bg-dokan-btn-tertiary text-dokan-btn-tertiary border-dokan-btn-tertiary ring-dokan-btn-tertiary transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply bg-dokan-btn-tertiary-hover text-dokan-btn-tertiary-hover border-dokan-btn-tertiary-hover #{!important};
+            @apply bg-dokan-btn-tertiary-hover text-dokan-btn-tertiary-hover #{!important};
         }
     }
 
