@@ -1,19 +1,10 @@
-import { useState, RawHTML } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
 import { ToggleSwitch } from '@getdokan/dokan-ui';
 import { SettingsProps } from '../../StepSettings';
 
 const Switcher = ( { element, onValueChange }: SettingsProps ) => {
     const enableState = element?.enable_state;
     const disableState = element?.disable_state;
-
-    const handleChange = ( checked ) => {
-        setIsEnabled( checked );
-
-        onValueChange( {
-            ...element,
-            value: checked ? enableState.value : disableState.value,
-        } );
-    };
 
     let initialEnabled = false;
     if ( element.value === enableState?.value ) {
@@ -32,6 +23,15 @@ const Switcher = ( { element, onValueChange }: SettingsProps ) => {
     if ( ! element.display ) {
         return <></>;
     }
+
+    const handleChange = ( checked ) => {
+        setIsEnabled( checked );
+
+        onValueChange( {
+            ...element,
+            value: checked ? enableState.value : disableState.value,
+        } );
+    };
 
     return (
         <div

@@ -18,9 +18,6 @@ const Radio = ( { element, onValueChange }: SettingsProps ) => {
         } );
     };
 
-    if ( ! element.display ) {
-        return <></>;
-    }
     return (
         <div className=" grid grid-cols-12 p-4 gap-y-4 w-full @container/radio ">
             <div className=" col-span-12 @md/radio:col-span-8 ">

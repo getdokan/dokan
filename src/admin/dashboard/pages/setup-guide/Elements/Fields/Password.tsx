@@ -4,6 +4,10 @@ import { SettingsProps } from '../../StepSettings';
 const Password = ( { element, onValueChange }: SettingsProps ) => {
     const [ value, setValue ] = useState( element.value );
 
+    if ( ! element.display ) {
+        return <></>;
+    }
+
     const handleValueChange = ( event ) => {
         setValue( event.target.value );
         onValueChange( {
@@ -11,9 +15,7 @@ const Password = ( { element, onValueChange }: SettingsProps ) => {
             value: event.target.value,
         } );
     };
-    if ( ! element.display ) {
-        return <></>;
-    }
+
     return (
         <div className="col-span-4">
             <label

@@ -1,10 +1,14 @@
 import { MaskedInput } from '@getdokan/dokan-ui';
 import { SettingsProps } from '../../StepSettings';
 import { useDebounceCallback } from 'usehooks-ts';
-import { useState, RawHTML } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
 
 const Currency = ( { element, onValueChange }: SettingsProps ) => {
     const [ localValue, setLocalValue ] = useState( element.value );
+
+    if ( ! element.display ) {
+        return <></>;
+    }
 
     const handleValueChange = ( newValue ) => {
         setLocalValue( newValue );
@@ -21,10 +25,6 @@ const Currency = ( { element, onValueChange }: SettingsProps ) => {
 
     const currencySymbol =
         window?.dokanWithdrawDashboard?.currency?.symbol ?? '';
-
-    if ( ! element.display ) {
-        return <></>;
-    }
 
     return (
         <div
