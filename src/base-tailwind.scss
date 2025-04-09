@@ -5,8 +5,8 @@
 // Reset unwanted table styles but keep structure intact
 @layer base {
     :root {
-        --colors-primary-500: var(--dokan-button-border-color, #F05025);
-        --wp-components-color-accent: var(--dokan-button-background-color, #F05025);
+        --colors-primary-500: var(--dokan-button-border-color, #7047EB);
+        --wp-components-color-accent: var(--dokan-button-background-color, #7047EB);
     }
     // This is a hack to fix headless ui flickering during .dokan-layout class addition with MutationObserver.
     // This is a temporary fix until headless ui provides a better solution.
@@ -33,17 +33,17 @@
         }
 
         a:focus, button:focus, .button.alt:focus, input:focus, textarea:focus, input[type="button"]:focus, input[type="reset"]:focus, input[type="submit"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="url"]:focus, input[type="password"]:focus, input[type="search"]:focus {
-            outline-color: var(--dokan-button-border-color, #F05025);
+            outline-color: var(--dokan-button-border-color, #7047EB);
         }
 
         input[type=checkbox] {
-            @apply before:!content-[''] mt-1;
+            @apply before:!content-[''];
         }
     }
 
     button[data-headlessui-state="checked"] {
         &:hover, &:focus {
-            background-color: var(--dokan-button-background-color, #F05025) !important;
+            background-color: var(--dokan-button-background-color, #7047EB) !important;
         }
     }
     div[data-headlessui-state="open"][role="dialog"] {

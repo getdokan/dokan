@@ -19,6 +19,7 @@ const Header = () => {
                 <div className="flex items-center gap-3 font-medium">
                     <div className="bg-[#FF9B5366] text-[#7B4E2E] text-xs px-3 py-1 rounded-[20px] h-8 flex items-center">
                         { sprintf(
+                            /* translators: %1$s: lite version info */
                             __( 'Lite: %s', 'dokan-lite' ),
                             lite_version
                         ) }
@@ -31,6 +32,7 @@ const Header = () => {
                             </span>
                             <span className="ml-1 capitalize">
                                 { sprintf(
+                                    /* translators: %1$s: license plan %2$s: pro version info */
                                     __( '%1$s: %2$s', 'dokan-lite' ),
                                     dokanAdminDashboardSettings.header_info
                                         .license_plan,
