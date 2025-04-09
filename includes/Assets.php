@@ -356,6 +356,7 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
             ],
             'dokan-react-frontend'          => [
+	            'deps' => [ 'dokan-react-components' ],
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
