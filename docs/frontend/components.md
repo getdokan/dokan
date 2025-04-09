@@ -309,6 +309,11 @@ const LinkExample = () => {
         <span className="mr-2">🔔</span>
         Notifications
       </DokanLink>
+
+        {/* Link as Button */}
+        <DokanLink as="button" href="/button">
+            Button Link
+        </DokanLink>
     </div>
   );
 };
