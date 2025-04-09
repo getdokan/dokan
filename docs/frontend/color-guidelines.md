@@ -397,3 +397,12 @@ Dokan uses a semantic color system where colors represent specific meanings:
   </div>
 </div>
 ```
+
+### Links
+```jsx
+<div className="flex gap-2">
+  <a href="#" className="dokan-link">Learn More</a>
+  <a href="#" className="dokan-link">Contact Support</a>
+  <a href="#" className="dokan-link">Privacy Policy</a>
+  <a href="#" className="dokan-link">Terms of Service</a>
+</div>
