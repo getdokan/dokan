@@ -4,7 +4,6 @@ import StepSettings, { SettingsElement } from './StepSettings';
 import StepComponent from './components/StepComponent';
 import CompletedStep from './components/CompletedStep';
 import apiFetch from '@wordpress/api-fetch';
-import { useMenuHighlight } from '../../../hooks/useMenuHighlight';
 
 export type Step = {
     title: string;
@@ -30,11 +29,6 @@ const SetupGuide = () => {
     };
     const [ currentStep, setCurrentStep ] = useState< Step >( {
         ...defaultStep,
-    } );
-    useMenuHighlight( {
-        menuSlug: 'dokan',
-        paths: [ 'setup', 'setup-guide' ],
-        queryParams: { page: 'dokan-setup' },
     } );
     useEffect( () => {
         const allSteps: Step[] = getSettings( 'setup' ).steps;
