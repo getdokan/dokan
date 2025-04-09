@@ -195,18 +195,6 @@ const baseConfig = {
                     tertiary: 'var(--dokan-button-tertiary-background-color, #00000000)',
                 },
             },
-            backgroundImage: {
-                'upgrade-popup-pattern':
-                    "url('/assets/src/images/upgrade-popup-bg.png')",
-                'upgrade-popup-crown':
-                    "url('/assets/src/images/upgrade-popup-crown.png')",
-                'upgrade-popup-saving':
-                    "url('/assets/src/images/upgrade-popup-saving.png')",
-                'upgrade-popup-money':
-                    "url('/assets/src/images/upgrade-popup-money.png')",
-                'close-icon':
-                    "url('/assets/src/images/close-icon.png')",
-            },
         },
     },
     plugins: [
