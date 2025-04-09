@@ -29,25 +29,19 @@ const Index = () => {
         <>
             <div className="dokan-withdraw-wrapper dokan-react-withdraw space-y-6">
                 <Balance
-                    masterLoading={
-                        useWithdrawRequestHook.isLoading
-                    }
+                    masterLoading={ useWithdrawRequestHook.isLoading }
                     bodyData={ balance }
                     settings={ withdrawSettings }
                     withdrawRequests={ useWithdrawRequestHook }
                 />
                 <PaymentDetails
-                    masterLoading={
-                        useWithdrawRequestHook.isLoading
-                    }
+                    masterLoading={ useWithdrawRequestHook.isLoading }
                     bodyData={ balance }
                     withdrawRequests={ useWithdrawRequestHook }
                     settings={ withdrawSettings }
                 />
                 <PaymentMethods
-                    masterLoading={
-                        useWithdrawRequestHook.isLoading
-                    }
+                    masterLoading={ useWithdrawRequestHook.isLoading }
                     bodyData={ withdrawSettings }
                 />
             </div>
