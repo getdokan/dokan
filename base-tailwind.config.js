@@ -122,15 +122,19 @@ const baseConfig = {
                     },
                     info: {
                         DEFAULT: 'var(--dokan-info-border-color, #E9F9FFFF)',
+                        hover: 'var(--dokan-info-text-color, #0B76B7)',
                     },
                     success: {
                         DEFAULT: 'var(--dokan-success-border-color, #DAF8E6FF)',
+                        hover: 'var(--dokan-success-text-color, #004434)',
                     },
                     warning: {
                         DEFAULT: 'var(--dokan-warning-border-color, #FFFBEBFF)',
+                        hover: 'var(--dokan-warning-text-color, #004434)',
                     },
                     danger: {
                         DEFAULT: 'var(--dokan-danger-border-color, #FEF3F3FF)',
+                        hover: 'var(--dokan-danger-text-color, #004434)',
                     },
                 },
             },
@@ -156,15 +160,19 @@ const baseConfig = {
                     },
                     info: {
                         DEFAULT: 'var(--dokan-info-border-color, #E9F9FFFF)',
+                        hover: 'var(--dokan-info-text-color, #0B76B7)',
                     },
                     success: {
                         DEFAULT: 'var(--dokan-success-border-color, #DAF8E6FF)',
+                        hover: 'var(--dokan-success-text-color, #004434)',
                     },
                     warning: {
                         DEFAULT: 'var(--dokan-warning-border-color, #FFFBEBFF)',
+                        hover: 'var(--dokan-warning-text-color, #004434)',
                     },
                     danger: {
                         DEFAULT: 'var(--dokan-danger-border-color, #FEF3F3FF)',
+                        hover: 'var(--dokan-danger-text-color, #004434)',
                     },
                 },
             },
