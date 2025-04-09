@@ -13,7 +13,7 @@ const Header = () => {
     return (
         <div className="w-full bg-white shadow-sm border-b border-gray-200 px-6 py-4 flex justify-between items-center rounded-lg shadow my-6">
             { /* Logo and version tags */ }
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
                 <DokanIcon />
 
                 <div className="flex items-center gap-3 font-medium">

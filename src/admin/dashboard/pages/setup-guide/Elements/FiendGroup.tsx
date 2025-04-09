@@ -8,6 +8,7 @@ const FieldGroup = ( {
     if ( ! element.display ) {
         return <></>;
     }
+
     return (
         <div className="col-span-4">
             <div>

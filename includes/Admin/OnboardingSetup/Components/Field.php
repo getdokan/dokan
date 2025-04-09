@@ -4,12 +4,17 @@ namespace WeDevs\Dokan\Admin\OnboardingSetup\Components;
 
 use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Checkbox;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Currency;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\MultiCheck;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Number;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Password;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Radio;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\RadioBox;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Select;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Switcher;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Tel;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Text;
+
 
 /**
  * Settings element Field.
@@ -42,14 +47,18 @@ class Field extends SettingsElement {
 	 *
 	 * @var string[] $field_map Map for the Input type.
 	 */
-	private $field_map = array(
-		'text'     => Text::class,
-		'number'   => Number::class,
-		'checkbox' => Checkbox::class,
-		'select'   => Select::class,
-		'radio'    => Radio::class,
-		'tel'      => Tel::class,
-		'password' => Password::class,
+    protected $field_map = array(
+		'text'       => Text::class,
+		'number'     => Number::class,
+		'checkbox'   => Checkbox::class,
+		'select'     => Select::class,
+		'radio'      => Radio::class,
+		'tel'        => Tel::class,
+		'password'   => Password::class,
+        'radio_box'  => RadioBox::class,
+        'switch'     => Switcher::class,
+        'multicheck' => MultiCheck::class,
+        'currency'   => Currency::class,
 	);
 
 	/**
@@ -106,6 +115,17 @@ class Field extends SettingsElement {
 	 */
 	private function input_map( string $id, string $input_type ): SettingsElement {
 		$class_name = $this->field_map[ $input_type ] ?? $this->field_map['text'];
+
+        /**
+         * Filters for setup guide field mapper.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param int    $id
+         * @param string $input_type
+         * @param string $class_name
+         */
+        $class_name = apply_filters( 'dokan_admin_setup_guide_field_mapper', $class_name, $id, $input_type );
 
 		try {
 			$reflection_class_name = new \ReflectionClass( $class_name );

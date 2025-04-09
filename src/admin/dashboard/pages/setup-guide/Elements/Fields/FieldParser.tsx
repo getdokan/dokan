@@ -1,11 +1,17 @@
 import Text from './Text';
-import Select from './Select';
 import Password from './Password';
 import Tel from './Tel';
 import { SettingsProps } from '../../StepSettings';
+import RadioBox from './RadioBox';
+import Radio from './Radio';
+import Switcher from './Switcher';
+import Currency from './Currency';
+import Select from './Select';
+import MultiCheck from './MultiCheck';
 
 const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
     // TODO: add support for custom input fields and custom hook.
+
     switch ( element.variant ) {
         case 'text':
             return (
@@ -39,6 +45,46 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     onValueChange={ onValueChange }
                 />
             );
+        case 'radio_box':
+            return (
+                <RadioBox
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'radio':
+            return (
+                <Radio
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'currency':
+            return (
+                <Currency
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'switch':
+            return (
+                <Switcher
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'multicheck':
+            return (
+                <MultiCheck
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />
+            );
         case 'checkbox':
         case 'color':
         case 'date':
@@ -48,12 +94,12 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
         case 'hidden':
         case 'image':
         case 'month':
-        case 'radio':
         case 'range':
         case 'search':
         case 'time':
         case 'url':
         case 'week':
+        case 'number':
         default:
             return (
                 <Text

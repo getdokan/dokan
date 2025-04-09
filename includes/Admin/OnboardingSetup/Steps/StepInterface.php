@@ -19,6 +19,15 @@ interface StepInterface {
     public function get_id(): string;
 
     /**
+     * Get settings options to check for.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string[] The settings options.
+     */
+    public function get_settings_options(): array;
+
+    /**
      * Get the step priority.
      *
      * @since DOKAN_SINCE
@@ -26,6 +35,15 @@ interface StepInterface {
      * @return int The step priority.
      */
     public function get_priority(): int;
+
+    /**
+     * Get the step skippable or not.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function get_skippable(): bool;
 
     /**
      * Register the step scripts and styles.

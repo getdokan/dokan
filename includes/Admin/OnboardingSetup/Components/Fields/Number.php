@@ -35,7 +35,7 @@ class Number extends Text {
 	 */
 	protected $step = 0.1;
 
-	/**
+    /**
 	 * Get minimum value.
 	 *
 	 * @return float

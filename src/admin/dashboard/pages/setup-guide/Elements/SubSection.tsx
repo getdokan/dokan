@@ -9,6 +9,11 @@ const SubSection = ( {
     if ( ! element.display ) {
         return <></>;
     }
+
+    const isAllChildrenFields = element?.children?.every( ( child ) => {
+        return child.type === 'field';
+    } );
+
     return (
         <div className="col-span-4">
             <div className={ `mb-6` }>
@@ -23,7 +28,13 @@ const SubSection = ( {
                 </p>
             </div>
 
-            <div className="mb-7 grid grid-cols-4 gap-6">
+            <div
+                className={ `flex flex-col ${
+                    isAllChildrenFields
+                        ? 'divide-y border border-[#E9E9E9] mb-8 divide-gray-200'
+                        : ''
+                }` }
+            >
                 { element.children.map( ( child ) => {
                     return (
                         <SettingsParser

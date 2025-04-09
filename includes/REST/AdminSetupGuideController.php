@@ -29,13 +29,26 @@ class AdminSetupGuideController extends DokanBaseAdminController {
             '/' . $this->rest_base,
             [
                 [
-					'methods'  => WP_REST_Server::READABLE,
-					'callback' => [ $this, 'get_items' ],
-					'permission_callback' => [ $this, 'check_permission' ],
-					'args'     => [],
-				],
-				'schema' => [ $this, 'get_public_item_schema' ],
-			]
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_items' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
+                    'args'                => [],
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'set_items_as_completed' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
+                    'args'                => [
+                        'setup_completed' => [
+                            'required' => true,
+                            'type'     => 'boolean',
+                            'default'  => false,
+                        ],
+                    ],
+                ],
+
+                'schema' => [ $this, 'get_public_item_schema' ],
+            ]
         );
 
         register_rest_route(
@@ -43,16 +56,16 @@ class AdminSetupGuideController extends DokanBaseAdminController {
             '/' . $this->rest_base . '/(?P<id>[\w-]+)',
             [
 				[
-					'methods'  => WP_REST_Server::READABLE,
-					'callback' => [ $this, 'get_item' ],
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_item' ],
 					'permission_callback' => [ $this, 'check_permission' ],
-					'args'     => [],
+					'args'                => [],
 				],
                 [
-                    'methods'  => WP_REST_Server::EDITABLE,
-                    'callback' => [ $this, 'update_item' ],
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_item' ],
                     'permission_callback' => [ $this, 'check_permission' ],
-                    'args'     => [],
+                    'args'                => [],
                 ],
             ]
         );
@@ -150,6 +163,29 @@ class AdminSetupGuideController extends DokanBaseAdminController {
         $step_array = apply_filters( 'dokan_admin_setup_guide_step_response', $step->populate(), $step );
 
         return rest_ensure_response( $step_array );
+    }
+
+    /**
+     * Set items as completed.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return WP_REST_Response
+     */
+    public function set_items_as_completed( $request ): WP_REST_Response {
+        /**
+         * @var AdminSetupGuide $setup_guide The admin setup guide steps.
+         */
+        $setup_guide = dokan_get_container()->get( AdminSetupGuide::class );
+        $setup_guide->set_setup_complete( true );
+
+        return rest_ensure_response(
+            [
+                'success' => $request->get_param( 'setup_completed' ),
+            ]
+        );
     }
 
     /**
