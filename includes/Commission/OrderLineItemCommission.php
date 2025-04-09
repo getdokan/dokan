@@ -200,6 +200,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $commission_data->set_net_vendor_earning( $vendor_net_earning );
         $commission_data->set_per_item_admin_commission( $admin_net_commission / $commission_data->get_total_quantity() );
 
+        // If the admin commission is negative, set it to 0 and set the admin subsidy.
         if ( $commission_data->get_net_admin_commission() < 0 ) {
             $commission_data->set_admin_subsidy( abs( $commission_data->get_net_admin_commission() ) );
             $commission_data->set_admin_commission( 0 );
