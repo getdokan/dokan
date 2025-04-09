@@ -125,6 +125,8 @@ class CommissionStep extends AbstractStep {
                         Factory::field( 'reset_sub_category_when_edit_all_category', 'switch' )
                             ->set_title( __( 'Apply Parent Category Commission to All Subcategories', 'dokan-lite' ) )
                             ->set_description( esc_html__( "Important: 'All Categories' commission serves as your marketplace's default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors", 'dokan-lite' ) )
+                            ->add_dependency( 'commission.commission_type', 'category_based', true, 'display', 'hide', '!==' )
+                            ->add_dependency( 'commission.commission_type', 'category_based', true, 'display', 'show', '===' )
                             ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                             ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
                             ->set_default( $default_settings['reset_sub_category_when_edit_all_category'] )
