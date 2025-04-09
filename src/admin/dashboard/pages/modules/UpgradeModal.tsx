@@ -13,7 +13,7 @@ const UpgradeModal = ( {
 
     return (
         <Modal
-            className="dokan-upgrade-modal max-w-[720px] mt-10 bg-transparent"
+            className="max-w-[720px] mt-10 bg-transparent"
             isOpen={ isOpen }
             showXButton={ false }
             onClose={ onClose }
