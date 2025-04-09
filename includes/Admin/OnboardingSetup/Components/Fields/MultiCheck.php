@@ -125,26 +125,4 @@ class MultiCheck extends Field {
 
         return $data;
     }
-
-    /**
-     * Sanitize data for storage.
-     *
-     * @param mixed $data Data for sanitization.
-     *
-     * @return float|string
-     */
-    public function sanitize_element( $data ) {
-        return wc_clean( parent::sanitize_element( $data ) );
-    }
-
-    /**
-     * Escape data for display.
-     *
-     * @param string $data Data for display.
-     *
-     * @return string
-     */
-    public function escape_element( $data ) {
-        return esc_html( $data );
-    }
 }

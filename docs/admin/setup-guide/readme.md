@@ -288,6 +288,10 @@ import { SettingsProps } from '../../StepSettings';
 const YourCustomField = ({ element, getSetting, onValueChange }: SettingsProps) => {
     const [ value, setValue ] = useState( element.value );
 
+    if ( ! element.display ) {
+        return <></>;
+    }
+
     const handleValueChange = ( newValue ) => {
         setValue( newValue );
         onValueChange( {
@@ -295,10 +299,6 @@ const YourCustomField = ({ element, getSetting, onValueChange }: SettingsProps) 
             value: newValue,
         } );
     };
-
-    if ( ! element.display ) {
-        return <></>;
-    }
 
     return (
         <div className="col-span-4">
@@ -373,7 +373,11 @@ const YourCustomField = ({
     onValueChange, 
     getSetting 
 }: SettingsProps) => {
-    // Retrieve another setting's element object by using `hook_key`.
+    if ( ! element.display ) {
+        return <></>;
+    }
+
+  // Retrieve another setting's element object by using `hook_key`.
     const otherSetting = getSetting( 'hook_key' );
     
     // Use the value in your component logic
@@ -381,7 +385,7 @@ const YourCustomField = ({
 
     // Component implementation
     return (
-        <div className="my-field-container">
+        <div id={ element.hook_key } className="my-field-container">
             { isFeatureEnabled && (
                 <div className="conditional-section">
                     {/* Render conditional UI here */}

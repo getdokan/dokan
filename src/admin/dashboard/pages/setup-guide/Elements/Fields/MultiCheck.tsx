@@ -1,9 +1,13 @@
 import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
-import { useState, RawHTML } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
 
 const MultiCheck = ( { element, onValueChange }: SettingsProps ) => {
     const [ selectedValues, setSelectedValues ] = useState( [] );
+
+    if ( ! element.display ) {
+        return <></>;
+    }
 
     // Handle change and propagate to parent component
     const handleChange = ( values ) => {
@@ -13,10 +17,6 @@ const MultiCheck = ( { element, onValueChange }: SettingsProps ) => {
             value: values,
         } );
     };
-
-    if ( ! element.display ) {
-        return <></>;
-    }
 
     const initialValue = Object.values( element.value || element.default );
 

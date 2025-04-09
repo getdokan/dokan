@@ -9,6 +9,10 @@ const CategoryBasedCommission = ( {
     onValueChange,
     getSetting,
 }: SettingsProps ) => {
+    if ( ! element.display ) {
+        return null;
+    }
+
     const { currency } = adminWithdrawData;
     const getCurrencySymbol = currency?.symbol;
 
@@ -37,9 +41,10 @@ const CategoryBasedCommission = ( {
         return result;
     };
 
-    const resetSubCategoryObj = getSetting(
-        'dokan_admin_onboarding_setup_step_commission_commission_reset_sub_category_when_edit_all_category'
-    ) || {};
+    const resetSubCategoryObj =
+        getSetting(
+            'dokan_admin_onboarding_setup_step_commission_commission_reset_sub_category_when_edit_all_category'
+        ) || {};
 
     const categories = element?.categories || {};
     const commissionValues = element?.value || {};
@@ -280,15 +285,8 @@ const CategoryBasedCommission = ( {
         return false; // For all other types, return false
     };
 
-    if ( ! element.display ) {
-        return null;
-    }
-
     return (
-        <div
-            className="p-4 flex flex-col gap-y-4"
-            id={ element.hook_key }
-        >
+        <div className="p-4 flex flex-col gap-y-4" id={ element.hook_key }>
             { ( element?.title || element?.description ) && (
                 <div className="flex-col flex gap-1">
                     <h2 className="text-sm leading-6 font-semibold text-gray-900">
@@ -475,7 +473,10 @@ const CategoryBasedCommission = ( {
                                                     ) }
                                                 >
                                                     { sprintf(
-                                                        __( '#%s', 'dokan-lite' ),
+                                                        __(
+                                                            '#%s',
+                                                            'dokan-lite'
+                                                        ),
                                                         item.term_id
                                                     ) }
                                                 </span>
