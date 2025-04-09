@@ -468,7 +468,7 @@ const DokanAI = () => {
                                     className="text-dokan-link mx-1 underline"
                                 >
                                     { __(
-                                        'regenerate all again',
+                                        'regenerate all again.',
                                         'dokan-lite'
                                     ) }
                                 </span>
