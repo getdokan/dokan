@@ -1,6 +1,6 @@
-@use './../../base-tailwind';
-@use '@getdokan/dokan-ui/dist/dokan-ui';
+@import '@getdokan/dokan-ui/dist/dokan-ui.css';
 @config './onboard-tailwind.config.js';
+@import './../../base-tailwind';
 
 .dokan-admin-setup-wizard {
     margin: 0;
