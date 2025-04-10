@@ -135,7 +135,7 @@
     line-height: 1em;
 }
 
-small.refunded-recipient {
+small.dokan-commission-metabox-refunded-recipient {
     display: block;
     color: #a00;
     white-space: nowrap;
@@ -144,7 +144,7 @@ small.refunded-recipient {
     margin: 0
 }
 
-small.refunded-recipient::before {
+small.dokan-commission-metabox-refunded-recipient::before {
     font-family: Dashicons;
     speak: never;
     font-weight: 400;

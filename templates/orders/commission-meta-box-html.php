@@ -234,7 +234,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         <?php
                         if ( $shipping_fee_refunded ) :
                             ?>
-                            <small class="refunded refunded-recipient">
+                            <small class="refunded dokan-commission-metabox-refunded-recipient">
                             <?php
                             echo wc_price(
                                 $shipping_fee_refunded, array(
@@ -243,7 +243,7 @@ foreach ( $order->get_refunds() as $refund ) {
                                 )
                             );
 							?>
-                                                                        </small>
+                            </small>
 							<?php
                         endif;
                         ?>
