@@ -252,7 +252,7 @@ function RequestList( {
                 onClose={ () => setIsOpen( false ) }
                 confirmationTitle={ __( 'Are you sure', 'dokan-lite' ) }
                 confirmationDescription={ __(
-                    'You want to cancel this request?',
+                    'Do You want to cancel this request?',
                     'dokan-lite'
                 ) }
                 confirmButtonText={ __( 'Yes', 'dokan' ) }
