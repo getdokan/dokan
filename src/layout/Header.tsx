@@ -16,11 +16,11 @@ const Header = ( { title = '' } ) => {
             <div className="@container/before-header grid grid-cols-4 gap-4">
                 <Slot name="dokan-before-header" />
             </div>
-            <div className="dokan-header-title-section @container/header-title-section flex justify-between flex-wrap">
+            <div className="dokan-header-title-section @container/header-title-section flex justify-between items-center flex-wrap">
                 <div className="dokan-header-title flex flex-wrap">
                     { title && (
                         <>
-                            <h3 className="mb-4 text-2xl font-semibold text-gray-800  md:text-4xl lg:text-3xl">
+                            <h3 className="text-2xl font-semibold text-gray-800  md:text-4xl lg:text-3xl">
                                 { title }
                             </h3>{ ' ' }
                             <Slot
