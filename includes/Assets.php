@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan;
 
+use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
@@ -616,6 +617,10 @@ class Assets {
                 'deps'    => $core_store_asset['dependencies'],
             ];
         }
+
+        // Register WooCommerce Admin Assets for the React-base Dokan Vendor ler dashboard.
+        $wc_instance = WCAdminAssets::get_instance();
+        $wc_instance->register_scripts();
 
         return $scripts;
     }
