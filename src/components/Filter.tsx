@@ -1,9 +1,9 @@
-import { Button } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import { snakeCase, kebabCase } from '../utilities';
+import DokanButton from "@dokan/components/Button";
 
 interface FilterProps {
     /** Namespace for the filter, used to generate unique IDs */
@@ -61,27 +61,15 @@ const Filter = ( {
             } ) }
 
             { showFilter && (
-                <Button
-                    color="primary"
-                    className={ twMerge(
-                        'bg-dokan-btn hover:bg-dokan-btn-hover focus:bg-dokan-btn h-10',
-                        filterBtnClassName
-                    ) }
-                    label={ __( 'Filter', 'dokan' ) }
-                    onClick={ onFilter }
-                />
+                <DokanButton onClick={ onFilter }>
+                    { __( 'Filter', 'dokan' ) }
+                </DokanButton>
             ) }
 
             { showReset && (
-                <Button
-                    color="primary"
-                    className={ twMerge(
-                        'bg-dokan-btn hover:bg-dokan-btn-hover focus:bg-dokan-btn h-10',
-                        resetBtnClassName
-                    ) }
-                    label={ __( 'Reset', 'dokan' ) }
-                    onClick={ onReset }
-                />
+                <DokanButton onClick={ onReset }>
+                    { __( 'Reset', 'dokan' ) }
+                </DokanButton>
             ) }
         </div>
     );
