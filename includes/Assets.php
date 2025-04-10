@@ -356,10 +356,6 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-product-style.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product-style.css' ),
             ],
-            'dokan-admin-commission-suborder' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-commission-suborder-metabox.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-commission-suborder-metabox.css' ),
-            ],
             'dokan-tailwind'                => [
                 'src'       => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
                 'version'   => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),

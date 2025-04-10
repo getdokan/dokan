@@ -15,7 +15,7 @@
  */
 ?>
 
-<div id="dokan-sub-order-or-related-items" class="dokan-order-metabox-items postbox" style='border: none'>
+<div id="woocommerce-order-items" class="postbox" style='border: none'>
     <div class="postbox-header">
         <div class="handle-actions hide-if-no-js">
             <button type="button" class="handle-order-higher" aria-disabled="false" aria-describedby="dokan-order-items-handle-order-higher-description">

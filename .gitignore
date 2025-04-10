@@ -23,4 +23,3 @@ phpcs-report.txt
 !/assets/css/vue-vendor.css
 !/assets/css/vue-frontend.css
 !/assets/css/wp-version-before-5-3.css
-!/assets/css/dokan-admin-commission-suborder-metabox.css
