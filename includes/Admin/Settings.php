@@ -562,7 +562,7 @@ class Settings {
                     'desc'    => __( 'Important: \'All Categories\' commission serves as your marketplace\'s default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'on',
-                    'tooltip' => __( 'When enabled, changing a parent category\'s commission rate will automatically update all its subscription. Disable this option to maintain independent commission rates for subcategories', 'dokan-lite' ),
+                    'tooltip' => __( 'When enabled, changing a parent category\'s commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories', 'dokan-lite' ),
                     'show_if' => [
                         'commission_type' => [
                             'equal' => 'category_based',

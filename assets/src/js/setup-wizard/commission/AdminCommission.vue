@@ -124,6 +124,9 @@
 </script>
 
 
-<style scoped lang="less">
+<style lang="less">
+.swal2-title{
+    border-bottom: none!important;
+}
 
 </style>
