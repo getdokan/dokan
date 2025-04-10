@@ -35,7 +35,7 @@ class ProductControllerV2 extends ProductController {
         parent::register_routes();
 
         register_rest_route(
-            $this->namespace, '/' . $this->base . 'jhj', [
+            $this->namespace, '/' . $this->base, [
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_items' ],

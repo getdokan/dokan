@@ -1,16 +1,6 @@
 import { useSelect } from '@wordpress/data';
-import productStore from '@dokan/stores/product-categories';
-
-interface Category {
-    id: number;
-    name: string;
-    slug: string;
-    parent: number;
-    description: string;
-    count: number;
-    thumbnail: string;
-    link: string;
-}
+import productCategoryStore from '@dokan/stores/product-categories';
+import { Category } from '@dokan/definitions/dokan-product-categories';
 
 export interface QueryParams {
     page?: number;
@@ -39,13 +29,17 @@ export interface CategoryHookData {
 export function useCategories( query: QueryParams = {} ): CategoriesHookData {
     return useSelect(
         ( select ) => ( {
-            categories: select( productStore ).getItems( query ),
+            categories: select( productCategoryStore ).getItems( query ),
             totalItems:
-                select( productStore ).getCategoryQueryTotalCount( query ),
+                select( productCategoryStore ).getCategoryQueryTotalCount(
+                    query
+                ),
             totalPages:
-                select( productStore ).getCategoryQueryTotalPages( query ),
-            isLoading: select( productStore ).isCategoriesLoading(),
-            error: select( productStore ).getCategoryError(),
+                select( productCategoryStore ).getCategoryQueryTotalPages(
+                    query
+                ),
+            isLoading: select( productCategoryStore ).isCategoriesLoading(),
+            error: select( productCategoryStore ).getCategoryError(),
         } ),
         [ JSON.stringify( query ) ]
     );
@@ -54,9 +48,9 @@ export function useCategories( query: QueryParams = {} ): CategoriesHookData {
 export function useCategory( id: number ): CategoryHookData {
     return useSelect(
         ( select ) => ( {
-            category: select( productStore ).getItem( id ),
-            isLoading: select( productStore ).isCategoriesLoading(),
-            error: select( productStore ).getCategoryError(),
+            category: select( productCategoryStore ).getItem( id ),
+            isLoading: select( productCategoryStore ).isCategoriesLoading(),
+            error: select( productCategoryStore ).getCategoryError(),
         } ),
         [ id ]
     );

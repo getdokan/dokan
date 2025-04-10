@@ -1,15 +1,7 @@
-import { QueryParams } from '@dokan/definitions/dokan-product';
+import { Product, QueryParams } from '@dokan/definitions/dokan-product';
 
 import products from '@dokan/stores/products';
 import { useSelect } from '@wordpress/data';
-
-interface Product {
-    id: number;
-    name: string;
-    price: string;
-
-    [ key: string ]: any;
-}
 
 export interface ProductsHookData {
     products: Product[] | undefined;
