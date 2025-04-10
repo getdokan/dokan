@@ -1,10 +1,10 @@
-import { Button, Card, useToast } from '@getdokan/dokan-ui';
+import { Card, useToast } from '@getdokan/dokan-ui';
+import { DokanButton } from '@dokan/components';
 import { twMerge } from 'tailwind-merge';
 import {
     UseWithdrawSettingsReturn,
     WithdrawMethod,
 } from './Hooks/useWithdrawSettings';
-import { UseBalanceReturn } from './Hooks/useBalance';
 import { __ } from '@wordpress/i18n';
 import { useMakeDefaultMethod } from './Hooks/useMakeDefaultMethod';
 
@@ -59,21 +59,16 @@ function PaymentMethods( {
             activemethod?.value === bodyData?.data?.withdraw_method
         ) {
             return (
-                <Button
-                    color="secondary"
-                    className="bg-gray-50 hover:bg-gray-100"
-                    disabled={ true }
-                    label={ __( 'Default', 'dokan-lite' ) }
-                />
+                <DokanButton disabled={ true } variant="secondary">
+                    { __( 'Default', 'dokan-lite' ) }
+                </DokanButton>
             );
         } else if (
             activemethod.has_information &&
             activemethod?.value !== bodyData?.data?.withdraw_method
         ) {
             return (
-                <Button
-                    color="secondary"
-                    className="bg-dokan-btn hover:bg-dokan-btn-hover text-white"
+                <DokanButton
                     onClick={ () => {
                         makeDefaultMethodHook
                             .makeDefaultMethod( activemethod.value )
@@ -94,20 +89,15 @@ function PaymentMethods( {
                         makeDefaultMethodHook.makingDefault ===
                             activemethod.value
                     }
-                    label={ __( 'Make Default', 'dokan-lite' ) }
-                />
+                >
+                    { __( 'Make Default', 'dokan-lite' ) }
+                </DokanButton>
             );
         }
         return (
-            <Button
-                type="button"
-                color="secondary"
-                className="bg-dokan-btn hover:bg-dokan-btn-hover text-white"
-                onClick={ () => {
-                    window.location.href = bodyData?.data?.setup_url;
-                } }
-                label={ __( 'Setup', 'dokan-lite' ) }
-            />
+            <a href={ bodyData?.data?.setup_url } className="dokan-btn">
+                { __( 'Setup', 'dokan-lite' ) }
+            </a>
         );
     };
     if (
