@@ -34,22 +34,22 @@ const baseConfig = {
                         },
                         info: {
                             DEFAULT: 'var(--dokan-button-info-background-color, #0B76B7)',
-                            hover: 'var(--dokan-button-info-hover-background-color, #E9F9FF)',
+                            hover: 'var(--dokan-button-info-hover-background-color, #2795d7)',
                         },
                         success: {
                             DEFAULT:
-                                'var(--dokan-button-success-background-color, #004434)',
-                            hover: 'var(--dokan-button-success-hover-background-color, #DAF8E6)',
+                                'var(--dokan-button-success-background-color, #07a67e)',
+                            hover: 'var(--dokan-button-success-hover-background-color, #11b68c)',
                         },
                         warning: {
                             DEFAULT:
-                                'var(--dokan-button-warning-background-color, #9D5425)',
-                            hover: 'var(--dokan-button-warning-hover-background-color, #FFFBEB)',
+                                'var(--dokan-button-warning-background-color, #e9a905)',
+                            hover: 'var(--dokan-button-warning-hover-background-color, #fbbf24)',
                         },
                         danger: {
                             DEFAULT:
-                                'var(--dokan-button-danger-background-color, #BC1C21)',
-                            hover: 'var(--dokan-button-danger-hover-background-color, #FEF3F3)',
+                                'var(--dokan-button-danger-background-color, #e3050c)',
+                            hover: 'var(--dokan-button-danger-hover-background-color, #f23030)',
                         },
                     },
                     info: {
@@ -94,23 +94,23 @@ const baseConfig = {
                         },
                         info: {
                             DEFAULT: 'var(--dokan-button-info-text-color, #ffffff)',
-                            hover: 'var(--dokan-button-info-hover-text-color, #0B76B7)',
+                            hover: 'var(--dokan-button-info-hover-text-color, #ffffff)',
                         },
                         success: {
                             DEFAULT: 'var(--dokan-button-success-text-color, #ffffff)',
-                            hover: 'var(--dokan-button-success-hover-text-color, #004434)',
+                            hover: 'var(--dokan-button-success-hover-text-color, #ffffff)',
                         },
                         warning: {
                             DEFAULT: 'var(--dokan-button-warning-text-color, #ffffff)',
-                            hover: 'var(--dokan-button-warning-hover-text-color, #9D5425)',
+                            hover: 'var(--dokan-button-warning-hover-text-color, #ffffff)',
                         },
                         danger: {
                             DEFAULT: 'var(--dokan-button-danger-text-color, #ffffff)',
-                            hover: 'var(--dokan-button-danger-hover-text-color, #BC1C21)',
+                            hover: 'var(--dokan-button-danger-hover-text-color, #ffffff)',
                         },
                     },
                     link: {
-                        DEFAULT: 'var(--dokan-link-color, var(--dokan-button-background-color, #7047EB))',
+                        DEFAULT: 'var(--dokan-link-color, #7047EB)',
                         hover: 'var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #322067))',
                     },
                     info: {
@@ -151,20 +151,20 @@ const baseConfig = {
                             hover: 'var(--dokan-button-tertiary-hover-border-color, var(--dokan-button-border-color, #7047EB))',
                         },
                         info: {
-                            DEFAULT: 'var(--dokan-button-info-border-color, #0B76B7)',
-                            hover: 'var(--dokan-button-info-hover-border-color, #E9F9FFFF)',
+                            DEFAULT: 'var(--dokan-button-info-background-color, #0B76B7)',
+                            hover: 'var(--dokan-button-info-hover-background-color, #2795d7)',
                         },
                         success: {
-                            DEFAULT: 'var(--dokan-button-success-border-color, #004434)',
-                            hover: 'var(--dokan-button-success-hover-border-color, #DAF8E6FF)',
+                            DEFAULT: 'var(--dokan-button-success-background-color, #07a67e)',
+                            hover: 'var(--dokan-button-success-hover-background-color, #11b68c)',
                         },
                         warning: {
-                            DEFAULT: 'var(--dokan-button-warning-border-color, #9D5425)',
-                            hover: 'var(--dokan-button-warning-hover-border-color, #FFFBEBFF)',
+                            DEFAULT: 'var(--dokan-button-warning-background-color, #e9a905)',
+                            hover: 'var(--dokan-button-warning-hover-background-color, #fbbf24)',
                         },
                         danger: {
-                            DEFAULT: 'var(--dokan-button-danger-border-color, #BC1C21)',
-                            hover: 'var(--dokan-button-danger-hover-border-color, #FEF3F3FF)',
+                            DEFAULT: 'var(--dokan-button-danger-background-color, #e3050c)',
+                            hover: 'var(--dokan-button-danger-hover-background-color, #f23030)',
                         },
                     },
                     link: {
@@ -205,20 +205,20 @@ const baseConfig = {
                             hover: 'var(--dokan-button-tertiary-hover-border-color, var(--dokan-button-border-color, #7047EB))',
                         },
                         info: {
-                            DEFAULT: 'var(--dokan-button-info-border-color, #0B76B7)',
-                            hover: 'var(--dokan-button-info-hover-border-color, #E9F9FFFF)',
+                            DEFAULT: 'var(--dokan-button-info-background-color, #0B76B7)',
+                            hover: 'var(--dokan-button-info-hover-background-color, #2795d7)',
                         },
                         success: {
-                            DEFAULT: 'var(--dokan-button-success-border-color, #004434)',
-                            hover: 'var(--dokan-button-success-hover-border-color, #DAF8E6FF)',
+                            DEFAULT: 'var(--dokan-button-success-background-color, #07a67e)',
+                            hover: 'var(--dokan-button-success-hover-background-color, #11b68c)',
                         },
                         warning: {
-                            DEFAULT: 'var(--dokan-button-warning-border-color, #9D5425)',
-                            hover: 'var(--dokan-button-warning-hover-border-color, #FFFBEBFF)',
+                            DEFAULT: 'var(--dokan-button-warning-background-color, #e9a905)',
+                            hover: 'var(--dokan-button-warning-hover-background-color, #fbbf24)',
                         },
                         danger: {
-                            DEFAULT: 'var(--dokan-button-danger-border-color, #BC1C21)',
-                            hover: 'var(--dokan-button-danger-border-color, #FEF3F3FF)',
+                            DEFAULT: 'var(--dokan-button-danger-background-color, #e3050c)',
+                            hover: 'var(--dokan-button-danger-hover-background-color, #f23030)',
                         },
                     },
                     link: {

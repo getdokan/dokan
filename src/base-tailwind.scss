@@ -133,7 +133,7 @@
         @apply relative text-dokan-link no-underline transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply text-dokan-link-hover underline #{!important};
+            @apply text-dokan-link-hover #{!important};
         }
     }
 
