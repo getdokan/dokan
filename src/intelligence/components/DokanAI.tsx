@@ -384,6 +384,7 @@ const DokanAI = () => {
                                     { __( 'Title:', 'dokan-lite' ) }
                                 </div>
                                 <ResponseHistory
+                                    loading={ skeletonLoading( 'post_title' ) }
                                     history={ getHistoryLabel( 'post_title' ) }
                                     prev={ () => prevHandler( 'post_title' ) }
                                     next={ () => nextHandler( 'post_title' ) }
@@ -426,6 +427,9 @@ const DokanAI = () => {
                                         ) }
                                     </div>
                                     <ResponseHistory
+                                        loading={ skeletonLoading(
+                                            'post_excerpt'
+                                        ) }
                                         history={ getHistoryLabel(
                                             'post_excerpt'
                                         ) }
@@ -482,6 +486,9 @@ const DokanAI = () => {
                                         ) }
                                     </div>
                                     <ResponseHistory
+                                        loading={ skeletonLoading(
+                                            'post_content'
+                                        ) }
                                         history={ getHistoryLabel(
                                             'post_content'
                                         ) }

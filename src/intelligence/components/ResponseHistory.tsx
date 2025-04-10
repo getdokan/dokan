@@ -1,5 +1,5 @@
-const ResponseHistory = ( { prev, next, history } ) => {
-    if ( ! history ) {
+const ResponseHistory = ( { prev, next, history, loading } ) => {
+    if ( ! history || loading ) {
         return null;
     }
     return (

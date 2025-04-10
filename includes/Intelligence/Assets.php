@@ -48,12 +48,7 @@ class Assets implements Hookable {
             return;
         }
 
-        $supported_fields = AISupportedFields::get_supported_fields();
-
-        $settings = [ 'fields' => $supported_fields ];
-
         wp_enqueue_style( 'dokan-ai-style' );
         wp_enqueue_script( 'dokan-ai-script' );
-        wp_localize_script( 'dokan-ai-script', 'dokanAiSettings', $settings );
     }
 }
