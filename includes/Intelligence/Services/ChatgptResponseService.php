@@ -5,10 +5,10 @@ namespace WeDevs\Dokan\Intelligence\Services;
 use Exception;
 
 class ChatgptResponseService extends BaseAIService {
-    private const API_URL = 'https://api.openai.com/v1/chat/completions';
+    private const BASE_URL = 'https://api.openai.com/v1/';
 
     protected function get_url(): string {
-        return self::API_URL;
+        return self::BASE_URL . 'chat/completions';
     }
 
     protected function get_headers(): array {
@@ -52,7 +52,6 @@ class ChatgptResponseService extends BaseAIService {
         return [
             'model' => dokan_get_option( 'dokan_ai_chatgpt_model', 'dokan_ai', 'gpt-3.5-turbo' ),
             'messages' => $messages,
-            // 'max_tokens' => (int) dokan_get_option( 'dokan_ai_max_tokens_for_marketplace', 'dokan_ai', '1000' ),
             'temperature' => 0.7,
         ];
     }
@@ -94,6 +93,9 @@ class ChatgptResponseService extends BaseAIService {
             'dokan_ai_supported_chatgpt_models', [
                 'gpt-3.5-turbo' => __( 'GPT-3.5 Turbo', 'dokan-lite' ),
                 'gpt-4o-mini'   => __( 'GPT-4o Mini', 'dokan-lite' ),
+                'gpt-4o'       => __( 'GPT-4o', 'dokan-lite' ),
+                'gpt-4-turbo' => __( 'GPT-4 Turbo', 'dokan-lite' ),
+                'chatgpt-4o-latest' => __( 'ChatGPT 4o Latest', 'dokan-lite' ),
             ]
         );
     }

@@ -5,10 +5,11 @@ namespace WeDevs\Dokan\Intelligence\Services;
 use Exception;
 
 class GeminiResponseService extends BaseAIService {
-    private const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    private const BASE_URL = 'https://generativelanguage.googleapis.com/v1/';
 
     protected function get_url(): string {
-        return self::API_URL . '?key=' . $this->get_api_key();
+        $model = dokan_get_option( 'dokan_ai_gemini_model', 'dokan_ai', 'gemini-1.5-flash' );
+        return self::BASE_URL . 'models/' . $model . ':generateContent?key=' . $this->get_api_key();
     }
 
     protected function get_headers(): array {
@@ -101,6 +102,8 @@ class GeminiResponseService extends BaseAIService {
         return apply_filters(
             'dokan_ai_supported_gemini_models', [
                 'gemini-1.5-flash' => __( 'Gemini 1.5 Flash', 'dokan-lite' ),
+                'gemini-2.0-flash' => __( 'Gemini 2.0 Flash', 'dokan-lite' ),
+                'gemini-2.0-flash-lite' => __( 'Gemini 2.0 Flash-Lite', 'dokan-lite' ),
             ]
         );
     }

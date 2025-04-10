@@ -50,32 +50,6 @@ class Settings implements Hookable {
                 'desc'    => __( 'Select which AI provider to use for generating content.', 'dokan-lite' ),
                 'default' => 'chatgpt',
             ],
-            'dokan_ai_chatgpt_model' => [
-                'name'    => 'dokan_ai_chatgpt_model',
-                'label'   => __( 'Model', 'dokan-lite' ),
-                'type'    => 'select',
-                'options' => ChatgptResponseService::get_models(),
-                'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
-                'default' => 'gpt-3.5-turbo',
-                'show_if' => [
-                    'dokan_ai_engine' => [
-                        'equal' => 'chatgpt',
-                    ],
-                ],
-            ],
-            'dokan_ai_gemini_model' => [
-                'name'    => 'dokan_ai_gemini_model',
-                'label'   => __( 'Model', 'dokan-lite' ),
-                'type'    => 'select',
-                'options' => GeminiResponseService::get_models(),
-                'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
-                'default' => 'gemini-1.5-flash',
-                'show_if' => [
-                    'dokan_ai_engine' => [
-                        'equal' => 'gemini',
-                    ],
-                ],
-            ],
             'dokan_ai_gemini_api_key' => [
                 'name'    => 'dokan_ai_gemini_api_key',
                 'label'   => __( 'Gemini API Key', 'dokan-lite' ),
@@ -105,6 +79,32 @@ class Settings implements Hookable {
                     ],
                 ],
                 'tooltip' => __( 'Your API key provides secure access to the AI service. Usage costs will be charged to the connected account.', 'dokan-lite' ),
+            ],
+            'dokan_ai_chatgpt_model' => [
+                'name'    => 'dokan_ai_chatgpt_model',
+                'label'   => __( 'Model', 'dokan-lite' ),
+                'type'    => 'select',
+                'options' => ChatgptResponseService::get_models(),
+                'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
+                'default' => 'gpt-3.5-turbo',
+                'show_if' => [
+                    'dokan_ai_engine' => [
+                        'equal' => 'chatgpt',
+                    ],
+                ],
+            ],
+            'dokan_ai_gemini_model' => [
+                'name'    => 'dokan_ai_gemini_model',
+                'label'   => __( 'Model', 'dokan-lite' ),
+                'type'    => 'select',
+                'options' => GeminiResponseService::get_models(),
+                'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
+                'default' => 'gemini-1.5-flash',
+                'show_if' => [
+                    'dokan_ai_engine' => [
+                        'equal' => 'gemini',
+                    ],
+                ],
             ],
         ];
 

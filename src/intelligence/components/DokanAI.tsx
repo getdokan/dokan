@@ -1,14 +1,21 @@
 import { useEffect, useState } from '@wordpress/element';
-import { Modal, SimpleInput, TextArea } from '@getdokan/dokan-ui';
+import { Modal, SimpleInput, TextArea, Tooltip } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
 import ResponseHistory from './ResponseHistory';
 import { useMutationObserver } from '../../hooks';
 import { DokanAlert, DokanButton } from '@dokan/components';
+import AISkeleton from './Skeleton';
 
 const DokanAI = () => {
     const [ isOpen, setIsOpen ] = useState( false );
+    const [ refineLoading, setRefineLoading ] = useState( {
+        post_title: false,
+        post_excerpt: false,
+        post_content: false,
+    } );
+    const [ isRefining, setIsRefining ] = useState( false );
     const [ prompt, setPrompt ] = useState( '' );
     const [ error, setError ] = useState( '' );
     const [ regenerateModal, setRegenerateModal ] = useState( false );
@@ -111,6 +118,16 @@ const DokanAI = () => {
         }
     };
 
+    const refineAllContent = async () => {
+        setIsRefining( true );
+        await generateContent();
+        setIsRefining( false );
+    };
+
+    const skeletonLoading = ( field: string ) => {
+        return refineLoading[ field ] || isRefining;
+    };
+
     const refineContent = async ( field: string ) => {
         setError( '' );
         let refineField = responseHistory[ field ][ historyIndex[ field ] ];
@@ -130,6 +147,13 @@ const DokanAI = () => {
         }
 
         setIsLoading( true );
+        // only current field is loading and other fields are false
+        setRefineLoading( ( prevState ) => {
+            return {
+                ...prevState,
+                [ field ]: true,
+            };
+        } );
         try {
             const content = await generateAiContent( refineField, {
                 field,
@@ -150,6 +174,12 @@ const DokanAI = () => {
             setError( err.message );
         } finally {
             setIsLoading( false );
+            setRefineLoading( ( prevState ) => {
+                return {
+                    ...prevState,
+                    [ field ]: false,
+                };
+            } );
         }
     };
 
@@ -245,12 +275,16 @@ const DokanAI = () => {
                 }
                 // @ts-ignore
                 for ( const node of mutation.addedNodes ) {
-                    if ( node.id !== 'headlessui-portal-root' ) {
-                        continue;
+                    if ( node.id === 'headlessui-portal-root' ) {
+                        node.classList.add( 'dokan-layout' );
+                        node.style.display = 'block';
                     }
 
-                    node.classList.add( 'dokan-layout' );
-                    node.style.display = 'block';
+                    if (
+                        node.hasAttribute( 'data-radix-popper-content-wrapper' )
+                    ) {
+                        node.classList.add( 'dokan-layout' );
+                    }
                 }
             }
         },
@@ -267,27 +301,36 @@ const DokanAI = () => {
 
     return (
         <>
-            <div className="text-dokan-link cursor-pointer">
-                <svg
-                    role={ 'button' }
-                    onClick={ handleLabelClick }
-                    width="24"
-                    height="24"
-                    viewBox="0 0 40 40"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <rect width="40" height="40" rx="5" fill="currentColor" />
-                    <path
-                        d="M18.0064 11.0266C18.2625 9.98897 19.7376 9.98897 19.9938 11.0266V11.0266C21.0872 15.4557 24.5455 18.9139 28.9747 20.0073V20.0073C30.0123 20.2634 30.0123 21.7386 28.9747 21.9947V21.9947C24.5455 23.0881 21.0872 26.5463 19.9938 30.9754V30.9754C19.7376 32.0131 18.2625 32.0131 18.0064 30.9754V30.9754C16.9129 26.5463 13.4546 23.0881 9.02549 21.9947V21.9947C7.98784 21.7386 7.98784 20.2634 9.02549 20.0073V20.0073C13.4546 18.9139 16.9129 15.4557 18.0064 11.0266V11.0266Z"
-                        fill="white"
-                    />
-                    <path
-                        d="M28.9309 6.62922C29.0345 6.20923 29.6316 6.20923 29.7353 6.62922V6.62922C30.1779 8.42196 31.5777 9.82171 33.3704 10.2643V10.2643C33.7904 10.3679 33.7904 10.965 33.3704 11.0687V11.0687C31.5777 11.5113 30.1779 12.911 29.7353 14.7037V14.7037C29.6316 15.1237 29.0345 15.1237 28.9309 14.7037V14.7037C28.4883 12.911 27.0885 11.5113 25.2957 11.0687V11.0687C24.8757 10.965 24.8757 10.3679 25.2957 10.2643V10.2643C27.0885 9.82171 28.4883 8.42196 28.9309 6.62922V6.62922Z"
-                        fill="white"
-                    />
-                </svg>
-            </div>
+            <button
+                type="button"
+                className="text-dokan-link"
+                onClick={ handleLabelClick }
+            >
+                <Tooltip content={ __( 'AI Assistant', 'dokan-lite' ) }>
+                    <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 40 40"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <rect
+                            width="40"
+                            height="40"
+                            rx="5"
+                            fill="currentColor"
+                        />
+                        <path
+                            d="M18.0064 11.0266C18.2625 9.98897 19.7376 9.98897 19.9938 11.0266V11.0266C21.0872 15.4557 24.5455 18.9139 28.9747 20.0073V20.0073C30.0123 20.2634 30.0123 21.7386 28.9747 21.9947V21.9947C24.5455 23.0881 21.0872 26.5463 19.9938 30.9754V30.9754C19.7376 32.0131 18.2625 32.0131 18.0064 30.9754V30.9754C16.9129 26.5463 13.4546 23.0881 9.02549 21.9947V21.9947C7.98784 21.7386 7.98784 20.2634 9.02549 20.0073V20.0073C13.4546 18.9139 16.9129 15.4557 18.0064 11.0266V11.0266Z"
+                            fill="white"
+                        />
+                        <path
+                            d="M28.9309 6.62922C29.0345 6.20923 29.6316 6.20923 29.7353 6.62922V6.62922C30.1779 8.42196 31.5777 9.82171 33.3704 10.2643V10.2643C33.7904 10.3679 33.7904 10.965 33.3704 11.0687V11.0687C31.5777 11.5113 30.1779 12.911 29.7353 14.7037V14.7037C29.6316 15.1237 29.0345 15.1237 28.9309 14.7037V14.7037C28.4883 12.911 27.0885 11.5113 25.2957 11.0687V11.0687C24.8757 10.965 24.8757 10.3679 25.2957 10.2643V10.2643C27.0885 9.82171 28.4883 8.42196 28.9309 6.62922V6.62922Z"
+                            fill="white"
+                        />
+                    </svg>
+                </Tooltip>
+            </button>
 
             <Modal
                 className="max-w-2xl"
@@ -338,7 +381,7 @@ const DokanAI = () => {
                         <div>
                             <div className="mb-2 flex items-center justify-between">
                                 <div className="font-semibold text-gray-800">
-                                    { __( 'Product Title', 'dokan-lite' ) }
+                                    { __( 'Title:', 'dokan-lite' ) }
                                 </div>
                                 <ResponseHistory
                                     history={ getHistoryLabel( 'post_title' ) }
@@ -347,21 +390,29 @@ const DokanAI = () => {
                                 />
                             </div>
                             <div className="mb-3">
-                                <SimpleInput
-                                    className="bg-white focus:outline-none focus:ring-dokan-btn"
-                                    onChange={ ( e: any ) => {
-                                        inputHandler(
-                                            e.target.value,
-                                            'post_title'
-                                        );
-                                    } }
-                                    value={ getInputValue( 'post_title' ) }
+                                <AISkeleton
+                                    type="text"
+                                    loading={ skeletonLoading( 'post_title' ) }
+                                    element={
+                                        <SimpleInput
+                                            className="bg-white focus:outline-none focus:ring-dokan-btn"
+                                            onChange={ ( e: any ) => {
+                                                inputHandler(
+                                                    e.target.value,
+                                                    'post_title'
+                                                );
+                                            } }
+                                            value={ getInputValue(
+                                                'post_title'
+                                            ) }
+                                        />
+                                    }
                                 />
                             </div>
                             <DokanButton
                                 variant="secondary"
                                 onClick={ () => refineContent( 'post_title' ) }
-                                disabled={ isLoading }
+                                disabled={ skeletonLoading( 'post_title' ) }
                             >
                                 { __( 'Refine', 'dokan-lite' ) }
                             </DokanButton>
@@ -370,7 +421,7 @@ const DokanAI = () => {
                                 <div className="mb-2 flex items-center justify-between">
                                     <div className="font-semibold text-gray-800">
                                         { __(
-                                            'Short Description',
+                                            'Short Description:',
                                             'dokan-lite'
                                         ) }
                                     </div>
@@ -386,25 +437,37 @@ const DokanAI = () => {
                                         }
                                     />
                                 </div>
-                                <div
-                                    className="mb-3 focus:outline-dokan-btn h-36 border border-gray-300 rounded p-2.5 overflow-auto"
-                                    contentEditable={ true }
-                                    onBlur={ ( e ) => {
-                                        inputHandler(
-                                            e.target.innerHTML,
-                                            'post_excerpt'
-                                        );
-                                    } }
-                                    dangerouslySetInnerHTML={ {
-                                        __html: getInputValue( 'post_excerpt' ),
-                                    } }
-                                ></div>
+
+                                <AISkeleton
+                                    loading={ skeletonLoading(
+                                        'post_excerpt'
+                                    ) }
+                                    element={
+                                        <div
+                                            className="mb-3 focus:outline-dokan-btn h-36 border border-gray-300 rounded p-2.5 overflow-auto"
+                                            contentEditable={ true }
+                                            onBlur={ ( e ) => {
+                                                inputHandler(
+                                                    e.target.innerHTML,
+                                                    'post_excerpt'
+                                                );
+                                            } }
+                                            dangerouslySetInnerHTML={ {
+                                                __html: getInputValue(
+                                                    'post_excerpt'
+                                                ),
+                                            } }
+                                        ></div>
+                                    }
+                                />
                                 <DokanButton
                                     variant="secondary"
                                     onClick={ () =>
                                         refineContent( 'post_excerpt' )
                                     }
-                                    disabled={ isLoading }
+                                    disabled={ skeletonLoading(
+                                        'post_excerpt'
+                                    ) }
                                 >
                                     { __( 'Refine', 'dokan-lite' ) }
                                 </DokanButton>
@@ -414,7 +477,7 @@ const DokanAI = () => {
                                 <div className="mb-2 flex items-center justify-between">
                                     <div className="font-semibold text-gray-800">
                                         { __(
-                                            'Long Description',
+                                            'Long Description:',
                                             'dokan-lite'
                                         ) }
                                     </div>
@@ -430,25 +493,37 @@ const DokanAI = () => {
                                         }
                                     />
                                 </div>
-                                <div
-                                    className="mb-3 h-48 focus:outline-dokan-btn border border-gray-300 rounded p-2.5 overflow-auto"
-                                    contentEditable={ true }
-                                    onBlur={ ( e ) => {
-                                        inputHandler(
-                                            e.target.innerHTML,
-                                            'post_content'
-                                        );
-                                    } }
-                                    dangerouslySetInnerHTML={ {
-                                        __html: getInputValue( 'post_content' ),
-                                    } }
-                                ></div>
+                                <AISkeleton
+                                    loading={ skeletonLoading(
+                                        'post_content'
+                                    ) }
+                                    element={
+                                        <div
+                                            className="mb-3 h-48 focus:outline-dokan-btn border border-gray-300 rounded p-2.5 overflow-auto"
+                                            contentEditable={ true }
+                                            onBlur={ ( e ) => {
+                                                inputHandler(
+                                                    e.target.innerHTML,
+                                                    'post_content'
+                                                );
+                                            } }
+                                            dangerouslySetInnerHTML={ {
+                                                __html: getInputValue(
+                                                    'post_content'
+                                                ),
+                                            } }
+                                        ></div>
+                                    }
+                                />
+
                                 <DokanButton
                                     variant="secondary"
                                     onClick={ () =>
                                         refineContent( 'post_content' )
                                     }
-                                    disabled={ isLoading }
+                                    disabled={ skeletonLoading(
+                                        'post_content'
+                                    ) }
                                 >
                                     { __( 'Refine', 'dokan-lite' ) }
                                 </DokanButton>
@@ -464,7 +539,7 @@ const DokanAI = () => {
                                 <span
                                     tabIndex={ 0 }
                                     role="button"
-                                    onClick={ generateContent }
+                                    onClick={ refineAllContent }
                                     className="text-dokan-link mx-1 underline"
                                 >
                                     { __(
@@ -476,12 +551,6 @@ const DokanAI = () => {
                         </div>
                     ) : (
                         <div>
-                            <div className="font-semibold mb-2">
-                                { __(
-                                    'Generate product information',
-                                    'dokan-lite'
-                                ) }
-                            </div>
                             <p className="text-sm mb-3">
                                 { __(
                                     'You can generate your product title, short description, long description all at once with this prompt. Type your prompt below',
@@ -523,7 +592,7 @@ const DokanAI = () => {
                             </DokanButton>
                         ) : (
                             <DokanButton
-                                disabled={ isLoading }
+                                disabled={ isLoading || ! prompt }
                                 onClick={ generateContent }
                             >
                                 { isLoading
@@ -534,6 +603,7 @@ const DokanAI = () => {
                     </div>
                 </Modal.Footer>
             </Modal>
+
             <Modal
                 className="max-w-md"
                 isOpen={ regenerateModal }
