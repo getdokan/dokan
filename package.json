@@ -65,6 +65,7 @@
     "@woocommerce/date": "^4.3.0",
     "@wordpress/api-fetch": "^7.14.0",
     "@wordpress/components": "^28.9.0",
+    "@wordpress/compose": "^7.20.0",
     "@wordpress/core-data": "^7.17.0",
     "@wordpress/data": "^10.9.0",
     "@wordpress/dataviews": "^4.10.0",
