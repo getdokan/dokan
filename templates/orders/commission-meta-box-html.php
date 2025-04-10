@@ -161,11 +161,6 @@ foreach ( $order->get_refunds() as $refund ) {
                                 <?php
                                 $amount = $item->get_total();
                                 $original_commission = $commission_data->get_admin_commission();
-
-                                if ( $order->get_total_refunded_for_item( $item_id ) ) {
-                                    $commission_refunded = ( $order->get_total_refunded_for_item( $item_id ) / $amount ) * $original_commission;
-                                }
-
                                 ?>
                                     <bdi>
                                     <?php
@@ -176,24 +171,7 @@ foreach ( $order->get_refunds() as $refund ) {
                                         )
                                     );
 									?>
-                                            </bdi>
-                                <?php
-
-                                if ( $order->get_total_refunded_for_item( $item_id ) ) :
-                                    ?>
-                                        <small class="refunded">
-                                        <?php
-                                        echo wc_price(
-                                            $commission_refunded, array(
-												'currency' => $order->get_currency(),
-												'decimals' => wc_get_price_decimals(),
-                                            )
-                                        );
-										?>
-                                                                </small>
-                                    <?php
-                                endif;
-                                ?>
+                                    </bdi>
                             </div>
                         </td>
                     </tr>
