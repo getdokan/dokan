@@ -62,6 +62,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@getdokan/dokan-ui": "github:getdokan/dokan-ui#dokan-plugin",
     "@headlessui/react": "^2.2.0",
+    "@woocommerce/date": "^4.3.0",
     "@wordpress/api-fetch": "^7.14.0",
     "@wordpress/components": "^28.9.0",
     "@wordpress/compose": "^7.20.0",
