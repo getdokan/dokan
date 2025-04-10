@@ -60,6 +60,7 @@ export type SettingsElement = {
 export interface SettingsProps {
     element: SettingsElement;
     onValueChange: ( element: SettingsElement ) => void;
+    getSetting: ( id: string ) => SettingsElement | undefined;
 }
 
 const StepSettings = ( {
@@ -368,6 +369,43 @@ const StepSettings = ( {
     };
 
     /**
+     * Get a setting by ID.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {string} id Setting ID.
+     */
+    const getSetting = ( id: string ) => {
+        return getSettingInChildren( id, allSettings );
+    };
+
+    /**
+     * Recursively search for a setting in the settings array.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {string}            id       Setting ID.
+     * @param {SettingsElement[]} settings Settings array.
+     */
+    const getSettingInChildren = (
+        id: string,
+        settings: SettingsElement[]
+    ): SettingsElement | undefined => {
+        for ( const setting of settings ) {
+            if ( setting.hook_key === id ) {
+                return setting;
+            }
+            if ( setting.children ) {
+                const found = getSettingInChildren( id, setting.children );
+                if ( found ) {
+                    return found;
+                }
+            }
+        }
+        return undefined;
+    }
+
+    /**
      * Retry loading the current step data.
      */
     const retryLoading = () => {
@@ -541,6 +579,7 @@ const StepSettings = ( {
                                                     '-settings-parser'
                                                 }
                                                 element={ element }
+                                                getSetting={ getSetting }
                                                 onValueChange={
                                                     updateSettingsValue
                                                 }

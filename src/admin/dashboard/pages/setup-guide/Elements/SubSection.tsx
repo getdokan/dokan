@@ -4,6 +4,7 @@ import { RawHTML } from '@wordpress/element';
 
 const SubSection = ( {
     element,
+    getSetting,
     onValueChange,
 }: SettingsProps ): JSX.Element => {
     if ( ! element.display ) {
@@ -43,6 +44,7 @@ const SubSection = ( {
                                 element.hook_key + '-' + child.id + '-parser'
                             }
                             onValueChange={ onValueChange }
+                            getSetting={ getSetting }
                         />
                     );
                 } ) }

@@ -28,7 +28,7 @@ const Currency = ( { element, onValueChange }: SettingsProps ) => {
 
     return (
         <div
-            id={ element.hook_key + '_div' }
+            id={ element.hook_key }
             className="@container/currency grid grid-cols-12 p-4 gap-2"
         >
             <div className="flex flex-col @sm/currency:col-span-8 col-span-12 gap-1">
@@ -65,7 +65,7 @@ const Currency = ( { element, onValueChange }: SettingsProps ) => {
                         placeholder: String( element?.placeholder ),
                         type: element.type,
                     } }
-                    className={ `w-24 h-12 rounded-r rounded-l-none border-l-0 focus:border-gray-300` }
+                    className={ `w-24 h-10 rounded-r rounded-l-none border-l-0 focus:border-gray-300` }
                 />
             </div>
         </div>

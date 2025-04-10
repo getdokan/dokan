@@ -3,6 +3,7 @@ import SettingsParser from './SettingsParser';
 
 const FieldGroup = ( {
     element,
+    getSetting,
     onValueChange,
 }: SettingsProps ): JSX.Element => {
     if ( ! element.display ) {
@@ -32,6 +33,7 @@ const FieldGroup = ( {
                                 element.hook_key + '-' + child.id + '-parser'
                             }
                             onValueChange={ onValueChange }
+                            getSetting={ getSetting }
                         />
                     );
                 } ) }

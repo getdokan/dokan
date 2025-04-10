@@ -16,7 +16,8 @@ export type Step = {
 
 const SetupGuide = () => {
     const [ steps, setSteps ] = useState< Step[] >( [] );
-    const [ isAllStepsCompleted, setIsAllStepsCompleted ] = useState< boolean >( false );
+    const [ isAllStepsCompleted, setIsAllStepsCompleted ] =
+        useState< boolean >( false );
 
     const defaultStep = {
         id: '',
@@ -26,19 +27,19 @@ const SetupGuide = () => {
         previous_step: '',
         title: '',
     };
-
-    const [ currentStep, setCurrentStep ] = useState< Step >( { ...defaultStep } );
-
+    const [ currentStep, setCurrentStep ] = useState< Step >( {
+        ...defaultStep,
+    } );
     useEffect( () => {
         const allSteps: Step[] = getSettings( 'setup' ).steps;
 
         setSteps( allSteps );
     }, [] );
 
-    useEffect(() => {
-        const allSteps: Step[] = getSettings('setup').steps;
-        setSteps(allSteps);
-    }, []);
+    useEffect( () => {
+        const allSteps: Step[] = getSettings( 'setup' ).steps;
+        setSteps( allSteps );
+    }, [] );
 
     useEffect( () => {
         const isCompleted = steps.every( ( step ) => step.is_completed );
@@ -55,9 +56,9 @@ const SetupGuide = () => {
         if ( isCompleted ) {
             try {
                 apiFetch< SettingsElement[] >( {
-                    path   : '/dokan/v1/admin/setup-guide/',
-                    method : 'POST',
-                    data   : { setup_completed: true },
+                    path: '/dokan/v1/admin/setup-guide/',
+                    method: 'POST',
+                    data: { setup_completed: true },
                 } );
 
                 setCurrentStep( { ...defaultStep } );
@@ -65,7 +66,7 @@ const SetupGuide = () => {
                 console.error( err );
             }
         }
-    }
+    };
 
     return (
         <div className="grid grid-cols-12 lg:gap-6 gap-4 @container/main">

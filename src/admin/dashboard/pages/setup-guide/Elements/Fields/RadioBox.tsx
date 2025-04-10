@@ -40,7 +40,7 @@ const RadioBox = ( { element, onValueChange }: SettingsProps ) => {
     };
 
     return (
-        <div id={ element.hook_key + '_div' } className="w-full ">
+        <div id={ element.hook_key } className="w-full ">
             <div className="p-4 flex flex-col gap-y-4 ">
                 <div className="flex-col flex gap-1">
                     <h2 className="@sm:text-sm @md:text-base leading-6 font-semibold text-gray-900">

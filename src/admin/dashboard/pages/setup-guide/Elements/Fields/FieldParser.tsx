@@ -8,10 +8,16 @@ import Switcher from './Switcher';
 import Currency from './Currency';
 import Select from './Select';
 import MultiCheck from './MultiCheck';
+import CategoryBasedCommission from './Commission/CategoryBasedCommission';
+import CombineInput from './Commission/CombineInput';
+import { applyFilters } from '@wordpress/hooks';
 
-const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
+const FieldParser = ( {
+    element,
+    getSetting,
+    onValueChange,
+}: SettingsProps ) => {
     // TODO: add support for custom input fields and custom hook.
-
     switch ( element.variant ) {
         case 'text':
             return (
@@ -19,6 +25,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
+                    getSetting={ getSetting }
                 />
             );
         case 'select':
@@ -27,6 +34,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
+                    getSetting={ getSetting }
                 />
             );
         case 'password':
@@ -35,6 +43,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
+                    getSetting={ getSetting }
                 />
             );
         case 'tel':
@@ -43,6 +52,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
+                    getSetting={ getSetting }
                 />
             );
         case 'radio_box':
@@ -51,6 +61,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
+                    getSetting={ getSetting }
                 />
             );
         case 'radio':
@@ -59,6 +70,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
+                    getSetting={ getSetting }
                 />
             );
         case 'currency':
@@ -67,6 +79,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
+                    getSetting={ getSetting }
                 />
             );
         case 'switch':
@@ -75,6 +88,7 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
+                    getSetting={ getSetting }
                 />
             );
         case 'multicheck':
@@ -83,6 +97,25 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
                     element={ element }
                     key={ element.hook_key }
                     onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+        case 'category_based_commission':
+            return (
+                <CategoryBasedCommission
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+        case 'combine_input':
+            return (
+                <CombineInput
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
                 />
             );
         case 'checkbox':
@@ -101,12 +134,17 @@ const FieldParser = ( { element, onValueChange }: SettingsProps ) => {
         case 'week':
         case 'number':
         default:
-            return (
+            return applyFilters(
+                'dokan_admin_setup_guide_default_field_parser',
                 <Text
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                />
+                    getSetting={ getSetting }
+                />,
+                element,
+                getSetting,
+                onValueChange
             );
     }
 };

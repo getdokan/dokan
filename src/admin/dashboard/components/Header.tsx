@@ -11,7 +11,7 @@ const Header = () => {
         dokanAdminDashboardSettings?.header_info;
 
     return (
-        <div className="w-full bg-white shadow-sm border-b border-gray-200 px-6 py-4 flex justify-between items-center rounded-lg shadow my-6">
+        <div data-test-id='dokan-dahboard-header' className="w-full bg-white shadow-sm border-b border-gray-200 px-6 py-4 flex justify-between items-center rounded-lg shadow my-6">
             { /* Logo and version tags */ }
             <div className="flex flex-wrap items-center gap-4">
                 <DokanIcon />
@@ -46,7 +46,7 @@ const Header = () => {
             </div>
 
             { /* Help button */ }
-            <div className="relative pr-1.5">
+            <div data-test-id='dokan-dashboard-header-help-menu-container' className="relative pr-1.5">
                 <button
                     onPointerEnter={ () => setShowDropdown( true ) }
                     onPointerLeave={ () => setShowDropdown( false ) }

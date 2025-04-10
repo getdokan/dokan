@@ -18,9 +18,11 @@ const MultiCheck = ( { element, onValueChange }: SettingsProps ) => {
         } );
     };
 
+    const initialValue = Object.values( element.value || element.default );
+
     return (
         <div
-            id={ element.hook_key + '_div' }
+            id={ element.hook_key }
             className=" flex justify-between flex-col items-start p-4 w-full"
         >
             <div className="flex flex-col mb-4 w-full">
@@ -34,7 +36,7 @@ const MultiCheck = ( { element, onValueChange }: SettingsProps ) => {
             <SimpleCheckboxGroup
                 name={ element?.id }
                 onChange={ handleChange }
-                defaultValue={ Object.values( element?.default ) }
+                defaultValue={ initialValue }
                 options={
                     element?.options?.map( ( option ) => ( {
                         label: option.title,

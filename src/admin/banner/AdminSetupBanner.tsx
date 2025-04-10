@@ -24,7 +24,7 @@ const AdminSetupBanner = () => {
     const dokanAssetUrl = dokanSetupGuideBanner?.asset_url;
 
     return (
-        <div className="bg-white rounded-lg  p-5 my-4  mr-[20px]">
+        <div data-test-id="admin-setup-guide-button" className="bg-white rounded-lg p-5 my-4 mr-[20px]">
             <div className="flex items-center flex-wrap gap-y-4 justify-between">
                 <div className="flex items-center flex-wrap gap-6">
                     <div className="flex items-center justify-center w-16 h-16 bg-white shadow-[0px_2px_14px_1px_rgba(50,22,56,0.06)] rounded-2xl border-2 border-[#5341C20F]">

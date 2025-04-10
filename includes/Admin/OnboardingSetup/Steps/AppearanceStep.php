@@ -35,6 +35,28 @@ class AppearanceStep extends AbstractStep {
     protected $storage_key = 'dokan_admin_onboarding_setup_step_appearance';
 
     /**
+     * Get default appearance settings
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array Default appearance settings
+     */
+    protected function get_default_settings(): array {
+        return apply_filters(
+            'dokan_admin_setup_guides_appearance_step_default_data',
+            [
+                'contact_seller'             => 'on',
+                'enable_theme_store_sidebar' => 'off',
+                'hide_vendor_info'           => [
+                    'email'   => '',
+                    'phone'   => '',
+                    'address' => '',
+                ],
+            ]
+        );
+    }
+
+    /**
      * @inheritDoc
      */
 	public function register(): void {}
@@ -57,16 +79,8 @@ class AppearanceStep extends AbstractStep {
 	 * @inheritDoc
 	 */
 	public function describe_settings(): void {
-        $contact_seller = dokan_get_option( 'contact_seller', 'dokan_appearance', 'on' );
-        $theme_sidebar  = dokan_get_option( 'enable_theme_store_sidebar', 'dokan_appearance', 'off' );
-
-        $default_vendor_info = [
-            'email'   => '',
-            'phone'   => '',
-            'address' => '',
-        ];
-
-        $vendor_info = dokan_get_option( 'hide_vendor_info', 'dokan_appearance', $default_vendor_info );
+        $default_settings = $this->get_default_settings();
+        $dokan_appearance = get_option( 'dokan_appearance', $default_settings );
 
         $this->set_title( esc_html__( 'Appearance', 'dokan-lite' ) )
             ->add(
@@ -81,7 +95,8 @@ class AppearanceStep extends AbstractStep {
                                     ->set_description( esc_html__( 'Display a contact form on vendor store pages for customer inquiries', 'dokan-lite' ) )
                                     ->add_option( esc_html__( 'Hide', 'dokan-lite' ), 'off' )
                                     ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'on' )
-                                    ->set_default( $contact_seller )
+                                    ->set_default( $default_settings['contact_seller'] )
+                                    ->set_value( $dokan_appearance['contact_seller'] ?? $default_settings['contact_seller'] )
                             )
                             ->add(
                                 Factory::field( 'enable_theme_store_sidebar', 'radio' )
@@ -89,7 +104,8 @@ class AppearanceStep extends AbstractStep {
                                     ->set_description( esc_html__( 'Show/hide the sidebar on vendor store pages', 'dokan-lite' ) )
                                     ->add_option( esc_html__( 'Hide', 'dokan-lite' ), 'off' )
                                     ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'on' )
-                                    ->set_default( $theme_sidebar )
+                                    ->set_default( $default_settings['enable_theme_store_sidebar'] )
+                                    ->set_value( $dokan_appearance['enable_theme_store_sidebar'] ?? $default_settings['enable_theme_store_sidebar'] )
                             )
                     )
                     ->add(
@@ -100,21 +116,24 @@ class AppearanceStep extends AbstractStep {
                                     ->set_title( esc_html__( 'Email Address', 'dokan-lite' ) )
                                     ->add_option( esc_html__( 'Hide', 'dokan-lite' ), '' )
                                     ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'email' )
-                                    ->set_default( $vendor_info['email'] ?? $default_vendor_info['email'] )
+                                    ->set_default( $default_settings['hide_vendor_info']['email'] )
+                                    ->set_value( $dokan_appearance['hide_vendor_info']['email'] ?? $default_settings['hide_vendor_info']['email'] )
                             )
                             ->add(
                                 Factory::field( 'phone', 'radio' )
                                     ->set_title( esc_html__( 'Phone Number', 'dokan-lite' ) )
                                     ->add_option( esc_html__( 'Hide', 'dokan-lite' ), '' )
                                     ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'phone' )
-                                    ->set_default( $vendor_info['phone'] ?? $default_vendor_info['phone'] )
+                                    ->set_default( $default_settings['hide_vendor_info']['phone'] )
+                                    ->set_value( $dokan_appearance['hide_vendor_info']['phone'] ?? $default_settings['hide_vendor_info']['phone'] )
                             )
                             ->add(
                                 Factory::field( 'address', 'radio' )
                                     ->set_title( esc_html__( 'Store Address', 'dokan-lite' ) )
                                     ->add_option( esc_html__( 'Hide', 'dokan-lite' ), '' )
                                     ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'address' )
-                                    ->set_default( $vendor_info['address'] ?? $default_vendor_info['address'] )
+                                    ->set_default( $default_settings['hide_vendor_info']['address'] )
+                                    ->set_value( $dokan_appearance['hide_vendor_info']['address'] ?? $default_settings['hide_vendor_info']['address'] )
                             )
                     )
             );
@@ -131,16 +150,7 @@ class AppearanceStep extends AbstractStep {
      * @inheritDoc
      */
     public function option_dispatcher( $data ): void {
-        $default_settings = [
-            'contact_seller'             => 'on',
-            'enable_theme_store_sidebar' => 'off',
-            'hide_vendor_info'           => [
-                'email'   => '',
-                'phone'   => '',
-                'address' => '',
-            ],
-        ];
-
+        $default_settings = $this->get_default_settings();
         $dokan_appearance = get_option( 'dokan_appearance', $default_settings );
 
         $dokan_appearance['contact_seller']              = $data['appearance']['store-info']['contact_seller'] ?? $default_settings['contact_seller'];

@@ -4,6 +4,8 @@ namespace WeDevs\Dokan\Admin\OnboardingSetup\Components;
 
 use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Checkbox;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Commission\CategoryBasedCommission;
+use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Commission\CombineInput;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Currency;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\MultiCheck;
 use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Number;
@@ -48,17 +50,19 @@ class Field extends SettingsElement {
 	 * @var string[] $field_map Map for the Input type.
 	 */
     protected $field_map = array(
-		'text'       => Text::class,
-		'number'     => Number::class,
-		'checkbox'   => Checkbox::class,
-		'select'     => Select::class,
-		'radio'      => Radio::class,
-		'tel'        => Tel::class,
-		'password'   => Password::class,
-        'radio_box'  => RadioBox::class,
-        'switch'     => Switcher::class,
-        'multicheck' => MultiCheck::class,
-        'currency'   => Currency::class,
+		'text'                      => Text::class,
+		'number'                    => Number::class,
+		'checkbox'                  => Checkbox::class,
+		'select'                    => Select::class,
+		'radio'                     => Radio::class,
+		'tel'                       => Tel::class,
+		'password'                  => Password::class,
+		'radio_box'                 => RadioBox::class,
+		'switch'                    => Switcher::class,
+		'multicheck'                => MultiCheck::class,
+		'currency'                  => Currency::class,
+		'combine_input'             => CombineInput::class,
+		'category_based_commission' => CategoryBasedCommission::class,
 	);
 
 	/**
