@@ -1,6 +1,6 @@
 const ForbiddenIcon = ( {
     className = '',
-    color = 'text-primary',
+    color = 'text-primary-500',
 }: {
     className?: string;
     color?: string;
