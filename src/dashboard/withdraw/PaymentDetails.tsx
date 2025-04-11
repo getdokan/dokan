@@ -1,4 +1,5 @@
-import { Button, Card } from '@getdokan/dokan-ui';
+import { Card } from '@getdokan/dokan-ui';
+import { DokanButton } from '@dokan/components';
 import { __ } from '@wordpress/i18n';
 import PriceHtml from '../../components/PriceHtml';
 import DateTimeHtml from '../../components/DateTimeHtml';
@@ -101,15 +102,13 @@ function PaymentDetails( {
                                     </p>
                                 ) }
                             </div>
-                            <Button
-                                color="gray"
-                                className="bg-dokan-btn hover:bg-dokan-btn-hover"
+                            <DokanButton
                                 onClick={ () => {
                                     navigate( '/withdraw-requests' );
                                 } }
                             >
                                 { __( 'View Payments', 'dokan-lite' ) }
-                            </Button>
+                            </DokanButton>
                         </div>
 
                         <Slot
