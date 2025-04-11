@@ -8,7 +8,6 @@ export interface QueryParams {
     search?: string;
     order?: 'asc' | 'desc';
     orderby?: string;
-
     [ key: string ]: any;
 }
 
