@@ -86,12 +86,14 @@ class ProductCommission extends AbstractCommissionCalculator {
      * @return \WeDevs\Dokan\Commission\Model\Commission|null
      */
     public function calculate(): Commission {
-        $strategies = [
-            new Product( $this->product_id ),
-            new Vendor( $this->vendor_id, $this->category_id ),
-            new GlobalStrategy( $this->category_id ),
-            new DefaultStrategy(),
-        ];
+        $strategies = apply_filters(
+            'dokan_product_commission_strategies', [
+                new Product( $this->product_id ),
+                new Vendor( $this->vendor_id, $this->category_id ),
+                new GlobalStrategy( $this->category_id ),
+                new DefaultStrategy(),
+            ]
+        );
 
         $this->determine_strategy_to_apply( $strategies );
 
@@ -105,7 +107,7 @@ class ProductCommission extends AbstractCommissionCalculator {
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
-    public function retrieve(): Commission {
+    public function get(): Commission {
         return $this->calculate();
     }
 

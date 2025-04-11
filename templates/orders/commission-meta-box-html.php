@@ -82,7 +82,7 @@ foreach ( $order->get_refunds() as $refund ) {
                     $commission   = 0;
 
                     $product_commission = new \WeDevs\Dokan\Commission\OrderLineItemCommission( $item, $order );
-                    $commission_data = $product_commission->retrieve();
+                    $commission_data = $product_commission->get();
 
                     $commission_type      = $commission_data->get_type();
                     $admin_commission     = $commission_data->get_admin_commission();

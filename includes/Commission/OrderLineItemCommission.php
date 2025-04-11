@@ -69,11 +69,38 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      * @return \WeDevs\Dokan\Commission\Model\Commission|null
      */
     public function calculate(): Commission {
-        /**
-         * @var \WeDevs\Dokan\Commission\Model\Commission $commission_data
-         * @var $item_price float
-         */
-        [ $commission_data, $item_price ] = $this->calculate_and_get_actual_commission();
+        $refund = $this->order->get_total_refunded_for_item( $this->item->get_id() );
+
+        $item_price = apply_filters( 'dokan_earning_by_order_item_price', $this->item->get_subtotal(), $this->item, $this->order );
+        $item_price = $refund ? floatval( $item_price ) - floatval( $refund ) : $item_price;
+
+        $total_quantity   = $this->item->get_quantity();
+        $product_id       = $this->item->get_variation_id() ? $this->item->get_variation_id() : $this->item->get_product_id();
+        $vendor_id        = $this->vendor_id;
+        $category_id      = 0;
+
+        // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
+        $product_categories = Helper::get_saved_products_category( $product_id );
+        $chosen_categories  = $product_categories['chosen_cat'];
+        $category_id        = reset( $chosen_categories );
+        $category_id        = $category_id ? $category_id : 0;
+
+        $strategies = apply_filters(
+            'dokan_order_line_item_commission_strategies', [
+                new OrderItem( $this->item->get_id(), $item_price, $total_quantity ),
+                new Product( $product_id ),
+                new Vendor( $vendor_id, $category_id ),
+                new GlobalStrategy( $category_id ),
+                new DefaultStrategy(),
+            ]
+        );
+
+        $this->determine_strategy_to_apply( $strategies );
+        $this->set_price( $item_price );
+        $this->set_quantity( $total_quantity );
+
+        $commission_data = $this->calculate_commission();
+
         $parameters = $commission_data->get_parameters() ?? [];
         $percentage = $parameters['percentage'] ?? 0;
         $flat       = $parameters['flat'] ?? 0;
@@ -103,7 +130,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
-    public function retrieve(): Commission {
+    public function get(): Commission {
         /**
          * @var \WeDevs\Dokan\Commission\Model\Commission $commission_data
          */
@@ -114,11 +141,10 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
          * But now dokan saves the commission data in order item meta. So we need to check if the commission data is available in order item meta or we need to calculate them for backward compatibility.
          */
         if ( empty( $commission_meta ) && ! is_array( $commission_meta ) ) {
-            [ $commission_meta ] = $this->calculate_and_get_actual_commission();
+            return $this->calculate();
         }
 
         $commission_data = new Commission();
-
         $commission_data->set_admin_commission( $commission_data->get_admin_commission() + floatval( $commission_meta['admin_commission'] ?? 0 ) );
         $commission_data->set_net_admin_commission( $commission_data->get_net_admin_commission() + floatval( $commission_meta['admin_net_commission'] ?? 0 ) );
         $commission_data->set_admin_discount( $commission_data->get_admin_discount() + floatval( $commission_meta['admin_discount'] ?? 0 ) );
@@ -146,29 +172,14 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
     public function additional_adjustments( Commission $commission_data ): Commission {
-        $admin_net_commission = 0.0;
-        $vendor_net_earning = 0.0;
-
-        /**
-         * @var DokanOrderLineItemCouponInfo[] $dokan_coupon_info
-         */
-        $dokan_coupon_info = $this->item->get_meta( '_dokan_coupon_info', true );
-
-        if ( ! $dokan_coupon_info || ! is_array( $dokan_coupon_info ) ) {
+        if ( empty( $this->dokan_coupon_infos ) ) {
             return $commission_data;
         }
 
-        $line_item_coupon_array = [];
-        if ( ! empty( $dokan_coupon_info ) && is_array( $dokan_coupon_info ) ) {
-            foreach ( $dokan_coupon_info as $coupon_code => $coupon_meta ) {
-                $coupon_line_item = new DokanOrderLineItemCouponInfo();
-                $coupon_line_item->set_coupon_info( $coupon_meta );
+        $admin_net_commission = 0.0;
+        $vendor_net_earning = 0.0;
 
-                $line_item_coupon_array[] = $coupon_line_item;
-            }
-        }
-
-        foreach ( $line_item_coupon_array as $dokan_coupon_info ) {
+        foreach ( $this->dokan_coupon_infos as $dokan_coupon_info ) {
             $commission_params     = $commission_data->get_parameters();
             $flat                  = $commission_params['flat'] ?? 0;
             $percent               = $commission_params['percentage'] ?? 0;
@@ -198,44 +209,5 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         }
 
         return $commission_data;
-    }
-
-    /**
-     * Calculate and get actual commission.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return array
-     */
-    protected function calculate_and_get_actual_commission(): array {
-        $refund = $this->order->get_total_refunded_for_item( $this->item->get_id() );
-
-        $item_price = apply_filters( 'dokan_earning_by_order_item_price', $this->item->get_subtotal(), $this->item, $this->order );
-        $item_price = $refund ? floatval( $item_price ) - floatval( $refund ) : $item_price;
-
-        $total_quantity   = $this->item->get_quantity();
-        $product_id       = $this->item->get_variation_id() ? $this->item->get_variation_id() : $this->item->get_product_id();
-        $vendor_id        = $this->vendor_id;
-        $category_id      = 0;
-
-        // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
-        $product_categories = Helper::get_saved_products_category( $product_id );
-        $chosen_categories  = $product_categories['chosen_cat'];
-        $category_id        = reset( $chosen_categories );
-        $category_id        = $category_id ? $category_id : 0;
-
-        $strategies = [
-            new OrderItem( $this->item->get_id(), $item_price, $total_quantity ),
-            new Product( $product_id ),
-            new Vendor( $vendor_id, $category_id ),
-            new GlobalStrategy( $category_id ),
-            new DefaultStrategy(),
-        ];
-
-        $this->determine_strategy_to_apply( $strategies );
-        $this->set_price( $item_price );
-        $this->set_quantity( $total_quantity );
-
-        return [ $this->calculate_commission(), $item_price ];
     }
 }

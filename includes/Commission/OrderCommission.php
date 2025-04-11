@@ -35,6 +35,8 @@ class OrderCommission extends AbstractCommissionCalculator {
      */
     public function __construct( WC_Order $order ) {
         $this->order = $order;
+
+        $this->get();
     }
 
     /**
@@ -45,6 +47,8 @@ class OrderCommission extends AbstractCommissionCalculator {
      * @return void
      */
     public function calculate(): Model\Commission {
+        $this->reset_order_commission_data();
+
         foreach ( $this->order->get_items() as $item_id => $item ) {
             $line_item_commission = new OrderLineItemCommission( $item, $this->order );
             $commission           = $line_item_commission->calculate();
@@ -69,11 +73,10 @@ class OrderCommission extends AbstractCommissionCalculator {
      *
      * @return $this
      */
-    public function retrieve(): Model\Commission {
-
+    public function get(): Model\Commission {
         foreach ( $this->order->get_items() as $item_id => $item ) {
             $line_item_commission = new OrderLineItemCommission( $item, $this->order );
-            $commission           = $line_item_commission->retrieve();
+            $commission           = $line_item_commission->get();
 
             $this->admin_commission     += $commission->get_admin_commission();
             $this->admin_net_commission += $commission->get_net_admin_commission();
@@ -407,5 +410,16 @@ class OrderCommission extends AbstractCommissionCalculator {
      */
     public function additional_adjustments( Commission $commission_data ): Commission {
         return $commission_data;
+    }
+
+    protected function reset_order_commission_data() {
+        $this->admin_commission     = 0;
+        $this->admin_net_commission = 0;
+        $this->admin_discount       = 0;
+        $this->admin_subsidy        = 0;
+
+        $this->vendor_discount    = 0;
+        $this->vendor_earnign     = 0;
+        $this->vendor_net_earnign = 0;
     }
 }

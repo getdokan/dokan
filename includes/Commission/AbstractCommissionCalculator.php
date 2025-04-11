@@ -55,7 +55,7 @@ abstract class AbstractCommissionCalculator {
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
-    abstract public function retrieve(): Commission;
+    abstract public function get(): Commission;
 
     /**
      * Additional adjustments to the commission data.

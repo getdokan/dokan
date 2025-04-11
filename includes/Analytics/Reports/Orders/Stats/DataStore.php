@@ -136,7 +136,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		}
 
         $order_commission = new OrderCommission( $order );
-        $order_commission->retrieve();
+        $order_commission->get();
 
 		/**
 		 * Filters order stats data.

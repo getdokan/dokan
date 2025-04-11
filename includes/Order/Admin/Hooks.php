@@ -607,7 +607,7 @@ class Hooks {
         $all_commission_types = array_merge( dokan_commission_types(), dokan()->commission->get_legacy_commission_types() );
 
         $order_commission = new OrderCommission( $order );
-        $order_commission->retrieve();
+        $order_commission->get();
 
         dokan_get_template_part(
             'orders/commission-meta-box-html', '', [
