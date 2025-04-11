@@ -5,10 +5,10 @@ import { actions } from './actions';
 import { resolvers } from './resolvers';
 import { State } from '@dokan/definitions/dokan-product-categories';
 
-export const storeName = 'dokan/product-categories';
+export const DOKAN_PRODUCT_CATEGORIES_STORE = 'dokan/product-categories';
 
 const store = createReduxStore< State, typeof actions, typeof selectors >(
-    storeName,
+    DOKAN_PRODUCT_CATEGORIES_STORE,
     {
         reducer,
         actions,

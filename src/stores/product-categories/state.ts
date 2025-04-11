@@ -1,4 +1,4 @@
-import { State } from './types';
+import { State } from '@dokan/definitions/dokan-product-categories';
 
 export const DEFAULT_STATE: State = {
     categories: {},

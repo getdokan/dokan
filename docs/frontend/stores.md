@@ -107,12 +107,12 @@ Import and use the store in your components:
 
 ```typescript
 import {useSelect, useDispatch} from '@wordpress/data';
-import storeModule from '@dokan/stores/{store-name}';
+import store from '@dokan/stores/{store-name}';
 
 function YourComponent() {
     const {items} = useSelect((select) => {
         return {
-            items: select(storeModule).getItems(),
+           items: select(store).getItems(),
         };
     }, []);
 
@@ -121,6 +121,85 @@ function YourComponent() {
     // Use items and setItems in your component
 }
 ```
+
+# Dokan Product Store
+
+The `Dokan Product Store` manages product data  within Dokan. Use this store  products.
+
+```js
+import { useSelect,resolveSelect } from '@wordpress/data';
+import productStore from '@dokan/stores/products';
+
+const App = () => {
+    const products = useSelect( ( select ) => {
+        return select( productStore ).getItems();
+    }, []);
+
+    const singleProduct = useSelect( ( select ) => {
+        return select( productStore ).getItem( 1 ); // Get product with ID 1
+    }, []);
+
+    // async product fetch using resolveSelect
+    
+    const fetchProducts = async () => {
+        resolveSelect( productStore )
+                        .getItems( {
+                            per_page: 10,
+                            search: searchValue,
+                            _fields: 'id,name',
+                            exclude: [ 1, 2, 3 ], // Exclude products with IDs 1, 2, and 3
+                        } )
+                        .then( ( response ) => {
+                               const mappedResponse = response.map( ( item ) => ( {
+                                    value: item.id,
+                                    label: item.name,
+                                } ) )
+                        } );
+    };
+
+    // Additional logic to handle products can be added here
+};
+
+```
+
+# Dokan Product Category Store
+The `Dokan Product Category Store` manages product categories within Dokan. Use this store to manage product categories.
+
+```js
+import { useSelect,resolveSelect } from '@wordpress/data';
+import productCategoryStore from '@dokan/stores/product-categories';
+const App = () => {
+    const categories = useSelect( ( select ) => {
+        return select( productCategoryStore ).getItems();
+    }, []);
+
+    const singleCategory = useSelect( ( select ) => {
+        return select( productCategoryStore ).getItem( 1 ); // Get category with ID 1
+    }, []);
+
+    // async category fetch using resolveSelect
+    
+    const fetchCategories = async () => {
+        resolveSelect( productCategoryStore )
+                        .getItems( {
+                            per_page: 10,
+                            search: searchValue,
+                            _fields: 'id,name',
+                            exclude: [ 1, 2, 3 ], // Exclude categories with IDs 1, 2, and 3
+                        } )
+                        .then( ( response ) => {
+                               const mappedResponse = response.map( ( item ) => ( {
+                                    value: item.id,
+                                    label: item.name,
+                                } ) )
+                        } );
+    };
+
+    // Additional logic to handle categories can be added here
+};
+
+```
+
 
 ## Dependency Resolution
 

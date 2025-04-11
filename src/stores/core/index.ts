@@ -5,10 +5,10 @@ import selectors from './selectors';
 import resolvers from './resolvers';
 import { CoreState } from '@dokan/definitions/dokan-core';
 
-export const storeName = 'dokan/core';
+export const DOKAN_CORE_STORE = 'dokan/core';
 
 const store = createReduxStore< CoreState, typeof actions, typeof selectors >(
-    storeName,
+    DOKAN_CORE_STORE,
     {
         reducer,
         selectors,
