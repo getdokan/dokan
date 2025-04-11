@@ -6,13 +6,18 @@ import Balance from './Balance';
 import PaymentDetails from './PaymentDetails';
 import PaymentMethods from './PaymentMethods';
 import { useEffect } from '@wordpress/element';
-import { useCurrentUser } from "@dokan/hooks";
+import { useSelect } from "@wordpress/data";
+import coreStore from "@dokan/stores/core";
 
 const Index = () => {
     const useWithdrawRequestHook = useWithdrawRequests( true );
     const withdrawSettings = useWithdrawSettings();
-    const currentUser = useCurrentUser();
     const balance = useBalance();
+
+    const currentUser = useSelect( ( select ) => {
+        // this is to do the eager loading the store.
+        return select( coreStore ).getCurrentUser();
+    }, [] );
 
     useEffect( () => {
         if ( currentUser ) {

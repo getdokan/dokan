@@ -7,14 +7,18 @@ import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 import RequestWithdrawBtn from './RequestWithdrawBtn';
 import { useWithdrawSettings } from './Hooks/useWithdrawSettings';
-import { useCurrentUser } from "@dokan/hooks";
 import { useBalance } from "./Hooks/useBalance";
+import { useSelect } from "@wordpress/data";
+import coreStore from "@dokan/stores/core";
 
 function WithdrawRequests() {
     const useWithdrawRequestHook = useWithdrawRequests( true );
     const withdrawSettings = useWithdrawSettings();
     const balance = useBalance();
-    const currentUser = useCurrentUser();
+    const currentUser = useSelect( ( select ) => {
+        // this is to do the eager loading the store.
+        return select( coreStore ).getCurrentUser();
+    }, [] );
 
     const navigate = useNavigate();
     const location = useLocation();
