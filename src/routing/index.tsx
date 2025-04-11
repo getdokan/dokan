@@ -47,14 +47,14 @@ export function withRouter( Component, capabilities = [] ) {
             createSearchParams,
         };
 
+        if ( ! authorised ) {
+            return createElement( Forbidden, { ...props, ...routerProps } );
+        }
+
         // Check if Component is a valid element
         if ( isValidElement( Component ) ) {
             // If it's a valid element, clone it and pass the router props
             return cloneElement( Component, { ...props, ...routerProps } );
-        }
-
-        if ( ! authorised ) {
-            return createElement( Forbidden, { ...props, ...routerProps } );
         }
 
         // If it's a function component, render it with the router props
