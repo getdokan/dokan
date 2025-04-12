@@ -225,6 +225,7 @@ class Coupon {
         }
 
         wc_update_order_item_meta( $order_item->get_id(), self::DOKAN_COUPON_META_KEY, $coupon_info );
+        do_action( 'dokan_after_coupon_info_data_updated_on_order_item_meta', $order_item, $coupon_info );
 
         // apply coupon sub order
         if ( $order->get_meta( 'has_sub_order' ) ) {

@@ -81,7 +81,18 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
         if ( ! empty( $line_items ) ) {
             foreach ( $line_items as $item_data ) {
                 $product = wc_get_product( $item_data['product_id'] );
-                $order->add_product( $product, $item_data['quantity'] );
+                $item_id = $order->add_product( $product, $item_data['quantity'] );
+                $item = $order->get_item( $item_id );
+
+                $item_metadatas = $item_data['meta_data'] ?? array();
+                foreach ( $item_metadatas as $item_meta ) {
+                    if ( is_array( $item_meta ) ) {
+                        $is_unique = $item_meta['unique'] ?? false;
+                        $item->add_meta_data( $item_meta['key'], $item_meta['value'], $is_unique );
+                    }
+                }
+                $item->save_meta_data();
+                $item->save();
             }
         }
 

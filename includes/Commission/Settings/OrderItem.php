@@ -3,6 +3,8 @@
 namespace WeDevs\Dokan\Commission\Settings;
 
 use WeDevs\Dokan\Commission\Formula\CategoryBased;
+use WeDevs\Dokan\Commission\Formula\Flat;
+use WeDevs\Dokan\Commission\Formula\Percentage;
 use WeDevs\Dokan\Commission\Model\Setting;
 
 class OrderItem implements InterfaceSetting {
@@ -44,6 +46,11 @@ class OrderItem implements InterfaceSetting {
             $commission_type       = wc_get_order_item_meta( $this->order_item_id, '_dokan_commission_type', true ) ?? '';
             $additional_flat       = wc_get_order_item_meta( $this->order_item_id, '_dokan_additional_fee', true ) ?? '';
             $commission_meta       = wc_get_order_item_meta( $this->order_item_id, 'dokan_commission_meta', true );
+
+            // if dokan_commission_meta is exists the we don't need to map the flat amount because after 3.14.0 this maping is not needed.
+            if ( $commission_type === Flat::SOURCE && ! is_array( $commission_meta ) ) {
+                $additional_flat = $commission_percentage;
+            }
 
             $commission_meta = empty( $commission_meta ) ? [] : $commission_meta;
         }

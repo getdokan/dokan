@@ -26,6 +26,9 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
     const VENDOR_ID_META_KEY = '_dokan_vendor_id';
     protected WC_Order $order;
     protected int $vendor_id;
+    /**
+     * @var DokanOrderLineItemCouponInfo[] $dokan_coupon_infos
+     */
     protected array $dokan_coupon_infos;
 
     /**
@@ -146,13 +149,13 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
 
         $commission_data = new Commission();
         $commission_data->set_admin_commission( $commission_data->get_admin_commission() + floatval( $commission_meta['admin_commission'] ?? 0 ) );
-        $commission_data->set_net_admin_commission( $commission_data->get_net_admin_commission() + floatval( $commission_meta['admin_net_commission'] ?? 0 ) );
+        $commission_data->set_net_admin_commission( $commission_data->get_net_admin_commission() + floatval( $commission_meta['net_admin_commission'] ?? 0 ) );
         $commission_data->set_admin_discount( $commission_data->get_admin_discount() + floatval( $commission_meta['admin_discount'] ?? 0 ) );
         $commission_data->set_admin_subsidy( $commission_data->get_admin_subsidy() + floatval( $commission_meta['admin_subsidy'] ?? 0 ) );
         $commission_data->set_per_item_admin_commission( floatval( $commission_meta['per_item_admin_commission'] ?? 0 ) );
         $commission_data->set_vendor_discount( $commission_data->get_vendor_discount() + floatval( $commission_meta['vendor_discount'] ?? 0 ) );
         $commission_data->set_vendor_earning( $commission_data->get_vendor_earning() + floatval( $commission_meta['vendor_earning'] ?? 0 ) );
-        $commission_data->set_net_vendor_earning( $commission_data->get_net_vendor_earning() + floatval( $commission_meta['vendor_net_earning'] ?? 0 ) );
+        $commission_data->set_net_vendor_earning( $commission_data->get_net_vendor_earning() + floatval( $commission_meta['net_vendor_earning'] ?? 0 ) );
         $commission_data->set_source( $commission_meta['source'] ?? DefaultStrategy::SOURCE );
         $commission_data->set_type( $commission_meta['type'] ?? '' );
         $commission_data->set_total_amount( $commission_meta['total_amount'] ?? 0 );
@@ -173,7 +176,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      */
     public function additional_adjustments( Commission $commission_data ): Commission {
         if ( empty( $this->dokan_coupon_infos ) ) {
-            return $commission_data;
+            return $this->adjust_commission_withd_backward_comparibility_coupon( $commission_data );
         }
 
         $admin_net_commission = 0.0;
@@ -207,6 +210,30 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             $commission_data->set_admin_commission( 0 );
             $commission_data->set_per_item_admin_commission( 0 );
         }
+
+        return $commission_data;
+    }
+
+    protected function adjust_commission_withd_backward_comparibility_coupon( Commission $commission_data ): Commission {
+//        $applied_coupons = $this->order->get_coupons();
+//
+//        /**
+//         * Prepare coupon info for commission calculation.
+//         *
+//         * @since DOKAN_SINCE
+//         *
+//         * @var DokanOrderLineItemCouponInfo[] $dokan_coupon_infos
+//         */
+//        $this->dokan_coupon_infos = [];
+//        if ( ! empty( $applied_coupons ) && is_array( $applied_coupons ) ) {
+//            foreach ( $applied_coupons as $coupon_code => $coupon ) {
+//                $coupon_line_item = new DokanOrderLineItemCouponInfo();
+////                $coupon_line_item->set_coupon_info( $coupon );
+//                $coupon_line_item->set_
+//
+//                $this->dokan_coupon_infos[] = $coupon_line_item;
+//            }
+//        }
 
         return $commission_data;
     }
