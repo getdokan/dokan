@@ -176,7 +176,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      */
     public function additional_adjustments( Commission $commission_data ): Commission {
         if ( empty( $this->dokan_coupon_infos ) ) {
-            return $this->adjust_commission_withd_backward_comparibility_coupon( $commission_data );
+	        return apply_filters( 'adjust_commission_with_backward_compatibility_coupon_for_line_item', $commission_data, $this->order, $this->item, $this->vendor_id );
         }
 
         $admin_net_commission = 0.0;
@@ -210,30 +210,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             $commission_data->set_admin_commission( 0 );
             $commission_data->set_per_item_admin_commission( 0 );
         }
-
-        return $commission_data;
-    }
-
-    protected function adjust_commission_withd_backward_comparibility_coupon( Commission $commission_data ): Commission {
-//        $applied_coupons = $this->order->get_coupons();
-//
-//        /**
-//         * Prepare coupon info for commission calculation.
-//         *
-//         * @since DOKAN_SINCE
-//         *
-//         * @var DokanOrderLineItemCouponInfo[] $dokan_coupon_infos
-//         */
-//        $this->dokan_coupon_infos = [];
-//        if ( ! empty( $applied_coupons ) && is_array( $applied_coupons ) ) {
-//            foreach ( $applied_coupons as $coupon_code => $coupon ) {
-//                $coupon_line_item = new DokanOrderLineItemCouponInfo();
-////                $coupon_line_item->set_coupon_info( $coupon );
-//                $coupon_line_item->set_
-//
-//                $this->dokan_coupon_infos[] = $coupon_line_item;
-//            }
-//        }
 
         return $commission_data;
     }
