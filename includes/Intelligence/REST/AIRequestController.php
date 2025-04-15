@@ -81,24 +81,17 @@ class AIRequestController extends DokanBaseVendorController {
 
             return rest_ensure_response( $response );
         } catch ( Exception $e ) {
-            if ( $e->getCode() === 401 ) {
+            if ( in_array( $e->getCode(), [ 401, 429 ], true ) ) {
                 return new WP_Error(
                     'dokan_ai_service_error',
                     esc_html__( 'Something went wrong in the configuration. Kindly reach out to Marketplace Owner', 'dokan-lite' ),
                     [ 'status' => 401 ]
                 );
             }
-            if ( $e->getCode() === 429 ) {
-                return new WP_Error(
-                    'dokan_ai_service_error',
-                    esc_html__( 'Service is not available due to some reason. Kindly reach out to Marketplace Owner', 'dokan-lite' ),
-                    [ 'status' => 403 ]
-                );
-            }
             return new WP_Error(
                 'dokan_ai_service_error',
-                esc_html( $e->getMessage() ),
-                [ 'status' => 500 ]
+                esc_html__( 'Service is not available due to some reason. Kindly reach out to Marketplace Owner', 'dokan-lite' ),
+                [ 'status' => 403 ]
             );
         }
     }
