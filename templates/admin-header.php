@@ -88,7 +88,7 @@
 
                             <?php esc_html_e( 'What’s New', 'dokan-lite' ); ?>
                         </a>
-                        <a href="https://dokan.co/contact/" target="_blank">
+                        <a href="https://dokan.co/contact/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite" target="_blank">
                             <span class="dokan-icon">
                                 <svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4.15332 6.91895C3.37788 6.91895 2.74707 7.54976 2.74707 8.3252V12.1377C2.74707 12.9131 3.37788 13.5439 4.15332 13.5439C4.92876 13.5439 5.55957 12.9131 5.55957 12.1377V8.3252C5.55957 7.54976 4.92876 6.91895 4.15332 6.91895Z" fill="#A3A3A3"/>
@@ -134,7 +134,7 @@
                             </div>
                             <?php esc_html_e( 'Basic & Fundamental', 'dokan-lite' ); ?>
                         </a>
-                        <a href="https://pluginfeedback.dokan.co/" target="_blank">
+                        <a href="https://pluginfeedback.dokan.co/b/feature-requests/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite" target="_blank">
                             <div class="dokan-icon">
                                 <svg width="12" height="17" viewBox="0 0 12 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M9.33962 1.5463C8.00147 0.490479 6.27038 0.109934 4.57616 0.515074C2.61184 0.969322 1.02815 2.52846 0.549312 4.48053C0.0705107 6.44481 0.622974 8.43368 2.03478 9.82097C2.53818 10.3244 2.83283 11.1141 2.83283 11.9245V12.0595C2.83283 12.4032 3.10288 12.6734 3.44668 12.6734H8.35746C8.70126 12.6734 8.97131 12.4032 8.97131 12.0595V11.9245C8.97131 11.1264 9.27824 10.3121 9.81842 9.78414C10.8497 8.7406 11.4267 7.35334 11.4267 5.88011C11.4267 4.18589 10.6655 2.60212 9.33962 1.5463ZM5.90207 4.03856C4.97598 4.03856 4.30181 4.65286 4.12527 5.36398C4.04493 5.6874 3.71951 5.89382 3.38132 5.81238C3.05283 5.73086 2.85198 5.39754 2.93354 5.06905C3.23768 3.84135 4.39082 2.81087 5.90207 2.81087C6.24136 2.81087 6.51592 3.08542 6.51592 3.42472C6.51592 3.76401 6.24136 4.03856 5.90207 4.03856Z" fill="#A3A3A3"/>
