@@ -191,7 +191,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
     public function additional_adjustments( Commission $commission_data ): Commission {
-        $this->dokan_coupon_infos = apply_filters( 'adjust_commission_with_backward_compatibility_coupon_for_line_item', $this->dokan_coupon_infos , $commission_data, $this->order, $this->item );
+        $this->dokan_coupon_infos = apply_filters( 'adjust_commission_with_backward_compatibility_coupon_for_line_item', $this->dokan_coupon_infos, $commission_data, $this->order, $this->item );
 
         if ( empty( $this->dokan_coupon_infos ) ) {
 			return $commission_data;
@@ -206,6 +206,9 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             $percent               = $commission_params['percentage'] ?? 0;
             $admin_commission_rate = $flat + ( $percent / 100 );
 
+            /**
+             * Check if the line item is subsidy supported or the coupon type is default or empty.
+             */
             if ( $dokan_coupon_info->is_subsidy_supported() || in_array( $dokan_coupon_info->get_coupon_commissions_type(), [ 'default', '' ], true ) ) {
                 /**
                  * Calculate admin commission and vendor earning based on the coupon type.
@@ -214,6 +217,9 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
                 $admin_net_commission += ( ( $commission_data->get_total_amount() - $dokan_coupon_info->get_vendor_discount() ) * $admin_commission_rate ) - $dokan_coupon_info->get_admin_discount();
                 $vendor_net_earning += floatval( $this->item->get_total() ) - $admin_net_commission;
             } else {
+                /**
+                 * Calculate admin commission and vendor earning based on the coupon type.
+                 */
                 $current_admin_net_commission = ( $commission_data->get_total_amount() * $admin_commission_rate ) - $dokan_coupon_info->get_admin_discount();
                 $admin_net_commission += $current_admin_net_commission < 0 ? 0 : $current_admin_net_commission;
                 $vendor_net_earning += floatval( $this->item->get_subtotal() - $dokan_coupon_info->get_vendor_discount() - $dokan_coupon_info->get_admin_discount() ) - abs( $admin_net_commission );
