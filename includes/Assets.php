@@ -637,12 +637,21 @@ class Assets {
             require_once ABSPATH . '/wp-admin/includes/screen.php';
         }
 
-        add_filter( 'doing_it_wrong_trigger_error', '__return_false' );
+        add_filter( 'doing_it_wrong_trigger_error', [ $this, 'desable_doing_it_wrong_error' ] );
 
 		$wc_instance = WCAdminAssets::get_instance();
         $wc_instance->register_scripts();
 
-        add_filter( 'doing_it_wrong_trigger_error', '__return_true' );
+        remove_filter( 'doing_it_wrong_trigger_error', [ $this, 'desable_doing_it_wrong_error' ] );
+    }
+
+    /**
+     * Disable "doing it wrong" error
+     *
+     * @return bool
+     */
+    public function desable_doing_it_wrong_error() {
+        return false;
     }
 
     /**
