@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan;
 
+use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
@@ -23,6 +24,7 @@ class Assets {
         } else {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
             add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ], 5 );
+            add_action( 'init', [ $this, 'register_wc_admin_scripts' ] );
         }
     }
 
@@ -618,6 +620,29 @@ class Assets {
         }
 
         return $scripts;
+    }
+
+    /**
+     * Registers WooCommerce Admin scripts for the React-based Dokan Vendor dashboard.
+     *
+     * This function ensures that the necessary WooCommerce Admin assets are registered
+     * for use in the Dokan Vendor dashboard. It temporarily suppresses "doing it wrong"
+     * warnings during the registration process.
+     *
+     * @return void
+     */
+    public function register_wc_admin_scripts() {
+        // Register WooCommerce Admin Assets for the React-base Dokan Vendor ler dashboard.
+        if ( ! function_exists( 'get_current_screen' ) ) {
+            require_once ABSPATH . '/wp-admin/includes/screen.php';
+        }
+
+        add_filter( 'doing_it_wrong_trigger_error', '__return_false' );
+
+		$wc_instance = WCAdminAssets::get_instance();
+        $wc_instance->register_scripts();
+
+        add_filter( 'doing_it_wrong_trigger_error', '__return_true' );
     }
 
     /**
