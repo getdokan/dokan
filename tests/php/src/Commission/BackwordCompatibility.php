@@ -214,7 +214,7 @@ class BackwordCompatibility extends DokanTestCase {
                                 ],
                                 [
                                     'key'   => '_dokan_commission_type',
-                                    'value' => 'flat',
+                                    'value' => Flat::SOURCE,
                                 ],
                             ],
                         ],
