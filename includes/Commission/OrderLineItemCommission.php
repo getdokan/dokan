@@ -191,13 +191,10 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
     public function additional_adjustments( Commission $commission_data ): Commission {
-        if ( empty( $this->dokan_coupon_infos ) ) {
-			// check if lineItem has coupon information.
-	        // If not, then we need to check if the order has coupon information.
-	        // If the order has coupon information, then we need to generate the coupon information and save it to the line item. as per the backward compatibility.
+        $this->dokan_coupon_infos = apply_filters( 'adjust_commission_with_backward_compatibility_coupon_for_line_item', $this->dokan_coupon_infos , $commission_data, $this->order, $this->item );
 
-			// If the coupon is not applied to the line item, then we need to calculate the commission data for backward compatibility.
-	        return apply_filters( 'adjust_commission_with_backward_compatibility_coupon_for_line_item', $commission_data, $this->order, $this->item, $this->vendor_id );
+        if ( empty( $this->dokan_coupon_infos ) ) {
+			return $commission_data;
         }
 
         $admin_net_commission = 0.0;
@@ -209,12 +206,18 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             $percent               = $commission_params['percentage'] ?? 0;
             $admin_commission_rate = $flat + ( $percent / 100 );
 
-            /**
-             * Calculate admin commission and vendor earning based on the coupon type.
-             * @see https://github.com/getdokan/plugin-internal-tasks/issues/198#issuecomment-2608895467
-             */
-            $admin_net_commission += ( ( $commission_data->get_total_amount() - $dokan_coupon_info->get_vendor_discount() ) * $admin_commission_rate ) - $dokan_coupon_info->get_admin_discount();
-            $vendor_net_earning += floatval( $this->item->get_total() ) - $admin_net_commission;
+            if ( $dokan_coupon_info->is_subsidy_supported() || in_array( $dokan_coupon_info->get_coupon_commissions_type(), [ 'default', '' ], true ) ) {
+                /**
+                 * Calculate admin commission and vendor earning based on the coupon type.
+                 * @see https://github.com/getdokan/plugin-internal-tasks/issues/198#issuecomment-2608895467
+                 */
+                $admin_net_commission += ( ( $commission_data->get_total_amount() - $dokan_coupon_info->get_vendor_discount() ) * $admin_commission_rate ) - $dokan_coupon_info->get_admin_discount();
+                $vendor_net_earning += floatval( $this->item->get_total() ) - $admin_net_commission;
+            } else {
+                $current_admin_net_commission = ( $commission_data->get_total_amount() * $admin_commission_rate ) - $dokan_coupon_info->get_admin_discount();
+                $admin_net_commission += $current_admin_net_commission < 0 ? 0 : $current_admin_net_commission;
+                $vendor_net_earning += floatval( $this->item->get_subtotal() - $dokan_coupon_info->get_vendor_discount() - $dokan_coupon_info->get_admin_discount() ) - abs( $admin_net_commission );
+            }
 
             $commission_data->set_vendor_discount( $commission_data->get_vendor_discount() + $dokan_coupon_info->get_vendor_discount() );
             $commission_data->set_admin_discount( $commission_data->get_admin_discount() + $dokan_coupon_info->get_admin_discount() );
