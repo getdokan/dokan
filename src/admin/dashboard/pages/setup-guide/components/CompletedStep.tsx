@@ -26,7 +26,7 @@ const CompletedStep = ( { steps, dashBoardUrl } ) => {
                 link={ true }
                 color={ 'primary' }
                 href={ dashBoardUrl }
-                className={ `bg-[#7047EB] text-white text-base font-medium py-2.5 px-5 flex items-center rounded-md m-0` }
+                className={ `bg-[#7047EB] !text-white text-base font-medium py-2.5 px-5 flex items-center rounded-md m-0` }
             >
                 { __( 'Visit Dokan Dashboard', 'dokan-lite' ) }
             </Button>

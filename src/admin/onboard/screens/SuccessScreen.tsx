@@ -23,7 +23,7 @@ const SuccessScreen = () => {
                     href={redirectUrl}
                     className="bg-[#7047EB] text-white rounded-md py-3 px-8 flex items-center"
                 >
-                    {__('Explore Dashboard', 'dokan-lite')}
+                    { __( 'Explore Dashboard', 'dokan-lite' ) }
                 </Button>
             </div>
         </OnBoardLayout>
