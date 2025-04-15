@@ -127,8 +127,13 @@ class CommissionControllerV1 extends DokanRESTController {
             $amount = 0;
         }
         try {
-            $product_commission = new ProductCommission( $product_id, $amount, $category_id, $vendor_id );
+            $product_commission = dokan_get_container()->get( ProductCommission::class );
+            $product_commission->set_product_id( $product_id );
+            $product_commission->set_total_amount( $amount );
+            $product_commission->set_vendor_id( $vendor_id );
+            $product_commission->set_category_id( $category_id );
             $commission_or_earning = $product_commission->calculate();
+
             $data = 'seller' === $context ? $commission_or_earning->get_vendor_earning() : $commission_or_earning->get_admin_commission();
         } catch ( \Exception $exception ) {
             $data = 0;

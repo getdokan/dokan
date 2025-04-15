@@ -14,7 +14,7 @@ use WeDevs\Dokan\Commission\Model\Commission;
  */
 class OrderCommission extends AbstractCommissionCalculator {
 
-    private WC_Order $order;
+    private ?WC_Order $order;
 
     const SELLER = 'seller';
     const ADMIN  = 'admin';
@@ -27,31 +27,52 @@ class OrderCommission extends AbstractCommissionCalculator {
     private $vendor_earnign       = 0;
 
     /**
-     * OrderCommission constructor.
+     * Get order.
      *
      * @since DOKAN_SINCE
      *
-     * @param \WC_Order $order
+     * @return \WC_Order|null
      */
-    public function __construct( WC_Order $order ) {
-        $this->order = $order;
-
-        $this->get();
+    public function get_order(): ?WC_Order {
+        return $this->order;
     }
+
+	/**
+	 * Set order.
+	 *
+	 * @since DOKAN_SINCE
+	 *
+	 * @param \WC_Order $order
+	 *
+	 * @return void
+	 */
+	public function set_order( WC_Order $order ) {
+		$this->order = $order;
+	}
 
     /**
      * Calculate order commission.
      *
      * @since DOKAN_SINCE
      *
-     * @return void
+     * @return Model\Commission|\Exception
      */
     public function calculate(): Model\Commission {
+        if ( ! $this->order ) {
+            throw new \Exception( esc_html__( 'Order is required for order commission calculation.', 'dokan-lite' ) );
+        }
+
         $this->reset_order_commission_data();
 
         foreach ( $this->order->get_items() as $item_id => $item ) {
-            $line_item_commission = new OrderLineItemCommission( $item, $this->order );
-            $commission           = $line_item_commission->calculate();
+            try {
+                $line_item_commission = dokan_get_container()->get( OrderLineItemCommission::class );
+                $line_item_commission->set_order( $this->order );
+                $line_item_commission->set_item( $item );
+                $commission = $line_item_commission->calculate();
+            } catch ( \Exception $exception ) {
+                throw $exception;
+            }
 
             $this->admin_commission     += $commission->get_admin_commission();
             $this->admin_net_commission += $commission->get_net_admin_commission();
@@ -70,13 +91,24 @@ class OrderCommission extends AbstractCommissionCalculator {
      * Retrieve order commission.
      *
      * @since DOKAN_SINCE
+     * @throws \Exception If the order is not set.
      *
-     * @return $this
+     * @return Model\Commission|\Exception
      */
     public function get(): Model\Commission {
+        if ( ! $this->order ) {
+            throw new \Exception( esc_html__( 'Order is required for order commission calculation.', 'dokan-lite' ) );
+        }
+
         foreach ( $this->order->get_items() as $item_id => $item ) {
-            $line_item_commission = new OrderLineItemCommission( $item, $this->order );
-            $commission           = $line_item_commission->get();
+            try {
+                $line_item_commission = dokan_get_container()->get( OrderLineItemCommission::class );
+                $line_item_commission->set_item( $item );
+                $line_item_commission->set_order( $this->order );
+                $commission = $line_item_commission->get();
+            } catch ( \Exception $exception ) {
+                throw $exception;
+            }
 
             $this->admin_commission     += $commission->get_admin_commission();
             $this->admin_net_commission += $commission->get_net_admin_commission();

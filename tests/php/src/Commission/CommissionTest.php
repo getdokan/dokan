@@ -74,13 +74,16 @@ class CommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_that_we_can_get_commission_with_non_existed_product_and_vendor() {
-        $orderItemId = 1; // Example IDs
-        $productId   = 103;
-        $vendorId    = 2;
+        $product_id   = 103;
+        $vendor_id    = 2;
         $category_id = 15;     // Example cat
-        $productPrice = 100.00; // Example product price
+        $product_price = 100.00; // Example product price
 
-        $product_commission = new ProductCommission( $productId, $productPrice, $category_id, $vendorId );
+        $product_commission = dokan_get_container()->get( ProductCommission::class );
+        $product_commission->set_product_id( $product_id );
+        $product_commission->set_total_amount( $product_price );
+        $product_commission->set_vendor_id( $vendor_id );
+        $product_commission->set_category_id( $category_id );
         $commission = $product_commission->calculate();
 
         $this->assertTrue( is_a( $commission, 'WeDevs\Dokan\Commission\Model\Commission' ) );
@@ -88,9 +91,9 @@ class CommissionTest extends WP_UnitTestCase {
         $this->assertEquals( DefaultStrategy::SOURCE, $commission->get_source() );
         $this->assertEquals( 0, $commission->get_per_item_admin_commission() );
         $this->assertEquals( 0, $commission->get_admin_commission() );
-        $this->assertEquals( $productPrice, $commission->get_vendor_earning() );
+        $this->assertEquals( $product_price, $commission->get_vendor_earning() );
         $this->assertEquals( 1, $commission->get_total_quantity() );
-        $this->assertEquals( $productPrice, $commission->get_total_amount() );
+        $this->assertEquals( $product_price, $commission->get_total_amount() );
         $this->assertEquals( DefaultSetting::TYPE, $commission->get_type() );
     }
 

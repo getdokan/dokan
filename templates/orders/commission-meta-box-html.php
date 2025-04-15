@@ -15,6 +15,8 @@
  * @package dokan
  */
 
+use WeDevs\Dokan\Commission\OrderLineItemCommission;
+
 if ( $order_commission->get_admin_commission() ) {
     $total_commission = $order_commission->get_admin_commission();
 } else {
@@ -80,15 +82,26 @@ foreach ( $order->get_refunds() as $refund ) {
                     $thumbnail    = $product ? apply_filters( 'woocommerce_admin_order_item_thumbnail', $product->get_image( 'thumbnail', array( 'title' => '' ), false ), $item_id, $item ) : '';
                     $row_class    = apply_filters( 'woocommerce_admin_html_order_item_class', ! empty( $class ) ? $class : '', $item, $order );
                     $commission   = 0;
+                    $commission_type      = '';
+                    $admin_commission     = '';
+                    $percentage           = 0;
+                    $flat                 = 0;
 
-                    $product_commission = new \WeDevs\Dokan\Commission\OrderLineItemCommission( $item, $order );
-                    $commission_data = $product_commission->get();
+                    try {
+                        $product_commission = dokan_get_container()->get( OrderLineItemCommission::class );
+                        $product_commission->set_order( $this->order );
+                        $product_commission->set_item( $item );
+                        $commission_data = $product_commission->get();
 
-                    $commission_type      = $commission_data->get_type();
-                    $admin_commission     = $commission_data->get_admin_commission();
-                    $percentage           = isset( $commission_data->get_parameters()['percentage'] ) ? $commission_data->get_parameters()['percentage'] : 0;
-                    $flat                 = isset( $commission_data->get_parameters()['flat'] ) ? $commission_data->get_parameters()['flat'] : 0;
-                    $commission_type_html = $all_commission_types[ $commission_type ];
+                        $commission_type      = $commission_data->get_type();
+                        $admin_commission     = $commission_data->get_admin_commission();
+                        $percentage           = isset( $commission_data->get_parameters()['percentage'] ) ? $commission_data->get_parameters()['percentage'] : 0;
+                        $flat                 = isset( $commission_data->get_parameters()['flat'] ) ? $commission_data->get_parameters()['flat'] : 0;
+                    } catch ( \Exception $exception ) {
+                        dokan_log( $exception->getMessage() );
+                    }
+
+                    $commission_type_html = $all_commission_types[ $commission_type ] ?? '';
                     ?>
                     <tr class="item  <?php echo esc_attr( $row_class ); ?>" data-order_item_id="<?php echo $item->get_id(); ?>">
                         <td class="thumb">

@@ -135,8 +135,14 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				break;
 		}
 
-        $order_commission = new OrderCommission( $order );
-        $order_commission->get();
+        try {
+            $order_commission = dokan_get_container()->get( OrderCommission::class );
+            $order_commission->set_order( $order );
+            $order_commission->get();
+        } catch ( \Exception $exception ) {
+            dokan_log( 'Dokan Analytics Order commission not found: ' . $exception->getMessage() );
+            return -1;
+        }
 
 		/**
 		 * Filters order stats data.

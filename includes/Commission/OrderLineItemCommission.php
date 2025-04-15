@@ -31,19 +31,12 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      */
     protected array $dokan_coupon_infos;
 
-    /**
-     * OrderLineItemCommission constructor.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param \WC_Order_Item $item
-     * @param \WC_Order      $order
-     */
-    public function __construct( WC_Order_Item $item, WC_Order $order ) {
-        $this->item  = $item;
-        $this->order = $order;
+    public function get_item(): WC_Order_Item {
+        return $this->item;
+    }
 
-        $this->vendor_id = (int) $this->order->get_meta( self::VENDOR_ID_META_KEY );
+    public function set_item( WC_Order_Item $item ): void {
+        $this->item = $item;
 
         $dokan_coupon_info = $this->item->get_meta( Coupon::DOKAN_COUPON_META_KEY, true );
         /**
@@ -64,6 +57,15 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         }
     }
 
+    public function get_order(): WC_Order {
+        return $this->order;
+    }
+
+    public function set_order( WC_Order $order ): void {
+        $this->order = $order;
+        $this->vendor_id = (int) $this->order->get_meta( self::VENDOR_ID_META_KEY );
+    }
+
     /**
      * Calculate order line item commission.
      *
@@ -72,6 +74,14 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      * @return \WeDevs\Dokan\Commission\Model\Commission|null
      */
     public function calculate(): Commission {
+        if ( ! $this->item ) {
+            throw new \Exception( esc_html__( 'Order item is required for order item commission calculation.', 'dokan-lite' ) );
+        }
+
+        if ( ! $this->order ) {
+            throw new \Exception( esc_html__( 'Order is required for order item commission calculation.', 'dokan-lite' ) );
+        }
+
         $refund = $this->order->get_total_refunded_for_item( $this->item->get_id() );
 
         $item_price = apply_filters( 'dokan_earning_by_order_item_price', $this->item->get_subtotal(), $this->item, $this->order );
@@ -132,8 +142,14 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      * @since DOKAN_SINCE
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
+     *
+     * @throw \Exception
      */
     public function get(): Commission {
+        if ( ! $this->item ) {
+            throw new \Exception( esc_html__( 'Order item is required to get order item commission.', 'dokan-lite' ) );
+        }
+
         /**
          * @var \WeDevs\Dokan\Commission\Model\Commission $commission_data
          */
@@ -176,6 +192,11 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      */
     public function additional_adjustments( Commission $commission_data ): Commission {
         if ( empty( $this->dokan_coupon_infos ) ) {
+			// check if lineItem has coupon information.
+	        // If not, then we need to check if the order has coupon information.
+	        // If the order has coupon information, then we need to generate the coupon information and save it to the line item. as per the backward compatibility.
+
+			// If the coupon is not applied to the line item, then we need to calculate the commission data for backward compatibility.
 	        return apply_filters( 'adjust_commission_with_backward_compatibility_coupon_for_line_item', $commission_data, $this->order, $this->item, $this->vendor_id );
         }
 

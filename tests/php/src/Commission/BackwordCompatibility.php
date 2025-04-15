@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Test\Commission;
 
 use WeDevs\Dokan\Commission\Formula\Flat;
 use WeDevs\Dokan\Commission\Formula\Percentage;
+use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Commission\Strategies\OrderItem;
 use WeDevs\Dokan\Test\DokanTestCase;
 use WeDevs\Dokan\Vendor\Coupon;
@@ -346,7 +347,13 @@ class BackwordCompatibility extends DokanTestCase {
         $item = reset( $items );
         $meta = $item->get_meta( Coupon::DOKAN_COUPON_META_KEY );
 
-        $order_commission = new \WeDevs\Dokan\Commission\OrderCommission( $order );
+        try {
+            $order_commission = dokan_get_container()->get( OrderCommission::class );
+            $order_commission->set_order( $order );
+            $order_commission->get();
+        } catch ( \Exception $exception ) {
+            throw $exception;
+        }
 
         $admin_commission = $order_commission->get_admin_total_earning();
         $vendor_earning   = $order_commission->get_vendor_total_earning();

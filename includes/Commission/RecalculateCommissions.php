@@ -257,8 +257,14 @@ class RecalculateCommissions {
         global $wpdb;
         $order_total = $order->get_total();
 
-        $order_commission = new OrderCommission( $order );
-        $order_commission->calculate();
+        try {
+            $order_commission = dokan_get_container()->get( OrderCommission::class );
+            $order_commission->set_order( $order );
+            $order_commission->calculate();
+        } catch ( \Exception $exception ) {
+            dokan_log( 'Dokan Recalculate Order commission not found: ' . $exception->getMessage() );
+            return;
+        }
 
         $context        = 'seller';
         $vendor_earning = $order_commission->get_vendor_total_earning();

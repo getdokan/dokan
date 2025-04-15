@@ -606,8 +606,14 @@ class Hooks {
         $total_commission     = (float) $order_total - (float) $net_amount;
         $all_commission_types = array_merge( dokan_commission_types(), dokan()->commission->get_legacy_commission_types() );
 
-        $order_commission = new OrderCommission( $order );
-        $order_commission->get();
+        try {
+            $order_commission = dokan_get_container()->get( OrderCommission::class );
+            $order_commission->set_order( $order );
+            $order_commission->get();
+        } catch ( \Exception $exception ) {
+            dokan_log( 'Dokan can not calculate commission on commission meta box : ' . $exception->getMessage() );
+            return;
+        }
 
         dokan_get_template_part(
             'orders/commission-meta-box-html', '', [

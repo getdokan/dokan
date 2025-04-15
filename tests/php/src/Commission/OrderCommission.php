@@ -327,8 +327,13 @@ class OrderCommission extends DokanTestCase {
 
         $order = wc_get_order( $fac_order );
 
-        $order_commission = new \WeDevs\Dokan\Commission\OrderCommission( $order );
-        $order_commission->calculate();
+        try {
+            $order_commission = dokan_get_container()->get( \WeDevs\Dokan\Commission\OrderCommission::class );
+            $order_commission->set_order( $order );
+            $order_commission->calculate();
+        } catch ( \Exception $exception ) {
+            throw $exception;
+        }
 
         $admin_commission = $order_commission->get_admin_total_earning();
         $vendor_earning   = $order_commission->get_vendor_total_earning();

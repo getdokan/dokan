@@ -175,8 +175,13 @@ class Commission {
         $product_id    = $product->get_id();
 
         try {
-            $product_commission = new ProductCommission( $product_id, $product_price, 0, $vendor_id );
+            $product_commission = dokan_get_container()->get( ProductCommission::class );
+            $product_commission->set_product_id( $product_id );
+            $product_commission->set_total_amount( $product_price );
+            $product_commission->set_vendor_id( $vendor_id );
+            $product_commission->set_category_id( 0 );
             $commission = $product_commission->calculate();
+
             $commission_or_earning = 'admin' === $context ? $commission->get_admin_commission() : $commission->get_vendor_earning();
         } catch ( \Exception $exception ) {
             $commission_or_earning = 0;
@@ -225,8 +230,13 @@ class Commission {
             return $earning_or_commission;
         }
 
-        $order_commission = new OrderCommission( $order );
-        $order_commission->calculate();
+        try {
+            $order_commission = dokan_get_container()->get( OrderCommission::class );
+            $order_commission->set_order( $order );
+            $order_commission->calculate();
+        } catch ( \Exception $exception ) {
+            return new WP_Error( 'commission_calculation_failed', __( 'Commission calculation failed', 'dokan-lite' ), [ 'status' => 500 ] );
+        }
 
         $earning_or_commission = 'admin' === $context ? $order_commission->get_admin_total_earning() : $order_commission->get_vendor_total_earning();
 
@@ -535,12 +545,23 @@ class Commission {
 
         if ( $order_item_id ) {
             $order_item = WC_Order_Factory::get_order_item( $order_item_id );
-            $line_item_commission = new OrderLineItemCommission( $order_item, $order_item->get_order() );
 
-            return $line_item_commission->calculate();
+            try {
+                $line_item_commission = dokan_get_container()->get( OrderLineItemCommission::class );
+                $line_item_commission->set_order( $order_item->get_order() );
+                $line_item_commission->set_item( $order_item );
+
+                return $line_item_commission->calculate();
+            } catch ( \Exception $e ) {
+                dokan_log( $e->getMessage() );
+            }
         } else {
             try {
-                $product_commission = new ProductCommission( $product_id, $total_amount, $category_id, $vendor_id );
+                $product_commission = dokan_get_container()->get( ProductCommission::class );
+                $product_commission->set_product_id( $product_id );
+                $product_commission->set_category_id( $category_id );
+                $product_commission->set_total_amount( $total_amount );
+                $product_commission->set_vendor_id( $vendor_id );
                 return $product_commission->calculate();
             } catch ( \Exception $e ) {
                 dokan_log( $e->getMessage() );
