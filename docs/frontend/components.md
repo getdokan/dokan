@@ -343,52 +343,52 @@ import {DokanButton} from '@dokan/components';
 
 // Basic usage with default settings.
 const BasicNotFound = () => {
-   return <NotFound/>;
+    return <NotFound/>;
 };
 
 // Custom usage with navigation button.
 const CustomNotFound = () => {
-   return (
-           <NotFound
-                   title={__('Resource Not Available', 'dokan-lite')}
-                   message={__("We couldn't find the page you were looking for.", 'dokan')}
-                   navigateButton={
-                      <DokanButton> // Add your necessary props.
-                         {__('Return to Dashboard', 'dokan')}
-                      </DokanButton>
-                   }
-           />
-   );
+    return (
+        <NotFound
+            title={__('Resource Not Available', 'dokan-lite')}
+            message={__("We couldn't find the page you were looking for.", 'dokan')}
+            navigateButton={
+                <DokanButton> // Add your necessary props.
+                    {__('Return to Dashboard', 'dokan')}
+                </DokanButton>
+            }
+        />
+    );
 };
 
 // Usage in a component when a resource is not found.
 const ProductDetails = ({params}) => {
-   const [product, setProduct] = useState(null);
-   const [isNotFound, setIsNotFound] = useState(false);
+    const [product, setProduct] = useState(null);
+    const [isNotFound, setIsNotFound] = useState(false);
 
-   useEffect(() => {
-      apiFetch({
-         path: `/dokan/v1/products/${params.id}`,
-      })
-              .then((response) => {
-                 if (response) {
+    useEffect(() => {
+        apiFetch({
+            path: `/dokan/v1/products/${params.id}`,
+        })
+            .then((response) => {
+                if (response) {
                     setProduct(response);
-                 }
-              })
-              .catch((error) => {
-                 if (error?.data?.status === 404) {
+                }
+            })
+            .catch((error) => {
+                if (error?.data?.status === 404) {
                     setIsNotFound(true);
-                 }
-              });
-   }, [params.id]);
+                }
+            });
+    }, [params.id]);
 
-   if (isNotFound) {
-      // Use your necessary `NotFound` from here.
-      // return <BasicNotFound />;
-      // return <CustomNotFound />;
-   }
+    if (isNotFound) {
+        // Use your necessary `NotFound` from here.
+        // return <BasicNotFound />;
+        // return <CustomNotFound />;
+    }
 
-   // Rest of the component
+    // Rest of the component
 };
 ```
 
@@ -415,52 +415,52 @@ import {DokanButton} from '@dokan/components';
 
 // Basic usage with default settings
 const BasicForbidden = () => {
-   return <Forbidden/>;
+    return <Forbidden/>;
 };
 
 // Custom usage with navigation button
 const CustomForbidden = () => {
-   return (
-           <Forbidden
-                   title={__('Access Denied', 'dokan')}
-                   message={__('You don\'t have permission to access this area.', 'dokan')}
-                   navigateButton={
-                      <DokanButton> // Add your necessary props.
-                         {__('Go to Dashboard', 'dokan')}
-                      </DokanButton>
-                   }
-           />
-   );
+    return (
+        <Forbidden
+            title={__('Access Denied', 'dokan')}
+            message={__('You don\'t have permission to access this area.', 'dokan')}
+            navigateButton={
+                <DokanButton> // Add your necessary props.
+                    {__('Go to Dashboard', 'dokan')}
+                </DokanButton>
+            }
+        />
+    );
 };
 
 // Usage in a component when permission check fails
 const VendorSettings = ({params}) => {
-   const [settings, setSettings] = useState(null);
-   const [isForbidden, setIsForbidden] = useState(false);
+    const [settings, setSettings] = useState(null);
+    const [isForbidden, setIsForbidden] = useState(false);
 
-   useEffect(() => {
-      apiFetch({
-         path: `/dokan/v1/vendors/${params.id}/settings`,
-      })
-              .then((response) => {
-                 if (response) {
+    useEffect(() => {
+        apiFetch({
+            path: `/dokan/v1/vendors/${params.id}/settings`,
+        })
+            .then((response) => {
+                if (response) {
                     setSettings(response);
-                 }
-              })
-              .catch((error) => {
-                 if (error?.data?.status === 403) {
+                }
+            })
+            .catch((error) => {
+                if (error?.data?.status === 403) {
                     setIsForbidden(true);
-                 }
-              });
-   }, [params.id]);
+                }
+            });
+    }, [params.id]);
 
-   if (isForbidden) {
-      // Use your necessary `Forbidden` from here.
-      // return <BasicForbidden />;
-      // return <CustomForbidden />;
-   }
+    if (isForbidden) {
+        // Use your necessary `Forbidden` from here.
+        // return <BasicForbidden />;
+        // return <CustomForbidden />;
+    }
 
-   // Rest of the component
+    // Rest of the component
 };
 ```
 
