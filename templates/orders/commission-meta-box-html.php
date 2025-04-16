@@ -17,11 +17,7 @@
 
 use WeDevs\Dokan\Commission\OrderLineItemCommission;
 
-if ( $order_commission->get_admin_commission() ) {
-    $total_commission = $order_commission->get_admin_commission();
-} else {
-    $total_commission = 0 > $total_commission ? 0 : $total_commission;
-}
+$total_commission = $order_commission->get_admin_commission();
 
 $order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
 $net_amount  = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;
@@ -62,8 +58,8 @@ foreach ( $order->get_refunds() as $refund ) {
         </div>
     </div>
     <div class="inside">
-        <div class="dokan_order_items_wrapper wc-order-items-editable">
-            <table cellpadding="0" cellspacing="0" class="dokan_order_items">
+        <div class="woocommerce_order_items_wrapper wc-order-items-editable">
+            <table cellpadding="0" cellspacing="0" class="woocommerce_order_items">
                 <thead>
                 <tr>
                     <th colspan="2">Item</th>
@@ -89,7 +85,7 @@ foreach ( $order->get_refunds() as $refund ) {
 
                     try {
                         $product_commission = dokan_get_container()->get( OrderLineItemCommission::class );
-                        $product_commission->set_order( $this->order );
+                        $product_commission->set_order( $order );
                         $product_commission->set_item( $item );
                         $commission_data = $product_commission->get();
 
