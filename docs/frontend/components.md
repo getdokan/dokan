@@ -14,7 +14,7 @@
 6. **Link Component** - Flexible link component with multiple style variants
 7. **DokanBadge** - Unified badge component for status badges
 8. **DokanAlert** - Unified alert component for notifications
-9. **DokanUpload** - File upload component
+9. **MediaUploader** - File upload component
 
 ## Important Dependencies
 
@@ -470,7 +470,7 @@ interface SelectedCustomer {
 #### Example of Upload 
 
 ```tsx
-import { DokanUpload } from '@dokan/components';
+import { MediaUploader } from '@dokan/components';
 
 type UploadTypes = {
     onSelect: ( value: any ) => void;
@@ -483,17 +483,17 @@ type UploadTypes = {
 };
 
 const App = () => {
-    const handleUpload = (files) => {
+    const handleUpload = (file) => {
         // Handle the uploaded files
-        console.log(files);
+        console.log(file);
     }
     return (
-        <DokanUpload as="div" onSelect={ handleUpload }>
+        <MediaUploader as="div" onSelect={ handleUpload }>
             <DokanButton variant="secondary" className="gap-1">
                 <i className="fas fa-cloud-upload-alt" />
                 { __( 'Upload', 'dokan' ) }
             </DokanButton>
-        </DokanUpload>
+        </MediaUploader>
     )
 }
 
