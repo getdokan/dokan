@@ -218,6 +218,7 @@ foreach ( $order->get_refunds() as $refund ) {
 						?>
                     </td>
                 </tr>
+                <?php if ( $order_commission->get_admin_subsidy() ) : ?>
                 <tr>
                     <td class="label"><?php esc_html_e( 'Subsidy:', 'dokan-lite' ); ?></td>
                     <td width="1%"></td>
@@ -232,6 +233,7 @@ foreach ( $order->get_refunds() as $refund ) {
 						?>
                     </td>
                 </tr>
+                <?php endif; ?>
                 <?php if ( $shipping_fee_recipient === $admin ) : ?>
                 <tr>
                     <td class="label"><?php esc_html_e( 'Shipping Fee:', 'dokan-lite' ); ?></td>
