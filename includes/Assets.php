@@ -273,6 +273,10 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/style.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/style.css' ),
             ],
+            'dokan-ui-style'                => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-ui-style.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-ui-style.css' ),
+            ],
             'dokan-tinymce'                 => [
                 'src'     => site_url( '/wp-includes/css/editor.css' ),
                 'deps'    => [],
@@ -359,12 +363,12 @@ class Assets {
             ],
             'dokan-react-frontend'          => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
-                'deps'    => [ 'dokan-react-components' ],
+                'deps'    => [ 'dokan-react-components', 'dokan-ui-style' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
             'dokan-react-components'        => [
-                'deps'    => [ 'wp-components' ],
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
+                'deps'    => [ 'wp-components', 'dokan-ui-style' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
         ];
