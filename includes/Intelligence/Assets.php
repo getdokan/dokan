@@ -19,7 +19,12 @@ class Assets implements Hookable {
      */
 
     public function register_all_scripts() {
-        $asset = require DOKAN_DIR . '/assets/js/dokan-intelligence.asset.php';
+        $asset = DOKAN_DIR . '/assets/js/dokan-intelligence.asset.php';
+
+        if ( ! file_exists( $asset ) ) {
+            return;
+        }
+        $asset = include $asset;
 
         wp_register_style(
             'dokan-ai-style',

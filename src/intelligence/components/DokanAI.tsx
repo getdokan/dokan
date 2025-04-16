@@ -303,7 +303,7 @@ const DokanAI = () => {
         <>
             <button
                 type="button"
-                className="dokan-btn p-0"
+                className="dokan-btn p-0 !min-h-[max-content]"
                 onClick={ handleLabelClick }
             >
                 <Tooltip content={ __( 'AI Assistant', 'dokan-lite' ) }>
