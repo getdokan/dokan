@@ -11,3 +11,8 @@ export {
 export { default as PriceHtml } from './PriceHtml';
 export { default as DateTimeHtml } from './DateTimeHtml';
 export { default as Filter } from './Filter';
+export { default as CustomerFilter } from './CustomerFilter';
+export { default as DokanAlert } from './Alert';
+export { default as DokanBadge } from './Badge';
+export { default as DokanButton } from './Button';
+export { default as DokanLink } from './Link';
