@@ -403,7 +403,7 @@ const StepSettings = ( {
             }
         }
         return undefined;
-    }
+    };
 
     /**
      * Retry loading the current step data.
@@ -498,7 +498,7 @@ const StepSettings = ( {
     return (
         <>
             <div
-                className="h-full @4xl/main:px-28 @4xl/main:py-16 p-6"
+                className="h-full @md/step-body:p-12 @5xl/step-body:px-28 @5xl/step-body:py-16"
                 ref={ contentRef }
             >
                 <main className="max-w-7xl mx-auto h-full relative transition-all duration-500 ease">

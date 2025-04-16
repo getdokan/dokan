@@ -71,7 +71,7 @@ const SetupGuide = () => {
     return (
         <div className="grid grid-cols-12 lg:gap-6 gap-4 @container/main">
             <StepComponent currentStep={ currentStep } steps={ steps } />
-            <div className="@3xl/main:col-span-9 @xl/main:col-span-8 col-span-12 bg-white shadow rounded-lg">
+            <div className="@3xl/main:col-span-9 @xl/main:col-span-8 col-span-12 bg-white shadow rounded-lg @container/step-body">
                 { isAllStepsCompleted ? (
                     <CompletedStep
                         dashBoardUrl={
