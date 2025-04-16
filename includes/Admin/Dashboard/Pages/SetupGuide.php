@@ -31,12 +31,13 @@ class SetupGuide extends AbstractPage {
 	 * @inheritDoc
 	 */
 	public function menu( string $capability, string $position ): array {
-		return [
+        return [
             'page_title' => __( 'Setup Guide', 'dokan-lite' ),
             'menu_title' => __( 'Setup', 'dokan-lite' ),
             'route'      => $this->get_id(),
             'capability' => $capability,
             'position'   => 5,
+            'hidden' => true,
         ];
 	}
 

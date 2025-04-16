@@ -99,6 +99,10 @@ class Dashboard implements Hookable {
             $route = $menu_args['route'] ?? $page->get_id();
             $route = trim( $route, ' /' );
 
+            if ( ! empty( $menu_args['hidden'] ) ) {
+                continue;
+            }
+
             // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
             $submenu[ $parent_slug ][] = [ $menu_args['menu_title'], $capability, 'admin.php?page=' . $menu_slug . '#/' . $route ];
         }
