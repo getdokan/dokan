@@ -4,8 +4,8 @@ namespace WeDevs\Dokan;
 
 use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Admin\Notices\Helper;
-use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
+use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\Utilities\OrderUtil;
 
 class Assets {
@@ -363,12 +363,12 @@ class Assets {
             ],
             'dokan-react-frontend'          => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
-                'deps'    => [ 'dokan-react-components', 'dokan-ui-style' ],
+                'deps' => [ 'dokan-react-components', 'dokan-ui-style' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
             'dokan-react-components'        => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
-                'deps'    => [ 'wp-components', 'dokan-ui-style' ],
+                'deps' => [ 'wp-components', 'dokan-ui-style' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
         ];

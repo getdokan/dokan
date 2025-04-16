@@ -38,9 +38,11 @@ const Header = ( { title = '', backUrl = '' } ) => {
     );
 
     /**
-     * Parse url from query params.
+     * Parse url from `backUrl` query params.
      *
      * @param urlString
+     *
+     * @return string
      */
     const parseBackUrl = ( urlString: string ) => {
         // get all the parts where it starts with `:`  and replace then from `params`
@@ -83,7 +85,7 @@ const Header = ( { title = '', backUrl = '' } ) => {
                                 className={ `text-dokan-link` }
                                 size={ 16 }
                             />
-                            { __( 'Back', 'dokan' ) }
+                            { __( 'Back', 'dokan-lite' ) }
                         </DokanButton>
                     ) }
                     <Slot
