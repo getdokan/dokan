@@ -12,6 +12,7 @@ import {
     useNavigation,
     useParams,
 } from 'react-router-dom';
+import { kebabCase } from '@dokan/utilities';
 
 const Header = ( { route } ) => {
     let { title = '', backUrl = '', id } = route;
@@ -57,7 +58,7 @@ const Header = ( { route } ) => {
 
     // @ts-ignore
     backUrl = wp.hooks.applyFilters(
-        `dokan-vendor-${ id }-dashboard-header-backUrl`,
+        `dokan-vendor-${ kebabCase( id ) }-dashboard-header-backUrl`,
         backUrl
     );
 

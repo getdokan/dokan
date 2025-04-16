@@ -67,7 +67,7 @@ const Header = ({route}) => {
 
     // Apply filter to potentially customize backUrl
     backUrl = wp.hooks.applyFilters(
-        `dokan-vendor-${id}-dashboard-header-backUrl`,
+        `dokan-vendor-${kebabCase(id)}-dashboard-header-backUrl`,
         backUrl
     );
 
