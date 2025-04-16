@@ -55,9 +55,15 @@ const Upload = ( {
         );
     }
     return (
-        <button type="button" onClick={ uploadHandler } className={ className }>
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+        <div
+            role={ 'button' }
+            tabIndex={ 0 }
+            onClick={ uploadHandler }
+            className={ className }
+        >
             { children }
-        </button>
+        </div>
     );
 };
 
