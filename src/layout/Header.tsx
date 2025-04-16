@@ -13,7 +13,9 @@ import {
     useParams,
 } from 'react-router-dom';
 
-const Header = ( { title = '', backUrl = '' } ) => {
+const Header = ( { route } ) => {
+    let { title = '', backUrl = '', id } = route;
+
     const navigate = useNavigate();
     const params = useParams();
     const location = useLocation();
@@ -52,6 +54,12 @@ const Header = ( { title = '', backUrl = '' } ) => {
 
         return url;
     };
+
+    // @ts-ignore
+    backUrl = wp.hooks.applyFilters(
+        `dokan-vendor-${ id }-dashboard-header-backUrl`,
+        backUrl
+    );
 
     return (
         <div className="@container/header flex flex-col gap-4">

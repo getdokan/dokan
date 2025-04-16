@@ -103,7 +103,7 @@ const Layout = ( {
                     { headerComponent ? (
                         headerComponent
                     ) : (
-                        <Header title={ title } backUrl={ backUrl } />
+                        <Header route={ route } />
                     ) }
                     <ContentArea>{ children }</ContentArea>
                     { footerComponent ? footerComponent : <Footer /> }
