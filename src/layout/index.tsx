@@ -22,6 +22,7 @@ const ThemeProvider = ( { children } ) => {
 };
 
 export type DokanRoute = {
+    backUrl?: string;
     id: string;
     title?: string;
     icon?: JSX.Element | React.ReactNode;
@@ -39,6 +40,7 @@ interface LayoutProps {
     children: React.ReactNode;
     route: DokanRoute;
     title?: string;
+    backUrl?: string;
     headerComponent?: JSX.Element | React.ReactNode;
     footerComponent?: JSX.Element | React.ReactNode;
 }
@@ -87,6 +89,7 @@ const Layout = ( {
     children,
     route,
     title = '',
+    backUrl = '',
     headerComponent,
     footerComponent,
 }: LayoutProps ) => {
@@ -100,7 +103,7 @@ const Layout = ( {
                     { headerComponent ? (
                         headerComponent
                     ) : (
-                        <Header title={ title } />
+                        <Header title={ title } backUrl={ backUrl } />
                     ) }
                     <ContentArea>{ children }</ContentArea>
                     { footerComponent ? footerComponent : <Footer /> }
