@@ -49,6 +49,7 @@ class Settings implements Hookable {
                 'options' => dokan()->get_container()->get( Manager::class )->get_engines(),
                 'desc'    => __( 'Select which AI provider to use for generating content.', 'dokan-lite' ),
                 'default' => 'chatgpt',
+                'is_lite' => true,
             ],
             'dokan_ai_gemini_api_key' => [
                 'name'    => 'dokan_ai_gemini_api_key',
@@ -58,6 +59,7 @@ class Settings implements Hookable {
                 'desc'    => sprintf( __( 'You can get your API Keys in your <a href="%s" target="_blank"> AI Studio Account.</a>', 'dokan-lite' ), 'https://aistudio.google.com/app/apikey' ),
                 'default' => '',
                 'secret_text' => true,
+                'is_lite' => true,
                 'show_if' => [
                     'dokan_ai_engine' => [
                         'equal' => 'gemini',
@@ -72,6 +74,7 @@ class Settings implements Hookable {
                 /* translators: 1: OpenAi Link */
                 'desc'    => sprintf( __( 'You can get your API Keys in your <a href="%s" target="_blank">OpenAI Account.</a>', 'dokan-lite' ), 'https://platform.openai.com/api-keys' ),
                 'default' => '',
+                'is_lite' => true,
                 'secret_text' => true,
                 'show_if' => [
                     'dokan_ai_engine' => [
@@ -87,6 +90,7 @@ class Settings implements Hookable {
                 'options' => ChatgptResponseService::get_models(),
                 'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
                 'default' => 'gpt-3.5-turbo',
+                'is_lite' => true,
                 'show_if' => [
                     'dokan_ai_engine' => [
                         'equal' => 'chatgpt',
@@ -100,6 +104,7 @@ class Settings implements Hookable {
                 'options' => GeminiResponseService::get_models(),
                 'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
                 'default' => 'gemini-1.5-flash',
+                'is_lite' => true,
                 'show_if' => [
                     'dokan_ai_engine' => [
                         'equal' => 'gemini',
