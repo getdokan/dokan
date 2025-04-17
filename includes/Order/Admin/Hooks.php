@@ -165,7 +165,15 @@ class Hooks {
                 if ( '1' === $order->get_meta( 'has_sub_order', true ) ) {
                     $output = '--';
                 } else {
-                    $commission = dokan()->commission->get_earning_by_order( $order->get_id(), 'admin' );
+                    try {
+                        $order_commission = dokan_get_container()->get( OrderCommission::class );
+                        $order_commission->set_order( $order );
+                        $order_commission->get();
+
+                        $commission = $order_commission->get_admin_total_earning();
+                    } catch ( Exception $e ) {
+                        $commission = 0;
+                    }
                     /**
                      * In case of refund, we are not excluding gateway fee; in case of stripe full/partial refund net amount can be negative
                      */
