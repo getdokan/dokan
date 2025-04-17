@@ -33,6 +33,7 @@ const App = () => {
                     footerComponent={ route?.footer }
                     route={ route }
                     title={ route?.title }
+                    backUrl={ route?.backUrl }
                 >
                     <WithRouterComponent />
                 </Layout>
