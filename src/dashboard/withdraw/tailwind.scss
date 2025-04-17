@@ -1,6 +1,5 @@
 @use '../../base-tailwind';
 @config './withdraw-tailwind.config.js';
-@import "@getdokan/dokan-ui/dist/dokan-ui.css";
 
 @mixin windraw-reset {
     button:focus,

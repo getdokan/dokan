@@ -1,4 +1,5 @@
 @use '../base-tailwind';
+@import "@getdokan/dokan-ui/dist/dokan-ui.css";
 @config './../../base-tailwind.config.js';
 
 #headlessui-portal-root {
