@@ -50,7 +50,6 @@ const entryPoints = {
     'dokan-category-commission': '/src/admin/components/Commission/index.js',
     'core-store': '/src/stores/core/store.ts',
     'dokan-status': '/src/Status/index.tsx',
-    'dokan-ui-style': '/node_modules/@getdokan/dokan-ui/dist/dokan-ui.css',
 };
 
 module.exports = entryPoints;
