@@ -19,19 +19,24 @@ class Assets implements Hookable {
      */
 
     public function register_all_scripts() {
-        $asset = require DOKAN_DIR . '/assets/js/dokan-intelligence.asset.php';
+        $asset = DOKAN_DIR . '/assets/js/dokan-intelligence.asset.php';
+
+        if ( ! file_exists( $asset ) ) {
+            return;
+        }
+        $asset = include $asset;
 
         wp_register_style(
             'dokan-ai-style',
             DOKAN_PLUGIN_ASSEST . '/css/dokan-intelligence.css',
-            [],
+            [ 'dokan-react-components', 'dokan-react-frontend' ],
             $asset['version']
         );
 
         wp_register_script(
             'dokan-ai-script',
             DOKAN_PLUGIN_ASSEST . '/js/dokan-intelligence.js',
-            $asset['dependencies'],
+            array_merge( $asset['dependencies'], [ 'dokan-react-components' ] ),
             $asset['version'],
             true
         );
@@ -48,12 +53,7 @@ class Assets implements Hookable {
             return;
         }
 
-        $supported_fields = AISupportedFields::get_supported_fields();
-
-        $settings = [ 'fields' => $supported_fields ];
-
         wp_enqueue_style( 'dokan-ai-style' );
         wp_enqueue_script( 'dokan-ai-script' );
-        wp_localize_script( 'dokan-ai-script', 'dokanAiSettings', $settings );
     }
 }

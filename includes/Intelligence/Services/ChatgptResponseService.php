@@ -5,10 +5,10 @@ namespace WeDevs\Dokan\Intelligence\Services;
 use Exception;
 
 class ChatgptResponseService extends BaseAIService {
-    private const API_URL = 'https://api.openai.com/v1/chat/completions';
+    private const BASE_URL = 'https://api.openai.com/v1/';
 
     protected function get_url(): string {
-        return self::API_URL;
+        return self::BASE_URL . 'chat/completions';
     }
 
     protected function get_headers(): array {
@@ -25,18 +25,33 @@ class ChatgptResponseService extends BaseAIService {
 				'content' => $prompt,
 			],
         ];
-        if ( isset( $args['id'] ) && $args['id'] === 'post_content' ) {
+        if ( isset( $args['json_format'] ) ) {
             array_unshift(
                 $messages, [
 					'role' => 'system',
-					'content' => __( 'You are a helpful assistant. The response will html content (if needed) with well-organized, detailed, formatted and clean content without "```html" this', 'dokan-lite' ),
-				]
+					'content' => 'You are an AI assistant specializing in WooCommerce and e-commerce product descriptions.
+                    Your task is to generate SEO-optimized content that helps increase sales and search rankings.
+                    Always return the response in strict JSON format without any markdown or special characters.
+                    Format the response as follows:
+                    {
+                      "title": "<Compelling product title optimized for SEO>",
+                      "short_description": "<A concise, keyword-rich summary (minimum 50-100 words) that attracts buyers and improves search engine visibility>",
+                      "long_description": "<A detailed, engaging product long description including features, benefits, use cases, and persuasive copywriting techniques>"
+                    }
+
+                    Guidelines:
+                    - Using <p></p> tags for paragraphs instead of newlines.
+                    - Do not use markdown formatting (** or `#` or `>` characters).
+                    - Do not include backticks (` or ```) or any non-JSON syntax.
+                    - Do not add extra commentary or explanations—only return the JSON object.
+                    - Ensure readability with short sentences, bullet points, and clear formatting.
+                    - Highlight key features (if need), unique selling points, and benefits.',
+				],
             );
         }
         return [
             'model' => dokan_get_option( 'dokan_ai_chatgpt_model', 'dokan_ai', 'gpt-3.5-turbo' ),
             'messages' => $messages,
-            'max_tokens' => (int) dokan_get_option( 'dokan_ai_max_tokens_for_marketplace', 'dokan_ai', '250' ),
             'temperature' => 0.7,
         ];
     }
@@ -57,9 +72,16 @@ class ChatgptResponseService extends BaseAIService {
             return $response;
         }
 
+        $response = $response['choices'][0]['message']['content'];
+
+        // if response type of string
+        if ( gettype( $response ) === 'string' ) {
+            $response = preg_replace( '/^"(.*)"$/', '$1', $response );
+        }
+
         return apply_filters(
             'dokan_ai_chatgpt_response_json', [
-				'response' => $response['choices'][0]['message']['content'] ?? '',
+				'response' => isset( $args['json_format'] ) ? json_decode( $response ) : $response,
 				'prompt' => $prompt,
 			]
         );
@@ -71,6 +93,9 @@ class ChatgptResponseService extends BaseAIService {
             'dokan_ai_supported_chatgpt_models', [
                 'gpt-3.5-turbo' => __( 'GPT-3.5 Turbo', 'dokan-lite' ),
                 'gpt-4o-mini'   => __( 'GPT-4o Mini', 'dokan-lite' ),
+                'gpt-4o'       => __( 'GPT-4o', 'dokan-lite' ),
+                'gpt-4-turbo' => __( 'GPT-4 Turbo', 'dokan-lite' ),
+                'chatgpt-4o-latest' => __( 'ChatGPT 4o Latest', 'dokan-lite' ),
             ]
         );
     }
