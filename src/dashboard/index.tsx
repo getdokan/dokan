@@ -8,6 +8,7 @@ import { useMutationObserver } from '../hooks';
 import { useSelect } from '@wordpress/data';
 import coreStore from '@dokan/stores/core';
 import Skeleton from '@dokan/layout/Skeleton';
+import { generateColorVariants } from '@dokan/utilities';
 
 const App = () => {
     const routes = getRoutes();
@@ -78,6 +79,22 @@ const App = () => {
     );
 };
 
+const addPrimaryColorVariant = () => {
+    const root = document.documentElement;
+    const primaryColor = getComputedStyle( root )
+        .getPropertyValue( '--dokan-button-background-color' )
+        .trim();
+
+    if ( ! primaryColor ) {
+        return;
+    }
+    const colorVariants = generateColorVariants( primaryColor );
+
+    Object.entries( colorVariants ).forEach( ( [ key, value ] ) => {
+        root.style.setProperty( `--colors-primary-${ key }`, value );
+    } );
+};
+
 domReady( function () {
     const rootElement = document.querySelector(
         '#dokan-vendor-dashboard-root'
@@ -87,4 +104,5 @@ domReady( function () {
     }
     const root = createRoot( rootElement! );
     root.render( <App /> );
+    addPrimaryColorVariant();
 } );
