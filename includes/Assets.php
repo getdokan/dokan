@@ -357,17 +357,18 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
             ],
-            'dokan-react-frontend'          => [
+            'dokan-react-frontend'   => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
-                'deps' => [ 'dokan-react-components' ],
+                'deps'    => [ 'dokan-react-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
-            'dokan-react-components'        => [
+            'dokan-react-components' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
-                'deps' => [ 'wp-components' ],
+                'deps'    => [ 'wp-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
         ];
+
 
         return $styles;
     }
