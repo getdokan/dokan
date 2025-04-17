@@ -2,9 +2,6 @@
 @config './tailwind.config.js';
 @import '@getdokan/dokan-ui/dist/dokan-ui.css';
 
-div[data-headlessui-state=open][role=dialog] {
-    z-index: 99999;
-}
 .dokan-dashboard header.dokan-ai-prompt {
     margin: 0 0 10px 0;
     border-bottom: 1px solid #EDEDED;

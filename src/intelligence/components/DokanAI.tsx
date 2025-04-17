@@ -338,6 +338,7 @@ const DokanAI = () => {
                     </p>
                     { isEditMode && (
                         <DokanButton
+                            variant="secondary"
                             onClick={ startOver }
                             className="flex gap-2 items-center"
                         >
@@ -578,7 +579,7 @@ const DokanAI = () => {
                 <Modal.Footer className="border-t">
                     <div className="flex gap-4 justify-end">
                         <DokanButton
-                            variant="danger"
+                            variant="secondary"
                             disabled={ isLoading }
                             onClick={ onClose }
                         >
@@ -627,7 +628,7 @@ const DokanAI = () => {
                         </p>
                         <div className="mt-4 flex gap-4 justify-center">
                             <DokanButton
-                                variant="danger"
+                                variant="secondary"
                                 onClick={ () => setRegenerateModal( false ) }
                             >
                                 { __( 'Cancel', 'dokan-lite' ) }
