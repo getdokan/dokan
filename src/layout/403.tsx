@@ -25,7 +25,7 @@ const Forbidden = ( {
             { children ? (
                 children
             ) : (
-                <div className="bg-[url('/assets/images/error-page-bg.png')] bg-no-repeat bg-center md:w-[42rem] w-full bg-cover h-[21rem] ">
+                <div className="bg-[url('/assets/images/error-page-bg.png')] bg-no-repeat bg-center w-full bg-cover h-[21rem] ">
                     <Slot name="before-dokan-forbidden" />
                     <div className="flex flex-col items-center justify-center h-full gap-3">
                         <ForbiddenIcon color={ `text-dokan-link` } />
