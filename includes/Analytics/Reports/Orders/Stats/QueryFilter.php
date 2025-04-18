@@ -10,7 +10,7 @@ use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter as OrdersQueryFilter;
  * Extends the OrdersQueryFilter class to customize WooCommerce Analytics reports
  * for Dokan orders stats by adding additional subqueries and modifying report columns.
  *
- * @since DOKAN_SINCE
+ * @since 3.13.0
  */
 class QueryFilter extends OrdersQueryFilter {
     /**
@@ -45,6 +45,8 @@ class QueryFilter extends OrdersQueryFilter {
     /**
      * Modifies the admin report columns to include Dokan-specific data.
      *
+     * @since DOKAN_SINCE
+     *
      * @param array  $column        The existing report columns.
      * @param string $context       The context of the report.
      * @param string $wc_table_name The WooCommerce table name being queried.
@@ -73,6 +75,8 @@ class QueryFilter extends OrdersQueryFilter {
 
     /**
      * Adds custom select subqueries for calculating Dokan-specific totals in the analytics reports.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array $clauses The existing SQL select clauses.
      *
