@@ -35,9 +35,9 @@ const OnboardingApp = () => {
         custom_store_url: 'store',
         share_essentials: true,
         marketplace_goal: {
-            marketplace_focus: 'physical',
-            handle_delivery: 'vendor',
-            top_priority: 'sales',
+            marketplace_focus: '',
+            handle_delivery: '',
+            top_priority: '',
         },
         plugins: [],
     } );
@@ -212,14 +212,8 @@ const OnboardingApp = () => {
                     <MarketplaceGoalScreen
                         onNext={ handleNext }
                         onBack={ handleBack }
-                        marketplaceType={
-                            formData.marketplace_goal.marketplace_focus
-                        }
-                        deliveryMethod={
-                            formData.marketplace_goal.handle_delivery
-                        }
-                        priority={ formData.marketplace_goal.top_priority }
                         onUpdate={ updateMarketplaceGoal }
+                        marketplaceGoal={ formData.marketplace_goal }
                     />
                 );
 
@@ -229,8 +223,12 @@ const OnboardingApp = () => {
                         onNext={ handleNext }
                         onBack={ handleBack }
                         onSkip={ handleSkip }
-                        availableAddons={ initialData?.plugins || [] }
                         onUpdate={ updateSelectedPlugins }
+                        selectedPlugins={
+                            formData.plugins?.map( ( plugin ) => plugin.id ) ||
+                            []
+                        }
+                        availableAddons={ initialData?.plugins || [] }
                     />
                 );
 

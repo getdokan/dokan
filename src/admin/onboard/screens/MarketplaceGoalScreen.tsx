@@ -41,7 +41,7 @@ const marketplaceFocus = [
 
 const deliveryMethods = [
     {
-        label: __( 'Marketplace Handles Delivery', 'dokan-lite' ),
+        label: __( 'Marketplace handles delivery', 'dokan-lite' ),
         value: 'marketplace',
     },
     {
@@ -49,7 +49,7 @@ const deliveryMethods = [
         value: 'vendor',
     },
     {
-        label: __( 'No Delivery Needed (Digital product)', 'dokan-lite' ),
+        label: __( 'No delivery needed (Digital Products)', 'dokan-lite' ),
         value: 'none',
     },
 ];

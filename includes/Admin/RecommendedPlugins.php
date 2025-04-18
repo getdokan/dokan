@@ -35,7 +35,7 @@ class RecommendedPlugins {
             [
                 'type'        => 'wemail',
                 'title'       => __( 'weMail', 'dokan-lite' ),
-                'description' => __( 'Simplified Email  Marketing Solution for WordPress!', 'dokan-lite' ),
+                'description' => __( 'Simplified Email Marketing Solution for WordPress!', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wemail-logo.png',
                 'img_alt'     => __( 'weMail logo', 'dokan-lite' ),
                 'slug'        => 'wemail',

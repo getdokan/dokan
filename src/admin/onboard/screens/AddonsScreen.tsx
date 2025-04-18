@@ -11,9 +11,11 @@ const AddonsScreen = ( {
     onBack,
     onSkip,
     availableAddons = [],
+    selectedPlugins,
     onUpdate,
 } ) => {
-    const [ localSelectedAddons, setLocalSelectedAddons ] = useState( [] );
+    const [ localSelectedAddons, setLocalSelectedAddons ] =
+        useState( selectedPlugins );
 
     // Map API addons to UI format if available
     const displayAddons =
@@ -97,7 +99,7 @@ const AddonsScreen = ( {
                         >
                             { __( 'Skip', 'dokan-lite' ) }
                         </Button>
-                        <NextButton handleNext={ handleNext } />
+                        <NextButton handleNext={ () => handleNext() } />
                     </div>
                 </div>
             </div>

@@ -11,20 +11,20 @@ import { debounce } from '@wordpress/compose';
 interface BasicInfoScreenProps {
     onNext: () => void;
     onUpdate: ( storeUrl: string, shareDiagnostics: boolean ) => void;
-    stateUrl: string;
+    storeUrl: string;
     shareDiagnostics: boolean;
 }
 
 const BasicInfoScreen = ( {
     onNext,
     onUpdate,
-    stateUrl,
+    storeUrl,
     shareDiagnostics,
 }: BasicInfoScreenProps ) => {
     const [ displayStoreUrl, setDisplayStoreUrl ] = useState(
-        stateUrl || 'store'
+        storeUrl || 'store'
     );
-    const [ localStoreUrl, setLocalStoreUrl ] = useState( stateUrl || 'store' );
+    const [ localStoreUrl, setLocalStoreUrl ] = useState( storeUrl || 'store' );
     const [ localShareDiagnostics, setLocalShareDiagnostics ] =
         useState( shareDiagnostics );
     const [ error, setError ] = useState( '' );
@@ -192,7 +192,14 @@ const BasicInfoScreen = ( {
                             />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <h3 className="text-sm text-[#575757] font-medium">
+                            <h3
+                                className="text-sm text-[#575757] font-medium cursor-pointer"
+                                onClick={ () =>
+                                    setLocalShareDiagnostics(
+                                        ! localShareDiagnostics
+                                    )
+                                }
+                            >
                                 { __(
                                     'Help Us Tailor Your Marketplace',
                                     'dokan-lite'
