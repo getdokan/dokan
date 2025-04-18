@@ -16,6 +16,7 @@
 8. **DokanAlert** - Unified alert component for notifications
 9. **NotFound** - Unified 404 component for undefined route
 10. **Forbidden** - Unified 403 component for unauthorized route
+11. **MediaUploader** - File upload component
 
 ## Important Dependencies
 
@@ -609,4 +610,36 @@ interface SelectedCustomer {
   label: string;  // Display name of the customer
   value: string;  // Customer ID
 }
+```
+
+#### Example of Upload 
+
+```tsx
+import { MediaUploader } from '@dokan/components';
+
+type UploadTypes = {
+    onSelect: ( value: any ) => void;
+    children: React.ReactNode;
+    multiple?: boolean;
+    className?: string;
+    as?: React.ElementType;
+    title?: string;
+    buttonText?: string;
+};
+
+const App = () => {
+    const handleUpload = (file) => {
+        // Handle the uploaded files
+        console.log(file);
+    }
+    return (
+        <MediaUploader as="div" onSelect={ handleUpload }>
+            <DokanButton variant="secondary" className="gap-1">
+                <i className="fas fa-cloud-upload-alt" />
+                { __( 'Upload', 'dokan' ) }
+            </DokanButton>
+        </MediaUploader>
+    )
+}
+
 ```
