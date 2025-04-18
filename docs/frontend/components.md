@@ -14,7 +14,9 @@
 6. **Link Component** - Flexible link component with multiple style variants
 7. **DokanBadge** - Unified badge component for status badges
 8. **DokanAlert** - Unified alert component for notifications
-9. **MediaUploader** - File upload component
+9. **NotFound** - Unified 404 component for undefined route
+10. **Forbidden** - Unified 403 component for unauthorized route
+11. **MediaUploader** - File upload component
 
 ## Important Dependencies
 
@@ -317,6 +319,149 @@ const LinkExample = () => {
         </DokanLink>
     </div>
   );
+};
+```
+
+### NotFound Component
+
+The `NotFound` component displays a user-friendly `404` error page when a requested resource cannot be found.
+We will import the `NotFound` component from the `@dokan/components` package (Both for Pro & Lite version).
+
+The `NotFound` component accepts the following props:
+
+| Prop             | Type        | Required | Description                                                                                                                             |
+|------------------|-------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| `title`          | `string`    | No       | Custom title for the `NotFound` page (default: `Sorry, the page can’t be found`)                                                        |
+| `message`        | `string`    | No       | Custom message for the `NotFound` page (default: `The page you were looking for appears to have been moved, deleted or does not exist`) |
+| `navigateButton` | `ReactNode` | No       | Custom navigation button component (default: `Back to Dashboard` button)                                                                |
+| `children`       | `ReactNode` | No       | Custom `NotFound` page template                                                                                                         |
+
+### Usage Example
+
+```jsx
+import {NotFound} from '@dokan/components';
+import {DokanButton} from '@dokan/components';
+
+// Basic usage with default settings.
+const BasicNotFound = () => {
+    return <NotFound/>;
+};
+
+// Custom usage with navigation button.
+const CustomNotFound = () => {
+    return (
+        <NotFound
+            title={__('Resource Not Available', 'dokan-lite')}
+            message={__("We couldn't find the page you were looking for.", 'dokan')}
+            navigateButton={
+                <DokanButton> // Add your necessary props.
+                    {__('Return to Dashboard', 'dokan')}
+                </DokanButton>
+            }
+        />
+    );
+};
+
+// Usage in a component when a resource is not found.
+const ProductDetails = ({params}) => {
+    const [product, setProduct] = useState(null);
+    const [isNotFound, setIsNotFound] = useState(false);
+
+    useEffect(() => {
+        apiFetch({
+            path: `/dokan/v1/products/${params.id}`,
+        })
+            .then((response) => {
+                if (response) {
+                    setProduct(response);
+                }
+            })
+            .catch((error) => {
+                if (error?.data?.status === 404) {
+                    setIsNotFound(true);
+                }
+            });
+    }, [params.id]);
+
+    if (isNotFound) {
+        // Use your necessary `NotFound` from here.
+        // return <BasicNotFound />;
+        // return <CustomNotFound />;
+    }
+
+    // Rest of the component
+};
+```
+
+### Forbidden Component
+
+The `Forbidden` component displays a user-friendly `403` error page when a user attempts to access a resource they don't
+have permission to view.
+We will import the `Forbidden` component from the `@dokan/components` package (Both for Pro & Lite version).
+
+The `Forbidden` component accepts the following props:
+
+| Prop             | Type        | Required | Description                                                                                               |
+|------------------|-------------|----------|-----------------------------------------------------------------------------------------------------------|
+| `title`          | `string`    | No       | Custom title for the `Forbidden` page (default: `Permission Denied`)                                      |
+| `message`        | `string`    | No       | Custom message for the `Forbidden` page (default: `Sorry, you don’t have permission to access this page`) |
+| `navigateButton` | `ReactNode` | No       | Custom navigation button component (default: `Back to Dashboard` button)                                  |
+| `children`       | `ReactNode` | No       | Custom `Forbidden` page template                                                                          |
+
+### Usage Example
+
+```jsx
+import {Forbidden} from '@dokan/components';
+import {DokanButton} from '@dokan/components';
+
+// Basic usage with default settings
+const BasicForbidden = () => {
+    return <Forbidden/>;
+};
+
+// Custom usage with navigation button
+const CustomForbidden = () => {
+    return (
+        <Forbidden
+            title={__('Access Denied', 'dokan')}
+            message={__('You don\'t have permission to access this area.', 'dokan')}
+            navigateButton={
+                <DokanButton> // Add your necessary props.
+                    {__('Go to Dashboard', 'dokan')}
+                </DokanButton>
+            }
+        />
+    );
+};
+
+// Usage in a component when permission check fails
+const VendorSettings = ({params}) => {
+    const [settings, setSettings] = useState(null);
+    const [isForbidden, setIsForbidden] = useState(false);
+
+    useEffect(() => {
+        apiFetch({
+            path: `/dokan/v1/vendors/${params.id}/settings`,
+        })
+            .then((response) => {
+                if (response) {
+                    setSettings(response);
+                }
+            })
+            .catch((error) => {
+                if (error?.data?.status === 403) {
+                    setIsForbidden(true);
+                }
+            });
+    }, [params.id]);
+
+    if (isForbidden) {
+        // Use your necessary `Forbidden` from here.
+        // return <BasicForbidden />;
+        // return <CustomForbidden />;
+    }
+
+    // Rest of the component
 };
 ```
 

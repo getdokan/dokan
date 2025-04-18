@@ -4,6 +4,7 @@ import Tab from './Tab';
 import SettingsParser from './SettingsParser';
 import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
+import { twMerge } from 'tailwind-merge';
 
 export type StatusElement = {
     headers?: Array< string >;
@@ -132,9 +133,10 @@ const Status = () => {
         setSelectedTab( tab );
     };
 
+    console.log( pages );
     return (
         <div className="h-full">
-            <main className="max-w-7xl mx-auto pb-10 lg:py-5 lg:px-0">
+            <main className="max-w-full mx-auto pb-10 lg:py-5 lg:px-0">
                 <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
                     { pages && '' !== selectedPage && pages.length > 0 && (
                         <Menu
@@ -146,7 +148,12 @@ const Status = () => {
                         />
                     ) }
 
-                    <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+                    <div
+                        className={ twMerge(
+                            'space-y-6 sm:px-6 lg:px-0 ',
+                            pages.length ? 'lg:col-span-9' : 'lg:col-span-12'
+                        ) }
+                    >
                         { tabs && '' !== selectedTab && (
                             <Tab
                                 key="admin-status-tab"
