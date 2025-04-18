@@ -588,8 +588,8 @@ class Assets {
             ],
             'dokan-hooks'               => [
                 'deps'    => [],
-                'src'     => $asset_url . '/js/hooks.js',
-                'version' => filemtime( $asset_path . 'js/hooks.js' ),
+                'src'     => $asset_url . '/js/react-hooks.js',
+                'version' => filemtime( $asset_path . 'js/react-hooks.js' ),
             ],
         ];
 
