@@ -786,8 +786,7 @@ class Ajax {
             }
         }
 
-        echo wp_json_encode( $brands_data );
-        die;
+        wp_send_json( $brands_data );
     }
 
     /**
