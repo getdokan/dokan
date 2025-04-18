@@ -49,9 +49,6 @@
             @apply before:!content-[''] mt-1;
         }
 
-        input[type=text]:focus {
-            outline-offset: 0;
-        }
     }
 
     button[data-headlessui-state="checked"] {
