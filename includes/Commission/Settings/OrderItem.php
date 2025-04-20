@@ -73,10 +73,10 @@ class OrderItem implements InterfaceSetting {
             $item_total = floatval( $order->get_meta( '_dokan_item_total' ) );
         }
 
-        $product_price = (float) wc_format_decimal( $this->product_price_to_calculate_commission );
-        if ( $order_id && $item_total ) {
-            $additional_flat = ( floatval( $additional_flat ) / $item_total ) * $product_price;
-        }
+//        $product_price = (float) wc_format_decimal( $this->product_price_to_calculate_commission );
+//        if ( $order_id && $item_total ) {
+//            $additional_flat = ( floatval( $additional_flat ) / $item_total ) * $product_price;
+//        }
 
         $settings = new Setting();
         $settings->set_type( $commission_type )
