@@ -12,8 +12,6 @@ class OrderItem implements AbstractSettings {
 
     protected $product_price_to_calculate_commission;
 
-
-
     /**
      * Class constructor.
      *
@@ -35,7 +33,7 @@ class OrderItem implements AbstractSettings {
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function get(): Setting {
+    public function get(): ?Setting {
         $commission_percentage = '';
         $commission_type       = '';
         $additional_flat       = '';
@@ -55,36 +53,15 @@ class OrderItem implements AbstractSettings {
             $commission_meta = empty( $commission_meta ) ? [] : $commission_meta;
         }
 
+        if (empty( $commission_type ) ) {
+            return null;
+        }
+
         $settings = new Setting();
         $settings->set_type( $commission_type )
                 ->set_flat( $additional_flat )
                 ->set_percentage( $commission_percentage )
                 ->set_meta_data( $commission_meta );
-
-        if ( $commission_type === CategoryBased::SOURCE && isset( $commission_meta['parameters']['category_id'] ) ) {
-            $settings->set_category_id( $commission_meta['parameters']['category_id'] );
-            $settings->set_category_commissions(
-                [
-                    'all'   => [],
-                    'items' => [
-                        $settings->get_category_id() => [
-                            'flat'       => $settings->get_flat(),
-                            'percentage' => $settings->get_percentage(),
-                        ],
-                    ],
-                ]
-            );
-        } else {
-            $settings->set_category_commissions(
-                [
-                    'all'   => [
-                        'flat'       => $settings->get_flat(),
-                        'percentage' => $settings->get_percentage(),
-                    ],
-                    'items' => [],
-                ]
-            );
-        }
 
         return $settings;
     }

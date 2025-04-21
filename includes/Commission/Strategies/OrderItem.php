@@ -43,7 +43,7 @@ class OrderItem extends AbstractStrategy {
      * @var int|mixed $total_quantity
      */
     protected $total_quantity;
-    
+
     protected $vendor_id = 0;
 
     /**
@@ -62,11 +62,14 @@ class OrderItem extends AbstractStrategy {
         $this->total_amount              = $total_amount;
         $this->total_quantity = $total_quantity;
 
-        $this->vendor_id = $vendor_id ? $vendor_id : dokan_get_vendor_by_product( $order_item->get_product_id(), true )
+        $this->vendor_id = $vendor_id ? $vendor_id : dokan_get_vendor_by_product( $order_item->get_product_id(), true );
 
-        $this->set_next( new Product( $order_item->get_product_id() ) );
+        parent::__construct();
+        
+        $this->set_next( new Product( $order_item->get_product_id(), $vendor_id ) );
+
     }
-    
+
     /**
      * Returns order item strategy source.
      *
@@ -85,7 +88,7 @@ class OrderItem extends AbstractStrategy {
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function get_settings(): Setting {
+    public function set_settings() {
         $settings = new \WeDevs\Dokan\Commission\Settings\OrderItem(
             [
                 'id'    => $this->order_item_id,
@@ -93,7 +96,7 @@ class OrderItem extends AbstractStrategy {
             ]
         );
 
-        return $settings->get();
+        $this->settings = $settings->get();
     }
 
     /**

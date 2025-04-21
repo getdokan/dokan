@@ -68,31 +68,6 @@ abstract class AbstractCommissionCalculator {
      */
     abstract public function additional_adjustments( Commission $commission_data ): Commission;
 
-    /**
-     * Returns the applied strategy.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $strategies
-     *
-     * @return void
-     */
-    public function determine_strategy_to_apply( array $strategies ) {
-        $this->strategies = $strategies;
-
-        foreach ( $this->strategies as $strategy ) {
-            $formula = $strategy->create_formula();
-
-            if ( ! $formula->is_applicable() ) {
-                continue;
-            }
-
-            $this->strategy = $strategy;
-            $this->formula  = $formula;
-
-            break;
-        }
-    }
 
     /**
      * Returns applied commission data

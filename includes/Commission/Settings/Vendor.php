@@ -27,7 +27,7 @@ class Vendor implements InterfaceSetting {
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function get(): Setting {
+    public function get(): ?Setting {
         $percentage = '';
         $type       = '';
         $flat       = '';
@@ -42,7 +42,12 @@ class Vendor implements InterfaceSetting {
             $category_commissions = ! is_array( $category_commissions ) ? [] : $category_commissions;
         }
 
+        if ( empty( $type ) ) {
+            return null;
+        }
+
         $settings = new Setting();
+
         $settings->set_type( $type )
                 ->set_flat( $flat )
                 ->set_percentage( $percentage )

@@ -33,11 +33,15 @@ class GlobalSetting implements InterfaceSetting {
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function get(): Setting {
+    public function get(): ?Setting {
         $percentage           = dokan_get_option( 'admin_percentage', 'dokan_selling', '' );
         $type                 = dokan_get_option( 'commission_type', 'dokan_selling', '' );
         $flat                 = dokan_get_option( 'additional_fee', 'dokan_selling', '' );
         $category_commissions = dokan_get_option( 'commission_category_based_values', 'dokan_selling', [] );
+
+        if ( empty( $type ) ) {
+            return null;
+        }
 
         $settings = new Setting();
         $settings->set_type( $type )

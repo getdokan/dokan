@@ -30,17 +30,16 @@ class DefaultStrategy extends AbstractStrategy {
      *
      * @since 3.14.0
      *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
+     * @return void
      */
-    public function get_settings(): Setting {
+    public function set_settings() {
         $default_setting = new DefaultSetting();
         $setting = $default_setting->get();
 
         $setting->set_type( DefaultSetting::TYPE )
             ->set_flat( 0 )
-            ->set_percentage( 0 )
-            ->set_category_commissions( [] );
+            ->set_percentage( 0 );
 
-        return $setting;
+        $this->settings = $setting;
     }
 }

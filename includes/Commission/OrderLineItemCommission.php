@@ -11,7 +11,6 @@ use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
 use WeDevs\Dokan\Commission\Strategies\OrderItem;
 use WeDevs\Dokan\Commission\Strategies\Product;
 use WeDevs\Dokan\Commission\Strategies\Vendor;
-use WeDevs\Dokan\ProductCategory\Helper;
 use WeDevs\Dokan\Vendor\Coupon;
 use WeDevs\Dokan\Vendor\DokanOrderLineItemCouponInfo;
 
@@ -39,6 +38,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $this->item = $item;
 
         $dokan_coupon_info = $this->item->get_meta( Coupon::DOKAN_COUPON_META_KEY, true );
+        
         /**
          * Prepare coupon info for commission calculation.
          *
@@ -87,28 +87,21 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $item_price = apply_filters( 'dokan_earning_by_order_item_price', $this->item->get_subtotal(), $this->item, $this->order );
         $item_price = $refund ? floatval( $item_price ) - floatval( $refund ) : $item_price;
 
-        $total_quantity   = $this->item->get_quantity();
-        $product_id       = $this->item->get_variation_id() ? $this->item->get_variation_id() : $this->item->get_product_id();
-        $vendor_id        = $this->vendor_id;
-        $category_id      = 0;
+        $total_quantity = $this->item->get_quantity();
 
         // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
-        $product_categories = Helper::get_saved_products_category( $product_id );
-        $chosen_categories  = $product_categories['chosen_cat'];
-        $category_id        = reset( $chosen_categories );
-        $category_id        = $category_id ? $category_id : 0;
+        // $product_categories = Helper::get_saved_products_category( $product_id );
+        // $chosen_categories  = $product_categories['chosen_cat'];
+        // $category_id        = reset( $chosen_categories );
+        // $category_id        = $category_id ? $category_id : 0;
 
-        $strategies = apply_filters(
-            'dokan_order_line_item_commission_strategies', [
-                new OrderItem( $this->item, $item_price, $total_quantity ),
-                new Product( $product_id ),
-                new Vendor( $vendor_id, $category_id ),
-                new GlobalStrategy( $category_id ),
-                new DefaultStrategy(),
-            ]
+        $strategy = apply_filters(
+            'dokan_order_line_item_commission_strategies',
+            new OrderItem( $this->item, $item_price, $total_quantity, $this->vendor_id )
         );
 
-        $this->determine_strategy_to_apply( $strategies );
+        $settings = $strategy->get_settings();
+
         $this->set_price( $item_price );
         $this->set_quantity( $total_quantity );
 

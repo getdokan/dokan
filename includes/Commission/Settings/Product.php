@@ -31,9 +31,9 @@ class Product implements InterfaceSetting {
      *
      * @since 3.14.0
      *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
+     * @return \WeDevs\Dokan\Commission\Model\Setting | null
      */
-    public function get(): Setting {
+    public function get(): ?Setting {
         $percentage = '';
         $type       = '';
         $flat       = '';
@@ -42,6 +42,10 @@ class Product implements InterfaceSetting {
             $percentage = $this->product->get_meta( '_per_product_admin_commission', true );
             $type       = $this->product->get_meta( '_per_product_admin_commission_type', true );
             $flat       = $this->product->get_meta( '_per_product_admin_additional_fee', true );
+        }
+
+        if ( empty( $type ) ) {
+            return null;
         }
 
         $settings = new Setting();

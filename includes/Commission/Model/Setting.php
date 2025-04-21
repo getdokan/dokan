@@ -116,6 +116,21 @@ class Setting {
     }
 
     /**
+     * Sets the flat commissin amount.
+     *
+     * @since 3.14.0
+     *
+     * @param mixed|string $flat
+     *
+     * @return $this
+     */
+    public function set_combined_flat( $flat ): Setting {
+        $this->flat = $flat;
+
+        return $this;
+    }
+
+    /**
      * Sets the percentage amount.
      *
      * @since 3.14.0
@@ -129,37 +144,6 @@ class Setting {
 
         return $this;
     }
-
-    /**
-     * Sets the category id.
-     *
-     * @since 3.14.0
-     *
-     * @param mixed|string $category_id
-     *
-     * @return $this
-     */
-    public function set_category_id( $category_id ): Setting {
-        $this->category_id = $category_id;
-
-        return $this;
-    }
-
-    /**
-     * Sets the category commission data.
-     *
-     * @since 3.14.0.
-     *
-     * @param array|mixed $category_commissions
-     *
-     * @return $this
-     */
-    public function set_category_commissions( $category_commissions ): Setting {
-        $this->category_commissions = $category_commissions;
-
-        return $this;
-    }
-
     /**
      * Sets the commission type.
      *
@@ -178,8 +162,23 @@ class Setting {
      *
      * @return mixed|string
      */
-    public function get_flat() {
-        return $this->flat;
+    public function get_flat(): float {
+        return $this->is_combined() ? 0 : floatval($this->flat);
+    }
+
+     /**
+     * Returns the flat amount.
+     *
+     * @since 3.14.0
+     *
+     * @return mixed|string
+     */
+    public function get_combine_flat(): float {
+        return $this->is_combined() ? floatval($this->flat) : 0;
+    }
+
+    protected function is_combined(): bool {
+        return $this->type === 'combine';
     }
 
     /**
@@ -190,7 +189,7 @@ class Setting {
      * @return mixed|string
      */
     public function get_percentage() {
-        return $this->percentage;
+        return floatval( $this->percentage ) / 100;
     }
 
     /**
@@ -213,5 +212,9 @@ class Setting {
      */
     public function get_category_id() {
         return $this->category_id;
+    }
+
+    public function is_applicable(): bool {
+        return  $this->percentage !== '' || $this->flat !== '';
     }
 }

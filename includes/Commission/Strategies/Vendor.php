@@ -44,6 +44,10 @@ class Vendor extends AbstractStrategy {
     public function __construct( $vendor_id, $category_id ) {
         $this->vendor_id = $vendor_id;
         $this->category_id = $category_id;
+
+        parent::__construct();
+        
+        $this->set_next( new GlobalStrategy( $category_id ) );
     }
 
     /**
@@ -73,12 +77,11 @@ class Vendor extends AbstractStrategy {
      *
      * @since 3.14.0
      *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
+     * @return void
      */
-    public function get_settings(): Setting {
+    public function set_settings() {
         $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->vendor_id );
-        $settings = $settings->get();
-        $settings->set_category_id( $this->get_category_id() );
+        $this->settings = $settings->get();
 
         return $settings;
     }

@@ -18,7 +18,7 @@ interface InterfaceSetting {
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function get(): Setting;
+    public function get(): ?Setting;
 
     /**
      * Save commission.
@@ -30,6 +30,4 @@ interface InterfaceSetting {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save( array $setting ): Setting;
-
-    public function get_next(): InterfaceSetting;
 }

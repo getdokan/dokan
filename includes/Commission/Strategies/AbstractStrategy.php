@@ -9,8 +9,16 @@ use WeDevs\Dokan\Commission\Formula\Flat;
 use WeDevs\Dokan\Commission\Formula\Percentage;
 use WeDevs\Dokan\Commission\Formula\AbstractFormula;
 use WeDevs\Dokan\Commission\Model\Setting;
+use WeDevs\Dokan\Commission\Settings\InterfaceSetting;
 
 abstract class AbstractStrategy {
+
+    protected ?AbstractStrategy $next = null;
+    protected ?Setting $settings;
+
+    public function __construct() {
+        $this->set_settings();
+    }
 
     /**
      * Returns commission strategy source.
@@ -26,39 +34,33 @@ abstract class AbstractStrategy {
      *
      * @since 3.14.0
      *
-     * @return Setting
+     * @return void
      */
-    abstract public function get_settings(): Setting;
+    abstract public function set_settings();
 
     /**
-     * Returns commission calculator or null.
+     * Returns commission settings.
      *
      * @since 3.14.0
      *
-     * @return \WeDevs\Dokan\Commission\Formula\AbstractFormula
+     * @return Setting
      */
-    public function create_formula(): AbstractFormula {
-        $settings = $this->get_settings();
-
-        switch ( $settings->get_type() ) {
-            case Flat::SOURCE:
-                // In Dokan before 3.14.0 version if the commission type was flat the flat value used to be saved in the percentage key, that is why we are passing the percentage value.
-                $formula = new Flat( $settings );
-                break;
-            case Combine::SOURCE: // Assuming 'combine' implies a combination of flat + percentage
-                $formula = new Combine( $settings );
-                break;
-            case Fixed::SOURCE:
-                $formula = new Fixed( $settings );
-                break;
-            case CategoryBased::SOURCE:
-                $formula = new CategoryBased( $settings );
-                break;
-            case Percentage::SOURCE:
-            default:
-                $formula = new Percentage( $settings );
+     public function get_settings(): ?Setting {
+        if ( ! $this->settings || !$this->settings->is_applicable() ) {
+            return $this->get_next() ? $this->get_next()->get_settings() : null;
         }
 
-        return apply_filters( 'dokan_commission_calculation_strategy_formula', $formula, $settings, $this->get_source() );
+        return $this->settings;
+     }
+
+
+    public function get_next(): ?AbstractStrategy {
+        return $this->next;
+    }
+
+    public function set_next( AbstractStrategy $next ): AbstractStrategy {
+        $this->next = $next;
+
+        return $this;
     }
 }
