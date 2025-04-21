@@ -1,4 +1,5 @@
-import { Button, Card } from '@getdokan/dokan-ui';
+import { Card } from '@getdokan/dokan-ui';
+import { DokanButton } from '@dokan/components';
 import { __ } from '@wordpress/i18n';
 import PriceHtml from '../../components/PriceHtml';
 import DateTimeHtml from '../../components/DateTimeHtml';
@@ -58,7 +59,7 @@ function PaymentDetails( {
                 </Card.Header>
                 <Card.Body>
                     <div className="space-y-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                        <div className="flex flex-col md:flex-row sm:items-center justify-between">
                             <div>
                                 <h4 className="font-medium text-gray-900 mb-2">
                                     { __( 'Last Payment', 'dokan' ) }
@@ -101,15 +102,13 @@ function PaymentDetails( {
                                     </p>
                                 ) }
                             </div>
-                            <Button
-                                color="gray"
-                                className="bg-dokan-btn hover:bg-dokan-btn-hover"
+                            <DokanButton
                                 onClick={ () => {
                                     navigate( '/withdraw-requests' );
                                 } }
                             >
                                 { __( 'View Payments', 'dokan-lite' ) }
-                            </Button>
+                            </DokanButton>
                         </div>
 
                         <Slot

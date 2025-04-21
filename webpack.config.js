@@ -20,7 +20,7 @@ const updatedConfig = {
         utilities: {
             import: '@dokan/utilities/index.ts',
         },
-        hooks: {
+        'react-hooks': {
             import: '@dokan/hooks/index.tsx',
         }
     },
@@ -70,7 +70,7 @@ const updatedConfig = {
         '@woocommerce/blocks-checkout': [ 'wc', 'blocksCheckout' ],
         '@dokan/components': [ 'dokan', 'components' ],
         '@dokan/utilities': [ 'dokan', 'utilities' ],
-        '@dokan/hooks': [ 'dokan', 'hooks' ],
+        '@dokan/hooks': [ 'dokan', 'react-hooks' ],
     },
 
     plugins: [
