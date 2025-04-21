@@ -7,6 +7,7 @@ export {
     filterSortAndPaginate,
     isItemValid,
 } from '@wordpress/dataviews/wp';
+
 export { default as PriceHtml } from './PriceHtml';
 export { default as DateTimeHtml } from './DateTimeHtml';
 export { default as Filter } from './Filter';
@@ -15,3 +16,6 @@ export { default as DokanAlert } from './Alert';
 export { default as DokanBadge } from './Badge';
 export { default as DokanButton } from './Button';
 export { default as DokanLink } from './Link';
+export { default as MediaUploader } from './Upload';
+export { default as NotFound } from './../layout/404';
+export { default as Forbidden } from './../layout/403';
