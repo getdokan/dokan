@@ -71,7 +71,7 @@ class OrderCommission extends AbstractCommissionCalculator {
                 $line_item_commission->set_item( $item );
                 $commission = $line_item_commission->calculate();
             } catch ( \Exception $exception ) {
-                throw $exception;
+                // TODO: Handle exception.
             }
 
             $this->admin_commission     += $commission->get_admin_commission();
@@ -135,7 +135,6 @@ class OrderCommission extends AbstractCommissionCalculator {
         $commission->set_admin_commission( $this->admin_commission )
             ->set_net_admin_commission( $this->admin_net_commission )
             ->set_admin_discount( $this->admin_discount )
-            ->set_admin_subsidy( $this->admin_subsidy )
             ->set_vendor_discount( $this->vendor_discount )
             ->set_vendor_earning( $this->vendor_earnign )
             ->set_net_vendor_earning( $this->vendor_net_earnign );

@@ -25,10 +25,11 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
     const VENDOR_ID_META_KEY = '_dokan_vendor_id';
     protected WC_Order $order;
     protected int $vendor_id;
+
     /**
-     * @var DokanOrderLineItemCouponInfo[] $dokan_coupon_infos
+     * @var array $coupon_infos
      */
-    protected array $dokan_coupon_infos;
+    protected array $coupon_infos = [];
 
     public function get_item(): WC_Order_Item {
         return $this->item;
@@ -37,28 +38,19 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
     public function set_item( WC_Order_Item $item ): void {
         $this->item = $item;
 
-        $dokan_coupon_info = $this->item->get_meta( Coupon::DOKAN_COUPON_META_KEY, true );
-        
-        /**
-         * Prepare coupon info for commission calculation.
-         *
-         * @since DOKAN_SINCE
-         *
-         * @var DokanOrderLineItemCouponInfo[] $dokan_coupon_infos
-         */
-        $this->dokan_coupon_infos = [];
-        if ( ! empty( $dokan_coupon_info ) && is_array( $dokan_coupon_info ) ) {
-            foreach ( $dokan_coupon_info as $coupon_code => $coupon_meta ) {
-                $coupon_line_item = new DokanOrderLineItemCouponInfo();
-                $coupon_line_item->set_coupon_info( $coupon_meta );
-
-                $this->dokan_coupon_infos[] = $coupon_line_item;
-            }
-        }
+        // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
+        $this->coupon_infos = $this->item->get_meta( Coupon::DOKAN_COUPON_META_KEY, true ) ?: [];
     }
 
     public function get_order(): WC_Order {
         return $this->order;
+    }
+
+    /**
+     * @return array
+     */
+    protected function get_coupon_infos(): array {
+        return empty( $this->coupon_infos ) ? [] : $this->coupon_infos;
     }
 
     public function set_order( WC_Order $order ): void {
@@ -88,13 +80,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $item_price = $refund ? floatval( $item_price ) - floatval( $refund ) : $item_price;
 
         $total_quantity = $this->item->get_quantity();
-
-        // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
-        // $product_categories = Helper::get_saved_products_category( $product_id );
-        // $chosen_categories  = $product_categories['chosen_cat'];
-        // $category_id        = reset( $chosen_categories );
-        // $category_id        = $category_id ? $category_id : 0;
-
         $strategy = apply_filters(
             'dokan_order_line_item_commission_strategies',
             new OrderItem( $this->item, $item_price, $total_quantity, $this->vendor_id )
@@ -105,7 +90,12 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $this->set_price( $item_price );
         $this->set_quantity( $total_quantity );
 
-        $commission_data = $this->calculate_commission();
+        $commission_data = dokan_get_container()->get( Calculator::class )
+            ->set_settings( $settings )
+            ->set_subtotal( $item_price )
+            ->set_quantity( $total_quantity )
+            ->set_discount( new CouponInfo( $this->get_coupon_infos() ) )
+            ->calculate();
 
         $parameters = $commission_data->get_parameters() ?? [];
         $percentage = $parameters['percentage'] ?? 0;
@@ -160,7 +150,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $commission_data->set_admin_commission( $commission_data->get_admin_commission() + floatval( $commission_meta['admin_commission'] ?? 0 ) );
         $commission_data->set_net_admin_commission( $commission_data->get_net_admin_commission() + floatval( $commission_meta['net_admin_commission'] ?? 0 ) );
         $commission_data->set_admin_discount( $commission_data->get_admin_discount() + floatval( $commission_meta['admin_discount'] ?? 0 ) );
-        $commission_data->set_admin_subsidy( $commission_data->get_admin_subsidy() + floatval( $commission_meta['admin_subsidy'] ?? 0 ) );
         $commission_data->set_per_item_admin_commission( floatval( $commission_meta['per_item_admin_commission'] ?? 0 ) );
         $commission_data->set_vendor_discount( $commission_data->get_vendor_discount() + floatval( $commission_meta['vendor_discount'] ?? 0 ) );
         $commission_data->set_vendor_earning( $commission_data->get_vendor_earning() + floatval( $commission_meta['vendor_earning'] ?? 0 ) );
@@ -170,57 +159,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $commission_data->set_total_amount( $commission_meta['total_amount'] ?? 0 );
         $commission_data->set_total_quantity( $commission_meta['total_quantity'] ?? 0 );
         $commission_data->set_parameters( $commission_meta['parameters'] ?? [] );
-
-        return $commission_data;
-    }
-
-    /**
-     * Additional adjustments for commission calculation.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param \WeDevs\Dokan\Commission\Model\Commission $commission_data
-     *
-     * @return \WeDevs\Dokan\Commission\Model\Commission
-     */
-    public function additional_adjustments( Commission $commission_data ): Commission {
-        $this->dokan_coupon_infos = apply_filters( 'adjust_commission_with_backward_compatibility_coupon_for_line_item', $this->dokan_coupon_infos, $commission_data, $this->order, $this->item );
-
-        if ( empty( $this->dokan_coupon_infos ) ) {
-			return $commission_data;
-        }
-
-        $admin_net_commission = 0.0;
-        $vendor_net_earning = 0.0;
-
-        foreach ( $this->dokan_coupon_infos as $dokan_coupon_info ) {
-            $commission_params     = $commission_data->get_parameters();
-            $flat                  = floatval( $commission_params['flat'] ?? 0 );
-            $percent               = intval( $commission_params['percentage'] ?? 0 );
-
-            $admin_commission_rate = $percent / 100;
-            $refunded_qty = $this->order->get_qty_refunded_for_item( $this->item->get_id() );
-            $item_qty = $this->item->get_quantity() - $refunded_qty;
-
-            $admin_net_commission += ( ( $commission_data->get_total_amount() - $dokan_coupon_info->get_vendor_discount() ) * $admin_commission_rate ) + $flat * $item_qty - $dokan_coupon_info->get_admin_discount();
-            $vendor_net_earning += floatval( $this->item->get_total() ) - $admin_net_commission;
-
-            $commission_data->set_vendor_discount( $commission_data->get_vendor_discount() + $dokan_coupon_info->get_vendor_discount() );
-            $commission_data->set_admin_discount( $commission_data->get_admin_discount() + $dokan_coupon_info->get_admin_discount() );
-        }
-
-        $commission_data->set_net_admin_commission( $admin_net_commission );
-        $commission_data->set_admin_commission( $admin_net_commission );
-        $commission_data->set_per_item_admin_commission( $admin_net_commission / $commission_data->get_total_quantity() );
-
-        $commission_data->set_net_vendor_earning( $vendor_net_earning );
-
-        // If the admin commission is negative, set it to 0 and set the admin subsidy.
-        if ( $commission_data->get_net_admin_commission() < 0 ) {
-            $commission_data->set_admin_subsidy( abs( $commission_data->get_net_admin_commission() ) );
-            $commission_data->set_admin_commission( 0 );
-            $commission_data->set_per_item_admin_commission( 0 );
-        }
 
         return $commission_data;
     }
