@@ -8,6 +8,10 @@
       .dataviews__view-actions {
         display: none;
       }
+
+      .components-button.is-compact.has-icon:not(.has-text) {
+          width: auto;
+      }
     }
   }
 }
