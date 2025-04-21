@@ -34,6 +34,7 @@ const QuickConfirm = () => {
         <DokanModal
             isOpen={ true }
             namespace='quick-confirm'
+            confirmButtonVariant={`primary`}
             onConfirm={ () => handleConfirm() }
             onClose={ () => setIsOpen( false ) }
             confirmationTitle={ __( 'Quick Confirmation', 'dokan-lite' ) }
@@ -69,20 +70,21 @@ The `DokanModal` component offers several features for customization and flexibi
 
 ## Component Properties
 
-| Property                  | Type          | Required  | Default                | Description                                                     |
-|---------------------------|---------------|-----------|------------------------|-----------------------------------------------------------------|
-| `isOpen`                  | `boolean`     | Yes       | -                      | Controls modal visibility                                       |
-| `onClose`                 | `() => void`  | Yes       | -                      | Callback function when modal closes                             |
-| `namespace`               | `string`      | Yes       | -                      | Unique identifier for the modal (used for modal identification) |
-| `className`               | `string`      | No        | -                      | Additional CSS classes for modal customization                  |
-| `onConfirm`               | `() => void`  | Yes       | -                      | Callback function when confirm button is clicked                |
-| `dialogTitle`             | `string`      | No        | `Confirmation Dialog`  | Title text for the modal                                        |
-| `cancelButtonText`        | `string`      | No        | `Cancel`               | Text for the cancel button                                      |
-| `confirmButtonText`       | `string`      | No        | `Confirm`              | Text for the confirm button                                     |
-| `confirmationTitle`       | `string`      | No        | `Delete Confirmation`  | Title for confirmation modals                                   |
-| `confirmationDescription` | `string`      | No        | -                      | Description text for confirmation modals                        |
-| `dialogIcon`              | `JSX.Element` | No        | -                      | Custom icon element for the modal header                        |
-| `dialogHeader`            | `JSX.Element` | No        | -                      | Custom header component                                         |
-| `dialogContent`           | `JSX.Element` | No        | -                      | Custom content component                                        |
-| `dialogFooter`            | `JSX.Element` | No        | -                      | Custom footer component                                         |
-| `loading`                 | `boolean`     | No        | false                  | Controls loading state of the modal                             |
+| Property                  | Type          | Required | Default               | Description                                                     |
+|---------------------------|---------------|----------|-----------------------|-----------------------------------------------------------------|
+| `isOpen`                  | `boolean`     | Yes      | -                     | Controls modal visibility                                       |
+| `onClose`                 | `() => void`  | Yes      | -                     | Callback function when modal closes                             |
+| `namespace`               | `string`      | Yes      | -                     | Unique identifier for the modal (used for modal identification) |
+| `className`               | `string`      | No       | -                     | Additional CSS classes for modal customization                  |
+| `onConfirm`               | `() => void`  | Yes      | -                     | Callback function when confirm button is clicked                |
+| `dialogTitle`             | `string`      | No       | `Confirmation Dialog` | Title text for the modal                                        |
+| `cancelButtonText`        | `string`      | No       | `Cancel`              | Text for the cancel button                                      |
+| `confirmButtonText`       | `string`      | No       | `Confirm`             | Text for the confirm button                                     |
+| `confirmationTitle`       | `string`      | No       | `Delete Confirmation` | Title for confirmation modals                                   |
+| `confirmationDescription` | `string`      | No       | -                     | Description text for confirmation modals                        |
+| `confirmButtonVariant`    | `string`      | No       | `danger`              | Action button style variant, default `danger` for `delete`      |
+| `dialogIcon`              | `JSX.Element` | No       | -                     | Custom icon element for the modal header                        |
+| `dialogHeader`            | `JSX.Element` | No       | -                     | Custom header component                                         |
+| `dialogContent`           | `JSX.Element` | No       | -                     | Custom content component                                        |
+| `dialogFooter`            | `JSX.Element` | No       | -                     | Custom footer component                                         |
+| `loading`                 | `boolean`     | No       | false                 | Controls loading state of the modal                             |

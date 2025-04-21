@@ -23,6 +23,7 @@ interface DokanModalProps {
     dialogContent?: JSX.Element;
     dialogFooter?: JSX.Element;
     loading?: boolean;
+    confirmButtonVariant?: string;
 }
 
 const DokanModal = ( {
@@ -41,6 +42,7 @@ const DokanModal = ( {
     dialogFooter,
     dialogContent,
     loading = false,
+    confirmButtonVariant = 'danger',
 }: DokanModalProps ) => {
     if ( ! namespace ) {
         throw new Error(
@@ -159,8 +161,8 @@ const DokanModal = ( {
                                     __( 'Cancel', 'dokan-lite' ) }
                             </DokanButton>
                             <DokanButton
-                                variant={ `danger` }
                                 onClick={ handleConfirm }
+                                variant={ confirmButtonVariant }
                                 loading={ isSubmitting || loading }
                                 disabled={ isSubmitting || loading }
                             >
