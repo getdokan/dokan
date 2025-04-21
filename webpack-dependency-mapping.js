@@ -76,7 +76,6 @@ const wooRequestToExternal = ( request ) => {
             settings: [ 'wc', 'wcSettings' ],
         };
 
-
         if ( irregularExternalMap[ handle ] ) {
             return irregularExternalMap[ handle ];
         }
@@ -115,16 +114,16 @@ const wooRequestToHandle = ( request ) => {
 /**
  * Given a request string, returns the external name for the packages.
  *
- * @param request string Request string.
+ * @param  request string Request string.
  *
- * @returns {string[]} External name for the package.
+ * @return {string[]} External name for the package.
  */
 const requestToExternal = ( request ) => {
     const dokan = request.match( /^@dokan\/stores\/(.+)$/ );
     const wc = request.match( /^@woocommerce\/(.+)$/ );
 
     if ( dokan ) {
-        return [ 'dokan', dokan[ 1 ] + '-store' ];
+        return [ 'dokan', dokan[ 1 ] + 'Store' ];
     }
 
     if ( wc ) {
@@ -137,9 +136,9 @@ const requestToExternal = ( request ) => {
 /**
  * Given a request string, returns the handle name.
  *
- * @param request string Request string.
+ * @param  request string Request string.
  *
- * @returns {string} Handle name for the package.
+ * @return {string} Handle name for the package.
  */
 const requestToHandle = ( request ) => {
     const dokan = request.match( /^@dokan\/stores\/(.+)$/ );
