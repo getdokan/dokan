@@ -48,7 +48,13 @@ const entryPoints = {
         './assets/src/js/setup-wizard/commission/index.js',
     // Category commission component styles.
     'dokan-category-commission': '/src/admin/components/Commission/index.js',
-    'core-store': '/src/stores/core/store.ts',
+    'core-store': {
+        import: '/src/stores/core/store.ts',
+        library: {
+            name: [ 'dokan', 'coreStore' ],
+            type: 'window',
+        },
+    },
     'dokan-status': '/src/Status/index.tsx',
     'products-store': '/src/stores/products/store.ts',
     'product-categories-store': '/src/stores/product-categories/store.ts',
