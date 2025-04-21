@@ -17,7 +17,7 @@ class DokanOrderLineItemCouponInfo {
     private $coupon_commissions_type          = '';
     private $admin_shared_coupon_type         = '';
     private $admin_shared_coupon_amount       = '';
-    private bool $subsidy_supported                = true;
+    private bool $subsidy_supported           = true;
 
     /**
      * Check if subsidy is supported
@@ -250,6 +250,10 @@ class DokanOrderLineItemCouponInfo {
      * @return string
      */
     public function get_admin_shared_coupon_type(): string {
+        if ( ! $this->is_subsidy_supported() && $this->admin_shared_coupon_type === 'default') {
+            $this->admin_shared_coupon_type = 'vendor';
+        }
+
         return $this->admin_shared_coupon_type;
     }
 

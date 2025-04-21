@@ -205,35 +205,12 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             $flat                  = floatval( $commission_params['flat'] ?? 0 );
             $percent               = intval( $commission_params['percentage'] ?? 0 );
 
-            if ( $flat > 0 ) {
-                $per_item_percentage       = $percent > 0 ? $commission_data->get_total_amount() / $percent : 0;
-                $per_item_flat             = $flat;
-                $total_per_item_percentage = $per_item_percentage + $per_item_flat;
-                $admin_commission_rate     = $total_per_item_percentage / $commission_data->get_total_amount();
-            } else {
-                $admin_commission_rate = $percent / 100;
-            }
+            $admin_commission_rate = $percent / 100;
+            $refunded_qty = $this->order->get_qty_refunded_for_item( $this->item->get_id() );
+            $item_qty = $this->item->get_quantity() - $refunded_qty;
 
-            /**
-             * Check if the line item is subsidy supported or the coupon type is default or empty.
-             */
-            if ( $dokan_coupon_info->is_subsidy_supported() || in_array( $dokan_coupon_info->get_coupon_commissions_type(), [ 'default', '' ], true ) ) {
-                /**
-                 * Calculate admin commission and vendor earning based on the coupon type.
-                 * @see https://github.com/getdokan/plugin-internal-tasks/issues/198#issuecomment-2608895467
-                 *
-                 *  (100-10)*(10/100)-0
-                 */
-                $admin_net_commission += ( ( $commission_data->get_total_amount() - $dokan_coupon_info->get_vendor_discount() ) * $admin_commission_rate ) - $dokan_coupon_info->get_admin_discount();
-                $vendor_net_earning += floatval( $this->item->get_total() ) - $admin_net_commission;
-            } else {
-                /**
-                 * Calculate admin commission and vendor earning based on the coupon type.
-                 */
-                $current_admin_net_commission = ( $commission_data->get_total_amount() * $admin_commission_rate ) - $dokan_coupon_info->get_admin_discount();
-                $admin_net_commission += $current_admin_net_commission < 0 ? 0 : $current_admin_net_commission;
-                $vendor_net_earning += floatval( $this->item->get_subtotal() - $dokan_coupon_info->get_vendor_discount() - $dokan_coupon_info->get_admin_discount() ) - abs( $admin_net_commission );
-            }
+            $admin_net_commission += ( ( $commission_data->get_total_amount() - $dokan_coupon_info->get_vendor_discount() ) * $admin_commission_rate ) + $flat * $item_qty - $dokan_coupon_info->get_admin_discount();
+            $vendor_net_earning += floatval( $this->item->get_total() ) - $admin_net_commission;
 
             $commission_data->set_vendor_discount( $commission_data->get_vendor_discount() + $dokan_coupon_info->get_vendor_discount() );
             $commission_data->set_admin_discount( $commission_data->get_admin_discount() + $dokan_coupon_info->get_admin_discount() );
