@@ -30,4 +30,6 @@ interface InterfaceSetting {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save( array $setting ): Setting;
+
+    public function get_next(): InterfaceSetting;
 }

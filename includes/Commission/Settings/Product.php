@@ -22,6 +22,7 @@ class Product implements InterfaceSetting {
         if ( $this->product && $this->product->is_type( 'variation' ) ) {
             $this->product = dokan()->product->get( $this->product->get_parent_id() );
         }
+        
     }
 
 

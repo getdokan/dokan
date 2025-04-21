@@ -29,7 +29,7 @@ class Product extends AbstractStrategy {
      *
      * @param $product_id
      */
-    public function __construct( $product_id ) {
+    public function __construct( $product_id, $vendor_id = 0 ) {
         $this->product_id = $product_id;
     }
 

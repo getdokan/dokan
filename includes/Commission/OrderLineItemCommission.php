@@ -100,7 +100,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
 
         $strategies = apply_filters(
             'dokan_order_line_item_commission_strategies', [
-                new OrderItem( $this->item->get_id(), $item_price, $total_quantity ),
+                new OrderItem( $this->item, $item_price, $total_quantity ),
                 new Product( $product_id ),
                 new Vendor( $vendor_id, $category_id ),
                 new GlobalStrategy( $category_id ),

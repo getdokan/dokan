@@ -43,24 +43,30 @@ class OrderItem extends AbstractStrategy {
      * @var int|mixed $total_quantity
      */
     protected $total_quantity;
+    
+    protected $vendor_id = 0;
 
     /**
      * Class constructor.
      *
      * @since 3.14.0
      *
-     * @param int|string $order_item_id
+     * @param \WC_Order_Item_Product $order_item
      * @param int|float  $total_amount
      * @param int        $total_quantity
      *
      * @return void
      */
-    public function __construct( $order_item_id = '', $total_amount = 0, $total_quantity = 1 ) {
-        $this->order_item_id             = $order_item_id;
+    public function __construct( $order_item = '', $total_amount = 0, $total_quantity = 1, $vendor_id = 0 ) {
+        $this->order_item_id             = $order_item->get_id();
         $this->total_amount              = $total_amount;
         $this->total_quantity = $total_quantity;
-    }
 
+        $this->vendor_id = $vendor_id ? $vendor_id : dokan_get_vendor_by_product( $order_item->get_product_id(), true )
+
+        $this->set_next( new Product( $order_item->get_product_id() ) );
+    }
+    
     /**
      * Returns order item strategy source.
      *

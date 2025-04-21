@@ -7,12 +7,12 @@ use WeDevs\Dokan\Commission\Formula\Flat;
 use WeDevs\Dokan\Commission\Formula\Percentage;
 use WeDevs\Dokan\Commission\Model\Setting;
 
-class OrderItem implements InterfaceSetting {
-
-
+class OrderItem implements AbstractSettings {
     protected $order_item_id;
 
     protected $product_price_to_calculate_commission;
+
+
 
     /**
      * Class constructor.
