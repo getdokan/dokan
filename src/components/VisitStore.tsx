@@ -27,7 +27,7 @@ const VisitStore = ( props: VisitStoreProps ) => {
     return (
         <span className="flex gap-3">
             { children }
-            <Tooltip content={ __( 'Visit Store', 'dokan-pro' ) }>
+            <Tooltip content={ __( 'Visit Store', 'dokan-lite' ) }>
                 <a
                     href={ externalLink }
                     target={ target }
