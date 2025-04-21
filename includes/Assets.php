@@ -4,8 +4,8 @@ namespace WeDevs\Dokan;
 
 use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Admin\Notices\Helper;
-use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
+use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\Utilities\OrderUtil;
 
 class Assets {
@@ -357,17 +357,18 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
             ],
-            'dokan-react-frontend'          => [
+            'dokan-react-frontend'   => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
                 'deps'    => [ 'dokan-react-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
-            'dokan-react-components'        => [
-                'deps'    => [ 'wp-components' ],
+            'dokan-react-components' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
+                'deps'    => [ 'wp-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
         ];
+
 
         return $styles;
     }
@@ -587,8 +588,8 @@ class Assets {
             ],
             'dokan-hooks'               => [
                 'deps'    => [],
-                'src'     => $asset_url . '/js/hooks.js',
-                'version' => filemtime( $asset_path . 'js/hooks.js' ),
+                'src'     => $asset_url . '/js/react-hooks.js',
+                'version' => filemtime( $asset_path . 'js/react-hooks.js' ),
             ],
         ];
 

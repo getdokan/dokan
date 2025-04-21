@@ -11,6 +11,7 @@ export default [
         path: '/withdraw',
         exact: true,
         order: 10,
+        capabilities: [ 'dokan_view_withdraw_menu' ],
     },
     {
         id: 'dokan-withdraw-requests',
@@ -19,5 +20,6 @@ export default [
         path: '/withdraw-requests',
         exact: true,
         order: 10,
+        capabilities: [ 'dokan_view_withdraw_menu' ],
     },
 ] as Array< DokanRoute >;
