@@ -30,27 +30,14 @@ class ProductCommission extends AbstractCommissionCalculator {
         $this->product_id = $product_id;
     }
 
-    public function get_category_id(): ?int {
-        return $this->category_id;
-    }
 
     public function set_category_id( ?int $category_id ): void {
         $this->category_id = $category_id;
     }
 
-    public function get_vendor_id(): ?int {
-        return $this->vendor_id;
-    }
 
     public function set_vendor_id( ?int $vendor_id ): void {
         $this->vendor_id = $vendor_id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function get_total_amount() {
-        return $this->total_amount;
     }
 
     /**
@@ -97,21 +84,14 @@ class ProductCommission extends AbstractCommissionCalculator {
             $this->vendor_id = dokan_get_vendor_by_product( $this->product_id, true );
         }
 
-        $this->price = $this->total_amount;
-        $this->quantity = 1;
+        $strategy = apply_filters( 'dokan_product_commission_strategies', new Product( $this->product_id ) );
 
-        $strategies = apply_filters(
-            'dokan_product_commission_strategies', [
-                new Product( $this->product_id ),
-                new Vendor( $this->vendor_id, $this->category_id ),
-                new GlobalStrategy( $this->category_id ),
-                new DefaultStrategy(),
-            ]
-        );
-
-        $this->determine_strategy_to_apply( $strategies );
-
-        return $this->calculate_commission();
+        $commission_calculator = dokan_get_container()->get( Calculator::class );
+        return $commission_calculator
+            ->set_settings( $strategy->get_settings() )
+            ->set_subtotal( $this->total_amount )
+            ->set_quantity( 1 )
+            ->calculate();
     }
 
     /**
@@ -123,18 +103,5 @@ class ProductCommission extends AbstractCommissionCalculator {
      */
     public function get(): Commission {
         return $this->calculate();
-    }
-
-    /**
-     * Additional adjustments to the commission data.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param \WeDevs\Dokan\Commission\Model\Commission $commission_data
-     *
-     * @return \WeDevs\Dokan\Commission\Model\Commission
-     */
-    public function additional_adjustments( Commission $commission_data ): Commission {
-        return $commission_data;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
+use WeDevs\Dokan\Commission\Calculator;
 use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Commission\OrderLineItemCommission;
 use WeDevs\Dokan\Commission\ProductCommission;
@@ -17,6 +18,7 @@ class CommissionServiceProvider extends BaseServiceProvider {
         OrderCommission::class,
         OrderLineItemCommission::class,
         ProductCommission::class,
+        Calculator::class,
     ];
 
     /**

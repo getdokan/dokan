@@ -45,13 +45,13 @@ abstract class AbstractStrategy {
      *
      * @return Setting
      */
-     public function get_settings(): ?Setting {
-        if ( ! $this->settings || !$this->settings->is_applicable() ) {
+	public function get_settings(): ?Setting {
+        if ( ! $this->settings || ! $this->settings->is_applicable() ) {
             return $this->get_next() ? $this->get_next()->get_settings() : null;
         }
 
         return $this->settings;
-     }
+	}
 
 
     public function get_next(): ?AbstractStrategy {

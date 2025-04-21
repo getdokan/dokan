@@ -46,9 +46,7 @@ class GlobalSetting implements InterfaceSetting {
         $settings = new Setting();
         $settings->set_type( $type )
                 ->set_flat( $flat )
-                ->set_percentage( $percentage )
-                ->set_category_commissions( $category_commissions )
-                ->set_category_id( $this->category_id );
+                ->set_percentage( $percentage );
 
         return $settings;
     }
