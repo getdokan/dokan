@@ -136,7 +136,7 @@ const BasicInfoScreen = ( {
                                 name: 'storename',
                                 type: 'text',
                                 autoComplete: 'off',
-                                placeHolder: __(
+                                placeholder: __(
                                     'write-your-store-name',
                                     'dokan-lite'
                                 ),
