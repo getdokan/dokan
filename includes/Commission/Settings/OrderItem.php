@@ -55,29 +55,6 @@ class OrderItem implements InterfaceSetting {
             $commission_meta = empty( $commission_meta ) ? [] : $commission_meta;
         }
 
-        /**
-         * If `_dokan_item_total` returns `non-falsy` value that means, the request comes from the `order refund request`.
-         * So modify `additional_fee` to the correct amount to get refunded. (additional_fee/item_total)*product_price.
-         * Where `product_price` means item_total - refunded_total_for_item.
-         *
-         * To understand clearly, how and when these codes work and how dokan commission works, you can also go through dokan-lite previous codes as provided below.
-         *
-         * @see https://github.com/getdokan/dokan/blob/28888e6824d96747ed65004fbd6de80d0eee5161/includes/Commission.php#L629
-         * @see https://github.com/getdokan/dokan/blob/28888e6824d96747ed65004fbd6de80d0eee5161/includes/Commission.php#L567-L653
-         * @see https://github.com/getdokan/dokan/blob/28888e6824d96747ed65004fbd6de80d0eee5161/includes/Commission.php
-         */
-        $order_id = wc_get_order_id_by_order_item_id( $this->order_item_id );
-
-        if ( $order_id ) {
-            $order = dokan()->order->get( $order_id );
-            $item_total = floatval( $order->get_meta( '_dokan_item_total' ) );
-        }
-
-        $product_price = (float) wc_format_decimal( $this->product_price_to_calculate_commission );
-        if ( $order_id && $item_total ) {
-            $additional_flat = ( floatval( $additional_flat ) / $item_total ) * $product_price;
-        }
-
         $settings = new Setting();
         $settings->set_type( $commission_type )
                 ->set_flat( $additional_flat )
