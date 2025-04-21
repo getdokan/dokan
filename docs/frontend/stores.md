@@ -7,7 +7,8 @@ This guide explains how to register a new store in Dokan following our establish
 Follow these steps to create a new store:
 
 1. Choose a short, meaningful name for your store.
-2. Create a new directory at `src/stores/{store-name}/` to house your store files.
+2. Create a new directory at `src/stores/{store-directory}/` to house your store files.
+3. Store directory is recommended to be in camelCase format.
 3. Follow the core store pattern with these files:
     - `index.ts` - Store creation
     - `actions.ts` - Store actions
@@ -36,9 +37,23 @@ export type YourStoreState = {
 Add the following to `webpack-entries.js`:
 
 ```javascript
-'{store-name}-store'
+  '{store-name}-store'
 :
-'/src/stores/{store-name}/store.ts',
+{
+    import
+:
+    '/src/stores/{store-directory}/store.ts',
+        library
+:
+    {
+        name: ['dokan', '{store-name}Store'],
+            type
+    :
+        'window',
+    }
+,
+}
+,
 ```
 
 ### 3. Register in Assets.php
@@ -167,7 +182,7 @@ The `Dokan Product Category Store` manages product categories within Dokan. Use 
 
 ```js
 import { useSelect,resolveSelect } from '@wordpress/data';
-import productCategoryStore from '@dokan/stores/product-categories';
+import productCategoryStore from '@dokan/stores/productCategories';
 const App = () => {
     const categories = useSelect( ( select ) => {
         return select( productCategoryStore ).getItems();
