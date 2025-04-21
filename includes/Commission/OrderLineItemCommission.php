@@ -202,9 +202,13 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
 
         foreach ( $this->dokan_coupon_infos as $dokan_coupon_info ) {
             $commission_params     = $commission_data->get_parameters();
-            $flat                  = $commission_params['flat'] ?? 0;
-            $percent               = $commission_params['percentage'] ?? 0;
-            $admin_commission_rate = $flat + ( $percent / 100 );
+            $flat                  = floatval( $commission_params['flat'] ?? 0 );
+            $percent               = intval( $commission_params['percentage'] ?? 0 );
+
+            $per_item_percentage       = $percent > 0 ? $commission_data->get_total_amount() / $percent : 0;
+            $per_item_flat             = $flat;
+            $total_per_item_percentage = $per_item_percentage + $per_item_flat;
+            $admin_commission_rate     = $total_per_item_percentage / $commission_data->get_total_amount();
 
             /**
              * Check if the line item is subsidy supported or the coupon type is default or empty.
@@ -213,6 +217,8 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
                 /**
                  * Calculate admin commission and vendor earning based on the coupon type.
                  * @see https://github.com/getdokan/plugin-internal-tasks/issues/198#issuecomment-2608895467
+                 *
+                 *  (100-10)*(10/100)-0
                  */
                 $admin_net_commission += ( ( $commission_data->get_total_amount() - $dokan_coupon_info->get_vendor_discount() ) * $admin_commission_rate ) - $dokan_coupon_info->get_admin_discount();
                 $vendor_net_earning += floatval( $this->item->get_total() ) - $admin_net_commission;
