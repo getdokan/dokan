@@ -86,7 +86,7 @@ const Header = () => {
                                             ? 'noopener noreferrer'
                                             : ''
                                     }
-                                    className="flex items-center text-gray-900 font-semibold text-base hover:text-[#7047EB] font-medium gap-2.5 group transition"
+                                    className="flex items-center !text-gray-900 font-semibold text-base hover:!text-[#7047EB] font-medium gap-2.5 group transition"
                                 >
                                     <div
                                         className={ `w-10 h-10 flex items-center justify-center rounded-full hover:text-[#7047EB] transition ${
