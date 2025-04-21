@@ -205,10 +205,14 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             $flat                  = floatval( $commission_params['flat'] ?? 0 );
             $percent               = intval( $commission_params['percentage'] ?? 0 );
 
-            $per_item_percentage       = $percent > 0 ? $commission_data->get_total_amount() / $percent : 0;
-            $per_item_flat             = $flat;
-            $total_per_item_percentage = $per_item_percentage + $per_item_flat;
-            $admin_commission_rate     = $total_per_item_percentage / $commission_data->get_total_amount();
+            if ( $flat > 0 ) {
+                $per_item_percentage       = $percent > 0 ? $commission_data->get_total_amount() / $percent : 0;
+                $per_item_flat             = $flat;
+                $total_per_item_percentage = $per_item_percentage + $per_item_flat;
+                $admin_commission_rate     = $total_per_item_percentage / $commission_data->get_total_amount();
+            } else {
+                $admin_commission_rate = $percent / 100;
+            }
 
             /**
              * Check if the line item is subsidy supported or the coupon type is default or empty.

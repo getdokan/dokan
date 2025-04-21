@@ -330,7 +330,7 @@ class OrderCommission extends DokanTestCase {
         try {
             $order_commission = dokan_get_container()->get( \WeDevs\Dokan\Commission\OrderCommission::class );
             $order_commission->set_order( $order );
-            $order_commission->calculate();
+            $order_commission->get();
         } catch ( \Exception $exception ) {
             throw $exception;
         }
