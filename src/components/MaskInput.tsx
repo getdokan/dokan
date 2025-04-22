@@ -12,14 +12,14 @@ interface DokanMaskInputProps extends SimpleInputProps {
     maskRule?: MaskedInputProps[ 'maskRule' ];
 }
 
-const currencySymbol = window?.dokanFrontend?.currency?.symbol ?? '';
-
 export const DokanMaskInput = ( props: DokanMaskInputProps ) => {
     if ( ! props.namespace ) {
         throw new Error(
             'Namespace is required for the DokanMaskedInput component'
         );
     }
+
+    const currencySymbol = window?.dokanFrontend?.currency?.symbol ?? '';
 
     const InputProps: DokanMaskInputProps = {
         label: __( 'Amount', 'dokan-lite' ),
