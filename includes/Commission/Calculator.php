@@ -86,8 +86,6 @@ class Calculator extends AbstractCommissionCalculator {
     }
 
 
-
-
 	/**
 	 * @inheritDoc
 	 */
@@ -96,6 +94,8 @@ class Calculator extends AbstractCommissionCalculator {
         $admin_commission = ( $net_amount_with_admin_discount * $this->settings->get_percentage() / 100 ) + $this->settings->get_flat() * $this->quantity + $this->settings->get_combine_flat() - $this->get_discount()->get_admin_discount();
 
         $net_amount = $this->subtotal - $this->get_discount()->get_total_discount();
+        $admin_commission = min( $admin_commission, $net_amount );
+        
         $vendor_earning = $net_amount - $admin_commission;
 
         $commission = new Commission();
