@@ -87,7 +87,7 @@ class CouponInfo {
                 $admin = $coupon_info['discount'];
                 break;
             case 'shared_coupon':
-                if ( 'percent' === $coupon_info['admin_shared_coupon_type'] ) {
+                if ( 'percentage' === $coupon_info['admin_shared_coupon_type'] ) {
                     $admin = ( $coupon_info['discount'] * $coupon_info['admin_shared_coupon_amount'] ) / 100;
                     $vendor = $coupon_info['discount'] - $admin;
                 } else {
