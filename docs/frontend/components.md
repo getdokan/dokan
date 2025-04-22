@@ -717,6 +717,50 @@ The DokanMaskInput component accepts the following props:
 | `maskRule` | `object` | No | Configuration for the input mask (default uses currency settings) |
 | `helpText` | `string` | No | Helper text displayed below the input |
 
+### Default Mask Rules
+
+The DokanMaskInput component automatically configures the input mask based on the WordPress/WooCommerce site's currency settings. These are the default mask rules:
+
+```js
+maskRule: {
+  numeral: true,                                                 // Enable numeric formatting
+  numeralDecimalMark: window?.dokanFrontend?.currency?.decimal ?? '.',  // Use site's decimal separator
+  delimiter: window?.dokanFrontend?.currency?.thousand ?? ',',   // Use site's thousands separator
+  numeralDecimalScale: window?.dokanFrontend?.currency?.precision ?? 2, // Use site's decimal precision
+}
+```
+
+You can override these defaults by providing your own `maskRule` object:
+
+```jsx
+<DokanMaskInput
+  namespace="custom-precision-input"
+  label="Amount (4 decimals)"
+  value={amount}
+  onChange={(e) => setAmount(e.target.value)}
+  maskRule={{
+    numeral: true,
+    numeralDecimalMark: '.',
+    delimiter: ',',
+    numeralDecimalScale: 4  // Override to use 4 decimal places
+  }}
+  // Other props...
+/>
+```
+
+The component also automatically uses the site's currency symbol as the `addOnLeft` value. This can be customized:
+
+```jsx
+<DokanMaskInput
+  namespace="custom-currency-input"
+  label="Euro Amount"
+  value={amount}
+  onChange={(e) => setAmount(e.target.value)}
+  addOnLeft="€"  // Override currency symbol
+  // Other props...
+/>
+```
+
 ### Using with formatNumber and unformatNumber Utilities
 
 When working with the DokanMaskInput component, you'll typically use two important utilities from `@dokan/utilities`:
