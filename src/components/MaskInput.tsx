@@ -42,8 +42,6 @@ export const DokanMaskedInput = ( props: DokanMaskInputProps ) => {
         ...props,
     };
 
-    console.log('InputProps', InputProps);
-
     // apply filter for mask input props.
     const snakeCaseNamespace = snakeCase( props.namespace );
     const filteredProps = applyFilters(
