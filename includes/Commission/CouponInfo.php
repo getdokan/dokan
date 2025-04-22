@@ -80,18 +80,18 @@ class CouponInfo {
 
         // TODO: fix me.
         switch ( $coupon_info['coupon_commissions_type'] ) {
-            case 'vendor':
+            case 'from_vendor':
                 $vendor = $coupon_info['discount'];
                 break;
-            case 'admin':
+            case 'from_admin':
                 $admin = $coupon_info['discount'];
                 break;
-            case 'shared':
+            case 'shared_coupon':
                 if ( 'percent' === $coupon_info['admin_shared_coupon_type'] ) {
                     $admin = ( $coupon_info['discount'] * $coupon_info['admin_shared_coupon_amount'] ) / 100;
                     $vendor = $coupon_info['discount'] - $admin;
                 } else {
-                    $admin = $coupon_info['admin_shared_coupon_amount'];
+                    $admin = min( $coupon_info['discount'], $coupon_info['admin_shared_coupon_amount'] );
                     $vendor = $coupon_info['discount'] - $admin;
                 }
                 break;
