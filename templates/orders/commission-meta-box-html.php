@@ -338,7 +338,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         <td class="total">
                             <?php
                             echo wc_price(
-                                -1 * $$order_commission->get_admin_gateway_fee() , array(
+                                -1 * $order_commission->get_admin_gateway_fee() , array(
 									'currency' => $order->get_currency(),
 									'decimals' => wc_get_price_decimals(),
                                 )
