@@ -331,6 +331,22 @@ foreach ( $order->get_refunds() as $refund ) {
                         </td>
                     </tr>
                 <?php endif; ?>
+                <?php if ( $order_commission->get_admin_gateway_fee() ) : ?>
+                    <tr>
+                        <td class="label"><?php esc_html_e( 'Gateway Fee:', 'dokan-lite' ); ?></td>
+                        <td width="1%"></td>
+                        <td class="total">
+                            <?php
+                            echo wc_price(
+                                -1 * $$order_commission->get_admin_gateway_fee() , array(
+									'currency' => $order->get_currency(),
+									'decimals' => wc_get_price_decimals(),
+                                )
+                            );
+							?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
                 </tbody>
             </table>
 

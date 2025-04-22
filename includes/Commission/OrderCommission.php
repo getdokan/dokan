@@ -310,7 +310,7 @@ class OrderCommission extends AbstractCommissionCalculator {
      *
      * @since DOKAN_SINCE
      *
-     * @return float/int
+     * @return float|int
      */
     public function get_total_admin_fees() {
         return $this->get_admin_shipping_fee() + $this->get_admin_tax_fee() + $this->get_admin_shipping_tax_fee() - $this->get_admin_gateway_fee();
