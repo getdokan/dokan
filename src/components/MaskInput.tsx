@@ -3,10 +3,14 @@ import { applyFilters } from '@wordpress/hooks';
 
 import { MaskedInput } from '@getdokan/dokan-ui';
 import type { MaskedInputProps } from '@getdokan/dokan-ui/dist/components/MaskedInput';
+import type { SimpleInputProps } from '@getdokan/dokan-ui/dist/components/SimpleInput';
 
 import { kebabCase, snakeCase } from '@dokan/utilities';
 
-type DokanMaskInputProps = MaskedInputProps & { namespace: string };
+interface DokanMaskInputProps extends SimpleInputProps {
+    namespace: string;
+    maskRule?: MaskedInputProps[ 'maskRule' ];
+}
 
 const currencySymbol = window?.dokanFrontend?.currency?.symbol ?? '';
 
