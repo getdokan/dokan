@@ -1,13 +1,12 @@
 import { __, sprintf } from '@wordpress/i18n';
 import {
-    MaskedInput,
     Modal,
     SimpleAlert,
     SimpleInput,
     SearchableSelect,
     useToast,
 } from '@getdokan/dokan-ui';
-import { DokanButton, DokanAlert } from '@dokan/components';
+import { DokanButton, DokanAlert, DokanMaskInput } from "@dokan/components";
 import { RawHTML, useEffect, useState } from '@wordpress/element';
 import '../../definitions/window-types';
 import { useWithdraw } from './Hooks/useWithdraw';
@@ -178,33 +177,17 @@ function RequestWithdrawBtn( {
                             />
                         </div>
                         <div className="mt-3">
-                            <MaskedInput
+                            <DokanMaskInput
+                                namespace="withdraw-request"
                                 label={ __( 'Withdraw amount', 'dokan' ) }
-                                className="focus:border-none"
-                                addOnLeft={ currencySymbol }
                                 value={ withdrawAmount }
                                 onChange={ ( e ) => {
                                     debouncedWithdrawAmount( e.target.value );
                                 } }
-                                maskRule={ {
-                                    numeral: true,
-                                    numeralDecimalMark:
-                                        window?.dokanFrontend?.currency
-                                            ?.decimal ?? '.',
-                                    delimiter:
-                                        window?.dokanFrontend?.currency
-                                            ?.thousand ?? ',',
-                                    numeralDecimalScale:
-                                        window?.dokanFrontend?.currency
-                                            ?.precision ?? 2,
-                                } }
                                 input={ {
                                     id: 'withdraw-amount',
                                     name: 'withdraw-amount',
-                                    type: 'text',
                                     placeholder: __( 'Enter amount', 'dokan' ),
-                                    required: true,
-                                    disabled: false,
                                 } }
                             />
                         </div>
