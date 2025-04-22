@@ -59,13 +59,3 @@
 .dokan-withdraw-style-reset {
     @include windraw-reset;
 }
-
-#dokan-withdraw-request-data-view {
-    &.dokan-dashboard-datatable {
-        .dataviews-wrapper {
-            .dataviews__view-actions {
-                display: none;
-            }
-        }
-    }
-}
