@@ -74,12 +74,14 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             throw new \Exception( esc_html__( 'Order is required for order item commission calculation.', 'dokan-lite' ) );
         }
 
-        $refund = $this->order->get_total_refunded_for_item( $this->item->get_id() );
+        $refund_amount = $this->order->get_total_refunded_for_item( $this->item->get_id() );
+        $refund_qty = $this->order->get_qty_refunded_for_item( $this->item->get_id() );
 
         $item_price = apply_filters( 'dokan_earning_by_order_item_price', $this->item->get_subtotal(), $this->item, $this->order );
-        $item_price = $refund ? floatval( $item_price ) - floatval( $refund ) : $item_price;
+        $item_price = $refund_amount ? floatval( $item_price ) - floatval( $refund_amount ) : $item_price;
 
-        $total_quantity = $this->item->get_quantity();
+        $total_quantity = $this->item->get_quantity() +  $refund_qty;
+
         $strategy = apply_filters(
             'dokan_order_line_item_commission_strategies',
             new OrderItem( $this->item, $item_price, $total_quantity, $this->vendor_id )
