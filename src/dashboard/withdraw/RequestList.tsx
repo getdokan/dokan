@@ -143,41 +143,38 @@ function RequestList( {
                   },
               ]
             : [] ),
-        ...( status === 'pending'
-            ? [
-                  {
-                      id: 'id',
-                      label: __( 'Action', 'dokan' ),
-                      render: ( { item } ) => {
-                          return (
-                              <div>
-                                  { loading ? (
-                                      <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
-                                  ) : (
-                                      <button
-                                          className="whitespace-normal m-0 hover:underline cursor-pointer bg-transparent hover:bg-transparent"
-                                          type="button"
-                                          onClick={ () => {
-                                              setCancelRequestId( item.id );
-                                              setIsOpen( true );
-                                          } }
-                                      >
-                                          { __( 'Cancel', 'dokan' ) }
-                                      </button>
-                                  ) }
-                              </div>
-                          );
-                      },
-                  },
-              ]
-            : [] ),
     ];
     const [ isOpen, setIsOpen ] = useState( false );
 
     const [ cancelRequestId, setCancelRequestId ] = useState( '' );
     const withdrawHook = useWithdraw();
 
-    const actions = [];
+    const actions = [
+        ...( status === 'pending'
+            ? [
+                  {
+                      id: 'withdraw-cancel',
+                      label: '',
+                      isPrimary: true,
+                      isEligible: () => status === 'pending',
+                      icon: () => {
+                          return (
+                              <span
+                                  className={ `px-2 bg-transparent font-medium text-dokan-danger text-sm` }
+                              >
+                                  { __( 'Cancel', 'dokan' ) }
+                              </span>
+                          );
+                      },
+                      callback: ( data ) => {
+                          const item = data[ 0 ];
+                          setCancelRequestId( item.id );
+                          setIsOpen( true );
+                      },
+                  },
+              ]
+            : [] ),
+    ];
 
     const toast = useToast();
 
@@ -250,13 +247,17 @@ function RequestList( {
                 namespace="cancel-request-confirmation"
                 onConfirm={ () => canclePendingRequest() }
                 onClose={ () => setIsOpen( false ) }
-                confirmationTitle={ __( 'Are you sure', 'dokan-lite' ) }
-                confirmationDescription={ __(
-                    'Do You want to cancel this request?',
+                dialogTitle={ __( 'Cancel Withdraw Request', 'dokan-lite' ) }
+                confirmationTitle={ __(
+                    'Are you sure you want to proceed?',
                     'dokan-lite'
                 ) }
-                confirmButtonText={ __( 'Yes', 'dokan' ) }
-                cancelButtonText={ __( 'No', 'dokan' ) }
+                confirmationDescription={ __(
+                    'Do you want to proceed for cancelling the withdraw request?',
+                    'dokan-lite'
+                ) }
+                confirmButtonText={ __( 'Yes, Cancel', 'dokan' ) }
+                cancelButtonText={ __( 'Close', 'dokan' ) }
                 loading={ withdrawHook.isLoading }
             />
         </>
