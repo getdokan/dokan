@@ -11,13 +11,16 @@ export default [
         path: '/withdraw',
         exact: true,
         order: 10,
+        capabilities: [ 'dokan_view_withdraw_menu' ],
     },
     {
         id: 'dokan-withdraw-requests',
         title: __( 'Withdraw', 'dokan-lite' ),
         element: <WithdrawRequests />,
         path: '/withdraw-requests',
+        backUrl: '/withdraw',
         exact: true,
         order: 10,
+        capabilities: [ 'dokan_view_withdraw_menu' ],
     },
 ] as Array< DokanRoute >;

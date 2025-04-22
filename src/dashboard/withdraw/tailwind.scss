@@ -1,6 +1,5 @@
 @use '../../base-tailwind';
 @config './withdraw-tailwind.config.js';
-@import "@getdokan/dokan-ui/dist/dokan-ui.css";
 
 @mixin windraw-reset {
     button:focus,
@@ -59,14 +58,4 @@
 
 .dokan-withdraw-style-reset {
     @include windraw-reset;
-}
-
-#dokan-withdraw-request-data-view {
-    &.dokan-dashboard-datatable {
-        .dataviews-wrapper {
-            .dataviews__view-actions {
-                display: none;
-            }
-        }
-    }
 }

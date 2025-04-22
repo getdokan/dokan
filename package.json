@@ -85,6 +85,7 @@
     "@getdokan/dokan-ui": "github:getdokan/dokan-ui#dokan-plugin",
     "@wordpress/api-fetch": "^7.14.0",
     "@wordpress/url": "^4.15.0",
+    "lucide-react": "^0.488.0",
     "@headlessui/react": "^2.2.0",
     "@wordpress/plugins": "^7.10.0",
     "react-router-dom": "^6.27.0",

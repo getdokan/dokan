@@ -75,9 +75,6 @@ class NewDashboard {
             return;
         }
 
-		    $wc_instance = WCAdminAssets::get_instance();
-        $wc_instance->register_scripts();
-
         $dokan_frontend = [
             'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
         ];
