@@ -11,12 +11,13 @@
 3. **Filter** - Standardized filtering interface
 4. **SortableList** - Drag-and-drop interface for managing sortable items
 5. **DokanButton** - Unified button component with multiple variants
-6. **Link Component** - Flexible link component with multiple style variants
+6. **DokanLink** - Flexible link component with multiple style variants
 7. **DokanBadge** - Unified badge component for status badges
 8. **DokanAlert** - Unified alert component for notifications
 9. **NotFound** - Unified 404 component for undefined route
 10. **Forbidden** - Unified 403 component for unauthorized route
 11. **MediaUploader** - File upload component
+12. **DokanMaskInput** - Masked input component for formatted data entry
 
 ## Important Dependencies
 
@@ -61,7 +62,7 @@ if (file_exists($script_assets)) {
 For `dokan free & premium version`, we can import the components via `@dokan/components`:
 
 ```js
-import { DataViews, DokanBadge, DokanButton, DokanAlert, Link } from '@dokan/components';
+import { DataViews, DokanBadge, DokanButton, DokanAlert, DokanLink, DokanMaskInput } from '@dokan/components';
 ```
 
 For external `plugins`, we must include the `dokan-react-components` as scripts dependency and the `@dokan/components` should be introduced as an external resource configuration to resolve the path via `webpack`:
@@ -86,9 +87,10 @@ externals: {
 |        |      |___ filter/           # Filter component 
 |        |      |___ sortable-list/    # Sortable list component
 |        |      |___ Button.tsx        # Button component
-|        |      |___ Link.tsx        # Link component
+|        |      |___ Link.tsx          # Link component
 |        |      |___ Badge.tsx         # Badge component
 |        |      |___ Alert.tsx         # Alert component
+|        |      |___ MaskInput.tsx     # Mask input component
 |        |      |___ your-component/   # Your new component directory
 |        |      |     |___ index.tsx
 |        |      |     |___ style.scss
@@ -108,9 +110,10 @@ export { default as DokanModal } from './modals/DokanModal';
 export { default as Filter } from './Filter';
 export { default as SortableList } from './sortable-list'; 
 export { default as DokanButton } from './Button';
-export { default as Link } from './Link';
+export { default as DokanLink } from './Link';
 export { default as DokanBadge } from './Badge';
 export { default as DokanAlert } from './Alert';
+export { default as DokanMaskInput } from './MaskInput';
 export { default as ComponentName } from './YourComponent';
 ```
 
@@ -313,10 +316,10 @@ const LinkExample = () => {
         Notifications
       </DokanLink>
 
-        {/* Link as Button */}
-        <DokanLink as="button" href="/button">
-            Button Link
-        </DokanLink>
+      {/* Link as Button */}
+      <DokanLink as="button" href="/button">
+        Button Link
+      </DokanLink>
     </div>
   );
 };
@@ -465,9 +468,9 @@ const VendorSettings = ({params}) => {
 };
 ```
 
-### Link Component Properties
+### MediaUploader Component Properties
 
-The Link component accepts the following props:
+The MediaUploader component accepts the following props:
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
@@ -642,4 +645,146 @@ const App = () => {
     )
 }
 
+```
+
+## DokanMaskInput Component
+
+`Dokan` provides a unified masked input component for formatted data entry such as currency amounts, phone numbers, dates, etc. The component is built on top of the `MaskedInput` component from `@getdokan/dokan-ui`.
+
+### Usage Example
+
+```jsx
+import { DokanMaskInput } from '@dokan/components';
+
+const PriceInput = () => {
+  const [amount, setAmount] = useState('');
+  
+  return (
+    <DokanMaskInput
+      namespace="product-price"
+      label="Product Price"
+      value={amount}
+      onChange={(e) => setAmount(e.target.value)}
+      input={{
+        id: 'product-price',
+        name: 'product-price',
+        placeholder: 'Enter price',
+        required: true
+      }}
+      helpText="Enter the product price including decimal points."
+    />
+  );
+};
+```
+
+### Real-World Example (LineItemForm)
+
+```jsx
+import { __ } from '@wordpress/i18n';
+import { DokanMaskInput } from '@dokan/components';
+
+const LineItemForm = ({ total, setTotal }) => {
+  return (
+    <DokanMaskInput
+      namespace="manual-order-shipping-line-item-amount"
+      label={__('Shipping Total', 'dokan')}
+      value={total}
+      onChange={(e) => setTotal(e.target.value)}
+      input={{
+        id: 'shipping-total',
+        name: 'shipping-total',
+        placeholder: __('Enter shipping cost', 'dokan'),
+      }}
+      helpText={__('Enter the total shipping cost for this method.', 'dokan')}
+    />
+  );
+};
+```
+
+### MaskInput Component Properties
+
+The DokanMaskInput component accepts the following props:
+
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `namespace` | `string` | Yes | Unique identifier for the input (used for filtering) |
+| `label` | `string` | Yes | The label text for the input field |
+| `value` | `string` | Yes | The current value of the input |
+| `onChange` | `(e: any) => void` | Yes | Callback function when the input value changes |
+| `input` | `object` | No | Input element HTML attributes (id, name, placeholder, required, etc.) |
+| `className` | `string` | No | Additional CSS classes for custom styling |
+| `addOnLeft` | `string` | No | Text or symbol to display on the left side (like currency symbol) |
+| `maskRule` | `object` | No | Configuration for the input mask (default uses currency settings) |
+| `helpText` | `string` | No | Helper text displayed below the input |
+
+### Using with formatNumber and unformatNumber Utilities
+
+When working with the DokanMaskInput component, you'll typically use two important utilities from `@dokan/utilities`:
+
+1. `formatNumber`: Formats a numeric value as a display string
+2. `unformatNumber`: Converts the formatted string back to a numeric value
+
+#### Typical Usage Pattern
+
+```jsx
+import { useState, useEffect } from '@wordpress/element';
+import { DokanMaskInput } from '@dokan/components';
+import { formatNumber, unformatNumber } from '@dokan/utilities';
+
+const PriceEditor = ({ initialPrice, onSave }) => {
+  const [formattedPrice, setFormattedPrice] = useState('');
+  
+  // Format initial value from API for display
+  useEffect(() => {
+    if (initialPrice) {
+      setFormattedPrice(formatNumber(initialPrice));
+    }
+  }, [initialPrice]);
+  
+  // When saving, convert back to numeric
+  const handleSave = () => {
+    const numericPrice = unformatNumber(formattedPrice);
+    onSave(numericPrice);
+  };
+  
+  return (
+    <div>
+      <DokanMaskInput
+        namespace="price-editor"
+        label="Price"
+        value={formattedPrice}
+        onChange={(e) => setFormattedPrice(e.target.value)}
+        input={{
+          id: 'price',
+          name: 'price',
+          placeholder: 'Enter price',
+        }}
+      />
+      <button onClick={handleSave}>Save</button>
+    </div>
+  );
+};
+```
+
+### Applying Filters
+
+The component supports WordPress filters for customization:
+
+```jsx
+// In your code that extends functionality
+wp.hooks.addFilter(
+  'dokan_your_namespace_mask_input_props',
+  'your-plugin/customize-mask-input',
+  (props, currencySymbol) => {
+    // Modify props as needed
+    return {
+      ...props,
+      addOnLeft: '$', // Override currency symbol
+      maskRule: {
+        ...props.maskRule,
+        numeralDecimalScale: 4, // Use 4 decimal places
+      }
+    };
+  }
+);
 ```
