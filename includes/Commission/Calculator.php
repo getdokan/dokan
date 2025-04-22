@@ -103,6 +103,9 @@ class Calculator extends AbstractCommissionCalculator {
         $commission->set_vendor_discount( $this->get_discount()->get_vendor_discount() );
         $commission->set_vendor_earning( $vendor_earning );
         $commission->set_admin_discount( $this->get_discount()->get_admin_discount() );
+        
+        $commission->set_source( $this->settings->get_source() );
+        
 
         return $commission;
 	}

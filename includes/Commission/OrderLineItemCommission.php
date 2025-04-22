@@ -107,8 +107,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $type       = $settings->get_type() ?? DefaultSetting::TYPE;
         $flat       = $settings->get_flat() ?? 0;
 
-        error_log('settings ->>' . print_r($settings, true));
-
         // Saving commission data to line items for further reuse.
         ( new \WeDevs\Dokan\Commission\Settings\OrderItem(
             [
@@ -117,7 +115,8 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             ]
         ) )->save(
             [
-                'type'       => $commission_data->get_type() ?? DefaultSetting::TYPE,
+                'commission_source'   => $settings->get_source(),
+                'type'       => $type,
                 'percentage' => $percentage,
                 'flat'       => $flat,
                 'meta_data'  => $commission_data->get_data()  ,
@@ -159,6 +158,8 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         if ( empty( $commission_meta ) && ! is_array( $commission_meta ) ) {
             return $this->calculate();
         }
+
+        error_log('order item commission meta: ' . print_r( $commission_meta, true ) );
 
         $commission_data = new Commission();
         $commission_data->set_admin_commission( $commission_data->get_admin_commission() + floatval( $commission_meta['admin_commission'] ?? 0 ) );

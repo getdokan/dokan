@@ -59,6 +59,8 @@ class Setting {
      */
     protected $meta_data = [];
 
+    protected string $source;
+
     /**
      * Returns the commission meta data.
      *
@@ -96,6 +98,21 @@ class Setting {
      */
     public function set_type( $type ): Setting {
         $this->type = $type;
+
+        return $this;
+    }
+
+     /**
+     * Sets the commission type.
+     *
+     * @since 3.14.0
+     *
+     * @param mixed|string $type
+     *
+     * @return $this
+     */
+    public function set_source(string $source ): Setting {
+        $this->source = $source;
 
         return $this;
     }
@@ -153,6 +170,17 @@ class Setting {
      */
     public function get_type() {
         return $this->type;
+    }
+
+    /**
+     * Sets the commission source.
+     *
+     * @since 3.14.0
+     *
+     * @return string
+     */
+    public function get_source():string {
+        return $this->source;
     }
 
     /**
@@ -215,6 +243,6 @@ class Setting {
     }
 
     public function is_applicable(): bool {
-        return  $this->percentage !== '' || $this->flat !== '';
+        return  trim($this->percentage) !== '' || trim($this->flat) !== '';
     }
 }

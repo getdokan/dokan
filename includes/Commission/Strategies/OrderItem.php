@@ -15,7 +15,7 @@ class OrderItem extends AbstractStrategy {
      *
      * @since 3.14.0
      */
-    const SOURCE = 'order_item';
+    const SOURCE = '';
 
     /**
      * Order item id.
@@ -78,7 +78,8 @@ class OrderItem extends AbstractStrategy {
      * @return string
      */
     public function get_source(): string {
-        return self::SOURCE;
+
+        return $this->settings->get_source() ?: self::SOURCE;
     }
 
     /**

@@ -36,12 +36,14 @@ class OrderItem  implements InterfaceSetting{
     public function get(): Setting {
         $commission_percentage = '';
         $commission_type       = '';
+        $commission_source     = '';
         $additional_flat       = '';
         $commission_meta       = [];
 
         if ( ! empty( $this->order_item_id ) ) {
             $commission_percentage = wc_get_order_item_meta( $this->order_item_id, '_dokan_commission_rate', true ) ?? '';
             $commission_type       = wc_get_order_item_meta( $this->order_item_id, '_dokan_commission_type', true ) ?? '';
+            $commission_source     = wc_get_order_item_meta( $this->order_item_id, '_dokan_commission_source', true ) ?? '';
             $additional_flat       = wc_get_order_item_meta( $this->order_item_id, '_dokan_additional_fee', true ) ?? '';
             $commission_meta       = wc_get_order_item_meta( $this->order_item_id, 'dokan_commission_meta', true );
 
@@ -54,9 +56,11 @@ class OrderItem  implements InterfaceSetting{
         }
 
         $settings = new Setting();
+
         $settings->set_type( $commission_type )
                 ->set_flat( $additional_flat )
                 ->set_percentage( $commission_percentage )
+                ->set_source( (string) $commission_source  )
                 ->set_meta_data( $commission_meta );
 
         return $settings;
@@ -74,28 +78,14 @@ class OrderItem  implements InterfaceSetting{
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save( array $setting ): Setting {
-        if ( ! isset( $setting['percentage'] ) ) {
-            $setting['percentage'] = '';
-        }
-
-        if ( ! isset( $setting['type'] ) ) {
-            $setting['type'] = '';
-        }
-
-        if ( ! isset( $setting['flat'] ) ) {
-            $setting['flat'] = '';
-        }
-
-        if ( ! isset( $setting['meta_data'] ) ) {
-            $setting['meta_data'] = [];
-        }
-
+       
         $setting = apply_filters( 'dokan_order_line_item_commission_save_before', $setting, $this->order_item_id );
 
-        wc_update_order_item_meta( $this->order_item_id, '_dokan_commission_type', $setting['type'] );
-        wc_update_order_item_meta( $this->order_item_id, '_dokan_commission_rate', $setting['percentage'] );
-        wc_update_order_item_meta( $this->order_item_id, '_dokan_additional_fee', $setting['flat'] );
-        wc_update_order_item_meta( $this->order_item_id, 'dokan_commission_meta', $setting['meta_data'] );
+        wc_update_order_item_meta( $this->order_item_id, '_dokan_commission_source', $setting['commission_source'] ?? '' );
+        wc_update_order_item_meta( $this->order_item_id, '_dokan_commission_type', $setting['type'] ?? '' );
+        wc_update_order_item_meta( $this->order_item_id, '_dokan_commission_rate', $setting['percentage'] ?? '' );
+        wc_update_order_item_meta( $this->order_item_id, '_dokan_additional_fee', $setting['flat'] ?? '' );
+        wc_update_order_item_meta( $this->order_item_id, 'dokan_commission_meta', $setting['meta_data'] ?? [] );
 
         return apply_filters( 'dokan_order_line_item_commission_save_after', $this->get(), $this->order_item_id );
     }
