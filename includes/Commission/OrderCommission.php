@@ -21,7 +21,6 @@ class OrderCommission extends AbstractCommissionCalculator {
     private $vendor_discount      = 0;
     private $admin_discount       = 0;
     private $admin_net_commission = 0;
-    private $admin_commission     = 0;
     private $admin_subsidy        = 0;
     private $vendor_net_earning   = 0;
     private $vendor_earnign       = 0;
@@ -166,7 +165,7 @@ class OrderCommission extends AbstractCommissionCalculator {
      * @return int
      */
     public function get_admin_commission() {
-        return $this->admin_commission;
+        return $this->get_admin_net_commission() + $this->get_total_admin_fees();
     }
 
     /**
@@ -313,7 +312,7 @@ class OrderCommission extends AbstractCommissionCalculator {
      * @return float|int
      */
     public function get_total_admin_fees() {
-        return $this->get_admin_shipping_fee() + $this->get_admin_tax_fee() + $this->get_admin_shipping_tax_fee() - $this->get_admin_gateway_fee();
+        return $this->get_admin_shipping_fee() + $this->get_admin_tax_fee() + $this->get_admin_shipping_tax_fee() - $this->get_admin_gateway_fee() - $this->get_admin_subsidy();
     }
 
     /**
@@ -423,7 +422,6 @@ class OrderCommission extends AbstractCommissionCalculator {
     }
 
     protected function reset_order_commission_data() {
-        $this->admin_commission     = 0;
         $this->admin_net_commission = 0;
         $this->admin_discount       = 0;
         $this->admin_subsidy        = 0;
