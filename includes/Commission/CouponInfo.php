@@ -80,6 +80,7 @@ class CouponInfo {
 
         // TODO: fix me.
         switch ( $coupon_info['coupon_commissions_type'] ) {
+            case 'default':
             case 'from_vendor':
                 $vendor = $coupon_info['discount'];
                 break;
