@@ -21,23 +21,22 @@ export const DokanMaskedInput = ( props: DokanMaskInputProps ) => {
         label: __( 'Amount', 'dokan-lite' ),
         className: 'focus:border-none',
         addOnLeft: currencySymbol,
-        value: '',
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        onChange: ( e: any ) => {},
         maskRule: {
             numeral: true,
             numeralDecimalMark: window?.dokanFrontend?.currency?.decimal ?? '.',
             delimiter: window?.dokanFrontend?.currency?.thousand ?? ',',
             numeralDecimalScale:
                 window?.dokanFrontend?.currency?.precision ?? 2,
+            ...props.maskRule,
         },
         input: {
             id: 'amount',
             name: 'amount',
             type: 'text',
-            placeholder: __( 'Enter amount', 'dokan' ),
+            placeholder: __( 'Enter amount', 'dokan-lite' ),
             required: true,
             disabled: false,
+            ...props.input,
         },
         ...props,
     };
