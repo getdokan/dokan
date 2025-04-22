@@ -50,3 +50,24 @@ ul.woocommerce-table__summary li.woocommerce-table__summary-item {
   .components-input-control__backdrop {
   display: none;
 }
+
+#headlessui-portal-root {
+  display: block;
+}
+
+.woocommerce-layout {
+  a,
+  .woocommerce-table__breadcrumbs {
+    color: var(--dokan-link-color, #7047EB);
+
+    &:hover {
+      color: var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #322067));
+    }
+  }
+
+  .woocommerce-summary__item {
+    &.is-selected {
+      box-shadow: inset -1px -1px 0 #757575, inset 1px 0 0 #757575, inset 0 4px 0 var(--dokan-button-background-color, #7047EB) !important;
+    }
+  }
+}

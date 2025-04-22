@@ -64,12 +64,30 @@ class Assets implements Hookable {
      * @return void
      */
 	public function register_all_scripts() {
-		$wc_instance = WCAdminAssets::get_instance();
+        // Register WooCommerce Admin Assets for the React-base Dokan Vendor ler dashboard.
+        if ( ! function_exists( 'get_current_screen' ) ) {
+            require_once ABSPATH . '/wp-admin/includes/screen.php';
+        }
+
+        add_filter( 'doing_it_wrong_trigger_error', [ $this, 'disable_doing_it_wrong_error' ] );
+
+        $wc_instance = WCAdminAssets::get_instance();
 		$wc_instance->register_scripts();
 
-		// $this->register_styles();
+        remove_filter( 'doing_it_wrong_trigger_error', [ $this, 'disable_doing_it_wrong_error' ] );
+
+        // $this->register_styles();
 		$this->register_scripts();
 	}
+
+    /**
+     * Disable "doing it wrong" error
+     *
+     * @return bool
+     */
+    public function disable_doing_it_wrong_error() {
+        return false;
+    }
 
     /**
      * Register scripts.
