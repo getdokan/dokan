@@ -148,7 +148,7 @@ foreach ( $order->get_refunds() as $refund ) {
                             </div>
                         </td>
                         <td width="1%">
-                            <div class="view">
+                            <div class="view" title="<?php echo esc_html( sprintf( __( 'Source: %s', 'dokan-lite'), $commission_data->get_source() ) ); ?>">
                                 <?php echo esc_html( isset( $commission_data->get_parameters()['percentage'] ) ? $commission_data->get_parameters()['percentage'] : 0 ); ?>%&nbsp;+&nbsp;<?php echo wc_price( isset( $commission_data->get_parameters()['flat'] ) ? $commission_data->get_parameters()['flat'] : 0 ); ?>
                             </div>
                         </td>
