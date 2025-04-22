@@ -23,8 +23,10 @@ class OrderCommission extends AbstractCommissionCalculator {
     private $admin_net_commission = 0;
     private $admin_commission     = 0;
     private $admin_subsidy        = 0;
-    private $vendor_net_earnign   = 0;
+    private $vendor_net_earning   = 0;
     private $vendor_earnign       = 0;
+
+    protected $is_calculated = false;
 
     /**
      * Get order.
@@ -70,19 +72,18 @@ class OrderCommission extends AbstractCommissionCalculator {
                 $line_item_commission->set_order( $this->order );
                 $line_item_commission->set_item( $item );
                 $commission = $line_item_commission->calculate();
+
+                $this->admin_net_commission += $commission->get_net_admin_commission();
+                $this->admin_discount       += $commission->get_admin_discount();
+
+                $this->vendor_net_earning += $commission->get_vendor_earning();
+                $this->vendor_discount    += $commission->get_vendor_discount();
             } catch ( \Exception $exception ) {
                 // TODO: Handle exception.
             }
-
-            $this->admin_commission     += $commission->get_admin_commission();
-            $this->admin_net_commission += $commission->get_net_admin_commission();
-            $this->admin_discount       += $commission->get_admin_discount();
-            $this->admin_subsidy        += $commission->get_admin_subsidy();
-
-            $this->vendor_discount    += $commission->get_vendor_discount();
-            $this->vendor_earnign     += $commission->get_vendor_earning();
-            $this->vendor_net_earnign += $commission->get_net_vendor_earning();
         }
+
+        $this->is_calculated = true;
 
         return $this->populate_commission_data();
     }
@@ -96,28 +97,8 @@ class OrderCommission extends AbstractCommissionCalculator {
      * @return Model\Commission|\Exception
      */
     public function get(): Model\Commission {
-        if ( ! $this->order ) {
-            throw new \Exception( esc_html__( 'Order is required for order commission calculation.', 'dokan-lite' ) );
-        }
-
-        foreach ( $this->order->get_items() as $item_id => $item ) {
-            try {
-                $line_item_commission = dokan_get_container()->get( OrderLineItemCommission::class );
-                $line_item_commission->set_item( $item );
-                $line_item_commission->set_order( $this->order );
-                $commission = $line_item_commission->get();
-            } catch ( \Exception $exception ) {
-                throw $exception;
-            }
-
-            $this->admin_commission     += $commission->get_admin_commission();
-            $this->admin_net_commission += $commission->get_net_admin_commission();
-            $this->admin_discount       += $commission->get_admin_discount();
-            $this->admin_subsidy        += $commission->get_admin_subsidy();
-
-            $this->vendor_discount    += $commission->get_vendor_discount();
-            $this->vendor_earnign     += $commission->get_vendor_earning();
-            $this->vendor_net_earnign += $commission->get_net_vendor_earning();
+        if ( ! $this->is_calculated) {
+            return $this->calculate();
         }
 
         return $this->populate_commission_data();
@@ -132,12 +113,10 @@ class OrderCommission extends AbstractCommissionCalculator {
      */
     protected function populate_commission_data() {
         $commission = new Commission();
-        $commission->set_admin_commission( $this->admin_commission )
-            ->set_net_admin_commission( $this->admin_net_commission )
+        $commission->set_net_admin_commission( $this->get_admin_commission() )
             ->set_admin_discount( $this->admin_discount )
             ->set_vendor_discount( $this->vendor_discount )
-            ->set_vendor_earning( $this->vendor_earnign )
-            ->set_net_vendor_earning( $this->vendor_net_earnign );
+            ->set_vendor_earning( $this->get_vendor_discount() );
 
         return $commission;
     }
@@ -267,7 +246,7 @@ class OrderCommission extends AbstractCommissionCalculator {
      * @return int
      */
     public function get_vendor_net_earning() {
-        return $this->vendor_net_earnign;
+        return $this->vendor_net_earning;
     }
 
     /**
@@ -451,6 +430,6 @@ class OrderCommission extends AbstractCommissionCalculator {
 
         $this->vendor_discount    = 0;
         $this->vendor_earnign     = 0;
-        $this->vendor_net_earnign = 0;
+        $this->vendor_net_earning = 0;
     }
 }

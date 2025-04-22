@@ -100,15 +100,6 @@ class Commission {
     private $net_admin_commission = 0;
 
     /**
-     * Net vendor earning
-     *
-     * @since DOKAN_SINCE
-     *
-     * @var int|float $net_vendor_earning
-     */
-    private $net_vendor_earning = 0;
-
-    /**
      * Returns applied commission source. example order_item/product/vendor/global.
      *
      * @since 3.14.0
@@ -335,7 +326,6 @@ class Commission {
             'vendor_discount'           => $this->get_vendor_discount(),
             'admin_discount'            => $this->get_admin_discount(),
             'net_admin_commission'      => $this->get_net_admin_commission(),
-            'net_vendor_earning'        => $this->get_net_vendor_earning(),
         ];
     }
     /**
@@ -384,22 +374,6 @@ class Commission {
         $this->net_admin_commission = $net_admin_commission;
 
         return $this;
-    }
-
-    /**
-     * @param float|int $net_vendor_earning
-     */
-    public function set_net_vendor_earning( $net_vendor_earning ): Commission {
-        $this->net_vendor_earning = $net_vendor_earning;
-
-        return $this;
-    }
-
-    /**
-     * @return float|int
-     */
-    public function get_net_vendor_earning() {
-        return $this->net_vendor_earning;
     }
 
     /**

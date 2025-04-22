@@ -165,7 +165,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $commission_data->set_per_item_admin_commission( floatval( $commission_meta['per_item_admin_commission'] ?? 0 ) );
         $commission_data->set_vendor_discount( $commission_data->get_vendor_discount() + floatval( $commission_meta['vendor_discount'] ?? 0 ) );
         $commission_data->set_vendor_earning( $commission_data->get_vendor_earning() + floatval( $commission_meta['vendor_earning'] ?? 0 ) );
-        $commission_data->set_net_vendor_earning( $commission_data->get_net_vendor_earning() + floatval( $commission_meta['net_vendor_earning'] ?? 0 ) );
         $commission_data->set_source( $commission_meta['source'] ?? DefaultStrategy::SOURCE );
         $commission_data->set_type( $commission_meta['type'] ?? '' );
         $commission_data->set_total_amount( $commission_meta['total_amount'] ?? 0 );
