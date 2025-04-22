@@ -6,6 +6,7 @@ use WeDevs\Dokan\Commission\Model\Setting;
 
 class Vendor implements InterfaceSetting {
 
+    protected int $category_id;
     /**
      * Product id to get a commission.
      *
@@ -15,7 +16,8 @@ class Vendor implements InterfaceSetting {
      */
     protected $vendor;
 
-    public function __construct( $vendor_id ) {
+    public function __construct( $vendor_id, int $category_id = 0 ) {
+        $this->category_id = $category_id;
         $this->vendor = dokan()->vendor->get( $vendor_id );
     }
 
@@ -27,7 +29,7 @@ class Vendor implements InterfaceSetting {
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function get(): ?Setting {
+    public function get(): Setting {
         $percentage = '';
         $type       = '';
         $flat       = '';
@@ -42,8 +44,18 @@ class Vendor implements InterfaceSetting {
             $category_commissions = ! is_array( $category_commissions ) ? [] : $category_commissions;
         }
 
-        if ( empty( $type ) ) {
-            return null;
+        // @todo Need to check if the commission rate 
+        if ( $type === 'category_based' ) {
+            $all_category_commissions = $category_commissions['all'] ?? [];
+            $category_commissions     = $category_commissions['items'][ $this->category_id] ?? [];
+
+            if ( ! empty( $category_commissions ) ) {
+                $percentage = $category_commissions['percentage'] ?? '';
+                $flat       = $category_commissions['flat'] ?? '';
+            } else {
+                $percentage = $all_category_commissions['percentage'] ?? '';
+                $flat       = $all_category_commissions['flat'] ?? '';
+            }
         }
 
         $settings = new Setting();

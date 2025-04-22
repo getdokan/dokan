@@ -7,7 +7,7 @@ use WeDevs\Dokan\Commission\Formula\Flat;
 use WeDevs\Dokan\Commission\Formula\Percentage;
 use WeDevs\Dokan\Commission\Model\Setting;
 
-class OrderItem implements AbstractSettings {
+class OrderItem  implements InterfaceSetting{
     protected $order_item_id;
 
     protected $product_price_to_calculate_commission;
@@ -33,7 +33,7 @@ class OrderItem implements AbstractSettings {
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function get(): ?Setting {
+    public function get(): Setting {
         $commission_percentage = '';
         $commission_type       = '';
         $additional_flat       = '';
@@ -51,10 +51,6 @@ class OrderItem implements AbstractSettings {
             }
 
             $commission_meta = empty( $commission_meta ) ? [] : $commission_meta;
-        }
-
-        if (empty( $commission_type ) ) {
-            return null;
         }
 
         $settings = new Setting();

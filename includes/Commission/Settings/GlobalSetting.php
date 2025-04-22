@@ -33,14 +33,24 @@ class GlobalSetting implements InterfaceSetting {
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function get(): ?Setting {
+    public function get(): Setting {
         $percentage           = dokan_get_option( 'admin_percentage', 'dokan_selling', '' );
         $type                 = dokan_get_option( 'commission_type', 'dokan_selling', '' );
         $flat                 = dokan_get_option( 'additional_fee', 'dokan_selling', '' );
         $category_commissions = dokan_get_option( 'commission_category_based_values', 'dokan_selling', [] );
 
-        if ( empty( $type ) ) {
-            return null;
+        // @todo Need to check if the commission rate 
+        if ( $type === 'category_based' ) {
+            $all_category_commissions = $category_commissions['all'] ?? [];
+            $category_commissions     = $category_commissions['items'][ $this->category_id] ?? [];
+
+            if ( ! empty( $category_commissions ) ) {
+                $percentage = $category_commissions['percentage'] ?? '';
+                $flat       = $category_commissions['flat'] ?? '';
+            } else {
+                $percentage = $all_category_commissions['percentage'] ?? '';
+                $flat       = $all_category_commissions['flat'] ?? '';
+            }
         }
 
         $settings = new Setting();

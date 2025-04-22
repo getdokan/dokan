@@ -85,6 +85,9 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             new OrderItem( $this->item, $item_price, $total_quantity, $this->vendor_id )
         );
 
+        /**
+         * @var \WeDevs\Dokan\Commission\Model\Setting $settings
+         */
         $settings = $strategy->get_settings();
 
         $this->set_price( $item_price );
@@ -98,8 +101,11 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             ->calculate();
 
         $parameters = $commission_data->get_parameters() ?? [];
-        $percentage = $parameters['percentage'] ?? 0;
-        $flat       = $parameters['flat'] ?? 0;
+        $percentage = $settings->get_percentage() ?? 0;
+        $type       = $settings->get_type() ?? DefaultSetting::TYPE;
+        $flat       = $settings->get_flat() ?? 0;
+
+        error_log('settings ->>' . print_r($settings, true));
 
         // Saving commission data to line items for further reuse.
         ( new \WeDevs\Dokan\Commission\Settings\OrderItem(
@@ -138,6 +144,12 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
          */
         $commission_meta = $this->item->get_meta( 'dokan_commission_meta', true );
 
+        $commission_settings_info = [
+            'type' => $this->item->get_meta('_dokan_commission_type', true),
+            'percentage' => $this->item->get_meta( '_dokan_commission_rate', true ),
+            'flat' => $this->item->get_meta( '_dokan_additional_fee', true ),
+        ];
+
         /**
          * Before dokan 3.14.0 version dokan did not save commission data in order item meta. When the commission is needed dokan use to calculate them.
          * But now dokan saves the commission data in order item meta. So we need to check if the commission data is available in order item meta or we need to calculate them for backward compatibility.
@@ -158,7 +170,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $commission_data->set_type( $commission_meta['type'] ?? '' );
         $commission_data->set_total_amount( $commission_meta['total_amount'] ?? 0 );
         $commission_data->set_total_quantity( $commission_meta['total_quantity'] ?? 0 );
-        $commission_data->set_parameters( $commission_meta['parameters'] ?? [] );
+        $commission_data->set_parameters( $commission_settings_info);
 
         return $commission_data;
     }

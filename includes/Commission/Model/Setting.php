@@ -189,7 +189,7 @@ class Setting {
      * @return mixed|string
      */
     public function get_percentage() {
-        return floatval( $this->percentage ) / 100;
+        return floatval( $this->percentage );
     }
 
     /**
