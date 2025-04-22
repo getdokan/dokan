@@ -18,6 +18,7 @@ export default [
         title: __( 'Withdraw', 'dokan-lite' ),
         element: <WithdrawRequests />,
         path: '/withdraw-requests',
+        backUrl: '/withdraw',
         exact: true,
         order: 10,
         capabilities: [ 'dokan_view_withdraw_menu' ],

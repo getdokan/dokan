@@ -99,13 +99,6 @@ function WithdrawRequests() {
                             withdrawRequests={ useWithdrawRequestHook }
                             balanceData={ balance }
                         />
-                        <DokanButton
-                            onClick={ () => {
-                                navigate( '/withdraw' );
-                            } }
-                        >
-                            { __( 'Withdraw Dashboard', 'dokan-lite' ) }
-                        </DokanButton>
                     </div>
                 </div>
 
