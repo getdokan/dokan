@@ -10,7 +10,7 @@ type DokanMaskInputProps = MaskedInputProps & { namespace: string };
 
 const currencySymbol = window?.dokanFrontend?.currency?.symbol ?? '';
 
-export const DokanMaskedInput = ( props: DokanMaskInputProps ) => {
+export const DokanMaskInput = ( props: DokanMaskInputProps ) => {
     if ( ! props.namespace ) {
         throw new Error(
             'Namespace is required for the DokanMaskedInput component'
@@ -55,4 +55,4 @@ export const DokanMaskedInput = ( props: DokanMaskInputProps ) => {
     return <MaskedInput id={ maskInputNameSpace } { ...filteredProps } />;
 };
 
-export default DokanMaskedInput;
+export default DokanMaskInput;
