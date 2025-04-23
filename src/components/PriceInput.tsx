@@ -5,14 +5,15 @@ import { MaskedInput } from '@getdokan/dokan-ui';
 import type { MaskedInputProps } from '@getdokan/dokan-ui/dist/components/MaskedInput';
 import type { SimpleInputProps } from '@getdokan/dokan-ui/dist/components/SimpleInput';
 
-import { kebabCase, snakeCase } from '@dokan/utilities';
+import { kebabCase, snakeCase, unformatNumber } from '@dokan/utilities';
 
-interface DokanMaskInputProps extends SimpleInputProps {
+interface DokanPriceInputProps extends Omit< SimpleInputProps, 'onChange' > {
     namespace: string;
+    onChange: ( formatedValue: string, unformattedValue: number ) => void;
     maskRule?: MaskedInputProps[ 'maskRule' ];
 }
 
-export const DokanMaskInput = ( props: DokanMaskInputProps ) => {
+export const DokanPriceInput = ( props: DokanPriceInputProps ) => {
     if ( ! props.namespace ) {
         throw new Error(
             'Namespace is required for the DokanMaskedInput component'
@@ -21,7 +22,7 @@ export const DokanMaskInput = ( props: DokanMaskInputProps ) => {
 
     const currencySymbol = window?.dokanFrontend?.currency?.symbol ?? '';
 
-    const InputProps: DokanMaskInputProps = {
+    const InputProps: DokanPriceInputProps = {
         label: __( 'Amount', 'dokan-lite' ),
         className: 'focus:border-none',
         addOnLeft: currencySymbol,
@@ -45,18 +46,33 @@ export const DokanMaskInput = ( props: DokanMaskInputProps ) => {
         ...props,
     };
 
-    // apply filter for mask input props.
+    // Apply filter for mask input props.
     const snakeCaseNamespace = snakeCase( props.namespace );
     const filteredProps = applyFilters(
-        `dokan_${ snakeCaseNamespace }_mask_input_props`,
+        `dokan_${ snakeCaseNamespace }_price_input_props`,
         InputProps,
         currencySymbol
-    ) as unknown as DokanMaskInputProps;
+    ) as unknown as DokanPriceInputProps;
 
-    // field id.
+    // Price field id.
     const maskInputNameSpace = kebabCase( props.namespace );
 
-    return <MaskedInput id={ maskInputNameSpace } { ...filteredProps } />;
+    return (
+        <div
+            id={ `dokan-${ maskInputNameSpace }-price-input` }
+            className={ `dokan-price-input` }
+        >
+            <MaskedInput
+                { ...filteredProps }
+                onChange={ ( e: any ) => {
+                    const formattedValue = e.target.value;
+                    const unformattedValue = unformatNumber( formattedValue );
+
+                    filteredProps.onChange( formattedValue, unformattedValue );
+                } }
+            />
+        </div>
+    );
 };
 
-export default DokanMaskInput;
+export default DokanPriceInput;

@@ -6,7 +6,7 @@ import {
     SearchableSelect,
     useToast,
 } from '@getdokan/dokan-ui';
-import { DokanButton, DokanAlert, DokanMaskInput } from "@dokan/components";
+import { DokanButton, DokanAlert, DokanPriceInput } from '@dokan/components';
 import { RawHTML, useEffect, useState } from '@wordpress/element';
 import '../../definitions/window-types';
 import { useWithdraw } from './Hooks/useWithdraw';
@@ -136,12 +136,13 @@ function RequestWithdrawBtn( {
             } );
     };
 
-    function handleWithdrawAmount( value ) {
-        if ( ! value ) {
-            value = 0;
+    function handleWithdrawAmount( rawValue, priceValue ) {
+        if ( ! rawValue ) {
+            rawValue = 0;
         }
-        setWithdrawAmount( value );
-        calculateWithdrawCharge( withdrawMethod, unformatNumber( value ) );
+
+        setWithdrawAmount( rawValue );
+        calculateWithdrawCharge( withdrawMethod, priceValue );
     }
 
     const debouncedWithdrawAmount = useDebounceCallback(
@@ -177,12 +178,18 @@ function RequestWithdrawBtn( {
                             />
                         </div>
                         <div className="mt-3">
-                            <DokanMaskInput
+                            <DokanPriceInput
                                 namespace="withdraw-request"
                                 label={ __( 'Withdraw amount', 'dokan' ) }
                                 value={ withdrawAmount }
-                                onChange={ ( e ) => {
-                                    debouncedWithdrawAmount( e.target.value );
+                                onChange={ (
+                                    formatedValue,
+                                    unformattedValue
+                                ) => {
+                                    debouncedWithdrawAmount(
+                                        formatedValue,
+                                        unformattedValue
+                                    );
                                 } }
                                 input={ {
                                     id: 'withdraw-amount',

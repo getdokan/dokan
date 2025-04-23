@@ -17,7 +17,7 @@
 9. **NotFound** - Unified 404 component for undefined route
 10. **Forbidden** - Unified 403 component for unauthorized route
 11. **MediaUploader** - File upload component
-12. **DokanMaskInput** - Masked input component for formatted data entry
+12. **DokanPriceInput** - Specialized input component for price entry with formatting
 
 ## Important Dependencies
 
@@ -90,7 +90,7 @@ externals: {
 |        |      |___ Link.tsx          # Link component
 |        |      |___ Badge.tsx         # Badge component
 |        |      |___ Alert.tsx         # Alert component
-|        |      |___ MaskInput.tsx     # Mask input component
+|        |      |___ PriceInput.tsx    # Price input component
 |        |      |___ your-component/   # Your new component directory
 |        |      |     |___ index.tsx
 |        |      |     |___ style.scss
@@ -113,7 +113,7 @@ export { default as DokanButton } from './Button';
 export { default as DokanLink } from './Link';
 export { default as DokanBadge } from './Badge';
 export { default as DokanAlert } from './Alert';
-export { default as DokanMaskInput } from './MaskInput';
+export { default as DokanPriceInput } from './PriceInput';
 export { default as ComponentName } from './YourComponent';
 ```
 
@@ -647,79 +647,93 @@ const App = () => {
 
 ```
 
-## DokanMaskInput Component
+## DokanPriceInput Component
 
-`Dokan` provides a unified masked input component for formatted data entry such as currency amounts, phone numbers, dates, etc. The component is built on top of the `MaskedInput` component from `@getdokan/dokan-ui`.
+`Dokan` provides a unified price input component for formatted data entry such as currency amounts, phone numbers, dates, etc. The component is built on top of the `PriceInput` component from `@getdokan/dokan-ui`.
 
 ### Usage Example
 
 ```jsx
-import { DokanMaskInput } from '@dokan/components';
+import { useState } from '@wordpress/element';
+import { DokanPriceInput } from '@dokan/components';
 
-const PriceInput = () => {
-  const [amount, setAmount] = useState('');
-  
-  return (
-    <DokanMaskInput
-      namespace="product-price"
-      label="Product Price"
-      value={amount}
-      onChange={(e) => setAmount(e.target.value)}
-      input={{
-        id: 'product-price',
-        name: 'product-price',
-        placeholder: 'Enter price',
-        required: true
-      }}
-      helpText="Enter the product price including decimal points."
-    />
-  );
+const ProductPriceForm = () => {
+    const [formattedPrice, setFormattedPrice] = useState('');
+    const [numericPrice, setNumericPrice] = useState(0);
+
+    return (
+        <DokanPriceInput
+            namespace="product-pricing"
+            label="Product Price"
+            value={formattedPrice}
+            onChange={(formattedValue, unformattedValue) => {
+                setFormattedPrice(formattedValue);
+                setNumericPrice(unformattedValue);
+            }}
+            input={{
+                id: 'product-price',
+                name: 'product-price',
+                placeholder: 'Enter product price',
+                required: true
+            }}
+            helpText="Enter the regular price for your product."
+        />
+    );
 };
 ```
 
-### Real-World Example (LineItemForm)
+### Real-World Example (Withdraw Request)
 
 ```jsx
-import { __ } from '@wordpress/i18n';
-import { DokanMaskInput } from '@dokan/components';
+import { __, sprintf } from '@wordpress/i18n';
+import { DokanPriceInput } from '@dokan/components';
 
-const LineItemForm = ({ total, setTotal }) => {
-  return (
-    <DokanMaskInput
-      namespace="manual-order-shipping-line-item-amount"
-      label={__('Shipping Total', 'dokan')}
-      value={total}
-      onChange={(e) => setTotal(e.target.value)}
-      input={{
-        id: 'shipping-total',
-        name: 'shipping-total',
-        placeholder: __('Enter shipping cost', 'dokan'),
-      }}
-      helpText={__('Enter the total shipping cost for this method.', 'dokan')}
-    />
-  );
+const WithdrawRequestForm = () => {
+    const [withdrawAmount, setWithdrawAmount] = useState('');
+
+    const handleWithdrawAmount = (rawValue, numericValue) => {
+        setWithdrawAmount(rawValue);
+        calculateWithdrawCharge('bank', numericValue);
+    };
+
+    return (
+        <div className="mt-3">
+            <DokanPriceInput
+                namespace="withdraw-request"
+                label={__('Withdraw amount', 'dokan')}
+                value={withdrawAmount}
+                onChange={(formattedValue, unformattedValue) => {
+                    handleWithdrawAmount(formattedValue, unformattedValue);
+                }}
+                input={{
+                    id: 'withdraw-amount',
+                    name: 'withdraw-amount',
+                    placeholder: __('Enter amount', 'dokan'),
+                }}
+            />
+        </div>
+    );
 };
 ```
 
-### MaskInput Component Properties
+### PriceInput Component Properties
 
-The DokanMaskInput component accepts the following props:
+The DokanPriceInput component accepts the following props:
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
 | `namespace` | `string` | Yes | Unique identifier for the input (used for filtering) |
-| `label` | `string` | Yes | The label text for the input field |
-| `value` | `string` | Yes | The current value of the input |
-| `onChange` | `(e: any) => void` | Yes | Callback function when the input value changes |
+| `label` | `string` | No | The label text for the input field |
+| `value` | `string` | Yes | The current formatted value of the input |
+| `onChange` | `(formattedValue: string, unformattedValue: number) => void` | Yes | Callback function with both formatted string and unformatted numeric value |
 | `input` | `object` | No | Input element HTML attributes (id, name, placeholder, required, etc.) |
 | `className` | `string` | No | Additional CSS classes for custom styling |
-| `addOnLeft` | `string` | No | Text or symbol to display on the left side (like currency symbol) |
-| `maskRule` | `object` | No | Configuration for the input mask (default uses currency settings) |
+| `maskRule` | `object` | No | Configuration for the input mask (override default currency settings) |
 | `helpText` | `string` | No | Helper text displayed below the input |
 
 ### Default Mask Rules
 
-The DokanMaskInput component automatically configures the input mask based on the WordPress/WooCommerce site's currency settings. These are the default mask rules:
+The DokanPriceInput component automatically configures the input mask based on the WordPress/WooCommerce site's currency settings. These are the default mask rules:
 
 ```js
 maskRule: {
@@ -733,71 +747,87 @@ maskRule: {
 You can override these defaults by providing your own `maskRule` object:
 
 ```jsx
-<DokanMaskInput
-  namespace="custom-precision-input"
-  label="Amount (4 decimals)"
-  value={amount}
-  onChange={(e) => setAmount(e.target.value)}
-  maskRule={{
-    numeral: true,
-    numeralDecimalMark: '.',
-    delimiter: ',',
-    numeralDecimalScale: 4  // Override to use 4 decimal places
-  }}
-  // Other props...
+<DokanPriceInput
+    namespace="custom-precision-input"
+    label="Amount (4 decimals)"
+    value={amount}
+    onChange={(formattedValue, numericValue) => {
+        setFormattedPrice(formattedValue);
+        setNumericPrice(numericValue);
+    }}
+    maskRule={{
+        numeral: true,
+        numeralDecimalMark: '.',
+        delimiter: ',',
+        numeralDecimalScale: 4  // Override to use 4 decimal places
+    }}
+    // Other props...
 />
 ```
 
 The component also automatically uses the site's currency symbol as the `addOnLeft` value. This can be customized:
 
 ```jsx
-<DokanMaskInput
-  namespace="custom-currency-input"
-  label="Euro Amount"
-  value={amount}
-  onChange={(e) => setAmount(e.target.value)}
-  addOnLeft="€"  // Override currency symbol
-  // Other props...
+<DokanPriceInput
+    namespace="custom-currency-input"
+    label="Euro Amount"
+    value={amount}
+    onChange={(formattedValue, numericValue) => {
+        // Handle values
+    }}
+    addOnLeft="€"  // Override currency symbol
+    // Other props...
 />
 ```
 
-### Using with formatNumber and unformatNumber Utilities
+### Integration with API Calls
 
-When working with the DokanMaskInput component, you'll typically use two important utilities from `@dokan/utilities`:
+When using DokanPriceInput with API operations, you'll typically:
 
-1. `formatNumber`: Formats a numeric value as a display string
-2. `unformatNumber`: Converts the formatted string back to a numeric value
+1. **Display data from API**: Format numeric values from API for display
+2. **Send data to API**: Use the unformatted numeric value for operations
 
-#### Typical Usage Pattern
+Example workflow:
 
 ```jsx
 import { useState, useEffect } from '@wordpress/element';
-import { DokanMaskInput } from '@dokan/components';
-import { formatNumber, unformatNumber } from '@dokan/utilities';
+import { DokanPriceInput } from '@dokan/components';
+import apiFetch from '@wordpress/api-fetch';
+import { formatNumber } from '@dokan/utilities';
 
-const PriceEditor = ({ initialPrice, onSave }) => {
+const PriceEditor = ({ productId }) => {
   const [formattedPrice, setFormattedPrice] = useState('');
+  const [numericPrice, setNumericPrice] = useState(0);
   
-  // Format initial value from API for display
+  // Fetch product data
   useEffect(() => {
-    if (initialPrice) {
-      setFormattedPrice(formatNumber(initialPrice));
-    }
-  }, [initialPrice]);
+    apiFetch({ path: `/wc/v3/products/${productId}` })
+      .then(product => {
+        // Product price from API comes as numeric value
+        setFormattedPrice(formatNumber(product.price));
+        setNumericPrice(Number(product.price));
+      });
+  }, [productId]);
   
-  // When saving, convert back to numeric
   const handleSave = () => {
-    const numericPrice = unformatNumber(formattedPrice);
-    onSave(numericPrice);
+    // Use the unformatted numeric value for API operations
+    apiFetch({
+      path: `/wc/v3/products/${productId}`,
+      method: 'PUT',
+      data: { price: numericPrice }
+    });
   };
   
   return (
     <div>
-      <DokanMaskInput
-        namespace="price-editor"
+      <DokanPriceInput
+        namespace="product-price"
         label="Price"
         value={formattedPrice}
-        onChange={(e) => setFormattedPrice(e.target.value)}
+        onChange={(formatted, numeric) => {
+          setFormattedPrice(formatted);
+          setNumericPrice(numeric);
+        }}
         input={{
           id: 'price',
           name: 'price',
@@ -817,18 +847,17 @@ The component supports WordPress filters for customization:
 ```jsx
 // In your code that extends functionality
 wp.hooks.addFilter(
-  'dokan_your_namespace_mask_input_props',
-  'your-plugin/customize-mask-input',
-  (props, currencySymbol) => {
-    // Modify props as needed
-    return {
-      ...props,
-      addOnLeft: '$', // Override currency symbol
-      maskRule: {
-        ...props.maskRule,
-        numeralDecimalScale: 4, // Use 4 decimal places
-      }
-    };
-  }
+    'dokan_product_pricing_price_input_props',
+    'your-plugin/customize-price-input',
+    (props, currencySymbol) => {
+        // Modify props as needed
+        return {
+            ...props,
+            maskRule: {
+                ...props.maskRule,
+                numeralDecimalScale: 4, // Use 4 decimal places for this specific input
+            }
+        };
+    }
 );
 ```
