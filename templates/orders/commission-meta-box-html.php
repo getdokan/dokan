@@ -80,8 +80,6 @@ foreach ( $order->get_refunds() as $refund ) {
                     $commission   = 0;
                     $commission_type      = '';
                     $admin_commission     = '';
-                    $percentage           = 0;
-                    $flat                 = 0;
 
                     try {
                         $product_commission = dokan_get_container()->get( OrderLineItemCommission::class );
@@ -91,8 +89,6 @@ foreach ( $order->get_refunds() as $refund ) {
 
                         $commission_type      = $commission_data->get_type();
                         $admin_commission     = $commission_data->get_admin_commission();
-                        $percentage           = isset( $commission_data->get_parameters()['percentage'] ) ? $commission_data->get_parameters()['percentage'] : 0;
-                        $flat                 = isset( $commission_data->get_parameters()['flat'] ) ? $commission_data->get_parameters()['flat'] : 0;
                     } catch ( \Exception $exception ) {
                         dokan_log( $exception->getMessage() );
                     }
@@ -149,7 +145,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         </td>
                         <td width="1%">
                             <div class="view" title="<?php echo esc_html( sprintf( __( 'Source: %s', 'dokan-lite'), $commission_data->get_source() ) ); ?>">
-                                <?php echo esc_html( isset( $commission_data->get_parameters()['percentage'] ) ? $commission_data->get_parameters()['percentage'] : 0 ); ?>%&nbsp;+&nbsp;<?php echo wc_price( isset( $commission_data->get_parameters()['flat'] ) ? $commission_data->get_parameters()['flat'] : 0 ); ?>
+                                <?php echo esc_html( $commission_data->get_settings()->get_percentage() ); ?>%&nbsp;+&nbsp;<?php echo wc_price( $commission_data->get_settings()->get_flat() ); ?>
                             </div>
                         </td>
                         <td class="quantity" width="1%">

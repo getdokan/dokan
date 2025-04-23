@@ -99,6 +99,8 @@ class Commission {
      */
     private $net_admin_commission = 0;
 
+    protected Setting $settings;
+
     /**
      * Returns applied commission source. example order_item/product/vendor/global.
      *
@@ -107,11 +109,11 @@ class Commission {
      * @return string
      */
     public function get_source(): string {
-        return $this->source;
+        return $this->settings->get_source();
     }
 
     /**
-     * Sets commission source.
+     * Sets applied commission source.
      *
      * @since 3.14.0
      *
@@ -119,10 +121,21 @@ class Commission {
      *
      * @return Commission
      */
-    public function set_source( string $source ): Commission {
-        $this->source = $source;
+    public function set_settings( Setting $settings ): Commission {
+        $this->settings = $settings;
 
         return $this;
+    }
+
+    /**
+     * Returns commission settings.
+     *
+     * @since 3.14.0
+     *
+     * @return Setting
+     */
+    public function get_settings(): Setting {
+        return $this->settings;
     }
 
     /**

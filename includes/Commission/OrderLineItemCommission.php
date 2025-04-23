@@ -103,9 +103,9 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             ->calculate();
 
         $parameters = $commission_data->get_parameters() ?? [];
-        $percentage = $settings->get_percentage() ?? 0;
-        $type       = $settings->get_type() ?? DefaultSetting::TYPE;
-        $flat       = $settings->get_flat() ?? 0;
+        $percentage = $settings->get_percentage();
+        $type       = $settings->get_type();
+        $flat       = $settings->get_flat();
 
         // Saving commission data to line items for further reuse.
         ( new \WeDevs\Dokan\Commission\Settings\OrderItem(
@@ -140,40 +140,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             throw new \Exception( esc_html__( 'Order item is required to get order item commission.', 'dokan-lite' ) );
         }
 
-        /**
-         * @var \WeDevs\Dokan\Commission\Model\Commission $commission_data
-         */
-        $commission_meta = $this->item->get_meta( 'dokan_commission_meta', true );
-
-        $commission_settings_info = [
-            'type' => $this->item->get_meta('_dokan_commission_type', true),
-            'percentage' => $this->item->get_meta( '_dokan_commission_rate', true ),
-            'flat' => $this->item->get_meta( '_dokan_additional_fee', true ),
-        ];
-
-        /**
-         * Before dokan 3.14.0 version dokan did not save commission data in order item meta. When the commission is needed dokan use to calculate them.
-         * But now dokan saves the commission data in order item meta. So we need to check if the commission data is available in order item meta or we need to calculate them for backward compatibility.
-         */
-        if ( empty( $commission_meta ) && ! is_array( $commission_meta ) ) {
-            return $this->calculate();
-        }
-
-        error_log('order item commission meta: ' . print_r( $commission_meta, true ) );
-
-        $commission_data = new Commission();
-        $commission_data->set_admin_commission( $commission_data->get_admin_commission() + floatval( $commission_meta['admin_commission'] ?? 0 ) );
-        $commission_data->set_net_admin_commission( $commission_data->get_net_admin_commission() + floatval( $commission_meta['net_admin_commission'] ?? 0 ) );
-        $commission_data->set_admin_discount( $commission_data->get_admin_discount() + floatval( $commission_meta['admin_discount'] ?? 0 ) );
-        $commission_data->set_per_item_admin_commission( floatval( $commission_meta['per_item_admin_commission'] ?? 0 ) );
-        $commission_data->set_vendor_discount( $commission_data->get_vendor_discount() + floatval( $commission_meta['vendor_discount'] ?? 0 ) );
-        $commission_data->set_vendor_earning( $commission_data->get_vendor_earning() + floatval( $commission_meta['vendor_earning'] ?? 0 ) );
-        $commission_data->set_source( $commission_meta['source'] ?? DefaultStrategy::SOURCE );
-        $commission_data->set_type( $commission_meta['type'] ?? '' );
-        $commission_data->set_total_amount( $commission_meta['total_amount'] ?? 0 );
-        $commission_data->set_total_quantity( $commission_meta['total_quantity'] ?? 0 );
-        $commission_data->set_parameters( $commission_settings_info);
-
-        return $commission_data;
+        return $this->calculate();
     }
 }

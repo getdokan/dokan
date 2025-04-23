@@ -2,14 +2,7 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Formula\CategoryBased;
-use WeDevs\Dokan\Commission\Formula\Combine;
-use WeDevs\Dokan\Commission\Formula\Fixed;
-use WeDevs\Dokan\Commission\Formula\Flat;
-use WeDevs\Dokan\Commission\Formula\Percentage;
-use WeDevs\Dokan\Commission\Formula\AbstractFormula;
 use WeDevs\Dokan\Commission\Model\Setting;
-use WeDevs\Dokan\Commission\Settings\InterfaceSetting;
 
 abstract class AbstractStrategy {
 
@@ -46,18 +39,14 @@ abstract class AbstractStrategy {
      * @return Setting
      */
 	public function get_settings(): ?Setting {
-        $settings = $this->settings;
+        $this->settings->set_source( $this->get_source() );
 
-        $source = $this->get_source();
-        $settings->set_source( $source );
-
-
-        if ( ! $this->settings || ! $this->settings->is_applicable() ) {
-            $settings = $this->get_next() ? $this->get_next()->get_settings() : null;
+        if ( $this->settings->is_applicable() ) {
+            return $this->settings;
         }
-        
-        return $settings;
-	}
+    
+        return $this->get_next() ? $this->get_next()->get_settings() : null;
+    }
 
 
     public function get_next(): ?AbstractStrategy {
