@@ -618,7 +618,6 @@ class Assets {
                 'deps'    => $core_store_asset['dependencies'],
             ];
         }
-
         $product_store_asset_file = DOKAN_DIR . '/assets/js/products-store.asset.php';
         if ( file_exists( $product_store_asset_file ) ) {
             $stores_asset = require $product_store_asset_file;
@@ -752,6 +751,7 @@ class Assets {
                 'urls'            => [
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
                     'dashboardUrl' => dokan_get_navigation_url(),
+                    'storeUrl' => dokan_get_store_url( dokan_get_current_user_id() ),
                 ],
             ]
         );
