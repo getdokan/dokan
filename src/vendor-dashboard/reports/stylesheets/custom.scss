@@ -67,7 +67,7 @@ ul.woocommerce-table__summary li.woocommerce-table__summary-item {
 
   .woocommerce-summary__item {
     &.is-selected {
-      box-shadow: inset -1px -1px 0 #757575, inset 1px 0 0 #757575, inset 0 4px 0 var(--dokan-button-background-color, #7047EB) !important;
+      box-shadow: inset -1px -1px 0 var(--dokan-sidebar-background-color, #322067), inset 1px 0 0 var(--dokan-sidebar-background-color, #322067), inset 0 4px 0 var(--dokan-button-background-color, #7047EB) !important;
     }
   }
 }
