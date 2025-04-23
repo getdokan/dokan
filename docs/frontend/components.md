@@ -14,6 +14,9 @@
 6. **Link Component** - Flexible link component with multiple style variants
 7. **DokanBadge** - Unified badge component for status badges
 8. **DokanAlert** - Unified alert component for notifications
+9. **NotFound** - Unified 404 component for undefined route
+10. **Forbidden** - Unified 403 component for unauthorized route
+11. **MediaUploader** - File upload component
 
 ## Important Dependencies
 
@@ -309,8 +312,156 @@ const LinkExample = () => {
         <span className="mr-2">🔔</span>
         Notifications
       </DokanLink>
+
+        {/* Link as Button */}
+        <DokanLink as="button" href="/button">
+            Button Link
+        </DokanLink>
     </div>
   );
+};
+```
+
+### NotFound Component
+
+The `NotFound` component displays a user-friendly `404` error page when a requested resource cannot be found.
+We will import the `NotFound` component from the `@dokan/components` package (Both for Pro & Lite version).
+
+The `NotFound` component accepts the following props:
+
+| Prop             | Type        | Required | Description                                                                                                                             |
+|------------------|-------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| `title`          | `string`    | No       | Custom title for the `NotFound` page (default: `Sorry, the page can’t be found`)                                                        |
+| `message`        | `string`    | No       | Custom message for the `NotFound` page (default: `The page you were looking for appears to have been moved, deleted or does not exist`) |
+| `navigateButton` | `ReactNode` | No       | Custom navigation button component (default: `Back to Dashboard` button)                                                                |
+| `children`       | `ReactNode` | No       | Custom `NotFound` page template                                                                                                         |
+
+### Usage Example
+
+```jsx
+import {NotFound} from '@dokan/components';
+import {DokanButton} from '@dokan/components';
+
+// Basic usage with default settings.
+const BasicNotFound = () => {
+    return <NotFound/>;
+};
+
+// Custom usage with navigation button.
+const CustomNotFound = () => {
+    return (
+        <NotFound
+            title={__('Resource Not Available', 'dokan-lite')}
+            message={__("We couldn't find the page you were looking for.", 'dokan')}
+            navigateButton={
+                <DokanButton> // Add your necessary props.
+                    {__('Return to Dashboard', 'dokan')}
+                </DokanButton>
+            }
+        />
+    );
+};
+
+// Usage in a component when a resource is not found.
+const ProductDetails = ({params}) => {
+    const [product, setProduct] = useState(null);
+    const [isNotFound, setIsNotFound] = useState(false);
+
+    useEffect(() => {
+        apiFetch({
+            path: `/dokan/v1/products/${params.id}`,
+        })
+            .then((response) => {
+                if (response) {
+                    setProduct(response);
+                }
+            })
+            .catch((error) => {
+                if (error?.data?.status === 404) {
+                    setIsNotFound(true);
+                }
+            });
+    }, [params.id]);
+
+    if (isNotFound) {
+        // Use your necessary `NotFound` from here.
+        // return <BasicNotFound />;
+        // return <CustomNotFound />;
+    }
+
+    // Rest of the component
+};
+```
+
+### Forbidden Component
+
+The `Forbidden` component displays a user-friendly `403` error page when a user attempts to access a resource they don't
+have permission to view.
+We will import the `Forbidden` component from the `@dokan/components` package (Both for Pro & Lite version).
+
+The `Forbidden` component accepts the following props:
+
+| Prop             | Type        | Required | Description                                                                                               |
+|------------------|-------------|----------|-----------------------------------------------------------------------------------------------------------|
+| `title`          | `string`    | No       | Custom title for the `Forbidden` page (default: `Permission Denied`)                                      |
+| `message`        | `string`    | No       | Custom message for the `Forbidden` page (default: `Sorry, you don’t have permission to access this page`) |
+| `navigateButton` | `ReactNode` | No       | Custom navigation button component (default: `Back to Dashboard` button)                                  |
+| `children`       | `ReactNode` | No       | Custom `Forbidden` page template                                                                          |
+
+### Usage Example
+
+```jsx
+import {Forbidden} from '@dokan/components';
+import {DokanButton} from '@dokan/components';
+
+// Basic usage with default settings
+const BasicForbidden = () => {
+    return <Forbidden/>;
+};
+
+// Custom usage with navigation button
+const CustomForbidden = () => {
+    return (
+        <Forbidden
+            title={__('Access Denied', 'dokan')}
+            message={__('You don\'t have permission to access this area.', 'dokan')}
+            navigateButton={
+                <DokanButton> // Add your necessary props.
+                    {__('Go to Dashboard', 'dokan')}
+                </DokanButton>
+            }
+        />
+    );
+};
+
+// Usage in a component when permission check fails
+const VendorSettings = ({params}) => {
+    const [settings, setSettings] = useState(null);
+    const [isForbidden, setIsForbidden] = useState(false);
+
+    useEffect(() => {
+        apiFetch({
+            path: `/dokan/v1/vendors/${params.id}/settings`,
+        })
+            .then((response) => {
+                if (response) {
+                    setSettings(response);
+                }
+            })
+            .catch((error) => {
+                if (error?.data?.status === 403) {
+                    setIsForbidden(true);
+                }
+            });
+    }, [params.id]);
+
+    if (isForbidden) {
+        // Use your necessary `Forbidden` from here.
+        // return <BasicForbidden />;
+        // return <CustomForbidden />;
+    }
+
+    // Rest of the component
 };
 ```
 
@@ -413,3 +564,82 @@ The Link component accepts the following props:
    ```
 
 The DokanLink component is designed to be simple yet flexible, providing a consistent look and feel across the application while maintaining accessibility and usability standards.
+
+## CustomerFilter Component
+
+The CustomerFilter component provides a standardized way to filter content by customer across your application. It allows users to search and select customers from a dropdown interface.
+
+### Features
+
+- Customer search with autocomplete
+- Selected customer display and management
+- Consistent interface across different views
+
+### Usage Example
+
+```jsx
+import { CustomerFilter } from '@dokan/components';
+
+const [selectedCustomer, setSelectedCustomer] = useState({});
+
+<CustomerFilter
+    id="dokan-filter-by-customer"
+    value={selectedCustomer}
+    onChange={(selected) => {
+        setSelectedCustomer(selected);
+    }}
+    placeholder={ __( 'Search', 'dokan' ) }
+    label={ __( 'Filter By Registered Customer', 'dokan' ) }
+/>
+```
+
+#### Props
+
+| Prop                  | Type       | Required | Description                                                                |
+|-----------------------|------------|----------|----------------------------------------------------------------------------|
+| `id`                  | `string`   | Yes      | Unique identifier for the filter group                                     |
+| `value`               | `object`   | Yes      | Currently selected customer object with `label` and `value` properties     |
+| `onChange` | `function` | Yes      | Callback function to update the selected customer                          |
+| `placeholder`         | `string`   | no       | Custom placeholder text for the search input |
+| `label`         | `string`   | no       | Custom label text for the search input  |
+
+#### Selected Customer Object Structure
+
+```jsx
+interface SelectedCustomer {
+  label: string;  // Display name of the customer
+  value: string;  // Customer ID
+}
+```
+
+#### Example of Upload 
+
+```tsx
+import { MediaUploader } from '@dokan/components';
+
+type UploadTypes = {
+    onSelect: ( value: any ) => void;
+    children: React.ReactNode;
+    multiple?: boolean;
+    className?: string;
+    as?: React.ElementType;
+    title?: string;
+    buttonText?: string;
+};
+
+const App = () => {
+    const handleUpload = (file) => {
+        // Handle the uploaded files
+        console.log(file);
+    }
+    return (
+        <MediaUploader as="div" onSelect={ handleUpload }>
+            <DokanButton variant="secondary" className="gap-1">
+                <i className="fas fa-cloud-upload-alt" />
+                { __( 'Upload', 'dokan' ) }
+            </DokanButton>
+        </MediaUploader>
+    )
+}
+
+```

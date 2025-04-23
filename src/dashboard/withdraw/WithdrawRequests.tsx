@@ -1,5 +1,5 @@
 import { useWithdrawRequests } from './Hooks/useWithdrawRequests';
-import { Button } from '@getdokan/dokan-ui';
+import { DokanButton } from '@dokan/components';
 import RequestList from './RequestList';
 import { useEffect, useState } from '@wordpress/element';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -99,15 +99,6 @@ function WithdrawRequests() {
                             withdrawRequests={ useWithdrawRequestHook }
                             balanceData={ balance }
                         />
-                        <Button
-                            color="gray"
-                            className="bg-dokan-btn hover:bg-dokan-btn-hover"
-                            onClick={ () => {
-                                navigate( '/withdraw' );
-                            } }
-                        >
-                            { __( 'Withdraw Dashboard', 'dokan-lite' ) }
-                        </Button>
                     </div>
                 </div>
 

@@ -7,6 +7,7 @@
     :root {
         --colors-primary-500: var(--dokan-button-border-color, #7047EB);
         --wp-components-color-accent: var(--dokan-button-background-color, #7047EB);
+        --wp-components-color-accent-darker-20: var(--dokan-button-hover-background-color, #502BBF);
     }
     // This is a hack to fix headless ui flickering during .dokan-layout class addition with MutationObserver.
     // This is a temporary fix until headless ui provides a better solution.
@@ -49,6 +50,9 @@
             @apply before:!content-[''] mt-1;
         }
 
+        input[type=text]:focus {
+            outline-offset: 0;
+        }
     }
 
     button[data-headlessui-state="checked"] {
@@ -83,7 +87,7 @@
         @apply relative bg-dokan-btn-secondary text-dokan-btn-secondary border-dokan-btn-secondary ring-dokan-btn-secondary transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply bg-dokan-btn-secondary-hover text-dokan-btn-secondary-hover border-dokan-btn-secondary-hover #{!important};
+            @apply bg-dokan-btn-secondary-hover text-dokan-btn-secondary-hover border-dokan-btn-secondary-hover ring-dokan-btn-secondary-hover #{!important};
         }
     }
 
@@ -91,40 +95,40 @@
         @apply relative bg-dokan-btn-tertiary text-dokan-btn-tertiary border-dokan-btn-tertiary ring-dokan-btn-tertiary transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply bg-dokan-btn-tertiary-hover text-dokan-btn-tertiary-hover border-dokan-btn-tertiary-hover #{!important};
+            @apply bg-dokan-btn-tertiary-hover text-dokan-btn-tertiary-hover #{!important};
         }
     }
 
     /* Status Button Styles */
     .dokan-btn-info {
-        @apply relative bg-dokan-info text-dokan-info border-dokan-info ring-dokan-info transition-colors duration-200 #{!important};
+        @apply relative bg-dokan-btn-info text-dokan-btn-info border-dokan-btn-info ring-dokan-btn-info transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply bg-blue-600 text-white #{!important};
+            @apply bg-dokan-btn-info-hover text-dokan-btn-info-hover border-dokan-btn-info-hover ring-dokan-btn-info-hover #{!important};
         }
     }
 
     .dokan-btn-success {
-        @apply relative bg-dokan-success text-dokan-success border-dokan-success ring-dokan-success transition-colors duration-200 #{!important};
+        @apply relative bg-dokan-btn-success text-dokan-btn-success border-dokan-btn-success ring-dokan-btn-success transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply bg-green-600 text-white #{!important};
+            @apply bg-dokan-btn-success-hover text-dokan-btn-success-hover border-dokan-btn-success-hover ring-dokan-btn-success-hover #{!important};
         }
     }
 
     .dokan-btn-warning {
-        @apply relative bg-dokan-warning text-dokan-warning border-dokan-warning ring-dokan-warning transition-colors duration-200 #{!important};
+        @apply relative bg-dokan-btn-warning text-dokan-btn-warning border-dokan-btn-warning ring-dokan-btn-warning transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply bg-yellow-600 text-white #{!important};
+            @apply bg-dokan-btn-warning-hover text-dokan-btn-warning-hover border-dokan-btn-warning-hover ring-dokan-btn-warning-hover #{!important};
         }
     }
 
     .dokan-btn-danger {
-        @apply relative bg-dokan-danger text-dokan-danger border-dokan-danger ring-dokan-danger transition-colors duration-200 #{!important};
+        @apply relative bg-dokan-btn-danger text-dokan-btn-danger border-dokan-btn-danger ring-dokan-btn-danger transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply bg-red-600 text-white #{!important};
+            @apply bg-dokan-btn-danger-hover text-dokan-btn-danger-hover border-dokan-btn-danger-hover ring-dokan-btn-danger-hover #{!important};
         }
     }
 
@@ -133,7 +137,7 @@
         @apply relative text-dokan-link no-underline transition-colors duration-200 #{!important};
 
         &:hover, &:focus {
-            @apply text-dokan-link-hover underline #{!important};
+            @apply text-dokan-link-hover #{!important};
         }
     }
 
@@ -146,20 +150,20 @@
         @apply relative px-6 py-3 text-lg #{!important};
     }
 
-    /* Label Styles */
-    .dokan-info {
+    /* Badge Styles */
+    .dokan-badge-info {
         @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info #{!important};
     }
 
-    .dokan-success {
+    .dokan-badge-success {
         @apply relative ring-1 ring-inset bg-dokan-success text-dokan-success ring-dokan-success #{!important};
     }
 
-    .dokan-warning {
+    .dokan-badge-warning {
         @apply relative ring-1 ring-inset bg-dokan-warning text-dokan-warning ring-dokan-warning #{!important};
     }
 
-    .dokan-danger {
+    .dokan-badge-danger {
         @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger ring-dokan-danger #{!important};
     }
 

@@ -15,13 +15,25 @@ const updatedConfig = {
     entry: {
         ...entryPoints,
         components: {
-            import: '@dokan/components/index.tsx',
+            import: './src/components/index.tsx',
+            library: {
+                name: [ 'dokan', 'components' ],
+                type: 'window',
+            },
         },
         utilities: {
-            import: '@dokan/utilities/index.ts',
+            import: './src/utilities/index.ts',
+            library: {
+                name: [ 'dokan', 'utilities' ],
+                type: 'window',
+            },
         },
-        hooks: {
-            import: '@dokan/hooks/index.tsx',
+        'react-hooks': {
+            import: './src/hooks/index.tsx',
+            library: {
+                name: [ 'dokan', 'reactHooks' ],
+                type: 'window',
+            },
         },
     },
     output: {
@@ -29,10 +41,10 @@ const updatedConfig = {
         filename: '[name].js',
         clean: true,
         devtoolNamespace: 'dokan',
-        library: {
-            name: [ 'dokan', '[name]' ],
-            type: 'window',
-        },
+        // library: { // Bind every entryChunkName to dokan global window object
+        //     name: [ 'dokan', '[name]' ],
+        //     type: 'window',
+        // },
     },
 
     resolve: {
@@ -58,7 +70,7 @@ const updatedConfig = {
         '@woocommerce/blocks-checkout': [ 'wc', 'blocksCheckout' ],
         '@dokan/components': [ 'dokan', 'components' ],
         '@dokan/utilities': [ 'dokan', 'utilities' ],
-        '@dokan/hooks': [ 'dokan', 'hooks' ],
+        '@dokan/hooks': [ 'dokan', 'reactHooks' ],
     },
 
     plugins: [
