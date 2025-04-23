@@ -32,7 +32,7 @@ function RequestWithdrawBtn( {
     const withdrawHook = useWithdraw();
     const toast = useToast();
     const [ withdrawMethod, setWithdrawMethod ] = useState( '' );
-    const { fetchCharge, isLoading, data } = useCharge();
+    const { fetchCharge, isLoading, data, error } = useCharge();
     const hasWithdrawRequests =
         withdrawRequests?.data &&
         Array.isArray( withdrawRequests?.data ) &&
@@ -137,10 +137,6 @@ function RequestWithdrawBtn( {
     };
 
     function handleWithdrawAmount( rawValue, priceValue ) {
-        if ( ! rawValue ) {
-            rawValue = 0;
-        }
-
         setWithdrawAmount( rawValue );
         calculateWithdrawCharge( withdrawMethod, priceValue );
     }
@@ -157,6 +153,15 @@ function RequestWithdrawBtn( {
             }
         );
     };
+
+    useEffect( () => {
+        if ( error && error?.message && error?.message.length > 0 ) {
+            toast( {
+                title: error?.message,
+                type: 'error',
+            } );
+        }
+    }, [ error ] );
 
     const WithdrawRequestForm = () => {
         return (
