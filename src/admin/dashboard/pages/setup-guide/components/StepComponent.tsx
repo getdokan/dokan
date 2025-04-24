@@ -1,17 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from '@wordpress/element';
-
-// Define custom animation keyframes
-const customStyles = `
-@keyframes completeStep {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-.animate-complete-step {
-  animation: completeStep 0.9s ease-in-out;
-}
-`;
+import { twMerge } from 'tailwind-merge';
 
 const StepComponent = ( { steps, currentStep } ) => {
     const [ displayedStep, setDisplayedStep ] = useState( currentStep );
@@ -62,8 +51,6 @@ const StepComponent = ( { steps, currentStep } ) => {
 
     return (
         <div className="@3xl/main:col-span-3 @xl/main:col-span-4 col-span-12 flex flex-col rounded-lg @5xl/main:pl-12 @3xl/main:py-10 @xs/main:py-4 pl-4 bg-white shadow">
-            { /* Add the custom style for animations */ }
-            <style>{ customStyles }</style>
             <h3 className="text-2xl font-bold leading-6 @2xl/main:mb-10 mb-3">
                 { __( 'Setup Guide', 'dokan-lite' ) }
             </h3>
@@ -78,11 +65,13 @@ const StepComponent = ( { steps, currentStep } ) => {
                         >
                             { step.is_completed ? (
                                 <span
-                                    className={ `absolute flex items-center justify-center w-12 h-12 bg-[#7047EB] rounded-full -start-6 transition-all duration-500 ${
-                                        completedSteps[ step.id ]
-                                            ? 'animate-complete-step'
-                                            : ''
-                                    }` }
+                                    className={ twMerge(
+                                        `absolute flex items-center justify-center w-12 h-12 bg-[#7047EB] rounded-full -start-6 transition-all duration-500 ${
+                                            completedSteps[ step.id ]
+                                                ? 'animate-complete-step'
+                                                : ''
+                                        }`
+                                    ) }
                                 >
                                     <svg
                                         className="w-3.5 h-3.5 text-white dark:text-black transition-opacity duration-300"

@@ -126,7 +126,6 @@ const StepSettings = ( {
             setDependencies( [ ...extractedDependencies ] );
             setAllSettings( [ ...modifiedSettings ] );
         } catch ( err ) {
-            console.error( 'Error processing settings:', err );
             handleError( err );
         }
     };
@@ -182,7 +181,6 @@ const StepSettings = ( {
             setAllSettings( [ ...modifiedSettings ] );
             setNeedSaving( true );
         } catch ( err ) {
-            console.error( 'Error updating settings value:', err );
             handleError( err );
         }
     };
@@ -242,7 +240,6 @@ const StepSettings = ( {
             setShowSkeleton( false );
             setLoading( false );
         } catch ( err ) {
-            console.error( 'Error fetching step data:', err );
             handleError( err );
 
             // Hide skeleton on error too
@@ -337,7 +334,6 @@ const StepSettings = ( {
                 setElements( tab?.children || [] );
             }
         } catch ( err ) {
-            console.error( 'Error setting elements:', err );
             setElements( [] );
         }
     }, [ allSettings, pages, selectedPage, tabs, selectedTab, loading ] );

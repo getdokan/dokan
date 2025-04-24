@@ -419,7 +419,7 @@ const CategoryBasedCommission = ( {
                                 showCatRow( item ) && (
                                     <div
                                         key={ item.term_id }
-                                        className="flex flex-col md:!flex-row divide-y  border-0 border-b-[1px] last:border-b-0 border-[#e9e9ea] border-solid"
+                                        className="flex flex-col md:!flex-row divide-y  border-0 !border-b-[1px] last:border-b-0 border-[#e9e9ea] border-solid"
                                     >
                                         <div className="md:w-1/2 w-full flex flex-row items-center min-h-[3rem] border-0 border-r-[1px] border-[#e9e9ea] border-solid pl-[5px]">
                                             <div className="flex h-1/2">

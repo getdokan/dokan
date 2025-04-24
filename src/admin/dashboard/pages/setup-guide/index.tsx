@@ -62,9 +62,7 @@ const SetupGuide = () => {
                 } );
 
                 setCurrentStep( { ...defaultStep } );
-            } catch ( err ) {
-                console.error( err );
-            }
+            } catch ( err ) {}
         }
     };
 

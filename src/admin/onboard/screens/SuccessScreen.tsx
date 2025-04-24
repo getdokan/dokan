@@ -22,6 +22,7 @@ const SuccessScreen = () => {
                     </h1>
                 </div>
                 <Button
+                    color={ 'primary' }
                     link={ true }
                     href={ redirectUrl }
                     className="bg-[#7047EB] !text-white rounded-md py-3 px-8 flex items-center"
