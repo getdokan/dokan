@@ -5,14 +5,8 @@ namespace WeDevs\Dokan\Commission;
 use WC_Order;
 use WC_Order_Item;
 use WeDevs\Dokan\Commission\Model\Commission;
-use WeDevs\Dokan\Commission\Settings\DefaultSetting;
-use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
-use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
 use WeDevs\Dokan\Commission\Strategies\OrderItem;
-use WeDevs\Dokan\Commission\Strategies\Product;
-use WeDevs\Dokan\Commission\Strategies\Vendor;
 use WeDevs\Dokan\Vendor\Coupon;
-use WeDevs\Dokan\Vendor\DokanOrderLineItemCouponInfo;
 
 /**
  * Class OrderLineItemCommission - Calculate order line item commission
@@ -20,7 +14,6 @@ use WeDevs\Dokan\Vendor\DokanOrderLineItemCouponInfo;
  * @since DOKAN_SINCE
  */
 class OrderLineItemCommission extends AbstractCommissionCalculator {
-
     /**
      * Order line item.
      *
@@ -30,8 +23,23 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      */
     protected $item;
 
+    /**
+     * Order line item commission meta key.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string
+     */
     const VENDOR_ID_META_KEY = '_dokan_vendor_id';
+
+    /**
+     * @var \WC_Order $order
+     */
     protected WC_Order $order;
+
+    /**
+     * @var int $vendor_id
+     */
     protected int $vendor_id;
 
     /**
@@ -133,10 +141,9 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
     }
 
     public function adjust_refunds( Commission $commission ) {
-
         $refund_amount = $this->order->get_total_refunded_for_item( $this->item->get_id() );
 
-        $item_total = $this->item->get_total();
+        $item_total = $this->item->get_total() ?: $this->item->get_subtotal();
 
         $vendor_earning = $commission->get_net_vendor_earning();
         $admin_commission = $commission->get_net_admin_commission();
@@ -152,8 +159,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
 
         return $commission;
     }
-
-
 
     /**
      * Retrieve commission data from order item meta.
