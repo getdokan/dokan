@@ -21,7 +21,15 @@ use WeDevs\Dokan\Vendor\DokanOrderLineItemCouponInfo;
  */
 class OrderLineItemCommission extends AbstractCommissionCalculator {
 
-    protected WC_Order_Item $item;
+    /**
+     * Order line item.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var \WC_Order_Item_Product $item
+     */
+    protected $item;
+
     const VENDOR_ID_META_KEY = '_dokan_vendor_id';
     protected WC_Order $order;
     protected int $vendor_id;
@@ -74,13 +82,9 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             throw new \Exception( esc_html__( 'Order is required for order item commission calculation.', 'dokan-lite' ) );
         }
 
-        $refund_amount = $this->order->get_total_refunded_for_item( $this->item->get_id() );
-        $refund_qty = $this->order->get_qty_refunded_for_item( $this->item->get_id() );
-
         $item_price = apply_filters( 'dokan_earning_by_order_item_price', $this->item->get_subtotal(), $this->item, $this->order );
-        $item_price = $refund_amount ? floatval( $item_price ) - floatval( $refund_amount ) : $item_price;
 
-        $total_quantity = $this->item->get_quantity() +  $refund_qty;
+        $total_quantity = $this->item->get_quantity();
 
         $strategy = apply_filters(
             'dokan_order_line_item_commission_strategies',
@@ -101,6 +105,8 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             ->set_quantity( $total_quantity )
             ->set_discount( new CouponInfo( $this->get_coupon_infos() ) )
             ->calculate();
+
+        $commission_data = $this->adjust_refunds( $commission_data );
 
         $parameters = $commission_data->get_parameters() ?? [];
         $percentage = $settings->get_percentage();
@@ -125,6 +131,29 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
 
         return $commission_data;
     }
+
+    public function adjust_refunds( Commission $commission ) {
+
+        $refund_amount = $this->order->get_total_refunded_for_item( $this->item->get_id() );
+
+        $item_total = $this->item->get_total();
+
+        $vendor_earning = $commission->get_net_vendor_earning();
+        $admin_commission = $commission->get_net_admin_commission();
+        
+        $vendor_earning_for_refund = $vendor_earning / $item_total * $refund_amount;
+        $admin_commission_for_refund = $admin_commission / $item_total * $refund_amount;
+
+        $admin_commission_after_refund = $admin_commission - $admin_commission_for_refund;
+        $vendor_earning_after_refund = $vendor_earning - $vendor_earning_for_refund;
+
+        $commission->set_net_admin_commission( $admin_commission_after_refund )
+            ->set_vendor_earning( $vendor_earning_after_refund );
+
+        return $commission;
+    }
+
+
 
     /**
      * Retrieve commission data from order item meta.

@@ -201,6 +201,17 @@ class Commission {
         return $this->vendor_earning;
     }
 
+     /**
+     * Returns vendor earning.
+     *
+     * @since 3.14.0
+     *
+     * @return int|float
+     */
+    public function get_net_vendor_earning() {
+        return $this->get_vendor_earning() - $this->get_admin_subsidy();
+    }
+
     /**
      * Sets vendor earning..
      *
