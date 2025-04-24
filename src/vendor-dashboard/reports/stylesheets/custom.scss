@@ -19,8 +19,8 @@ ul.woocommerce-table__summary li.woocommerce-table__summary-item {
 }
 
 .woocommerce-segmented-selection__container
-  .woocommerce-segmented-selection__item
-  label {
+.woocommerce-segmented-selection__item
+label {
   font-size: 13px;
 }
 
@@ -30,6 +30,12 @@ ul.woocommerce-table__summary li.woocommerce-table__summary-item {
 }
 .woocommerce-summary {
   padding-left: 0;
+
+  .woocommerce-summary__item {
+    &.is-selected {
+      box-shadow: inset -1px -1px 0 var(--dokan-sidebar-background-color, #322067), inset 1px 0 0 var(--dokan-sidebar-background-color, #322067), inset 0 4px 0 var(--dokan-button-background-color, #7047EB) !important;
+    }
+  }
 }
 
 .woocommerce-calendar__input .woocommerce-calendar__input-text {
@@ -55,19 +61,13 @@ ul.woocommerce-table__summary li.woocommerce-table__summary-item {
   display: block;
 }
 
-.woocommerce-layout {
+.woocommerce-table__item {
   a,
   .woocommerce-table__breadcrumbs {
     color: var(--dokan-link-color, #7047EB);
 
     &:hover {
       color: var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #322067));
-    }
-  }
-
-  .woocommerce-summary__item {
-    &.is-selected {
-      box-shadow: inset -1px -1px 0 var(--dokan-sidebar-background-color, #322067), inset 1px 0 0 var(--dokan-sidebar-background-color, #322067), inset 0 4px 0 var(--dokan-button-background-color, #7047EB) !important;
     }
   }
 }
