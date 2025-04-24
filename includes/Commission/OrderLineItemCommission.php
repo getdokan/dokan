@@ -116,7 +116,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
 
         $commission_data = $this->adjust_refunds( $commission_data );
 
-        $parameters = $commission_data->get_parameters() ?? [];
         $percentage = $settings->get_percentage();
         $type       = $settings->get_type();
         $flat       = $settings->get_flat();
@@ -133,7 +132,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
                 'type'       => $type,
                 'percentage' => $percentage,
                 'flat'       => $flat,
-                'meta_data'  => $commission_data->get_data()  ,
             ]
         );
 
@@ -145,8 +143,8 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
 
         $item_total = $this->item->get_total() ?: $this->item->get_subtotal();
 
-        $vendor_earning = $commission->get_net_vendor_earning();
-        $admin_commission = $commission->get_net_admin_commission();
+        $vendor_earning = $commission->get_vendor_net_earning();
+        $admin_commission = $commission->get_admin_net_commission();
         
         $vendor_earning_for_refund = $vendor_earning / $item_total * $refund_amount;
         $admin_commission_for_refund = $admin_commission / $item_total * $refund_amount;
@@ -154,7 +152,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $admin_commission_after_refund = $admin_commission - $admin_commission_for_refund;
         $vendor_earning_after_refund = $vendor_earning - $vendor_earning_for_refund;
 
-        $commission->set_net_admin_commission( $admin_commission_after_refund )
+        $commission->set_admin_net_commission( $admin_commission_after_refund )
             ->set_vendor_earning( $vendor_earning_after_refund );
 
         return $commission;

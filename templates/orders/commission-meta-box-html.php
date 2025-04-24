@@ -87,7 +87,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         $product_commission->set_item( $item );
                         $commission_data = $product_commission->get();
 
-                        $commission_type      = $commission_data->get_type();
+                        $commission_type      = $commission_data->get_settings()->get_type();
                         $admin_commission     = $commission_data->get_admin_commission();
                     } catch ( \Exception $exception ) {
                         dokan_log( $exception->getMessage() );
@@ -144,7 +144,7 @@ foreach ( $order->get_refunds() as $refund ) {
                             </div>
                         </td>
                         <td width="1%">
-                            <div class="view" title="<?php echo esc_html( sprintf( __( 'Source: %s', 'dokan-lite'), $commission_data->get_source() ) ); ?>">
+                            <div class="view" title="<?php echo esc_html( sprintf( __( 'Source: %s', 'dokan-lite'), $commission_data->get_settings()->get_source() ) ); ?>">
                                 <?php echo esc_html( $commission_data->get_settings()->get_percentage() ); ?>%&nbsp;+&nbsp;<?php echo wc_price( $commission_data->get_settings()->get_flat() ); ?>
                             </div>
                         </td>

@@ -99,7 +99,7 @@ class Calculator extends AbstractCommissionCalculator {
         $vendor_earning = $net_amount - $admin_commission;
 
         $commission = new Commission();
-        $commission->set_net_admin_commission( $admin_commission );
+        $commission->set_admin_net_commission( $admin_commission );
         $commission->set_vendor_discount( $this->get_discount()->get_vendor_discount() );
         $commission->set_vendor_earning( $vendor_earning );
         $commission->set_admin_discount( $this->get_discount()->get_admin_discount() );
