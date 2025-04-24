@@ -11,6 +11,7 @@ use WP_REST_Request;
  * @covers \WeDevs\Dokan\REST\VendorProductCategoriesController
  */
 class VendorProductCategoriesApiTest extends DokanTestCase {
+
     /**
      * Test REST API base
      *
@@ -37,25 +38,25 @@ class VendorProductCategoriesApiTest extends DokanTestCase {
         // Create parent categories
         $categories['parent1'] = $this->factory()->term->create(
             [
-				'taxonomy' => 'product_cat',
-				'name'    => 'Parent Category 1',
-			]
+                'taxonomy' => 'product_cat',
+                'name'    => 'Parent Category 1',
+            ]
         );
 
         $categories['parent2'] = $this->factory()->term->create(
             [
-				'taxonomy' => 'product_cat',
-				'name'    => 'Parent Category 2',
-			]
+                'taxonomy' => 'product_cat',
+                'name'    => 'Parent Category 2',
+            ]
         );
 
         // Create child categories
         $categories['child1'] = $this->factory()->term->create(
             [
-				'taxonomy' => 'product_cat',
-				'name'    => 'Child Category 1',
-				'parent'  => $categories['parent1'],
-			]
+                'taxonomy' => 'product_cat',
+                'name'    => 'Child Category 1',
+                'parent'  => $categories['parent1'],
+            ]
         );
 
         return $categories;
@@ -173,9 +174,10 @@ class VendorProductCategoriesApiTest extends DokanTestCase {
         wp_set_current_user( $this->seller_id1 );
 
         $response = $this->post_request(
-            $this->base, [
-				'name' => 'Test Category',
-			]
+            $this->base,
+            [
+                'name' => 'Test Category',
+            ]
         );
 
         $this->assertEquals( 404, $response->get_status() );
@@ -189,9 +191,10 @@ class VendorProductCategoriesApiTest extends DokanTestCase {
 
         $category_id = $this->categories['parent1'];
         $response = $this->put_request(
-            "{$this->base}/{$category_id}", [
-				'name' => 'Updated Name',
-			]
+            "{$this->base}/{$category_id}",
+            [
+                'name' => 'Updated Name',
+            ]
         );
 
         $this->assertEquals( 404, $response->get_status() );
@@ -216,20 +219,21 @@ class VendorProductCategoriesApiTest extends DokanTestCase {
         wp_set_current_user( $this->seller_id1 );
 
         $response = $this->post_request(
-            "{$this->base}/batch", [
-				'create' => [
-					[ 'name' => 'New Category' ],
-				],
-				'update' => [
-					[
-						'id' => $this->categories['parent1'],
-						'name' => 'Updated Name',
-					],
-				],
-				'delete' => [
-					$this->categories['child1'],
-				],
-			]
+            "{$this->base}/batch",
+            [
+                'create' => [
+                    [ 'name' => 'New Category' ],
+                ],
+                'update' => [
+                    [
+                        'id' => $this->categories['parent1'],
+                        'name' => 'Updated Name',
+                    ],
+                ],
+                'delete' => [
+                    $this->categories['child1'],
+                ],
+            ]
         );
 
         $this->assertEquals( 404, $response->get_status() );
