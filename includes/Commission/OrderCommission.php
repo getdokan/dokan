@@ -21,9 +21,7 @@ class OrderCommission extends AbstractCommissionCalculator {
     private $vendor_discount      = 0;
     private $admin_discount       = 0;
     private $admin_net_commission = 0;
-    private $admin_subsidy        = 0;
     private $vendor_net_earning   = 0;
-    private $vendor_earnign       = 0;
 
     protected $is_calculated = false;
 
@@ -75,7 +73,7 @@ class OrderCommission extends AbstractCommissionCalculator {
                 $this->admin_net_commission += $commission->get_net_admin_commission();
                 $this->admin_discount       += $commission->get_admin_discount();
 
-                $this->vendor_net_earning += $commission->get_vendor_earning();
+                $this->vendor_net_earning += $commission->get_net_vendor_earning();
                 $this->vendor_discount    += $commission->get_vendor_discount();
             } catch ( \Exception $exception ) {
                 // TODO: Handle exception.
@@ -206,7 +204,9 @@ class OrderCommission extends AbstractCommissionCalculator {
      * @return int
      */
     public function get_admin_subsidy() {
-        return $this->admin_subsidy;
+        $subsidy = $this->get_admin_net_commission() - $this->get_admin_gateway_fee();
+
+        return $subsidy < 0 ? abs( $subsidy ) : 0;
     }
 
     /**
@@ -301,7 +301,7 @@ class OrderCommission extends AbstractCommissionCalculator {
      * @return float|int
      */
     public function get_vendor_earning() {
-        return $this->vendor_earnign;
+        return $this->get_vendor_net_earning() + $this->get_total_vendor_fees();
     }
 
     /**
@@ -424,10 +424,8 @@ class OrderCommission extends AbstractCommissionCalculator {
     protected function reset_order_commission_data() {
         $this->admin_net_commission = 0;
         $this->admin_discount       = 0;
-        $this->admin_subsidy        = 0;
 
         $this->vendor_discount    = 0;
-        $this->vendor_earnign     = 0;
         $this->vendor_net_earning = 0;
     }
 }
