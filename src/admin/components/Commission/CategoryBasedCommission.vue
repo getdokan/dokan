@@ -1,5 +1,6 @@
 <template>
-    <div class='relative'>
+    <div class="dokan-category-commission">
+        <div class='relative '>
         <div class='d-xs:hidden md:flex bg-gray-100 min-h-[3rem] text-gray-500 border-[0.957434px] border-b-0 items-center'>
             <div class='w-1/2 pl-3 flex h-[3rem] items-center border-r-[0.957434px]'>
                 <p class='text-xs'>{{ __( 'Category', 'dokan-lite' ) }}</p>
@@ -105,12 +106,13 @@
             </div>
         </div>
     </div>
+    </div>
 </template>
 
 <script>
-    import Debounce from "debounce";
+import Debounce from "debounce";
 
-    export default {
+export default {
         name: 'CategoryBasedCommission',
         props: {
             value: {
