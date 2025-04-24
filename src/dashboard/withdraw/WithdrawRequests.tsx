@@ -60,7 +60,7 @@ function WithdrawRequests() {
                         <Link
                             to="?status=pending"
                             className={ twMerge(
-                                'hover:underline text-xs',
+                                'text-dokan-link text-xs',
                                 statusParam === 'pending'
                                     ? 'font-bold'
                                     : 'font-normal'
@@ -72,7 +72,7 @@ function WithdrawRequests() {
                         <Link
                             to="?status=approved"
                             className={ twMerge(
-                                'hover:underline text-xs',
+                                'text-dokan-link text-xs',
                                 statusParam === 'approved'
                                     ? 'font-bold'
                                     : 'font-normal'
@@ -84,7 +84,7 @@ function WithdrawRequests() {
                         <Link
                             to="?status=cancelled"
                             className={ twMerge(
-                                'hover:underline text-xs',
+                                'text-dokan-link text-xs',
                                 statusParam === 'cancelled'
                                     ? 'font-bold'
                                     : 'font-normal'

@@ -80,7 +80,10 @@ function PaymentMethods( {
                                         'dokan-lite'
                                     ),
                                 } );
-                                bodyData.refresh();
+                                bodyData.setData( {
+                                    ...bodyData.data,
+                                    withdraw_method: activemethod.value,
+                                } );
                             } );
                     } }
                     disabled={ makeDefaultMethodHook.isLoading }
@@ -112,7 +115,9 @@ function PaymentMethods( {
     return (
         <Card>
             <Card.Header>
-                <Card.Title className="p-0 m-0">Payment Methods</Card.Title>
+                <Card.Title className="p-0 m-0">
+                    { __( 'Payment Methods', 'dokan' ) }
+                </Card.Title>
             </Card.Header>
             <Card.Body>
                 <div className="space-y-4">

@@ -37,7 +37,7 @@ function RequestList( {
             render: ( { item } ) => (
                 <div>
                     { loading ? (
-                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                        <span className="block w-16 h-3 rounded bg-gray-200 animate-pulse"></span>
                     ) : (
                         <PriceHtml price={ item?.amount } />
                     ) }
@@ -66,7 +66,7 @@ function RequestList( {
             render: ( { item } ) => (
                 <div>
                     { loading ? (
-                        <span className="block w-40 h-3 rounded bg-gray-200 animate-pulse"></span>
+                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
                     ) : (
                         <DateTimeHtml date={ item?.created } />
                     ) }
@@ -80,7 +80,7 @@ function RequestList( {
             render: ( { item } ) => (
                 <div>
                     { loading ? (
-                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                        <span className="block w-16 h-3 rounded bg-gray-200 animate-pulse"></span>
                     ) : (
                         <PriceHtml price={ item?.charge } />
                     ) }
@@ -94,7 +94,7 @@ function RequestList( {
             render: ( { item } ) => (
                 <div>
                     { loading ? (
-                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                        <span className="block w-16 h-3 rounded bg-gray-200 animate-pulse"></span>
                     ) : (
                         <PriceHtml price={ item?.receivable } />
                     ) }
@@ -159,11 +159,17 @@ function RequestList( {
                       isEligible: () => status === 'pending',
                       icon: () => {
                           return (
-                              <span
-                                  className={ `px-2 bg-transparent font-medium text-dokan-danger text-sm` }
-                              >
-                                  { __( 'Cancel', 'dokan' ) }
-                              </span>
+                              <div>
+                                  { loading ? (
+                                      <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                                  ) : (
+                                      <span
+                                          className={ `px-2 bg-transparent font-medium text-dokan-danger text-sm` }
+                                      >
+                                          { __( 'Cancel', 'dokan' ) }
+                                      </span>
+                                  ) }
+                              </div>
                           );
                       },
                       callback: ( data ) => {
