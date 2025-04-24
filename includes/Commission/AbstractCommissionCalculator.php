@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Commission;
 use WeDevs\Dokan\Commission\Model\Commission;
 use WeDevs\Dokan\Commission\Model\Setting;
 
-abstract class AbstractCommissionCalculator {
+abstract class AbstractCommissionCalculator extends Commission {
 
     protected Setting $settings;
 

@@ -22,9 +22,9 @@ class OrderItem extends AbstractStrategy {
      *
      * @since 3.14.0
      *
-     * @var mixed|string $order_item_id
+    * @var \WC_Order_Item_Product $order_item
      */
-    protected $order_item_id;
+    protected $order_item;
 
     /**
      * Total price amount.
@@ -58,8 +58,8 @@ class OrderItem extends AbstractStrategy {
      * @return void
      */
     public function __construct( $order_item = '', $total_amount = 0, $total_quantity = 1, $vendor_id = 0 ) {
-        $this->order_item_id             = $order_item->get_id();
-        $this->total_amount              = $total_amount;
+        $this->order_item     = $order_item;
+        $this->total_amount   = $total_amount;
         $this->total_quantity = $total_quantity;
 
         $this->vendor_id = $vendor_id ? $vendor_id : dokan_get_vendor_by_product( $order_item->get_product_id(), true );
@@ -90,12 +90,7 @@ class OrderItem extends AbstractStrategy {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function set_settings() {
-        $settings = new \WeDevs\Dokan\Commission\Settings\OrderItem(
-            [
-                'id'    => $this->order_item_id,
-                'price' => $this->total_amount,
-            ]
-        );
+        $settings = new \WeDevs\Dokan\Commission\Settings\OrderItem( $this->order_item );
 
         $this->settings = $settings->get();
     }
@@ -108,7 +103,7 @@ class OrderItem extends AbstractStrategy {
      * @return int|mixed|string
      */
     public function get_order_item_id() {
-        return $this->order_item_id;
+        return $this->order_item->get_id();
     }
 }
 

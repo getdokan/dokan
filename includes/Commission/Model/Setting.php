@@ -190,7 +190,11 @@ class Setting {
      *
      * @return mixed|string
      */
-    public function get_flat(): float {
+    public function get_flat( string $context = 'view'): float | string {
+        if ( $context === 'edit' ) {
+            return $this->flat;
+        }
+
         return $this->is_combined() ? 0 : floatval($this->flat);
     }
 
@@ -216,7 +220,11 @@ class Setting {
      *
      * @return mixed|string
      */
-    public function get_percentage() {
+    public function get_percentage( string $context = 'view' ): float | string  {
+        if ( $context === 'edit' ) {
+            return $this->percentage;
+        }
+
         return floatval( $this->percentage );
     }
 

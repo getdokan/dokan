@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Commission;
 
 use WC_Order;
+use WeDevs\Dokan\Commission\Contracts\OrderCommissionInterface;
 use WeDevs\Dokan\Commission\Model\Commission;
 
 /**
@@ -12,16 +13,13 @@ use WeDevs\Dokan\Commission\Model\Commission;
  *
  * @package WeDevs\Dokan\Commission
  */
-class OrderCommission extends AbstractCommissionCalculator {
+class OrderCommission extends AbstractCommissionCalculator implements OrderCommissionInterface {
 
     private ?WC_Order $order;
 
     const SELLER = 'seller';
     const ADMIN  = 'admin';
-    private $vendor_discount      = 0;
-    private $admin_discount       = 0;
-    private $admin_net_commission = 0;
-    private $vendor_net_earning   = 0;
+
 
     protected $is_calculated = false;
 
@@ -45,8 +43,10 @@ class OrderCommission extends AbstractCommissionCalculator {
 	 *
 	 * @return void
 	 */
-	public function set_order( WC_Order $order ) {
+	public function set_order( WC_Order $order ): self {
 		$this->order = $order;
+
+        return $this;
 	}
 
     /**
@@ -56,12 +56,17 @@ class OrderCommission extends AbstractCommissionCalculator {
      *
      * @return Model\Commission|\Exception
      */
-    public function calculate(): Model\Commission {
+    public function calculate(): self {
         if ( ! $this->order ) {
             throw new \Exception( esc_html__( 'Order is required for order commission calculation.', 'dokan-lite' ) );
         }
 
         $this->reset_order_commission_data();
+
+        $admin_net_commission = 0;
+        $admin_discount = 0;
+        $vendor_net_earning = 0;
+        $vendor_discount = 0;
 
         foreach ( $this->order->get_items() as $item_id => $item ) {
             try {
@@ -70,19 +75,24 @@ class OrderCommission extends AbstractCommissionCalculator {
                 $line_item_commission->set_item( $item );
                 $commission = $line_item_commission->calculate();
 
-                $this->admin_net_commission += $commission->get_admin_net_commission();
-                $this->admin_discount       += $commission->get_admin_discount();
+                $admin_net_commission += $commission->get_admin_net_commission();
+                $admin_discount       += $commission->get_admin_discount();
 
-                $this->vendor_net_earning += $commission->get_vendor_net_earning();
-                $this->vendor_discount    += $commission->get_vendor_discount();
+                $vendor_net_earning += $commission->get_vendor_net_earning();
+                $vendor_discount    += $commission->get_vendor_discount();
             } catch ( \Exception $exception ) {
                 // TODO: Handle exception.
             }
         }
 
+        $this->set_admin_net_commission( $admin_net_commission )
+            ->set_admin_discount( $admin_discount )
+            ->set_vendor_net_earning( $vendor_net_earning )
+            ->set_vendor_discount( $vendor_discount );
+
         $this->is_calculated = true;
 
-        return $this->populate_commission_data();
+        return $this;
     }
 
     /**
@@ -94,50 +104,7 @@ class OrderCommission extends AbstractCommissionCalculator {
      * @return Model\Commission|\Exception
      */
     public function get(): Model\Commission {
-        if ( ! $this->is_calculated) {
-            return $this->calculate();
-        }
-
-        return $this->populate_commission_data();
-    }
-
-    /**
-     * Populate commission data.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return \WeDevs\Dokan\Commission\Model\Commission
-     */
-    protected function populate_commission_data() {
-        $commission = new Commission();
-        $commission->set_admin_net_commission( $this->get_admin_commission() )
-            ->set_admin_discount( $this->admin_discount )
-            ->set_vendor_discount( $this->vendor_discount )
-            ->set_vendor_earning( $this->get_vendor_discount() );
-
-        return $commission;
-    }
-
-    /**
-     * Get admin discount.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return int
-     */
-    public function get_admin_discount() {
-        return $this->admin_discount;
-    }
-
-    /**
-     * Get admin net commission.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return int
-     */
-    public function get_admin_net_commission() {
-        return $this->admin_net_commission;
+        return $this->calculate();
     }
 
     /**
@@ -145,25 +112,14 @@ class OrderCommission extends AbstractCommissionCalculator {
      *
      * @since DOKAN_SINCE
      *
-     * @return float|int|string
+     * @return float
      */
-    public function get_admin_shipping_fee() {
+    public function get_admin_shipping_fee(): float {
         if ( self::ADMIN === dokan()->fees->get_shipping_fee_recipient( $this->order ) ) {
             return $this->order->get_shipping_total() - $this->order->get_total_shipping_refunded();
         }
 
         return 0;
-    }
-
-    /**
-     * Get admin commission.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return int
-     */
-    public function get_admin_commission() {
-        return $this->get_admin_net_commission() + $this->get_total_admin_fees();
     }
 
     /**
@@ -197,26 +153,13 @@ class OrderCommission extends AbstractCommissionCalculator {
     }
 
     /**
-     * Get admin subsidy.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return int
-     */
-    public function get_admin_subsidy() {
-        $subsidy = $this->get_admin_net_commission() - $this->get_admin_gateway_fee();
-
-        return $subsidy < 0 ? abs( $subsidy ) : 0;
-    }
-
-    /**
      * Get admin gateway fee.
      *
      * @since DOKAN_SINCE
      *
      * @return float|int
      */
-    public function get_admin_gateway_fee() {
+    public function get_admin_gateway_fee(): float {
         $gateway_fee = $this->get_dokan_gateway_fee();
 
         if ( ! empty( $gateway_fee['fee'] ) && self::ADMIN === $gateway_fee['paid_by'] ) {
@@ -227,35 +170,13 @@ class OrderCommission extends AbstractCommissionCalculator {
     }
 
     /**
-     * Get vendor discount.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return int
-     */
-    public function get_vendor_discount() {
-        return $this->vendor_discount;
-    }
-
-    /**
-     * Get vendor net earning.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return int
-     */
-    public function get_vendor_net_earning() {
-        return $this->vendor_net_earning;
-    }
-
-    /**
      * Get vendor shipping fee.
      *
      * @since DOKAN_SINCE
      *
      * @return float|int
      */
-    public function get_vendor_shipping_fee() {
+    public function get_vendor_shipping_fee(): float {
         if ( self::SELLER === dokan()->fees->get_shipping_fee_recipient( $this->order ) ) {
             return $this->order->get_shipping_total() - $this->order->get_total_shipping_refunded();
         }
@@ -270,7 +191,7 @@ class OrderCommission extends AbstractCommissionCalculator {
      *
      * @return float|int
      */
-    public function get_vendor_shipping_tax_fee() {
+    public function get_vendor_shipping_tax_fee(): float {
         if ( self::SELLER === dokan()->fees->get_shipping_tax_fee_recipient( $this->order ) ) {
             return ( floatval( $this->order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $this->order ) ) );
         }
@@ -285,7 +206,7 @@ class OrderCommission extends AbstractCommissionCalculator {
      *
      * @return float|int
      */
-    public function get_vendor_tax_fee() {
+    public function get_vendor_tax_fee(): float {
         if ( self::SELLER === dokan()->fees->get_tax_fee_recipient( $this->order->get_id() ) ) {
             return ( ( floatval( $this->order->get_total_tax() ) - floatval( $this->order->get_total_tax_refunded() ) ) - ( floatval( $this->order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $this->order ) ) ) );
         }
@@ -300,7 +221,7 @@ class OrderCommission extends AbstractCommissionCalculator {
      *
      * @return float|int
      */
-    public function get_vendor_earning() {
+    public function get_vendor_earning(): float {
         return $this->get_vendor_net_earning() + $this->get_total_vendor_fees();
     }
 
@@ -311,7 +232,7 @@ class OrderCommission extends AbstractCommissionCalculator {
      *
      * @return float|int
      */
-    public function get_total_admin_fees() {
+    public function get_total_admin_fees(): float {
         return $this->get_admin_shipping_fee() + $this->get_admin_tax_fee() + $this->get_admin_shipping_tax_fee() - $this->get_admin_gateway_fee() - $this->get_admin_subsidy();
     }
 
@@ -322,31 +243,10 @@ class OrderCommission extends AbstractCommissionCalculator {
      *
      * @return float|int
      */
-    public function get_total_vendor_fees() {
+    public function get_total_vendor_fees(): float {
         return $this->get_vendor_shipping_fee() + $this->get_vendor_tax_fee() + $this->get_vendor_shipping_tax_fee() - $this->get_vendor_gateway_fee();
     }
 
-    /**
-     * Get admin total earning.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return float|int
-     */
-    public function get_admin_total_earning() {
-        return $this->get_admin_net_commission() + $this->get_total_admin_fees();
-    }
-
-    /**
-     * Get vendor total earning.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return float|int
-     */
-    public function get_vendor_total_earning() {
-        return $this->get_vendor_net_earning() + $this->get_total_vendor_fees();
-    }
 
     /**
      * Get dokan gateway fee.
@@ -379,7 +279,7 @@ class OrderCommission extends AbstractCommissionCalculator {
      *
      * @return float|int
      */
-    public function get_vendor_gateway_fee() {
+    public function get_vendor_gateway_fee(): float {
         $gateway_fee = $this->get_dokan_gateway_fee();
 
         if ( ! empty( $gateway_fee['fee'] ) && self::SELLER === $gateway_fee['paid_by'] ) {
@@ -427,5 +327,6 @@ class OrderCommission extends AbstractCommissionCalculator {
 
         $this->vendor_discount    = 0;
         $this->vendor_net_earning = 0;
+        $this->is_calculated      = false;
     }
 }

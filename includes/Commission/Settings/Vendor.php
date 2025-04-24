@@ -80,12 +80,14 @@ class Vendor implements InterfaceSetting {
      *     @type array  $category_commissions
      * }
      *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
+     * @return void
      */
-    public function save( array $setting ): Setting {
+    public function save( array $setting ) {
         if ( ! $this->vendor->get_id() ) {
             return $this->get();
         }
+
+        $setting = apply_filters( 'dokan_vendor_commission_settings_before_save', $setting, $this->vendor );
 
         $percentage           = isset( $setting['percentage'] ) ? $setting['percentage'] : '';
         $type                 = isset( $setting['type'] ) ? $setting['type'] : '';
@@ -97,7 +99,7 @@ class Vendor implements InterfaceSetting {
         $this->vendor->update_meta( 'dokan_admin_additional_fee', $flat );
         $this->vendor->update_meta( 'admin_category_commission', $category_commissions );
 
-        return $this->get();
+        do_action( 'dokan_vendor_commission_settings_after_save', $setting, $this->vendor );
     }
 
     public function delete() {

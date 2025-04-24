@@ -6,7 +6,13 @@ use WeDevs\Dokan\Commission\Contracts\CommissionInterface;
 
 class Commission implements CommissionInterface {
     protected float $admin_net_commission;
-    protected float $vendor_earning;
+    /**
+     * Vendor Earning without subsidy.
+     *
+     * @var float
+     */
+    protected float $vendor_net_earning;
+
     protected float $admin_discount;
     protected float $vendor_discount;
 
@@ -58,9 +64,9 @@ class Commission implements CommissionInterface {
      * @param float $vendor_earning The earning amount for the vendor.
      * @return self
      */
-    public function set_vendor_earning(float $vendor_earning): self
+    public function set_vendor_net_earning( float $vendor_earning_without_subsidy ): self
     {
-        $this->vendor_earning = $vendor_earning;
+        $this->vendor_net_earning = $vendor_earning_without_subsidy;
 
         return $this;
     }
@@ -72,7 +78,7 @@ class Commission implements CommissionInterface {
      */
     public function get_vendor_net_earning(): float
     {
-        return $this->get_vendor_earning() - $this->get_admin_subsidy();
+        return $this->vendor_net_earning;
     }
 
     /**
@@ -123,7 +129,7 @@ class Commission implements CommissionInterface {
 
     public function get_vendor_earning(): float
     {
-        return $this->vendor_earning;
+        return $this->get_vendor_net_earning() + $this->get_admin_subsidy();
     }
 
     public function get_admin_commission(): float

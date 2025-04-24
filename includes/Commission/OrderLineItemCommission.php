@@ -94,10 +94,13 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
 
         $total_quantity = $this->item->get_quantity();
 
+        /** @var \WeDevs\Dokan\Commission\Strategies\AbstractStrategy */
         $strategy = apply_filters(
             'dokan_order_line_item_commission_strategies',
             new OrderItem( $this->item, $item_price, $total_quantity, $this->vendor_id )
         );
+
+        $strategy->save_settings_to_order_item( $this->item );
 
         /**
          * @var \WeDevs\Dokan\Commission\Model\Setting $settings
@@ -115,25 +118,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             ->calculate();
 
         $commission_data = $this->adjust_refunds( $commission_data );
-
-        $percentage = $settings->get_percentage();
-        $type       = $settings->get_type();
-        $flat       = $settings->get_flat();
-
-        // Saving commission data to line items for further reuse.
-        ( new \WeDevs\Dokan\Commission\Settings\OrderItem(
-            [
-                'id'    => $this->item->get_id(),
-                'price' => $item_price,
-            ]
-        ) )->save(
-            [
-                'commission_source'   => $settings->get_source(),
-                'type'       => $type,
-                'percentage' => $percentage,
-                'flat'       => $flat,
-            ]
-        );
 
         return $commission_data;
     }
@@ -153,7 +137,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $vendor_earning_after_refund = $vendor_earning - $vendor_earning_for_refund;
 
         $commission->set_admin_net_commission( $admin_commission_after_refund )
-            ->set_vendor_earning( $vendor_earning_after_refund );
+            ->set_vendor_net_earning( $vendor_earning_after_refund );
 
         return $commission;
     }

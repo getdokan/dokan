@@ -170,7 +170,7 @@ class Hooks {
                         $order_commission->set_order( $order );
                         $order_commission->get();
 
-                        $commission = $order_commission->get_admin_total_earning();
+                        $commission = $order_commission->get_admin_commission();
                     } catch ( Exception $e ) {
                         $commission = 0;
                     }

@@ -16,7 +16,7 @@
  */
 
 use WeDevs\Dokan\Commission\OrderLineItemCommission;
-$total_commission = $order_commission->get_admin_total_earning();
+$total_commission = $order_commission->get_admin_commission();
 $total_commission = 0 > $total_commission ? 0 : $total_commission;
 
 $order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
@@ -207,7 +207,7 @@ foreach ( $order->get_refunds() as $refund ) {
                     <td class="total">
                         <?php
                         echo wc_price(
-                            $order_commission->get_vendor_total_earning(), array(
+                            $order_commission->get_vendor_earning(), array(
 								'currency' => $order->get_currency(),
 								'decimals' => wc_get_price_decimals(),
                             )
