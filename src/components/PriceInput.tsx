@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
-
+import { twMerge } from 'tailwind-merge';
 import { MaskedInput } from '@getdokan/dokan-ui';
 import type { MaskedInputProps } from '@getdokan/dokan-ui/dist/components/MaskedInput';
 import type { SimpleInputProps } from '@getdokan/dokan-ui/dist/components/SimpleInput';
@@ -25,7 +25,6 @@ export const DokanPriceInput = ( props: DokanPriceInputProps ) => {
     const InputProps: DokanPriceInputProps = {
         label: __( 'Amount', 'dokan-lite' ),
         className: 'focus:border-none',
-        addOnLeft: currencySymbol,
         maskRule: {
             numeral: true,
             numeralDecimalMark: window?.dokanFrontend?.currency?.decimal ?? '.',
@@ -45,6 +44,27 @@ export const DokanPriceInput = ( props: DokanPriceInputProps ) => {
         },
         ...props,
     };
+    const position = window?.dokanFrontend?.currency?.position ?? 'left';
+    switch ( position ) {
+        case 'left':
+        case 'left_space':
+            InputProps.addOnLeft = currencySymbol;
+            InputProps.className = twMerge(
+                'rounded-l-none',
+                InputProps.className
+            );
+            break;
+        case 'right':
+        case 'right_space':
+            InputProps.addOnRight = currencySymbol;
+            InputProps.className = twMerge(
+                'rounded-r-none',
+                InputProps.className
+            );
+            break;
+        default:
+            break;
+    }
 
     // Apply filter for mask input props.
     const snakeCaseNamespace = snakeCase( props.namespace );
