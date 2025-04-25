@@ -36,10 +36,31 @@ Dokan uses a semantic color system where colors represent specific meanings:
 /* Tertiary Button */
 --dokan-button-tertiary-text-color: #637381;
 --dokan-button-tertiary-hover-text-color: #7047EB;
---dokan-button-tertiary-background-color: #f3f4f6;
---dokan-button-tertiary-hover-background-color: #b5e7eb;
+--dokan-button-tertiary-background-color: #00000000;
+--dokan-button-tertiary-hover-background-color: #DACEFF;
 --dokan-button-tertiary-border-color: transparent;
 --dokan-button-tertiary-hover-border-color: #7047EB;
+
+/* Status Button Variables */
+--dokan-button-info-text-color: #ffffff;
+--dokan-button-info-hover-text-color: #ffffff;
+--dokan-button-info-background-color: #0B76B7;
+--dokan-button-info-hover-background-color: #2795d7;
+
+--dokan-button-success-text-color: #ffffff;
+--dokan-button-success-hover-text-color: #ffffff;
+--dokan-button-success-background-color: #07a67e;
+--dokan-button-success-hover-background-color: #11b68c;
+
+--dokan-button-warning-text-color: #ffffff;
+--dokan-button-warning-hover-text-color: #ffffff;
+--dokan-button-warning-background-color: #e9a905;
+--dokan-button-warning-hover-background-color: #fbbf24;
+
+--dokan-button-danger-text-color: #ffffff;
+--dokan-button-danger-hover-text-color: #ffffff;
+--dokan-button-danger-background-color: #e3050c;
+--dokan-button-danger-hover-background-color: #f23030;
 ```
 
 ### Sidebar Variables
@@ -54,27 +75,31 @@ Dokan uses a semantic color system where colors represent specific meanings:
 ```css
 /* Info Colors */
 --dokan-info-text-color: #0B76B7;
---dokan-info-light-text-color: #637381;
+--dokan-info-secondary-text-color: #637381;
 --dokan-info-background-color: #E9F9FF;
 --dokan-info-border-color: #E9F9FFFF;
+--dokan-info-hover-text-color: #3ea4e1;
 
 /* Success Colors */
 --dokan-success-text-color: #004434;
---dokan-success-light-text-color: #637381;
+--dokan-success-secondary-text-color: #637381;
 --dokan-success-background-color: #DAF8E6;
 --dokan-success-border-color: #DAF8E6FF;
+--dokan-success-hover-text-color: #09a77d;
 
 /* Warning Colors */
 --dokan-warning-text-color: #9D5425;
---dokan-warning-light-text-color: #D0915C;
+--dokan-warning-secondary-text-color: #D0915C;
 --dokan-warning-background-color: #FFFBEB;
 --dokan-warning-border-color: #FFFBEBFF;
+--dokan-warning-hover-text-color: #e9a904;
 
 /* Danger Colors */
 --dokan-danger-text-color: #BC1C21;
---dokan-danger-light-text-color: #F56060;
+--dokan-danger-secondary-text-color: #F56060;
 --dokan-danger-background-color: #FEF3F3;
 --dokan-danger-border-color: #FEF3F3FF;
+--dokan-danger-hover-text-color: #e5292e;
 ```
 
 ### Link Colors
@@ -152,181 +177,96 @@ Dokan uses a semantic color system where colors represent specific meanings:
 <div className="ring-dokan-warning">Warning Ring</div>
 <div className="ring-dokan-danger">Danger Ring</div>
 
-// Hover States
+// State Modifiers
 <div className="hover:text-dokan-btn">Hover Text</div>
 <div className="hover:bg-dokan-btn">Hover Background</div>
-<div className="hover:border-dokan-btn">Hover Border</div>
-<div className="hover:ring-dokan-btn">Hover Ring</div>
-
-// Focus States
 <div className="focus:text-dokan-btn">Focus Text</div>
 <div className="focus:bg-dokan-btn">Focus Background</div>
-<div className="focus:border-dokan-btn">Focus Border</div>
-<div className="focus:ring-dokan-btn">Focus Ring</div>
-
-// Active States
 <div className="active:text-dokan-btn">Active Text</div>
 <div className="active:bg-dokan-btn">Active Background</div>
-<div className="active:border-dokan-btn">Active Border</div>
-<div className="active:ring-dokan-btn">Active Ring</div>
-
-// Disabled States
-<div className="disabled:text-dokan-btn">Disabled Text</div>
-<div className="disabled:bg-dokan-btn">Disabled Background</div>
-<div className="disabled:border-dokan-btn">Disabled Border</div>
-<div className="disabled:ring-dokan-btn">Disabled Ring</div>
-
-// Combined States
-<button className="
-  text-dokan-btn 
-  bg-dokan-btn 
-  border-dokan-btn 
-  ring-dokan-btn 
-  hover:text-dokan-btn-hover 
-  hover:bg-dokan-btn-hover 
-  hover:border-dokan-btn-hover 
-  hover:ring-dokan-btn-hover 
-  focus:text-dokan-btn-hover 
-  focus:bg-dokan-btn-hover 
-  focus:border-dokan-btn-hover 
-  focus:ring-dokan-btn-hover 
-  active:text-dokan-btn-hover 
-  active:bg-dokan-btn-hover 
-  active:border-dokan-btn-hover 
-  active:ring-dokan-btn-hover 
-  disabled:opacity-60 
-  disabled:cursor-not-allowed
-">
-  Interactive Button
-</button>
+<div className="disabled:opacity-60">Disabled State</div>
 ```
 
-## Component Styling
+## Component CSS Classes
 
-### Button Styling with Hover
+Dokan defines specific CSS classes for component styling that ensure consistent appearance across the application. These classes are implemented in SCSS and apply Tailwind utility classes.
+
+### Button Styles
+
 ```css
+/* Primary Button */
 .dokan-btn {
-  @apply relative bg-dokan-btn text-dokan-btn border-dokan-btn ring-dokan-btn transition-colors duration-200;
+  @apply relative ring-0 ring-offset-0 bg-dokan-btn text-dokan-btn border-dokan-btn ring-dokan-btn transition-colors duration-200 !important;
+
+  &:hover {
+    @apply ring-0 ring-offset-0 bg-dokan-btn-hover text-dokan-btn-hover border-dokan-btn-hover !important;
+  }
+
+  &:focus {
+    @apply ring-0 ring-offset-0 !important;
+  }
+
+  &:disabled {
+    @apply opacity-60 cursor-not-allowed !important;
+  }
 }
 
-.dokan-btn:hover,
-.dokan-btn:focus {
-  @apply bg-dokan-btn-hover text-dokan-btn-hover border-dokan-btn-hover ring-dokan-btn-hover;
+/* Additional button variants */
+.dokan-btn-secondary {
+  @apply relative ring-0 ring-offset-0 bg-dokan-btn-secondary text-dokan-btn-secondary border-dokan-btn-secondary ring-dokan-btn-secondary transition-colors duration-200 !important;
+  /* Hover and focus states */
 }
 
-.dokan-btn:disabled {
-  @apply opacity-60 cursor-not-allowed;
+.dokan-btn-tertiary {
+  @apply relative ring-0 ring-offset-0 bg-dokan-btn-tertiary text-dokan-btn-tertiary border-dokan-btn-tertiary ring-dokan-btn-tertiary transition-colors duration-200 !important;
+  /* Hover and focus states */
 }
 
+/* Status Buttons */
+.dokan-btn-info {
+  @apply relative bg-dokan-btn-info text-dokan-btn-info border-dokan-btn-info ring-dokan-btn-info transition-colors duration-200 !important;
+  /* Hover and focus states */
+}
+
+/* Size Variants */
 .dokan-btn-sm {
-  @apply relative px-2 py-1 text-sm;
+  @apply relative px-2 py-1 text-sm !important;
 }
 
 .dokan-btn-lg {
-  @apply relative px-6 py-3 text-lg;
-}
-
-/* Status Button Hover States */
-.dokan-btn-info:hover,
-.dokan-btn-info:focus {
-  @apply bg-blue-600 text-white;
-}
-
-.dokan-btn-success:hover,
-.dokan-btn-success:focus {
-  @apply bg-green-600 text-white;
-}
-
-.dokan-btn-warning:hover,
-.dokan-btn-warning:focus {
-  @apply bg-yellow-600 text-white;
-}
-
-.dokan-btn-danger:hover,
-.dokan-btn-danger:focus {
-  @apply bg-red-600 text-white;
+  @apply relative px-6 py-3 text-lg !important;
 }
 ```
 
-### Badge Styling with Hover
+### Badge Styles
+
 ```css
 .dokan-badge-info {
-  @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info transition-colors duration-200;
+  @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info !important;
 }
 
-.dokan-badge-info:hover {
-  @apply bg-dokan-info text-dokan-info;
-}
-
-.dokan-badge-success {
-  @apply relative ring-1 ring-inset bg-dokan-success text-dokan-success ring-dokan-success transition-colors duration-200;
-}
-
-.dokan-badge-success:hover {
-  @apply bg-dokan-success text-dokan-success;
-}
-
-.dokan-badge-warning {
-  @apply relative ring-1 ring-inset bg-dokan-warning text-dokan-warning ring-dokan-warning transition-colors duration-200;
-}
-
-.dokan-badge-warning:hover {
-  @apply bg-dokan-warning text-dokan-warning;
-}
-
-.dokan-badge-danger {
-  @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger ring-dokan-danger transition-colors duration-200;
-}
-
-.dokan-badge-danger:hover {
-  @apply bg-dokan-danger text-dokan-danger;
-}
+/* Additional badge variants */
 ```
 
-### Alert Styling with Hover
+### Alert Styles
+
 ```css
 .dokan-alert-info {
-  @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info-light ring-dokan-info transition-colors duration-200;
+  @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info-secondary ring-dokan-info !important;
 }
 
-.dokan-alert-info:hover {
-  @apply bg-dokan-info text-dokan-info-light;
-}
-
-.dokan-alert-success {
-  @apply relative ring-1 ring-inset bg-dokan-success text-dokan-success-light ring-dokan-success transition-colors duration-200;
-}
-
-.dokan-alert-success:hover {
-  @apply bg-dokan-success text-dokan-success-light;
-}
-
-.dokan-alert-warning {
-  @apply relative ring-1 ring-inset bg-dokan-warning text-dokan-warning-light ring-dokan-warning transition-colors duration-200;
-}
-
-.dokan-alert-warning:hover {
-  @apply bg-dokan-warning text-dokan-warning-light;
-}
-
-.dokan-alert-danger {
-  @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger-light ring-dokan-danger transition-colors duration-200;
-}
-
-.dokan-alert-danger:hover {
-  @apply bg-dokan-danger text-dokan-danger-light;
-}
+/* Additional alert variants */
 ```
 
-### Link Styling with Hover
+### Link Styles
+
 ```css
 .dokan-link {
-  @apply relative text-dokan-link no-underline transition-colors duration-200;
-}
+  @apply relative text-dokan-link no-underline transition-colors duration-200 !important;
 
-.dokan-link:hover,
-.dokan-link:focus {
-  @apply text-dokan-link-hover underline;
+  &:hover, &:focus {
+    @apply text-dokan-link-hover !important;
+  }
 }
 ```
 
@@ -334,21 +274,25 @@ Dokan uses a semantic color system where colors represent specific meanings:
 
 1. **Consistent Usage**
    - Use predefined CSS variables for colors
-   - Use utility classes for styling
+   - Use component classes for common UI elements
+   - Use utility classes for custom styling
    - Follow semantic color meanings
 
 2. **Accessibility**
    - Ensure sufficient contrast ratios
    - Use appropriate text colors for backgrounds
-   - Maintain focus states
+   - Maintain focus states for interactive elements
+   - Test with screen readers and keyboard navigation
 
 3. **Component Usage**
    - Use the appropriate component class for each element
    - Combine with utility classes when needed
-   - Follow the established patterns
+   - Follow the established patterns for consistent user experience
+   - Use the `.dokan-layout` container to ensure proper styling
 
 4. **Maintenance**
-   - Use CSS variables for global changes
+   - Use CSS variables for global color changes
+   - Update the base Tailwind config for new color additions
    - Follow the established naming conventions
    - Keep styles consistent across components
 
@@ -405,4 +349,30 @@ Dokan uses a semantic color system where colors represent specific meanings:
   <a href="#" className="dokan-link">Contact Support</a>
   <a href="#" className="dokan-link">Privacy Policy</a>
   <a href="#" className="dokan-link">Terms of Service</a>
+  <a href="#" className="dokan-link-danger">Terms of Service</a>
 </div>
+```
+
+### Combined Implementation
+
+For more complex UI, combine component classes with utility classes:
+
+```jsx
+<div className="p-4 rounded-lg bg-white shadow">
+  <h2 className="text-lg font-semibold mb-4">Vendor Status</h2>
+  
+  <div className="flex items-center justify-between mb-4">
+    <span className="dokan-badge-success">Active</span>
+    <button className="dokan-btn-sm">Edit Status</button>
+  </div>
+  
+  <div className="dokan-alert-info mb-4">
+    Your store is currently visible to customers.
+  </div>
+  
+  <div className="flex justify-end gap-2">
+    <button className="dokan-btn-tertiary">Cancel</button>
+    <button className="dokan-btn">Save Changes</button>
+  </div>
+</div>
+```
