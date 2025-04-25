@@ -145,29 +145,24 @@ const baseConfig = {
                             hover: 'var(--dokan-button-tertiary-hover-border-color, var(--dokan-button-border-color, #7047EB))',
                         },
                         info: {
-                            DEFAULT:
-                                'var(--dokan-button-info-background-color, #0B76B7)',
+                            DEFAULT: 'var(--dokan-button-info-background-color, #0B76B7)',
                             hover: 'var(--dokan-button-info-hover-background-color, #2795d7)',
                         },
                         success: {
-                            DEFAULT:
-                                'var(--dokan-button-success-background-color, #07a67e)',
+                            DEFAULT: 'var(--dokan-button-success-background-color, #07a67e)',
                             hover: 'var(--dokan-button-success-hover-background-color, #11b68c)',
                         },
                         warning: {
-                            DEFAULT:
-                                'var(--dokan-button-warning-background-color, #e9a905)',
+                            DEFAULT: 'var(--dokan-button-warning-background-color, #e9a905)',
                             hover: 'var(--dokan-button-warning-hover-background-color, #fbbf24)',
                         },
                         danger: {
-                            DEFAULT:
-                                'var(--dokan-button-danger-background-color, #e3050c)',
+                            DEFAULT: 'var(--dokan-button-danger-background-color, #e3050c)',
                             hover: 'var(--dokan-button-danger-hover-background-color, #f23030)',
                         },
                     },
                     link: {
-                        DEFAULT:
-                            'var(--dokan-link-color, var(--dokan-button-background-color, #7047EB))',
+                        DEFAULT: 'var(--dokan-link-color, var(--dokan-button-background-color, #7047EB))',
                         hover: 'var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #322067))',
                     },
                     info: {
