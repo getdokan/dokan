@@ -35,40 +35,91 @@ abstract class AbstractStrategy {
     abstract public function set_settings();
 
     /**
-     * Returns commission settings.
+     * Returns the commission settings from the first applicable strategy in the chain.
      *
-     * @since 3.14.0
+     * @since DOKAN_SINCE
      *
-     * @return Setting
+     * @return \WeDevs\Dokan\Commission\Model\Setting|null
      */
-	public function get_settings(): ?Setting {
+    public function get_settings(): ?Setting {
+        return $this->get_eligible_strategy()?->settings;
+    }
+
+    /**
+     * Returns the first strategy in the chain that has applicable commission settings.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return \WeDevs\Dokan\Commission\Strategies\AbstractStrategy|null
+     */
+    public function get_eligible_strategy(): ?AbstractStrategy {
         $this->settings->set_source( $this->get_source() );
 
         if ( $this->settings->is_applicable() ) {
-            return $this->settings;
+            return $this;
         }
-    
-        return $this->get_next() ? $this->get_next()->get_settings() : null;
+
+        return $this->get_next()?->get_eligible_strategy();
     }
 
-
+    /**
+     * Gets the next fallback strategy in the chain.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return \WeDevs\Dokan\Commission\Strategies\AbstractStrategy|null
+     */
     public function get_next(): ?AbstractStrategy {
         return $this->next;
     }
 
+    /**
+     * Sets the next fallback strategy in the chain.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WeDevs\Dokan\Commission\Strategies\AbstractStrategy $next
+     *
+     * @return \WeDevs\Dokan\Commission\Strategies\AbstractStrategy
+     */
     public function set_next( AbstractStrategy $next ): AbstractStrategy {
         $this->next = $next;
 
         return $this;
     }
 
+    /**
+     * Saves the applicable commission settings to the order item.
+     *
+     * Only applies if this is an instance of OrderItemStrategy and a valid setting is found.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Order_Item $order_item WooCommerce order item instance.
+     *
+     * @return void
+     */
     public function save_settings_to_order_item( WC_Order_Item $order_item ): void {
-        if ( ! $this instanceof OrderItemStrategy ) {
-            return; // Already saved in the line item since it was retrieved from the order item.
+        $settings = $this->get_settings();
+
+        if ( ! $settings || ! $this instanceof OrderItemStrategy ) {
+            return;
         }
 
-        $item_settings = new OrderItemSetting($order_item );
+        $this->get_order_item_setting_saver( $order_item )->save( $settings );
+    }
 
-        $item_settings->save( $this->settings );
+    /**
+     * Returns an instance of OrderItemSetting to save commission settings to the order item.
+     * Useful for mocking during unit tests.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Order_Item $order_item WooCommerce order item.
+     *
+     * @return \WeDevs\Dokan\Commission\Settings\OrderItem
+     */
+    protected function get_order_item_setting_saver( WC_Order_Item $order_item ): OrderItemSetting {
+        return new OrderItemSetting( $order_item );
     }
 }

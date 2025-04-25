@@ -39,7 +39,7 @@ class OrderItem  implements InterfaceSetting {
         $additional_flat       = '';
         $commission_meta       = [];
 
-        if ( ! empty( $this->order_item_id ) ) {
+        if ( ! empty( $this->order_item ) ) {
             $commission_percentage = $this->order_item->get_meta( '_dokan_commission_rate', true ) ?? '';
             $commission_type       = $this->order_item->get_meta( '_dokan_commission_type', true ) ?? '';
             $commission_source     = $this->order_item->get_meta( '_dokan_commission_source', true ) ?? '';
@@ -77,7 +77,6 @@ class OrderItem  implements InterfaceSetting {
      * @return void
      */
     public function save( Setting $settings ): void {
-       
         $settings = apply_filters( 'dokan_order_line_item_commission_settings_before_save', $settings, $this->order_item );
 
         $this->order_item->update_meta_data( '_dokan_commission_source', $settings->get_source() ?? '' );

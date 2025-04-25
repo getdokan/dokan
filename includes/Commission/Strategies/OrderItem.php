@@ -9,7 +9,6 @@ use WeDevs\Dokan\Commission\Model\Setting;
  * It's important cause commission rate may get changed by admin during the order table `re-generation`.
  */
 class OrderItem extends AbstractStrategy {
-
     /**
      * Order item commission strategy source.
      *
@@ -27,23 +26,10 @@ class OrderItem extends AbstractStrategy {
     protected $order_item;
 
     /**
-     * Total price amount.
+     * The vendor id of the order item.
      *
-     * @since 3.14.0
-     *
-     * @var int|mixed $total_amount
+     * @var integer
      */
-    protected $total_amount;
-
-    /**
-     * Total order quantity.
-     *
-     * @since 3.14.0
-     *
-     * @var int|mixed $total_quantity
-     */
-    protected $total_quantity;
-
     protected $vendor_id = 0;
 
     /**
@@ -57,10 +43,8 @@ class OrderItem extends AbstractStrategy {
      *
      * @return void
      */
-    public function __construct( $order_item = '', $total_amount = 0, $total_quantity = 1, $vendor_id = 0 ) {
+    public function __construct( $order_item = '', $vendor_id = 0 ) {
         $this->order_item     = $order_item;
-        $this->total_amount   = $total_amount;
-        $this->total_quantity = $total_quantity;
 
         $this->vendor_id = $vendor_id ? $vendor_id : dokan_get_vendor_by_product( $order_item->get_product_id(), true );
 
@@ -106,4 +90,3 @@ class OrderItem extends AbstractStrategy {
         return $this->order_item->get_id();
     }
 }
-
