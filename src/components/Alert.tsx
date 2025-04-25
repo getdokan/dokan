@@ -3,9 +3,9 @@ import * as React from 'react';
 import { SimpleAlert } from '@getdokan/dokan-ui';
 import type { SimpleAlertProps } from '@getdokan/dokan-ui/dist/components/SimpleAlert';
 
-type AlertVariant = 'info' | 'warning' | 'success' | 'danger';
+export type AlertVariant = 'info' | 'warning' | 'success' | 'danger';
 
-interface DokanAlertProps extends Partial< SimpleAlertProps > {
+export interface DokanAlertProps extends Partial< SimpleAlertProps > {
     variant?: AlertVariant;
     label: string;
     className?: string;

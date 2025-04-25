@@ -5,7 +5,7 @@ import { debounce } from '@wordpress/compose';
 import { Modal } from '@getdokan/dokan-ui';
 import { useCallback, useState } from '@wordpress/element';
 import DialogIcon from './DialogIcon';
-import DokanButton from '../Button';
+import DokanButton, { ButtonVariant } from '../Button';
 
 interface DokanModalProps {
     isOpen: boolean;
@@ -23,7 +23,7 @@ interface DokanModalProps {
     dialogContent?: JSX.Element;
     dialogFooter?: JSX.Element;
     loading?: boolean;
-    confirmButtonVariant?: string;
+    confirmButtonVariant?: ButtonVariant;
 }
 
 const DokanModal = ( {
@@ -42,7 +42,7 @@ const DokanModal = ( {
     dialogFooter,
     dialogContent,
     loading = false,
-    confirmButtonVariant = 'danger',
+    confirmButtonVariant = 'primary',
 }: DokanModalProps ) => {
     if ( ! namespace ) {
         throw new Error(
