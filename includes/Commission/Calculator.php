@@ -91,18 +91,18 @@ class Calculator extends AbstractCommissionCalculator {
      * @return Commission
      */
     public function calculate(): Commission {
-        $total_discount  = $this->get_discount()->get_total_discount();
+        $total_discount = $this->get_discount()->get_total_discount();
 
-        $raw_admin_commission = $this->calculate_raw_admin_commission( );
+        $raw_admin_commission = $this->calculate_raw_admin_commission();
 
         $net_amount       = $this->subtotal - $total_discount;
         $admin_commission = min( $raw_admin_commission, $net_amount );
 
-        $vendor_earning   = $net_amount;
+        $vendor_earning = $net_amount;
 
-        if ($admin_commission > 0) {
-            $vendor_earning   = $net_amount - $admin_commission;
-        } 
+        if ( $admin_commission > 0 ) {
+            $vendor_earning = $net_amount - $admin_commission;
+        }
 
         return $this->create_commission(
             $admin_commission,
@@ -119,7 +119,7 @@ class Calculator extends AbstractCommissionCalculator {
      * @param float $admin_discount Discount given by admin.
      * @return float
      */
-    private function calculate_raw_admin_commission( ): float {
+    private function calculate_raw_admin_commission(): float {
         $vendor_discount = $this->get_discount()->get_vendor_discount();
         $admin_discount  = $this->get_discount()->get_admin_discount();
 
