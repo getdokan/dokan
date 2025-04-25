@@ -54,11 +54,15 @@ class VendorBalanceUpdateHandler implements Hookable {
             return;
         }
 
-        $this->update_balance( $order, $vendor_earning );
+        $updated = $this->update_balance( $order, $vendor_earning );
 
-        error_log(
+        if ( $updated ) {
+            return;
+        }
+
+        dokan_log(
             sprintf(
-                'Dokan: Order %d commission after save. Vendor Earning: %s, Previous Vendor Earning: %s',
+                'For Order %d Edit event, Vendor Balance entry could not be updated. Current Vendor Earning: %s, Previous Vendor Earning: %s',
                 $order_id,
                 $vendor_earning,
                 $previous_data
