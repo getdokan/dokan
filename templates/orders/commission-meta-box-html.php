@@ -15,7 +15,6 @@
  * @package dokan
  */
 
-use WeDevs\Dokan\Commission\OrderLineItemCommission;
 $total_commission = $order_commission->get_admin_commission();
 $total_commission = 0 > $total_commission ? 0 : $total_commission;
 
@@ -80,18 +79,8 @@ foreach ( $order->get_refunds() as $refund ) {
                     $commission   = 0;
                     $commission_type      = '';
                     $admin_commission     = '';
-
-                    try {
-                        $product_commission = dokan_get_container()->get( OrderLineItemCommission::class );
-                        $product_commission->set_order( $order );
-                        $product_commission->set_item( $item );
-                        $commission_data = $product_commission->get();
-
-                        $commission_type      = $commission_data->get_settings()->get_type();
-                        $admin_commission     = $commission_data->get_admin_commission();
-                    } catch ( \Exception $exception ) {
-                        dokan_log( $exception->getMessage() );
-                    }
+                    $commission_data = $order_commission->get_commission_for_line_item( $item_id );
+            
 
                     $commission_type_html = $all_commission_types[ $commission_type ] ?? '';
                     ?>

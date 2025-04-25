@@ -20,8 +20,12 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     const SELLER = 'seller';
     const ADMIN  = 'admin';
 
-
     protected $is_calculated = false;
+
+    /**
+     * @var Commission[] $admin_net_commission
+     */
+    protected $commission_by_line_item = [];
 
     /**
      * Get order.
@@ -71,8 +75,10 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         foreach ( $this->order->get_items() as $item_id => $item ) {
             try {
                 $line_item_commission = dokan_get_container()->get( OrderLineItemCommission::class );
+                $line_item_commission->set_should_adjust_refund( $this->get_should_adjust_refund() );
                 $line_item_commission->set_order( $this->order );
                 $line_item_commission->set_item( $item );
+
                 $commission = $line_item_commission->calculate();
 
                 $admin_net_commission += $commission->get_admin_net_commission();
@@ -80,8 +86,18 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
 
                 $vendor_net_earning += $commission->get_vendor_net_earning();
                 $vendor_discount    += $commission->get_vendor_discount();
+
+                $this->commission_by_line_item[ $item_id ] = $commission;
             } catch ( \Exception $exception ) {
                 // TODO: Handle exception.
+                dokan_log(
+                    sprintf(
+                        'Error calculating commission for order item %s: %s',
+                        $item_id,
+                        $exception->getMessage()
+                    ),
+                    'error'
+                );
             }
         }
 
@@ -328,5 +344,41 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         $this->vendor_discount    = 0;
         $this->vendor_net_earning = 0;
         $this->is_calculated      = false;
+    }
+
+    /**
+     * Retrieve the commission object for a specific line item.
+     *
+     * @param int $item_id Line item ID.
+     * @return Commission|null The commission object or null if not found.
+     */
+    public function get_commission_for_line_item( int $item_id ): ?Commission {
+        $commissions = $this->get_all_line_item_commissions();
+
+        return $commissions[ $item_id ] ?? null;
+    }
+
+    /**
+     * Retrieve all calculated commissions by line item.
+     *
+     * Ensures commission calculations are performed before returning.
+     *
+     * @return Commission[] Associative array of item ID => Commission.
+     */
+    public function get_all_line_item_commissions(): array {
+        $this->ensure_commissions_are_calculated();
+
+        return $this->commission_by_line_item;
+    }
+
+    /**
+     * Ensure commission calculations have been performed.
+     *
+     * Triggers calculation if not already done.
+     */
+    private function ensure_commissions_are_calculated(): void {
+        if ( ! $this->is_calculated ) {
+            $this->calculate();
+        }
     }
 }

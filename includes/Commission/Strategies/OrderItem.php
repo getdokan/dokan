@@ -2,8 +2,6 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Model\Setting;
-
 /**
  * If an order has been purchased previously, calculate the earning with the previously stated commission rate.
  * It's important cause commission rate may get changed by admin during the order table `re-generation`.
@@ -44,14 +42,13 @@ class OrderItem extends AbstractStrategy {
      * @return void
      */
     public function __construct( $order_item = '', $vendor_id = 0 ) {
-        $this->order_item     = $order_item;
+        $this->order_item = $order_item;
 
         $this->vendor_id = $vendor_id ? $vendor_id : dokan_get_vendor_by_product( $order_item->get_product_id(), true );
 
         parent::__construct();
-        
-        $this->set_next( new Product( $order_item->get_product_id(), $vendor_id ) );
 
+        $this->set_next( new Product( $order_item->get_product_id(), $vendor_id ) );
     }
 
     /**
@@ -62,8 +59,7 @@ class OrderItem extends AbstractStrategy {
      * @return string
      */
     public function get_source(): string {
-
-        return $this->settings->get_source() ?: self::SOURCE;
+        return $this->settings->get_source();
     }
 
     /**

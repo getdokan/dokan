@@ -107,9 +107,6 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
          */
         $settings = $strategy->get_settings();
 
-        $this->set_price( $item_price );
-        $this->set_quantity( $total_quantity );
-
         $commission_data = dokan_get_container()->get( Calculator::class )
             ->set_settings( $settings )
             ->set_subtotal( $item_price )
@@ -123,13 +120,17 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
     }
 
     public function adjust_refunds( Commission $commission ) {
+        if ( ! $this->get_should_adjust_refund() ) {
+            return $commission;
+        }
+
         $refund_amount = $this->order->get_total_refunded_for_item( $this->item->get_id() );
 
-        $item_total = $this->item->get_total() ?: $this->item->get_subtotal();
+        $item_total = $this->item->get_total() ? $this->item->get_total() : $this->item->get_subtotal();
 
         $vendor_earning = $commission->get_vendor_net_earning();
         $admin_commission = $commission->get_admin_net_commission();
-        
+
         $vendor_earning_for_refund = $vendor_earning / $item_total * $refund_amount;
         $admin_commission_for_refund = $admin_commission / $item_total * $refund_amount;
 
