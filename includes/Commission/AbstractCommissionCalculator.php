@@ -5,20 +5,14 @@ namespace WeDevs\Dokan\Commission;
 use WeDevs\Dokan\Commission\Model\Commission;
 use WeDevs\Dokan\Commission\Model\Setting;
 
-abstract class AbstractCommissionCalculator {
+abstract class AbstractCommissionCalculator extends Commission {
 
     protected Setting $settings;
 
-
     /**
-     * @var float $price
+     * @var bool $should_adjust_refund
      */
-    protected float $price;
-
-    /**
-     * @var int $quantity
-     */
-    protected int $quantity = 1;
+    protected bool $should_adjust_refund = true;
 
     /**
      * Returns the applied strategy.
@@ -38,29 +32,13 @@ abstract class AbstractCommissionCalculator {
      */
     abstract public function get(): Commission;
 
-    /**
-     * Set price.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param float $price
-     *
-     * @return void
-     */
-    public function set_price( float $price ) {
-        $this->price = $price;
+    public function set_should_adjust_refund( bool $should_adjust_refund ): self {
+        $this->should_adjust_refund = $should_adjust_refund;
+
+        return $this;
     }
 
-    /**
-     * Set quantity.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param int $quantity
-     *
-     * @return void
-     */
-    public function set_quantity( int $quantity ) {
-        $this->quantity = $quantity;
+    public function get_should_adjust_refund(): bool {
+        return $this->should_adjust_refund;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Model\Setting;
 use WeDevs\Dokan\ProductCategory\Helper;
 
 class Product extends AbstractStrategy {

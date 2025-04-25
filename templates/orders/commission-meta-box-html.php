@@ -15,8 +15,7 @@
  * @package dokan
  */
 
-use WeDevs\Dokan\Commission\OrderLineItemCommission;
-$total_commission = $order_commission->get_admin_total_earning();
+$total_commission = $order_commission->get_admin_commission();
 $total_commission = 0 > $total_commission ? 0 : $total_commission;
 
 $order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
@@ -80,18 +79,8 @@ foreach ( $order->get_refunds() as $refund ) {
                     $commission   = 0;
                     $commission_type      = '';
                     $admin_commission     = '';
-
-                    try {
-                        $product_commission = dokan_get_container()->get( OrderLineItemCommission::class );
-                        $product_commission->set_order( $order );
-                        $product_commission->set_item( $item );
-                        $commission_data = $product_commission->get();
-
-                        $commission_type      = $commission_data->get_type();
-                        $admin_commission     = $commission_data->get_admin_commission();
-                    } catch ( \Exception $exception ) {
-                        dokan_log( $exception->getMessage() );
-                    }
+                    $commission_data = $order_commission->get_commission_for_line_item( $item_id );
+            
 
                     $commission_type_html = $all_commission_types[ $commission_type ] ?? '';
                     ?>
@@ -144,7 +133,7 @@ foreach ( $order->get_refunds() as $refund ) {
                             </div>
                         </td>
                         <td width="1%">
-                            <div class="view" title="<?php echo esc_html( sprintf( __( 'Source: %s', 'dokan-lite'), $commission_data->get_source() ) ); ?>">
+                            <div class="view" title="<?php echo esc_html( sprintf( __( 'Source: %s', 'dokan-lite'), $commission_data->get_settings()->get_source() ) ); ?>">
                                 <?php echo esc_html( $commission_data->get_settings()->get_percentage() ); ?>%&nbsp;+&nbsp;<?php echo wc_price( $commission_data->get_settings()->get_flat() ); ?>
                             </div>
                         </td>
@@ -207,7 +196,7 @@ foreach ( $order->get_refunds() as $refund ) {
                     <td class="total">
                         <?php
                         echo wc_price(
-                            $order_commission->get_vendor_total_earning(), array(
+                            $order_commission->get_vendor_earning(), array(
 								'currency' => $order->get_currency(),
 								'decimals' => wc_get_price_decimals(),
                             )

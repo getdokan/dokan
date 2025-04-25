@@ -2,8 +2,6 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use Automattic\Jetpack\Sync\Defaults;
-use WeDevs\Dokan\Commission\Model\Setting;
 use WeDevs\Dokan\Commission\Settings\GlobalSetting;
 
 class GlobalStrategy extends AbstractStrategy {
@@ -35,7 +33,7 @@ class GlobalStrategy extends AbstractStrategy {
         $this->category_id = $category_id;
 
         parent::__construct();
-        
+
         $this->set_next( new DefaultStrategy() );
     }
 
@@ -68,7 +66,7 @@ class GlobalStrategy extends AbstractStrategy {
      *
      * @return void
      */
-    public function set_settings(){
+    public function set_settings() {
         $setting = new GlobalSetting( $this->get_category_id() );
 
         $this->settings = $setting->get();

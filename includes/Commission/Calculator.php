@@ -85,30 +85,75 @@ class Calculator extends AbstractCommissionCalculator {
         return $this;
     }
 
+    /**
+     * Calculates the commission based on discounts and settings.
+     *
+     * @return Commission
+     */
+    public function calculate(): Commission {
+        $total_discount = $this->get_discount()->get_total_discount();
 
-	/**
-	 * @inheritDoc
-	 */
-	public function calculate(): Commission {
-        $net_amount_with_admin_discount = $this->subtotal - $this->get_discount()->get_vendor_discount();
-        $admin_commission = ( $net_amount_with_admin_discount * $this->settings->get_percentage() / 100 ) + $this->settings->get_flat() * $this->quantity + $this->settings->get_combine_flat() - $this->get_discount()->get_admin_discount();
+        $raw_admin_commission = $this->calculate_raw_admin_commission();
 
-        $net_amount = $this->subtotal - $this->get_discount()->get_total_discount();
-        $admin_commission = min( $admin_commission, $net_amount );
-        
-        $vendor_earning = $net_amount - $admin_commission;
+        $net_amount       = $this->subtotal - $total_discount;
+        $admin_commission = min( $raw_admin_commission, $net_amount );
 
+        $vendor_earning = $net_amount;
+
+        if ( $admin_commission > 0 ) {
+            $vendor_earning = $net_amount - $admin_commission;
+        }
+
+        return $this->create_commission(
+            $admin_commission,
+            $vendor_earning,
+        );
+    }
+
+
+    /**
+     * Calculates the raw admin commission before capping.
+     *
+     * @param float $net_amount_with_admin_discount Amount after vendor discount.
+     * @param float $vendor_discount Discount given by vendor.
+     * @param float $admin_discount Discount given by admin.
+     * @return float
+     */
+    private function calculate_raw_admin_commission(): float {
+        $vendor_discount = $this->get_discount()->get_vendor_discount();
+        $admin_discount  = $this->get_discount()->get_admin_discount();
+
+        $net_amount_with_admin_discount = $this->subtotal - $vendor_discount;
+
+        $percentage_commission = ( $net_amount_with_admin_discount * $this->settings->get_percentage() ) / 100;
+        $flat_commission       = $this->settings->get_flat() * $this->quantity;
+        $combine_flat          = $this->settings->get_combine_flat();
+
+        return $percentage_commission + $flat_commission + $combine_flat - $admin_discount;
+    }
+
+    /**
+     * Creates the commission object with all related values.
+     *
+     * @param float $admin_commission Final admin commission.
+     * @param float $vendor_discount Vendor's discount.
+     * @param float $vendor_earning Vendor's earning.
+     * @param float $admin_discount Admin's discount.
+     * @return Commission
+     */
+    private function create_commission(
+        float $admin_commission,
+        float $vendor_earning,
+    ): Commission {
         $commission = new Commission();
-        $commission->set_net_admin_commission( $admin_commission );
+        $commission->set_admin_net_commission( $admin_commission );
         $commission->set_vendor_discount( $this->get_discount()->get_vendor_discount() );
-        $commission->set_vendor_earning( $vendor_earning );
+        $commission->set_vendor_net_earning( $vendor_earning );
         $commission->set_admin_discount( $this->get_discount()->get_admin_discount() );
-        
         $commission->set_settings( $this->settings );
-        
 
         return $commission;
-	}
+    }
 
 	/**
 	 * @inheritDoc
