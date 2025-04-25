@@ -189,6 +189,12 @@ class SetupWizard {
                 $version,
                 true
             );
+
+            wp_set_script_translations(
+                'dokan-admin-onboard-app',
+                'dokan-lite'
+            );
+
             wp_localize_script(
                 'dokan-admin-onboard-app',
                 'onboardingData',
