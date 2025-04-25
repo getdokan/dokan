@@ -1,7 +1,6 @@
-import { MaskedInput } from '@getdokan/dokan-ui';
-import { SettingsProps } from '../../StepSettings';
-import { useDebounceCallback } from 'usehooks-ts';
 import { RawHTML, useState } from '@wordpress/element';
+import { DokanCurrencyInput } from './DokanCurrencyInput';
+import { SettingsProps } from '../../StepSettings';
 
 const Currency = ( { element, onValueChange }: SettingsProps ) => {
     const [ localValue, setLocalValue ] = useState( element.value );
@@ -10,21 +9,16 @@ const Currency = ( { element, onValueChange }: SettingsProps ) => {
         return <></>;
     }
 
-    const handleValueChange = ( newValue ) => {
-        setLocalValue( newValue );
+    const handleValueChange = (
+        formattedValue: string,
+        unformattedValue: number
+    ) => {
+        setLocalValue( formattedValue );
         onValueChange( {
             ...element,
-            value: newValue,
+            value: formattedValue,
         } );
     };
-
-    const debouncedWithdrawAmount = useDebounceCallback(
-        handleValueChange,
-        500
-    );
-
-    const currencySymbol =
-        window?.dokanWithdrawDashboard?.currency?.symbol ?? '';
 
     return (
         <div
@@ -40,24 +34,13 @@ const Currency = ( { element, onValueChange }: SettingsProps ) => {
                 </p>
             </div>
             <div className="@sm/currency:col-span-4 col-span-12 flex items-center @sm/currency:justify-end">
-                <MaskedInput
-                    addOnLeft={ currencySymbol }
-                    value={ String( localValue ) }
-                    onChange={ ( e ) => {
-                        debouncedWithdrawAmount( e.target.value );
+                <DokanCurrencyInput
+                    namespace={ `currency-${ element.id }` }
+                    value={ localValue }
+                    onChange={ ( formattedValue, unformattedValue ) => {
+                        handleValueChange( formattedValue, unformattedValue );
                     } }
-                    maskRule={ {
-                        numeral: true,
-                        numeralDecimalMark:
-                            window?.dokanWithdrawDashboard?.currency?.decimal ??
-                            '.',
-                        delimiter:
-                            window?.dokanWithdrawDashboard?.currency
-                                ?.thousand ?? ',',
-                        numeralDecimalScale:
-                            window?.dokanWithdrawDashboard?.currency
-                                ?.precision ?? 2,
-                    } }
+                    label={ '' }
                     input={ {
                         autoComplete: 'off',
                         id: element?.id,
@@ -65,7 +48,7 @@ const Currency = ( { element, onValueChange }: SettingsProps ) => {
                         placeholder: String( element?.placeholder ),
                         type: element.type,
                     } }
-                    className={ `w-24 h-10 rounded-r rounded-l-none border-l-0 focus:border-gray-300` }
+                    className="w-24 h-10 rounded-r rounded-l border-l-0 focus:border-gray-300"
                 />
             </div>
         </div>

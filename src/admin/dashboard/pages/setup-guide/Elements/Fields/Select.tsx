@@ -1,6 +1,6 @@
 import { RawHTML, useState } from '@wordpress/element';
 import { SettingsProps } from '../../StepSettings';
-import { SimpleSelect } from '@getdokan/dokan-ui';
+import { FormSelect } from '@getdokan/dokan-ui';
 
 const Select = ( { element, onValueChange }: SettingsProps ) => {
     const initialValue = element.value ? element.value : element.default;
@@ -31,7 +31,7 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
                 </p>
             </div>
             <div className="flex w-[11rem]">
-                <SimpleSelect
+                <FormSelect
                     name={ element?.id }
                     label={ '' }
                     options={
@@ -40,6 +40,7 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
                             value: option?.value,
                         } ) ) || []
                     }
+                    multiple={ false }
                     value={ selectedOption }
                     onChange={ onHandleChange }
                 />
