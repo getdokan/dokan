@@ -66,7 +66,7 @@ function WithdrawRequests() {
                                     : 'font-normal'
                             ) }
                         >
-                            { __( 'Pending Requests', 'dokan' ) }
+                            { __( 'Pending Requests', 'dokan-lite' ) }
                         </Link>
                         <span className="border-r h-3"></span>
                         <Link
@@ -78,7 +78,7 @@ function WithdrawRequests() {
                                     : 'font-normal'
                             ) }
                         >
-                            { __( 'Approved Requests', 'dokan' ) }
+                            { __( 'Approved Requests', 'dokan-lite' ) }
                         </Link>
                         <span className="border-r h-3"></span>
                         <Link
@@ -90,7 +90,7 @@ function WithdrawRequests() {
                                     : 'font-normal'
                             ) }
                         >
-                            { __( 'Cancelled Requests', 'dokan' ) }
+                            { __( 'Cancelled Requests', 'dokan-lite' ) }
                         </Link>
                     </div>
                     <div className="flex flex-row gap-4">

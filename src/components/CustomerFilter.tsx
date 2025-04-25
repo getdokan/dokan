@@ -2,6 +2,7 @@ import { AsyncSearchableSelect } from '@getdokan/dokan-ui';
 import { useCustomerSearch } from '@dokan/hooks';
 import { useState } from '@wordpress/element';
 import { debounce } from '@wordpress/compose';
+import { __ } from "@wordpress/i18n";
 
 const CustomerFilter = ( props ) => {
     const customerHook = useCustomerSearch();
@@ -59,6 +60,7 @@ const CustomerFilter = ( props ) => {
             value={ getValue() }
             defaultOptions={ searchedCustomer }
             loadOptions={ handleCustomrSearch }
+            noOptionsMessage={ () => __( 'No options', 'dokan-lite' ) }
         />
     );
 };

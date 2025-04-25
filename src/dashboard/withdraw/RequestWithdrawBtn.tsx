@@ -104,7 +104,7 @@ function RequestWithdrawBtn( {
 
         if ( ! payload.amount ) {
             toast( {
-                title: __( 'Withdraw amount is required', 'dokan' ),
+                title: __( 'Withdraw amount is required', 'dokan-lite' ),
                 type: 'error',
             } );
             return;
@@ -116,14 +116,14 @@ function RequestWithdrawBtn( {
             .then( () => {
                 setIsOpen( false );
                 toast( {
-                    title: __( 'Withdraw request created.', 'dokan' ),
+                    title: __( 'Withdraw request created.', 'dokan-lite' ),
                     type: 'success',
                 } );
 
                 withdrawRequests.refresh();
             } )
             .catch( ( err ) => {
-                let message = __( 'Failed to create withdraw.', 'dokan' );
+                let message = __( 'Failed to create withdraw.', 'dokan-lite' );
 
                 if ( err?.message ) {
                     // @ts-ignore
@@ -171,7 +171,7 @@ function RequestWithdrawBtn( {
                     <>
                         <div>
                             <SearchableSelect
-                                label={ __( 'Withdraw method', 'dokan' ) }
+                                label={ __( 'Withdraw method', 'dokan-lite' ) }
                                 value={ getSelectValue( withdrawMethod ) }
                                 onChange={ ( e ) => {
                                     setWithdrawMethod( e.value );
@@ -185,7 +185,7 @@ function RequestWithdrawBtn( {
                         </div>
                         <div className="mt-3">
                             <MaskedInput
-                                label={ __( 'Withdraw amount', 'dokan' ) }
+                                label={ __( 'Withdraw amount', 'dokan-lite' ) }
                                 className="focus:border-none"
                                 addOnLeft={ currencySymbol }
                                 value={ withdrawAmount }
@@ -208,7 +208,7 @@ function RequestWithdrawBtn( {
                                     id: 'withdraw-amount',
                                     name: 'withdraw-amount',
                                     type: 'text',
-                                    placeholder: __( 'Enter amount', 'dokan' ),
+                                    placeholder: __( 'Enter amount', 'dokan-lite' ),
                                     required: true,
                                     disabled: false,
                                 } }
@@ -216,12 +216,12 @@ function RequestWithdrawBtn( {
                         </div>
                         <div className="mt-3">
                             <SimpleInput
-                                label={ __( 'Withdraw charge', 'dokan' ) }
+                                label={ __( 'Withdraw charge', 'dokan-lite' ) }
                                 className="pl-12"
                                 addOnLeft={ currencySymbol }
                                 value={
                                     isLoading
-                                        ? __( 'Calculating…', 'dokan' )
+                                        ? __( 'Calculating…', 'dokan-lite' )
                                         : getChargeFormated()
                                 }
                                 input={ {
@@ -235,12 +235,12 @@ function RequestWithdrawBtn( {
                         </div>
                         <div className="mt-3">
                             <SimpleInput
-                                label={ __( 'Receivable amount', 'dokan' ) }
+                                label={ __( 'Receivable amount', 'dokan-lite' ) }
                                 className="pl-12"
                                 addOnLeft={ currencySymbol }
                                 value={
                                     isLoading
-                                        ? __( 'Calculating…', 'dokan' )
+                                        ? __( 'Calculating…', 'dokan-lite' )
                                         : getRecivableFormated()
                                 }
                                 input={ {
@@ -316,7 +316,7 @@ function RequestWithdrawBtn( {
     return (
         <>
             <DokanButton onClick={ () => setIsOpen( true ) }>
-                { __( 'Request Withdraw', 'dokan' ) }
+                { __( 'Request Withdraw', 'dokan-lite' ) }
             </DokanButton>
 
             <Modal
@@ -326,7 +326,7 @@ function RequestWithdrawBtn( {
                 showXButton={ false }
             >
                 <Modal.Title className="border-b">
-                    { __( 'Send Withdraw Request', 'dokan' ) }
+                    { __( 'Send Withdraw Request', 'dokan-lite' ) }
                 </Modal.Title>
                 <Modal.Content className="">
                     <ModalContect />
@@ -337,7 +337,7 @@ function RequestWithdrawBtn( {
                             onClick={ () => setIsOpen( false ) }
                             variant="secondary"
                         >
-                            { __( 'Close', 'dokan' ) }
+                            { __( 'Close', 'dokan-lite' ) }
                         </DokanButton>
 
                         { ! hasWithdrawRequests &&
@@ -351,8 +351,8 @@ function RequestWithdrawBtn( {
                                     loading={ withdrawHook?.isLoading }
                                 >
                                     { withdrawHook?.isLoading
-                                        ? __( 'Creating…', 'dokan' )
-                                        : __( 'Submit request', 'dokan' ) }
+                                        ? __( 'Creating…', 'dokan-lite' )
+                                        : __( 'Submit request', 'dokan-lite' ) }
                                 </DokanButton>
                             ) }
                     </div>

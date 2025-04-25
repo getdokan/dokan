@@ -17,7 +17,7 @@ function DateTimeHtml( {
         <RawHTML>
             { sprintf(
                 // translators: %1$s: withdraw date, %2$s: withdraw time
-                __( '%1$s at %2$s', 'dokan' ),
+                __( '%1$s at %2$s', 'dokan-lite' ),
                 dateI18n(
                     getSettings().formats.date,
                     date,
