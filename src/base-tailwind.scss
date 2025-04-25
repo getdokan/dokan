@@ -168,6 +168,7 @@
             @apply text-dokan-link-hover #{!important};
         }
     }
+
     .dokan-link-info {
         @apply relative text-dokan-link-info no-underline transition-colors duration-200 #{!important};
 
@@ -175,6 +176,7 @@
             @apply text-dokan-link-info-hover #{!important};
         }
     }
+
     .dokan-link-success {
         @apply relative text-dokan-link-success no-underline transition-colors duration-200 #{!important};
 
@@ -182,6 +184,7 @@
             @apply text-dokan-link-success-hover #{!important};
         }
     }
+
     .dokan-link-warning {
         @apply relative text-dokan-link-warning no-underline transition-colors duration-200 #{!important};
 
@@ -189,6 +192,7 @@
             @apply text-dokan-link-warning-hover #{!important};
         }
     }
+
     .dokan-link-danger {
         @apply relative text-dokan-link-danger no-underline transition-colors duration-200 #{!important};
 
@@ -207,6 +211,14 @@
     }
 
     /* Badge Styles */
+    .dokan-badge-primary {
+        @apply relative ring-1 ring-inset bg-dokan-btn text-dokan-btn ring-dokan-btn #{!important};
+    }
+
+    .dokan-badge-secondary {
+        @apply relative ring-1 ring-inset bg-dokan-btn-secondary text-dokan-btn-secondary ring-dokan-btn-secondary #{!important};
+    }
+    
     .dokan-badge-info {
         @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info #{!important};
     }
