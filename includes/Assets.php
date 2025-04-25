@@ -7,6 +7,7 @@ use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\Utilities\OrderUtil;
+use WeDevs\Dokan\Utilities\ReportUtil;
 
 class Assets {
 
@@ -730,7 +731,7 @@ class Assets {
                 'routes'          => $this->get_vue_frontend_routes(),
                 'urls'            => [
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
-                    'dashboardUrl' => dokan_get_navigation_url(),
+                    'dashboardUrl' => dokan_get_navigation_url() . ( ReportUtil::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
                     'storeUrl'     => dokan_get_store_url( dokan_get_current_user_id() ),
                 ],
             ]
