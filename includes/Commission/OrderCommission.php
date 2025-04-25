@@ -389,4 +389,8 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     public function get_admin_total_earning(): float {
         return $this->get_admin_commission();
     }
+
+    public function get_vendor_total_earning(): float {
+        return $this->get_vendor_earning();
+    }
 }
