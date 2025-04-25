@@ -33,8 +33,7 @@ const baseConfig = {
                             hover: 'var(--dokan-button-tertiary-hover-background-color, #DACEFF)',
                         },
                         info: {
-                            DEFAULT:
-                                'var(--dokan-button-info-background-color, #0B76B7)',
+                            DEFAULT: 'var(--dokan-button-info-background-color, #0B76B7)',
                             hover: 'var(--dokan-button-info-hover-background-color, #2795d7)',
                         },
                         success: {
