@@ -38,7 +38,7 @@
         }
 
         /* Default link styles (for normal hyperlinks) */
-        a:not(.dokan-btn):not([class*="dokan-btn-"]) {
+        a:not(.dokan-btn):not([class*="dokan-btn-"], .skip-color-module) {
             @apply text-dokan-link transition-colors duration-200;
 
             &:hover, &:focus {

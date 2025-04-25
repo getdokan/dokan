@@ -48,7 +48,7 @@ const Card = ( {
                     <a
                         target="_blank"
                         href={ module.url }
-                        className="text-black hover:text-gray-600"
+                        className="text-black hover:text-gray-600 skip-color-module"
                         rel="noreferrer"
                     >
                         { module.title }
