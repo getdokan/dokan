@@ -10,13 +10,11 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
         return <></>;
     }
 
-    const onHandleChange = ( event ) => {
-        const selectedValue = event?.target?.value;
-
-        setSelectedOption( selectedValue );
+    const onHandleChange = ( value ) => {
+        setSelectedOption( value );
         onValueChange( {
             ...element,
-            value: selectedValue,
+            value,
         } );
     };
 
@@ -41,7 +39,7 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
                         } ) ) || []
                     }
                     multiple={ false }
-                    value={ selectedOption }
+                    value={ selectedOption as string }
                     onChange={ onHandleChange }
                 />
             </div>
