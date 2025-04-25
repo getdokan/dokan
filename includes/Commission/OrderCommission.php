@@ -249,7 +249,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float|int
      */
     public function get_total_admin_fees(): float {
-        return $this->get_admin_shipping_fee() + $this->get_admin_tax_fee() + $this->get_admin_shipping_tax_fee() - $this->get_admin_gateway_fee() - $this->get_admin_subsidy();
+        return $this->get_admin_shipping_fee() + $this->get_admin_tax_fee() + $this->get_admin_shipping_tax_fee() - $this->get_admin_gateway_fee();
     }
 
     /**
@@ -380,5 +380,13 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         if ( ! $this->is_calculated ) {
             $this->calculate();
         }
+    }
+
+    public function get_admin_commission(): float {
+        return $this->get_admin_net_commission() + $this->get_total_admin_fees() - $this->get_admin_subsidy();
+    }
+
+    public function get_admin_total_earning(): float {
+        return $this->get_admin_commission();
     }
 }

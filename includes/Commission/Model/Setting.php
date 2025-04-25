@@ -102,7 +102,7 @@ class Setting {
         return $this;
     }
 
-     /**
+    /**
      * Sets the commission type.
      *
      * @since 3.14.0
@@ -111,7 +111,7 @@ class Setting {
      *
      * @return $this
      */
-    public function set_source(string $source ): Setting {
+    public function set_source( string $source ): Setting {
         $this->source = $source;
 
         return $this;
@@ -179,7 +179,7 @@ class Setting {
      *
      * @return string
      */
-    public function get_source():string {
+    public function get_source(): string {
         return $this->source;
     }
 
@@ -190,15 +190,15 @@ class Setting {
      *
      * @return mixed|string
      */
-    public function get_flat( string $context = 'view'): float | string {
+    public function get_flat( string $context = 'view' ): float|string {
         if ( $context === 'edit' ) {
             return $this->flat;
         }
 
-        return $this->is_combined() ? 0 : floatval($this->flat);
+        return $this->is_combined() ? 0 : floatval( $this->flat );
     }
 
-     /**
+    /**
      * Returns the flat amount.
      *
      * @since 3.14.0
@@ -206,7 +206,7 @@ class Setting {
      * @return mixed|string
      */
     public function get_combine_flat(): float {
-        return $this->is_combined() ? floatval($this->flat) : 0;
+        return $this->is_combined() ? floatval( $this->flat ) : 0;
     }
 
     protected function is_combined(): bool {
@@ -220,7 +220,7 @@ class Setting {
      *
      * @return mixed|string
      */
-    public function get_percentage( string $context = 'view' ): float | string  {
+    public function get_percentage( string $context = 'view' ): float|string {
         if ( $context === 'edit' ) {
             return $this->percentage;
         }
@@ -251,6 +251,6 @@ class Setting {
     }
 
     public function is_applicable(): bool {
-        return  trim($this->percentage) !== '' || trim($this->flat) !== '';
+        return trim( $this->percentage ) !== '' || trim( $this->flat ) !== '';
     }
 }
