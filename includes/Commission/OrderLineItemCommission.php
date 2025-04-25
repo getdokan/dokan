@@ -47,10 +47,23 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      */
     protected array $coupon_infos = [];
 
+    /**
+     * Get the line item.
+     *
+     * @param \WC_Order_Item_Product $item
+     * @param \WC_Order              $order
+     */
     public function get_item(): WC_Order_Item {
         return $this->item;
     }
 
+    /**
+     * Set order item to calculate commission.
+     *
+     *
+     * @param WC_Order_Item $item
+     * @return void
+     */
     public function set_item( WC_Order_Item $item ): void {
         $this->item = $item;
 
@@ -58,6 +71,11 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $this->coupon_infos = $this->item->get_meta( Coupon::DOKAN_COUPON_META_KEY, true ) ?: [];
     }
 
+    /**
+     * Get the order of the associated line item to calculate the commission.
+     *
+     * @return \WC_Order
+     */
     public function get_order(): WC_Order {
         return $this->order;
     }
@@ -69,6 +87,12 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         return empty( $this->coupon_infos ) ? [] : $this->coupon_infos;
     }
 
+    /**
+     * Set order to calculate commission.
+     *
+     * @param WC_Order $order
+     * @return void
+     */
     public function set_order( WC_Order $order ): void {
         $this->order = $order;
         $this->vendor_id = (int) $this->order->get_meta( self::VENDOR_ID_META_KEY );
@@ -119,7 +143,14 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         return $commission_data;
     }
 
-    public function adjust_refunds( Commission $commission ) {
+    /**
+     * Check if the refund should be adjusted.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return Commission
+     */
+    public function adjust_refunds( Commission $commission ): Commission {
         if ( ! $this->get_should_adjust_refund() ) {
             return $commission;
         }
@@ -131,11 +162,17 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $vendor_earning = $commission->get_vendor_net_earning();
         $admin_commission = $commission->get_admin_net_commission();
 
-        $vendor_earning_for_refund = $vendor_earning / $item_total * $refund_amount;
-        $admin_commission_for_refund = $admin_commission / $item_total * $refund_amount;
+        $calculator = dokan_get_container()->get( Calculator::class );
 
-        $admin_commission_after_refund = $admin_commission - $admin_commission_for_refund;
-        $vendor_earning_after_refund = $vendor_earning - $vendor_earning_for_refund;
+        $refund_commission = $calculator->calculate_for_refund(
+            $vendor_earning,
+            $admin_commission,
+            $item_total,
+            $refund_amount
+        );
+
+        $admin_commission_after_refund = $admin_commission - $refund_commission->get_admin_net_commission();
+        $vendor_earning_after_refund = $vendor_earning - $refund_commission->get_vendor_net_earning();
 
         $commission->set_admin_net_commission( $admin_commission_after_refund )
             ->set_vendor_net_earning( $vendor_earning_after_refund );

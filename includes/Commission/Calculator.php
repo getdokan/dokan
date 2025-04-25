@@ -161,4 +161,33 @@ class Calculator extends AbstractCommissionCalculator {
 	public function get(): Commission {
 		return $this->calculate();
 	}
+
+    /**
+     * Calculate vendor and admin earnings after a refund.
+     *
+     * @param float $vendor_earning    Original vendor earning.
+     * @param float $admin_commission  Original admin commission.
+     * @param float $item_total        Original item total (excluding tax/shipping).
+     * @param float $refund_amount     Refunded amount for the item.
+     *
+     * @return Commission
+     */
+    public function calculate_for_refund( float $vendor_earning, float $admin_commission, float $item_total, float $refund_amount ): Commission {
+        $commission = new Commission();
+
+		if ( $item_total === 0 ) {
+			$commission->set_admin_net_commission( 0 );
+            $commission->set_vendor_net_earning( 0 );
+
+            return $commission;
+		}
+
+		$vendor_earning_for_refund   = ( $vendor_earning / $item_total ) * $refund_amount;
+		$admin_commission_for_refund = ( $admin_commission / $item_total ) * $refund_amount;
+
+        $commission->set_vendor_net_earning( abs( $vendor_earning_for_refund ) );
+        $commission->set_admin_net_commission( abs( $admin_commission_for_refund ) );
+
+        return $commission;
+	}
 }

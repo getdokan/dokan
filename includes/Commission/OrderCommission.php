@@ -2,7 +2,9 @@
 
 namespace WeDevs\Dokan\Commission;
 
+use WC_Abstract_Order;
 use WC_Order;
+use WC_Order_Refund;
 use WeDevs\Dokan\Commission\Contracts\OrderCommissionInterface;
 use WeDevs\Dokan\Commission\Model\Commission;
 
@@ -100,7 +102,6 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
                 );
             }
         }
-
         $this->set_admin_net_commission( $admin_net_commission )
             ->set_admin_discount( $admin_discount )
             ->set_vendor_net_earning( $vendor_net_earning )
@@ -109,6 +110,55 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         $this->is_calculated = true;
 
         return $this;
+    }
+
+    /**
+     * Calculate commission for refund.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Order_Refund $refund
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Commission
+     */
+    public function calculate_for_refund( WC_Order_Refund $refund ): Commission {
+        $this->ensure_commissions_are_calculated();
+
+        $vendor_earning = $this->get_vendor_net_earning();
+        $admin_commission = $this->get_admin_net_commission();
+
+        $calculator = dokan_get_container()->get( Calculator::class );
+
+        $item_total = $this->get_line_item_total_from_order( $this->get_order() );
+        $refund_amount = $this->get_line_item_total_from_order( $refund );
+
+        $refund_commission = $calculator->calculate_for_refund(
+            $vendor_earning,
+            $admin_commission,
+            $item_total,
+            $refund_amount
+        );
+
+        return $refund_commission;
+    }
+
+    /**
+     * Get line item total from order.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Abstract_Order $order
+     *
+     * @return float|int
+     */
+    protected function get_line_item_total_from_order( WC_Abstract_Order $order ) {
+        $line_item_total = 0;
+
+        foreach ( $order->get_items() as $item_id => $item ) {
+            $line_item_total += $item->get_total();
+        }
+
+        return $line_item_total;
     }
 
     /**
