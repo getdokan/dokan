@@ -25,7 +25,7 @@ const SuccessScreen = () => {
                     color={ 'primary' }
                     link={ true }
                     href={ redirectUrl }
-                    className="bg-[#7047EB] !text-white rounded-md py-3 px-8 flex items-center"
+                    className="bg-[#7047EB] cursor-pointer hover:bg-indigo-600 !text-white rounded-md py-3 px-8 flex items-center"
                 >
                     { __( 'Explore Dashboard', 'dokan-lite' ) }
                 </Button>
