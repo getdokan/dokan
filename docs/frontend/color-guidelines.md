@@ -140,9 +140,13 @@ Dokan uses a semantic color system where colors represent specific meanings:
 
 // Link Classes
 <a className="dokan-link">Link Text</a>
+<a className="dokan-link-info">Info Link</a>
+<a className="dokan-link-success">Success Link</a>
+<a className="dokan-link-warning">Warning Link</a>
+<a className="dokan-link-danger">Danger Link</a>
 ```
 
-### 2. Tailwind Uitility Classes with Dokan Colors
+### 2. Tailwind Utility Classes with Dokan Colors
 
 ```jsx
 // Text Colors
@@ -177,24 +181,59 @@ Dokan uses a semantic color system where colors represent specific meanings:
 <div className="ring-dokan-warning">Warning Ring</div>
 <div className="ring-dokan-danger">Danger Ring</div>
 
-// State Modifiers
+// Hover States
 <div className="hover:text-dokan-btn">Hover Text</div>
 <div className="hover:bg-dokan-btn">Hover Background</div>
+<div className="hover:border-dokan-btn">Hover Border</div>
+<div className="hover:ring-dokan-btn">Hover Ring</div>
+
+// Focus States
 <div className="focus:text-dokan-btn">Focus Text</div>
 <div className="focus:bg-dokan-btn">Focus Background</div>
+<div className="focus:border-dokan-btn">Focus Border</div>
+<div className="focus:ring-dokan-btn">Focus Ring</div>
+
+// Active States
 <div className="active:text-dokan-btn">Active Text</div>
 <div className="active:bg-dokan-btn">Active Background</div>
-<div className="disabled:opacity-60">Disabled State</div>
+<div className="active:border-dokan-btn">Active Border</div>
+<div className="active:ring-dokan-btn">Active Ring</div>
+
+// Disabled States
+<div className="disabled:text-dokan-btn">Disabled Text</div>
+<div className="disabled:bg-dokan-btn">Disabled Background</div>
+<div className="disabled:border-dokan-btn">Disabled Border</div>
+<div className="disabled:ring-dokan-btn">Disabled Ring</div>
+
+// Combined States
+<button className="
+  text-dokan-btn 
+  bg-dokan-btn 
+  border-dokan-btn 
+  ring-dokan-btn 
+  hover:text-dokan-btn-hover 
+  hover:bg-dokan-btn-hover 
+  hover:border-dokan-btn-hover 
+  hover:ring-dokan-btn-hover 
+  focus:text-dokan-btn-hover 
+  focus:bg-dokan-btn-hover 
+  focus:border-dokan-btn-hover 
+  focus:ring-dokan-btn-hover 
+  active:text-dokan-btn-hover 
+  active:bg-dokan-btn-hover 
+  active:border-dokan-btn-hover 
+  active:ring-dokan-btn-hover 
+  disabled:opacity-60 
+  disabled:cursor-not-allowed
+">
+  Interactive Button
+</button>
 ```
 
-## Component CSS Classes
+## Component Styling
 
-Dokan defines specific CSS classes for component styling that ensure consistent appearance across the application. These classes are implemented in SCSS and apply Tailwind utility classes.
-
-### Button Styles
-
+### Button Styling with Hover
 ```css
-/* Primary Button */
 .dokan-btn {
   @apply relative ring-0 ring-offset-0 bg-dokan-btn text-dokan-btn border-dokan-btn ring-dokan-btn transition-colors duration-200 !important;
 
@@ -211,24 +250,63 @@ Dokan defines specific CSS classes for component styling that ensure consistent 
   }
 }
 
-/* Additional button variants */
 .dokan-btn-secondary {
   @apply relative ring-0 ring-offset-0 bg-dokan-btn-secondary text-dokan-btn-secondary border-dokan-btn-secondary ring-dokan-btn-secondary transition-colors duration-200 !important;
-  /* Hover and focus states */
+
+  &:focus {
+    @apply ring-0 ring-offset-0 !important;
+  }
+
+  &:hover {
+    @apply ring-0 ring-offset-0 bg-dokan-btn-secondary-hover text-dokan-btn-secondary-hover border-dokan-btn-secondary-hover ring-dokan-btn-secondary-hover !important;
+  }
 }
 
 .dokan-btn-tertiary {
   @apply relative ring-0 ring-offset-0 bg-dokan-btn-tertiary text-dokan-btn-tertiary border-dokan-btn-tertiary ring-dokan-btn-tertiary transition-colors duration-200 !important;
-  /* Hover and focus states */
+
+  &:focus {
+    @apply ring-0 ring-offset-0 !important;
+  }
+
+  &:hover {
+    @apply ring-0 ring-offset-0 bg-dokan-btn-tertiary-hover text-dokan-btn-tertiary-hover !important;
+  }
 }
 
-/* Status Buttons */
+/* Status Button Styles */
 .dokan-btn-info {
   @apply relative bg-dokan-btn-info text-dokan-btn-info border-dokan-btn-info ring-dokan-btn-info transition-colors duration-200 !important;
-  /* Hover and focus states */
+
+  &:hover {
+    @apply bg-dokan-btn-info-hover text-dokan-btn-info-hover border-dokan-btn-info-hover ring-dokan-btn-info-hover !important;
+  }
 }
 
-/* Size Variants */
+.dokan-btn-success {
+  @apply relative bg-dokan-btn-success text-dokan-btn-success border-dokan-btn-success ring-dokan-btn-success transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply bg-dokan-btn-success-hover text-dokan-btn-success-hover border-dokan-btn-success-hover ring-dokan-btn-success-hover !important;
+  }
+}
+
+.dokan-btn-warning {
+  @apply relative bg-dokan-btn-warning text-dokan-btn-warning border-dokan-btn-warning ring-dokan-btn-warning transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply bg-dokan-btn-warning-hover text-dokan-btn-warning-hover border-dokan-btn-warning-hover ring-dokan-btn-warning-hover !important;
+  }
+}
+
+.dokan-btn-danger {
+  @apply relative bg-dokan-btn-danger text-dokan-btn-danger border-dokan-btn-danger ring-dokan-btn-danger transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply bg-dokan-btn-danger-hover text-dokan-btn-danger-hover border-dokan-btn-danger-hover ring-dokan-btn-danger-hover !important;
+  }
+}
+
 .dokan-btn-sm {
   @apply relative px-2 py-1 text-sm !important;
 }
@@ -238,28 +316,45 @@ Dokan defines specific CSS classes for component styling that ensure consistent 
 }
 ```
 
-### Badge Styles
-
+### Badge Styling with Hover
 ```css
 .dokan-badge-info {
   @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info !important;
 }
 
-/* Additional badge variants */
+.dokan-badge-success {
+  @apply relative ring-1 ring-inset bg-dokan-success text-dokan-success ring-dokan-success !important;
+}
+
+.dokan-badge-warning {
+  @apply relative ring-1 ring-inset bg-dokan-warning text-dokan-warning ring-dokan-warning !important;
+}
+
+.dokan-badge-danger {
+  @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger ring-dokan-danger !important;
+}
 ```
 
-### Alert Styles
-
+### Alert Styling with Hover
 ```css
 .dokan-alert-info {
   @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info-secondary ring-dokan-info !important;
 }
 
-/* Additional alert variants */
+.dokan-alert-success {
+  @apply relative ring-1 ring-inset bg-dokan-success text-dokan-success-secondary ring-dokan-success !important;
+}
+
+.dokan-alert-warning {
+  @apply relative ring-1 ring-inset bg-dokan-warning text-dokan-warning-secondary ring-dokan-warning !important;
+}
+
+.dokan-alert-danger {
+  @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger-secondary ring-dokan-danger !important;
+}
 ```
 
-### Link Styles
-
+### Link Styling with Hover
 ```css
 .dokan-link {
   @apply relative text-dokan-link no-underline transition-colors duration-200 !important;
@@ -268,31 +363,59 @@ Dokan defines specific CSS classes for component styling that ensure consistent 
     @apply text-dokan-link-hover !important;
   }
 }
+
+.dokan-link-info {
+  @apply relative text-dokan-link-info no-underline transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply text-dokan-link-info-hover !important;
+  }
+}
+
+.dokan-link-success {
+  @apply relative text-dokan-link-success no-underline transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply text-dokan-link-success-hover !important;
+  }
+}
+
+.dokan-link-warning {
+  @apply relative text-dokan-link-warning no-underline transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply text-dokan-link-warning-hover !important;
+  }
+}
+
+.dokan-link-danger {
+  @apply relative text-dokan-link-danger no-underline transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply text-dokan-link-danger-hover !important;
+  }
+}
 ```
 
 ## Best Practices
 
 1. **Consistent Usage**
    - Use predefined CSS variables for colors
-   - Use component classes for common UI elements
-   - Use utility classes for custom styling
+   - Use utility classes for styling
    - Follow semantic color meanings
 
 2. **Accessibility**
    - Ensure sufficient contrast ratios
    - Use appropriate text colors for backgrounds
-   - Maintain focus states for interactive elements
-   - Test with screen readers and keyboard navigation
+   - Maintain focus states
 
 3. **Component Usage**
    - Use the appropriate component class for each element
    - Combine with utility classes when needed
-   - Follow the established patterns for consistent user experience
-   - Use the `.dokan-layout` container to ensure proper styling
+   - Follow the established patterns
 
 4. **Maintenance**
-   - Use CSS variables for global color changes
-   - Update the base Tailwind config for new color additions
+   - Use CSS variables for global changes
    - Follow the established naming conventions
    - Keep styles consistent across components
 
@@ -349,13 +472,17 @@ Dokan defines specific CSS classes for component styling that ensure consistent 
   <a href="#" className="dokan-link">Contact Support</a>
   <a href="#" className="dokan-link">Privacy Policy</a>
   <a href="#" className="dokan-link">Terms of Service</a>
-  <a href="#" className="dokan-link-danger">Terms of Service</a>
+</div>
+
+<div className="flex gap-2">
+  <a href="#" className="dokan-link-info">Info Link</a>
+  <a href="#" className="dokan-link-success">Success Link</a>
+  <a href="#" className="dokan-link-warning">Warning Link</a>
+  <a href="#" className="dokan-link-danger">Danger Link</a>
 </div>
 ```
 
 ### Combined Implementation
-
-For more complex UI, combine component classes with utility classes:
 
 ```jsx
 <div className="p-4 rounded-lg bg-white shadow">
