@@ -64,6 +64,10 @@ class Assets implements Hookable {
      * @return void
      */
 	public function register_all_scripts() {
+        if ( is_admin() ) {
+            return;
+        }
+
         // Register WooCommerce Admin Assets for the React-base Dokan Vendor ler dashboard.
         if ( ! function_exists( 'get_current_screen' ) ) {
             require_once ABSPATH . '/wp-admin/includes/screen.php';
@@ -146,7 +150,11 @@ class Assets implements Hookable {
      * @return void
      */
 	public function enqueue_front_scripts() {
-		wp_enqueue_script( 'vendor_analytics_script' );
+        if ( ! dokan_is_seller_dashboard() ) {
+            return;
+        }
+
+        wp_enqueue_script( 'vendor_analytics_script' );
 		wp_localize_script(
             'vendor_analytics_script', 'vendorAnalyticsDokanConfig', [
 				'seller_id'        => dokan_get_current_user_id(),
