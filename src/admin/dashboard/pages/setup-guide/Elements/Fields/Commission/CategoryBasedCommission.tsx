@@ -326,7 +326,7 @@ const CategoryBasedCommission = ( {
                 >
                     { /* All Categories Row */ }
                     <div className="flex  flex-col md:!flex-row divide-y  border-b-[1px] border-[#e9e9ea] border-solid  ">
-                        <div className="flex flex-row md:w-1/2 w-full items-center min-h-[3rem] border-0 border-r-[1px] pl-[5px]">
+                        <div className="flex flex-row md:w-1/2 w-full items-center min-h-[3rem] border-0 !border-r-[1px] pl-[5px]">
                             <button
                                 type="button"
                                 className="p-1 bg-transparent border-none cursor-pointer"
@@ -421,7 +421,7 @@ const CategoryBasedCommission = ( {
                                         key={ item.term_id }
                                         className="flex flex-col md:!flex-row divide-y  border-0 !border-b-[1px] last:border-b-0 border-[#e9e9ea] border-solid"
                                     >
-                                        <div className="md:w-1/2 w-full flex flex-row items-center min-h-[3rem] border-0 border-r-[1px] border-[#e9e9ea] border-solid pl-[5px]">
+                                        <div className="md:w-1/2 w-full flex flex-row items-center min-h-[3rem] border-0 !border-r-[1px] border-[#e9e9ea] border-solid pl-[5px]">
                                             <div className="flex h-1/2">
                                                 { item.parents.map(
                                                     ( parentId ) => (
