@@ -321,6 +321,11 @@ class Dashboard implements Hookable {
                 $version
             );
 
+            wp_set_script_translations(
+                $this->script_key,
+                'dokan-lite'
+            );
+
             wp_localize_script(
                 $this->script_key,
                 'dokanAdminDashboard',
@@ -356,6 +361,11 @@ class Dashboard implements Hookable {
                 DOKAN_PLUGIN_ASSEST . '/css/setup-guide-banner.css',
                 [],
                 $version
+            );
+
+            wp_set_script_translations(
+                $this->setup_guide_key,
+                'dokan-lite'
             );
 
             wp_localize_script(
