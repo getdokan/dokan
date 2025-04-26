@@ -188,13 +188,9 @@ class Setting {
      *
      * @since 3.14.0
      *
-     * @return mixed|string
+     * @return float
      */
-    public function get_flat( string $context = 'view' ): float|string {
-        if ( $context === 'edit' ) {
-            return $this->flat;
-        }
-
+    public function get_flat(): float {
         return $this->is_combined() ? 0 : floatval( $this->flat );
     }
 
@@ -203,7 +199,7 @@ class Setting {
      *
      * @since 3.14.0
      *
-     * @return mixed|string
+     * @return float
      */
     public function get_combine_flat(): float {
         return $this->is_combined() ? floatval( $this->flat ) : 0;
@@ -218,13 +214,9 @@ class Setting {
      *
      * @since 3.14.0
      *
-     * @return mixed|string
+     * @return float
      */
-    public function get_percentage( string $context = 'view' ): float|string {
-        if ( $context === 'edit' ) {
-            return $this->percentage;
-        }
-
+    public function get_percentage(): float {
         return floatval( $this->percentage );
     }
 
@@ -252,5 +244,22 @@ class Setting {
 
     public function is_applicable(): bool {
         return trim( $this->percentage ) !== '' || trim( $this->flat ) !== '';
+    }
+
+    /**
+     * Returns the commission settings as an array.
+     *
+     * @since 3.14.0
+     *
+     * @return array
+     */
+    public function to_array(): array {
+        return [
+            'type'       => $this->get_type(),
+            'flat'       => $this->flat,
+            'percentage' => $this->percentage,
+            'source'     => $this->get_source(),
+            'meta_data'  => $this->get_meta_data(),
+        ];
     }
 }

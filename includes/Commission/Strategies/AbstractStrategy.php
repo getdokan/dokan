@@ -106,7 +106,7 @@ abstract class AbstractStrategy {
             return;
         }
 
-        $this->get_order_item_setting_saver( $order_item )->save( $settings );
+        $this->get_order_item_setting_saver( $order_item )->save( $settings->to_array() );
     }
 
     /**
