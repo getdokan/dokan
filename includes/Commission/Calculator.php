@@ -175,7 +175,7 @@ class Calculator extends AbstractCommissionCalculator {
     public function calculate_for_refund( float $vendor_earning, float $admin_commission, float $item_total, float $refund_amount ): Commission {
         $commission = new Commission();
 
-		if ( $item_total === 0 ) {
+		if ( $item_total === floatval( 0 ) ) {
 			$commission->set_admin_net_commission( 0 );
             $commission->set_vendor_net_earning( 0 );
 
