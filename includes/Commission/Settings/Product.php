@@ -56,28 +56,37 @@ class Product implements InterfaceSetting {
      *
      * @since 3.14.0
      *
-     * @param Setting $setting
+     * @param array $setting {
      *
-     * @throws \Exception
+     *     @type string $percentage
+     *     @type string $type
+     *     @type string $flat
+     * }
      *
-     * @return void
+     * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function save( Setting $settings ): void {
-        $settings = apply_filters( 'dokan_product_commission_settings_before_save', $settings, $this->product );
+    public function save( array $setting ): Setting {
+        $settings = apply_filters( 'dokan_product_commission_settings_before_save', $setting, $this->product );
 
-        $commission_type       = $settings->get_type() ?? '';
-        $commission_percentage = $settings->get_percentage( 'edit' ) ?? '';
-        $additional_flat       = $settings->get_flat( 'edit' ) ?? '';
+        $commission_percentage = $setting['percentage'] ?? '';
+        $commission_type       = $setting['type'] ?? '';
+        $additional_flat       = $setting['flat'] ?? '';
 
         if ( is_a( $this->product, WC_Product::class ) && $this->product->get_id() ) {
             $this->product->update_meta_data( '_per_product_admin_commission', $commission_percentage );
             $this->product->update_meta_data( '_per_product_admin_commission_type', $commission_type );
             $this->product->update_meta_data( '_per_product_admin_additional_fee', $additional_flat );
-
             $this->product->save_meta_data();
             $this->product->save();
+
+			do_action( 'dokan_product_commission_settings_after_save', $settings, $this->product );
         }
 
-        do_action( 'dokan_product_commission_settings_after_save', $settings, $this->product );
+        $commission = new Setting();
+        $commission->set_type( $commission_type )
+                ->set_flat( $additional_flat )
+                ->set_percentage( $commission_percentage );
+
+        return $commission;
     }
 }
