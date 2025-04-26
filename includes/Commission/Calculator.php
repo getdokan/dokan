@@ -98,11 +98,7 @@ class Calculator extends AbstractCommissionCalculator {
         $net_amount       = $this->subtotal - $total_discount;
         $admin_commission = min( $raw_admin_commission, $net_amount );
 
-        $vendor_earning = $net_amount;
-
-        if ( $admin_commission > 0 ) {
-            $vendor_earning = $net_amount - $admin_commission;
-        }
+        $vendor_earning = $net_amount - $admin_commission;
 
         return $this->create_commission(
             $admin_commission,

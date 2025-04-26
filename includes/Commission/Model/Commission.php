@@ -118,7 +118,7 @@ class Commission implements CommissionInterface {
     }
 
     public function get_vendor_earning(): float {
-        return $this->get_vendor_net_earning() + $this->get_admin_subsidy();
+        return $this->get_vendor_net_earning();
     }
 
     public function get_admin_commission(): float {

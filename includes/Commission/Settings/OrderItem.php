@@ -77,19 +77,25 @@ class OrderItem implements InterfaceSetting {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save( array $setting ): Setting {
-        $settings = apply_filters( 'dokan_order_line_item_commission_settings_before_save', $setting, $this->order_item );
+        $setting = apply_filters( 'dokan_order_line_item_commission_settings_before_save', $setting, $this->order_item );
+        $settings = new Setting();
+        $settings->set_type( $setting['type'] )
+            ->set_flat( $setting['flat'] )
+            ->set_percentage( $setting['percentage'] )
+            ->set_source( $setting['source'] )
+            ->set_meta_data( $setting['meta_data'] );
 
-        $this->order_item->update_meta_data( '_dokan_commission_source', $setting['source'] ?? '' );
-        $this->order_item->update_meta_data( '_dokan_commission_type', $setting['type'] ?? '' );
-        $this->order_item->update_meta_data( '_dokan_commission_rate', $setting['percentage'] ?? '' );
-        $this->order_item->update_meta_data( '_dokan_additional_fee', $setting['flat'] ?? '' );
-        $this->order_item->update_meta_data( 'dokan_commission_meta', $setting['meta_data'] ?? [] );
+        $this->order_item->update_meta_data( '_dokan_commission_source', $settings->get_source() );
+        $this->order_item->update_meta_data( '_dokan_commission_rate', $settings->get_percentage() );
+        $this->order_item->update_meta_data( '_dokan_commission_type', $settings->get_type() );
+        $this->order_item->update_meta_data( '_dokan_additional_fee', $settings->get_flat() );
+        $this->order_item->update_meta_data( 'dokan_commission_meta', $settings->get_meta_data() );
 
         $this->order_item->save_meta_data();
         $this->order_item->save();
 
         do_action( 'dokan_order_line_item_commission_settings_after_save', $settings, $this->order_item );
 
-        return $this->get();
+		return $settings;
     }
 }

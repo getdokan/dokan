@@ -10,6 +10,10 @@ use WeDevs\Dokan\Commission\Strategies\Product as ProductStrategy;
 use WeDevs\Dokan\Commission\Strategies\Vendor as VendorStrategy;
 use WeDevs\Dokan\Test\DokanTestCase;
 
+/**
+ * @group commission
+ * @group commission-order
+ */
 class StrategyTest extends DokanTestCase {
     protected $product;
 
@@ -23,7 +27,7 @@ class StrategyTest extends DokanTestCase {
         );
     }
 
-    public function test_order_item_strategy(){
+    public function test_order_item_strategy() {
         $order_item = $this->get_order_item();
         $order_item->add_meta_data( '_dokan_commission_source', 'order_item' );
         $order_item->add_meta_data( '_dokan_commission_type', 'fixed' );

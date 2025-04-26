@@ -6,7 +6,10 @@ use WeDevs\Dokan\Commission\Calculator;
 use WeDevs\Dokan\Commission\CouponInfo;
 use WeDevs\Dokan\Commission\Model\Setting;
 use WeDevs\Dokan\Test\DokanTestCase;
-
+/**
+ * @group commission
+ * @group commission-order
+ */
 class CommissionCalculatorTest extends DokanTestCase {
 
     public function test_calculator() {
@@ -20,7 +23,7 @@ class CommissionCalculatorTest extends DokanTestCase {
             [
 				[
 					'discount' => 35.2,
-					'coupon_commissions_type' => 'admin',
+					'coupon_commissions_type' => 'from_admin',
 
 				],
 			]
