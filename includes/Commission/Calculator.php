@@ -178,11 +178,13 @@ class Calculator extends AbstractCommissionCalculator {
             return $commission;
 		}
 
+        $refund_amount = abs( $refund_amount );
+
 		$vendor_earning_for_refund   = ( $vendor_earning / $item_total ) * $refund_amount;
 		$admin_commission_for_refund = ( $admin_commission / $item_total ) * $refund_amount;
 
-        $commission->set_vendor_net_earning( abs( $vendor_earning_for_refund ) );
-        $commission->set_admin_net_commission( abs( $admin_commission_for_refund ) );
+        $commission->set_vendor_net_earning( $vendor_earning_for_refund );
+        $commission->set_admin_net_commission( $admin_commission_for_refund );
 
         return $commission;
 	}
