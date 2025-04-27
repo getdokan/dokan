@@ -22,3 +22,4 @@ export { default as NotFound } from './../layout/404';
 export { default as Forbidden } from './../layout/403';
 export { default as VisitStore } from './VisitStore';
 export { default as DokanPriceInput } from './PriceInput';
+export { default as WpDatePicker } from './WpDatePicker';
