@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Commission;
 
-use WC_Abstract_Order;
 use WC_Order;
 use WC_Order_Refund;
 use WeDevs\Dokan\Commission\Contracts\OrderCommissionInterface;
@@ -122,43 +121,42 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
     public function calculate_for_refund( WC_Order_Refund $refund ): Commission {
+        $should_reset_adjust_refund = false;
+
+		if ( $this->get_should_adjust_refund() ) {
+			$this->set_should_adjust_refund( false );
+			$this->calculate();
+			$should_reset_adjust_refund = true;
+		}
+
         $this->ensure_commissions_are_calculated();
 
-        $vendor_earning = $this->get_vendor_net_earning();
-        $admin_commission = $this->get_admin_net_commission();
+        $refund_commission = new Commission();
 
-        $calculator = dokan_get_container()->get( Calculator::class );
+        foreach ( $refund->get_items() as $item_id => $refund_item ) {
+            try {
+                $order_item_id = $refund_item->get_meta( '_refunded_item_id', true );
+                $order_item_commission = $this->get_commission_for_line_item( $order_item_id );
+                $item_refund_commission = $order_item_commission->calculate_for_refund_item( $refund_item );
 
-        $item_total = $this->get_line_item_total_from_order( $this->get_order() );
-        $refund_amount = $this->get_line_item_total_from_order( $refund );
-
-        $refund_commission = $calculator->calculate_for_refund(
-            $vendor_earning,
-            $admin_commission,
-            $item_total,
-            $refund_amount
-        );
-
-        return $refund_commission;
-    }
-
-    /**
-     * Get line item total from order.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param \WC_Abstract_Order $order
-     *
-     * @return float|int
-     */
-    protected function get_line_item_total_from_order( WC_Abstract_Order $order ) {
-        $line_item_total = 0;
-
-        foreach ( $order->get_items() as $item_id => $item ) {
-            $line_item_total += $item->get_total();
+                $refund_commission->set_admin_net_commission(
+                    $refund_commission->get_admin_net_commission() + $item_refund_commission->get_admin_net_commission()
+                );
+                $refund_commission->set_vendor_net_earning(
+                    $refund_commission->get_vendor_net_earning() + $item_refund_commission->get_vendor_net_earning()
+                );
+            } catch ( \Exception $exception ) {
+                // translators: 1: Refund item ID, 2: Error message
+                dokan_log( sprintf( __( 'Refund item ID %1$s error: %2$s', 'dokan-lite' ), $order_item_id, $exception->getMessage() ), 'error' );
+            }
         }
 
-        return $line_item_total;
+        if ( $should_reset_adjust_refund ) {
+            $this->set_should_adjust_refund( true );
+			$this->calculate();
+        }
+
+        return $refund_commission;
     }
 
     /**
@@ -167,10 +165,12 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @since DOKAN_SINCE
      * @throws \Exception If the order is not set.
      *
-     * @return Model\Commission|\Exception
+     * @return OrderCommission
      */
-    public function get(): Model\Commission {
-        return $this->calculate();
+    public function get(): OrderCommission {
+        $this->ensure_commissions_are_calculated();
+
+        return $this;
     }
 
     /**
@@ -387,6 +387,11 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         return $commission_data;
     }
 
+    /**
+     * Reset the commission related data.
+     *
+     * @return void
+     */
     protected function reset_order_commission_data() {
         $this->admin_net_commission = 0;
         $this->admin_discount       = 0;
@@ -400,9 +405,9 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * Retrieve the commission object for a specific line item.
      *
      * @param int $item_id Line item ID.
-     * @return Commission|null The commission object or null if not found.
+     * @return OrderLineItemCommission|null The commission object or null if not found.
      */
-    public function get_commission_for_line_item( int $item_id ): ?Commission {
+    public function get_commission_for_line_item( int $item_id ): ?OrderLineItemCommission {
         $commissions = $this->get_all_line_item_commissions();
 
         return $commissions[ $item_id ] ?? null;
@@ -426,21 +431,46 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      *
      * Triggers calculation if not already done.
      */
-    private function ensure_commissions_are_calculated(): void {
+    protected function ensure_commissions_are_calculated(): void {
         if ( ! $this->is_calculated ) {
             $this->calculate();
         }
     }
 
-    public function get_admin_commission(): float {
-        return $this->get_admin_net_commission() + $this->get_total_admin_fees();
-    }
+	/**
+     * Get the total admin commission.
+     *
+     * This includes the net commission plus any additional admin fees.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return float
+     */
+	public function get_admin_commission(): float {
+		return $this->get_admin_net_commission() + $this->get_total_admin_fees();
+	}
 
-    public function get_admin_total_earning(): float {
-        return $this->get_admin_commission();
-    }
+	/**
+	 * Get the total earning for the admin.
+	 *
+	 * @since DOKAN_SINCE
+	 * @deprecated DOKAN_SINCE Use get_admin_commission() instead.
+	 *
+	 * @return float
+	 */
+	public function get_admin_total_earning(): float {
+		return $this->get_admin_commission();
+	}
 
-    public function get_vendor_total_earning(): float {
-        return $this->get_vendor_earning();
-    }
+	/**
+	 * Get the total earning for the vendor.
+	 *
+	 * @since DOKAN_SINCE
+	 * @deprecated DOKAN_SINCE Use get_vendor_earning() instead.
+	 *
+	 * @return float
+	 */
+	public function get_vendor_total_earning(): float {
+		return $this->get_vendor_earning();
+	}
 }

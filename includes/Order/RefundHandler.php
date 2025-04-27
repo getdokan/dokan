@@ -15,7 +15,7 @@ class RefundHandler implements Hookable {
     public function register_hooks(): void {
         // @todo Enable the bellow action after refactoring the Pro Refund class.
 
-        // add_action( 'woocommerce_order_refunded', [ $this, 'handle_refund' ], 10, 2 );
+        add_action( 'woocommerce_order_refunded', [ $this, 'handle_refund' ], 10, 2 );
     }
 
     /**

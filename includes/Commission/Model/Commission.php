@@ -51,7 +51,7 @@ class Commission implements CommissionInterface {
      * @return float The net commission amount for the admin.
      */
     public function get_admin_net_commission(): float {
-        return $this->admin_net_commission;
+        return $this->admin_net_commission ?? 0;
     }
 
     /**
@@ -60,8 +60,8 @@ class Commission implements CommissionInterface {
      * @param float $vendor_earning The earning amount for the vendor.
      * @return self
      */
-    public function set_vendor_net_earning( float $vendor_earning_without_subsidy ): self {
-        $this->vendor_net_earning = $vendor_earning_without_subsidy;
+    public function set_vendor_net_earning( float $vendor_earning ): self {
+        $this->vendor_net_earning = $vendor_earning;
 
         return $this;
     }
@@ -72,7 +72,7 @@ class Commission implements CommissionInterface {
      * @return float The net earning amount for the vendor.
      */
     public function get_vendor_net_earning(): float {
-        return $this->vendor_net_earning;
+        return $this->vendor_net_earning ?? 0;
     }
 
     /**
@@ -93,7 +93,7 @@ class Commission implements CommissionInterface {
      * @return float The discount amount for the admin.
      */
     public function get_admin_discount(): float {
-        return $this->admin_discount;
+        return $this->admin_discount ?? 0;
     }
 
     /**
@@ -114,7 +114,7 @@ class Commission implements CommissionInterface {
      * @return float The discount amount for the vendor.
      */
     public function get_vendor_discount(): float {
-        return $this->vendor_discount;
+        return $this->vendor_discount ?? 0;
     }
 
     public function get_vendor_earning(): float {

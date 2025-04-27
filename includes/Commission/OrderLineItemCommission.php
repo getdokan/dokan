@@ -103,9 +103,9 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      *
      * @since DOKAN_SINCE
      *
-     * @return \WeDevs\Dokan\Commission\Model\Commission|null
+     * @return OrderLineItemCommission |null
      */
-    public function calculate(): Commission {
+    public function calculate(): OrderLineItemCommission {
         if ( ! $this->item ) {
             throw new \Exception( esc_html__( 'Order item is required for order item commission calculation.', 'dokan-lite' ) );
         }
@@ -140,7 +140,48 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
 
         $commission_data = $this->adjust_refunds( $commission_data );
 
-        return $commission_data;
+        $this->set_commission_data( $commission_data );
+
+        return $this;
+    }
+
+    /**
+     * Set the commission data to this class.
+     *
+     * @param Commission $commission
+     * @return self
+     */
+    protected function set_commission_data( Commission $commission ): self {
+        $this->set_admin_net_commission( $commission->get_admin_net_commission() );
+        $this->set_vendor_discount( $commission->get_vendor_discount() );
+        $this->set_vendor_net_earning( $commission->get_vendor_net_earning() );
+        $this->set_admin_discount( $commission->get_admin_discount() );
+        $this->set_settings( $commission->get_settings() );
+
+        return $this;
+    }
+
+    /**
+     * Calculate and get the vendor earning & admin commission in refunded item.
+     *
+     * @param WC_Order_Item $refund_item
+     * @return Commission
+     */
+    public function calculate_for_refund_item( WC_Order_Item $refund_item ): Commission {
+        $order_item = $this->get_item();
+        $item_subtotal = $order_item->get_subtotal();
+        $refund_item_subtotal = $refund_item->get_subtotal();
+
+        $calculator = dokan_get_container()->get( Calculator::class );
+
+        $refund_commission = $calculator->calculate_for_refund(
+            $this->get_vendor_net_earning(),
+            $this->get_admin_net_commission(),
+            $item_subtotal,
+            $refund_item_subtotal,
+        );
+
+        return $refund_commission;
     }
 
     /**
