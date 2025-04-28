@@ -55,14 +55,16 @@ function PaymentDetails( {
         <SlotFillProvider>
             <Card>
                 <Card.Header>
-                    <Card.Title className="p-0 m-0">Payment Details</Card.Title>
+                    <Card.Title className="p-0 m-0">
+                        { __( 'Payment Details', 'dokan-lite' ) }
+                    </Card.Title>
                 </Card.Header>
                 <Card.Body>
                     <div className="space-y-4">
                         <div className="flex flex-col md:flex-row sm:items-center justify-between">
                             <div>
                                 <h4 className="font-medium text-gray-900 mb-2">
-                                    { __( 'Last Payment', 'dokan' ) }
+                                    { __( 'Last Payment', 'dokan-lite' ) }
                                 </h4>
                                 { bodyData?.data?.last_withdraw?.id ? (
                                     <div className="flex">
@@ -75,7 +77,7 @@ function PaymentDetails( {
                                                 }
                                             />
                                         </strong>
-                                        &nbsp;{ __( 'on', 'dokan' ) }&nbsp;
+                                        &nbsp;{ __( 'on', 'dokan-lite' ) }&nbsp;
                                         <strong>
                                             <em>
                                                 <DateTimeHtml.Date
@@ -87,7 +89,7 @@ function PaymentDetails( {
                                                 />
                                             </em>
                                         </strong>
-                                        &nbsp;{ __( 'to', 'dokan' ) }&nbsp;
+                                        &nbsp;{ __( 'to', 'dokan-lite' ) }&nbsp;
                                         <strong>
                                             { bodyData?.data?.last_withdraw
                                                 ?.method_title ?? '' }
@@ -97,7 +99,7 @@ function PaymentDetails( {
                                     <p className="text-gray-600">
                                         { __(
                                             'You do not have any approved withdraw yet.',
-                                            'dokan'
+                                            'dokan-lite'
                                         ) }
                                     </p>
                                 ) }
@@ -127,7 +129,7 @@ function PaymentDetails( {
                             withdrawRequests?.data.length > 0 && (
                                 <div className="flex flex-col border-t pt-4">
                                     <h4 className="font-medium text-gray-900 mb-2">
-                                        { __( 'Pending Requests', 'dokan' ) }
+                                        { __( 'Pending Requests', 'dokan-lite' ) }
                                     </h4>
 
                                     <RequestList

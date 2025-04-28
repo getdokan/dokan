@@ -57,7 +57,7 @@ const WpDatePicker = ( props ) => {
                             className="mt-2"
                             onClick={ () => updatedProps.onChange( '' ) }
                         >
-                            { __( 'Clear', 'dokan' ) }
+                            { __( 'Clear', 'dokan-lite' ) }
                         </DokanButton>
                     </div>
                 </PopoverPanel>
