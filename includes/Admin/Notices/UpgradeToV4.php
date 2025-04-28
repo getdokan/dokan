@@ -19,7 +19,7 @@ class UpgradeToV4 {
     }
 
     /**
-     * Render run admin setup wizard notice
+     * Render upgrade notice.
      *
      * @since DOKAN_SINCE
      *
