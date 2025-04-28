@@ -116,7 +116,7 @@ function PaymentMethods( {
         <Card>
             <Card.Header>
                 <Card.Title className="p-0 m-0">
-                    { __( 'Payment Methods', 'dokan' ) }
+                    { __( 'Payment Methods', 'dokan-lite' ) }
                 </Card.Title>
             </Card.Header>
             <Card.Body>
