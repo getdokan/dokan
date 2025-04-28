@@ -16,7 +16,6 @@ class FieldGroup extends SettingsElement {
 	 */
 	protected $type = 'fieldgroup';
 
-
 	/**
 	 * Data validation.
 	 *
@@ -38,7 +37,6 @@ class FieldGroup extends SettingsElement {
 	public function sanitize_element( $data ) {
 		return wp_unslash( $data );
 	}
-
 
 	/**
 	 * Escape data for display.

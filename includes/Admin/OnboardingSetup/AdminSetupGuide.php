@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\Admin\OnboardingSetup;
 
 use WeDevs\Dokan\Admin\OnboardingSetup\Steps\AbstractStep;
-use WeDevs\Dokan\Contracts\Hookable;
 
 class AdminSetupGuide {
 
@@ -33,6 +32,17 @@ class AdminSetupGuide {
      * @throws \InvalidArgumentException If the step is not an instance of AbstractStep.
      */
     public function get_steps(): array {
+        /**
+         * Filters the list of setup guide steps.
+         * Allows modification of the setup guide steps array before processing.
+         * Each step must be an instance of AbstractStep.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $steps Array of AbstractStep instances.
+         *
+         * @return array Modified array of steps.
+         */
         $steps = apply_filters( 'dokan_admin_setup_guide_steps', $this->steps );
 
         if ( ! is_array( $steps ) ) {
@@ -81,6 +91,18 @@ class AdminSetupGuide {
             ];
         }
 
+        /**
+         * Filters the steps mapper array for setup guide.
+         * Allows modification of the steps mapper data which includes step title, ID,
+         * completion status, and navigation details.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $mapper Array of step mapping information including title, ID,
+         *                      completion status, and previous/next step references.
+         *
+         * @return array Modified steps mapper array.
+         */
         return apply_filters( 'dokan_admin_setup_guide_steps_mapper', $mapper );
     }
 
@@ -103,6 +125,17 @@ class AdminSetupGuide {
             }
         }
 
+        /**
+         * Filters whether the admin setup is complete.
+         * Allows overriding the setup completion status determined by checking
+         * all individual steps.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool $setup_complete Whether all setup steps are completed.
+         *
+         * @return bool Modified setup completion status.
+         */
         return apply_filters( 'dokan_admin_setup_guide_is_setup_complete', $setup_complete );
     }
 

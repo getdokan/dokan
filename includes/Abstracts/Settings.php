@@ -124,6 +124,14 @@ abstract class Settings extends SettingsElement {
 			$updated = update_user_meta( get_current_user_id(), $this->storage_key, $data );
 		}
 
+        /**
+         * Actions for after save settings.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param string $storeage_key
+         * @param mixed  $data
+         */
 		do_action( 'dokan_settings_after_save_' . $this->storage_key, $data );
 
 		return (bool) $updated;

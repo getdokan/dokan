@@ -34,7 +34,9 @@
         }
 
         a:focus, button:focus, .button.alt:focus, input:focus, textarea:focus, input[type="button"]:focus, input[type="reset"]:focus, input[type="submit"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="url"]:focus, input[type="password"]:focus, input[type="search"]:focus {
-            outline-color: var(--dokan-button-border-color, #7047EB);
+            &:not([role="switch"]) {
+                outline-color: var(--dokan-button-border-color, #7047EB);
+            }
         }
 
         /* Default link styles (for normal hyperlinks) */

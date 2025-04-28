@@ -292,6 +292,16 @@ abstract class SettingsElement {
 	public function get_children(): array {
 		$children = array();
 
+        /**
+         * An array containing the filtered list of child elements or objects.
+         * This variable is intended to store a subset of children
+         * after applying specific filtering criteria.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array           $children
+         * @param SettingsElement $this
+         */
 		$filtered_children = apply_filters( $this->get_hook_key() . '_children', $this->children, $this ); // phpcs:ignore.
 
 		foreach ( $filtered_children as $child ) {
@@ -467,6 +477,19 @@ abstract class SettingsElement {
 			'dependencies'   => $this->get_dependencies(),
 		);
 
+        /**
+         * Filters the populated data for a settings element.
+         * This filter allows modification of the complete array of populated data
+         * before it's returned from the populate method. The data includes all element
+         * properties such as ID, type, title, children, dependencies, etc.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array           $populated_data The array containing all element data.
+         * @param SettingsElement $this           The current settings element instance.
+         *
+         * @return array Modified populated data.
+         */
         return apply_filters( $this->get_hook_key() . '_populate', $populated_data, $this );
 	}
 

@@ -42,6 +42,17 @@ class AppearanceStep extends AbstractStep {
      * @return array Default appearance settings
      */
     protected function get_default_settings(): array {
+        /**
+         * Filters the default appearance settings for the setup guide.
+         * Allows modification of the default appearance settings including
+         * contact seller status, theme store sidebar, and vendor info visibility.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $defaults Array of default appearance settings with the following structure:
+         *
+         * @return array Modified default appearance settings.
+         */
         return apply_filters(
             'dokan_admin_setup_guides_appearance_step_default_data',
             [

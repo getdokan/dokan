@@ -106,6 +106,16 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
      * @return bool
      */
     public function get_skippable(): bool {
+        /**
+         * Filters whether a step is skippable.
+         * Allows overriding the skippable status of a specific setup step.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool $skippable Whether the step can be skipped.
+         *
+         * @return bool Modified skippable status.
+         */
         return apply_filters( $this->storage_key . '_skippable', $this->skippable );
     }
 
@@ -175,6 +185,17 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
      * @return array
      */
     public function get_settings_options(): array {
+        /**
+         * Filters the settings options for a specific setup step.
+         * Allows modification of the settings options for a particular step
+         * identified by its ID.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $settings_options Array of settings options for the step.
+         *
+         * @return array Modified settings options.
+         */
         return apply_filters( 'dokan_admin_setup_guide_step_' . $this->get_id() . '_options', $this->settings_options );
     }
 
