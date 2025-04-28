@@ -7,6 +7,7 @@ use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\Utilities\OrderUtil;
+use WeDevs\Dokan\Utilities\ReportUtil;
 
 class Assets {
 
@@ -681,6 +682,8 @@ class Assets {
         $default_script = [
             'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
             'nonce'                        => wp_create_nonce( 'dokan_reviews' ),
+            'order_nonce'                  => wp_create_nonce( 'dokan_view_order' ),
+            'product_edit_nonce'           => wp_create_nonce( 'dokan_edit_product_nonce' ),
             'ajax_loader'                  => DOKAN_PLUGIN_ASSEST . '/images/ajax-loader.gif',
             'seller'                       => [
                 'available'    => __( 'Available', 'dokan-lite' ),
@@ -728,7 +731,7 @@ class Assets {
                 'routes'          => $this->get_vue_frontend_routes(),
                 'urls'            => [
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
-                    'dashboardUrl' => dokan_get_navigation_url(),
+                    'dashboardUrl' => dokan_get_navigation_url() . ( ReportUtil::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
                     'storeUrl'     => dokan_get_store_url( dokan_get_current_user_id() ),
                 ],
             ]

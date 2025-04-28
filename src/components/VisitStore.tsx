@@ -35,7 +35,7 @@ const VisitStore = ( props: VisitStoreProps ) => {
                     rel="noreferrer"
                 >
                     <ExternalLink
-                        className="text-dokan-link stroke-[2.5]"
+                        className="dokan-link stroke-[2.5]"
                         size={ size }
                     />
                 </a>

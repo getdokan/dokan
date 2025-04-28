@@ -52,8 +52,12 @@
             @apply before:!content-[''];
         }
 
-        input[type=text]:focus {
-            outline-offset: 0;
+        textarea,
+        input[type=text],
+        input[type=number] {
+            &:focus {
+                outline-offset: 0;
+            }
         }
     }
 
