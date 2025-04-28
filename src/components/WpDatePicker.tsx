@@ -7,8 +7,8 @@ import {
 import { useRef, useState } from '@wordpress/element';
 import { useOnClickOutside } from 'usehooks-ts';
 import { DatePicker } from '@wordpress/components';
-import { DokanButton } from '@dokan/components';
 import { __ } from '@wordpress/i18n';
+import { DokanButton } from './index';
 
 const WpDatePicker = ( props ) => {
     const [ isOpen, setIsOpen ] = useState< boolean >( false );
