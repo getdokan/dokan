@@ -751,6 +751,7 @@ class Assets {
                 'urls'            => [
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
                     'dashboardUrl' => dokan_get_navigation_url(),
+                    'storeUrl'     => dokan_get_store_url( dokan_get_current_user_id() ),
                 ],
             ]
         );

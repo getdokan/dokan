@@ -7,7 +7,7 @@ import {
     SearchableSelect,
     useToast,
 } from '@getdokan/dokan-ui';
-import { DokanButton } from '@dokan/components';
+import { DokanButton, DokanAlert } from '@dokan/components';
 import { RawHTML, useEffect, useState } from '@wordpress/element';
 import '../../definitions/window-types';
 import { useWithdraw } from './Hooks/useWithdraw';
@@ -15,9 +15,8 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { useCharge } from './Hooks/useCharge';
 import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
-import { formatPrice } from '@dokan/utilities';
+import { formatNumber } from '@dokan/utilities';
 import { UseBalanceReturn } from './Hooks/useBalance';
-import { DokanAlert } from '@dokan/components';
 
 function RequestWithdrawBtn( {
     settings,
@@ -34,7 +33,7 @@ function RequestWithdrawBtn( {
     const withdrawHook = useWithdraw();
     const toast = useToast();
     const [ withdrawMethod, setWithdrawMethod ] = useState( '' );
-    const { fetchCharge, isLoading, data } = useCharge();
+    const { fetchCharge, isLoading, data, error } = useCharge();
     const hasWithdrawRequests =
         withdrawRequests?.data &&
         Array.isArray( withdrawRequests?.data ) &&
@@ -63,15 +62,15 @@ function RequestWithdrawBtn( {
 
     const getRecivableFormated = () => {
         if ( ! withdrawAmount ) {
-            return formatPrice( '', '' );
+            return formatNumber( 0 );
         }
 
-        return formatPrice( data?.receivable ?? '', '' );
+        return formatNumber( data?.receivable ?? 0 );
     };
     const getChargeFormated = () => {
         let chargeText = '';
         if ( ! withdrawAmount ) {
-            return formatPrice( '', '' );
+            return formatNumber( 0 );
         }
 
         const fixed = data?.charge_data?.fixed
@@ -82,17 +81,17 @@ function RequestWithdrawBtn( {
             : '';
 
         if ( fixed ) {
-            chargeText += formatPrice( fixed, '' );
+            chargeText += formatNumber( fixed );
         }
 
         if ( percentage ) {
             chargeText += chargeText ? ' + ' : '';
             chargeText += `${ percentage }%`;
-            chargeText += ` = ${ formatPrice( data?.charge, '' ) }`;
+            chargeText += ` = ${ formatNumber( data?.charge ) }`;
         }
 
         if ( ! chargeText ) {
-            chargeText = formatPrice( data?.charge, '' );
+            chargeText = formatNumber( data?.charge );
         }
 
         return chargeText;
@@ -139,9 +138,6 @@ function RequestWithdrawBtn( {
     };
 
     function handleWithdrawAmount( value ) {
-        if ( ! value ) {
-            value = 0;
-        }
         setWithdrawAmount( value );
         calculateWithdrawCharge( withdrawMethod, unformatNumber( value ) );
     }
@@ -158,6 +154,15 @@ function RequestWithdrawBtn( {
             }
         );
     };
+
+    useEffect( () => {
+        if ( error && error?.message && error?.message.length > 0 ) {
+            toast( {
+                title: error?.message,
+                type: 'error',
+            } );
+        }
+    }, [ error ] );
 
     const WithdrawRequestForm = () => {
         return (
