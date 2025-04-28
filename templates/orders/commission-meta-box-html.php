@@ -209,7 +209,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         echo wc_price(
                             $order_commission->get_admin_subsidy(), array(
 								'currency' => $order->get_currency(),
-								'decimals' => wc_get_price_decimals() + 2,
+								'decimals' => wc_get_price_decimals(),
                             )
                         );
 						?>
