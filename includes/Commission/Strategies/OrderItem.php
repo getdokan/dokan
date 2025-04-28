@@ -47,8 +47,17 @@ class OrderItem extends AbstractStrategy {
         $this->vendor_id = $vendor_id ? $vendor_id : dokan_get_vendor_by_product( $order_item->get_product_id(), true );
 
         parent::__construct();
+    }
 
-        $this->set_next( new Product( $order_item->get_product_id(), $vendor_id ) );
+    /**
+     * @inheritDoc
+     */
+    public function set_next(): AbstractStrategy {
+        if ( ! $this->next ) {
+			$this->next = new Product( $this->order_item->get_product_id(), $this->vendor_id );
+        }
+
+        return $this;
     }
 
     /**

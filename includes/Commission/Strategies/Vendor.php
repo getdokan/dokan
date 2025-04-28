@@ -44,8 +44,17 @@ class Vendor extends AbstractStrategy {
         $this->category_id = $category_id;
 
         parent::__construct();
+    }
 
-        $this->set_next( new GlobalStrategy( $category_id ) );
+    /**
+     * @inheritDoc
+     */
+    public function set_next(): AbstractStrategy {
+        if ( ! $this->next ) {
+			$this->next = new GlobalStrategy( $this->category_id );
+        }
+
+        return $this;
     }
 
     /**

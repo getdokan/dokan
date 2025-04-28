@@ -70,6 +70,10 @@ abstract class AbstractStrategy {
      * @return \WeDevs\Dokan\Commission\Strategies\AbstractStrategy|null
      */
     public function get_next(): ?AbstractStrategy {
+        if ( ! $this->next ) {
+            $this->set_next();
+        }
+
         return $this->next;
     }
 
@@ -78,15 +82,9 @@ abstract class AbstractStrategy {
      *
      * @since DOKAN_SINCE
      *
-     * @param \WeDevs\Dokan\Commission\Strategies\AbstractStrategy $next
-     *
      * @return \WeDevs\Dokan\Commission\Strategies\AbstractStrategy
      */
-    public function set_next( AbstractStrategy $next ): AbstractStrategy {
-        $this->next = $next;
-
-        return $this;
-    }
+    abstract public function set_next(): AbstractStrategy;
 
     /**
      * Saves the applicable commission settings to the order item.
