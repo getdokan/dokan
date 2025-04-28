@@ -20,7 +20,7 @@ class RefundHandler implements Hookable {
         add_filter( 'dokan_vendor_earning_in_refund', [ $this, 'get_vendor_earning_in_refund' ], 10, 2 );
         add_action( 'dokan_refund_adjust_vendor_balance', [ $this, 'insert_into_balance_table' ], 10, 3 );
         add_action( 'dokan_refund_adjust_dokan_orders', [ $this, 'update_order_amounts' ], 10, 3 );
-        add_action( 'dokan_refund_adjust_vendor_balance_updated', [ $this, 'clear_order_caches' ], 10, 3 );
+        add_action( 'dokan_refund_after_dokan_orders_updated', [ $this, 'clear_order_caches' ], 10, 3 );
     }
 
     /**
@@ -51,7 +51,7 @@ class RefundHandler implements Hookable {
 
         do_action( 'dokan_refund_adjust_vendor_balance', $vendor_refund, $refund_order, $order );
 
-        do_action( 'dokan_refund_adjust_dokan_orders', $vendor_refund, $order, $refund_order );
+        do_action( 'dokan_refund_adjust_dokan_orders', $vendor_refund, $refund_order, $order );
     }
 
     /**
@@ -270,7 +270,7 @@ class RefundHandler implements Hookable {
 			);
 		}
 
-        do_action( 'dokan_refund_adjust_dokan_orders_updated', $vendor_refund, $refund_order, $order );
+        do_action( 'dokan_refund_after_dokan_orders_updated', $vendor_refund, $refund_order, $order );
 	}
 
 	/**
