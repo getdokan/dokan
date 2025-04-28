@@ -18,7 +18,7 @@
 $total_commission = $order_commission->get_admin_commission();
 $total_commission = 0 > $total_commission ? 0 : $total_commission;
 
-$order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
+$order_total = $order->get_total() - $order->get_total_refunded();
 $net_amount  = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;
 
 $shipping_fee_recipient     = $order->get_meta( 'shipping_fee_recipient' );
@@ -80,7 +80,7 @@ foreach ( $order->get_refunds() as $refund ) {
                     $commission_type      = '';
                     $admin_commission     = '';
                     $commission_data = $order_commission->get_commission_for_line_item( $item_id );
-            
+
 
                     $commission_type_html = $all_commission_types[ $commission_type ] ?? '';
                     ?>
