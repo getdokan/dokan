@@ -54,6 +54,14 @@ class RefundHandler implements Hookable {
         do_action( 'dokan_refund_adjust_dokan_orders', $vendor_refund, $order, $refund_order );
     }
 
+    /**
+     * Get the vendor earning amount in the refund.
+     *
+     * @param \WC_Order_Refund $refund_order
+     * @param \WC_Order $order
+     *
+     * @return float
+     */
     public function get_vendor_earning_in_refund( $refund_order, $order ): float {
         if ( $order->get_meta( 'has_sub_order' ) ) {
             return 0;
@@ -74,7 +82,7 @@ class RefundHandler implements Hookable {
     }
 
     /**
-     * Check the COD payement settings.
+     * Check the COD payment settings.
      *
      * @param bool $ret
      * @param \WC_Order_Refund $refund_order
@@ -136,7 +144,6 @@ class RefundHandler implements Hookable {
 
         return abs( $vendor_tax_refund );
     }
-
 
     /**
      * Get the refunded shipping amount for the vendor.
