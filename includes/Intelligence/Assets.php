@@ -55,5 +55,6 @@ class Assets implements Hookable {
 
         wp_enqueue_style( 'dokan-ai-style' );
         wp_enqueue_script( 'dokan-ai-script' );
+        wp_set_script_translations( 'dokan-ai-script', 'dokan-lite' );
     }
 }
