@@ -200,7 +200,7 @@ class RefundHandler implements Hookable {
 
         $vendor_refund_amount = apply_filters( 'dokan_vendor_refund_amount_before_insert', $vendor_refund_amount, $order, $refund_order );
 
-        if ( apply_filters( 'dokan_refund_should_insert_into_vendor_balance', $vendor_refund_amount <= 0, $refund_order, $order ) ) {
+        if ( ! apply_filters( 'dokan_refund_should_insert_into_vendor_balance', $vendor_refund_amount > 0, $refund_order, $order ) ) {
 			return;
         }
 
