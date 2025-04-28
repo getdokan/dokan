@@ -80,7 +80,10 @@ function PaymentMethods( {
                                         'dokan-lite'
                                     ),
                                 } );
-                                bodyData.refresh();
+                                bodyData.setData( {
+                                    ...bodyData.data,
+                                    withdraw_method: activemethod.value,
+                                } );
                             } );
                     } }
                     disabled={ makeDefaultMethodHook.isLoading }
