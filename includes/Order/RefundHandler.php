@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Order;
 use WeDevs\Dokan\Analytics\Reports\OrderType;
 use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Contracts\Hookable;
+use WeDevs\Dokan\Cache;
 
 class RefundHandler implements Hookable {
     /**
@@ -18,6 +19,8 @@ class RefundHandler implements Hookable {
         add_filter( 'dokan_refund_should_insert_into_vendor_balance', [ $this, 'exclude_cod_payment' ], 10, 3 );
         add_filter( 'dokan_vendor_earning_in_refund', [ $this, 'get_vendor_earning_in_refund' ], 10, 2 );
         add_action( 'dokan_refund_adjust_vendor_balance', [ $this, 'insert_into_balance_table' ], 10, 3 );
+        add_action( 'dokan_refund_adjust_dokan_orders', [ $this, 'update_order_amounts' ], 10, 3 );
+        add_action( 'dokan_refund_adjust_vendor_balance_updated', [ $this, 'clear_order_caches' ], 10, 3 );
     }
 
     /**
@@ -259,5 +262,25 @@ class RefundHandler implements Hookable {
                 ]
 			);
 		}
+
+        do_action( 'dokan_refund_adjust_dokan_orders_updated', $vendor_refund, $refund_order, $order );
+	}
+
+	/**
+	 * Clear order related caches
+	 *
+	 * @param float $vendor_refund
+     * @param \WC_Order_Refund $refund_order
+     * @param \WC_Order $order
+	 */
+	public function clear_order_caches( $vendor_refund, $refund_order, $order ) {
+        $order_id = $order->get_id();
+		// Clear seller earning cache
+		$cache_key = "get_earning_from_order_table_{$order_id}_seller";
+		Cache::delete( $cache_key );
+
+		// Clear admin earning cache
+		$cache_key = "get_earning_from_order_table_{$order_id}_admin";
+		Cache::delete( $cache_key );
 	}
 }
