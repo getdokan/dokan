@@ -43,8 +43,9 @@
                 $upgrade_url = 'https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite';
                 ?>
                 <a target="_blank" href="<?php echo esc_url( $upgrade_url ); ?>" class="upgrade-button">
-                    Upgrade
                     <?php
+                    esc_html_e( 'Upgrade', 'dokan-lite' );
+
                     dokan_get_template_part(
                         'svg-icons/pro-award', null,
                         [

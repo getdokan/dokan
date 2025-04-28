@@ -170,7 +170,7 @@ const BasicInfoScreen = ( {
                     </div>
 
                     <div className="flex items-center gap-2 space-y-8">
-                        <div className="flex-shrink-0 mb-2">
+                        <div className="flex-shrink-0 mt-1.5">
                             <SimpleCheckbox
                                 input={ {
                                     id: 'localShareDiagnostics',
@@ -205,7 +205,7 @@ const BasicInfoScreen = ( {
                                     'dokan-lite'
                                 ) }
                             </h3>
-                            <p className="text-sm text-gray-500 lg:max-w-[400px]">
+                            <p className="text-sm text-gray-500">
                                 { __(
                                     'Allow Dokan Multivendor Marketplace to collect non-sensitive diagnostic data and usage information.',
                                     'dokan-lite'
