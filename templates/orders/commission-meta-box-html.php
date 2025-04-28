@@ -15,11 +15,7 @@
  * @package dokan
  */
 
-$total_commission = $order_commission->get_admin_commission();
-$total_commission = 0 > $total_commission ? 0 : $total_commission;
-
 $order_total = $order->get_total() - $order->get_total_refunded();
-$net_amount  = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;
 
 $shipping_fee_recipient     = $order->get_meta( 'shipping_fee_recipient' );
 $shipping_tax_fee_recipient = $order->get_meta( 'shipping_tax_fee_recipient' );
@@ -133,7 +129,7 @@ foreach ( $order->get_refunds() as $refund ) {
                             </div>
                         </td>
                         <td width="1%">
-                            <div class="view" title="<?php echo esc_html( sprintf( __( 'Source: %s', 'dokan-lite'), $commission_data->get_settings()->get_source() ) ); ?>">
+                            <div class="view" title="<?php echo esc_html( sprintf( __( 'Source: %s', 'dokan-lite' ), $commission_data->get_settings()->get_source() ) ); ?>">
                                 <?php echo esc_html( $commission_data->get_settings()->get_percentage() ); ?>%&nbsp;+&nbsp;<?php echo wc_price( $commission_data->get_settings()->get_flat() ); ?>
                             </div>
                         </td>
@@ -154,7 +150,7 @@ foreach ( $order->get_refunds() as $refund ) {
                             <div class="view">
                                 <?php
                                 $amount = $item->get_total();
-                                $original_commission = $commission_data->get_admin_commission();
+                                $original_commission = $commission_data->get_admin_net_commission();
                                 ?>
                                     <bdi>
                                     <?php
@@ -323,7 +319,7 @@ foreach ( $order->get_refunds() as $refund ) {
                         <td class="total">
                             <?php
                             echo wc_price(
-                                -1 * $order_commission->get_admin_gateway_fee() , array(
+                                -1 * $order_commission->get_admin_gateway_fee(), array(
 									'currency' => $order->get_currency(),
 									'decimals' => wc_get_price_decimals(),
                                 )
@@ -346,7 +342,7 @@ foreach ( $order->get_refunds() as $refund ) {
                     <td class="total">
                         <?php
                         echo wc_price(
-                            $total_commission, array(
+                            $order_commission->get_admin_commission(), array(
 								'currency' => $order->get_currency(),
 								'decimals' => wc_get_price_decimals(),
                             )
