@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import ForbiddenIcon from '@dokan/layout/Icons/ForbiddenIcon';
-import { DokanButton } from '@dokan/components';
 import { Slot } from '@wordpress/components';
+import { DokanButton } from '../components';
 
 const Forbidden = ( {
     children,
