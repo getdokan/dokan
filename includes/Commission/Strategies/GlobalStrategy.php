@@ -33,8 +33,17 @@ class GlobalStrategy extends AbstractStrategy {
         $this->category_id = $category_id;
 
         parent::__construct();
+    }
 
-        $this->set_next( new DefaultStrategy() );
+    /**
+     * @inheritDoc
+     */
+    public function set_next(): AbstractStrategy {
+        if ( ! $this->next ) {
+			$this->next = new DefaultStrategy();
+        }
+
+        return $this;
     }
 
     /**

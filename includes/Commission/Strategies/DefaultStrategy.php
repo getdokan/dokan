@@ -25,6 +25,15 @@ class DefaultStrategy extends AbstractStrategy {
     }
 
     /**
+     * @inheritDoc
+     */
+    public function set_next(): AbstractStrategy {
+        $this->next = null;
+
+        return $this;
+    }
+
+    /**
      * Returns global commission settings.
      *
      * @since 3.14.0
