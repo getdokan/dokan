@@ -71,3 +71,13 @@ export const formatNumber = ( value ) => {
         window?.dokanFrontend?.currency.decimal
     );
 };
+
+export const unformatNumber = ( value ) => {
+    if ( value === '' ) {
+        return value;
+    }
+    return window.accounting.unformat(
+        value,
+        window?.dokanFrontend?.currency.decimal
+    );
+};
