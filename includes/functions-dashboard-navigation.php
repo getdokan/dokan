@@ -226,6 +226,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
             $title = $item['title'];
         }
 
+        $title     = apply_filters( 'dokan_vendor_dashboard_menu_title', $title, $item );
         $menu_slug = $filtered_key;
         $submenu   = '';
 
@@ -288,7 +289,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
             $item['url'] ?? dokan_get_navigation_url( $menu_slug ),
             $item['target'] ?? '_self',
             $item['icon'] ?? '<i class="fab fa-staylinked"></i>',
-            apply_filters( 'dokan_vendor_dashboard_menu_title', $title, $item ),
+            $title,
             $submenu
         );
     }
