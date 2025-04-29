@@ -80,7 +80,7 @@ class Flat extends AbstractFormula {
         $this->set_quantity( max( $this->get_quantity(), 1 ) );
 
         if ( $this->is_applicable() ) {
-            $this->per_item_admin_commission = dokan()->commission->validate_rate( $this->get_settings()->get_flat() );
+            $this->per_item_admin_commission = $this->validate_rate( $this->get_settings()->get_flat() );
         }
 
         if ( $this->per_item_admin_commission > $this->get_amount() ) {
@@ -168,7 +168,7 @@ class Flat extends AbstractFormula {
      * @return float
      */
     public function get_per_item_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->per_item_admin_commission );
+        return $this->validate_rate( $this->per_item_admin_commission );
     }
 
     /**

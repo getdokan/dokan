@@ -65,6 +65,7 @@ class ServiceProvider extends BootableServiceProvider {
         $this->getContainer()->addServiceProvider( new IntelligenceServiceProvider() );
 		$this->getContainer()->addServiceProvider( new AdminDashboardServiceProvider() );
 		$this->getContainer()->addServiceProvider( new AdminSetupGuideServiceProvider() );
+		$this->getContainer()->addServiceProvider( new CommissionServiceProvider() );
 	}
 
     /**
