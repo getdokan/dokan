@@ -1,13 +1,12 @@
 import { __, sprintf } from '@wordpress/i18n';
 import {
-    MaskedInput,
     Modal,
     SimpleAlert,
     SimpleInput,
     SearchableSelect,
     useToast,
 } from '@getdokan/dokan-ui';
-import { DokanButton, DokanAlert } from '@dokan/components';
+import { DokanButton, DokanAlert, DokanPriceInput } from '@dokan/components';
 import { RawHTML, useEffect, useState } from '@wordpress/element';
 import '../../definitions/window-types';
 import { useWithdraw } from './Hooks/useWithdraw';
@@ -137,9 +136,9 @@ function RequestWithdrawBtn( {
             } );
     };
 
-    function handleWithdrawAmount( value ) {
-        setWithdrawAmount( value );
-        calculateWithdrawCharge( withdrawMethod, unformatNumber( value ) );
+    function handleWithdrawAmount( rawValue, priceValue ) {
+        setWithdrawAmount( rawValue );
+        calculateWithdrawCharge( withdrawMethod, priceValue );
     }
 
     const debouncedWithdrawAmount = useDebounceCallback(
@@ -184,33 +183,23 @@ function RequestWithdrawBtn( {
                             />
                         </div>
                         <div className="mt-3">
-                            <MaskedInput
-                                label={ __( 'Withdraw amount', 'dokan-lite' ) }
-                                className="focus:border-none"
-                                addOnLeft={ currencySymbol }
+                            <DokanPriceInput
+                                namespace="withdraw-request"
+                                label={ __( 'Withdraw amount', 'dokan' ) }
                                 value={ withdrawAmount }
-                                onChange={ ( e ) => {
-                                    debouncedWithdrawAmount( e.target.value );
-                                } }
-                                maskRule={ {
-                                    numeral: true,
-                                    numeralDecimalMark:
-                                        window?.dokanFrontend?.currency
-                                            ?.decimal ?? '.',
-                                    delimiter:
-                                        window?.dokanFrontend?.currency
-                                            ?.thousand ?? ',',
-                                    numeralDecimalScale:
-                                        window?.dokanFrontend?.currency
-                                            ?.precision ?? 2,
+                                onChange={ (
+                                    formatedValue,
+                                    unformattedValue
+                                ) => {
+                                    debouncedWithdrawAmount(
+                                        formatedValue,
+                                        unformattedValue
+                                    );
                                 } }
                                 input={ {
                                     id: 'withdraw-amount',
                                     name: 'withdraw-amount',
-                                    type: 'text',
-                                    placeholder: __( 'Enter amount', 'dokan-lite' ),
-                                    required: true,
-                                    disabled: false,
+                                    placeholder: __( 'Enter amount', 'dokan' ),
                                 } }
                             />
                         </div>

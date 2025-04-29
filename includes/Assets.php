@@ -165,6 +165,7 @@ class Assets {
             'symbol'    => html_entity_decode( get_woocommerce_currency_symbol() ),
             'decimal'   => esc_attr( wc_get_price_decimal_separator() ),
             'thousand'  => esc_attr( wc_get_price_thousand_separator() ),
+            'position'  => esc_attr( get_option( 'woocommerce_currency_pos' ) ),
             'format'    => esc_attr( str_replace( [ '%1$s', '%2$s' ], [ '%s', '%v' ], get_woocommerce_price_format() ) ), // For accounting JS
         ];
     }
