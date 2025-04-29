@@ -36,10 +36,31 @@ Dokan uses a semantic color system where colors represent specific meanings:
 /* Tertiary Button */
 --dokan-button-tertiary-text-color: #637381;
 --dokan-button-tertiary-hover-text-color: #7047EB;
---dokan-button-tertiary-background-color: #f3f4f6;
---dokan-button-tertiary-hover-background-color: #b5e7eb;
+--dokan-button-tertiary-background-color: #00000000;
+--dokan-button-tertiary-hover-background-color: #DACEFF;
 --dokan-button-tertiary-border-color: transparent;
 --dokan-button-tertiary-hover-border-color: #7047EB;
+
+/* Status Button Variables */
+--dokan-button-info-text-color: #ffffff;
+--dokan-button-info-hover-text-color: #ffffff;
+--dokan-button-info-background-color: #0B76B7;
+--dokan-button-info-hover-background-color: #2795d7;
+
+--dokan-button-success-text-color: #ffffff;
+--dokan-button-success-hover-text-color: #ffffff;
+--dokan-button-success-background-color: #07a67e;
+--dokan-button-success-hover-background-color: #11b68c;
+
+--dokan-button-warning-text-color: #ffffff;
+--dokan-button-warning-hover-text-color: #ffffff;
+--dokan-button-warning-background-color: #e9a905;
+--dokan-button-warning-hover-background-color: #fbbf24;
+
+--dokan-button-danger-text-color: #ffffff;
+--dokan-button-danger-hover-text-color: #ffffff;
+--dokan-button-danger-background-color: #e3050c;
+--dokan-button-danger-hover-background-color: #f23030;
 ```
 
 ### Sidebar Variables
@@ -54,27 +75,31 @@ Dokan uses a semantic color system where colors represent specific meanings:
 ```css
 /* Info Colors */
 --dokan-info-text-color: #0B76B7;
---dokan-info-light-text-color: #637381;
+--dokan-info-secondary-text-color: #637381;
 --dokan-info-background-color: #E9F9FF;
 --dokan-info-border-color: #E9F9FFFF;
+--dokan-info-hover-text-color: #3ea4e1;
 
 /* Success Colors */
 --dokan-success-text-color: #004434;
---dokan-success-light-text-color: #637381;
+--dokan-success-secondary-text-color: #637381;
 --dokan-success-background-color: #DAF8E6;
 --dokan-success-border-color: #DAF8E6FF;
+--dokan-success-hover-text-color: #09a77d;
 
 /* Warning Colors */
 --dokan-warning-text-color: #9D5425;
---dokan-warning-light-text-color: #D0915C;
+--dokan-warning-secondary-text-color: #D0915C;
 --dokan-warning-background-color: #FFFBEB;
 --dokan-warning-border-color: #FFFBEBFF;
+--dokan-warning-hover-text-color: #e9a904;
 
 /* Danger Colors */
 --dokan-danger-text-color: #BC1C21;
---dokan-danger-light-text-color: #F56060;
+--dokan-danger-secondary-text-color: #F56060;
 --dokan-danger-background-color: #FEF3F3;
 --dokan-danger-border-color: #FEF3F3FF;
+--dokan-danger-hover-text-color: #e5292e;
 ```
 
 ### Link Colors
@@ -115,9 +140,13 @@ Dokan uses a semantic color system where colors represent specific meanings:
 
 // Link Classes
 <a className="dokan-link">Link Text</a>
+<a className="dokan-link-info">Info Link</a>
+<a className="dokan-link-success">Success Link</a>
+<a className="dokan-link-warning">Warning Link</a>
+<a className="dokan-link-danger">Danger Link</a>
 ```
 
-### 2. Tailwind Uitility Classes with Dokan Colors
+### 2. Tailwind Utility Classes with Dokan Colors
 
 ```jsx
 // Text Colors
@@ -206,127 +235,165 @@ Dokan uses a semantic color system where colors represent specific meanings:
 ### Button Styling with Hover
 ```css
 .dokan-btn {
-  @apply relative bg-dokan-btn text-dokan-btn border-dokan-btn ring-dokan-btn transition-colors duration-200;
+  @apply relative ring-0 ring-offset-0 bg-dokan-btn text-dokan-btn border-dokan-btn ring-dokan-btn transition-colors duration-200 !important;
+
+  &:hover {
+    @apply ring-0 ring-offset-0 bg-dokan-btn-hover text-dokan-btn-hover border-dokan-btn-hover !important;
+  }
+
+  &:focus {
+    @apply ring-0 ring-offset-0 !important;
+  }
+
+  &:disabled {
+    @apply opacity-60 cursor-not-allowed !important;
+  }
 }
 
-.dokan-btn:hover,
-.dokan-btn:focus {
-  @apply bg-dokan-btn-hover text-dokan-btn-hover border-dokan-btn-hover ring-dokan-btn-hover;
+.dokan-btn-secondary {
+  @apply relative ring-0 ring-offset-0 bg-dokan-btn-secondary text-dokan-btn-secondary border-dokan-btn-secondary ring-dokan-btn-secondary transition-colors duration-200 !important;
+
+  &:focus {
+    @apply ring-0 ring-offset-0 !important;
+  }
+
+  &:hover {
+    @apply ring-0 ring-offset-0 bg-dokan-btn-secondary-hover text-dokan-btn-secondary-hover border-dokan-btn-secondary-hover ring-dokan-btn-secondary-hover !important;
+  }
 }
 
-.dokan-btn:disabled {
-  @apply opacity-60 cursor-not-allowed;
+.dokan-btn-tertiary {
+  @apply relative ring-0 ring-offset-0 bg-dokan-btn-tertiary text-dokan-btn-tertiary border-dokan-btn-tertiary ring-dokan-btn-tertiary transition-colors duration-200 !important;
+
+  &:focus {
+    @apply ring-0 ring-offset-0 !important;
+  }
+
+  &:hover {
+    @apply ring-0 ring-offset-0 bg-dokan-btn-tertiary-hover text-dokan-btn-tertiary-hover !important;
+  }
+}
+
+/* Status Button Styles */
+.dokan-btn-info {
+  @apply relative bg-dokan-btn-info text-dokan-btn-info border-dokan-btn-info ring-dokan-btn-info transition-colors duration-200 !important;
+
+  &:hover {
+    @apply bg-dokan-btn-info-hover text-dokan-btn-info-hover border-dokan-btn-info-hover ring-dokan-btn-info-hover !important;
+  }
+}
+
+.dokan-btn-success {
+  @apply relative bg-dokan-btn-success text-dokan-btn-success border-dokan-btn-success ring-dokan-btn-success transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply bg-dokan-btn-success-hover text-dokan-btn-success-hover border-dokan-btn-success-hover ring-dokan-btn-success-hover !important;
+  }
+}
+
+.dokan-btn-warning {
+  @apply relative bg-dokan-btn-warning text-dokan-btn-warning border-dokan-btn-warning ring-dokan-btn-warning transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply bg-dokan-btn-warning-hover text-dokan-btn-warning-hover border-dokan-btn-warning-hover ring-dokan-btn-warning-hover !important;
+  }
+}
+
+.dokan-btn-danger {
+  @apply relative bg-dokan-btn-danger text-dokan-btn-danger border-dokan-btn-danger ring-dokan-btn-danger transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply bg-dokan-btn-danger-hover text-dokan-btn-danger-hover border-dokan-btn-danger-hover ring-dokan-btn-danger-hover !important;
+  }
 }
 
 .dokan-btn-sm {
-  @apply relative px-2 py-1 text-sm;
+  @apply relative px-2 py-1 text-sm !important;
 }
 
 .dokan-btn-lg {
-  @apply relative px-6 py-3 text-lg;
-}
-
-/* Status Button Hover States */
-.dokan-btn-info:hover,
-.dokan-btn-info:focus {
-  @apply bg-blue-600 text-white;
-}
-
-.dokan-btn-success:hover,
-.dokan-btn-success:focus {
-  @apply bg-green-600 text-white;
-}
-
-.dokan-btn-warning:hover,
-.dokan-btn-warning:focus {
-  @apply bg-yellow-600 text-white;
-}
-
-.dokan-btn-danger:hover,
-.dokan-btn-danger:focus {
-  @apply bg-red-600 text-white;
+  @apply relative px-6 py-3 text-lg !important;
 }
 ```
 
 ### Badge Styling with Hover
 ```css
 .dokan-badge-info {
-  @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info transition-colors duration-200;
-}
-
-.dokan-badge-info:hover {
-  @apply bg-dokan-info text-dokan-info;
+  @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info !important;
 }
 
 .dokan-badge-success {
-  @apply relative ring-1 ring-inset bg-dokan-success text-dokan-success ring-dokan-success transition-colors duration-200;
-}
-
-.dokan-badge-success:hover {
-  @apply bg-dokan-success text-dokan-success;
+  @apply relative ring-1 ring-inset bg-dokan-success text-dokan-success ring-dokan-success !important;
 }
 
 .dokan-badge-warning {
-  @apply relative ring-1 ring-inset bg-dokan-warning text-dokan-warning ring-dokan-warning transition-colors duration-200;
-}
-
-.dokan-badge-warning:hover {
-  @apply bg-dokan-warning text-dokan-warning;
+  @apply relative ring-1 ring-inset bg-dokan-warning text-dokan-warning ring-dokan-warning !important;
 }
 
 .dokan-badge-danger {
-  @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger ring-dokan-danger transition-colors duration-200;
-}
-
-.dokan-badge-danger:hover {
-  @apply bg-dokan-danger text-dokan-danger;
+  @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger ring-dokan-danger !important;
 }
 ```
 
 ### Alert Styling with Hover
 ```css
 .dokan-alert-info {
-  @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info-light ring-dokan-info transition-colors duration-200;
-}
-
-.dokan-alert-info:hover {
-  @apply bg-dokan-info text-dokan-info-light;
+  @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info-secondary ring-dokan-info !important;
 }
 
 .dokan-alert-success {
-  @apply relative ring-1 ring-inset bg-dokan-success text-dokan-success-light ring-dokan-success transition-colors duration-200;
-}
-
-.dokan-alert-success:hover {
-  @apply bg-dokan-success text-dokan-success-light;
+  @apply relative ring-1 ring-inset bg-dokan-success text-dokan-success-secondary ring-dokan-success !important;
 }
 
 .dokan-alert-warning {
-  @apply relative ring-1 ring-inset bg-dokan-warning text-dokan-warning-light ring-dokan-warning transition-colors duration-200;
-}
-
-.dokan-alert-warning:hover {
-  @apply bg-dokan-warning text-dokan-warning-light;
+  @apply relative ring-1 ring-inset bg-dokan-warning text-dokan-warning-secondary ring-dokan-warning !important;
 }
 
 .dokan-alert-danger {
-  @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger-light ring-dokan-danger transition-colors duration-200;
-}
-
-.dokan-alert-danger:hover {
-  @apply bg-dokan-danger text-dokan-danger-light;
+  @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger-secondary ring-dokan-danger !important;
 }
 ```
 
 ### Link Styling with Hover
 ```css
 .dokan-link {
-  @apply relative text-dokan-link no-underline transition-colors duration-200;
+  @apply relative text-dokan-link no-underline transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply text-dokan-link-hover !important;
+  }
 }
 
-.dokan-link:hover,
-.dokan-link:focus {
-  @apply text-dokan-link-hover underline;
+.dokan-link-info {
+  @apply relative text-dokan-link-info no-underline transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply text-dokan-link-info-hover !important;
+  }
+}
+
+.dokan-link-success {
+  @apply relative text-dokan-link-success no-underline transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply text-dokan-link-success-hover !important;
+  }
+}
+
+.dokan-link-warning {
+  @apply relative text-dokan-link-warning no-underline transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply text-dokan-link-warning-hover !important;
+  }
+}
+
+.dokan-link-danger {
+  @apply relative text-dokan-link-danger no-underline transition-colors duration-200 !important;
+
+  &:hover, &:focus {
+    @apply text-dokan-link-danger-hover !important;
+  }
 }
 ```
 
@@ -406,3 +473,33 @@ Dokan uses a semantic color system where colors represent specific meanings:
   <a href="#" className="dokan-link">Privacy Policy</a>
   <a href="#" className="dokan-link">Terms of Service</a>
 </div>
+
+<div className="flex gap-2">
+  <a href="#" className="dokan-link-info">Info Link</a>
+  <a href="#" className="dokan-link-success">Success Link</a>
+  <a href="#" className="dokan-link-warning">Warning Link</a>
+  <a href="#" className="dokan-link-danger">Danger Link</a>
+</div>
+```
+
+### Combined Implementation
+
+```jsx
+<div className="p-4 rounded-lg bg-white shadow">
+  <h2 className="text-lg font-semibold mb-4">Vendor Status</h2>
+  
+  <div className="flex items-center justify-between mb-4">
+    <span className="dokan-badge-success">Active</span>
+    <button className="dokan-btn-sm">Edit Status</button>
+  </div>
+  
+  <div className="dokan-alert-info mb-4">
+    Your store is currently visible to customers.
+  </div>
+  
+  <div className="flex justify-end gap-2">
+    <button className="dokan-btn-tertiary">Cancel</button>
+    <button className="dokan-btn">Save Changes</button>
+  </div>
+</div>
+```

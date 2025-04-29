@@ -8,6 +8,19 @@
       .dataviews__view-actions {
         display: none;
       }
+
+      .components-button.is-compact.has-icon:not(.has-text) {
+          width: auto;
+          padding: 6px;
+
+          &:hover,
+          &:focus {
+              background-color: transparent;
+              box-shadow: none;
+              border: none;
+
+          }
+      }
     }
   }
 }

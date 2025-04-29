@@ -26,6 +26,10 @@ export const useCharge = (): UseChargeReturn => {
 
     const fetchCharge = useCallback(
         async ( method: string, amount: string ) => {
+            if ( ! method || ! amount ) {
+                setData( null );
+                return;
+            }
             try {
                 setIsLoading( true );
                 setError( null );
@@ -37,12 +41,8 @@ export const useCharge = (): UseChargeReturn => {
 
                 setData( response );
             } catch ( err ) {
-                setError(
-                    err instanceof Error
-                        ? err
-                        : new Error( 'Failed to fetch charge' )
-                );
-                console.error( 'Error fetching charge:', err );
+                setError( err );
+                setData( err?.data ?? null );
             } finally {
                 setIsLoading( false );
             }

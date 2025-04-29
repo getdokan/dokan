@@ -40,12 +40,10 @@ const Status = () => {
             path: 'dokan/v1/admin/dashboard/status',
         } )
             .then( ( data ) => {
-                console.log( data );
                 setAllSettings( data );
                 setLoading( false );
             } )
             .catch( ( error ) => {
-                console.log( error );
                 setLoading( false );
             } );
     }, [] );
@@ -133,7 +131,6 @@ const Status = () => {
         setSelectedTab( tab );
     };
 
-    console.log( pages );
     return (
         <div className="h-full">
             <main className="max-w-full mx-auto pb-10 lg:py-5 lg:px-0">
