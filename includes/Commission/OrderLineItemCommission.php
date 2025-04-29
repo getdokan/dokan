@@ -114,7 +114,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             throw new \Exception( esc_html__( 'Order is required for order item commission calculation.', 'dokan-lite' ) );
         }
 
-        $item_price = apply_filters( 'dokan_earning_by_order_item_price', $this->item->get_subtotal(), $this->item, $this->order );
+        $item_price = apply_filters( 'dokan_earning_by_order_item_price', $this->item->get_total(), $this->item, $this->order );
 
         $total_quantity = $this->item->get_quantity();
 
@@ -134,6 +134,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $commission_data = dokan_get_container()->get( Calculator::class )
             ->set_settings( $settings )
             ->set_subtotal( $item_price )
+            ->set_total( $this->item->get_total() )
             ->set_quantity( $total_quantity )
             ->set_discount( new CouponInfo( $this->get_coupon_infos() ) )
             ->calculate();
@@ -169,16 +170,16 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
      */
     public function calculate_for_refund_item( WC_Order_Item $refund_item ): Commission {
         $order_item = $this->get_item();
-        $item_subtotal = $order_item->get_subtotal();
-        $refund_item_subtotal = $refund_item->get_subtotal();
+        $item_total = $order_item->get_total();
+        $refund_item_total = $refund_item->get_total();
 
         $calculator = dokan_get_container()->get( Calculator::class );
 
         $refund_commission = $calculator->calculate_for_refund(
             $this->get_vendor_net_earning(),
             $this->get_admin_net_commission(),
-            $item_subtotal,
-            $refund_item_subtotal,
+            $item_total,
+            $refund_item_total,
         );
 
         return $refund_commission;
@@ -198,7 +199,11 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
 
         $refund_amount = $this->order->get_total_refunded_for_item( $this->item->get_id() );
 
-        $item_total = $this->item->get_total() ? $this->item->get_total() : $this->item->get_subtotal();
+        /**
+         * If Admin provide discount 20 for 100, then item_total = 80.
+         * Then vendor earning and admin commission in refund amount should be proportional to 80 not 100.
+        */
+        $item_total = $this->item->get_total();
 
         $vendor_earning = $commission->get_vendor_net_earning();
         $admin_commission = $commission->get_admin_net_commission();
