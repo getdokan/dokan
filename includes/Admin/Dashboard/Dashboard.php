@@ -188,13 +188,6 @@ class Dashboard implements Hookable {
                         'external' => true,
                     ],
                     [
-                        'id'       => 'setup-wizard',
-                        'title'    => __( 'Run Setup Wizard', 'dokan-lite' ),
-                        'url'      => admin_url( 'admin.php?page=dokan-setup' ),
-                        'icon'     => 'setup-wizard',
-                        'external' => false,
-                    ],
-                    [
                         'id'       => 'import-dummy-data',
                         'title'    => __( 'Import dummy data', 'dokan-lite' ),
                         'url'      => $dashboard_url . '#/dummy-data',
