@@ -349,7 +349,7 @@ class OrderCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 			],
 
 			[
-				'case' => 'Coupon applied',
+				'case' => 'Coupon applied and refunded a item',
 				'data' => [
 					'order' => [
 						'shipping_item_list' => [
@@ -387,23 +387,10 @@ class OrderCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 							),
 						),
 					],
-					'refund' => [
-						'amount'         => 5,
-						'reason'         => 'Testing Refund',
-						'order_id'       => '{order_id}',
-						'line_items'     => [
-							'{item_id1}' => [
-								'qty'          => 1,
-								'refund_total' => 5, // Commission in Refund = - 3.5 /15 * 5 =
-								'refund_tax'   => array(),
-							],
-						],
-						'refund_payment' => false,
-					],
 					'coupon' => [
 						'code' => 'testcoupon',
 						'meta' => [
-							'discount_type' => 'percent', // percent/
+							'discount_type' => 'percent', // percent/fixed_product
 							'coupon_amount' => 20,
 							'product_ids' => [ '{product_item_id1}' ],
 							'excluded_product_ids' => [],
@@ -415,11 +402,24 @@ class OrderCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 							'admin_shared_coupon_amount' => '',
 						],
 					],
+					'refund' => [
+						'amount'         => 5,
+						'reason'         => 'Testing Refund',
+						'order_id'       => '{order_id}',
+						'line_items'     => [
+							'{item_id1}' => [
+								'qty'          => 1,
+								'refund_total' => 5, // Commission in Refund = - 1.5 /12 * 5
+								'refund_tax'   => array(),
+							],
+						],
+						'refund_payment' => false,
+					],
 				],
 				'settings' => [
 					'commission' => [
 						'global' => [
-							'type' => 'flat',
+							'type' => 'fixed',
 							'percentage' => 10,
 							'flat' => 0,
 						],
@@ -429,17 +429,16 @@ class OrderCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 				'expected' => [
 					'total' => 55 - 3,
 					'net_commission' => 3.5 - 3, // Shipping fee - Admin commission = 0.5
-					'commission' => 20 + 3.5 - 3, // Shipping fee + Admin commission - Admin Discount
-					'vendor_earnings' => 31.5,
+					'commission' => 20 + 3.5 - 3, // Shipping fee + Admin Net Commission
+					'vendor_earnings' => 31.5, // 13.5 + 18
 					'vendor_net_earnings' => 31.5,
 					'refund' => [ // Refund amount = 5
-						'total' => 50, // 55 - 5
-						'commission' => number_format( 20 + ( -1.5 - ( -1.5 / 12 * 5 ) + 2 ), 2 ), // 23.5 - 0.5
+						'commission_in_refund' => number_format( ( 5 / 12 * -1.5 ), 2 ), // Sum of ( Item wise net commission in refund = commission before refund * refund amount / paid amount ).
+						'vendor_earning_in_refund' => number_format( 5 / 12 * 13.5, 2 ), // Sum of ( Item wise net earning in refund  = earning before refund * refund amount / paid amount ).
+						'net_commission' => number_format( 0.5 - ( -1.5 / 12 * 5 ), 2 ), // Net commission after refund =  (Net commission before refund - Net commission in refund),
+						'commission' => number_format( 20 + 0.5 - ( -1.5 / 12 * 5 ), 2 ), // Admin Shipping Fee + Net commission after refund
 						'vendor_earnings' => number_format( 31.5 - ( 13.5 / 12 * 5 ), 2 ), // Item wise Vendor earning in refund = earning_before_refund / paid_amount * refund_amount
 						'vendor_net_earnings' => number_format( 31.5 - ( 13.5 / 12 * 5 ), 2 ), // Item wise Vendor earning in refund = earning_before_refund / paid_amount * refund_amount
-						'net_commission' => number_format( -1.5 - ( -1.5 / 12 * 5 ) + 2, 2 ), // (item1_commission_before_refund - item1_commission_for_refund_amount +   + item2_commission)
-						'vendor_earning_in_refund' => number_format( 5 / 12 * 13.5, 2 ), // 4.5
-						'commission_in_refund' => number_format( ( 5 / 12 * -1.5 ), 2 ), // 7.83
 					],
 				],
 			],
