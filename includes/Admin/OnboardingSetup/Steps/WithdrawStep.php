@@ -42,6 +42,15 @@ class WithdrawStep extends AbstractStep {
      * @return array Default withdraw settings
      */
     protected function get_default_settings(): array {
+        /**
+         * Filter the default settings for the withdraw step in the onboarding setup.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $default_settings The default settings for the withdraw step.
+         *
+         * @return array Filtered default settings.
+         */
         return apply_filters(
             'dokan_admin_setup_guides_withdraw_step_default_data',
             [

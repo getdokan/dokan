@@ -103,6 +103,15 @@ class RecommendedPlugins {
             }
         );
 
+        /**
+         * Filter the list of recommended inactive plugins.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $recommended_plugins List of recommended inactive plugins.
+         *
+         * @return array Filtered list of recommended inactive plugins.
+         */
         return apply_filters( 'dokan_recommended_inactive_plugins', $recommended_plugins );
     }
 }

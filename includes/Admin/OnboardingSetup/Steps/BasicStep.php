@@ -50,16 +50,25 @@ class BasicStep extends AbstractStep {
      * @return array Default basic settings
      */
     protected function get_default_settings(): array {
-        return apply_filters(
+		/**
+		 * Filter the default settings for the basic step in the onboarding setup.
+		 *
+		 * @since DOKAN_SINCE
+		 *
+		 * @param array $default_settings The default settings for the basic step.
+		 *
+		 * @return array Filtered default settings.
+		 */
+		return apply_filters(
             'dokan_admin_setup_guides_basic_step_default_data',
             [
-                'shipping_fee_recipient'     => 'seller',
-                'tax_fee_recipient'          => 'seller',
-                'shipping_tax_fee_recipient' => 'seller',
-                'order_status_change'        => 'on',
-                'new_seller_enable_selling'  => 'on',
-            ]
-        );
+				'shipping_fee_recipient'     => 'seller',
+				'tax_fee_recipient'          => 'seller',
+				'shipping_tax_fee_recipient' => 'seller',
+				'order_status_change'        => 'on',
+				'new_seller_enable_selling'  => 'on',
+			]
+		);
     }
 
     /**

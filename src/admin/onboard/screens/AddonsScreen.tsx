@@ -26,7 +26,10 @@ const AddonsScreen = ( {
                   title: addon?.title || 'Plugin',
                   description:
                       addon?.description ||
-                      'Enhance your marketplace with this plugin',
+                      __(
+                          'Enhance your marketplace with this plugin',
+                          'dokan-lite'
+                      ),
                   info: addon,
               } ) )
             : [];

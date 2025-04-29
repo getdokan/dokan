@@ -6,6 +6,7 @@ import AddonsScreen from './screens/AddonsScreen';
 import LoadingScreen from './screens/LoadingScreen';
 import SuccessScreen from './screens/SuccessScreen';
 import { OnboardingStep } from './types';
+import { __ } from '@wordpress/i18n';
 import {
     getNextStep,
     getPreviousStep,
@@ -67,7 +68,10 @@ const OnboardingApp = () => {
             }
         } catch ( error ) {
             setApiError(
-                'Failed to load initial data. Please refresh the page.'
+                __(
+                    'Failed to load initial data. Please refresh the page.',
+                    'dokan-lite'
+                )
             );
         } finally {
             setIsLoading( false );
@@ -94,7 +98,9 @@ const OnboardingApp = () => {
             // Go to success
             setCurrentStep( skipToSuccess() );
         } catch ( error ) {
-            setApiError( 'Failed to save onboarding data. Please try again.' );
+            setApiError(
+                __( 'Failed to submit data. Please try again.', 'dokan-lite' )
+            );
         } finally {
             setIsLoading( false );
         }

@@ -42,22 +42,31 @@ class CommissionStep extends AbstractStep {
      * @return array Default commission settings
      */
     protected function get_default_settings(): array {
-        return apply_filters(
+		/**
+		 * Filter the default settings for the commission step in the onboarding setup.
+		 *
+		 * @since DOKAN_SINCE
+		 *
+		 * @param array $default_settings The default settings for the commission step.
+		 *
+		 * @return array Filtered default settings.
+		 */
+		return apply_filters(
             'dokan_admin_setup_guides_commission_step_default_data',
             [
-                'additional_fee'                            => '10',
-                'commission_type'                           => 'fixed',
-                'admin_percentage'                          => '10',
-                'reset_sub_category_when_edit_all_category' => 'on',
-                'commission_category_based_values'          => [
-                    'items' => [],
-                    'all'   => [
-                        'flat'       => '',
-                        'percentage' => '',
-                    ],
-                ],
-            ]
-        );
+				'additional_fee'                            => '10',
+				'commission_type'                           => 'fixed',
+				'admin_percentage'                          => '10',
+				'reset_sub_category_when_edit_all_category' => 'on',
+				'commission_category_based_values'          => [
+					'items' => [],
+					'all'   => [
+						'flat'       => '',
+						'percentage' => '',
+					],
+				],
+			]
+		);
     }
 
     /**
