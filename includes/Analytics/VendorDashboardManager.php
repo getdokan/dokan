@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Analytics;
 
 use WeDevs\Dokan\Contracts\Hookable;
 use WP_REST_Request;
+use WP_REST_Server;
 
 class VendorDashboardManager implements Hookable {
     public function register_hooks(): void {
@@ -17,6 +18,8 @@ class VendorDashboardManager implements Hookable {
         // add_filter( 'woocommerce_rest_report_orders_stats_schema', [ $this, 'revenue_stats_schema' ] );
 
         add_filter( 'woocommerce_rest_report_sort_performance_indicators', [ $this, 'sort_performance_indicators' ] );
+        // TODO: Need to review latest woocommerce release to resolve deprecated code usage.
+        add_filter( 'woocommerce_rest_api_option_permissions', [ $this, 'add_option_check_permissions' ], 10, 2 );
     }
 
     /**
@@ -31,10 +34,26 @@ class VendorDashboardManager implements Hookable {
     }
 
     public function woocommerce_rest_check_permissions( $permission, $context, $int_val, $obj ) {
-        if ( ! $permission && in_array( $obj, [ 'reports', 'settings' ], true ) && $context === 'read' ) {
+        if ( ! $permission && in_array(
+                $obj, [
+                'reports',
+                'settings',
+                'product_cat',
+            ], true
+            ) && $context === 'read' ) {
             $current_user_id = dokan_get_current_user_id();
             $permission      = dokan_is_user_seller( $current_user_id );
         }
+
+        return $permission;
+    }
+
+    public function add_option_check_permissions( array $permission, WP_REST_Request $request ) {
+        if ( $request->get_method() !== WP_REST_Server::READABLE ) {
+            return $permission;
+        }
+
+        $permission['woocommerce_admin_install_timestamp'] = current_user_can( 'dokandar' );
 
         return $permission;
     }
