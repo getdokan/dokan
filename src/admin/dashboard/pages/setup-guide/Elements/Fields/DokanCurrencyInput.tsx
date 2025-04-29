@@ -1,6 +1,5 @@
 import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
-import { twMerge } from 'tailwind-merge';
 import { MaskedInput } from '@getdokan/dokan-ui';
 import type { MaskedInputProps } from '@getdokan/dokan-ui/dist/components/MaskedInput';
 import type { SimpleInputProps } from '@getdokan/dokan-ui/dist/components/SimpleInput';
@@ -69,7 +68,6 @@ export const DokanCurrencyInput = ( props: DokanCurrencyInputProps ) => {
 
     const InputProps: DokanCurrencyInputProps = {
         label: __( 'Currency', 'dokan-lite' ),
-        className: 'focus:border-none',
         maskRule: {
             numeral: true,
             numeralDecimalMark:
@@ -98,18 +96,11 @@ export const DokanCurrencyInput = ( props: DokanCurrencyInputProps ) => {
         case 'left':
         case 'left_space':
             InputProps.addOnLeft = currencySymbol;
-            InputProps.className = twMerge(
-                'rounded-l-none',
-                InputProps.className
-            );
+
             break;
         case 'right':
         case 'right_space':
             InputProps.addOnRight = currencySymbol;
-            InputProps.className = twMerge(
-                'rounded-r-none',
-                InputProps.className
-            );
             break;
         default:
             break;
@@ -132,7 +123,12 @@ export const DokanCurrencyInput = ( props: DokanCurrencyInputProps ) => {
             className={ `dokan-currency-input` }
         >
             <MaskedInput
-                { ...filteredProps }
+                errors={ filteredProps.errors }
+                className={ `dokan-currency-input__input ${ filteredProps.className }` }
+                label={ filteredProps.label }
+                maskRule={ filteredProps.maskRule }
+                addOnLeft={ filteredProps.addOnLeft }
+                addOnRight={ filteredProps.addOnRight }
                 value={ formatNumber( props.value ) }
                 onChange={ ( e: any ) => {
                     const formattedValue = e.target.value;
