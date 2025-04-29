@@ -54,7 +54,7 @@ const Currency = ( { element, onValueChange }: SettingsProps ) => {
                         type: element.type,
                     } }
                     errors={ fieldError ? [ fieldError ] : [] }
-                    className="w-24 h-10  focus:!ring-0 focus:!outline-none "
+                    className="w-24 h-10 rounded-l-none border-l-0 focus:!ring-0 focus:!outline-none "
                 />
             </div>
         </div>
