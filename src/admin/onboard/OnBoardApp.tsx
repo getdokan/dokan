@@ -192,7 +192,7 @@ const OnboardingApp = () => {
                         className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
                         onClick={ fetchOnboardingData }
                     >
-                        Try Again
+                        { __( 'Try Again', 'dokan-lite' ) }
                     </button>
                 </div>
             );

@@ -181,8 +181,19 @@ class AdminSetupGuideController extends DokanBaseAdminController {
             return new \WP_Error( 'dokan_rest_invalid_step', $e->getMessage(), [ 'status' => 400 ] );
         }
 
+        /**
+         * Filter the admin setup guide step response.
+         *
+         * Allows modification of the step response data before it is returned.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array  $step_array The populated step data.
+         * @param object $step       The step object.
+         *
+         * @return array The modified step response data.
+         */
         $step_array = apply_filters( 'dokan_admin_setup_guide_step_response', $step->populate(), $step );
-
         return rest_ensure_response( $step_array );
     }
 
