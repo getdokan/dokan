@@ -136,8 +136,8 @@ const StepSettings = ( {
      * @param {any} err Error object
      */
     const handleError = ( err: any ) => {
-        const errorMessage = err?.message || 'Something went wrong';
-        const errorCode = err?.code || 'unknown_error';
+        const errorMessage = err?.message || __( 'Something went wrong' );
+        const errorCode = err?.code || __( 'unknown_error', 'dokan-lite' );
 
         setError( { message: errorMessage, code: errorCode } );
         setShowError( true );
@@ -146,13 +146,6 @@ const StepSettings = ( {
         setTimeout( () => {
             setShowError( false );
         }, 5000 );
-    };
-
-    /**
-     * Dismiss the error message
-     */
-    const dismissError = () => {
-        setShowError( false );
     };
 
     /**

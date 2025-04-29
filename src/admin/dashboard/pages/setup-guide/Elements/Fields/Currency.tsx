@@ -1,19 +1,24 @@
 import { RawHTML, useState } from '@wordpress/element';
 import { DokanCurrencyInput } from './DokanCurrencyInput';
 import { SettingsProps } from '../../StepSettings';
+import { __ } from '@wordpress/i18n';
 
 const Currency = ( { element, onValueChange }: SettingsProps ) => {
     const [ localValue, setLocalValue ] = useState( element.value );
-
+    const [ fieldError, setFieldError ] = useState( null );
     if ( ! element.display ) {
         return <></>;
     }
 
-    const handleValueChange = (
-        formattedValue: string,
-        unformattedValue: number
-    ) => {
+    const handleValueChange = ( formattedValue: string, unformattedValue ) => {
+        setFieldError( null );
         setLocalValue( formattedValue );
+        // handle negative values
+        if ( unformattedValue < 0 ) {
+            setFieldError( __( 'Invalid value', 'dokan' ) );
+            return;
+        }
+
         onValueChange( {
             ...element,
             value: formattedValue,
@@ -48,7 +53,8 @@ const Currency = ( { element, onValueChange }: SettingsProps ) => {
                         placeholder: String( element?.placeholder ),
                         type: element.type,
                     } }
-                    className="w-24 h-10 rounded-r rounded-l border-l-0 focus:border-gray-300"
+                    errors={ fieldError ? [ fieldError ] : [] }
+                    className="w-24 h-10  focus:!ring-0 focus:!outline-none "
                 />
             </div>
         </div>
