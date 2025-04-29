@@ -356,7 +356,32 @@ Running tests involves executing the predefined test cases or scripts to evaluat
 ### update plugin paths in .wp-env.override
 
 :radio_button: rename the file as .wp-env.override.json [it will overide plugins mentioned in .wp-env.json]
+
 :radio_button: store the plugins as the paths mentioned in the .wp-env.override or update the paths according to pw folder
+
+```
+.
+├── plugins
+│   └── dokan                      # Dokan Lite plugin (cloned from `getdokan/dokan`)
+│       └── tests
+│           └── pw                # Playwright tests and wp-env setup
+│               ├── wp-data
+│               ├── playwright
+│               ├── playwright-report
+│               └── .wp-env.override.json
+├── woo-plugins
+│   └── tests
+│       └── plugins               # WooCommerce related zipped plugins
+│           ├── woocommerce-bookings
+│           ├── woocommerce-product-addons
+│           ├── woocommerce-simple-auctions
+│           └── woocommerce-subscriptions
+├── node_modules                  # Installed dependencies (after npm ci / install)
+├── dokan-pro.php                 # Dokan Pro plugin base (assumed root)
+├── composer.lock / package-lock.json
+└── ...                           # Other project root files
+
+```
 
 ###  Start Wordpress Environment
 :radio_button: follow previously mentioned steps for start wordpress environment and run pro projects to run pro tests
