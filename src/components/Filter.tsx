@@ -1,9 +1,9 @@
-import { Button } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import { snakeCase, kebabCase } from '../utilities';
+import DokanButton from "@dokan/components/Button";
 
 interface FilterProps {
     /** Namespace for the filter, used to generate unique IDs */
@@ -20,6 +20,10 @@ interface FilterProps {
     onReset?: () => void;
     /** Additional class names for the filter container */
     className?: string;
+    /** Additional class names for the filter button */
+    filterBtnClassName?: string;
+    /** Additional class names for the reset button */
+    resetBtnClassName?: string;
 }
 
 const Filter = ( {
@@ -30,6 +34,8 @@ const Filter = ( {
     onFilter = () => {},
     onReset = () => {},
     className = '',
+    filterBtnClassName = '',
+    resetBtnClassName = '',
 }: FilterProps ) => {
     const snakeCaseNamespace = snakeCase( namespace );
     const filterId = `dokan_${ snakeCaseNamespace }_filters`;
@@ -55,21 +61,15 @@ const Filter = ( {
             } ) }
 
             { showFilter && (
-                <Button
-                    color="primary"
-                    className="bg-dokan-btn hover:dokan-btn-hover h-10"
-                    label={ __( 'Filter', 'dokan' ) }
-                    onClick={ onFilter }
-                />
+                <DokanButton onClick={ onFilter }>
+                    { __( 'Filter', 'dokan-lite' ) }
+                </DokanButton>
             ) }
 
             { showReset && (
-                <Button
-                    color="primary"
-                    className="bg-dokan-btn hover:dokan-btn-hover h-10"
-                    label={ __( 'Reset', 'dokan' ) }
-                    onClick={ onReset }
-                />
+                <DokanButton onClick={ onReset }>
+                    { __( 'Reset', 'dokan-lite' ) }
+                </DokanButton>
             ) }
         </div>
     );

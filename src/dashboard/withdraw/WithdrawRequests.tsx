@@ -1,5 +1,5 @@
 import { useWithdrawRequests } from './Hooks/useWithdrawRequests';
-import { Button } from '@getdokan/dokan-ui';
+import { DokanButton } from '@dokan/components';
 import RequestList from './RequestList';
 import { useEffect, useState } from '@wordpress/element';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -23,7 +23,7 @@ function WithdrawRequests() {
     const validStatuses = [ 'pending', 'approved', 'cancelled' ];
 
     useEffect( () => {
-        if ( ! currentUser?.data || ! currentUser?.data?.id ) {
+        if ( ! currentUser?.id ) {
             return;
         }
         const queryParams = new URLSearchParams( location.search );
@@ -50,7 +50,7 @@ function WithdrawRequests() {
             status,
             user_id: 1,
         } );
-    }, [ location.search, currentUser?.data ] );
+    }, [ location.search, currentUser ] );
 
     const Content = () => {
         return (
@@ -60,37 +60,37 @@ function WithdrawRequests() {
                         <Link
                             to="?status=pending"
                             className={ twMerge(
-                                'hover:underline text-xs',
+                                'text-dokan-link text-xs',
                                 statusParam === 'pending'
                                     ? 'font-bold'
                                     : 'font-normal'
                             ) }
                         >
-                            { __( 'Pending Requests', 'dokan' ) }
+                            { __( 'Pending Requests', 'dokan-lite' ) }
                         </Link>
                         <span className="border-r h-3"></span>
                         <Link
                             to="?status=approved"
                             className={ twMerge(
-                                'hover:underline text-xs',
+                                'text-dokan-link text-xs',
                                 statusParam === 'approved'
                                     ? 'font-bold'
                                     : 'font-normal'
                             ) }
                         >
-                            { __( 'Approved Requests', 'dokan' ) }
+                            { __( 'Approved Requests', 'dokan-lite' ) }
                         </Link>
                         <span className="border-r h-3"></span>
                         <Link
                             to="?status=cancelled"
                             className={ twMerge(
-                                'hover:underline text-xs',
+                                'text-dokan-link text-xs',
                                 statusParam === 'cancelled'
                                     ? 'font-bold'
                                     : 'font-normal'
                             ) }
                         >
-                            { __( 'Cancelled Requests', 'dokan' ) }
+                            { __( 'Cancelled Requests', 'dokan-lite' ) }
                         </Link>
                     </div>
                     <div className="flex flex-row gap-4">
@@ -99,15 +99,6 @@ function WithdrawRequests() {
                             withdrawRequests={ useWithdrawRequestHook }
                             balanceData={ balance }
                         />
-                        <Button
-                            color="gray"
-                            className="bg-dokan-btn hover:bg-dokan-btn-hover"
-                            onClick={ () => {
-                                navigate( '/withdraw' );
-                            } }
-                        >
-                            { __( 'Withdraw Dashboard', 'dokan-lite' ) }
-                        </Button>
                     </div>
                 </div>
 
@@ -116,7 +107,6 @@ function WithdrawRequests() {
                     status={ statusParam }
                     loading={
                         useWithdrawRequestHook.isLoading ||
-                        currentUser.isLoading ||
                         withdrawSettings.isLoading
                     }
                 />

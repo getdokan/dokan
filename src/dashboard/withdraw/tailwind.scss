@@ -1,6 +1,5 @@
 @use '../../base-tailwind';
 @config './withdraw-tailwind.config.js';
-@import "@getdokan/dokan-ui/dist/dokan-ui.css";
 
 @mixin windraw-reset {
     button:focus,
@@ -16,8 +15,8 @@
     input[type="button"]:focus,
     input[type="submit"]:hover,
     input[type="submit"]:focus {
-        background-color: var(--dokan-button-hover-color, #F05025);
-        border-color: var(--dokan-button-hover-background-color, #F05025);
+        background-color: var(--dokan-button-hover-color, #7047EB);
+        border-color: var(--dokan-button-hover-background-color, #7047EB);
     }
 
     button {
@@ -59,14 +58,4 @@
 
 .dokan-withdraw-style-reset {
     @include windraw-reset;
-}
-
-#dokan-withdraw-request-data-view {
-    &.dokan-dashboard-datatable {
-        .dataviews-wrapper {
-            .dataviews__view-actions {
-                display: none;
-            }
-        }
-    }
 }

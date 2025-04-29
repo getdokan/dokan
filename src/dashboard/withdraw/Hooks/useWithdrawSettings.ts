@@ -23,6 +23,7 @@ export interface WithdrawSettings {
 
 export interface UseWithdrawSettingsReturn {
     data: WithdrawSettings | null;
+    setData: ( data: WithdrawSettings | null ) => void;
     isLoading: boolean;
     error: Error | null;
     refresh: () => void;
@@ -64,5 +65,5 @@ export const useWithdrawSettings = (): UseWithdrawSettingsReturn => {
         fetchSettings();
     }, [ fetchSettings ] );
 
-    return { data, isLoading, error, refresh };
+    return { data, setData, isLoading, error, refresh };
 };

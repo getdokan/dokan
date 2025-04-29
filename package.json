@@ -1,6 +1,6 @@
 {
   "name": "dokan",
-  "version": "3.14.10",
+  "version": "3.14.11",
   "description": "A WordPress marketplace plugin",
   "author": "Dokan Inc.",
   "license": "GPL",
@@ -62,8 +62,10 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@getdokan/dokan-ui": "github:getdokan/dokan-ui#dokan-plugin",
     "@headlessui/react": "^2.2.0",
+    "@woocommerce/date": "^4.3.0",
     "@wordpress/api-fetch": "^7.14.0",
     "@wordpress/components": "^28.9.0",
+    "@wordpress/compose": "^7.20.0",
     "@wordpress/core-data": "^7.17.0",
     "@wordpress/data": "^10.9.0",
     "@wordpress/dataviews": "^4.10.0",
@@ -73,6 +75,7 @@
     "@wordpress/i18n": "^5.8.0",
     "@wordpress/plugins": "^7.10.0",
     "@wordpress/url": "^4.15.0",
+    "lucide-react": "^0.488.0",
     "react-router-dom": "^6.27.0",
     "tailwind-merge": "^2.5.5",
     "usehooks-ts": "^3.1.0"

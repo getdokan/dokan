@@ -15,42 +15,33 @@ const Index = () => {
     const balance = useBalance();
 
     useEffect( () => {
-        if ( currentUser?.data ) {
+        if ( currentUser ) {
             useWithdrawRequestHook.fetchWithdrawRequests( {
                 per_page: 10,
                 page: 1,
                 status: 'pending',
-                user_id: currentUser?.data?.id ?? 0,
+                user_id: currentUser?.id ?? 0,
             } );
         }
-    }, [ currentUser?.data ] );
+    }, [ currentUser ] );
 
     return (
         <>
             <div className="dokan-withdraw-wrapper dokan-react-withdraw space-y-6">
                 <Balance
-                    masterLoading={
-                        currentUser.isLoading ||
-                        useWithdrawRequestHook.isLoading
-                    }
+                    masterLoading={ useWithdrawRequestHook.isLoading }
                     bodyData={ balance }
                     settings={ withdrawSettings }
                     withdrawRequests={ useWithdrawRequestHook }
                 />
                 <PaymentDetails
-                    masterLoading={
-                        currentUser.isLoading ||
-                        useWithdrawRequestHook.isLoading
-                    }
+                    masterLoading={ useWithdrawRequestHook.isLoading }
                     bodyData={ balance }
                     withdrawRequests={ useWithdrawRequestHook }
                     settings={ withdrawSettings }
                 />
                 <PaymentMethods
-                    masterLoading={
-                        currentUser.isLoading ||
-                        useWithdrawRequestHook.isLoading
-                    }
+                    masterLoading={ useWithdrawRequestHook.isLoading }
                     bodyData={ withdrawSettings }
                 />
             </div>

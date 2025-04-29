@@ -1,4 +1,4 @@
-import { Button, Modal, useToast } from '@getdokan/dokan-ui';
+import { useToast } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import PriceHtml from '../../components/PriceHtml';
@@ -6,7 +6,7 @@ import DateTimeHtml from '../../components/DateTimeHtml';
 import { useWithdraw } from './Hooks/useWithdraw';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
 import { isEqual } from 'lodash';
-import { DataViews } from '@dokan/components';
+import { DataViews, DokanModal } from '@dokan/components';
 
 function RequestList( {
     withdrawRequests,
@@ -25,9 +25,9 @@ function RequestList( {
     };
 
     const allStatus = {
-        pending: __( 'Pending Review', 'dokan' ),
-        approved: __( 'Approved', 'dokan' ),
-        cancelled: __( 'Cancelled', 'dokan' ),
+        pending: __( 'Pending Review', 'dokan-lite' ),
+        approved: __( 'Approved', 'dokan-lite' ),
+        cancelled: __( 'Cancelled', 'dokan-lite' ),
     };
 
     const fields = [
@@ -37,7 +37,7 @@ function RequestList( {
             render: ( { item } ) => (
                 <div>
                     { loading ? (
-                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                        <span className="block w-16 h-3 rounded bg-gray-200 animate-pulse"></span>
                     ) : (
                         <PriceHtml price={ item?.amount } />
                     ) }
@@ -47,7 +47,7 @@ function RequestList( {
         },
         {
             id: 'method_title',
-            label: __( 'Method', 'dokan' ),
+            label: __( 'Method', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
                 <div>
@@ -61,12 +61,12 @@ function RequestList( {
         },
         {
             id: 'created',
-            label: __( 'Date', 'dokan' ),
+            label: __( 'Date', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
                 <div>
                     { loading ? (
-                        <span className="block w-40 h-3 rounded bg-gray-200 animate-pulse"></span>
+                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
                     ) : (
                         <DateTimeHtml date={ item?.created } />
                     ) }
@@ -75,12 +75,12 @@ function RequestList( {
         },
         {
             id: 'charge',
-            label: __( 'Charge', 'dokan' ),
+            label: __( 'Charge', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
                 <div>
                     { loading ? (
-                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                        <span className="block w-16 h-3 rounded bg-gray-200 animate-pulse"></span>
                     ) : (
                         <PriceHtml price={ item?.charge } />
                     ) }
@@ -89,12 +89,12 @@ function RequestList( {
         },
         {
             id: 'receivable',
-            label: __( 'Receivable', 'dokan' ),
+            label: __( 'Receivable', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
                 <div>
                     { loading ? (
-                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                        <span className="block w-16 h-3 rounded bg-gray-200 animate-pulse"></span>
                     ) : (
                         <PriceHtml price={ item?.receivable } />
                     ) }
@@ -105,7 +105,7 @@ function RequestList( {
             ? [
                   {
                       id: 'status',
-                      label: __( 'Status', 'dokan' ),
+                      label: __( 'Status', 'dokan-lite' ),
                       enableSorting: false,
                       render: ( { item } ) => (
                           <div>
@@ -129,7 +129,7 @@ function RequestList( {
             ? [
                   {
                       id: 'note',
-                      label: __( 'Note', 'dokan' ),
+                      label: __( 'Note', 'dokan-lite' ),
                       enableSorting: false,
                       render: ( { item } ) => (
                           <div>
@@ -143,41 +143,44 @@ function RequestList( {
                   },
               ]
             : [] ),
-        ...( status === 'pending'
-            ? [
-                  {
-                      id: 'id',
-                      label: __( 'Action', 'dokan' ),
-                      render: ( { item } ) => {
-                          return (
-                              <div>
-                                  { loading ? (
-                                      <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
-                                  ) : (
-                                      <button
-                                          className="whitespace-normal m-0 hover:underline cursor-pointer bg-transparent hover:bg-transparent"
-                                          type="button"
-                                          onClick={ () => {
-                                              setCancelRequestId( item.id );
-                                              setIsOpen( true );
-                                          } }
-                                      >
-                                          { __( 'Cancel', 'dokan' ) }
-                                      </button>
-                                  ) }
-                              </div>
-                          );
-                      },
-                  },
-              ]
-            : [] ),
     ];
     const [ isOpen, setIsOpen ] = useState( false );
 
     const [ cancelRequestId, setCancelRequestId ] = useState( '' );
     const withdrawHook = useWithdraw();
 
-    const actions = [];
+    const actions = [
+        ...( status === 'pending'
+            ? [
+                  {
+                      id: 'withdraw-cancel',
+                      label: '',
+                      isPrimary: true,
+                      isEligible: () => status === 'pending',
+                      icon: () => {
+                          return (
+                              <div>
+                                  { loading ? (
+                                      <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                                  ) : (
+                                      <span
+                                          className={ `px-2 bg-transparent font-medium text-dokan-danger text-sm` }
+                                      >
+                                          { __( 'Cancel', 'dokan-lite' ) }
+                                      </span>
+                                  ) }
+                              </div>
+                          );
+                      },
+                      callback: ( data ) => {
+                          const item = data[ 0 ];
+                          setCancelRequestId( item.id );
+                          setIsOpen( true );
+                      },
+                  },
+              ]
+            : [] ),
+    ];
 
     const toast = useToast();
 
@@ -190,14 +193,14 @@ function RequestList( {
             .then( () => {
                 toast( {
                     type: 'success',
-                    title: __( 'Request cancelled successfully', 'dokan' ),
+                    title: __( 'Request cancelled successfully', 'dokan-lite' ),
                 } );
                 withdrawRequests.refresh();
             } )
             .catch( () => {
                 toast( {
                     type: 'error',
-                    title: __( 'Failed to cancel request', 'dokan' ),
+                    title: __( 'Failed to cancel request', 'dokan-lite' ),
                 } );
             } )
             .finally( () => {
@@ -245,44 +248,24 @@ function RequestList( {
                 isLoading={ loading }
             />
 
-            <Modal
-                className="max-w-2xl dokan-withdraw-style-reset dokan-layout"
+            <DokanModal
                 isOpen={ isOpen }
+                namespace="cancel-request-confirmation"
+                onConfirm={ () => canclePendingRequest() }
                 onClose={ () => setIsOpen( false ) }
-                showXButton={ false }
-            >
-                <Modal.Title className="border-b">
-                    { __( 'Confirm', 'dokan' ) }
-                </Modal.Title>
-                <Modal.Content className="">
-                    <p className="text-gray-600">
-                        { __(
-                            'Are you sure, you want to cancel this request ?',
-                            'dokan'
-                        ) }
-                    </p>
-                </Modal.Content>
-                <Modal.Footer className="border-t">
-                    <div className="flex flex-row gap-3">
-                        <Button
-                            color="secondary"
-                            className="bg-gray-50 hover:bg-gray-100"
-                            onClick={ () => setIsOpen( false ) }
-                            disabled={ withdrawHook.isLoading }
-                            label={ __( 'No', 'dokan' ) }
-                        />
-
-                        <Button
-                            color="secondary"
-                            className="bg-gray-50 hover:bg-gray-100"
-                            onClick={ canclePendingRequest }
-                            disabled={ withdrawHook.isLoading }
-                            loading={ withdrawHook.isLoading }
-                            label={ __( 'Yes', 'dokan' ) }
-                        />
-                    </div>
-                </Modal.Footer>
-            </Modal>
+                dialogTitle={ __( 'Cancel Withdraw Request', 'dokan-lite' ) }
+                confirmationTitle={ __(
+                    'Are you sure you want to proceed?',
+                    'dokan-lite'
+                ) }
+                confirmationDescription={ __(
+                    'Do you want to proceed for cancelling the withdraw request?',
+                    'dokan-lite'
+                ) }
+                confirmButtonText={ __( 'Yes, Cancel', 'dokan-lite' ) }
+                cancelButtonText={ __( 'Close', 'dokan-lite' ) }
+                loading={ withdrawHook.isLoading }
+            />
         </>
     );
 }

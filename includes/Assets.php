@@ -2,9 +2,10 @@
 
 namespace WeDevs\Dokan;
 
+use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Admin\Notices\Helper;
-use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
+use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\Utilities\OrderUtil;
 
 class Assets {
@@ -23,6 +24,7 @@ class Assets {
         } else {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
             add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ], 5 );
+            add_action( 'init', [ $this, 'register_wc_admin_scripts' ] );
         }
     }
 
@@ -163,6 +165,7 @@ class Assets {
             'symbol'    => html_entity_decode( get_woocommerce_currency_symbol() ),
             'decimal'   => esc_attr( wc_get_price_decimal_separator() ),
             'thousand'  => esc_attr( wc_get_price_thousand_separator() ),
+            'position'  => esc_attr( get_option( 'woocommerce_currency_pos' ) ),
             'format'    => esc_attr( str_replace( [ '%1$s', '%2$s' ], [ '%s', '%v' ], get_woocommerce_price_format() ) ), // For accounting JS
         ];
     }
@@ -355,13 +358,14 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
             ],
-            'dokan-react-frontend'          => [
+            'dokan-react-frontend'   => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
+                'deps'    => [ 'dokan-react-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
-            'dokan-react-components'        => [
-                'deps'    => [ 'wp-components' ],
+            'dokan-react-components' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
+                'deps'    => [ 'wp-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
         ];
@@ -584,8 +588,8 @@ class Assets {
             ],
             'dokan-hooks'               => [
                 'deps'    => [],
-                'src'     => $asset_url . '/js/hooks.js',
-                'version' => filemtime( $asset_path . 'js/hooks.js' ),
+                'src'     => $asset_url . '/js/react-hooks.js',
+                'version' => filemtime( $asset_path . 'js/react-hooks.js' ),
             ],
         ];
 
@@ -617,6 +621,38 @@ class Assets {
         }
 
         return $scripts;
+    }
+
+    /**
+     * Registers WooCommerce Admin scripts for the React-based Dokan Vendor dashboard.
+     *
+     * This function ensures that the necessary WooCommerce Admin assets are registered
+     * for use in the Dokan Vendor dashboard. It temporarily suppresses "doing it wrong"
+     * warnings during the registration process.
+     *
+     * @return void
+     */
+    public function register_wc_admin_scripts() {
+        // Register WooCommerce Admin Assets for the React-base Dokan Vendor ler dashboard.
+        if ( ! function_exists( 'get_current_screen' ) ) {
+            require_once ABSPATH . '/wp-admin/includes/screen.php';
+        }
+
+        add_filter( 'doing_it_wrong_trigger_error', [ $this, 'desable_doing_it_wrong_error' ] );
+
+		$wc_instance = WCAdminAssets::get_instance();
+        $wc_instance->register_scripts();
+
+        remove_filter( 'doing_it_wrong_trigger_error', [ $this, 'desable_doing_it_wrong_error' ] );
+    }
+
+    /**
+     * Disable "doing it wrong" error
+     *
+     * @return bool
+     */
+    public function desable_doing_it_wrong_error() {
+        return false;
     }
 
     /**
@@ -676,7 +712,7 @@ class Assets {
              * @param integer default -1
              */
             'maximum_tags_select_length'   => apply_filters( 'dokan_product_tags_select_max_length', - 1 ),  // Filter of maximun a vendor can add tags
-            'modal_header_color'           => '#F05025',
+            'modal_header_color'           => 'var(--dokan-button-background-color, #7047EB)',
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );
@@ -694,6 +730,7 @@ class Assets {
                 'urls'            => [
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
                     'dashboardUrl' => dokan_get_navigation_url(),
+                    'storeUrl'     => dokan_get_store_url( dokan_get_current_user_id() ),
                 ],
             ]
         );

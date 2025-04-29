@@ -1,10 +1,10 @@
-import { Button, Card, useToast } from '@getdokan/dokan-ui';
+import { Card, useToast } from '@getdokan/dokan-ui';
+import { DokanButton } from '@dokan/components';
 import { twMerge } from 'tailwind-merge';
 import {
     UseWithdrawSettingsReturn,
     WithdrawMethod,
 } from './Hooks/useWithdrawSettings';
-import { UseBalanceReturn } from './Hooks/useBalance';
 import { __ } from '@wordpress/i18n';
 import { useMakeDefaultMethod } from './Hooks/useMakeDefaultMethod';
 
@@ -59,21 +59,16 @@ function PaymentMethods( {
             activemethod?.value === bodyData?.data?.withdraw_method
         ) {
             return (
-                <Button
-                    color="secondary"
-                    className="bg-gray-50 hover:bg-gray-100"
-                    disabled={ true }
-                    label={ __( 'Default', 'dokan-lite' ) }
-                />
+                <DokanButton disabled={ true } variant="secondary">
+                    { __( 'Default', 'dokan-lite' ) }
+                </DokanButton>
             );
         } else if (
             activemethod.has_information &&
             activemethod?.value !== bodyData?.data?.withdraw_method
         ) {
             return (
-                <Button
-                    color="secondary"
-                    className="bg-dokan-btn hover:bg-dokan-btn-hover text-white"
+                <DokanButton
                     onClick={ () => {
                         makeDefaultMethodHook
                             .makeDefaultMethod( activemethod.value )
@@ -85,7 +80,10 @@ function PaymentMethods( {
                                         'dokan-lite'
                                     ),
                                 } );
-                                bodyData.refresh();
+                                bodyData.setData( {
+                                    ...bodyData.data,
+                                    withdraw_method: activemethod.value,
+                                } );
                             } );
                     } }
                     disabled={ makeDefaultMethodHook.isLoading }
@@ -94,20 +92,15 @@ function PaymentMethods( {
                         makeDefaultMethodHook.makingDefault ===
                             activemethod.value
                     }
-                    label={ __( 'Make Default', 'dokan-lite' ) }
-                />
+                >
+                    { __( 'Make Default', 'dokan-lite' ) }
+                </DokanButton>
             );
         }
         return (
-            <Button
-                type="button"
-                color="secondary"
-                className="bg-dokan-btn hover:bg-dokan-btn-hover text-white"
-                onClick={ () => {
-                    window.location.href = bodyData?.data?.setup_url;
-                } }
-                label={ __( 'Setup', 'dokan-lite' ) }
-            />
+            <a href={ bodyData?.data?.setup_url } className="dokan-btn">
+                { __( 'Setup', 'dokan-lite' ) }
+            </a>
         );
     };
     if (
@@ -122,7 +115,9 @@ function PaymentMethods( {
     return (
         <Card>
             <Card.Header>
-                <Card.Title className="p-0 m-0">Payment Methods</Card.Title>
+                <Card.Title className="p-0 m-0">
+                    { __( 'Payment Methods', 'dokan-lite' ) }
+                </Card.Title>
             </Card.Header>
             <Card.Body>
                 <div className="space-y-4">
@@ -134,7 +129,7 @@ function PaymentMethods( {
                                     <div
                                         key={ activeMethod.value }
                                         className={ twMerge(
-                                            'flex flex-col sm:flex-row sm:items-center justify-between',
+                                            'flex flex-col md:flex-row sm:items-center justify-between',
                                             index !== 0 ? 'border-t pt-4' : ''
                                         ) }
                                     >

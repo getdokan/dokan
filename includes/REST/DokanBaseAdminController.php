@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\REST;
 /**
 * Admin REST Controller for Dokan
 *
-* @since DOKAN_SINCE
+* @since 3.14.11
 * @package dokan
 */
 abstract class DokanBaseAdminController extends DokanBaseController {
