@@ -23,10 +23,13 @@ const AddonsScreen = ( {
             ? availableAddons.map( ( addon ) => ( {
                   id: addon?.slug,
                   icon: addon?.img_url,
-                  title: addon?.title || 'Plugin',
+                  title: addon?.title || __( 'Plugin', 'dokan-lite' ),
                   description:
                       addon?.description ||
-                      'Enhance your marketplace with this plugin',
+                      __(
+                          'Enhance your marketplace with this plugin',
+                          'dokan-lite'
+                      ),
                   info: addon,
               } ) )
             : [];

@@ -88,8 +88,18 @@ class AdminSetupGuideController extends DokanBaseAdminController {
 
         $steps = $setup_guide->get_steps_mapper();
 
+		// Apply a filter to modify the steps progress data before returning it.
+        /**
+         * Filter the admin setup guide steps progress.
+         *
+         * Allows modification of the steps progress data before it is returned.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $steps The steps progress data.
+         * @return array The modified steps progress data.
+         */
         $steps = apply_filters( 'dokan_admin_setup_guide_steps_progress', $steps );
-
         return rest_ensure_response( $steps );
     }
 
@@ -121,6 +131,17 @@ class AdminSetupGuideController extends DokanBaseAdminController {
 
         $step = $steps[ $step_index ];
 
+        // Apply a filter to modify the step response data before returning it.
+        /**
+         * Filter the admin setup guide step response.
+         *
+         * Allows modification of the step response data before it is returned.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array  $step_array The populated step data.
+         * @param object $step       The step object.
+         */
         $step_array = apply_filters( 'dokan_admin_setup_guide_step_response', $step->populate(), $step );
 
         return rest_ensure_response( $step_array );
@@ -160,8 +181,19 @@ class AdminSetupGuideController extends DokanBaseAdminController {
             return new \WP_Error( 'dokan_rest_invalid_step', $e->getMessage(), [ 'status' => 400 ] );
         }
 
+        /**
+         * Filter the admin setup guide step response.
+         *
+         * Allows modification of the step response data before it is returned.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array  $step_array The populated step data.
+         * @param object $step       The step object.
+         *
+         * @return array The modified step response data.
+         */
         $step_array = apply_filters( 'dokan_admin_setup_guide_step_response', $step->populate(), $step );
-
         return rest_ensure_response( $step_array );
     }
 

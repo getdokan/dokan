@@ -121,6 +121,7 @@ const BasicInfoScreen = ( {
                             addOnLeft={
                                 <span className="md:inline-flex hidden items-center bg-gray-50 px-3 text-xs text-gray-900 sm:text-sm rouned-bl absolute left-0 top-0 h-full rounded-bl rounded-tl w-max">
                                     { sprintf(
+                                        // eslint-disable-next-line @wordpress/i18n-translator-comments
                                         __( '%s/', 'dokan-lite' ),
                                         siteUrlContent
                                     ) }

@@ -83,6 +83,16 @@ class RecommendedPlugins {
      * @return bool
      */
     protected function is_active( string $basename ): bool {
+        /**
+         * Filter to determine if a recommended plugin is active.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool   $is_active Whether the plugin is active.
+         * @param string $basename  The basename of the plugin.
+         *
+         * @return bool Filtered value indicating if the plugin is active.
+         */
         return apply_filters( 'dokan_recommended_plugin_is_active', is_plugin_active( $basename ), $basename );
     }
 
@@ -103,6 +113,15 @@ class RecommendedPlugins {
             }
         );
 
+        /**
+         * Filter the list of recommended inactive plugins.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $recommended_plugins List of recommended inactive plugins.
+         *
+         * @return array Filtered list of recommended inactive plugins.
+         */
         return apply_filters( 'dokan_recommended_inactive_plugins', $recommended_plugins );
     }
 }
