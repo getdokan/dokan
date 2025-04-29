@@ -9,6 +9,7 @@ use WeDevs\Dokan\Commission\Model\Setting;
 class Calculator extends AbstractCommissionCalculator {
 
     protected float $subtotal = 0.0;
+    protected float $total = 0.0;
     protected int $quantity = 0;
     protected Setting $settings;
     protected ?CouponInfo $discount;
@@ -27,6 +28,25 @@ class Calculator extends AbstractCommissionCalculator {
      */
     public function set_subtotal( float $subtotal ): Calculator {
         $this->subtotal = $subtotal;
+
+        return $this;
+    }
+
+
+    /**
+     * @return float
+     */
+    public function get_total(): float {
+        return $this->total;
+    }
+
+    /**
+     * @param float $total
+     *
+     * @return Calculator
+     */
+    public function set_total( float $total ): Calculator {
+        $this->total = $total;
 
         return $this;
     }
@@ -91,11 +111,9 @@ class Calculator extends AbstractCommissionCalculator {
      * @return Commission
      */
     public function calculate(): Commission {
-        $total_discount = $this->get_discount()->get_total_discount();
-
         $raw_admin_commission = $this->calculate_raw_admin_commission();
 
-        $net_amount       = $this->subtotal - $total_discount;
+        $net_amount       = $this->get_total();
         $admin_commission = min( $raw_admin_commission, $net_amount );
 
         $vendor_earning = $net_amount - $admin_commission;
@@ -116,10 +134,9 @@ class Calculator extends AbstractCommissionCalculator {
      * @return float
      */
     private function calculate_raw_admin_commission(): float {
-        $vendor_discount = $this->get_discount()->get_vendor_discount();
-        $admin_discount  = $this->get_discount()->get_admin_discount();
+        $admin_discount = $this->get_discount()->get_admin_discount();
 
-        $net_amount_with_admin_discount = $this->subtotal - $vendor_discount;
+        $net_amount_with_admin_discount = $this->get_total() + $admin_discount;
 
         $percentage_commission = ( $net_amount_with_admin_discount * $this->settings->get_percentage() ) / 100;
         $flat_commission       = $this->settings->get_flat() * $this->quantity;

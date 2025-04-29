@@ -114,7 +114,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
             throw new \Exception( esc_html__( 'Order is required for order item commission calculation.', 'dokan-lite' ) );
         }
 
-        $item_price = apply_filters( 'dokan_earning_by_order_item_price', $this->item->get_subtotal(), $this->item, $this->order );
+        $item_price = apply_filters( 'dokan_earning_by_order_item_price', $this->item->get_total(), $this->item, $this->order );
 
         $total_quantity = $this->item->get_quantity();
 
@@ -134,6 +134,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
         $commission_data = dokan_get_container()->get( Calculator::class )
             ->set_settings( $settings )
             ->set_subtotal( $item_price )
+            ->set_total( $this->item->get_total() )
             ->set_quantity( $total_quantity )
             ->set_discount( new CouponInfo( $this->get_coupon_infos() ) )
             ->calculate();
