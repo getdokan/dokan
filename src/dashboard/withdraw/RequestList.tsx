@@ -25,9 +25,9 @@ function RequestList( {
     };
 
     const allStatus = {
-        pending: __( 'Pending Review', 'dokan' ),
-        approved: __( 'Approved', 'dokan' ),
-        cancelled: __( 'Cancelled', 'dokan' ),
+        pending: __( 'Pending Review', 'dokan-lite' ),
+        approved: __( 'Approved', 'dokan-lite' ),
+        cancelled: __( 'Cancelled', 'dokan-lite' ),
     };
 
     const fields = [
@@ -37,7 +37,7 @@ function RequestList( {
             render: ( { item } ) => (
                 <div>
                     { loading ? (
-                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                        <span className="block w-16 h-3 rounded bg-gray-200 animate-pulse"></span>
                     ) : (
                         <PriceHtml price={ item?.amount } />
                     ) }
@@ -47,7 +47,7 @@ function RequestList( {
         },
         {
             id: 'method_title',
-            label: __( 'Method', 'dokan' ),
+            label: __( 'Method', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
                 <div>
@@ -61,12 +61,12 @@ function RequestList( {
         },
         {
             id: 'created',
-            label: __( 'Date', 'dokan' ),
+            label: __( 'Date', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
                 <div>
                     { loading ? (
-                        <span className="block w-40 h-3 rounded bg-gray-200 animate-pulse"></span>
+                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
                     ) : (
                         <DateTimeHtml date={ item?.created } />
                     ) }
@@ -75,12 +75,12 @@ function RequestList( {
         },
         {
             id: 'charge',
-            label: __( 'Charge', 'dokan' ),
+            label: __( 'Charge', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
                 <div>
                     { loading ? (
-                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                        <span className="block w-16 h-3 rounded bg-gray-200 animate-pulse"></span>
                     ) : (
                         <PriceHtml price={ item?.charge } />
                     ) }
@@ -89,12 +89,12 @@ function RequestList( {
         },
         {
             id: 'receivable',
-            label: __( 'Receivable', 'dokan' ),
+            label: __( 'Receivable', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
                 <div>
                     { loading ? (
-                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                        <span className="block w-16 h-3 rounded bg-gray-200 animate-pulse"></span>
                     ) : (
                         <PriceHtml price={ item?.receivable } />
                     ) }
@@ -105,7 +105,7 @@ function RequestList( {
             ? [
                   {
                       id: 'status',
-                      label: __( 'Status', 'dokan' ),
+                      label: __( 'Status', 'dokan-lite' ),
                       enableSorting: false,
                       render: ( { item } ) => (
                           <div>
@@ -129,7 +129,7 @@ function RequestList( {
             ? [
                   {
                       id: 'note',
-                      label: __( 'Note', 'dokan' ),
+                      label: __( 'Note', 'dokan-lite' ),
                       enableSorting: false,
                       render: ( { item } ) => (
                           <div>
@@ -159,11 +159,17 @@ function RequestList( {
                       isEligible: () => status === 'pending',
                       icon: () => {
                           return (
-                              <span
-                                  className={ `px-2 bg-transparent font-medium text-dokan-danger text-sm` }
-                              >
-                                  { __( 'Cancel', 'dokan' ) }
-                              </span>
+                              <div>
+                                  { loading ? (
+                                      <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
+                                  ) : (
+                                      <span
+                                          className={ `px-2 bg-transparent font-medium text-dokan-danger text-sm` }
+                                      >
+                                          { __( 'Cancel', 'dokan-lite' ) }
+                                      </span>
+                                  ) }
+                              </div>
                           );
                       },
                       callback: ( data ) => {
@@ -187,14 +193,14 @@ function RequestList( {
             .then( () => {
                 toast( {
                     type: 'success',
-                    title: __( 'Request cancelled successfully', 'dokan' ),
+                    title: __( 'Request cancelled successfully', 'dokan-lite' ),
                 } );
                 withdrawRequests.refresh();
             } )
             .catch( () => {
                 toast( {
                     type: 'error',
-                    title: __( 'Failed to cancel request', 'dokan' ),
+                    title: __( 'Failed to cancel request', 'dokan-lite' ),
                 } );
             } )
             .finally( () => {
@@ -256,8 +262,8 @@ function RequestList( {
                     'Do you want to proceed for cancelling the withdraw request?',
                     'dokan-lite'
                 ) }
-                confirmButtonText={ __( 'Yes, Cancel', 'dokan' ) }
-                cancelButtonText={ __( 'Close', 'dokan' ) }
+                confirmButtonText={ __( 'Yes, Cancel', 'dokan-lite' ) }
+                cancelButtonText={ __( 'Close', 'dokan-lite' ) }
                 loading={ withdrawHook.isLoading }
             />
         </>
