@@ -185,7 +185,7 @@ function RequestWithdrawBtn( {
                         <div className="mt-3">
                             <DokanPriceInput
                                 namespace="withdraw-request"
-                                label={ __( 'Withdraw amount', 'dokan-lite' ) }
+                                label={ __( 'Withdraw amount', 'dokan' ) }
                                 value={ withdrawAmount }
                                 onChange={ (
                                     formatedValue,
@@ -199,7 +199,6 @@ function RequestWithdrawBtn( {
                                 input={ {
                                     id: 'withdraw-amount',
                                     name: 'withdraw-amount',
-                                    type: 'text',
                                     placeholder: __( 'Enter amount', 'dokan-lite' ),
                                     required: true,
                                     disabled: false,
