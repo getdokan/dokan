@@ -79,11 +79,11 @@ class OrderItem implements InterfaceSetting {
     public function save( array $setting ): Setting {
         $setting = apply_filters( 'dokan_order_line_item_commission_settings_before_save', $setting, $this->order_item );
         $settings = new Setting();
-        $settings->set_type( $setting['type'] )
-            ->set_flat( $setting['flat'] )
-            ->set_percentage( $setting['percentage'] )
-            ->set_source( $setting['source'] )
-            ->set_meta_data( $setting['meta_data'] );
+        $settings->set_type( $setting['type'] ?? '' )
+            ->set_flat( $setting['flat'] ?? '' )
+            ->set_percentage( $setting['percentage'] ?? '' )
+            ->set_source( $setting['source'] ?? '' )
+            ->set_meta_data( $setting['meta_data'] ?? '' );
 
         $this->order_item->update_meta_data( '_dokan_commission_source', $settings->get_source() );
         $this->order_item->update_meta_data( '_dokan_commission_rate', $settings->get_percentage() );
