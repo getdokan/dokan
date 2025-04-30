@@ -119,7 +119,7 @@ const BasicInfoScreen = ( {
                             required={ true }
                             value={ displayStoreUrl }
                             addOnLeft={
-                                <span className="md:inline-flex hidden items-center bg-gray-50 px-3 text-xs text-gray-900 sm:text-sm rouned-bl absolute left-0 top-0 h-full rounded-bl rounded-tl w-max">
+                                <span className="w-48">
                                     { sprintf(
                                         // eslint-disable-next-line @wordpress/i18n-translator-comments
                                         __( '%s/', 'dokan-lite' ),
@@ -128,7 +128,7 @@ const BasicInfoScreen = ( {
                                 </span>
                             }
                             addOnRight={
-                                <span className="md:inline-flex hidden items-center bg-gray-50 px-3 text-gray-900 text-xs sm:text-sm rouned-bl absolute right-0 top-0 h-full rounded-bl rounded-tl w-max">
+                                <span className="w-24">
                                     { __( '/vendor-name', 'dokan-lite' ) }
                                 </span>
                             }
@@ -145,11 +145,7 @@ const BasicInfoScreen = ( {
                             errors={ error && [ error ] }
                             onChange={ onHandleInputChange }
                             onBlur={ onBlurInput }
-                            className={ `sm:pl-[11rem] pl-6  mb-2 block focus:ring-0 focus:outline-gray-300 focus:ring-0 ${
-                                error
-                                    ? 'focus:outline-red-500'
-                                    : 'focus:outline-blue-500'
-                            } border-gray-300 rounded-md` }
+                            className="!h-auto"
                         />
                         <div className="flex items-center gap-1 mt-6 text-sm text-gray-500">
                             <WarningIcon />
