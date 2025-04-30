@@ -70,6 +70,15 @@ class RecommendedPlugins {
      * @return array
      */
     protected function get_enlisted_plugins(): array {
+        /**
+         * Filter the list of recommended plugins.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $plugins List of recommended plugins.
+         *
+         * @return array Filtered list of recommended plugins.
+         */
         return apply_filters( 'dokan_recommended_plugins_list', $this->plugins );
     }
 

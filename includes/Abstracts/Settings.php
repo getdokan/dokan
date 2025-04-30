@@ -32,11 +32,7 @@ abstract class Settings extends SettingsElement {
         parent::__construct( $this->id );
         $this->set_hook_key( $this->storage_key );
 
-        try {
-            $this->describe_settings();
-        } catch ( Exception $e ) {
-            dokan_log( $e->getMessage() );
-        }
+        add_action( 'init', [ $this, 'settings' ] );
     }
 
 	/**
@@ -169,6 +165,23 @@ abstract class Settings extends SettingsElement {
 	public function escape_element( $data ): array {
 		return $data;
 	}
+
+    /**
+     * Describe the settings options.
+     *
+     * It is used to describe the settings options for the settings page in `init` hook.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function settings() {
+        try {
+            $this->describe_settings();
+        } catch ( Exception $e ) {
+            dokan_log( $e->getMessage() );
+        }
+    }
 
 	/**
 	 * Describe the settings options
