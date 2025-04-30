@@ -40,6 +40,7 @@ class VendorBalanceUpdateHandler implements Hookable {
         try {
             $order_commission_calculator = dokan_get_container()->get( OrderCommission::class );
             $order_commission_calculator->set_order( $order );
+            $order_commission_calculator->set_should_adjust_refund( false );
             $order_commission_calculator->calculate();
 
             $vendor_earning = $order_commission_calculator->get_vendor_total_earning();
