@@ -156,7 +156,7 @@ class Calculator extends AbstractCommissionCalculator {
      */
     private function create_commission(
         float $admin_commission,
-        float $vendor_earning,
+        float $vendor_earning
     ): Commission {
         $commission = new Commission();
         $commission->set_admin_net_commission( $admin_commission );
