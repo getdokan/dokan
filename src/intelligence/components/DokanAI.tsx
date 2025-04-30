@@ -8,6 +8,17 @@ import { useMutationObserver } from '../../hooks';
 import { DokanAlert, DokanButton } from '@dokan/components';
 import AISkeleton from './Skeleton';
 
+const initialIndex = {
+    post_title: 0,
+    post_excerpt: 0,
+    post_content: 0,
+};
+const initialContent = {
+    post_title: [],
+    post_excerpt: [],
+    post_content: [],
+};
+
 const DokanAI = () => {
     const [ isOpen, setIsOpen ] = useState( false );
     const [ refineLoading, setRefineLoading ] = useState( {
@@ -19,27 +30,24 @@ const DokanAI = () => {
     const [ prompt, setPrompt ] = useState( '' );
     const [ error, setError ] = useState( '' );
     const [ regenerateModal, setRegenerateModal ] = useState( false );
-    const [ responseHistory, setResponseHistory ] = useState( {
-        post_title: [],
-        post_excerpt: [],
-        post_content: [],
-    } );
+    const [ responseHistory, setResponseHistory ] = useState( initialContent );
     const [ isEditMode, setIsEditMode ] = useState( false );
 
-    const [ historyIndex, setHistoryIndex ] = useState( {
-        post_title: 0,
-        post_excerpt: 0,
-        post_content: 0,
-    } );
+    const [ historyIndex, setHistoryIndex ] = useState( initialIndex );
 
     const [ isLoading, setIsLoading ] = useState( false );
 
     const resetIndex = () => {
-        setHistoryIndex( {
-            post_title: 0,
-            post_excerpt: 0,
-            post_content: 0,
-        } );
+        setHistoryIndex( initialIndex );
+    };
+
+    const getElement = ( ifr: string, selector: string ) => {
+        const iframe = document.getElementById( ifr ) as HTMLIFrameElement;
+        const doc = iframe.contentDocument || iframe.contentWindow?.document;
+        return (
+            doc?.querySelector( `[data-id="${ selector }"]` ) ||
+            document.querySelector( `#${ selector }` )
+        );
     };
 
     const handleLabelClick = ( event: any ) => {
@@ -47,31 +55,33 @@ const DokanAI = () => {
         event.stopPropagation();
         setIsOpen( true );
 
-        // if title exists
+        // if values exists
         const title = document.querySelector(
             '#post_title'
         ) as HTMLInputElement;
-        const postExcerpt = document.querySelector(
+        const postExcerpt = getElement( 'post_excerpt_ifr', 'post_excerpt' );
+        const excerptValue = document.querySelector(
             '#post_excerpt'
         ) as HTMLInputElement;
-        const postContent = document.querySelector(
+        const postContent = getElement( 'post_content_ifr', 'post_content' );
+        const contentValue = document.querySelector(
             '#post_content'
         ) as HTMLInputElement;
 
         const previousData = {
-            post_title: [],
-            post_excerpt: [],
-            post_content: [],
+            ...initialContent,
         } as any;
-        if ( title.value ) {
-            previousData.post_title = [ title.value ];
+
+        if ( excerptValue.value || contentValue.value ) {
+            previousData.post_title = [ title.value || '' ];
             setPrompt( title.value );
         }
-        if ( postExcerpt.value ) {
-            previousData.post_excerpt = [ postExcerpt.value ];
+
+        if ( postExcerpt.innerHTML && excerptValue.value ) {
+            previousData.post_excerpt = [ postExcerpt.innerHTML ];
         }
-        if ( postContent.value ) {
-            previousData.post_content = [ postContent.value ];
+        if ( postContent.innerHTML && contentValue.value ) {
+            previousData.post_content = [ postContent.innerHTML ];
         }
         setResponseHistory( previousData );
         resetIndex();
@@ -81,11 +91,7 @@ const DokanAI = () => {
         setPrompt( '' );
         setError( '' );
         setRegenerateModal( false );
-        setResponseHistory( {
-            post_title: [],
-            post_excerpt: [],
-            post_content: [],
-        } );
+        setResponseHistory( initialContent );
         resetIndex();
     };
 
@@ -144,6 +150,11 @@ const DokanAI = () => {
             product title is ${
                 responseHistory.post_title[ historyIndex.post_title ]
             }`;
+        }
+
+        if ( ! refineField?.trim() ) {
+            setError( __( 'Please enter a prompt.', 'dokan-lite' ) );
+            return;
         }
 
         setIsLoading( true );
@@ -235,12 +246,7 @@ const DokanAI = () => {
     };
 
     const insertHandler = ( force = false ) => {
-        // get title from post_title field
-        const existingTitle = document.querySelector(
-            '#post_title'
-        ) as HTMLInputElement;
-
-        if ( existingTitle.value && ! force ) {
+        if ( isEditMode && ! force ) {
             setIsOpen( false );
             setRegenerateModal( true );
             return;
@@ -292,12 +298,17 @@ const DokanAI = () => {
     );
 
     useEffect( () => {
-        if ( responseHistory.post_title.length ) {
-            setIsEditMode( true );
-        } else {
-            setIsEditMode( false );
-        }
-    }, [ responseHistory.post_title ] );
+        const hasContent =
+            responseHistory.post_title.length > 0 ||
+            responseHistory.post_content.length > 0 ||
+            responseHistory.post_excerpt.length > 0;
+
+        setIsEditMode( hasContent );
+    }, [
+        responseHistory.post_title,
+        responseHistory.post_content,
+        responseHistory.post_excerpt,
+    ] );
 
     return (
         <>
