@@ -145,11 +145,7 @@ const BasicInfoScreen = ( {
                             errors={ error && [ error ] }
                             onChange={ onHandleInputChange }
                             onBlur={ onBlurInput }
-                            className={ `!h-auto focus:ring-0 focus:outline-gray-300 focus:ring-0 ${
-                                error
-                                    ? 'focus:outline-red-500'
-                                    : 'focus:outline-blue-500'
-                            }` }
+                            className="!h-auto"
                         />
                         <div className="flex items-center gap-1 mt-6 text-sm text-gray-500">
                             <WarningIcon />
