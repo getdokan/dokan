@@ -182,7 +182,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      */
     public function get_admin_shipping_fee(): float {
         if ( self::ADMIN === dokan()->fees->get_shipping_fee_recipient( $this->order ) ) {
-            return $this->order->get_shipping_total() - $this->order->get_total_shipping_refunded();
+            return $this->order->get_shipping_total() - $this->get_shipping_refunded();
         }
 
         return 0;
@@ -197,7 +197,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      */
     public function get_admin_tax_fee() {
         if ( self::ADMIN === dokan()->fees->get_tax_fee_recipient( $this->order->get_id() ) ) {
-            return ( ( floatval( $this->order->get_total_tax() ) - floatval( $this->order->get_total_tax_refunded() ) ) - ( floatval( $this->order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $this->order ) ) ) );
+            return ( ( floatval( $this->order->get_total_tax() ) - floatval( $this->get_tax_refunded() ) ) - ( floatval( $this->order->get_shipping_tax() ) - floatval( $this->get_total_shipping_tax_refunded() ) ) );
         }
 
         return 0;
@@ -212,7 +212,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      */
     public function get_admin_shipping_tax_fee() {
         if ( self::ADMIN === dokan()->fees->get_shipping_tax_fee_recipient( $this->order ) ) {
-            return ( floatval( $this->order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $this->order ) ) );
+            return ( floatval( $this->order->get_shipping_tax() ) - floatval( $this->get_total_shipping_tax_refunded() ) );
         }
 
         return 0;
@@ -244,7 +244,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      */
     public function get_vendor_shipping_fee(): float {
         if ( self::SELLER === dokan()->fees->get_shipping_fee_recipient( $this->order ) ) {
-            return $this->order->get_shipping_total() - $this->order->get_total_shipping_refunded();
+            return $this->order->get_shipping_total() - $this->get_shipping_refunded();
         }
 
         return 0;
@@ -259,7 +259,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      */
     public function get_vendor_shipping_tax_fee(): float {
         if ( self::SELLER === dokan()->fees->get_shipping_tax_fee_recipient( $this->order ) ) {
-            return ( floatval( $this->order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $this->order ) ) );
+            return ( floatval( $this->order->get_shipping_tax() ) - floatval( $this->get_total_shipping_tax_refunded() ) );
         }
 
         return 0;
@@ -274,7 +274,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      */
     public function get_vendor_tax_fee(): float {
         if ( self::SELLER === dokan()->fees->get_tax_fee_recipient( $this->order->get_id() ) ) {
-            return ( ( floatval( $this->order->get_total_tax() ) - floatval( $this->order->get_total_tax_refunded() ) ) - ( floatval( $this->order->get_shipping_tax() ) - floatval( dokan()->fees->get_total_shipping_tax_refunded( $this->order ) ) ) );
+            return ( ( floatval( $this->order->get_total_tax() ) - floatval( $this->get_tax_refunded() ) ) - ( floatval( $this->order->get_shipping_tax() ) - floatval( $this->get_total_shipping_tax_refunded() ) ) );
         }
 
         return 0;
@@ -473,4 +473,31 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
 	public function get_vendor_total_earning(): float {
 		return $this->get_vendor_earning();
 	}
+
+    /**
+     * Get the total shipping refunded.
+     *
+     * @return float
+     */
+    protected function get_shipping_refunded(): float {
+        return $this->get_should_adjust_refund() ? $this->order->get_total_shipping_refunded() : 0.0;
+    }
+
+    /**
+     * Get the tax refunded.
+     *
+     * @return float
+     */
+    protected function get_tax_refunded(): float {
+        return $this->get_should_adjust_refund() ? $this->order->get_total_tax_refunded() : 0.0;
+    }
+
+    /**
+     * Get the total shipping tax refunded.
+     *
+     * @return float
+     */
+    protected function get_total_shipping_tax_refunded(): float {
+        return $this->get_should_adjust_refund() ? dokan()->fees->get_total_shipping_tax_refunded( $this->order ) : 0.0;
+    }
 }
