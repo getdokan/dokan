@@ -23,8 +23,8 @@ $product_tax_fee_recipient  = $order->get_meta( 'tax_fee_recipient' );
 $admin                      = 'admin';
 
 $shipping_fee     = $order->get_shipping_total();
-$product_tax_fee  = $order->get_shipping_tax();
-$shipping_tax_fee = $order->get_cart_tax();
+$product_tax_fee  = $order->get_cart_tax();
+$shipping_tax_fee = $order->get_shipping_tax();
 
 $shipping_fee_refunded     = 0;
 $product_tax_fee_refunded  = 0;
