@@ -42,7 +42,7 @@ abstract class AbstractStrategy {
      * @return \WeDevs\Dokan\Commission\Model\Setting|null
      */
     public function get_settings(): ?Setting {
-        return $this->get_eligible_strategy()?->settings;
+        return $this->get_eligible_strategy() ? $this->get_eligible_strategy()->settings : null;
     }
 
     /**
@@ -59,7 +59,7 @@ abstract class AbstractStrategy {
             return $this;
         }
 
-        return $this->get_next()?->get_eligible_strategy();
+        return $this->get_next() ? $this->get_next()->get_eligible_strategy() : null;
     }
 
     /**
