@@ -110,7 +110,9 @@
     }
 
     .dokan-btn-tertiary {
-        @apply relative bg-dokan-btn-tertiary text-dokan-btn-tertiary border-dokan-btn-tertiary ring-dokan-btn-tertiary transition-colors duration-200 ease-in-out shadow-none #{!important};
+        --tw-shadow: 1px 3px 4px 0 rgb(0 0 0 / 0.05);
+
+        @apply relative bg-dokan-btn-tertiary text-dokan-btn-tertiary border-dokan-btn-tertiary ring-dokan-btn-tertiary transition-colors duration-200 ease-in-out #{!important};
 
         &:focus {
             @apply ring-0 ring-offset-0 #{!important};
