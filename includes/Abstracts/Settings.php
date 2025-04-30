@@ -32,7 +32,7 @@ abstract class Settings extends SettingsElement {
         parent::__construct( $this->id );
         $this->set_hook_key( $this->storage_key );
 
-        add_action( 'init', [ $this, 'settings' ] );
+        add_action( 'init', [ $this, 'get_described_settings' ] );
     }
 
 	/**
@@ -175,7 +175,7 @@ abstract class Settings extends SettingsElement {
      *
      * @return void
      */
-    public function settings() {
+    public function get_described_settings() {
         try {
             $this->describe_settings();
         } catch ( Exception $e ) {
