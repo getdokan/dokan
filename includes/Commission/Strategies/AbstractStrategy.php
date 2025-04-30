@@ -59,7 +59,7 @@ abstract class AbstractStrategy {
             return $this;
         }
 
-        return $this->get_next()?->get_eligible_strategy();
+        return $this->get_next()->get_eligible_strategy();
     }
 
     /**
