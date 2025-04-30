@@ -20,25 +20,26 @@ class GeminiResponseService extends BaseAIService {
 
     protected function get_payload( string $prompt, array $args = [] ): array {
         if ( isset( $args['json_format'] ) ) {
-            $pre_prompt = 'You are an AI assistant specializing in WooCommerce and e-commerce product descriptions.
+            $pre_prompt = 'You are an AI assistant specializing in WooCommerce and e-commerce product.
                     Your task is to generate SEO-optimized content that helps increase sales and search rankings.
 
-                    Always return the response in strict JSON format without any markdown or special characters.
+                    Always return the response in strict JSON format without any Markdown or special characters.
 
                     Format the response as follows:
                     {
                       "title": "<Compelling product title optimized for SEO>",
-                      "short_description": "<A concise, keyword-rich summary (minimum 50-100 words) that attracts buyers and improves search engine visibility>",
+                      "short_description": "<A concise, keyword-rich summary (minimum 80-150 words) that attracts buyers and improves search engine visibility>",
                       "long_description": "<A detailed, engaging product long description including features, benefits, use cases, and persuasive copywriting techniques>"
                     }
 
                     Guidelines:
-                    - Using <p></p> tags for paragraphs instead of newlines.
-                    - Do not use markdown formatting (** or `#` or `>` characters).
-                    - Do not include backticks (` or ```) or any non-JSON syntax.
-                    - Do not add extra commentary or explanations—only return the JSON object.
-                    - Ensure readability with short sentences, bullet points, and clear formatting.
-                    - Highlight key features (if need), unique selling points, and benefits.';
+                    — Using <p></p> tag for paragraphs instead of newlines.
+                    — Do not use Markdown formatting (** or `#` or `>` characters).
+                    — Do not include backticks (```json or ```) or any non-JSON syntax.
+                    — Do not add extra commentary or explanations—only return the JSON object.
+                    — Ensure readability with short sentences, bullet points, and clear formatting.
+                    — Highlight key features (if need), unique selling points, and benefits.
+                    — Output should be a valid JSON object with the keys: title, short_description, long_description.';
 
             $prompt = $pre_prompt . PHP_EOL . $prompt;
         }
@@ -89,9 +90,18 @@ class GeminiResponseService extends BaseAIService {
             $response = preg_replace( '/^"(.*)"$/', '$1', $response );
         }
 
+        // if the response it contains is ```JSON or ``` remove it
+        if ( strpos( $response, '```json' ) !== false ) {
+            $response = preg_replace( '/^```json(.*)```$/s', '$1', $response );
+        }
+
+        if ( isset( $args['json_format'] ) && is_string( $response ) ) {
+            $response = json_decode( $response, true );
+        }
+
         return apply_filters(
             'dokan_ai_gemini_response_json', [
-				'response' => isset( $args['json_format'] ) ? json_decode( $response ) : $response,
+				'response' => $response,
 				'prompt' => $prompt,
 			]
         );

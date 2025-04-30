@@ -29,7 +29,15 @@ class PromptUtils {
         $personalized_prompt = self::get_personalized_prompt( $id );
 
         if ( $personalized_prompt ) {
-            $prompt = $personalized_prompt . ' ' . $prompt . ' and output as same input format';
+            $prompt = $personalized_prompt . ' ' . $prompt;
+            if ( $id !== 'post_title' ) {
+                $prompt .= '
+                Guide:
+                    — The output should be in the same format as the input.
+                    — No ```JSON or No ```HTML of start and end, only pure text.
+                    — Use <p></p> tag for paragraphs. instead of \n or other html tag for styling
+                ';
+            }
         }
 
         return apply_filters( 'dokan_ai_get_prompt', $prompt, $personalized_prompt );

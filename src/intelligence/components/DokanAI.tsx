@@ -111,11 +111,20 @@ const DokanAI = () => {
             const content = await generateAiContent( prompt, {
                 json_format: 'true',
             } );
-            setResponseHistory( {
-                post_title: [ content.title ],
-                post_excerpt: [ content.short_description ],
-                post_content: [ content.long_description ],
-            } );
+            if ( content ) {
+                setResponseHistory( {
+                    post_title: [ content.title ],
+                    post_excerpt: [ content.short_description ],
+                    post_content: [ content.long_description ],
+                } );
+            } else {
+                setError(
+                    __(
+                        'No content generated, please try again.',
+                        'dokan-lite'
+                    )
+                );
+            }
             resetIndex();
         } catch ( err ) {
             setError( err.message );
@@ -344,13 +353,14 @@ const DokanAI = () => {
                 showXButton={ false }
             >
                 <Modal.Title className="border-b flex justify-between items-center">
-                    <p>
+                    <div>
                         { __( 'Craft your product information', 'dokan-lite' ) }
-                    </p>
+                    </div>
                     { isEditMode && (
                         <DokanButton
                             variant="secondary"
                             onClick={ startOver }
+                            disabled={ isLoading }
                             className="flex gap-2 items-center"
                         >
                             <svg
@@ -378,7 +388,7 @@ const DokanAI = () => {
                         <DokanAlert
                             label={ __( 'Error', 'dokan-lite' ) }
                             variant="danger"
-                            className="mb-4"
+                            className="mb-4 [&_*_p]:m-0"
                         >
                             { error }
                         </DokanAlert>
@@ -402,7 +412,7 @@ const DokanAI = () => {
                                     loading={ skeletonLoading( 'post_title' ) }
                                     element={
                                         <SimpleInput
-                                            className="bg-white focus:outline-none focus:ring-dokan-btn"
+                                            className="focus:outline-none"
                                             onChange={ ( e: any ) => {
                                                 inputHandler(
                                                     e.target.value,
@@ -454,7 +464,7 @@ const DokanAI = () => {
                                     ) }
                                     element={
                                         <div
-                                            className="mb-3 focus:outline-dokan-btn h-36 border border-gray-300 rounded p-2.5 overflow-auto"
+                                            className="mb-3 focus:outline-dokan-btn h-36 border rounded p-2.5 overflow-auto"
                                             contentEditable={ true }
                                             onBlur={ ( e ) => {
                                                 inputHandler(
@@ -512,7 +522,7 @@ const DokanAI = () => {
                                     ) }
                                     element={
                                         <div
-                                            className="mb-3 h-48 focus:outline-dokan-btn border border-gray-300 rounded p-2.5 overflow-auto"
+                                            className="mb-3 h-48 focus:outline-dokan-btn border rounded p-2.5 overflow-auto"
                                             contentEditable={ true }
                                             onBlur={ ( e ) => {
                                                 inputHandler(
@@ -572,7 +582,7 @@ const DokanAI = () => {
                             </p>
                             <TextArea
                                 disabled={ isLoading }
-                                className="min-h-48 bg-white focus:outline-none focus:ring-dokan-btn"
+                                className="min-h-48 focus:outline-none"
                                 input={ {
                                     id: 'dokan-ai-prompt',
                                     value: prompt,
