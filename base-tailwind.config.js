@@ -143,7 +143,7 @@ const baseConfig = {
                         secondary: {
                             DEFAULT:
                                 'var(--dokan-button-secondary-border-color, var(--dokan-button-border-color, #7047EB))',
-                            hover: 'var(--dokan-button-secondary-hover-border-color, #DACEFF82)',
+                            hover: 'var(--dokan-button-secondary-hover-border-color, #7047EB)',
                         },
                         tertiary: {
                             DEFAULT:
@@ -197,7 +197,7 @@ const baseConfig = {
                         secondary: {
                             DEFAULT:
                                 'var(--dokan-button-secondary-border-color, var(--dokan-button-border-color, #7047EB))',
-                            hover: 'var(--dokan-button-secondary-hover-border-color, #DACEFF82)',
+                            hover: 'var(--dokan-button-secondary-hover-border-color, #7047EB)',
                         },
                         tertiary: {
                             DEFAULT:

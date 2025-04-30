@@ -105,7 +105,7 @@
         }
 
         &:hover {
-            @apply ring-0 ring-offset-0 bg-dokan-btn-secondary-hover text-dokan-btn-secondary-hover border-dokan-btn-secondary-hover ring-dokan-btn-secondary-hover #{!important};
+            @apply ring-offset-0 bg-dokan-btn-secondary-hover text-dokan-btn-secondary-hover border-dokan-btn-secondary-hover ring-dokan-btn-secondary-hover #{!important};
         }
     }
 
@@ -228,7 +228,7 @@
     .dokan-badge-secondary {
         @apply relative ring-1 ring-inset bg-dokan-btn-secondary text-dokan-btn-secondary ring-dokan-btn-secondary #{!important};
     }
-    
+
     .dokan-badge-info {
         @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info #{!important};
     }
