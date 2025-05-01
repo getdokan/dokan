@@ -313,7 +313,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                                         wc_price(
                                                                             dokan()->commission->get_earning_by_product( $post_id ),
                                                                             [
-                                                                                'decimals' => wc_get_price_decimals() + 2,
+                                                                                'decimals' => wc_get_price_decimals(),
                                                                             ]
                                                                         )
                                                                     );
@@ -330,7 +330,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         '_regular_price',
                                                         [
                                                             'class'       => 'dokan-product-regular-price',
-                                                            'placeholder' => __( '0.00', 'dokan-lite' ),
+															'placeholder' => sprintf( '%.0' . get_option( 'woocommerce_price_num_decimals' ) . 'f', 0 ),
                                                         ],
                                                         'price'
                                                     );
@@ -353,7 +353,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         '_sale_price',
                                                         [
                                                             'class'       => 'dokan-product-sales-price',
-                                                            'placeholder' => __( '0.00', 'dokan-lite' ),
+                                                            'placeholder' => sprintf( '%.0' . get_option( 'woocommerce_price_num_decimals' ) . 'f', 0 ),
                                                         ],
                                                         'price'
                                                     );

@@ -7,7 +7,7 @@ use WeDevs\Dokan\REST\DokanBaseController;
 /**
  * Customer REST Controller for Dokan
  *
- * @since DOKAN_SINCE
+ * @since 3.14.11
  *
  * @package dokan
  */
@@ -23,7 +23,7 @@ abstract class DokanBaseCustomerController extends DokanBaseController {
     /**
      * Check if user has customer permission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.11
      *
      * @return bool
      */

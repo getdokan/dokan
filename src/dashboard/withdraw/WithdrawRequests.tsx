@@ -60,37 +60,37 @@ function WithdrawRequests() {
                         <Link
                             to="?status=pending"
                             className={ twMerge(
-                                'hover:underline text-xs',
+                                'text-dokan-link text-xs',
                                 statusParam === 'pending'
                                     ? 'font-bold'
                                     : 'font-normal'
                             ) }
                         >
-                            { __( 'Pending Requests', 'dokan' ) }
+                            { __( 'Pending Requests', 'dokan-lite' ) }
                         </Link>
                         <span className="border-r h-3"></span>
                         <Link
                             to="?status=approved"
                             className={ twMerge(
-                                'hover:underline text-xs',
+                                'text-dokan-link text-xs',
                                 statusParam === 'approved'
                                     ? 'font-bold'
                                     : 'font-normal'
                             ) }
                         >
-                            { __( 'Approved Requests', 'dokan' ) }
+                            { __( 'Approved Requests', 'dokan-lite' ) }
                         </Link>
                         <span className="border-r h-3"></span>
                         <Link
                             to="?status=cancelled"
                             className={ twMerge(
-                                'hover:underline text-xs',
+                                'text-dokan-link text-xs',
                                 statusParam === 'cancelled'
                                     ? 'font-bold'
                                     : 'font-normal'
                             ) }
                         >
-                            { __( 'Cancelled Requests', 'dokan' ) }
+                            { __( 'Cancelled Requests', 'dokan-lite' ) }
                         </Link>
                     </div>
                     <div className="flex flex-row gap-4">
@@ -99,13 +99,6 @@ function WithdrawRequests() {
                             withdrawRequests={ useWithdrawRequestHook }
                             balanceData={ balance }
                         />
-                        <DokanButton
-                            onClick={ () => {
-                                navigate( '/withdraw' );
-                            } }
-                        >
-                            { __( 'Withdraw Dashboard', 'dokan-lite' ) }
-                        </DokanButton>
                     </div>
                 </div>
 

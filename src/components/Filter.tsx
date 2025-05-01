@@ -62,13 +62,13 @@ const Filter = ( {
 
             { showFilter && (
                 <DokanButton onClick={ onFilter }>
-                    { __( 'Filter', 'dokan' ) }
+                    { __( 'Filter', 'dokan-lite' ) }
                 </DokanButton>
             ) }
 
             { showReset && (
                 <DokanButton onClick={ onReset }>
-                    { __( 'Reset', 'dokan' ) }
+                    { __( 'Reset', 'dokan-lite' ) }
                 </DokanButton>
             ) }
         </div>

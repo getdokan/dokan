@@ -12,6 +12,7 @@
 /assets/src
 
 .distignore
+.svnignore
 .gitignore
 /**/.DS_Store
 /**/*.LICENCE.txt

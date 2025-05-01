@@ -257,7 +257,7 @@ class VendorNavMenuChecker {
                 [
                     'type'   => 'primary',
                     'text' => esc_html__( 'Learn More', 'dokan-lite' ),
-                    'action'   => admin_url( 'admin.php?page=dokan-status' ),
+                    'action'   => admin_url( 'admin.php?page=dokan-dashboard#/status' ),
                     'target' => '_blank',
                 ],
             ],
