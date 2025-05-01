@@ -20,7 +20,7 @@ class ServiceProvider extends BootableServiceProvider {
     public const TAG = 'container-service';
 
 	protected $services = [
-		'product_block'       => \WeDevs\Dokan\Blocks\ProductBlock::class,
+        'product_block'       => \WeDevs\Dokan\Blocks\ProductBlock::class,
         'pageview'            => \WeDevs\Dokan\PageViews::class,
         'seller_wizard'       => \WeDevs\Dokan\Vendor\SetupWizard::class,
         'core'                => \WeDevs\Dokan\Core::class,
@@ -62,6 +62,7 @@ class ServiceProvider extends BootableServiceProvider {
 		$this->getContainer()->addServiceProvider( new FrontendServiceProvider() );
 		$this->getContainer()->addServiceProvider( new AjaxServiceProvider() );
 		$this->getContainer()->addServiceProvider( new AnalyticsServiceProvider() );
+        $this->getContainer()->addServiceProvider( new UtilsServiceProvider() );
 	}
 
     /**
