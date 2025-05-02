@@ -102,7 +102,7 @@ class Setting {
         return $this;
     }
 
-     /**
+    /**
      * Sets the commission type.
      *
      * @since 3.14.0
@@ -111,7 +111,7 @@ class Setting {
      *
      * @return $this
      */
-    public function set_source(string $source ): Setting {
+    public function set_source( string $source ): Setting {
         $this->source = $source;
 
         return $this;
@@ -161,6 +161,22 @@ class Setting {
 
         return $this;
     }
+
+    /**
+     * Sets the category commission data.
+     *
+     * @since 3.14.0
+     *
+     * @param array $category_commissions
+     *
+     * @return $this
+     */
+    public function set_category_commissions( array $category_commissions ): Setting {
+        $this->category_commissions = $category_commissions;
+
+        return $this;
+    }
+
     /**
      * Sets the commission type.
      *
@@ -179,8 +195,19 @@ class Setting {
      *
      * @return string
      */
-    public function get_source():string {
+    public function get_source(): string {
         return $this->source;
+    }
+
+    /**
+     * Returns the value of the flat settings.
+     *
+     * @since 3.14.0
+     *
+     * @return string
+     */
+    public function get_flat(): string {
+        return $this->flat;
     }
 
     /**
@@ -188,25 +215,42 @@ class Setting {
      *
      * @since 3.14.0
      *
-     * @return mixed|string
+     * @return float
      */
-    public function get_flat(): float {
-        return $this->is_combined() ? 0 : floatval($this->flat);
+    public function get_flat_value(): float {
+        return $this->is_combined() ? 0 : floatval( $this->get_flat() );
     }
 
-     /**
+    /**
      * Returns the flat amount.
      *
      * @since 3.14.0
      *
-     * @return mixed|string
+     * @return float
      */
     public function get_combine_flat(): float {
-        return $this->is_combined() ? floatval($this->flat) : 0;
+        return $this->is_combined() ? floatval( $this->flat ) : 0;
     }
 
+    /**
+     * Returns true if the commission is combined. 
+     * N.B. This is a legacy type. It does not exist in the new commission system.
+     *
+     * @return bool
+     */
     protected function is_combined(): bool {
         return $this->type === 'combine';
+    }
+
+    /**
+     * Returns the value of the percentage settings.
+     *
+     * @since 3.14.0
+     *
+     * @return string
+     */
+    public function get_percentage(): string {
+        return $this->percentage;
     }
 
     /**
@@ -214,9 +258,9 @@ class Setting {
      *
      * @since 3.14.0
      *
-     * @return mixed|string
+     * @return float
      */
-    public function get_percentage() {
+    public function get_percentage_value(): float {
         return floatval( $this->percentage );
     }
 
@@ -243,6 +287,23 @@ class Setting {
     }
 
     public function is_applicable(): bool {
-        return  trim($this->percentage) !== '' || trim($this->flat) !== '';
+        return trim( $this->percentage ) !== '' || trim( $this->flat ) !== '';
+    }
+
+    /**
+     * Returns the commission settings as an array.
+     *
+     * @since 3.14.0
+     *
+     * @return array
+     */
+    public function to_array(): array {
+        return [
+            'type'       => $this->get_type(),
+            'flat'       => $this->get_flat(),
+            'percentage' => $this->get_percentage(),
+            'source'     => $this->get_source(),
+            'meta_data'  => $this->get_meta_data(),
+        ];
     }
 }

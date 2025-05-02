@@ -2,8 +2,6 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Model\Setting;
-
 class Vendor extends AbstractStrategy {
 
     /**
@@ -46,8 +44,17 @@ class Vendor extends AbstractStrategy {
         $this->category_id = $category_id;
 
         parent::__construct();
-        
-        $this->set_next( new GlobalStrategy( $category_id ) );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function set_next(): AbstractStrategy {
+        if ( ! $this->next ) {
+			$this->next = new GlobalStrategy( $this->category_id );
+        }
+
+        return $this;
     }
 
     /**
@@ -80,7 +87,7 @@ class Vendor extends AbstractStrategy {
      * @return void
      */
     public function set_settings() {
-        $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->vendor_id );
+        $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->vendor_id, $this->category_id );
         $this->settings = $settings->get();
 
         return $settings;

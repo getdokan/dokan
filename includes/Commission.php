@@ -482,14 +482,16 @@ class Commission {
             true
         );
 
-        $parameters       = $commission_data->get_parameters() ?? [];
-        $percentage       = $parameters['percentage'] ?? 0;
-        $flat             = $parameters['flat'] ?? 0;
+        $settings       = $commission_data->get_settings();
+        $percentage       = $settings->get_percentage();
+        $flat             = $settings->get_flat();
+        $commission_type = $settings->get_type();
 
         return apply_filters(
             'dokan_after_commission_calculation',
             $commission_data->get_vendor_earning() ?? 0,
-            $percentage, $commission_data->get_type() ?? 'none',
+            $percentage,
+            $commission_type,
             $flat,
             $product_price,
             $this->get_order_id()

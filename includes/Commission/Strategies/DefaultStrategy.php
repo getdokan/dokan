@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Model\Setting;
 use WeDevs\Dokan\Commission\Settings\DefaultSetting;
 
 class DefaultStrategy extends AbstractStrategy {
@@ -23,6 +22,15 @@ class DefaultStrategy extends AbstractStrategy {
      */
     public function get_source(): string {
         return self::SOURCE;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function set_next(): AbstractStrategy {
+        $this->next = null;
+
+        return $this;
     }
 
     /**

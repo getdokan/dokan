@@ -7,6 +7,7 @@ use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Commission\OrderLineItemCommission;
 use WeDevs\Dokan\Commission\ProductCommission;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
+use WeDevs\Dokan\Order\VendorBalanceUpdateHandler;
 
 class CommissionServiceProvider extends BaseServiceProvider {
     /**
@@ -19,6 +20,7 @@ class CommissionServiceProvider extends BaseServiceProvider {
         OrderLineItemCommission::class,
         ProductCommission::class,
         Calculator::class,
+        VendorBalanceUpdateHandler::class,
     ];
 
     /**

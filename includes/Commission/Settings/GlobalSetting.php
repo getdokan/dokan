@@ -74,9 +74,11 @@ class GlobalSetting implements InterfaceSetting {
      *     @type array  $category_commissions
      * }
      *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
+     * @return void
      */
-    public function save( array $setting ): Setting {
+    public function save( array $setting ): void {
+        $setting = apply_filters( 'dokan_global_commission_settings_before_save', $setting );
+
         $options                                     = get_option( 'dokan_selling', [] );
         $options['commission_type']                  = isset( $setting['type'] ) ? $setting['type'] : '';
         $options['admin_percentage']                 = isset( $setting['percentage'] ) ? $setting['percentage'] : '';
@@ -85,6 +87,6 @@ class GlobalSetting implements InterfaceSetting {
 
         update_option( 'dokan_selling', $options );
 
-        return $this->get();
+        do_action( 'dokan_global_commission_settings_after_save', $setting );
     }
 }

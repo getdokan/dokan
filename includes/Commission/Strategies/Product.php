@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Model\Setting;
 use WeDevs\Dokan\ProductCategory\Helper;
 
 class Product extends AbstractStrategy {
@@ -15,6 +14,8 @@ class Product extends AbstractStrategy {
      * @var int
      */
     protected $product_id;
+
+    protected $vendor_id;
 
     /**
      * Product strategy source
@@ -32,13 +33,31 @@ class Product extends AbstractStrategy {
      */
     public function __construct( $product_id, $vendor_id = 0 ) {
         $this->product_id = $product_id;
-        $vendor_id = $vendor_id ? $vendor_id : dokan_get_vendor_by_product( $product_id, true );
+        $this->vendor_id = $vendor_id;
 
         parent::__construct();
-
-        $this->set_next( new Vendor( $vendor_id, $this->get_category_from_product( $product_id ) ) );
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function set_next(): AbstractStrategy {
+        if ( ! $this->next ) {
+            $product_id = $this->product_id;
+            $vendor_id = $this->vendor_id ? $this->vendor_id : dokan_get_vendor_by_product( $product_id, true );
+
+			$this->next = new Vendor( $vendor_id, $this->get_category_from_product( $product_id ) );
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get category for the given product.
+     *
+     * @param int $product_id
+     * @return void
+     */
     protected function get_category_from_product( $product_id ) {
         $product_categories = Helper::get_saved_products_category( $product_id );
         $chosen_categories  = $product_categories['chosen_cat'];

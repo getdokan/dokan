@@ -87,7 +87,7 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
                 $item_metadatas = $item_data['meta_data'] ?? array();
                 foreach ( $item_metadatas as $item_meta ) {
                     if ( is_array( $item_meta ) ) {
-                        $is_unique = $item_meta['unique'] ?? false;
+                        $is_unique = $item_meta['unique'] ?? true;
                         $item->add_meta_data( $item_meta['key'], $item_meta['value'], $is_unique );
                     }
                 }
@@ -109,6 +109,8 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
             $order->apply_coupon( $item->get_code() );
         }
 
+        $order->calculate_shipping();
+        $order->calculate_taxes();
         $order->calculate_totals();
 
         $order->save();

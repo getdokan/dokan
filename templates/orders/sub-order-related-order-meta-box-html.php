@@ -30,8 +30,8 @@
         </div>
     </div>
     <div class="inside">
-        <div class="dokan_order_items_wrapper wc-order-items-editable">
-            <table cellpadding="0" cellspacing="0" class="dokan_order_items">
+        <div class="woocommerce_order_items_wrapper wc-order-items-editable">
+            <table cellpadding="0" cellspacing="0" class="woocommerce_order_items">
                 <thead>
                 <tr>
                     <th colspan="2"><?php esc_html_e( 'Order', 'dokan-lite' ); ?></th>
