@@ -87,7 +87,7 @@ class Vendor extends AbstractStrategy {
      * @return void
      */
     public function set_settings() {
-        $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->vendor_id );
+        $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->vendor_id, $this->category_id );
         $this->settings = $settings->get();
 
         return $settings;

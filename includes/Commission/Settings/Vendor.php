@@ -49,7 +49,7 @@ class Vendor implements InterfaceSetting {
             $all_category_commissions = $category_commissions['all'] ?? [];
             $category_commissions_items = $category_commissions['items'][ $this->category_id ] ?? [];
 
-            if ( ! empty( $category_commissions ) ) {
+            if ( ! empty( $category_commissions_items ) ) {
                 $percentage = $category_commissions_items['percentage'] ?? '';
                 $flat       = $category_commissions_items['flat'] ?? '';
             } else {
