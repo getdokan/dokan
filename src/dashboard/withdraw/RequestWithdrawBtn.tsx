@@ -321,7 +321,7 @@ function RequestWithdrawBtn( {
                     <ModalContect />
                 </Modal.Content>
                 <Modal.Footer className="border-t">
-                    <div className="flex flex-row gap-3">
+                    <div className="flex flex-row gap-3 justify-end">
                         <DokanButton
                             onClick={ () => setIsOpen( false ) }
                             variant="secondary"
