@@ -56,6 +56,8 @@ const entryPoints = {
         },
     },
     'dokan-status': '/src/Status/index.tsx',
+    // intelligence
+    'dokan-intelligence': './src/intelligence/index.tsx',
     'products-store': {
         import: '/src/stores/products/store.ts',
         library: {
