@@ -12,6 +12,7 @@ interface Currency {
     decimal: string;
     thousand: string;
     format: string;
+    position: string;
 }
 
 interface Withdraw {

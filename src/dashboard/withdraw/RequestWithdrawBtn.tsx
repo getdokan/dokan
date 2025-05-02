@@ -1,21 +1,21 @@
 import { __, sprintf } from '@wordpress/i18n';
 import {
-    MaskedInput,
     Modal,
     SimpleAlert,
     SimpleInput,
     SearchableSelect,
     useToast,
 } from '@getdokan/dokan-ui';
-import { DokanButton, DokanAlert } from '@dokan/components';
+import { DokanButton, DokanAlert, DokanPriceInput } from '@dokan/components';
 import { RawHTML, useEffect, useState } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
 import '../../definitions/window-types';
 import { useWithdraw } from './Hooks/useWithdraw';
 import { useDebounceCallback } from 'usehooks-ts';
 import { useCharge } from './Hooks/useCharge';
 import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
-import { formatNumber } from '@dokan/utilities';
+import { formatPrice, unformatNumber } from '@dokan/utilities';
 import { UseBalanceReturn } from './Hooks/useBalance';
 
 function RequestWithdrawBtn( {
@@ -29,7 +29,6 @@ function RequestWithdrawBtn( {
 } ) {
     const [ isOpen, setIsOpen ] = useState( false );
     const [ withdrawAmount, setWithdrawAmount ] = useState( '' );
-    const currencySymbol = window?.dokanFrontend?.currency?.symbol ?? '';
     const withdrawHook = useWithdraw();
     const toast = useToast();
     const [ withdrawMethod, setWithdrawMethod ] = useState( '' );
@@ -46,31 +45,21 @@ function RequestWithdrawBtn( {
         Number( balanceData?.data?.current_balance ) >=
         Number( balanceData?.data?.withdraw_limit );
 
-    const unformatNumber = ( value ) => {
-        if ( value === '' ) {
-            return value;
-        }
-        return window.accounting.unformat(
-            value,
-            window?.dokanFrontend?.currency.decimal
-        );
-    };
-
     function calculateWithdrawCharge( method, value ) {
         fetchCharge( method, value );
     }
 
     const getRecivableFormated = () => {
         if ( ! withdrawAmount ) {
-            return formatNumber( 0 );
+            return formatPrice( 0 );
         }
 
-        return formatNumber( data?.receivable ?? 0 );
+        return formatPrice( data?.receivable ?? 0 );
     };
     const getChargeFormated = () => {
         let chargeText = '';
         if ( ! withdrawAmount ) {
-            return formatNumber( 0 );
+            return formatPrice( 0 );
         }
 
         const fixed = data?.charge_data?.fixed
@@ -81,17 +70,17 @@ function RequestWithdrawBtn( {
             : '';
 
         if ( fixed ) {
-            chargeText += formatNumber( fixed );
+            chargeText += formatPrice( fixed );
         }
 
         if ( percentage ) {
             chargeText += chargeText ? ' + ' : '';
             chargeText += `${ percentage }%`;
-            chargeText += ` = ${ formatNumber( data?.charge ) }`;
+            chargeText += ` = ${ formatPrice( data?.charge ) }`;
         }
 
         if ( ! chargeText ) {
-            chargeText = formatNumber( data?.charge );
+            chargeText = formatPrice( data?.charge ).toString();
         }
 
         return chargeText;
@@ -104,7 +93,7 @@ function RequestWithdrawBtn( {
 
         if ( ! payload.amount ) {
             toast( {
-                title: __( 'Withdraw amount is required', 'dokan' ),
+                title: __( 'Withdraw amount is required', 'dokan-lite' ),
                 type: 'error',
             } );
             return;
@@ -116,14 +105,14 @@ function RequestWithdrawBtn( {
             .then( () => {
                 setIsOpen( false );
                 toast( {
-                    title: __( 'Withdraw request created.', 'dokan' ),
+                    title: __( 'Withdraw request created.', 'dokan-lite' ),
                     type: 'success',
                 } );
 
                 withdrawRequests.refresh();
             } )
             .catch( ( err ) => {
-                let message = __( 'Failed to create withdraw.', 'dokan' );
+                let message = __( 'Failed to create withdraw.', 'dokan-lite' );
 
                 if ( err?.message ) {
                     // @ts-ignore
@@ -137,9 +126,9 @@ function RequestWithdrawBtn( {
             } );
     };
 
-    function handleWithdrawAmount( value ) {
-        setWithdrawAmount( value );
-        calculateWithdrawCharge( withdrawMethod, unformatNumber( value ) );
+    function handleWithdrawAmount( rawValue, priceValue ) {
+        setWithdrawAmount( rawValue );
+        calculateWithdrawCharge( withdrawMethod, priceValue );
     }
 
     const debouncedWithdrawAmount = useDebounceCallback(
@@ -171,7 +160,7 @@ function RequestWithdrawBtn( {
                     <>
                         <div>
                             <SearchableSelect
-                                label={ __( 'Withdraw method', 'dokan' ) }
+                                label={ __( 'Withdraw method', 'dokan-lite' ) }
                                 value={ getSelectValue( withdrawMethod ) }
                                 onChange={ ( e ) => {
                                     setWithdrawMethod( e.value );
@@ -184,45 +173,35 @@ function RequestWithdrawBtn( {
                             />
                         </div>
                         <div className="mt-3">
-                            <MaskedInput
+                            <DokanPriceInput
+                                namespace="withdraw-request"
                                 label={ __( 'Withdraw amount', 'dokan' ) }
-                                className="focus:border-none"
-                                addOnLeft={ currencySymbol }
                                 value={ withdrawAmount }
-                                onChange={ ( e ) => {
-                                    debouncedWithdrawAmount( e.target.value );
-                                } }
-                                maskRule={ {
-                                    numeral: true,
-                                    numeralDecimalMark:
-                                        window?.dokanFrontend?.currency
-                                            ?.decimal ?? '.',
-                                    delimiter:
-                                        window?.dokanFrontend?.currency
-                                            ?.thousand ?? ',',
-                                    numeralDecimalScale:
-                                        window?.dokanFrontend?.currency
-                                            ?.precision ?? 2,
+                                onChange={ (
+                                    formatedValue,
+                                    unformattedValue
+                                ) => {
+                                    debouncedWithdrawAmount(
+                                        formatedValue,
+                                        unformattedValue
+                                    );
                                 } }
                                 input={ {
                                     id: 'withdraw-amount',
                                     name: 'withdraw-amount',
-                                    type: 'text',
                                     placeholder: __( 'Enter amount', 'dokan' ),
-                                    required: true,
-                                    disabled: false,
                                 } }
                             />
                         </div>
                         <div className="mt-3">
                             <SimpleInput
-                                label={ __( 'Withdraw charge', 'dokan' ) }
-                                className="pl-12"
-                                addOnLeft={ currencySymbol }
+                                label={ __( 'Withdraw charge', 'dokan-lite' ) }
                                 value={
                                     isLoading
-                                        ? __( 'Calculating…', 'dokan' )
-                                        : getChargeFormated()
+                                        ? __( 'Calculating…', 'dokan-lite' )
+                                        : decodeEntities(
+                                              getChargeFormated() as string
+                                          )
                                 }
                                 input={ {
                                     id: 'withdraw-charge',
@@ -235,13 +214,16 @@ function RequestWithdrawBtn( {
                         </div>
                         <div className="mt-3">
                             <SimpleInput
-                                label={ __( 'Receivable amount', 'dokan' ) }
-                                className="pl-12"
-                                addOnLeft={ currencySymbol }
+                                label={ __(
+                                    'Receivable amount',
+                                    'dokan-lite'
+                                ) }
                                 value={
                                     isLoading
-                                        ? __( 'Calculating…', 'dokan' )
-                                        : getRecivableFormated()
+                                        ? __( 'Calculating…', 'dokan-lite' )
+                                        : decodeEntities(
+                                              getRecivableFormated() as string
+                                          )
                                 }
                                 input={ {
                                     id: 'receivable-amount',
@@ -316,7 +298,7 @@ function RequestWithdrawBtn( {
     return (
         <>
             <DokanButton onClick={ () => setIsOpen( true ) }>
-                { __( 'Request Withdraw', 'dokan' ) }
+                { __( 'Request Withdraw', 'dokan-lite' ) }
             </DokanButton>
 
             <Modal
@@ -326,18 +308,18 @@ function RequestWithdrawBtn( {
                 showXButton={ false }
             >
                 <Modal.Title className="border-b">
-                    { __( 'Send Withdraw Request', 'dokan' ) }
+                    { __( 'Send Withdraw Request', 'dokan-lite' ) }
                 </Modal.Title>
                 <Modal.Content className="">
                     <ModalContect />
                 </Modal.Content>
                 <Modal.Footer className="border-t">
-                    <div className="flex flex-row gap-3">
+                    <div className="flex flex-row gap-3 justify-end">
                         <DokanButton
                             onClick={ () => setIsOpen( false ) }
                             variant="secondary"
                         >
-                            { __( 'Close', 'dokan' ) }
+                            { __( 'Close', 'dokan-lite' ) }
                         </DokanButton>
 
                         { ! hasWithdrawRequests &&
@@ -351,8 +333,8 @@ function RequestWithdrawBtn( {
                                     loading={ withdrawHook?.isLoading }
                                 >
                                     { withdrawHook?.isLoading
-                                        ? __( 'Creating…', 'dokan' )
-                                        : __( 'Submit request', 'dokan' ) }
+                                        ? __( 'Creating…', 'dokan-lite' )
+                                        : __( 'Submit request', 'dokan-lite' ) }
                                 </DokanButton>
                             ) }
                     </div>

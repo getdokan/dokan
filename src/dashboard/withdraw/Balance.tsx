@@ -51,14 +51,14 @@ function Balance( {
             <Card className="dokan-withdraw-style-reset dokan-layout">
                 <Card.Header>
                     <Card.Title className="p-0 m-0">
-                        { __( 'Balance', 'dokan' ) }
+                        { __( 'Balance', 'dokan-lite' ) }
                     </Card.Title>
                 </Card.Header>
                 <Card.Body>
                     <div className="flex flex-col md:flex-row sm:items-center justify-between">
                         <div className="flex flex-col">
                             <div className="text-gray-700 md:mb-4 sm:mb-0 flex">
-                                <span>{ __( 'Your Balance:', 'dokan' ) }</span>
+                                <span>{ __( 'Your Balance:', 'dokan-lite' ) }</span>
                                 &nbsp;
                                 <span className="font-semibold">
                                     <PriceHtml
@@ -73,7 +73,7 @@ function Balance( {
                                 <span>
                                     { __(
                                         'Minimum Withdraw Amount: ',
-                                        'dokan'
+                                        'dokan-lite'
                                     ) }
                                 </span>
                                 &nbsp;

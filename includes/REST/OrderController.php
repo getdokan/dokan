@@ -666,7 +666,7 @@ class OrderController extends DokanRESTController {
         $response = $this->prepare_note_item_for_response( $note, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, str_replace( '(?P<id>[\d]+)', $order->get_id(), $this->rest_base ), $note_id ) ) );
+        $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, str_replace( '(?P<id>[\d]+)', $order->get_id(), $this->base ), $note_id ) ) );
 
         return $response;
     }

@@ -3,6 +3,7 @@ const entryPoints = {
 
     frontend: './src/dashboard/index.tsx',
     'dokan-admin-dashboard': './src/admin/dashboard/index.tsx',
+    'setup-guide-banner': './src/admin/banner/SetupGuideBanner.tsx',
     'vue-frontend': './src/frontend/main.js',
     'vue-admin': './src/admin/main.js',
     'vue-bootstrap': './src/utils/Bootstrap.js',
@@ -28,6 +29,7 @@ const entryPoints = {
     'login-form-popup': './assets/src/js/login-form-popup.js',
     'dokan-maps-compat': './assets/src/js/dokan-maps-compat.js',
     'dokan-admin': './assets/src/js/admin.js',
+    'dokan-admin-onboard': '/src/admin/onboard/index.tsx',
     'dokan-setup-no-wc': [ './assets/src/js/setup-no-wc.js' ],
     helper: './assets/src/js/helper.js',
     'dokan-frontend': './assets/src/js/dokan-frontend.js',
@@ -57,6 +59,22 @@ const entryPoints = {
     },
     'dokan-status': '/src/Status/index.tsx',
     'vendor-dashboard/reports/index': './src/vendor-dashboard/reports/index.js',
+    // intelligence
+    'dokan-intelligence': './src/intelligence/index.tsx',
+    'products-store': {
+        import: '/src/stores/products/store.ts',
+        library: {
+            name: [ 'dokan', 'productsStore' ],
+            type: 'window',
+        },
+    },
+    'product-categories-store': {
+        import: '/src/stores/productCategories/store.ts',
+        library: {
+            name: [ 'dokan', 'productCategoriesStore' ],
+            type: 'window',
+        },
+    },
 };
 
 module.exports = entryPoints;

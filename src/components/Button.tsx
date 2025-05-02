@@ -2,7 +2,7 @@ import { twMerge } from 'tailwind-merge';
 import { Button as DokanUIButton } from '@getdokan/dokan-ui';
 import type { ButtonProps } from '@getdokan/dokan-ui/dist/components/Button';
 
-type ButtonVariant =
+export type ButtonVariant =
     | 'primary'
     | 'secondary'
     | 'tertiary'
@@ -11,7 +11,7 @@ type ButtonVariant =
     | 'warning'
     | 'danger';
 
-interface DokanButtonProps extends Partial< ButtonProps > {
+export interface DokanButtonProps extends Partial< ButtonProps > {
     variant?: ButtonVariant;
     className?: string;
 }
@@ -57,11 +57,7 @@ export const DokanButton = ( {
     return (
         <DokanUIButton
             color={ config.color }
-            className={ twMerge(
-                'transition-colors duration-200 ease-in-out ring-1 ring-inset',
-                config.className,
-                className
-            ) }
+            className={ twMerge( config.className, className ) }
             { ...props }
         />
     );

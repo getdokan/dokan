@@ -166,6 +166,7 @@ class Assets {
             'symbol'    => html_entity_decode( get_woocommerce_currency_symbol() ),
             'decimal'   => esc_attr( wc_get_price_decimal_separator() ),
             'thousand'  => esc_attr( wc_get_price_thousand_separator() ),
+            'position'  => esc_attr( get_option( 'woocommerce_currency_pos' ) ),
             'format'    => esc_attr( str_replace( [ '%1$s', '%2$s' ], [ '%s', '%v' ], get_woocommerce_price_format() ) ), // For accounting JS
         ];
     }
@@ -394,10 +395,10 @@ class Assets {
                 'deps' => [ 'jquery' ],
             ],
             // Remove `dokan-i18n-jed` in next release.
-			'dokan-i18n-jed'            => [
-				'src'  => $asset_url . '/vendors/i18n/jed.js',
-				'deps' => [ 'jquery', 'wp-i18n' ],
-			],
+            'dokan-i18n-jed' => [
+                'src'  => $asset_url . '/vendors/i18n/jed.js',
+                'deps' => [ 'jquery', 'wp-i18n' ],
+            ],
             'dokan-accounting'          => [
                 'src'  => WC()->plugin_url() . '/assets/js/accounting/accounting.min.js',
                 'deps' => [ 'jquery' ],
@@ -619,6 +620,28 @@ class Assets {
                 'deps'    => $core_store_asset['dependencies'],
             ];
         }
+        $product_store_asset_file = DOKAN_DIR . '/assets/js/products-store.asset.php';
+        if ( file_exists( $product_store_asset_file ) ) {
+            $stores_asset = require $product_store_asset_file;
+
+            // Register Product stores.
+            $scripts['dokan-stores-products'] = [
+                'version' => $stores_asset['version'],
+                'src'     => $asset_url . '/js/products-store.js',
+                'deps'    => $stores_asset['dependencies'],
+            ];
+        }
+        $product_category_asset_file = DOKAN_DIR . '/assets/js/product-categories-store.asset.php';
+        if ( file_exists( $product_category_asset_file ) ) {
+            $stores_asset = require $product_category_asset_file;
+
+            // Register Product stores.
+            $scripts['dokan-stores-product-categories'] = [
+                'version' => $stores_asset['version'],
+                'src'     => $asset_url . '/js/product-categories-store.js',
+                'deps'    => $stores_asset['dependencies'],
+            ];
+        }
 
         return $scripts;
     }
@@ -640,7 +663,7 @@ class Assets {
 
         add_filter( 'doing_it_wrong_trigger_error', [ $this, 'desable_doing_it_wrong_error' ] );
 
-		$wc_instance = WCAdminAssets::get_instance();
+        $wc_instance = WCAdminAssets::get_instance();
         $wc_instance->register_scripts();
 
         remove_filter( 'doing_it_wrong_trigger_error', [ $this, 'desable_doing_it_wrong_error' ] );
@@ -742,8 +765,8 @@ class Assets {
         // Remove `dokan-i18n-jed` in next release.
         wp_localize_script( 'dokan-i18n-jed', 'dokan', $localize_data );
         wp_localize_script( 'dokan-util-helper', 'dokan', $localize_data );
-		//        wp_localize_script( 'dokan-vue-bootstrap', 'dokan', $localize_data );
-		//        wp_localize_script( 'dokan-script', 'dokan', $localize_data );
+        //        wp_localize_script( 'dokan-vue-bootstrap', 'dokan', $localize_data );
+        //        wp_localize_script( 'dokan-script', 'dokan', $localize_data );
 
         // localized vendor-registration script
         wp_localize_script(

@@ -38,7 +38,7 @@ if ( isset( $_GET['product_id'] ) ) {
             '',
             array(
                 'deleted' => false,
-                'message' => __( 'This product is no longer available', 'dokan-lite' )
+                'message' => __( 'This product is no longer available', 'dokan-lite' ),
             )
         );
         return;
@@ -138,7 +138,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
         do_action( 'dokan_before_product_content_area' );
         ?>
 
-        <div class="dokan-dashboard-content dokan-product-edit">
+        <div class="dokan-dashboard-content dokan-product-edit dokan-layout">
 
             <?php
             /**
@@ -153,7 +153,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
             }
             ?>
 
-            <header class="dokan-dashboard-header dokan-clearfix">
+            <header class="dokan-dashboard-header dokan-ai-prompt">
                 <h1 class="entry-title">
                     <?php
                     if ( $new_product || 'auto-draft' === $post->post_status ) {
@@ -208,6 +208,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     do_action( 'dokan_edit_product_after_view_product_button', $product );
                     ?>
                 </h1>
+                <div id="ai-prompt-app"></div>
             </header><!-- .entry-header -->
 
             <div class="product-edit-new-container product-edit-container">
@@ -312,7 +313,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                                         wc_price(
                                                                             dokan()->commission->get_earning_by_product( $post_id ),
                                                                             [
-                                                                                'decimals' => wc_get_price_decimals() + 2,
+                                                                                'decimals' => wc_get_price_decimals(),
                                                                             ]
                                                                         )
                                                                     );
@@ -329,7 +330,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         '_regular_price',
                                                         [
                                                             'class'       => 'dokan-product-regular-price',
-                                                            'placeholder' => __( '0.00', 'dokan-lite' ),
+															'placeholder' => sprintf( '%.0' . get_option( 'woocommerce_price_num_decimals' ) . 'f', 0 ),
                                                         ],
                                                         'price'
                                                     );
@@ -352,7 +353,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         '_sale_price',
                                                         [
                                                             'class'       => 'dokan-product-sales-price',
-                                                            'placeholder' => __( '0.00', 'dokan-lite' ),
+                                                            'placeholder' => sprintf( '%.0' . get_option( 'woocommerce_price_num_decimals' ) . 'f', 0 ),
                                                         ],
                                                         'price'
                                                     );

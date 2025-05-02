@@ -1,14 +1,28 @@
 import { Badge } from '@getdokan/dokan-ui';
 import type { BadgeProps } from '@getdokan/dokan-ui/dist/components/Badge';
 
-type BadgeVariant = 'info' | 'warning' | 'success' | 'danger';
+export type BadgeVariant =
+    | 'primary'
+    | 'secondary'
+    | 'info'
+    | 'warning'
+    | 'success'
+    | 'danger';
 
-interface DokanBadgeProps extends Partial< BadgeProps > {
+export interface DokanBadgeProps extends Partial< BadgeProps > {
     variant?: BadgeVariant;
     label: string;
 }
 
 const variantConfig = {
+    primary: {
+        color: 'blue',
+        className: 'dokan-badge-primary',
+    },
+    secondary: {
+        color: 'gray',
+        className: 'dokan-badge-secondary',
+    },
     info: {
         color: 'blue',
         className: 'dokan-badge-info',
