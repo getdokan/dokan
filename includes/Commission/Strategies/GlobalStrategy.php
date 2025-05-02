@@ -2,8 +2,7 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Model\Setting;
-use WeDevs\Dokan\Commission\Settings\Builder;
+use WeDevs\Dokan\Commission\Settings\GlobalSetting;
 
 class GlobalStrategy extends AbstractStrategy {
 
@@ -32,6 +31,19 @@ class GlobalStrategy extends AbstractStrategy {
      */
     public function __construct( $category_id ) {
         $this->category_id = $category_id;
+
+        parent::__construct();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function set_next(): AbstractStrategy {
+        if ( ! $this->next ) {
+			$this->next = new DefaultStrategy();
+        }
+
+        return $this;
     }
 
     /**
@@ -61,11 +73,11 @@ class GlobalStrategy extends AbstractStrategy {
      *
      * @since 3.14.0
      *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
+     * @return void
      */
-    public function get_settings(): Setting {
-        $setting = Builder::build( Builder::TYPE_GLOBAL, $this->get_category_id() );
+    public function set_settings() {
+        $setting = new GlobalSetting( $this->get_category_id() );
 
-        return $setting->get();
+        $this->settings = $setting->get();
     }
 }

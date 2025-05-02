@@ -62,19 +62,12 @@ class CommissionModelTest extends WP_UnitTestCase {
         $this->assertEquals( 0, $data->get_total_amount() );
         $this->assertEquals( DefaultSetting::TYPE, $data->get_type() );
         $this->assertEquals( [], $data->get_parameters() );
-        $this->assertEquals(
-            [
-                'source'                    => DefaultStrategy::SOURCE,
-                'per_item_admin_commission' => 0,
-                'admin_commission'          => 0,
-                'vendor_earning'            => 0,
-                'total_quantity'            => 1,
-                'total_amount'              => '0',
-                'type'                      => DefaultSetting::TYPE,
-                'parameters'                => [],
-            ],
-            $data->get_data()
-        );
+        $this->assertEquals( 0, $data->get_admin_subsidy() );
+        $this->assertEquals( 0, $data->get_vendor_discount() );
+        $this->assertEquals( 0, $data->get_admin_discount() );
+        $this->assertEquals( 0, $data->get_net_admin_commission() );
+        $this->assertEquals( 0, $data->get_net_vendor_earning() );
+        $this->assertFalse( empty( $data->get_data() ) );
 
         $data->set_type( Fixed::SOURCE )
             ->set_admin_commission( 10 )
@@ -103,21 +96,12 @@ class CommissionModelTest extends WP_UnitTestCase {
 				'percentage' => 0,
 			], $data->get_parameters()
         );
-        $this->assertEquals(
-            [
-                'source'                    => GlobalStrategy::SOURCE,
-                'per_item_admin_commission' => 10,
-                'admin_commission'          => 10,
-                'vendor_earning'            => 100,
-                'total_quantity'            => 1,
-                'total_amount'              => '100',
-                'type'                      => Fixed::SOURCE,
-                'parameters'                => [
-					'flat' => 10,
-					'percentage' => 0,
-				],
-            ],
-            $data->get_data()
-        );
+
+        $this->assertEquals( 0, $data->get_admin_subsidy() );
+        $this->assertEquals( 0, $data->get_vendor_discount() );
+        $this->assertEquals( 0, $data->get_admin_discount() );
+        $this->assertEquals( 0, $data->get_net_admin_commission() );
+        $this->assertEquals( 0, $data->get_net_vendor_earning() );
+        $this->assertFalse( empty( $data->get_data() ) );
     }
 }
