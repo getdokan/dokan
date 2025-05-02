@@ -57,11 +57,7 @@ export const DokanButton = ( {
     return (
         <DokanUIButton
             color={ config.color }
-            className={ twMerge(
-                'transition-colors duration-200 ease-in-out ring-1 ring-inset',
-                config.className,
-                className
-            ) }
+            className={ twMerge( config.className, className ) }
             { ...props }
         />
     );
