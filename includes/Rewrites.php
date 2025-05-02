@@ -28,6 +28,8 @@ class Rewrites {
         add_filter( 'query_vars', [ $this, 'register_query_var' ] );
         add_filter( 'woocommerce_get_breadcrumb', [ $this, 'store_page_breadcrumb' ] );
         add_filter( 'tiny_mce_before_init', [ $this, 'remove_h1_from_heading_in_edit_product_page' ] );
+
+        add_action( 'wp', [ $this, 'maybe_flash_rewrite_rules' ], 99 );
     }
 
     /**
@@ -533,5 +535,25 @@ class Rewrites {
             $sql .= " LEFT JOIN {$wpdb->wc_product_meta_lookup} wc_product_meta_lookup ON $wpdb->posts.ID = wc_product_meta_lookup.product_id ";
         }
         return $sql;
+    }
+
+    /**
+     * Flush rewrite rules if the version is 4.0 or above.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function maybe_flash_rewrite_rules() {
+        $flash   = get_option( 'dokan_rewrite_rules_needs_flashing', 'yes' );
+        $version = get_option( 'dokan_theme_version', DOKAN_PLUGIN_VERSION );
+
+        if ( 'yes' !== $flash || ! version_compare( DOKAN_PLUGIN_VERSION, $version, '>' ) ) {
+            return;
+        }
+
+        dokan()->flush_rewrite_rules();
+
+        update_option( 'dokan_rewrite_rules_needs_flashing', 'no', true );
     }
 }
