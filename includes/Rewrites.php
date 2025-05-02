@@ -554,6 +554,6 @@ class Rewrites {
 
         dokan()->flush_rewrite_rules();
 
-        update_option( 'dokan_rewrite_rules_needs_flashing', 'no' );
+        update_option( 'dokan_rewrite_rules_needs_flashing', 'no', true );
     }
 }
