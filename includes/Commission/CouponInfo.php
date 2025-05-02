@@ -77,7 +77,7 @@ class CouponInfo {
 
         $default = [
             'discount'                         => 0.0,
-            'coupon_commissions_type'          => 'vendor',
+            'coupon_commissions_type'          => 'from_vendor',
             'admin_shared_coupon_type'         => 'percent',
             'admin_shared_coupon_amount'       => 0.0,
         ];
