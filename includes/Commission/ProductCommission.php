@@ -89,7 +89,7 @@ class ProductCommission extends AbstractCommissionCalculator {
         $commission_calculator = dokan_get_container()->get( Calculator::class );
         return $commission_calculator
             ->set_settings( $strategy->get_settings() )
-            ->set_subtotal( $this->total_amount )
+            ->set_total( $this->total_amount )
             ->set_quantity( 1 )
             ->calculate();
     }
