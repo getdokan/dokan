@@ -81,24 +81,3 @@ export const unformatNumber = ( value ) => {
         window?.dokanFrontend?.currency.decimal
     );
 };
-
-export const withCurrencySymbol = ( value: string ): string => {
-    let priceValue = '';
-    const currencySymbol = window?.dokanFrontend?.currency?.symbol ?? '';
-    const position = window?.dokanFrontend?.currency?.position ?? 'left';
-
-    switch ( position ) {
-        case 'left':
-        case 'left_space':
-            priceValue = `${ currencySymbol }${ value }`;
-            break;
-        case 'right':
-        case 'right_space':
-            priceValue = `${ value }${ currencySymbol }`;
-            break;
-        default:
-            break;
-    }
-
-    return priceValue;
-};

@@ -8,17 +8,14 @@ import {
 } from '@getdokan/dokan-ui';
 import { DokanButton, DokanAlert, DokanPriceInput } from '@dokan/components';
 import { RawHTML, useEffect, useState } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
 import '../../definitions/window-types';
 import { useWithdraw } from './Hooks/useWithdraw';
 import { useDebounceCallback } from 'usehooks-ts';
 import { useCharge } from './Hooks/useCharge';
 import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
-import {
-    formatNumber,
-    unformatNumber,
-    withCurrencySymbol,
-} from '@dokan/utilities';
+import { formatPrice, unformatNumber } from '@dokan/utilities';
 import { UseBalanceReturn } from './Hooks/useBalance';
 
 function RequestWithdrawBtn( {
@@ -54,15 +51,15 @@ function RequestWithdrawBtn( {
 
     const getRecivableFormated = () => {
         if ( ! withdrawAmount ) {
-            return withCurrencySymbol( formatNumber( 0 ) );
+            return formatPrice( 0 );
         }
 
-        return withCurrencySymbol( formatNumber( data?.receivable ?? 0 ) );
+        return formatPrice( data?.receivable ?? 0 );
     };
     const getChargeFormated = () => {
         let chargeText = '';
         if ( ! withdrawAmount ) {
-            return withCurrencySymbol( formatNumber( 0 ) );
+            return formatPrice( 0 );
         }
 
         const fixed = data?.charge_data?.fixed
@@ -73,19 +70,17 @@ function RequestWithdrawBtn( {
             : '';
 
         if ( fixed ) {
-            chargeText += withCurrencySymbol( formatNumber( fixed ) );
+            chargeText += formatPrice( fixed );
         }
 
         if ( percentage ) {
             chargeText += chargeText ? ' + ' : '';
             chargeText += `${ percentage }%`;
-            chargeText += ` = ${ withCurrencySymbol(
-                formatNumber( data?.charge )
-            ) }`;
+            chargeText += ` = ${ formatPrice( data?.charge ) }`;
         }
 
         if ( ! chargeText ) {
-            chargeText = withCurrencySymbol( formatNumber( data?.charge ) );
+            chargeText = formatPrice( data?.charge ).toString();
         }
 
         return chargeText;
@@ -204,7 +199,9 @@ function RequestWithdrawBtn( {
                                 value={
                                     isLoading
                                         ? __( 'Calculating…', 'dokan-lite' )
-                                        : getChargeFormated()
+                                        : decodeEntities(
+                                              getChargeFormated() as string
+                                          )
                                 }
                                 input={ {
                                     id: 'withdraw-charge',
@@ -224,7 +221,9 @@ function RequestWithdrawBtn( {
                                 value={
                                     isLoading
                                         ? __( 'Calculating…', 'dokan-lite' )
-                                        : getRecivableFormated()
+                                        : decodeEntities(
+                                              getRecivableFormated() as string
+                                          )
                                 }
                                 input={ {
                                     id: 'receivable-amount',
