@@ -56,6 +56,20 @@ const entryPoints = {
         },
     },
     'dokan-status': '/src/Status/index.tsx',
+    'products-store': {
+        import: '/src/stores/products/store.ts',
+        library: {
+            name: [ 'dokan', 'productsStore' ],
+            type: 'window',
+        },
+    },
+    'product-categories-store': {
+        import: '/src/stores/productCategories/store.ts',
+        library: {
+            name: [ 'dokan', 'productCategoriesStore' ],
+            type: 'window',
+        },
+    },
 };
 
 module.exports = entryPoints;
