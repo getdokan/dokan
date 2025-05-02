@@ -39,12 +39,24 @@ class GlobalSetting implements InterfaceSetting {
         $flat                 = dokan_get_option( 'additional_fee', 'dokan_selling', '' );
         $category_commissions = dokan_get_option( 'commission_category_based_values', 'dokan_selling', [] );
 
+        // @todo Need to check if the commission rate 
+        if ( $type === 'category_based' ) {
+            $all_category_commissions = $category_commissions['all'] ?? [];
+            $category_commissions     = $category_commissions['items'][ $this->category_id] ?? [];
+
+            if ( ! empty( $category_commissions ) ) {
+                $percentage = $category_commissions['percentage'] ?? '';
+                $flat       = $category_commissions['flat'] ?? '';
+            } else {
+                $percentage = $all_category_commissions['percentage'] ?? '';
+                $flat       = $all_category_commissions['flat'] ?? '';
+            }
+        }
+
         $settings = new Setting();
         $settings->set_type( $type )
                 ->set_flat( $flat )
-                ->set_percentage( $percentage )
-                ->set_category_commissions( $category_commissions )
-                ->set_category_id( $this->category_id );
+                ->set_percentage( $percentage );
 
         return $settings;
     }
@@ -62,9 +74,11 @@ class GlobalSetting implements InterfaceSetting {
      *     @type array  $category_commissions
      * }
      *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
+     * @return void
      */
-    public function save( array $setting ): Setting {
+    public function save( array $setting ): void {
+        $setting = apply_filters( 'dokan_global_commission_settings_before_save', $setting );
+
         $options                                     = get_option( 'dokan_selling', [] );
         $options['commission_type']                  = isset( $setting['type'] ) ? $setting['type'] : '';
         $options['admin_percentage']                 = isset( $setting['percentage'] ) ? $setting['percentage'] : '';
@@ -73,6 +87,6 @@ class GlobalSetting implements InterfaceSetting {
 
         update_option( 'dokan_selling', $options );
 
-        return $this->get();
+        do_action( 'dokan_global_commission_settings_after_save', $setting );
     }
 }

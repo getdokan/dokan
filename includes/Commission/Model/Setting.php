@@ -59,6 +59,8 @@ class Setting {
      */
     protected $meta_data = [];
 
+    protected string $source;
+
     /**
      * Returns the commission meta data.
      *
@@ -101,6 +103,21 @@ class Setting {
     }
 
     /**
+     * Sets the commission type.
+     *
+     * @since 3.14.0
+     *
+     * @param mixed|string $type
+     *
+     * @return $this
+     */
+    public function set_source( string $source ): Setting {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    /**
      * Sets the flat commissin amount.
      *
      * @since 3.14.0
@@ -110,6 +127,21 @@ class Setting {
      * @return $this
      */
     public function set_flat( $flat ): Setting {
+        $this->flat = $flat;
+
+        return $this;
+    }
+
+    /**
+     * Sets the flat commissin amount.
+     *
+     * @since 3.14.0
+     *
+     * @param mixed|string $flat
+     *
+     * @return $this
+     */
+    public function set_combined_flat( $flat ): Setting {
         $this->flat = $flat;
 
         return $this;
@@ -131,30 +163,15 @@ class Setting {
     }
 
     /**
-     * Sets the category id.
+     * Sets the category commission data.
      *
      * @since 3.14.0
      *
-     * @param mixed|string $category_id
+     * @param array $category_commissions
      *
      * @return $this
      */
-    public function set_category_id( $category_id ): Setting {
-        $this->category_id = $category_id;
-
-        return $this;
-    }
-
-    /**
-     * Sets the category commission data.
-     *
-     * @since 3.14.0.
-     *
-     * @param array|mixed $category_commissions
-     *
-     * @return $this
-     */
-    public function set_category_commissions( $category_commissions ): Setting {
+    public function set_category_commissions( array $category_commissions ): Setting {
         $this->category_commissions = $category_commissions;
 
         return $this;
@@ -172,14 +189,68 @@ class Setting {
     }
 
     /**
+     * Sets the commission source.
+     *
+     * @since 3.14.0
+     *
+     * @return string
+     */
+    public function get_source(): string {
+        return $this->source;
+    }
+
+    /**
+     * Returns the value of the flat settings.
+     *
+     * @since 3.14.0
+     *
+     * @return string
+     */
+    public function get_flat(): string {
+        return $this->flat;
+    }
+
+    /**
      * Returns the flat amount.
      *
      * @since 3.14.0
      *
-     * @return mixed|string
+     * @return float
      */
-    public function get_flat() {
-        return $this->flat;
+    public function get_flat_value(): float {
+        return $this->is_combined() ? 0 : floatval( $this->get_flat() );
+    }
+
+    /**
+     * Returns the flat amount.
+     *
+     * @since 3.14.0
+     *
+     * @return float
+     */
+    public function get_combine_flat(): float {
+        return $this->is_combined() ? floatval( $this->flat ) : 0;
+    }
+
+    /**
+     * Returns true if the commission is combined. 
+     * N.B. This is a legacy type. It does not exist in the new commission system.
+     *
+     * @return bool
+     */
+    protected function is_combined(): bool {
+        return $this->type === 'combine';
+    }
+
+    /**
+     * Returns the value of the percentage settings.
+     *
+     * @since 3.14.0
+     *
+     * @return string
+     */
+    public function get_percentage(): string {
+        return $this->percentage;
     }
 
     /**
@@ -187,10 +258,10 @@ class Setting {
      *
      * @since 3.14.0
      *
-     * @return mixed|string
+     * @return float
      */
-    public function get_percentage() {
-        return $this->percentage;
+    public function get_percentage_value(): float {
+        return floatval( $this->percentage );
     }
 
     /**
@@ -213,5 +284,26 @@ class Setting {
      */
     public function get_category_id() {
         return $this->category_id;
+    }
+
+    public function is_applicable(): bool {
+        return trim( $this->percentage ) !== '' || trim( $this->flat ) !== '';
+    }
+
+    /**
+     * Returns the commission settings as an array.
+     *
+     * @since 3.14.0
+     *
+     * @return array
+     */
+    public function to_array(): array {
+        return [
+            'type'       => $this->get_type(),
+            'flat'       => $this->get_flat(),
+            'percentage' => $this->get_percentage(),
+            'source'     => $this->get_source(),
+            'meta_data'  => $this->get_meta_data(),
+        ];
     }
 }

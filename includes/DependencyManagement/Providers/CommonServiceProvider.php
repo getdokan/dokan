@@ -20,6 +20,8 @@ class CommonServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\CacheInvalidate::class,
         \WeDevs\Dokan\Shipping\Hooks::class,
         \WeDevs\Dokan\Privacy::class,
+        \WeDevs\Dokan\Commission\RecalculateCommissions::class,
+        \WeDevs\Dokan\Order\RefundHandler::class,
 	];
 
 	/**
@@ -27,7 +29,7 @@ class CommonServiceProvider extends BaseServiceProvider {
      */
 	public function register(): void {
         foreach ( $this->services as $service ) {
-            $definition = $this->getContainer()->addShared( $service );
+            $definition = $this->share_with_implements_tags( $service );
             $this->add_tags( $definition, $this->tags );
         }
     }
