@@ -14,7 +14,11 @@ import { useDebounceCallback } from 'usehooks-ts';
 import { useCharge } from './Hooks/useCharge';
 import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
-import { formatNumber } from '@dokan/utilities';
+import {
+    formatNumber,
+    unformatNumber,
+    withCurrencySymbol,
+} from '@dokan/utilities';
 import { UseBalanceReturn } from './Hooks/useBalance';
 
 function RequestWithdrawBtn( {
@@ -28,7 +32,6 @@ function RequestWithdrawBtn( {
 } ) {
     const [ isOpen, setIsOpen ] = useState( false );
     const [ withdrawAmount, setWithdrawAmount ] = useState( '' );
-    const currencySymbol = window?.dokanFrontend?.currency?.symbol ?? '';
     const withdrawHook = useWithdraw();
     const toast = useToast();
     const [ withdrawMethod, setWithdrawMethod ] = useState( '' );
@@ -45,31 +48,21 @@ function RequestWithdrawBtn( {
         Number( balanceData?.data?.current_balance ) >=
         Number( balanceData?.data?.withdraw_limit );
 
-    const unformatNumber = ( value ) => {
-        if ( value === '' ) {
-            return value;
-        }
-        return window.accounting.unformat(
-            value,
-            window?.dokanFrontend?.currency.decimal
-        );
-    };
-
     function calculateWithdrawCharge( method, value ) {
         fetchCharge( method, value );
     }
 
     const getRecivableFormated = () => {
         if ( ! withdrawAmount ) {
-            return formatNumber( 0 );
+            return withCurrencySymbol( formatNumber( 0 ) );
         }
 
-        return formatNumber( data?.receivable ?? 0 );
+        return withCurrencySymbol( formatNumber( data?.receivable ?? 0 ) );
     };
     const getChargeFormated = () => {
         let chargeText = '';
         if ( ! withdrawAmount ) {
-            return formatNumber( 0 );
+            return withCurrencySymbol( formatNumber( 0 ) );
         }
 
         const fixed = data?.charge_data?.fixed
@@ -80,17 +73,19 @@ function RequestWithdrawBtn( {
             : '';
 
         if ( fixed ) {
-            chargeText += formatNumber( fixed );
+            chargeText += withCurrencySymbol( formatNumber( fixed ) );
         }
 
         if ( percentage ) {
             chargeText += chargeText ? ' + ' : '';
             chargeText += `${ percentage }%`;
-            chargeText += ` = ${ formatNumber( data?.charge ) }`;
+            chargeText += ` = ${ withCurrencySymbol(
+                formatNumber( data?.charge )
+            ) }`;
         }
 
         if ( ! chargeText ) {
-            chargeText = formatNumber( data?.charge );
+            chargeText = withCurrencySymbol( formatNumber( data?.charge ) );
         }
 
         return chargeText;
@@ -207,7 +202,6 @@ function RequestWithdrawBtn( {
                             <SimpleInput
                                 label={ __( 'Withdraw charge', 'dokan-lite' ) }
                                 className="pl-12"
-                                addOnLeft={ currencySymbol }
                                 value={
                                     isLoading
                                         ? __( 'Calculating…', 'dokan-lite' )
@@ -226,7 +220,6 @@ function RequestWithdrawBtn( {
                             <SimpleInput
                                 label={ __( 'Receivable amount', 'dokan-lite' ) }
                                 className="pl-12"
-                                addOnLeft={ currencySymbol }
                                 value={
                                     isLoading
                                         ? __( 'Calculating…', 'dokan-lite' )
