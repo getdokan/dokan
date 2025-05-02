@@ -542,8 +542,6 @@ class Rewrites {
      *
      * @since DOKAN_SINCE
      *
-     * @param  string  $store_url
-     *
      * @return void
      */
     public function maybe_flash_rewrite_rules() {
