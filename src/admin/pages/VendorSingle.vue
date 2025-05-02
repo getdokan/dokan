@@ -681,8 +681,6 @@ export default {
 
             self.isUpdating = true;
 
-            self.store.aunshon = {};
-
             dokan.api.put( `/stores/${self.store.id}`, self.store )
                 .done( ( response ) => {
                     self.editMode = false;

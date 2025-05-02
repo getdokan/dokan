@@ -123,7 +123,7 @@ class SetupWizard {
         wp_enqueue_script(
             'dokan-setup-wizard-commission',
             DOKAN_PLUGIN_ASSEST . '/js/dokan-setup-wizard-commission.js',
-            array( 'jquery', 'dokan-vue-bootstrap', 'dokan-accounting' ),
+            array( 'jquery', 'dokan-vue-bootstrap', 'dokan-accounting', 'dokan-sweetalert2' ),
             DOKAN_PLUGIN_VERSION,
             [ 'in_footer' => true ]
         );
@@ -584,6 +584,8 @@ class SetupWizard {
         $additional_fee                   = isset( $options['additional_fee'] ) ? $options['additional_fee'] : 0;
         $commission_category_based_values = isset( $options['commission_category_based_values'] ) ? $options['commission_category_based_values'] : new stdClass();
         $commission_type                  = ! empty( $options['commission_type'] ) ? $options['commission_type'] : 'fixed';
+        $reset_sub_category_when_edit_all_category                  = ! empty( $options['reset_sub_category_when_edit_all_category'] ) ? $options['reset_sub_category_when_edit_all_category'] : 'on';
+        $reset_sub_category = ! ( $reset_sub_category_when_edit_all_category === 'off' );
 
         $args = apply_filters(
             'dokan_admin_setup_wizard_step_setup_selling_template_args', [
@@ -592,6 +594,7 @@ class SetupWizard {
                 'additional_fee'                   => $additional_fee,
                 'commission_category_based_values' => $commission_category_based_values,
                 'dokanCommission'                  => dokan_commission_types(),
+                'reset_sub_category'               => $reset_sub_category,
                 'setup_wizard'                     => $this,
             ]
         );
@@ -632,11 +635,12 @@ class SetupWizard {
             $dokan_commission_percentage = 0;
         }
 
-        $options                                     = get_option( 'dokan_selling', [] );
-        $options['commission_type']                  = isset( $_POST['dokan_commission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_type'] ) ) : 'fixed';
-        $options['admin_percentage']                 = $dokan_commission_percentage;
-        $options['additional_fee']                   = isset( $_POST['dokan_commission_flat'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_flat'] ) ) : 0;
-        $options['commission_category_based_values'] = isset( $_POST['dokan_commission_category_based'] ) ? wc_clean( json_decode( sanitize_text_field( wp_unslash( $_POST['dokan_commission_category_based'] ) ), true ) ) : [];
+        $options                                              = get_option( 'dokan_selling', [] );
+        $options['commission_type']                           = isset( $_POST['dokan_commission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_type'] ) ) : 'fixed';
+        $options['admin_percentage']                          = $dokan_commission_percentage;
+        $options['additional_fee']                            = isset( $_POST['dokan_commission_flat'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_flat'] ) ) : 0;
+        $options['commission_category_based_values']          = isset( $_POST['dokan_commission_category_based'] ) ? wc_clean( json_decode( sanitize_text_field( wp_unslash( $_POST['dokan_commission_category_based'] ) ), true ) ) : [];
+        $options['reset_sub_category_when_edit_all_category'] = isset( $_POST['reset_sub_category'] ) && false === dokan_string_to_bool( $_POST['reset_sub_category'] ) ? 'off' : 'on';
 
         update_option( 'dokan_selling', $options );
 

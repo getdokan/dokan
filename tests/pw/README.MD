@@ -45,7 +45,7 @@
 
 &emsp;Follow instructions in the [NVM repository](https://github.com/nvm-sh/nvm) to install NVM.
 
-#### :o: Install Docker
+#### :o: Install Docker [Skip if are using local site]
 
 &emsp;Follow instructions on the [Docker Desktop](https://docs.docker.com/docker-for-mac/install/) to install Docker.
 
@@ -66,7 +66,6 @@ Preparation for running tests involves conducting necessary tasks and arrangemen
     composer i --no-dev && composer du -o && npm i && npm run build
 
 <br/>
-
 ### :o: Install Dependencies
 
 <br/>
@@ -174,6 +173,23 @@ DB_PREFIX=wp
 ```
 
 <br/>
+
+
+<br/>
+
+### Pre-define data only for doker instance
+
+```
+ADMIN: admin
+ADMIN_PASSWORD: password
+DB_HOST_NAME: localhost
+DB_USER_NAME: root
+DB_USER_PASSWORD: password
+DB_PORT: 9998                       [should be same with port mentioned in wp-env.json]
+DATABASE: tests-wordpress
+DB_PREFIX: wp
+```
+
 <br/>
 
 ## :test_tube: Running tests
@@ -316,4 +332,58 @@ Running tests involves executing the predefined test cases or scripts to evaluat
 
     npx playwright show-report
 
-## Contributing to playwright-api-test
+
+## Setup steps for Dokan pro
+
+### :o: Clone & Build Dokan pro plugin
+
+<br/>
+
+:radio_button: Clone and Go to dokan-pro project root directory and run
+
+    composer i --no-dev && composer du -o && npm i && npm run build
+
+<br/>
+
+### :o: Clone Requied Woocommerce Plugins
+
+<br/>
+
+:radio_button: Clone all requied woocommerce plugins and store them in a single folder
+
+<br/>
+
+### update plugin paths in .wp-env.override
+
+:radio_button: rename the file as .wp-env.override.json [it will overide plugins mentioned in .wp-env.json]
+
+:radio_button: store the plugins as the paths mentioned in the .wp-env.override or update the paths according to pw folder
+
+```
+.
+├── plugins
+│   └── dokan                      # Dokan Lite plugin (cloned from `getdokan/dokan`)
+│       └── tests
+│           └── pw                # Playwright tests and wp-env setup
+│               ├── wp-data
+│               ├── playwright
+│               ├── playwright-report
+│               └── .wp-env.override.json
+├── woo-plugins
+│   └── tests
+│       └── plugins               # WooCommerce related zipped plugins
+│           ├── woocommerce-bookings
+│           ├── woocommerce-product-addons
+│           ├── woocommerce-simple-auctions
+│           └── woocommerce-subscriptions
+├── node_modules                  # Installed dependencies (after npm ci / install)
+├── dokan-pro.php                 # Dokan Pro plugin base (assumed root)
+├── composer.lock / package-lock.json
+└── ...                           # Other project root files
+
+```
+
+###  Start Wordpress Environment
+:radio_button: follow previously mentioned steps for start wordpress environment and run pro projects to run pro tests
+
+
