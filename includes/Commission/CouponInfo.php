@@ -65,9 +65,15 @@ class CouponInfo {
         return $this->admin_discount;
     }
 
+    /**
+     * Get the admin and vendor discount amount from a single coupon.
+     *
+     * @param array $coupon_info
+     * @return array
+     */
     protected function get_coupon_amount( array $coupon_info ): array {
-        $admin = 0.0;
-        $vendor = 0.0;
+        $admin_discount = 0.0;
+        $vendor_discount = 0.0;
 
         $default = [
             'discount'                         => 0.0,
@@ -78,29 +84,34 @@ class CouponInfo {
 
         $coupon_info = wp_parse_args( $coupon_info, $default );
 
-        // TODO: fix me.
+        $discount_amount = floatval( $coupon_info['discount'] );
+
         switch ( $coupon_info['coupon_commissions_type'] ) {
             case 'default':
             case 'from_vendor':
-                $vendor = $coupon_info['discount'];
+                $vendor_discount = $discount_amount;
                 break;
             case 'from_admin':
-                $admin = $coupon_info['discount'];
+                $admin_discount = $discount_amount;
                 break;
             case 'shared_coupon':
                 if ( 'percentage' === $coupon_info['admin_shared_coupon_type'] ) {
-                    $admin = ( $coupon_info['discount'] * $coupon_info['admin_shared_coupon_amount'] ) / 100;
-                    $vendor = $coupon_info['discount'] - $admin;
+                    $admin_discount = ( $discount_amount * floatval( $coupon_info['admin_shared_coupon_amount'] ) ) / 100;
+                    $vendor_discount = $discount_amount - $admin_discount;
                 } else {
-                    $admin = min( $coupon_info['discount'], $coupon_info['admin_shared_coupon_amount'] );
-                    $vendor = $coupon_info['discount'] - $admin;
+                    $admin_discount = min( $discount_amount, floatval( $coupon_info['admin_shared_coupon_amount'] ) );
+                    $vendor_discount = $discount_amount - $admin_discount;
                 }
+                break;
+            default:
+                $vendor_discount = $discount_amount;
+
                 break;
         }
 
         return [
-            'admin' => $admin,
-            'vendor' => $vendor,
+            'admin' => $admin_discount,
+            'vendor' => $vendor_discount,
         ];
     }
 }
