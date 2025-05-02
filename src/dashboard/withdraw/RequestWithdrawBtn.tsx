@@ -8,13 +8,14 @@ import {
 } from '@getdokan/dokan-ui';
 import { DokanButton, DokanAlert, DokanPriceInput } from '@dokan/components';
 import { RawHTML, useEffect, useState } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
 import '../../definitions/window-types';
 import { useWithdraw } from './Hooks/useWithdraw';
 import { useDebounceCallback } from 'usehooks-ts';
 import { useCharge } from './Hooks/useCharge';
 import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
-import { formatNumber } from '@dokan/utilities';
+import { formatPrice, unformatNumber } from '@dokan/utilities';
 import { UseBalanceReturn } from './Hooks/useBalance';
 
 function RequestWithdrawBtn( {
@@ -28,7 +29,6 @@ function RequestWithdrawBtn( {
 } ) {
     const [ isOpen, setIsOpen ] = useState( false );
     const [ withdrawAmount, setWithdrawAmount ] = useState( '' );
-    const currencySymbol = window?.dokanFrontend?.currency?.symbol ?? '';
     const withdrawHook = useWithdraw();
     const toast = useToast();
     const [ withdrawMethod, setWithdrawMethod ] = useState( '' );
@@ -45,31 +45,21 @@ function RequestWithdrawBtn( {
         Number( balanceData?.data?.current_balance ) >=
         Number( balanceData?.data?.withdraw_limit );
 
-    const unformatNumber = ( value ) => {
-        if ( value === '' ) {
-            return value;
-        }
-        return window.accounting.unformat(
-            value,
-            window?.dokanFrontend?.currency.decimal
-        );
-    };
-
     function calculateWithdrawCharge( method, value ) {
         fetchCharge( method, value );
     }
 
     const getRecivableFormated = () => {
         if ( ! withdrawAmount ) {
-            return formatNumber( 0 );
+            return formatPrice( 0 );
         }
 
-        return formatNumber( data?.receivable ?? 0 );
+        return formatPrice( data?.receivable ?? 0 );
     };
     const getChargeFormated = () => {
         let chargeText = '';
         if ( ! withdrawAmount ) {
-            return formatNumber( 0 );
+            return formatPrice( 0 );
         }
 
         const fixed = data?.charge_data?.fixed
@@ -80,17 +70,17 @@ function RequestWithdrawBtn( {
             : '';
 
         if ( fixed ) {
-            chargeText += formatNumber( fixed );
+            chargeText += formatPrice( fixed );
         }
 
         if ( percentage ) {
             chargeText += chargeText ? ' + ' : '';
             chargeText += `${ percentage }%`;
-            chargeText += ` = ${ formatNumber( data?.charge ) }`;
+            chargeText += ` = ${ formatPrice( data?.charge ) }`;
         }
 
         if ( ! chargeText ) {
-            chargeText = formatNumber( data?.charge );
+            chargeText = formatPrice( data?.charge ).toString();
         }
 
         return chargeText;
@@ -206,12 +196,12 @@ function RequestWithdrawBtn( {
                         <div className="mt-3">
                             <SimpleInput
                                 label={ __( 'Withdraw charge', 'dokan-lite' ) }
-                                className="pl-12"
-                                addOnLeft={ currencySymbol }
                                 value={
                                     isLoading
                                         ? __( 'Calculating…', 'dokan-lite' )
-                                        : getChargeFormated()
+                                        : decodeEntities(
+                                              getChargeFormated() as string
+                                          )
                                 }
                                 input={ {
                                     id: 'withdraw-charge',
@@ -224,13 +214,16 @@ function RequestWithdrawBtn( {
                         </div>
                         <div className="mt-3">
                             <SimpleInput
-                                label={ __( 'Receivable amount', 'dokan-lite' ) }
-                                className="pl-12"
-                                addOnLeft={ currencySymbol }
+                                label={ __(
+                                    'Receivable amount',
+                                    'dokan-lite'
+                                ) }
                                 value={
                                     isLoading
                                         ? __( 'Calculating…', 'dokan-lite' )
-                                        : getRecivableFormated()
+                                        : decodeEntities(
+                                              getRecivableFormated() as string
+                                          )
                                 }
                                 input={ {
                                     id: 'receivable-amount',
@@ -321,7 +314,7 @@ function RequestWithdrawBtn( {
                     <ModalContect />
                 </Modal.Content>
                 <Modal.Footer className="border-t">
-                    <div className="flex flex-row gap-3">
+                    <div className="flex flex-row gap-3 justify-end">
                         <DokanButton
                             onClick={ () => setIsOpen( false ) }
                             variant="secondary"

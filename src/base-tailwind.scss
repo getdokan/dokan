@@ -13,6 +13,15 @@
     // This is a temporary fix until headless ui provides a better solution.
     #headlessui-portal-root {
         display: none;
+
+        &.dokan-layout button[type="button"]:is(.absolute.right-2.top-2) {
+             @apply py-0.5 px-1.5 rounded-full;
+
+            &:hover {
+                @apply ring-2 ring-offset-2 text-red-500 bg-red-50 ring-red-500;
+            }
+
+        }
     }
     .bg-primary-500 {
         @apply bg-dokan-btn focus:outline-dokan-btn;
@@ -75,7 +84,7 @@
 
     /* Button Styles */
     .dokan-btn {
-        @apply relative bg-dokan-btn text-dokan-btn border-dokan-btn ring-dokan-btn transition-colors duration-200 #{!important};
+        @apply relative bg-dokan-btn text-dokan-btn border-dokan-btn ring-dokan-btn transition-colors duration-200 ease-in-out shadow-none #{!important};
 
         &:hover {
             @apply ring-0 ring-offset-0 bg-dokan-btn-hover text-dokan-btn-hover border-dokan-btn-hover #{!important};
@@ -91,19 +100,21 @@
     }
 
     .dokan-btn-secondary {
-        @apply relative bg-dokan-btn-secondary text-dokan-btn-secondary border-dokan-btn-secondary ring-dokan-btn-secondary transition-colors duration-200 #{!important};
+        @apply relative ring-1 bg-dokan-btn-secondary text-dokan-btn-secondary border-dokan-btn-secondary ring-dokan-btn-secondary transition-colors duration-200 ease-in-out shadow-none border-none #{!important};
 
         &:focus {
             @apply ring-0 ring-offset-0 #{!important};
         }
 
         &:hover {
-            @apply ring-0 ring-offset-0 bg-dokan-btn-secondary-hover text-dokan-btn-secondary-hover border-dokan-btn-secondary-hover ring-dokan-btn-secondary-hover #{!important};
+            @apply ring-offset-0 bg-dokan-btn-secondary-hover text-dokan-btn-secondary-hover border-dokan-btn-secondary-hover ring-dokan-btn-secondary-hover #{!important};
         }
     }
 
     .dokan-btn-tertiary {
-        @apply relative bg-dokan-btn-tertiary text-dokan-btn-tertiary border-dokan-btn-tertiary ring-dokan-btn-tertiary transition-colors duration-200 #{!important};
+        --tw-shadow: 1px 3px 4px 0 rgb(0 0 0 / 0.05);
+
+        @apply relative bg-dokan-btn-tertiary text-dokan-btn-tertiary border-dokan-btn-tertiary ring-dokan-btn-tertiary transition-colors duration-200 ease-in-out #{!important};
 
         &:focus {
             @apply ring-0 ring-offset-0 #{!important};
@@ -221,7 +232,7 @@
     .dokan-badge-secondary {
         @apply relative ring-1 ring-inset bg-dokan-btn-secondary text-dokan-btn-secondary ring-dokan-btn-secondary #{!important};
     }
-    
+
     .dokan-badge-info {
         @apply relative ring-1 ring-inset bg-dokan-info text-dokan-info ring-dokan-info #{!important};
     }

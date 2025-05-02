@@ -5,6 +5,7 @@
  *
  * @type {string}
  */
+const { kebabCase } = require( 'lodash' );
 
 const WOOCOMMERCE_NAMESPACE = '@woocommerce/';
 
@@ -123,7 +124,8 @@ const requestToExternal = ( request ) => {
     const wc = request.match( /^@woocommerce\/(.+)$/ );
 
     if ( dokan ) {
-        return [ 'dokan', dokan[ 1 ] + 'Store' ];
+        const storeName = camelCaseDash( dokan[ 1 ] );
+        return [ 'dokan', storeName + 'Store' ];
     }
 
     if ( wc ) {
@@ -145,7 +147,9 @@ const requestToHandle = ( request ) => {
     const wc = request.match( /^@woocommerce\/(.+)$/ );
 
     if ( dokan ) {
-        return `dokan-stores-${ dokan[ 1 ] }`;
+        // Convert the store name to camelCase and append 'Store'.
+        const storeName = kebabCase( dokan[ 1 ] );
+        return `dokan-stores-${ storeName }`;
     }
 
     if ( wc ) {

@@ -204,11 +204,12 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/VendorDashboardController.php'       => '\WeDevs\Dokan\REST\VendorDashboardController',
                 DOKAN_DIR . '/includes/REST/ProductBlockController.php'          => '\WeDevs\Dokan\REST\ProductBlockController',
                 DOKAN_DIR . '/includes/REST/CommissionControllerV1.php'          => '\WeDevs\Dokan\REST\CommissionControllerV1',
-                DOKAN_DIR . '/includes/REST/CustomersController.php'              => '\WeDevs\Dokan\REST\CustomersController',
+                DOKAN_DIR . '/includes/REST/CustomersController.php'             => '\WeDevs\Dokan\REST\CustomersController',
                 DOKAN_DIR . '/includes/REST/DokanDataCountriesController.php'    => '\WeDevs\Dokan\REST\DokanDataCountriesController',
                 DOKAN_DIR . '/includes/REST/DokanDataContinentsController.php'   => '\WeDevs\Dokan\REST\DokanDataContinentsController',
                 DOKAN_DIR . '/includes/REST/OrderControllerV3.php'               => '\WeDevs\Dokan\REST\OrderControllerV3',
                 DOKAN_DIR . '/includes/REST/AdminOnboardingController.php'       => '\WeDevs\Dokan\REST\AdminOnboardingController',
+                DOKAN_DIR . '/includes/REST/VendorProductCategoriesController.php'  => '\WeDevs\Dokan\REST\VendorProductCategoriesController',
             )
         );
     }
