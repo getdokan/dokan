@@ -138,8 +138,8 @@ class Calculator extends AbstractCommissionCalculator {
 
         $net_amount_with_admin_discount = $this->get_total() + $admin_discount;
 
-        $percentage_commission = ( $net_amount_with_admin_discount * $this->settings->get_percentage() ) / 100;
-        $flat_commission       = $this->settings->get_flat() * $this->quantity;
+        $percentage_commission = ( $net_amount_with_admin_discount * $this->settings->get_percentage_value() ) / 100;
+        $flat_commission       = $this->settings->get_flat_value() * $this->quantity;
         $combine_flat          = $this->settings->get_combine_flat();
 
         return $percentage_commission + $flat_commission + $combine_flat - $admin_discount;
