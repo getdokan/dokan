@@ -5,7 +5,7 @@ import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
 import ResponseHistory from './ResponseHistory';
 import { useMutationObserver } from '../../hooks';
-import { DokanAlert, DokanButton } from '@dokan/components';
+import { DokanAlert, DokanButton } from '../../components';
 import AISkeleton from './Skeleton';
 
 const initialIndex = {
