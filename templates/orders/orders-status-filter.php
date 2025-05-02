@@ -17,11 +17,17 @@ if ( isset( $_GET['order_id'] ) ) { // phpcs:ignore
         <a href="<?php echo esc_url( dokan_get_navigation_url( 'orders' ) ); ?>" class="dokan-btn dokan-left">
             <?php esc_html_e( '&larr; Orders', 'dokan-lite' ); ?>
         </a>
-        <?php if ( $show_edit_url ?? false ) : ?>
-            <a href="<?php echo esc_url( dokan_get_navigation_url( 'new/#/orders/edit/' . $order_id ) ); ?>" class="edit-order-button dokan-btn btn btn-sm btn-theme dokan-btn-theme dokan-right">
-                <?php esc_html_e( 'Edit Order', 'dokan-lite' ); ?>
-            </a>
-        <?php endif; ?>
+
+        <?php
+        /**
+         * Fires before the order status filter.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param int $order_id Order ID.
+         */
+        do_action( 'dokan_order_status_filter_before', $order_id );
+        ?>
     </div>
     <?php
 } else {

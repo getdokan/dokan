@@ -50,19 +50,7 @@ class Orders {
      * @return void
      */
     public function order_listing_status_filter() {
-        $can_edit  = false;
-        $vendor_id = dokan_get_current_user_id();
-
-        // Check if order creation enabled by vendor.
-        if ( dokan()->is_pro_exists() && method_exists( \dokan_pro()->manual_orders, 'is_enabled_for_vendor' ) && \dokan_pro()->manual_orders->is_enabled_for_vendor( $vendor_id ) ) {
-            $order_id = isset( $_GET['order_id'] ) ? absint( wp_unslash( $_GET['order_id'] ) ) : 0; // phpcs:ignore WordPress.Security
-            $order    = wc_get_order( $order_id );
-            if ( $order instanceof \WC_Order ) {
-                $can_edit = \dokan_pro()->manual_orders->is_created_by_vendor( $order, $vendor_id ) && $order->is_editable();
-            }
-        }
-
-        dokan_get_template_part( 'orders/orders-status-filter', '', array( 'show_edit_url' => $can_edit ) );
+        dokan_get_template_part( 'orders/orders-status-filter' );
     }
 
     /**
@@ -77,7 +65,7 @@ class Orders {
 
         // get order id
         $order_id = absint( wp_unslash( $_GET['order_id'] ) );
-        $order    = wc_get_order( $order_id );
+        $order = wc_get_order( $order_id );
         if ( ! $order ) {
             dokan_get_template_part(
                 'global/dokan-error',
@@ -87,7 +75,6 @@ class Orders {
                     'message' => __( 'No order data found with given order id.', 'dokan-lite' ),
                 ]
             );
-
             return;
         }
 
