@@ -62,7 +62,7 @@
                     <div class='d-xs:flex h-1/2'>
                         <span v-for='parent_id in item.parents' :key='parent_id' class='d-xs:bg-[#e5e7eb] md:bg-transparent block h-full w-[1px] d-xs:ml-1'></span>
                     </div>
-                    <button type='button' class='p-1 d-xs:pl-1 md:pl-6 bg-transparent border-none cursor-pointer' :disabled='!item.children.length' :class='!item.children.length ? "disabled:cursor-not-allowed text-gray-300" : "cursor-pointer text-[#F05025]"' @click='()=> catRowClick( item, index )'>
+                    <button type='button' class='p-1 d-xs:pl-1 md:pl-6 bg-transparent border-none cursor-pointer' :disabled='!item.children.length' :class='!item.children.length ? "disabled:cursor-not-allowed text-gray-300" : "cursor-pointer text-[#4C19E6]"' @click='()=> catRowClick( item, index )'>
                         <i class="far" :class='openRows.includes( Number( item.term_id ) ) ? "fa-minus-square text-black" : "fa-plus-square"'></i>
                     </button>
                     <p class='d-xs:text-[8px] sm:text-[14px] text-black !m-0'>
@@ -122,6 +122,10 @@
                     },
                     items:{}
                 }
+            },
+            resetSubCategory: {
+                type: Boolean,
+                default: true
             }
         },
         computed: {
@@ -266,7 +270,10 @@
 
                 let commissions = JSON.parse( JSON.stringify( this.commission.items ) );
 
-                let data = JSON.parse( JSON.stringify( this.commission.all ) );
+                let data = this.resetSubCategory ? JSON.parse( JSON.stringify( this.commission.all ) ) : {
+                    flat: '',
+                    percentage: ''
+                };
 
                 if ( commissions.hasOwnProperty( term_id ) ) {
                     data = commissions[term_id];
@@ -293,7 +300,10 @@
                     value = this.unFormatValue( value );
                 }
                 this.$set( this.commission.all, commission_type, value );
-                this.$set(this.commission, 'items', {});
+
+                let items = JSON.parse( JSON.stringify( this.commission.items ?? {} ) );
+                items = this.resetSubCategory ? {} : items;
+                this.$set(this.commission, 'items', items);
 
                 this.emitComponentChange( JSON.parse( JSON.stringify( this.commission ) ) )
             }, 700 ),
@@ -356,6 +366,10 @@
             },
 
             updateChildCommissionValues(parent_cat_id, commission_data) {
+                if ( ! this.resetSubCategory ) {
+                    return;
+                }
+
                 let all_nested_children_ids = this.getChildren( parent_cat_id );
                 let children = JSON.parse( JSON.stringify( this.commission.items ) );
 
