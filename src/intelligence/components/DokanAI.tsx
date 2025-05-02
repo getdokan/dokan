@@ -255,7 +255,10 @@ const DokanAI = () => {
     };
 
     const insertHandler = ( force = false ) => {
-        if ( isEditMode && ! force ) {
+        const existingTitle = document.getElementById(
+            'post_title'
+        ) as HTMLInputElement;
+        if ( existingTitle.value && ! force ) {
             setIsOpen( false );
             setRegenerateModal( true );
             return;
