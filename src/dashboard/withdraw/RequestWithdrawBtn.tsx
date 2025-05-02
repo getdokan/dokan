@@ -201,7 +201,6 @@ function RequestWithdrawBtn( {
                         <div className="mt-3">
                             <SimpleInput
                                 label={ __( 'Withdraw charge', 'dokan-lite' ) }
-                                className="pl-12"
                                 value={
                                     isLoading
                                         ? __( 'Calculating…', 'dokan-lite' )
@@ -218,8 +217,10 @@ function RequestWithdrawBtn( {
                         </div>
                         <div className="mt-3">
                             <SimpleInput
-                                label={ __( 'Receivable amount', 'dokan-lite' ) }
-                                className="pl-12"
+                                label={ __(
+                                    'Receivable amount',
+                                    'dokan-lite'
+                                ) }
                                 value={
                                     isLoading
                                         ? __( 'Calculating…', 'dokan-lite' )
