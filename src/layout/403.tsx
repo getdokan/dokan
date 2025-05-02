@@ -38,9 +38,10 @@ const Forbidden = ( {
                             </p>
                             { navigateButton ?? (
                                 <DokanButton
-                                    variant={ 'primary' }
-                                    className="w-[10.5rem] h-10 mt-2 "
+                                    link={ true }
                                     href={ dashBoardUrl }
+                                    variant={ 'primary' }
+                                    className="w-[10.5rem] mt-2 py-2"
                                 >
                                     { __( 'Back to Dashboard', 'dokan-lite' ) }
                                 </DokanButton>

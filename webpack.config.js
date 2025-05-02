@@ -49,11 +49,23 @@ const updatedConfig = {
 
     resolve: {
         ...defaultConfig.resolve,
+        fallback: {
+            // Reduce bundle size by omitting Node crypto library.
+            // See https://github.com/woocommerce/woocommerce-admin/pull/5768
+            crypto: 'empty',
+            // Ignore fs, path to skip resolve errors for @automattic/calypso-config
+            fs: false,
+            path: false,
+        },
+        extensions: [ '.json', '.js', '.jsx', '.ts', '.tsx' ],
         alias: {
             vue$: 'vue/dist/vue.esm.js',
             '@dokan': path.resolve( './src/' ),
             frontend: path.resolve( './src/frontend/' ),
             admin: path.resolve( './src/admin/' ),
+            reports: path.resolve(
+                __dirname + '/src/vendor-dashboard/reports'
+            ),
         },
     },
 
@@ -96,6 +108,7 @@ const updatedConfig = {
     ],
 
     module: {
+        ...defaultConfig.module,
         rules: [
             ...defaultConfig.module.rules,
             {
