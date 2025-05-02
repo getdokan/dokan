@@ -693,6 +693,8 @@ class Manager {
                 }
             }
 
+            $product_item->add_meta_data( '_dokan_parent_order_item_id', $item->get_id() );
+
             $order->add_item( $product_item );
         }
 
