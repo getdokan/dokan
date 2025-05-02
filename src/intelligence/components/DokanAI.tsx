@@ -582,7 +582,7 @@ const DokanAI = () => {
                             </p>
                             <TextArea
                                 disabled={ isLoading }
-                                className="min-h-48 focus:outline-none"
+                                className="min-h-48"
                                 input={ {
                                     id: 'dokan-ai-prompt',
                                     value: prompt,
