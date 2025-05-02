@@ -47,11 +47,11 @@ class Vendor implements InterfaceSetting {
         // @todo Need to check if the commission rate
         if ( $type === 'category_based' ) {
             $all_category_commissions = $category_commissions['all'] ?? [];
-            $category_commissions     = $category_commissions['items'][ $this->category_id ] ?? [];
+            $category_commissions_items = $category_commissions['items'][ $this->category_id ] ?? [];
 
             if ( ! empty( $category_commissions ) ) {
-                $percentage = $category_commissions['percentage'] ?? '';
-                $flat       = $category_commissions['flat'] ?? '';
+                $percentage = $category_commissions_items['percentage'] ?? '';
+                $flat       = $category_commissions_items['flat'] ?? '';
             } else {
                 $percentage = $all_category_commissions['percentage'] ?? '';
                 $flat       = $all_category_commissions['flat'] ?? '';
