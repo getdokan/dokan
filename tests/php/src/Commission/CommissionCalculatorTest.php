@@ -29,7 +29,8 @@ class CommissionCalculatorTest extends DokanTestCase {
 			]
         );
 
-        $comm = $calc->set_subtotal( 880 )->set_quantity( 10 )
+        $comm = $calc->set_total( 880 - 35.2 )
+            ->set_quantity( 10 )
             ->set_discount( $coupon_info )
             ->set_settings( $settings )
             ->calculate();

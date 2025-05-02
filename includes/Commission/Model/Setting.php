@@ -161,6 +161,22 @@ class Setting {
 
         return $this;
     }
+
+    /**
+     * Sets the category commission data.
+     *
+     * @since 3.14.0
+     *
+     * @param array $category_commissions
+     *
+     * @return $this
+     */
+    public function set_category_commissions( array $category_commissions ): Setting {
+        $this->category_commissions = $category_commissions;
+
+        return $this;
+    }
+
     /**
      * Sets the commission type.
      *
@@ -184,14 +200,25 @@ class Setting {
     }
 
     /**
+     * Returns the value of the flat settings.
+     *
+     * @since 3.14.0
+     *
+     * @return string
+     */
+    public function get_flat(): string {
+        return $this->flat;
+    }
+
+    /**
      * Returns the flat amount.
      *
      * @since 3.14.0
      *
      * @return float
      */
-    public function get_flat(): float {
-        return $this->is_combined() ? 0 : floatval( $this->flat );
+    public function get_flat_value(): float {
+        return $this->is_combined() ? 0 : floatval( $this->get_flat() );
     }
 
     /**
@@ -205,8 +232,25 @@ class Setting {
         return $this->is_combined() ? floatval( $this->flat ) : 0;
     }
 
+    /**
+     * Returns true if the commission is combined. 
+     * N.B. This is a legacy type. It does not exist in the new commission system.
+     *
+     * @return bool
+     */
     protected function is_combined(): bool {
         return $this->type === 'combine';
+    }
+
+    /**
+     * Returns the value of the percentage settings.
+     *
+     * @since 3.14.0
+     *
+     * @return string
+     */
+    public function get_percentage(): string {
+        return $this->percentage;
     }
 
     /**
@@ -216,7 +260,7 @@ class Setting {
      *
      * @return float
      */
-    public function get_percentage(): float {
+    public function get_percentage_value(): float {
         return floatval( $this->percentage );
     }
 
@@ -256,8 +300,8 @@ class Setting {
     public function to_array(): array {
         return [
             'type'       => $this->get_type(),
-            'flat'       => $this->flat,
-            'percentage' => $this->percentage,
+            'flat'       => $this->get_flat(),
+            'percentage' => $this->get_percentage(),
             'source'     => $this->get_source(),
             'meta_data'  => $this->get_meta_data(),
         ];

@@ -62,7 +62,8 @@ class Vendor implements InterfaceSetting {
 
         $settings->set_type( $type )
                 ->set_flat( $flat )
-                ->set_percentage( $percentage );
+                ->set_percentage( $percentage )
+                ->set_category_commissions( $category_commissions );
 
         return $settings;
     }
