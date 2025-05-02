@@ -75,7 +75,7 @@ const BasicInfoScreen = ( {
     };
 
     const siteUrl = onboardingData?.site_url;
-    const maxUrlLength = 40;
+    const maxUrlLength = 90;
     let siteUrlContent =
         siteUrl?.length > maxUrlLength
             ? siteUrl.slice( 0, maxUrlLength ) + '...'
@@ -119,7 +119,7 @@ const BasicInfoScreen = ( {
                             required={ true }
                             value={ displayStoreUrl }
                             addOnLeft={
-                                <span className="w-48">
+                                <span className="truncate max-w-[20rem] inline-block">
                                     { sprintf(
                                         // eslint-disable-next-line @wordpress/i18n-translator-comments
                                         __( '%s/', 'dokan-lite' ),
@@ -145,7 +145,6 @@ const BasicInfoScreen = ( {
                             errors={ error && [ error ] }
                             onChange={ onHandleInputChange }
                             onBlur={ onBlurInput }
-                            className="!h-auto z-10 border-l-0"
                         />
                         <div className="flex items-center gap-1 mt-6 text-sm text-gray-500">
                             <WarningIcon />
