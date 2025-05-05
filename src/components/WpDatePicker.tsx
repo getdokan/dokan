@@ -29,7 +29,7 @@ const WpDatePicker = ( props ) => {
     return (
         <Popover className="relative">
             <PopoverButton
-                className="shadow-none w-full"
+                className="shadow-none rounded w-full"
                 onClick={ () => setIsOpen( ! isOpen ) }
             >
                 { props.children ?? '' }
