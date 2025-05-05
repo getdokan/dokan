@@ -57,10 +57,12 @@ function Balance( {
                     </Card.Title>
                 </Card.Header>
                 <Card.Body>
-                    <div className="flex flex-col md:flex-row sm:items-center justify-between">
+                    <div className="flex flex-col md:!flex-row sm:!items-center justify-between">
                         <div className="flex flex-col">
                             <div className="text-gray-700 md:mb-4 sm:mb-0 flex">
-                                <span>{ __( 'Your Balance:', 'dokan-lite' ) }</span>
+                                <span>
+                                    { __( 'Your Balance:', 'dokan-lite' ) }
+                                </span>
                                 &nbsp;
                                 <span className="font-semibold">
                                     <PriceHtml

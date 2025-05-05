@@ -129,7 +129,7 @@ function PaymentMethods( {
                                     <div
                                         key={ activeMethod.value }
                                         className={ twMerge(
-                                            'flex flex-col md:flex-row sm:items-center justify-between',
+                                            'flex flex-col md:!flex-row sm:!items-center justify-between',
                                             index !== 0 ? 'border-t pt-4' : ''
                                         ) }
                                     >
