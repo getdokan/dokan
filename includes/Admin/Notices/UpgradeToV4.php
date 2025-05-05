@@ -35,10 +35,11 @@ class UpgradeToV4 {
         }
 
         $notices[] = [
-            'type'              => 'warning',
-            'description'       => __( '<strong>Dokan Pro Upgrade Required!</strong> &#8211; A major update happened in Dokan Pro which is available in v4.0.1. You are using a previous version which may run into some issues if you don\'t update so requesting you to update into the latest version.', 'dokan-lite' ),
-            'priority'          => 1,
-            'scope'            => 'global',
+            'type'        => 'warning',
+            'title'       => esc_html__( 'Dokan Pro Upgrade Required!', 'dokan-lite' ),
+            'description' => esc_html__( 'A major update happened in Dokan Pro which is available in v4.0.0. You are using a previous version which may run into some issues if you don\'t update so requesting you to update into the latest version.', 'dokan-lite' ),
+            'priority'    => 1,
+            'scope'       => 'global',
         ];
 
         return $notices;
