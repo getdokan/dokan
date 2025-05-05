@@ -6,6 +6,7 @@ import {
     SearchableSelect,
     useToast,
 } from '@getdokan/dokan-ui';
+import { Fill } from '@wordpress/components';
 import { DokanButton, DokanAlert, DokanPriceInput } from '@dokan/components';
 import { RawHTML, useEffect, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -22,7 +23,9 @@ function RequestWithdrawBtn( {
     settings,
     withdrawRequests,
     balanceData,
+    location,
 }: {
+    location?: string;
     settings: UseWithdrawSettingsReturn;
     withdrawRequests: UseWithdrawRequestsReturn;
     balanceData: UseBalanceReturn;
@@ -297,9 +300,17 @@ function RequestWithdrawBtn( {
 
     return (
         <>
-            <DokanButton onClick={ () => setIsOpen( true ) }>
-                { __( 'Request Withdraw', 'dokan-lite' ) }
-            </DokanButton>
+            { location !== '/withdraw-requests' ? (
+                <DokanButton onClick={ () => setIsOpen( true ) }>
+                    { __( 'Request Withdraw', 'dokan-lite' ) }
+                </DokanButton>
+            ) : (
+                <Fill name="dokan-header-actions">
+                    <DokanButton onClick={ () => setIsOpen( true ) }>
+                        { __( 'Request Withdraw', 'dokan-lite' ) }
+                    </DokanButton>
+                </Fill>
+            ) }
 
             <Modal
                 className="max-w-2xl dokan-withdraw-style-reset dokan-layout"

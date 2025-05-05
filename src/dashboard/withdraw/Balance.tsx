@@ -30,9 +30,11 @@ const Loader = () => {
 function Balance( {
     bodyData,
     settings,
+    location,
     masterLoading,
     withdrawRequests,
 }: {
+    location: string;
     bodyData: UseBalanceReturn;
     settings: UseWithdrawSettingsReturn;
     masterLoading: boolean;
@@ -87,6 +89,7 @@ function Balance( {
                             </div>
                         </div>
                         <RequestWithdrawBtn
+                            location={ location }
                             settings={ settings }
                             withdrawRequests={ withdrawRequests }
                             balanceData={ bodyData }
