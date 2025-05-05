@@ -58,7 +58,6 @@ class WithdrawControllerV2 extends WithdrawController {
                         'description' => __( 'Withdraw method key', 'dokan-lite' ),
                         'type'        => 'string',
                         'required'    => true,
-                        'enum'        => $methods,
                     ],
                 ],
             ]
