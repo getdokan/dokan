@@ -545,10 +545,9 @@ class Rewrites {
      * @return void
      */
     public function maybe_flash_rewrite_rules() {
-        $flash   = get_option( 'dokan_rewrite_rules_needs_flashing', 'yes' );
-        $version = get_option( 'dokan_theme_version', DOKAN_PLUGIN_VERSION );
+        $flash = get_option( 'dokan_rewrite_rules_needs_flashing', 'yes' );
 
-        if ( 'yes' !== $flash || ! version_compare( DOKAN_PLUGIN_VERSION, $version, '>' ) ) {
+        if ( 'yes' !== $flash ) {
             return;
         }
 
