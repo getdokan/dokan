@@ -3,11 +3,11 @@ Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
 Requires at least: 6.5
-Tested up to: 6.7.2
+Tested up to: 6.8.1
 WC requires at least: 8.5.0
-WC tested up to: 9.7.1
+WC tested up to: 9.8.3
 Requires PHP: 7.4
-Stable tag: 3.14.11
+Stable tag: 4.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -344,6 +344,34 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.0.0 ( May 06, 2025 ) =
+
+- **new:** AI-powered auto-completion for product content (titles, short and long descriptions). Integrated with OpenAI and Gemini GPT models, improves content creation speed and consistency, allows selection of preferred AI provider
+- **new:** WooCommerce Brand management support in Vendor Panel, Vendors can assign brands during product creation, editing
+- **new:** Introduced Dokan link components with success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Introduced Dokan button components with success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Introduced Dokan badge components with primary, secondary, success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Introduced Dokan alert components with success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Created Dokan price input component formatted according to WooCommerce settings
+- **new:** Implemented internal error React component for error boundary and integrated with Analytics feature
+- **new:** Introduce product & product categories data store
+- **new:** Introduced comprehensive setup guide panel with multiple steps for admin
+- **new:** Introduce vendor analytics feature integrating with WooCommerce analytics system.
+- **update:** Migrated color scheme from 'default' to 'Majestic Orange' for improved visual consistency
+- **update:** Enhanced withdrawal display with proper currency symbols and formatting according to WooCommerce settings
+- **update:** Refined Dokan primary and secondary button colors including text, background, border and shadow for tertiary button
+- **update:** Updated color scheme in the dummy data importer to align with Dokan's brand color
+- **update:** Redesign the upgrade modal using ReactJS framework for improved performance and user experience
+- **update:** Enhanced withdraw with modern UI for better user experience
+- **update:** Optimized withdraw request process with reduced loading times
+- **update:** Reimagined withdraw management interface with cleaner layouts
+- **update:** Skeleton loaders for withdraw screens to improve perceived performance during data fetching
+- **update:** UI inconsistencies in withdraw request and history views
+- **update:** Better error handling for withdraw actions
+- **update:** Improved onboarding experience with modern UI and intuitive setup flow.
+- **fix:** Resolved an issue where the vendor dashboard menus  UI with submenus and notification counters were breaking
+- **fix:** Product reviews not working from admin
+
 = v3.14.11 ( Mar 14, 2025 ) =
 
 - **update:** Dokan now displays prices based on the decimal points setup in WooCommerce.
@@ -368,21 +396,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **feat:** Rollback support for product statues on dokan pro deactivation.
 - **refactor:** Improved dokan_is_user_seller function by adding strict comparison to differentiate between vendor and staff.
 
-= v3.14.8 ( Jan 29, 2025 ) =
-
-- **update:** Missing parameters support added for the reverse-withdrawal API endpoints.
-- **update:** Missing parameters support added for the Settings API endpoints.
-- **fix:** Fixed an error when navigating to the product edit page with an invalid (non-numeric) product ID.
-- **fix:** Fixed a misspelling typo vendor contact form input field.
-- **fix:** Fixed and updated analytics cache modifier for seller analytics filter.
-
-= v3.14.6 ( Jan 09, 2025 ) =
-
-- **fix:** Translations on Admin Commission Setup Wizard, Withdraw, Withdraw Log, Add Reverse Withdraw, Dummy Data, and Vendor Single pages were not working due to wrong text-domains.
-
 [CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
 
 == Upgrade Notice ==
 
 = 3.0.0 =
 **Important Update** This update changes code structures for improving performance. Make sure to take backup and read the changlogs first before upgrade process.
+
+= 4.0.0 =
+**Important Update** This update includes major changes that may impact your existing commission settings, email templates, or vendor panel UI updates. Please review the changelog and back up your site before updating to ensure smooth transition.
