@@ -17,6 +17,11 @@ use WeDevs\Dokan\Contracts\Hookable;
 class VendorBalanceUpdateHandler implements Hookable {
 
     /**
+     * Vendor earning without refund meta key.
+     */
+    public const DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY = 'dokan_vendor_earning_without_refund';
+
+    /**
      * Register hooks.
      *
      * @return void
@@ -46,7 +51,6 @@ class VendorBalanceUpdateHandler implements Hookable {
             $order_commission_calculator->calculate();
 
             $vendor_earning = $order_commission_calculator->get_vendor_earning();
-
         } catch ( Exception $e ) {
             error_log( sprintf( 'Dokan: Order %d commission calculation failed. Error: %s', $order_id, $e->getMessage() ) );
             return;
@@ -86,7 +90,7 @@ class VendorBalanceUpdateHandler implements Hookable {
         global $wpdb;
 
         remove_action( 'woocommerce_update_order', [ $this, 'handle_order_edit' ], 99 );
-        $order->update_meta_data( 'dokan_vendor_balance', $balance );
+        $order->update_meta_data( self::DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY, $balance );
         $order->save();
         add_action( 'woocommerce_update_order', [ $this, 'handle_order_edit' ], 99, 2 );
 
@@ -112,7 +116,7 @@ class VendorBalanceUpdateHandler implements Hookable {
     protected function get_order_amount( WC_Abstract_Order $order ): ?float {
         global $wpdb;
 
-        $cached_value = $order->get_meta( 'dokan_vendor_balance' );
+        $cached_value = $order->get_meta( self::DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY );
 
         if ( $cached_value ) {
             return floatval( $cached_value );
