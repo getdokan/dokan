@@ -45,6 +45,12 @@ div.media-sidebar a.edit-attachment{
         a:focus {
             outline-color: var(--dokan-button-background-color, #7047EB);
         }
+
+        input[type=checkbox]:not(.dokan-layout input[type=checkbox]){
+            -webkit-appearance: revert;
+            -moz-appearance: revert;
+            appearance: revert;
+        }
     }
 
     header.dokan-dashboard-header {
