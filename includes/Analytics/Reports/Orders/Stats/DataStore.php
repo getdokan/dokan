@@ -106,43 +106,22 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			return -1;
 		}
 
-		// Following values are applicable for Refund Order.
-		$vendor_earning = 0;
-		$admin_earning = 0;
-
-		$gateway_fee = 0;
-		$gateway_fee_provider = '';
-
-		$shipping_fee = $order->get_shipping_total();
-		$shipping_fee_recipient = '';
+		$order_commission = null;
 
 		// Override the values if order is a shop order.
 		switch ( $order->get_type() ) {
 			case 'shop_order':
-				$vendor_earning = (float) dokan()->commission->get_earning_by_order( $order );
-				$admin_earning = (float) dokan()->commission->get_earning_by_order( $order, 'admin' );
-
-				$gateway_fee = $order->get_meta( 'dokan_gateway_fee' );
-				$gateway_fee_provider = $order->get_meta( 'dokan_gateway_fee_paid_by' );
-				$shipping_fee_recipient = $order->get_meta( 'shipping_fee_recipient' );
+				$order_commission = dokan_get_container()->get( OrderCommission::class );
+				$order_commission->set_order( $order );
+				$order_commission->get();
 				break;
 
 			case 'shop_order_refund':
 				$parent_order = wc_get_order( $order->get_parent_id() );
-				$shipping_fee_recipient = $parent_order->get_meta( 'shipping_fee_recipient' );
 				break;
 			default:
 				break;
 		}
-
-        try {
-            $order_commission = dokan_get_container()->get( OrderCommission::class );
-            $order_commission->set_order( $order );
-            $order_commission->get();
-        } catch ( \Exception $exception ) {
-            dokan_log( 'Dokan Analytics Order commission not found: ' . $exception->getMessage() );
-            return -1;
-        }
 
 		/**
 		 * Filters order stats data.
@@ -159,18 +138,18 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
                 'vendor_id'           => (int) self::get_vendor_id_from_order( $order ),
                 'order_type'          => (int) ( ( new OrderType() )->get_type( $order ) ),
                 // Seller Data
-                'vendor_earning'      => $order_commission->get_vendor_earning(),
-                'vendor_gateway_fee'  => $order_commission->get_vendor_gateway_fee(),
-                'vendor_shipping_fee' => $order_commission->get_vendor_shipping_fee(),
-                'vendor_discount'     => $order_commission->get_vendor_discount(),
-                // 'vendor_tax_fee'          => $order_commission->get_vendor_tax_fee(),
-                // 'vendor_shipping_tax_fee' => $order_commission->get_vendor_shipping_tax_fee(),
+                'vendor_earning'      => $order_commission ? $order_commission->get_vendor_earning() : 0,
+                'vendor_gateway_fee'  => $order_commission ? $order_commission->get_vendor_gateway_fee() : 0,
+                'vendor_shipping_fee' => $order_commission ? $order_commission->get_vendor_shipping_fee() : 0,
+                'vendor_discount'     => $order_commission ? $order_commission->get_vendor_discount() : 0,
+                // 'vendor_tax_fee'          => $order_commission ? $order_commission->get_vendor_tax_fee() : 0,
+                // 'vendor_shipping_tax_fee' => $order_commission ? $order_commission->get_vendor_shipping_tax_fee() : 0,
                 // Admin Data
-                'admin_commission'    => $order_commission->get_admin_commission(),
-                'admin_gateway_fee'   => $order_commission->get_admin_gateway_fee(),
-                'admin_shipping_fee'  => $order_commission->get_admin_shipping_fee(),
-                'admin_discount'      => $order_commission->get_admin_discount(),
-                'admin_subsidy'       => $order_commission->get_admin_subsidy(),
+                'admin_commission'    => $order_commission ? $order_commission->get_admin_commission() : 0,
+                'admin_gateway_fee'   => $order_commission ? $order_commission->get_admin_gateway_fee() : 0,
+                'admin_shipping_fee'  => $order_commission ? $order_commission->get_admin_shipping_fee() : 0,
+                'admin_discount'      => $order_commission ? $order_commission->get_admin_discount() : 0,
+                'admin_subsidy'       => $order_commission ? $order_commission->get_admin_subsidy() : 0,
                 // 'admin_tax_fee'           => $order_commission->get_admin_tax_fee(),
                 // 'admin_shipping_tax_fee'  => $order_commission->get_admin_shipping_tax_fee(),
 			),
