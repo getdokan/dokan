@@ -601,17 +601,7 @@ class Hooks {
      * @return void
      */
     public function commission_meta_box( $post_or_order ) {
-        global $wpdb;
         $order = dokan()->order->get( OrderUtil::get_post_or_order_id( $post_or_order ) );
-
-        $data = $wpdb->get_row(
-            $wpdb->prepare( "SELECT order_total,net_amount FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order->get_id() )
-        );
-
-        $order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
-        $net_amount = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;
-
-        $total_commission     = (float) $order_total - (float) $net_amount;
         $all_commission_types = array_merge( dokan_commission_types(), dokan()->commission->get_legacy_commission_types() );
 
         try {
@@ -626,8 +616,6 @@ class Hooks {
         dokan_get_template_part(
             'orders/commission-meta-box-html', '', [
                 'order'                => $order,
-                'data'                 => $data,
-                'total_commission'     => $total_commission,
                 'all_commission_types' => $all_commission_types,
                 'order_commission'     => $order_commission,
             ]
