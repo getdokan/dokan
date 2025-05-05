@@ -1,3 +1,4 @@
+import './tailwind.scss';
 import { useBalance } from './Hooks/useBalance';
 import { useWithdrawSettings } from './Hooks/useWithdrawSettings';
 import { useWithdrawRequests } from './Hooks/useWithdrawRequests';
