@@ -63,9 +63,9 @@ function PaymentDetails( {
                     <div className="space-y-4">
                         <div className="flex flex-col md:flex-row sm:items-center justify-between">
                             <div>
-                                <h4 className="font-medium text-gray-900 mb-2">
+                                <span className="text-gray-700 mb-2">
                                     { __( 'Last Payment', 'dokan-lite' ) }
-                                </h4>
+                                </span>
                                 { bodyData?.data?.last_withdraw?.id ? (
                                     <div className="flex">
                                         <strong>
