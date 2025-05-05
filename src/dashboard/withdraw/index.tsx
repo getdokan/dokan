@@ -7,14 +7,12 @@ import PaymentDetails from './PaymentDetails';
 import PaymentMethods from './PaymentMethods';
 import { useEffect } from '@wordpress/element';
 import { useCurrentUser } from "@dokan/hooks";
-import { useLocation } from "react-router-dom";
 
 const Index = () => {
     const useWithdrawRequestHook = useWithdrawRequests( true );
     const withdrawSettings = useWithdrawSettings();
     const currentUser = useCurrentUser();
     const balance = useBalance();
-    const location = useLocation();
 
     useEffect( () => {
         if ( currentUser ) {
@@ -35,7 +33,6 @@ const Index = () => {
                     bodyData={ balance }
                     settings={ withdrawSettings }
                     withdrawRequests={ useWithdrawRequestHook }
-                    location={ location?.pathname ?? '' }
                 />
                 <PaymentDetails
                     masterLoading={ useWithdrawRequestHook.isLoading }

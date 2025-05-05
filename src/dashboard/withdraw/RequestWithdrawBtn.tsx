@@ -18,14 +18,13 @@ import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
 import { formatPrice, unformatNumber } from '@dokan/utilities';
 import { UseBalanceReturn } from './Hooks/useBalance';
+import { useLocation } from "react-router-dom";
 
 function RequestWithdrawBtn( {
     settings,
     withdrawRequests,
     balanceData,
-    location,
 }: {
-    location?: string;
     settings: UseWithdrawSettingsReturn;
     withdrawRequests: UseWithdrawRequestsReturn;
     balanceData: UseBalanceReturn;
@@ -300,7 +299,7 @@ function RequestWithdrawBtn( {
 
     return (
         <>
-            { location !== '/withdraw-requests' ? (
+            { useLocation()?.pathname !== '/withdraw-requests' ? (
                 <DokanButton onClick={ () => setIsOpen( true ) }>
                     { __( 'Request Withdraw', 'dokan-lite' ) }
                 </DokanButton>

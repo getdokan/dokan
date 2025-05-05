@@ -98,7 +98,6 @@ function WithdrawRequests() {
                             settings={ withdrawSettings }
                             withdrawRequests={ useWithdrawRequestHook }
                             balanceData={ balance }
-                            location={ location?.pathname ?? '' }
                         />
                     </div>
                 </div>

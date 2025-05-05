@@ -30,11 +30,9 @@ const Loader = () => {
 function Balance( {
     bodyData,
     settings,
-    location,
     masterLoading,
     withdrawRequests,
 }: {
-    location: string;
     bodyData: UseBalanceReturn;
     settings: UseWithdrawSettingsReturn;
     masterLoading: boolean;
@@ -60,9 +58,7 @@ function Balance( {
                     <div className="flex flex-col md:!flex-row sm:!items-center justify-between">
                         <div className="flex flex-col">
                             <div className="text-gray-700 md:mb-4 sm:mb-0 flex">
-                                <span>
-                                    { __( 'Your Balance:', 'dokan-lite' ) }
-                                </span>
+                                <span>{ __( 'Your Balance:', 'dokan-lite' ) }</span>
                                 &nbsp;
                                 <span className="font-semibold">
                                     <PriceHtml
@@ -91,7 +87,6 @@ function Balance( {
                             </div>
                         </div>
                         <RequestWithdrawBtn
-                            location={ location }
                             settings={ settings }
                             withdrawRequests={ withdrawRequests }
                             balanceData={ bodyData }
