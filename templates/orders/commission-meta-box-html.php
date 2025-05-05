@@ -5,8 +5,6 @@
  * Dokan Dashboard Commission Meta-box Content Template
  *
  * @var WC_Order $order
- * @var object $data
- * @var float $total_commission
  * @var array $all_commission_types
  * @var \WeDevs\Dokan\Commission\OrderCommission $order_commission
  *
