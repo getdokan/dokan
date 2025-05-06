@@ -97,7 +97,7 @@ class Withdraws {
         $limits     = '';
         $query_args = [ 1, 1 ];
 
-        if ( 'DESC' === $args['orderby'] ) {
+        if ( isset( $args['orderby'] ) && 'DESC' === $args['orderby'] ) {
             $orderby = 'ORDER BY id DESC';
         }
 

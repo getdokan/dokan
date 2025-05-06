@@ -297,17 +297,21 @@ function RequestWithdrawBtn( {
         return <WithdrawRequestForm />;
     };
 
+    const RequestWithdraw = () => {
+        return (
+            <DokanButton onClick={ () => setIsOpen( true ) }>
+                { __( 'Request Withdraw', 'dokan-lite' ) }
+            </DokanButton>
+        );
+    };
+
     return (
         <>
             { useLocation()?.pathname !== '/withdraw-requests' ? (
-                <DokanButton onClick={ () => setIsOpen( true ) }>
-                    { __( 'Request Withdraw', 'dokan-lite' ) }
-                </DokanButton>
+                <RequestWithdraw />
             ) : (
                 <Fill name="dokan-header-actions">
-                    <DokanButton onClick={ () => setIsOpen( true ) }>
-                        { __( 'Request Withdraw', 'dokan-lite' ) }
-                    </DokanButton>
+                    <RequestWithdraw />
                 </Fill>
             ) }
 
