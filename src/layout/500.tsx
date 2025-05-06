@@ -27,7 +27,7 @@ const InternalError = ( {
                         { /*slot for internal error*/ }
                         <Slot name="before-dokan-internal-error" />
                         <div className="flex flex-col items-center justify-center h-full gap-4">
-                            <InternalErrorIcon color={ `text-dokan-link` } />
+                            <InternalErrorIcon color="text-dokan-link w-44" />
                             <div className="flex flex-col gap-4 justify-center items-center">
                                 <h1 className="text-xl font-bold text-center tracking-wide leading-6">
                                     { title }
