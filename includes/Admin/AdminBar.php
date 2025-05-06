@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin;
 
+use WeDevs\Dokan\Dashboard\Templates\Dashboard;
+use WeDevs\Dokan\Utilities\ReportUtil;
 use WP_Admin_Bar;
 
 /**
@@ -152,7 +154,7 @@ class AdminBar {
                 'parent' => 'site-name',
                 'id'     => 'view-dashboard',
                 'title'  => __( 'Visit Vendor Dashboard', 'dokan-lite' ),
-                'href'   => get_permalink( $vendor_dashboard ),
+                'href'   => get_permalink( $vendor_dashboard ) . ( ReportUtil::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
             ];
         }
 

@@ -62,10 +62,6 @@ class Menu {
             }
 
             if ( ! dokan()->is_pro_exists() ) {
-                $submenu[ $slug ][] = [ __( 'Modules', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/pro-modules' ];
-            }
-
-            if ( ! dokan()->is_pro_exists() ) {
                 $submenu[ $slug ][] = [ __( 'PRO Features', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/premium' ];
             }
         }
@@ -112,7 +108,6 @@ class Menu {
      */
     public function dashboard() {
         $has_new_version = Helper::dokan_has_new_version();
-
         include DOKAN_DIR . '/templates/admin-header.php';
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
     }

@@ -87,7 +87,7 @@ class OrderItem extends AbstractStrategy {
     /**
      * Returns order item id.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return int|mixed|string
      */

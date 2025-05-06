@@ -17,7 +17,7 @@ abstract class AbstractCommissionCalculator extends Commission {
     /**
      * Returns the applied strategy.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
@@ -26,7 +26,7 @@ abstract class AbstractCommissionCalculator extends Commission {
     /**
      * Retrieve commission data from order item meta.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */

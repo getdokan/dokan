@@ -13,7 +13,7 @@ use WeDevs\Dokan\ProductCategory\Helper;
 /**
  * Class OrderLineItemCommission - Calculate order line item commission
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  */
 class ProductCommission extends AbstractCommissionCalculator {
 
@@ -50,7 +50,7 @@ class ProductCommission extends AbstractCommissionCalculator {
     /**
      * Calculate order line item commission.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param $auto_save
      *
@@ -97,7 +97,7 @@ class ProductCommission extends AbstractCommissionCalculator {
     /**
      * Retrieve commission data from order item meta.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */

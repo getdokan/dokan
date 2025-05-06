@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Dashboard\Templates;
 
+use WeDevs\Dokan\Utilities\ReportUtil;
+
 /**
  * Dokan Template Dashboard Class
  *
@@ -28,10 +30,13 @@ class Dashboard {
         $this->user_id = dokan_get_current_user_id();
 
         add_action( 'dokan_dashboard_content_inside_before', [ $this, 'show_seller_dashboard_notice' ], 10 );
-        add_action( 'dokan_dashboard_left_widgets', [ $this, 'get_big_counter_widgets' ], 10 );
-        add_action( 'dokan_dashboard_left_widgets', [ $this, 'get_orders_widgets' ], 15 );
-        add_action( 'dokan_dashboard_left_widgets', [ $this, 'get_products_widgets' ], 20 );
-        add_action( 'dokan_dashboard_right_widgets', [ $this, 'get_sales_report_chart_widget' ], 10 );
+
+        if ( ! ReportUtil::is_analytics_enabled() ) {
+            add_action( 'dokan_dashboard_left_widgets', [ $this, 'get_big_counter_widgets' ], 10 );
+            add_action( 'dokan_dashboard_left_widgets', [ $this, 'get_orders_widgets' ], 15 );
+            add_action( 'dokan_dashboard_left_widgets', [ $this, 'get_products_widgets' ], 20 );
+            add_action( 'dokan_dashboard_right_widgets', [ $this, 'get_sales_report_chart_widget' ], 10 );
+        }
     }
 
     /**

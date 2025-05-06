@@ -136,7 +136,7 @@ class RecalculateCommissions {
     /**
      * Overwrite WooCommerce's remove_order_coupon method.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -148,7 +148,7 @@ class RecalculateCommissions {
     /**
      * Overwrite WooCommerce's add_coupon_discount_method method.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -160,7 +160,7 @@ class RecalculateCommissions {
     /**
      * Remove a coupon from an order on ajax request.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -221,7 +221,7 @@ class RecalculateCommissions {
     /**
      * Adjust admin commission and vendor earning after coupon removed.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param int $order_id
      *
@@ -307,7 +307,7 @@ class RecalculateCommissions {
     /**
      * Add order discount via Ajax.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */

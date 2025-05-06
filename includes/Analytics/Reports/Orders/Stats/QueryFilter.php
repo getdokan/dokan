@@ -45,7 +45,7 @@ class QueryFilter extends OrdersQueryFilter {
     /**
      * Modifies the admin report columns to include Dokan-specific data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param array  $column        The existing report columns.
      * @param string $context       The context of the report.
@@ -76,7 +76,7 @@ class QueryFilter extends OrdersQueryFilter {
     /**
      * Adds custom select subqueries for calculating Dokan-specific totals in the analytics reports.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param array $clauses The existing SQL select clauses.
      *

@@ -123,7 +123,7 @@ class UserSwitch {
                             echo '<span>';
                         }
                     ?>
-                    <span class="fa fa-user" style="color:#f05025" aria-hidden="true"></span>
+                    <span class="fa fa-user" style="color: var(--dokan-button-background-color, #7047EB)" aria-hidden="true"></span>
                     <?php
                         $message       = '';
                         $just_switched = isset( $_GET['user_switched'] );

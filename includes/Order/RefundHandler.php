@@ -19,14 +19,14 @@ class RefundHandler implements Hookable {
         add_filter( 'dokan_refund_should_insert_into_vendor_balance', [ $this, 'exclude_cod_payment' ], 10, 3 );
         add_filter( 'dokan_vendor_earning_in_refund', [ $this, 'get_vendor_earning_in_refund' ], 10, 2 );
         add_action( 'dokan_refund_adjust_vendor_balance', [ $this, 'insert_into_balance_table' ], 10, 3 );
-        add_action( 'dokan_refund_adjust_dokan_orders', [ $this, 'update_order_amounts' ], 10, 3 );
+//        add_action( 'dokan_refund_adjust_dokan_orders', [ $this, 'update_order_amounts' ], 10, 3 );
         add_action( 'dokan_refund_after_dokan_orders_updated', [ $this, 'clear_order_caches' ], 10, 3 );
     }
 
     /**
      * Handle refund logic for Dokan orders.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param int $order_id  The ID of the original order.
      * @param int $refund_id The ID of the refund.
@@ -115,7 +115,7 @@ class RefundHandler implements Hookable {
     /**
      * Get the refunded tax amount for the vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param \WC_Order_Refund $refund_order The refund object.
      * @param \WC_Order        $order  The original order object.
@@ -148,7 +148,7 @@ class RefundHandler implements Hookable {
     /**
      * Get the refunded shipping amount for the vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param \WC_Order_Refund $refund_order The refund object.
      * @param \WC_Order        $order  The original order object.
@@ -172,7 +172,7 @@ class RefundHandler implements Hookable {
     /**
      * Insert a refund record into the Dokan vendor balance table.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param float       $vendor_refund The amount to refund the vendor.
      * @param \WC_Order_Refund   $order         The original order object.

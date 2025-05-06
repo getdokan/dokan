@@ -97,6 +97,10 @@ class Withdraws {
         $limits     = '';
         $query_args = [ 1, 1 ];
 
+        if ( isset( $args['orderby'] ) && 'DESC' === $args['orderby'] ) {
+            $orderby = 'ORDER BY id DESC';
+        }
+
         // Check if retrun type is counts.
         if ( 'count' === $args['return'] ) {
             $fields  = " CASE `status` WHEN 0 THEN 'pending' WHEN 1 THEN 'completed' WHEN 2 THEN 'cancelled' END AS `status`, COUNT(id) AS count";

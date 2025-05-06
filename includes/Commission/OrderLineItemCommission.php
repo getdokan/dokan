@@ -11,13 +11,13 @@ use WeDevs\Dokan\Vendor\Coupon;
 /**
  * Class OrderLineItemCommission - Calculate order line item commission
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  */
 class OrderLineItemCommission extends AbstractCommissionCalculator {
     /**
      * Order line item.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @var \WC_Order_Item_Product $item
      */
@@ -26,7 +26,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
     /**
      * Order line item commission meta key.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @var string
      */
@@ -101,7 +101,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
     /**
      * Calculate order line item commission.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return OrderLineItemCommission |null
      */
@@ -188,7 +188,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
     /**
      * Check if the refund should be adjusted.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return Commission
      */
@@ -229,7 +229,7 @@ class OrderLineItemCommission extends AbstractCommissionCalculator {
     /**
      * Retrieve commission data from order item meta.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      *

@@ -10,7 +10,7 @@ use WeDevs\Dokan\Commission\Model\Commission;
 /**
  * Class OrderCommission - Calculate order commission
  *
- * @since   DOKAN_SINCE
+ * @since   4.0.0
  *
  * @package WeDevs\Dokan\Commission
  */
@@ -31,7 +31,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get order.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return \WC_Order|null
      */
@@ -42,7 +42,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
 	/**
 	 * Set order.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.0.0
 	 *
 	 * @param \WC_Order $order
 	 *
@@ -57,7 +57,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Calculate order commission.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return Model\Commission|\Exception
      */
@@ -114,7 +114,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Calculate commission for refund.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param \WC_Order_Refund $refund
      *
@@ -162,7 +162,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Retrieve order commission.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      * @throws \Exception If the order is not set.
      *
      * @return OrderCommission
@@ -176,7 +176,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get admin commission.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float
      */
@@ -191,7 +191,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get admin subsidy.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float|int
      */
@@ -206,7 +206,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get admin shipping tax fee.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float|int
      */
@@ -221,7 +221,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get admin gateway fee.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float|int
      */
@@ -238,7 +238,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get vendor shipping fee.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float|int
      */
@@ -253,7 +253,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get vendor shipping tax fee.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float|int
      */
@@ -268,7 +268,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get vendor tax fee.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float|int
      */
@@ -283,7 +283,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get vendor gateway fee.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float|int
      */
@@ -294,7 +294,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get dokan gateway fee.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float|int
      */
@@ -305,7 +305,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get total vendor fees.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float|int
      */
@@ -317,7 +317,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get dokan gateway fee.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -341,7 +341,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get vendor gateway fee.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float|int
      */
@@ -358,7 +358,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -377,7 +377,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Additional adjustments.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param \WeDevs\Dokan\Commission\Model\Commission $commission_data
      *
@@ -442,7 +442,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      *
      * This includes the net commission plus any additional admin fees.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float
      */
@@ -453,8 +453,8 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
 	/**
 	 * Get the total earning for the admin.
 	 *
-	 * @since DOKAN_SINCE
-	 * @deprecated DOKAN_SINCE Use get_admin_commission() instead.
+	 * @since 4.0.0
+	 * @deprecated 4.0.0 Use get_admin_commission() instead.
 	 *
 	 * @return float
 	 */
@@ -465,8 +465,8 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
 	/**
 	 * Get the total earning for the vendor.
 	 *
-	 * @since DOKAN_SINCE
-	 * @deprecated DOKAN_SINCE Use get_vendor_earning() instead.
+	 * @since 4.0.0
+	 * @deprecated 4.0.0 Use get_vendor_earning() instead.
 	 *
 	 * @return float
 	 */
@@ -489,7 +489,12 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float
      */
     protected function get_tax_refunded(): float {
-        return $this->get_should_adjust_refund() ? $this->order->get_total_tax_refunded() : 0.0;
+        do_action( 'dokan_order_commission_tax_refunded_before', $this->order, $this );
+        $tax_refund = $this->get_should_adjust_refund() ? $this->order->get_total_tax_refunded() : 0.0;
+
+        do_action( 'dokan_order_commission_tax_refunded_after', $this->order, $this );
+
+        return $tax_refund;
     }
 
     /**
