@@ -371,13 +371,13 @@ const CategoryBasedCommission = ( {
                                     } }
                                     className={ `px-4 border-0 shadow-none focus:ring-0` }
                                 />
-                                <div className="h-full border-l-[1px] border-r-[1px] flex justify-center items-center bg-gray-100">
+                                <div className="h-full border-l-[1px] border-r-[1px] ml-auto flex justify-center items-center bg-gray-100">
                                     <span className="pl-2 pr-2">
                                         { __( '%', 'dokan-lite' ) }
                                     </span>
                                 </div>
                             </div>
-                            <div className="h-full border-l-[1px] border-r-[1px] -ml-1 md:border-0 bg-transparent flex justify-center items-center">
+                            <div className="h-full border-l-[1px] border-r-[1px] md:border-0 bg-transparent flex justify-center items-center">
                                 <span className="p-2">
                                     { __( '+', 'dokan-lite' ) }
                                 </span>
@@ -513,7 +513,7 @@ const CategoryBasedCommission = ( {
                                                     } }
                                                     className={ `px-4 border-0 shadow-none focus:ring-0` }
                                                 />
-                                                <div className="h-full border-l-[1px] border-r-[1px] flex justify-center items-center bg-gray-100">
+                                                <div className="h-full border-l-[1px] border-r-[1px] ml-auto flex justify-center items-center bg-gray-100">
                                                     <span className="pl-2 pr-2">
                                                         { __(
                                                             '%',
@@ -522,7 +522,7 @@ const CategoryBasedCommission = ( {
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div className="h-full border-l-[1px] border-r-[1px] md:-ml-1 md:border-0 bg-transparent flex justify-center items-center">
+                                            <div className="h-full border-l-[1px] border-r-[1px] md:border-0 bg-transparent flex justify-center items-center">
                                                 <span className="p-2">
                                                     { __( '+', 'dokan-lite' ) }
                                                 </span>
