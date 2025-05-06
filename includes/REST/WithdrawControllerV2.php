@@ -121,7 +121,7 @@ class WithdrawControllerV2 extends WithdrawController {
     /**`
      * Make a withdraw method default for a vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param WP_REST_Request $request
      *

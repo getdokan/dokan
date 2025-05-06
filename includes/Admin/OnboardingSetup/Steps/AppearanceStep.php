@@ -37,7 +37,7 @@ class AppearanceStep extends AbstractStep {
     /**
      * Get default appearance settings
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array Default appearance settings
      */
@@ -47,7 +47,7 @@ class AppearanceStep extends AbstractStep {
          * Allows modification of the default appearance settings including
          * contact seller status, theme store sidebar, and vendor info visibility.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $defaults Array of default appearance settings with the following structure:
          *

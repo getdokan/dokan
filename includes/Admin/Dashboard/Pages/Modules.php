@@ -7,7 +7,7 @@ class Modules extends AbstractPage {
     /**
      * Get the ID of the page.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return string
      */
@@ -596,7 +596,7 @@ class Modules extends AbstractPage {
     /**
      * Get the styles.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array<string> An array of style handles.
      */
@@ -607,7 +607,7 @@ class Modules extends AbstractPage {
     /**
      * Register the page scripts and styles.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */

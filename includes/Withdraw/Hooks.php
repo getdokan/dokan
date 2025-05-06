@@ -53,7 +53,7 @@ class Hooks {
     /**
      * Dokan withdraw localize scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param array $localized_args
      *

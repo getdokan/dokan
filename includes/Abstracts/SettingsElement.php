@@ -297,7 +297,7 @@ abstract class SettingsElement {
          * This variable is intended to store a subset of children
          * after applying specific filtering criteria.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array           $children
          * @param SettingsElement $this
@@ -483,7 +483,7 @@ abstract class SettingsElement {
          * before it's returned from the populate method. The data includes all element
          * properties such as ID, type, title, children, dependencies, etc.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array           $populated_data The array containing all element data.
          * @param SettingsElement $this           The current settings element instance.

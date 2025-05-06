@@ -9,7 +9,7 @@ class AdminSetupGuide {
     /**
      * Steps.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @var array< AbstractStep >
      */
@@ -25,7 +25,7 @@ class AdminSetupGuide {
     /**
      * Get all steps.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array< AbstractStep >
      *
@@ -37,7 +37,7 @@ class AdminSetupGuide {
          * Allows modification of the setup guide steps array before processing.
          * Each step must be an instance of AbstractStep.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $steps Array of AbstractStep instances.
          *
@@ -72,7 +72,7 @@ class AdminSetupGuide {
     /**
      * Get the steps mapper.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -96,7 +96,7 @@ class AdminSetupGuide {
          * Allows modification of the steps mapper data which includes step title, ID,
          * completion status, and navigation details.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $mapper Array of step mapping information including title, ID,
          *                      completion status, and previous/next step references.
@@ -109,7 +109,7 @@ class AdminSetupGuide {
     /**
      * Check if the setup is complete.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return bool
      */
@@ -130,7 +130,7 @@ class AdminSetupGuide {
          * Allows overriding the setup completion status determined by checking
          * all individual steps.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param bool $setup_complete Whether all setup steps are completed.
          *
@@ -142,7 +142,7 @@ class AdminSetupGuide {
     /**
      * Set the setup complete.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param bool $value The value to set.
      *
@@ -155,7 +155,7 @@ class AdminSetupGuide {
     /**
      * Get the setup complete from option.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return bool
      */
@@ -166,7 +166,7 @@ class AdminSetupGuide {
     /**
      * Get the styles.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -181,7 +181,7 @@ class AdminSetupGuide {
     /**
      * Get the scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -196,7 +196,7 @@ class AdminSetupGuide {
     /**
      * Register the steps scripts and styles.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -211,7 +211,7 @@ class AdminSetupGuide {
     /**
      * Describe the settings options for frontend.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */

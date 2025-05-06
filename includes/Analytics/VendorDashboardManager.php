@@ -25,7 +25,7 @@ class VendorDashboardManager implements Hookable {
     /**
      * Add a dummy content to the dashboard.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */

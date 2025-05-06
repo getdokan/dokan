@@ -11,7 +11,7 @@ use WP_REST_Server;
 class VendorProductCategoriesController extends WC_REST_Product_Categories_Controller {
     /**
      * Endpoint namespace.
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @var string
      */

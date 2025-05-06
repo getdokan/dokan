@@ -25,7 +25,7 @@ class DokanDataCountriesController extends WC_REST_Data_Countries_Controller {
     /**
      * Check the permission of the request for dokan.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param  WP_REST_Request $request Full details about the request.
      * @return WP_Error|boolean
@@ -58,7 +58,7 @@ class DokanDataCountriesController extends WC_REST_Data_Countries_Controller {
     /**
      * Check if a given request has access to read items.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param  WP_REST_Request $request Full details about the request.
      *

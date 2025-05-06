@@ -29,7 +29,7 @@ class SetupWizard {
     /**
      * Instance of RecommendedPlugins class for managing plugin recommendations.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @var RecommendedPlugins Handles the retrieval and management of recommended plugins
      */
@@ -164,7 +164,7 @@ class SetupWizard {
     /**
      * Enqueue scripts for admin onboarding setup.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -209,7 +209,7 @@ class SetupWizard {
     /**
      * Enqueue scripts for admin onboarding setup.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -835,7 +835,7 @@ class SetupWizard {
     /**
      * Determines if a plugin should be installed based on POST data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param array $plugin Plugin configuration array
      *

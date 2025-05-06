@@ -150,7 +150,7 @@ abstract class StatusElement {
     /**
      * Set children.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param  array  $children
      *

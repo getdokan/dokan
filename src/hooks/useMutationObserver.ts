@@ -1,7 +1,7 @@
 /**
  * useMutationObserver hook.
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  *
  * @param {Node}                 targetNode       Target node
  * @param {MutationCallback}     mutationCallback Callback function

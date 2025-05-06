@@ -6,7 +6,7 @@ use Automattic\WooCommerce\Internal\Admin\Analytics;
 /**
  * ReportUtil class
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  */
 class ReportUtil {
 
@@ -15,7 +15,7 @@ class ReportUtil {
      *
      * This checks if the seller is enabled and the analytics toggle option is set to "yes".
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return bool True if analytics is enabled, false otherwise.
      */
@@ -25,7 +25,7 @@ class ReportUtil {
         /**
          * Filter to modify the analytics enabled status for the current seller.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param bool $is_enabled Whether analytics is enabled for the current seller.
          */
@@ -35,7 +35,7 @@ class ReportUtil {
     /**
      * Check if product listing is belongs to Report menu
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return bool
      */
@@ -48,7 +48,7 @@ class ReportUtil {
         /**
          * Filter to control product listing template rendering.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param bool $should_render Whether to render the product listing template.
          */

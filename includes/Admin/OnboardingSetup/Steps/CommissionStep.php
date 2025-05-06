@@ -37,7 +37,7 @@ class CommissionStep extends AbstractStep {
     /**
      * Get default commission settings
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array Default commission settings
      */
@@ -45,7 +45,7 @@ class CommissionStep extends AbstractStep {
 		/**
 		 * Filter the default settings for the commission step in the onboarding setup.
 		 *
-		 * @since DOKAN_SINCE
+		 * @since 4.0.0
 		 *
 		 * @param array $default_settings The default settings for the commission step.
 		 *

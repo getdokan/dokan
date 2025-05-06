@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Admin;
 /**
  * Recommended Plugins Class.
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  */
 class RecommendedPlugins {
 
@@ -19,7 +19,7 @@ class RecommendedPlugins {
     /**
      * Class Constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      */
     public function __construct() {
         $this->plugins = [
@@ -65,7 +65,7 @@ class RecommendedPlugins {
     /**
      * Get All Enlisted Plugins.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -73,7 +73,7 @@ class RecommendedPlugins {
         /**
          * Filter the list of recommended plugins.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $plugins List of recommended plugins.
          *
@@ -85,7 +85,7 @@ class RecommendedPlugins {
     /**
      * Is Plugin Active.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param string $basename
      *
@@ -95,7 +95,7 @@ class RecommendedPlugins {
         /**
          * Filter to determine if a recommended plugin is active.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param bool   $is_active Whether the plugin is active.
          * @param string $basename  The basename of the plugin.
@@ -108,7 +108,7 @@ class RecommendedPlugins {
     /**
      * Get List of Recommended Inactive Plugins.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -125,7 +125,7 @@ class RecommendedPlugins {
         /**
          * Filter the list of recommended inactive plugins.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $recommended_plugins List of recommended inactive plugins.
          *

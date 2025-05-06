@@ -10,7 +10,7 @@ abstract class AbstractPage implements Pageable, Hookable {
     /**
      * Register the hooks.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */

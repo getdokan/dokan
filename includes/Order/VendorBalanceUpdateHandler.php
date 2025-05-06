@@ -133,7 +133,7 @@ class VendorBalanceUpdateHandler implements Hookable {
     /**
      * Update dokan_orders table if necessary.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param  int $order_id Order ID.
      * @param  WC_Abstract_Order|WC_Order $order Order object.

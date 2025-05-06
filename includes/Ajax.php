@@ -724,7 +724,7 @@ class Ajax {
      *
      * @return void
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      */
     public function get_child_terms_recursive( int $parent_id, array &$brands, int $level ) {
 		$child_terms = get_terms(
@@ -751,7 +751,7 @@ class Ajax {
     /**
      * Search product brand
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */

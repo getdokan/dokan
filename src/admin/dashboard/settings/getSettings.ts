@@ -2,7 +2,7 @@
  * Get settings from the global `dokanAdminDashboardSettings` object.
  * This object is available in the admin dashboard pages.
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  *
  * @param {string} settingsKey Settings key to get the value from the object.
  */

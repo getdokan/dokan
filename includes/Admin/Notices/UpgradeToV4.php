@@ -5,14 +5,14 @@ namespace WeDevs\Dokan\Admin\Notices;
 /**
  * V4 upgrader notice handler class
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  */
 class UpgradeToV4 {
 
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      */
     public function __construct() {
         add_filter( 'dokan_admin_notices', [ $this, 'render_notice' ] );
@@ -21,7 +21,7 @@ class UpgradeToV4 {
     /**
      * Render upgrade notice.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param array $notices Existing notices.
      *

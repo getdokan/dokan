@@ -8,7 +8,7 @@ use WeDevs\Dokan\Contracts\Hookable;
 /**
  * Admin dashboard class.
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  */
 class Dashboard implements Hookable {
 
@@ -39,7 +39,7 @@ class Dashboard implements Hookable {
     /**
      * Get all pages.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array< Pageable >
      *
@@ -65,7 +65,7 @@ class Dashboard implements Hookable {
     /**
      * Register the submenu menu.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param string $capability Menu capability.
      * @param string $position Menu position.
@@ -111,7 +111,7 @@ class Dashboard implements Hookable {
     /**
      * Render the dashboard page.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -124,7 +124,7 @@ class Dashboard implements Hookable {
     /**
      * Get all settings.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array<string, mixed>
      */
@@ -213,7 +213,7 @@ class Dashboard implements Hookable {
             /**
              * Filter the settings for a specific page.
              *
-             * @since DOKAN_SINCE
+             * @since 4.0.0
              *
              * @param  array  $settings The settings.
              * @param  string $page_id The page ID.
@@ -225,7 +225,7 @@ class Dashboard implements Hookable {
         /**
          * Filter the settings.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array<string, mixed> $settings The settings.
          */
@@ -235,7 +235,7 @@ class Dashboard implements Hookable {
     /**
      * Get all scripts ids.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array<string>
      */
@@ -251,7 +251,7 @@ class Dashboard implements Hookable {
     /**
      * Get all styles ids.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array<string>
      */
@@ -267,7 +267,7 @@ class Dashboard implements Hookable {
     /**
      * Register dashboard scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -287,7 +287,7 @@ class Dashboard implements Hookable {
     /**
      * Register the admin dashboard scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -330,7 +330,7 @@ class Dashboard implements Hookable {
     /**
      * Register the setup guide banner scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -376,7 +376,7 @@ class Dashboard implements Hookable {
     /**
      * Enqueue dashboard scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */

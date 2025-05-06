@@ -123,7 +123,7 @@ class Field extends SettingsElement {
         /**
          * Filters for setup guide field mapper.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param int    $id
          * @param string $input_type

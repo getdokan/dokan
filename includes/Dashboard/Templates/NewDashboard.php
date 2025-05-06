@@ -9,7 +9,7 @@ class NewDashboard {
 	/**
 	 * Class constructor
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.0.0
 	 */
     public function __construct() {
         add_filter(
@@ -31,7 +31,7 @@ class NewDashboard {
 	/**
 	 * Add query var for new dashboard.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.0.0
 	 *
 	 * @param array $query_vars
 	 *
@@ -46,7 +46,7 @@ class NewDashboard {
 	/**
 	 * Load new dashboard content.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.0.0
 	 *
 	 * @param array $query_vars
 	 *
@@ -65,7 +65,7 @@ class NewDashboard {
 	/**
 	 * Enqueue scripts for new dashboard.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.0.0
 	 *
 	 * @return void
 	 */

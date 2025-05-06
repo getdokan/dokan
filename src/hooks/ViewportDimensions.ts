@@ -8,7 +8,7 @@ interface ViewportDimensions {
 /**
  * Hook to track viewport dimensions.
  *
- * @since DOKAN_PRO_SINCE
+ * @since 4.0.0
  *
  * @return {ViewportDimensions} The viewport dimensions.
  */

@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\REST;
 /**
  * Dokan Order ControllerV3 Class
  *
- * @since   DOKAN_SINCE
+ * @since   4.0.0
  *
  * @package dokan
  */
@@ -14,7 +14,7 @@ class OrderControllerV3 extends OrderControllerV2 {
     /**
      * Endpoint namespace
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @var string
      */

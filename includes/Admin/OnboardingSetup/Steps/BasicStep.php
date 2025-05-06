@@ -45,7 +45,7 @@ class BasicStep extends AbstractStep {
     /**
      * Get default basic settings
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array Default basic settings
      */
@@ -53,7 +53,7 @@ class BasicStep extends AbstractStep {
 		/**
 		 * Filter the default settings for the basic step in the onboarding setup.
 		 *
-		 * @since DOKAN_SINCE
+		 * @since 4.0.0
 		 *
 		 * @param array $default_settings The default settings for the basic step.
 		 *

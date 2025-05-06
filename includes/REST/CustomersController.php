@@ -229,7 +229,7 @@ class CustomersController extends WC_REST_Customers_Controller {
          * This filter allows you to modify the list of customers found during a search
          * before it is returned by the REST API.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $found_customers An array of found customers. Each customer is an array containing:
          *                               'id'    => (int)    The customer's ID.

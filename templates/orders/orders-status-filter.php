@@ -22,7 +22,7 @@ if ( isset( $_GET['order_id'] ) ) { // phpcs:ignore
         /**
          * Fires before the order status filter.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param int $order_id Order ID.
          */

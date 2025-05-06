@@ -540,7 +540,7 @@ class Rewrites {
     /**
      * Flush rewrite rules if the version is 4.0 or above.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */

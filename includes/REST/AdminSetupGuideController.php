@@ -19,7 +19,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
     /**
      * Register all routes releated with stores.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -74,7 +74,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
     /**
      * Get all items.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param WP_REST_Request $request Request object.
      *
@@ -94,7 +94,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
          *
          * Allows modification of the steps progress data before it is returned.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $steps The steps progress data.
          * @return array The modified steps progress data.
@@ -106,7 +106,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
     /**
      * Get a single item.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param WP_REST_Request $request Request object.
      *
@@ -137,7 +137,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
          *
          * Allows modification of the step response data before it is returned.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array  $step_array The populated step data.
          * @param object $step       The step object.
@@ -150,7 +150,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
     /**
      * Update a single item.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param WP_REST_Request $request Request object.
      *
@@ -186,7 +186,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
          *
          * Allows modification of the step response data before it is returned.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array  $step_array The populated step data.
          * @param object $step       The step object.
@@ -200,7 +200,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
     /**
      * Set items as completed.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param WP_REST_Request $request Request object.
      *

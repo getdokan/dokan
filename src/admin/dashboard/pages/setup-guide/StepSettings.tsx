@@ -111,7 +111,7 @@ const StepSettings = ( {
     /**
      * Set settings and dependencies to the state after fetching from the API.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param {SettingsElement[]} settings Settings array.
      */
@@ -151,7 +151,7 @@ const StepSettings = ( {
     /**
      * Update settings value and apply dependencies.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param {SettingsElement} element Element to update.
      */
@@ -360,7 +360,7 @@ const StepSettings = ( {
     /**
      * Get a setting by ID.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param {string} id Setting ID.
      */
@@ -371,7 +371,7 @@ const StepSettings = ( {
     /**
      * Recursively search for a setting in the settings array.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param {string}            id       Setting ID.
      * @param {SettingsElement[]} settings Settings array.

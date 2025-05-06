@@ -123,7 +123,7 @@ abstract class Settings extends SettingsElement {
         /**
          * Actions for after save settings.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param string $storeage_key
          * @param mixed  $data
@@ -171,7 +171,7 @@ abstract class Settings extends SettingsElement {
      *
      * It is used to describe the settings options for the settings page in `init` hook.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */

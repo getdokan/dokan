@@ -7,14 +7,14 @@ namespace WeDevs\Dokan\Admin\Dashboard;
  *
  * @package WeDevs\Dokan\Admin\Dashboard
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  */
 interface Pageable {
 
     /**
      * Get the ID of the page.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return string
      */
@@ -23,7 +23,7 @@ interface Pageable {
     /**
      * Get the menu arguments.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param  string  $capability Menu capability.
      * @param  string  $position Menu position.
@@ -35,7 +35,7 @@ interface Pageable {
     /**
      * Get the settings values.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array<string,mixed> An array of settings values.
      */
@@ -44,7 +44,7 @@ interface Pageable {
     /**
      * Get the scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array<string> An array of script handles.
      */
@@ -53,7 +53,7 @@ interface Pageable {
     /**
      * Get the styles.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array<string> An array of style handles.
      */
@@ -62,7 +62,7 @@ interface Pageable {
     /**
      * Register the page scripts and styles.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */

@@ -9,7 +9,7 @@ use WP_Error;
 /**
  * Admin Onboarding REST Controller
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  */
 class AdminOnboardingController extends DokanBaseAdminController {
 
@@ -23,7 +23,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
     /**
      * Register routes
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -48,7 +48,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
     /**
      * Get the schema for the endpoint
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -127,7 +127,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
         /**
          * Filter the admin onboarding schema.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $schema The schema definition.
          */
@@ -137,7 +137,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
     /**
      * Create onboarding data
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param WP_REST_Request $request
      *
@@ -159,7 +159,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
         /**
          * Fires before saving onboarding data.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $data The request data.
          */
@@ -195,7 +195,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
         /**
          * Filter the response data after saving onboarding settings.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $response_data The response data.
          * @param array $data The request data.
@@ -204,13 +204,13 @@ class AdminOnboardingController extends DokanBaseAdminController {
         /**
          * Flush rewrite rules for custom store URL.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          */
         do_action( 'woocommerce_flush_rewrite_rules' );
         /**
          * Fires after saving onboarding data.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $data The request data.
          * @param array $response_data The response data.
@@ -223,7 +223,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
     /**
      * Get onboarding data
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param WP_REST_Request $request
      *
@@ -242,7 +242,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
         /**
          * Filter the response data for get onboarding request.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $data The response data.
          * @param WP_REST_Request $request The request object.
@@ -255,7 +255,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
     /**
      * Update share essentials option
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param bool $share_essentials
      *
@@ -274,7 +274,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
         /**
          * Fires after updating share essentials option.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param bool $share_essentials Whether sharing essentials is enabled.
          */
@@ -284,7 +284,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
     /**
      * Update marketplace goal settings
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param array $data Request data
      *
@@ -305,7 +305,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
         /**
          * Filter the marketplace goal data before saving.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $marketplace_goal The marketplace goal data.
          * @param array $data The original request data.
@@ -317,7 +317,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
         /**
          * Fires after updating marketplace goal settings.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $marketplace_goal The marketplace goal data.
          * @param array $data The original request data.
@@ -328,7 +328,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
     /**
      * Install required plugins
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param array $plugins
      *
@@ -340,7 +340,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
         /**
          * Filter the plugins to install during onboarding.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $plugins The plugins to install.
          */
@@ -351,7 +351,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
                 /**
                  * Fires before installing a specific plugin during onboarding.
                  *
-                 * @since DOKAN_SINCE
+                 * @since 4.0.0
                  *
                  * @param string $plugin_id The plugin ID.
                  * @param array $plugin_info The plugin info.
@@ -363,7 +363,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
                 /**
                  * Fires after installing a specific plugin during onboarding.
                  *
-                 * @since DOKAN_SINCE
+                 * @since 4.0.0
                  *
                  * @param string $plugin_id The plugin ID.
                  * @param array $plugin_info The plugin info.
@@ -375,7 +375,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
         /**
          * Fires after installing all plugins during onboarding.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $plugins The installed plugins.
          */

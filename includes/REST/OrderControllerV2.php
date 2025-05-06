@@ -179,7 +179,7 @@ class OrderControllerV2 extends OrderController {
     /**
      * Format downloads data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param \stdClass[]   $downloads
      * @param \WC_Product[] $products
@@ -204,7 +204,7 @@ class OrderControllerV2 extends OrderController {
     /**
      * Prepare data for response.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param \stdClass        $download
      * @param \WP_REST_Request $request

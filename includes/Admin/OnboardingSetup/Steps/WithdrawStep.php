@@ -37,7 +37,7 @@ class WithdrawStep extends AbstractStep {
     /**
      * Get default withdraw settings
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array Default withdraw settings
      */
@@ -45,7 +45,7 @@ class WithdrawStep extends AbstractStep {
         /**
          * Filter the default settings for the withdraw step in the onboarding setup.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $default_settings The default settings for the withdraw step.
          *

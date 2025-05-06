@@ -57,7 +57,7 @@ class ProductController extends DokanRESTController {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      */
     public function __construct() {
         add_filter( "dokan_rest_{$this->post_type}_object_query", [ $this, 'add_only_downloadable_query' ], 10, 2 );
@@ -66,7 +66,7 @@ class ProductController extends DokanRESTController {
     /**
      * Add only downloadable meta query.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param array $args
      *
@@ -87,7 +87,7 @@ class ProductController extends DokanRESTController {
     /**
      * Product API query parameters collections.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array Query parameters.
      */

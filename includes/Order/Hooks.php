@@ -410,7 +410,7 @@ class Hooks {
      * sure a product of the admin is in the cart. Otherwise it wouldn't be
      * possible to distribute the coupon in sub orders.
      *
-     * @since DOKAN_SINCE Refactored to make it more flexible, and added filter
+     * @since 4.0.0 Refactored to make it more flexible, and added filter
      *
      * @param boolean      $valid      Whether the coupon is currently considered valid.
      * @param WC_Coupon    $coupon     The coupon object being validated.
@@ -439,7 +439,7 @@ class Hooks {
         /**
          * Filter the validity of a coupon.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param boolean      $valid     The validity of the coupon.
          * @param WC_Coupon    $coupon    The coupon object.

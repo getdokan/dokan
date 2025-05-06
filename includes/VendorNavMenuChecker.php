@@ -9,7 +9,7 @@ use WeDevs\Dokan\Admin\Status\StatusElementFactory;
 class VendorNavMenuChecker {
 
     /**
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @var array $template_dependencies List of template dependencies.
      * [ 'route' => [ ['slug' => 'template-slug', 'name' => 'template-name' (Optional), 'args' = [] (Optional)  ] ] ]
@@ -35,7 +35,7 @@ class VendorNavMenuChecker {
      *
      * Using `dokan_is_dashboard_nav_dependency_resolved` filter hook.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @var array $forcefully_resolved_dependencies List of forcefully resolved dependencies.
      */
@@ -54,7 +54,7 @@ class VendorNavMenuChecker {
     /**
      * Get template dependencies.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -65,7 +65,7 @@ class VendorNavMenuChecker {
     /**
      * Convert menu items to react menu items
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param array $menu_items Menu items.
      *
@@ -90,7 +90,7 @@ class VendorNavMenuChecker {
     /**
      * Check if the dependency is cleared or not.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param string $route Route.
      *
@@ -116,7 +116,7 @@ class VendorNavMenuChecker {
     /**
      * List forcefully resolved dependencies.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -130,7 +130,7 @@ class VendorNavMenuChecker {
     /**
      * Get URL for the route.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param string $route Route.
      *
@@ -145,7 +145,7 @@ class VendorNavMenuChecker {
     /**
      * Get template dependencies resolutions.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -172,7 +172,7 @@ class VendorNavMenuChecker {
     /**
      * Get overridden template part path.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param string $slug Template slug.
      * @param string $name Template name.
@@ -217,7 +217,7 @@ class VendorNavMenuChecker {
     /**
      * List overridden templates.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -234,7 +234,7 @@ class VendorNavMenuChecker {
     /**
      * Display notice if templates are overridden.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param array $notices Notices.
      *
@@ -269,7 +269,7 @@ class VendorNavMenuChecker {
     /**
      * Add template dependencies to status page.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      * @throws Exception

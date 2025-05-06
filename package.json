@@ -76,7 +76,6 @@
     "@wordpress/hooks": "^4.8.0",
     "@wordpress/html-entities": "^4.8.0",
     "@wordpress/i18n": "^5.8.0",
-    "fs-extra": "^11.2.0",
     "path": "^0.12.7",
     "prop-types": "^15.8.1",
     "qrcode.react": "^4.0.1",

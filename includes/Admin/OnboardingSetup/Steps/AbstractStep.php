@@ -8,7 +8,7 @@ use WeDevs\Dokan\Contracts\Hookable;
 /**
  * The abstract step class.
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  */
 abstract class AbstractStep extends Settings implements StepInterface, Hookable {
 
@@ -51,7 +51,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Get the step ID.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return string
      */
@@ -62,7 +62,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Register the hooks.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -75,7 +75,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Enlist the steps.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param AbstractStep[] $steps The steps to enlist.
      *
@@ -90,7 +90,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Get the step priority.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return int
      */
@@ -101,7 +101,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Get the step skippable or not.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return bool
      */
@@ -110,7 +110,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
          * Filters whether a step is skippable.
          * Allows overriding the skippable status of a specific setup step.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param bool $skippable Whether the step can be skipped.
          *
@@ -122,7 +122,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Register the scripts and styles.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -131,7 +131,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Get the scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array<string>
      */
@@ -141,7 +141,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Get the styles.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array<string>
      */
@@ -151,7 +151,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Describe the settings options.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -160,7 +160,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Get the settings options for frontend.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -169,7 +169,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Dispatch the options to settings options.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param mixed $data The data to dispatch.
      *
@@ -180,7 +180,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Get the settings options.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -190,7 +190,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
          * Allows modification of the settings options for a particular step
          * identified by its ID.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.0
          *
          * @param array $settings_options Array of settings options for the step.
          *
@@ -202,7 +202,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Get the settings options.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return bool
      */
@@ -213,7 +213,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Dispatch the options to settings options.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param mixed $data The data to dispatch.
      *
@@ -229,7 +229,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Listen for settings save.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param string $option The option to listen for.
      *
@@ -247,7 +247,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Mark the step as complete.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */

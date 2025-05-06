@@ -8,14 +8,14 @@ use WeDevs\Dokan\Contracts\Hookable;
 /**
  * DataStoreCacheModifier class
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  */
 class DataStoreCacheModifier implements Hookable {
 
     /**
      * Setup analytics entities
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -41,7 +41,7 @@ class DataStoreCacheModifier implements Hookable {
      * Register hooks for modify vendor specific analytics data.
      * This method will be called automatically to register the hooks.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -75,7 +75,7 @@ class DataStoreCacheModifier implements Hookable {
      *
      * @param int $seller_id Seller ID.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return bool
      */

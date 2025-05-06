@@ -37,7 +37,7 @@ abstract class AbstractStrategy {
     /**
      * Returns the commission settings from the first applicable strategy in the chain.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting|null
      */
@@ -48,7 +48,7 @@ abstract class AbstractStrategy {
     /**
      * Returns the first strategy in the chain that has applicable commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return \WeDevs\Dokan\Commission\Strategies\AbstractStrategy|null
      */
@@ -65,7 +65,7 @@ abstract class AbstractStrategy {
     /**
      * Gets the next fallback strategy in the chain.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return \WeDevs\Dokan\Commission\Strategies\AbstractStrategy|null
      */
@@ -80,7 +80,7 @@ abstract class AbstractStrategy {
     /**
      * Sets the next fallback strategy in the chain.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return \WeDevs\Dokan\Commission\Strategies\AbstractStrategy
      */
@@ -91,7 +91,7 @@ abstract class AbstractStrategy {
      *
      * Only applies if this is an instance of OrderItemStrategy and a valid setting is found.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param \WC_Order_Item $order_item WooCommerce order item instance.
      *
@@ -111,7 +111,7 @@ abstract class AbstractStrategy {
      * Returns an instance of OrderItemSetting to save commission settings to the order item.
      * Useful for mocking during unit tests.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param \WC_Order_Item $order_item WooCommerce order item.
      *

@@ -5,14 +5,14 @@ namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 /**
  * The step interface.
  *
- * @since DOKAN_SINCE
+ * @since 4.0.0
  */
 interface StepInterface {
 
     /**
      * Get the step ID.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return string The step ID.
      */
@@ -21,7 +21,7 @@ interface StepInterface {
     /**
      * Get settings options to check for.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return string[] The settings options.
      */
@@ -30,7 +30,7 @@ interface StepInterface {
     /**
      * Get the step priority.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return int The step priority.
      */
@@ -39,7 +39,7 @@ interface StepInterface {
     /**
      * Get the step skippable or not.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return bool
      */
@@ -48,7 +48,7 @@ interface StepInterface {
     /**
      * Register the step scripts and styles.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */
@@ -57,7 +57,7 @@ interface StepInterface {
     /**
      * Get the step scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array The step scripts.
      */
@@ -66,7 +66,7 @@ interface StepInterface {
     /**
      * Get the step styles.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array The step styles.
      */
@@ -75,7 +75,7 @@ interface StepInterface {
     /**
      * Pass the settings options to frontend.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array The settings options.
      */
@@ -84,7 +84,7 @@ interface StepInterface {
     /**
      * Describe the settings options.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return void
      */

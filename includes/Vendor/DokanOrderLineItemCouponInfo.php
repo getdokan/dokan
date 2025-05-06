@@ -22,7 +22,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Check if subsidy is supported
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return bool
      */
@@ -33,7 +33,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Set subsidy supported
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param bool $subsidy_supported
      *
@@ -46,7 +46,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Get coupon info
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return array
      */
@@ -67,7 +67,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Set coupon info
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param $coupon_info
      *
@@ -89,7 +89,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Get discount amount
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float
      */
@@ -100,7 +100,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Set discount amount
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param float $discount
      *
@@ -115,7 +115,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Get coupon code
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return string
      */
@@ -126,7 +126,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Set coupon code
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param string $coupon_code
      *
@@ -141,7 +141,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Get per qty amount
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float
      */
@@ -152,7 +152,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Set per qty amount
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param float $per_qty_amount
      *
@@ -167,7 +167,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Get quantity
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return int
      */
@@ -178,7 +178,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Set quantity
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param int $quantity
      *
@@ -193,7 +193,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Get admin coupons enabled for vendor
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return string
      */
@@ -204,7 +204,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Set admin coupons enabled for vendor
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param string $admin_coupons_enabled_for_vendor
      *
@@ -219,7 +219,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Get coupon commissions type
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return string
      */
@@ -230,7 +230,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Set coupon commissions type
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param string $coupon_commissions_type
      *
@@ -245,7 +245,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Get admin shared coupon type
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return string
      */
@@ -260,7 +260,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Set admin shared coupon type
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @param string $admin_shared_coupon_type
      *
@@ -275,7 +275,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Get admin shared coupon amount
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return string
      */
@@ -292,7 +292,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Get vendor discount
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float
      */
@@ -308,7 +308,7 @@ class DokanOrderLineItemCouponInfo {
     /**
      * Get admin discount
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
      * @return float
      */
