@@ -91,10 +91,30 @@ class VendorDashboardManager implements Hookable {
     public function revenue_stats_schema( $reports ) {
         $is_vendor_dashboard = dokan_is_seller_dashboard();
 
-        $reports['totals']['properties']['total_seller_earning'] = array(
+        $reports['totals']['properties']['total_vendor_earning'] = array(
             'description' => $is_vendor_dashboard
                 ? esc_html__( 'Total Earning', 'dokan-lite' )
                 : esc_html__( 'Total Vendor Earning', 'dokan-lite' ),
+            'type'        => 'number',
+            'context'     => array( 'view', 'edit' ),
+            'readonly'    => true,
+            'indicator'   => true,
+            'format'      => 'currency',
+        );
+
+        $reports['totals']['properties']['total_admin_discount'] = array(
+            'description' => esc_html__( 'Total Marketplace Discount', 'dokan-lite' ),
+            'type'        => 'number',
+            'context'     => array( 'view', 'edit' ),
+            'readonly'    => true,
+            'indicator'   => true,
+            'format'      => 'currency',
+        );
+
+        $reports['totals']['properties']['total_vendor_discount'] = array(
+            'description' => $is_vendor_dashboard
+                ? esc_html__( 'Total Store Discount', 'dokan-lite' )
+                : esc_html__( 'Total Vendor Discount', 'dokan-lite' ),
             'type'        => 'number',
             'context'     => array( 'view', 'edit' ),
             'readonly'    => true,
