@@ -58,7 +58,7 @@ class VendorBalanceUpdateHandler implements Hookable {
 
         $previous_data = $this->get_order_amount( $order );
 
-        if ( null === $previous_data || $previous_data === $vendor_earning ) {
+        if ( null === $previous_data || floatval( $previous_data ) === $vendor_earning ) {
             return;
         }
 
@@ -160,7 +160,7 @@ class VendorBalanceUpdateHandler implements Hookable {
 
         $earning_in_dokan_orders = dokan()->commission->get_earning_from_order_table( $order->get_id() );
 
-        if ( $earning_in_dokan_orders === $calculated_earning ) {
+        if ( $earning_in_dokan_orders === floatval( $calculated_earning ) ) {
             return;
         }
 
