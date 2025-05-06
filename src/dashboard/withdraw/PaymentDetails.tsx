@@ -61,7 +61,7 @@ function PaymentDetails( {
                 </Card.Header>
                 <Card.Body>
                     <div className="space-y-4">
-                        <div className="flex flex-col md:flex-row sm:items-center justify-between">
+                        <div className="flex flex-col md:!flex-row sm:!items-center justify-between">
                             <div>
                                 <span className="text-gray-700 mb-2">
                                     { __( 'Last Payment', 'dokan-lite' ) }

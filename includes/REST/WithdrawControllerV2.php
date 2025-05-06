@@ -46,8 +46,6 @@ class WithdrawControllerV2 extends WithdrawController {
             ]
         );
 
-        $methods = array_keys( dokan_withdraw_get_methods() );
-
         register_rest_route(
             $this->namespace, '/' . $this->rest_base . '/make-default-method', [
                 'methods'  => WP_REST_Server::CREATABLE,
@@ -58,7 +56,6 @@ class WithdrawControllerV2 extends WithdrawController {
                         'description' => __( 'Withdraw method key', 'dokan-lite' ),
                         'type'        => 'string',
                         'required'    => true,
-                        'enum'        => $methods,
                     ],
                 ],
             ]

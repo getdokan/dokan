@@ -6,6 +6,7 @@ import {
     SearchableSelect,
     useToast,
 } from '@getdokan/dokan-ui';
+import { Fill } from '@wordpress/components';
 import { DokanButton, DokanAlert, DokanPriceInput } from '@dokan/components';
 import { RawHTML, useEffect, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -17,6 +18,7 @@ import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
 import { formatPrice, unformatNumber } from '@dokan/utilities';
 import { UseBalanceReturn } from './Hooks/useBalance';
+import { useLocation } from "react-router-dom";
 
 function RequestWithdrawBtn( {
     settings,
@@ -295,11 +297,23 @@ function RequestWithdrawBtn( {
         return <WithdrawRequestForm />;
     };
 
-    return (
-        <>
+    const RequestWithdraw = () => {
+        return (
             <DokanButton onClick={ () => setIsOpen( true ) }>
                 { __( 'Request Withdraw', 'dokan-lite' ) }
             </DokanButton>
+        );
+    };
+
+    return (
+        <>
+            { useLocation()?.pathname !== '/withdraw-requests' ? (
+                <RequestWithdraw />
+            ) : (
+                <Fill name="dokan-header-actions">
+                    <RequestWithdraw />
+                </Fill>
+            ) }
 
             <Modal
                 className="max-w-2xl dokan-withdraw-style-reset dokan-layout"

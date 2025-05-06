@@ -316,6 +316,7 @@ class WithdrawController extends WP_REST_Controller {
             'paginate' => true,
             'page'     => $request['page'],
             'limit'    => $request['per_page'],
+            'orderby'  => 'DESC',
         ];
 
         $user_id = null;
