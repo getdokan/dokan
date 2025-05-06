@@ -147,6 +147,9 @@ class VendorBalanceUpdateHandler implements Hookable {
             return;
         }
 
+        // Remove the action to prevent infinite loop
+        remove_action( 'woocommerce_update_order', [ $this, 'update_dokan_order_table' ], 80 );
+
         try {
             $order_commission_calculator = dokan_get_container()->get( OrderCommission::class );
             $order_commission_calculator->set_order( $order );
@@ -159,6 +162,9 @@ class VendorBalanceUpdateHandler implements Hookable {
         }
 
         $earning_in_dokan_orders = dokan()->commission->get_earning_from_order_table( $order->get_id() );
+
+        // Restore the action
+        add_action( 'woocommerce_update_order', [ $this, 'update_dokan_order_table' ], 80, 2 );
 
         if ( $earning_in_dokan_orders === floatval( $calculated_earning ) ) {
             return;
