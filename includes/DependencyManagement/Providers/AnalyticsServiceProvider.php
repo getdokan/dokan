@@ -35,6 +35,7 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Analytics\Assets::class,
         \WeDevs\Dokan\Analytics\VendorDashboardManager::class,
         \WeDevs\Dokan\Analytics\Reports\DataStoreCacheModifier::class,
+        \WeDevs\Dokan\Analytics\Settings::class,
     ];
 
     /**

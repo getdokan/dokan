@@ -20,42 +20,13 @@ class Assets implements Hookable {
 	}
 
 	/**
-	 * Localize WC admin settings.
+	 * Localize the data following the similar data structure of the WC admin settings.
 	 *
 	 * @param array $settings
 	 * @return array
 	 */
-	public function localize_wc_admin_settings( $settings = [] ) {
-        $settings['vendorBalance']      = dokan_get_seller_balance( dokan_get_current_user_id() );
-        $settings['stockStatuses']      = wc_get_product_stock_status_options();
-        $settings['isAnalyticsEnabled'] = ReportUtil::is_analytics_enabled();
-        $settings['lastDayOfTheMonth']  = dokan_current_datetime()->format( 'Y-m-d' );
-        $settings['firstDayOfTheMonth'] = dokan_current_datetime()->modify( 'first day of this month' )->format( 'Y-m-d' );
-
-        $preload_data           = [];
-        $preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', array() );
-
-        if ( ! empty( $preload_data_endpoints ) ) {
-			// @see https://github.com/woocommerce/woocommerce/blob/f469bba6f28edd8616b5423755c6559912d47a4a/plugins/woocommerce/src/Internal/Admin/Settings.php#L140-L146
-			$preload_data = array_reduce(
-				array_values( $preload_data_endpoints ),
-				'rest_preload_api_request'
-			);
-			// @see https://github.com/woocommerce/woocommerce/blob/f469bba6f28edd8616b5423755c6559912d47a4a/plugins/woocommerce/src/Internal/Admin/Settings.php#L215-L225
-			$settings['dataEndpoints'] = isset( $settings['dataEndpoints'] )
-				? $settings['dataEndpoints']
-				: array();
-			foreach ( $preload_data_endpoints as $key => $endpoint ) {
-				// Handle error case: rest_do_request() doesn't guarantee success.
-				if ( empty( $preload_data[ $endpoint ] ) ) {
-					$settings['dataEndpoints'][ $key ] = array();
-				} else {
-					$settings['dataEndpoints'][ $key ] = $preload_data[ $endpoint ]['body'];
-				}
-			}
-		}
-
-		return $settings;
+	protected function localize_wc_admin_settings( $settings = [] ) {
+        return apply_filters( 'dokan_analytics_reports_settings', [] );
 	}
 
     /**
@@ -117,12 +88,6 @@ class Assets implements Hookable {
             true
         );
 
-        wp_localize_script(
-            'vendor_analytics_script',
-            'vendorSharedSettings',
-            $this->localize_wc_admin_settings()
-        );
-
 		$dep = array(
 			'wc-components',
 			'wc-admin-layout',
@@ -155,12 +120,21 @@ class Assets implements Hookable {
         }
 
         wp_enqueue_script( 'vendor_analytics_script' );
-		wp_localize_script(
-            'vendor_analytics_script', 'vendorAnalyticsDokanConfig', [
-				'seller_id'        => dokan_get_current_user_id(),
-				'orderListPageUlr' => dokan_get_navigation_url( 'orders' ),
-			]
-		);
         wp_enqueue_style( 'vendor_analytics_style' );
+
+		wp_add_inline_script(
+            'vendor_analytics_script', 'var vendorAnalyticsDokanConfig = ' . wp_json_encode(
+                [
+					'seller_id'        => dokan_get_current_user_id(),
+					'orderListPageUlr' => dokan_get_navigation_url( 'orders' ),
+                ]
+            ), 'before'
+		);
+
+		wp_add_inline_script(
+            'vendor_analytics_script',
+            'var vendorSharedSettings = ' . wp_json_encode( $this->localize_wc_admin_settings() ),
+            'before'
+		);
 	}
 }

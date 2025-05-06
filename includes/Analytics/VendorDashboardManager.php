@@ -35,12 +35,12 @@ class VendorDashboardManager implements Hookable {
 
     public function woocommerce_rest_check_permissions( $permission, $context, $int_val, $obj ) {
         if ( ! $permission && in_array(
-                $obj, [
-                'reports',
-                'settings',
-                'product_cat',
-            ], true
-            ) && $context === 'read' ) {
+            $obj, [
+				'reports',
+				'settings',
+				'product_cat',
+			], true
+        ) && $context === 'read' ) {
             $current_user_id = dokan_get_current_user_id();
             $permission      = dokan_is_user_seller( $current_user_id );
         }
@@ -103,7 +103,7 @@ class VendorDashboardManager implements Hookable {
         );
 
         $reports['totals']['properties']['total_admin_discount'] = array(
-            'description' => esc_html__( 'Total Marketplace Discount', 'dokan-lite' ),
+            'description' => esc_html__( 'Marketplace Discount', 'dokan-lite' ),
             'type'        => 'number',
             'context'     => array( 'view', 'edit' ),
             'readonly'    => true,
@@ -113,7 +113,7 @@ class VendorDashboardManager implements Hookable {
 
         $reports['totals']['properties']['total_vendor_discount'] = array(
             'description' => $is_vendor_dashboard
-                ? esc_html__( 'Total Store Discount', 'dokan-lite' )
+                ? esc_html__( 'Store Discount', 'dokan-lite' )
                 : esc_html__( 'Total Vendor Discount', 'dokan-lite' ),
             'type'        => 'number',
             'context'     => array( 'view', 'edit' ),
@@ -124,7 +124,7 @@ class VendorDashboardManager implements Hookable {
 
         $reports['totals']['properties']['total_admin_commission'] = array(
             'description' => $is_vendor_dashboard
-                ? esc_html__( 'Total Admin Commission', 'dokan-lite' )
+                ? esc_html__( 'Marketplace Commission', 'dokan-lite' )
                 : esc_html__( 'Total Commission', 'dokan-lite' ),
             'type'        => 'number',
             'context'     => array( 'view', 'edit' ),
