@@ -489,7 +489,12 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float
      */
     protected function get_tax_refunded(): float {
-        return $this->get_should_adjust_refund() ? $this->order->get_total_tax_refunded() : 0.0;
+        do_action( 'dokan_order_commission_tax_refunded_before', $this->order, $this );
+        $tax_refund = $this->get_should_adjust_refund() ? $this->order->get_total_tax_refunded() : 0.0;
+
+        do_action( 'dokan_order_commission_tax_refunded_after', $this->order, $this );
+
+        return $tax_refund;
     }
 
     /**
