@@ -5,19 +5,15 @@
  * Dokan Dashboard Commission Meta-box Content Template
  *
  * @var WC_Order $order
- * @var object $data
- * @var float $total_commission
  * @var array $all_commission_types
+ * @var \WeDevs\Dokan\Commission\OrderCommission $order_commission
  *
  * @since DOKAN_LITE
  *
  * @package dokan
  */
 
-$total_commission = 0 > $total_commission ? 0 : $total_commission;
-
-$order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
-$net_amount  = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;
+$order_total = $order->get_total() - $order->get_total_refunded();
 
 $shipping_fee_recipient     = $order->get_meta( 'shipping_fee_recipient' );
 $shipping_tax_fee_recipient = $order->get_meta( 'shipping_tax_fee_recipient' );
@@ -25,8 +21,8 @@ $product_tax_fee_recipient  = $order->get_meta( 'tax_fee_recipient' );
 $admin                      = 'admin';
 
 $shipping_fee     = $order->get_shipping_total();
-$product_tax_fee  = $order->get_shipping_tax();
-$shipping_tax_fee = $order->get_cart_tax();
+$product_tax_fee  = $order->get_cart_tax();
+$shipping_tax_fee = $order->get_shipping_tax();
 
 $shipping_fee_refunded     = 0;
 $product_tax_fee_refunded  = 0;
@@ -75,20 +71,12 @@ foreach ( $order->get_refunds() as $refund ) {
                     $thumbnail    = $product ? apply_filters( 'woocommerce_admin_order_item_thumbnail', $product->get_image( 'thumbnail', array( 'title' => '' ), false ), $item_id, $item ) : '';
                     $row_class    = apply_filters( 'woocommerce_admin_html_order_item_class', ! empty( $class ) ? $class : '', $item, $order );
                     $commission   = 0;
+                    $commission_type      = '';
+                    $admin_commission     = '';
+                    $commission_data = $order_commission->get_commission_for_line_item( $item_id );
 
-                    $commission_data = dokan()->commission->get_commission(
-                        [
-                            'order_item_id' => $item->get_id(),
-                            'total_amount' => $item->get_total(),
-                            'total_quantity' => $item->get_quantity(),
-                        ]
-                    );
 
-                    $commission_type      = $commission_data->get_type();
-                    $admin_commission     = $commission_data->get_admin_commission();
-                    $percentage           = isset( $commission_data->get_parameters()['percentage'] ) ? $commission_data->get_parameters()['percentage'] : 0;
-                    $flat                 = isset( $commission_data->get_parameters()['flat'] ) ? $commission_data->get_parameters()['flat'] : 0;
-                    $commission_type_html = $all_commission_types[ $commission_type ];
+                    $commission_type_html = $all_commission_types[ $commission_type ] ?? '';
                     ?>
                     <tr class="item  <?php echo esc_attr( $row_class ); ?>" data-order_item_id="<?php echo $item->get_id(); ?>">
                         <td class="thumb">
@@ -139,8 +127,8 @@ foreach ( $order->get_refunds() as $refund ) {
                             </div>
                         </td>
                         <td width="1%">
-                            <div class="view">
-                                <?php echo esc_html( isset( $commission_data->get_parameters()['percentage'] ) ? $commission_data->get_parameters()['percentage'] : 0 ); ?>%&nbsp;+&nbsp;<?php echo wc_price( isset( $commission_data->get_parameters()['flat'] ) ? $commission_data->get_parameters()['flat'] : 0 ); ?>
+                            <div class="view" title="<?php echo esc_html( sprintf( __( 'Source: %s', 'dokan-lite' ), $commission_data->get_settings()->get_source() ) ); ?>">
+                                <?php echo esc_html( $commission_data->get_settings()->get_percentage() ); ?>%&nbsp;+&nbsp;<?php echo wc_price( $commission_data->get_settings()->get_flat() ); ?>
                             </div>
                         </td>
                         <td class="quantity" width="1%">
@@ -160,12 +148,7 @@ foreach ( $order->get_refunds() as $refund ) {
                             <div class="view">
                                 <?php
                                 $amount = $item->get_total();
-                                $original_commission = $commission_data->get_admin_commission();
-
-                                if ( $order->get_total_refunded_for_item( $item_id ) ) {
-                                    $commission_refunded = ( $order->get_total_refunded_for_item( $item_id ) / $amount ) * $original_commission;
-                                }
-
+                                $original_commission = $commission_data->get_admin_net_commission();
                                 ?>
                                     <bdi>
                                     <?php
@@ -176,24 +159,7 @@ foreach ( $order->get_refunds() as $refund ) {
                                         )
                                     );
 									?>
-                                            </bdi>
-                                <?php
-
-                                if ( $order->get_total_refunded_for_item( $item_id ) ) :
-                                    ?>
-                                        <small class="refunded">
-                                        <?php
-                                        echo wc_price(
-                                            $commission_refunded, array(
-												'currency' => $order->get_currency(),
-												'decimals' => wc_get_price_decimals(),
-                                            )
-                                        );
-										?>
-                                                                </small>
-                                    <?php
-                                endif;
-                                ?>
+                                    </bdi>
                             </div>
                         </td>
                     </tr>
@@ -224,7 +190,7 @@ foreach ( $order->get_refunds() as $refund ) {
                     <td class="total">
                         <?php
                         echo wc_price(
-                            $net_amount, array(
+                            $order_commission->get_vendor_earning(), array(
 								'currency' => $order->get_currency(),
 								'decimals' => wc_get_price_decimals(),
                             )
@@ -232,6 +198,22 @@ foreach ( $order->get_refunds() as $refund ) {
 						?>
                     </td>
                 </tr>
+                <?php if ( $order_commission->get_admin_subsidy() ) : ?>
+                <tr>
+                    <td class="label"><?php esc_html_e( 'Subsidy:', 'dokan-lite' ); ?></td>
+                    <td width="1%"></td>
+                    <td class="total">
+                        <?php
+                        echo wc_price(
+                            $order_commission->get_admin_subsidy(), array(
+								'currency' => $order->get_currency(),
+								'decimals' => wc_get_price_decimals(),
+                            )
+                        );
+						?>
+                    </td>
+                </tr>
+                <?php endif; ?>
                 <?php if ( $shipping_fee_recipient === $admin ) : ?>
                 <tr>
                     <td class="label"><?php esc_html_e( 'Shipping Fee:', 'dokan-lite' ); ?></td>
@@ -328,6 +310,22 @@ foreach ( $order->get_refunds() as $refund ) {
                         </td>
                     </tr>
                 <?php endif; ?>
+                <?php if ( $order_commission->get_admin_gateway_fee() ) : ?>
+                    <tr>
+                        <td class="label"><?php esc_html_e( 'Gateway Fee:', 'dokan-lite' ); ?></td>
+                        <td width="1%"></td>
+                        <td class="total">
+                            <?php
+                            echo wc_price(
+                                -1 * $order_commission->get_admin_gateway_fee(), array(
+									'currency' => $order->get_currency(),
+									'decimals' => wc_get_price_decimals(),
+                                )
+                            );
+							?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
                 </tbody>
             </table>
 
@@ -342,7 +340,7 @@ foreach ( $order->get_refunds() as $refund ) {
                     <td class="total">
                         <?php
                         echo wc_price(
-                            $total_commission, array(
+                            $order_commission->get_admin_commission(), array(
 								'currency' => $order->get_currency(),
 								'decimals' => wc_get_price_decimals(),
                             )
@@ -355,39 +353,3 @@ foreach ( $order->get_refunds() as $refund ) {
         </div>
     </div>
 </div>
-
-<style>
-    small.refunded-recipient {
-        display: block;
-        color: #a00;
-        white-space: nowrap;
-        font-size: smaller;
-        padding: 0;
-        margin: 0
-    }
-
-    small.refunded-recipient::before {
-        font-family: Dashicons;
-        speak: never;
-        font-weight: 400;
-        font-variant: normal;
-        text-transform: none;
-        line-height: 1;
-        -webkit-font-smoothing: antialiased;
-        margin: 0;
-        text-indent: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        content: "\f171";
-        position: relative;
-        top: auto;
-        left: auto;
-        margin: -1px 4px 0 0;
-        vertical-align: middle;
-        line-height: 1em;
-    }
-</style>

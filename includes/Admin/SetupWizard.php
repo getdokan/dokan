@@ -27,6 +27,15 @@ class SetupWizard {
     private $deferred_actions = [];
 
     /**
+     * Instance of RecommendedPlugins class for managing plugin recommendations.
+     *
+     * @since 4.0.0
+     *
+     * @var RecommendedPlugins Handles the retrieval and management of recommended plugins
+     */
+    private RecommendedPlugins $recommended_plugins;
+
+    /**
      * Hook in tabs.
      */
     public function __construct() {
@@ -35,7 +44,10 @@ class SetupWizard {
         }
 
         if ( current_user_can( 'manage_woocommerce' ) ) {
+            $this->recommended_plugins = new RecommendedPlugins();
+
             add_action( 'admin_menu', [ $this, 'admin_menus' ] );
+            add_action( 'init', [ $this, 'register_admin_scripts' ] );
             add_action( 'admin_init', [ $this, 'setup_wizard' ], 99 );
 
             if ( get_transient( 'dokan_setup_wizard_no_wc' ) && defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '4.6.0', '<' ) ) { // todo: temporary fix, will add this feature again in future release
@@ -111,7 +123,7 @@ class SetupWizard {
         wp_enqueue_script(
             'dokan-setup-wizard-commission',
             DOKAN_PLUGIN_ASSEST . '/js/dokan-setup-wizard-commission.js',
-            array( 'jquery', 'dokan-vue-bootstrap', 'dokan-accounting' ),
+            array( 'jquery', 'dokan-vue-bootstrap', 'dokan-accounting', 'dokan-sweetalert2' ),
             DOKAN_PLUGIN_VERSION,
             [ 'in_footer' => true ]
         );
@@ -147,6 +159,63 @@ class SetupWizard {
          * @since 2.8.7
          */
         do_action( 'dokan_setup_wizard_enqueue_scripts' );
+    }
+
+    /**
+     * Enqueue scripts for admin onboarding setup.
+     *
+     * @since 4.0.0
+     *
+     * @return void
+     */
+    public function register_admin_scripts() {
+        $script_assets = DOKAN_DIR . '/assets/js/dokan-admin-onboard.asset.php';
+        if ( file_exists( $script_assets ) ) {
+            $onboard_asset = require $script_assets;
+            $dependencies  = $onboard_asset['dependencies'] ?? [];
+            $version       = $onboard_asset['version'] ?? '';
+
+            wp_register_style(
+                'dokan-admin-onboard-app',
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-onboard.css',
+                [],
+                $version
+            );
+
+            wp_register_script(
+                'dokan-admin-onboard-app',
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-onboard.js',
+                $dependencies,
+                $version,
+                true
+            );
+
+            wp_set_script_translations(
+                'dokan-admin-onboard-app',
+                'dokan-lite'
+            );
+
+            wp_localize_script(
+                'dokan-admin-onboard-app',
+                'onboardingData',
+                [
+                    'site_url'                  => esc_url( get_site_url() ),
+                    'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=dokan' ) ),
+                ]
+            );
+        }
+    }
+
+    /**
+     * Enqueue scripts for admin onboarding setup.
+     *
+     * @since 4.0.0
+     *
+     * @return void
+     */
+    public function enqueue_admin_scripts() {
+        wp_enqueue_style( 'dokan-admin-onboard-app' );
+        wp_enqueue_script( 'dokan-admin-onboard-app' );
     }
 
     /**
@@ -242,8 +311,10 @@ class SetupWizard {
      */
     protected function set_setup_wizard_template() {
         $this->setup_wizard_header();
-        $this->setup_wizard_steps();
-        $this->setup_wizard_content();
+        if ( ! is_admin() ) {
+            $this->setup_wizard_steps();
+            $this->setup_wizard_content();
+        }
         $this->setup_wizard_footer();
     }
 
@@ -274,7 +345,7 @@ class SetupWizard {
             $this->current_step = sanitize_key( wp_unslash( $_GET['step'] ) );
         }
 
-        $this->enqueue_scripts();
+        is_admin() ? $this->enqueue_admin_scripts() : $this->enqueue_scripts();
 
         if (
             isset( $_POST['_wpnonce'], $_POST['save_step'] )
@@ -322,10 +393,6 @@ class SetupWizard {
             ?>
         </head>
         <body class="wc-setup dokan-admin-setup-wizard wp-core-ui<?php echo get_transient( 'dokan_setup_wizard_no_wc' ) ? ' dokan-setup-wizard-activated-wc' : ''; ?>">
-        <?php
-        $logo_url = ( ! empty( $this->custom_logo ) ) ? $this->custom_logo : plugins_url( 'assets/images/dokan-logo.png', DOKAN_FILE );
-        ?>
-        <h1 id="wc-logo"><a href="https://dokan.co/wordpress/"><img src="<?php echo esc_url( $logo_url ); ?>" alt="Dokan Logo" width="135" height="auto"/></a></h1>
         <?php
     }
 
@@ -517,6 +584,8 @@ class SetupWizard {
         $additional_fee                   = isset( $options['additional_fee'] ) ? $options['additional_fee'] : 0;
         $commission_category_based_values = isset( $options['commission_category_based_values'] ) ? $options['commission_category_based_values'] : new stdClass();
         $commission_type                  = ! empty( $options['commission_type'] ) ? $options['commission_type'] : 'fixed';
+        $reset_sub_category_when_edit_all_category                  = ! empty( $options['reset_sub_category_when_edit_all_category'] ) ? $options['reset_sub_category_when_edit_all_category'] : 'on';
+        $reset_sub_category = ! ( $reset_sub_category_when_edit_all_category === 'off' );
 
         $args = apply_filters(
             'dokan_admin_setup_wizard_step_setup_selling_template_args', [
@@ -525,6 +594,7 @@ class SetupWizard {
                 'additional_fee'                   => $additional_fee,
                 'commission_category_based_values' => $commission_category_based_values,
                 'dokanCommission'                  => dokan_commission_types(),
+                'reset_sub_category'               => $reset_sub_category,
                 'setup_wizard'                     => $this,
             ]
         );
@@ -565,11 +635,12 @@ class SetupWizard {
             $dokan_commission_percentage = 0;
         }
 
-        $options                                     = get_option( 'dokan_selling', [] );
-        $options['commission_type']                  = isset( $_POST['dokan_commission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_type'] ) ) : 'fixed';
-        $options['admin_percentage']                 = $dokan_commission_percentage;
-        $options['additional_fee']                   = isset( $_POST['dokan_commission_flat'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_flat'] ) ) : 0;
-        $options['commission_category_based_values'] = isset( $_POST['dokan_commission_category_based'] ) ? wc_clean( json_decode( sanitize_text_field( wp_unslash( $_POST['dokan_commission_category_based'] ) ), true ) ) : [];
+        $options                                              = get_option( 'dokan_selling', [] );
+        $options['commission_type']                           = isset( $_POST['dokan_commission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_type'] ) ) : 'fixed';
+        $options['admin_percentage']                          = $dokan_commission_percentage;
+        $options['additional_fee']                            = isset( $_POST['dokan_commission_flat'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_flat'] ) ) : 0;
+        $options['commission_category_based_values']          = isset( $_POST['dokan_commission_category_based'] ) ? wc_clean( json_decode( sanitize_text_field( wp_unslash( $_POST['dokan_commission_category_based'] ) ), true ) ) : [];
+        $options['reset_sub_category_when_edit_all_category'] = isset( $_POST['reset_sub_category'] ) && false === dokan_string_to_bool( $_POST['reset_sub_category'] ) ? 'off' : 'on';
 
         update_option( 'dokan_selling', $options );
 
@@ -699,58 +770,8 @@ class SetupWizard {
             <ul class="recommended-step">
                 <?php
                 if ( $this->user_can_install_plugin() ) {
-                    if ( ! $this->is_wc_conversion_tracking_active() ) {
-                        $this->display_recommended_item(
-                            [
-                                'type'        => 'wc_conversion_tracking',
-                                'title'       => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                                'description' => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
-                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
-                                'img_alt'     => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
-                                'plugins'     => [
-                                    [
-                                        'name' => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                                        'slug' => 'woocommerce-conversion-tracking',
-                                    ],
-                                ],
-                            ]
-                        );
-                    }
-
-                    if ( ! $this->is_wemail_active() ) {
-                        $this->display_recommended_item(
-                            [
-                                'type'        => 'wemail',
-                                'title'       => __( 'weMail', 'dokan-lite' ),
-                                'description' => __( 'Simplified Email  Marketing Solution for WordPress!', 'dokan-lite' ),
-                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wemail-logo.png',
-                                'img_alt'     => __( 'weMail logo', 'dokan-lite' ),
-                                'plugins'     => [
-                                    [
-                                        'name' => __( 'weMail', 'dokan-lite' ),
-                                        'slug' => 'wemail',
-                                    ],
-                                ],
-                            ]
-                        );
-                    }
-
-                    if ( ! $this->is_texty_active() ) {
-                        $this->display_recommended_item(
-                            [
-                                'type'        => 'texty',
-                                'title'       => __( 'Texty', 'dokan-lite' ),
-                                'description' => __( 'SMS Notification for WordPress, WooCommerce, Dokan and more', 'dokan-lite' ),
-                                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/texty-logo.png',
-                                'img_alt'     => __( 'Texty logo', 'dokan-lite' ),
-                                'plugins'     => [
-                                    [
-                                        'name' => __( 'Texty', 'dokan-lite' ),
-                                        'slug' => 'texty',
-                                    ],
-                                ],
-                            ]
-                        );
+                    foreach ( $this->recommended_plugins->get() as $plugin ) {
+                        $this->display_recommended_item( $plugin );
                     }
                 }
                 ?>
@@ -772,41 +793,25 @@ class SetupWizard {
      * @return void
      */
     public function dokan_setup_recommended_save() {
-        check_admin_referer( 'dokan-setup' );
+        foreach ( $this->recommended_plugins->get() as $plugin ) {
+            if ( ! $this->should_install_plugin( $plugin ) ) {
+                continue;
+            }
 
-        $setup_wc_conversion_tracking = isset( $_POST['setup_wc_conversion_tracking'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_wc_conversion_tracking'] ) );
-        $setup_wemail                 = isset( $_POST['setup_wemail'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_wemail'] ) );
-        $setup_texty                  = isset( $_POST['setup_texty'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['setup_texty'] ) );
+            $plugin_details = $plugin ?? null;
 
-        if ( $setup_wc_conversion_tracking && ! $this->is_wc_conversion_tracking_active() ) {
+            if ( ! $plugin_details ) {
+                continue;
+            }
+
+            $plugin_details_arr = explode( '/', $plugin_details['basename'] ?? '' );
+
             $this->install_plugin(
-                'woocommerce-conversion-tracking',
+                $plugin_details['slug'],
                 [
-                    'name'      => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                    'repo-slug' => 'woocommerce-conversion-tracking',
-                    'file'      => 'conversion-tracking.php',
-                ]
-            );
-        }
-
-        if ( $setup_wemail && ! $this->is_wemail_active() ) {
-            $this->install_plugin(
-                'wemail',
-                [
-                    'name'      => __( 'weMail', 'dokan-lite' ),
-                    'repo-slug' => 'wemail',
-                    'file'      => 'wemail.php',
-                ]
-            );
-        }
-
-        if ( $setup_texty && ! $this->is_texty_active() ) {
-            $this->install_plugin(
-                'texty',
-                [
-                    'name'      => __( 'Texty', 'dokan-lite' ),
-                    'repo-slug' => 'texty',
-                    'file'      => 'texty.php',
+                    'name'      => $plugin_details['title'] ?? '',
+                    'repo-slug' => $plugin_details_arr[0] ?? '',
+                    'file'      => $plugin_details_arr[1] ?? '',
                 ]
             );
         }
@@ -825,6 +830,27 @@ class SetupWizard {
 
         wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;
+    }
+
+    /**
+     * Determines if a plugin should be installed based on POST data.
+     *
+     * @since 4.0.0
+     *
+     * @param array $plugin Plugin configuration array
+     *
+     * @return bool
+     */
+    private function should_install_plugin( array $plugin ): bool {
+        check_admin_referer( 'dokan-setup' );
+
+        $setup_key = 'setup_' . $plugin['type'];
+
+        if ( ! isset( $_POST[ $setup_key ] ) ) {
+            return false;
+        }
+
+        return 'yes' === sanitize_text_field( wp_unslash( $_POST[ $setup_key ] ) );
     }
 
     /**
@@ -891,52 +917,11 @@ class SetupWizard {
             return false;
         }
 
-        if ( $this->is_wc_conversion_tracking_active() ) {
-            return false;
-        }
-
-        if ( $this->is_wemail_active() ) {
-            return false;
-        }
-
-        if ( $this->is_texty_active() ) {
+        if ( ! count( $this->recommended_plugins->get() ) ) {
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * Check if WC Conversion Tracking is active or not
-     *
-     * @since 2.8.7
-     *
-     * @return bool
-     */
-    protected function is_wc_conversion_tracking_active() {
-        return is_plugin_active( 'woocommerce-conversion-tracking/conversion-tracking.php' );
-    }
-
-    /**
-     * Check if weMail is active or not
-     *
-     * @since 3.0.0
-     *
-     * @return bool
-     */
-    protected function is_wemail_active() {
-        return is_plugin_active( 'wemail/wemail.php' );
-    }
-
-    /**
-     * Check if texty is active or not
-     *
-     * @since 3.2.11
-     *
-     * @return bool
-     */
-    protected function is_texty_active() {
-        return is_plugin_active( 'texty/texty.php' );
     }
 
     /**
@@ -964,7 +949,7 @@ class SetupWizard {
                 name="<?php echo esc_attr( 'setup_' . $type ); ?>"
                 value="yes"
                 checked
-                data-plugins="<?php echo esc_attr( wp_json_encode( isset( $item_info['plugins'] ) ? $item_info['plugins'] : null ) ); ?>"
+                data-plugins="<?php echo esc_attr( wp_json_encode( $item_info ?? null ) ); ?>"
             />
             <label for="<?php echo esc_attr( 'dokan_recommended_' . $type ); ?>">
                 <img
@@ -1011,7 +996,11 @@ class SetupWizard {
      * @param string $plugin_id   Plugin id used for background install.
      * @param array  $plugin_info Plugin info array containing name and repo-slug, and optionally file if different from [repo-slug].php.
      */
-    protected function install_plugin( $plugin_id, $plugin_info ) {
+    public function install_plugin( $plugin_id, $plugin_info ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
         // Make sure we don't trigger multiple simultaneous installs.
         if ( get_option( 'woocommerce_setup_background_installing_' . $plugin_id ) ) {
             return;

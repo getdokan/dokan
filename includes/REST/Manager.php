@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WC_Data;
+
 /**
  * API_Registrar class
  */
@@ -24,7 +26,7 @@ class Manager {
 
         // Init REST API routes.
         add_action( 'rest_api_init', array( $this, 'register_rest_routes' ), 10 );
-        add_filter( 'woocommerce_rest_prepare_product_object', array( $this, 'prepeare_product_response' ), 10, 3 );
+        add_filter( 'woocommerce_rest_prepare_product_object', array( $this, 'prepare_product_response' ) );
         add_filter( 'dokan_vendor_to_array', array( $this, 'filter_store_open_close_option' ) );
 
         // Send email to admin on adding a new product
@@ -74,7 +76,7 @@ class Manager {
      *
      * @return void
      */
-    public function prepeare_product_response( $response, $object, $request ) {
+    public function prepare_product_response( $response ) {
         $data = $response->get_data();
         $author_id = get_post_field( 'post_author', $data['id'] );
 
@@ -130,19 +132,19 @@ class Manager {
     /**
      * Send email to admin on adding a new product
      *
-     * @param  \WC_Data $object
+     * @param WC_Data $data
      * @param  \WP_REST_Request $request
      * @param  Boolean $creating
      *
      * @return void
      */
-    public function on_dokan_rest_insert_product( $object, $request, $creating ) {
+    public function on_dokan_rest_insert_product( $data, $request, $creating ) {
         // if not creating, meaning product is updating. So return early
         if ( ! $creating ) {
             return;
         }
 
-        do_action( 'dokan_new_product_added', $object->get_id(), $request );
+        do_action( 'dokan_new_product_added', $data->get_id(), $request );
     }
 
     /**
@@ -184,6 +186,7 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/AdminReportController.php'           => 'WeDevs\Dokan\REST\AdminReportController',
                 DOKAN_DIR . '/includes/REST/AdminDashboardController.php'        => 'WeDevs\Dokan\REST\AdminDashboardController',
                 DOKAN_DIR . '/includes/REST/AdminMiscController.php'             => 'WeDevs\Dokan\REST\AdminMiscController',
+                DOKAN_DIR . '/includes/REST/AdminSetupGuideController.php'       => 'WeDevs\Dokan\REST\AdminSetupGuideController',
                 DOKAN_DIR . '/includes/REST/StoreController.php'                 => '\WeDevs\Dokan\REST\StoreController',
                 DOKAN_DIR . '/includes/REST/ProductController.php'               => '\WeDevs\Dokan\REST\ProductController',
                 DOKAN_DIR . '/includes/REST/ProductControllerV2.php'             => '\WeDevs\Dokan\REST\ProductControllerV2',
@@ -201,6 +204,12 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/VendorDashboardController.php'       => '\WeDevs\Dokan\REST\VendorDashboardController',
                 DOKAN_DIR . '/includes/REST/ProductBlockController.php'          => '\WeDevs\Dokan\REST\ProductBlockController',
                 DOKAN_DIR . '/includes/REST/CommissionControllerV1.php'          => '\WeDevs\Dokan\REST\CommissionControllerV1',
+                DOKAN_DIR . '/includes/REST/CustomersController.php'             => '\WeDevs\Dokan\REST\CustomersController',
+                DOKAN_DIR . '/includes/REST/DokanDataCountriesController.php'    => '\WeDevs\Dokan\REST\DokanDataCountriesController',
+                DOKAN_DIR . '/includes/REST/DokanDataContinentsController.php'   => '\WeDevs\Dokan\REST\DokanDataContinentsController',
+                DOKAN_DIR . '/includes/REST/OrderControllerV3.php'               => '\WeDevs\Dokan\REST\OrderControllerV3',
+                DOKAN_DIR . '/includes/REST/AdminOnboardingController.php'       => '\WeDevs\Dokan\REST\AdminOnboardingController',
+                DOKAN_DIR . '/includes/REST/VendorProductCategoriesController.php'  => '\WeDevs\Dokan\REST\VendorProductCategoriesController',
             )
         );
     }
