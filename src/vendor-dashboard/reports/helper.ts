@@ -71,8 +71,19 @@ export const handleAnalyticsLinkPrevention = () => {
 
     navigationLinks.forEach(anchor => {
         anchor.addEventListener( 'click', ( event ) => {
-            const targetUrl = event.target.href;
-            if ( ! targetUrl.toLowerCase().includes( 'analytics' ) ) {
+            const targetUrl = event.target.href,
+                analyticsUrl =
+                    targetUrl === vendorAnalyticsDokanConfig.vendorAnalyticsUrl,
+                isIncludeAnalyticsQueryPath = targetUrl
+                    .toLowerCase()
+                    .includes( 'analytics' );
+
+            if (
+                applyFilters(
+                    'dokan_analytics_should_hold_prevent_url',
+                    analyticsUrl || ! isIncludeAnalyticsQueryPath
+                )
+            ) {
                 return;
             }
 
