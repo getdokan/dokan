@@ -1,16 +1,16 @@
 # Copyright (c) 2025 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 4.0.0\n"
+"Project-Id-Version: Dokan 4.0.1\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-06T14:38:47+00:00\n"
+"POT-Creation-Date: 2025-05-08T14:18:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: dokan-lite\n"
 
 #. Plugin Name of the plugin
@@ -41,6 +41,7 @@ msgstr ""
 
 #. translators: 1: Required PHP Version 2: Running php version
 #: dokan-class.php:164
+#, php-format
 msgid "The Minimum PHP Version Requirement for <b>Dokan</b> is %1$s. You are Running PHP %2$s"
 msgstr ""
 
@@ -67,6 +68,7 @@ msgstr ""
 
 #. translators: 1) interval period
 #: includes/Abstracts/DokanBackgroundProcesses.php:87
+#, php-format
 msgid "Every %d Minutes"
 msgstr ""
 
@@ -97,6 +99,7 @@ msgstr ""
 #: includes/Abstracts/DokanRESTController.php:30
 #: includes/Abstracts/DokanRESTController.php:210
 #: includes/Abstracts/DokanRESTController.php:285
+#, php-format
 msgid "Method '%s' not implemented. Must be overridden in subclass."
 msgstr ""
 
@@ -114,6 +117,7 @@ msgstr ""
 
 #. translators: 1) post type name
 #: includes/Abstracts/DokanRESTController.php:193
+#, php-format
 msgid "The %s cannot be deleted."
 msgstr ""
 
@@ -128,11 +132,13 @@ msgstr ""
 #. translators: %s is Settings element type.
 #: includes/Abstracts/SettingsElement.php:327
 #: includes/Abstracts/SettingsElement.php:401
+#, php-format
 msgid "Settings %s Does not support adding any children."
 msgstr ""
 
 #. translators: %s is Settings element type.
 #: includes/Abstracts/SettingsElement.php:420
+#, php-format
 msgid "Settings %s Does not support removing any children."
 msgstr ""
 
@@ -143,6 +149,7 @@ msgstr ""
 
 #. translators: %s is Status element type.
 #: includes/Abstracts/StatusElement.php:223
+#, php-format
 msgid "Status %s Does not support adding any children."
 msgstr ""
 
@@ -689,6 +696,7 @@ msgstr ""
 
 #. translators: %s: withdraw count
 #: includes/Admin/Menu.php:40
+#, php-format
 msgid "Withdraw %s"
 msgstr ""
 
@@ -711,6 +719,7 @@ msgstr ""
 
 #. translators: %s permalink settings url
 #: includes/Admin/Notices/Manager.php:116
+#, php-format
 msgid "The <strong>Plain</strong> permalink structure is not working for the Dokan plugin. Please change your permalink structure from <a href=\"%s\">Settings > Permalinks</a>"
 msgstr ""
 
@@ -777,6 +786,7 @@ msgstr ""
 
 #. translators: %s: plugin version
 #: includes/Admin/Notices/WhatsNew.php:45
+#, php-format
 msgid "Check What's new in Dokan Version %s"
 msgstr ""
 
@@ -1370,6 +1380,7 @@ msgstr ""
 
 #. translators: %s: store url
 #: includes/Admin/Settings.php:425
+#, php-format
 msgid "Define the vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])"
 msgstr ""
 
@@ -1741,6 +1752,7 @@ msgstr ""
 
 #. translators: 1) Opening anchor tag, 2) Closing anchor tag, 3) Opening anchor tag, 4) Closing anchor tag
 #: includes/Admin/Settings.php:851
+#, php-format
 msgid "%1$sreCAPTCHA_v3%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s"
 msgstr ""
 
@@ -1985,6 +1997,7 @@ msgstr ""
 
 #. translators: %s: withdraw method name
 #: includes/Admin/SetupWizard.php:692
+#, php-format
 msgid "Enable %s for your vendor as a withdraw method"
 msgstr ""
 
@@ -2062,6 +2075,7 @@ msgstr ""
 
 #. translators: %s: country name including the 'the' prefix if needed
 #: includes/Admin/SetupWizardWCAdmin.php:75
+#, php-format
 msgid "We've created two Shipping Zones - for %s and for the rest of the world. Below you can set Flat Rate shipping costs for these Zones or offer Free Shipping."
 msgstr ""
 
@@ -2104,6 +2118,7 @@ msgstr ""
 
 #. translators: %1$s: live rates tooltip text, %2$s: shipping extensions URL
 #: includes/Admin/SetupWizardWCAdmin.php:180
+#, php-format
 msgid "If you'd like to offer <span class=\"help_tip\" data-tip=\"%1$s\">live rates</span> from a specific carrier (e.g. UPS) you can find a variety of extensions available for WooCommerce <a href=\"%2$s\" target=\"_blank\">here</a>."
 msgstr ""
 
@@ -2113,6 +2128,7 @@ msgstr ""
 
 #. translators: %1$s: weight unit dropdown, %2$s: dimension unit dropdown
 #: includes/Admin/SetupWizardWCAdmin.php:207
+#, php-format
 msgid "We'll use %1$s for product weight and %2$s for product dimensions."
 msgstr ""
 
@@ -2171,6 +2187,7 @@ msgstr ""
 #. translators: 1) store banner width 2) store banner height
 #: includes/Admin/UserProfile.php:125
 #: templates/settings/store-form.php:86
+#, php-format
 msgid "Upload a banner for your store. Banner size is (%1$sx%2$s) pixels."
 msgstr ""
 
@@ -2910,6 +2927,7 @@ msgstr ""
 
 #. translators: %d: max linked variation.
 #: includes/Assets.php:1119
+#, php-format
 msgid "Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run)."
 msgstr ""
 
@@ -2988,12 +3006,14 @@ msgstr ""
 #. translators: %s: decimal
 #: includes/Assets.php:1139
 #: includes/Assets.php:1320
+#, php-format
 msgid "Please enter with one decimal point (%s) without thousand separators."
 msgstr ""
 
 #. translators: %s: price decimal separator
 #: includes/Assets.php:1141
 #: includes/Assets.php:1322
+#, php-format
 msgid "Please enter with one monetary decimal point (%s) without thousand separators and currency symbols."
 msgstr ""
 
@@ -3190,6 +3210,7 @@ msgstr ""
 
 #. translators: %d is product count.
 #: includes/CatalogMode/Dashboard/ProductBulkEdit.php:133
+#, php-format
 msgid "%s product has been successfully updated."
 msgid_plural "%s products have been successfully updated."
 msgstr[0] ""
@@ -3248,6 +3269,7 @@ msgstr ""
 
 #. translators: 1: Refund item ID, 2: Error message
 #: includes/Commission/OrderCommission.php:150
+#, php-format
 msgid "Refund item ID %1$s error: %2$s"
 msgstr ""
 
@@ -3286,11 +3308,13 @@ msgstr ""
 
 #. translators: %s coupon code.
 #: includes/Commission/RecalculateCommissions.php:198
+#, php-format
 msgid "Coupon removed: \"%s\"."
 msgstr ""
 
 #. translators: 1) page number
 #: includes/Core.php:149
+#, php-format
 msgid "Page %1$s"
 msgstr ""
 
@@ -3419,6 +3443,7 @@ msgstr ""
 #: includes/template-tags.php:277
 #: templates/admin-setup-wizard/step-store-wc-fields.php:92
 #: assets/js/dokan-admin-dashboard.js:172
+#, php-format,js-format
 msgid "%1$s (%2$s)"
 msgstr ""
 
@@ -3498,16 +3523,19 @@ msgstr ""
 #. translators: %s: maximum tag length
 #: includes/Dashboard/Templates/Products.php:505
 #: includes/Product/functions.php:121
+#, php-format
 msgid "You can only select %s tags"
 msgstr ""
 
 #. translators: 1) reverse withdrawal balance, 2) navigation url, 3) due status, 4) will be taken actions
 #: includes/Dashboard/Templates/ReverseWithdrawal.php:127
+#, php-format
 msgid "You have a reverse withdrawal balance of %1$s to be paid. Please <a href=\"%2$s\">pay</a> it before %3$s. Below actions will be taken after the billing period is over. %4$s"
 msgstr ""
 
 #. translators: 1) reverse withdrawal failed actions, 2) reverse withdrawal navigation url
 #: includes/Dashboard/Templates/ReverseWithdrawal.php:157
+#, php-format
 msgid "Below actions have been taken due to unpaid reverse withdrawal balance: %1$s Kindly <a href=\"%2$s\">pay</a> your due to start selling again."
 msgstr ""
 
@@ -3633,11 +3661,13 @@ msgstr ""
 
 #. translators: 1: Last formatted withdraw amount 2: Last formatted withdraw date 3: Last formatted withdraw method used.
 #: includes/Dashboard/Templates/Withdraw.php:450
+#, php-format
 msgid "%1$s on %2$s to %3$s"
 msgstr ""
 
 #. translators: 1) Negative withdrawal balance amount
 #: includes/Dashboard/Templates/Withdraw.php:489
+#, php-format
 msgid "You have already withdrawn %s. This amount will be deducted from your balance."
 msgstr ""
 
@@ -3696,6 +3726,7 @@ msgstr ""
 #: includes/Emails/VendorWithdrawRequest.php:150
 #: includes/Emails/WithdrawApproved.php:146
 #: includes/Emails/WithdrawCancelled.php:150
+#, php-format
 msgid "Available placeholders: %s"
 msgstr ""
 
@@ -3838,46 +3869,55 @@ msgstr ""
 
 #. translators: %1: from name, %2: from name
 #: includes/Emails/Manager.php:207
+#, php-format
 msgid "\"%1$s\" sent you a message from your \"%2$s\" store"
 msgstr ""
 
 #. translators: %1: from name, %2: status
 #: includes/Emails/Manager.php:259
+#, php-format
 msgid "[%1$s] Refund Request %2$s"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:293
+#, php-format
 msgid "[%s] New Refund Request"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:350
+#, php-format
 msgid "[%s] New Withdraw Request"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:373
+#, php-format
 msgid "[%s] Your Withdraw Request has been approved"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:397
+#, php-format
 msgid "[%s] Your Withdraw Request has been cancelled"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:436
+#, php-format
 msgid "[%s] New Vendor Registered"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:490
+#, php-format
 msgid "[%s] New Product Added"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:531
+#, php-format
 msgid "[%s] Your product has been approved!"
 msgstr ""
 
@@ -3908,6 +3948,7 @@ msgstr ""
 #: includes/Emails/NewProduct.php:187
 #: includes/Emails/NewSeller.php:150
 #: includes/Emails/VendorWithdrawRequest.php:162
+#, php-format
 msgid "Enter recipients (comma separated) for this email. Defaults to %s."
 msgstr ""
 
@@ -3929,6 +3970,7 @@ msgstr ""
 
 #. translators: 1) admin email address
 #: includes/Emails/NewProductPending.php:185
+#, php-format
 msgid "Enter recipients (comma separated) for this email. Defaults to %1$s."
 msgstr ""
 
@@ -4080,8 +4122,21 @@ msgstr ""
 msgid "Withdrawal request for {amount} is cancelled"
 msgstr ""
 
+#: includes/Exceptions/Handler.php:93
+msgid "Follow Store  Module Deactivated"
+msgstr ""
+
+#: includes/Exceptions/Handler.php:94
+msgid "The <strong>Follow Store </strong> module has been automatically deactivated due to incompatibility with the current versions of Dokan Lite and Dokan Pro. Please update Dokan Pro to the latest version and then reactivate the Follow Store  module."
+msgstr ""
+
+#: includes/Exceptions/Handler.php:99
+msgid "Activate Module"
+msgstr ""
+
 #. translators: %s: Geteway fee
 #: includes/Fees.php:105
+#, php-format
 msgid "Payment gateway processing fee %s"
 msgstr ""
 
@@ -4156,12 +4211,14 @@ msgstr ""
 #. translators: 1) argument name, 2) argument value
 #: includes/functions-rest-api.php:22
 #: includes/functions-rest-api.php:61
+#, php-format
 msgid "%1$s is not of type %2$s"
 msgstr ""
 
 #. translators: 1) argument name
 #: includes/functions-rest-api.php:28
 #: includes/functions-rest-api.php:67
+#, php-format
 msgid "%s was not registered as a request argument."
 msgstr ""
 
@@ -4223,40 +4280,47 @@ msgstr ""
 #. translators: 1) bank account name
 #: includes/functions.php:1258
 #: assets/js/vue-admin.js:2
+#, php-format,js-format
 msgid "Account Name: %s"
 msgstr ""
 
 #. translators: 1) bank account number
 #: includes/functions.php:1263
 #: assets/js/vue-admin.js:2
+#, php-format,js-format
 msgid "Account Number: %s"
 msgstr ""
 
 #. translators: 1) bank name
 #: includes/functions.php:1268
 #: assets/js/vue-admin.js:2
+#, php-format,js-format
 msgid "Bank Name: %s"
 msgstr ""
 
 #. translators: 1)  bank address
 #: includes/functions.php:1273
+#, php-format
 msgid "Address: %s"
 msgstr ""
 
 #. translators: 1) bank routing number
 #: includes/functions.php:1278
 #: assets/js/vue-admin.js:2
+#, php-format,js-format
 msgid "Routing Number: %s"
 msgstr ""
 
 #. translators: 1) bank iban
 #: includes/functions.php:1283
 #: assets/js/vue-admin.js:2
+#, php-format,js-format
 msgid "IBAN: %s"
 msgstr ""
 
 #. translators: 1) bank swift
 #: includes/functions.php:1288
+#, php-format
 msgid "SWIFT: %s"
 msgstr ""
 
@@ -4324,6 +4388,7 @@ msgstr ""
 #. translators: 1: month name, 2: 4-digit year
 #: includes/functions.php:2180
 #: includes/REST/ProductControllerV2.php:218
+#, php-format
 msgid "%1$s %2$d"
 msgstr ""
 
@@ -4659,11 +4724,13 @@ msgstr ""
 
 #. translators: 1) plugin slug
 #: includes/functions.php:3446
+#, php-format
 msgid "Unable to fetch plugin information from wordpress.org for %s."
 msgstr ""
 
 #. translators: 1) plugin slug
 #: includes/functions.php:3459
+#, php-format
 msgid "Unable to install %s from wordpress.org"
 msgstr ""
 
@@ -4697,6 +4764,7 @@ msgstr ""
 
 #. translators: 1: OpenAi Link
 #: includes/Intelligence/Admin/Settings.php:59
+#, php-format
 msgid "You can get your API Keys in your <a href=\"%s\" target=\"_blank\"> AI Studio Account.</a>"
 msgstr ""
 
@@ -4711,6 +4779,7 @@ msgstr ""
 
 #. translators: 1: OpenAi Link
 #: includes/Intelligence/Admin/Settings.php:75
+#, php-format
 msgid "You can get your API Keys in your <a href=\"%s\" target=\"_blank\">OpenAI Account.</a>"
 msgstr ""
 
@@ -4774,6 +4843,7 @@ msgstr ""
 
 #. translators: %1$s: class name, %2$s: interface name
 #: includes/Intelligence/Services/EngineFactory.php:34
+#, php-format
 msgid "Unsupported service type provided: %1$s must be an instance of %2$s"
 msgstr ""
 
@@ -5022,11 +5092,13 @@ msgstr ""
 
 #. translators: %s item name.
 #: includes/Order/Hooks.php:484
+#, php-format
 msgid "Unable to restore stock for item %s."
 msgstr ""
 
 #. translators: 1: Order ID, 2: Refund ID, 3: Refund Amount
 #: includes/Order/RefundHandler.php:192
+#, php-format
 msgid "Dokan refund adjustment error: Seller not found, Order ID: %1$d, Refund ID: %2$d, Refund Amount: %3$f "
 msgstr ""
 
@@ -5283,6 +5355,7 @@ msgstr ""
 
 #. translators: vendor name.
 #: includes/Privacy.php:369
+#, php-format
 msgid "Vendor %s data is removed."
 msgstr ""
 
@@ -5411,6 +5484,7 @@ msgstr ""
 
 #. translators: number of items
 #: includes/Product/functions.php:316
+#, php-format
 msgid "%s item"
 msgid_plural "%s items"
 msgstr[0] ""
@@ -5582,11 +5656,13 @@ msgstr ""
 
 #. translators: %s: product section name.
 #: includes/ProductSections/Manager.php:96
+#, php-format
 msgid "Hide %s section"
 msgstr ""
 
 #. translators: %s: product section name.
 #: includes/ProductSections/Manager.php:118
+#, php-format
 msgid "Section title for %s"
 msgstr ""
 
@@ -6036,6 +6112,7 @@ msgstr ""
 #. translators: %s: weight unit
 #: includes/REST/DummyDataController.php:477
 #: includes/REST/ProductController.php:2022
+#, php-format
 msgid "Product weight (%s)."
 msgstr ""
 
@@ -6047,18 +6124,21 @@ msgstr ""
 #. translators: %s: dimension unit
 #: includes/REST/DummyDataController.php:489
 #: includes/REST/ProductController.php:2033
+#, php-format
 msgid "Product length (%s)."
 msgstr ""
 
 #. translators: %s: dimension unit
 #: includes/REST/DummyDataController.php:496
 #: includes/REST/ProductController.php:2039
+#, php-format
 msgid "Product width (%s)."
 msgstr ""
 
 #. translators: %s: dimension unit
 #: includes/REST/DummyDataController.php:503
 #: includes/REST/ProductController.php:2045
+#, php-format
 msgid "Product height (%s)."
 msgstr ""
 
@@ -6479,6 +6559,7 @@ msgstr ""
 #. translators: 1) %s: post type name
 #: includes/REST/OrderController.php:639
 #: includes/REST/ProductController.php:354
+#, php-format
 msgid "Cannot create existing %s."
 msgstr ""
 
@@ -6903,6 +6984,7 @@ msgstr ""
 
 #. translators: numeric number of files
 #: includes/REST/OrderControllerV2.php:254
+#, php-format
 msgid "File %d"
 msgstr ""
 
@@ -7011,6 +7093,7 @@ msgstr ""
 
 #. translators: %s: attachment id
 #: includes/REST/ProductController.php:1572
+#, php-format
 msgid "#%s is an invalid image ID."
 msgstr ""
 
@@ -7726,6 +7809,7 @@ msgstr ""
 
 #. translators: 1) Product title
 #: includes/ReverseWithdrawal/Cart.php:92
+#, php-format
 msgid "<strong>Error!</strong> Could not add product <strong>%1$s</strong> to cart. You can not purchase other products along with reverse withdrawal payment."
 msgstr ""
 
@@ -7884,6 +7968,7 @@ msgstr ""
 
 #. translators: 1) wooCommerce installation url
 #: includes/Shortcodes/Dashboard.php:26
+#, php-format
 msgid "Please install <a href=\"%s\"><strong>WooCommerce</strong></a> plugin first"
 msgstr ""
 
@@ -8117,6 +8202,7 @@ msgstr ""
 
 #. translators: 1) store banner width, 2) store banner height.
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:72
+#, php-format
 msgid "Upload your store banner [ jpg or png, %1$d X %2$d pixels (max), 5 mb (max) ]"
 msgstr ""
 
@@ -8397,6 +8483,7 @@ msgstr ""
 
 #. translators: %1$s and %2$s are HTML tags for bold text
 #: includes/Vendor/SetupWizard.php:162
+#, php-format
 msgid "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. %1$sIt’s completely optional and shouldn’t take longer than two minutes.%2$s"
 msgstr ""
 
@@ -8482,16 +8569,19 @@ msgstr ""
 #. Translators: 1: user display name; 2: username;
 #: includes/Vendor/UserSwitch.php:133
 #: includes/Vendor/UserSwitch.php:183
+#, php-format
 msgid "Switched to %1$s (%2$s)."
 msgstr ""
 
 #. Translators: 1: user display name; 2: username;
 #: includes/Vendor/UserSwitch.php:147
+#, php-format
 msgid "Switch back to %1$s (%2$s)"
 msgstr ""
 
 #. Translators: 1: user display name; 2: username;
 #: includes/Vendor/UserSwitch.php:176
+#, php-format
 msgid "Switched back to %1$s (%2$s)."
 msgstr ""
 
@@ -8500,12 +8590,14 @@ msgid "No ratings found yet!"
 msgstr ""
 
 #: includes/Vendor/Vendor.php:928
+#, php-format
 msgid "%s rating from %d review"
 msgid_plural "%s rating from %d reviews"
 msgstr[0] ""
 msgstr[1] ""
 
 #: includes/Vendor/Vendor.php:929
+#, php-format
 msgid "Rated %s out of %d"
 msgstr ""
 
@@ -8848,11 +8940,13 @@ msgstr ""
 
 #. translators: 1: Email address for withdraw method.
 #: includes/Withdraw/functions.php:421
+#, php-format
 msgid "( %1$s )"
 msgstr ""
 
 #. translators: 1: Bank account holder name. 2: Bank name. 1: Bank account number
 #: includes/Withdraw/functions.php:425
+#, php-format
 msgid "- %1$s - %2$s - ****%3$s"
 msgstr ""
 
@@ -8895,6 +8989,7 @@ msgstr ""
 
 #. translators: %s: withdraw limit amount
 #: includes/Withdraw/Manager.php:50
+#, php-format
 msgid "Withdraw amount must be greater than or equal to %s"
 msgstr ""
 
@@ -8982,6 +9077,7 @@ msgstr ""
 
 #. translators: 1. Terms and conditions of agreement link.
 #: templates/account/update-customer-to-vendor.php:69
+#, php-format
 msgid "I have read and agree to the %1$s."
 msgstr ""
 
@@ -9011,6 +9107,7 @@ msgstr ""
 #. translators: %1$s: opening anchor tag with link, %2$s: an ampersand %3$s: closing anchor tag
 #: templates/account/vendor-registration.php:101
 #: templates/global/seller-registration-form.php:70
+#, php-format
 msgid "I have read and agree to the %1$sTerms %2$s Conditions%3$s."
 msgstr ""
 
@@ -9037,11 +9134,13 @@ msgstr ""
 
 #. translators: 1$-2$: opening and closing <strong> tags, 3$-4$: link tags, takes to woocommerce plugin on wp.org, 5$-6$: opening and closing link tags, leads to plugins.php in admin
 #: templates/admin-notice-dependencies.php:34
+#, php-format
 msgid "%1$sDokan is inactive.%2$s The %3$sWooCommerce plugin%4$s must be active for Dokan to work. Please %5$s install WooCommerce &raquo;%6$s"
 msgstr ""
 
 #. translators: 1$-2$: opening and closing <strong> tags, 3$-4$: link tags, takes to woocommerce plugin on wp.org, 5$-6$: opening and closing link tags, leads to plugins.php in admin
 #: templates/admin-notice-dependencies.php:46
+#, php-format
 msgid "%1$sDokan is inactive.%2$s The %3$sWooCommerce plugin%4$s must be active for Dokan to work. Please %5$s activate WooCommerce &raquo;%6$s"
 msgstr ""
 
@@ -9051,6 +9150,7 @@ msgstr ""
 
 #. translators: %1$s: line break and opening strong tag, %2$s: closing strong tag
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:8
+#, php-format
 msgid "Thanks for choosing Dokan to power your online marketplace! This quick setup wizard will help you configure the basic settings. %1$sThis setup wizard is completely optional and shouldn't take longer than three minutes.%2$s"
 msgstr ""
 
@@ -9060,11 +9160,13 @@ msgstr ""
 
 #. translators: %1$s: opening anchor tag with WooCommerce plugin link, %2$s: closing anchor tag, %3$s: opening anchor tag with php update link
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:37
+#, php-format
 msgid "Please note that %1$sWooCommerce%2$s is necessary for Dokan to work but the current PHP version does not meet minimum requirements for WooCommerce. %3$sPlease learn more about updating PHP%2$s"
 msgstr ""
 
 #. translators: %1$s: opening anchor tag with WooCommerce plugin link, %2$s: closing anchor tag
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:58
+#, php-format
 msgid "Please note that %1$sWooCommerce%2$s is necessary for Dokan to work and it will be automatically installed if you haven't already done so."
 msgstr ""
 
@@ -9111,6 +9213,7 @@ msgstr ""
 
 #. translators: 1: currency name 2: currency symbol, 3: currency code
 #: templates/admin-setup-wizard/step-store-wc-fields.php:95
+#, php-format
 msgid "%1$s (%2$s %3$s)"
 msgstr ""
 
@@ -9157,11 +9260,13 @@ msgstr ""
 
 #. translators: %1$s: opening anchor tag, %2$s: closing anchor tag
 #: templates/admin-setup-wizard/step-store.php:75
+#, php-format
 msgid "%1$sAPI Key%2$s is needed to display map on store page"
 msgstr ""
 
 #. translators: %1$s: opening anchor tag, %2$s: closing anchor tag
 #: templates/admin-setup-wizard/step-store.php:91
+#, php-format
 msgid "%1$sAccess Token%2$s is needed to display map on store page"
 msgstr ""
 
@@ -9171,11 +9276,13 @@ msgstr ""
 
 #. translators: %1$s: opening anchor tag with link, %2$s: closing anchor tag
 #: templates/admin-setup-wizard/step-store.php:113
+#, php-format
 msgid "Want to help make Dokan even more awesome? Allow Dokan Multivendor Marketplace to collect non-sensitive diagnostic data and usage information. %1$sWhat we collect%2$s"
 msgstr ""
 
 #. translators: %1$s: Appsero hypertext with link, %2$s: opening anchor tag with link, %3$s: closing anchor tag
 #: templates/admin-setup-wizard/step-store.php:132
+#, php-format
 msgid "Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked. We are using %1$s to collect your data. %2$sLearn more%3$s about how %1$s collects and handles your data."
 msgstr ""
 
@@ -9250,6 +9357,7 @@ msgstr ""
 #. translators: 1) customer name 2) customer email
 #: templates/emails/contact-seller.php:21
 #: templates/emails/plain/contact-seller.php:20
+#, php-format
 msgid "From : %1$s (%2$s)"
 msgstr ""
 
@@ -9326,6 +9434,7 @@ msgstr ""
 
 #. translators: 1) seller edit url
 #: templates/emails/new-seller-registered.php:43
+#, php-format
 msgid "To edit vendor access and details <a href=\"%s\">Click Here</a>"
 msgstr ""
 
@@ -9335,24 +9444,28 @@ msgstr ""
 
 #. translators: 1) product title
 #: templates/emails/plain/new-product-pending.php:30
+#, php-format
 msgid "Title: %s"
 msgstr ""
 
 #. translators: 1) product price
 #: templates/emails/plain/new-product-pending.php:34
 #: templates/emails/plain/new-product.php:34
+#, php-format
 msgid "Price: %1$s"
 msgstr ""
 
 #. translators: 1) product seller name
 #: templates/emails/plain/new-product-pending.php:38
 #: templates/emails/plain/new-product.php:38
+#, php-format
 msgid "Vendor: %1$s"
 msgstr ""
 
 #. translators: 1) product category
 #: templates/emails/plain/new-product-pending.php:42
 #: templates/emails/plain/new-product.php:42
+#, php-format
 msgid "Category: %1$s"
 msgstr ""
 
@@ -9370,6 +9483,7 @@ msgstr ""
 
 #. translators: 1) product title
 #: templates/emails/plain/new-product.php:30
+#, php-format
 msgid "Title: %1$s"
 msgstr ""
 
@@ -9387,16 +9501,19 @@ msgstr ""
 
 #. translators: 1) seller name
 #: templates/emails/plain/new-seller-registered.php:31
+#, php-format
 msgid "Vendor: %s"
 msgstr ""
 
 #. translators: 1) store name
 #: templates/emails/plain/new-seller-registered.php:35
+#, php-format
 msgid "Vendor Store: %s"
 msgstr ""
 
 #. translators: 1) seller edit url
 #: templates/emails/plain/new-seller-registered.php:39
+#, php-format
 msgid "To edit vendor access and details visit : %s"
 msgstr ""
 
@@ -9404,11 +9521,13 @@ msgstr ""
 #. translators: 1) seller name
 #: templates/emails/plain/product-published.php:20
 #: templates/emails/product-published.php:19
+#, php-format
 msgid "Hello %s"
 msgstr ""
 
 #. translators: 1) product title
 #: templates/emails/plain/product-published.php:24
+#, php-format
 msgid "Your product %s"
 msgstr ""
 
@@ -9419,36 +9538,43 @@ msgstr ""
 
 #. translators: 1) product url
 #: templates/emails/plain/product-published.php:29
+#, php-format
 msgid "View product : %s"
 msgstr ""
 
 #. translators: 1) product edit url
 #: templates/emails/plain/product-published.php:33
+#, php-format
 msgid "Update : %s"
 msgstr ""
 
 #. translators: 1) store name
 #: templates/emails/plain/reverse-withdrawal-invoice.php:27
+#, php-format
 msgid "Hi %s,\\n\\n"
 msgstr ""
 
 #. translators: 1) invoice month 2) invoice year 3) store name
 #: templates/emails/plain/reverse-withdrawal-invoice.php:30
+#, php-format
 msgid "Your %1$s %2$s invoice is now available for store: %3$s.\\n\\n"
 msgstr ""
 
 #. translators: 1) store name
 #: templates/emails/plain/reverse-withdrawal-invoice.php:33
+#, php-format
 msgid "Summary for %1$s: \\n\\n"
 msgstr ""
 
 #. translators: 1) invoice month 2) invoice year 3) due balance amount
 #: templates/emails/plain/reverse-withdrawal-invoice.php:36
+#, php-format
 msgid "Reverse withdrawal charges for %1$s %2$s: %3$s \\n\\n"
 msgstr ""
 
 #. translators: 1) invoice due date
 #: templates/emails/plain/reverse-withdrawal-invoice.php:39
+#, php-format
 msgid "Due Date %1$s: \\n\\n"
 msgstr ""
 
@@ -9461,6 +9587,7 @@ msgstr ""
 #. translators: 1) order billing full name
 #: templates/emails/plain/vendor-completed-order.php:20
 #: templates/emails/vendor-completed-order.php:37
+#, php-format
 msgid "You have received complete order from %s."
 msgstr ""
 
@@ -9481,11 +9608,13 @@ msgstr ""
 #. translators: 1) order formatted billing full name
 #: templates/emails/plain/vendor-new-order.php:20
 #: templates/emails/vendor-new-order.php:36
+#, php-format
 msgid "You have received an order from %s."
 msgstr ""
 
 #. translators: 1) product name, 2) customer name, 3) rating
 #: templates/emails/plain/vendor-product-review.php:27
+#, php-format
 msgid "We are happy to inform you that your product %1$s has received a new review on our website. The review was written by %2$s and has a rating of %3$s out of 5 stars."
 msgstr ""
 
@@ -9515,6 +9644,7 @@ msgstr ""
 #: templates/emails/plain/withdraw-cancel.php:20
 #: templates/emails/withdraw-approve.php:19
 #: templates/emails/withdraw-cancel.php:19
+#, php-format
 msgid "Hi %s"
 msgstr ""
 
@@ -9534,6 +9664,7 @@ msgstr ""
 #: templates/emails/plain/withdraw-approve.php:30
 #: templates/emails/plain/withdraw-cancel.php:30
 #: templates/emails/withdraw-cancel.php:30
+#, php-format
 msgid "Amount : %s"
 msgstr ""
 
@@ -9543,6 +9674,7 @@ msgstr ""
 #: templates/emails/plain/withdraw-cancel.php:34
 #: templates/emails/withdraw-approve.php:38
 #: templates/emails/withdraw-cancel.php:40
+#, php-format
 msgid "Method : %s"
 msgstr ""
 
@@ -9572,61 +9704,73 @@ msgstr ""
 
 #. translators: 1) user name
 #: templates/emails/plain/withdraw-new.php:23
+#, php-format
 msgid "A new withdraw request has been made by - %s"
 msgstr ""
 
 #. translators: 1) withdraw request amount
 #: templates/emails/plain/withdraw-new.php:27
+#, php-format
 msgid "Request Amount : %s"
 msgstr ""
 
 #. translators: 1) withdraw payment method
 #: templates/emails/plain/withdraw-new.php:31
+#, php-format
 msgid "Payment Method : %s"
 msgstr ""
 
 #. translators: 1) user name
 #: templates/emails/plain/withdraw-new.php:35
+#, php-format
 msgid "Store Name : %s"
 msgstr ""
 
 #. translators: 1) vendor profile url
 #: templates/emails/plain/withdraw-new.php:39
+#, php-format
 msgid "Profile : %s"
 msgstr ""
 
 #. translators: 1) with menu url
 #: templates/emails/plain/withdraw-new.php:43
+#, php-format
 msgid "You can approve or deny it by going here : %s"
 msgstr ""
 
 #. translators: 1) Product url 2) Product title
 #: templates/emails/product-published.php:25
+#, php-format
 msgid "Your product : <a href=\"%1$s\">%2$s</a> is approved by the admin, congrats!"
 msgstr ""
 
 #. translators: 1) product edit link
 #: templates/emails/product-published.php:31
+#, php-format
 msgid "To Edit product click : <a href=\"%s\">here</a>"
 msgstr ""
 
 #. translators: 1) store name
 #: templates/emails/reverse-withdrawal-invoice.php:27
+#, php-format
 msgid "Hi %s,"
 msgstr ""
 
 #. translators: 1) invoice month 2) invoice year 3) store name
 #: templates/emails/reverse-withdrawal-invoice.php:34
+#, php-format
 msgid "Your %1$s %2$s invoice is now available for store: %3$s."
 msgstr ""
 
 #. translators: 1) store name
 #: templates/emails/reverse-withdrawal-invoice.php:45
+#, php-format
 msgid "Summary for %1$s: "
 msgstr ""
 
 #. translators: 1) invoice month 2) invoice year
 #: templates/emails/reverse-withdrawal-invoice.php:54
+#, php-format
 msgid "Reverse withdrawal charges for %1$s %2$s:"
 msgstr ""
 
@@ -9637,6 +9781,7 @@ msgstr ""
 #. translators: %s: Order ID.
 #: templates/emails/vendor-completed-order.php:46
 #: templates/emails/vendor-new-order.php:45
+#, php-format
 msgid "[Order #%s]"
 msgstr ""
 
@@ -9657,6 +9802,7 @@ msgstr ""
 
 #. translators: 1) product name, 2) customer name, 3) rating
 #: templates/emails/vendor-product-review.php:26
+#, php-format
 msgid "We are happy to inform you that your product <strong>%1$s</strong> has received a new review on our website. The review was written by <strong>%2$s</strong> and has a rating of <strong>%3$s</strong> out of 5 stars."
 msgstr ""
 
@@ -9667,6 +9813,7 @@ msgstr ""
 #. translators: 1) withdraw receivable amount
 #: templates/emails/withdraw-approve.php:33
 #: templates/emails/withdraw-cancel.php:35
+#, php-format
 msgid "Receivable amount : %s"
 msgstr ""
 
@@ -9696,11 +9843,13 @@ msgstr ""
 
 #. translators: 1) withdraw page url
 #: templates/emails/withdraw-new.php:56
+#, php-format
 msgid "You can approve or deny it by going <a href=\"%s\"> here </a>"
 msgstr ""
 
 #. translators: 1) cart total amount
 #: templates/global/header-menu.php:16
+#, php-format
 msgid "Cart %s"
 msgstr ""
 
@@ -9807,6 +9956,7 @@ msgstr ""
 #. translators: 1) order total amount 2) order item count
 #: templates/my-orders.php:63
 #: templates/sub-orders.php:88
+#, php-format
 msgid "%1$s for %2$s item"
 msgid_plural "%1$s for %2$s items"
 msgstr[0] ""
@@ -9845,10 +9995,12 @@ msgstr ""
 
 #. translators: %s: variation id
 #: templates/orders/commission-meta-box-html.php:114
+#, php-format
 msgid "%s (No longer exists)"
 msgstr ""
 
 #: templates/orders/commission-meta-box-html.php:130
+#, php-format
 msgid "Source: %s"
 msgstr ""
 
@@ -10003,6 +10155,7 @@ msgstr ""
 
 #. translators: 1) human-readable date
 #: templates/orders/details.php:280
+#, php-format
 msgid "added %s ago"
 msgstr ""
 
@@ -10077,6 +10230,7 @@ msgstr ""
 #. translators: 1) order number
 #: templates/orders/listing.php:64
 #: templates/orders/listing.php:70
+#, php-format
 msgid "Order %s"
 msgstr ""
 
@@ -10095,6 +10249,7 @@ msgstr ""
 #. translators: %s: time difference
 #: templates/orders/listing.php:115
 #: templates/products/products-listing-row.php:316
+#, php-format
 msgid "%s ago"
 msgstr ""
 
@@ -10113,6 +10268,7 @@ msgstr ""
 
 #. translators: 1) download count, 2) download file name
 #: templates/orders/order-download-permission-html.php:22
+#, php-format
 msgid "File %1$s: %2$s"
 msgstr ""
 
@@ -10126,6 +10282,7 @@ msgstr ""
 
 #. translators: 1) file download counter
 #: templates/orders/order-download-permission-html.php:52
+#, php-format
 msgid "%s time"
 msgid_plural "%s times"
 msgstr[0] ""
@@ -10479,6 +10636,7 @@ msgstr ""
 
 #. translators: 1) All product count
 #: templates/products/listing-status-filter.php:23
+#, php-format
 msgid "All (%s)"
 msgstr ""
 
@@ -10492,6 +10650,7 @@ msgstr ""
 
 #. translators: %s: product title with edit link
 #: templates/products/new-product.php:131
+#, php-format
 msgid "You have successfully created %s product"
 msgstr ""
 
@@ -10659,6 +10818,7 @@ msgstr ""
 
 #. translators: 1) search query
 #: templates/seller-search-form.php:6
+#, php-format
 msgid "Search Results for: %s"
 msgstr ""
 
@@ -10740,6 +10900,7 @@ msgstr ""
 
 #. translators: %s: payment method title
 #: templates/settings/payment.php:33
+#, php-format
 msgid "Direct to %s"
 msgstr ""
 
@@ -10814,6 +10975,7 @@ msgstr ""
 
 #. translators: 1) number of stores
 #: templates/store-lists-filter.php:28
+#, php-format
 msgid "Total store showing: %s"
 msgid_plural "Total stores showing: %s"
 msgstr[0] ""
@@ -10847,11 +11009,13 @@ msgstr ""
 
 #. translators: 1) seller rating
 #: templates/store-lists-loop.php:58
+#, php-format
 msgid "Rated %s out of 5"
 msgstr ""
 
 #. translators: 1) seller rating
 #: templates/store-lists-loop.php:67
+#, php-format
 msgid "%s out of 5"
 msgstr ""
 
@@ -10877,6 +11041,7 @@ msgstr ""
 
 #. translators: %d reviews count
 #: templates/vendor-store-info.php:32
+#, php-format
 msgid "%s Review"
 msgid_plural "%s Reviews"
 msgstr[0] ""
@@ -11009,6 +11174,7 @@ msgstr ""
 
 #. translators: 1) withdraw threshold days
 #: templates/withdraw/withdraw-dashboard.php:37
+#, php-format
 msgid "%s day"
 msgid_plural "%s days"
 msgstr[0] ""
@@ -11043,6 +11209,7 @@ msgstr ""
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-intelligence.js:172
 #: assets/js/frontend.js:172
+#, js-format
 msgid "%1$s at %2$s"
 msgstr ""
 
@@ -11055,6 +11222,7 @@ msgid "Delete Confirmation"
 msgstr ""
 
 #: assets/js/components.js:179
+#, js-format
 msgid "Are you sure you want to proceed with this %1$sdeletion%2$s?"
 msgstr ""
 
@@ -11169,6 +11337,7 @@ msgid "Dashboard Sections"
 msgstr ""
 
 #: assets/js/customizable-dashboard.js:1
+#, js-format
 msgid "Add %s section"
 msgstr ""
 
@@ -11181,6 +11350,7 @@ msgid "No data for the selected date range"
 msgstr ""
 
 #: assets/js/dashboard-charts.js:1
+#, js-format
 msgid "%s Report"
 msgstr ""
 
@@ -11786,6 +11956,7 @@ msgid "Bar chart"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:172
+#, js-format
 msgid "Lite: %s"
 msgstr ""
 
@@ -11794,6 +11965,7 @@ msgid "Pro"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:172
+#, js-format
 msgid "%1$s: %2$s"
 msgstr ""
 
@@ -11802,6 +11974,7 @@ msgid "Video"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:172
+#, js-format
 msgid "Requirements: %s"
 msgstr ""
 
@@ -11871,6 +12044,7 @@ msgid "Confused? Talk to the Sales Team!"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:172
+#, js-format
 msgid "Select %1$s Category %2$s"
 msgstr ""
 
@@ -11886,6 +12060,7 @@ msgid "Search Modules"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:172
+#, js-format
 msgid "Pro Modules (%s)"
 msgstr ""
 
@@ -11920,6 +12095,7 @@ msgid "Category ID"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:172
+#, js-format
 msgid "#%s"
 msgstr ""
 
@@ -11945,6 +12121,7 @@ msgid "Your Marketplace is  ready to explore"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:172
+#, js-format
 msgid "%1$s of %1$s tasks completed"
 msgstr ""
 
@@ -11969,6 +12146,7 @@ msgid "Choose how vendor store URLs will appear"
 msgstr ""
 
 #: assets/js/dokan-admin-onboard.js:172
+#, js-format
 msgid "%s/"
 msgstr ""
 
@@ -11985,6 +12163,7 @@ msgid "Please enter a valid input"
 msgstr ""
 
 #: assets/js/dokan-admin-onboard.js:172
+#, js-format
 msgid "Vendor Store URL will be (<span class=\"text-indigo-600\">%1$s/%2$s/%3$s</span>)"
 msgstr ""
 
@@ -12242,6 +12421,7 @@ msgid "No payment methods found to submit a withdrawal request."
 msgstr ""
 
 #: assets/js/frontend.js:172
+#, js-format
 msgid "Please set up your %1$spayment methods%2$s first."
 msgstr ""
 
@@ -12375,6 +12555,7 @@ msgid "Not allowed"
 msgstr ""
 
 #: assets/js/vendor-dashboard/reports/index.js:2
+#, js-format
 msgid "%1$s &lsaquo; %2$s &#8212; WooCommerce"
 msgstr ""
 
@@ -12455,6 +12636,7 @@ msgid "Download PayPal mass payment file"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
+#, js-format
 msgid "Swift Code: %s"
 msgstr ""
 
@@ -12838,6 +13020,7 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
+#, js-format
 msgid "You can change your profile picture on %s"
 msgstr ""
 

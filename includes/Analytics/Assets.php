@@ -125,16 +125,29 @@ class Assets implements Hookable {
 		wp_add_inline_script(
             'vendor_analytics_script', 'var vendorAnalyticsDokanConfig = ' . wp_json_encode(
                 [
-					'seller_id'        => dokan_get_current_user_id(),
-					'orderListPageUlr' => dokan_get_navigation_url( 'orders' ),
+                    'seller_id'          => dokan_get_current_user_id(),
+                    'orderListPageUlr'   => dokan_get_navigation_url( 'orders' ),
+                    'vendorAnalyticsUrl' => dokan_get_navigation_url( 'analytics' ),
                 ]
             ), 'before'
-		);
+        );
 
 		wp_add_inline_script(
             'vendor_analytics_script',
             'var vendorSharedSettings = ' . wp_json_encode( $this->localize_wc_admin_settings() ),
             'before'
 		);
+
+        // Load currency data for accounting components.
+        wp_localize_script(
+            'vendor_analytics_script',
+            'dokanFrontend',
+            apply_filters(
+                'dokan_react_frontend_localized_args',
+                [
+                    'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+                ]
+            ),
+        );
 	}
 }

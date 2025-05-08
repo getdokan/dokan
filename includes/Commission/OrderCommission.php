@@ -182,7 +182,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      */
     public function get_admin_shipping_fee(): float {
         if ( self::ADMIN === dokan()->fees->get_shipping_fee_recipient( $this->order ) ) {
-            return $this->order->get_shipping_total() - $this->get_shipping_refunded();
+            return floatval( $this->order->get_shipping_total() ) - floatval( $this->get_shipping_refunded() );
         }
 
         return 0;
@@ -244,7 +244,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      */
     public function get_vendor_shipping_fee(): float {
         if ( self::SELLER === dokan()->fees->get_shipping_fee_recipient( $this->order ) ) {
-            return $this->order->get_shipping_total() - $this->get_shipping_refunded();
+            return floatval( $this->order->get_shipping_total() ) - floatval( $this->get_shipping_refunded() );
         }
 
         return 0;
@@ -333,7 +333,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         }
 
         return [
-            'fee'     => $gateway_fee,
+            'fee'     => floatval( $gateway_fee ),
             'paid_by' => $gateway_fee_paid_by,
         ];
     }
