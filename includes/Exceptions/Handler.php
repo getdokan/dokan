@@ -64,7 +64,7 @@ class Handler implements Hookable {
     }
 
     /**
-     * Conditionally deactivates the Store Follow module based on error content.
+     * Conditionally deactivates the Follow Store  module based on error content.
      *
      * @see https://github.com/getdokan/dokan-pro/issues/4401
      *
@@ -94,7 +94,7 @@ class Handler implements Hookable {
                 );
 
                 update_option( 'dokan_pro_active_modules', $updated_modules );
-                set_transient( 'dokan_store_follow_deactivated_forcefully', 'yes', 60 * 5 );
+                set_transient( 'dokan_store_follow_deactivated_forcefully', 'yes', WEEK_IN_SECONDS );
 
                 error_log( '[DOKAN] follow_store module deactivated.' );
             }
@@ -102,7 +102,7 @@ class Handler implements Hookable {
     }
 
     /**
-     * Adds an admin notice when the Store Follow module is forcefully deactivated.
+     * Adds an admin notice when the Follow Store  module is forcefully deactivated.
      *
      * @param array $notices Existing Dokan admin notices.
      *
@@ -116,10 +116,16 @@ class Handler implements Hookable {
             return $notices;
         }
 
+        if ( dokan()->is_pro_exists() && dokan_pro()->module->is_active( 'follow_store' ) ) {
+            delete_transient( 'dokan_store_follow_deactivated_forcefully' );
+
+            return $notices;
+		}
+
         $notices[] = [
             'type'        => 'warning',
-            'title'       => __( 'Store Follow Module Deactivated', 'dokan-lite' ),
-            'description' => __( 'The <strong>Store Follow</strong> module has been automatically deactivated due to incompatibility with the current versions of Dokan Lite and Dokan Pro. Please update Dokan Pro to the latest version and then reactivate the Store Follow module.', 'dokan-lite' ),
+            'title'       => __( 'Follow Store  Module Deactivated', 'dokan-lite' ),
+            'description' => __( 'The <strong>Follow Store </strong> module has been automatically deactivated due to incompatibility with the current versions of Dokan Lite and Dokan Pro. Please update Dokan Pro to the latest version and then reactivate the Follow Store  module.', 'dokan-lite' ),
             'priority'    => 1,
             'actions'     => [
                 [
