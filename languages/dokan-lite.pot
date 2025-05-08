@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-08T12:39:44+00:00\n"
+"POT-Creation-Date: 2025-05-08T14:18:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: dokan-lite\n"
@@ -4122,15 +4122,15 @@ msgstr ""
 msgid "Withdrawal request for {amount} is cancelled"
 msgstr ""
 
-#: includes/Exceptions/Handler.php:129
+#: includes/Exceptions/Handler.php:93
 msgid "Follow Store  Module Deactivated"
 msgstr ""
 
-#: includes/Exceptions/Handler.php:130
+#: includes/Exceptions/Handler.php:94
 msgid "The <strong>Follow Store </strong> module has been automatically deactivated due to incompatibility with the current versions of Dokan Lite and Dokan Pro. Please update Dokan Pro to the latest version and then reactivate the Follow Store  module."
 msgstr ""
 
-#: includes/Exceptions/Handler.php:135
+#: includes/Exceptions/Handler.php:99
 msgid "Activate Module"
 msgstr ""
 
