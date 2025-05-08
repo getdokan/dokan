@@ -2907,9 +2907,9 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "wp-coding-standards/wpcs": 20,
-        "tareq1988/wp-php-cs-fixer": 20,
         "phpcompatibility/phpcompatibility-wp": 20,
+        "tareq1988/wp-php-cs-fixer": 20,
+        "wp-coding-standards/wpcs": 20,
         "wp-phpunit/wp-phpunit": 20,
         "yoast/phpunit-polyfills": 20
     },
@@ -2918,9 +2918,9 @@
     "platform": {
         "php": ">=7.4"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

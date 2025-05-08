@@ -4,6 +4,24 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.0.1',
+        'released' => '2025-05-08',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Replaced the WordPress.org banner image with a new version for improved branding.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Added number value data type casting in order commission.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.0',
         'released' => '2025-05-06',
         'changes'  => [

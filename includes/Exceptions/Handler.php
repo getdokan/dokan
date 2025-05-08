@@ -25,6 +25,8 @@ class Handler implements Hookable {
 
         // Handles non-fatal errors
         set_error_handler( [ $this, 'handle_error' ] );
+
+        add_action( 'woocommerce_shutdown_error', [ $this, 'on_woocommerce_shutdown' ] );
     }
 
     /**
@@ -138,5 +140,9 @@ class Handler implements Hookable {
         ];
 
         return $notices;
+    }
+
+    public function on_woocommerce_shutdown( $error ) {
+        $this->maybe_deactivate_store_follow_module( $error );
     }
 }

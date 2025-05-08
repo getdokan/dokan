@@ -1,3 +1,8 @@
+### v4.0.1 ( May 08, 2025 ) ###
+
+- **update**: Replaced the WordPress.org banner image with a new version for improved branding.
+- **fix:** Added number value data type casting in order commission.
+
 ### v4.0.0 ( May 06, 2025 ) ###
 
 - **new:** AI-powered auto-completion for product content (titles, short and long descriptions). Integrated with OpenAI and Gemini GPT models, improves content creation speed and consistency, allows selection of preferred AI provider
