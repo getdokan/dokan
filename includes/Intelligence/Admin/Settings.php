@@ -26,7 +26,7 @@ class Settings implements Hookable {
             'title'                => __( 'AI Assist', 'dokan-lite' ),
             'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/dokan-ai.svg',
             'description'          => __( 'Dokan AI Assist', 'dokan-lite' ),
-            'document_link'        => '#',
+            'document_link'        => 'https://dokan.co/docs/wordpress/settings/dokan-ai-assistant/',
             'settings_title'       => __( 'AI Assist Settings', 'dokan-lite' ),
             'settings_description' => __( 'Set up AI to elevate your platform with enhanced capabilities.', 'dokan-lite' ),
         ];

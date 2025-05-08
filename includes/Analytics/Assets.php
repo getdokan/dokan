@@ -125,11 +125,12 @@ class Assets implements Hookable {
 		wp_add_inline_script(
             'vendor_analytics_script', 'var vendorAnalyticsDokanConfig = ' . wp_json_encode(
                 [
-					'seller_id'        => dokan_get_current_user_id(),
-					'orderListPageUlr' => dokan_get_navigation_url( 'orders' ),
+                    'seller_id'          => dokan_get_current_user_id(),
+                    'orderListPageUlr'   => dokan_get_navigation_url( 'orders' ),
+                    'vendorAnalyticsUrl' => dokan_get_navigation_url( 'analytics' ),
                 ]
             ), 'before'
-		);
+        );
 
 		wp_add_inline_script(
             'vendor_analytics_script',
