@@ -20,47 +20,7 @@ class Handler implements Hookable {
     public function register_hooks(): void {
         add_action( 'dokan_admin_notices', [ $this, 'dokan_store_follow_module_deactivation_notice' ] );
 
-        // Handles fatal errors
-        register_shutdown_function( [ $this, 'check_for_fatal_error' ] );
-
-        // Handles non-fatal errors
-        set_error_handler( [ $this, 'handle_error' ] );
-    }
-
-    /**
-     * Detects and handles fatal errors on shutdown.
-     *
-     * @return void
-     */
-    public function check_for_fatal_error(): void {
-        $error = error_get_last();
-
-        if ( $error && in_array( $error['type'], [ E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR ], true ) ) {
-            $this->maybe_deactivate_store_follow_module( $error );
-        }
-    }
-
-    /**
-     * Handles non-fatal runtime errors.
-     *
-     * @param int    $errno   The level of the error raised.
-     * @param string $errstr  The error message.
-     * @param string $errfile The filename that the error was raised in.
-     * @param int    $errline The line number the error occurred on.
-     *
-     * @return bool False to allow PHP's internal error handler to run as well.
-     */
-    public function handle_error( int $errno, string $errstr, string $errfile, int $errline ): bool {
-        $this->maybe_deactivate_store_follow_module(
-            [
-                'message' => $errstr,
-                'type'    => $errno,
-                'file'    => $errfile,
-                'line'    => $errline,
-            ]
-        );
-
-        return false;
+        add_action( 'woocommerce_shutdown_error', [ $this, 'on_woocommerce_shutdown' ] );
     }
 
     /**
@@ -98,6 +58,12 @@ class Handler implements Hookable {
 
                 error_log( '[DOKAN] follow_store module deactivated.' );
             }
+
+            $processes = get_option( 'dokan_background_processes', [] );
+
+            unset( $processes['Dokan_Follow_Store_Send_Updates'] );
+
+            update_option( 'dokan_background_processes', $processes );
         }
     }
 
@@ -138,5 +104,15 @@ class Handler implements Hookable {
         ];
 
         return $notices;
+    }
+
+    /**
+     * Deal with WooCommerce Shutdown.
+     *
+     * @param array $error
+     * @return void
+     */
+    public function on_woocommerce_shutdown( $error ) {
+        $this->maybe_deactivate_store_follow_module( $error );
     }
 }
