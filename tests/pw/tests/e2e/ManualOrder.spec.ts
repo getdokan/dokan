@@ -26,7 +26,6 @@ test.describe.only('Configuration', () => {
         // Expected result.
         await page.locator('.profile-banner .action-links .button.router-link-active').click();
         await expect(page.locator('.payment-info.edit-mode .checkbox-left:has(input[type="checkbox"][value="enableManualOrder"])')).toBeVisible();
-        console.log(page.locator('.payment-info.edit-mode .checkbox-left input[type="checkbox"][value="enableManualOrder"]'))
         await expect(page.locator('.payment-info.edit-mode .checkbox-left input[type="checkbox"][value="enableManualOrder"]')).toBeChecked();
     });
 })
