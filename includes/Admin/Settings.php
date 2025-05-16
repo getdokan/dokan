@@ -556,6 +556,19 @@ class Settings {
                         ],
                     ],
                 ],
+                'reset_sub_category_when_edit_all_category' => [
+                    'name'    => 'reset_sub_category_when_edit_all_category',
+                    'label'   => __( 'Apply Parent Category Commission to All Subcategories', 'dokan-lite' ),
+                    'desc'    => __( 'Important: \'All Categories\' commission serves as your marketplace\'s default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'on',
+                    'tooltip' => __( 'When enabled, changing a parent category\'s commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories', 'dokan-lite' ),
+                    'show_if' => [
+                        'commission_type' => [
+                            'equal' => 'category_based',
+                        ],
+                    ],
+                ],
                 'commission_category_based_values' => [
                     'name'                 => 'commission_category_based_values',
                     'type'                 => 'category_based_commission',
@@ -839,7 +852,7 @@ class Settings {
                     'type'                 => 'social',
                     'desc'                 => sprintf(
                     /* translators: 1) Opening anchor tag, 2) Closing anchor tag, 3) Opening anchor tag, 4) Closing anchor tag */
-                        __( '%1$sreCAPTCHA%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s', 'dokan-lite' ),
+                        __( '%1$sreCAPTCHA_v3%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s', 'dokan-lite' ),
                         '<a href="https://developers.google.com/recaptcha/docs/v3" target="_blank" rel="noopener noreferrer">',
                         '</a>',
                         '<a href="https://wedevs.com/docs/dokan/settings/dokan-recaptacha-v3-integration" target="_blank" rel="noopener noreferrer">',
@@ -1006,7 +1019,7 @@ class Settings {
     /**
      * Add settings nonce to localized vars
      *
-     * @since DOKNA_LITE_SINCE
+     * @since 3.0.6
      *
      * @param array $vars
      *
@@ -1021,7 +1034,7 @@ class Settings {
     /**
      * Get refreshed options for a admin setting
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      *
      * @return void
      */

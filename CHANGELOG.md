@@ -1,3 +1,111 @@
+### v4.0.1 ( May 08, 2025 ) ###
+
+- **update**: Replaced the WordPress.org banner image with a new version for improved branding.
+- **fix:** Added number value data type casting in order commission.
+
+### v4.0.0 ( May 06, 2025 ) ###
+
+- **new:** AI-powered auto-completion for product content (titles, short and long descriptions). Integrated with OpenAI and Gemini GPT models, improves content creation speed and consistency, allows selection of preferred AI provider
+- **new:** WooCommerce Brand management support in Vendor Panel, Vendors can assign brands during product creation, editing
+- **new:** Introduced Dokan link components with success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Introduced Dokan button components with success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Introduced Dokan badge components with primary, secondary, success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Introduced Dokan alert components with success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Created Dokan price input component formatted according to WooCommerce settings
+- **new:** Implemented internal error React component for error boundary and integrated with Analytics feature
+- **new:** Introduce product & product categories data store
+- **new:** Introduced comprehensive setup guide panel with multiple steps for admin
+- **new:** Introduce vendor analytics feature integrating with WooCommerce analytics system.
+- **update:** Migrated color scheme from 'default' to 'Majestic Orange' for improved visual consistency
+- **update:** Enhanced withdrawal display with proper currency symbols and formatting according to WooCommerce settings
+- **update:** Refined Dokan primary and secondary button colors including text, background, border and shadow for tertiary button
+- **update:** Updated color scheme in the dummy data importer to align with Dokan's brand color
+- **update:** Redesign the upgrade modal using ReactJS framework for improved performance and user experience
+- **update:** Enhanced withdraw with modern UI for better user experience
+- **update:** Optimized withdraw request process with reduced loading times
+- **update:** Reimagined withdraw management interface with cleaner layouts
+- **update:** Skeleton loaders for withdraw screens to improve perceived performance during data fetching
+- **update:** UI inconsistencies in withdraw request and history views
+- **update:** Better error handling for withdraw actions
+- **update:** Improved onboarding experience with modern UI and intuitive setup flow.
+- **fix:** Resolved an issue where the vendor dashboard menus  UI with submenus and notification counters were breaking
+- **fix:** Product reviews not working from admin
+- 
+### v3.14.11 ( Mar 14, 2025 ) ###
+
+- **update:** Dokan now displays prices based on the decimal points setup in WooCommerce.
+- **update:** Added charge and receivable amount in withdraw email templates.
+- **fix:** Resolve an issue when displaying admin earning in admin order list.
+- **fix:** Dokan registration form asset loading issue on Elementor My Account widget.
+- **fix:** Resolved an issue where revoking access to digital product content from order details page reverts on page reload.
+- **fix:** Vendor setup wizard form validation added to properly handle countries without states.
+
+### v3.14.10 ( Feb 28, 2025 ) ###
+
+- **fix:** Prevented wrong store URL generation for staff managers on admin dashboard.
+- **fix:** Restoring parent order with restore related child orders.
+- **fix:** Store settings API data storing inconsistencies.
+
+### v3.14.9 ( Feb 12, 2025 ) ###
+
+- **fix:** Fix earning suggestion in vendor dashboard when product edit page loads initially.
+- **fix:** Fix vendor earning suggestion currency, currency position, decimal separator in vendor dashboard product edit page.
+- **fix:** Fix vendor earning suggestion for invalid product price.
+- **fix:** Tax calculation for shipping based on tax status
+- **feat:** Rollback support for product statues on dokan pro deactivation.
+- **refactor:** Improved dokan_is_user_seller function by adding strict comparison to differentiate between vendor and staff.
+
+### v3.14.8 ( Jan 29, 2025 ) ###
+
+- **update:** Missing parameters support added for the reverse-withdrawal API endpoints.
+- **update:** Missing parameters support added for the Settings API endpoints.
+- **fix:** Fixed an error when navigating to the product edit page with an invalid (non-numeric) product ID.
+- **fix:** Fixed a misspelling typo vendor contact form input field.
+- **fix:** Fixed and updated analytics cache modifier for seller analytics filter.
+
+### v3.14.6 ( Jan 09, 2025 ) ###
+
+- **fix:** Translations on Admin Commission Setup Wizard, Withdraw, Withdraw Log, Add Reverse Withdraw, Dummy Data, and Vendor Single pages were not working due to wrong text-domains.
+
+### v3.14.5 ( Jan 06, 2025 ) ###
+
+- **update:** Improvement vendor setup wizard ui.
+- **update:** Improvement withdraw approved email template.
+- **update:** Dokan admin settings page responsive & update ui design.
+
+### v3.14.4 ( Dec 27, 2024 ) ###
+
+- **fix:** Added tweaks to improve system stability and smoothness.
+
+### v3.14.3 ( Dec 11, 2024 ) ###
+
+- **update:** Updated Dokan admin header to display current pro plan and version with upgrading option.
+
+### v3.14.2 ( Dec 06, 2024 ) ###
+
+- **update:** Added commission setting option in product bulk edit for Admin.
+
+### v3.14.1 ( Dec 04, 2024 ) ###
+
+- **fix:** Fixed a issue in the commission upgrader to deal with empty values for product and vendor.
+
+### v3.14.0 ( Dec 02, 2024 ) ###
+
+- **new:** Commission amount now displayed in the product list within the admin dashboard.
+- **new:** Vendor earning amount displayed in the product list within the vendor dashboard.
+- **new:** Vendor earning suggestions on the product add and edit pages in the vendor dashboard for simple and variable products.
+- **new:** Commission details metabox on the order details page in the admin dashboard is now visible for child orders or orders without a parent.
+- **new:** Related order metabox on the order details page in the admin dashboard, displaying sibling orders for child orders and child orders for parent orders.
+- **new:** Backward compatibility for flat, percentage, and combine commission types for older orders.
+- **update:** Updated commission types from flat, percentage, and combine to fixed and category-based commissions.
+- **update:** Overhauled the commission UI across Dokan global settings, vendor settings, product settings, Dokan subscription product settings, and the admin setup wizard.
+- **update:** Updated the commission settings in the admin setup wizard.
+- **update:** Enhanced responsiveness of the UI for Dokan admin dashboard settings menus.
+- **update:** Product is rebranded with new branding.
+- **update:** As per new branding of Dokan Multivendor Plugin, full product is rebranded with new theme color.
+- **fix:** Moved the vendor edit page from Dokan Pro to Dokan Lite and eliminated the commission setting from the WordPress default user profile page.
+- **fix:** Removed the commission from every category, introducing category-based commission in global settings, vendor settings, Dokan subscription products, and the admin setup wizard.
+
 ### v3.13.1 ( Nov 11, 2024 ) ###
 
 - **update:** Compatibility with the Printful Integration Module added.

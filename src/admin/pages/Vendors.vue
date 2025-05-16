@@ -12,7 +12,7 @@
 
             <AdminNotice></AdminNotice>
 
-            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
+<!--            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>-->
 
             <hr class="wp-header-end">
 
@@ -100,7 +100,7 @@
 
 <script>
 import AddVendor from './AddVendor.vue'
-import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+// import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
 let ListTable   = dokan_get_lib('ListTable');
 let Switches    = dokan_get_lib('Switches');
@@ -116,7 +116,7 @@ export default {
         Switches,
         Search,
         AddVendor,
-        UpgradeBanner,
+        // UpgradeBanner,
         AdminNotice,
     },
 

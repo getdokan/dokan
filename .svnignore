@@ -22,6 +22,14 @@ CONTRIBUTING.md
 config.json
 phpcs.xml.dist
 webpack.config.js
+webpack-dependency-mapping.js
+webpack-entries.js
+base-tailwind.config.js
 composer.lock
 composer.json
 .editorconfig
+.wordpress-org
+.distignore
+docs
+CHANGELOG.md
+DEVELOPER.md

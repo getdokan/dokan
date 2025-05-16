@@ -36,7 +36,6 @@ export class ShipStationPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipStation);
         await this.click(settingsShipStation.generateCredentials);
         await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.settingsShipStation, settingsShipStation.confirmGeneration);
-        // await this.toBeVisible(settingsShipStation.generateSuccessMessage); //todo: success message is removed
 
         await this.toBeVisible(settingsShipStation.revokeCredentials);
         await this.multipleElementVisible(settingsShipStation.credentials);
