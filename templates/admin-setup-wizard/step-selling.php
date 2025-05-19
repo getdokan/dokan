@@ -12,7 +12,7 @@
                 <?php endforeach; ?>
                 </select>
                 <span class="description">
-                    <?php esc_html_e( 'Set selling status for new registered vendor', 'dokan-lite' ); ?>
+                    <?php esc_html_e( 'Set selling status for newly registered vendor', 'dokan-lite' ); ?>
                 </span>
             </td>
         </tr>
