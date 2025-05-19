@@ -220,7 +220,7 @@ export default {
             let flexWidth  = !! parseInt( dokan.store_banner_dimension['flex-width'], 10 );
             let flexHeight = !! parseInt( dokan.store_banner_dimension['flex-height'], 10 );
 
-            let ratio, xImg, yImg, realHeight, realWidth, imgSelectOptions;
+            let realHeight, realWidth, imgSelectOptions;
 
             realWidth = attachment.get('width');
             realHeight = attachment.get('height');
@@ -228,18 +228,6 @@ export default {
             let control = controller.get('control');
 
             controller.set( 'canSkipCrop', ! control.mustBeCropped( flexWidth, flexHeight, xInit, yInit, realWidth, realHeight ) );
-
-            ratio = xInit / yInit;
-            xImg = realWidth;
-            yImg = realHeight;
-
-            if ( xImg / yImg > ratio ) {
-                yInit = yImg;
-                xInit = yInit * ratio;
-            } else {
-                xInit = xImg;
-                yInit = xInit / ratio;
-            }
 
             imgSelectOptions = {
                 handles: true,
@@ -251,18 +239,11 @@ export default {
                 x1: 0,
                 y1: 0,
                 x2: xInit,
-                y2: yInit
+                y2: yInit,
+                aspectRatio: xInit + ':' + yInit,
+                maxHeight: yInit,
+                maxWidth: xInit
             };
-
-            if (flexHeight === false && flexWidth === false) {
-                imgSelectOptions.aspectRatio = xInit + ':' + yInit;
-            }
-            if (flexHeight === false ) {
-                imgSelectOptions.maxHeight = yInit;
-            }
-            if (flexWidth === false ) {
-                imgSelectOptions.maxWidth = xInit;
-            }
 
             return imgSelectOptions;
         },
@@ -272,11 +253,6 @@ export default {
 <style lang="less">
     .dokan-upload-image {
         width: 100%;
-
-        .dokan-upload-image-container {
-            background: #496a94;
-            border-radius: 50%;
-        }
 
         img {
             width: 100%;

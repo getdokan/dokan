@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Vendor;
 use Automattic\WooCommerce\Utilities\NumberUtil;
 use WC_Order;
 use WeDevs\Dokan\Cache;
-use WeDevs\Dokan\Commission\Model\Setting;
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WP_Error;
 use WP_User;
 
@@ -460,11 +460,8 @@ class Vendor {
             return wp_get_attachment_url( $this->get_banner_id() );
         }
 
-        // Define the default store banner URL from plugin assets.
-        $default_store_banner = $this->get_default_banner();
-
-        // Retrieve the default banner URL from Dokan settings, with fallback to the plugin's default banner.
-        $banner_url = dokan_get_option( 'default_store_banner', 'dokan_appearance', $default_store_banner );
+        // Retrieve the default banner URL from settings, with fallback of the plugin's default banner.
+        $banner_url = VendorUtil::get_vendor_default_banner_url();
 
         /**
          * Filters for the store banner URL.
@@ -478,26 +475,6 @@ class Vendor {
          * @param Vendor $this       Instance of the current class.
          */
         return apply_filters( 'dokan_get_banner_url', $banner_url, $this );
-    }
-
-    /**
-     * Get the default store banner URL.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function get_default_banner(): string {
-
-        /**
-         * Filters for the default store banner URL.
-         *
-         * Allows overriding of the default store banner URL via external plugins or themes.
-         * This is particularly useful if there is a need to dynamically change the banner based on specific conditions or configurations.
-         *
-         * @since DOKAN_SINCE
-         */
-        return apply_filters( 'dokan_get_banner_url', DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png' );
     }
 
     /**
@@ -529,11 +506,8 @@ class Vendor {
             return wp_get_attachment_url( $avatar_id );
         }
 
-        // Define the default avatar URL from plugin assets.
-        $default_store_avatar = $this->get_default_avatar();
-
-        // Retrieve the default avatar URL from Dokan settings, with fallback to the plugin's default avatar.
-        $avatar_url = dokan_get_option( 'default_store_profile', 'dokan_appearance', $default_store_avatar );
+        // Retrieve the default avatar URL from settings, with fallback of the plugin's default avatar.
+        $avatar_url = VendorUtil::get_vendor_default_avatar_url();
 
         /**
          * Filters for the store avatar URL.
@@ -547,26 +521,6 @@ class Vendor {
          * @param Vendor $this       Instance of the current class.
          */
         return apply_filters( 'dokan_get_avatar_url', $avatar_url, $this );
-    }
-
-    /**
-     * Get the default store avatar URL.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return string
-     */
-    public function get_default_avatar(): string {
-
-        /**
-         * Filters for the default store avatar URL.
-         *
-         * Allows overriding of the default store avatar URL via external plugins or themes.
-         * This is particularly useful if there is a need to dynamically change the avatar based on specific conditions or configurations.
-         *
-         * @since DOKAN_SINCE
-         */
-        return apply_filters( 'dokan_get_default_avatar_url', DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg' );
     }
 
     /**

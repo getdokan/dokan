@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Admin;
 
 use Exception;
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WP_Error;
 use WeDevs\Dokan\Exceptions\DokanException;
 use WeDevs\Dokan\Traits\AjaxResponseError;
@@ -907,7 +908,7 @@ class Settings {
                     'name'            => 'default_store_banner',
                     'label'           => __( 'Default Store Banner', 'dokan-lite' ),
                     'type'            => 'croppable_image',
-                    'default'         => DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png',
+                    'default'         => VendorUtil::get_vendor_default_banner_url(),
                     'restore'         => true,
                     'render_width'    => 625,
                     'cropping_width'  => $store_banner_width,
@@ -917,11 +918,11 @@ class Settings {
                     'name'            => 'default_store_profile',
                     'label'           => __( 'Default Store Profile Picture', 'dokan-lite' ),
                     'type'            => 'croppable_image',
-                    'default'         => DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg',
+                    'default'         => VendorUtil::get_vendor_default_avatar_url(),
                     'restore'         => true,
                     'render_width'    => 120,
-                    'cropping_width'  => 625,
-                    'cropping_height' => 625,
+                    'cropping_width'  => 384,
+                    'cropping_height' => 384,
                 ],
                 'store_open_close'           => [
                     'name'    => 'store_open_close',

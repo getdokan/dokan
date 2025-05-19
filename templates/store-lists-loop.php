@@ -16,13 +16,9 @@
                     $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
                     $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
                     $store_open_is_on         = ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled && ! $is_store_featured ) ? 'store_open_is_on' : '';
-
-                    // Get default banner set from admin settings.
-                    $default_store_banner   = DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png';
-                    $no_banner_image_needed = $default_store_banner === $store_banner_url;
                     ?>
 
-                    <li class="dokan-single-seller woocommerce coloum-<?php echo esc_attr( $per_row ); ?> <?php echo esc_attr( $no_banner_image_needed ? 'no-banner-img' : '' ); ?>">
+                    <li class="dokan-single-seller woocommerce coloum-<?php echo esc_attr( $per_row ); ?>">
                         <div class="store-wrapper">
                             <div class="store-header">
                                 <div class="store-banner">
@@ -32,7 +28,7 @@
                                 </div>
                             </div>
 
-                            <div class="store-content <?php echo $no_banner_image_needed ? esc_attr( 'default-store-banner' ) : ''; ?>">
+                            <div class="store-content">
                                 <div class="store-data-container">
                                     <div class="featured-favourite">
                                         <?php if ( $is_store_featured ) : ?>
