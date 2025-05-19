@@ -115,6 +115,11 @@ class Products {
      * @return void
      */
     public static function load_inventory_template( $post, $post_id ) {
+        // filter load inventory template
+        $hide_inventory = apply_filters( 'dokan_hide_inventory_template', false, $post_id );
+        if ( $hide_inventory ) {
+            return;
+        }
         $_sold_individually = get_post_meta( $post_id, '_sold_individually', true );
         $_stock             = get_post_meta( $post_id, '_stock', true );
         $_low_stock_amount  = get_post_meta( $post_id, '_low_stock_amount', true );
