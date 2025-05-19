@@ -160,7 +160,7 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 **Frontend Dashboard For Each Seller**
 
 * Vendors can manage products, control orders from customers, and make payment withdrawals right from the site frontend. 
-* Vendors can manually create or place orders on behalf of customers.
+* Vendors can manually create or place orders on behalf of customers (Pro).
 * WordPress backend and administrative settings can only be accessed by the admin.
 
 **Earn From Each Sale**
