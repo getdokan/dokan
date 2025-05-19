@@ -4,6 +4,166 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.0.1',
+        'released' => '2025-05-08',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Replaced the WordPress.org banner image with a new version for improved branding.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Added number value data type casting in order commission.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.0',
+        'released' => '2025-05-06',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'AI-powered auto-completion for product content including titles, short and long descriptions - Integrated with OpenAI and Gemini GPT models to improve content creation speed and consistency while allowing vendors to select their preferred AI provider.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'WooCommerce Brand management support in Vendor Panel enabling vendors to assign brands during product creation and editing.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduced Dokan link components with success, warning, info, and danger variants using Tailwind utility classes.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduced Dokan button components with success, warning, info, and danger variants using Tailwind utility classes.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduced Dokan badge components with primary, secondary, success, warning, info, and danger variants using Tailwind utility classes.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduced Dokan alert components with success, warning, info, and danger variants using Tailwind utility classes.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Created Dokan price input component formatted according to WooCommerce settings - Implemented internal error React component for error boundary and integrated with Analytics feature.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduced product & product categories data store.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduced comprehensive setup guide panel with multiple steps for admin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduced vendor analytics feature integrating with WooCommerce analytics system.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Migrated color scheme from \'default\' to \'Majestic Orange\' for improved visual consistency.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enhanced withdrawal display with proper currency symbols and formatting according to WooCommerce settings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Refined Dokan primary and secondary button colors including text, background, border and shadow for tertiary button.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated color scheme in the dummy data importer to align with Dokan\'s brand color.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Redesigned the upgrade modal using ReactJS framework for improved performance and user experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enhanced withdraw with modern UI for better user experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Optimized withdraw request process with reduced loading times.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Reimagined withdraw management interface with cleaner layouts.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Skeleton loaders for withdraw screens to improve perceived performance during data fetching.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'UI inconsistencies in withdraw request and history views.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Better error handling for withdraw actions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improved onboarding experience with modern UI and intuitive setup flow.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Resolved an issue where vendor dashboard menus UI with submenus and notification counters were breaking.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed product reviews not working from admin panel.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.14.11',
+        'released' => '2025-03-14',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Dokan now displays prices based on the decimal points setup in WooCommerce.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added charge and receivable amount in withdraw email templates.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Resolve an issue when displaying admin earning in admin order list.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Dokan registration form asset loading issue on Elementor My Account widget.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where revoking access to digital product content from order details page reverts on page reload.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor setup wizard form validation added to properly handle countries without states.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.14.10',
         'released' => '2025-02-28',
         'changes'  => [

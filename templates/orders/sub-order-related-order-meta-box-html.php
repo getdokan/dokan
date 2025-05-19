@@ -18,10 +18,10 @@
 <div id="woocommerce-order-items" class="postbox" style='border: none'>
     <div class="postbox-header">
         <div class="handle-actions hide-if-no-js">
-            <button type="button" class="handle-order-higher" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-higher-description">
+            <button type="button" class="handle-order-higher" aria-disabled="false" aria-describedby="dokan-order-items-handle-order-higher-description">
                 <span class="order-higher-indicator" aria-hidden="true"></span>
             </button>
-            <button type="button" class="handle-order-lower" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-lower-description">
+            <button type="button" class="handle-order-lower" aria-disabled="false" aria-describedby="dokan-order-items-handle-order-lower-description">
                 <span class="screen-reader-text"></span><span class="order-lower-indicator" aria-hidden="true"></span>
             </button>
             <button type="button" class="handlediv" aria-expanded="true">

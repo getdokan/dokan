@@ -1,3 +1,45 @@
+### v4.0.1 ( May 08, 2025 ) ###
+
+- **update**: Replaced the WordPress.org banner image with a new version for improved branding.
+- **fix:** Added number value data type casting in order commission.
+
+### v4.0.0 ( May 06, 2025 ) ###
+
+- **new:** AI-powered auto-completion for product content (titles, short and long descriptions). Integrated with OpenAI and Gemini GPT models, improves content creation speed and consistency, allows selection of preferred AI provider
+- **new:** WooCommerce Brand management support in Vendor Panel, Vendors can assign brands during product creation, editing
+- **new:** Introduced Dokan link components with success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Introduced Dokan button components with success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Introduced Dokan badge components with primary, secondary, success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Introduced Dokan alert components with success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Created Dokan price input component formatted according to WooCommerce settings
+- **new:** Implemented internal error React component for error boundary and integrated with Analytics feature
+- **new:** Introduce product & product categories data store
+- **new:** Introduced comprehensive setup guide panel with multiple steps for admin
+- **new:** Introduce vendor analytics feature integrating with WooCommerce analytics system.
+- **update:** Migrated color scheme from 'default' to 'Majestic Orange' for improved visual consistency
+- **update:** Enhanced withdrawal display with proper currency symbols and formatting according to WooCommerce settings
+- **update:** Refined Dokan primary and secondary button colors including text, background, border and shadow for tertiary button
+- **update:** Updated color scheme in the dummy data importer to align with Dokan's brand color
+- **update:** Redesign the upgrade modal using ReactJS framework for improved performance and user experience
+- **update:** Enhanced withdraw with modern UI for better user experience
+- **update:** Optimized withdraw request process with reduced loading times
+- **update:** Reimagined withdraw management interface with cleaner layouts
+- **update:** Skeleton loaders for withdraw screens to improve perceived performance during data fetching
+- **update:** UI inconsistencies in withdraw request and history views
+- **update:** Better error handling for withdraw actions
+- **update:** Improved onboarding experience with modern UI and intuitive setup flow.
+- **fix:** Resolved an issue where the vendor dashboard menus  UI with submenus and notification counters were breaking
+- **fix:** Product reviews not working from admin
+- 
+### v3.14.11 ( Mar 14, 2025 ) ###
+
+- **update:** Dokan now displays prices based on the decimal points setup in WooCommerce.
+- **update:** Added charge and receivable amount in withdraw email templates.
+- **fix:** Resolve an issue when displaying admin earning in admin order list.
+- **fix:** Dokan registration form asset loading issue on Elementor My Account widget.
+- **fix:** Resolved an issue where revoking access to digital product content from order details page reverts on page reload.
+- **fix:** Vendor setup wizard form validation added to properly handle countries without states.
+
 ### v3.14.10 ( Feb 28, 2025 ) ###
 
 - **fix:** Prevented wrong store URL generation for staff managers on admin dashboard.

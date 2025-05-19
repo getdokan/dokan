@@ -216,7 +216,7 @@ export const selector = {
                 modules: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Modules"]',
                 proFeature: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="PRO Features"]',
                 tools: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Tools"]',
-                productQA: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Product Q&A"]',
+                productQA: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Product Q&A "]',
                 verifications: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Verifications"]',
                 subscriptions: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Subscriptions"]',
                 advertising: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Advertising"]',
@@ -2716,8 +2716,9 @@ export const selector = {
 
                 // Recommended
                 recommendedHeading: '//h1[normalize-space()="Recommended for All Dokan Marketplaces"]',
-                wooCommerceConversionTracking: '//label[@for="dokan_recommended_wc_conversion_tracking"]',
+                storeGrowth: '//label[@for="dokan_recommended_store_growth"]',
                 weMail: '//label[@for="dokan_recommended_wemail"]',
+                wooCommerceConversionTracking: '//label[@for="dokan_recommended_wc_conversion_tracking"]',
                 texty: '//label[@for="dokan_recommended_texty"]',
                 continueRecommended: '.button-primary',
 
@@ -7475,8 +7476,7 @@ export const selector = {
                 satellite: '//button[normalize-space()="Satellite"]',
                 fullScreenToggle: '//button[@title="Toggle fullscreen view"]',
                 pegman: '//button[@title="Drag Pegman onto the map to open Street View"]',
-                zoomIn: '//button[@title="Zoom in"]',
-                zoomOut: '//button[@title="Zoom out"]',
+                mapCameraControls: '//button[@title="Map camera controls"]',
                 storeOnMap: {
                     storePin: '//div[@id="dokan-geolocation-locations-map"]//img[contains(@src, "maps.gstatic.com/mapfiles/transparent.png")]/../..//div[@role="button"]',
                     storeCluster: '//div[@id="dokan-geolocation-locations-map"]//div[contains(@style, "dokan-pro/modules/geolocation/assets/images")]',
