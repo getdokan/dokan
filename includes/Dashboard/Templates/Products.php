@@ -115,7 +115,8 @@ class Products {
      * @return void
      */
     public static function load_inventory_template( $post, $post_id ) {
-        // filter load inventory template
+        //  Allow plugins to conditionally hide the inventory template section
+        // Filter 'dokan_hide_inventory_template' returns boolean: true to hide, false to display
         $hide_inventory = apply_filters( 'dokan_hide_inventory_template', false, $post_id );
         if ( $hide_inventory ) {
             return;
