@@ -119,7 +119,7 @@ class Products {
      * @return void
      */
     public static function load_inventory_template( $post, $post_id ) {
-        $hide_inventory = apply_filters( 'dokan_hide_inventory_template', false, $post_id );
+        $hide_inventory = (bool) apply_filters( 'dokan_hide_inventory_template', false, $post_id );
         if ( $hide_inventory ) {
             return;
         }
