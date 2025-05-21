@@ -15,7 +15,7 @@ export interface Tab {
 export interface DokanTabProps {
     variant?: TabVariant;
     className?: string;
-    children: (tab: Tab) => React.ReactNode;
+    children?: (tab: Tab) => React.ReactNode;
     tabs: Tab[];
     activeClass?: string;
     orientation?: 'horizontal' | 'vertical';
@@ -71,7 +71,7 @@ const DokanTab = ({
             selectOnMove={selectOnMove}
             {...props}
         >
-            {children}
+            {children || (() => null)}
         </TabPanel>
     );
 };
