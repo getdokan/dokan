@@ -2,7 +2,10 @@
 
 ## Overview
 
-`DokanTab` is a React component that extends WordPress's TabPanel to provide an ARIA-compliant tab interface with additional Dokan-specific features. It organizes content across different screens, data sets, and interactions, with two main sections: a list of tabs and the view to show when tabs are chosen.
+`DokanTab` is a React component that extends
+WordPress's [TabPanel](https://developer.wordpress.org/block-editor/reference-guides/components/tab-panel/) to provide
+an ARIA-compliant tab interface with additional Dokan-specific features. It organizes content across different screens,
+data sets, and interactions, with two main sections: a list of tabs and the view to show when tabs are chosen.
 
 ## Design Guidelines
 
@@ -100,18 +103,20 @@ const MyTabs = () => {
 
 ## Props
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `namespace` | `string` | Yes | Unique identifier for the tab component |
-| `tabs` | `Tab[]` | Yes | Array of tab objects |
-| `variant` | `'primary' \| 'secondary' \| 'tertiary'` | No | Tab style variant (default: 'primary') |
-| `className` | `string` | No | Additional CSS classes for the tab panel |
-| `activeClass` | `string` | No | CSS class for the active tab (default: '!text-dokan-primary !border-dokan-btn !border-b-2 dokan-active-tab') |
-| `orientation` | `'horizontal' \| 'vertical'` | No | Tab orientation (default: 'horizontal') |
-| `onSelect` | `(tabName: string) => void` | No | Callback when a tab has been selected |
-| `initialTabName` | `string` | No | Name of the tab to be selected upon mounting |
-| `selectOnMove` | `boolean` | No | Whether to select tab on keyboard navigation (default: true) |
-| `children` | `(tab: Tab) => React.ReactNode` | No | Optional function which renders the tabviews given the selected tab. If not provided, no content will be rendered |
+| Prop             | Type                                     | Required | Description                                                                                                           |
+|------------------|------------------------------------------|----------|-----------------------------------------------------------------------------------------------------------------------|
+| `namespace`      | `string`                                 | Yes      | Unique identifier for the tab component                                                                               |
+| `tabs`           | `Tab[]`                                  | Yes      | Array of tab objects                                                                                                  |
+| `variant`        | `'primary' \| 'secondary' \| 'tertiary'` | No       | Tab style variant (default: 'primary')                                                                                |
+| `className`      | `string`                                 | No       | Additional CSS classes for the tab panel                                                                              |
+| `activeClass`    | `string`                                 | No       | CSS class for the active tab (default: '!text-dokan-primary !border-dokan-btn !border-b-2 dokan-active-tab')          |
+| `orientation`    | `'horizontal' \| 'vertical'`             | No       | Tab orientation (default: 'horizontal')                                                                               |
+| `onSelect`       | `(tabName: string) => void`              | No       | Callback when a tab has been selected                                                                                 |
+| `initialTabName` | `string`                                 | No       | Name of the tab to be selected upon mounting                                                                          |
+| `selectOnMove`   | `boolean`                                | No       | Whether to select tab on keyboard navigation (default: true)                                                          |
+| `children`       | `(tab: Tab) => React.ReactNode`          | No       | Optional function which renders the tabviews given the selected tab. If not provided, no content will be rendered     |
+| `renderTab`      | `(tab: Tab) => React.ReactNode`          | No       | Optional function which renders the tab items given the selected tab. If not provided, default rendering will be used |
+| `initialTabName` | `string`                                 | No       | Name of the tab to be selected upon mounting                                                                          |
 
 ### Tab Object Structure
 
@@ -310,4 +315,4 @@ const ProductTabs = () => {
         </DokanTab>
     );
 };
-``` 
+```
