@@ -123,10 +123,10 @@ class Products {
         if ( $hide_inventory ) {
             return;
         }
-        $_sold_individually = get_post_meta( $post_id, '_sold_individually', true );
-        $_stock             = get_post_meta( $post_id, '_stock', true );
-        $_low_stock_amount  = get_post_meta( $post_id, '_low_stock_amount', true );
-
+        $product            = wc_get_product( $post_id );
+        $_sold_individually = $product ? $product->get_meta( '_sold_individually' ) : '';
+        $_stock             = $product ? $product->get_meta( '_stock' ) : '';
+        $_low_stock_amount  = $product ? $product->get_meta( '_low_stock_amount' ) : '';
         dokan_get_template_part(
             'products/inventory', '', [
                 'post_id'            => $post_id,
