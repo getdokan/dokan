@@ -106,7 +106,7 @@ const MyTabs = () => {
 | `tabs` | `Tab[]` | Yes | Array of tab objects |
 | `variant` | `'primary' \| 'secondary' \| 'tertiary'` | No | Tab style variant (default: 'primary') |
 | `className` | `string` | No | Additional CSS classes for the tab panel |
-| `activeClass` | `string` | No | CSS class for the active tab (default: 'is-active') |
+| `activeClass` | `string` | No | CSS class for the active tab (default: '!text-dokan-primary !border-dokan-btn !border-b-2 dokan-active-tab') |
 | `orientation` | `'horizontal' \| 'vertical'` | No | Tab orientation (default: 'horizontal') |
 | `onSelect` | `(tabName: string) => void` | No | Callback when a tab has been selected |
 | `initialTabName` | `string` | No | Name of the tab to be selected upon mounting |
