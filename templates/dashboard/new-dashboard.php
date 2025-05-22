@@ -39,6 +39,17 @@
         ?>
 
         <article class="dashboard-content-area">
+            <?php
+
+				/**
+				 *  Added dokan_dashboard_before_widgets hook
+				 *
+				 * @hooked dokan_show_profile_progressbar
+				 *
+				 * @since  2.4
+				 */
+				do_action( 'dokan_dashboard_before_widgets' );
+			?>
             <div id="dokan-vendor-dashboard-root" class="dokan-layout">
                 <div class="h-48 flex justify-center items-center" role="status">
                     <svg aria-hidden="true" class="inline w-10 h-10 text-gray-200 animate-spin dark:text-gray-600" viewBox="0 0 100 101" fill="var(--colors-primary-600)" xmlns="http://www.w3.org/2000/svg">
