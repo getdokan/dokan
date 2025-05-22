@@ -174,7 +174,7 @@ class VendorBalanceUpdateHandler implements Hookable {
             $wpdb->dokan_orders,
             [
                 'net_amount' => $calculated_earning,
-                'order_total' => $order->get_total(),
+                'order_total' => $order->get_total() - $order->get_total_refunded(),
             ],
             [ 'order_id' => $order->get_id() ],
             [ '%s', '%s' ],
