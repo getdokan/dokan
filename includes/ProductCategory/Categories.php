@@ -205,4 +205,67 @@ class Categories {
             $this->recursively_get_parent_categories( $current_item );
         }
     }
+
+    /**
+     * Get product categories in a fully hierarchical (recursive) format for JS consumption.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public static function get_product_categories_tree(): array {
+        $categories = get_terms(
+            [
+				'taxonomy'   => 'product_cat',
+				'hide_empty' => false,
+			]
+        );
+
+        if ( is_wp_error( $categories ) || empty( $categories ) ) {
+            return [];
+        }
+
+        // Index categories by parent
+        $by_parent = [];
+        foreach ( $categories as $cat ) {
+            $by_parent[ $cat->parent ][] = $cat;
+        }
+
+        /**
+         * Recursive function to build category tree
+         */
+        $build_tree = function ( $parent_id ) use ( &$build_tree, &$by_parent ) {
+            $tree = [];
+
+            if ( ! isset( $by_parent[ $parent_id ] ) ) {
+                return $tree;
+            }
+
+            foreach ( $by_parent[ $parent_id ] as $cat ) {
+                $tree[] = [
+                    'value'    => $cat->slug,
+                    'label'    => $cat->name,
+                    'parent'   => $cat->parent,
+                    'count'    => $cat->count,
+                    'slug'     => $cat->slug,
+                    'term_id'  => $cat->term_id,
+                    'children' => $build_tree( $cat->term_id ),
+                ];
+            }
+
+            return $tree;
+        };
+
+        $tree = $build_tree( 0 ); // Top-level categories have parent = 0
+
+        /**
+         * Allow filtering the final category tree
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $tree       Hierarchical category tree
+         * @param array $categories Raw category data
+         */
+        return apply_filters( 'dokan_get_product_categories_tree', $tree, $categories );
+    }
 }
