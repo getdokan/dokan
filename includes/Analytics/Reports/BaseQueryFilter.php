@@ -164,7 +164,7 @@ abstract class BaseQueryFilter implements Hookable {
 			return 0;
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'view_woocommerce_reports' ) ) {
 			return dokan_get_current_user_id();
 		}
 
