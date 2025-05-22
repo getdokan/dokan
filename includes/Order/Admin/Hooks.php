@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Order\Admin;
 use Exception;
 use WC_Data_Store;
 use WC_Order;
+use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Utilities\OrderUtil;
 use WP_Post;
 
@@ -164,7 +165,15 @@ class Hooks {
                 if ( '1' === $order->get_meta( 'has_sub_order', true ) ) {
                     $output = '--';
                 } else {
-                    $commission = dokan()->commission->get_earning_by_order( $order->get_id(), 'admin' );
+                    try {
+                        $order_commission = dokan_get_container()->get( OrderCommission::class );
+                        $order_commission->set_order( $order );
+                        $order_commission->get();
+
+                        $commission = $order_commission->get_admin_commission();
+                    } catch ( Exception $e ) {
+                        $commission = 0;
+                    }
                     /**
                      * In case of refund, we are not excluding gateway fee; in case of stripe full/partial refund net amount can be negative
                      */
@@ -592,25 +601,23 @@ class Hooks {
      * @return void
      */
     public function commission_meta_box( $post_or_order ) {
-        global $wpdb;
         $order = dokan()->order->get( OrderUtil::get_post_or_order_id( $post_or_order ) );
-
-        $data = $wpdb->get_row(
-            $wpdb->prepare( "SELECT order_total,net_amount FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order->get_id() )
-        );
-
-        $order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
-        $net_amount = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;
-
-        $total_commission     = (float) $order_total - (float) $net_amount;
         $all_commission_types = array_merge( dokan_commission_types(), dokan()->commission->get_legacy_commission_types() );
+
+        try {
+            $order_commission = dokan_get_container()->get( OrderCommission::class );
+            $order_commission->set_order( $order );
+            $order_commission->get();
+        } catch ( \Exception $exception ) {
+            dokan_log( 'Dokan can not calculate commission on commission meta box : ' . $exception->getMessage() );
+            return;
+        }
 
         dokan_get_template_part(
             'orders/commission-meta-box-html', '', [
                 'order'                => $order,
-                'data'                 => $data,
-                'total_commission'     => $total_commission,
                 'all_commission_types' => $all_commission_types,
+                'order_commission'     => $order_commission,
             ]
         );
     }
