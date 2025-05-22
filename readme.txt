@@ -1,4 +1,4 @@
-=== Dokan - Powerful WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
+=== Dokan: AI Powered WooCommerce Multivendor Marketplace Solution – Build Your Own Amazon, eBay, Etsy ===
 Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
@@ -11,7 +11,7 @@ Stable tag: 4.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Transform your WooCommerce site into a multivendor marketplace with Dokan - a powerful and advanced WooCommerce multivendor marketplace solution
+Transform your WooCommerce site into a multivendor marketplace with Dokan – an AI powered & advanced WooCommerce marketplace solution
 
 == Description ==
 
@@ -93,6 +93,9 @@ Dokan is also compatible with the [Otel theme](https://dokan.co/wordpress/otel-t
 
 With Dokan, experience a smooth, fast setup process in under an hour and have your WooCommerce multivendor marketplace running within a day. It perfectly matches your expectations and is designed with intuitive practices from eCommerce leaders like WooCommerce and others.
 
+= AI Assistant =
+Generate product titles, short & long descriptions using generative AI directly from the vendor dashboard.
+
 = A RELIABLE GROWING PLATFORM & COMMUNITY =
 
 We continuously update Dokan with reliable services for flawless operation, staying ahead of industry trends and introducing new features with each update.
@@ -156,8 +159,8 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 
 **Frontend Dashboard For Each Seller**
 
-* Vendors can manage products, control orders from customers, and make payment withdrawals right from the site frontend.
-
+* Vendors can manage products, control orders from customers, and make payment withdrawals right from the site frontend. 
+* Vendors can manually create or place orders on behalf of customers (Pro).
 * WordPress backend and administrative settings can only be accessed by the admin.
 
 **Earn From Each Sale**
@@ -187,12 +190,14 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 * Vendors can see their [sales report, generate statements and overview from the frontend](https://dokan.co/wordpress/modules/vendor-analytics/) (Vendor Analytics).
 * Admins can [overview orders](https://dokan.co/docs/wordpress/vendor-dashboard/orders/) and filter by sale, date, top vendors, or top earners.
 * Let Vendors easily migrate from other marketplaces to your Dokan marketplace using the [Export/Import feature](https://dokan.co/wordpress/modules/export-import/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro) without losing any product data, including stock value, SKU information, tags and other information.
-* Admin has access to all customer reviews on the marketplace. The customer can leave [reviews for a product/vendor](https://dokan.co/wordpress/modules/dokan-vendor-review/) they are satisfied with. The vendor cannot change a review, promoting transparency.
+* Admin has access to all customer reviews on the marketplace. The customer can leave [reviews for a product/vendor](https://dokan.co/wordpress/modules/dokan-vendor-review/) they are satisfied with. The vendor cannot change a review, promoting transparency. 
+* Vendors can track earnings, revenue by product, category, variation, and download statements (Pro). 
 
 **Vendors Discounts Creation & Management**
 * Configure coupon expiration and restrictions.
 * All product reviews are managed by vendors (with admin override), and make decisions on whether to display the review on their site.
-* Vendors will be able to create diverse [coupons](https://dokan.co/docs/wordpress/vendor-dashboard/coupons-2/) by setting different rules based on usage limit, expiration date, excluding sale items while also specifying only certain products on which the coupons are valid on (Pro).
+* Vendors will be able to create diverse [coupons](https://dokan.co/docs/wordpress/vendor-dashboard/coupons-2/) by setting different rules based on usage limit, expiration date, excluding sale items while also specifying only certain products on which the coupons are valid on (Pro). 
+* Admins can create coupons without affecting vendors’ earnings at the product or marketplace level (pro).
 
 **💪‍ ADMINS CONTROL EVERY ASPECT OF THE MARKETPLACE**
 * Admin can view and modify vendor store products.
@@ -212,7 +217,7 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
         * Admin can set the order status for withdrawal.
         * The admin can configure automatic withdrawal disbursement for vendor payments based on amount or time period.
         * Admin can change the vendor store URL.
-        * Admin can also enable/disable the permission of review editing for the vendor.
+        * Admin can also enable/disable the permission of review editing for the vendor. 
 
      * Widgets
         * Best vendor widget.
