@@ -106,7 +106,7 @@ All modals in `Dokan` should use the `DokanModal` component from `@dokan/compone
 
 All icons in the Dokan vendor dashboard re-engineering must be implemented using the `lucide-react` library to ensure consistency and maintainability across the interface.
 
-**Library Link:** [lucide-react](https://lucide.dev/guide/packages/lucide-react)
+**For more details follow:** [Lucide react library documentation](https://lucide.dev/guide/packages/lucide-react)
 
 ```jsx
 import { Edit, Trash, Plus, ChevronRight, ArrowLeft } from 'lucide-react';
