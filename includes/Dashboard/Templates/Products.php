@@ -112,13 +112,21 @@ class Products {
      *
      * @since 2.9.2
      *
+     * @uses apply_filters() Calls 'dokan_hide_inventory_template' to allow plugins
+     *                       to conditionally hide the inventory template section.
+     *                       Return true to hide, false to display.
+     * /
      * @return void
      */
     public static function load_inventory_template( $post, $post_id ) {
-        $_sold_individually = get_post_meta( $post_id, '_sold_individually', true );
-        $_stock             = get_post_meta( $post_id, '_stock', true );
-        $_low_stock_amount  = get_post_meta( $post_id, '_low_stock_amount', true );
-
+        $hide_inventory = (bool) apply_filters( 'dokan_hide_inventory_template', false, $post_id );
+        if ( $hide_inventory ) {
+            return;
+        }
+        $product            = wc_get_product( $post_id );
+        $_sold_individually = $product ? $product->get_meta( '_sold_individually' ) : '';
+        $_stock             = $product ? $product->get_meta( '_stock' ) : '';
+        $_low_stock_amount  = $product ? $product->get_meta( '_low_stock_amount' ) : '';
         dokan_get_template_part(
             'products/inventory', '', [
                 'post_id'            => $post_id,
