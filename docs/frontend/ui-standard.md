@@ -106,6 +106,8 @@ All modals in `Dokan` should use the `DokanModal` component from `@dokan/compone
 
 All icons in the Dokan vendor dashboard re-engineering must be implemented using the `lucide-react` library to ensure consistency and maintainability across the interface.
 
+**Library Link:** [lucide-react](https://lucide.dev/guide/packages/lucide-react)
+
 ```jsx
 import { Edit, Trash, Plus, ChevronRight, ArrowLeft } from 'lucide-react';
 
@@ -139,6 +141,25 @@ All `date` and `time` displays in `Dokan` features must be compatible with `Word
 - **Time Format:** WP Settings > General > Time Format
 - **Week Starts On:** WP Settings > General > Week Starts On
 
+### DateTime Component Usage Example
+
+```jsx
+import { DateTimeHtml } from '@dokan/components';
+
+const MyComponent = () => {
+    return (
+        <div>
+            {/* Display the formated date time only */}
+            <DateTimeHtml
+                date='2024-03-20 14:30:00'
+            />
+
+            {/* Your rest of the implementation goes here */}
+        </div>
+    );
+};
+```
+
 **Follow:** [DateTimeHtml component](https://github.com/getdokan/dokan/blob/develop/src/components/DateTimeHtml.tsx)
 
 ## Currency Input Standards
@@ -146,6 +167,53 @@ All `date` and `time` displays in `Dokan` features must be compatible with `Word
 All currency inputs in Dokan must use the `DokanPriceInput` component to ensure proper formatting and consistency with `WooCommerce currency settings`.
 
 The `DokanPriceInput` component automatically applies currency formatting based on `WooCommerce settings`. We can use this components from `@dokan/components`.
+
+### Currency Input Usage Example
+
+```jsx
+import { __, sprintf } from '@wordpress/i18n';
+import { DokanPriceInput } from '@dokan/components';
+
+const MyComponent = () => {
+    const [ price, setPrice ] = useState( 0 );
+
+    return (
+        <div>
+            {/* Basic price input */}
+            <DokanPriceInput
+                value={ price }
+                namespace='product-pricing'
+                label={ __( 'Product Price', 'dokan-lite' ) }
+                onChange={ ( e ) => setPrice( e.target.value ) }
+            />
+
+            {/* Price input with custom styling */}
+            <DokanPriceInput
+                value={ price }
+                className='max-w-16'
+                namespace='shipping-cost'
+                label={ __( 'Shipping Cost', 'dokan-lite' ) }
+                onChange={ ( e ) => setPrice( e.target.value ) }
+                input={ {
+                    min: 0,
+                    step: 1,
+                    placeholder: __( 'Enter amount', 'dokan-lite' )
+                } }
+            />
+
+            {/* Price input with validation */}
+            <DokanPriceInput
+                required
+                value={ price }
+                namespace='offer-price'
+                label={ __( 'Offer Price', 'dokan-lite' ) }
+                onChange={ ( e ) => setPrice( e.target.value ) }
+                error={ __( 'Please enter a valid price', 'dokan-lite' ) }
+            />
+        </div>
+    );
+};
+```
 
 **For more information visit:** [DokanPriceInput component documentation](https://github.com/getdokan/dokan/blob/develop/docs/frontend/components.md#dokanpriceinput-component)
 
