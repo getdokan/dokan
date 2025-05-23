@@ -912,6 +912,17 @@ class Assets {
         );
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
+
+        $dokan_frontend = [
+            'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+        ];
+
+        // localize dokan frontend script
+        wp_localize_script(
+            'dokan-react-frontend',
+            'dokanFrontend',
+            apply_filters( 'dokan_react_frontend_localized_args', $dokan_frontend ),
+        );
     }
 
     /**
