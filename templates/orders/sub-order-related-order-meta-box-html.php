@@ -15,7 +15,7 @@
  */
 ?>
 
-<div id="dokan-sub-order-or-related-items" class="dokan-order-metabox-items postbox" style='border: none'>
+<div id="woocommerce-order-items" class="postbox" style='border: none'>
     <div class="postbox-header">
         <div class="handle-actions hide-if-no-js">
             <button type="button" class="handle-order-higher" aria-disabled="false" aria-describedby="dokan-order-items-handle-order-higher-description">
@@ -30,8 +30,8 @@
         </div>
     </div>
     <div class="inside">
-        <div class="dokan_order_items_wrapper wc-order-items-editable">
-            <table cellpadding="0" cellspacing="0" class="dokan_order_items">
+        <div class="woocommerce_order_items_wrapper wc-order-items-editable">
+            <table cellpadding="0" cellspacing="0" class="woocommerce_order_items">
                 <thead>
                 <tr>
                     <th colspan="2"><?php esc_html_e( 'Order', 'dokan-lite' ); ?></th>

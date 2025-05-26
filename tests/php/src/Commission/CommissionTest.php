@@ -7,9 +7,9 @@ use WeDevs\Dokan\Commission\Formula\Combine;
 use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\Commission\Formula\Flat;
 use WeDevs\Dokan\Commission\Formula\Percentage;
-use WeDevs\Dokan\Commission\Calculator;
-use WeDevs\Dokan\Commission\Settings\Builder;
+use WeDevs\Dokan\Commission\ProductCommission;
 use WeDevs\Dokan\Commission\Settings\DefaultSetting;
+use WeDevs\Dokan\Commission\Settings\GlobalSetting;
 use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
 use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
 use WeDevs\Dokan\Commission\Strategies\OrderItem;
@@ -74,31 +74,26 @@ class CommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_that_we_can_get_commission_with_non_existed_product_and_vendor() {
-        $orderItemId = 1; // Example IDs
-        $productId   = 103;
-        $vendorId    = 2;
+        $product_id   = 103;
+        $vendor_id    = 2;
         $category_id = 15;     // Example cat
-        $productPrice = 100.00; // Example product price
+        $product_price = 100.00; // Example product price
 
-        $strategies = [
-            new OrderItem( $orderItemId ),
-            new Product( $productId, $productPrice ),
-            new Vendor( $vendorId, $category_id ),
-            new GlobalStrategy( $category_id ),
-            new DefaultStrategy(),
-        ];
-
-        $context      = new Calculator( $strategies );
-        $commission   = $context->calculate_commission( $productPrice, 1 );
+        $product_commission = dokan_get_container()->get( ProductCommission::class );
+        $product_commission->set_product_id( $product_id );
+        $product_commission->set_total_amount( $product_price );
+        $product_commission->set_vendor_id( $vendor_id );
+        $product_commission->set_category_id( $category_id );
+        $commission = $product_commission->calculate();
 
         $this->assertTrue( is_a( $commission, 'WeDevs\Dokan\Commission\Model\Commission' ) );
         $this->assertIsArray( $commission->get_data() );
         $this->assertEquals( DefaultStrategy::SOURCE, $commission->get_source() );
         $this->assertEquals( 0, $commission->get_per_item_admin_commission() );
         $this->assertEquals( 0, $commission->get_admin_commission() );
-        $this->assertEquals( $productPrice, $commission->get_vendor_earning() );
+        $this->assertEquals( $product_price, $commission->get_vendor_earning() );
         $this->assertEquals( 1, $commission->get_total_quantity() );
-        $this->assertEquals( $productPrice, $commission->get_total_amount() );
+        $this->assertEquals( $product_price, $commission->get_total_amount() );
         $this->assertEquals( DefaultSetting::TYPE, $commission->get_type() );
     }
 
@@ -1034,9 +1029,9 @@ class CommissionTest extends WP_UnitTestCase {
         $product = dokan()->product->get( $product->get_id() );
 
         // Saving settings...
-        $product_setting = Builder::build( Builder::TYPE_PRODUCT, $product->get_id() );
-        $vendor_setting  = Builder::build( Builder::TYPE_VENDOR, $vendor->get_id() );
-        $global_setting  = Builder::build( Builder::TYPE_GLOBAL, $chosen_cat );
+        $product_setting = new \WeDevs\Dokan\Commission\Settings\Product( $product->get_id() );
+        $vendor_setting  = new \WeDevs\Dokan\Commission\Settings\Vendor( $vendor->get_id() );
+        $global_setting  = new GlobalSetting( $chosen_cat );
 
         $product_setting->save(
             [
@@ -1068,6 +1063,8 @@ class CommissionTest extends WP_UnitTestCase {
             $customer->ID,
             $product
         );
+        $order->update_meta_data( '_dokan_vendor_id', $vendor->get_id() );
+        $order->save_meta_data();
 
         $items = $order->get_items();
         $item  = reset( $items );

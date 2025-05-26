@@ -318,6 +318,12 @@ class Manager {
                 $vendor->update_meta( 'dokan_publishing', 'no' );
             }
 
+            if ( isset( $data['reset_sub_category'] ) && dokan_validate_boolean( $data['reset_sub_category'] ) ) {
+                $vendor->update_meta( 'reset_sub_category', 'yes' );
+            } else {
+                $vendor->update_meta( 'reset_sub_category', 'no' );
+            }
+
             if ( ! empty( $data['admin_commission_type'] ) ) {
                 $vendor->update_meta( 'dokan_admin_percentage_type', $data['admin_commission_type'] );
             }

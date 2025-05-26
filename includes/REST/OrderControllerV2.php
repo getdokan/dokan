@@ -118,69 +118,104 @@ class OrderControllerV2 extends OrderController {
      *
      * @since 3.7.10
      *
-     * @param  \WP_REST_Request $requests Request object.
+     * @param  \WP_REST_Request $request Request object.
      *
      * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
      */
-    public function get_order_downloads( $requests ) {
+    public function get_order_downloads( $request ) {
         global $wpdb;
 
         $user_id   = dokan_get_current_user_id();
         $data      = [];
         $downloads = [];
 
-        // TODO: Need to move this into a separate function.
         $download_permissions = $wpdb->get_results(
             $wpdb->prepare(
                 "
                 SELECT * FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions
                 WHERE order_id = %d ORDER BY product_id ASC
-            ", $requests->get_param( 'id' )
+            ", $request->get_param( 'id' )
             )
         );
 
-        foreach ( $download_permissions as $download ) {
-            $product = wc_get_product( absint( $download->product_id ) );
+        $product_ids = wp_list_pluck( $download_permissions, 'product_id' );
+        $product_ids = array_unique( $product_ids );
 
-            // don't show permissions to files that have since been removed
-            if ( ! $product || ! $product->exists() || ! $product->has_file( $download->download_id ) ) {
-                continue;
+        $products = wc_get_products(
+            [
+                'include' => $product_ids,
+            ]
+        );
+
+        $existing_product_ids = wp_list_pluck( $products, 'id' );
+
+        $downloads = array_filter(
+            $download_permissions,
+            function ( $download ) use ( $existing_product_ids ) {
+                return in_array( $download->product_id, $existing_product_ids );
             }
-
-            $downloads[] = $download;
-        }
-
-        $data['downloads'] = $downloads;
-        $orders_items      = wc_get_order( $requests->get_param( 'id' ) )->get_items();
-        $orders_items_ids  = [];
-
-        foreach ( $orders_items as $item ) {
-            $orders_items_ids[] = $item->get_product_id();
-        }
-
-        $orders_items_ids = implode( ',', $orders_items_ids );
-        // @codingStandardsIgnoreStart
-        $products = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT $wpdb->posts.* FROM $wpdb->posts
-                        INNER JOIN $wpdb->postmeta
-                            ON ( $wpdb->posts.ID = $wpdb->postmeta.post_id )
-                        WHERE $wpdb->posts.post_author=%d
-                            AND ( $wpdb->postmeta.meta_key = '_downloadable' AND $wpdb->postmeta.meta_value = 'yes' )
-                            AND $wpdb->posts.post_type IN ( 'product', 'product_variation' )
-                            AND $wpdb->posts.post_status = 'publish'
-                            AND $wpdb->posts.ID IN ( {$orders_items_ids} )
-                        GROUP BY $wpdb->posts.ID
-                        ORDER BY $wpdb->posts.post_parent ASC, $wpdb->posts.post_title ASC", $user_id
-            )
         );
-        // @codingStandardsIgnoreEnd
 
-        foreach ( $products as $product ) {
-            $data['products'][ $product->ID ] = esc_html( wc_get_product( $product->ID )->get_formatted_name() );
-        }
+        $downloads = array_map(
+            function ( $download ) use ( $products, $request ) {
+                    $filter_items = array_filter(
+                        $products,
+                        function ( $product ) use ( $download ) {
+                            return $product->get_id() === intval( $download->product_id );
+                        }
+                    );
+                    $download->product = reset( $filter_items );
+
+                    return $this->prepare_data_for_response( $download, $request );
+            },
+            $downloads
+        );
+
+        $data = $this->format_downloads_data( $downloads, $products );
 
         return rest_ensure_response( $data );
+    }
+
+    /**
+     * Format downloads data.
+     *
+     * @since 4.0.0
+     *
+     * @param \stdClass[]   $downloads
+     * @param \WC_Product[] $products
+     *
+     * @return array
+     */
+    protected function format_downloads_data( $downloads, $products ) {
+        $data = [];
+        $data['downloads'] = $downloads;
+        $data['products'] = array_reduce(
+            $products, function ( $acc, $product ) {
+
+				$acc[ $product->get_id() ] = $product->get_formatted_name();
+
+				return $acc;
+			}, []
+        );
+
+        return apply_filters( 'dokan_rest_prepare_format_downloads_data', $data, $downloads, $products );
+    }
+
+    /**
+     * Prepare data for response.
+     *
+     * @since 4.0.0
+     *
+     * @param \stdClass        $download
+     * @param \WP_REST_Request $request
+     *
+     * @return \stdClass
+     */
+    public function prepare_data_for_response( $download, $request ) {
+        $product = $download->product;
+        unset( $download->product );
+
+        return apply_filters( 'dokan_rest_prepare_order_download_response', $download, $product );
     }
 
     /**
@@ -211,7 +246,7 @@ class OrderControllerV2 extends OrderController {
                 $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
 
                 if ( $inserted_id ) {
-                    $file_counter ++;
+                    ++$file_counter;
                     if ( $file->get_name() ) {
                         $file_count = $file->get_name();
                     } else {

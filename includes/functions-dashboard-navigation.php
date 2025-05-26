@@ -1,4 +1,8 @@
 <?php
+
+use WeDevs\Dokan\Utilities\ReportUtil;
+use WeDevs\Dokan\Dashboard\Templates\Dashboard;
+
 /**
  * Sort navigation menu items by position
  *
@@ -29,7 +33,7 @@ function dokan_get_dashboard_nav(): array {
         'dashboard' => [
             'title'      => __( 'Dashboard', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-tachometer-alt"></i>',
-            'url'        => dokan_get_navigation_url(),
+            'url'        => dokan_get_navigation_url() . ( ReportUtil::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
             'pos'        => 10,
             'permission' => 'dokan_view_overview_menu',
         ],
@@ -48,11 +52,12 @@ function dokan_get_dashboard_nav(): array {
             'permission' => 'dokan_view_order_menu',
         ],
         'withdraw'  => [
-            'title'      => __( 'Withdraw', 'dokan-lite' ),
-            'icon'       => '<i class="fas fa-upload"></i>',
-            'url'        => dokan_get_navigation_url( 'withdraw' ),
-            'pos'        => 70,
-            'permission' => 'dokan_view_withdraw_menu',
+            'title'       => __( 'Withdraw', 'dokan-lite' ),
+            'icon'        => '<i class="fas fa-upload"></i>',
+            'url'         => dokan_get_navigation_url( 'withdraw' ),
+            'pos'         => 70,
+            'permission'  => 'dokan_view_withdraw_menu',
+            'react_route' => 'withdraw',
         ],
         'settings'  => [
             'title' => __( 'Settings', 'dokan-lite' ),
@@ -225,6 +230,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
             $title = $item['title'];
         }
 
+        $title     = apply_filters( 'dokan_vendor_dashboard_menu_title', $title, $item );
         $menu_slug = $filtered_key;
         $submenu   = '';
 
@@ -259,10 +265,12 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                 }
 
                 $submenu .= sprintf(
-                    '<li class="submenu-item %s"><a href="%s" class="submenu-link">%s %s</a></li>',
+                    /* translators: 1) submenu class, 2) submenu route, 3) submenu icon, 4) submenu title */
+                    '<li class="submenu-item %1$s" data-react-route="%2$s"><a href="%3$s" class="submenu-link">%4$s %5$s</a></li>',
                     $submenu_class,
-                    isset( $sub['url'] ) ? $sub['url'] : dokan_get_navigation_url( "{$key}/{$sub_key}" ),
-                    isset( $sub['icon'] ) ? $sub['icon'] : '<i class="fab fa-staylinked"></i>',
+                    $sub['react_route'] ?? '',
+                    $sub['url'] ?? dokan_get_navigation_url( "{$key}/{$sub_key}" ),
+                    $sub['icon'] ?? '<i class="fab fa-staylinked"></i>',
                     apply_filters( 'dokan_vendor_dashboard_menu_title', $submenu_title, $sub )
                 );
 
@@ -278,12 +286,14 @@ function dokan_dashboard_nav( $active_menu = '' ) {
         }
 
         $menu .= sprintf(
-            '<li class="%s"><a href="%s" target="%s">%s %s</a>%s</li>',
+            /* translators: 1) menu class, 2) menu route, 3) menu url, 4) menu target, 5) menu icon, 6) menu title, 7) submenu */
+            '<li class="%1$s" data-react-route="%2$s"><a href="%3$s" target="%4$s">%5$s %6$s</a>%7$s</li>',
             $class,
-            isset( $item['url'] ) ? $item['url'] : dokan_get_navigation_url( $menu_slug ),
-            isset( $item['target'] ) ? $item['target'] : '_self',
-            isset( $item['icon'] ) ? $item['icon'] : '<i class="fab fa-staylinked"></i>',
-            apply_filters( 'dokan_vendor_dashboard_menu_title', $title, $item ),
+            $item['react_route'] ?? '',
+            $item['url'] ?? dokan_get_navigation_url( $menu_slug ),
+            $item['target'] ?? '_self',
+            $item['icon'] ?? '<i class="fab fa-staylinked"></i>',
+            $title,
             $submenu
         );
     }

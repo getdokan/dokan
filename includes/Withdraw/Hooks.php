@@ -15,6 +15,7 @@ class Hooks {
      */
     public function __construct() {
         add_action( 'init', [ $this, 'download_withdraw_log_export_file' ] );
+        add_action( 'dokan_react_frontend_localized_args', [ $this, 'localize_withdraw_scripts' ] );
         add_action( 'dokan_withdraw_request_approved', [ $this, 'update_vendor_balance' ], 11 );
         // change custom withdraw method title
         add_filter( 'dokan_get_withdraw_method_title', [ $this, 'dokan_withdraw_dokan_custom_method_title' ], 10, 3 );
@@ -47,6 +48,21 @@ class Hooks {
         // Export withdraw logs.
         $exporter = new \WeDevs\Dokan\Admin\WithdrawLogExporter();
         $exporter->export();
+    }
+
+    /**
+     * Dokan withdraw localize scripts.
+     *
+     * @since 4.0.0
+     *
+     * @param array $localized_args
+     *
+     * @return array
+     */
+    public function localize_withdraw_scripts( $localized_args ) {
+        $localized_args['withdraw'] = [ 'paymentSettingUrl' => dokan_get_navigation_url( 'settings/payment' ) ];
+
+        return $localized_args;
     }
 
     /**
