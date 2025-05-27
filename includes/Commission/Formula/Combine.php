@@ -68,10 +68,10 @@ class Combine extends AbstractFormula {
      * @return void
      */
     public function calculate() {
-        $percent_commission = $this->get_amount() * ( dokan()->commission->validate_rate( $this->get_settings()->get_percentage() ) / 100 );
-        $commission         = (float) dokan()->commission->validate_rate( $this->get_settings()->get_flat() ) + $percent_commission;
+        $percent_commission = $this->get_amount() * ( $this->validate_rate( $this->get_settings()->get_percentage() ) / 100 );
+        $commission         = (float) $this->validate_rate( $this->get_settings()->get_flat() ) + $percent_commission;
 
-        $per_item_flat       = dokan()->commission->validate_rate( $this->get_settings()->get_flat() ) / $this->get_quantity();
+        $per_item_flat       = $this->validate_rate( $this->get_settings()->get_flat() ) / $this->get_quantity();
         $per_item_percentage = $percent_commission / $this->get_quantity();
 
         $this->admin_commission          = $commission;
@@ -160,7 +160,7 @@ class Combine extends AbstractFormula {
      * @return float
      */
     public function get_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->admin_commission );
+        return $this->validate_rate( $this->admin_commission );
     }
 
     /**
@@ -171,7 +171,7 @@ class Combine extends AbstractFormula {
      * @return float
      */
     public function get_vendor_earning(): float {
-        return dokan()->commission->validate_rate( $this->vendor_earning );
+        return $this->validate_rate( $this->vendor_earning );
     }
 
     /**
@@ -182,7 +182,7 @@ class Combine extends AbstractFormula {
      * @return float
      */
     public function get_per_item_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->per_item_admin_commission );
+        return $this->validate_rate( $this->per_item_admin_commission );
     }
 
     /**
