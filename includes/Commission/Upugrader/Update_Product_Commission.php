@@ -12,21 +12,21 @@ class Update_Product_Commission {
     /**
      * The batch size for processing products
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      */
     const BATCH_SIZE = 10;
 
     /**
      * The hook name for processing batches
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      */
     const PROCESS_BATCH_HOOK = 'process_product_batch';
     const PROCESS_BATCH_HOOK_CREATOR = 'process_product_batch_creator';
 
     /**
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      */
     const PROCESS_ITEM_HOOK = 'process_product_item';
 
@@ -39,7 +39,7 @@ class Update_Product_Commission {
     /**
      * Start the batch processing
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -54,7 +54,7 @@ class Update_Product_Commission {
     /**
      * Batch queue creator.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -80,7 +80,7 @@ class Update_Product_Commission {
     /**
      * Process a batch of products
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int $offset Current offset
      * @param int $total_products Total number of products
@@ -99,7 +99,7 @@ class Update_Product_Commission {
     /**
      * Schedule the next batch of products
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int $offset Current offset
      * @param int $total_products Total number of products
@@ -119,7 +119,7 @@ class Update_Product_Commission {
     /**
      * Schedule a single product for processing.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param $item
      *
@@ -136,7 +136,7 @@ class Update_Product_Commission {
     /**
      * Get a batch of products
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int $offset Current offset
      *
@@ -157,7 +157,7 @@ class Update_Product_Commission {
     /**
      * Get total number of products
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @return int
      */
@@ -177,7 +177,7 @@ class Update_Product_Commission {
      * Process a single product
      * Customize this method based on what you need to do with each product
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @param int $product
      *
@@ -187,13 +187,14 @@ class Update_Product_Commission {
         $commission = dokan()->product->get_commission_settings( $product_id );
 
         $commission_type_old = $commission->get_type();
+
         $commission->set_type( Fixed::SOURCE );
 
         if ( Flat::SOURCE === $commission_type_old ) {
             $commission->set_flat( $commission->get_percentage() );
-            $commission->set_percentage( 0 );
+            $commission->set_percentage( '' );
         } elseif ( Percentage::SOURCE === $commission_type_old ) {
-            $commission->set_flat( 0 );
+            $commission->set_flat( '' );
         }
 
         dokan()->product->save_commission_settings(
@@ -209,7 +210,7 @@ class Update_Product_Commission {
     /**
      * Check if processing is currently running
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */

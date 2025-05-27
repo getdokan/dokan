@@ -166,6 +166,7 @@ export interface product {
         stockStatus: boolean;
         attribute: string;
         attributeTerms: string[];
+        variationPrice: () => string;
         variations: {
             linkAllVariation: string;
             variableRegularPrice: string;
@@ -230,6 +231,7 @@ export interface product {
         status: string;
         attribute: string;
         attributeTerms: string[];
+        variationPrice: () => string;
         variations: {
             linkAllVariation: string;
             variableRegularPrice: string;
@@ -1512,7 +1514,7 @@ export interface modules {
 
     modulesName: {
         auctionIntegration: string;
-        colorSchemeCustomize: string;
+        colorSchemeCustomizer: string;
         deliveryTime: string;
         elementor: string;
         eUComplianceFields: string;
@@ -1560,6 +1562,24 @@ export interface productAdvertisement {
             freePurchase: string;
         };
     };
+}
+
+// product form manager
+
+export interface block {
+    currentLabel: string;
+    label: string;
+    description: string;
+    productType: string;
+    productCategory: string;
+}
+export interface field {
+    block: any;
+    currentLabel: any;
+    label: any;
+    type: any;
+    placeholder: any;
+    helpContent: any;
 }
 
 // wholesale customers

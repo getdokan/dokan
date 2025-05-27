@@ -63,16 +63,19 @@ function dokan_get_current_user_id() {
 /**
  * Check if a user is seller
  *
- * @param int $user_id
+ * @since 3.14.9 Added `$exclude_staff` as optional parameter
+ *
+ * @param int  $user_id       User ID
+ * @param bool $exclude_staff Exclude staff
  *
  * @return bool
  */
-function dokan_is_user_seller( $user_id ) {
-    if ( ! user_can( $user_id, 'dokandar' ) ) {
+function dokan_is_user_seller( $user_id, $exclude_staff = false ) {
+    if ( $exclude_staff && user_can( $user_id, 'vendor_staff' ) ) {
         return false;
     }
 
-    return true;
+    return user_can( $user_id, 'dokandar' );
 }
 
 /**
@@ -200,14 +203,14 @@ function dokan_redirect_if_not_seller( $redirect = '' ) {
  */
 function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'booking', 'auction' ] ) {
     // get all function arguments as key => value pairs
-    $args = get_defined_vars();
+    $args = apply_filters( 'dokan_count_posts_args', get_defined_vars() );
 
     $cache_group = "seller_product_data_$user_id";
     $cache_key   = 'count_posts_' . md5( wp_json_encode( $args ) );
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
-        $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id );
+        $results = apply_filters( 'dokan_count_posts', null, $post_type, $user_id, $exclude_product_types );
 
         if ( ! $results ) {
             global $wpdb;
@@ -259,7 +262,7 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'bo
 /**
  * Count stock product type from a user
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.2.5
  *
  * @param string $post_type
  * @param int    $user_id
@@ -272,11 +275,11 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_pr
     global $wpdb;
 
     $cache_group = 'seller_product_stock_data_' . $user_id;
-    $cache_key   = "count_stock_posts_{$user_id}_{$post_type}_{$stock_type}";
+    $cache_key   = apply_filters( 'dokan_count_stock_posts_cache_key', "count_stock_posts_{$user_id}_{$post_type}_{$stock_type}", $post_type, $user_id, $stock_type );
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
-        $results = apply_filters( 'dokan_count_posts_' . $stock_type, null, $post_type, $user_id );
+        $results = apply_filters( 'dokan_count_posts_' . $stock_type, null, $post_type, $user_id, $stock_type, $exclude_product_types );
         $exclude_product_types_text = "'" . implode( "', '", esc_sql( $exclude_product_types ) ) . "'";
 
         if ( ! $results ) {
@@ -423,7 +426,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
     /**
      * Get store seller percentage settings
      *
-     * @deprecated DOKAN_SINCE Do Not Use This Function
+     * @deprecated 3.14.0 Do Not Use This Function
      *
      * @param int $seller_id
      * @param int $product_id
@@ -431,7 +434,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
      * @return int
      */
     function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0, $category_id = 0 ) {
-        wc_deprecated_function( __FUNCTION__, 'DOKAN_SINCE', 'dokan()->commission->get_commission()' );
+        wc_deprecated_function( __FUNCTION__, '3.14.0', 'dokan()->commission->get_commission()' );
 
         $commission_data = dokan()->commission->get_commission(
             [
@@ -450,7 +453,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
 /**
  * Get Dokan commission type by seller or product or both
  *
- * @deprecated DOKAN_SINCE Do Not Use This Function
+ * @deprecated 3.14.0 Do Not Use This Function
  *
  * @since 2.6.9
  *
@@ -460,7 +463,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
  * @return string $type
  */
 function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_id = 0 ) {
-    wc_deprecated_function( __FUNCTION__, 'DOKAN_SINCE', 'dokan()->commission->get_commission()' );
+    wc_deprecated_function( __FUNCTION__, '3.14.0', 'dokan()->commission->get_commission()' );
 
     $commission_data = dokan()->commission->get_commission(
         [
@@ -1069,11 +1072,14 @@ function dokan_is_seller_trusted( $user_id ) {
 /**
  * Get store page url of a seller
  *
+ * @since 3.14.9 Added `$tab` optional parameter.
+ *
  * @param int $user_id
+ * @param string $tab Tab endpoint (Optional). Default is empty.
  *
  * @return string
  */
-function dokan_get_store_url( $user_id ) {
+function dokan_get_store_url( $user_id, $tab = '' ) {
     if ( ! $user_id ) {
         return '';
     }
@@ -1082,16 +1088,25 @@ function dokan_get_store_url( $user_id ) {
     $user_nicename    = ( false !== $userdata ) ? $userdata->user_nicename : '';
     $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
+    $path = '/' . $custom_store_url . '/' . $user_nicename . '/';
+    if ( $tab ) {
+        $tab  = untrailingslashit( trim( $tab, " \n\r\t\v\0/\\" ) );
+        $path .= $tab;
+        $path = trailingslashit( $path );
+    }
+
     /**
      * Filter hook for the store URL before returning.
      *
      * @since 3.9.0
+     * @since 3.14.9 Added `$tab` parameter
      *
      * @param string $store_url        The default store URL
      * @param string $custom_store_url The custom store URL
      * @param int    $user_id          The user ID for the store owner
+     * @param string $tab              The tab endpoint. Default is empty.
      */
-    return apply_filters( 'dokan_get_store_url', home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' ), $custom_store_url, $user_id );
+    return apply_filters( 'dokan_get_store_url', home_url( $path ), $custom_store_url, $user_id, $tab );
 }
 
 /**
@@ -2179,6 +2194,7 @@ function dokan_product_listing_filter() {
     $template_args = [
         'product_types'       => apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] ),
         'product_cat'         => -1,
+        'product_brand'       => -1,
         'product_search_name' => '',
         'date'                => '',
         'product_type'        => '',
@@ -2188,6 +2204,7 @@ function dokan_product_listing_filter() {
 
     if ( isset( $_GET['_product_listing_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_product_listing_filter_nonce'] ) ), 'product_listing_filter' ) ) {
         $template_args['product_cat']         = ! empty( $_GET['product_cat'] ) ? intval( wp_unslash( $_GET['product_cat'] ) ) : -1;
+        $template_args['product_brand']       = ! empty( $_GET['product_brand'] ) ? intval( wp_unslash( $_GET['product_brand'] ) ) : -1;
         $template_args['product_search_name'] = ! empty( $_GET['product_search_name'] ) ? sanitize_text_field( wp_unslash( $_GET['product_search_name'] ) ) : '';
         $template_args['date']                = ! empty( $_GET['date'] ) ? intval( wp_unslash( $_GET['date'] ) ) : '';
         $template_args['product_type']        = ! empty( $_GET['product_type'] ) ? sanitize_text_field( wp_unslash( $_GET['product_type'] ) ) : '';
@@ -2485,9 +2502,7 @@ function dokan_get_toc_url( $store_id ) {
         return '';
     }
 
-    $userstore = dokan_get_store_url( $store_id );
-
-    return apply_filters( 'dokan_get_toc_url', $userstore . 'toc' );
+    return apply_filters( 'dokan_get_toc_url', dokan_get_store_url( $store_id, 'toc' ) );
 }
 
 /**
@@ -2570,7 +2585,7 @@ add_action( 'widgets_init', 'dokan_register_store_widget' );
 /**
  * Calculate category wise commission for given product.
  *
- * @deprecated DOKAN_SINCE Do Not Use This Function
+ * @deprecated 3.14.0 Do Not Use This Function
  *
  * @since 2.6.8
  *
@@ -2579,7 +2594,7 @@ add_action( 'widgets_init', 'dokan_register_store_widget' );
  * @return int $commission_rate
  */
 function dokan_get_category_wise_seller_commission( $product_id, $category_id = 0 ) {
-    wc_deprecated_function( __FUNCTION__, 'DOKAN_SINCE' );
+    wc_deprecated_function( __FUNCTION__, '3.14.0' );
 
     return 0;
 }
@@ -2587,7 +2602,7 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
 /**
  * Calculate category wise commission type for given product.
  *
- * @deprecated DOKAN_SINCE Do Not Use This Function
+ * @deprecated 3.14.0 Do Not Use This Function
  *
  * @since 2.6.9
  *
@@ -2596,7 +2611,7 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
  * @return int $commission_rate
  */
 function dokan_get_category_wise_seller_commission_type( $product_id, $category_id = 0 ) {
-    wc_deprecated_function( __FUNCTION__, 'DOKAN_SINCE' );
+    wc_deprecated_function( __FUNCTION__, '3.14.0' );
 
     return '';
 }
@@ -2663,7 +2678,7 @@ function dokan_delete_user_details( $user_id, $reassign ) {
  *
  * @param int $vendor_id
  *
- * @return \Dokan_Vendor
+ * @return WeDevs\Dokan\Vendor\Vendor
  */
 function dokan_get_vendor( $vendor_id = null ) {
     if ( ! $vendor_id ) {
@@ -3562,7 +3577,7 @@ function dokan_clear_product_caches( $product ) {
 /**
  * Check which vendor info should be hidden
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.0.4
  *
  * @param string $option
  *
@@ -3836,7 +3851,7 @@ if ( ! function_exists( 'dokan_date_time_format' ) ) {
 /**
  * Get threshold day for a user
  *
- * @since DOKAN_LITE_SINCE
+ * @since 3.2.2
  *
  * @param int $user_id
  *
@@ -4110,7 +4125,7 @@ function dokan_bool_to_on_off( $bool ) {
 /**
  * Check is 12-hour format in current setup.
  *
- * @since DOKAN_PRO_SINCE
+ * @since 3.6.0
  *
  * @return bool
  */

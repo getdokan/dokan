@@ -39,8 +39,8 @@ class ProductControllerV2 extends ProductController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_items' ],
-                    'args'                => $this->get_product_collection_params(),
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
+                    'args' => $this->get_collection_params(),
                 ],
                 'schema' => [ $this, 'get_item_schema' ],
             ]
@@ -50,7 +50,7 @@ class ProductControllerV2 extends ProductController {
             $this->namespace, '/' . $this->base . '/filter-by-data', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_product_filter_by_data' ],
+                    'callback' => [ $this, 'get_items' ],
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
                 ],
                 'schema' => [ $this, 'get_filter_data_schema' ],
@@ -119,7 +119,7 @@ class ProductControllerV2 extends ProductController {
      *
      * @return array Query parameters.
      */
-    public function get_product_collection_params() {
+    public function get_collection_params() {
         $params = parent::get_collection_params();
 
         $params['author'] = array(
@@ -177,6 +177,24 @@ class ProductControllerV2 extends ProductController {
             'validate_callback' => 'rest_validate_request_arg',
             'required'          => false,
         );
+        $params['include'] = array(
+            'description'       => __( 'Limit result set to specific ids.', 'dokan-lite' ),
+            'type'              => 'array',
+            'items'             => array(
+                'type' => 'integer',
+            ),
+            'default'           => array(),
+            'sanitize_callback' => 'wp_parse_id_list',
+        );
+        $params['exclude'] = array(
+            'description'       => __( 'Ensure result set excludes specific IDs.', 'dokan-lite' ),
+            'type'              => 'array',
+            'items'             => array(
+                'type' => 'integer',
+            ),
+            'default'           => array(),
+            'sanitize_callback' => 'wp_parse_id_list',
+        );
 
         return $params;
     }
@@ -217,10 +235,10 @@ class ProductControllerV2 extends ProductController {
         $args = array_merge(
             $args,
             array(
-                'posts_per_page' => 10,
-                'paged'          => 1,
+                'posts_per_page' => isset( $request['per_page'] ) ? $request['per_page'] : 10,
+                'paged'          => isset( $request['page'] ) ? $request['page'] : 1,
                 'author'         => dokan_get_current_user_id(),
-                'orderby'        => 'post_date',
+                'orderby'        => isset( $request['orderby'] ) ? $request['orderby'] : 'date',
                 'post_type'      => 'product',
                 'date_query'     => [],
                 'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query

@@ -209,6 +209,90 @@
         },
 
         bindProductTagDropdown: function () {
+            $(".product_brand_search").select2({
+                allowClear: false,
+                minimumInputLength: 0,
+                maximumSelectionLength: -1,
+                ajax: {
+                    url: dokan.ajaxurl,
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term,
+                            action: 'dokan_json_search_products_brands',
+                            security: dokan.search_products_brands_nonce,
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function ( data ) {
+                        const options = [];
+                        if ( data ) {
+                            $.each( data, function ( index, text ) {
+                                options.push( {
+                                    id: text[ 0 ],
+                                    text: text[ 1 ],
+                                } );
+                            } );
+                        }
+                        return {
+                            results: options,
+                            pagination: {
+                                more: options.length == 0 ? false : true
+                            },
+                        };
+                    },
+                    cache: true,
+                },
+                language: {
+                    errorLoading: function() {
+                        return dokan.i18n_searching;
+                    },
+                    inputTooLong: function( args ) {
+                        var overChars = args.input.length - args.maximum;
+
+                        if ( 1 === overChars ) {
+                            return dokan.i18n_input_too_long_1;
+                        }
+
+                        return dokan.i18n_input_too_long_n.replace( '%qty%', overChars );
+                    },
+                    inputTooShort: function( args ) {
+                        var remainingChars = args.minimum - args.input.length;
+
+                        if ( 1 === remainingChars ) {
+                            return dokan.i18n_input_too_short_1;
+                        }
+
+                        return dokan.i18n_input_too_short_n.replace( '%qty%', remainingChars );
+                    },
+                    loadingMore: function() {
+                        return dokan.i18n_load_more;
+                    },
+                    maximumSelected: function( args ) {
+                        if ( args.maximum === 1 ) {
+                            return dokan.i18n_selection_too_long_1;
+                        }
+
+                        return dokan.i18n_selection_too_long_n.replace( '%qty%', args.maximum );
+                    },
+                    noResults: function() {
+                        return dokan.i18n_no_matches;
+                    },
+                    searching: function() {
+                        return dokan.i18n_searching;
+                    }
+                },
+                escapeMarkup: function ( markup ) {
+                    return markup;
+                },
+                templateResult: function ( item ) {
+                    return `<span>${ item.text }</span>`;
+                },
+                templateSelection: function ( item ) {
+                    return item.text.replaceAll( '—', '' );
+                },
+            });
             $(".product_tag_search").select2({
                 allowClear: false,
                 tags: ( dokan.product_vendors_can_create_tags && 'on' === dokan.product_vendors_can_create_tags ),
@@ -949,6 +1033,8 @@
                 return $(this).val();
             }).get();
 
+            let priceAmount = sale_price ? sale_price : product_price;
+
             jQuery.ajax({
                 url: window.dokan.rest.root + `dokan/v1/commission`,
                 beforeSend: function ( xhr ) {
@@ -957,14 +1043,14 @@
                 type: 'GET',
                 data: {
                     product_id: product_id,
-                    amount: sale_price ? sale_price : product_price,
+                    amount: priceAmount ? Dokan_Editor.unformatMoney( priceAmount ) : 0,
                     // vendor_id
                     category_ids,
                     context: 'seller'
                 }
             }).done( ( response ) => {
                 if ( ! isNaN( response ) ) {
-                    earning_suggestion.html( response );
+                    earning_suggestion.html( Dokan_Editor.formatMoney( response ) );
                 }
 
                 if ( typeof callback === 'function' ) {
@@ -973,10 +1059,29 @@
             } );
         },
 
+        formatMoney( amount ) {
+            return accounting.formatMoney( amount, {
+                symbol: dokan.currency_format_symbol,
+                decimal: dokan.currency_format_decimal_sep,
+                thousand: dokan.currency_format_thousand_sep,
+                precision: dokan.currency_format_num_decimals,
+                format: dokan.currency_format,
+            } );
+        },
+
+        unformatMoney( amount ) {
+            return accounting.unformat( amount, dokan.mon_decimal_point );
+        },
+
         earning_suggestion_callbak: function() {
 
             if ( $( '#product_type' ).val() == 'simple' || $( '#product_type' ).text() == '' ) {
-                if ( Number( $('.simple-product span.vendor-price').text() ) < 0  ) {
+                let vandorPrice = $(
+                    '.simple-product span.vendor-price'
+                ).text();
+                vandorPrice = Dokan_Editor.unformatMoney( vandorPrice );
+
+                if ( vandorPrice < 0 ) {
                     $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
                     $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
                     $( 'button[type=submit]' ).attr( 'disabled', 'disabled' );

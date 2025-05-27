@@ -9,14 +9,14 @@ class Fixed extends AbstractFormula {
     /**
      * Commission type source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'fixed';
 
     /**
      * Admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $admin_commission
      */
@@ -25,7 +25,7 @@ class Fixed extends AbstractFormula {
     /**
      * Per item admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $per_item_admin_commission
      */
@@ -34,7 +34,7 @@ class Fixed extends AbstractFormula {
     /**
      * Total vendor earning amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float $vendor_earning
      */
@@ -43,21 +43,21 @@ class Fixed extends AbstractFormula {
     /**
      * Total items quantity, on it the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int $items_total_quantity
      */
     protected $items_total_quantity = 1;
 
     /**
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var \WeDevs\Dokan\Commission\Formula\Flat
      */
     protected Flat $flat_calculator;
 
     /**
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var \WeDevs\Dokan\Commission\Formula\Percentage
      */
@@ -66,7 +66,7 @@ class Fixed extends AbstractFormula {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      */
@@ -80,7 +80,7 @@ class Fixed extends AbstractFormula {
     /**
      * Calculating the fixed commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -120,7 +120,7 @@ class Fixed extends AbstractFormula {
     /**
      * Get commission date parameters.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */
@@ -135,7 +135,7 @@ class Fixed extends AbstractFormula {
     /**
      * Returns commission source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -146,7 +146,7 @@ class Fixed extends AbstractFormula {
     /**
      * Returns if a fixed commission is applicable or not.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -157,7 +157,7 @@ class Fixed extends AbstractFormula {
     /**
      * Returns true if commission type is valid.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -172,7 +172,7 @@ class Fixed extends AbstractFormula {
     /**
      * Returns if saved commission data is valid to be applied.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -183,40 +183,40 @@ class Fixed extends AbstractFormula {
     /**
      * Returns admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
     public function get_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->admin_commission );
+        return $this->validate_rate( $this->admin_commission );
     }
 
     /**
      * Returns vendor earning amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
     public function get_vendor_earning(): float {
-        return dokan()->commission->validate_rate( $this->vendor_earning );
+        return $this->validate_rate( $this->vendor_earning );
     }
 
     /**
      * Returns per item admin commission amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
     public function get_per_item_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->per_item_admin_commission );
+        return $this->validate_rate( $this->per_item_admin_commission );
     }
 
     /**
      * Returns the quantity on which the commission has been calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int
      */

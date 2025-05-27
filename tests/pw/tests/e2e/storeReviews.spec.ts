@@ -35,6 +35,7 @@ test.describe('Store Reviews test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules(payloads.moduleIds.storeReviews, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
@@ -42,6 +43,10 @@ test.describe('Store Reviews test', () => {
     });
 
     //admin
+
+    test('admin can enable store reviews module', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+        await admin.enableStoreReviewsModule(data.predefined.vendorStores.vendor1);
+    });
 
     test('admin can view store reviews menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminStoreReviewsRenderProperly();
@@ -94,5 +99,10 @@ test.describe('Store Reviews test', () => {
 
     test("vendor can't review own store", { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.cantReviewOwnStore(data.predefined.vendorStores.vendor1);
+    });
+
+    test('admin can disable store reviews module', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.storeReviews, payloads.adminAuth);
+        await admin.disableStoreReviewsModule(data.predefined.vendorStores.vendor1);
     });
 });

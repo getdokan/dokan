@@ -3,7 +3,7 @@
         <div class="withdraw-requests">
             <h1>{{ __( 'Withdraw Requests', 'dokan-lite' ) }}</h1>
             <AdminNotice></AdminNotice>
-            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
+<!--            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>-->
 
             <modal
                 :title="__( 'Update Note', 'dokan-lite' )"
@@ -161,7 +161,7 @@ let AdminNotice       = dokan_get_lib('AdminNotice');
 const DateRangePicker = dokan_get_lib('DateRangePicker');
 
 import $ from 'jquery';
-import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+// import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
 export default {
 
@@ -171,7 +171,7 @@ export default {
         ListTable,
         Modal,
         Currency,
-        UpgradeBanner,
+        // UpgradeBanner,
         AdminNotice,
         DateRangePicker,
     },
@@ -835,7 +835,7 @@ export default {
         showErrorAlert( message ) {
             let self = this;
             swal.fire(
-                self.__( 'Something went wrong', 'dokan' ),
+                self.__( 'Something went wrong', 'dokan-lite' ),
                 message,
                 'error'
             );

@@ -157,6 +157,7 @@ class Vendor {
             'registered'            => $this->get_register_date(),
             'payment'               => $this->get_payment_profiles(),
             'trusted'               => $this->is_trusted(),
+            'reset_sub_category'    => $this->get_reset_sub_category(),
             'store_open_close'      => [
                 'enabled'      => $this->is_store_time_enabled(),
                 'time'         => $this->get_store_time(),
@@ -213,6 +214,15 @@ class Vendor {
      */
     public function is_featured() {
         return 'yes' == get_user_meta( $this->id, 'dokan_feature_seller', true );
+    }
+
+    /**
+     * If reset sub category is enabled
+     *
+     * @return boolean
+     */
+    public function get_reset_sub_category() {
+        return 'no' !== get_user_meta( $this->id, 'reset_sub_category', true );
     }
 
     /**
@@ -1550,7 +1560,7 @@ class Vendor {
     /**
      * Returns vendor commission settings data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -1562,7 +1572,7 @@ class Vendor {
     /**
      * Saves commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param array $commission
      *

@@ -2,124 +2,96 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Model\Setting;
-use WeDevs\Dokan\Commission\Settings\Builder;
-
 /**
  * If an order has been purchased previously, calculate the earning with the previously stated commission rate.
  * It's important cause commission rate may get changed by admin during the order table `re-generation`.
  */
 class OrderItem extends AbstractStrategy {
-
     /**
      * Order item commission strategy source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'order_item';
 
     /**
      * Order item id.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
-     * @var mixed|string $order_item_id
+    * @var \WC_Order_Item_Product $order_item
      */
-    protected $order_item_id;
+    protected $order_item;
 
     /**
-     * Total price amount.
+     * The vendor id of the order item.
      *
-     * @since DOKAN_SINCE
-     *
-     * @var int|mixed $total_amount
+     * @var integer
      */
-    protected $total_amount;
-
-    /**
-     * Total order quantity.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @var int|mixed $total_quantity
-     */
-    protected $total_quantity;
+    protected $vendor_id = 0;
 
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
-     * @param int|string $order_item_id
+     * @param \WC_Order_Item_Product $order_item
      * @param int|float  $total_amount
      * @param int        $total_quantity
      *
      * @return void
      */
-    public function __construct( $order_item_id = '', $total_amount = 0, $total_quantity = 1 ) {
-        $this->order_item_id             = $order_item_id;
-        $this->total_amount              = $total_amount;
-        $this->total_quantity = $total_quantity;
+    public function __construct( $order_item = '', $vendor_id = 0 ) {
+        $this->order_item = $order_item;
+
+        $this->vendor_id = $vendor_id ? $vendor_id : dokan_get_vendor_by_product( $order_item->get_product_id(), true );
+
+        parent::__construct();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function set_next(): AbstractStrategy {
+        if ( ! $this->next ) {
+			$this->next = new Product( $this->order_item->get_product_id(), $this->vendor_id );
+        }
+
+        return $this;
     }
 
     /**
      * Returns order item strategy source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
     public function get_source(): string {
-        return self::SOURCE;
+        return $this->settings->get_source();
     }
 
     /**
      * Returns order item commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function get_settings(): Setting {
-        $settings = Builder::build(
-            Builder::TYPE_ORDER_ITEM,
-            [
-                'id' => $this->order_item_id,
-                'price' => $this->total_amount,
-            ]
-        );
+    public function set_settings() {
+        $settings = new \WeDevs\Dokan\Commission\Settings\OrderItem( $this->order_item );
 
-        return $settings->get();
+        $this->settings = $settings->get();
     }
 
     /**
-     * Save order item commission meta data.
+     * Returns order item id.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.0
      *
-     * @param string    $type
-     * @param int|float $percentage
-     * @param int|float $flat
-     * @param array     $meta_data
-     *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
+     * @return int|mixed|string
      */
-    public function save_line_item_commission_to_meta( $type, $percentage, $flat, $meta_data ) {
-        $settings = Builder::build(
-            Builder::TYPE_ORDER_ITEM,
-            [
-                'id'    => $this->order_item_id,
-                'price' => $this->total_amount,
-            ]
-        );
-
-        return $settings->save(
-            [
-                'type'       => $type,
-                'percentage' => $percentage,
-                'flat'       => $flat,
-                'meta_data'  => $meta_data  ,
-            ]
-        );
+    public function get_order_item_id() {
+        return $this->order_item->get_id();
     }
 }

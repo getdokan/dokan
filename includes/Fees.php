@@ -3,13 +3,6 @@
 namespace WeDevs\Dokan;
 
 use WC_Order;
-use WC_Product;
-use WeDevs\Dokan\Commission\Calculator;
-use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
-use WeDevs\Dokan\Commission\Strategies\OrderItem;
-use WeDevs\Dokan\Commission\Strategies\Product;
-use WeDevs\Dokan\Commission\Strategies\Vendor;
-use WeDevs\Dokan\ProductCategory\Helper;
 use WP_Error;
 use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayPalGateway;
 
@@ -17,9 +10,9 @@ class Fees {
 
     /**
      * Class constructor
-     * Moved from dokan()->commission in version in DOKAN_SINCE
+     * Moved from dokan()->commission in version in 3.14.0
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
@@ -53,7 +46,7 @@ class Fees {
 
     /**
      * Calculate gateway fee
-     * Moved from dokan()->commission in version in DOKAN_SINCE
+     * Moved from dokan()->commission in version in 3.14.0
      *
      * @since 2.9.21
      *
@@ -124,7 +117,7 @@ class Fees {
     /**
      * Get processing fee
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.4
      *
      * @param WC_Order $order
      *
@@ -150,7 +143,7 @@ class Fees {
 
     /**
      * Get shipping fee recipient
-     * Move from commission.php in version DOKAN_SINCE
+     * Move from commission.php in version 3.14.0
      *
      * @since  2.9.21
      * @since  3.4.1 introduced the shipping fee recipient hook
@@ -183,7 +176,7 @@ class Fees {
 
     /**
      * Get tax fee recipient
-     *  Move from commission.php in version DOKAN_SINCE
+     *  Move from commission.php in version 3.14.0
      *
      * @since  2.9.21
      * @since  3.4.1 introduced the tax fee recipient hook
@@ -216,7 +209,7 @@ class Fees {
 
     /**
      * Get shipping tax fee recipient.
-     * Move from commission.php in version DOKAN_SINCE
+     * Move from commission.php in version 3.14.0
      *
      * @since 3.7.19
      *
@@ -243,7 +236,7 @@ class Fees {
 
     /**
      * Get total shipping tax refunded for the order.
-     * Move from commission.php in version DOKAN_SINCE
+     * Move from commission.php in version 3.14.0
      *
      * @since 3.7.19
      *

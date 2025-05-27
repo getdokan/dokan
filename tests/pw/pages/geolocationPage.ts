@@ -13,6 +13,36 @@ export class GeolocationPage extends AdminPage {
         await this.gotoUntilNetworkidle(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
     }
 
+    // enable geolocation module
+    async enableGeolocationModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.geolocation);
+
+        // shop page
+        await this.goto(data.subUrls.frontend.shop);
+        await this.toBeVisible(selector.customer.cShop.map.locationMap);
+
+        // store listing page
+        await this.goto(data.subUrls.frontend.storeListing);
+        await this.toBeVisible(selector.customer.cStoreList.map.locationMap);
+    }
+
+    // disable geolocation module
+    async disableGeolocationModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.geolocation);
+
+        // shop page
+        await this.goto(data.subUrls.frontend.shop);
+        await this.notToBeVisible(selector.customer.cShop.map.locationMap);
+
+        // store listing page
+        await this.goto(data.subUrls.frontend.storeListing);
+        await this.notToBeVisible(selector.customer.cStoreList.map.locationMap);
+    }
+
     // view map position
     async viewMapPosition(position: 'top' | 'left' | 'right'): Promise<void> {
         await this.gotoUntilNetworkidle(data.subUrls.frontend.storeListing);

@@ -29,8 +29,21 @@ if ( isset( $post->ID ) && $post->ID && 'product' === $post->post_type ) {
 }
 
 if ( isset( $_GET['product_id'] ) ) {
-    $post_id        = intval( $_GET['product_id'] );
-    $post           = get_post( $post_id );
+    $post_id = intval( $_GET['product_id'] );
+    $post    = get_post( $post_id );
+
+    if ( ! $post instanceof WP_Post ) {
+        dokan_get_template_part(
+            'global/dokan-error',
+            '',
+            array(
+                'deleted' => false,
+                'message' => __( 'This product is no longer available', 'dokan-lite' ),
+            )
+        );
+        return;
+    }
+
     $post_status    = $post->post_status;
     $auto_draft     = 'auto-draft' === $post_status;
     $post_title     = $auto_draft ? '' : $post->post_title;
@@ -125,7 +138,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
         do_action( 'dokan_before_product_content_area' );
         ?>
 
-        <div class="dokan-dashboard-content dokan-product-edit">
+        <div class="dokan-dashboard-content dokan-product-edit dokan-layout">
 
             <?php
             /**
@@ -140,7 +153,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
             }
             ?>
 
-            <header class="dokan-dashboard-header dokan-clearfix">
+            <header class="dokan-dashboard-header dokan-ai-prompt">
                 <h1 class="entry-title">
                     <?php
                     if ( $new_product || 'auto-draft' === $post->post_status ) {
@@ -152,7 +165,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     /**
                      * Render the contents before product edit status label.
                      *
-                     * @since DOKAN_PRO_SINCE
+                     * @since 3.13.1
                      *
                      * @param \WC_Product $product
                      */
@@ -167,7 +180,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     /**
                      * Render the contents after product edit status label.
                      *
-                     * @since DOKAN_PRO_SINCE
+                     * @since 3.13.1
                      *
                      * @param \WC_Product $product
                      */
@@ -195,6 +208,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     do_action( 'dokan_edit_product_after_view_product_button', $product );
                     ?>
                 </h1>
+                <div id="ai-prompt-app"></div>
             </header><!-- .entry-header -->
 
             <div class="product-edit-new-container product-edit-container">
@@ -292,15 +306,14 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         class="vendor-earning simple-product"
                                                         data-commission="<?php echo esc_attr( dokan()->commission->get_earning_by_product( $post_id ) ); ?>"
                                                         data-product-id="<?php echo esc_attr( $post_id ); ?>">
-                                                            ( <?php esc_html_e( ' You Earn : ', 'dokan-lite' ); ?><?php echo esc_html( get_woocommerce_currency_symbol() ); ?>
+                                                            ( <?php esc_html_e( ' You Earn : ', 'dokan-lite' ); ?>
                                                                 <span class="vendor-price">
                                                                     <?php
                                                                     echo wp_kses_post(
                                                                         wc_price(
                                                                             dokan()->commission->get_earning_by_product( $post_id ),
                                                                             [
-                                                                                'currency' => get_woocommerce_currency_symbol(),
-                                                                                'decimals' => wc_get_price_decimals() + 2,
+                                                                                'decimals' => wc_get_price_decimals(),
                                                                             ]
                                                                         )
                                                                     );
@@ -317,7 +330,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         '_regular_price',
                                                         [
                                                             'class'       => 'dokan-product-regular-price',
-                                                            'placeholder' => __( '0.00', 'dokan-lite' ),
+															'placeholder' => sprintf( '%.0' . get_option( 'woocommerce_price_num_decimals' ) . 'f', 0 ),
                                                         ],
                                                         'price'
                                                     );
@@ -340,7 +353,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         '_sale_price',
                                                         [
                                                             'class'       => 'dokan-product-sales-price',
-                                                            'placeholder' => __( '0.00', 'dokan-lite' ),
+                                                            'placeholder' => sprintf( '%.0' . get_option( 'woocommerce_price_num_decimals' ) . 'f', 0 ),
                                                         ],
                                                         'price'
                                                     );
@@ -374,6 +387,20 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                                     <div class="dokan-form-group">
                                     <?php do_action( 'dokan_product_edit_after_pricing', $post, $post_id ); ?>
+                                    </div>
+
+                                    <div class="dokan-form-group">
+                                        <label for="product_tag_edit" class="form-label"><?php esc_html_e( 'Brand', 'dokan-lite' ); ?></label>
+                                        <?php
+                                        $terms_brand = wp_get_post_terms( $post_id, 'product_brand', array( 'fields' => 'all' ) );
+                                        ?>
+                                        <select multiple="multiple" id="product_brand_edit" name="product_brand[]" class="product_brand_search dokan-form-control" data-placeholder="Select Brand">
+                                            <?php if ( ! empty( $terms_brand ) ) : ?>
+                                                <?php foreach ( $terms_brand as $tax_term ) : ?>
+                                                    <option value="<?php echo esc_attr( $tax_term->term_id ); ?>" selected="selected" ><?php echo esc_html( $tax_term->name ); ?></option>
+                                                <?php endforeach ?>
+                                            <?php endif ?>
+                                        </select>
                                     </div>
 
                                     <div class="dokan-form-group">
