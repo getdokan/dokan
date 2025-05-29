@@ -188,7 +188,7 @@ class Fixed extends AbstractFormula {
      * @return float
      */
     public function get_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->admin_commission );
+        return $this->validate_rate( $this->admin_commission );
     }
 
     /**
@@ -199,7 +199,7 @@ class Fixed extends AbstractFormula {
      * @return float
      */
     public function get_vendor_earning(): float {
-        return dokan()->commission->validate_rate( $this->vendor_earning );
+        return $this->validate_rate( $this->vendor_earning );
     }
 
     /**
@@ -210,7 +210,7 @@ class Fixed extends AbstractFormula {
      * @return float
      */
     public function get_per_item_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->per_item_admin_commission );
+        return $this->validate_rate( $this->per_item_admin_commission );
     }
 
     /**

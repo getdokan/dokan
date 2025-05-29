@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\Analytics\Reports\Orders\Stats;
 
 use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter as OrdersQueryFilter;
-use WeDevs\Dokan\Analytics\Reports\OrderType;
 
 /**
  * Class QueryFilter
@@ -30,11 +29,8 @@ class QueryFilter extends OrdersQueryFilter {
         add_filter( 'woocommerce_analytics_clauses_join_orders_stats_total', [ $this, 'add_join_subquery' ] );
         add_filter( 'woocommerce_analytics_clauses_join_orders_stats_interval', [ $this, 'add_join_subquery' ] );
 
-        // add_filter( 'woocommerce_analytics_clauses_where_orders_stats_total', [ $this, 'add_where_subquery' ], 30 );
-        // add_filter( 'woocommerce_analytics_clauses_where_orders_stats_interval', [ $this, 'add_where_subquery' ], 30 );
-
-        add_filter( 'woocommerce_analytics_clauses_where_orders_stats_total', [ $this, 'add_where_subquery_for_vendor_filter' ], 30 );
-        add_filter( 'woocommerce_analytics_clauses_where_orders_stats_interval', [ $this, 'add_where_subquery_for_vendor_filter' ], 30 );
+        add_filter( 'woocommerce_analytics_clauses_where_orders_stats_total', [ $this, 'add_where_subquery' ], 30 );
+        add_filter( 'woocommerce_analytics_clauses_where_orders_stats_interval', [ $this, 'add_where_subquery' ], 30 );
 
         add_filter( 'woocommerce_analytics_clauses_select_orders_stats_total', [ $this, 'add_select_subquery_for_total' ] );
         add_filter( 'woocommerce_analytics_clauses_select_orders_stats_interval', [ $this, 'add_select_subquery_for_total' ] );
@@ -49,101 +45,62 @@ class QueryFilter extends OrdersQueryFilter {
     /**
      * Modifies the admin report columns to include Dokan-specific data.
      *
+     * @since 4.0.0
+     *
      * @param array  $column        The existing report columns.
      * @param string $context       The context of the report.
      * @param string $wc_table_name The WooCommerce table name being queried.
      *
      * @return array Modified report columns.
      */
-    public function modify_admin_report_columns( array $column, string $context, string $table_name ): array {
-        if ( $context !== $this->context ) {
-            return $column;
-        }
+	public function modify_admin_report_columns( array $column, string $context, string $wc_table_name ): array {
+		if ( $context !== $this->context ) {
+			return $column;
+		}
 
-        $dokan_table_name = $this->get_dokan_table();
-        $order_types = $this->get_order_types_for_sql_excluding_refunds();
-        $types = implode( ',', ( new OrderType() )->get_vendor_order_types() );
-        // $types = $this->get_order_types_for_sql_excluding_refunds();
+		$table_name = $this->get_dokan_table();
+		$types      = $this->get_order_types_for_sql_excluding_refunds();
 
-        $parent_order_types_str = implode( ',', ( new OrderType() )->get_admin_order_types_excluding_refunds() );
-        $refund_order_types_str = implode( ',', ( new OrderType() )->get_vendor_refund_types() );
+		$order_count_expr = "SUM(CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END)";
+		$order_count_safe = "NULLIF({$order_count_expr}, 0)";
 
-        $order_count = "SUM( CASE WHEN {$dokan_table_name}.order_type IN($order_types) THEN 1 ELSE 0 END )";
+		$column['orders_count']         = "{$order_count_expr} AS orders_count";
+		$column['avg_items_per_order']  = "COALESCE(SUM({$wc_table_name}.num_items_sold) / {$order_count_safe}, 0) AS avg_items_per_order";
+		$column['avg_order_value']      = "COALESCE(SUM({$wc_table_name}.net_total) / {$order_count_safe}, 0) AS avg_order_value";
+		$column['avg_admin_commission'] = "COALESCE(SUM({$table_name}.admin_commission) / {$order_count_safe}, 0) AS avg_admin_commission";
+		$column['avg_vendor_earning']   = "COALESCE(SUM({$table_name}.vendor_earning) / {$order_count_safe}, 0) AS avg_vendor_earning";
 
-        /**
-         * Override WC column.
-         *
-         * We can apply the common where clause after Dokan Coupon Distribution.
-         * File to restore: @see https://github.com/getdokan/dokan/blob/2cffa360a94b32033e7591fece5950068ab758f5/includes/Analytics/Reports/Orders/Stats/QueryFilter.php#L4
-         */
-        $coupon = "SUM(CASE WHEN {$dokan_table_name}.order_type IN($parent_order_types_str) THEN discount_amount END)";
-
-        $net_total = "SUM(CASE WHEN {$dokan_table_name}.order_type IN($types) THEN  {$table_name}.net_total END)";
-
-        $item_sold = "SUM( CASE WHEN {$dokan_table_name}.order_type IN($types) THEN {$table_name}.num_items_sold END)";
-
-        $refunds = "ABS( SUM( CASE WHEN {$table_name}.net_total < 0 AND {$dokan_table_name}.order_type IN($refund_order_types_str) THEN {$table_name}.net_total ELSE 0 END ) )";
-
-		$gross_sales =
-			"( SUM( CASE WHEN {$dokan_table_name}.order_type IN($types) THEN {$table_name}.total_sales END )" .
-			" + COALESCE( $coupon, 0 )" . // SUM() all nulls gives null.
-			" - SUM(CASE WHEN {$dokan_table_name}.order_type IN($types) THEN {$table_name}.tax_total END)" .
-			" - SUM(CASE WHEN {$dokan_table_name}.order_type IN($types) THEN  {$table_name}.shipping_total END)" .
-			" + {$refunds}" .
-			' ) as gross_sales';
-
-        $column['num_items_sold']      = "$item_sold as num_items_sold";
-        $column['gross_sales']         = $gross_sales;
-        $column['total_sales']         = "SUM( CASE WHEN {$dokan_table_name}.order_type IN($types) THEN  {$table_name}.total_sales END) AS total_sales";
-        $column['coupons']             = "COALESCE( $coupon, 0 ) AS coupons"; // SUM() all nulls gives null;
-        $column['coupons_count']       = 'COALESCE( coupons_count, 0 ) as coupons_count';
-        $column['refunds']             = "{$refunds} AS refunds";
-        $column['taxes']               = "SUM(CASE WHEN {$dokan_table_name}.order_type IN($types) THEN {$table_name}.tax_total END) AS taxes";
-        $column['shipping']            = "SUM(CASE WHEN {$dokan_table_name}.order_type IN($types) THEN {$table_name}.shipping_total END) AS shipping";
-        $column['net_revenue']         = " $net_total AS net_revenue";
-        $column['total_customers']     = "COUNT( DISTINCT( {$table_name}.customer_id ) ) as total_customers";
-        // End of override
-
-        $column['orders_count'] = "{$order_count} as orders_count";
-
-        $column['avg_items_per_order']  = "{$item_sold} / {$order_count} AS avg_items_per_order";
-        $column['avg_order_value']      = "{$net_total} / {$order_count} AS avg_order_value";
-        $column['avg_admin_commission'] = "SUM( CASE WHEN {$dokan_table_name}.order_type IN($types) THEN  {$dokan_table_name}.admin_commission END) / {$order_count} AS avg_admin_commission";
-        $column['avg_vendor_earning']   = "SUM( CASE WHEN {$dokan_table_name}.order_type IN($types) THEN  {$dokan_table_name}.vendor_earning END) / {$order_count} AS avg_vendor_earning";
-
-        return $column;
-    }
+		return $column;
+	}
 
     /**
      * Adds custom select subqueries for calculating Dokan-specific totals in the analytics reports.
+     *
+     * @since 4.0.0
      *
      * @param array $clauses The existing SQL select clauses.
      *
      * @return array Modified SQL select clauses.
      */
-    public function add_select_subquery_for_total( $clauses ) {
-        $table_name = $this->get_dokan_table();
-        $types = $this->get_order_and_refund_types_to_include();
-        $commission = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN admin_commission ELSE 0 END)";
-        $vendor_earning = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN vendor_earning ELSE 0 END)";
+	public function add_select_subquery_for_total( $clauses ) {
+		$table_name = $this->get_dokan_table();
+		$types      = $this->get_order_and_refund_types_to_include();
 
-        $clauses[] = "$vendor_earning  as total_vendor_earning";
-        $clauses[] = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN vendor_gateway_fee ELSE 0 END) as total_vendor_gateway_fee";
-        $clauses[] = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN vendor_discount ELSE 0 END) as total_vendor_discount";
-        $clauses[] = "$commission as total_admin_commission";
-        $clauses[] = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN admin_gateway_fee ELSE 0 END) as total_admin_gateway_fee";
-        $clauses[] = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN admin_discount ELSE 0 END) as total_admin_discount";
-        $clauses[] = ", SUM( CASE WHEN {$table_name}.order_type IN($types) THEN admin_subsidy ELSE 0 END) as total_admin_subsidy";
-        $clauses[] = " $commission / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_admin_commission";
-        $clauses[] = "$vendor_earning / SUM( CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END ) AS avg_vendor_earning";
+		$order_count_expr = "SUM(CASE WHEN {$table_name}.order_type IN($types) THEN 1 ELSE 0 END)";
+		$order_count_safe = "NULLIF({$order_count_expr}, 0)";
 
-        return $clauses;
-    }
+		$clauses[] = ', 
+        SUM(vendor_earning) AS total_vendor_earning, 
+        SUM(vendor_gateway_fee) AS total_vendor_gateway_fee, 
+        SUM(vendor_discount) AS total_vendor_discount, 
+        SUM(admin_commission) AS total_admin_commission, 
+        SUM(admin_gateway_fee) AS total_admin_gateway_fee, 
+        SUM(admin_discount) AS total_admin_discount, 
+        SUM(admin_subsidy) AS total_admin_subsidy';
 
-    /**
-     * @inheritDoc
-     */
-    public function add_where_subquery_for_vendor_filter( array $clauses ): array {
-        return parent::add_where_subquery_for_vendor_filter( $clauses );
-    }
+		$clauses[] = ", COALESCE(SUM({$table_name}.admin_commission) / {$order_count_safe}, 0) AS avg_admin_commission";
+		$clauses[] = ", COALESCE(SUM({$table_name}.vendor_earning) / {$order_count_safe}, 0) AS avg_vendor_earning";
+
+		return $clauses;
+	}
 }

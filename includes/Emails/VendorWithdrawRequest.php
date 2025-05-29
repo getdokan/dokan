@@ -30,6 +30,7 @@ class VendorWithdrawRequest extends WC_Email {
         $this->placeholders   = [
             '{store_name}'    => '',
             '{amount}'        => '',
+            '{charge}'        => '',
             '{method}'        => '',
             '{profile_url}'   => '',
             '{withdraw_page}' => '',
@@ -39,7 +40,7 @@ class VendorWithdrawRequest extends WC_Email {
         ];
 
         // Triggers for this email
-        add_action( 'dokan_after_withdraw_request', array( $this, 'trigger' ), 30, 3 );
+        add_action( 'dokan_after_withdraw_request', array( $this, 'trigger' ), 30, 4 );
 
         // Call parent constructor
         parent::__construct();
@@ -71,21 +72,25 @@ class VendorWithdrawRequest extends WC_Email {
     /**
      * Trigger the sending of this email.
      *
-     * @param int $user_id User ID.
-     * @param mixed $amount Withdrawal amount.
-     * @param string $method Withdrawal method.
+     * @param int    $user_id User ID.
+     * @param mixed  $amount  Withdrawal amount.
+     * @param string $method  Withdrawal method.
+     * @param int    $id      Withdrawal id,
      */
-    public function trigger( $user_id, $amount, $method ) {
+    public function trigger( $user_id, $amount, $method, $id ) {
         $seller = new Vendor( $user_id );
 
         if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
             return;
         }
 
+        $withdraw = dokan()->withdraw->get( $id );
+
         $this->setup_locale();
         $this->object                          = $seller;
         $this->placeholders['{store_name}']    = $seller->get_shop_name();
         $this->placeholders['{amount}']        = dokan()->email->currency_symbol( $amount );
+        $this->placeholders['{charge}']        = dokan()->email->currency_symbol( $withdraw->get_charge() );
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $method );
         $this->placeholders['{profile_url}']   = $seller->get_profile_url();
         $this->placeholders['{withdraw_page}'] = admin_url( 'admin.php?page=dokan#/withdraw?status=pending' );

@@ -2,8 +2,7 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Model\Setting;
-use WeDevs\Dokan\Commission\Settings\Builder;
+use WeDevs\Dokan\ProductCategory\Helper;
 
 class Product extends AbstractStrategy {
 
@@ -15,6 +14,8 @@ class Product extends AbstractStrategy {
      * @var int
      */
     protected $product_id;
+
+    protected $vendor_id;
 
     /**
      * Product strategy source
@@ -30,8 +31,39 @@ class Product extends AbstractStrategy {
      *
      * @param $product_id
      */
-    public function __construct( $product_id ) {
+    public function __construct( $product_id, $vendor_id = 0 ) {
         $this->product_id = $product_id;
+        $this->vendor_id = $vendor_id;
+
+        parent::__construct();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function set_next(): AbstractStrategy {
+        if ( ! $this->next ) {
+            $product_id = $this->product_id;
+            $vendor_id = $this->vendor_id ? $this->vendor_id : dokan_get_vendor_by_product( $product_id, true );
+
+			$this->next = new Vendor( $vendor_id, $this->get_category_from_product( $product_id ) );
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get category for the given product.
+     *
+     * @param int $product_id
+     * @return void
+     */
+    protected function get_category_from_product( $product_id ) {
+        $product_categories = Helper::get_saved_products_category( $product_id );
+        $chosen_categories  = $product_categories['chosen_cat'];
+        $category_id        = reset( $chosen_categories );
+
+        return $category_id ? $category_id : 0;
     }
 
     /**
@@ -52,9 +84,9 @@ class Product extends AbstractStrategy {
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function get_settings(): Setting {
-        $settings = Builder::build( Builder::TYPE_PRODUCT, $this->product_id );
+    public function set_settings() {
+        $settings = new \WeDevs\Dokan\Commission\Settings\Product( $this->product_id );
 
-        return $settings->get();
+        $this->settings = $settings->get();
     }
 }
