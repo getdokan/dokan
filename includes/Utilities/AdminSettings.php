@@ -8,7 +8,7 @@ class AdminSettings {
      * Get new seller selling status setting.
      * We are placing this function here because this function may access from admin and front-end both.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.2
      *
      * @param string $status
      *
@@ -32,7 +32,7 @@ class AdminSettings {
     /**
      * Dokan new seller enable selling statuses.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.2
      *
      * @return array
      */
