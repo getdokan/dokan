@@ -1975,11 +1975,12 @@ add_filter( 'get_avatar_url', 'dokan_get_avatar_url', 99, 3 );
 /**
  * Get navigation url for the dokan dashboard
  *
- * @param string $name endpoint name
+ * @param string $name    endpoint name
+ * @param bool   $new_url if true, it will return the new url format
  *
  * @return string url
  */
-function dokan_get_navigation_url( $name = '' ) {
+function dokan_get_navigation_url( $name = '', $new_url = false ) {
     $page_id = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
 
     if ( ! $page_id ) {
@@ -1988,11 +1989,16 @@ function dokan_get_navigation_url( $name = '' ) {
 
     $url = rtrim( get_permalink( $page_id ), '/' ) . '/';
 
-    if ( ! empty( $name ) ) {
+    if ( ! empty( $name ) && ! $new_url ) {
         $url = dokan_add_subpage_to_url( $url, $name . '/' );
     }
 
-    return apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name );
+    if ( $new_url ) {
+        $url = dokan_add_subpage_to_url( $url, 'new/' );
+        $url = $url . '#' . $name . '/';
+    }
+
+    return apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name, $new_url );
 }
 
 /**
