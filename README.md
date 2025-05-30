@@ -348,7 +348,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 ## Changelog ##
-### v4.0.2 ( May 30, 2025 ) ###
+### v4.0.2 ( Jun 02, 2025 ) ###
 
 - **fix:** Resolved an issue where the single store page header style was broken on multiple themes.
 - **fix:** Added proper type checking for product and author objects in the product tab template to prevent potential errors when invalid data is passed.
