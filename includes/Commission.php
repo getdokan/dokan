@@ -317,13 +317,14 @@ class Commission {
      *
      * @param int    $order_id
      * @param string $context
+     * @param bool   $raw
      *
      * @return float|array|null on failure
      */
     public function get_earning_from_order_table( $order_id, $context = 'seller', $raw = false ) {
         global $wpdb;
 
-        $raw_key   = json_encode( $raw );
+        $raw_key   = wp_json_encode( $raw );
         $cache_key = "get_earning_from_order_table_{$order_id}_{$context}_{$raw_key}";
         $earning   = Cache::get( $cache_key );
 
