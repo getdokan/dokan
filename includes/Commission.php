@@ -318,12 +318,13 @@ class Commission {
      * @param int    $order_id
      * @param string $context
      *
-     * @return float|null on failure
+     * @return float|array|null on failure
      */
-    public function get_earning_from_order_table( $order_id, $context = 'seller' ) {
+    public function get_earning_from_order_table( $order_id, $context = 'seller', $raw = false ) {
         global $wpdb;
 
-        $cache_key = "get_earning_from_order_table_{$order_id}_{$context}";
+        $raw_key   = json_encode( $raw );
+        $cache_key = "get_earning_from_order_table_{$order_id}_{$context}_{$raw_key}";
         $earning   = Cache::get( $cache_key );
 
         if ( false !== $earning ) {
@@ -341,7 +342,15 @@ class Commission {
             return null;
         }
 
-        $earning = 'seller' === $context ? (float) $result->net_amount : (float) $result->order_total - (float) $result->net_amount;
+        if ( $raw ) {
+            $earning = [
+                'net_amount'  => (float) $result->net_amount,
+                'order_total' => (float) $result->order_total,
+            ];
+        } else {
+            $earning = 'seller' === $context ? (float) $result->net_amount : (float) $result->order_total - (float) $result->net_amount;
+        }
+
         Cache::set( $cache_key, $earning );
 
         return $earning;
