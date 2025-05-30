@@ -155,26 +155,29 @@ class VendorBalanceUpdateHandler implements Hookable {
             $order_commission_calculator->set_order( $order );
             $order_commission_calculator->calculate();
 
-            $calculated_earning = $order_commission_calculator->get_vendor_earning();
+            $calculated_earning = (float) $order_commission_calculator->get_vendor_earning();
         } catch ( Exception $e ) {
             error_log( sprintf( 'Dokan: Order %d commission calculation failed. Error: %s', $order->get_id(), $e->getMessage() ) );
             return;
         }
 
-        $earning_in_dokan_orders = dokan()->commission->get_earning_from_order_table( $order->get_id() );
+        $earning_table_entry     = dokan()->commission->get_earning_from_order_table( $order->get_id(), 'seller', true );
+        $earning_in_dokan_orders = (float) $earning_table_entry['net_amount'] ?? 0.0;
+        $net_totals              = (float) $earning_table_entry['order_total'] ?? 0.0;
+        $order_totals            = (float) ( $order->get_total() - $order->get_total_refunded() );
 
         // Restore the action
         add_action( 'woocommerce_update_order', [ $this, 'update_dokan_order_table' ], 80, 2 );
 
-        if ( $earning_in_dokan_orders === floatval( $calculated_earning ) ) {
+        if ( ( $order_totals === $net_totals ) && ( $earning_in_dokan_orders === $calculated_earning ) ) {
             return;
         }
 
         $updated = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->dokan_orders,
             [
-                'net_amount' => $calculated_earning,
-                'order_total' => $order->get_total() - $order->get_total_refunded(),
+                'net_amount'  => $calculated_earning,
+                'order_total' => $order_totals,
             ],
             [ 'order_id' => $order->get_id() ],
             [ '%s', '%s' ],
@@ -185,6 +188,6 @@ class VendorBalanceUpdateHandler implements Hookable {
             return;
         }
 
-        Cache::delete( "get_earning_from_order_table_{$order->get_id()}_seller" );
+        Cache::delete( "get_earning_from_order_table_{$order->get_id()}_seller_true" );
     }
 }
