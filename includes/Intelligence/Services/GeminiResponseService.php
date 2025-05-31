@@ -33,6 +33,7 @@ class GeminiResponseService extends BaseAIService {
                     }
 
                     Guidelines:
+                    — Output language should be the same as the input language strictly matching the prompt.
                     — Using <p></p> tag for paragraphs instead of newlines.
                     — Do not use Markdown formatting (** or `#` or `>` characters).
                     — Do not include backticks (```json or ```) or any non-JSON syntax.
