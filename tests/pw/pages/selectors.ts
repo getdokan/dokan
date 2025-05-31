@@ -5089,15 +5089,16 @@ export const selector = {
         vReturnRequest: {
             // menus
             menus: {
-                all: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"All")]',
-                new: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"New")]',
-                completed: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"Completed")]',
-                processing: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"Processing")]',
+                all: '#dokan-dokan-rma-requests-filter-filters span[role="button"]:has-text("All")',
+                new: '#dokan-dokan-rma-requests-filter-filters span[role="button"]:has-text("New")',
+                processing: '#dokan-dokan-rma-requests-filter-filters span[role="button"]:has-text("Processing")',
+                rejected: '#dokan-dokan-rma-requests-filter-filters span[role="button"]:has-text("Rejected")',
+                reviewing: '#dokan-dokan-rma-requests-filter-filters span[role="button"]:has-text("Reviewing")',
             },
 
             // table
             table: {
-                table: '.rma-request-listing-table',
+                table: '#dokan-rma-requests-data-view',
                 detailsColumn: '//th[normalize-space()="Details"]',
                 productsColumn: '//th[normalize-space()="Products"]',
                 typeColumn: '//th[normalize-space()="Type"]',
@@ -5106,7 +5107,7 @@ export const selector = {
             },
 
             noRowsFound: '//td[normalize-space()="No request found"]',
-            numberOfRowsFound: '.rma-request-listing-table tbody tr',
+            numberOfRowsFound: '#dokan-rma-requests-data-view tbody tr',
 
             // Refund Request table Actions
             returnRequestCell: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../..`,
@@ -7272,6 +7273,7 @@ export const selector = {
                     deliveryTime: 'div.summary p.wc-gzd-additional-info.delivery-time-info',
                 },
 
+                // “p1_v1-simple” has been added to your cart.
                 productAddedSuccessMessage: (productName: string) => `//div[@class="woocommerce-message" and contains(.,"“${productName}” has been added to your cart.")]`,
                 productWithQuantityAddedSuccessMessage: (productName: string, quantity: string) => `//div[@class="woocommerce-message" and contains(.,"${quantity} × “${productName}” have been added to your cart.")]`,
             },
