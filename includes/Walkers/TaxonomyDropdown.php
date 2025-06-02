@@ -40,6 +40,32 @@ class TaxonomyDropdown extends Walker {
     }
 
     /**
+     * Override display_element method to add additional validation
+     *
+     * @param object $element           Data object.
+     * @param array  $children_elements List of elements to continue traversing.
+     * @param int    $max_depth         Max depth to traverse.
+     * @param int    $depth             Depth of current element.
+     * @param array  $args              An array of arguments.
+     * @param string $output            Used to append additional content.
+     */
+    public function display_element( $element, &$children_elements, $max_depth, $depth, $args, &$output ) {
+        // Validate element is an object before accessing properties
+        if ( ! $element ) {
+            return;
+        }
+
+        // Check if the required ID field exists
+        $id_field = $this->db_fields['id'];
+        if ( ! isset( $element->$id_field ) ) {
+            return;
+        }
+
+        // Now call the parent method which will properly handle valid elements
+        parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
+    }
+
+    /**
      * Start element
      *
      * @param string $output
@@ -52,8 +78,15 @@ class TaxonomyDropdown extends Walker {
      */
     public function start_el( &$output, $category, $depth = 0, $args = [], $id = 0 ) {
 
-        if ( ! taxonomy_exists( $category->name ) ) {
-            dokan_log( 'Taxonomy does not exist: ' . $category->name );
+
+        $taxonomy = isset( $category->taxonomy ) ? $category->taxonomy : '';
+
+        if ( ! taxonomy_exists( $taxonomy ) ) {
+            dokan_log( 'Taxonomy does not exist: ' . $taxonomy );
+            return;
+        }
+        // Check if term_id exists
+        if ( ! isset( $category->term_id ) ) {
             return;
         }
 
@@ -78,3 +111,5 @@ class TaxonomyDropdown extends Walker {
         $output .= "</option>\n";
     }
 }
+
+
