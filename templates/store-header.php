@@ -12,7 +12,6 @@ $today             = strtolower( $current_time->format( 'l' ) );
 $dokan_appearance = get_option( 'dokan_appearance' );
 $profile_layout   = empty( $dokan_appearance['store_header_template'] ) ? 'default' : $dokan_appearance['store_header_template'];
 $store_address    = dokan_get_seller_short_address( $store_user->get_id(), false );
-$store_banner_url = $store_user->get_banner();
 
 $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
 $store_open_notice        = isset( $store_info['dokan_store_open_notice'] ) && ! empty( $store_info['dokan_store_open_notice'] ) ? $store_info['dokan_store_open_notice'] : __( 'Store Open', 'dokan-lite' );
@@ -43,13 +42,13 @@ if ( 'layout3' === $profile_layout ) {
     <div class="profile-frame<?php echo esc_attr( $no_banner_class ); ?>">
 
         <div class="profile-info-box profile-layout-<?php echo esc_attr( $profile_layout ); ?>">
-            <?php if ( $store_user->get_banner() ) { ?>
+            <?php if ( ! $store_user->get_banner() ) { ?>
                 <img src="<?php echo esc_url( $store_user->get_banner() ); ?>"
                     alt="<?php echo esc_attr( $store_user->get_shop_name() ); ?>"
                     title="<?php echo esc_attr( $store_user->get_shop_name() ); ?>"
                     class="profile-info-img">
             <?php } else { ?>
-                <div class="profile-info-img dummy-image" style="background-image: url(<?php echo esc_url_raw( $store_banner_url ); ?>);">&nbsp;</div>
+                <div class="profile-info-img dummy-image">&nbsp;</div>
             <?php } ?>
 
             <div class="profile-info-summery-wrapper dokan-clearfix">
