@@ -52,29 +52,29 @@ class TaxonomyDropdown extends Walker {
      */
     public function start_el( &$output, $category, $depth = 0, $args = [], $id = 0 ) {
 
-        if ( taxonomy_exists( $category->name ) ) {
+        if ( ! taxonomy_exists( $category->name ) ) {
             dokan_log( 'Taxonomy does not exist: ' . $category->name );
-
             return;
         }
-            $pad      = str_repeat( '&nbsp;&#8212;', $depth * 1 );
-            $cat_name = apply_filters( 'list_cats', $category->name, $category );
-            $output   .= "<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
 
-            $selected = is_array( $args['selected'] ) ? $args['selected'] : (array) $args['selected'];
-            $selected = array_map( 'intval', $selected );
+        $pad      = str_repeat( '&nbsp;&#8212;', $depth * 1 );
+        $cat_name = apply_filters( 'list_cats', $category->name, $category );
+        $output   .= "<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
+
+        $selected = is_array( $args['selected'] ) ? $args['selected'] : (array) $args['selected'];
+        $selected = array_map( 'intval', $selected );
 
         if ( in_array( $category->term_id, $selected, true ) ) {
             $output .= ' selected="selected"';
         }
 
-            $output .= '>';
-            $output .= $pad . ' ' . $cat_name;
+        $output .= '>';
+        $output .= $pad . ' ' . $cat_name;
 
         if ( $args['show_count'] ) {
             $output .= '&nbsp;&nbsp;(' . $category->count . ')';
         }
 
-            $output .= "</option>\n";
+        $output .= "</option>\n";
     }
 }
