@@ -906,9 +906,9 @@ class Settings {
                 ],
                 'default_store_banner'       => [
                     'name'            => 'default_store_banner',
-                    'label'           => __( 'Default Store Banner', 'dokan-lite' ),
+                    'label'           => esc_html__( 'Default Store Banner', 'dokan-lite' ),
                     'type'            => 'croppable_image',
-                    'default'         => VendorUtil::get_vendor_default_banner_url(),
+                    'default'         => DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png',
                     'restore'         => true,
                     'render_width'    => 625,
                     'cropping_width'  => $store_banner_width,
@@ -916,9 +916,9 @@ class Settings {
                 ],
                 'default_store_profile'      => [
                     'name'            => 'default_store_profile',
-                    'label'           => __( 'Default Store Profile Picture', 'dokan-lite' ),
+                    'label'           => esc_html__( 'Default Store Profile Picture', 'dokan-lite' ),
                     'type'            => 'croppable_image',
-                    'default'         => VendorUtil::get_vendor_default_avatar_url(),
+                    'default'         => DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg',
                     'restore'         => true,
                     'render_width'    => 120,
                     'cropping_width'  => 384,

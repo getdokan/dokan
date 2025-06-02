@@ -498,7 +498,7 @@ class Vendor {
      *
      * @return string
      */
-    public function get_avatar(): string {
+    public function get_avatar() {
         $avatar_id = $this->get_avatar_id();
 
         // Check if a specific avatar ID is set and return its URL.

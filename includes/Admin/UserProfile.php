@@ -111,14 +111,14 @@ class UserProfile {
                     <th><?php esc_html_e( 'Banner', 'dokan-lite' ); ?></th>
                     <td>
                         <div class="dokan-banner">
-                            <div class="image-wrap<?php echo esc_url( $banner_url ) ? '' : ' dokan-hide'; ?>">
+                            <div class="image-wrap<?php echo esc_attr( $banner ) ? '' : ' dokan-hide'; ?>">
                                 <input type="hidden" class="dokan-file-field" value="<?php echo esc_attr( $banner ); ?>" name="dokan_banner">
                                 <img class="dokan-banner-img" src="<?php echo esc_url( $banner_url ); ?>">
 
                                 <a class="close dokan-remove-banner-image">&times;</a>
                             </div>
 
-                            <div class="button-area<?php echo esc_url( $banner_url ) ? ' dokan-hide' : ''; ?>">
+                            <div class="button-area<?php echo esc_attr( $banner ) ? ' dokan-hide' : ''; ?>">
                                 <a href="#" class="dokan-banner-drag button button-primary"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
                                 <p class="description">
                                     <?php

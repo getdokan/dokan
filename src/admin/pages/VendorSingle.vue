@@ -898,7 +898,6 @@ export default {
             width: ~"calc(100% - 285px + 30px)";
             // max-width: 850px;
             border: 1px solid #dfdfdf;
-            background: #496a94;
             overflow: hidden;
 
             img {
@@ -957,7 +956,6 @@ export default {
                 position: absolute;
                 left: 33%;
                 top: 46px;
-                color: white;
                 width: 80px;
                 cursor: pointer;
             }
@@ -1012,7 +1010,6 @@ export default {
                     top: 50%;
                     font-size: 30px;
                     font-weight: 400;
-                    color: white;
 
                     i.change-banner {
                         font-size: 50px;
