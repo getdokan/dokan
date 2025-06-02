@@ -35,24 +35,10 @@ foreach ( $order->get_refunds() as $refund ) {
 }
 ?>
 
-<div id="woocommerce-order-items" class="postbox" style='border: none'>
-    <div class="postbox-header">
-        <div class="handle-actions hide-if-no-js">
-            <button type="button" class="handle-order-higher" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-higher-description">
-                <span class="order-higher-indicator" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="handle-order-lower" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-lower-description">
-                <span class="screen-reader-text"></span>
-                <span class="order-lower-indicator" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="handlediv" aria-expanded="true">
-                <span class="toggle-indicator" aria-hidden="true"></span>
-            </button>
-        </div>
-    </div>
+<div id="dokan-order-items" class="dokan-order-metabox-items postbox" style='border: none'>
     <div class="inside">
-        <div class="woocommerce_order_items_wrapper wc-order-items-editable">
-            <table cellpadding="0" cellspacing="0" class="woocommerce_order_items">
+        <div class="dokan_order_items_wrapper">
+            <table cellpadding="0" cellspacing="0" class="dokan_order_items">
                 <thead>
                 <tr>
                     <th colspan="2">Item</th>
