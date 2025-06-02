@@ -51,41 +51,29 @@ class TaxonomyDropdown extends Walker {
      * @return void
      */
     public function start_el( &$output, $category, $depth = 0, $args = [], $id = 0 ) {
-        $commission_data = dokan()->commission->get_commission(
-            [
-                'product_id'  => $this->post_id,
-                'category_id' => $category->term_id,
-                'vendor_id'   => dokan_get_current_user_id(),
-            ]
-        );
 
-        $commission_val = $commission_data->get_vendor_earning();
-        $commission_type = $commission_data->get_type();
+        if ( taxonomy_exists( $category->name ) ) {
+            $pad      = str_repeat( '&nbsp;&#8212;', $depth * 1 );
+            $cat_name = apply_filters( 'list_cats', $category->name, $category );
+            $output   .= "<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
 
-        $pad      = str_repeat( '&nbsp;&#8212;', $depth * 1 );
-        $cat_name = apply_filters( 'list_cats', $category->name, $category );
-        $output .= "<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
+            $selected = is_array( $args['selected'] ) ? $args['selected'] : (array) $args['selected'];
+            $selected = array_map( 'intval', $selected );
 
-        if ( defined( 'DOKAN_PRO_PLUGIN_VERSION' ) && version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '<' ) ) {
-            $output .= ' data-commission="' . $commission_val . '" data-commission_type="' . $commission_type . '"';
+            if ( in_array( $category->term_id, $selected, true ) ) {
+                $output .= ' selected="selected"';
+            }
+
+            $output .= '>';
+            $output .= $pad . ' ' . $cat_name;
+
+            if ( $args['show_count'] ) {
+                $output .= '&nbsp;&nbsp;(' . $category->count . ')';
+            }
+
+            $output .= "</option>\n";
         } else {
-            $output .= ' data-commission="' . $commission_val . '" data-product-id="' . $this->post_id . '"';
+            dokan_log( 'Taxonomy does not exist: ' . $category->name );
         }
-
-        $selected = is_array( $args['selected'] ) ? $args['selected'] : (array) $args['selected'];
-        $selected = array_map( 'intval', $selected );
-
-        if ( in_array( $category->term_id, $selected, true ) ) {
-            $output .= ' selected="selected"';
-        }
-
-        $output .= '>';
-        $output .= $pad . ' ' . $cat_name;
-
-        if ( $args['show_count'] ) {
-            $output .= '&nbsp;&nbsp;(' . $category->count . ')';
-        }
-
-        $output .= "</option>\n";
     }
 }
