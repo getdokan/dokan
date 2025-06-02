@@ -90,8 +90,12 @@ class VendorBalanceUpdateHandler implements Hookable {
         global $wpdb;
 
         remove_action( 'woocommerce_update_order', [ $this, 'handle_order_edit' ], 99 );
-        $order->add_meta_data( self::DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY, $balance, true );
-        $order->save();
+        Cache::set_transient(
+            self::DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY . '_' . $order->get_id(),
+            $balance,
+            'dokan_vendor_balance_update_handler',
+            5 * MINUTE_IN_SECONDS
+        );
         add_action( 'woocommerce_update_order', [ $this, 'handle_order_edit' ], 99, 2 );
 
         return $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -116,8 +120,7 @@ class VendorBalanceUpdateHandler implements Hookable {
     protected function get_order_amount( WC_Abstract_Order $order ): ?float {
         global $wpdb;
 
-        $cached_value = $order->get_meta( self::DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY );
-
+        $cached_value = Cache::get_transient( self::DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY . '_' . $order->get_id(), 'dokan_vendor_balance_update_handler' );
         if ( $cached_value ) {
             return floatval( $cached_value );
         }
