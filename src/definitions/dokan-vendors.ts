@@ -4,6 +4,34 @@ export type StoreCategory = {
     slug: string;
 };
 
+export type PaymentDetails = {
+    paypal?: {
+        email: string;
+    };
+    bank?: {
+        ac_name: string;
+        ac_number: string;
+        bank_name: string;
+        bank_addr: string;
+        routing_number: string;
+        iban: string;
+        swift: string;
+        ac_type: string;
+        declaration: string;
+    };
+    skrill?: {
+        email: string;
+    };
+    dokan_custom?: {
+        withdraw_method_name: string;
+        withdraw_method_type: string;
+        value: string;
+    };
+    dokan_razorpay?: boolean;
+    stripe_express?: boolean;
+    'dokan-moip-connect'?: boolean;
+};
+
 export type Vendor = {
     id: number;
     store_name: string;
@@ -46,33 +74,7 @@ export type Vendor = {
     };
     enabled: boolean;
     registered: string;
-    payment: {
-        paypal?: {
-            email: string;
-        };
-        bank?: {
-            ac_name: string;
-            ac_number: string;
-            bank_name: string;
-            bank_addr: string;
-            routing_number: string;
-            iban: string;
-            swift: string;
-            ac_type: string;
-            declaration: string;
-        };
-        skrill?: {
-            email: string;
-        };
-        dokan_custom?: {
-            withdraw_method_name: string;
-            withdraw_method_type: string;
-            value: string;
-        };
-        dokan_razorpay?: boolean;
-        stripe_express?: boolean;
-        'dokan-moip-connect'?: boolean;
-    };
+    payment: PaymentDetails;
     trusted: boolean;
     reset_sub_category?: boolean;
     store_open_close?: {
