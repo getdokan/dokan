@@ -10,6 +10,7 @@ import { useOnClickOutside } from 'usehooks-ts';
 // eslint-disable-next-line import/no-unresolved
 import { DateRange } from '@woocommerce/components';
 import { applyFilters } from '@wordpress/hooks';
+import './style.scss';
 
 interface DateRangePickerProps {
     show: boolean;
@@ -51,7 +52,7 @@ const DateRangePicker = ( props: DateRangePickerProps ): JSX.Element => {
         <Popover className="relative">
             <PopoverButton
                 onClick={ () => updatedProps.setShow( ! updatedProps.show ) }
-                className="shadow-none w-full focus:outline-none p-0"
+                className="shadow-none w-full focus:!outline-none p-0"
             >
                 { props.children ?? '' }
             </PopoverButton>
@@ -66,10 +67,10 @@ const DateRangePicker = ( props: DateRangePickerProps ): JSX.Element => {
             >
                 <PopoverPanel
                     anchor="bottom"
-                    className="absolute flex rounded shadow-xl border"
+                    className="dokan-layout absolute flex rounded shadow-xl border"
                 >
                     <div
-                        className="w-auto flex-auto overflow-hidden bg-white z-40"
+                        className="dokan-date-range-picker w-auto flex-auto overflow-hidden bg-white z-40"
                         ref={ ref }
                     >
                         <DateRange { ...updatedProps } />
