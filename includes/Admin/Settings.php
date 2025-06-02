@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\Admin;
 
 use Exception;
-use WeDevs\Dokan\Utilities\VendorUtil;
 use WP_Error;
 use WeDevs\Dokan\Exceptions\DokanException;
 use WeDevs\Dokan\Traits\AjaxResponseError;
