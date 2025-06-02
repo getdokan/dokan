@@ -90,7 +90,7 @@ class VendorBalanceUpdateHandler implements Hookable {
         global $wpdb;
 
         remove_action( 'woocommerce_update_order', [ $this, 'handle_order_edit' ], 99 );
-        $order->update_meta_data( self::DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY, $balance );
+        $order->add_meta_data( self::DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY, $balance, true );
         $order->save();
         add_action( 'woocommerce_update_order', [ $this, 'handle_order_edit' ], 99, 2 );
 
