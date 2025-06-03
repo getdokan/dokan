@@ -1191,6 +1191,15 @@ class Vendor {
     }
 
     /**
+     * Set threads
+     *
+     * @param string
+     */
+    public function set_threads( $value ) {
+        $this->set_social_prop( 'threads', 'social', esc_url_raw( $value ) );
+    }
+
+    /**
      * Set flickr
      *
      * @param string
