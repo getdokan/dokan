@@ -363,12 +363,14 @@ class Commission {
          * @param float|array $earning  The earning amount or raw data.
          * @param int         $order_id The order ID.
          * @param string      $context  The context (admin or seller).
+         * @param bool        $raw      Whether to return raw data or not.
          */
         return apply_filters(
             'dokan_get_earning_from_order_table',
             $raw ? $raw_earning : $earning,
             $order_id,
-            $context
+            $context,
+            $raw
         );
     }
 
