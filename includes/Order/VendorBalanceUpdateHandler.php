@@ -201,7 +201,7 @@ class VendorBalanceUpdateHandler implements Hookable {
      *
      * This function is triggered when the 'dokan_cache_deleted' action is called.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.2
      *
      * @param string $key   Cache key.
      * @param string $group Cache group.

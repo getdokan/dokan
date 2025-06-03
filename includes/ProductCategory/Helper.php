@@ -344,7 +344,7 @@ class Helper {
     /**
      * Get product categories in a fully hierarchical (recursive) format for JS consumption.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.2
      *
      * @return array
      */
@@ -396,7 +396,7 @@ class Helper {
         /**
          * Allow filtering the final category tree
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.2
          *
          * @param array $tree       Hierarchical category tree
          * @param array $categories Raw category data

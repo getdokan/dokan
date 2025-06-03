@@ -49,7 +49,7 @@ class Hooks {
     /**
      * Skip cart validation for reverse withdrawal
      *
-     * @since DOKAN_PRO_SINCE
+     * @since 4.0.2
      *
      * @param bool $needs_validation Whether to skip cart validation.
      *
