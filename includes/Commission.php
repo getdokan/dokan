@@ -327,7 +327,7 @@ class Commission {
         $cache_key     = "get_earning_from_order_table_{$order_id}_{$context}";
         $cache_key_raw = $cache_key . '_raw';
 
-        $earning = Cache::get( $raw ? $cache_key_raw :  $cache_key );
+        $earning = Cache::get( $raw ? $cache_key_raw : $cache_key );
         if ( false !== $earning ) {
             return $earning;
         }
