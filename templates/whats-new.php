@@ -5,7 +5,7 @@
 $changelog = [
     [
         'version'  => 'Version 4.0.2',
-        'released' => '2025-06-02',
+        'released' => '2025-06-03',
         'changes'  => [
             'Fix'  => [
                 [
@@ -30,6 +30,10 @@ $changelog = [
                 ],
                 [
                     'title'       => 'Adjust the admin commission and order total to exclude partial refund for display where needed.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Clarify output language in AI response based on the input language.',
                     'description' => '',
                 ],
             ],

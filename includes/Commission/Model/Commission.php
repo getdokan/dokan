@@ -132,7 +132,7 @@ class Commission implements CommissionInterface {
     /**
      * Get the commission type.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.2
      *
      * @return string The commission type.
      */

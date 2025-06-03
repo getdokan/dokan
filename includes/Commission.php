@@ -358,7 +358,7 @@ class Commission {
         /**
          * Hooks to modify the earning from order table.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.2
          *
          * @param float|array $earning  The earning amount or raw data.
          * @param int         $order_id The order ID.

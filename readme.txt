@@ -3,7 +3,7 @@ Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
 Requires at least: 6.5
-Tested up to: 6.8.1
+Tested up to: 6.8
 WC requires at least: 8.5.0
 WC tested up to: 9.8.4
 Requires PHP: 7.4
@@ -348,7 +348,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
-= v4.0.2 ( Jun 02, 2025 ) =
+= v4.0.2 ( Jun 03, 2025 ) =
 
 - **fix:** Resolved an issue where the single store page header style was broken on multiple themes.
 - **fix:** Added proper type checking for product and author objects in the product tab template to prevent potential errors when invalid data is passed.
@@ -356,6 +356,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Fix admin dashboard order details page items meta-box content and commission meta-box content  not showing properly.
 - **fix:** Fixed analytics view permissions to access analytics data for users. Thanks to @oliviertassinari for the contribution.
 - **fix:** Adjust the admin commission and order total to exclude partial refund for display where needed.
+- **fix:** Clarify output language in AI response based on the input language.
 
 = v4.0.1 ( May 08, 2025 ) =
 
