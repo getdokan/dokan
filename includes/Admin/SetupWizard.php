@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Admin;
 
 use stdClass;
+use WeDevs\Dokan\Utilities\AdminSettings;
 
 /**
  * Setup wizard class
@@ -551,19 +552,19 @@ class SetupWizard {
         $options          = get_option( 'dokan_selling', [ 'admin_percentage' => 10 ] );
         $admin_percentage = isset( $options['admin_percentage'] ) ? $options['admin_percentage'] : 10;
 
-        $new_seller_enable_selling = ! empty( $options['new_seller_enable_selling'] ) ? $options['new_seller_enable_selling'] : '';
         $commission_type           = ! empty( $options['commission_type'] ) ? $options['commission_type'] : 'percentage';
         $order_status_change       = ! empty( $options['order_status_change'] ) ? $options['order_status_change'] : '';
         $dokan_commission_types    = dokan_commission_types();
 
         $args = apply_filters(
             'dokan_admin_setup_wizard_step_setup_selling_template_args', [
-                'new_seller_enable_selling' => $new_seller_enable_selling,
+                'new_seller_enable_selling' => dokan_get_container()->get( AdminSettings::class )->get_new_seller_enable_selling_status(),
                 'commission_type'           => $commission_type,
                 'admin_percentage'          => $admin_percentage,
                 'order_status_change'       => $order_status_change,
                 'dokan_commission_types'    => $dokan_commission_types,
                 'setup_wizard'              => $this,
+                'new_seller_enable_selling_statuses' => dokan_get_container()->get( AdminSettings::class )->new_seller_enable_selling_statuses(),
             ]
         );
 
@@ -608,8 +609,9 @@ class SetupWizard {
     public function dokan_setup_selling_save() {
         check_admin_referer( 'dokan-setup' );
 
-        $options                              = get_option( 'dokan_selling', [] );
-        $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? 'on' : 'off';
+        $options = get_option( 'dokan_selling', [] );
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+        $options['new_seller_enable_selling'] = dokan_get_container()->get( AdminSettings::class )->get_new_seller_enable_selling_status( sanitize_text_field( wp_unslash( $_POST['new_seller_enable_selling'] ) ) ?? 'automatically' );
         $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
 
         update_option( 'dokan_selling', $options );

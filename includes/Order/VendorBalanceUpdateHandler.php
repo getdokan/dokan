@@ -29,6 +29,7 @@ class VendorBalanceUpdateHandler implements Hookable {
     public function register_hooks(): void {
         add_action( 'woocommerce_update_order', [ $this, 'handle_order_edit' ], 99, 2 );
         add_action( 'woocommerce_update_order', [ $this, 'update_dokan_order_table' ], 80, 2 );
+        add_action( 'dokan_cache_deleted', [ $this, 'remove_vendor_balance_cache' ], 10, 2 );
     }
 
     /**
@@ -90,8 +91,12 @@ class VendorBalanceUpdateHandler implements Hookable {
         global $wpdb;
 
         remove_action( 'woocommerce_update_order', [ $this, 'handle_order_edit' ], 99 );
-        $order->update_meta_data( self::DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY, $balance );
-        $order->save();
+        Cache::set_transient(
+            self::DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY . '_' . $order->get_id(),
+            $balance,
+            'dokan_vendor_balance_update_handler',
+            5 * MINUTE_IN_SECONDS
+        );
         add_action( 'woocommerce_update_order', [ $this, 'handle_order_edit' ], 99, 2 );
 
         return $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -116,8 +121,7 @@ class VendorBalanceUpdateHandler implements Hookable {
     protected function get_order_amount( WC_Abstract_Order $order ): ?float {
         global $wpdb;
 
-        $cached_value = $order->get_meta( self::DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY );
-
+        $cached_value = Cache::get_transient( self::DOKAN_VENDOR_EARNING_WITHOUT_REFUND_META_KEY . '_' . $order->get_id(), 'dokan_vendor_balance_update_handler' );
         if ( $cached_value ) {
             return floatval( $cached_value );
         }
@@ -155,26 +159,29 @@ class VendorBalanceUpdateHandler implements Hookable {
             $order_commission_calculator->set_order( $order );
             $order_commission_calculator->calculate();
 
-            $calculated_earning = $order_commission_calculator->get_vendor_earning();
+            $calculated_earning = (float) $order_commission_calculator->get_vendor_earning();
         } catch ( Exception $e ) {
             error_log( sprintf( 'Dokan: Order %d commission calculation failed. Error: %s', $order->get_id(), $e->getMessage() ) );
             return;
         }
 
-        $earning_in_dokan_orders = dokan()->commission->get_earning_from_order_table( $order->get_id() );
+        $earning_table_entry     = dokan()->commission->get_earning_from_order_table( $order->get_id(), 'seller', true );
+        $earning_in_dokan_orders = (float) $earning_table_entry['net_amount'] ?? 0.0;
+        $net_totals              = (float) $earning_table_entry['order_total'] ?? 0.0;
+        $order_totals            = (float) ( $order->get_total() - $order->get_total_refunded() );
 
         // Restore the action
         add_action( 'woocommerce_update_order', [ $this, 'update_dokan_order_table' ], 80, 2 );
 
-        if ( $earning_in_dokan_orders === floatval( $calculated_earning ) ) {
+        if ( ( $order_totals === $net_totals ) && ( $earning_in_dokan_orders === $calculated_earning ) ) {
             return;
         }
 
         $updated = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->dokan_orders,
             [
-                'net_amount' => $calculated_earning,
-                'order_total' => $order->get_total(),
+                'net_amount'  => $calculated_earning,
+                'order_total' => $order_totals,
             ],
             [ 'order_id' => $order->get_id() ],
             [ '%s', '%s' ],
@@ -186,5 +193,26 @@ class VendorBalanceUpdateHandler implements Hookable {
         }
 
         Cache::delete( "get_earning_from_order_table_{$order->get_id()}_seller" );
+        Cache::delete( "get_earning_from_order_table_{$order->get_id()}_admin" );
+    }
+
+    /**
+     * Remove vendor balance cache when order earning is updated.
+     *
+     * This function is triggered when the 'dokan_cache_deleted' action is called.
+     *
+     * @since 4.0.2
+     *
+     * @param string $key   Cache key.
+     * @param string $group Cache group.
+     *
+     * @return void
+     */
+    public function remove_vendor_balance_cache( $key, $group ) {
+        if ( strpos( $key, 'dokan_get_earning_from_order_table_' ) !== 0 ) {
+            return;
+        }
+
+        wp_cache_delete( $key . '_raw', $group );
     }
 }

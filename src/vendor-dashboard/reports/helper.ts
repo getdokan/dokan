@@ -1,8 +1,15 @@
-import { dokanConfig } from "./dokan-config";
-import { getHistory } from "@woocommerce/navigation";
-import {applyFilters} from "@wordpress/hooks";
+import { dokanConfig } from './dokan-config';
+import { getHistory } from '@woocommerce/navigation';
+import { applyFilters } from '@wordpress/hooks';
 
-export const mapToDashboardRoute = (url: string): string => {
+declare const vendorAnalyticsDokanConfig: {
+    seller_id: number;
+    orderListPageUlr: string;
+    vendorAnalyticsUrl: string;
+    dashboardPath: string;
+    reportsPath: string;
+};
+export const mapToDashboardRoute = ( url: string ): string => {
     const mappers = [
         {
             search: 'wp-admin/admin.php',
@@ -11,20 +18,21 @@ export const mapToDashboardRoute = (url: string): string => {
         {
             search: 'admin.php',
             replace: '',
-        }
-    ]
+        },
+    ];
 
-    for(let i = 0; i < mappers.length; i++) {
-        const item = mappers[i];
+    for ( let i = 0; i < mappers.length; i++ ) {
+        const item = mappers[ i ];
 
-        if (url.includes(item.search)) {
-            return url.replace(item.search, item.replace)
-                .replace("page=wc-admin", "page=dokan-reports");
+        if ( url.includes( item.search ) ) {
+            return url
+                .replace( item.search, item.replace )
+                .replace( 'page=wc-admin', 'page=dokan-reports' );
         }
     }
 
     return url;
-}
+};
 
 /**
  * Determines if navigation should be blocked and handles redirects.
@@ -37,39 +45,42 @@ export const shouldBlockNavigation = () => {
     const REDIRECT_RULES_FILTER = 'dokan_analytics_redirect_rules',
         BLOCK_NAVIGATION_FILTER = 'dokan_analytics_block_navigation';
 
-    const redirectRules = applyFilters(
-        REDIRECT_RULES_FILTER,
-        [
-            {
-                path     : '/dashboard/',
-                redirect : '/dashboard/?path=%2Fanalytics%2FOverview'
-            },
-            {
-                path     : '/dashboard/reports/',
-                redirect : '/dashboard/reports/?path=%2Fanalytics%2Fproducts'
-            }
-        ]
-    );
+    const redirectRules = applyFilters( REDIRECT_RULES_FILTER, [
+        {
+            path: vendorAnalyticsDokanConfig.dashboardPath,
+            redirect: `${ vendorAnalyticsDokanConfig.dashboardPath }?path=%2Fanalytics%2FOverview`,
+        },
+        {
+            path: vendorAnalyticsDokanConfig.reportsPath,
+            redirect: `${ vendorAnalyticsDokanConfig.reportsPath }?path=%2Fanalytics%2Fproducts`,
+        },
+    ] );
 
-    const decodedURL = decodeURIComponent( document.location.search || document.location.href ),
+    const decodedURL = decodeURIComponent(
+            document.location.search || document.location.href
+        ),
         pathMatch = decodedURL.match( /path=([^&]*)/ ),
-        currentPathName = pathMatch ? pathMatch[1] : '',
+        currentPathName = pathMatch ? pathMatch[ 1 ] : '',
         currentURLPath = document.location.pathname,
-        isAnalyticsExcluded = ! currentPathName.toLowerCase().includes( 'analytics' ),
-        matchingRedirectRule = redirectRules.find( rule => rule.path === currentURLPath );
+        isAnalyticsExcluded = ! currentPathName
+            .toLowerCase()
+            .includes( 'analytics' ),
+        matchingRedirectRule = redirectRules.find(
+            ( rule ) => rule.path === currentURLPath
+        );
 
     if ( isAnalyticsExcluded && matchingRedirectRule ) {
         document.location.href = matchingRedirectRule.redirect;
     }
 
     return applyFilters( BLOCK_NAVIGATION_FILTER, isAnalyticsExcluded );
-}
+};
 
 export const handleAnalyticsLinkPrevention = () => {
     // Select all anchor tags within the dokan navigation element.
     const navigationLinks = document.querySelectorAll( '#dokan-navigation a' );
 
-    navigationLinks.forEach(anchor => {
+    navigationLinks.forEach( ( anchor ) => {
         anchor.addEventListener( 'click', ( event ) => {
             const targetUrl = event.target.href,
                 analyticsUrl =
@@ -87,8 +98,8 @@ export const handleAnalyticsLinkPrevention = () => {
                 return;
             }
 
-            event.preventDefault();         // Prevent redirection if the link is related to 'analytics'.
+            event.preventDefault(); // Prevent redirection if the link is related to 'analytics'.
             getHistory().push( targetUrl ); // Optionally push the URL to history for routing (if required).
-        });
-    });
+        } );
+    } );
 };
