@@ -29,6 +29,7 @@ class VendorBalanceUpdateHandler implements Hookable {
     public function register_hooks(): void {
         add_action( 'woocommerce_update_order', [ $this, 'handle_order_edit' ], 99, 2 );
         add_action( 'woocommerce_update_order', [ $this, 'update_dokan_order_table' ], 80, 2 );
+        add_action( 'dokan_cache_deleted', [ $this, 'remove_vendor_balance_cache' ], 10, 2 );
     }
 
     /**
@@ -188,6 +189,27 @@ class VendorBalanceUpdateHandler implements Hookable {
             return;
         }
 
-        Cache::delete( "get_earning_from_order_table_{$order->get_id()}_seller_true" );
+        Cache::delete( "get_earning_from_order_table_{$order->get_id()}_seller" );
+        Cache::delete( "get_earning_from_order_table_{$order->get_id()}_admin" );
+    }
+
+    /**
+     * Remove vendor balance cache when order earning is updated.
+     *
+     * This function is triggered when the 'dokan_cache_deleted' action is called.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $key   Cache key.
+     * @param string $group Cache group.
+     *
+     * @return void
+     */
+    public function remove_vendor_balance_cache( $key, $group ) {
+        if ( strpos( $key, 'dokan_get_earning_from_order_table_' ) !== 0 ) {
+            return;
+        }
+
+        wp_cache_delete( $key . '_raw', $group );
     }
 }

@@ -324,10 +324,10 @@ class Commission {
     public function get_earning_from_order_table( $order_id, $context = 'seller', $raw = false ) {
         global $wpdb;
 
-        $raw_key   = wp_json_encode( $raw );
-        $cache_key = "get_earning_from_order_table_{$order_id}_{$context}_{$raw_key}";
-        $earning   = Cache::get( $cache_key );
+        $cache_key     = "get_earning_from_order_table_{$order_id}_{$context}";
+        $cache_key_raw = $cache_key . '_raw';
 
+        $earning = Cache::get( $raw ? $cache_key_raw :  $cache_key );
         if ( false !== $earning ) {
             return $earning;
         }
@@ -343,18 +343,33 @@ class Commission {
             return null;
         }
 
-        if ( $raw ) {
-            $earning = [
-                'net_amount'  => (float) $result->net_amount,
-                'order_total' => (float) $result->order_total,
-            ];
-        } else {
-            $earning = 'seller' === $context ? (float) $result->net_amount : (float) $result->order_total - (float) $result->net_amount;
-        }
+        $raw_earning = [
+            'net_amount'  => (float) $result->net_amount,
+            'order_total' => (float) $result->order_total,
+        ];
+
+        $earning = ( 'seller' === $context )
+            ? $raw_earning['net_amount']
+            : $raw_earning['order_total'] - $raw_earning['net_amount'];
 
         Cache::set( $cache_key, $earning );
+        Cache::set( $cache_key_raw, $raw_earning );
 
-        return $earning;
+        /**
+         * Hooks to modify the earning from order table.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param float|array $earning  The earning amount or raw data.
+         * @param int         $order_id The order ID.
+         * @param string      $context  The context (admin or seller).
+         */
+        return apply_filters(
+            'dokan_get_earning_from_order_table',
+            $raw ? $raw_earning : $earning,
+            $order_id,
+            $context
+        );
     }
 
     /**
