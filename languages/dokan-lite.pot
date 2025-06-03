@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-30T11:41:18+00:00\n"
+"POT-Creation-Date: 2025-05-30T11:56:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -162,7 +162,7 @@ msgstr ""
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:107
 #: includes/Admin/SetupWizard.php:277
 #: includes/functions-dashboard-navigation.php:55
-#: includes/functions.php:2777
+#: includes/functions.php:2783
 #: templates/withdraw/header.php:11
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/frontend.js:172
@@ -957,13 +957,13 @@ msgid "Select a commission type for your marketplace"
 msgstr ""
 
 #: includes/Admin/OnboardingSetup/Steps/CommissionStep.php:113
-#: includes/functions.php:3268
+#: includes/functions.php:3274
 #: templates/products/dokan-products-edit-bulk-commission.php:28
 msgid "Fixed"
 msgstr ""
 
 #: includes/Admin/OnboardingSetup/Steps/CommissionStep.php:114
-#: includes/functions.php:3269
+#: includes/functions.php:3275
 msgid "Category Based"
 msgstr ""
 
@@ -1833,7 +1833,7 @@ msgid "Select a page to show your privacy policy"
 msgstr ""
 
 #: includes/Admin/Settings.php:971
-#: includes/functions.php:3243
+#: includes/functions.php:3249
 msgid "Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]"
 msgstr ""
 
@@ -4277,70 +4277,70 @@ msgstr ""
 msgid "Date is not valid"
 msgstr ""
 
-#: includes/functions.php:2006
+#: includes/functions.php:2012
 msgid "- Select a location -"
 msgstr ""
 
-#: includes/functions.php:2010
-#: includes/functions.php:2034
+#: includes/functions.php:2016
+#: includes/functions.php:2040
 msgid "Everywhere Else"
 msgstr ""
 
-#: includes/functions.php:2030
+#: includes/functions.php:2036
 msgid "- Select a State -"
 msgstr ""
 
-#: includes/functions.php:2053
+#: includes/functions.php:2059
 msgid "Ready to ship in..."
 msgstr ""
 
-#: includes/functions.php:2054
+#: includes/functions.php:2060
 msgid "1 business day"
 msgstr ""
 
-#: includes/functions.php:2055
+#: includes/functions.php:2061
 msgid "1-2 business days"
 msgstr ""
 
-#: includes/functions.php:2056
+#: includes/functions.php:2062
 msgid "1-3 business days"
 msgstr ""
 
-#: includes/functions.php:2057
+#: includes/functions.php:2063
 msgid "3-5 business days"
 msgstr ""
 
-#: includes/functions.php:2058
+#: includes/functions.php:2064
 msgid "1-2 weeks"
 msgstr ""
 
-#: includes/functions.php:2059
+#: includes/functions.php:2065
 msgid "2-3 weeks"
 msgstr ""
 
-#: includes/functions.php:2060
+#: includes/functions.php:2066
 msgid "3-4 weeks"
 msgstr ""
 
-#: includes/functions.php:2061
+#: includes/functions.php:2067
 msgid "4-6 weeks"
 msgstr ""
 
-#: includes/functions.php:2062
+#: includes/functions.php:2068
 msgid "6-8 weeks"
 msgstr ""
 
-#: includes/functions.php:2162
+#: includes/functions.php:2168
 msgid "All dates"
 msgstr ""
 
 #. translators: 1: month name, 2: 4-digit year
-#: includes/functions.php:2177
+#: includes/functions.php:2183
 #: includes/REST/ProductControllerV2.php:218
 msgid "%1$s %2$d"
 msgstr ""
 
-#: includes/functions.php:2192
+#: includes/functions.php:2198
 #: includes/REST/ProductControllerV2.php:256
 #: templates/products/edit-product-single.php:271
 #: templates/products/products-listing-row.php:247
@@ -4348,230 +4348,230 @@ msgstr ""
 msgid "Simple"
 msgstr ""
 
-#: includes/functions.php:2277
+#: includes/functions.php:2283
 #: includes/Privacy.php:201
 #: assets/js/vue-bootstrap.js:2
 msgid "Facebook"
 msgstr ""
 
-#: includes/functions.php:2281
+#: includes/functions.php:2287
 #: includes/Privacy.php:202
 #: assets/js/vue-bootstrap.js:2
 msgid "Twitter"
 msgstr ""
 
-#: includes/functions.php:2285
+#: includes/functions.php:2291
 #: includes/Privacy.php:203
 #: assets/js/vue-bootstrap.js:2
 msgid "Pinterest"
 msgstr ""
 
-#: includes/functions.php:2289
+#: includes/functions.php:2295
 msgid "LinkedIn"
 msgstr ""
 
-#: includes/functions.php:2293
+#: includes/functions.php:2299
 #: includes/Privacy.php:205
 #: assets/js/vue-bootstrap.js:2
 msgid "Youtube"
 msgstr ""
 
-#: includes/functions.php:2297
+#: includes/functions.php:2303
 #: includes/Privacy.php:206
 #: assets/js/vue-bootstrap.js:2
 msgid "Instagram"
 msgstr ""
 
-#: includes/functions.php:2301
+#: includes/functions.php:2307
 #: includes/Privacy.php:207
 #: assets/js/vue-bootstrap.js:2
 msgid "Flickr"
 msgstr ""
 
-#: includes/functions.php:2305
+#: includes/functions.php:2311
 msgid "Threads"
 msgstr ""
 
-#: includes/functions.php:2569
+#: includes/functions.php:2575
 msgid "Dokan Store Sidebar"
 msgstr ""
 
-#: includes/functions.php:2698
+#: includes/functions.php:2704
 msgid "View sales overview"
 msgstr ""
 
-#: includes/functions.php:2699
+#: includes/functions.php:2705
 msgid "View sales report chart"
 msgstr ""
 
-#: includes/functions.php:2700
+#: includes/functions.php:2706
 msgid "View announcement"
 msgstr ""
 
-#: includes/functions.php:2701
+#: includes/functions.php:2707
 msgid "View order report"
 msgstr ""
 
-#: includes/functions.php:2702
+#: includes/functions.php:2708
 msgid "View review report"
 msgstr ""
 
-#: includes/functions.php:2703
+#: includes/functions.php:2709
 msgid "View product status report"
 msgstr ""
 
-#: includes/functions.php:2706
+#: includes/functions.php:2712
 msgid "View overview report"
 msgstr ""
 
-#: includes/functions.php:2707
+#: includes/functions.php:2713
 msgid "View daily sales report"
 msgstr ""
 
-#: includes/functions.php:2708
+#: includes/functions.php:2714
 msgid "View top selling report"
 msgstr ""
 
-#: includes/functions.php:2709
+#: includes/functions.php:2715
 msgid "View top earning report"
 msgstr ""
 
-#: includes/functions.php:2710
+#: includes/functions.php:2716
 msgid "View statement report"
 msgstr ""
 
-#: includes/functions.php:2713
+#: includes/functions.php:2719
 msgid "View order"
 msgstr ""
 
-#: includes/functions.php:2714
+#: includes/functions.php:2720
 msgid "Manage order"
 msgstr ""
 
-#: includes/functions.php:2715
+#: includes/functions.php:2721
 msgid "Manage order note"
 msgstr ""
 
-#: includes/functions.php:2716
+#: includes/functions.php:2722
 msgid "Manage refund"
 msgstr ""
 
-#: includes/functions.php:2717
+#: includes/functions.php:2723
 msgid "Export order"
 msgstr ""
 
-#: includes/functions.php:2720
+#: includes/functions.php:2726
 msgid "Add coupon"
 msgstr ""
 
-#: includes/functions.php:2721
+#: includes/functions.php:2727
 msgid "Edit coupon"
 msgstr ""
 
-#: includes/functions.php:2722
+#: includes/functions.php:2728
 msgid "Delete coupon"
 msgstr ""
 
-#: includes/functions.php:2725
+#: includes/functions.php:2731
 msgid "View reviews"
 msgstr ""
 
-#: includes/functions.php:2726
+#: includes/functions.php:2732
 #: assets/js/vue-admin.js:2
 msgid "Manage reviews"
 msgstr ""
 
-#: includes/functions.php:2730
+#: includes/functions.php:2736
 msgid "Manage withdraw"
 msgstr ""
 
-#: includes/functions.php:2733
+#: includes/functions.php:2739
 msgid "Add product"
 msgstr ""
 
-#: includes/functions.php:2734
+#: includes/functions.php:2740
 msgid "Edit product"
 msgstr ""
 
-#: includes/functions.php:2735
+#: includes/functions.php:2741
 msgid "Delete product"
 msgstr ""
 
-#: includes/functions.php:2736
+#: includes/functions.php:2742
 msgid "View product"
 msgstr ""
 
-#: includes/functions.php:2737
+#: includes/functions.php:2743
 msgid "Duplicate product"
 msgstr ""
 
-#: includes/functions.php:2738
+#: includes/functions.php:2744
 msgid "Import product"
 msgstr ""
 
-#: includes/functions.php:2739
+#: includes/functions.php:2745
 msgid "Export product"
 msgstr ""
 
-#: includes/functions.php:2742
+#: includes/functions.php:2748
 msgid "View overview menu"
 msgstr ""
 
-#: includes/functions.php:2743
+#: includes/functions.php:2749
 msgid "View product menu"
 msgstr ""
 
-#: includes/functions.php:2744
+#: includes/functions.php:2750
 msgid "View order menu"
 msgstr ""
 
-#: includes/functions.php:2745
+#: includes/functions.php:2751
 msgid "View coupon menu"
 msgstr ""
 
-#: includes/functions.php:2746
+#: includes/functions.php:2752
 msgid "View report menu"
 msgstr ""
 
-#: includes/functions.php:2747
+#: includes/functions.php:2753
 msgid "View review menu"
 msgstr ""
 
-#: includes/functions.php:2748
+#: includes/functions.php:2754
 msgid "View withdraw menu"
 msgstr ""
 
-#: includes/functions.php:2749
+#: includes/functions.php:2755
 msgid "View store settings menu"
 msgstr ""
 
-#: includes/functions.php:2750
+#: includes/functions.php:2756
 msgid "View payment settings menu"
 msgstr ""
 
-#: includes/functions.php:2751
+#: includes/functions.php:2757
 msgid "View shipping settings menu"
 msgstr ""
 
-#: includes/functions.php:2752
+#: includes/functions.php:2758
 msgid "View social settings menu"
 msgstr ""
 
-#: includes/functions.php:2753
+#: includes/functions.php:2759
 msgid "View seo settings menu"
 msgstr ""
 
-#: includes/functions.php:2772
+#: includes/functions.php:2778
 #: assets/js/vendor-dashboard/reports/index.js:2
 #: assets/js/vue-admin.js:2
 msgid "Overview"
 msgstr ""
 
-#: includes/functions.php:2773
+#: includes/functions.php:2779
 msgid "Report"
 msgstr ""
 
-#: includes/functions.php:2774
+#: includes/functions.php:2780
 #: templates/dashboard/big-counter-widget.php:29
 #: templates/my-orders.php:25
 #: templates/orders/details.php:19
@@ -4583,15 +4583,15 @@ msgstr ""
 msgid "Order"
 msgstr ""
 
-#: includes/functions.php:2775
+#: includes/functions.php:2781
 msgid "Coupon"
 msgstr ""
 
-#: includes/functions.php:2776
+#: includes/functions.php:2782
 msgid "Review"
 msgstr ""
 
-#: includes/functions.php:2778
+#: includes/functions.php:2784
 #: templates/emails/vendor-completed-order.php:54
 #: templates/emails/vendor-new-order.php:53
 #: assets/js/dashboard-charts.js:1
@@ -4599,84 +4599,84 @@ msgstr ""
 msgid "Product"
 msgstr ""
 
-#: includes/functions.php:2779
+#: includes/functions.php:2785
 msgid "Menu"
 msgstr ""
 
-#: includes/functions.php:2908
+#: includes/functions.php:2914
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:350
 msgid "Sunday"
 msgstr ""
 
-#: includes/functions.php:2909
+#: includes/functions.php:2915
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:302
 msgid "Monday"
 msgstr ""
 
-#: includes/functions.php:2910
+#: includes/functions.php:2916
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:310
 msgid "Tuesday"
 msgstr ""
 
-#: includes/functions.php:2911
+#: includes/functions.php:2917
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:318
 msgid "Wednesday"
 msgstr ""
 
-#: includes/functions.php:2912
+#: includes/functions.php:2918
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:326
 msgid "Thursday"
 msgstr ""
 
-#: includes/functions.php:2913
+#: includes/functions.php:2919
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:334
 msgid "Friday"
 msgstr ""
 
-#: includes/functions.php:2914
+#: includes/functions.php:2920
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:342
 msgid "Saturday"
 msgstr ""
 
-#: includes/functions.php:2919
+#: includes/functions.php:2925
 msgid "Sun"
 msgstr ""
 
-#: includes/functions.php:2920
+#: includes/functions.php:2926
 msgid "Mon"
 msgstr ""
 
-#: includes/functions.php:2921
+#: includes/functions.php:2927
 msgid "Tue"
 msgstr ""
 
-#: includes/functions.php:2922
+#: includes/functions.php:2928
 msgid "Wed"
 msgstr ""
 
-#: includes/functions.php:2923
+#: includes/functions.php:2929
 msgid "Thu"
 msgstr ""
 
-#: includes/functions.php:2924
+#: includes/functions.php:2930
 msgid "Fri"
 msgstr ""
 
-#: includes/functions.php:2925
+#: includes/functions.php:2931
 msgid "Sat"
 msgstr ""
 
-#: includes/functions.php:3221
+#: includes/functions.php:3227
 msgid "privacy policy"
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3443
+#: includes/functions.php:3449
 msgid "Unable to fetch plugin information from wordpress.org for %s."
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3456
+#: includes/functions.php:3462
 msgid "Unable to install %s from wordpress.org"
 msgstr ""
 
