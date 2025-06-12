@@ -75,16 +75,7 @@ class NewDashboard {
             return;
         }
 
-        $dokan_frontend = [
-            'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
-        ];
-
         wp_enqueue_script( 'dokan-react-frontend' );
         wp_enqueue_style( 'dokan-react-frontend' );
-        wp_localize_script(
-            'dokan-react-frontend',
-            'dokanFrontend',
-            apply_filters( 'dokan_react_frontend_localized_args', $dokan_frontend ),
-        );
     }
 }

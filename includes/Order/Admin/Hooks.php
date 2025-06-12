@@ -620,6 +620,13 @@ class Hooks {
                 'order_commission'     => $order_commission,
             ]
         );
+
+        wp_enqueue_style(
+            'dokan-commission-meta-box',
+            DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-commission-suborder-metabox.css',
+            [],
+            DOKAN_PLUGIN_VERSION
+        );
     }
 
     /**

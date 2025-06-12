@@ -10,7 +10,7 @@ class VendorDashboardManager implements Hookable {
     public function register_hooks(): void {
         add_filter( 'woocommerce_rest_check_permissions', [ $this, 'woocommerce_rest_check_permissions' ], 20, 4 );
 
-        add_action( 'dokan_dashboard_content_inside_before', [ $this, 'add_dashboard_content' ], 20 );
+        add_action( 'dokan_dashboard_before_widgets', [ $this, 'add_dashboard_content' ], 20 );
 
         add_filter( 'woocommerce_rest_product_object_query', [ $this, 'product_query_args' ], 10, 2 );
 

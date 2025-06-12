@@ -1,17 +1,17 @@
-=== Dokan - Powerful WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
+=== Dokan: AI Powered WooCommerce Multivendor Marketplace Solution – Build Your Own Amazon, eBay, Etsy ===
 Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
 Requires at least: 6.5
-Tested up to: 6.8.1
+Tested up to: 6.8
 WC requires at least: 8.5.0
 WC tested up to: 9.8.4
 Requires PHP: 7.4
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Transform your WooCommerce site into a multivendor marketplace with Dokan - a powerful and advanced WooCommerce multivendor marketplace solution
+Transform your WooCommerce site into a multivendor marketplace with Dokan – an AI powered & advanced WooCommerce marketplace solution
 
 == Description ==
 
@@ -93,6 +93,9 @@ Dokan is also compatible with the [Otel theme](https://dokan.co/wordpress/otel-t
 
 With Dokan, experience a smooth, fast setup process in under an hour and have your WooCommerce multivendor marketplace running within a day. It perfectly matches your expectations and is designed with intuitive practices from eCommerce leaders like WooCommerce and others.
 
+= AI Assistant =
+Generate product titles, short & long descriptions using generative AI directly from the vendor dashboard.
+
 = A RELIABLE GROWING PLATFORM & COMMUNITY =
 
 We continuously update Dokan with reliable services for flawless operation, staying ahead of industry trends and introducing new features with each update.
@@ -157,7 +160,7 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 **Frontend Dashboard For Each Seller**
 
 * Vendors can manage products, control orders from customers, and make payment withdrawals right from the site frontend.
-
+* Vendors can manually create or place orders on behalf of customers (Pro).
 * WordPress backend and administrative settings can only be accessed by the admin.
 
 **Earn From Each Sale**
@@ -188,11 +191,13 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 * Admins can [overview orders](https://dokan.co/docs/wordpress/vendor-dashboard/orders/) and filter by sale, date, top vendors, or top earners.
 * Let Vendors easily migrate from other marketplaces to your Dokan marketplace using the [Export/Import feature](https://dokan.co/wordpress/modules/export-import/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro) without losing any product data, including stock value, SKU information, tags and other information.
 * Admin has access to all customer reviews on the marketplace. The customer can leave [reviews for a product/vendor](https://dokan.co/wordpress/modules/dokan-vendor-review/) they are satisfied with. The vendor cannot change a review, promoting transparency.
+* Vendors can track earnings, revenue by product, category, variation, and download statements (Pro).
 
 **Vendors Discounts Creation & Management**
 * Configure coupon expiration and restrictions.
 * All product reviews are managed by vendors (with admin override), and make decisions on whether to display the review on their site.
 * Vendors will be able to create diverse [coupons](https://dokan.co/docs/wordpress/vendor-dashboard/coupons-2/) by setting different rules based on usage limit, expiration date, excluding sale items while also specifying only certain products on which the coupons are valid on (Pro).
+* Admins can create coupons without affecting vendors’ earnings at the product or marketplace level (pro).
 
 **💪‍ ADMINS CONTROL EVERY ASPECT OF THE MARKETPLACE**
 * Admin can view and modify vendor store products.
@@ -343,6 +348,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+= v4.0.2 ( Jun 03, 2025 ) =
+
+- **fix:** Resolved an issue where the single store page header style was broken on multiple themes.
+- **fix:** Added proper type checking for product and author objects in the product tab template to prevent potential errors when invalid data is passed.
+- **fix:** Skip cart validation for reverse withdrawal in Stripe Express.
+- **fix:** Fix admin dashboard order details page items meta-box content and commission meta-box content  not showing properly.
+- **fix:** Fixed analytics view permissions to access analytics data for users. Thanks to @oliviertassinari for the contribution.
+- **fix:** Adjust the admin commission and order total to exclude partial refund for display where needed.
+- **fix:** Clarify output language in AI response based on the input language.
 
 = v4.0.1 ( May 08, 2025 ) =
 

@@ -130,7 +130,20 @@ trait ObjectCache {
             return false;
         }
 
-        return wp_cache_delete( $key, $group, $time );
+        $deleted = wp_cache_delete( $key, $group, $time );
+
+        /**
+		 * Action hook to notify that cache has been deleted.
+		 *
+		 * @since 4.0.2
+		 *
+		 * @param string $key   The key under which the value is stored.
+		 * @param string $group The group value appended to the $key.
+		 * @param int    $time  The amount of time the server will wait to delete the item in seconds.
+		 */
+        do_action( 'dokan_cache_deleted', $key, $group, $time );
+
+        return $deleted;
     }
 
     /**
