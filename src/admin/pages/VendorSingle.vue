@@ -53,7 +53,7 @@
 
                     <div :class="{'profile-icon': true, 'edit-mode': editMode}">
                         <template v-if="editMode">
-                            <upload-image @uploadedImage="uploadGravatar" :croppingWidth="625" :croppingHeight="625" :src="store.gravatar_id && store.gravatar ? store.gravatar : getDefaultPic()">
+                            <upload-image @uploadedImage="uploadGravatar" :croppingWidth="parseInt( 384 )" :croppingHeight="parseInt( 384 )" :src="store.gravatar ? store.gravatar : getDefaultPic()">
                                 <template v-slot:imagePlaceholder>
                                     <span class="edit-photo" v-if="editMode" :style="{color: ! store.gravatar_id ? 'black' : '' }">
                                         {{ __( 'Change Store Photo', 'dokan-lite' ) }}
@@ -148,7 +148,12 @@
                 <div :class="{'profile-banner': true, 'edit-mode': editMode}">
                     <div class="banner-wrap">
                         <template v-if="editMode">
-                            <upload-image @uploadedImage="uploadBanner" :src="store.banner">
+                            <upload-image
+                                :src="store.banner"
+                                @uploadedImage="uploadBanner"
+                                :croppingWidth="parseInt( settings?.store_banner_width )"
+                                :croppingHeight="parseInt( settings?.store_banner_height )"
+                            >
                                 <template v-slot:imagePlaceholder>
                                         <span class="edit-banner" v-if="editMode">
                                             <i class="change-banner dashicons dashicons-format-image"></i>
@@ -523,6 +528,9 @@ export default {
             const self = this;
             dokan.api.get( '/settings' )
                 .done( ( settings ) => {
+                    settings.store_banner_width = dokan.store_banner_dimension.width || 625;
+                    settings.store_banner_height = dokan.store_banner_dimension.height || 300;
+
                     self.settings = settings;
                 } );
 
@@ -720,7 +728,7 @@ export default {
         },
 
         getDefaultPic() {
-            return dokan.urls.assetsUrl + '/images/store-pic.png';
+            return dokan.urls.assetsUrl + '/images/mystery-person.jpg';
         },
 
         updateCommissonRate() {
@@ -889,13 +897,10 @@ export default {
             position: relative;
             width: ~"calc(100% - 285px + 30px)";
             // max-width: 850px;
-            height: 350px;
             border: 1px solid #dfdfdf;
-            background: #496a94;
             overflow: hidden;
 
             img {
-                height: 350px;
                 width: 100%;
             }
 
@@ -951,7 +956,6 @@ export default {
                 position: absolute;
                 left: 33%;
                 top: 46px;
-                color: white;
                 width: 80px;
                 cursor: pointer;
             }
@@ -979,7 +983,7 @@ export default {
                 border: 5px solid #1a9ed4;
 
                 cursor: pointer;
-                opacity: .8;
+                opacity: .3;
             }
         }
 
@@ -1006,7 +1010,6 @@ export default {
                     top: 50%;
                     font-size: 30px;
                     font-weight: 400;
-                    color: white;
 
                     i.change-banner {
                         font-size: 50px;
