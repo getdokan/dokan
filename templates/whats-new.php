@@ -4,6 +4,42 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.0.2',
+        'released' => '2025-06-03',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Resolved an issue where the single store page header style was broken on multiple themes.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added proper type checking for product and author objects in the product tab template to prevent potential errors when invalid data is passed.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Skip cart validation for reverse withdrawal in Stripe Express.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fix admin dashboard order details page items meta-box content and commission meta-box content  not showing properly.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed analytics view permissions to access analytics data for users. Thanks to @oliviertassinari for the contribution.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Adjust the admin commission and order total to exclude partial refund for display where needed.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Clarify output language in AI response based on the input language.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.1',
         'released' => '2025-05-08',
         'changes'  => [

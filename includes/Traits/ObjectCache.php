@@ -132,10 +132,10 @@ trait ObjectCache {
 
         $deleted = wp_cache_delete( $key, $group, $time );
 
-        /*
+        /**
 		 * Action hook to notify that cache has been deleted.
 		 *
-		 * @since DOKAN_SINCE
+		 * @since 4.0.2
 		 *
 		 * @param string $key   The key under which the value is stored.
 		 * @param string $group The group value appended to the $key.

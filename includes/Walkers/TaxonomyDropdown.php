@@ -56,7 +56,7 @@ class TaxonomyDropdown extends Walker {
         }
 
         // Check if the required ID field exists
-        $id_field = $this->db_fields['id'];
+        $id_field = $this->db_fields['id'] ?? 0;
         if ( ! isset( $element->$id_field ) ) {
             return;
         }

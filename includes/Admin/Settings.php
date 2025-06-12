@@ -130,7 +130,7 @@ class Settings {
         $new_seller_enable_selling_statuses = ! empty( $settings['dokan_selling']['new_seller_enable_selling'] ) ? $settings['dokan_selling']['new_seller_enable_selling'] : 'automatically';
 
         /**
-         * This is the mapper of enabled selling admin setting option for before and after of DOKAN_SINCE
+         * This is the mapper of enabled selling admin setting option for before and after of 4.0.2
          */
         if ( ! in_array( $new_seller_enable_selling_statuses, $settings, true ) ) {
             $settings['dokan_selling']['new_seller_enable_selling'] = dokan_get_container()->get( AdminSettings::class )->get_new_seller_enable_selling_status( $settings['dokan_selling']['new_seller_enable_selling'] );
