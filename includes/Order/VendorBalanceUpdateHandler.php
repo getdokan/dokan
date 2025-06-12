@@ -162,12 +162,24 @@ class VendorBalanceUpdateHandler implements Hookable {
             $calculated_earning = (float) $order_commission_calculator->get_vendor_earning();
         } catch ( Exception $e ) {
             error_log( sprintf( 'Dokan: Order %d commission calculation failed. Error: %s', $order->get_id(), $e->getMessage() ) );
+            // Restore the action before returning
+            add_action( 'woocommerce_update_order', [ $this, 'update_dokan_order_table' ], 80, 2 );
             return;
         }
 
-        $earning_table_entry     = dokan()->commission->get_earning_from_order_table( $order->get_id(), 'seller', true );
-        $earning_in_dokan_orders = (float) $earning_table_entry['net_amount'] ?? 0.0;
-        $net_totals              = (float) $earning_table_entry['order_total'] ?? 0.0;
+        $earning_table_entry = dokan()->commission->get_earning_from_order_table( $order->get_id(), 'seller', true );
+
+        // If no entry found, we won't update the dokan_orders table.
+        if ( null === $earning_table_entry ) {
+            // Restore the action before returning
+            add_action( 'woocommerce_update_order', [ $this, 'update_dokan_order_table' ], 80, 2 );
+
+            return;
+        }
+
+        // Safely access array elements with proper null checking
+        $earning_in_dokan_orders = isset( $earning_table_entry['net_amount'] ) ? (float) $earning_table_entry['net_amount'] : 0.0;
+        $net_totals              = isset( $earning_table_entry['order_total'] ) ? (float) $earning_table_entry['order_total'] : 0.0;
         $order_totals            = (float) ( $order->get_total() - $order->get_total_refunded() );
 
         // Restore the action
