@@ -32,22 +32,24 @@ export type PaymentDetails = {
     'dokan-moip-connect'?: boolean;
 };
 
+export type VendorSocial = {
+    fb?: string;
+    youtube?: string;
+    twitter?: string;
+    linkedin?: string;
+    pinterest?: string;
+    instagram?: string;
+    flickr?: string;
+    threads?: string;
+};
+
 export type Vendor = {
     id: number;
     store_name: string;
     first_name: string;
     last_name: string;
     email?: string;
-    social?: {
-        fb: string;
-        youtube: string;
-        twitter: string;
-        linkedin: string;
-        pinterest: string;
-        instagram: string;
-        flickr: string;
-        threads: string;
-    };
+    social?: VendorSocial;
     phone?: string;
     show_email?: boolean;
     address?: {

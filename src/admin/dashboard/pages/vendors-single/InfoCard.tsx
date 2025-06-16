@@ -3,6 +3,8 @@ import { __ } from '@wordpress/i18n';
 import { DateTimeHtml } from '../../../../components';
 import { Tooltip } from '@getdokan/dokan-ui';
 import { humanTimeDiff } from '@wordpress/date';
+import SocialLinks from './SocialLinks';
+import SendEmail from './SendEmail';
 
 export interface InfoCardProps {
     vendor: Vendor;
@@ -288,13 +290,14 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                     { __( 'Social Links:', 'dokan-lite' ) }
                 </h4>
                 { vendor?.social ? (
-                    <></>
+                    <SocialLinks social={ vendor.social } />
                 ) : (
                     <p className="text-neutral-700 text-sm font-normal">
                         { __( 'No Social Links Added', 'dokan-lite' ) }
                     </p>
                 ) }
             </div>
+            <SendEmail vendor={ vendor } />
         </div>
     );
 };
