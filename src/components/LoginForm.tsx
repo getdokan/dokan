@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import $ from 'jquery';
 
 import { __ } from '@wordpress/i18n';

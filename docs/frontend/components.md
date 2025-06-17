@@ -2,7 +2,8 @@
 
 ## Overview
 
-`Dokan` provides a set of reusable `components` that can be used across both `Free` and `Pro` versions. This documentation explains how to properly set up and use these `components` in your project.
+`Dokan` provides a set of reusable `components` that can be used across both `Free` and `Pro` versions. This
+documentation explains how to properly set up and use these `components` in your project.
 
 ## Available Components
 
@@ -21,7 +22,8 @@
 
 ## Important Dependencies
 
-For both `Dokan Free and Pro` versions, we must register the `dokan-react-components` dependency when using `global` components.
+For both `Dokan Free and Pro` versions, we must register the `dokan-react-components` dependency when using `global`
+components.
 
 ### Implementation Example
 
@@ -62,16 +64,20 @@ if (file_exists($script_assets)) {
 For `dokan free & premium version`, we can import the components via `@dokan/components`:
 
 ```js
-import { DataViews, DokanBadge, DokanButton, DokanAlert, DokanLink, DokanMaskInput } from '@dokan/components';
+import {DataViews, DokanBadge, DokanButton, DokanAlert, DokanLink, DokanMaskInput} from '@dokan/components';
 ```
 
-For external `plugins`, we must include the `dokan-react-components` as scripts dependency and the `@dokan/components` should be introduced as an external resource configuration to resolve the path via `webpack`:
+For external `plugins`, we must include the `dokan-react-components` as scripts dependency and the `@dokan/components`
+should be introduced as an external resource configuration to resolve the path via `webpack`:
 
 ```js
 externals: {
-    '@dokan/components': 'dokan.components',
-    ...
-},
+    '@dokan/components'
+:
+    'dokan.components',
+...
+}
+,
 ```
 
 ## Adding Global Components
@@ -102,33 +108,37 @@ externals: {
 |____ Other Files
 ```
 
-**Finally,** we need to export the new `component` from the `src/components/index.tsx` file. Then, we can import the new component from `@dokan/components` in `dokan pro` version.
+**Finally,** we need to export the new `component` from the `src/components/index.tsx` file. Then, we can import the new
+component from `@dokan/components` in `dokan pro` version.
 
 ```ts
-export { default as DataViews } from './dataviews/DataViewTable';
-export { default as DokanModal } from './modals/DokanModal';
-export { default as Filter } from './Filter';
-export { default as SortableList } from './sortable-list'; 
-export { default as DokanButton } from './Button';
-export { default as DokanLink } from './Link';
-export { default as DokanBadge } from './Badge';
-export { default as DokanAlert } from './Alert';
-export { default as DokanPriceInput } from './PriceInput';
-export { default as ComponentName } from './YourComponent';
+export {default as DataViews} from './dataviews/DataViewTable';
+export {default as DokanModal} from './modals/DokanModal';
+export {default as Filter} from './Filter';
+export {default as SortableList} from './sortable-list';
+export {default as DokanButton} from './Button';
+export {default as DokanLink} from './Link';
+export {default as DokanBadge} from './Badge';
+export {default as DokanAlert} from './Alert';
+export {default as DokanPriceInput} from './PriceInput';
+export {default as ComponentName} from './YourComponent';
 ```
 
 ## Button Component
 
-`Dokan` provides a unified button component that supports multiple variants and styles. The component is built on top of the `Button` component from `@getdokan/dokan-ui` and is styled consistently with the Dokan design system.
+`Dokan` provides a unified button component that supports multiple variants and styles. The component is built on top of
+the `Button` component from `@getdokan/dokan-ui` and is styled consistently with the Dokan design system.
 
 ### Available Button Variants
 
 #### Action Variants
+
 - **primary** - Primary button (default)
 - **secondary** - Secondary button style
 - **tertiary** - Tertiary button style
 
 #### Status Variants
+
 - **info** - Blue styled button for informational actions
 - **success** - Green styled button for confirmation actions
 - **warning** - Yellow styled button for cautionary actions
@@ -137,32 +147,32 @@ export { default as ComponentName } from './YourComponent';
 ### Usage Example
 
 ```jsx
-import { DokanButton } from '@dokan/components';
+import {DokanButton} from '@dokan/components';
 
 const ButtonsExample = () => {
-  return (
-    <div className="flex flex-wrap gap-4">
-      {/* Action Variants */}
-      <DokanButton>Primary Button</DokanButton>
-      <DokanButton variant="secondary">Secondary Button</DokanButton>
-      <DokanButton variant="tertiary">Tertiary Button</DokanButton>
-      
-      {/* Status Variants */}
-      <DokanButton variant="info">Info Button</DokanButton>
-      <DokanButton variant="success">Success Button</DokanButton>
-      <DokanButton variant="warning">Warning Button</DokanButton>
-      <DokanButton variant="danger">Danger Button</DokanButton>
-      
-      {/* Button Sizes */}
-      <DokanButton size="sm">Small Button</DokanButton>
-      <DokanButton>Default Size</DokanButton>
-      <DokanButton size="lg">Large Button</DokanButton>
-      
-      {/* Button States */}
-      <DokanButton disabled>Disabled Button</DokanButton>
-      <DokanButton loading={true}>Loading Button</DokanButton>
-    </div>
-  );
+    return (
+        <div className="flex flex-wrap gap-4">
+            {/* Action Variants */}
+            <DokanButton>Primary Button</DokanButton>
+            <DokanButton variant="secondary">Secondary Button</DokanButton>
+            <DokanButton variant="tertiary">Tertiary Button</DokanButton>
+
+            {/* Status Variants */}
+            <DokanButton variant="info">Info Button</DokanButton>
+            <DokanButton variant="success">Success Button</DokanButton>
+            <DokanButton variant="warning">Warning Button</DokanButton>
+            <DokanButton variant="danger">Danger Button</DokanButton>
+
+            {/* Button Sizes */}
+            <DokanButton size="sm">Small Button</DokanButton>
+            <DokanButton>Default Size</DokanButton>
+            <DokanButton size="lg">Large Button</DokanButton>
+
+            {/* Button States */}
+            <DokanButton disabled>Disabled Button</DokanButton>
+            <DokanButton loading={true}>Loading Button</DokanButton>
+        </div>
+    );
 };
 ```
 
@@ -170,19 +180,20 @@ const ButtonsExample = () => {
 
 The DokanButton component accepts the following props:
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `children` | `ReactNode` | Yes | The content to be displayed within the button |
-| `className` | `string` | No | Additional CSS classes for custom styling |
-| `variant` | `"primary" \| "secondary" \| "tertiary" \| "info" \| "success" \| "warning" \| "danger"` | No | Button style variant (default: "primary") |
-| `size` | `"sm" \| "md" \| "lg"` | No | Button size (small, medium, large) |
-| `disabled` | `boolean` | No | Whether the button is disabled |
-| `loading` | `boolean` | No | Whether to show a loading indicator |
-| `...props` | `ButtonProps` | No | Any additional props from the Button component |
+| Prop        | Type                                                                                     | Required | Description                                    |
+|-------------|------------------------------------------------------------------------------------------|----------|------------------------------------------------|
+| `children`  | `ReactNode`                                                                              | Yes      | The content to be displayed within the button  |
+| `className` | `string`                                                                                 | No       | Additional CSS classes for custom styling      |
+| `variant`   | `"primary" \| "secondary" \| "tertiary" \| "info" \| "success" \| "warning" \| "danger"` | No       | Button style variant (default: "primary")      |
+| `size`      | `"sm" \| "md" \| "lg"`                                                                   | No       | Button size (small, medium, large)             |
+| `disabled`  | `boolean`                                                                                | No       | Whether the button is disabled                 |
+| `loading`   | `boolean`                                                                                | No       | Whether to show a loading indicator            |
+| `...props`  | `ButtonProps`                                                                            | No       | Any additional props from the Button component |
 
 ## Badge Component
 
-`Dokan` provides a unified badge component for displaying status badges in different visual styles. The component is built on top of the `Badge` component from `@getdokan/dokan-ui`.
+`Dokan` provides a unified badge component for displaying status badges in different visual styles. The component is
+built on top of the `Badge` component from `@getdokan/dokan-ui`.
 
 ### Available Badge Variants
 
@@ -194,15 +205,15 @@ The DokanButton component accepts the following props:
 ### Usage Example
 
 ```jsx
-import { DokanBadge } from '@dokan/components';
+import {DokanBadge} from '@dokan/components';
 
 const StatusBadges = () => {
     return (
         <div className="flex space-x-2">
-            <DokanBadge label="Processing" />
-            <DokanBadge variant="success" label="Active" />
-            <DokanBadge variant="warning" label="Pending" />
-            <DokanBadge variant="danger" label="Failed" />
+            <DokanBadge label="Processing"/>
+            <DokanBadge variant="success" label="Active"/>
+            <DokanBadge variant="warning" label="Pending"/>
+            <DokanBadge variant="danger" label="Failed"/>
         </div>
     );
 };
@@ -212,15 +223,16 @@ const StatusBadges = () => {
 
 The DokanBadge component accepts the following props:
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `label` | `string` | Yes | The text to display in the badge |
-| `variant` | `"info" \| "warning" \| "success" \| "danger"` | No | Label style variant (default: "info") |
-| `...props` | `BadgeProps` | No | Any additional props from the Badge component |
+| Prop       | Type                                           | Required | Description                                   |
+|------------|------------------------------------------------|----------|-----------------------------------------------|
+| `label`    | `string`                                       | Yes      | The text to display in the badge              |
+| `variant`  | `"info" \| "warning" \| "success" \| "danger"` | No       | Label style variant (default: "info")         |
+| `...props` | `BadgeProps`                                   | No       | Any additional props from the Badge component |
 
 ## Alert Component
 
-`Dokan` provides a unified alert component for displaying notifications, warnings, or informational messages to users. The component is built on top of the `SimpleAlert` component from `@getdokan/dokan-ui`.
+`Dokan` provides a unified alert component for displaying notifications, warnings, or informational messages to users.
+The component is built on top of the `SimpleAlert` component from `@getdokan/dokan-ui`.
 
 ### Available Alert Variants
 
@@ -232,36 +244,36 @@ The DokanBadge component accepts the following props:
 ### Usage Example
 
 ```jsx
-import { DokanAlert } from '@dokan/components';
+import {DokanAlert} from '@dokan/components';
 
 const AlertExample = () => {
-  return (
-    <div className="space-y-4">
-      <DokanAlert label="Information Message">
-        <div className="text-sm mt-1 font-light">
-          Additional information about this message.
+    return (
+        <div className="space-y-4">
+            <DokanAlert label="Information Message">
+                <div className="text-sm mt-1 font-light">
+                    Additional information about this message.
+                </div>
+            </DokanAlert>
+
+            <DokanAlert variant="warning" label="Warning Message">
+                <div className="text-sm mt-1 font-light">
+                    Please pay attention to this warning.
+                </div>
+            </DokanAlert>
+
+            <DokanAlert variant="success" label="Success Message">
+                <div className="text-sm mt-1 font-light">
+                    The operation completed successfully.
+                </div>
+            </DokanAlert>
+
+            <DokanAlert variant="danger" label="Error Message">
+                <div className="text-sm mt-1 font-light">
+                    There was a problem with your request.
+                </div>
+            </DokanAlert>
         </div>
-      </DokanAlert>
-      
-      <DokanAlert variant="warning" label="Warning Message">
-        <div className="text-sm mt-1 font-light">
-          Please pay attention to this warning.
-        </div>
-      </DokanAlert>
-      
-      <DokanAlert variant="success" label="Success Message">
-        <div className="text-sm mt-1 font-light">
-          The operation completed successfully.
-        </div>
-      </DokanAlert>
-      
-      <DokanAlert variant="danger" label="Error Message">
-        <div className="text-sm mt-1 font-light">
-          There was a problem with your request.
-        </div>
-      </DokanAlert>
-    </div>
-  );
+    );
 };
 ```
 
@@ -269,59 +281,60 @@ const AlertExample = () => {
 
 The DokanAlert component accepts the following props:
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `label` | `string` | Yes | The main heading text of the alert |
-| `children` | `ReactNode` | No | Optional content to be displayed below the heading |
-| `className` | `string` | No | Additional CSS classes for custom styling |
-| `variant` | `"info" \| "warning" \| "success" \| "danger"` | No | Alert style variant (default: "info") |
+| Prop        | Type                                           | Required | Description                                        |
+|-------------|------------------------------------------------|----------|----------------------------------------------------|
+| `label`     | `string`                                       | Yes      | The main heading text of the alert                 |
+| `children`  | `ReactNode`                                    | No       | Optional content to be displayed below the heading |
+| `className` | `string`                                       | No       | Additional CSS classes for custom styling          |
+| `variant`   | `"info" \| "warning" \| "success" \| "danger"` | No       | Alert style variant (default: "info")              |
 
 ## Link Component
 
-`Dokan` provides a unified link component for creating consistent and accessible hyperlinks throughout the application. The component extends the native HTML anchor element with Dokan's styling system.
+`Dokan` provides a unified link component for creating consistent and accessible hyperlinks throughout the application.
+The component extends the native HTML anchor element with Dokan's styling system.
 
 ### Usage Example
 
 ```jsx
-import { DokanLink } from '@dokan/components';
+import {DokanLink} from '@dokan/components';
 
 const LinkExample = () => {
-  return (
-    <div className="space-y-4">
-      {/* Basic Link */}
-      <DokanLink href="/dashboard">
-        Dashboard
-      </DokanLink>
+    return (
+        <div className="space-y-4">
+            {/* Basic Link */}
+            <DokanLink href="/dashboard">
+                Dashboard
+            </DokanLink>
 
-      {/* Link with Custom Class */}
-      <DokanLink 
-        href="/settings" 
-        className="font-semibold"
-      >
-        Settings
-      </DokanLink>
+            {/* Link with Custom Class */}
+            <DokanLink
+                href="/settings"
+                className="font-semibold"
+            >
+                Settings
+            </DokanLink>
 
-      {/* External Link */}
-      <DokanLink 
-        href="https://example.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        External Link
-      </DokanLink>
+            {/* External Link */}
+            <DokanLink
+                href="https://example.com"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                External Link
+            </DokanLink>
 
-      {/* Link with Icon */}
-      <DokanLink href="/notifications">
-        <span className="mr-2">🔔</span>
-        Notifications
-      </DokanLink>
+            {/* Link with Icon */}
+            <DokanLink href="/notifications">
+                <span className="mr-2">🔔</span>
+                Notifications
+            </DokanLink>
 
-      {/* Link as Button */}
-      <DokanLink as="button" href="/button">
-        Button Link
-      </DokanLink>
-    </div>
-  );
+            {/* Link as Button */}
+            <DokanLink as="button" href="/button">
+                Button Link
+            </DokanLink>
+        </div>
+    );
 };
 ```
 
@@ -472,12 +485,12 @@ const VendorSettings = ({params}) => {
 
 The MediaUploader component accepts the following props:
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `href` | `string` | Yes | The URL the link points to |
-| `children` | `ReactNode` | No | The content to be displayed within the link |
-| `className` | `string` | No | Additional CSS classes for custom styling |
-| `...props` | `AnchorHTMLAttributes` | No | Any additional HTML anchor element props |
+| Prop        | Type                   | Required | Description                                 |
+|-------------|------------------------|----------|---------------------------------------------|
+| `href`      | `string`               | Yes      | The URL the link points to                  |
+| `children`  | `ReactNode`            | No       | The content to be displayed within the link |
+| `className` | `string`               | No       | Additional CSS classes for custom styling   |
+| `...props`  | `AnchorHTMLAttributes` | No       | Any additional HTML anchor element props    |
 
 ### Styling Features
 
@@ -566,11 +579,13 @@ The MediaUploader component accepts the following props:
    </footer>
    ```
 
-The DokanLink component is designed to be simple yet flexible, providing a consistent look and feel across the application while maintaining accessibility and usability standards.
+The DokanLink component is designed to be simple yet flexible, providing a consistent look and feel across the
+application while maintaining accessibility and usability standards.
 
 ## CustomerFilter Component
 
-The CustomerFilter component provides a standardized way to filter content by customer across your application. It allows users to search and select customers from a dropdown interface.
+The CustomerFilter component provides a standardized way to filter content by customer across your application. It
+allows users to search and select customers from a dropdown interface.
 
 ### Features
 
@@ -581,7 +596,7 @@ The CustomerFilter component provides a standardized way to filter content by cu
 ### Usage Example
 
 ```jsx
-import { CustomerFilter } from '@dokan/components';
+import {CustomerFilter} from '@dokan/components';
 
 const [selectedCustomer, setSelectedCustomer] = useState({});
 
@@ -591,37 +606,39 @@ const [selectedCustomer, setSelectedCustomer] = useState({});
     onChange={(selected) => {
         setSelectedCustomer(selected);
     }}
-    placeholder={ __( 'Search', 'dokan' ) }
-    label={ __( 'Filter By Registered Customer', 'dokan' ) }
+    placeholder={__('Search', 'dokan')}
+    label={__('Filter By Registered Customer', 'dokan')}
 />
 ```
 
 #### Props
 
-| Prop                  | Type       | Required | Description                                                                |
-|-----------------------|------------|----------|----------------------------------------------------------------------------|
-| `id`                  | `string`   | Yes      | Unique identifier for the filter group                                     |
-| `value`               | `object`   | Yes      | Currently selected customer object with `label` and `value` properties     |
-| `onChange` | `function` | Yes      | Callback function to update the selected customer                          |
-| `placeholder`         | `string`   | no       | Custom placeholder text for the search input |
-| `label`         | `string`   | no       | Custom label text for the search input  |
+| Prop          | Type       | Required | Description                                                            |
+|---------------|------------|----------|------------------------------------------------------------------------|
+| `id`          | `string`   | Yes      | Unique identifier for the filter group                                 |
+| `value`       | `object`   | Yes      | Currently selected customer object with `label` and `value` properties |
+| `onChange`    | `function` | Yes      | Callback function to update the selected customer                      |
+| `placeholder` | `string`   | no       | Custom placeholder text for the search input                           |
+| `label`       | `string`   | no       | Custom label text for the search input                                 |
 
 #### Selected Customer Object Structure
 
 ```jsx
-interface SelectedCustomer {
-  label: string;  // Display name of the customer
-  value: string;  // Customer ID
+interface
+SelectedCustomer
+{
+    label: string;  // Display name of the customer
+    value: string;  // Customer ID
 }
 ```
 
-#### Example of Upload 
+#### Example of Upload
 
 ```tsx
-import { MediaUploader } from '@dokan/components';
+import {MediaUploader} from '@dokan/components';
 
 type UploadTypes = {
-    onSelect: ( value: any ) => void;
+    onSelect: (value: any) => void;
     children: React.ReactNode;
     multiple?: boolean;
     className?: string;
@@ -636,10 +653,10 @@ const App = () => {
         console.log(file);
     }
     return (
-        <MediaUploader as="div" onSelect={ handleUpload }>
+        <MediaUploader as="div" onSelect={handleUpload}>
             <DokanButton variant="secondary" className="gap-1">
-                <i className="fas fa-cloud-upload-alt" />
-                { __( 'Upload', 'dokan' ) }
+                <i className="fas fa-cloud-upload-alt"/>
+                {__('Upload', 'dokan')}
             </DokanButton>
         </MediaUploader>
     )
@@ -649,13 +666,14 @@ const App = () => {
 
 ## DokanPriceInput Component
 
-`Dokan` provides a unified price input component for formatted data entry such as currency amounts, phone numbers, dates, etc. The component is built on top of the `PriceInput` component from `@getdokan/dokan-ui`.
+`Dokan` provides a unified price input component for formatted data entry such as currency amounts, phone numbers,
+dates, etc. The component is built on top of the `PriceInput` component from `@getdokan/dokan-ui`.
 
 ### Usage Example
 
 ```jsx
-import { useState } from '@wordpress/element';
-import { DokanPriceInput } from '@dokan/components';
+import {useState} from '@wordpress/element';
+import {DokanPriceInput} from '@dokan/components';
 
 const ProductPriceForm = () => {
     const [formattedPrice, setFormattedPrice] = useState('');
@@ -685,8 +703,8 @@ const ProductPriceForm = () => {
 ### Real-World Example (Withdraw Request)
 
 ```jsx
-import { __, sprintf } from '@wordpress/i18n';
-import { DokanPriceInput } from '@dokan/components';
+import {__, sprintf} from '@wordpress/i18n';
+import {DokanPriceInput} from '@dokan/components';
 
 const WithdrawRequestForm = () => {
     const [withdrawAmount, setWithdrawAmount] = useState('');
@@ -720,27 +738,34 @@ const WithdrawRequestForm = () => {
 
 The DokanPriceInput component accepts the following props:
 
-| Prop | Type | Required | Description |
-|------|------|----------|-------------|
-| `namespace` | `string` | Yes | Unique identifier for the input (used for filtering) |
-| `label` | `string` | No | The label text for the input field |
-| `value` | `string` | Yes | The current formatted value of the input |
-| `onChange` | `(formattedValue: string, unformattedValue: number) => void` | Yes | Callback function with both formatted string and unformatted numeric value |
-| `input` | `object` | No | Input element HTML attributes (id, name, placeholder, required, etc.) |
-| `className` | `string` | No | Additional CSS classes for custom styling |
-| `maskRule` | `object` | No | Configuration for the input mask (override default currency settings) |
-| `helpText` | `string` | No | Helper text displayed below the input |
+| Prop        | Type                                                         | Required | Description                                                                |
+|-------------|--------------------------------------------------------------|----------|----------------------------------------------------------------------------|
+| `namespace` | `string`                                                     | Yes      | Unique identifier for the input (used for filtering)                       |
+| `label`     | `string`                                                     | No       | The label text for the input field                                         |
+| `value`     | `string`                                                     | Yes      | The current formatted value of the input                                   |
+| `onChange`  | `(formattedValue: string, unformattedValue: number) => void` | Yes      | Callback function with both formatted string and unformatted numeric value |
+| `input`     | `object`                                                     | No       | Input element HTML attributes (id, name, placeholder, required, etc.)      |
+| `className` | `string`                                                     | No       | Additional CSS classes for custom styling                                  |
+| `maskRule`  | `object`                                                     | No       | Configuration for the input mask (override default currency settings)      |
+| `helpText`  | `string`                                                     | No       | Helper text displayed below the input                                      |
 
 ### Default Mask Rules
 
-The DokanPriceInput component automatically configures the input mask based on the WordPress/WooCommerce site's currency settings. These are the default mask rules:
+The DokanPriceInput component automatically configures the input mask based on the WordPress/WooCommerce site's currency
+settings. These are the default mask rules:
 
 ```js
 maskRule: {
-  numeral: true,                                                 // Enable numeric formatting
-  numeralDecimalMark: window?.dokanFrontend?.currency?.decimal ?? '.',  // Use site's decimal separator
-  delimiter: window?.dokanFrontend?.currency?.thousand ?? ',',   // Use site's thousands separator
-  numeralDecimalScale: window?.dokanFrontend?.currency?.precision ?? 2, // Use site's decimal precision
+    numeral: true,                                                 // Enable numeric formatting
+        numeralDecimalMark
+:
+    window?.dokanFrontend?.currency?.decimal ?? '.',  // Use site's decimal separator
+        delimiter
+:
+    window?.dokanFrontend?.currency?.thousand ?? ',',   // Use site's thousands separator
+        numeralDecimalScale
+:
+    window?.dokanFrontend?.currency?.precision ?? 2, // Use site's decimal precision
 }
 ```
 
@@ -790,74 +815,146 @@ When using DokanPriceInput with API operations, you'll typically:
 Example workflow:
 
 ```jsx
-import { useState, useEffect } from '@wordpress/element';
-import { DokanPriceInput } from '@dokan/components';
+import {useState, useEffect} from '@wordpress/element';
+import {DokanPriceInput} from '@dokan/components';
 import apiFetch from '@wordpress/api-fetch';
-import { formatNumber } from '@dokan/utilities';
+import {formatNumber} from '@dokan/utilities';
 
-const PriceEditor = ({ productId }) => {
-  const [formattedPrice, setFormattedPrice] = useState('');
-  const [numericPrice, setNumericPrice] = useState(0);
-  
-  // Fetch product data
-  useEffect(() => {
-    apiFetch({ path: `/wc/v3/products/${productId}` })
-      .then(product => {
-        // Product price from API comes as numeric value
-        setFormattedPrice(formatNumber(product.price));
-        setNumericPrice(Number(product.price));
-      });
-  }, [productId]);
-  
-  const handleSave = () => {
-    // Use the unformatted numeric value for API operations
-    apiFetch({
-      path: `/wc/v3/products/${productId}`,
-      method: 'PUT',
-      data: { price: numericPrice }
-    });
-  };
-  
-  return (
-    <div>
-      <DokanPriceInput
-        namespace="product-price"
-        label="Price"
-        value={formattedPrice}
-        onChange={(formatted, numeric) => {
-          setFormattedPrice(formatted);
-          setNumericPrice(numeric);
-        }}
-        input={{
-          id: 'price',
-          name: 'price',
-          placeholder: 'Enter price',
-        }}
-      />
-      <button onClick={handleSave}>Save</button>
-    </div>
-  );
+const PriceEditor = ({productId}) => {
+    const [formattedPrice, setFormattedPrice] = useState('');
+    const [numericPrice, setNumericPrice] = useState(0);
+
+    // Fetch product data
+    useEffect(() => {
+        apiFetch({path: `/wc/v3/products/${productId}`})
+            .then(product => {
+                // Product price from API comes as numeric value
+                setFormattedPrice(formatNumber(product.price));
+                setNumericPrice(Number(product.price));
+            });
+    }, [productId]);
+
+    const handleSave = () => {
+        // Use the unformatted numeric value for API operations
+        apiFetch({
+            path: `/wc/v3/products/${productId}`,
+            method: 'PUT',
+            data: {price: numericPrice}
+        });
+    };
+
+    return (
+        <div>
+            <DokanPriceInput
+                namespace="product-price"
+                label="Price"
+                value={formattedPrice}
+                onChange={(formatted, numeric) => {
+                    setFormattedPrice(formatted);
+                    setNumericPrice(numeric);
+                }}
+                input={{
+                    id: 'price',
+                    name: 'price',
+                    placeholder: 'Enter price',
+                }}
+            />
+            <button onClick={handleSave}>Save</button>
+        </div>
+    );
 };
 ```
 
-### Applying Filters
+## LoginForm Component
 
-The component supports WordPress filters for customization:
+`Dokan` provides a reusable login form component that can be used across various parts of your application to handle
+user authentication. The component includes username/password fields, validation, error handling, and options for
+account creation.
+
+### Features
+
+- Clean, responsive design with Tailwind styling
+- Form validation for required fields
+- Error display for failed login attempts
+- "Create an account" option that can be customized
+- Seamless integration with WordPress authentication
+
+### Usage Example
 
 ```jsx
-// In your code that extends functionality
-wp.hooks.addFilter(
-    'dokan_product_pricing_price_input_props',
-    'your-plugin/customize-price-input',
-    (props, currencySymbol) => {
-        // Modify props as needed
-        return {
-            ...props,
-            maskRule: {
-                ...props.maskRule,
-                numeralDecimalScale: 4, // Use 4 decimal places for this specific input
-            }
-        };
-    }
-);
+import {LoginForm} from '@dokan/components';
+
+const MyLoginPage = () => {
+    const handleLoginSuccess = () => {
+        // Handle successful login, e.g. redirect
+        window.location.reload();
+    };
+
+    const handleCreateAccount = () => {
+        // Handle create account click, e.g. navigate to registration page
+        window.location.href = '/register';
+    };
+
+    return (
+        <div className="my-login-container">
+            <LoginForm
+                onLoginSuccess={handleLoginSuccess}
+                onCreateAccount={handleCreateAccount}
+            />
+        </div>
+    );
+};
 ```
+
+### LoginForm Component Properties
+
+The LoginForm component accepts the following props:
+
+| Prop              | Type       | Required | Description                                                                                      |
+|-------------------|------------|----------|--------------------------------------------------------------------------------------------------|
+| `onLoginSuccess`  | `Function` | No       | Callback function triggered after successful login (default: empty function)                     |
+| `onCreateAccount` | `Function` | No       | Callback function triggered when "Create an account" button is clicked (default: empty function) |
+
+### Integration with Existing Authentication Systems
+
+The LoginForm component uses jQuery AJAX under the hood to maintain compatibility with WordPress's authentication
+system. It handles all the complexity of form submission, authentication token management, and error handling
+internally.
+
+When a user submits their credentials, the component:
+
+1. Creates properly formatted form data with the appropriate field names
+2. Submits the data to WordPress via AJAX
+3. Handles success and error states appropriately
+4. Triggers the provided callback functions
+
+This provides a seamless integration with WordPress's authentication system without requiring you to write any
+authentication code yourself.
+
+### Advanced Usage with Custom Styling
+
+```jsx
+import {LoginForm} from '@dokan/components';
+
+const CustomStyledLogin = () => {
+    return (
+        <div className="my-custom-login bg-gradient-to-r from-blue-100 to-purple-100 p-8 rounded-lg shadow-xl">
+            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+                {__('Member Access', 'dokan-lite')}
+            </h2>
+
+            <LoginForm
+                onLoginSuccess={() => window.location.reload()}
+                onCreateAccount={() => window.location.href = '/become-a-vendor'}
+            />
+
+            <div className="mt-4 text-center text-sm text-gray-600">
+                {__('Protected by Dokan security', 'dokan-lite')}
+            </div>
+        </div>
+    );
+};
+```
+
+The LoginForm component is designed to work seamlessly with both Dokan Lite and Pro versions, providing a consistent
+user authentication experience throughout your application.
