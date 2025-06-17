@@ -64,7 +64,7 @@ const LoginForm = ( {
                 success( response: any ) {
                     setIsLoading( false );
 
-                    if ( response && ! response.success ) {
+                    if ( response && response.success ) {
                         onLoginSuccess();
                     } else {
                         setError(
