@@ -3,23 +3,29 @@ import $ from 'jquery';
 
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
+import { Slot } from '@wordpress/components';
+import { decodeEntities } from '@wordpress/html-entities';
+import { applyFilters } from '@wordpress/hooks';
 
 import { SimpleInput } from '@getdokan/dokan-ui';
 
 import { DokanButton, DokanAlert } from './index';
-import { decodeEntities } from '@wordpress/html-entities';
 
 /**
  * LoginModal component for handling user authentication
  *
- * @param {Object}   props                 Component properties
- * @param {Function} props.onLoginSuccess  Function to call on successful login
- * @param {Function} props.onCreateAccount
+ * @param {Object}   props                    Component properties
+ * @param {Function} props.onLoginSuccess     Function to call on successful login
+ * @param {Function} props.onCreateAccount    Function to call when create account button is clicked
+ * @param {string}   props.createAccountLabel Custom label for the create account button
+ * @param {string}   props.loginButtonLabel   Custom label for the login button
  * @return {JSX.Element} Login modal component
  */
 const LoginForm = ( {
     onLoginSuccess = () => {},
     onCreateAccount = () => {},
+    createAccountLabel = __( 'Create an account', 'dokan-lite' ),
+    loginButtonLabel = __( 'Login', 'dokan-lite' ),
 } ) => {
     const [ isLoading, setIsLoading ] = useState( false );
     const [ error, setError ] = useState( '' );
@@ -62,7 +68,7 @@ const LoginForm = ( {
                         onLoginSuccess();
                     } else {
                         setError(
-                            response.data.message ||
+                            response.data?.message ||
                                 __(
                                     'Failed to login. Please try again later.',
                                     'dokan-lite'
@@ -73,7 +79,7 @@ const LoginForm = ( {
                 error( err: any ) {
                     setIsLoading( false );
                     setError(
-                        err.responseJSON.data.message ||
+                        err.responseJSON?.data?.message ||
                             __(
                                 'Failed to login. Please try again later.',
                                 'dokan-lite'
@@ -93,8 +99,24 @@ const LoginForm = ( {
         }
     };
 
+    const slotProps = applyFilters( 'dokan_login_form_slot_props', {
+        loginData,
+        setLoginData,
+        isLoading,
+        setIsLoading,
+        error,
+        setError,
+        onUserLogin,
+        onCreateAccount,
+        createAccountLabel,
+        loginButtonLabel,
+    } );
+
     return (
         <div className={ 'flex flex-col gap-4' }>
+            { /* Slot: Before Form */ }
+            <Slot name="dokan_login_form_before" fillProps={ slotProps } />
+
             <div className="w-full grid grid-cols-1 gap-4">
                 { error && (
                     <DokanAlert
@@ -120,6 +142,13 @@ const LoginForm = ( {
                         } }
                     />
                 </div>
+
+                { /* Slot: After Username */ }
+                <Slot
+                    name="dokan_login_form_after_username"
+                    fillProps={ slotProps }
+                />
+
                 <div className="flex flex-col">
                     <SimpleInput
                         input={ {
@@ -138,14 +167,27 @@ const LoginForm = ( {
                         } }
                     />
                 </div>
+
+                { /* Slot: After Password */ }
+                <Slot
+                    name="dokan_login_form_after_password"
+                    fillProps={ slotProps }
+                />
             </div>
+
+            { /* Slot: Before Buttons */ }
+            <Slot
+                name="dokan_login_form_before_buttons"
+                fillProps={ slotProps }
+            />
+
             <div className="flex justify-end">
                 <div className={ `flex items-center justify-end gap-3` }>
                     <DokanButton
                         variant="secondary"
                         onClick={ onCreateAccount }
                         disabled={ isLoading }
-                        label={ __( 'Create an account', 'dokan-lite' ) }
+                        label={ createAccountLabel }
                     />
                     <DokanButton
                         onClick={ onUserLogin }
@@ -155,10 +197,16 @@ const LoginForm = ( {
                             ! loginData.password
                         }
                         loading={ isLoading }
-                        label={ __( 'Login', 'dokan-lite' ) }
+                        label={ loginButtonLabel }
                     />
                 </div>
             </div>
+
+            { /* Slot: After Buttons */ }
+            <Slot
+                name="dokan_login_form_after_buttons"
+                fillProps={ slotProps }
+            />
         </div>
     );
 };
