@@ -921,10 +921,9 @@
 
         featuredImage: {
             calculateImageSelectOptions: function(attachment, controller) {
-                var realWidth = attachment.get('width');
-                var realHeight = attachment.get('height');
-
-                var xInit = parseInt(realWidth, 10),
+                let realWidth = attachment.get('width');
+                let realHeight = attachment.get('height');
+                let xInit = parseInt(realWidth, 10),
                     yInit = parseInt(realHeight, 10),
                     flexWidth = !!parseInt(realWidth, 10),
                     flexHeight = !!parseInt(realHeight, 10),
@@ -932,7 +931,7 @@
                     xImg,
                     yImg,
                     imgSelectOptions;
-                var api = wp.customize;
+                let api = wp.customize;
 
                 this.headerImage = new api.HeaderTool.ImageModel();
                 this.headerImage.set({
@@ -989,7 +988,7 @@
             },
 
             onCropped: function(croppedImage) {
-                var url = croppedImage.url, attachmentId = croppedImage.attachment_id;
+                let url = croppedImage.url, attachmentId = croppedImage.attachment_id;
 
                 Dokan_Editor.featuredImage.setSelectedImage(
                     url,
@@ -997,7 +996,7 @@
                 );
             },
             onSkippedCrop: function(selection) {
-                var url = selection.get('url'), id = selection.id;
+                let url = selection.get('url'), id = selection.id;
                 Dokan_Editor.featuredImage.setSelectedImage( url, id );
             },
             setSelectedImage: function( url, id ) {
@@ -1005,8 +1004,8 @@
                 Dokan_Editor.featuredImage.imageContainer.siblings('input.dokan-feat-image-id').val(id);
 
                 // set the image
-                var instruction = Dokan_Editor.featuredImage.imageContainer.closest('.instruction-inside');
-                var wrap = instruction.siblings('.image-wrap');
+                let instruction = Dokan_Editor.featuredImage.imageContainer.closest('.instruction-inside');
+                let wrap = instruction.siblings('.image-wrap');
 
                 wrap.find('img').attr('src', url);
                 wrap.find('img').removeAttr( 'srcset' );
@@ -1017,7 +1016,7 @@
             addImage: function(e) {
                 e.preventDefault();
 
-                var self = $(this);
+                let self = $(this);
 
                 if ( product_featured_frame ) {
                     product_featured_frame.open();
