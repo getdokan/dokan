@@ -1,5 +1,4 @@
 <?php
-// Get product stock quantity by post ID
 $product = wc_get_product( $post_id );
 $_stock = $product ? $product->get_stock_quantity() : '';
 ?>
