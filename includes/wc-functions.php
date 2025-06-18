@@ -407,6 +407,8 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
             error_log( 'Invalid date_from: ' . $date_from . ' | ' . $e->getMessage() );
             $product->set_date_on_sale_from( null );
         }
+    } else {
+        $product->set_date_on_sale_from( null );
     }
 
     // Sale ending date
