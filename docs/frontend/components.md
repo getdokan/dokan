@@ -65,7 +65,15 @@ if (file_exists($script_assets)) {
 For `dokan free & premium version`, we can import the components via `@dokan/components`:
 
 ```js
-import {DataViews, DokanBadge, DokanButton, DokanAlert, DokanLink, DokanMaskInput} from '@dokan/components';
+import {
+    DataViews,
+    DokanBadge,
+    DokanButton,
+    DokanAlert,
+    DokanLink,
+    DokanMaskInput,
+    DokanLoginForm
+} from '@dokan/components';
 ```
 
 For external `plugins`, we must include the `dokan-react-components` as scripts dependency and the `@dokan/components`
@@ -123,7 +131,6 @@ export {default as DokanLink} from './Link';
 export {default as DokanBadge} from './Badge';
 export {default as DokanAlert} from './Alert';
 export {default as DokanPriceInput} from './PriceInput';
-export {default as LoginForm} from './LoginForm';
 export {default as ComponentName} from './YourComponent';
 ```
 
