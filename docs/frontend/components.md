@@ -19,6 +19,7 @@ documentation explains how to properly set up and use these `components` in your
 10. **Forbidden** - Unified 403 component for unauthorized route
 11. **MediaUploader** - File upload component
 12. **DokanPriceInput** - Specialized input component for price entry with formatting
+13. **LoginForm** - Login form component
 
 ## Important Dependencies
 
@@ -97,6 +98,7 @@ externals: {
 |        |      |___ Badge.tsx         # Badge component
 |        |      |___ Alert.tsx         # Alert component
 |        |      |___ PriceInput.tsx    # Price input component
+|        |      |___ LoginForm.tsx     # Login form component
 |        |      |___ your-component/   # Your new component directory
 |        |      |     |___ index.tsx
 |        |      |     |___ style.scss
@@ -121,6 +123,7 @@ export {default as DokanLink} from './Link';
 export {default as DokanBadge} from './Badge';
 export {default as DokanAlert} from './Alert';
 export {default as DokanPriceInput} from './PriceInput';
+export {default as LoginForm} from './LoginForm';
 export {default as ComponentName} from './YourComponent';
 ```
 
@@ -865,6 +868,28 @@ const PriceEditor = ({productId}) => {
 };
 ```
 
+### Applying Filters
+
+The component supports WordPress filters for customization:
+
+```jsx
+// In your code that extends functionality
+wp.hooks.addFilter(
+    'dokan_product_pricing_price_input_props',
+    'your-plugin/customize-price-input',
+    (props, currencySymbol) => {
+        // Modify props as needed
+        return {
+            ...props,
+            maskRule: {
+                ...props.maskRule,
+                numeralDecimalScale: 4, // Use 4 decimal places for this specific input
+            }
+        };
+    }
+);
+```
+
 ## LoginForm Component
 
 `Dokan` provides a reusable login form component that can be used across various parts of your application to handle
@@ -955,6 +980,3 @@ const CustomStyledLogin = () => {
     );
 };
 ```
-
-The LoginForm component is designed to work seamlessly with both Dokan Lite and Pro versions, providing a consistent
-user authentication experience throughout your application.
