@@ -1,0 +1,48 @@
+import { truncate } from '../../../../../utilities/Truncate';
+
+interface Product {
+    id: number;
+    name: string;
+    image: string;
+    category: string;
+    price: number;
+    sold: number;
+    status: 'Sold' | 'Active' | 'Draft';
+}
+
+interface ProductCardProps {
+    product: Product;
+    formatPrice: ( price: number ) => string;
+}
+
+const ProductCard = ( { product, formatPrice }: ProductCardProps ) => (
+    <div className="bg-white border border-[#E9E9E9] rounded-md flex items-center gap-4 p-6 hover:bg-gray-50 transition-colors shadow">
+        <img
+            src={ product.image }
+            alt={ product.name }
+            className="w-14 h-14 rounded-lg object-cover bg-gray-100"
+            loading="lazy"
+        />
+        <div className="flex-1 min-w-0 space-y-1.5">
+            <h4 className="text-gray-900 truncate text-base font-medium mt-1">
+                { truncate( product.name, 30 ) }
+            </h4>
+            <div className="flex items-center gap-4">
+                <p className="text-sm border-r text-[#828282] pr-4">
+                    { truncate( product.category, 20 ) }
+                </p>
+                <div className="flex gap-3">
+                    <div className="font-bold text-gray-900 text-xl">
+                        { formatPrice( product.price ) }
+                    </div>
+                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-[#EFEAFF] text-[#7047EB]">
+                        { product.status }
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
+export default ProductCard;
+export type { Product };

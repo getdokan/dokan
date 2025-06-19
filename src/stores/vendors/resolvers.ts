@@ -22,6 +22,20 @@ const resolvers = {
             dispatch.setVendor( vendor );
             return dispatch.setLoading( false );
         },
+
+    getVendorStats:
+        ( vendorId: number ) =>
+        async ( { dispatch } ) => {
+            dispatch.setLoading( true );
+            try {
+                const stats = await apiFetch< any >( {
+                    path: `/dokan/v1/stores/${ vendorId }/stats`,
+                } );
+                dispatch.setVendorStats( vendorId, stats );
+            } finally {
+                dispatch.setLoading( false );
+            }
+        },
 };
 
 export default resolvers;

@@ -10,6 +10,7 @@ const defaultState = {
         orderby: 'registered',
         order: 'desc',
     },
+    vendorStats: {},
 };
 
 export default defaultState;

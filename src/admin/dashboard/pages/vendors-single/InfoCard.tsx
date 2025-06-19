@@ -71,7 +71,7 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                 <h4 className="text-zinc-500 text-xs font-normal">
                     { __( 'Registered Since:', 'dokan-lite' ) }
                 </h4>
-                <p className="text-neutral-700 text-sm font-normal flex items-center gap-1">
+                <div className="text-neutral-700 text-sm font-normal flex items-center gap-1">
                     <DateTimeHtml.Date date={ vendor.registered } />
                     <Tooltip
                         content={ humanTimeDiff(
@@ -109,7 +109,7 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                             />
                         </svg>
                     </Tooltip>
-                </p>
+                </div>
             </div>
             <div className="mb-4">
                 <h4 className="text-zinc-500 text-xs font-normal">

@@ -18,6 +18,9 @@ const selectors = {
     getError( state: VendorsStoreState ): string | undefined {
         return state.error;
     },
+    getVendorStats( state: VendorsStoreState, vendorId: number ): any {
+        return state.vendorStats ? state.vendorStats[ vendorId ] : undefined;
+    },
 };
 
 export default selectors;
