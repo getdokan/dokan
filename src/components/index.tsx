@@ -24,5 +24,5 @@ export { default as InternalError } from './../layout/500';
 export { default as VisitStore } from './VisitStore';
 export { default as DokanPriceInput } from './PriceInput';
 export { default as WpDatePicker } from './WpDatePicker';
-export { default as DateRangePicker } from './DateRangePicker';
+export { default as DateRangePicker } from './date-range-picker';
 export { default as DokanTab } from './Tab';

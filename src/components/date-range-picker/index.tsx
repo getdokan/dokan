@@ -6,7 +6,6 @@ import {
 } from '@headlessui/react';
 import { useRef } from '@wordpress/element';
 import { useOnClickOutside } from 'usehooks-ts';
-// @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import { DateRange } from '@woocommerce/components';
 import { applyFilters } from '@wordpress/hooks';
@@ -35,18 +34,19 @@ interface DateRangePickerProps {
 /**
  * DateRangePicker component for selecting a date range
  *
- * @since 4.0.0
+ * @since DOKAN_PRO_SINCE
  *
  * @param {DateRangePickerProps} props Component properties
  * @return {JSX.Element} DateRangePicker component
  */
 const DateRangePicker = ( props: DateRangePickerProps ): JSX.Element => {
     const ref = useRef( null );
-    useOnClickOutside( ref, () => props.setShow( ! props.show ) );
+    useOnClickOutside( ref, () => props.setShow( false ) );
 
-    const updatedProps: any = applyFilters( 'dokan_date_range_picker_props', {
-        ...props,
-    } );
+    const updatedProps: DateRangePickerProps = applyFilters(
+        'dokan_date_range_picker_props',
+        props
+    ) as DateRangePickerProps;
 
     return (
         <Popover className="relative">
