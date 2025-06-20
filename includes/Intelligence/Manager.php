@@ -2,6 +2,9 @@
 
 namespace WeDevs\Dokan\Intelligence;
 
+use WeDevs\Dokan\Intelligence\Services\AIProviderInterface;
+use WeDevs\Dokan\Intelligence\Services\Provider;
+
 class Manager {
 
     public function active_engine(): string {
@@ -47,5 +50,84 @@ class Manager {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Get available AI providers
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array< string, AIProviderInterface >
+     */
+    public function get_providers(): array {
+        $providers = apply_filters(
+            'dokan_intelligence_providers', []
+        );
+
+        $instances = [];
+        foreach ( $providers as $id => $provider_class ) {
+            if ( is_a( $provider_class, AIProviderInterface::class ) ) {
+                $instances[ $id ] = $provider_class;
+            }
+        }
+
+        return $instances;
+    }
+
+    /**
+     * Get provider by ID
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $provider_id
+     *
+     * @return AIProviderInterface|null
+     */
+    public function get_provider( string $provider_id ): ?AIProviderInterface {
+        $providers = $this->get_providers();
+
+        if ( ! array_key_exists( $provider_id, $providers ) ) {
+            return null;
+        }
+
+        return $providers[ $provider_id ];
+    }
+
+    /**
+     * Get all supported providers for text generation
+     *
+     * @return array< string, AIProviderInterface >
+     */
+    public function get_text_supported_providers(): array {
+        return $this->get_providers_by_type( Provider::GENERATION_TYPE_TEXT );
+    }
+
+    /**
+     * Get all supported providers for image generation
+     *
+     * @return array< string, AIProviderInterface >
+     */
+    public function get_image_supported_providers(): array {
+        return $this->get_providers_by_type( Provider::GENERATION_TYPE_IMAGE );
+    }
+
+    /**
+     * Get all supported providers for selected type
+     *
+     * @param string $type The type of generation to filter providers by (e.g., 'text', 'image').
+     *
+     * @return array< string, AIProviderInterface >
+     */
+    protected function get_providers_by_type( string $type ): array {
+        $providers = $this->get_providers();
+        $filtered_providers = [];
+
+        foreach ( $providers as $provider ) {
+            if ( $provider->has_model( $type ) ) {
+                $filtered_providers[ $provider->get_id() ] = $provider;
+            }
+        }
+
+        return apply_filters( 'dokan_intelligence_' . $type . '_supported_providers', $filtered_providers );
     }
 }
