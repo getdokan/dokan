@@ -22,30 +22,42 @@ interface TabConfig {
     component: JSX.Element;
 }
 
-const tabs: TabConfig[] = [
-    {
-        name: 'overview',
-        title: __( 'Overview', 'dokan-lite' ),
-        component: OverviewTab,
-    },
-    { name: 'general', title: __( 'General', 'dokan' ), component: GeneralTab },
-    {
-        name: 'verification',
-        title: __( 'Verification', 'dokan-lite' ),
-        component: VerificationTab,
-    },
-    {
-        name: 'subscription',
-        title: __( 'Subscription', 'dokan-lite' ),
-        component: SubscriptionTab,
-    },
-    {
-        name: 'withdraw',
-        title: __( 'Withdraw', 'dokan-lite' ),
-        component: WithdrawTab,
-    },
-    { name: 'badges', title: __( 'Badges', 'dokan' ), component: BadgesTab },
-];
+const tabs: TabConfig[] = wp.hooks.applyFilters(
+    'dokan-admin-vendor-tabs',
+    // @ts-ignore
+    [
+        {
+            name: 'overview',
+            title: __( 'Overview', 'dokan-lite' ),
+            component: OverviewTab,
+        },
+        {
+            name: 'general',
+            title: __( 'General', 'dokan' ),
+            component: GeneralTab,
+        },
+        {
+            name: 'verification',
+            title: __( 'Verification', 'dokan-lite' ),
+            component: VerificationTab,
+        },
+        {
+            name: 'subscription',
+            title: __( 'Subscription', 'dokan-lite' ),
+            component: SubscriptionTab,
+        },
+        {
+            name: 'withdraw',
+            title: __( 'Withdraw', 'dokan-lite' ),
+            component: WithdrawTab,
+        },
+        {
+            name: 'badges',
+            title: __( 'Badges', 'dokan' ),
+            component: BadgesTab,
+        },
+    ]
+);
 
 const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
     const vendorStats = useSelect(
