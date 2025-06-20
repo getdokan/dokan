@@ -1,3 +1,8 @@
+<?php
+// Get product stock quantity by postid
+$product = wc_get_product( $post_id ?? 0 );
+$_stock = $product ? $product->get_stock_quantity() : '';
+?>
 <div class="dokan-product-inventory dokan-edit-row <?php echo esc_attr( $class ); ?>">
     <div class="dokan-section-heading" data-togglehandler="dokan_product_inventory">
         <h2><i class="fas fa-cubes" aria-hidden="true"></i> <?php esc_html_e( 'Inventory', 'dokan-lite' ); ?></h2>
