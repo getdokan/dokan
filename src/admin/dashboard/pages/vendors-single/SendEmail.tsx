@@ -42,7 +42,7 @@ const SendEmail = ( { vendor }: SendEmailProps ) => {
                     replyto: currentUser?.email,
                 },
             } )
-                .then( ( response ) => {
+                .then( () => {
                     toast( {
                         type: 'success',
                         title: __( 'Success!', 'dokan-lite' ),

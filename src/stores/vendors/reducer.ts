@@ -43,6 +43,14 @@ const reducer = ( state = defaultState, action: any ): VendorsStoreState => {
                     [ action.key ]: action.value,
                 },
             };
+        case 'SET_VENDOR_STATS':
+            return {
+                ...state,
+                vendorStats: {
+                    ...( state.vendorStats || {} ),
+                    [ action.vendorId ]: action.stats,
+                },
+            };
         default:
             return state;
     }

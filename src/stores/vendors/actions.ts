@@ -42,6 +42,13 @@ const actions = {
             value,
         };
     },
+    setVendorStats( vendorId: number, stats: any ) {
+        return {
+            type: 'SET_VENDOR_STATS',
+            vendorId,
+            stats,
+        };
+    },
 };
 
 export default actions;
