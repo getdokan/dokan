@@ -1,6 +1,6 @@
 <?php
 // Get product stock quantity by postid
-$product = wc_get_product( $post_id );
+$product = wc_get_product( $post_id ?? 0 );
 $_stock = $product ? $product->get_stock_quantity() : '';
 ?>
 <div class="dokan-product-inventory dokan-edit-row <?php echo esc_attr( $class ); ?>">
