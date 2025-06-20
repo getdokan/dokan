@@ -2,10 +2,12 @@
 
 namespace WeDevs\Dokan;
 
+use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Admin\Notices\Helper;
-use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
+use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\Utilities\OrderUtil;
+use WeDevs\Dokan\Utilities\ReportUtil;
 
 class Assets {
 
@@ -23,6 +25,7 @@ class Assets {
         } else {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
             add_action( 'wp_enqueue_scripts', [ $this, 'load_dokan_global_scripts' ], 5 );
+            add_action( 'init', [ $this, 'register_wc_admin_scripts' ] );
         }
     }
 
@@ -35,6 +38,7 @@ class Assets {
      */
     public function load_dokan_admin_notices_scripts() {
         wp_enqueue_script( 'dokan-promo-notice-js' );
+        wp_enqueue_script( 'dokan-admin-notice-js' );
         $vue_localize_script = apply_filters(
             'dokan_promo_notice_localize_script', [
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -59,7 +63,8 @@ class Assets {
 
         // load vue app inside the parent menu only
         if ( 'toplevel_page_dokan' === $hook ) {
-            $localize_script = $this->get_admin_localized_scripts();
+            $localize_script           = $this->get_admin_localized_scripts();
+            $vue_admin_localize_script = $this->get_vue_admin_localized_scripts();
 
             // Load common styles and scripts
             wp_enqueue_script( 'dokan-tinymce' );
@@ -89,6 +94,7 @@ class Assets {
 
             // fire the admin app
             wp_enqueue_script( 'dokan-vue-admin' );
+            wp_localize_script( 'dokan-vue-vendor', 'dokanAdmin', $vue_admin_localize_script );
 
             if ( version_compare( $wp_version, '5.3', '<' ) ) {
                 wp_enqueue_style( 'dokan-wp-version-before-5-3' );
@@ -160,6 +166,7 @@ class Assets {
             'symbol'    => html_entity_decode( get_woocommerce_currency_symbol() ),
             'decimal'   => esc_attr( wc_get_price_decimal_separator() ),
             'thousand'  => esc_attr( wc_get_price_thousand_separator() ),
+            'position'  => esc_attr( get_option( 'woocommerce_currency_pos' ) ),
             'format'    => esc_attr( str_replace( [ '%1$s', '%2$s' ], [ '%s', '%v' ], get_woocommerce_price_format() ) ), // For accounting JS
         ];
     }
@@ -212,6 +219,11 @@ class Assets {
                 'component' => 'Vendors',
             ],
             [
+                'path'      => '/vendors/:id',
+                'name'      => 'VendorSingle',
+                'component' => 'VendorSingle',
+            ],
+            [
                 'path'      => '/dummy-data',
                 'name'      => 'DummyData',
                 'component' => 'DummyData',
@@ -220,11 +232,6 @@ class Assets {
                 'path'      => '/vendor-capabilities',
                 'name'      => 'VendorCapabilities',
                 'component' => 'VendorCapabilities',
-            ],
-            [
-                'path'      => '/pro-modules',
-                'name'      => 'ProModules',
-                'component' => 'ProModules',
             ],
             [
                 'path'      => '/changelog',
@@ -349,8 +356,18 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product-style.css' ),
             ],
             'dokan-tailwind'                => [
-                'src'       => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
-                'version'   => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
+            ],
+            'dokan-react-frontend'   => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
+                'deps'    => [ 'dokan-react-components' ],
+                'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
+            ],
+            'dokan-react-components' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
+                'deps'    => [ 'wp-components' ],
+                'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
         ];
 
@@ -365,6 +382,8 @@ class Assets {
     public function get_scripts() {
         global $wp_version;
 
+        $frontend_shipping_asset = require DOKAN_DIR . '/assets/js/frontend.asset.php';
+
         $suffix         = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
         $asset_url      = DOKAN_PLUGIN_ASSEST;
         $asset_path     = DOKAN_DIR . '/assets/';
@@ -376,10 +395,10 @@ class Assets {
                 'deps' => [ 'jquery' ],
             ],
             // Remove `dokan-i18n-jed` in next release.
-			'dokan-i18n-jed'            => [
-				'src'  => $asset_url . '/vendors/i18n/jed.js',
-				'deps' => [ 'jquery', 'wp-i18n' ],
-			],
+            'dokan-i18n-jed' => [
+                'src'  => $asset_url . '/vendors/i18n/jed.js',
+                'deps' => [ 'jquery', 'wp-i18n' ],
+            ],
             'dokan-accounting'          => [
                 'src'  => WC()->plugin_url() . '/assets/js/accounting/accounting.min.js',
                 'deps' => [ 'jquery' ],
@@ -506,57 +525,157 @@ class Assets {
                 'deps'    => [ 'jquery', 'wp-i18n', 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
                 'version' => filemtime( $asset_path . 'js/vue-frontend.js' ),
             ],
-
-            'dokan-login-form-popup'   => [
+            'dokan-login-form-popup'    => [
                 'src'     => $asset_url . '/js/login-form-popup.js',
                 'deps'    => [ 'dokan-modal', 'wp-i18n' ],
                 'version' => filemtime( $asset_path . 'js/login-form-popup.js' ),
             ],
-            'dokan-sweetalert2'        => [
+            'dokan-sweetalert2'         => [
                 'src'     => $asset_url . '/vendors/sweetalert2/sweetalert2.all.min.js',
                 'deps'    => [ 'dokan-modal', 'wp-i18n' ],
                 'version' => filemtime( $asset_path . 'vendors/sweetalert2/sweetalert2.all.min.js' ),
             ],
-            'dokan-util-helper'        => [
+            'dokan-util-helper'         => [
                 'src'       => $asset_url . '/js/helper.js',
                 'deps'      => [ 'jquery', 'dokan-sweetalert2', 'moment' ],
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
-            'dokan-promo-notice-js'    => [
+            'dokan-promo-notice-js'     => [
                 'src'     => $asset_url . '/js/dokan-promo-notice.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
             ],
-            'dokan-reverse-withdrawal' => [
+            'dokan-admin-notice-js'     => [
+                'src'     => $asset_url . '/js/dokan-admin-notice.js',
+                'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
+                'version' => filemtime( $asset_path . 'js/dokan-admin-notice.js' ),
+            ],
+            'dokan-reverse-withdrawal'  => [
                 'src'     => $asset_url . '/js/reverse-withdrawal.js',
                 'deps'    => [ 'jquery', 'dokan-util-helper', 'dokan-vue-vendor', 'dokan-date-range-picker' ],
                 'version' => filemtime( $asset_path . 'js/reverse-withdrawal.js' ),
             ],
-            'product-category-ui'      => [
+            'product-category-ui'       => [
                 'src'     => $asset_url . '/js/product-category-ui.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/product-category-ui.js' ),
             ],
-            'dokan-vendor-address'     => [
+            'dokan-vendor-address'      => [
                 'src'     => $asset_url . '/js/vendor-address.js',
                 'deps'    => [ 'jquery', 'wc-address-i18n' ],
                 'version' => filemtime( $asset_path . 'js/vendor-address.js' ),
             ],
-            'dokan-admin-product'      => [
+            'dokan-admin-product'       => [
                 'src'       => $asset_url . '/js/dokan-admin-product.js',
                 'deps'      => [ 'jquery', 'dokan-vue-vendor', 'selectWoo' ],
                 'version'   => filemtime( $asset_path . 'js/dokan-admin-product.js' ),
                 'in_footer' => false,
             ],
-            'dokan-frontend'           => [
+            'dokan-frontend'            => [
                 'src'     => $asset_url . '/js/dokan-frontend.js',
                 'deps'    => [ 'jquery' ],
                 'version' => filemtime( $asset_path . 'js/dokan-frontend.js' ),
             ],
+            'dokan-react-frontend'      => [
+                'src'     => $asset_url . '/js/frontend.js',
+                'deps'    => array_merge( $frontend_shipping_asset['dependencies'], [ 'wp-core-data', 'dokan-react-components' ] ),
+                'version' => $frontend_shipping_asset['version'],
+            ],
+            'dokan-utilities'           => [
+                'deps'    => [],
+                'src'     => $asset_url . '/js/utilities.js',
+                'version' => filemtime( $asset_path . 'js/utilities.js' ),
+            ],
+            'dokan-hooks'               => [
+                'deps'    => [],
+                'src'     => $asset_url . '/js/react-hooks.js',
+                'version' => filemtime( $asset_path . 'js/react-hooks.js' ),
+            ],
         ];
 
+        $components_asset_file = DOKAN_DIR . '/assets/js/components.asset.php';
+        if ( file_exists( $components_asset_file ) ) {
+            $components_asset = require $components_asset_file;
+
+            // Register React components.
+            $scripts['dokan-react-components'] = [
+                'version' => $components_asset['version'],
+                'src'     => $asset_url . '/js/components.js',
+                'deps'    => array_merge(
+                    $components_asset['dependencies'],
+                    [ 'dokan-utilities', 'dokan-hooks' ]
+                ),
+            ];
+        }
+
+        $core_store_asset_file = DOKAN_DIR . '/assets/js/core-store.asset.php';
+        if ( file_exists( $core_store_asset_file ) ) {
+            $core_store_asset = require $core_store_asset_file;
+
+            // Register React components.
+            $scripts['dokan-stores-core'] = [
+                'version' => $core_store_asset['version'],
+                'src'     => $asset_url . '/js/core-store.js',
+                'deps'    => $core_store_asset['dependencies'],
+            ];
+        }
+        $product_store_asset_file = DOKAN_DIR . '/assets/js/products-store.asset.php';
+        if ( file_exists( $product_store_asset_file ) ) {
+            $stores_asset = require $product_store_asset_file;
+
+            // Register Product stores.
+            $scripts['dokan-stores-products'] = [
+                'version' => $stores_asset['version'],
+                'src'     => $asset_url . '/js/products-store.js',
+                'deps'    => $stores_asset['dependencies'],
+            ];
+        }
+        $product_category_asset_file = DOKAN_DIR . '/assets/js/product-categories-store.asset.php';
+        if ( file_exists( $product_category_asset_file ) ) {
+            $stores_asset = require $product_category_asset_file;
+
+            // Register Product stores.
+            $scripts['dokan-stores-product-categories'] = [
+                'version' => $stores_asset['version'],
+                'src'     => $asset_url . '/js/product-categories-store.js',
+                'deps'    => $stores_asset['dependencies'],
+            ];
+        }
+
         return $scripts;
+    }
+
+    /**
+     * Registers WooCommerce Admin scripts for the React-based Dokan Vendor dashboard.
+     *
+     * This function ensures that the necessary WooCommerce Admin assets are registered
+     * for use in the Dokan Vendor dashboard. It temporarily suppresses "doing it wrong"
+     * warnings during the registration process.
+     *
+     * @return void
+     */
+    public function register_wc_admin_scripts() {
+        // Register WooCommerce Admin Assets for the React-base Dokan Vendor ler dashboard.
+        if ( ! function_exists( 'get_current_screen' ) ) {
+            require_once ABSPATH . '/wp-admin/includes/screen.php';
+        }
+
+        add_filter( 'doing_it_wrong_trigger_error', [ $this, 'desable_doing_it_wrong_error' ] );
+
+        $wc_instance = WCAdminAssets::get_instance();
+        $wc_instance->register_scripts();
+
+        remove_filter( 'doing_it_wrong_trigger_error', [ $this, 'desable_doing_it_wrong_error' ] );
+    }
+
+    /**
+     * Disable "doing it wrong" error
+     *
+     * @return bool
+     */
+    public function desable_doing_it_wrong_error() {
+        return false;
     }
 
     /**
@@ -580,9 +699,14 @@ class Assets {
             }
         }
 
+        $vendor = dokan()->vendor->get( dokan_get_current_user_id() );
+        $commision_settings = $vendor->get_commission_settings();
+
         $default_script = [
             'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
             'nonce'                        => wp_create_nonce( 'dokan_reviews' ),
+            'order_nonce'                  => wp_create_nonce( 'dokan_view_order' ),
+            'product_edit_nonce'           => wp_create_nonce( 'dokan_edit_product_nonce' ),
             'ajax_loader'                  => DOKAN_PLUGIN_ASSEST . '/images/ajax-loader.gif',
             'seller'                       => [
                 'available'    => __( 'Available', 'dokan-lite' ),
@@ -590,8 +714,8 @@ class Assets {
             ],
             'delete_confirm'               => __( 'Are you sure?', 'dokan-lite' ),
             'wrong_message'                => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
-            'vendor_percentage'            => dokan_get_seller_percentage( dokan_get_current_user_id() ),
-            'commission_type'              => dokan_get_commission_type( dokan_get_current_user_id() ),
+            'vendor_percentage'            => $commision_settings->get_percentage(),
+            'commission_type'              => $commision_settings->get_type(),
             'rounding_precision'           => wc_get_rounding_precision(),
             'mon_decimal_point'            => wc_get_price_decimal_separator(),
             'currency_format_num_decimals' => wc_get_price_decimals(),
@@ -613,7 +737,7 @@ class Assets {
              * @param integer default -1
              */
             'maximum_tags_select_length'   => apply_filters( 'dokan_product_tags_select_max_length', - 1 ),  // Filter of maximun a vendor can add tags
-            'modal_header_color'           => '#F05025',
+            'modal_header_color'           => 'var(--dokan-button-background-color, #7047EB)',
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );
@@ -629,7 +753,9 @@ class Assets {
                 'routeComponents' => [ 'default' => null ],
                 'routes'          => $this->get_vue_frontend_routes(),
                 'urls'            => [
-                    'assetsUrl' => DOKAN_PLUGIN_ASSEST,
+                    'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
+                    'dashboardUrl' => dokan_get_navigation_url() . ( ReportUtil::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
+                    'storeUrl'     => dokan_get_store_url( dokan_get_current_user_id() ),
                 ],
             ]
         );
@@ -639,8 +765,8 @@ class Assets {
         // Remove `dokan-i18n-jed` in next release.
         wp_localize_script( 'dokan-i18n-jed', 'dokan', $localize_data );
         wp_localize_script( 'dokan-util-helper', 'dokan', $localize_data );
-		//        wp_localize_script( 'dokan-vue-bootstrap', 'dokan', $localize_data );
-		//        wp_localize_script( 'dokan-script', 'dokan', $localize_data );
+        //        wp_localize_script( 'dokan-vue-bootstrap', 'dokan', $localize_data );
+        //        wp_localize_script( 'dokan-script', 'dokan', $localize_data );
 
         // localized vendor-registration script
         wp_localize_script(
@@ -786,6 +912,17 @@ class Assets {
         );
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
+
+        $dokan_frontend = [
+            'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+        ];
+
+        // localize dokan frontend script
+        wp_localize_script(
+            'dokan-react-frontend',
+            'dokanFrontend',
+            apply_filters( 'dokan_react_frontend_localized_args', $dokan_frontend ),
+        );
     }
 
     /**
@@ -1033,6 +1170,7 @@ class Assets {
                 'product_created_response'                 => __( 'Product created successfully', 'dokan-lite' ),
                 'search_products_nonce'                    => wp_create_nonce( 'search-products' ),
                 'search_products_tags_nonce'               => wp_create_nonce( 'search-products-tags' ),
+                'search_products_brands_nonce'             => wp_create_nonce( 'search-products-brands' ),
                 'search_customer_nonce'                    => wp_create_nonce( 'search-customer' ),
                 'i18n_matches_1'                           => __( 'One result is available, press enter to select it.', 'dokan-lite' ),
                 'i18n_matches_n'                           => __( '%qty% results are available, use up and down arrow keys to navigate.', 'dokan-lite' ),
@@ -1200,6 +1338,21 @@ class Assets {
                 'decimal_point'                     => $decimal,
                 'mon_decimal_point'                 => wc_get_price_decimal_separator(),
                 'i18n_date_format'                  => wc_date_format(),
+            ]
+        );
+    }
+
+    /**
+     * Admin vue localized scripts
+     *
+     * @since 3.14.0
+     *
+     * @return array
+     */
+    private function get_vue_admin_localized_scripts() {
+        return apply_filters(
+            'dokan_vue_admin_localize_script', [
+                'commission_types' => dokan_commission_types(),
             ]
         );
     }

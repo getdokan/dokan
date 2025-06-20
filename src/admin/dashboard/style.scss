@@ -1,0 +1,16 @@
+@use '../../base-tailwind';
+@config './admin-dashboard-tailwind.config.js';
+// Define custom animation keyframes
+
+@keyframes completeStep {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.animate-complete-step {
+    animation: completeStep 0.9s ease-in-out;
+}

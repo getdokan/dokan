@@ -318,12 +318,26 @@ class Manager {
                 $vendor->update_meta( 'dokan_publishing', 'no' );
             }
 
+            if ( isset( $data['reset_sub_category'] ) && dokan_validate_boolean( $data['reset_sub_category'] ) ) {
+                $vendor->update_meta( 'reset_sub_category', 'yes' );
+            } else {
+                $vendor->update_meta( 'reset_sub_category', 'no' );
+            }
+
             if ( ! empty( $data['admin_commission_type'] ) ) {
                 $vendor->update_meta( 'dokan_admin_percentage_type', $data['admin_commission_type'] );
             }
 
             if ( isset( $data['admin_commission'] ) && ( is_numeric( wc_format_decimal( $data['admin_commission'] ) ) || '' === $data['admin_commission'] ) ) {
                 $vendor->update_meta( 'dokan_admin_percentage', wc_format_decimal( $data['admin_commission'] ) );
+            }
+
+            if ( isset( $data['admin_additional_fee'] ) && ( is_numeric( wc_format_decimal( $data['admin_additional_fee'] ) ) || '' === $data['admin_additional_fee'] ) ) {
+                $vendor->update_meta( 'dokan_admin_additional_fee', wc_format_decimal( $data['admin_additional_fee'] ) );
+            }
+
+            if ( isset( $data['admin_category_commission'] ) ) {
+                $vendor->update_meta( 'admin_category_commission', wc_clean( $data['admin_category_commission'] ) );
             }
         }
 

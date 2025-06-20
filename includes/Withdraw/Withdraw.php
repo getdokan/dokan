@@ -152,7 +152,7 @@ class Withdraw {
     /**
      * Get details
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.12
      *
      * @return string
      */
@@ -303,7 +303,7 @@ class Withdraw {
     /**
      * Set details
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.12
      *
      * @param string $details
      *

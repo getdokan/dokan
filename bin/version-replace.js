@@ -3,7 +3,6 @@ const replace = require( 'replace-in-file' );
 
 const pluginFiles = [
     'assets/src/**/*',
-    'deprecated/**/*',
     'includes/**/*',
     'templates/**/*',
     'src/**/*',
@@ -16,6 +15,6 @@ const { version } = JSON.parse( fs.readFileSync( 'package.json' ) );
 
 replace( {
     files: pluginFiles,
-    from: /DOKAN_SINCE/g,
+    from: [ /DOKAN_SINCE/g, /DOKAN_PRO_SINCE/g ],
     to: version,
 } );

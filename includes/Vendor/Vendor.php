@@ -7,8 +7,8 @@ use WC_Order;
 use WeDevs\Dokan\Cache;
 use WeDevs\Dokan\Models\VendorBalance;
 use WeDevs\Dokan\Product\ProductCache;
+use WeDevs\Dokan\Commission\Model\Setting;
 use WP_Error;
-use WP_Query;
 use WP_User;
 
 /**
@@ -157,6 +157,7 @@ class Vendor {
             'registered'            => $this->get_register_date(),
             'payment'               => $this->get_payment_profiles(),
             'trusted'               => $this->is_trusted(),
+            'reset_sub_category'    => $this->get_reset_sub_category(),
             'store_open_close'      => [
                 'enabled'      => $this->is_store_time_enabled(),
                 'time'         => $this->get_store_time(),
@@ -213,6 +214,15 @@ class Vendor {
      */
     public function is_featured() {
         return 'yes' === get_user_meta( $this->id, 'dokan_feature_seller', true );
+    }
+
+    /**
+     * If reset sub category is enabled
+     *
+     * @return boolean
+     */
+    public function get_reset_sub_category() {
+        return 'no' !== get_user_meta( $this->id, 'reset_sub_category', true );
     }
 
     /**
@@ -635,8 +645,6 @@ class Vendor {
                             // get extra information
                             $display_type            = get_term_meta( $term->term_id, 'display_type', true );
                             $thumbnail_id            = absint( get_term_meta( $term->term_id, 'thumbnail_id', true ) );
-                            $category_commision_type = get_term_meta( $term->term_id, 'per_category_admin_commission_type', true );
-                            $category_commision      = get_term_meta( $term->term_id, 'per_category_admin_commission', true );
                             $category_icon           = get_term_meta( $term->term_id, 'dokan_cat_icon', true );
                             $category_icon_color     = get_term_meta( $term->term_id, 'dokan_cat_icon_color', true );
 
@@ -649,9 +657,6 @@ class Vendor {
                                 $image = $thumbnail = wc_placeholder_img_src();
                             }
 
-                            // fix commission
-                            $category_commision = ! empty( $category_commision ) ? wc_format_decimal( $category_commision ) : 0.00;
-
                             // set extra fields to term object
                             $term->thumbnail = $thumbnail;
                             $term->image     = $image;
@@ -659,9 +664,6 @@ class Vendor {
                             $term->icon         = $category_icon;
                             $term->icon_color   = $category_icon_color;
                             $term->display_type = $display_type;
-                            // set commissions
-                            $term->admin_commission_type = $category_commision_type;
-                            $term->admin_commission      = $category_commision;
 
                             // finally store category data
                             $all_categories[] = $term;
@@ -921,17 +923,6 @@ class Vendor {
     }
 
     /**
-     * Get vendor percentage
-     *
-     * @param  integer $product_id
-     *
-     * @return integer
-     */
-    public function get_percentage( $product_id = 0 ) {
-        return dokan_get_seller_percentage( $this->id, $product_id );
-    }
-
-    /**
      * Make vendor active
      *
      * @since 2.8.0
@@ -1178,6 +1169,15 @@ class Vendor {
     }
 
     /**
+     * Set threads
+     *
+     * @param string
+     */
+    public function set_threads( $value ) {
+        $this->set_social_prop( 'threads', 'social', esc_url_raw( $value ) );
+    }
+
+    /**
      * Set flickr
      *
      * @param string
@@ -1352,7 +1352,7 @@ class Vendor {
      * @param string $key
      * @param bool $single  Whether to return a single value
      *
-     * @return Mix
+     * @return mixed|null|false
      */
     public function get_meta( $key, $single = false ) {
         return get_user_meta( $this->get_id(), $key, $single );
@@ -1542,6 +1542,32 @@ class Vendor {
      */
     public function save() {
         $this->apply_changes();
+    }
+
+    /**
+     * Returns vendor commission settings data.
+     *
+     * @since 3.14.0
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Setting
+     */
+    public function get_commission_settings() {
+        $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->get_id() );
+        return $settings->get();
+    }
+
+    /**
+     * Saves commission settings.
+     *
+     * @since 3.14.0
+     *
+     * @param array $commission
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Setting
+     */
+    public function save_commission_settings( $commission = [] ) {
+        $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->get_id() );
+        return  $settings->save( $commission );
     }
 
     /**

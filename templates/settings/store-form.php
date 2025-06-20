@@ -69,7 +69,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
         <div class="button-area<?php echo $banner_id ? ' dokan-hide' : ''; ?>">
             <i class="fas fa-cloud-upload-alt"></i>
-            <a href="#" class="dokan-banner-drag dokan-btn dokan-btn-info dokan-theme dokan-btn-theme"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
+            <a href="#" class="dokan-banner-drag dokan-btn dokan-theme dokan-btn-theme"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
             <p class="help-block">
                 <?php
                 /**
@@ -267,7 +267,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
     <div class="dokan-form-group">
 
         <div class="dokan-w4 ajax_prev dokan-text-left" style="margin-left:24%;">
-            <input type="submit" name="dokan_update_store_settings" class="dokan-btn dokan-btn-danger dokan-btn-theme" value="<?php esc_attr_e( 'Update Settings', 'dokan-lite' ); ?>">
+            <input type="submit" name="dokan_update_store_settings" class="dokan-btn dokan-btn-theme" value="<?php esc_attr_e( 'Update Settings', 'dokan-lite' ); ?>">
         </div>
     </div>
 </form>

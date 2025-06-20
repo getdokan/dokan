@@ -56,7 +56,7 @@ class StoreSettingController extends WP_REST_Controller {
      *
      * @param \WP_REST_Request $request
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.12
      *
      * @return WP_Error|\WP_REST_Response
      */

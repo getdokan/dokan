@@ -244,6 +244,7 @@ export const endPoints = {
     getAdminPromoNotices: `${SERVER_URL}/dokan/v1/admin/notices/promo`,
     getAdminLogs: `${SERVER_URL}/dokan/v1/admin/logs`,
     getAdminExportLogs: `${SERVER_URL}/dokan/v1/admin/logs/export`,
+    getAdminSettings: `${SERVER_URL}/dokan/v1/admin/option`,
 
     // seller badge
     getVerifiedSellerVerificationTypes: `${SERVER_URL}/dokan/v1/seller-badge/verification-types`,
@@ -365,7 +366,7 @@ export const endPoints = {
     updateVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
     deleteVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
 
-    //commission
+    // commission
     getCommission: `${SERVER_URL}/dokan/v1/commission`,
 
     // shipping status
@@ -374,6 +375,14 @@ export const endPoints = {
     createShipment: (orderId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}`,
     getSingleShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
     updateShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
+
+    // ShipStation
+    getShipStationCredential: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/credentials/${vendorId}`,
+    createShipStationCredential: `${SERVER_URL}/dokan/v1/shipstation/credentials/create`,
+    deleteShipStationCredential: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/credentials/${vendorId}`,
+    getShipStationOrderStatusSettings: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/order-statuses/${vendorId}`,
+    createShipStationOrderStatusSettings: `${SERVER_URL}/dokan/v1/shipstation/order-statuses`,
+    deleteShipStationOrderStatusSettings: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/order-statuses/${vendorId}`,
 
     wc: {
         // coupons

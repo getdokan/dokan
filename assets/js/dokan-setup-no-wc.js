@@ -1,1 +1,0 @@
-jQuery(document).ready((function(n){"use strict";n("#dokan-admin-setup-wizard").on("submit",(function(t){n(".wc-setup-content").block({message:null,overlayCSS:{background:"#fff",opacity:.6}})}))}));

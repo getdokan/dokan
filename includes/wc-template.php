@@ -1,4 +1,7 @@
 <?php
+
+use WeDevs\Dokan\Vendor\Vendor;
+
 /**
  * Injects seller name on cart and other areas
  *
@@ -49,14 +52,21 @@ add_filter( 'woocommerce_product_tabs', 'dokan_seller_product_tab' );
  * Prints seller info in product single page
  *
  * @global WC_Product $product
- * @param type $val
  */
-function dokan_product_seller_tab( $val ) {
+function dokan_product_seller_tab() {
     global $product;
 
-    $author_id  = get_post_field( 'post_author', $product->get_id() );
-    $author     = get_user_by( 'id', $author_id );
-    $store_info = dokan_get_store_info( $author->ID );
+    if ( ! $product instanceof WC_Product ) {
+        return;
+    }
+
+    $vendor = dokan_get_vendor_by_product( $product );
+    if ( ! $vendor instanceof Vendor ) {
+        return;
+    }
+
+    $store_info = $vendor->get_shop_info();
+    $author     = get_user_by( 'id', $vendor->get_id() );
 
     dokan_get_template_part(
         'global/product-tab',
@@ -217,9 +227,27 @@ function dokan_vendor_quick_edit_data( $column, $post_id ) {
             </div>
             <?php
             break;
+
+        case 'admin_commission':
+            $commission = dokan()->commission->get_earning_by_product( $post_id, 'admin' );
+            echo is_numeric( $commission ) ? wc_price( $commission ) : '';
+
+            break;
+
         default:
             break;
     }
+
+    ?>
+        <script>
+            jQuery(document).ready(function($) {
+                // Target the Products page
+                if($('body').hasClass('edit-php') && $('body').hasClass('post-type-product')) {
+                    $("th.column-admin_commission").css( 'width', '10%' );
+                }
+            });
+        </script>
+    <?php
 }
 
 add_action( 'manage_product_posts_custom_column', 'dokan_vendor_quick_edit_data', 99, 2 );

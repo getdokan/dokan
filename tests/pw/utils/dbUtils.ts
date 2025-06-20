@@ -1,8 +1,7 @@
 import mysql from 'mysql2/promise';
 import { serialize, unserialize, isSerialized } from 'php-serialize';
-import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
-import { commission, feeRecipient } from '@utils/interfaces';
+
 const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 
 const dbPrefix = DB_PREFIX;
@@ -102,20 +101,11 @@ export const dbUtils = {
         return [currentSettings, newSettings];
     },
 
-    // get selling info
-    async getSellingInfo(): Promise<[commission, feeRecipient]> {
-        const res = await this.getOptionValue(dbData.dokan.optionName.selling);
-        const commission = {
-            type: res.commission_type,
-            amount: res.admin_percentage,
-            additionalAmount: res.additional_fee,
-        };
-        const feeRecipient = {
-            shippingFeeRecipient: res.shipping_fee_recipient,
-            taxFeeRecipient: res.tax_fee_recipient,
-            shippingTaxFeeRecipient: res.shipping_tax_fee_recipient,
-        };
-        return [commission, feeRecipient];
+    // delete option row
+    async deleteOptionRow(optionNames: string[]): Promise<any> {
+        const query = `DELETE FROM ${dbPrefix}_options WHERE option_name IN (${optionNames.map(() => '?').join(',')})`;
+        const res = await dbUtils.dbQuery(query, optionNames);
+        return res;
     },
 
     // create abuse report
@@ -145,20 +135,7 @@ export const dbUtils = {
         };
 
         const query = `INSERT INTO ${dbPrefix}_dokan_refund VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
-        const res = await dbUtils.dbQuery(query, [
-            refund.id,
-            refund.orderId,
-            refund.sellerId,
-            refund.refundAmount,
-            refund.refundReason,
-            refund.itemQtys,
-            refund.itemTotals,
-            refund.itemTaxTotals,
-            refund.restockItems,
-            refund.date,
-            refund.status,
-            refund.method,
-        ]);
+        const res = await dbUtils.dbQuery(query, [refund.id, refund.orderId, refund.sellerId, refund.refundAmount, refund.refundReason, refund.itemQtys, refund.itemTotals, refund.itemTaxTotals, refund.restockItems, refund.date, refund.status, refund.method]);
 
         return [res, refundId];
     },
@@ -196,7 +173,7 @@ export const dbUtils = {
     async updateProductType(productId?: string): Promise<void> {
         // get term ids
         const termIdQuery = `SELECT t1.term_id AS simple_term_id, t2.term_id AS subscription_term_id
-                    FROM (SELECT term_id FROM ${dbPrefix}_terms WHERE name = ? ORDER BY term_id DESC LIMIT 1) t1, ${dbPrefix}_terms t2 
+                    FROM (SELECT term_id FROM ${dbPrefix}_terms WHERE name = ? ORDER BY term_id DESC LIMIT 1) t1, ${dbPrefix}_terms t2
                     WHERE t2.name = ?;
                 `;
         const [termIdQueryResult] = await dbUtils.dbQuery(termIdQuery, ['simple', 'product_pack']);
@@ -204,9 +181,9 @@ export const dbUtils = {
         const subscriptionTermId = termIdQueryResult.subscription_term_id;
         // console.log('simpleTermId:', simpleTermId, 'subscriptionTermId:', subscriptionTermId);
 
-        const termTaxonomyIdQuery = `SELECT  t1.term_taxonomy_id AS simple_term_taxonomy_id,  t2.term_taxonomy_id AS subscription_term_taxonomy_id 
-                    FROM ${dbPrefix}_term_taxonomy t1, ${dbPrefix}_term_taxonomy t2 
-                    WHERE  t1.term_id = ? AND t2.term_id = ?;    
+        const termTaxonomyIdQuery = `SELECT  t1.term_taxonomy_id AS simple_term_taxonomy_id,  t2.term_taxonomy_id AS subscription_term_taxonomy_id
+                    FROM ${dbPrefix}_term_taxonomy t1, ${dbPrefix}_term_taxonomy t2
+                    WHERE  t1.term_id = ? AND t2.term_id = ?;
                 `;
         const [termTaxonomyIdQueryResult] = await dbUtils.dbQuery(termTaxonomyIdQuery, [simpleTermId, subscriptionTermId]);
         const simpleTermTaxonomyId = termTaxonomyIdQueryResult.simple_term_taxonomy_id;
@@ -220,6 +197,14 @@ export const dbUtils = {
         await dbUtils.dbQuery(updateCountQuery, [subscriptionTermTaxonomyId]);
     },
 
+    // get child order ids
+    async getChildOrderIds(orderId: string): Promise<string[]> {
+        const query = `SELECT id FROM ${dbPrefix}_wc_orders WHERE parent_order_id = ?;`;
+        const res = await dbUtils.dbQuery(query, [orderId]);
+        const ids = res.map((row: { id: number }) => row.id);
+        return ids;
+    },
+
     async updateQuoteRuleContent(quoted: string, updatedRuleContent: object) {
         const querySelect = `SELECT rule_contents FROM ${dbPrefix}_dokan_request_quote_rules WHERE id = ?`;
         const res = await dbUtils.dbQuery(querySelect, [quoted]);
@@ -229,5 +214,22 @@ export const dbUtils = {
 
         const queryUpdate = `UPDATE ${dbPrefix}_dokan_request_quote_rules SET rule_contents = ? WHERE id = ?`;
         await dbUtils.dbQuery(queryUpdate, [serialize(newRuleContent), quoted]);
+    },
+
+    async followVendor(followerId: string, vendorId: string) {
+        const currentTime = helpers.currentDateTimeFullFormat;
+        const query = `INSERT INTO ${dbPrefix}_dokan_follow_store_followers (vendor_id, follower_id, followed_at)
+            SELECT ?, ?, ?
+            WHERE NOT EXISTS (  SELECT 1 FROM ${dbPrefix}_dokan_follow_store_followers WHERE vendor_id = ? AND follower_id = ? );`;
+        const res = await dbUtils.dbQuery(query, [vendorId, followerId, currentTime, vendorId, followerId]);
+        return res;
+    },
+
+    async addStoreMapLocation(sellerId: string) {
+        await dbUtils.updateUserMeta(sellerId, 'dokan_profile_settings', { find_address: 'New York, NY, USA' });
+        await dbUtils.setUserMeta(sellerId, 'dokan_geo_latitude', '40.7127753', false);
+        await dbUtils.setUserMeta(sellerId, 'dokan_geo_longitude', '-74.0059728', false);
+        await dbUtils.setUserMeta(sellerId, 'dokan_geo_public', '1', false);
+        await dbUtils.setUserMeta(sellerId, 'dokan_geo_address', 'New York, NY, USA', false);
     },
 };
