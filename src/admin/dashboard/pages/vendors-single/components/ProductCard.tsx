@@ -1,4 +1,5 @@
 import { truncate } from '../../../../../utilities/Truncate';
+import { __ } from '@wordpress/i18n';
 
 interface Product {
     id: number;
@@ -7,15 +8,13 @@ interface Product {
     category: string;
     price: number;
     sold: number;
-    status: 'Sold' | 'Active' | 'Draft';
 }
 
 interface ProductCardProps {
     product: Product;
-    formatPrice: ( price: number ) => string;
 }
 
-const ProductCard = ( { product, formatPrice }: ProductCardProps ) => (
+const ProductCard = ( { product }: ProductCardProps ) => (
     <div className="bg-white border border-[#E9E9E9] rounded-md flex items-center gap-4 p-6 hover:bg-gray-50 transition-colors shadow">
         <img
             src={ product.image }
@@ -33,10 +32,10 @@ const ProductCard = ( { product, formatPrice }: ProductCardProps ) => (
                 </p>
                 <div className="flex gap-3">
                     <div className="font-bold text-gray-900 text-xl">
-                        { formatPrice( product.price ) }
+                        { product.sold }
                     </div>
                     <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-[#EFEAFF] text-[#7047EB]">
-                        { product.status }
+                        { __( 'Sold', 'dokan-lite' ) }
                     </span>
                 </div>
             </div>

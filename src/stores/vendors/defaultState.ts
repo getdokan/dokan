@@ -11,6 +11,8 @@ const defaultState = {
         order: 'desc',
     },
     vendorStats: {},
+    topProducts: {},
+    loadingTopProducts: {},
 };
 
 export default defaultState;
