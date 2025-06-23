@@ -6,6 +6,13 @@ use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 use WeDevs\Dokan\Intelligence\Assets;
 use WeDevs\Dokan\Intelligence\Admin\Settings;
 use WeDevs\Dokan\Intelligence\Manager;
+use WeDevs\Dokan\Intelligence\Services\Models\GeminiTwoDotFiveFlash;
+use WeDevs\Dokan\Intelligence\Services\Models\GeminiTwoDotFiveFlashLite;
+use WeDevs\Dokan\Intelligence\Services\Models\GeminiTwoDotFivePro;
+use WeDevs\Dokan\Intelligence\Services\Models\OpenAIChatGPTFourO;
+use WeDevs\Dokan\Intelligence\Services\Models\OpenAIGPTFourO;
+use WeDevs\Dokan\Intelligence\Services\Models\OpenAIGPTFourOMini;
+use WeDevs\Dokan\Intelligence\Services\Models\OpenAIGPTThreeDotFiveTurbo;
 use WeDevs\Dokan\Intelligence\Services\Providers\Gemini;
 use WeDevs\Dokan\Intelligence\Services\Providers\OpenAI;
 
@@ -21,6 +28,13 @@ class IntelligenceServiceProvider extends BaseServiceProvider {
         Settings::class,
         OpenAI::class,
         Gemini::class,
+        GeminiTwoDotFiveFlash::class,
+        GeminiTwoDotFivePro::class,
+        GeminiTwoDotFiveFlashLite::class,
+        OpenAIGPTThreeDotFiveTurbo::class,
+        OpenAIGPTFourOMini::class,
+        OpenAIGPTFourO::class,
+        OpenAIChatGPTFourO::class,
     ];
 
 	/**

@@ -6,6 +6,7 @@ use WeDevs\Dokan\Contracts\Hookable;
 use WeDevs\Dokan\Intelligence\Manager;
 use WeDevs\Dokan\Intelligence\Services\ChatgptResponseService;
 use WeDevs\Dokan\Intelligence\Services\GeminiResponseService;
+use WeDevs\Dokan\Intelligence\Services\Model;
 
 class Settings implements Hookable {
     public function register_hooks(): void {
@@ -56,13 +57,11 @@ class Settings implements Hookable {
                 'label'   => __( 'Engine', 'dokan-lite' ),
                 'type'    => 'select',
                 'options' => array_map(
-                    function ( $provider ) {
-                        return $provider->get_title();
-                    },
+                    fn( $provider ) => $provider->get_title(),
                     $text_providers
                 ),
                 'desc'    => __( 'Select which AI provider to use for generating content.', 'dokan-lite' ),
-                'default' => 'chatgpt',
+                'default' => 'openai',
                 'is_lite' => true,
             ],
         ];
@@ -89,7 +88,7 @@ class Settings implements Hookable {
                 'name'    => 'dokan_ai_' . $provider_id . '_model',
                 'label'   => __( 'Model', 'dokan-lite' ),
                 'type'    => 'select',
-                'options' => $provider->get_models(),
+                'options' => array_map( fn( $model ) => $model->get_title(), $provider->get_models_by_type( Model::SUPPORTS_TEXT ) ),
                 'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
                 'default' => $provider->get_default_model_id(),
                 'is_lite' => true,
