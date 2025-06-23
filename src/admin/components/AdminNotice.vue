@@ -10,10 +10,10 @@
                                 <img src="../../../assets/src/images/dokan-notice-logo.svg" alt="Dokan Logo" class="dokan-logo" v-if="!notice.hide_logo">
                             </div>
                             <div class="dokan-message">
-                                <h3 v-if="notice.title">{{ notice.title }}</h3>
-                                <div v-if="notice.description" v-html="notice.description"></div>
+                                <h3 v-if="notice.title" class="dokan-message-title">{{ notice.title }}</h3>
+                                <div v-if="notice.description" v-html="notice.description" class="dokan-message-content"></div>
                                 <template v-if="notice.actions && notice.actions.length">
-                                    <div>
+                                    <div class="dokan-notice-actions">
                                     <template v-for="action in notice.actions">
                                         <a v-if="action.action" class="dokan-btn" :class="[`dokan-btn-${action.type}`, action.class]" :target="action.target ? action.target : '_self'" :href="action.action">{{ action.text }}</a>
                                         <button :disabled="loading" v-else class="dokan-btn btn-dokan" :class="[`dokan-btn-${action.type}`, action.class]" @click="handleAction(action, index)">{{ loading || task_completed ? button_text : action.text }}</button>
