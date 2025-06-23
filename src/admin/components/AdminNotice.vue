@@ -6,7 +6,8 @@
                     <div class="dokan-admin-notice" :key="index" v-show="(index + 1) === current_notice" :class="`dokan-${notice.type}`" @mouseenter="stopAutoSlide" @mouseleave="startAutoSlide">
                         <div class="notice-content">
                             <div class="logo-wrap">
-                                <div class="dokan-logo"></div>
+                                <!-- <div class="dokan-logo"></div>-->
+                                <img src="../../../assets/src/images/dokan-notice-logo.svg" alt="Dokan Logo" class="dokan-logo" v-if="!notice.hide_logo">
                             </div>
                             <div class="dokan-message">
                                 <h3 v-if="notice.title">{{ notice.title }}</h3>

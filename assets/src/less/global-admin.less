@@ -106,19 +106,27 @@
 
         .notice-content {
             display: flex;
-            align-items: center;
+
+            &:not(:has(.dokan-message h3)) {
+                align-items: center;
+            }
         }
 
         .logo-wrap {
             position: relative;
+            background-color: #020A39;
+            min-width: 86px;
+            min-height: 97px;
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
 
             .dokan-logo {
-                width: 86px;
-                height: 97px;
-                background-repeat: no-repeat;
-                background-image: url(../images/dokan-admin-notice-logo.svg);
-                background-size: cover;
-                background-position: center;
+                width: 41.74px;
+                height: 52px;
             }
         }
 
