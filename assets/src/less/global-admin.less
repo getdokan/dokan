@@ -18,6 +18,7 @@
             border-radius: 5px;
             // background: transparent;
             padding: 13px 0;
+            box-shadow: 0 3px 4px rgba(138, 138, 138, 0.1);
 
             .dokan-admin-notice {
                 position: absolute;
@@ -28,29 +29,31 @@
                 align-items: center;
                 min-height: 100%;
                 padding: 0 15px;
+                box-sizing: border-box;
             }
         }
 
         .slide-notice {
             position: absolute;
-            top: 50%;
-            right: 27px;
-            padding: 6px 8px;
-            border: 1px solid #b5bfc9;
+            top: 18px;
+            right: 18px;
+            padding: 0;
+            border: .8px solid #DFDFDF;
             border-radius: 3px;
-            min-width: 77px;
+            min-width: 75px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transform: translateY(-50%);
             background: #fff;
 
             .notice-count {
-                margin: 0 8px;
-                color: #acacac;
+                padding: 4px 5px;
+                color: #777777;
                 font-size: 12px;
                 font-weight: normal;
                 font-family: "SF Pro Text", sans-serif;
+                border-left: 1px solid #DFDFDF;
+                border-right: 1px solid #DFDFDF;
             }
 
             .current-notice,
@@ -62,15 +65,19 @@
 
             .next,
             .prev {
-                margin-top: 2px;
-                padding: 0 2px;
+                margin-top: 4.5px;
+                padding: 0 6.45px;
                 cursor: pointer;
+
+                svg {
+                    line-height: 0;
+                }
             }
 
             .next,
             .prev {
                 &.active svg path {
-                    fill: #9da6ae;
+                    fill: #C2BEBE;
                 }
             }
         }
