@@ -297,7 +297,14 @@ class Dashboard implements Hookable {
             $dashboard_script = require $admin_dashboard_file;
             $dependencies     = $dashboard_script['dependencies'] ?? [];
             $version          = $dashboard_script['version'] ?? '';
-            $data             = [ 'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price() ];
+            $data             = apply_filters(
+                'dokan_admin_dashboard_localize_scripts',
+                [
+                    'currency'  => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+                    'states'    => WC()->countries->get_allowed_country_states(),
+                    'countries' => WC()->countries->get_allowed_countries(),
+                ]
+            );
 
             wp_register_script(
                 $this->script_key,
