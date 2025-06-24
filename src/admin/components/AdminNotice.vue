@@ -80,61 +80,61 @@ export default {
     methods: {
         fetch() {
             const notice_scope = this.scope ? `?scope=${this.scope}` : '';
-            $.ajax({
+            $.ajax( {
                 url: `${dokan_promo.rest.root}${dokan_promo.rest.version}/admin/notices/${this.endpoint}${notice_scope}`,
                 method: 'get',
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-WP-Nonce', dokan_promo.rest.nonce);
+                beforeSend: function( xhr ) {
+                    xhr.setRequestHeader( 'X-WP-Nonce', dokan_promo.rest.nonce );
                 },
-            }).done(response => {
+            } ).done( response => {
                 // Add close action to notices with show_close_button
                 this.notices = response
-                    .filter(notice => notice.description || notice.title)
-                    .map(notice => {
-                        if (notice.show_close_button) {
+                    .filter( notice => notice.description || notice.title )
+                    .map( notice => {
+                        if ( notice.show_close_button ) {
                             const closeAction = {
                                 type: 'secondary',
                                 class: 'dokan-notice-close',
-                                text: this.__('Dismiss', 'dokan-lite'),
-                                loading_text: this.__('Dismissing...', 'dokan-lite'),
-                                completed_text: this.__('Dismissed', 'dokan-lite'),
-                                ...(notice.close_url ? { action: notice.close_url } : {}),
-                                ...(notice.ajax_data ? { ajax_data: notice.ajax_data } : {})
+                                text: this.__( 'Dismiss', 'dokan-lite' ),
+                                loading_text: this.__( 'Dismissing...', 'dokan-lite' ),
+                                completed_text: this.__( 'Dismissed', 'dokan-lite' ),
+                                ...( notice.close_url ? { action: notice.close_url } : {} ),
+                                ...( notice.ajax_data ? { ajax_data: notice.ajax_data } : {} )
                             };
                             return {
                                 ...notice,
-                                actions: [...(notice.actions || []), closeAction]
+                                actions: [ ...( notice.actions || [] ), closeAction ]
                             };
                         }
                         return notice;
-                    });
+                    } );
                 this.startAutoSlide();
-            });
+            } );
         },
 
-        slideNotice(n) {
+        slideNotice( n ) {
             this.current_notice += n;
             let len = this.notices.length;
-            if (this.current_notice < 1) {
+            if ( this.current_notice < 1 ) {
                 this.current_notice = len;
             }
-            if (this.current_notice > len) {
+            if ( this.current_notice > len ) {
                 this.current_notice = 1;
             }
         },
 
         nextNotice() {
             this.stopAutoSlide();
-            this.slideNotice(1);
+            this.slideNotice( 1 );
         },
 
         prevNotice() {
             this.stopAutoSlide();
-            this.slideNotice(-1);
+            this.slideNotice( -1 );
         },
 
         startAutoSlide() {
-            if (!this.loading && this.notices.length > 1) {
+            if ( !this.loading && this.notices.length > 1 ) {
                 this.timer = setInterval(() => {
                     this.slideNotice(1);
                 }, this.interval);
@@ -142,34 +142,34 @@ export default {
         },
 
         stopAutoSlide() {
-            if (!this.loading && this.notices.length > 1) {
-                clearInterval(this.timer);
+            if ( !this.loading && this.notices.length > 1 ) {
+                clearInterval( this.timer );
                 this.timer = null;
             }
         },
 
-        handleAction(action, index) {
-            if (action.confirm_message) {
-                Swal.fire({
-                    title: this.__('Are you sure?', 'dokan-lite'),
+        handleAction( action, index ) {
+            if ( action.confirm_message ) {
+                Swal.fire( {
+                    title: this.__( 'Are you sure?', 'dokan-lite' ),
                     icon: 'warning',
                     html: action.confirm_message,
                     showCancelButton: true,
                     confirmButtonText: action.text,
-                    cancelButtonText: this.__('Cancel', 'dokan-lite'),
-                }).then((response) => {
-                    if (response.value) {
-                        this.handleRequest(action, index);
+                    cancelButtonText: this.__( 'Cancel', 'dokan-lite' ),
+                } ).then( ( response ) => {
+                    if ( response.value ) {
+                        this.handleRequest( action, index );
                     }
-                });
+                } );
             } else {
-                this.handleRequest(action, index);
+                this.handleRequest( action, index );
             }
         },
 
-        handleRequest(action, index) {
+        handleRequest( action, index ) {
             this.loading = true;
-            this.button_text = action.loading_text ? action.loading_text : this.__('Loading...', 'dokan-lite');
+            this.button_text = action.loading_text ? action.loading_text : this.__( 'Loading...', 'dokan-lite' );
 
             // Handle AJAX request if ajax_data exists
             const ajaxPromise = action.ajax_data
@@ -198,7 +198,7 @@ export default {
                         window.location.href = action.action;
                     }
 
-                    if (action.reload) {
+                    if ( action.reload ) {
                         window.location.reload();
                     }
                 });
