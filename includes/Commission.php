@@ -5,7 +5,6 @@ namespace WeDevs\Dokan;
 use WC_Order;
 use WC_Order_Factory;
 use WC_Product;
-use WeDevs\DokanPro\Modules\DeliveryTime\StorePickup\Vendor;
 use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Commission\OrderLineItemCommission;
 use WeDevs\Dokan\Commission\ProductCommission;

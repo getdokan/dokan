@@ -7,7 +7,6 @@ use WC_Coupon;
 use WC_Discounts;
 use WC_Order;
 use WC_Product;
-use WeDevs\Dokan\Models\VendorBalance;
 
 // don't call the file directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -128,13 +127,16 @@ class Hooks {
             return;
         }
 
-        $vendor_balance_model = dokan()->get_container()->get( VendorBalance::class );
-
         // update on vendor-balance table
-        $vendor_balance_model->update_by_transaction(
-            $order_id,
-            $vendor_balance_model::TRN_TYPE_DOKAN_ORDERS,
-            [ 'status' => $new_status ]
+        $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $wpdb->dokan_vendor_balance,
+            [ 'status' => $new_status ],
+            [
+                'trn_id'   => $order_id,
+                'trn_type' => 'dokan_orders',
+            ],
+            [ '%s' ],
+            [ '%d', '%s' ]
         );
     }
 
@@ -155,6 +157,7 @@ class Hooks {
         // Ensure both statuses have 'wc-' prefix
         $current_status = $this->maybe_add_wc_prefix( $current_status );
         $new_status     = $this->maybe_add_wc_prefix( $new_status );
+
         // Define the default whitelist of allowed status transitions
         $default_whitelist = [
             'wc-pending'    => [ 'any' ],
