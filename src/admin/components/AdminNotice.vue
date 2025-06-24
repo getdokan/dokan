@@ -83,7 +83,7 @@ export default {
             $.ajax( {
                 url: `${dokan_promo.rest.root}${dokan_promo.rest.version}/admin/notices/${this.endpoint}${notice_scope}`,
                 method: 'get',
-                beforeSend: function( xhr ) {
+                beforeSend: function ( xhr ) {
                     xhr.setRequestHeader( 'X-WP-Nonce', dokan_promo.rest.nonce );
                 },
             } ).done( response => {
