@@ -134,7 +134,7 @@ export default {
         },
 
         startAutoSlide() {
-            if ( !this.loading && this.notices.length > 1 ) {
+            if ( ! this.loading && this.notices.length > 1 ) {
                 this.timer = setInterval(() => {
                     this.slideNotice(1);
                 }, this.interval);
@@ -142,7 +142,7 @@ export default {
         },
 
         stopAutoSlide() {
-            if ( !this.loading && this.notices.length > 1 ) {
+            if ( ! this.loading && this.notices.length > 1 ) {
                 clearInterval( this.timer );
                 this.timer = null;
             }
