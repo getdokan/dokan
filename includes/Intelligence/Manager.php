@@ -10,7 +10,7 @@ class Manager {
     public function active_engine(): string {
         return apply_filters(
             'dokan_ai_active_engine',
-            dokan_get_option( 'dokan_ai_engine', 'dokan_ai', 'chatgpt' )
+            dokan_get_option( 'dokan_ai_engine', 'dokan_ai', 'openai' )
         );
     }
 
@@ -20,12 +20,7 @@ class Manager {
      * @return array
      */
     public function get_engines(): array {
-        return apply_filters(
-            'dokan_ai_supported_engines', [
-				'chatgpt' => __( 'OpenAI', 'dokan-lite' ),
-				'gemini'  => __( 'Gemini', 'dokan-lite' ),
-			]
-        );
+        return $this->get_text_supported_providers();
     }
 
     /**
@@ -44,7 +39,7 @@ class Manager {
         }
 
         // Activated api key
-        $api_key = dokan_get_option( "dokan_ai_{$engine}_api_key", 'dokan_ai' );
+        $api_key = dokan_get_option( "dokan_ai_{$engine}_api_key", 'dokan_ai', '' );
 
         if ( empty( $api_key ) ) {
             return false;
