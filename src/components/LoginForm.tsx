@@ -56,11 +56,11 @@ const LoginForm = ( {
                 url: dokan.ajaxurl,
                 method: 'POST',
                 dataType: 'json',
-                data: {
+                data: applyFilters( 'dokan_login_payload', {
                     action: 'dokan_login_user',
                     _wpnonce: dokan.nonce,
                     form_data: formData.toString(),
-                },
+                } ),
                 success( response: any ) {
                     setIsLoading( false );
 
