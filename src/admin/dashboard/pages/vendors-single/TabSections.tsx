@@ -3,8 +3,6 @@ import { Vendor } from '@dokan/definitions/dokan-vendors';
 
 import OverviewTab from './InformationTabs/OverviewTab';
 import GeneralTab from './InformationTabs/GeneralTab';
-import VerificationTab from './InformationTabs/VerificationTab';
-import SubscriptionTab from './InformationTabs/SubscriptionTab';
 import WithdrawTab from './InformationTabs/WithdrawTab';
 import BadgesTab from './InformationTabs/BadgesTab';
 import { __ } from '@wordpress/i18n';
@@ -22,44 +20,34 @@ interface TabConfig {
     component: JSX.Element;
 }
 
-const tabs: TabConfig[] = wp.hooks.applyFilters(
-    'dokan-admin-vendor-tabs',
-    // @ts-ignore
-    [
-        {
-            name: 'overview',
-            title: __( 'Overview', 'dokan-lite' ),
-            component: OverviewTab,
-        },
-        {
-            name: 'general',
-            title: __( 'General', 'dokan' ),
-            component: GeneralTab,
-        },
-        {
-            name: 'verification',
-            title: __( 'Verification', 'dokan-lite' ),
-            component: VerificationTab,
-        },
-        {
-            name: 'subscription',
-            title: __( 'Subscription', 'dokan-lite' ),
-            component: SubscriptionTab,
-        },
-        {
-            name: 'withdraw',
-            title: __( 'Withdraw', 'dokan-lite' ),
-            component: WithdrawTab,
-        },
-        {
-            name: 'badges',
-            title: __( 'Badges', 'dokan' ),
-            component: BadgesTab,
-        },
-    ]
-);
-
 const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
+    const tabs: TabConfig[] = window.wp.hooks.applyFilters(
+        'dokan-admin-vendor-tabs',
+        // @ts-ignore
+        [
+            {
+                name: 'overview',
+                title: __( 'Overview', 'dokan-lite' ),
+                component: OverviewTab,
+            },
+            {
+                name: 'general',
+                title: __( 'General', 'dokan' ),
+                component: GeneralTab,
+            },
+            {
+                name: 'withdraw',
+                title: __( 'Withdraw', 'dokan-lite' ),
+                component: WithdrawTab,
+            },
+            {
+                name: 'badges',
+                title: __( 'Badges', 'dokan' ),
+                component: BadgesTab,
+            },
+        ]
+    );
+
     const vendorStats = useSelect(
         ( select ) => {
             if ( ! vendor?.id ) {
@@ -116,19 +104,19 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
                 : undefined,
             onStatusChange: onDataUpdate
                 ? ( status: boolean ) =>
-                      onDataUpdate( 'verification', { enabled: status } )
+                    onDataUpdate( 'verification', { enabled: status } )
                 : undefined,
             onPlanChange: onDataUpdate
                 ? ( planId: string ) =>
-                      onDataUpdate( 'subscription', { planId } )
+                    onDataUpdate( 'subscription', { planId } )
                 : undefined,
             onWithdrawRequest: onDataUpdate
                 ? ( amount: number, method: string ) =>
-                      onDataUpdate( 'withdraw', { amount, method } )
+                    onDataUpdate( 'withdraw', { amount, method } )
                 : undefined,
             onBadgeToggle: onDataUpdate
                 ? ( badgeId: string, award: boolean ) =>
-                      onDataUpdate( 'badges', { badgeId, award } )
+                    onDataUpdate( 'badges', { badgeId, award } )
                 : undefined,
         };
 
