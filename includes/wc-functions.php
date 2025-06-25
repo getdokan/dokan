@@ -416,7 +416,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
         try {
             $to_dt = new WC_DateTime( $date_to . ' 23:59:59', $timezone );
             $product->set_date_on_sale_to( $to_dt );
-            
+
             if ( empty( $date_from ) ) {
                 // Automatically add date of today if start date is empty
                 $from_obj = new WC_DateTime( 'now', $timezone );
