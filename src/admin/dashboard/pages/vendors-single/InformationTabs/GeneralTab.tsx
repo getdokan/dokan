@@ -3,8 +3,8 @@ import { Card } from '@getdokan/dokan-ui';
 import { User } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
-import { Slot } from "@wordpress/components";
-import EuVendorTaxFields from "@dokan/admin/dashboard/pages/vendors-single/InformationTabs/EuVendorTaxFields";
+import { Slot, SlotFillProvider } from '@wordpress/components';
+import { PluginArea } from '@wordpress/plugins';
 
 interface GeneralTabProps {
     vendor: Vendor;
@@ -53,6 +53,7 @@ const GeneralTab = ( { vendor, vendorStats }: GeneralTabProps ) => {
         }
 
         const states = [];
+        // @ts-ignore
         const statesObject = window?.dokanAdminDashboard?.states;
 
         for ( const state in statesObject ) {
@@ -87,7 +88,7 @@ const GeneralTab = ( { vendor, vendorStats }: GeneralTabProps ) => {
     };
 
     return (
-        <div>
+        <SlotFillProvider>
             <div className="flex flex-col gap-8">
                 { /*General section*/ }
                 <div>
@@ -103,7 +104,9 @@ const GeneralTab = ( { vendor, vendorStats }: GeneralTabProps ) => {
                                 <InfoRow
                                     showDivider={ true }
                                     label={ __( 'Name', 'dokan-lite' ) }
-                                    value={ `${ vendor?.first_name || '--' } ${ vendor?.last_name || '--' }` }
+                                    value={ `${ vendor?.first_name || '--' } ${
+                                        vendor?.last_name || '--'
+                                    }` }
                                 />
                                 <InfoRow
                                     showDivider={ true }
@@ -145,14 +148,17 @@ const GeneralTab = ( { vendor, vendorStats }: GeneralTabProps ) => {
                     </div>
                 </div>
 
-                <Slot name="dokan-admin-dashboard-vendor-single-generaltab-section-after" />
-
-                <EuVendorTaxFields
-                    vendor={ vendor }
-                    vendorStats={ vendorStats }
+                <Slot
+                    name="dokan-admin-dashboard-vendor-single-generaltab-section-after"
+                    fillProps={ {
+                        vendor,
+                        vendorStats,
+                    } }
                 />
             </div>
-        </div>
+
+            <PluginArea />
+        </SlotFillProvider>
     );
 };
 
