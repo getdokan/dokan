@@ -9,20 +9,14 @@ import {
     ShoppingBag,
 } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
-import { Vendor, VendorStats } from '@dokan/definitions/dokan-vendors';
+import { useSelect } from '@wordpress/data';
+import { Vendor, VendorStats, Product } from '@dokan/definitions/dokan-vendors';
+import vendorsStore from '@dokan/stores/vendors';
 import CardSection from '../components/CardSection';
-import ProductCard from '../components/ProductCard';
+import ProductCard, {
+    Product as TransformedProduct,
+} from '../components/ProductCard';
 import SectionHeading from '../components/SectionHeading';
-
-interface Product {
-    id: number;
-    name: string;
-    image: string;
-    category: string;
-    price: number;
-    sold: number;
-    status: 'Sold' | 'Active' | 'Draft';
-}
 
 interface OverviewTabProps {
     vendor: Vendor;
@@ -30,45 +24,35 @@ interface OverviewTabProps {
 }
 
 const OverviewTab = ( { vendor, vendorStats }: OverviewTabProps ) => {
-    // Mock top products data
-    const topProducts: Product[] = [
-        {
-            id: 1,
-            name: 'Stylish T Shirt for boy in summer. Collection 2025',
-            image: 'http://dokanbd.test/wp-content/uploads/2025/05/album-1-768x768.jpg',
-            category: 'Clothing, Fashion, Boys, Toys, Agents',
-            price: 430,
-            sold: 120,
-            status: 'Sold',
-        },
-        {
-            id: 2,
-            name: 'Stylish T Shirt for boy in summer. Collection 2025',
-            image: 'http://dokanbd.test/wp-content/uploads/2025/05/album-1-768x768.jpg',
-            category: 'Clothing, Fashion, Boys, Toys, Agents',
-            price: 430,
-            sold: 95,
-            status: 'Sold',
-        },
-        {
-            id: 3,
-            name: 'Stylish T Shirt for boy in summer. Collection 2025',
-            image: 'http://dokanbd.test/wp-content/uploads/2025/05/album-1-768x768.jpg',
-            category: "Clothing & Men's wear",
-            price: 430,
-            sold: 80,
-            status: 'Sold',
-        },
-        {
-            id: 4,
-            name: 'Stylish T Shirt for boy in summer. Collection 2025',
-            image: 'http://dokanbd.test/wp-content/uploads/2025/05/album-1-768x768.jpg',
-            category: 'Clothing',
-            price: 430,
-            sold: 75,
-            status: 'Sold',
-        },
-    ];
+    const { productsFromStore, isLoadingProducts } = useSelect(
+        ( select ) => ( {
+            productsFromStore: select( vendorsStore ).getTopProducts(
+                vendor.id
+            ),
+            isLoadingProducts: select( vendorsStore ).isLoadingTopProducts(
+                vendor.id
+            ),
+        } ),
+        [ vendor.id ]
+    );
+
+    // Transform raw API data to Product interface for rendering
+    const topProducts: TransformedProduct[] = productsFromStore.map(
+        ( product: Product ) => ( {
+            id: product.id,
+            name: product.name,
+            image:
+                product.images && product.images.length > 0
+                    ? product.images[ 0 ].src
+                    : 'http://dokanbd.test/wp-content/uploads/2025/05/album-1-768x768.jpg',
+            category:
+                product.categories && product.categories.length > 0
+                    ? product.categories.map( ( cat ) => cat.name ).join( ', ' )
+                    : 'Uncategorized',
+            price: parseFloat( product.price ) || 0,
+            sold: product.total_sales || 0,
+        } )
+    );
 
     // Show loading if vendorStats is null
     if ( ! vendorStats ) {
@@ -84,17 +68,23 @@ const OverviewTab = ( { vendor, vendorStats }: OverviewTabProps ) => {
 
     // Get a formatted price.
     const getFormatedPrice = ( price: number ) => {
+        // @ts-ignore - dokanAdminDashboard is available globally
         return window.accounting.formatMoney(
             price,
+            // @ts-ignore
             dokanAdminDashboard.currency.symbol,
+            // @ts-ignore
             dokanAdminDashboard.currency.precision,
+            // @ts-ignore
             dokanAdminDashboard.currency.thousand,
+            // @ts-ignore
             dokanAdminDashboard.currency.deicmal,
+            // @ts-ignore
             dokanAdminDashboard.currency.format
         );
     };
 
-    const storeCards = wp.hooks.applyFilters(
+    const storeCards = ( window as any ).wp?.hooks?.applyFilters(
         'dokan-admin-dashboard-vendor-overview-store-cards',
         [
             {
@@ -133,7 +123,7 @@ const OverviewTab = ( { vendor, vendorStats }: OverviewTabProps ) => {
         ]
     );
 
-    const salesCards = wp.hooks.applyFilters(
+    const salesCards = ( window as any ).wp?.hooks?.applyFilters(
         'dokan-admin-dashboard-vendor-overview-sales-cards',
         [
             {
@@ -166,7 +156,6 @@ const OverviewTab = ( { vendor, vendorStats }: OverviewTabProps ) => {
         ]
     );
 
-    // @ts-ignore
     return (
         <div className="@container space-y-10">
             { /* Store Section */ }
@@ -186,15 +175,28 @@ const OverviewTab = ( { vendor, vendorStats }: OverviewTabProps ) => {
                 <SectionHeading
                     title={ __( 'Top Selling Product', 'dokan-lite' ) }
                 />
-                <div className="grid @xs:grid-cols-1 @lg:grid-cols-2 gap-6">
-                    { topProducts.map( ( product ) => (
-                        <ProductCard
-                            key={ product.id }
-                            product={ product }
-                            formatPrice={ getFormatedPrice }
-                        />
-                    ) ) }
-                </div>
+
+                { isLoadingProducts ? (
+                    <div className="flex items-center justify-center h-32">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#7C3AED]"></div>
+                        <span className="ml-2 text-gray-600">
+                            Loading top products...
+                        </span>
+                    </div>
+                ) : topProducts.length > 0 ? (
+                    <div className="grid @xs:grid-cols-1 @lg:grid-cols-2 gap-6">
+                        { topProducts.map( ( product ) => (
+                            <ProductCard
+                                key={ product.id }
+                                product={ product }
+                            />
+                        ) ) }
+                    </div>
+                ) : (
+                    <div className="text-center py-8 text-gray-500">
+                        { __( 'No top selling products found.', 'dokan-lite' ) }
+                    </div>
+                ) }
             </div>
         </div>
     );

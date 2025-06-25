@@ -1,4 +1,4 @@
-import { VendorsStoreState, Vendor } from '../../definitions/dokan-vendors';
+import { Vendor, Product } from '../../definitions/dokan-vendors';
 import apiFetch from '@wordpress/api-fetch';
 
 const resolvers = {
@@ -34,6 +34,25 @@ const resolvers = {
                 dispatch.setVendorStats( vendorId, stats );
             } finally {
                 dispatch.setLoading( false );
+            }
+        },
+
+    getTopProducts:
+        ( vendorId: number ) =>
+        async ( { dispatch } ) => {
+            dispatch.setLoadingTopProducts( vendorId, true );
+            try {
+                const response = await apiFetch< Product[] >( {
+                    path: `/dokan/v1/products/best_selling?per_page=4&seller_id=${ vendorId }`,
+                } );
+
+                // Store raw API response without transformation
+                dispatch.setTopProducts( vendorId, response );
+            } catch ( error ) {
+                console.error( 'Error fetching best selling products:', error );
+                dispatch.setTopProducts( vendorId, [] );
+            } finally {
+                dispatch.setLoadingTopProducts( vendorId, false );
             }
         },
 };

@@ -179,10 +179,22 @@ export type VendorStats = {
     };
 };
 
+export type Product = {
+    id: number;
+    name: string;
+    images?: Array< { src: string } >;
+    categories?: Array< { name: string } >;
+    price: string;
+    total_sales: number;
+    status: string;
+};
+
 export type VendorsStoreState = {
     vendors: Vendor[];
     loading: boolean;
     error?: string;
     queryParams: VendorQueryParams;
     vendorStats: Record< number, VendorStats >;
+    topProducts: Record< number, Product[] >;
+    loadingTopProducts: Record< number, boolean >;
 };

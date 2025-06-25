@@ -51,6 +51,25 @@ const reducer = ( state = defaultState, action: any ): VendorsStoreState => {
                     [ action.vendorId ]: action.stats,
                 },
             };
+
+        case 'SET_TOP_PRODUCTS':
+            return {
+                ...state,
+                topProducts: {
+                    ...state.topProducts,
+                    [ action.vendorId ]: action.products,
+                },
+            };
+
+        case 'SET_LOADING_TOP_PRODUCTS':
+            return {
+                ...state,
+                loadingTopProducts: {
+                    ...state.loadingTopProducts,
+                    [ action.vendorId ]: action.loading,
+                },
+            };
+
         default:
             return state;
     }
