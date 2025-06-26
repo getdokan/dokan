@@ -1378,11 +1378,8 @@ function dokan_admin_user_register( $user_id ) {
     $role = reset( $user->roles );
 
     if ( $role === 'seller' ) {
-        if ( dokan_get_option( 'new_seller_enable_selling', 'dokan_selling' ) === 'off' ) {
-            update_user_meta( $user_id, 'dokan_enable_selling', 'no' );
-        } else {
-            update_user_meta( $user_id, 'dokan_enable_selling', 'yes' );
-        }
+        $enabled = 'automatically' === dokan_get_container()->get( \WeDevs\Dokan\Utilities\AdminSettings::class )->get_new_seller_enable_selling_status();
+        update_user_meta( $user_id, 'dokan_enable_selling', $enabled ? 'yes' : 'no' );
     }
 }
 
@@ -1978,11 +1975,12 @@ add_filter( 'get_avatar_url', 'dokan_get_avatar_url', 99, 3 );
 /**
  * Get navigation url for the dokan dashboard
  *
- * @param string $name endpoint name
+ * @param string $name    endpoint name
+ * @param bool   $new_url if true, it will return the new url format
  *
  * @return string url
  */
-function dokan_get_navigation_url( $name = '' ) {
+function dokan_get_navigation_url( $name = '', $new_url = false ) {
     $page_id = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
 
     if ( ! $page_id ) {
@@ -1991,11 +1989,16 @@ function dokan_get_navigation_url( $name = '' ) {
 
     $url = rtrim( get_permalink( $page_id ), '/' ) . '/';
 
-    if ( ! empty( $name ) ) {
+    if ( ! empty( $name ) && ! $new_url ) {
         $url = dokan_add_subpage_to_url( $url, $name . '/' );
     }
 
-    return apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name );
+    if ( $new_url ) {
+        $url = dokan_add_subpage_to_url( $url, 'new/' );
+        $url = $url . '#' . $name . '/';
+    }
+
+    return apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name, $new_url );
 }
 
 /**
@@ -4247,10 +4250,10 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
         $vendor->set_address( $data['address'] );
         $vendor->save();
 
-        if ( 'off' === dokan_get_option( 'new_seller_enable_selling', 'dokan_selling', 'on' ) ) {
-            $vendor->make_inactive();
-        } else {
+        if ( 'automatically' === dokan_get_container()->get( \WeDevs\Dokan\Utilities\AdminSettings::class )->get_new_seller_enable_selling_status() ) {
             $vendor->make_active();
+        } else {
+            $vendor->make_inactive();
         }
 
         update_user_meta( $user_id, 'dokan_publishing', 'no' );

@@ -61,50 +61,54 @@ const AddonsScreen = ( {
     };
 
     return (
-        <div className={ `min-h-screen flex items-center justify-center` }>
-            <div className="p-8 md:p-10 max-w-3xl">
-                <div className="mb-12">
-                    <DokanLogo />
-                </div>
-                <h1 className="text-2xl md:text-3xl font-bold mb-2">
-                    { __(
-                        'Enhance Your Marketplace with these Recommended Add-ons',
-                        'dokan-lite'
-                    ) }
-                </h1>
-                <p className="text-sm text-gray-500 mb-8">
-                    { __(
-                        'We recommend some plugins for the marketplace. You can select from the following suggestions and based on your selection we will install and activate them for you so that your experience remains flawless',
-                        'dokan-lite'
-                    ) }
-                </p>
+        <div className="w-full h-full relative">
+            <div className={ `min-h-screen flex items-center justify-center` }>
+                <div className="p-8 md:p-10 max-w-3xl">
+                    <div className="mb-12">
+                        <DokanLogo />
+                    </div>
+                    <h1 className="text-2xl md:text-3xl font-bold mb-2">
+                        { __(
+                            'Enhance Your Marketplace with these Recommended Add-ons',
+                            'dokan-lite'
+                        ) }
+                    </h1>
+                    <p className="text-sm text-gray-500 mb-8">
+                        { __(
+                            'We recommend some plugins for the marketplace. You can select from the following suggestions and based on your selection we will install and activate them for you so that your experience remains flawless',
+                            'dokan-lite'
+                        ) }
+                    </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-10">
-                    { displayAddons.map( ( addon ) => (
-                        <SinglePlugin
-                            addon={ addon }
-                            isSelected={ localSelectedAddons.includes(
-                                addon.id
-                            ) }
-                            toggleAddon={ toggleAddon }
-                            key={ addon.id }
-                        />
-                    ) ) }
-                </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-10">
+                        { displayAddons.map( ( addon ) => (
+                            <SinglePlugin
+                                addon={ addon }
+                                isSelected={ localSelectedAddons.includes(
+                                    addon.id
+                                ) }
+                                toggleAddon={ toggleAddon }
+                                key={ addon.id }
+                            />
+                        ) ) }
+                    </div>
 
-                <div className="flex justify-between flex-wrap">
-                    <BackButton onBack={ onBack } />
+                    <div className="flex justify-between flex-wrap">
+                        <BackButton onBack={ onBack } />
 
-                    <div className="flex space-x-4 sm:w-auto w-full justify-end">
-                        <Button
-                            onClick={ handleSkip }
-                            className="text-gray-600 font-medium py-2 px-4 border-0 shadow-none"
-                        >
-                            { __( 'Skip', 'dokan-lite' ) }
-                        </Button>
-                        <NextButton handleNext={ () => handleNext() } />
+                        <div className="flex space-x-4 sm:w-auto w-full justify-end">
+                            <NextButton handleNext={ () => handleNext() } />
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div className="absolute top-6 right-6   z-10">
+                <Button
+                    onClick={ handleSkip }
+                    className="text-gray-600 font-medium py-2 px-4 border-0 shadow-none text-[#bcbed5]"
+                >
+                    { __( 'Skip this step', 'dokan-lite' ) }
+                </Button>
             </div>
         </div>
     );

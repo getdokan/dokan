@@ -128,4 +128,16 @@ class Commission implements CommissionInterface {
     public function get_admin_subsidy(): float {
         return abs( min( $this->get_admin_net_commission(), 0 ) );
     }
+
+    /**
+     * Get the commission type.
+     *
+     * @since 4.0.2
+     *
+     * @return string The commission type.
+     */
+
+    public function get_type(): string {
+        return $this->get_settings()->get_type();
+    }
 }
