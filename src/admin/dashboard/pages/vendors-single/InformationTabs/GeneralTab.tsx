@@ -32,7 +32,7 @@ const GeneralTab = ( { vendor, vendorStats }: GeneralTabProps ) => {
         }
 
         // @ts-ignore
-        return window?.dokanAdminDashboard?.countries[ countryCode ];
+        return window?.dokanAdminDashboard?.countries[ countryCode ] ?? '';
     };
 
     const getStateFromStateCode = ( stateCode, countryCode ) => {
@@ -41,8 +41,8 @@ const GeneralTab = ( { vendor, vendorStats }: GeneralTabProps ) => {
         }
 
         // @ts-ignore
-        const states = window?.dokanAdminDashboard?.states[ countryCode ];
-        const state = states && states[ stateCode ];
+        const states = window?.dokanAdminDashboard?.states[ countryCode ] ?? '';
+        const state = states && states[ stateCode ] ? states[ stateCode ] : '';
 
         return typeof state !== 'undefined' ? state : [];
     };

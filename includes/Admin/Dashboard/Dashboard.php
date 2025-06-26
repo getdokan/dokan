@@ -295,8 +295,7 @@ class Dashboard implements Hookable {
         $admin_dashboard_file = DOKAN_DIR . '/assets/js/dokan-admin-dashboard.asset.php';
         if ( file_exists( $admin_dashboard_file ) ) {
             $dashboard_script = require $admin_dashboard_file;
-            $dependencies     = $dashboard_script['dependencies'] ?? [];
-            $dependencies     = array_merge( $dependencies, [ 'dokan-react-components' ] );
+            $dependencies     = array_merge( $dashboard_script['dependencies'] ?? [], [ 'dokan-react-components' ] );
             $version          = $dashboard_script['version'] ?? '';
             $data             = apply_filters(
                 'dokan_admin_dashboard_localize_scripts',
