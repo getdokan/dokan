@@ -401,7 +401,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
     // Sale starting date
     if ( ! empty( $date_from ) ) {
         try {
-            $from_dt = new WC_DateTime( $date_from . ' 12:00:00', $timezone );
+            $from_dt = new WC_DateTime( $date_from . ' 00:00:00', $timezone );
             $product->set_date_on_sale_from( $from_dt );
         } catch ( Exception $e ) {
             error_log( 'Invalid date_from: ' . $date_from . ' | ' . $e->getMessage() );
@@ -420,7 +420,6 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
             if ( empty( $date_from ) ) {
                 // Automatically add date of today if start date is empty
                 $from_obj = new WC_DateTime( 'now', $timezone );
-                $from_obj->setTime( 12, 0, 0 );
                 $product->set_date_on_sale_from( $from_obj );
             }
         } catch ( Exception $e ) {
