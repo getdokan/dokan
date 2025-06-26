@@ -64,6 +64,11 @@ const OnboardingApp = () => {
                 // Skip to success if already onboarded
                 if ( response.onboarding === '1' ) {
                     setCurrentStep( skipToSuccess() );
+                } else {
+                    setFormData( ( prev ) => ( {
+                        ...prev,
+                        plugins: formatPlugins( response?.plugins || [] ),
+                    } ) );
                 }
             }
         } catch ( error ) {

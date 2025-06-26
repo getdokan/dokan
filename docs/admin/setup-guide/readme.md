@@ -10,6 +10,7 @@
     - [Create React Component for Your Field](#create-react-component-for-your-field)
     - [Update FieldParser to Include Your Field](#update-fieldparser-to-include-your-field)
 - [3. Accessing Field Settings](#accessing-field-settings)
+- [4. Creating New Admin Dashboard Pages](#creating-new-admin-dashboard-pages)
 
 ## Introduction
 The Dokan Admin Setup Guide provides a structured, step-by-step onboarding experience for administrators configuring a Dokan marketplace.  
@@ -399,3 +400,143 @@ const YourCustomField = ({
 
 export default YourCustomField;
 ```
+
+### Creating New Admin Dashboard Pages
+
+The Dokan admin dashboard system provides a structured way to create and manage admin pages. Each page extends the `AbstractPage` class and implements the `Pageable` and `Hookable` interfaces, ensuring consistent behavior across the admin interface.
+
+To create a new admin dashboard page, follow these steps:
+
+```php
+<?php
+
+namespace WeDevs\Dokan\Admin\Dashboard\Pages;
+
+class YourCustomPage extends AbstractPage {
+
+    /**
+     * Get the unique ID of the page.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_id(): string {
+        return 'your-custom-page';
+    }
+
+    /**
+     * Define the menu configuration.
+     *
+     * @since DOKAN_SINCE
+     * 
+     * @param string $capability Required capability to access the page
+     * @param string $position   Menu position
+     *
+     * @return array Menu configuration array
+     */
+    public function menu( string $capability, string $position ): array {
+        return [
+            'page_title' => esc_html__( 'Your Custom Page', 'dokan-lite' ),
+            'menu_title' => esc_html__( 'Custom Page', 'dokan-lite' ),
+            'route'      => 'your-custom-page',
+            'capability' => $capability,
+            'position'   => 50,
+            // 'hidden'     => false, // Set to true to hide from admin menu
+        ];
+    }
+
+    /**
+     * Page settings and data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array Settings array passed to frontend
+     */
+    public function settings(): array {
+        return [
+            'api_endpoint' => 'your-custom-endpoint',
+            'custom_data'  => [
+                'option_1' => get_option( 'your_option_1', 'default' ),
+                'option_2' => get_option( 'your_option_2', 'default' ),
+            ],
+            'nonce' => wp_create_nonce( 'your_custom_nonce' ),
+        ];
+    }
+
+    /**
+     * Scripts to enqueue for this page.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array<string> Array of script handles
+     */
+    public function scripts(): array {
+        return [ 'your-custom-script' ];
+    }
+
+    /**
+     * Styles to enqueue for this page.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array<string> Array of style handles
+     */
+    public function styles(): array {
+        return [ 'your-custom-style' ];
+    }
+
+    /**
+     * Register page scripts and styles.
+     *
+     * @return void
+     */
+    public function register(): void {
+        // Register your scripts and styles here
+        $asset_file = include DOKAN_DIR . '/assets/js/your-custom-script.asset.php';
+
+        wp_register_script(
+            'your-custom-script',
+            DOKAN_PLUGIN_ASSEST . '/js/your-custom-script.js',
+            $asset_file['dependencies'],
+            $asset_file['version'],
+            [
+                'strategy'  => 'defer',
+                'in_footer' => true,
+            ]
+        );
+
+        wp_register_style(
+            'your-custom-style',
+            DOKAN_PLUGIN_ASSEST . '/css/your-custom-style.css',
+            [],
+            $asset_file['version']
+        );
+
+        // Localize script data if needed
+        wp_localize_script(
+            'your-custom-script',
+            'yourCustomPageData',
+            [
+                'ajax_url' => admin_url( 'admin-ajax.php' ),
+                'nonce'    => wp_create_nonce( 'your_custom_nonce' ),
+            ]
+        );
+    }
+}
+```
+
+#### Important Properties and Methods
+##### Menu Configuration Properties
+
+- **page_title:** The title displayed in the browser tab and page header.
+- **menu_title:** The title shown in the WordPress admin menu
+- **route:** The URL route for the page
+- **capability:** WordPress capability required to access the page
+- **position:** Numeric position in the admin menu (lower numbers appear first)
+
+##### Asset Management
+
+- **scripts():** Returns an array of script handles to enqueue for this page
+- **styles():** Returns an array of style handles to enqueue for this page
+- **register():** Method where you register and configure your scripts and styles

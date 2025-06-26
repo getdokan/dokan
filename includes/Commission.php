@@ -317,15 +317,17 @@ class Commission {
      *
      * @param int    $order_id
      * @param string $context
+     * @param bool   $raw
      *
-     * @return float|null on failure
+     * @return float|array|null on failure
      */
-    public function get_earning_from_order_table( $order_id, $context = 'seller' ) {
+    public function get_earning_from_order_table( $order_id, $context = 'seller', $raw = false ) {
         global $wpdb;
 
-        $cache_key = "get_earning_from_order_table_{$order_id}_{$context}";
-        $earning   = Cache::get( $cache_key );
+        $cache_key     = "get_earning_from_order_table_{$order_id}_{$context}";
+        $cache_key_raw = $cache_key . '_raw';
 
+        $earning = Cache::get( $raw ? $cache_key_raw : $cache_key );
         if ( false !== $earning ) {
             return $earning;
         }
@@ -341,10 +343,35 @@ class Commission {
             return null;
         }
 
-        $earning = 'seller' === $context ? (float) $result->net_amount : (float) $result->order_total - (float) $result->net_amount;
-        Cache::set( $cache_key, $earning );
+        $raw_earning = [
+            'net_amount'  => (float) $result->net_amount,
+            'order_total' => (float) $result->order_total,
+        ];
 
-        return $earning;
+        $earning = ( 'seller' === $context )
+            ? $raw_earning['net_amount']
+            : $raw_earning['order_total'] - $raw_earning['net_amount'];
+
+        Cache::set( $cache_key, $earning );
+        Cache::set( $cache_key_raw, $raw_earning );
+
+        /**
+         * Hooks to modify the earning from order table.
+         *
+         * @since 4.0.2
+         *
+         * @param float|array $earning  The earning amount or raw data.
+         * @param int         $order_id The order ID.
+         * @param string      $context  The context (admin or seller).
+         * @param bool        $raw      Whether to return raw data or not.
+         */
+        return apply_filters(
+            'dokan_get_earning_from_order_table',
+            $raw ? $raw_earning : $earning,
+            $order_id,
+            $context,
+            $raw
+        );
     }
 
     /**
