@@ -568,4 +568,42 @@ class Hooks {
             ]
         );
     }
+
+    /**
+     * Add product brand taxonomy template
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WP_Post $post The post object of the product being edited.
+     *
+     * @return void
+     */
+    public function add_product_brand_template( \WP_Post $post ): void {
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
+            return;
+        }
+
+        $product_brands = dokan()->product->get_brands( $post->ID );
+
+        dokan_get_template_part( 'products/product-brand', '', [ 'product_brands' => $product_brands ] );
+    }
+
+    /**
+     * Update product brands
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int   $product_id   The ID of the product being updated.
+     * @param array $product_data The product data containing brand information.
+     *
+     * @return void
+     */
+    public function update_product_brands_by_id( int $product_id, array $product_data = array() ): void {
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
+            return;
+        }
+
+        $brand_ids = $product_data['product_brand'] ?? array();
+        dokan()->product->save_brands( $product_id, $brand_ids );
+    }
 }
