@@ -33,6 +33,11 @@ class Hooks {
         add_filter( 'dokan_post_status', [ $this, 'set_product_status' ], 1, 2 );
         add_action( 'dokan_new_product_added', [ $this, 'set_new_product_email_status' ], 1, 1 );
 
+        // Add WooCommerce product brands support.
+        add_action( 'dokan_new_product_added', [ $this, 'update_product_brands_by_id' ], 10, 2 );
+        add_action( 'dokan_product_updated', [ $this, 'update_product_brands_by_id' ], 10, 2 );
+        add_action( 'dokan_product_edit_after_pricing_fields', [ $this, 'add_product_brand_template' ] );
+
         // Remove product type filter if pro not exists.
         add_filter( 'dokan_product_listing_filter_args', [ $this, 'remove_product_type_filter' ] );
         add_action( 'woocommerce_before_single_product', [ $this, 'own_product_not_purchasable_notice' ] );
