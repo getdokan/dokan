@@ -4,7 +4,6 @@ import { Vendor } from '@dokan/definitions/dokan-vendors';
 import OverviewTab from './InformationTabs/OverviewTab';
 import GeneralTab from './InformationTabs/GeneralTab';
 import WithdrawTab from './InformationTabs/WithdrawTab';
-import BadgesTab from './InformationTabs/BadgesTab';
 import { __ } from '@wordpress/i18n';
 import { useSelect } from '@wordpress/data';
 import vendorsStore from '@dokan/stores/vendors';
@@ -21,6 +20,20 @@ interface TabConfig {
 }
 
 const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
+    const vendorStats = useSelect(
+        ( select ) => {
+            if ( ! vendor?.id ) {
+                return;
+            }
+
+            return select( vendorsStore ).getVendorStats(
+                // @ts-ignore
+                parseInt( vendor?.id )
+            );
+        },
+        [ vendor?.id ]
+    );
+
     const tabs: TabConfig[] = window.wp.hooks.applyFilters(
         'dokan-admin-vendor-tabs',
         // @ts-ignore
@@ -40,26 +53,9 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
                 title: __( 'Withdraw', 'dokan-lite' ),
                 component: WithdrawTab,
             },
-            {
-                name: 'badges',
-                title: __( 'Badges', 'dokan' ),
-                component: BadgesTab,
-            },
-        ]
-    );
-
-    const vendorStats = useSelect(
-        ( select ) => {
-            if ( ! vendor?.id ) {
-                return;
-            }
-
-            return select( vendorsStore ).getVendorStats(
-                // @ts-ignore
-                parseInt( vendor?.id )
-            );
-        },
-        [ vendor?.id ]
+        ],
+        vendor,
+        vendorStats
     );
 
     const [ activeTab, setActiveTab ] = useState( 'overview' );
