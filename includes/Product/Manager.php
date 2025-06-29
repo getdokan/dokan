@@ -812,11 +812,6 @@ class Manager {
      * @return array
      */
     public function get_brand_ids( int $product_id ): array {
-        $brands = $this->get_brands( $product_id, 'ids' );
-        if ( is_wp_error( $brands ) || count( $brands ) === 0 ) {
-            return [];
-        }
-
-        return $brands;
+        return $this->get_brands( $product_id, 'ids' );
     }
 }
