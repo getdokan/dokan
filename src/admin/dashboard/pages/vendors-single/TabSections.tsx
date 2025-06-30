@@ -17,6 +17,7 @@ interface TabConfig {
     name: string;
     title: string;
     component: JSX.Element;
+    position?: number;
 }
 
 const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
@@ -42,16 +43,19 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
                 name: 'overview',
                 title: __( 'Overview', 'dokan-lite' ),
                 component: OverviewTab,
+                position: 0,
             },
             {
                 name: 'general',
                 title: __( 'General', 'dokan' ),
                 component: GeneralTab,
+                position: 10,
             },
             {
                 name: 'withdraw',
                 title: __( 'Withdraw', 'dokan-lite' ),
                 component: WithdrawTab,
+                position: 20,
             },
         ],
         vendor,
@@ -67,8 +71,17 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
         }
     };
 
+    const getSortedTabs = () => {
+        return [ ...tabs ].sort(
+            ( a, b ) => ( a.position || 0 ) - ( b.position || 0 )
+        );
+    };
+
     const getCurrentTabComponent = () => {
-        const currentTab = tabs.find( ( tab ) => tab.name === activeTab );
+        // Find the current tab based on the activeTab state
+        const sortedTabs = getSortedTabs(),
+            currentTab = sortedTabs.find( ( tab ) => tab.name === activeTab );
+
         if ( ! currentTab ) {
             return currentTab;
         }
@@ -123,7 +136,7 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
         <div className="@container flex flex-col w-full">
             { /* Tab Navigation - Matching the exact style from your design */ }
             <div className="flex border-gray-200 mb-6 overflow-x-auto @md:space-x-8 space-x-4">
-                { tabs.map( ( tab ) => (
+                { getSortedTabs().map( ( tab ) => (
                     <button
                         key={ tab.name }
                         className={
