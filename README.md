@@ -2,7 +2,11 @@
 
 ![dokan](https://dokan.co/app/uploads/2024/02/dokan-new-color-logo.svg)
 
-Welcome to the **Dokan Multivendor Marketplace** repository on **GitHub**. Here you can find the **source code**, **open issues**, and **contribute** to the development of the **Dokan plugin**. **Dokan** is the ultimate frontend **multivendor marketplace** plugin for **WordPress**, powered by **WooCommerce**, helping you build your own **multivendor marketplace** similar to **Amazon**, **Shopify**, **eBay**, and **Magento**.
+Welcome to the **Dokan Multivendor Marketplace** repository on **GitHub**!
+
+**Dokan is the ultimate frontend multivendor marketplace plugin for WordPress, powered by WooCommerce, helping you build your own multivendor marketplace similar to Amazon, Shopify, eBay, and Magento.**
+
+Here you can find the **source code**, **open issues**, and **contribute** to the development of the **Dokan plugin**.
 
 We recommend all **developers** to follow the [**Dokan blog**](https://dokan.co/blog/) to stay up to date about everything happening in the **project**. You can also follow [**@DokanTweets**](https://x.com/DokanTweets) on **X** for the latest development updates.
 
@@ -139,12 +143,31 @@ For peer to peer support and **discussions**:
 
 ## 🤝 Contributing to Dokan
 
-As an **open source project**, we rely on community contributions to continue to improve **Dokan**. To contribute:
+**Community contributions** are always welcomed and help us remain the **Number 1 Multivendor Marketplace plugin for WordPress**. As an **open source project**, we rely on community contributions to continue to improve **Dokan**. Feel free to answer questions on **GitHub** and within the various **Dokan communities**.
 
-1. **Fork** the repository.
-2. Create a **feature branch**.
-3. Make your changes.
-4. Submit a **pull request**.
-5. Finally, add the with `Needs: Dev Review` & `Needs: Testing` label for **progress** tracking.
+There are many ways to contribute to **Dokan**:
 
-Please follow our [**commit message & contribution guidelines**](CONTRIBUTING.md) when submitting pull requests.
+### Contribution Guidelines
+Please read our [**Contribution Guidelines**](CONTRIBUTING.md) to learn the best practices for contributing to **Dokan**.
+
+### 🐛 Bug Report
+If you found a **bug** in the source code and can reproduce it consistently after troubleshooting it, you can help us by [**submitting a Bug Report**](https://dokan.co/contact/).
+
+Even better, you can [**submit a Pull Request**](https://github.com/getdokan/dokan/blob/develop/CONTRIBUTING.md) with a fix, and we will **happily review it**.
+
+When submitting pull requests, please ensure you follow our [**commit message and contribution guidelines**](CONTRIBUTING.md).
+
+Additionally, include the `Needs: Dev Review` and `Needs: Testing` labels for **progress** tracking.
+
+### ✨ Feature Request
+Do you have a **brilliant idea**, **enhancement**, or **feature** you would love to see in **Dokan**? We're all ears!
+
+Suggest new **ideas**, **features**, or **enhancements** by [**submitting a Feature Request**](https://github.com/getdokan/dokan/discussions/new?category=feature-request).
+You can also support existing ideas by [**voting for your favorite requests**](https://github.com/getdokan/dokan/discussions).
+
+### 🌐 Translate
+The **Dokan User Interface** was designed with a **global audience** in mind. It supports a wide range of languages and is also **RTL** compatible.
+
+**Want to make a difference?**
+
+We would appreciate your **contribution** by adding a **new language** or helping **translate existing ones** at [**translate.wordpress.org**](https://translate.wordpress.org/projects/wp-plugins/dokan-lite/).
