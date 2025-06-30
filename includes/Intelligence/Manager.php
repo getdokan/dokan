@@ -3,34 +3,53 @@
 namespace WeDevs\Dokan\Intelligence;
 
 use WeDevs\Dokan\Intelligence\Services\AIProviderInterface;
+use WeDevs\Dokan\Intelligence\Services\Model;
 use WeDevs\Dokan\Intelligence\Services\Provider;
 
 class Manager {
 
-    public function active_engine(): string {
+    public function active_engine( string $type = Model::SUPPORTS_TEXT ): string {
+        $prefix = $this->get_type_prefix( $type );
+        /**
+         * Filters the active AI engine.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param string $engine The ID of the active AI engine.
+         */
         return apply_filters(
-            'dokan_ai_active_engine',
-            dokan_get_option( 'dokan_ai_engine', 'dokan_ai', 'openai' )
+            'dokan_ai_' . $prefix . 'active_engine',
+            dokan_get_option( 'dokan_ai_' . $prefix . 'engine', 'dokan_ai', 'openai' )
         );
     }
 
     /**
-     * Get available AI engines
+     * Get available AI engines.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $type The type of generation to filter engines by (default is Model::SUPPORTS_TEXT).
      *
      * @return array
      */
-    public function get_engines(): array {
-        return $this->get_text_supported_providers();
+    public function get_engines( string $type = Model::SUPPORTS_TEXT ): array {
+
+        return $this->get_providers_by_type( $type );
     }
 
     /**
      * Get activated AI engine
      *
+     * @since DOKAN_SINCE
+     *
+     * @param string $type The type of generation to filter engines by (default is Model::SUPPORTS_TEXT).
+     *
      * @return bool
      */
-    public function is_configured(): bool {
-        $engine  = $this->active_engine();
-        $engines = $this->get_engines();
+    public function is_configured( string $type = Model::SUPPORTS_TEXT ): bool {
+        $engine  = $this->active_engine( $type );
+        $engines = $this->get_engines( $type );
+        $prefix = $this->get_type_prefix( $type );
 
         $available_engines = array_keys( $engines );
         // activated engine should be in available engines
@@ -39,7 +58,7 @@ class Manager {
         }
 
         // Activated api key
-        $api_key = dokan_get_option( "dokan_ai_{$engine}_api_key", 'dokan_ai', '' );
+        $api_key = dokan_get_option( "dokan_ai_{$prefix}{$engine}_api_key", 'dokan_ai', '' );
 
         if ( empty( $api_key ) ) {
             return false;
@@ -124,5 +143,25 @@ class Manager {
         }
 
         return apply_filters( 'dokan_intelligence_' . $type . '_supported_providers', $filtered_providers );
+    }
+
+
+    /**
+     * Get the type prefix for the given generation type.
+     *
+     * @param string $type The type of generation (e.g., 'text', 'image', 'video').
+     *
+     * @return string The prefix for the type.
+     */
+    public function get_type_prefix( string $type ): string {
+        switch ( $type ) {
+            case Model::SUPPORTS_IMAGE:
+                return 'image_';
+            case Model::SUPPORTS_VIDEO:
+                return 'video_';
+            case Model::SUPPORTS_TEXT:
+            default:
+                return '';
+        }
     }
 }

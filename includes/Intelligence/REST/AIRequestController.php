@@ -67,12 +67,13 @@ class AIRequestController extends DokanBaseVendorController {
 
     public function handle_request( $request ) {
         $prompt = $request->get_param( 'prompt' );
-        $type   = $request->get_param( 'type' ) ?? Model::SUPPORTS_TEXT;
         $args = wp_parse_args(
             $request->get_param( 'payload' ), [
 				'field' => '',
+                'type'  => Model::SUPPORTS_TEXT,
 			]
         );
+        $type = $args['type'];
 
         // Resolve the appropriate service based on the AI engine.
 		try {
