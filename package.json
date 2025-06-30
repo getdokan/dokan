@@ -12,13 +12,12 @@
     "packages-update": "wp-scripts packages-update",
     "version": "node bin/version-replace",
     "makepot": "wp i18n make-pot --domain='dokan-lite' --include='assets/js,includes,lib,templates,dokan.php,dokan-class.php' . --headers='{\"Report-Msgid-Bugs-To\":\"https://dokan.co/contact/\"}' --file-comment=\"Copyright (c) $(date +'%Y') Dokan Inc. All Rights Reserved.\" languages/dokan-lite.pot",
-    "readme": "wp-readme-to-md",
     "clean-files": "node bin/clean-useless-files",
     "zip": "node bin/zip",
     "format": "wp-scripts format",
     "lint:css": "wp-scripts lint-style",
     "lint:js": "wp-scripts lint-js",
-    "release": "npm install && npm run readme && npm run build && npm run clean-files && npm run makepot && npm run version && npm run zip",
+    "release": "npm install && npm run build && npm run clean-files && npm run makepot && npm run version && npm run zip",
     "release:dev": "npm install && npm run build && npm run clean-files && npm run makepot && npm run zip"
   },
   "devDependencies": {
