@@ -4,6 +4,34 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.0.3',
+        'released' => '2025-07-02',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Add gradient background style for fa-threads social icon.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where array access warnings in vendor balance calculation were being triggered.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where incorrect timestamp on sale price schedule hampering product sales schedule added from vendor dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where stock quantity always shows 0 in vendor dashboard product edit screen.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improved the format of payment methods in the withdrawal settings to ensure they are consistently returned as a zero-based indexed list in the REST API response.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.2',
         'released' => '2025-06-03',
         'changes'  => [
