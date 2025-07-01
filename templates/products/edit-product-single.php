@@ -86,8 +86,8 @@ $is_discount            = ! empty( $_sale_price );
 $_sale_price_dates_from = get_post_meta( $post_id, '_sale_price_dates_from', true );
 $_sale_price_dates_to   = get_post_meta( $post_id, '_sale_price_dates_to', true );
 
-$_sale_price_dates_from = ! empty( $_sale_price_dates_from ) ? date_i18n( 'Y-m-d', $_sale_price_dates_from ) : '';
-$_sale_price_dates_to   = ! empty( $_sale_price_dates_to ) ? date_i18n( 'Y-m-d', $_sale_price_dates_to ) : '';
+$_sale_price_dates_from = ! empty( $_sale_price_dates_from ) ? wp_date( 'Y-m-d', (int) $_sale_price_dates_from ) : '';
+$_sale_price_dates_to   = ! empty( $_sale_price_dates_to ) ? wp_date( 'Y-m-d', (int) $_sale_price_dates_to ) : '';
 $show_schedule          = false;
 
 if ( ! empty( $_sale_price_dates_from ) && ! empty( $_sale_price_dates_to ) ) {
