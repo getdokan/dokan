@@ -159,26 +159,6 @@ export type VendorQueryParams = {
     badge_id?: number;
 };
 
-export type VendorStats = {
-    products: {
-        total: number;
-        sold: number;
-        visitor: number;
-    };
-    revenue: {
-        orders: number;
-        sales: number;
-        earning: number;
-    };
-    others: {
-        commission_rate: string;
-        additional_fee: string;
-        commission_type: string;
-        balance: number;
-        reviews: number;
-    };
-};
-
 export type Product = {
     id: number;
     name: string;

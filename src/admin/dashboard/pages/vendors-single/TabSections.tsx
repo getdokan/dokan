@@ -1,12 +1,9 @@
 import { useState } from '@wordpress/element';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
-
 import OverviewTab from './InformationTabs/OverviewTab';
 import GeneralTab from './InformationTabs/GeneralTab';
 import WithdrawTab from './InformationTabs/WithdrawTab';
 import { __ } from '@wordpress/i18n';
-import { useSelect } from '@wordpress/data';
-import vendorsStore from '@dokan/stores/vendors';
 
 export interface TabSectionProps {
     vendor: Vendor;
@@ -21,20 +18,6 @@ interface TabConfig {
 }
 
 const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
-    const vendorStats = useSelect(
-        ( select ) => {
-            if ( ! vendor?.id ) {
-                return;
-            }
-
-            return select( vendorsStore ).getVendorStats(
-                // @ts-ignore
-                parseInt( vendor?.id )
-            );
-        },
-        [ vendor?.id ]
-    );
-
     const tabs: TabConfig[] = window.wp.hooks.applyFilters(
         'dokan-admin-vendor-tabs',
         // @ts-ignore
@@ -58,8 +41,7 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
                 position: 20,
             },
         ],
-        vendor,
-        vendorStats
+        vendor
     );
 
     const [ activeTab, setActiveTab ] = useState( 'overview' );
@@ -67,7 +49,7 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
     const handleTabChange = ( tabName: string ) => {
         setActiveTab( tabName );
         if ( onDataUpdate ) {
-            onDataUpdate( tabName, { vendor, vendorStats } );
+            onDataUpdate( tabName, { vendor } );
         }
     };
 
@@ -88,23 +70,8 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
 
         const TabComponent = currentTab.component;
 
-        // Show loading state if vendorStats is null (like in Vue where stats !== null check)
-        if ( ! vendorStats && activeTab === 'overview' ) {
-            return (
-                <div className="flex items-center justify-center h-64">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7C3AED]"></div>
-                    <span className="ml-2 text-gray-600">
-                        Loading vendor statistics...
-                    </span>
-                </div>
-            );
-        }
-
         // Pass appropriate props based on tab type
-        const commonProps = {
-            vendor,
-            vendorStats,
-        };
+        const commonProps = { vendor };
 
         // Add specific props for certain tabs
         const specificProps = {

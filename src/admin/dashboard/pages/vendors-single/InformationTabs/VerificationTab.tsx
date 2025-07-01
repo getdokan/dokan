@@ -1,10 +1,9 @@
-import { Vendor, VendorStats } from '@dokan/definitions/dokan-vendors';
+import { Vendor } from '@dokan/definitions/dokan-vendors';
 
 interface VerificationTabProps {
     vendor: Vendor;
-    vendorStats: VendorStats | null;
 }
 
-const VerificationTab = ( { vendor, vendorStats }: VerificationTabProps ) => {};
+const VerificationTab = ( { vendor }: VerificationTabProps ) => {};
 
 export default VerificationTab;

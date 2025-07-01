@@ -1,5 +1,4 @@
 import {
-    VendorsStoreState,
     Vendor,
     VendorQueryParams,
     Product,

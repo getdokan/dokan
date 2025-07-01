@@ -1,10 +1,9 @@
-import { Vendor, VendorStats } from '@dokan/definitions/dokan-vendors';
+import { Vendor } from '@dokan/definitions/dokan-vendors';
 
 interface SubscriptionTabProps {
     vendor: Vendor;
-    vendorStats: VendorStats | null;
 }
 
-const SubscriptionTab = ( { vendor, vendorStats }: SubscriptionTabProps ) => {};
+const SubscriptionTab = ( { vendor }: SubscriptionTabProps ) => {};
 
 export default SubscriptionTab;
