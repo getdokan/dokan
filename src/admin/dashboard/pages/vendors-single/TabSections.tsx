@@ -1,9 +1,10 @@
-import { useState } from '@wordpress/element';
-import { Vendor } from '@dokan/definitions/dokan-vendors';
-import OverviewTab from './InformationTabs/OverviewTab';
-import GeneralTab from './InformationTabs/GeneralTab';
-import WithdrawTab from './InformationTabs/WithdrawTab';
 import { __ } from '@wordpress/i18n';
+import { useState } from '@wordpress/element';
+import GeneralTab from './InformationTabs/GeneralTab';
+import OverviewTab from './InformationTabs/OverviewTab';
+import WithdrawTab from './InformationTabs/WithdrawTab';
+import { Vendor } from '@dokan/definitions/dokan-vendors';
+import { Slot } from '@wordpress/components';
 
 export interface TabSectionProps {
     vendor: Vendor;
@@ -18,6 +19,7 @@ interface TabConfig {
 }
 
 const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
+    // @ts-ignore
     const tabs: TabConfig[] = window.wp.hooks.applyFilters(
         'dokan-admin-vendor-tabs',
         // @ts-ignore
@@ -54,8 +56,15 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
     };
 
     const getSortedTabs = () => {
-        return [ ...tabs ].sort(
-            ( a, b ) => ( a.position || 0 ) - ( b.position || 0 )
+        // @ts-ignore - Apply any additional hooks to modify the tabs.
+        wp.hooks.doAction( 'dokan-admin-vendor-tabs-sort', tabs );
+
+        // @ts-ignore - Sort the tabs based on the position prop.
+        return wp.hooks.applyFilters(
+            'dokan-admin-vendor-sorted-tabs',
+            [ ...tabs ].sort(
+                ( a, b ) => ( a.position || 0 ) - ( b.position || 0 )
+            )
         );
     };
 
@@ -96,12 +105,18 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
                 : undefined,
         };
 
+        // @ts-ignore
         return <TabComponent { ...commonProps } { ...specificProps } />;
     };
 
     return (
         <div className="@container flex flex-col w-full">
-            { /* Tab Navigation - Matching the exact style from your design */ }
+            <Slot
+                name={ `dokan-admin-vendor-before-tabs` }
+                fillProps={ { vendor, getSortedTabs } }
+            />
+
+            { /* @ts-ignore - Tab Navigation - Matching the exact style from your design */ }
             <div className="flex border-gray-200 mb-6 overflow-x-auto @md:space-x-8 space-x-4">
                 { getSortedTabs().map( ( tab ) => (
                     <button

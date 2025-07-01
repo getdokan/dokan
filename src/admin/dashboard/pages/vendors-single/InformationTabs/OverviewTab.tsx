@@ -46,8 +46,8 @@ const OverviewTab = ( { vendor }: OverviewTabProps ) => {
     return (
         <div className="@container space-y-10">
             <Slot
-                name={ `dokan-admin-vendor-before-overview-section` }
-                fillProps={ { vendor } }
+                name={ `dokan-admin-vendor-before-top-selling-products` }
+                fillProps={ { vendor, topProducts } }
             />
 
             { /* Top Selling Products */ }
@@ -78,6 +78,11 @@ const OverviewTab = ( { vendor }: OverviewTabProps ) => {
                     </div>
                 ) }
             </div>
+
+            <Slot
+                name={ `dokan-admin-vendor-after-top-selling-products` }
+                fillProps={ { vendor, topProducts } }
+            />
         </div>
     );
 };
