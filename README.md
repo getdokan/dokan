@@ -67,10 +67,30 @@ dokan-lite/
 ├── 📂 tests/              # Test suites.
 │   ├── php/               # PHPUnit tests.
 │   └── pw/                # Playwrite tests.
+├── 📂 src/                # Source files for react, vue frontend codes.
+│   ├── admin/             # Admin frontend codes.
+│   ├── components/        # Global components for reactive frontend.
+│   ├── hooks/             # Hooks for reactive frontend.
+│   └── utilities/         # Utilitiy functions for reactive frontend.
 ├── 📂 lib/                # Third-party libraries and dependencies.
 ├── 📂 docs/               # Documentation files.
 └── 📂 languages/          # Translation files.
 ```
+
+## 📚 Developer Documentation
+
+**Dokan** provides comprehensive **documentation** to help developers understand the **codebase**, **architecture**, and **extend** or **customize** the plugin effectively.
+
+The **documentation** is available in the `docs` directory:
+
+* [**Admin Setup Guide**](docs/admin/setup-guide/readme.md): Dokan admin **configuration**, **setup pages**, **fields**, and **administrative** documentation.
+* [**Vendor Analytics**](docs/analytics/vendor-dashboard.md): Dokan **analytics reports**, **vendor** comprehensive analytics info for **vendor insights**.
+* [**API**](docs/api/api.md): Dokan **REST API** standard documentation.
+* [**Feature Override**](docs/feature-override/README.md): Frontend template **customization** guide and **override** documentation.
+* [**Slots**](docs/slots/README.md): Frontend **slot** system documentation.
+* [**TDD**](docs/tdd/readme.md): Dokan **TDD** practices, **testing frameworks** documentation for Dokan development.
+* [**Container**](docs/container.md): Dokan **container** documentation.
+* [**Coupon**](docs/coupon.md): Dokan **coupon workflow**, implementation **flowchart** & **system** documentation.
 
 ## Scripts
 
