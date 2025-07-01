@@ -4,7 +4,7 @@ import { DateTimeHtml } from '../../../../components';
 import { Tooltip } from '@getdokan/dokan-ui';
 import { humanTimeDiff } from '@wordpress/date';
 import SocialLinks from './SocialLinks';
-import SendEmail from './SendEmail';
+import { Slot } from '@wordpress/components';
 
 export interface InfoCardProps {
     vendor: Vendor;
@@ -67,6 +67,11 @@ export const paymentMethods = ( methods: PaymentDetails ) => {
 const InfoCard = ( { vendor }: InfoCardProps ) => {
     return (
         <div className="md:w-1/3 lg:w-1/4 flex flex-col gap-2 p-4 bg-white rounded shadow-md">
+            <Slot
+                name={ `dokan-admin-vendor-before-info-contents` }
+                fillProps={ { vendor } }
+            />
+
             <div className="mb-4">
                 <h4 className="text-zinc-500 text-xs font-normal">
                     { __( 'Registered Since:', 'dokan-lite' ) }
@@ -297,7 +302,11 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                     </p>
                 ) }
             </div>
-            <SendEmail vendor={ vendor } />
+
+            <Slot
+                name={ `dokan-admin-vendor-after-info-contents` }
+                fillProps={ { vendor } }
+            />
         </div>
     );
 };
