@@ -180,7 +180,7 @@ const OverviewTab = ( { vendor, vendorStats }: OverviewTabProps ) => {
                     <div className="flex items-center justify-center h-32">
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#7C3AED]"></div>
                         <span className="ml-2 text-gray-600">
-                            Loading top products...
+                            { __( 'Loading top products…', 'dokan' ) }
                         </span>
                     </div>
                 ) : topProducts.length > 0 ? (

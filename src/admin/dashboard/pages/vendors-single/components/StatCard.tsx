@@ -25,6 +25,7 @@ const StatCard = ( {
     >
         <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
+                { /* @ts-ignore */ }
                 <Icon size={ 20 } className="text-[#7047EB]" />
                 <span className="text-base font-light text-[#828282]">
                     { title }
@@ -36,7 +37,11 @@ const StatCard = ( {
                 ) }
             </div>
         </div>
-        <div className="text-2xl font-bold text-gray-900">{ data }</div>
+        <div
+            className="text-2xl font-bold text-gray-900"
+            // @ts-ignore
+            dangerouslySetInnerHTML={ { __html: data } }
+        ></div>
     </div>
 );
 
