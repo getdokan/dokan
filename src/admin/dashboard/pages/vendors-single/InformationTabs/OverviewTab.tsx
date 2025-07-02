@@ -7,6 +7,7 @@ import ProductCard, {
 } from '../components/ProductCard';
 import SectionHeading from '../components/SectionHeading';
 import { Slot } from '@wordpress/components';
+import TopProductSkeleton from '@dokan/admin/dashboard/pages/vendors-single/Skeletons/TopProductSkeleton';
 
 interface OverviewTabProps {
     vendor: Vendor;
@@ -51,33 +52,34 @@ const OverviewTab = ( { vendor }: OverviewTabProps ) => {
             />
 
             { /* Top Selling Products */ }
-            <div className={ `top-selling-products-section space-y-4` }>
-                <SectionHeading
-                    title={ __( 'Top Selling Product', 'dokan-lite' ) }
-                />
+            { isLoadingProducts ? (
+                <TopProductSkeleton />
+            ) : (
+                <div className={ `top-selling-products-section space-y-4` }>
+                    <SectionHeading
+                        title={ __( 'Top Selling Product', 'dokan-lite' ) }
+                    />
 
-                { isLoadingProducts ? (
-                    <div className="flex items-center justify-center h-32">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#7C3AED]"></div>
-                        <span className="ml-2 text-gray-600">
-                            { __( 'Loading top products…', 'dokan' ) }
-                        </span>
-                    </div>
-                ) : topProducts.length > 0 ? (
-                    <div className="grid @md:grid-cols-1 @lg:grid-cols-2 gap-6">
-                        { topProducts.map( ( product ) => (
-                            <ProductCard
-                                key={ product.id }
-                                product={ product }
-                            />
-                        ) ) }
-                    </div>
-                ) : (
-                    <div className="text-center py-8 text-gray-500">
-                        { __( 'No top selling products found.', 'dokan-lite' ) }
-                    </div>
-                ) }
-            </div>
+                    { /* eslint-disable-next-line no-nested-ternary */ }
+                    { topProducts.length > 0 ? (
+                        <div className="grid @md:grid-cols-1 @lg:grid-cols-2 gap-6">
+                            { topProducts.map( ( product ) => (
+                                <ProductCard
+                                    key={ product.id }
+                                    product={ product }
+                                />
+                            ) ) }
+                        </div>
+                    ) : (
+                        <div className="text-center py-8 text-gray-500">
+                            { __(
+                                'No top selling products found.',
+                                'dokan-lite'
+                            ) }
+                        </div>
+                    ) }
+                </div>
+            ) }
 
             <Slot
                 name={ `dokan-admin-vendor-after-top-selling-products` }

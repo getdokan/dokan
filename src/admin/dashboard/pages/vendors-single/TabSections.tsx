@@ -32,7 +32,7 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
             },
             {
                 name: 'general',
-                title: __( 'General', 'dokan' ),
+                title: __( 'General', 'dokan-lite' ),
                 component: GeneralTab,
                 position: 10,
             },
