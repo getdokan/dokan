@@ -4,6 +4,7 @@ import Layout from './Layout';
 import ModulePage from '../pages/modules';
 import { useMutationObserver } from '../../../hooks';
 import SetupGuide from '../pages/setup-guide';
+import MoleculeDemo from './MoleculeDemo';
 
 export type DokanAdminRoute = {
     id: string;
@@ -23,6 +24,11 @@ const getAdminRoutes = () => {
             id: 'pro-modules',
             element: <ModulePage />,
             path: '/pro-modules',
+        },
+        {
+            id: 'molecules',
+            element: <MoleculeDemo />,
+            path: '/molecules',
         },
     ];
 
