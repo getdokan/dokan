@@ -2,7 +2,7 @@ import { Card } from '@getdokan/dokan-ui';
 import { File } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 interface NoInformationProps {
-    icon?: React.ReactNode;
+    icon?: JSX.Element;
     title?: string;
     description?: string;
 }
@@ -11,7 +11,7 @@ function NoInformation( props: NoInformationProps ) {
     return (
         <Card className="flex flex-col items-center justify-center min-h-[500px] w-full bg-white shadow">
             <div className="flex flex-col items-center space-y-4">
-                <div className="w-16 h-16 bg-[#EFEAFF] rounded-full flex items-center justify-center text-[#7047EB] flex justify-center items-center">
+                <div className="w-16 h-16 bg-[#EFEAFF] rounded-full flex items-center justify-center text-[#7047EB]">
                     { props.icon ?? <File /> }
                 </div>
 

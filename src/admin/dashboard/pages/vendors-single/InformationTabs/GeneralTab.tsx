@@ -3,14 +3,13 @@ import { Card } from '@getdokan/dokan-ui';
 import { User } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
-import { Slot, SlotFillProvider } from '@wordpress/components';
-import { PluginArea } from '@wordpress/plugins';
+import { Slot } from '@wordpress/components';
 
 interface GeneralTabProps {
     vendor: Vendor;
 }
 
-const InfoRow = ( { label, value, showDivider } ) => (
+const InfoRow = ( { label, value, showDivider, defaultValue = '--' } ) => (
     <div
         className={ twMerge(
             'flex flex-col gap-1',
@@ -19,7 +18,7 @@ const InfoRow = ( { label, value, showDivider } ) => (
     >
         <h4 className="text-zinc-500 text-xs font-normal">{ label }</h4>
         <p className="text-neutral-700 text-sm font-semibold break-words overflow-wrap-break-word">
-            { value || '--' }
+            { value || defaultValue }
         </p>
     </div>
 );
@@ -87,14 +86,14 @@ const GeneralTab = ( { vendor }: GeneralTabProps ) => {
     };
 
     return (
-        <SlotFillProvider>
+        <div>
             <div className="flex flex-col gap-8">
                 { /*General section*/ }
                 <div>
                     <div className="text-black bg-[#dadada] w-fit rounded-full pt-1 pb-1 pl-2 pr-2 flex justify-center items-center text-sm mb-4">
                         <User size="12" strokeWidth="3" />
                         <span className="ml-1">
-                            { __( 'Profile & Address', 'dokan' ) }
+                            { __( 'Profile & Address', 'dokan-lite' ) }
                         </span>
                     </div>
                     <div className="flex flex-col gap-4">
@@ -154,9 +153,7 @@ const GeneralTab = ( { vendor }: GeneralTabProps ) => {
                     } }
                 />
             </div>
-
-            <PluginArea />
-        </SlotFillProvider>
+        </div>
     );
 };
 
