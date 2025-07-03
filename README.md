@@ -5,9 +5,9 @@
 **Requires at least:** 6.5  
 **Tested up to:** 6.8  
 **WC requires at least:** 8.5.0  
-**WC tested up to:** 9.8.4  
+**WC tested up to:** 9.9.5  
 **Requires PHP:** 7.4  
-**Stable tag:** 4.0.2  
+**Stable tag:** 4.0.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -348,6 +348,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 ## Changelog ##
+### v4.0.3 ( Jul 02, 2025 ) ###
+
+- **fix:** Add gradient background style for fa-threads social icon.
+- **fix** Resolved an issue where array access warnings in vendor balance calculation were being triggered.
+- **fix** Resolved an issue where incorrect timestamp on sale price schedule hampering product sales schedule added from vendor dashboard.
+- **fix** Resolved an issue where stock quantity always shows 0 in vendor dashboard product edit screen.
+- **fix** Improved the format of payment methods in the withdrawal settings to ensure they are consistently returned as a zero-based indexed list in the REST API response.
+
 ### v4.0.2 ( Jun 03, 2025 ) ###
 
 - **fix:** Resolved an issue where the single store page header style was broken on multiple themes.

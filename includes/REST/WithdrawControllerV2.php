@@ -99,7 +99,7 @@ class WithdrawControllerV2 extends WithdrawController {
         return rest_ensure_response(
             [
                 'withdraw_method' => $default_withdraw_method,
-                'payment_methods' => $payment_methods,
+                'payment_methods' => array_values( $payment_methods ),
                 'active_methods'  => $active_methods,
                 'setup_url'       => $setup_url,
             ]
