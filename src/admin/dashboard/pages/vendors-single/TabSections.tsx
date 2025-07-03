@@ -34,13 +34,13 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
                 name: 'general',
                 title: __( 'General', 'dokan-lite' ),
                 component: GeneralTab,
-                position: 10,
+                position: 1,
             },
             {
                 name: 'withdraw',
                 title: __( 'Withdraw', 'dokan-lite' ),
                 component: WithdrawTab,
-                position: 20,
+                position: 5,
             },
         ],
         vendor
