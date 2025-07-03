@@ -9,7 +9,12 @@ interface GeneralTabProps {
     vendor: Vendor;
 }
 
-const InfoRow = ( { label, value, showDivider, defaultValue = '--' } ) => (
+const InfoRow = ( {
+    label,
+    value,
+    showDivider,
+    defaultValue = __( '--', 'dokan-lite' ),
+} ) => (
     <div
         className={ twMerge(
             'flex flex-col gap-1',
