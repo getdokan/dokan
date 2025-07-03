@@ -36,11 +36,11 @@ const OverviewTab = ( { vendor }: OverviewTabProps ) => {
             image:
                 product.images && product.images.length > 0
                     ? product.images[ 0 ].src
-                    : 'http://dokanbd.test/wp-content/uploads/2025/05/album-1-768x768.jpg',
+                    : '',
             category:
                 product.categories && product.categories.length > 0
                     ? product.categories.map( ( cat ) => cat.name ).join( ', ' )
-                    : 'Uncategorized',
+                    : '',
             price: parseFloat( product.price ) || 0,
             sold: product.total_sales || 0,
         } )
