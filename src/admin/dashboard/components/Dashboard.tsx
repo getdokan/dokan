@@ -5,6 +5,7 @@ import ModulePage from '../pages/modules';
 import { useMutationObserver } from '../../../hooks';
 import SetupGuide from '../pages/setup-guide';
 import VendorsSingle from '../pages/vendors-single';
+import { NotFound } from "@dokan/components";
 
 export type DokanAdminRoute = {
     id: string;
@@ -40,7 +41,7 @@ const getAdminRoutes = () => {
 
     routes.push( {
         id: 'dokan-404',
-        element: <h3>404</h3>,
+        element: <NotFound className="h-screen" />,
         path: '*',
     } );
 
