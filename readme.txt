@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivend
 Requires at least: 6.5
 Tested up to: 6.8
 WC requires at least: 8.5.0
-WC tested up to: 9.8.4
+WC tested up to: 9.9.5
 Requires PHP: 7.4
-Stable tag: 4.0.2
+Stable tag: 4.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -348,6 +348,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+= v4.0.3 ( Jul 02, 2025 ) =
+
+- **fix:** Add gradient background style for fa-threads social icon.
+- **fix** Resolved an issue where array access warnings in vendor balance calculation were being triggered.
+- **fix** Resolved an issue where incorrect timestamp on sale price schedule hampering product sales schedule added from vendor dashboard.
+- **fix** Resolved an issue where stock quantity always shows 0 in vendor dashboard product edit screen.
+- **fix** Improved the format of payment methods in the withdrawal settings to ensure they are consistently returned as a zero-based indexed list in the REST API response.
+
 = v4.0.2 ( Jun 03, 2025 ) =
 
 - **fix:** Resolved an issue where the single store page header style was broken on multiple themes.
@@ -399,21 +407,6 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Dokan registration form asset loading issue on Elementor My Account widget.
 - **fix:** Resolved an issue where revoking access to digital product content from order details page reverts on page reload.
 - **fix:** Vendor setup wizard form validation added to properly handle countries without states.
-
-= v3.14.10 ( Feb 28, 2025 ) =
-
-- **fix:** Prevented wrong store URL generation for staff managers on admin dashboard.
-- **fix:** Restoring parent order with restore related child orders.
-- **fix:** Store settings API data storing inconsistencies.
-
-= v3.14.9 ( Feb 12, 2025 ) =
-
-- **fix:** Fix earning suggestion in vendor dashboard when product edit page loads initially.
-- **fix:** Fix vendor earning suggestion currency, currency position, decimal separator in vendor dashboard product edit page.
-- **fix:** Fix vendor earning suggestion for invalid product price.
-- **fix:** Tax calculation for shipping based on tax status
-- **feat:** Rollback support for product statues on dokan pro deactivation.
-- **refactor:** Improved dokan_is_user_seller function by adding strict comparison to differentiate between vendor and staff.
 
 [CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
 
