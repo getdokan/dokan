@@ -1,13 +1,10 @@
-import { useState } from '@wordpress/element';
-import { Vendor } from '@dokan/definitions/dokan-vendors';
-
-import OverviewTab from './InformationTabs/OverviewTab';
-import GeneralTab from './InformationTabs/GeneralTab';
-import WithdrawTab from './InformationTabs/WithdrawTab';
-import BadgesTab from './InformationTabs/BadgesTab';
 import { __ } from '@wordpress/i18n';
-import { useSelect } from '@wordpress/data';
-import vendorsStore from '@dokan/stores/vendors';
+import { useState } from '@wordpress/element';
+import GeneralTab from './InformationTabs/GeneralTab';
+import OverviewTab from './InformationTabs/OverviewTab';
+import WithdrawTab from './InformationTabs/WithdrawTab';
+import { Vendor } from '@dokan/definitions/dokan-vendors';
+import { Slot } from '@wordpress/components';
 
 export interface TabSectionProps {
     vendor: Vendor;
@@ -18,9 +15,11 @@ interface TabConfig {
     name: string;
     title: string;
     component: JSX.Element;
+    position?: number;
 }
 
 const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
+    // @ts-ignore
     const tabs: TabConfig[] = window.wp.hooks.applyFilters(
         'dokan-admin-vendor-tabs',
         // @ts-ignore
@@ -29,37 +28,22 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
                 name: 'overview',
                 title: __( 'Overview', 'dokan-lite' ),
                 component: OverviewTab,
+                position: 0,
             },
             {
                 name: 'general',
-                title: __( 'General', 'dokan' ),
+                title: __( 'General', 'dokan-lite' ),
                 component: GeneralTab,
+                position: 10,
             },
             {
                 name: 'withdraw',
                 title: __( 'Withdraw', 'dokan-lite' ),
                 component: WithdrawTab,
+                position: 20,
             },
-            {
-                name: 'badges',
-                title: __( 'Badges', 'dokan' ),
-                component: BadgesTab,
-            },
-        ]
-    );
-
-    const vendorStats = useSelect(
-        ( select ) => {
-            if ( ! vendor?.id ) {
-                return;
-            }
-
-            return select( vendorsStore ).getVendorStats(
-                // @ts-ignore
-                parseInt( vendor?.id )
-            );
-        },
-        [ vendor?.id ]
+        ],
+        vendor
     );
 
     const [ activeTab, setActiveTab ] = useState( 'overview' );
@@ -67,35 +51,36 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
     const handleTabChange = ( tabName: string ) => {
         setActiveTab( tabName );
         if ( onDataUpdate ) {
-            onDataUpdate( tabName, { vendor, vendorStats } );
+            onDataUpdate( tabName, { vendor } );
         }
     };
 
+    const getSortedTabs = () => {
+        // @ts-ignore - Apply any additional hooks to modify the tabs.
+        wp.hooks.doAction( 'dokan-admin-vendor-tabs-sort', tabs );
+
+        // @ts-ignore - Sort the tabs based on the position prop.
+        return wp.hooks.applyFilters(
+            'dokan-admin-vendor-sorted-tabs',
+            [ ...tabs ].sort(
+                ( a, b ) => ( a.position || 0 ) - ( b.position || 0 )
+            )
+        );
+    };
+
     const getCurrentTabComponent = () => {
-        const currentTab = tabs.find( ( tab ) => tab.name === activeTab );
+        // Find the current tab based on the activeTab state
+        const sortedTabs = getSortedTabs(),
+            currentTab = sortedTabs.find( ( tab ) => tab.name === activeTab );
+
         if ( ! currentTab ) {
             return currentTab;
         }
 
         const TabComponent = currentTab.component;
 
-        // Show loading state if vendorStats is null (like in Vue where stats !== null check)
-        if ( ! vendorStats && activeTab === 'overview' ) {
-            return (
-                <div className="flex items-center justify-center h-64">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7C3AED]"></div>
-                    <span className="ml-2 text-gray-600">
-                        Loading vendor statistics...
-                    </span>
-                </div>
-            );
-        }
-
         // Pass appropriate props based on tab type
-        const commonProps = {
-            vendor,
-            vendorStats,
-        };
+        const commonProps = { vendor };
 
         // Add specific props for certain tabs
         const specificProps = {
@@ -104,30 +89,36 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
                 : undefined,
             onStatusChange: onDataUpdate
                 ? ( status: boolean ) =>
-                      onDataUpdate( 'verification', { enabled: status } )
+                    onDataUpdate( 'verification', { enabled: status } )
                 : undefined,
             onPlanChange: onDataUpdate
                 ? ( planId: string ) =>
-                      onDataUpdate( 'subscription', { planId } )
+                    onDataUpdate( 'subscription', { planId } )
                 : undefined,
             onWithdrawRequest: onDataUpdate
                 ? ( amount: number, method: string ) =>
-                      onDataUpdate( 'withdraw', { amount, method } )
+                    onDataUpdate( 'withdraw', { amount, method } )
                 : undefined,
             onBadgeToggle: onDataUpdate
                 ? ( badgeId: string, award: boolean ) =>
-                      onDataUpdate( 'badges', { badgeId, award } )
+                    onDataUpdate( 'badges', { badgeId, award } )
                 : undefined,
         };
 
+        // @ts-ignore
         return <TabComponent { ...commonProps } { ...specificProps } />;
     };
 
     return (
         <div className="@container flex flex-col w-full">
-            { /* Tab Navigation - Matching the exact style from your design */ }
+            <Slot
+                name={ `dokan-admin-vendor-before-tabs` }
+                fillProps={ { vendor, getSortedTabs } }
+            />
+
+            { /* @ts-ignore - Tab Navigation - Matching the exact style from your design */ }
             <div className="flex border-gray-200 mb-6 overflow-x-auto @md:space-x-8 space-x-4">
-                { tabs.map( ( tab ) => (
+                { getSortedTabs().map( ( tab ) => (
                     <button
                         key={ tab.name }
                         className={

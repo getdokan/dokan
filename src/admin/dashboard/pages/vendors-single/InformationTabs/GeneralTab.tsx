@@ -1,4 +1,4 @@
-import { Vendor, VendorStats } from '@dokan/definitions/dokan-vendors';
+import { Vendor } from '@dokan/definitions/dokan-vendors';
 import { Card } from '@getdokan/dokan-ui';
 import { User } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
@@ -8,7 +8,6 @@ import { PluginArea } from '@wordpress/plugins';
 
 interface GeneralTabProps {
     vendor: Vendor;
-    vendorStats: VendorStats | null;
 }
 
 const InfoRow = ( { label, value, showDivider } ) => (
@@ -25,7 +24,7 @@ const InfoRow = ( { label, value, showDivider } ) => (
     </div>
 );
 
-const GeneralTab = ( { vendor, vendorStats }: GeneralTabProps ) => {
+const GeneralTab = ( { vendor }: GeneralTabProps ) => {
     const getCountryFromCountryCode = ( countryCode ) => {
         if ( '' === countryCode ) {
             return;
@@ -152,7 +151,6 @@ const GeneralTab = ( { vendor, vendorStats }: GeneralTabProps ) => {
                     name="dokan-admin-dashboard-vendor-single-generaltab-section-after"
                     fillProps={ {
                         vendor,
-                        vendorStats,
                     } }
                 />
             </div>
