@@ -537,12 +537,6 @@ class Products {
 
         wp_update_post( $product_info );
 
-        // set product brands
-        if ( isset( $_POST['product_brand'] ) ) {
-            $brands_ids = array_map( 'absint', (array) wp_unslash( $_POST['product_brand'] ) );
-            wp_set_object_terms( $post_id, $brands_ids, 'product_brand' );
-        }
-
         /** Set Product tags */
         if ( isset( $_POST['product_tag'] ) ) {
             $tags_ids = array_map( 'absint', (array) wp_unslash( $_POST['product_tag'] ) );
