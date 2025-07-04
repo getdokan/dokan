@@ -1,7 +1,7 @@
 import {
-    VendorsStoreState,
     Vendor,
     VendorQueryParams,
+    Product,
 } from '../../definitions/dokan-vendors';
 
 const actions = {
@@ -40,6 +40,27 @@ const actions = {
             type: 'UPDATE_QUERY_PARAM',
             key,
             value,
+        };
+    },
+    setVendorStats( vendorId: number, stats: any ) {
+        return {
+            type: 'SET_VENDOR_STATS',
+            vendorId,
+            stats,
+        };
+    },
+    setTopProducts( vendorId: number, products: Product[] ) {
+        return {
+            type: 'SET_TOP_PRODUCTS',
+            vendorId,
+            products,
+        };
+    },
+    setLoadingTopProducts( vendorId: number, loading: boolean ) {
+        return {
+            type: 'SET_LOADING_TOP_PRODUCTS',
+            vendorId,
+            loading,
         };
     },
 };

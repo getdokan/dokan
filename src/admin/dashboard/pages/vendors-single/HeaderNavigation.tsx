@@ -38,11 +38,11 @@ const HeaderNavigation = ( { vendor }: HeaderNavigationProps ) => {
                         strokeLinejoin="round"
                     />
                 </svg>
-                { __( 'Vendors List', 'dokan' ) }
+                { __( 'Vendors List', 'dokan-lite' ) }
             </Button>
             <div className="flex justify-between w-full">
                 <h2 className="text-2xl font-semibold text-[#25252D]">
-                    { __( 'Vendor Details', 'dokan' ) }
+                    { __( 'Vendor Details', 'dokan-lite' ) }
                 </h2>
                 <div className="flex gap-2">
                     <Button
@@ -77,7 +77,7 @@ const HeaderNavigation = ( { vendor }: HeaderNavigationProps ) => {
                                 strokeLinejoin="round"
                             />
                         </svg>
-                        { __( 'Visit Store', 'dokan' ) }
+                        { __( 'Visit Store', 'dokan-lite' ) }
                     </Button>
                     <Button
                         className="dokan-btn-secondary"
