@@ -3,7 +3,7 @@ import HeaderNavigation from './HeaderNavigation';
 import HeaderCard from './HeaderCard';
 import { useSelect } from '@wordpress/data';
 import vendorsStore from '@dokan/stores/vendors';
-import SkelitonLoader from './SkelitonLoader';
+import SkelitonLoader from './Skeletons/SkelitonLoader';
 import InfoSection from './InfoSection';
 
 const VendorsSingle = ( { params }: RouterProps ) => {
