@@ -1,8 +1,9 @@
 import GoogleIcon from '../Icons/GoogleIcon';
+import { useState } from '@wordpress/element';
 
 interface SocialButtonProps {
-    network: 'facebook' | 'google' | 'twitter';
-    label?: string;
+    network: 'facebook' | 'google' | 'twitter' | string;
+    label?: string | JSX.Element;
     onClick: () => void;
     className?: string;
     disabled?: boolean;
@@ -40,7 +41,7 @@ export const SocialButton: React.FC< SocialButtonProps > = ( {
     className = '',
     disabled = false,
 } ) => {
-    const [ hovered, setHovered ] = React.useState( false );
+    const [ hovered, setHovered ] = useState( false );
     const config = getNetworkConfig( network, hovered );
 
     return (

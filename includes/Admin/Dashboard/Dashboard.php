@@ -386,7 +386,7 @@ class Dashboard implements Hookable {
         if ( $screen->id !== 'toplevel_page_dokan' && $screen->id !== 'dokan_page_dokan-dashboard' ) {
             return;
         }
-
+        wp_enqueue_media();
         foreach ( $this->scripts() as $handle ) {
             wp_enqueue_script( $handle );
         }
