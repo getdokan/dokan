@@ -8,6 +8,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Use desired version of NodeJS
+        uses: actions/setup-node@v4
+        with:
+            node-version: 20
+            cache: npm
+
+      - name: Npm install and build
+        run: |
+            npm i
+            npm run build
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -37,3 +48,11 @@ jobs:
 
       - name: Detect coding standard violations
         run: vendor/bin/phpcs ${{ steps.changes.outputs.files }} -q --report=checkstyle | cs2pr --graceful-warnings
+
+      - name: Start WordPress Environment
+        run: |
+            npm run env:start
+
+      - name: Running the phpunit tests
+        run: |
+            npm run phpunit
