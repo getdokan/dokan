@@ -288,7 +288,9 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float|int
      */
     public function get_vendor_earning(): float {
-        return $this->get_vendor_net_earning() + $this->get_total_vendor_fees();
+        $vendor_earning = $this->get_vendor_net_earning() + $this->get_total_vendor_fees();
+
+        return apply_filters( 'dokan_get_earning_by_order', $vendor_earning, $this->get_order(), self::SELLER );
     }
 
     /**
@@ -447,7 +449,9 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float
      */
 	public function get_admin_commission(): float {
-		return $this->get_admin_net_commission() + $this->get_total_admin_fees();
+        $admin_commission = $this->get_admin_net_commission() + $this->get_total_admin_fees();
+
+        return apply_filters( 'dokan_get_earning_by_order', $admin_commission, $this->get_order(), self::ADMIN );
 	}
 
 	/**
