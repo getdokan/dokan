@@ -84,7 +84,7 @@ class ProductCommission extends AbstractCommissionCalculator {
             $this->vendor_id = dokan_get_vendor_by_product( $this->product_id, true );
         }
 
-        $strategy = apply_filters( 'dokan_product_commission_strategies', new Product( $this->product_id ) );
+        $strategy = apply_filters( 'dokan_product_commission_strategies', new Product( $this->product_id, $this->vendor_id, $this->category_id ) );
 
         $commission_calculator = dokan_get_container()->get( Calculator::class );
         return $commission_calculator
