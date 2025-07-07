@@ -2,34 +2,42 @@
 
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
-use WeDevs\Dokan\Admin\Dashboard\Dashboard;
-use WeDevs\Dokan\Admin\Dashboard\Pages\Modules;
-use WeDevs\Dokan\Admin\Dashboard\Pages\SetupGuide;
-use WeDevs\Dokan\Admin\Dashboard\Pages\Status;
-use WeDevs\Dokan\Admin\OnboardingSetup\AdminSetupGuide;
+use WeDevs\Dokan\REST\AdminDashboardController;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
+/**
+ * Admin Dashboard API Service Provider
+ *
+ * @since 4.0.3
+ */
 class AdminDashboardServiceProvider extends BaseServiceProvider {
     /**
      * Tag for services added to the container.
+     *
+     * @var array
      */
-    protected $tags = [ 'admin-dashboard-service' ];
+    protected $tags = [ 'admin-dashboard-api-service' ];
 
-	protected $services = [
-        Dashboard::class,
-        Modules::class,
-        Status::class,
-	];
-
-	/**
-     * Register the classes.
+    /**
+     * Services to register
+     *
+     * @var array
      */
-	public function register(): void {
+    protected $services = [
+        AdminDashboardController::class,
+    ];
+
+    /**
+     * Register the services.
+     *
+     * @since 4.0.3
+     *
+     * @return void
+     */
+    public function register(): void {
         foreach ( $this->services as $service ) {
             $definition = $this->share_with_implements_tags( $service );
             $this->add_tags( $definition, $this->tags );
         }
-
-        $this->add_tags( $this->share_with_implements_tags( SetupGuide::class )->addArgument( AdminSetupGuide::class ), $this->tags );
     }
 }
