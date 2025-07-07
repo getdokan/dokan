@@ -1,9 +1,9 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { Slot } from '@wordpress/components';
-import { kebabCase } from '@dokan/utilities';
+import { kebabCase } from '../../utilities';
 import { debounce } from '@wordpress/compose';
 import { Modal } from '@getdokan/dokan-ui';
-import { useCallback, useState } from '@wordpress/element';
+import { useCallback, useEffect, useState } from '@wordpress/element';
 import DialogIcon from './DialogIcon';
 import DokanButton, { ButtonVariant } from '../Button';
 
@@ -19,9 +19,9 @@ interface DokanModalProps {
     confirmationTitle?: string;
     confirmationDescription?: string;
     dialogIcon?: JSX.Element;
-    dialogHeader?: JSX.Element;
+    dialogHeader?: JSX.Element | false;
     dialogContent?: JSX.Element;
-    dialogFooter?: JSX.Element;
+    dialogFooter?: JSX.Element | false;
     loading?: boolean;
     confirmButtonVariant?: ButtonVariant;
 }
@@ -50,7 +50,22 @@ const DokanModal = ( {
         );
     }
 
-    const dialogNamespace = kebabCase( namespace );
+    useEffect( () => {
+        const portalRoot = document.querySelector( '#headlessui-portal-root' );
+        if ( portalRoot ) {
+            portalRoot.classList.add( 'dokan-layout' );
+        } else {
+            const div = document.createElement( 'div' );
+            div.id = 'headlessui-portal-root';
+            div.classList.add( 'dokan-layout' );
+            div.style.display = 'block';
+            document.body.appendChild( div );
+        }
+    }, [ isOpen ] );
+
+    const dialogNamespace = kebabCase
+        ? kebabCase( namespace || '' )
+        : namespace;
     const [ isSubmitting, setIsSubmitting ] = useState( false );
 
     const handleConfirm = useCallback(
@@ -77,25 +92,32 @@ const DokanModal = ( {
             <div
                 className={ `relative text-left bg-white max-w-xl rounded transition-all transform shadow-xl self-center z-0 ${ className }` }
             >
-                <Modal.Title className={ `border-b` }>
-                    <Slot
-                        name={ `dokan-before-dialog-header-${ dialogNamespace }` }
-                        fillProps={ { namespace } }
-                    />
+                { dialogHeader === false
+                    ? null
+                    : dialogHeader || (
+                          <Modal.Title className={ `border-b` }>
+                              <Slot
+                                  name={ `dokan-before-dialog-header-${ dialogNamespace }` }
+                                  fillProps={ { namespace } }
+                              />
 
-                    { dialogHeader || (
-                        <div className="text-gray-900">
-                            { dialogTitle ||
-                                __( 'Confirmation Dialog', 'dokan-lite' ) }
-                        </div>
-                    ) }
+                              {
+                                  <div className="text-gray-900">
+                                      { dialogTitle !== false ||
+                                          __(
+                                              'Confirmation Dialog',
+                                              'dokan-lite'
+                                          ) }
+                                  </div>
+                              }
 
-                    <Slot
-                        name={ `dokan-after-dialog-header-${ dialogNamespace }` }
-                        fillProps={ { namespace } }
-                    />
-                </Modal.Title>
-                <Modal.Content>
+                              <Slot
+                                  name={ `dokan-after-dialog-header-${ dialogNamespace }` }
+                                  fillProps={ { namespace } }
+                              />
+                          </Modal.Title>
+                      ) }
+                <Modal.Content className="p-0">
                     <Slot
                         name={ `dokan-before-${ dialogNamespace }-dialog-content` }
                         fillProps={ { namespace } }
@@ -147,31 +169,33 @@ const DokanModal = ( {
                         fillProps={ { namespace } }
                     />
                 </Modal.Content>
-                <Modal.Footer className="border-t">
-                    { dialogFooter || (
-                        <div
-                            className={ `flex items-center justify-end gap-3` }
-                        >
-                            <DokanButton
-                                onClick={ onClose }
-                                variant={ `secondary` }
-                                disabled={ isSubmitting || loading }
-                            >
-                                { cancelButtonText ||
-                                    __( 'Cancel', 'dokan-lite' ) }
-                            </DokanButton>
-                            <DokanButton
-                                onClick={ handleConfirm }
-                                variant={ confirmButtonVariant }
-                                loading={ isSubmitting || loading }
-                                disabled={ isSubmitting || loading }
-                            >
-                                { confirmButtonText ||
-                                    __( 'Yes, Delete', 'dokan-lite' ) }
-                            </DokanButton>
-                        </div>
-                    ) }
-                </Modal.Footer>
+                { dialogFooter === false
+                    ? null
+                    : dialogFooter || (
+                          <Modal.Footer className="border-t">
+                              <div
+                                  className={ `flex items-center justify-end gap-3` }
+                              >
+                                  <DokanButton
+                                      onClick={ onClose }
+                                      variant={ `secondary` }
+                                      disabled={ isSubmitting || loading }
+                                  >
+                                      { cancelButtonText ||
+                                          __( 'Cancel', 'dokan-lite' ) }
+                                  </DokanButton>
+                                  <DokanButton
+                                      onClick={ handleConfirm }
+                                      variant={ confirmButtonVariant }
+                                      loading={ isSubmitting || loading }
+                                      disabled={ isSubmitting || loading }
+                                  >
+                                      { confirmButtonText ||
+                                          __( 'Yes, Delete', 'dokan-lite' ) }
+                                  </DokanButton>
+                              </div>
+                          </Modal.Footer>
+                      ) }
             </div>
         </Modal>
     );

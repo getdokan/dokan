@@ -287,6 +287,10 @@ const DokanAI = () => {
     useMutationObserver(
         document.body,
         ( mutations ) => {
+            if ( ! isOpen ) {
+                return;
+            }
+
             for ( const mutation of mutations ) {
                 if ( mutation.type !== 'childList' ) {
                     continue;
