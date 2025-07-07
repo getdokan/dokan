@@ -6,6 +6,7 @@ use WeDevs\Dokan\Contracts\Hookable;
 use WeDevs\Dokan\Intelligence\Manager;
 use WeDevs\Dokan\Intelligence\Services\ChatgptResponseService;
 use WeDevs\Dokan\Intelligence\Services\GeminiResponseService;
+use WeDevs\Dokan\Intelligence\Services\Model;
 
 class Settings implements Hookable {
     public function register_hooks(): void {
@@ -41,79 +42,65 @@ class Settings implements Hookable {
      * @return array
      */
     public function render_ai_settings( array $settings_fields ): array {
+        $text_providers = dokan()->get_container()->get( Manager::class )->get_text_supported_providers();
+
         $settings_fields['dokan_ai'] = [
+            'dokan_ai_product_info'               => [
+                'name'          => 'dokan_ai_product_info',
+                'type'          => 'sub_section',
+                'label'         => __( 'AI Product Info Generator', 'dokan-lite' ),
+                'description'   => __( 'Let vendors generate product info by AI', 'dokan-lite' ),
+                'content_class' => 'sub-section-styles',
+            ],
             'dokan_ai_engine' => [
                 'name'    => 'dokan_ai_engine',
                 'label'   => __( 'Engine', 'dokan-lite' ),
                 'type'    => 'select',
-                'options' => dokan()->get_container()->get( Manager::class )->get_engines(),
+                'options' => array_map(
+                    fn( $provider ) => $provider->get_title(),
+                    $text_providers
+                ),
                 'desc'    => __( 'Select which AI provider to use for generating content.', 'dokan-lite' ),
-                'default' => 'chatgpt',
+                'default' => 'openai',
                 'is_lite' => true,
-            ],
-            'dokan_ai_gemini_api_key' => [
-                'name'    => 'dokan_ai_gemini_api_key',
-                'label'   => __( 'Gemini API Key', 'dokan-lite' ),
-                'type'    => 'text',
-                /* translators: 1: OpenAi Link */
-                'desc'    => sprintf( __( 'You can get your API Keys in your <a href="%s" target="_blank"> AI Studio Account.</a>', 'dokan-lite' ), 'https://aistudio.google.com/app/apikey' ),
-                'default' => '',
-                'secret_text' => true,
-                'is_lite' => true,
-                'show_if' => [
-                    'dokan_ai_engine' => [
-                        'equal' => 'gemini',
-                    ],
-                ],
-                'tooltip' => __( 'Your API key provides secure access to the AI service. Usage costs will be charged to the connected account.', 'dokan-lite' ),
-            ],
-            'dokan_ai_chatgpt_api_key' => [
-                'name'    => 'dokan_ai_chatgpt_api_key',
-                'label'   => __( 'OpenAI API Key', 'dokan-lite' ),
-                'type'    => 'text',
-                /* translators: 1: OpenAi Link */
-                'desc'    => sprintf( __( 'You can get your API Keys in your <a href="%s" target="_blank">OpenAI Account.</a>', 'dokan-lite' ), 'https://platform.openai.com/api-keys' ),
-                'default' => '',
-                'is_lite' => true,
-                'secret_text' => true,
-                'show_if' => [
-                    'dokan_ai_engine' => [
-                        'equal' => 'chatgpt',
-                    ],
-                ],
-                'tooltip' => __( 'Your API key provides secure access to the AI service. Usage costs will be charged to the connected account.', 'dokan-lite' ),
-            ],
-            'dokan_ai_chatgpt_model' => [
-                'name'    => 'dokan_ai_chatgpt_model',
-                'label'   => __( 'Model', 'dokan-lite' ),
-                'type'    => 'select',
-                'options' => ChatgptResponseService::get_models(),
-                'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
-                'default' => 'gpt-3.5-turbo',
-                'is_lite' => true,
-                'show_if' => [
-                    'dokan_ai_engine' => [
-                        'equal' => 'chatgpt',
-                    ],
-                ],
-            ],
-            'dokan_ai_gemini_model' => [
-                'name'    => 'dokan_ai_gemini_model',
-                'label'   => __( 'Model', 'dokan-lite' ),
-                'type'    => 'select',
-                'options' => GeminiResponseService::get_models(),
-                'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
-                'default' => 'gemini-1.5-flash',
-                'is_lite' => true,
-                'show_if' => [
-                    'dokan_ai_engine' => [
-                        'equal' => 'gemini',
-                    ],
-                ],
             ],
         ];
 
-        return $settings_fields;
+        foreach ( $text_providers as $provider_id => $provider ) {
+            $settings_fields['dokan_ai'][ 'dokan_ai_' . $provider_id . '_api_key' ] = [
+                'name'    => 'dokan_ai_' . $provider_id . '_api_key',
+                // translators: %s is the provider name, e.g., OpenAI
+                'label'   => sprintf( __( '%s API Key', 'dokan-lite' ), $provider->get_title() ),
+                'type'    => 'text',
+                /* translators: 1: OpenAi Link */
+                'desc'    => sprintf( __( 'You can get your API Keys in your <a href="%1$s" target="_blank">%2$s Account.</a>', 'dokan-lite' ), $provider->get_api_key_url(), $provider->get_title() ),
+                'default' => '',
+                'secret_text' => true,
+                'show_if' => [
+                    'dokan_ai_engine' => [
+                        'equal' => $provider_id,
+                    ],
+                ],
+                'tooltip' => __( 'Your API key provides secure access to the AI service. Usage costs will be charged to the connected account.', 'dokan-lite' ),
+            ];
+
+            $settings_fields['dokan_ai'][ 'dokan_ai_' . $provider_id . '_model' ] = [
+                'name'    => 'dokan_ai_' . $provider_id . '_model',
+                'label'   => __( 'Model', 'dokan-lite' ),
+                'type'    => 'select',
+                'options' => array_map( fn( $model ) => $model->get_title(), $provider->get_models_by_type( Model::SUPPORTS_TEXT ) ),
+                'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
+                'default' => $provider->get_default_model_id(),
+                'is_lite' => true,
+                'show_if' => [
+                    'dokan_ai_engine' => [
+                        'equal' => $provider_id,
+                    ],
+                ],
+            ];
+        }
+
+        return apply_filters( 'dokan_ai_settings_fields', $settings_fields );
     }
 
     /**
