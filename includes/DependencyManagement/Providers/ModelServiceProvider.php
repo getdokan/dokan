@@ -12,7 +12,9 @@ class ModelServiceProvider extends BaseServiceProvider {
 
 	protected $services = [
         \WeDevs\Dokan\Models\VendorBalance::class,
+        \WeDevs\Dokan\Models\VendorOrderStats::class,
         \WeDevs\Dokan\Models\DataStore\VendorBalanceStore::class,
+        \WeDevs\Dokan\Models\DataStore\VendorOrderStatsStore::class,
     ];
 
 	/**

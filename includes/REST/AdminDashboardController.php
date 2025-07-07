@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Models\VendorOrderStats;
 use WeDevs\DokanPro\Modules\ProductQA\Models\Question;
 use WeDevs\DokanPro\Modules\RequestForQuotation\Helper as QuoteHelper;
 use WeDevs\DokanPro\Modules\VendorVerification\Models\VerificationRequest;
@@ -401,46 +402,33 @@ class AdminDashboardController extends DokanBaseAdminController {
     }
 
     /**
-     * Get top performing vendors
+     * Get top-performing vendors
      *
      * @since DOKAN_SINCE
      *
      * @return array
      */
     private function get_top_performing_vendors() {
-        global $wpdb;
+        $result  = [];
+        $vendors = VendorOrderStats::get_top_performing_vendors();
 
-        $vendors = $wpdb->get_results(
-            "SELECT 
-                vendor_id,
-                COUNT(order_id) as total_orders,
-                SUM(vendor_earning) as total_earning,
-                SUM(admin_commission) as total_commission
-            FROM {$wpdb->prefix}dokan_order_stats
-            GROUP BY vendor_id
-            ORDER BY total_earning DESC
-            LIMIT 5",
-            ARRAY_A
-        );
+        // If vendors found, then populate the result array
+        if ( ! empty( $vendors ) ) {
+            $rank = 0;
+            foreach ( $vendors as $vendor ) {
+                $vendor_info = dokan()->vendor->get( $vendor['vendor_id'] );
+                if ( ! $vendor_info->get_id() ) {
+                    continue;
+                }
 
-        if ( empty( $vendors ) ) {
-            return [];
-        }
-
-        $result = [];
-        foreach ( $vendors as $key => $vendor ) {
-            $vendor_info = dokan()->vendor->get( $vendor['vendor_id'] );
-            if ( ! $vendor_info->get_id() ) {
-                continue;
+                $result[] = [
+                    'rank'             => ++$rank,
+                    'vendor_name'      => $vendor_info->get_shop_name(),
+                    'total_earning'    => (float) $vendor['total_earning'],
+                    'total_orders'     => (int) $vendor['total_orders'],
+                    'total_commission' => (float) $vendor['total_commission'],
+                ];
             }
-
-            $result[] = [
-                'rank'             => $key + 1,
-                'vendor_name'      => $vendor_info->get_shop_name(),
-                'total_earning'    => (float) $vendor['total_earning'],
-                'total_orders'     => (int) $vendor['total_orders'],
-                'total_commission' => (float) $vendor['total_commission'],
-            ];
         }
 
         return $result;
