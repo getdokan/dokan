@@ -216,10 +216,15 @@ class AdminDashboardController extends DokanBaseAdminController {
      *
      * @since DOKAN_SINCE
      *
+     * @param WP_REST_Request $request
+     *
      * @return WP_REST_Response
      */
-    public function get_customer_metrics_data() {
-        return rest_ensure_response( $this->get_customer_metrics() );
+    public function get_customer_metrics_data( $request ) {
+        // Get the selected month and year from the request
+        $date = $request->get_param( 'date' ) ? sanitize_text_field( $request->get_param( 'date' ) ) : date( 'Y-m' );
+
+        return rest_ensure_response( $this->get_customer_metrics( $date ) );
     }
 
     /**
@@ -516,61 +521,10 @@ class AdminDashboardController extends DokanBaseAdminController {
             ]
         );
 
-        // Get total sales and commissions from dokan_order_stats
-//        $sales_stats = $wpdb->get_row(
-//            "SELECT
-//                SUM(vendor_earning + admin_commission) as total_sales,
-//                SUM(admin_commission) as total_commissions
-//            FROM {$wpdb->prefix}dokan_order_stats
-//            WHERE order_id NOT IN (
-//                SELECT post_id FROM $wpdb->postmeta
-//                WHERE meta_key = '_wp_trash_meta_status'
-//            )",
-//            ARRAY_A
-//        );
-//
-//        $total_sales = $sales_stats['total_sales'] ?? 0;
-//        $total_commissions = $sales_stats['total_commissions'] ?? 0;
-
-//        $args = apply_filters( 'woocommerce_analytics_revenue_query_args', array(
-//            'per_page' => get_option( 'posts_per_page' ), // not sure if this should be the default.
-//            'page'     => 1,
-//            'order'    => 'DESC',
-//            'orderby'  => 'date',
-//            'before'   => '',
-//            'after'    => '',
-//            'interval' => 'week',
-//            'fields'   => array(
-//                'orders_count',
-//                'num_items_sold',
-//                'total_sales',
-//                'coupons',
-//                'coupons_count',
-//                'refunds',
-//                'taxes',
-//                'shipping',
-//                'net_revenue',
-//                'gross_sales',
-//            ),
-//        ) );
-//
-//        error_log( print_r( $args, 1 ) );
-//
-//        $data_store = \WC_Data_Store::load( 'report-revenue-stats' );
-//        $results    = $data_store->get_data( $args );
-//
-//        error_log( print_r( $results, 1 ) );
-
         $query_args = [
-//                'after'  => '2010-01-01T00:00:00',
-//                'before' => '2099-01-01T23:59:59',
             'fields' => [
                 'total_sales',
                 'total_admin_commission',
-//                    'net_revenue',
-//                    'orders_count',
-//                    'avg_order_value',
-//                    'num_items_sold',
             ]
         ];
 
@@ -580,15 +534,6 @@ class AdminDashboardController extends DokanBaseAdminController {
         $total_sales       = $stats_data->totals->total_sales ?? 0;
         $total_commissions = $stats_data->totals->total_admin_commission ?? 0;
 
-//            error_log( print_r( $stats_data, 1 ) );
-//            return [
-//                'net_revenue' => $stats_data->totals->net_revenue ?? 0,
-//                'total_sales' => $stats_data->totals->total_sales ?? 0,
-//                'orders_count' => $stats_data->totals->orders_count ?? 0,
-//                'avg_order_value' => $stats_data->totals->avg_order_value ?? 0,
-//                'num_items_sold' => $stats_data->totals->num_items_sold ?? 0,
-//            ];
-
         return [
             'total_products'    => (int) $total_products,
             'total_vendors'     => (int) $total_vendors,
@@ -596,7 +541,6 @@ class AdminDashboardController extends DokanBaseAdminController {
             'total_orders'      => (int) $total_orders,
             'total_sales'       => (float) $total_sales,
             'total_commissions' => (float) $total_commissions,
-            'tooltip'           => 'Overview of your all time result in your marketplace',
         ];
     }
 
@@ -658,21 +602,33 @@ class AdminDashboardController extends DokanBaseAdminController {
      *
      * @since DOKAN_SINCE
      *
+     * @param string $date
+     *
      * @return array
      */
-    private function get_customer_metrics() {
+    private function get_customer_metrics( string $date = '' ): array {
         global $wpdb;
 
-        // Get the current month's start and end dates for the time filter
-        $start_date = date('Y-m-01');
-        $end_date = date('Y-m-t');
+        // If no date is provided, use the current month
+        if ( empty( $date ) ) {
+            $date = date( 'Y-m' );
+        }
+
+        // Parse the selected date to get year and month
+        $date_parts = explode( '-', $date );
+        $year       = (int) ( $date_parts[0] ?? date( 'Y' ) );
+        $month      = (int) ( $date_parts[1] ?? date( 'm' ) );
+
+        // Calculate the start and end dates for the selected month
+        $start_date = date( 'Y-m-d', strtotime( "$year-$month-01" ) );
+        $end_date   = date( 'Y-m-t', strtotime( "$year-$month-01" ) );
 
         // Query to find recurring customers
-        // These are customers who have placed at least one order before the current time period
-        // and have placed at least one order during the current time period
+        // These are customers who have placed at least one order before the selected time period
+        // and have placed at least one order during the selected time period
         $recurring_customers = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT COUNT(DISTINCT pm.meta_value) 
+                "SELECT COUNT(DISTINCT pm.meta_value)
                 FROM {$wpdb->posts} p1
                 JOIN {$wpdb->postmeta} pm ON p1.ID = pm.post_id AND pm.meta_key = '_customer_user' AND pm.meta_value > 0
                 WHERE p1.post_type = 'shop_order'
@@ -694,7 +650,6 @@ class AdminDashboardController extends DokanBaseAdminController {
 
         return [
             'recurring_customers' => (int) $recurring_customers,
-            'tooltip'             => 'Customers who returned and purchased again in the time period',
         ];
     }
 
@@ -722,7 +677,7 @@ class AdminDashboardController extends DokanBaseAdminController {
 
         // Get the previous month's start and end dates
         $previous_month_start = date( 'Y-m-01 00:00:00', strtotime( 'first day of last month' ) );
-        $previous_month_end = date( 'Y-m-t 23:59:59', strtotime( 'last day of last month' ) );
+        $previous_month_end   = date( 'Y-m-t 23:59:59', strtotime( 'last day of last month' ) );
 
         $args = [
             'status'       => 'publish',
@@ -779,7 +734,7 @@ class AdminDashboardController extends DokanBaseAdminController {
         );
 
         // Calculate growth rate
-        $active_vendors_growth = $this->calculate_growth_rate($active_vendors_current, $active_vendors_previous);
+        $active_vendors_growth = $this->calculate_growth_rate( $active_vendors_current, $active_vendors_previous );
 
         // 3. New Customers
         // Current month
