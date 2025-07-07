@@ -177,19 +177,11 @@ class AdminDashboardController extends DokanBaseAdminController {
      */
     public function get_to_do() {
         $data = apply_filters(
-            'dokan_rest_admin_dashboard_to_do_data',
+            'dokan_rest_admin_dashboard_todo_data',
             [
-                // From dokan-lite
                 'vendor_approvals'      => $this->get_vendor_approvals_count(),
                 'product_approvals'     => $this->get_product_approvals_count(),
                 'pending_withdrawals'   => $this->get_pending_withdrawals_count(),
-
-                // From dokan-pro
-                'pending_verifications' => $this->get_pending_verifications_count(),
-                'open_support_tickets'  => $this->get_open_support_tickets_count(),
-                'return_requests'       => $this->get_return_requests_count(),
-                'product_inquiries'     => $this->get_product_inquiries_count(),
-                'pending_quotes'        => $this->get_pending_quotes_count(),
             ],
             $this
         );
@@ -398,7 +390,7 @@ class AdminDashboardController extends DokanBaseAdminController {
         ];
 
         $withdraw_count = dokan()->withdraw->all( $args );
-        return $withdraw_count['pending'] ?? 0;
+        return (int) ( $withdraw_count['pending'] ?? 0 );
     }
 
     /**
