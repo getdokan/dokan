@@ -6,7 +6,6 @@ import { Modal } from '@getdokan/dokan-ui';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import DialogIcon from './DialogIcon';
 import DokanButton, { ButtonVariant } from '../Button';
-import { twMerge } from 'tailwind-merge';
 
 interface DokanModalProps {
     isOpen: boolean;
