@@ -99,7 +99,10 @@ const DokanModal = ( {
             ) }
         >
             <div
-                className={ `relative text-left bg-white max-w-xl rounded transition-all transform shadow-xl self-center z-0 ${ className }` }
+                className={ twMerge(
+                    'relative text-left bg-white w-full max-w-xl rounded transition-all transform shadow-xl self-center z-0',
+                    className
+                ) }
             >
                 { dialogHeader === false
                     ? null
