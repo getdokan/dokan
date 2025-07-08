@@ -4,10 +4,15 @@ import MiniCard from './Elements/MiniCard';
 import { Coins, BadgeDollarSign, User } from 'lucide-react';
 import { DokanButton } from '../components';
 import Card from './Elements/Card';
-import MonthPickerDemo from "./Elements/MonthPickerDemo";
-import MonthPicker from "./Elements/MonthPicker";
+import MonthPicker from './Elements/MonthPicker';
+import { useState } from '@wordpress/element';
 
 function Dashboard() {
+    const [ monthData, setMonthData ] = useState( {
+        month: '',
+        year: '',
+    } );
+
     return (
         <div>
             <h1 className="wp-heading-inline">
@@ -78,8 +83,14 @@ function Dashboard() {
             <Section
                 title={ __( 'Month Overview', 'dokan-lite' ) }
                 sectionHeader={
-                    <><MonthPickerDemo /><MonthPicker/></>
+                    <MonthPicker
+                        value={ monthData }
+                        onChange={ ( value ) => {
+                            setMonthData( value );
+                        } }
+                    />
                 }
+                tooltip={ 'This is a simple tooltip' }
             >
                 <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     <Card
