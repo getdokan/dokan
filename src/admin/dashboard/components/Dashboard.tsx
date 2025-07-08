@@ -5,7 +5,7 @@ import ModulePage from '../pages/modules';
 import { useMutationObserver } from '../../../hooks';
 import SetupGuide from '../pages/setup-guide';
 import VendorsSingle from '../pages/vendors-single';
-import { NotFound } from "@dokan/components";
+import NotFound from '../../../layout/404';
 
 export type DokanAdminRoute = {
     id: string;
