@@ -35,7 +35,9 @@ const getAdminRoutes = () => {
 
     routes.push( {
         id: 'dokan-404',
-        element: <NotFound className="h-screen" />,
+        element: (
+            <NotFound className="h-screen" backToDashboardUrl="?page=dokan" />
+        ),
         path: '*',
     } );
 
