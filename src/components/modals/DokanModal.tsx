@@ -6,11 +6,13 @@ import { Modal } from '@getdokan/dokan-ui';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import DialogIcon from './DialogIcon';
 import DokanButton, { ButtonVariant } from '../Button';
+import { twMerge } from 'tailwind-merge';
 
 interface DokanModalProps {
     isOpen: boolean;
     namespace: string;
     className?: string;
+    modalClassName?: string;
     modalBodyClassName?: string;
     onClose: () => void;
     dialogTitle?: string;
@@ -31,6 +33,7 @@ const DokanModal = ( {
     isOpen,
     onClose,
     className,
+    modalClassName,
     modalBodyClassName,
     onConfirm,
     namespace,
@@ -90,7 +93,10 @@ const DokanModal = ( {
         <Modal
             isOpen={ isOpen }
             onClose={ onClose }
-            className={ `dokan-layout bg-transparent shadow-none flex justify-center w-fit` }
+            className={ twMerge(
+                `dokan-layout bg-transparent shadow-none flex justify-center w-fit`,
+                modalClassName
+            ) }
         >
             <div
                 className={ `relative text-left bg-white max-w-xl rounded transition-all transform shadow-xl self-center z-0 ${ className }` }

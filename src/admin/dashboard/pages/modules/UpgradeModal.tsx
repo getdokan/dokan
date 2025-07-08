@@ -1,7 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import getSettings from '../../settings/getSettings';
 import { DokanModal } from '../../../../components';
-import { Modal } from '@getdokan/dokan-ui';
 
 const UpgradeModal = ( {
     isOpen,
@@ -238,7 +237,7 @@ const UpgradeModal = ( {
     return (
         <DokanModal
             namespace="upgrade-to-pro"
-            className="max-w-[720px] mt-10 bg-transparent"
+            modalClassName="max-w-[720px] mt-10 bg-transparent"
             modalBodyClassName="bg-violet-900 bg-upgrade-popup-pattern bg-cover bg-center bg-no-repeat rounded-lg"
             isOpen={ isOpen }
             onClose={ onClose }
