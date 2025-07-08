@@ -54,6 +54,7 @@ const DokanModal = ( {
         const portalRoot = document.querySelector( '#headlessui-portal-root' );
         if ( portalRoot ) {
             portalRoot.classList.add( 'dokan-layout' );
+            portalRoot.style.display = 'block';
         } else {
             const div = document.createElement( 'div' );
             div.id = 'headlessui-portal-root';
