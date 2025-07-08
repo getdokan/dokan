@@ -37,7 +37,9 @@ const VideoPopup = ( { videoId, module }: VideoPopupProps ) => {
                 namespace="video-popup"
                 isOpen={ isOpen }
                 onClose={ () => setIsOpen( false ) }
+                onConfirm={ () => {} }
                 className="max-w-3xl rounded overflow-hidden bg-transparent w-[800px]"
+                modalBodyClassName=""
                 dialogHeader={ false }
                 dialogContent={
                     <div className="aspect-video object-cover -m-4">

@@ -6,11 +6,13 @@ import { Modal } from '@getdokan/dokan-ui';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import DialogIcon from './DialogIcon';
 import DokanButton, { ButtonVariant } from '../Button';
+import { twMerge } from 'tailwind-merge';
 
 interface DokanModalProps {
     isOpen: boolean;
     namespace: string;
     className?: string;
+    modalBodyClassName?: string;
     onClose: () => void;
     dialogTitle?: string;
     onConfirm: () => void;
@@ -30,6 +32,7 @@ const DokanModal = ( {
     isOpen,
     onClose,
     className,
+    modalBodyClassName,
     onConfirm,
     namespace,
     dialogTitle,
@@ -104,7 +107,7 @@ const DokanModal = ( {
 
                               {
                                   <div className="text-gray-900">
-                                      { dialogTitle !== false ||
+                                      { dialogTitle ||
                                           __(
                                               'Confirmation Dialog',
                                               'dokan-lite'
@@ -118,7 +121,7 @@ const DokanModal = ( {
                               />
                           </Modal.Title>
                       ) }
-                <Modal.Content className="p-0">
+                <Modal.Content className={ modalBodyClassName }>
                     <Slot
                         name={ `dokan-before-${ dialogNamespace }-dialog-content` }
                         fillProps={ { namespace } }
