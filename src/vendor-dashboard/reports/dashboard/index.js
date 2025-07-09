@@ -1,30 +1,25 @@
 /**
  * External dependencies
  */
-import { Spinner } from "@woocommerce/components";
-import { Component, Suspense, lazy } from "@wordpress/element";
+import { Component } from '@wordpress/element';
 
 /**
  * Internal dependencies
  */
-import VendorEarning from "./components/vendor-earning";
-// import './style.scss';
-
-const CustomizableDashboard = lazy(() =>
-  import(/* webpackChunkName: "customizable-dashboard" */ "./customizable")
-);
+import VendorEarning from './components/vendor-earning';
+import CustomizableDashboard from './customizable';
 
 class Dashboard extends Component {
-  render() {
-    const { path, query } = this.props;
+    render() {
+        const { path, query } = this.props;
 
-    return (
-      <Suspense fallback={ <Spinner /> } >
-        <VendorEarning query={ query } />
-        <CustomizableDashboard query={ query } path={ path } />
-      </Suspense>
-    );
-  }
+        return (
+            <>
+                <VendorEarning query={ query } />
+                <CustomizableDashboard query={ query } path={ path } />
+            </>
+        );
+    }
 }
 
 export default Dashboard;
