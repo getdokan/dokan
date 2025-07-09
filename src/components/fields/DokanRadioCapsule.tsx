@@ -9,13 +9,13 @@ export interface DokanRadioCapsuleProps {
     } >;
     selected: string;
     onChange: ( value: string ) => void;
-    wrapperClassName?: string;
+    containerClassName?: string;
     className?: string;
 }
 
 const DokanRadioCapsule = ( {
     options = [],
-    wrapperClassName = '',
+    containerClassName = '',
     selected,
     onChange,
     className = '',
@@ -30,7 +30,7 @@ const DokanRadioCapsule = ( {
         <div
             className={ twMerge(
                 'inline-flex items-center',
-                wrapperClassName
+                containerClassName
             ) }
         >
             { options?.map( ( option, index ) => (

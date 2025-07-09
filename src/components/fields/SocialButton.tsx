@@ -1,5 +1,6 @@
 import GoogleIcon from '../Icons/GoogleIcon';
 import { useState } from '@wordpress/element';
+import { twMerge } from 'tailwind-merge';
 
 interface SocialButtonProps {
     network: 'facebook' | 'google' | 'twitter' | string;
@@ -49,11 +50,8 @@ export const SocialButton: React.FC< SocialButtonProps > = ( {
             type="button"
             onClick={ onClick }
             disabled={ disabled }
-            className={ `flex flex-row items-center p-0 rounded-[5px] overflow-hidden font-inter text-[14px] font-normal leading-[1.4] not-italic transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                config.bg
-            } ${
-                disabled ? 'opacity-50 cursor-not-allowed' : ''
-            } ${ className }` }
+            className={ twMerge( `flex flex-row min-w-48 max-w-full items-center p-0 rounded-[5px] overflow-hidden font-inter text-[14px] font-normal leading-[1.4] not-italic transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${ config.bg } ${ disabled } ${ className }
+            ` ) }
             aria-label={ label || config.text }
             onMouseEnter={ () => setHovered( true ) }
             onMouseLeave={ () => setHovered( false ) }

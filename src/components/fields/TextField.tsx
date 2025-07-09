@@ -109,7 +109,7 @@ const TextField: React.FC< TextFieldProps > = ( {
         >
             <div
                 className={ twMerge(
-                    'flex flex-col flex-1 ',
+                    'flex flex-col w-full flex-1 ',
                     wrapperClassName
                 ) }
             >

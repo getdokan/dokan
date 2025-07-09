@@ -6,6 +6,7 @@ import { twMerge } from 'tailwind-merge';
 interface DokanFileUploadProps {
     onUrlImport?: ( url: string ) => void;
     className?: string;
+    inputClassName?: string;
 }
 
 function DokanFileUpload( {
@@ -26,7 +27,7 @@ function DokanFileUpload( {
     };
 
     return (
-        <div className={ `flex items-center gap-2 ${ className }` }>
+        <div className={ `flex items-center gap-4 ${ className }` }>
             <FormInput
                 type="text"
                 name="dokan-file-upload-url"
@@ -34,6 +35,10 @@ function DokanFileUpload( {
                 placeholder="No file selected"
                 readOnly
                 disabled={ true }
+                className={ twMerge(
+                    'text-[#828282] bg-[#F1F1F4] border border-[#E9E9E9] disabled:opacity-90',
+                    className
+                ) }
             />
             <Upload onSelect={ handleMediaSelect }>
                 <Button

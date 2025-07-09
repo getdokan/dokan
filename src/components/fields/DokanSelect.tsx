@@ -11,13 +11,14 @@ export type DokanSelectProps = {
     placeholder?: string;
     disabled?: boolean;
     isError?: boolean;
+    containerClassName?: string;
 };
 const DokanSelect = ( {
-    wrapperClassName = '',
+    containerClassName = '',
     ...props
 }: DokanSelectProps ) => {
     return (
-        <div className={ ` ${ wrapperClassName }` }>
+        <div className={ `${ containerClassName }` }>
             <FormSelect { ...props } />
         </div>
     );

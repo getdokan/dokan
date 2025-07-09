@@ -2,7 +2,7 @@ import { ToggleSwitch } from '@getdokan/dokan-ui';
 import { twMerge } from 'tailwind-merge';
 
 interface DokanSwitchProps {
-    wrapperClassName?: string;
+    containerClassName?: string;
     checked: boolean;
     onChange: ( value: boolean ) => void;
     color?: string;
@@ -17,7 +17,7 @@ interface DokanSwitchProps {
     required?: boolean;
 }
 const DokanSwitch = ( {
-    wrapperClassName,
+    containerClassName,
     checked,
     onChange,
     disabled = false,
@@ -28,7 +28,7 @@ const DokanSwitch = ( {
         <div
             className={ twMerge(
                 'inline-flex flex-col items-center gap-4',
-                wrapperClassName
+                containerClassName
             ) }
         >
             { /* The ToggleSwitch component from Dokan UI */ }

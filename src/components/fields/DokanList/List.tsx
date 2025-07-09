@@ -1,8 +1,7 @@
 // filepath: /Users/osman/Sites/dokan-test/wp-content/plugins/dokan-lite/src/components/fields/List.tsx
-import { Fragment } from '@wordpress/element';
+import { Fragment, useEffect, useRef, useState } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
 import ListItem, { ListItemProps } from './ListItem';
-import React, { useRef, useState, useEffect, ReactNode } from 'react';
 
 interface ListProps {
     /**
@@ -53,12 +52,12 @@ interface ListProps {
     /**
      * Custom element to render at the top of the list
      */
-    headerElement?: ReactNode;
+    headerElement?: JSX.Element;
 
     /**
      * Custom element to render at the bottom of the list
      */
-    footerElement?: ReactNode;
+    footerElement?: JSX.Element;
 
     /**
      * Whether the list is in a loading state
@@ -68,7 +67,7 @@ interface ListProps {
     /**
      * Message to display when there are no items
      */
-    emptyMessage?: string | ReactNode;
+    emptyMessage?: string | JSX.Element;
 
     /**
      * Function to call when an item is selected
