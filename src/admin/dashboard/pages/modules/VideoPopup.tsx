@@ -1,8 +1,7 @@
-import { Modal } from '@getdokan/dokan-ui';
 import { useState } from '@wordpress/element';
 import { DokanModule } from './index';
 import { __ } from '@wordpress/i18n';
-import React from 'react';
+import { DokanModal } from '../../../../components';
 
 export interface VideoPopupProps {
     videoId: string;
@@ -33,13 +32,15 @@ const VideoPopup = ( { videoId, module }: VideoPopupProps ) => {
                 </svg>
                 { __( 'Video', 'dokan-lite' ) }
             </button>
-            <Modal
+            <DokanModal
+                namespace="video-popup"
                 isOpen={ isOpen }
                 onClose={ () => setIsOpen( false ) }
-                className="max-w-3xl rounded overflow-hidden bg-transparent"
-                showXButton={ false }
-            >
-                <Modal.Content className="">
+                onConfirm={ () => {} }
+                modalClassName="max-w-3xl rounded overflow-hidden bg-transparent w-[800px]"
+                modalBodyClassName=""
+                dialogHeader={ false }
+                dialogContent={
                     <div className="aspect-video object-cover -m-4">
                         <iframe
                             src={ `https://www.youtube.com/embed/${ videoId }` }
@@ -49,15 +50,9 @@ const VideoPopup = ( { videoId, module }: VideoPopupProps ) => {
                             allowFullScreen
                         />
                     </div>
-                </Modal.Content>
-                <button
-                    type="button"
-                    onClick={ () => setIsOpen( false ) }
-                    className="absolute bg-white border border-gray-300 w-7 h-7 rounded-full right-1 top-1 rounded-primary transition-colors duration-150 text-sm text-gray-500 hover:text-gray-700 hover:bg-opacity-85 outline-none focus:outline-none"
-                >
-                    &#10005;
-                </button>
-            </Modal>
+                }
+                dialogFooter={ false }
+            />
         </>
     );
 };
