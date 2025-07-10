@@ -931,20 +931,29 @@
                     xImg,
                     yImg,
                     imgSelectOptions;
-                let api = wp.customize;
 
-                this.headerImage = new api.HeaderTool.ImageModel();
-                this.headerImage.set({
-                    themeWidth: xInit,
-                    themeHeight: yInit,
-                    themeFlexWidth: flexWidth,
-                    themeFlexHeight: flexHeight,
-                    imageWidth: realWidth,
-                    imageHeight: realHeight,
-                });
+                // Add check before accessing wp.customize
+                if ( typeof wp !== 'undefined' && wp.customize ) {
+                    const api = wp.customize;
+                    this.headerImage = new api.HeaderTool.ImageModel();
+                    this.headerImage.set(
+                        {
+                            themeWidth: xInit,
+                            themeHeight: yInit,
+                            themeFlexWidth: flexWidth,
+                            themeFlexHeight: flexHeight,
+                            imageWidth: realWidth,
+                            imageHeight: realHeight,
+                        }
+                    );
+                }
 
                 controller.set('canSkipCrop', true);
 
+                // Add validation before ratio calculation
+                if ( !yInit ) {
+                    return {};
+                }
                 ratio = xInit / yInit;
                 xImg = realWidth;
                 yImg = realHeight;
@@ -1036,7 +1045,9 @@
                                 date: false,
                             }),
                             new wp.media.controller.Cropper({
-                                imgSelectOptions: Dokan_Editor.featuredImage.calculateImageSelectOptions
+                                imgSelectOptions: Dokan_Editor.featuredImage.calculateImageSelectOptions.bind(
+                                    Dokan_Editor.featuredImage
+                                )
                             })
                         ]
                     });
