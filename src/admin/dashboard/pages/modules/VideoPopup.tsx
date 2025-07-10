@@ -1,4 +1,3 @@
-import { Modal } from '@getdokan/dokan-ui';
 import { useState } from '@wordpress/element';
 import { DokanModule } from './index';
 import { __ } from '@wordpress/i18n';
