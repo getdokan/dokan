@@ -52,7 +52,7 @@ const VideoPopup = ( { videoId, module }: VideoPopupProps ) => {
                     </div>
                 }
                 dialogFooter={ false }
-            ></DokanModal>
+            />
         </>
     );
 };

@@ -5,7 +5,7 @@ import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
 import ResponseHistory from './ResponseHistory';
 import { useMutationObserver } from '../../hooks';
-import { DokanAlert, DokanButton } from '../../components';
+import { DokanAlert, DokanButton, DokanModal } from '../../components';
 import AISkeleton from './Skeleton';
 
 const initialIndex = {
@@ -353,259 +353,280 @@ const DokanAI = () => {
                 </Tooltip>
             </button>
 
-            <Modal
-                className="max-w-2xl"
+            <DokanModal
+                namespace="dokan-ai-new-prompt-modal"
                 isOpen={ isOpen }
                 onClose={ onClose }
-                showXButton={ false }
-            >
-                <Modal.Title className="border-b flex justify-between items-center">
-                    <div>
-                        { __( 'Craft your product information', 'dokan-lite' ) }
-                    </div>
-                    { isEditMode && (
-                        <DokanButton
-                            variant="secondary"
-                            onClick={ startOver }
-                            disabled={ isLoading }
-                            className="flex gap-2 items-center"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={ 1.5 }
-                                stroke="currentColor"
-                                className="h-4 w-4"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-                                />
-                            </svg>
-
-                            { __( 'Start Over', 'dokan-lite' ) }
-                        </DokanButton>
-                    ) }
-                </Modal.Title>
-
-                <Modal.Content>
-                    { error && (
-                        <DokanAlert
-                            label={ __( 'Error', 'dokan-lite' ) }
-                            variant="danger"
-                            className="mb-4 [&_*_p]:m-0"
-                        >
-                            { error }
-                        </DokanAlert>
-                    ) }
-                    { isEditMode ? (
+                onConfirm={ () => {} }
+                modalClassName="max-w-2xl"
+                modalProps={ {
+                    showXButton: false,
+                } }
+                dialogHeader={
+                    <div className="p-4 font-semibold border-b flex justify-between items-center">
                         <div>
-                            <div className="mb-2 flex items-center justify-between">
-                                <div className="font-semibold text-gray-800">
-                                    { __( 'Title:', 'dokan-lite' ) }
-                                </div>
-                                <ResponseHistory
-                                    loading={ skeletonLoading( 'post_title' ) }
-                                    history={ getHistoryLabel( 'post_title' ) }
-                                    prev={ () => prevHandler( 'post_title' ) }
-                                    next={ () => nextHandler( 'post_title' ) }
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <AISkeleton
-                                    type="text"
-                                    loading={ skeletonLoading( 'post_title' ) }
-                                    element={
-                                        <SimpleInput
-                                            className="focus:outline-none"
-                                            onChange={ ( e: any ) => {
-                                                inputHandler(
-                                                    e.target.value,
-                                                    'post_title'
-                                                );
-                                            } }
-                                            value={ getInputValue(
-                                                'post_title'
-                                            ) }
-                                        />
-                                    }
-                                />
-                            </div>
+                            { __(
+                                'Craft your product information',
+                                'dokan-lite'
+                            ) }
+                        </div>
+                        { isEditMode && (
                             <DokanButton
                                 variant="secondary"
-                                onClick={ () => refineContent( 'post_title' ) }
-                                disabled={ skeletonLoading( 'post_title' ) }
-                            >
-                                { __( 'Refine', 'dokan-lite' ) }
-                            </DokanButton>
-                            { /* Short Description Section */ }
-                            <div className="my-4">
-                                <div className="mb-2 flex items-center justify-between">
-                                    <div className="font-semibold text-gray-800">
-                                        { __(
-                                            'Short Description:',
-                                            'dokan-lite'
-                                        ) }
-                                    </div>
-                                    <ResponseHistory
-                                        loading={ skeletonLoading(
-                                            'post_excerpt'
-                                        ) }
-                                        history={ getHistoryLabel(
-                                            'post_excerpt'
-                                        ) }
-                                        prev={ () =>
-                                            prevHandler( 'post_excerpt' )
-                                        }
-                                        next={ () =>
-                                            nextHandler( 'post_excerpt' )
-                                        }
-                                    />
-                                </div>
-
-                                <AISkeleton
-                                    loading={ skeletonLoading(
-                                        'post_excerpt'
-                                    ) }
-                                    element={
-                                        <div
-                                            className="mb-3 focus:outline-dokan-btn h-36 border rounded p-2.5 overflow-auto"
-                                            contentEditable={ true }
-                                            onBlur={ ( e ) => {
-                                                inputHandler(
-                                                    e.target.innerHTML,
-                                                    'post_excerpt'
-                                                );
-                                            } }
-                                            dangerouslySetInnerHTML={ {
-                                                __html: getInputValue(
-                                                    'post_excerpt'
-                                                ),
-                                            } }
-                                        ></div>
-                                    }
-                                />
-                                <DokanButton
-                                    variant="secondary"
-                                    onClick={ () =>
-                                        refineContent( 'post_excerpt' )
-                                    }
-                                    disabled={ skeletonLoading(
-                                        'post_excerpt'
-                                    ) }
-                                >
-                                    { __( 'Refine', 'dokan-lite' ) }
-                                </DokanButton>
-                            </div>
-                            { /* Long Description Section */ }
-                            <div className="mt-4">
-                                <div className="mb-2 flex items-center justify-between">
-                                    <div className="font-semibold text-gray-800">
-                                        { __(
-                                            'Long Description:',
-                                            'dokan-lite'
-                                        ) }
-                                    </div>
-                                    <ResponseHistory
-                                        loading={ skeletonLoading(
-                                            'post_content'
-                                        ) }
-                                        history={ getHistoryLabel(
-                                            'post_content'
-                                        ) }
-                                        prev={ () =>
-                                            prevHandler( 'post_content' )
-                                        }
-                                        next={ () =>
-                                            nextHandler( 'post_content' )
-                                        }
-                                    />
-                                </div>
-                                <AISkeleton
-                                    loading={ skeletonLoading(
-                                        'post_content'
-                                    ) }
-                                    element={
-                                        <div
-                                            className="mb-3 h-48 focus:outline-dokan-btn border rounded p-2.5 overflow-auto"
-                                            contentEditable={ true }
-                                            onBlur={ ( e ) => {
-                                                inputHandler(
-                                                    e.target.innerHTML,
-                                                    'post_content'
-                                                );
-                                            } }
-                                            dangerouslySetInnerHTML={ {
-                                                __html: getInputValue(
-                                                    'post_content'
-                                                ),
-                                            } }
-                                        ></div>
-                                    }
-                                />
-
-                                <DokanButton
-                                    variant="secondary"
-                                    onClick={ () =>
-                                        refineContent( 'post_content' )
-                                    }
-                                    disabled={ skeletonLoading(
-                                        'post_content'
-                                    ) }
-                                >
-                                    { __( 'Refine', 'dokan-lite' ) }
-                                </DokanButton>
-                            </div>
-
-                            <p className="text-sm mt-4 mb-3">
-                                { __(
-                                    '** If you think the outcome doesn’t match your choice then you can',
-                                    'dokan-lite'
-                                ) }
-
-                                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events */ }
-                                <span
-                                    tabIndex={ 0 }
-                                    role="button"
-                                    onClick={ refineAllContent }
-                                    className="text-dokan-link mx-1 underline"
-                                >
-                                    { __(
-                                        'regenerate all again.',
-                                        'dokan-lite'
-                                    ) }
-                                </span>
-                            </p>
-                        </div>
-                    ) : (
-                        <div>
-                            <p className="text-sm mb-3">
-                                { __(
-                                    'You can generate your product title, short description, long description all at once with this prompt. Type your prompt below',
-                                    'dokan-lite'
-                                ) }
-                            </p>
-                            <TextArea
+                                onClick={ startOver }
                                 disabled={ isLoading }
-                                className="min-h-48"
-                                input={ {
-                                    id: 'dokan-ai-prompt',
-                                    value: prompt,
-                                    onChange: ( e: any ) =>
-                                        setPrompt( e.target.value ),
-                                    placeholder: __(
-                                        'Enter prompt',
+                                className="flex gap-2 items-center"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={ 1.5 }
+                                    stroke="currentColor"
+                                    className="h-4 w-4"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                                    />
+                                </svg>
+
+                                { __( 'Start Over', 'dokan-lite' ) }
+                            </DokanButton>
+                        ) }
+                    </div>
+                }
+                dialogContent={
+                    <>
+                        { error && (
+                            <DokanAlert
+                                label={ __( 'Error', 'dokan-lite' ) }
+                                variant="danger"
+                                className="mb-4 [&_*_p]:m-0"
+                            >
+                                { error }
+                            </DokanAlert>
+                        ) }
+                        { isEditMode ? (
+                            <div>
+                                <div className="mb-2 flex items-center justify-between">
+                                    <div className="font-semibold text-gray-800">
+                                        { __( 'Title:', 'dokan-lite' ) }
+                                    </div>
+                                    <ResponseHistory
+                                        loading={ skeletonLoading(
+                                            'post_title'
+                                        ) }
+                                        history={ getHistoryLabel(
+                                            'post_title'
+                                        ) }
+                                        prev={ () =>
+                                            prevHandler( 'post_title' )
+                                        }
+                                        next={ () =>
+                                            nextHandler( 'post_title' )
+                                        }
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <AISkeleton
+                                        type="text"
+                                        loading={ skeletonLoading(
+                                            'post_title'
+                                        ) }
+                                        element={
+                                            <SimpleInput
+                                                className="focus:outline-none"
+                                                onChange={ ( e: any ) => {
+                                                    inputHandler(
+                                                        e.target.value,
+                                                        'post_title'
+                                                    );
+                                                } }
+                                                value={ getInputValue(
+                                                    'post_title'
+                                                ) }
+                                            />
+                                        }
+                                    />
+                                </div>
+                                <DokanButton
+                                    variant="secondary"
+                                    onClick={ () =>
+                                        refineContent( 'post_title' )
+                                    }
+                                    disabled={ skeletonLoading( 'post_title' ) }
+                                >
+                                    { __( 'Refine', 'dokan-lite' ) }
+                                </DokanButton>
+                                { /* Short Description Section */ }
+                                <div className="my-4">
+                                    <div className="mb-2 flex items-center justify-between">
+                                        <div className="font-semibold text-gray-800">
+                                            { __(
+                                                'Short Description:',
+                                                'dokan-lite'
+                                            ) }
+                                        </div>
+                                        <ResponseHistory
+                                            loading={ skeletonLoading(
+                                                'post_excerpt'
+                                            ) }
+                                            history={ getHistoryLabel(
+                                                'post_excerpt'
+                                            ) }
+                                            prev={ () =>
+                                                prevHandler( 'post_excerpt' )
+                                            }
+                                            next={ () =>
+                                                nextHandler( 'post_excerpt' )
+                                            }
+                                        />
+                                    </div>
+
+                                    <AISkeleton
+                                        loading={ skeletonLoading(
+                                            'post_excerpt'
+                                        ) }
+                                        element={
+                                            <div
+                                                className="mb-3 focus:outline-dokan-btn h-36 border rounded p-2.5 overflow-auto"
+                                                contentEditable={ true }
+                                                onBlur={ ( e ) => {
+                                                    inputHandler(
+                                                        e.target.innerHTML,
+                                                        'post_excerpt'
+                                                    );
+                                                } }
+                                                dangerouslySetInnerHTML={ {
+                                                    __html: getInputValue(
+                                                        'post_excerpt'
+                                                    ),
+                                                } }
+                                            ></div>
+                                        }
+                                    />
+                                    <DokanButton
+                                        variant="secondary"
+                                        onClick={ () =>
+                                            refineContent( 'post_excerpt' )
+                                        }
+                                        disabled={ skeletonLoading(
+                                            'post_excerpt'
+                                        ) }
+                                    >
+                                        { __( 'Refine', 'dokan-lite' ) }
+                                    </DokanButton>
+                                </div>
+                                { /* Long Description Section */ }
+                                <div className="mt-4">
+                                    <div className="mb-2 flex items-center justify-between">
+                                        <div className="font-semibold text-gray-800">
+                                            { __(
+                                                'Long Description:',
+                                                'dokan-lite'
+                                            ) }
+                                        </div>
+                                        <ResponseHistory
+                                            loading={ skeletonLoading(
+                                                'post_content'
+                                            ) }
+                                            history={ getHistoryLabel(
+                                                'post_content'
+                                            ) }
+                                            prev={ () =>
+                                                prevHandler( 'post_content' )
+                                            }
+                                            next={ () =>
+                                                nextHandler( 'post_content' )
+                                            }
+                                        />
+                                    </div>
+                                    <AISkeleton
+                                        loading={ skeletonLoading(
+                                            'post_content'
+                                        ) }
+                                        element={
+                                            <div
+                                                className="mb-3 h-48 focus:outline-dokan-btn border rounded p-2.5 overflow-auto"
+                                                contentEditable={ true }
+                                                onBlur={ ( e ) => {
+                                                    inputHandler(
+                                                        e.target.innerHTML,
+                                                        'post_content'
+                                                    );
+                                                } }
+                                                dangerouslySetInnerHTML={ {
+                                                    __html: getInputValue(
+                                                        'post_content'
+                                                    ),
+                                                } }
+                                            ></div>
+                                        }
+                                    />
+
+                                    <DokanButton
+                                        variant="secondary"
+                                        onClick={ () =>
+                                            refineContent( 'post_content' )
+                                        }
+                                        disabled={ skeletonLoading(
+                                            'post_content'
+                                        ) }
+                                    >
+                                        { __( 'Refine', 'dokan-lite' ) }
+                                    </DokanButton>
+                                </div>
+
+                                <p className="text-sm mt-4 mb-3">
+                                    { __(
+                                        '** If you think the outcome doesn’t match your choice then you can',
                                         'dokan-lite'
-                                    ),
-                                } }
-                            />
-                        </div>
-                    ) }
-                </Modal.Content>
-                <Modal.Footer className="border-t">
-                    <div className="flex gap-4 justify-end">
+                                    ) }
+
+                                    { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events */ }
+                                    <span
+                                        tabIndex={ 0 }
+                                        role="button"
+                                        onClick={ refineAllContent }
+                                        className="text-dokan-link mx-1 underline"
+                                    >
+                                        { __(
+                                            'regenerate all again.',
+                                            'dokan-lite'
+                                        ) }
+                                    </span>
+                                </p>
+                            </div>
+                        ) : (
+                            <div>
+                                <p className="text-sm mb-3">
+                                    { __(
+                                        'You can generate your product title, short description, long description all at once with this prompt. Type your prompt below',
+                                        'dokan-lite'
+                                    ) }
+                                </p>
+                                <TextArea
+                                    disabled={ isLoading }
+                                    className="min-h-48"
+                                    input={ {
+                                        id: 'dokan-ai-prompt',
+                                        value: prompt,
+                                        onChange: ( e: any ) =>
+                                            setPrompt( e.target.value ),
+                                        placeholder: __(
+                                            'Enter prompt',
+                                            'dokan-lite'
+                                        ),
+                                    } }
+                                />
+                            </div>
+                        ) }
+                    </>
+                }
+                dialogFooter={
+                    <div className="p-4 border-t flex gap-4 justify-end">
                         <DokanButton
                             variant="secondary"
                             disabled={ isLoading }
@@ -631,16 +652,20 @@ const DokanAI = () => {
                             </DokanButton>
                         ) }
                     </div>
-                </Modal.Footer>
-            </Modal>
+                }
+            />
 
-            <Modal
-                className="max-w-md"
+            <DokanModal
+                namespace="dokan-ai-new-prompt-modal"
                 isOpen={ regenerateModal }
-                showXButton={ false }
                 onClose={ () => setRegenerateModal( false ) }
-            >
-                <Modal.Content>
+                onConfirm={ () => {} }
+                modalClassName="max-w-md"
+                modalProps={ {
+                    showXButton: false,
+                } }
+                dialogHeader={ false }
+                dialogContent={
                     <div className="text-center p-5">
                         <div className="text-xl font-semibold mb-4">
                             { __(
@@ -669,8 +694,9 @@ const DokanAI = () => {
                             </DokanButton>
                         </div>
                     </div>
-                </Modal.Content>
-            </Modal>
+                }
+                dialogFooter={ false }
+            />
         </>
     );
 };

@@ -3,6 +3,7 @@ import { Slot } from '@wordpress/components';
 import { kebabCase } from '../../utilities';
 import { debounce } from '@wordpress/compose';
 import { Modal } from '@getdokan/dokan-ui';
+import { ModalProps } from '@getdokan/dokan-ui/dist/components/Modal';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import DialogIcon from './DialogIcon';
 import DokanButton, { ButtonVariant } from '../Button';
@@ -12,6 +13,7 @@ interface DokanModalProps {
     isOpen: boolean;
     namespace: string;
     className?: string;
+    modalProps?: Partial< ModalProps >;
     modalClassName?: string;
     modalBodyClassName?: string;
     onClose: () => void;
@@ -33,6 +35,7 @@ const DokanModal = ( {
     isOpen,
     onClose,
     className,
+    modalProps = {},
     modalClassName,
     modalBodyClassName,
     onConfirm,
@@ -97,6 +100,7 @@ const DokanModal = ( {
                 `dokan-layout bg-transparent shadow-none flex justify-center w-fit`,
                 modalClassName
             ) }
+            { ...modalProps }
         >
             <div
                 className={ twMerge(

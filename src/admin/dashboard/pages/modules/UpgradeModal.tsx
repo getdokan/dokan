@@ -245,7 +245,7 @@ const UpgradeModal = ( {
             dialogFooter={ false }
             dialogContent={ modalContent }
             onConfirm={ () => {} }
-        ></DokanModal>
+        />
     );
 };
 export default UpgradeModal;
