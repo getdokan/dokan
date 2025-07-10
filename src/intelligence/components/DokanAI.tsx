@@ -610,11 +610,12 @@ const DokanAI = () => {
                                 <TextArea
                                     disabled={ isLoading }
                                     className="min-h-48"
+                                    onChange={ ( e: any ) =>
+                                        setPrompt( e.target.value )
+                                    }
                                     input={ {
                                         id: 'dokan-ai-prompt',
                                         value: prompt,
-                                        onChange: ( e: any ) =>
-                                            setPrompt( e.target.value ),
                                         placeholder: __(
                                             'Enter prompt',
                                             'dokan-lite'
