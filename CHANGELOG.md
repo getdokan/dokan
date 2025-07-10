@@ -1,3 +1,12 @@
+### v4.0.3 ( Jul 02, 2025 ) ###
+
+- **fix:** Add gradient background style for fa-threads social icon.
+- **fix** Resolved an issue where array access warnings in vendor balance calculation were being triggered.
+- **fix** Resolved an issue where incorrect timestamp on sale price schedule hampering product sales schedule added from vendor dashboard.
+- **fix** Resolved an issue where stock quantity always shows 0 in vendor dashboard product edit screen.
+- **fix** Improved the format of payment methods in the withdrawal settings to ensure they are consistently returned as a zero-based indexed list in the REST API response.
+
+
 ### v4.0.2 ( Jun 03, 2025 ) ###
 
 - **fix:** Resolved an issue where the single store page header style was broken on multiple themes.
