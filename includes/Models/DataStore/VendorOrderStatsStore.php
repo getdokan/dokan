@@ -2,9 +2,6 @@
 
 namespace WeDevs\Dokan\Models\DataStore;
 
-use WeDevs\Dokan\Models\BaseModel;
-use WeDevs\Dokan\Models\VendorOrderStats;
-
 /**
  * Vendor Order Stats Store Class
  *
@@ -133,7 +130,7 @@ class VendorOrderStatsStore extends BaseDataStore {
         $this->add_sql_clause( 'select', 'COUNT(dos.order_id) as order_count' );
         $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() . ' dos' );
         $this->add_sql_clause( 'join', "INNER JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
-        $this->add_sql_clause( 'where', " AND wos.status IN ('wc-completed')" );
+        $this->add_sql_clause( 'where', " AND wos.status IN ('wc-completed', 'wc-processing', 'wc-on-hold')" );
         $this->add_sql_clause( 'where', ' AND wos.total_sales > 0' );
         $this->add_sql_clause( 'where', $wpdb->prepare( ' AND wos.date_created BETWEEN %s AND %s', $start_date, $end_date ) );
 

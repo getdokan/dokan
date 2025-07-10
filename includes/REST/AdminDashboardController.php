@@ -464,12 +464,15 @@ class AdminDashboardController extends DokanBaseAdminController {
             ]
         );
 
-        $query_args = [
-            'fields' => [
-                'total_sales',
-                'total_admin_commission',
-            ]
-        ];
+        $query_args = apply_filters(
+            'dokan_rest_admin_dashboard_all_time_stats_sales_args',
+			[
+                'fields' => [
+                    'total_sales',
+                    'total_admin_commission',
+                ]
+			]
+        );
 
         $stats_query = new DataStore( $query_args );
         $stats_data  = $stats_query->get_data();
@@ -478,12 +481,36 @@ class AdminDashboardController extends DokanBaseAdminController {
         $total_commissions = $stats_data->totals->total_admin_commission ?? 0;
 
         return [
-            'total_products'    => (int) $total_products,
-            'total_vendors'     => (int) $total_vendors,
-            'total_customers'   => (int) $total_customers,
-            'total_orders'      => (int) $total_orders,
-            'total_sales'       => (float) $total_sales,
-            'total_commissions' => (float) $total_commissions,
+            'total_products'    => [
+                'icon'  => 'Box',
+                'count' => (int) $total_products,
+                'title' => esc_html__( 'Total Products', 'dokan-lite' ),
+            ],
+            'total_vendors'     => [
+                'icon'  => 'User',
+                'count' => (int) $total_vendors,
+                'title' => esc_html__( 'Total Vendors', 'dokan-lite' ),
+            ],
+            'total_customers'   => [
+                'icon'  => 'SquareUserRound',
+                'count' => (int) $total_customers,
+                'title' => esc_html__( 'Total Customers', 'dokan-lite' ),
+            ],
+            'total_orders'      => [
+                'icon'  => 'ShoppingCart',
+                'count' => (int) $total_orders,
+                'title' => esc_html__( 'Total Orders', 'dokan-lite' ),
+            ],
+            'total_sales'       => [
+                'icon'  => 'Banknote',
+                'count' => (float) $total_sales,
+                'title' => esc_html__( 'Total Sales', 'dokan-lite' ),
+            ],
+            'total_commissions' => [
+                'icon'  => 'CircleDollarSign',
+                'count' => (float) $total_commissions,
+                'title' => esc_html__( 'Total Commissions', 'dokan-lite' ),
+            ],
         ];
     }
 
@@ -567,7 +594,11 @@ class AdminDashboardController extends DokanBaseAdminController {
 
         return apply_filters(
 			'dokan_admin_dashboard_customer_metrics',
-			[ 'recurring_customers' => (int) $recurring_customers ]
+			[
+                'icon'  => 'FileUser',
+                'count' => (int) $recurring_customers,
+                'title' => esc_html__( 'Recurring Customers', 'dokan-lite' ),
+            ]
         );
     }
 
