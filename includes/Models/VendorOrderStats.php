@@ -388,71 +388,6 @@ class VendorOrderStats extends BaseModel {
 	}
 
 	/**
-	 * Get order stats by order ID.
-	 *
-	 * @since DOKAN_SINCE
-	 *
-	 * @param int $order_id The order ID.
-	 *
-	 * @return VendorOrderStats|false Returns the VendorOrderStats object if found, false otherwise.
-	 */
-	public static function get_by_order_id( int $order_id ) {
-		try {
-			$order_stats = new self();
-			$order_stats->set_id( $order_id );
-			$order_stats->data_store->read( $order_stats );
-
-			return $order_stats;
-		} catch ( \Exception $e ) {
-			return false;
-		}
-	}
-
-	/**
-	 * Get order stats by vendor ID.
-	 *
-	 * @since DOKAN_SINCE
-	 *
-	 * @param int $vendor_id The vendor ID.
-	 *
-	 * @return array Array of VendorOrderStats objects.
-	 */
-	public static function get_by_vendor_id( int $vendor_id ) {
-		$order_stats = new self();
-
-		return $order_stats->data_store->get_by_vendor_id( $vendor_id );
-	}
-
-	/**
-	 * Get total sales for a vendor within a date range.
-	 *
-	 * @since DOKAN_SINCE
-	 *
-	 * @param int    $vendor_id  The vendor ID.
-	 * @param string $start_date Start date in Y-m-d format.
-	 * @param string $end_date   End date in Y-m-d format.
-	 *
-	 * @return float Total sales amount.
-	 */
-	public static function get_total_sales_by_vendor( int $vendor_id, string $start_date, string $end_date ): float {
-		return ( new static() )->get_data_store()->get_total_sales_by_vendor( $vendor_id, $start_date, $end_date );
-	}
-
-	/**
-	 * Get daily sales data for a date range.
-	 *
-	 * @since DOKAN_SINCE
-	 *
-	 * @param string $start_date Start date in Y-m-d format.
-	 * @param string $end_date   End date in Y-m-d format.
-	 *
-	 * @return array Daily sales data.
-	 */
-	public static function get_daily_sales_data( string $start_date, string $end_date ): array {
-		return ( new static() )->get_data_store()->get_daily_sales_data( $start_date, $end_date );
-	}
-
-	/**
 	 * Get count of active vendors within a date range.
 	 *
 	 * @since DOKAN_SINCE
@@ -478,4 +413,18 @@ class VendorOrderStats extends BaseModel {
 	public static function get_top_performing_vendors( int $limit = 5 ): array {
 		return ( new static() )->get_data_store()->get_top_performing_vendors( $limit );
 	}
+
+    /**
+     * Get sales chart data for a date range.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $start_date Start date in Y-m-d format.
+     * @param string $end_date   End date in Y-m-d format.
+     *
+     * @return array Sales chart data with totals.
+     */
+    public static function get_sales_chart_data( string $start_date, string $end_date ): array {
+        return ( new static() )->get_data_store()->get_sales_chart_data( $start_date, $end_date );
+    }
 }
