@@ -13,7 +13,7 @@ const InfoRow = ( { label, value, showDivider, defaultValue = '--' } ) => (
     <div
         className={ twMerge(
             'flex flex-col gap-1',
-            showDivider ? 'border-b-0 md:border-r-[2px]' : ''
+            showDivider ? 'sm:border-b-0 md:border-r-[2px]' : ''
         ) }
     >
         <h4 className="text-zinc-500 text-xs font-normal">{ label }</h4>
@@ -98,7 +98,7 @@ const GeneralTab = ( { vendor }: GeneralTabProps ) => {
                     </div>
                     <div className="flex flex-col gap-4">
                         <Card className="bg-white shadow p-6">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-6">
                                 <InfoRow
                                     showDivider={ true }
                                     label={ __( 'Name', 'dokan-lite' ) }
@@ -121,7 +121,7 @@ const GeneralTab = ( { vendor }: GeneralTabProps ) => {
                             </div>
                         </Card>
                         <Card className="bg-white shadow p-6">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-6">
                                 <InfoRow
                                     showDivider={ true }
                                     label={ __( 'State', 'dokan-lite' ) }
