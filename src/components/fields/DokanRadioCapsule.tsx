@@ -38,7 +38,7 @@ const DokanRadioCapsule = ( {
                     key={ option?.value }
                     type="button"
                     className={ twMerge(
-                        `px-5 py-3  text-sm font-semibold flex gap-3 items-center  border
+                        `px-5 py-3  text-sm font-semibold flex gap-[10px] items-center  border
                          ${ index === 0 ? 'rounded-l-md' : 'rounded-r-md' }
                          ${
                              selectedValue === option?.value

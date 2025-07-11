@@ -41,7 +41,7 @@ const sampleCategories: Category[] = [
 
 const defaultCommission = { percent: '0', fixed: '2500' };
 
-const CategoryCommission: React.FC = () => {
+const CategoryCommission = () => {
     const [ commission, setCommission ] = useState< CommissionValues >( () => {
         const values: CommissionValues = {};
 
@@ -240,7 +240,7 @@ const CategoryCommission: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>{ ' ' }
             { /* Categories List */ }
             <div className="border-t border-[#E9E9E9]">
                 { renderCategoryRow( { id: 'all', name: 'All Category' } ) }

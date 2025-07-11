@@ -150,7 +150,7 @@ const List: React.FC< ListProps > = ( {
         bgColor,
         bordered ? 'border border-gray-200' : '',
         rounded ? 'rounded' : '',
-        'overflow-hidden p-2',
+        'overflow-hidden',
         className
     );
 
@@ -297,41 +297,22 @@ const List: React.FC< ListProps > = ( {
                     };
 
                     return (
-                        <div
-                            key={ `list-item-${ index }-${ itemId || index }` }
-                            ref={ ( el ) => ( itemRefs.current[ index ] = el ) }
-                            tabIndex={ focusedIndex === index ? 0 : -1 }
-                            onKeyDown={ handleKeyDown }
-                            onFocus={ () => setFocusedIndex( index ) }
-                            onClick={ ( e ) => {
-                                setFocusedIndex( index );
-                                e.currentTarget.focus();
+                        <ListItem
+                            key={ item[ itemKey as keyof typeof item ] }
+                            { ...item }
+                            primary={ item.primary || item.title }
+                            selected={ item.selected || isSelected }
+                            showDivider={
+                                index < items.length - 1 && showDividers
+                            }
+                            onClick={ () => {
                                 if ( item.onClick ) {
                                     item.onClick();
                                 } else {
                                     handleItemClick( item, index );
                                 }
                             } }
-                            className={ `outline-none focus:ring-2 focus:ring-primary-500` }
-                            role="option"
-                            aria-selected={ isSelected }
-                        >
-                            <ListItem
-                                { ...item }
-                                primary={ item.primary || item.title }
-                                selected={ item.selected || isSelected }
-                                showDivider={
-                                    index < items.length - 1 && showDividers
-                                }
-                                onClick={ () => {
-                                    if ( item.onClick ) {
-                                        item.onClick();
-                                    } else {
-                                        handleItemClick( item, index );
-                                    }
-                                } }
-                            />
-                        </div>
+                        />
                     );
                 } ) }
             </div>
