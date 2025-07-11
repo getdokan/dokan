@@ -24,6 +24,7 @@ interface DokanModalProps {
     dialogFooter?: JSX.Element;
     loading?: boolean;
     confirmButtonVariant?: ButtonVariant;
+    isCancelButtonHidden?: boolean;
 }
 
 const DokanModal = ( {
@@ -43,6 +44,7 @@ const DokanModal = ( {
     dialogContent,
     loading = false,
     confirmButtonVariant = 'primary',
+    isCancelButtonHidden = false,
 }: DokanModalProps ) => {
     if ( ! namespace ) {
         throw new Error(
@@ -152,14 +154,16 @@ const DokanModal = ( {
                         <div
                             className={ `flex items-center justify-end gap-3` }
                         >
-                            <DokanButton
-                                onClick={ onClose }
-                                variant={ `secondary` }
-                                disabled={ isSubmitting || loading }
-                            >
-                                { cancelButtonText ||
-                                    __( 'Cancel', 'dokan-lite' ) }
-                            </DokanButton>
+                            { isCancelButtonHidden || (
+                                <DokanButton
+                                    onClick={ onClose }
+                                    variant={ `secondary` }
+                                    disabled={ isSubmitting || loading }
+                                >
+                                    { cancelButtonText ||
+                                        __( 'Cancel', 'dokan-lite' ) }
+                                </DokanButton>
+                            ) }
                             <DokanButton
                                 onClick={ handleConfirm }
                                 variant={ confirmButtonVariant }
