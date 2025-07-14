@@ -1,12 +1,4 @@
 import React, { useRef } from 'react';
-import paymentImg from './assets/payment.png';
-import supportImg from './assets/support.png';
-import brandingImg from './assets/branding.png';
-import smartImg from './assets/smart.png';
-import storeImg from './assets/store.png';
-import lockCrownImg from './assets/lock-crown.png';
-import sparkleImg from './assets/sparkle.png';
-import circleImg from './assets/circle.png';
 import crownSmallImg from './assets/crown-small.png';
 import fcmImg from './assets/FCM.png';
 import aerImg from './assets/AER.png';
@@ -17,7 +9,41 @@ import rrwImg from './assets/RRW.png';
 import docIcon from './assets/docsIcon.png';      // Use your provided icon images
 import brushIcon from './assets/PaintIcon.png';
 import gearIcon from './assets/settingsIcon.png';
-import modulesBanner from './assets/modules-banner.png'; // The wide modules banner image
+import moduleBanner from './assets/modules-banner.png';
+import unlockBanner from './assets/unlock-banner.png';
+import shippingImg from './assets/shipping.png';
+import paymentImg from './assets/payment.png';
+import smartImg from './assets/smart.png';
+import storeImg from './assets/store.png';
+import brandingImg from './assets/branding.png';
+import supportImg from './assets/support.png';
+import dokanAiBanner from './assets/DokanAi.png';
+
+function DokanAIBanner() {
+    return (
+        <div
+            className="relative w-full h-[220px] rounded-2xl overflow-hidden"
+        >
+            {/* Background Image */}
+            <img
+                src={dokanAiBanner}
+                alt="Dokan AI Banner"
+                className="w-full h-full object-cover"
+                draggable={false}
+            />
+
+            {/* Text Overlay */}
+            <div className="absolute inset-0 flex items-center pl-10 pr-4">
+                <div className="max-w-sm text-white">
+                    <h2 className="text-white text-3xl font-bold mb-2">Dokan AI</h2>
+                    <p className="text-base leading-relaxed opacity-90">
+                        Generate product titles, descriptions, and images instantly with Dokan AI, powered by OpenAI and Gemini. Save time, look sharp, and sell smarter.
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 function WhySettle() {
     const features = [
@@ -42,14 +68,20 @@ function WhySettle() {
         <div className="mt-16">
             <h2 className="text-2xl font-semibold mb-8">Why Settle? Get More with Dokan PRO!</h2>
             {/* Modules Banner */}
-            <div className="rounded-2xl overflow-hidden mb-10">
+            <div className="relative rounded-2xl overflow-hidden mb-10 min-h-[180px]">
                 <img
-                    src={modulesBanner}
+                    src={moduleBanner}
                     alt="42+ Modules"
-                    className="w-full object-cover"
+                    className="w-full h-full object-cover absolute inset-0"
                     style={{ minHeight: 100, maxHeight: 200 }}
                     draggable={false}
                 />
+                <div className="relative z-10 flex flex-col justify-center h-full px-8 py-8">
+                    <h3 className="text-3xl font-bold text-white mb-2">42+ Modules</h3>
+                    <p className="text-white text-base max-w-xs">
+                        Access an extensive range of modules designed to enhance both admin and vendor experiences.
+                    </p>
+                </div>
             </div>
             {/* Feature Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -139,60 +171,32 @@ function ProFeatures() {
     return (
         <div className="p-6 space-y-10 bg-white">
             {/* Hero Banner */}
-            <div className="relative min-h-[304px] rounded-2xl overflow-hidden flex flex-col md:flex-row items-center bg-[#0b1e2d]">
-                {/* Left Content */}
-                <div className="flex-1 px-10 py-10 z-10">
+            <div
+                className="relative min-h-[304px] rounded-2xl overflow-hidden flex items-center"
+                style={{
+                    background: `url(${unlockBanner}) center center / cover no-repeat`,
+                }}
+            >
+                <div className="flex flex-col justify-center px-8 py-10 z-10 max-w-xl">
                     <h2 className="text-4xl font-bold mb-4 leading-tight text-white drop-shadow">
                         Unlock the Full Potential of<br />Your Marketplace!
                     </h2>
-                    <p className="mb-6 max-w-xl text-base text-white/90 drop-shadow">
+                    <p className="mb-6 text-base text-white/90 drop-shadow">
                         Upgrade to Dokan PRO for powerful vendor management, advanced admin controls, and built-in AI assistance. Enjoy exclusive features that simplify operations, boost sales, and scale your business effortlessly.
                     </p>
                     <div className="flex items-center gap-4">
                         <button className="px-6 py-3 bg-yellow-400 text-black font-semibold rounded shadow hover:bg-yellow-300 transition flex items-center gap-2 text-base">
                             Upgrade to Pro
-                            <span role="img" aria-label="crown">
-                                <img
-                                    src={crownSmallImg}
-                                    alt="Crown"
-                                    className="inline-block w-5 h-5"
-                                    draggable={false}
-                                />
-                            </span>
+                            <img
+                                src={crownSmallImg}
+                                alt="Crown"
+                                className="inline-block w-5 h-5 ml-1"
+                                draggable={false}
+                            />
                         </button>
                         <span className="text-white/80 font-medium text-base">with 20% off</span>
                     </div>
                 </div>
-                {/* Right Visuals */}
-                <div className="flex-1 flex items-center justify-center relative h-[304px] w-full md:w-auto">
-                    {/* Teal Circle
-                    <img
-                        src={circleImg}
-                        alt=""
-                        className="absolute right-10 top-1/2 -translate-y-1/2 w-[320px] md:w-[280px] opacity-80 pointer-events-none"
-                        draggable={false}
-                    /> */}
-                    {/* Lock + Crown */}
-                    <img
-                        src={lockCrownImg}
-                        alt="Lock with Crown"
-                        className="relative z-10 w-[180px] md:w-[210px] drop-shadow-xl"
-                        draggable={false}
-                    />
-                    {/* Sparkle */}
-                    <img
-                        src={sparkleImg}
-                        alt="Sparkle"
-                        className="absolute z-20 top-16 right-24 w-10"
-                        draggable={false}
-                    />
-                </div>
-                {/* Subtle grid overlay (optional, for extra polish) */}
-                <div className="absolute inset-0 pointer-events-none" style={{
-                    backgroundImage: "url('data:image/svg+xml;utf8,<svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"0.5\" y=\"0.5\" width=\"39\" height=\"39\" rx=\"1.5\" fill=\"none\" stroke=\"%231e293b\" stroke-opacity=\"0.15\"/></svg>')",
-                    opacity: 0.5,
-                    zIndex: 1,
-                }} />
             </div>
 
             {/* Features Slider */}
@@ -230,10 +234,15 @@ function ProFeatures() {
             <div>
                 <ExceptionalFeatures />
             </div>
-            
+
             {/* Why Settle Section */}
             <div>
                 <WhySettle />
+            </div>
+
+            {/* Dokan AI Banner */}
+            <div>
+                <DokanAIBanner />
             </div>
         </div>
     );
@@ -243,7 +252,7 @@ const features = [
     {
         title: 'Effortless Shipping Management',
         description: 'Let vendors set flexible shipping rates by distance, weight, price, or items.',
-        image: paymentImg,
+        image: shippingImg,
     },
     {
         title: 'Popular Payment Gateways',
