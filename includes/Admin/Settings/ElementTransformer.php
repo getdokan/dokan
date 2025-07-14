@@ -15,7 +15,6 @@ class ElementTransformer implements TransformerInterface {
      */
     protected array $fields = [];
     protected $settings;
-
     /**
      * @inheritDoc
      */
@@ -73,6 +72,16 @@ class ElementTransformer implements TransformerInterface {
         if ( isset( $data['fields'] ) && is_array( $data['fields'] ) ) {
             $this->fields = $data['fields'];
         }
+
+        return $this;
+    }
+
+    public function set_conversion( array $conversion ) {
+        if ( ! is_array( $conversion ) ) {
+            throw new \InvalidArgumentException( esc_html__( 'Conversion data must be an array.', 'dokan-lite' ) );
+        }
+
+        $this->conversion = $conversion;
 
         return $this;
     }
