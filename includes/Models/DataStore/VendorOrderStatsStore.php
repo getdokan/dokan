@@ -2,6 +2,10 @@
 
 namespace WeDevs\Dokan\Models\DataStore;
 
+use DatePeriod;
+use DateTime;
+use DateInterval;
+
 /**
  * Vendor Order Stats Store Class
  *
@@ -123,6 +127,37 @@ class VendorOrderStatsStore extends BaseDataStore {
     public function get_sales_chart_data( string $start_date, string $end_date, bool $group_by_day = false ): array {
 		global $wpdb;
 
+        // Helper to fill missing dates in daily results
+        $fill_missing_dates = function(array $data, string $start_date, string $end_date) {
+            $period = new DatePeriod(
+                new DateTime($start_date),
+                new DateInterval('P1D'),
+                (new DateTime($end_date))->modify('+1 day')
+            );
+
+            $data_by_date = [];
+            foreach ($data as $entry) {
+                $data_by_date[$entry['date']] = $entry;
+            }
+
+            $filled = [];
+            foreach ($period as $date) {
+                $d = $date->format('Y-m-d');
+                if (isset($data_by_date[$d])) {
+                    $filled[] = $data_by_date[$d];
+                } else {
+                    $filled[] = [
+                        'date'        => $d,
+                        'total_sales' => 0,
+                        'net_sales'   => 0,
+                        'commissions' => 0,
+                        'order_count' => 0,
+                    ];
+                }
+            }
+            return $filled;
+        };
+
 		$this->clear_all_clauses();
 
 		// Select clause
@@ -162,6 +197,8 @@ class VendorOrderStatsStore extends BaseDataStore {
 		$results = $wpdb->get_results( $query_statement, ARRAY_A );
 
 		if ( $group_by_day ) {
+            $results = $fill_missing_dates($results, $start_date, $end_date);
+            
 			return array_map( function ( $row ) {
 				return [
 					'date'        => $row['date'],
