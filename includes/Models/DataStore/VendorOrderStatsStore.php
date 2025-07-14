@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Models\DataStore;
 use DatePeriod;
 use DateTime;
 use DateInterval;
+use WeDevs\Dokan\Utilities\ReportUtil;
 
 /**
  * Vendor Order Stats Store Class
@@ -72,19 +73,26 @@ class VendorOrderStatsStore extends BaseDataStore {
     public function get_active_vendors_count( string $start_date, string $end_date ): int {
         global $wpdb;
 
+        // Get the order statuses to exclude from the report.
+        $exclude_order_statuses = ReportUtil::get_exclude_order_statuses();
+
         $this->clear_all_clauses();
         $this->add_sql_clause( 'select', 'COUNT(DISTINCT dos.vendor_id)' );
         $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() . ' dos' );
         $this->add_sql_clause( 'join', "JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
-        $this->add_sql_clause( 'where', " AND wos.status IN ('wc-completed', 'wc-processing', 'wc-on-hold')" );
+        $this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
         $this->add_sql_clause( 'where', ' AND dos.vendor_earning > 0' );
         $this->add_sql_clause( 'where', $wpdb->prepare( ' AND wos.date_created BETWEEN %s AND %s', $start_date, $end_date ) );
 
         $query_statement = $this->get_query_statement();
+        $count           = $wpdb->get_var( $query_statement ); // phpcs:ignore
 
-        $count = $wpdb->get_var( $query_statement ); // phpcs:ignore
-
-        return (int) $count;
+        return apply_filters(
+            'dokan_admin_dashboard_active_vendors_count',
+            (int) $count,
+            $start_date,
+            $end_date
+        );
     }
 
     /**
@@ -126,6 +134,9 @@ class VendorOrderStatsStore extends BaseDataStore {
      */
     public function get_sales_chart_data( string $start_date, string $end_date, bool $group_by_day = false ): array {
 		global $wpdb;
+
+        // Get the order statuses to exclude from the report.
+        $exclude_order_statuses = ReportUtil::get_exclude_order_statuses();
 
         // Helper to fill missing dates in daily results
         $fill_missing_dates = function(array $data, string $start_date, string $end_date) {
@@ -175,8 +186,8 @@ class VendorOrderStatsStore extends BaseDataStore {
 		$this->add_sql_clause( 'join', "INNER JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
 
 		// Where conditions
-		$this->add_sql_clause( 'where', "AND wos.status IN ('wc-completed', 'wc-processing', 'wc-on-hold')" );
-		$this->add_sql_clause( 'where', 'AND wos.total_sales > 0' );
+		$this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
+		$this->add_sql_clause( 'where', ' AND wos.total_sales > 0' );
 		$this->add_sql_clause( 'where', $wpdb->prepare(
 			'AND wos.date_created BETWEEN %s AND %s',
 			$start_date . ' 00:00:00',
@@ -198,7 +209,7 @@ class VendorOrderStatsStore extends BaseDataStore {
 
 		if ( $group_by_day ) {
             $results = $fill_missing_dates($results, $start_date, $end_date);
-            
+
 			return array_map( function ( $row ) {
 				return [
 					'date'        => $row['date'],
@@ -212,13 +223,16 @@ class VendorOrderStatsStore extends BaseDataStore {
 
 		$result = $results[0] ?? [];
 
-		return [
-			'total_sales' => (float) ( $result['total_sales'] ?? 0 ),
-			'net_sales'   => (float) ( $result['net_sales'] ?? 0 ),
-			'commissions' => (float) ( $result['commissions'] ?? 0 ),
-			'order_count' => (int) ( $result['order_count'] ?? 0 ),
-		];
-	}
-
-
+        return apply_filters(
+            'dokan_admin_dashboard_order_stats_sales_chart_data',
+            [
+                'total_sales' => (float) ( $result['total_sales'] ?? 0 ),
+                'net_sales'   => (float) ( $result['net_sales'] ?? 0 ),
+                'commissions' => (float) ( $result['commissions'] ?? 0 ),
+                'order_count' => (int) ( $result['order_count'] ?? 0 ),
+            ],
+            $start_date,
+            $end_date
+        );
+    }
 }

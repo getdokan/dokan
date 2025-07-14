@@ -19,13 +19,6 @@ class VendorOrderStats extends BaseModel {
 	protected $object_type = 'dokan_vendor_order_stats';
 
 	/**
-	 * Cache group.
-	 *
-	 * @var string
-	 */
-	protected $cache_group = 'dokan_vendor_order_stats';
-
-	/**
 	 * The default data of the object.
 	 *
 	 * @var array
