@@ -526,33 +526,51 @@ class AdminDashboardController extends DokanBaseAdminController {
     public function get_sales_chart_data( $date = '' ) {
         global $wpdb;
 
-        // Current month totals
         $date_range = $this->parse_date_range( $date );
-        $current    = VendorOrderStats::get_sales_chart_data(
-			$date_range['current_month_start'],
-			$date_range['current_month_end']
+
+        // Get monthly totals
+        $current_totals  = VendorOrderStats::get_sales_chart_data(
+            $date_range['current_month_start'],
+            $date_range['current_month_end']
         );
-        // Previous month totals
-        $previous = VendorOrderStats::get_sales_chart_data(
+
+        $previous_totals = VendorOrderStats::get_sales_chart_data(
             $date_range['previous_month_start'],
             $date_range['previous_month_end']
         );
 
+        // Get daily breakdown
+        $current_daily  = VendorOrderStats::get_sales_chart_data(
+            $date_range['current_month_start'],
+            $date_range['current_month_end'],
+            true // group by day
+        );
+
+        $previous_daily = VendorOrderStats::get_sales_chart_data(
+            $date_range['previous_month_start'],
+            $date_range['previous_month_end'],
+            true // group by day
+        );
+
         return [
             'current_month' => [
-                'total_sales'  => (float) ( $current['total_sales'] ?? 0 ),
-                'net_sales'    => (float) ( $current['net_sales'] ?? 0 ),
-                'commissions'  => (float) ( $current['commissions'] ?? 0 ),
-                'order_count'  => (int) ( $current['order_count'] ?? 0 ),
+                'total_sales'  => (float) ( $current_totals['total_sales'] ?? 0 ),
+                'net_sales'    => (float) ( $current_totals['net_sales'] ?? 0 ),
+                'commissions'  => (float) ( $current_totals['commissions'] ?? 0 ),
+                'order_count'  => (int) ( $current_totals['order_count'] ?? 0 ),
             ],
             'previous_month' => [
-                'total_sales'  => (float) ( $previous['total_sales'] ?? 0 ),
-                'net_sales'    => (float) ( $previous['net_sales'] ?? 0 ),
-                'commissions'  => (float) ( $previous['commissions'] ?? 0 ),
-                'order_count'  => (int) ( $previous['order_count'] ?? 0 ),
-            ]
+                'total_sales'  => (float) ( $previous_totals['total_sales'] ?? 0 ),
+                'net_sales'    => (float) ( $previous_totals['net_sales'] ?? 0 ),
+                'commissions'  => (float) ( $previous_totals['commissions'] ?? 0 ),
+                'order_count'  => (int) ( $previous_totals['order_count'] ?? 0 ),
+            ],
+            'current_month_daily'  => $current_daily,
+            'previous_month_daily' => $previous_daily,
         ];
     }
+
+
 
     /**
      * Get customer metrics data
