@@ -42,6 +42,16 @@ abstract class Settings extends SettingsElement {
 	 */
 	public function populate(): array {
 		$this->hydrate_data();
+		return parent::populate();
+	}
+
+	/**
+	 * Populate settings children_only.
+	 *
+	 * @return array
+	 */
+	public function populate_children_only(): array {
+		$this->hydrate_data();
 		return parent::populate()['children'];
 	}
 

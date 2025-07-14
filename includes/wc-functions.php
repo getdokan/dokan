@@ -226,18 +226,6 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
         $sale_price    = (string) isset( $data['_sale_price'] ) ? wc_clean( $data['_sale_price'] ) : '';
         $now           = dokan_current_datetime();
 
-        update_post_meta( $post_id, '_regular_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
-        update_post_meta( $post_id, '_sale_price', '' === $sale_price ? '' : wc_format_decimal( $sale_price ) );
-
-        // Dates
-        update_post_meta( $post_id, '_sale_price_dates_from', $date_from ? strtotime( $date_from ) : '' );
-        update_post_meta( $post_id, '_sale_price_dates_to', $date_to ? strtotime( '+ 23 hours', strtotime( $date_to ) ) : '' );
-
-        if ( $date_to && ! $date_from ) {
-            $date_from = $now->format( 'Y-m-d' );
-            update_post_meta( $post_id, '_sale_price_dates_from', $now->getTimestamp() );
-        }
-
         // Update price if on sale
         if ( '' !== $sale_price && '' === $date_to && '' === $date_from ) {
             update_post_meta( $post_id, '_price', wc_format_decimal( $sale_price ) );
@@ -402,6 +390,47 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
         $woocommerce_errors[] = __( 'Product SKU must be unique', 'dokan-lite' );
     }
 
+    // Set Sales and prices
+    $product->set_regular_price( $regular_price );
+    $product->set_sale_price( $sale_price );
+
+    // Site timezone
+    $tz_string = wc_timezone_string();
+    $timezone  = $tz_string ? new DateTimeZone( $tz_string ) : new DateTimeZone( 'UTC' );
+
+    // Sale starting date
+    if ( ! empty( $date_from ) ) {
+        try {
+            $from_dt = new WC_DateTime( $date_from . ' 00:00:00', $timezone );
+            $product->set_date_on_sale_from( $from_dt );
+        } catch ( Exception $e ) {
+            error_log( 'Invalid date_from: ' . $date_from . ' | ' . $e->getMessage() );
+            $product->set_date_on_sale_from( null );
+        }
+    } else {
+        $product->set_date_on_sale_from( null );
+    }
+
+    // Sale ending date
+    if ( ! empty( $date_to ) ) {
+        try {
+            $to_dt = new WC_DateTime( $date_to . ' 23:59:59', $timezone );
+            $product->set_date_on_sale_to( $to_dt );
+
+            if ( empty( $date_from ) ) {
+                // Automatically add date of today if start date is empty
+                $from_obj = new WC_DateTime( 'now', $timezone );
+                $product->set_date_on_sale_from( $from_obj );
+            }
+        } catch ( Exception $e ) {
+            error_log( 'Invalid date_to: ' . $date_to . ' | ' . $e->getMessage() );
+            $product->set_date_on_sale_to( null );
+        }
+    } else {
+        $product->set_date_on_sale_to( null );
+    }
+
+    // save the product
     $product->save();
 
     // Do action for product type

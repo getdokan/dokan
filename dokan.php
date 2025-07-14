@@ -3,13 +3,13 @@
  * Plugin Name: Dokan
  * Plugin URI: https://dokan.co/wordpress/
  * Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
- * Version: 4.0.2
+ * Version: 4.0.3
  * Author: Dokan Inc.
  * Author URI: https://dokan.co/wordpress/
  * Text Domain: dokan-lite
  * Requires Plugins: woocommerce
  * WC requires at least: 8.5.0
- * WC tested up to: 9.8.5
+ * WC tested up to: 9.9.5
  * Domain Path: /languages/
  * License: GPL2
  */
