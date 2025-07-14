@@ -2,11 +2,10 @@
 
 namespace WeDevs\Dokan\REST;
 
-use WeDevs\Dokan\Utilities\ReportUtil;
-use WeDevs\Dokan\Models\VendorOrderStats;
 use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
+use WeDevs\Dokan\Models\AdminDashboardStats;
 use Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query as DataStore;
 
 /**
@@ -348,7 +347,7 @@ class AdminDashboardController extends DokanBaseAdminController {
      */
     public function get_top_performing_vendors() {
         $result  = [];
-        $vendors = VendorOrderStats::get_top_performing_vendors();
+        $vendors = AdminDashboardStats::get_top_performing_vendors();
 
         // If vendors found, then populate the result array
         if ( ! empty( $vendors ) ) {
@@ -369,7 +368,10 @@ class AdminDashboardController extends DokanBaseAdminController {
             }
         }
 
-        return $result;
+        return apply_filters(
+            'dokan_rest_admin_dashboard_top_performing_vendors_data',
+            $result
+        );
     }
 
     /**
@@ -410,7 +412,11 @@ class AdminDashboardController extends DokanBaseAdminController {
             }
         }
 
-        return $result;
+        return apply_filters(
+            'dokan_rest_admin_dashboard_most_reviewed_products_data',
+            $result,
+            $products
+        );
     }
 
     /**
@@ -457,12 +463,12 @@ class AdminDashboardController extends DokanBaseAdminController {
 
         $query_args = apply_filters(
             'dokan_rest_admin_dashboard_all_time_stats_sales_args',
-			[
+            [
                 'fields' => [
                     'total_sales',
                     'total_admin_commission',
                 ]
-			]
+            ]
         );
 
         $stats_query = new DataStore( $query_args );
@@ -471,38 +477,41 @@ class AdminDashboardController extends DokanBaseAdminController {
         $total_sales       = $stats_data->totals->total_sales ?? 0;
         $total_commissions = $stats_data->totals->total_admin_commission ?? 0;
 
-        return [
-            'total_products'    => [
-                'icon'  => 'Box',
-                'count' => (int) $total_products,
-                'title' => esc_html__( 'Total Products', 'dokan-lite' ),
-            ],
-            'total_vendors'     => [
-                'icon'  => 'User',
-                'count' => (int) $total_vendors,
-                'title' => esc_html__( 'Total Vendors', 'dokan-lite' ),
-            ],
-            'total_customers'   => [
-                'icon'  => 'SquareUserRound',
-                'count' => (int) $total_customers,
-                'title' => esc_html__( 'Total Customers', 'dokan-lite' ),
-            ],
-            'total_orders'      => [
-                'icon'  => 'ShoppingCart',
-                'count' => (int) $total_orders,
-                'title' => esc_html__( 'Total Orders', 'dokan-lite' ),
-            ],
-            'total_sales'       => [
-                'icon'  => 'Banknote',
-                'count' => (float) $total_sales,
-                'title' => esc_html__( 'Total Sales', 'dokan-lite' ),
-            ],
-            'total_commissions' => [
-                'icon'  => 'CircleDollarSign',
-                'count' => (float) $total_commissions,
-                'title' => esc_html__( 'Total Commissions', 'dokan-lite' ),
-            ],
-        ];
+        return apply_filters(
+            'dokan_rest_admin_dashboard_all_time_stats_data',
+            [
+                'total_products'    => [
+                    'icon'  => 'Box',
+                    'count' => (int) $total_products,
+                    'title' => esc_html__( 'Total Products', 'dokan-lite' ),
+                ],
+                'total_vendors'     => [
+                    'icon'  => 'User',
+                    'count' => (int) $total_vendors,
+                    'title' => esc_html__( 'Total Vendors', 'dokan-lite' ),
+                ],
+                'total_customers'   => [
+                    'icon'  => 'SquareUserRound',
+                    'count' => (int) $total_customers,
+                    'title' => esc_html__( 'Total Customers', 'dokan-lite' ),
+                ],
+                'total_orders'      => [
+                    'icon'  => 'ShoppingCart',
+                    'count' => (int) $total_orders,
+                    'title' => esc_html__( 'Total Orders', 'dokan-lite' ),
+                ],
+                'total_sales'       => [
+                    'icon'  => 'Banknote',
+                    'count' => (float) $total_sales,
+                    'title' => esc_html__( 'Total Sales', 'dokan-lite' ),
+                ],
+                'total_commissions' => [
+                    'icon'  => 'CircleDollarSign',
+                    'count' => (float) $total_commissions,
+                    'title' => esc_html__( 'Total Commissions', 'dokan-lite' ),
+                ],
+            ]
+        );
     }
 
     /**
@@ -515,34 +524,36 @@ class AdminDashboardController extends DokanBaseAdminController {
      * @return array
      */
     public function get_sales_chart_data( $date = '' ) {
-        global $wpdb;
-
         // Current month totals
         $date_range = $this->parse_date_range( $date );
-        $current    = VendorOrderStats::get_sales_chart_data(
-			$date_range['current_month_start'],
-			$date_range['current_month_end']
+        $current    = AdminDashboardStats::get_sales_chart_data(
+            $date_range['current_month_start'],
+            $date_range['current_month_end']
         );
         // Previous month totals
-        $previous = VendorOrderStats::get_sales_chart_data(
+        $previous = AdminDashboardStats::get_sales_chart_data(
             $date_range['previous_month_start'],
             $date_range['previous_month_end']
         );
 
-        return [
-            'current_month' => [
-                'total_sales'  => (float) ( $current['total_sales'] ?? 0 ),
-                'net_sales'    => (float) ( $current['net_sales'] ?? 0 ),
-                'commissions'  => (float) ( $current['commissions'] ?? 0 ),
-                'order_count'  => (int) ( $current['order_count'] ?? 0 ),
+        return apply_filters(
+            'dokan_rest_admin_dashboard_sales_chart_data',
+            [
+                'current_month' => [
+                    'total_sales'  => (float) ( $current['total_sales'] ?? 0 ),
+                    'net_sales'    => (float) ( $current['net_sales'] ?? 0 ),
+                    'commissions'  => (float) ( $current['commissions'] ?? 0 ),
+                    'order_count'  => (int) ( $current['order_count'] ?? 0 ),
+                ],
+                'previous_month' => [
+                    'total_sales'  => (float) ( $previous['total_sales'] ?? 0 ),
+                    'net_sales'    => (float) ( $previous['net_sales'] ?? 0 ),
+                    'commissions'  => (float) ( $previous['commissions'] ?? 0 ),
+                    'order_count'  => (int) ( $previous['order_count'] ?? 0 ),
+                ]
             ],
-            'previous_month' => [
-                'total_sales'  => (float) ( $previous['total_sales'] ?? 0 ),
-                'net_sales'    => (float) ( $previous['net_sales'] ?? 0 ),
-                'commissions'  => (float) ( $previous['commissions'] ?? 0 ),
-                'order_count'  => (int) ( $previous['order_count'] ?? 0 ),
-            ]
-        ];
+            $date_range
+        );
     }
 
     /**
@@ -555,41 +566,17 @@ class AdminDashboardController extends DokanBaseAdminController {
      * @return array
      */
     public function get_customer_metrics( string $date = '' ): array {
-        global $wpdb;
-
-        // Query to find recurring customers
-        // These are customers who have placed at least one order before the selected time period
-        // and have placed at least one order during the selected time period
-        $date_range          = $this->parse_date_range( $date );
-        $recurring_customers = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT COUNT(DISTINCT pm.meta_value)
-                FROM {$wpdb->posts} p1
-                JOIN {$wpdb->postmeta} pm ON p1.ID = pm.post_id AND pm.meta_key = '_customer_user' AND pm.meta_value > 0
-                WHERE p1.post_type = 'shop_order'
-                AND p1.post_status NOT IN ( '" . implode( "','", ReportUtil::get_exclude_order_statuses() ) . "' )
-                AND DATE(p1.post_date) BETWEEN %s AND %s
-                AND pm.meta_value IN (
-                    SELECT DISTINCT pm2.meta_value
-                    FROM {$wpdb->posts} p2
-                    JOIN {$wpdb->postmeta} pm2 ON p2.ID = pm2.post_id AND pm2.meta_key = '_customer_user' AND pm2.meta_value > 0
-                    WHERE p2.post_type = 'shop_order'
-                    AND p2.post_status IN ('wc-completed', 'wc-processing', 'wc-on-hold')
-                    AND DATE(p2.post_date) < %s
-                )",
-                $date_range['current_month_start'],
-                $date_range['current_month_end'],
-                $date_range['current_month_start']
-            )
+        // Date range for the current month.
+        $date_range       = $this->parse_date_range( $date );
+        $monthly_overview = AdminDashboardStats::get_customer_metrics(
+            $date_range['current_month_start'],
+            $date_range['current_month_end']
         );
 
         return apply_filters(
-			'dokan_admin_dashboard_customer_metrics',
-			[
-                'icon'  => 'FileUser',
-                'count' => (int) $recurring_customers,
-                'title' => esc_html__( 'Recurring Customers', 'dokan-lite' ),
-            ]
+            'dokan_rest_admin_dashboard_customer_metrics_data',
+            $monthly_overview,
+            $date_range
         );
     }
 
@@ -603,132 +590,12 @@ class AdminDashboardController extends DokanBaseAdminController {
      * @return array
      */
     public function get_monthly_overview( $date ) {
-        global $wpdb;
-
-        $date_range        = $this->parse_date_range( $date );
-        $advertise_product = get_option( 'dokan_advertisement_product_id', 0 );
-        $product_types     = $this->get_filtered_product_types();
-
-        $args = [
-            'status'       => 'publish',
-            'type'         => array_keys( $product_types ),
-            'limit'        => -1,
-            'return'       => 'ids',
-            'post__not_in' => [ $advertise_product ],
-        ];
-
-        $product_ids = wc_get_products(
-            array_merge(
-                $args,
-                [ 'date_created' => $date_range['current_month_start'] . '...' . $date_range['current_month_end'] ]
-            )
-        );
-
-        $new_products_current    = count( $product_ids );
-        $previous_month_products = wc_get_products(
-            array_merge(
-                $args,
-                [ 'date_created' => $date_range['previous_month_start'] . '...' . $date_range['previous_month_end'] ]
-            )
-        );
-
-        $new_products_previous   = count( $previous_month_products );
-        $active_vendors_current  = VendorOrderStats::get_active_vendors_count(
-			$date_range['current_month_start'],
-			$date_range['current_month_end']
-        );
-        $active_vendors_previous = VendorOrderStats::get_active_vendors_count(
-			$date_range['previous_month_start'],
-			$date_range['previous_month_end']
-        );
-
-        $results = $wpdb->get_row(
-            $wpdb->prepare(
-                "SELECT 
-                    SUM(CASE WHEN u.user_registered BETWEEN %s AND %s THEN 1 ELSE 0 END) as current_count,
-                    SUM(CASE WHEN u.user_registered BETWEEN %s AND %s THEN 1 ELSE 0 END) as previous_count
-                FROM $wpdb->users u
-                JOIN $wpdb->usermeta um ON u.ID = um.user_id
-                WHERE u.user_registered BETWEEN %s AND %s
-                AND um.meta_key = %s
-                AND um.meta_value LIKE %s",
-                $date_range['current_month_start'],
-                $date_range['current_month_end'],
-                $date_range['previous_month_start'],
-                $date_range['previous_month_end'],
-                $date_range['previous_month_start'],
-                $date_range['current_month_end'],
-                $wpdb->prefix . 'capabilities',
-                '%customer%'
-            )
-        );
-
-        $new_customers_current  = $results->current_count ?? 0;
-        $new_customers_previous = $results->previous_count ?? 0;
-
-        // Order cancellation rate.
-        $stats = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT 
-                    CASE 
-                        WHEN post_date BETWEEN %s AND %s THEN 'current'
-                        WHEN post_date BETWEEN %s AND %s THEN 'previous'
-                    END as period,
-                    COUNT(*) as total_orders,
-                    SUM(CASE WHEN post_status = 'wc-cancelled' THEN 1 ELSE 0 END) as cancelled_orders
-                FROM $wpdb->posts 
-                WHERE post_type = 'shop_order' 
-                AND (
-                    (post_date BETWEEN %s AND %s) OR 
-                    (post_date BETWEEN %s AND %s)
-                )
-                GROUP BY period",
-                $date_range['current_month_start'], $date_range['current_month_end'],    // CASE condition
-                $date_range['previous_month_start'], $date_range['previous_month_end'],  // CASE condition
-                $date_range['current_month_start'], $date_range['current_month_end'],    // WHERE condition
-                $date_range['previous_month_start'], $date_range['previous_month_end']   // WHERE condition
-            )
-        );
-
-        $order_stats = [];
-        foreach ( $stats as $stat ) {
-            $order_stats[ $stat->period ] = [
-                'total_orders'     => (int) ( $stat->total_orders ?? 0 ),
-                'cancelled_orders' => (int) ( $stat->cancelled_orders ?? 0 ),
-            ];
-        }
+        $date_range    = $this->parse_date_range( $date );
+        $overview_data = AdminDashboardStats::get_monthly_overview( $date_range );
 
         return apply_filters(
             'dokan_rest_admin_dashboard_monthly_overview_data',
-            [
-                'new_products' => [
-                    'icon'     => 'Box',
-                    'current'  => (int) $new_products_current,
-                    'previous' => (int) $new_products_previous,
-                    'title'    => esc_html__( 'New Products', 'dokan-lite' ),
-                    'tooltip'  => esc_html__( 'New products published in the month', 'dokan-lite' ),
-                ],
-                'active_vendors' => [
-                    'icon'     => 'UserCog',
-                    'current'  => (int) $active_vendors_current,
-                    'previous' => (int) $active_vendors_previous,
-                    'title'    => esc_html__( 'Active Vendors', 'dokan-lite' ),
-                    'tooltip'  => esc_html__( 'Vendors sold minimum 1 product', 'dokan-lite' ),
-                ],
-                'new_customers' => [
-                    'icon'     => 'FileUser',
-                    'current'  => (int) $new_customers_current,
-                    'previous' => (int) $new_customers_previous,
-                    'title'    => esc_html__( 'New Customers', 'dokan-lite' ),
-                    'tooltip'  => esc_html__( 'Total new customers registered in the time period', 'dokan-lite' ),
-                ],
-                'order_cancellation_rate' => [
-                    ...$order_stats,
-                    'icon'    => 'BanknoteX',
-                    'title'   => esc_html__( 'Order Cancellation Rate', 'dokan-lite' ),
-                    'tooltip' => esc_html__( 'Rate of orders which got cancelled in the time period', 'dokan-lite' ),
-                ],
-            ],
+            $overview_data,
             $date_range,
             $this
         );
@@ -776,17 +643,17 @@ class AdminDashboardController extends DokanBaseAdminController {
      *
      * @return array
      */
-	public function get_filtered_product_types() {
-		$exclude_product_types = apply_filters(
+    public function get_filtered_product_types() {
+        $exclude_product_types = apply_filters(
             'dokan_rest_admin_dashboard_exclude_product_types',
             [ 'product_pack', 'subscription' ]
-		);
+        );
 
-		return array_filter(
+        return array_filter(
             wc_get_product_types(),
             function ( $type ) use ( $exclude_product_types ) {
                 return ! in_array( $type, $exclude_product_types, true );
             }
         );
-	}
+    }
 }

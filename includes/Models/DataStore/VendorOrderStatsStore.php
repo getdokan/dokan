@@ -116,12 +116,7 @@ class VendorOrderStatsStore extends BaseDataStore {
 
 		$vendors = $wpdb->get_results( $this->get_query_statement(), ARRAY_A );
 
-		return apply_filters(
-            'dokan_admin_dashboard_top_performing_vendors',
-            $vendors ?? [],
-            $limit,
-            $this->get_table_name_with_prefix()
-        );
+		return $vendors ?? [];
 	}
 
     /**
