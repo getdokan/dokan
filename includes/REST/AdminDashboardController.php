@@ -68,7 +68,7 @@ class AdminDashboardController extends DokanBaseAdminController {
             $this->namespace, '/' . $this->rest_base . '/sales-chart', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_sales_chart_data_endpoint' ],
+                    'callback'            => [ $this, 'get_sales_chart_data' ],
                     'permission_callback' => [ $this, 'check_permission' ],
                 ],
             ]
@@ -234,11 +234,11 @@ class AdminDashboardController extends DokanBaseAdminController {
      *
      * @return WP_REST_Response
      */
-    public function get_sales_chart_data_endpoint( $request ) {
+    public function get_sales_chart_data( $request ) {
         // Get the selected month and year from the request (same as monthly overview)
         $date = $request->get_param( 'date' ) ? sanitize_text_field( $request->get_param( 'date' ) ) : date( 'Y-m' );
 
-        return rest_ensure_response( $this->get_sales_chart_data( $date ) );
+        return rest_ensure_response( $this->get_sales_chart( $date ) );
     }
 
     /**
@@ -523,7 +523,7 @@ class AdminDashboardController extends DokanBaseAdminController {
      *
      * @return array
      */
-    public function get_sales_chart_data( $date = '' ) {
+    public function get_sales_chart( $date = '' ) {
         // Current month totals
         $date_range = $this->parse_date_range( $date );
         $current    = AdminDashboardStats::get_sales_chart_data(
