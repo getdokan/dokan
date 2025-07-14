@@ -3,20 +3,19 @@
 namespace WeDevs\Dokan\Admin\Settings\Elements;
 
 use WeDevs\Dokan\Abstracts\SettingsElement;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Checkbox;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Commission\CategoryBasedCommission;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Commission\CombineInput;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Currency;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\MultiCheck;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Number;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Password;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Radio;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\RadioBox;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Select;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Switcher;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Tel;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields\Text;
-
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Checkbox;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CategoryBasedCommission;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CombineInput;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Currency;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\MultiCheck;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Number;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Password;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Radio;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioBox;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Select;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Text;
 
 /**
  * Settings element Field.

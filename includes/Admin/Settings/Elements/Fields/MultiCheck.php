@@ -3,7 +3,7 @@
 namespace WeDevs\Dokan\Admin\Settings\Elements\Fields;
 
 use WeDevs\Dokan\Abstracts\SettingsElement;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Field;
+use WeDevs\Dokan\Admin\Settings\Elements\Field;
 
 /**
  * CheckboxGroup Field.
