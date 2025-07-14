@@ -189,7 +189,6 @@ abstract class Settings extends SettingsElement {
         try {
             $this->describe_settings();
         } catch ( Exception $e ) {
-            error_log( $e->getMessage() );
             dokan_log( $e->getMessage() );
         }
     }

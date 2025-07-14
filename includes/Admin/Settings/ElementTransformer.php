@@ -76,16 +76,6 @@ class ElementTransformer implements TransformerInterface {
         return $this;
     }
 
-    public function set_conversion( array $conversion ) {
-        if ( ! is_array( $conversion ) ) {
-            throw new \InvalidArgumentException( esc_html__( 'Conversion data must be an array.', 'dokan-lite' ) );
-        }
-
-        $this->conversion = $conversion;
-
-        return $this;
-    }
-
     /**
      * Create a SettingsElement from field configuration array.
      *
