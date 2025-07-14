@@ -2,10 +2,8 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Utilities\ReportUtil;
 use WeDevs\Dokan\Models\VendorOrderStats;
-use WeDevs\DokanPro\Modules\ProductQA\Models\Question;
-use WeDevs\DokanPro\Modules\RequestForQuotation\Helper as QuoteHelper;
-use WeDevs\DokanPro\Modules\VendorVerification\Models\VerificationRequest;
 use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -166,13 +164,6 @@ class AdminDashboardController extends DokanBaseAdminController {
                         'count' => $this->get_pending_withdrawals_count(),
                         'title' => esc_html__( 'Pending Withdrawals', 'dokan-lite' ),
                     ],
-
-                    // From dokan-pro
-    //                'pending_verifications' => $this->get_pending_verifications_count(),
-    //                'open_support_tickets'  => $this->get_open_support_tickets_count(),
-    //                'return_requests'       => $this->get_return_requests_count(),
-    //                'product_inquiries'     => $this->get_product_inquiries_count(),
-    //                'pending_quotes'        => $this->get_pending_quotes_count(),
                 ]
             ),
             'monthly_overview'       => $this->get_monthly_overview( $date ),
@@ -576,7 +567,7 @@ class AdminDashboardController extends DokanBaseAdminController {
                 FROM {$wpdb->posts} p1
                 JOIN {$wpdb->postmeta} pm ON p1.ID = pm.post_id AND pm.meta_key = '_customer_user' AND pm.meta_value > 0
                 WHERE p1.post_type = 'shop_order'
-                AND p1.post_status IN ('wc-completed', 'wc-processing', 'wc-on-hold')
+                AND p1.post_status NOT IN ( '" . implode( "','", ReportUtil::get_exclude_order_statuses() ) . "' )
                 AND DATE(p1.post_date) BETWEEN %s AND %s
                 AND pm.meta_value IN (
                     SELECT DISTINCT pm2.meta_value
