@@ -10,20 +10,20 @@ import { arrowRight, chartBar } from '@wordpress/icons';
 
 /**
  * Internal dependencies
- * Disable all the components lazy loaded in this file
  */
 import DashboardCharts from './dashboard-charts';
 
 const LazyLeaderboards = lazy( () =>
     import( /* webpackChunkName: "leaderboards" */ './leaderboards' )
 );
-import StorePerformance from './store-performance';
 
 const Leaderboards = ( props ) => (
     <Suspense fallback={ <Spinner /> }>
         <LazyLeaderboards { ...props } />
     </Suspense>
 );
+
+import StorePerformance from './store-performance';
 
 const DEFAULT_SECTIONS_FILTER = 'woocommerce_dashboard_default_sections';
 
