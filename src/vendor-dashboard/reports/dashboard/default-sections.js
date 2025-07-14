@@ -3,14 +3,27 @@
  */
 import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
-// eslint-disable-next-line import/no-extraneous-dependencies
+import { lazy, Suspense } from '@wordpress/element';
+import { Spinner } from '@woocommerce/components';
 import { arrowRight, chartBar } from '@wordpress/icons';
+// import ListOrdered from "gridicons/dist/list-ordered";
 
 /**
  * Internal dependencies
+ * Disable all the components lazy loaded in this file
  */
 import DashboardCharts from './dashboard-charts';
+
+const LazyLeaderboards = lazy( () =>
+    import( /* webpackChunkName: "leaderboards" */ './leaderboards' )
+);
 import StorePerformance from './store-performance';
+
+const Leaderboards = ( props ) => (
+    <Suspense fallback={ <Spinner /> }>
+        <LazyLeaderboards { ...props } />
+    </Suspense>
+);
 
 const DEFAULT_SECTIONS_FILTER = 'woocommerce_dashboard_default_sections';
 
