@@ -117,7 +117,7 @@ class VendorOrderStatsStore extends BaseDataStore {
         $this->add_sql_clause( 'order_by', 'total_earning DESC' );
         $this->add_sql_clause( 'limit', 'LIMIT ' . $limit );
 
-        $vendors = $wpdb->get_results( $this->get_query_statement(), ARRAY_A );
+        $vendors = $wpdb->get_results( $this->get_query_statement(), ARRAY_A ); // phpcs:ignore
 
         return $vendors ?? [];
     }
@@ -153,11 +153,14 @@ class VendorOrderStatsStore extends BaseDataStore {
         // Where conditions.
         $this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", ReportUtil::get_exclude_order_statuses() ) . "' )" );
         $this->add_sql_clause( 'where', 'AND wos.total_sales > 0' );
-        $this->add_sql_clause( 'where', $wpdb->prepare(
-            'AND wos.date_created BETWEEN %s AND %s',
-            $start_date . ' 00:00:00',
-            $end_date . ' 23:59:59'
-        ) );
+        $this->add_sql_clause(
+            'where',
+            $wpdb->prepare(
+                'AND wos.date_created BETWEEN %s AND %s',
+                $start_date . ' 00:00:00',
+                $end_date . ' 23:59:59'
+            )
+        );
 
         // Group by and order by.
         if ( $group_by_day ) {
@@ -167,18 +170,21 @@ class VendorOrderStatsStore extends BaseDataStore {
 
         // Build & log query
         $query_statement = $this->get_query_statement();
-        $results         = $wpdb->get_results( $query_statement, ARRAY_A );
+        $results         = $wpdb->get_results( $query_statement, ARRAY_A ); // phpcs:ignore
 
         if ( $group_by_day ) {
-            return array_map( function ( $row ) {
-                return [
-                    'date'        => $row['date'],
-                    'total_sales' => (float) $row['total_sales'],
-                    'net_sales'   => (float) $row['net_sales'],
-                    'commissions' => (float) $row['commissions'],
-                    'order_count' => (int) $row['order_count'],
-                ];
-            }, $this->fill_missing_dates( $results, $start_date, $end_date ) );
+            return array_map(
+                function ( $row ) {
+                    return [
+                        'date'        => $row['date'],
+                        'total_sales' => (float) $row['total_sales'],
+                        'net_sales'   => (float) $row['net_sales'],
+                        'commissions' => (float) $row['commissions'],
+                        'order_count' => (int) $row['order_count'],
+                    ];
+                },
+                $this->fill_missing_dates( $results, $start_date, $end_date )
+            );
         }
 
         $result = $results[0] ?? [];
