@@ -1,24 +1,27 @@
-import {
-    Popover,
-    PopoverButton,
-    PopoverPanel,
-    Transition,
-} from '@headlessui/react';
-import { useRef, useState } from '@wordpress/element';
-import { useOnClickOutside } from 'usehooks-ts';
+import { useState } from '@wordpress/element';
 import { DatePicker } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { DokanButton } from './index';
+import Popover from '@dokan/components/Popover';
+import { DatePickerProps } from '@wordpress/components/build-types/date-time/types';
+import { twMerge } from 'tailwind-merge';
 
-const WpDatePicker = ( props ) => {
-    const [ isOpen, setIsOpen ] = useState< boolean >( false );
-    const ref = useRef( null );
-    useOnClickOutside( ref, () => setIsOpen( ! isOpen ) );
+interface Props extends DatePickerProps {
+    children?: React.ReactNode | JSX.Element;
+    wrapperClassName?: string;
+    pickerToggleClassName?: string;
+    wpPopoverClassName?: string;
+    popoverBodyClassName?: string;
+}
+
+const WpDatePicker = ( props: Props ) => {
+    const [ popoverAnchor, setPopoverAnchor ] = useState();
+    const [ isVisible, setIsVisible ] = useState( false );
 
     const updatedProps = {
         ...props,
         onChange: ( updatedDate ) => {
-            setIsOpen( false );
+            setIsVisible( false );
 
             if ( props.onChange ) {
                 props.onChange( updatedDate );
@@ -27,29 +30,40 @@ const WpDatePicker = ( props ) => {
     };
 
     return (
-        <Popover className="relative">
-            <PopoverButton
-                className="shadow-none rounded w-full"
-                onClick={ () => setIsOpen( ! isOpen ) }
+        <div className={ props?.wrapperClassName ?? '' }>
+            { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */ }
+            <div
+                className={ props?.pickerToggleClassName ?? '' }
+                onClick={ () => {
+                    setIsVisible( ! isVisible );
+                } }
+                // @ts-ignore
+                ref={ setPopoverAnchor }
             >
                 { props.children ?? '' }
-            </PopoverButton>
-            <Transition
-                show={ isOpen }
-                enter="transition duration-200 ease-out"
-                enterFrom="transform scale-95 opacity-0"
-                enterTo="transform scale-100 opacity-100"
-                leave="transition duration-150 ease-out"
-                leaveFrom="transform scale-100 opacity-100"
-                leaveTo="transform scale-95 opacity-0"
-            >
-                <PopoverPanel
-                    anchor="bottom"
-                    className="absolute flex rounded shadow-xl border"
+            </div>
+
+            { isVisible && (
+                <Popover
+                    animate
+                    anchor={ popoverAnchor }
+                    focusOnMount={ true }
+                    onClose={ () => {
+                        setIsVisible( ! isVisible );
+                    } }
+                    onFocusOutside={ () => {
+                        setIsVisible( ! isVisible );
+                    } }
+                    className={ twMerge(
+                        props?.wpPopoverClassName ?? '',
+                        'dokan-layout'
+                    ) }
                 >
                     <div
-                        className="p-4 w-auto flex-auto overflow-hidden bg-white text-sm/6 z-40"
-                        ref={ ref }
+                        className={ twMerge(
+                            'p-4 w-auto text-sm/6',
+                            props?.popoverBodyClassName ?? ''
+                        ) }
                     >
                         <DatePicker { ...updatedProps } />
                         <DokanButton
@@ -60,9 +74,9 @@ const WpDatePicker = ( props ) => {
                             { __( 'Clear', 'dokan-lite' ) }
                         </DokanButton>
                     </div>
-                </PopoverPanel>
-            </Transition>
-        </Popover>
+                </Popover>
+            ) }
+        </div>
     );
 };
 
