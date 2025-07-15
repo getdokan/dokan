@@ -102,12 +102,14 @@ class AdminDashboardStatsStore extends BaseDataStore {
         $exclude_order_statuses = ReportUtil::get_exclude_order_statuses();
 
         $this->clear_all_clauses();
+        // phpcs:disable WordPress.PreparedSQL.NotPrepared
         $this->add_sql_clause( 'select', 'COUNT(DISTINCT pm.meta_value)' );
         $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() . ' p1' );
         $this->add_sql_clause( 'join', "JOIN {$wpdb->postmeta} pm ON p1.ID = pm.post_id AND pm.meta_key = '_customer_user' AND pm.meta_value > 0" );
         $this->add_sql_clause( 'where', " AND p1.post_type = 'shop_order'" );
         $this->add_sql_clause( 'where', " AND p1.post_status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
         $this->add_sql_clause( 'where', $wpdb->prepare( ' AND DATE(p1.post_date) BETWEEN %s AND %s', $start_date, $end_date ) );
+
         $this->add_sql_clause(
             'where',
             $wpdb->prepare(
@@ -124,7 +126,8 @@ class AdminDashboardStatsStore extends BaseDataStore {
         );
 
         $query_statement = $this->get_query_statement();
-        $result          = $wpdb->get_row( $query_statement, ARRAY_A ); // phpcs:ignore
+        $result          = $wpdb->get_row( $query_statement, ARRAY_A );
+        // phpcs:enable WordPress.PreparedSQL.NotPrepared
 
         return apply_filters(
             'dokan_admin_dashboard_customer_metrics',
