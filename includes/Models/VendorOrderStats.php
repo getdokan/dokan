@@ -19,13 +19,6 @@ class VendorOrderStats extends BaseModel {
 	protected $object_type = 'dokan_vendor_order_stats';
 
 	/**
-	 * Cache group.
-	 *
-	 * @var string
-	 */
-	protected $cache_group = 'dokan_vendor_order_stats';
-
-	/**
 	 * The default data of the object.
 	 *
 	 * @var array
@@ -427,5 +420,4 @@ class VendorOrderStats extends BaseModel {
     public static function get_sales_chart_data( string $start_date, string $end_date, bool $group_by_day = false ): array {
 		return ( new static() )->get_data_store()->get_sales_chart_data( $start_date, $end_date, $group_by_day );
 	}
-
 }
