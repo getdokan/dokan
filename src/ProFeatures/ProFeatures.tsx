@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import crownSmallImg from './assets/crown-small.png';
 import fcmImg from './assets/FCM.png';
 import aerImg from './assets/AER.png';
@@ -18,6 +18,137 @@ import storeImg from './assets/store.png';
 import brandingImg from './assets/branding.png';
 import supportImg from './assets/support.png';
 import dokanAiBanner from './assets/DokanAi.png';
+import { Check } from 'lucide-react';
+
+interface FeatureData {
+  features: string[];
+  lite: boolean[];
+  pro: boolean[];
+}
+
+interface Category {
+  title: string;
+  key: string;
+}
+
+const categories: Category[] = [
+  { title: 'Vendor & Product Management', key: 'vendor' },
+  { title: 'Payment & Commission Systems', key: 'payment' },
+  { title: 'Sales, Orders & Customer Support', key: 'sales' },
+  { title: 'Marketing, SEO & Compliance', key: 'marketing' },
+  { title: 'Migration, Integration & Support', key: 'migration' },
+];
+
+const featureData: Record<string, FeatureData> = {
+  vendor: {
+    features: [
+      'Frontend Dashboard for Vendors',
+      'Frontend Simple Product',
+      'Frontend Variable Products',
+      'Individual Vendor Stores',
+      'Product Bulk Edit',
+      'Single Product Multivendor',
+      'WC Booking Integration',
+      'WC Auction Integration',
+      'Wholesale',
+    ],
+    lite: [true, true, true, true, false, false, false, false, false],
+    pro: [true, true, true, true, true, true, true, true, true],
+  },
+  payment: {
+    features: ['Payment Gateway Integration', 'Commission Management', 'Automated Withdrawals'],
+    lite: [true, true, false],
+    pro: [true, true, true],
+  },
+  sales: {
+    features: ['Order Tracking', 'Customer Support Ticket System', 'Refund Management'],
+    lite: [true, true, false],
+    pro: [true, true, true],
+  },
+  marketing: {
+    features: ['SEO Tools', 'Marketing Campaigns', 'Compliance Reports'],
+    lite: [true, false, false],
+    pro: [true, true, true],
+  },
+  migration: {
+    features: ['Data Migration', 'API Integration', 'Technical Support'],
+    lite: [true, true, true],
+    pro: [true, true, true],
+  },
+};
+
+const FeatureComparison: React.FC = () => {
+  const [activeCategory, setActiveCategory] = useState<string>('vendor');
+  const { features, lite, pro } = featureData[activeCategory];
+
+  return (
+    <section className="w-full max-w-7xl mx-auto px-4 md:px-6 py-16">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+          Dokan Lite vs Dokan Pro
+        </h2>
+        <button className="text-sm font-medium border border-purple-500 text-purple-600 px-4 py-2 rounded-md hover:bg-purple-50 transition">
+          Explore All Features
+        </button>
+      </div>
+
+      <div className="flex flex-col md:flex-row rounded-xl overflow-hidden shadow-sm border border-gray-200">
+        {/* Sidebar */}
+        <div className="flex md:flex-col border-b md:border-b-0 md:border-r border-gray-200 bg-white w-full md:w-72">
+          {categories.map((category) => (
+            <button
+              key={category.key}
+              onClick={() => setActiveCategory(category.key)}
+              className={`w-full text-left px-4 py-4 text-sm font-semibold transition whitespace-normal
+                ${category.key === activeCategory ? 'bg-black text-white' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'}`}
+            >
+              {category.title}
+            </button>
+          ))}
+        </div>
+
+        {/* Feature Table */}
+        <div className="flex-1 w-full overflow-x-auto">
+          <div className="min-w-[600px]">
+            <div className="grid grid-cols-3 text-sm font-semibold px-6 py-4 bg-white border-b border-gray-200">
+              <div>Features</div>
+              <div className="text-center">Lite</div>
+              <div className="text-center">Pro</div>
+            </div>
+
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-3 items-center text-sm px-6 py-4 bg-white border-b border-gray-100"
+              >
+                <div>{feature}</div>
+                <div className="text-center">
+                  {lite[index] ? (
+                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-600">
+                      <Check size={16} />
+                    </span>
+                  ) : (
+                    <span className="inline-block w-6 h-6" />
+                  )}
+                </div>
+                <div className="text-center">
+                  {pro[index] ? (
+                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-600">
+                      <Check size={16} />
+                    </span>
+                  ) : (
+                    <span className="inline-block w-6 h-6" />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 
 function DokanAIBanner() {
     return (
@@ -243,6 +374,11 @@ function ProFeatures() {
             {/* Dokan AI Banner */}
             <div>
                 <DokanAIBanner />
+            </div>
+
+            {/* Dokan lite vs pro */}
+            <div>
+                <FeatureComparison />
             </div>
         </div>
     );
