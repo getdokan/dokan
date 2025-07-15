@@ -202,23 +202,31 @@ class AdminDashboardStatsStore extends BaseDataStore {
         global $wpdb;
 
         $this->clear_all_clauses();
-        $this->add_sql_clause( 'select', $wpdb->prepare( 
-            'CASE 
-                WHEN post_date BETWEEN %s AND %s THEN \'current\'
-                WHEN post_date BETWEEN %s AND %s THEN \'previous\'
-            END as period,',
-            $date_range['current_month_start'], $date_range['current_month_end'],
-            $date_range['previous_month_start'], $date_range['previous_month_end']
-        ) );
+        $this->add_sql_clause(
+            'select',
+            $wpdb->prepare(
+                'CASE 
+                    WHEN post_date BETWEEN %s AND %s THEN \'current\'
+                    WHEN post_date BETWEEN %s AND %s THEN \'previous\'
+                END as period,',
+                $date_range['current_month_start'], $date_range['current_month_end'],
+                $date_range['previous_month_start'], $date_range['previous_month_end']
+            )
+        );
         $this->add_sql_clause( 'select', 'COUNT(*) as total_orders,' );
         $this->add_sql_clause( 'select', 'SUM(CASE WHEN post_status = \'wc-cancelled\' THEN 1 ELSE 0 END) as cancelled_orders' );
         $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() );
         $this->add_sql_clause( 'where', " AND post_type = 'shop_order'" );
-        $this->add_sql_clause( 'where', $wpdb->prepare( 
-            ' AND ((post_date BETWEEN %s AND %s) OR (post_date BETWEEN %s AND %s))',
-            $date_range['current_month_start'], $date_range['current_month_end'],
-            $date_range['previous_month_start'], $date_range['previous_month_end']
-        ) );
+        $this->add_sql_clause(
+            'where',
+            $wpdb->prepare(
+                ' AND ((post_date BETWEEN %s AND %s) OR (post_date BETWEEN %s AND %s))',
+                $date_range['current_month_start'],
+                $date_range['current_month_end'],
+                $date_range['previous_month_start'],
+                $date_range['previous_month_end']
+            )
+        );
         $this->add_sql_clause( 'group_by', 'period' );
 
         $query_statement = $this->get_query_statement();

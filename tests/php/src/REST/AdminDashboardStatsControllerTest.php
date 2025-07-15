@@ -83,7 +83,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
      */
     public function test_if_endpoints_exist() {
         $routes = $this->server->get_routes( $this->namespace );
-        
+
         $expected_endpoints = [
             'todo',
             'monthly-overview',
@@ -91,7 +91,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
             'customer-metrics',
             'all-time-stats',
             'top-performing-vendors',
-            'most-reviewed-products'
+            'most-reviewed-products',
         ];
 
         foreach ( $expected_endpoints as $endpoint ) {
@@ -110,7 +110,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
         $controller->register_routes();
 
         $routes = $this->server->get_routes( $this->namespace );
-        
+
         $expected_endpoints = [
             'todo',
             'monthly-overview',
@@ -118,7 +118,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
             'customer-metrics',
             'all-time-stats',
             'top-performing-vendors',
-            'most-reviewed-products'
+            'most-reviewed-products',
         ];
 
         foreach ( $expected_endpoints as $endpoint ) {
