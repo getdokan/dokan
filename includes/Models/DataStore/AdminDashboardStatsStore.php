@@ -108,18 +108,20 @@ class AdminDashboardStatsStore extends BaseDataStore {
         $this->add_sql_clause( 'where', " AND p1.post_type = 'shop_order'" );
         $this->add_sql_clause( 'where', " AND p1.post_status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
         $this->add_sql_clause( 'where', $wpdb->prepare( ' AND DATE(p1.post_date) BETWEEN %s AND %s', $start_date, $end_date ) );
-        $this->add_sql_clause( 'where', $wpdb->prepare(
-            "AND pm.meta_value IN (
-                SELECT DISTINCT pm2.meta_value
-                FROM {$wpdb->posts} p2
-                JOIN {$wpdb->postmeta} pm2 ON p2.ID = pm2.post_id AND pm2.meta_key = '_customer_user' AND pm2.meta_value > 0
-                WHERE p2.post_type = 'shop_order'
-                AND p2.post_status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )
-                AND DATE(p2.post_date) < %s
-            )",
-            $start_date
-        ) );
-
+        $this->add_sql_clause(
+            'where',
+            $wpdb->prepare(
+                "AND pm.meta_value IN (
+                    SELECT DISTINCT pm2.meta_value
+                    FROM {$wpdb->posts} p2
+                    JOIN {$wpdb->postmeta} pm2 ON p2.ID = pm2.post_id AND pm2.meta_key = '_customer_user' AND pm2.meta_value > 0
+                    WHERE p2.post_type = 'shop_order'
+                    AND p2.post_status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )
+                    AND DATE(p2.post_date) < %s
+                )",
+                $start_date
+            )
+        );
 
         $query_statement = $this->get_query_statement();
         $result          = $wpdb->get_row( $query_statement, ARRAY_A ); // phpcs:ignore
@@ -149,16 +151,22 @@ class AdminDashboardStatsStore extends BaseDataStore {
         global $wpdb;
 
         $this->clear_all_clauses();
-        $this->add_sql_clause( 'select', $wpdb->prepare( 
-            'SUM(CASE WHEN u.user_registered BETWEEN %s AND %s THEN 1 ELSE 0 END) as current_count,',
-            $date_range['current_month_start'],
-            $date_range['current_month_end']
-        ) );
-        $this->add_sql_clause( 'select', $wpdb->prepare( 
-            'SUM(CASE WHEN u.user_registered BETWEEN %s AND %s THEN 1 ELSE 0 END) as previous_count',
-            $date_range['previous_month_start'],
-            $date_range['previous_month_end']
-        ) );
+        $this->add_sql_clause(
+            'select',
+            $wpdb->prepare(
+                'SUM(CASE WHEN u.user_registered BETWEEN %s AND %s THEN 1 ELSE 0 END) as current_count,',
+                $date_range['current_month_start'],
+                $date_range['current_month_end']
+            )
+        );
+        $this->add_sql_clause(
+            'select',
+            $wpdb->prepare(
+                'SUM(CASE WHEN u.user_registered BETWEEN %s AND %s THEN 1 ELSE 0 END) as previous_count',
+                $date_range['previous_month_start'],
+                $date_range['previous_month_end']
+            )
+        );
         $this->add_sql_clause( 'from', "{$wpdb->users} u" );
         $this->add_sql_clause( 'join', "JOIN {$wpdb->usermeta} um ON u.ID = um.user_id" );
         $this->add_sql_clause( 'where', $wpdb->prepare( ' AND u.user_registered BETWEEN %s AND %s', $date_range['previous_month_start'], $date_range['current_month_end'] ) );
@@ -295,7 +303,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
      */
     public function get_active_vendors_data( array $date_range ): array {
         // Use VendorOrderStatsStore for dokan_order_stats queries
-        $current_count  = $this->vendor_order_stats_store->get_active_vendors_count(
+        $current_count = $this->vendor_order_stats_store->get_active_vendors_count(
             $date_range['current_month_start'],
             $date_range['current_month_end']
         );

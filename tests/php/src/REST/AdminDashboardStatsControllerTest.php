@@ -2,12 +2,12 @@
 
 namespace WeDevs\Dokan\Test\REST;
 
-use WeDevs\Dokan\REST\AdminDashboardController;
+use WeDevs\Dokan\REST\AdminDashboardStatsController;
 use WeDevs\Dokan\Test\DokanTestCase;
 use WP_REST_Request;
 use WP_REST_Server;
 
-class AdminDashboardControllerTest extends DokanTestCase {
+class AdminDashboardStatsControllerTest extends DokanTestCase {
 
     /**
      * @var WP_REST_Server
@@ -106,7 +106,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
      * @return void
      */
     public function test_register_routes() {
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $controller->register_routes();
 
         $routes = $this->server->get_routes( $this->namespace );
@@ -133,10 +133,10 @@ class AdminDashboardControllerTest extends DokanTestCase {
      * @return void
      */
     public function test_permission_callback() {
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $request = new WP_REST_Request( 'GET', "/{$this->namespace}/{$this->rest_base}/todo" );
 
-        // Test without user
+        // Test without a user
         wp_set_current_user( 0 );
         $this->assertFalse( $controller->check_permission( $request ) );
 
@@ -162,7 +162,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
         wp_set_current_user( $this->admin_id );
 
         $request = new WP_REST_Request( 'GET', "/{$this->namespace}/{$this->rest_base}/todo" );
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $response = $controller->get_to_do();
 
         $this->assertEquals( 200, $response->get_status() );
@@ -191,7 +191,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
 
         // Test with default date
         $request = new WP_REST_Request( 'GET', "/{$this->namespace}/{$this->rest_base}/monthly-overview" );
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $response = $controller->get_monthly_overview_data( $request );
 
         $this->assertEquals( 200, $response->get_status() );
@@ -214,7 +214,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
 
         // Test with default date
         $request = new WP_REST_Request( 'GET', "/{$this->namespace}/{$this->rest_base}/sales-chart" );
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $response = $controller->get_sales_chart_data( $request );
 
         $this->assertEquals( 200, $response->get_status() );
@@ -237,7 +237,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
 
         // Test with default date
         $request = new WP_REST_Request( 'GET', "/{$this->namespace}/{$this->rest_base}/customer-metrics" );
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $response = $controller->get_customer_metrics_data( $request );
 
         $this->assertEquals( 200, $response->get_status() );
@@ -258,7 +258,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
     public function test_get_all_time_stats_data() {
         wp_set_current_user( $this->admin_id );
 
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $response = $controller->get_all_time_stats_data();
 
         $this->assertEquals( 200, $response->get_status() );
@@ -274,7 +274,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
     public function test_get_top_performing_vendors_data() {
         wp_set_current_user( $this->admin_id );
 
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $response = $controller->get_top_performing_vendors_data();
 
         $this->assertEquals( 200, $response->get_status() );
@@ -290,7 +290,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
     public function test_get_most_reviewed_products_data() {
         wp_set_current_user( $this->admin_id );
 
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $response = $controller->get_most_reviewed_products_data();
 
         $this->assertEquals( 200, $response->get_status() );
@@ -306,7 +306,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
     public function test_get_vendor_approvals_count() {
         wp_set_current_user( $this->admin_id );
 
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $count = $controller->get_vendor_approvals_count();
 
         $this->assertIsInt( $count );
@@ -321,7 +321,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
     public function test_get_product_approvals_count() {
         wp_set_current_user( $this->admin_id );
 
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $count = $controller->get_product_approvals_count();
 
         $this->assertIsInt( $count );
@@ -336,7 +336,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
     public function test_get_pending_withdrawals_count() {
         wp_set_current_user( $this->admin_id );
 
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $count = $controller->get_pending_withdrawals_count();
 
         $this->assertIsInt( $count );
@@ -349,7 +349,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
      * @return void
      */
     public function test_parse_date_range() {
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
 
         // Test with valid date
         $result = $controller->parse_date_range( '2024-02' );
@@ -374,7 +374,7 @@ class AdminDashboardControllerTest extends DokanTestCase {
      * @return void
      */
     public function test_get_filtered_product_types() {
-        $controller = new AdminDashboardController();
+        $controller = new AdminDashboardStatsController();
         $product_types = $controller->get_filtered_product_types();
 
         $this->assertIsArray( $product_types );

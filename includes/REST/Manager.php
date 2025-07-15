@@ -210,7 +210,7 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/OrderControllerV3.php'                 => '\WeDevs\Dokan\REST\OrderControllerV3',
                 DOKAN_DIR . '/includes/REST/AdminOnboardingController.php'         => '\WeDevs\Dokan\REST\AdminOnboardingController',
                 DOKAN_DIR . '/includes/REST/VendorProductCategoriesController.php' => '\WeDevs\Dokan\REST\VendorProductCategoriesController',
-                DOKAN_DIR . '/includes/REST/AdminDashboardController.php'          => '\WeDevs\Dokan\REST\AdminDashboardController',
+                DOKAN_DIR . '/includes/REST/AdminDashboardStatsController.php'     => '\WeDevs\Dokan\REST\AdminDashboardStatsController',
             )
         );
     }
