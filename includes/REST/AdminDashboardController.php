@@ -6,6 +6,7 @@ use WP_REST_Server;
 use WP_REST_Request;
 use WP_REST_Response;
 use WeDevs\Dokan\Models\AdminDashboardStats;
+use WeDevs\Dokan\Models\VendorOrderStats;
 use Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query as DataStore;
 
 /**
@@ -458,18 +459,9 @@ class AdminDashboardController extends DokanBaseAdminController {
     public function get_sales_chart( $date = '' ) {
         // Current month totals
         $date_range = $this->parse_date_range( $date );
-        $current    = AdminDashboardStats::get_sales_chart_data(
-            $date_range['current_month_start'],
-            $date_range['current_month_end']
-        );
-        // Previous month totals
-        $previous = AdminDashboardStats::get_sales_chart_data(
-            $date_range['previous_month_start'],
-            $date_range['previous_month_end']
-        );
 
-        // Get daily breakdown
-        $current_daily  = VendorOrderStats::get_sales_chart_data(
+        // Get a daily breakdown
+        $current_daily = VendorOrderStats::get_sales_chart_data(
             $date_range['current_month_start'],
             $date_range['current_month_end'],
             true // group by day
@@ -484,18 +476,6 @@ class AdminDashboardController extends DokanBaseAdminController {
         return apply_filters(
             'dokan_rest_admin_dashboard_sales_chart_data',
             [
-                'current_month' => [
-                    'total_sales'  => (float) ( $current_totals['total_sales'] ?? 0 ),
-                    'net_sales'    => (float) ( $current_totals['net_sales'] ?? 0 ),
-                    'commissions'  => (float) ( $current_totals['commissions'] ?? 0 ),
-                    'order_count'  => (int) ( $current_totals['order_count'] ?? 0 ),
-                ],
-                'previous_month' => [
-                    'total_sales'  => (float) ( $previous_totals['total_sales'] ?? 0 ),
-                    'net_sales'    => (float) ( $previous_totals['net_sales'] ?? 0 ),
-                    'commissions'  => (float) ( $previous_totals['commissions'] ?? 0 ),
-                    'order_count'  => (int) ( $previous_totals['order_count'] ?? 0 ),
-                ],
                 'current_month_daily'  => $current_daily,
                 'previous_month_daily' => $previous_daily,
             ],
