@@ -112,20 +112,6 @@ class AdminDashboardStats extends BaseModel {
     }
 
     /**
-     * Get sales chart data.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $start_date Start date in Y-m-d format.
-     * @param string $end_date   End date in Y-m-d format.
-     *
-     * @return array Sales chart data.
-     */
-    public static function get_sales_chart_data( string $start_date, string $end_date ): array {
-        return ( new static() )->get_data_store()->get_sales_chart_data( $start_date, $end_date );
-    }
-
-    /**
      * Get top-performing vendors.
      *
      * @since DOKAN_SINCE

@@ -30,17 +30,6 @@ class AdminDashboardController extends DokanBaseAdminController {
      * @return void
      */
     public function register_routes() {
-        // Main endpoint for backward compatibility
-        register_rest_route(
-            $this->namespace, '/' . $this->rest_base, [
-                [
-                    'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_todo_counts' ],
-                    'permission_callback' => [ $this, 'check_permission' ],
-                ],
-            ]
-        );
-
         // Add a new endpoint for a to_do section
         register_rest_route(
             $this->namespace, '/' . $this->rest_base . '/todo', [
@@ -117,63 +106,6 @@ class AdminDashboardController extends DokanBaseAdminController {
                 ],
             ]
         );
-    }
-
-    /**
-     * Get todo permissions check
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    public function get_todo_permissions_check() {
-        return current_user_can( 'manage_options' );
-    }
-
-    /**
-     * Get todo counts
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_REST_Response
-     */
-    public function get_todo_counts( $request ) {
-        // Get the selected month and year from the request
-        $date = $request->get_param( 'date' ) ? sanitize_text_field( $request->get_param( 'date' ) ) : date( 'Y-m' );
-
-        $data = [
-            'to_do' => apply_filters(
-                'dokan_rest_admin_dashboard_todo_data',
-                [
-                    // From dokan-lite
-                    'vendor_approvals'    => [
-                        'icon'  => 'UserCheck',
-                        'count' => $this->get_vendor_approvals_count(),
-                        'title' => esc_html__( 'Vendor Approvals', 'dokan-lite' ),
-                    ],
-                    'product_approvals'   => [
-                        'icon'  => 'Box',
-                        'count' => $this->get_product_approvals_count(),
-                        'title' => esc_html__( 'Product Approvals', 'dokan-lite' ),
-                    ],
-                    'pending_withdrawals' => [
-                        'icon'  => 'PanelTop',
-                        'count' => $this->get_pending_withdrawals_count(),
-                        'title' => esc_html__( 'Pending Withdrawals', 'dokan-lite' ),
-                    ],
-                ]
-            ),
-            'monthly_overview'       => $this->get_monthly_overview( $date ),
-            'sales_chart'            => $this->get_sales_chart_data( $date ),
-            'customer_metrics'       => $this->get_customer_metrics(),
-            'all_time_stats'         => $this->get_all_time_stats(),
-            'top_performing_vendors' => $this->get_top_performing_vendors(),
-            'most_reviewed_product'  => $this->get_most_reviewed_products(),
-        ];
-
-        return rest_ensure_response( $data );
     }
 
     /**
