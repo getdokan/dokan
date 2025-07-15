@@ -153,7 +153,7 @@ class AdminDashboardController extends DokanBaseAdminController {
      */
     public function get_monthly_overview_data( $request ) {
         // Get the selected month and year from the request
-        $date = $request->get_param( 'date' ) ?? date( 'Y-m' );
+        $date = $request->get_param( 'date' ) ?? dokan_current_datetime()->format( 'Y-m' );
 
         return rest_ensure_response( $this->get_monthly_overview( $date ) );
     }
@@ -169,7 +169,9 @@ class AdminDashboardController extends DokanBaseAdminController {
      */
     public function get_sales_chart_data( $request ) {
         // Get the selected month and year from the request (same as monthly overview)
-        $date = $request->get_param( 'date' ) ? sanitize_text_field( $request->get_param( 'date' ) ) : date( 'Y-m' );
+        $date = $request->get_param( 'date' )
+            ? sanitize_text_field( $request->get_param( 'date' ) )
+            : dokan_current_datetime()->format( 'Y-m' );
 
         return rest_ensure_response( $this->get_sales_chart( $date ) );
     }
@@ -185,7 +187,9 @@ class AdminDashboardController extends DokanBaseAdminController {
      */
     public function get_customer_metrics_data( $request ) {
         // Get the selected month and year from the request
-        $date = $request->get_param( 'date' ) ? sanitize_text_field( $request->get_param( 'date' ) ) : date( 'Y-m' );
+        $date = $request->get_param( 'date' )
+            ? sanitize_text_field( $request->get_param( 'date' ) )
+            : dokan_current_datetime()->format( 'Y-m' );
 
         return rest_ensure_response( $this->get_customer_metrics( $date ) );
     }
@@ -400,7 +404,7 @@ class AdminDashboardController extends DokanBaseAdminController {
                 'fields' => [
                     'total_sales',
                     'total_admin_commission',
-                ]
+                ],
             ]
         );
 
@@ -539,7 +543,7 @@ class AdminDashboardController extends DokanBaseAdminController {
      */
     public function parse_date_range( $date = '' ) {
         // Parse the selected date to get year and month
-        $date       = ! empty( $date ) ? sanitize_text_field( $date ) : date( 'Y-m' );
+        $date       = ! empty( $date ) ? sanitize_text_field( $date ) : dokan_current_datetime()->format( 'Y-m' );
         $date_parts = explode( '-', $date );
         $year       = (int) ( $date_parts[0] ?? date( 'Y' ) );
         $month      = (int) ( $date_parts[1] ?? date( 'm' ) );

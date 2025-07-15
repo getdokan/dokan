@@ -8,7 +8,7 @@ use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 /**
  * Admin Dashboard API Service Provider
  *
- * @since 4.0.3
+ * @since DOKAN_SINCE
  */
 class AdminDashboardServiceProvider extends BaseServiceProvider {
     /**
@@ -30,7 +30,7 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
     /**
      * Register the services.
      *
-     * @since 4.0.3
+     * @since DOKAN_SINCE
      *
      * @return void
      */
