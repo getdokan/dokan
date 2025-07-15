@@ -545,19 +545,19 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
         // Parse the selected date to get year and month
         $date       = ! empty( $date ) ? sanitize_text_field( $date ) : dokan_current_datetime()->format( 'Y-m' );
         $date_parts = explode( '-', $date );
-        $year       = (int) ( $date_parts[0] ?? date( 'Y' ) );
-        $month      = (int) ( $date_parts[1] ?? date( 'm' ) );
+        $year       = (int) ( $date_parts[0] ?? dokan_current_datetime()->format( 'Y' ) );
+        $month      = (int) ( $date_parts[1] ?? dokan_current_datetime()->format( 'm' ) );
 
         // Ensure valid month range
         $month = max( 1, min( 12, $month ) );
 
         // Calculate the start and end dates for the selected month
-        $current_month_start = date( 'Y-m-01', strtotime( "$year-$month-01" ) );
-        $current_month_end   = date( 'Y-m-t', strtotime( "$year-$month-01" ) );
+        $current_month_start = dokan_current_datetime()->modify( "$year-$month-01" )->format( 'Y-m-01' );
+        $current_month_end   = dokan_current_datetime()->modify( "$year-$month-01" )->format( 'Y-m-t' );
 
         // Calculate the start and end dates for the previous month
-        $previous_month_start = date( 'Y-m-01', strtotime( "$year-$month-01 -1 month" ) );
-        $previous_month_end   = date( 'Y-m-t', strtotime( "$year-$month-01 -1 month" ) );
+        $previous_month_start = dokan_current_datetime()->modify( "$year-$month-01 -1 month" )->format( 'Y-m-01' );
+        $previous_month_end   = dokan_current_datetime()->modify( "$year-$month-01 -1 month" )->format( 'Y-m-t' );
 
         return [
             'current_month_start'  => $current_month_start,
