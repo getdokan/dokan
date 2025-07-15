@@ -14,51 +14,51 @@ use WeDevs\Dokan\Utilities\ReportUtil;
  */
 class VendorOrderStatsStore extends BaseDataStore {
 
-	/**
-	 * Get the fields with format as an array where key is the db field name and value is the format.
-	 *
-	 * @since DOKAN_SINCE
-	 *
-	 * @return array
-	 */
-	protected function get_fields_with_format(): array {
-		return [
-			'order_id'            => '%d',
-			'vendor_id'           => '%d',
-			'order_type'          => '%d',
-			'vendor_earning'      => '%f',
-			'vendor_gateway_fee'  => '%f',
-			'vendor_shipping_fee' => '%f',
-			'vendor_discount'     => '%f',
-			'admin_commission'    => '%f',
-			'admin_gateway_fee'   => '%f',
-			'admin_shipping_fee'  => '%f',
-			'admin_discount'      => '%f',
-			'admin_subsidy'       => '%f',
-		];
-	}
+    /**
+     * Get the fields with format as an array where key is the db field name and value is the format.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    protected function get_fields_with_format(): array {
+        return [
+            'order_id'            => '%d',
+            'vendor_id'           => '%d',
+            'order_type'          => '%d',
+            'vendor_earning'      => '%f',
+            'vendor_gateway_fee'  => '%f',
+            'vendor_shipping_fee' => '%f',
+            'vendor_discount'     => '%f',
+            'admin_commission'    => '%f',
+            'admin_gateway_fee'   => '%f',
+            'admin_shipping_fee'  => '%f',
+            'admin_discount'      => '%f',
+            'admin_subsidy'       => '%f',
+        ];
+    }
 
-	/**
-	 * Get the table name.
-	 *
-	 * @since DOKAN_SINCE
-	 *
-	 * @return string
-	 */
-	public function get_table_name(): string {
-		return 'dokan_order_stats';
-	}
+    /**
+     * Get the table name.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_table_name(): string {
+        return 'dokan_order_stats';
+    }
 
-	/**
-	 * Get the ID field name.
-	 *
-	 * @since DOKAN_SINCE
-	 *
-	 * @return string
-	 */
-	protected function get_id_field_name(): string {
-		return 'order_id';
-	}
+    /**
+     * Get the ID field name.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    protected function get_id_field_name(): string {
+        return 'order_id';
+    }
 
     /**
      * Get count of active vendors within a date range.
@@ -96,31 +96,31 @@ class VendorOrderStatsStore extends BaseDataStore {
     }
 
     /**
-	 * Get top performing vendors.
-	 *
-	 * @since DOKAN_SINCE
-	 *
-	 * @param int $limit Number of vendors to retrieve. Default 5.
-	 *
-	 * @return array Array of vendor data with sales metrics.
-	 */
-	public function get_top_performing_vendors( int $limit = 5 ): array {
-		global $wpdb;
+     * Get top performing vendors.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $limit Number of vendors to retrieve. Default 5.
+     *
+     * @return array Array of vendor data with sales metrics.
+     */
+    public function get_top_performing_vendors( int $limit = 5 ): array {
+        global $wpdb;
 
-		$this->clear_all_clauses();
-		$this->add_sql_clause( 'select', 'vendor_id,' );
-		$this->add_sql_clause( 'select', 'COUNT(order_id) as total_orders,' );
-		$this->add_sql_clause( 'select', 'SUM(vendor_earning) as total_earning,' );
-		$this->add_sql_clause( 'select', 'SUM(admin_commission) as total_commission' );
-		$this->add_sql_clause( 'from', $this->get_table_name_with_prefix() );
-		$this->add_sql_clause( 'group_by', 'vendor_id' );
-		$this->add_sql_clause( 'order_by', 'total_earning DESC' );
-		$this->add_sql_clause( 'limit', 'LIMIT ' . $limit );
+        $this->clear_all_clauses();
+        $this->add_sql_clause( 'select', 'vendor_id,' );
+        $this->add_sql_clause( 'select', 'COUNT(order_id) as total_orders,' );
+        $this->add_sql_clause( 'select', 'SUM(vendor_earning) as total_earning,' );
+        $this->add_sql_clause( 'select', 'SUM(admin_commission) as total_commission' );
+        $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() );
+        $this->add_sql_clause( 'group_by', 'vendor_id' );
+        $this->add_sql_clause( 'order_by', 'total_earning DESC' );
+        $this->add_sql_clause( 'limit', 'LIMIT ' . $limit );
 
-		$vendors = $wpdb->get_results( $this->get_query_statement(), ARRAY_A );
+        $vendors = $wpdb->get_results( $this->get_query_statement(), ARRAY_A );
 
-		return $vendors ?? [];
-	}
+        return $vendors ?? [];
+    }
 
     /**
      * Get sales chart data for a date range.
@@ -223,16 +223,11 @@ class VendorOrderStatsStore extends BaseDataStore {
 
 		$result = $results[0] ?? [];
 
-        return apply_filters(
-            'dokan_admin_dashboard_order_stats_sales_chart_data',
-            [
-                'total_sales' => (float) ( $result['total_sales'] ?? 0 ),
-                'net_sales'   => (float) ( $result['net_sales'] ?? 0 ),
-                'commissions' => (float) ( $result['commissions'] ?? 0 ),
-                'order_count' => (int) ( $result['order_count'] ?? 0 ),
-            ],
-            $start_date,
-            $end_date
-        );
+        return [
+            'total_sales' => (float) ( $result['total_sales'] ?? 0 ),
+            'net_sales'   => (float) ( $result['net_sales'] ?? 0 ),
+            'commissions' => (float) ( $result['commissions'] ?? 0 ),
+            'order_count' => (int) ( $result['order_count'] ?? 0 ),
+        ];
     }
 }

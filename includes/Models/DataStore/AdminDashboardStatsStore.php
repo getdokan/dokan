@@ -341,21 +341,6 @@ class AdminDashboardStatsStore extends BaseDataStore {
     }
 
     /**
-     * Get sales chart data using VendorOrderStatsStore.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $start_date Start date in Y-m-d format.
-     * @param string $end_date   End date in Y-m-d format.
-     *
-     * @return array Sales chart data.
-     */
-    public function get_sales_chart_data( string $start_date, string $end_date ): array {
-        // Use VendorOrderStatsStore for dokan_order_stats queries
-        return $this->vendor_order_stats_store->get_sales_chart_data( $start_date, $end_date );
-    }
-
-    /**
      * Get top performing vendors using VendorOrderStatsStore.
      *
      * @since DOKAN_SINCE
@@ -376,9 +361,17 @@ class AdminDashboardStatsStore extends BaseDataStore {
      *
      * @return array Filtered product types.
      */
-    private function get_filtered_product_types(): array {
-        $product_types = wc_get_product_types();
+    public function get_filtered_product_types(): array {
+        $exclude_product_types = apply_filters(
+            'dokan_rest_admin_dashboard_exclude_product_types',
+            [ 'product_pack', 'subscription' ]
+        );
 
-        return apply_filters( 'dokan_admin_dashboard_product_types', $product_types );
+        return array_filter(
+            wc_get_product_types(),
+            function ( $type ) use ( $exclude_product_types ) {
+                return ! in_array( $type, $exclude_product_types, true );
+            }
+        );
     }
 }
