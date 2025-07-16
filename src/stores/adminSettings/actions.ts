@@ -14,6 +14,12 @@ const actions = {
             item,
         };
     },
+    updateSettingsValue( item: SettingsElement ) {
+        return {
+            type: 'UPDATE_SETTINGS_VALUE',
+            item,
+        };
+    },
     setLoading( loading: boolean ) {
         return {
             type: 'SET_LOADING',
