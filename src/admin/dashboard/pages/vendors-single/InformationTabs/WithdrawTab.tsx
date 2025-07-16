@@ -6,6 +6,8 @@ import { __ } from '@wordpress/i18n';
 import WithdrawTabSkeleton from '@dokan/admin/dashboard/pages/vendors-single/InformationTabs/WithdrawTabSkeleton';
 import Badge from '@dokan/components/Badge';
 import WithdrawPaymentRow from '@dokan/admin/dashboard/pages/vendors-single/InformationTabs/Withdraw/WithdrawPaymentRow';
+import { addQueryArgs } from '@wordpress/url';
+import Alert from "@dokan/components/Alert";
 
 interface WithdrawTabProps {
     vendor: Vendor;
@@ -17,20 +19,25 @@ const WithdrawTab = ( { vendor }: WithdrawTabProps ) => {
     const [ isLoading, setIsLoading ] = useState( true );
 
     const getPrintableMethods = ( connected = true ) => {
-        if ( ! settings || ! settings.active_payment_methods ) {
+        if ( ! settings ) {
             return [];
         }
 
-        const vendorConnedectedMethods = Object.keys( vendor?.payment || {} );
+        const connectedMethods = Object.keys(
+            settings?.connected_methods || {}
+        );
+        const disconnectedMethods = Object.keys(
+            settings?.disconnected_methods || {}
+        );
+
         const activeMethods = Object.keys(
             settings?.active_payment_methods || {}
         );
 
+        const methods = connected ? connectedMethods : disconnectedMethods;
+
         return activeMethods.filter( ( method: string ) => {
-            if ( connected ) {
-                return vendorConnedectedMethods.includes( method );
-            }
-            return ! vendorConnedectedMethods.includes( method );
+            return methods.includes( method );
         } );
     };
 
@@ -47,6 +54,16 @@ const WithdrawTab = ( { vendor }: WithdrawTabProps ) => {
         //     'dokan_mangopay',
         //     'dokan_custom',
         // ];
+        if ( methods.length === 0 ) {
+            const message = connected
+                ? __( 'No connected payment methods found' )
+                : __( 'No disconnected payment methods found' );
+            return (
+                <div>
+                    <Alert label={ message } variant="info"/>
+                </div>
+            );
+        }
         return (
             <div className="flex flex-col border rounded">
                 { methods.map( ( method: string, index ) => {
@@ -57,6 +74,7 @@ const WithdrawTab = ( { vendor }: WithdrawTabProps ) => {
                             connected={ connected }
                             settings={ settings }
                             vendor={ vendor }
+                            className="border-b last:border-b-0"
                         />
                     );
                 } ) }
@@ -65,7 +83,11 @@ const WithdrawTab = ( { vendor }: WithdrawTabProps ) => {
     };
 
     useEffect( () => {
-        apiFetch( { path: 'dokan/v1/settings' } )
+        apiFetch( {
+            path: addQueryArgs( 'dokan/v1/settings', {
+                vendor_id: vendor?.id,
+            } ),
+        } )
             .then( ( data ) => {
                 setIsLoading( false );
                 setSettings( data );
