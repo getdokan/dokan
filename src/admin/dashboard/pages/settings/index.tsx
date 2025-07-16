@@ -1,7 +1,12 @@
 import { __ } from '@wordpress/i18n';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { SettingsElement } from '../setup-guide/StepSettings';
 import { useEffect, useState } from '@wordpress/element';
+import { SaveIcon } from 'lucide-react';
+import settingsStore from '@dokan/stores/adminSettings';
+import { SettingsElement } from '../../../../stores/adminSettings/types';
+import Menu from './Elements/Menu';
+import Tab from './Elements/Tab';
+import SettingsParser from './Elements/SettingsParser';
 
 const SettingsPage = () => {
     const dispatch = useDispatch();
@@ -29,13 +34,18 @@ const SettingsPage = () => {
 
     useEffect( () => {
         if ( ! loading ) {
-            setParentPages(
-                allSettings?.filter( ( child ) => child.type === 'page' )
+            const maybeParentPages: SettingsElement[] = allSettings?.filter(
+                ( child ) => child.type === 'page'
             );
 
-            setPages(
-                allSettings?.filter( ( child ) => child.type === 'subpage' )
-            );
+            // Get all the subpages from the parent pages children array.
+            const maybePages: SettingsElement[] = maybeParentPages
+                .map( ( child ) => child.children )
+                .flat()
+                .filter( ( child ) => child.type === 'subpage' );
+
+            setParentPages( maybeParentPages );
+            setPages( maybePages );
         }
     }, [ allSettings, loading ] );
 
@@ -139,6 +149,7 @@ const SettingsPage = () => {
                         { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
                                 key="admin-settings-menu"
+                                parentPages={ parentPages }
                                 pages={ pages }
                                 loading={ loading }
                                 activePage={ selectedPage }
