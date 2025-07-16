@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
+use WeDevs\Dokan\Admin\Settings\Pages\GeneralPage;
 use WeDevs\Dokan\Admin\Settings\Settings;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
@@ -16,6 +17,7 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
      */
     protected $services = [
         Settings::class,
+        GeneralPage::class,
     ];
 
 	/**
