@@ -4,7 +4,7 @@ import {
     TextField,
 } from '../../../../../../components/fields';
 
-const Text = ( { element, onValueChange }: SettingsProps ) => {
+const Email = ( { element, onValueChange }: SettingsProps ) => {
     const handleChange = ( value: string ) => {
         onValueChange( {
             ...element,
@@ -24,11 +24,11 @@ const Text = ( { element, onValueChange }: SettingsProps ) => {
                 onChange={ handleChange }
                 placeholder={ element.placeholder as string }
                 disabled={ element.disabled }
-                inputType="text"
+                inputType="email"
                 helperText={ element.description }
             />
         </div>
     );
 };
 
-export default Text;
+export default Email;
