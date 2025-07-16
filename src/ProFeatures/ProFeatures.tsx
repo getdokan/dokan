@@ -18,7 +18,183 @@ import storeImg from './assets/store.png';
 import brandingImg from './assets/branding.png';
 import supportImg from './assets/support.png';
 import dokanAiBanner from './assets/DokanAi.png';
+import iftsyImg from './assets/iftsy.png';
 import { Check } from 'lucide-react';
+
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { MoveLeft, MoveRight } from 'lucide-react';
+
+const tabs = ['Marketplace', 'Testimonial'];
+
+const marketplaces = [
+  {
+    name: 'Ifesty',
+    country: 'Brazil',
+    flag: '🇧🇷',
+    img: '/images/ifesty.png',
+  },
+  {
+    name: 'BidCurios',
+    country: 'India',
+    flag: '🇮🇳',
+    img: '/images/bidcurios.png',
+  },
+  {
+    name: 'Bootstrap',
+    country: 'USA',
+    flag: '🇺🇸',
+    img: '/images/bootstrap.png',
+  },
+  {
+    name: 'Parsiankala',
+    country: 'Iran',
+    flag: '🇮🇷',
+    img: '/images/parsiankala.png',
+  },
+];
+
+const testimonials = [
+  {
+    name: 'christian d.',
+    role: 'SEO, Small business',
+    content:
+      "As a Webmaster in Argentina for 25+ years, I’ve tested all the multi-vendor WordPress plugins —and this is by far the best.",
+    platform: 'G2',
+    img: '/images/user1.png',
+  },
+  {
+    name: 'upcodestudios',
+    role: 'Self-employed',
+    content:
+      'Dokan is the best multivendor solution I’ve seen in 10 years of web development.',
+    platform: 'WordPress',
+    img: '/images/user2.png',
+  },
+  {
+    name: 'Jonathan D.',
+    role: 'Sales assistant Retail',
+    content:
+      'Dokan made my dream a reality. For a small yearly cost, it offers features worth thousands—a true game-changer.',
+    platform: 'Capterra',
+    img: '/images/user3.png',
+  },
+  {
+    name: 'Neels V.',
+    role: 'Founder, Small business',
+    content:
+      'Perfect for adding services offerings to WooCommerce.',
+    platform: 'G2',
+    img: '/images/user4.png',
+  },
+];
+
+function DokanMarketplaceUI() {
+  const [activeTab, setActiveTab] = useState('Marketplace');
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const data = activeTab === 'Marketplace' ? marketplaces : testimonials;
+
+  return (
+    <div className="py-16">
+      <div className="flex justify-center items-center gap-8 mb-4">
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={cn(
+              'text-lg font-medium transition relative',
+              activeTab === tab ? 'text-[#6C47FF]' : 'text-gray-500'
+            )}
+          >
+            {tab}
+            {activeTab === tab && (
+              <span className="absolute left-0 -bottom-1 h-[2px] w-full bg-[#6C47FF]" />
+            )}
+          </button>
+        ))}
+      </div>
+
+      <h2 className="text-center text-2xl font-semibold mb-6">
+        {activeTab === 'Marketplace'
+          ? 'Dokan Powered Marketplace Across the Globe'
+          : 'Great People, Great Minds Choose Dokan'}
+      </h2>
+
+      <div className="relative px-6">
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10">
+          <Button onClick={() => scroll('left')} variant="ghost" size="icon" className="rounded-full">
+            <MoveLeft className="h-5 w-5" />
+          </Button>
+        </div>
+
+        <div
+          ref={scrollRef}
+          className="overflow-x-auto flex gap-6 px-10 scroll-smooth pb-2 snap-x scrollbar-hide"
+        >
+          {data.map((item, index) => (
+            <div
+              key={index}
+              className="relative min-w-[260px] max-w-[280px] bg-white rounded-xl border p-4 snap-start shrink-0"
+            >
+              {activeTab === 'Marketplace' ? (
+                <div className="space-y-4">
+                  <img
+                    src={item.img}
+                    alt={item.name}
+                    className="rounded-lg w-full h-40 object-cover"
+                  />
+                  <h4 className="text-lg font-semibold">{item.name}</h4>
+                  {item.country && (
+                    <span className="absolute bottom-4 right-4 text-xs text-purple-700 bg-purple-100 px-3 py-1 rounded-full">
+                      {item.country} {item.flag}
+                    </span>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={item.img}
+                      alt={item.name}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div>
+                      <h4 className="text-base font-semibold">{item.name}</h4>
+                      <p className="text-sm text-gray-500">{item.role}</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 leading-snug">{item.content}</p>
+                  <p className="text-sm text-gray-400">{item.platform}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10">
+          <Button onClick={() => scroll('right')} variant="ghost" size="icon" className="rounded-full">
+            <MoveRight className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
 
 interface FeatureData {
   features: string[];
@@ -380,6 +556,9 @@ function ProFeatures() {
             <div>
                 <FeatureComparison />
             </div>
+
+            {/* marketplace and testimonial section */}
+            <DokanMarketplaceUI />
         </div>
     );
 }
