@@ -18,7 +18,7 @@ const DokanSelect = ( {
     ...props
 }: DokanSelectProps ) => {
     return (
-        <div className={ `${ containerClassName }` }>
+        <div className={ `w-full ${ containerClassName }` }>
             <FormSelect { ...props } />
         </div>
     );

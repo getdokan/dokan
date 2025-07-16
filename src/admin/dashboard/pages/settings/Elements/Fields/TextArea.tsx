@@ -1,5 +1,8 @@
 import { SettingsProps } from '../../types';
-import { DokanTextArea } from '../../../../../../components/fields';
+import {
+    DokanFieldLabel,
+    DokanTextArea,
+} from '../../../../../../components/fields';
 
 const TextArea = ( { element, onValueChange }: SettingsProps ) => {
     const handleChange = (
@@ -12,10 +15,13 @@ const TextArea = ( { element, onValueChange }: SettingsProps ) => {
     };
 
     return (
-        <div className="p-4">
+        <div className="flex justify-between p-4" id={ element.hook_key }>
+            <DokanFieldLabel
+                title={ element.title || '' }
+                titleFontWeight="light"
+                helperText={ element.description }
+            />
             <DokanTextArea
-                label={ element.title }
-                helpText={ element.description }
                 value={ ( element.value as string ) || '' }
                 onChange={ handleChange }
                 input={ {

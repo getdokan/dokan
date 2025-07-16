@@ -9,6 +9,13 @@ import Number from './Number';
 import CheckboxGroup from './CheckboxGroup';
 import RadioCapsule from './RadioCapsule';
 import TextArea from './TextArea';
+import Radio from './Radio';
+import RadioBox from './RadioBox';
+import Currency from './Currency';
+import MultiCheck from './MultiCheck';
+import CategoryBasedCommission from './Commission/CategoryBasedCommission';
+import CombineInput from './Commission/CombineInput';
+import Tel from './Tel';
 
 const FieldParser = ( {
     element,
@@ -110,6 +117,89 @@ const FieldParser = ( {
                 />
             );
 
+        case 'radio':
+            return (
+                <Radio
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'radio_box':
+            return (
+                <RadioBox
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'currency':
+            return (
+                <Currency
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'multicheck':
+            return (
+                <MultiCheck
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'category_based_commission':
+            return (
+                <CategoryBasedCommission
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'combine_input':
+            return (
+                <CombineInput
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'tel':
+            return (
+                <Tel
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'checkbox':
+        case 'color':
+        case 'date':
+        case 'datetime-local':
+        case 'file':
+        case 'hidden':
+        case 'image':
+        case 'month':
+        case 'range':
+        case 'search':
+        case 'time':
+        case 'url':
+        case 'week':
         default:
             return applyFilters(
                 'dokan_admin_settings_default_field_parser',

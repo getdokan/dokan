@@ -2,7 +2,7 @@ import React, { useState } from '@wordpress/element';
 import { SettingsProps } from '../../types';
 import { DokanFieldLabel, TextField } from '../../../../../../components/fields';
 
-const Text = ( { element, onValueChange }: SettingsProps ) => {
+const Tel = ( { element, onValueChange }: SettingsProps ) => {
     const [ value, setValue ] = useState( element.value );
 
     if ( ! element.display ) {
@@ -29,11 +29,11 @@ const Text = ( { element, onValueChange }: SettingsProps ) => {
                 onChange={ handleValueChange }
                 placeholder={ element?.placeholder as string }
                 disabled={ element.disabled }
-                inputType="text"
+                inputType="tel"
                 helperText={ element.description }
             />
         </div>
     );
 };
 
-export default Text;
+export default Tel;

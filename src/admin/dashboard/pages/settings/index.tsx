@@ -148,15 +148,19 @@ const SettingsPage = () => {
                 // TODO: Say Error.
             } );
     };
+
+    const onValueChange = ( element: SettingsElement ) => {
+        dispatch( settingsStore ).updateSettingsValue( element );
+    };
     return (
         <>
             <h3 className="text-3xl font-bold">
                 { __( 'Settings', 'dokan-lite' ) }
             </h3>
 
-            <div className="h-full">
-                <main className="max-w-7xl mx-auto pb-10 lg:py-5 lg:px-0">
-                    <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
+            <div className="h-screen ">
+                <main className="w-full pb-10 lg:py-5 lg:px-0 bg-white h-screen  shadow rounded-lg">
+                    <div className="lg:grid lg:grid-cols-12 lg:gap-x-5  ">
                         { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
                                 key="admin-settings-menu"
@@ -186,6 +190,7 @@ const SettingsPage = () => {
                                             '-settings-parser'
                                         }
                                         element={ element }
+                                        onValueChange={ onValueChange }
                                     />
                                 );
                             } ) }
