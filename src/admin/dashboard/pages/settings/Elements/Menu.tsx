@@ -62,14 +62,14 @@ const Menu = ( {
                                                         )
                                                         ? 'bg-gray-50'
                                                         : 'hover:bg-gray-50',
-                                                    'group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-semibold text-gray-700'
+                                                    'group flex w-full items-center justify-between rounded-md p-2 text-left text-sm/6 font-semibold text-gray-700'
                                                 ) }
                                             >
+                                                { item.title }
                                                 <ChevronRightIcon
                                                     aria-hidden="true"
                                                     className="size-5 shrink-0 text-gray-400 group-data-[open]:rotate-90 group-data-[open]:text-gray-500"
                                                 />
-                                                { item.title }
                                             </DisclosureButton>
                                             <DisclosurePanel
                                                 as="ul"
