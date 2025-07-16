@@ -5,10 +5,7 @@ import {
     TextField,
 } from '../../../../../../../components/fields';
 
-const CategoryBasedCommission = ( {
-    element,
-    onValueChange,
-}: SettingsProps ) => {
+const CombineInput = ( { element, onValueChange }: SettingsProps ) => {
     const [ value, setValue ] = useState( element.value );
 
     if ( ! element.display ) {
@@ -30,7 +27,7 @@ const CategoryBasedCommission = ( {
                 titleFontWeight="light"
                 helperText={ element.description }
             />
-            <div className="mt-2">
+            <div className="mt-2 flex gap-2">
                 <TextField
                     value={ value as string }
                     onChange={ handleValueChange }
@@ -40,9 +37,18 @@ const CategoryBasedCommission = ( {
                     helperText={ element.description }
                     postfix="%"
                 />
+                <TextField
+                    value={ value as string }
+                    onChange={ handleValueChange }
+                    placeholder={ element?.placeholder as string }
+                    disabled={ element.disabled }
+                    inputType="number"
+                    helperText={ element.description }
+                    postfix="$"
+                />
             </div>
         </div>
     );
 };
 
-export default CategoryBasedCommission;
+export default CombineInput;
