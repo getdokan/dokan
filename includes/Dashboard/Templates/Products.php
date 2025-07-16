@@ -416,11 +416,8 @@ class Products {
                     }
 
                     // Sold Individually
-                    if ( ! empty( $postdata['_sold_individually'] ) ) {
-                        update_post_meta( $product_id, '_sold_individually', 'yes' );
-                    } else {
-                        update_post_meta( $product_id, '_sold_individually', '' );
-                    }
+                    $sold_individually = ! empty( $data['_sold_individually'] ) && 'yes' === $data['_sold_individually'] ? 'yes' : 'no';
+                    update_post_meta( $product_id, '_sold_individually', $sold_individually );
 
                     update_post_meta( $product_id, '_visibility', 'visible' );
                     update_post_meta( $product_id, '_stock_status', 'instock' );
