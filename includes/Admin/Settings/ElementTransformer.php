@@ -15,7 +15,6 @@ class ElementTransformer implements TransformerInterface {
      */
     protected array $fields = [];
     protected $settings;
-
     /**
      * @inheritDoc
      */

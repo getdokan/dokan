@@ -19,6 +19,8 @@ abstract class AbstractPage extends Settings implements PageInterface, Hookable 
 
     protected int $priority = 100;
 
+    protected $type = 'page';
+
     /**
      * Get the page ID.
      *
