@@ -79,7 +79,7 @@ const SettingsPage = () => {
         if ( tabs?.length > 0 ) {
             setSelectedTab( selectedTab === '' ? tabs[ 0 ].id : selectedTab );
         }
-    }, [ tabs, loading ] );
+    }, [ tabs, loading, selectedTab ] );
 
     useEffect( () => {
         if ( loading ) {
@@ -90,11 +90,13 @@ const SettingsPage = () => {
             setElements( allSettings );
         } else if ( pages?.length && ! tabs?.length && '' !== selectedPage ) {
             setElements(
-                pages.find( ( child ) => child.id === selectedPage ).children
+                pages.find( ( child ) => child.id === selectedPage )
+                    ?.children ?? []
             );
         } else if ( ! pages?.length && tabs?.length && '' !== selectedTab ) {
             setElements(
-                tabs.find( ( child ) => child.id === selectedTab ).children
+                tabs.find( ( child ) => child.id === selectedTab )?.children ??
+                    []
             );
         } else if (
             pages?.length &&
@@ -103,10 +105,19 @@ const SettingsPage = () => {
             '' !== selectedTab
         ) {
             setElements(
-                tabs.find( ( child ) => child.id === selectedTab ).children
+                tabs.find( ( child ) => child.id === selectedTab )?.children ??
+                    []
             );
         }
-    }, [ allSettings, pages, selectedPage, tabs, selectedTab, loading ] );
+    }, [
+        allSettings,
+        parentPages,
+        pages,
+        selectedPage,
+        tabs,
+        selectedTab,
+        loading,
+    ] );
 
     const onMenuClick = ( page: string ) => {
         if ( ! page ) {
@@ -149,8 +160,7 @@ const SettingsPage = () => {
                         { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
                                 key="admin-settings-menu"
-                                parentPages={ parentPages }
-                                pages={ pages }
+                                pages={ parentPages }
                                 loading={ loading }
                                 activePage={ selectedPage }
                                 onMenuClick={ onMenuClick }
