@@ -1,17 +1,12 @@
-import { RawHTML, useState } from '@wordpress/element';
-import { SettingsProps } from '../../StepSettings';
-import { FormSelect } from '@getdokan/dokan-ui';
+import { SettingsProps } from '../../types';
+import {
+    DokanFieldLabel,
+    DokanSelect,
+} from '../../../../../../components/fields';
 
 const Select = ( { element, onValueChange }: SettingsProps ) => {
-    const initialValue = element.value ? element.value : element.default;
-    const [ selectedOption, setSelectedOption ] = useState( initialValue );
-
-    if ( ! element.display ) {
-        return <></>;
-    }
-
-    const onHandleChange = ( value ) => {
-        setSelectedOption( value );
+    const handleChange = ( value: string | number ) => {
+        console.log({value});
         onValueChange( {
             ...element,
             value,
@@ -19,30 +14,24 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
     };
 
     return (
-        <div className="flex justify-between p-4" id={ element.hook_key }>
-            <div className="flex flex-col sm:w-[70%]">
-                <h2 className="text-sm leading-6 font-semibold text-gray-900">
-                    <RawHTML>{ element?.title }</RawHTML>
-                </h2>
-                <p className="text-sm font-normal text-[#828282]">
-                    <RawHTML>{ element?.description }</RawHTML>
-                </p>
-            </div>
-            <div className="flex w-[11rem]">
-                <FormSelect
-                    name={ element?.id }
-                    label={ '' }
-                    options={
-                        element?.options?.map( ( option ) => ( {
-                            label: option?.title,
-                            value: option?.value,
-                        } ) ) || []
-                    }
-                    multiple={ false }
-                    value={ selectedOption as string }
-                    onChange={ onHandleChange }
-                />
-            </div>
+        <div className="p-4">
+            <DokanFieldLabel
+                title={ element.title || '' }
+                titleFontWeight="light"
+                helperText={ element.description }
+            />
+            <DokanSelect
+                value={ element.value as string | number }
+                onChange={ handleChange }
+                options={
+                    element.options?.map( ( option ) => ( {
+                        label: option.title,
+                        value: option.value,
+                    } ) ) || []
+                }
+                placeholder={ element.placeholder as string }
+                disabled={ element.disabled }
+            />
         </div>
     );
 };
