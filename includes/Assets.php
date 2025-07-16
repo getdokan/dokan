@@ -643,6 +643,18 @@ class Assets {
             ];
         }
 
+        $admin_settings_store = DOKAN_DIR . '/assets/js/admin-settings-store.asset.php';
+        if ( file_exists( $admin_settings_store ) ) {
+            $stores_asset = require $admin_settings_store;
+
+            // Register Product stores.
+            $scripts['dokan-stores-admin-settings'] = [
+                'version' => $stores_asset['version'],
+                'src'     => $asset_url . '/js/admin-settings-store.js',
+                'deps'    => $stores_asset['dependencies'],
+            ];
+        }
+
         return $scripts;
     }
 
