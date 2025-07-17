@@ -66,7 +66,10 @@ class DashboardMenu extends AbstractPage {
         wp_register_script(
             'dokan-admin-dashboard-menu',
             DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-dashboard-menu.js',
-            $asset_file['dependencies'],
+            array_merge(
+                $asset_file['dependencies'],
+                [ 'dokan-react-components' ]
+            ),
             $asset_file['version'],
             [
                 'strategy' => 'defer',
