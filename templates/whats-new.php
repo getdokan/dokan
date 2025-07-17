@@ -46,6 +46,7 @@ $changelog = [
                     'title'       => 'Resolve an issue for "sold individually" option does not save on create or update a product.',
                     'description' => '',
                 ],
+            ],
         ],
     ],
     [
