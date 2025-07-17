@@ -440,7 +440,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
             'customer-metrics',
             'all-time-stats',
             'top-performing-vendors',
-            'most-reviewed-products'
+            'most-reviewed-products',
         ];
 
         foreach ( $endpoints as $endpoint ) {

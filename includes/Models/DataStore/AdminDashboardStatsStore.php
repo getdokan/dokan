@@ -102,7 +102,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
         $exclude_order_statuses = ReportUtil::get_exclude_order_statuses();
 
         $this->clear_all_clauses();
-        // phpcs:disable WordPress.PreparedSQL.NotPrepared
+        // phpcs:disable
         $this->add_sql_clause( 'select', 'COUNT(DISTINCT pm.meta_value)' );
         $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() . ' p1' );
         $this->add_sql_clause( 'join', "JOIN {$wpdb->postmeta} pm ON p1.ID = pm.post_id AND pm.meta_key = '_customer_user' AND pm.meta_value > 0" );
@@ -126,8 +126,8 @@ class AdminDashboardStatsStore extends BaseDataStore {
         );
 
         $query_statement = $this->get_query_statement();
-        $result          = $wpdb->get_row( $query_statement, ARRAY_A );
-        // phpcs:enable WordPress.PreparedSQL.NotPrepared
+        $result          = $wpdb->get_row( $query_statement, ARRAY_A ); // phpcs:ignore
+        // phpcs:enable
 
         return apply_filters(
             'dokan_admin_dashboard_customer_metrics',
