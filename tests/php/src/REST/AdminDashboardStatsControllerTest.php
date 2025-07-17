@@ -461,11 +461,11 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
         $endpoints_with_date = [
             'monthly-overview',
             'sales-chart',
-            'customer-metrics'
+            'customer-metrics',
         ];
 
         foreach ( $endpoints_with_date as $endpoint ) {
-            $response = $this->get_request( "/{$this->rest_base}/{$endpoint}", ['date' => '2024-01'] );
+            $response = $this->get_request( "/{$this->rest_base}/{$endpoint}", [ 'date' => '2024-01' ] );
             $this->assertEquals( 200, $response->get_status(), "Endpoint {$endpoint} with date param should return 200" );
             $this->assertIsArray( $response->get_data(), "Endpoint {$endpoint} with date param should return array data" );
         }
@@ -487,7 +487,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
             'customer-metrics',
             'all-time-stats',
             'top-performing-vendors',
-            'most-reviewed-products'
+            'most-reviewed-products',
         ];
 
         foreach ( $endpoints as $endpoint ) {
@@ -512,7 +512,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
             'customer-metrics',
             'all-time-stats',
             'top-performing-vendors',
-            'most-reviewed-products'
+            'most-reviewed-products',
         ];
 
         foreach ( $endpoints as $endpoint ) {
