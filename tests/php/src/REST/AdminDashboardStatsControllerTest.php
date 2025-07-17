@@ -175,11 +175,11 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
         $this->assertArrayHasKey( 'pending_withdrawals', $data );
 
         // Check structure of each todo item
-        foreach ( ['vendor_approvals', 'product_approvals', 'pending_withdrawals'] as $key ) {
-            $this->assertArrayHasKey( 'icon', $data[$key] );
-            $this->assertArrayHasKey( 'count', $data[$key] );
-            $this->assertArrayHasKey( 'title', $data[$key] );
-            $this->assertIsInt( $data[$key]['count'] );
+        foreach ( [ 'vendor_approvals', 'product_approvals', 'pending_withdrawals' ] as $key ) {
+            $this->assertArrayHasKey( 'icon', $data[ $key ] );
+            $this->assertArrayHasKey( 'count', $data[ $key ] );
+            $this->assertArrayHasKey( 'title', $data[ $key ] );
+            $this->assertIsInt( $data[ $key ]['count'] );
         }
     }
 
@@ -204,13 +204,13 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
         $this->assertArrayHasKey( 'revenue_insight', $data );
 
         // Check structure of each analytics item
-        foreach ( ['sales_overview', 'revenue_insight'] as $key ) {
-            $this->assertArrayHasKey( 'icon', $data[$key] );
-            $this->assertArrayHasKey( 'url', $data[$key] );
-            $this->assertArrayHasKey( 'title', $data[$key] );
-            $this->assertIsString( $data[$key]['icon'] );
-            $this->assertIsString( $data[$key]['url'] );
-            $this->assertIsString( $data[$key]['title'] );
+        foreach ( [ 'sales_overview', 'revenue_insight' ] as $key ) {
+            $this->assertArrayHasKey( 'icon', $data[ $key ] );
+            $this->assertArrayHasKey( 'url', $data[ $key ] );
+            $this->assertArrayHasKey( 'title', $data[ $key ] );
+            $this->assertIsString( $data[ $key ]['icon'] );
+            $this->assertIsString( $data[ $key ]['url'] );
+            $this->assertIsString( $data[ $key ]['title'] );
         }
 
         // Verify specific expected values
