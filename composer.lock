@@ -62,16 +62,16 @@
         },
         {
             "name": "appsero/updater",
-            "version": "v2.3.3",
+            "version": "v2.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Appsero/updater.git",
-                "reference": "0c899f2e6b5894b695751d738151a98461cdb198"
+                "reference": "7d026d28a7ed7bdeaea061815642961b5fa6a72d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Appsero/updater/zipball/0c899f2e6b5894b695751d738151a98461cdb198",
-                "reference": "0c899f2e6b5894b695751d738151a98461cdb198",
+                "url": "https://api.github.com/repos/Appsero/updater/zipball/7d026d28a7ed7bdeaea061815642961b5fa6a72d",
+                "reference": "7d026d28a7ed7bdeaea061815642961b5fa6a72d",
                 "shasum": ""
             },
             "type": "library",
@@ -93,9 +93,9 @@
             "description": "Appsero client updater module",
             "support": {
                 "issues": "https://github.com/Appsero/updater/issues",
-                "source": "https://github.com/Appsero/updater/tree/v2.3.3"
+                "source": "https://github.com/Appsero/updater/tree/v2.3.4"
             },
-            "time": "2025-03-10T03:42:43+00:00"
+            "time": "2025-07-17T09:01:00+00:00"
         },
         {
             "name": "jakeasmith/http_build_url",
@@ -535,16 +535,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.13.1",
+            "version": "1.13.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "1720ddd719e16cf0db4eb1c6eca108031636d46c"
+                "reference": "faed855a7b5f4d4637717c2b3863e277116beb36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/1720ddd719e16cf0db4eb1c6eca108031636d46c",
-                "reference": "1720ddd719e16cf0db4eb1c6eca108031636d46c",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/faed855a7b5f4d4637717c2b3863e277116beb36",
+                "reference": "faed855a7b5f4d4637717c2b3863e277116beb36",
                 "shasum": ""
             },
             "require": {
@@ -583,7 +583,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.1"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.3"
             },
             "funding": [
                 {
@@ -591,7 +591,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-04-29T12:36:36+00:00"
+            "time": "2025-07-05T12:25:42+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -2725,12 +2725,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "6ee142efdd7bfee4d647bdf4c660fe88a6595aa2"
+                "reference": "549cd3317ea2172fddeafd61df114018b547bd09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/6ee142efdd7bfee4d647bdf4c660fe88a6595aa2",
-                "reference": "6ee142efdd7bfee4d647bdf4c660fe88a6595aa2",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/549cd3317ea2172fddeafd61df114018b547bd09",
+                "reference": "549cd3317ea2172fddeafd61df114018b547bd09",
                 "shasum": ""
             },
             "require": {
@@ -2784,7 +2784,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-06-26T13:50:46+00:00"
+            "time": "2025-07-17T08:00:26+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",
