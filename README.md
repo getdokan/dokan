@@ -350,13 +350,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 ## Changelog ##
 ### v4.0.4 ( Jul 17, 2025 ) ###
 
-- **update** Admin Notice UI with Modern Design and Improved User Experience.
-- **update** Enhanced Product Brand Integration with Dedicated Template and Manager Methods.
+- **update:** Admin Notice UI with Modern Design and Improved User Experience.
+- **update:** Enhanced Product Brand Integration with Dedicated Template and Manager Methods.
+- **update:** Enhanced product featured image selection with cropping functionality in the product editor.
 - **fix:** Vendor/store names with special characters (e.g., apostrophes) now display correctly in the vendor dropdown on the admin product edit screen.
 - **fix:** Display correct earning in vendor dashboard product add/edit page for different category.
 - **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
 - **fix:** Improved how product inventory information is retrieved, ensuring more accurate and consistent display of stock values.
 - **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
+- **fix:** Resolve an issue for "sold individually" option does not save on create or update a product.
 
 ### v4.0.3 ( Jul 02, 2025 ) ###
 

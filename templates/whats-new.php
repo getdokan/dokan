@@ -16,6 +16,10 @@ $changelog = [
                     'title'       => 'Enhanced Product Brand Integration with Dedicated Template and Manager Methods.',
                     'description' => '',
                 ],
+                [
+                    'title'       => 'Enhanced product featured image selection with cropping functionality in the product editor.',
+                    'description' => '',
+                ],
             ],
             'Fix'  => [
                 [
@@ -36,6 +40,10 @@ $changelog = [
                 ],
                 [
                     'title'       => 'Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolve an issue for "sold individually" option does not save on create or update a product.',
                     'description' => '',
                 ],
         ],
