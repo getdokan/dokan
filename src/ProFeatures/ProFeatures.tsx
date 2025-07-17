@@ -18,13 +18,58 @@ import storeImg from './assets/store.png';
 import brandingImg from './assets/branding.png';
 import supportImg from './assets/support.png';
 import dokanAiBanner from './assets/DokanAi.png';
-import iftsyImg from './assets/iftsy.png';
-import { Check } from 'lucide-react';
+import iftsyImg from "./assets/iftsy.png";
+import bidCuriousImg from './assets/bidCurious.png';
+import bootstrapImg from './assets/bootstrap.png';
+import designAddictImg from './assets/designAddict.png';
+import parsiankalaImg from './assets/parsiankala.png';
+import zakartoImg from './assets/zakarto.png';
+import { Check, MoveLeft, MoveRight } from 'lucide-react';
+import avatar1 from './assets/Avatar1.png';
+import avatar2 from './assets/Avatar2.png';
+import avatar3 from './assets/Avatar3.png';
+import avatar4 from './assets/Avatar4.png';
+import avatar5 from './assets/Avatar5.png';
+import avatar6 from './assets/Avatar6.png';
+import avatar7 from './assets/Avatar7.png';
+import avatar8 from './assets/Avatar8.png';
+import avatar9 from './assets/Avatar9.png';
+import avatar10 from './assets/Avatar10.png';
+import avatar11 from './assets/Avatar11.png';
+import g2Logo from './assets/g2Logo.png';
+import trustpilotLogo from './assets/trustpilotLogo.png';
+import capterraLogo from './assets/capterraLogo.png';
+import wordpressLogo from './assets/wordpressLogo.png';
 
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { MoveLeft, MoveRight } from 'lucide-react';
+function PricingSection() {
+  const [isAnnual, setIsAnnual] = useState(true);
+  const pricingPlans = [
+    {
+      name: 'Starter',
+      annualPrice: '$149',
+      lifetimePrice: '$399',
+      features: ['Essential Features', '3 Premium Modules', '1 Site License', 'Ticket Based Support'],
+    },
+    {
+      name: 'Pro',
+      annualPrice: '$299',
+      lifetimePrice: '$799',
+      features: ['All Starter Features', '5 Premium Modules', '3 Site Licenses', 'Priority Support'],
+    },
+    {
+      name: 'Premium',
+      annualPrice: '$499',
+      lifetimePrice: '$1299',
+      features: ['All Pro Features', '10 Premium Modules', 'Unlimited Sites', '24/7 Support'],
+    },
+  ];
+
+  return (
+    <section>
+     <h2>The packages we provide</h2>
+    </section>
+  );
+}
 
 const tabs = ['Marketplace', 'Testimonial'];
 
@@ -33,61 +78,118 @@ const marketplaces = [
     name: 'Ifesty',
     country: 'Brazil',
     flag: '🇧🇷',
-    img: '/images/ifesty.png',
+    img: iftsyImg,
   },
   {
     name: 'BidCurios',
     country: 'India',
     flag: '🇮🇳',
-    img: '/images/bidcurios.png',
+    img: bidCuriousImg,
   },
   {
     name: 'Bootstrap',
     country: 'USA',
     flag: '🇺🇸',
-    img: '/images/bootstrap.png',
+    img: bootstrapImg,
   },
   {
     name: 'Parsiankala',
-    country: 'Iran',
-    flag: '🇮🇷',
-    img: '/images/parsiankala.png',
+    country: 'USA',
+    flag: '🇺🇸',
+    img: parsiankalaImg,
   },
+  {
+    name: 'DesignAddict',
+    country: 'USA',
+    flag: '🇺🇸',
+    img: designAddictImg,
+  },
+  {
+    name: 'Zakarto',
+    country: 'USA',
+    flag: '🇺🇸',
+    img: zakartoImg,
+  }
 ];
 
 const testimonials = [
   {
     name: 'christian d.',
     role: 'SEO, Small business',
-    content:
-      "As a Webmaster in Argentina for 25+ years, I’ve tested all the multi-vendor WordPress plugins —and this is by far the best.",
-    platform: 'G2',
-    img: '/images/user1.png',
+    content: "As a Webmaster in Argentina for 25+ years, I’ve tested all the multi-vendor WordPress plugins and this is by far the best.",
+    img: avatar1,
+    logo: g2Logo
   },
   {
     name: 'upcodestudios',
     role: 'Self-employed',
-    content:
-      'Dokan is the best multivendor solution I’ve seen in 10 years of web development.',
-    platform: 'WordPress',
-    img: '/images/user2.png',
+    content: 'Dokan is the best multivendor solution I’ve seen in 10 years of web development.',
+    img: avatar2,
+    logo: wordpressLogo
   },
   {
     name: 'Jonathan D.',
     role: 'Sales assistant Retail',
-    content:
-      'Dokan made my dream a reality. For a small yearly cost, it offers features worth thousands—a true game-changer.',
-    platform: 'Capterra',
-    img: '/images/user3.png',
+    content: 'Dokan made my dream a reality. For a small yearly cost, it offers features worth thousandsa true game-changer.',
+    img: avatar3,
+    logo: capterraLogo
   },
   {
     name: 'Neels V.',
     role: 'Founder, Small business',
-    content:
-      'Perfect for adding services offerings to WooCommerce.',
-    platform: 'G2',
-    img: '/images/user4.png',
+    content: 'Perfect for adding services offerings to WooCommerce.',
+    img: avatar4,
+    logo: g2Logo
   },
+  {
+    name: 'asmaraldn',
+    role: 'Self-employed',
+    content: 'Dokan Lite has been a game-changer for my marketplace!',
+    img: avatar5,
+    logo: wordpressLogo
+  },
+  {
+    name: 'Melvin R',
+    role: 'Desarrollador web',
+    content: 'If you want the ease of WordPress with WooCommerce’s flexibility, this is the best plugin out there.',
+    img: avatar6,
+    logo: capterraLogo
+  },
+  {
+    name: 'cheazeh',
+    role: 'Self-employed',
+    content: 'Been using it for over a yearhands down, the best!',
+    img: avatar7,
+    logo: wordpressLogo
+  },
+  {
+    name: 'Karisa Joshua',
+    role: 'Self-employed',
+    content: 'Incredible experience with Dokan’s serviceprofessional, kind, and truly went above and beyond.',
+    img: avatar8,
+    logo: trustpilotLogo
+  },
+  {
+    name: 'Corrado G.',
+    role: 'Titolare',
+    content: 'Dokan has improved a lot over the years and made it easy for me to build a marketplace.',
+    img: avatar9,
+    logo: capterraLogo
+  },
+  {
+    name: 'Omar Wyllie',
+    role: 'St. Vincent & Grenadines',
+    content: 'Just installed a few hours agooff to a good start! Support was fast and helpful via live chat.',
+    img: avatar10,
+    logo: trustpilotLogo
+  },
+  {
+    name: 'franklinlucas',
+    role: 'Self-employed',
+    content: 'Amazing plugin. Easy to use and very well-organized team.',
+    img: avatar11,
+    logo: wordpressLogo
+  }
 ];
 
 function DokanMarketplaceUI() {
@@ -107,41 +209,52 @@ function DokanMarketplaceUI() {
   const data = activeTab === 'Marketplace' ? marketplaces : testimonials;
 
   return (
-    <div className="py-16">
-      <div className="flex justify-center items-center gap-8 mb-4">
+    <section className="w-full px-4 md:px-6 py-8">
+      <div className="flex justify-center items-center gap-8 mb-6">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={cn(
-              'text-lg font-medium transition relative',
-              activeTab === tab ? 'text-[#6C47FF]' : 'text-gray-500'
-            )}
+            className={`text-base md:text-lg font-medium transition relative ${
+              activeTab === tab ? 'text-purple-700' : 'text-gray-500'
+            }`}
           >
             {tab}
             {activeTab === tab && (
-              <span className="absolute left-0 -bottom-1 h-[2px] w-full bg-[#6C47FF]" />
+              <span className="absolute left-0 -bottom-1 h-[2px] w-full bg-purple-700" />
             )}
           </button>
         ))}
       </div>
+      <div className="text-center mb-4">
+        <h2 className="text-2xl md:text-3xl font-semibold inline-block">
+          {activeTab === 'Marketplace'
+            ? 'Dokan Powered Marketplace Across the Globe'
+            : 'Great People, Great Minds Choose Dokan'}
+        </h2>
+      </div>
 
-      <h2 className="text-center text-2xl font-semibold mb-6">
-        {activeTab === 'Marketplace'
-          ? 'Dokan Powered Marketplace Across the Globe'
-          : 'Great People, Great Minds Choose Dokan'}
-      </h2>
-
-      <div className="relative px-6">
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10">
-          <Button onClick={() => scroll('left')} variant="ghost" size="icon" className="rounded-full">
-            <MoveLeft className="h-5 w-5" />
-          </Button>
+      <div className="flex justify-end mb-6">
+        <div className="flex space-x-2">
+          <button
+            onClick={() => scroll('left')}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
+          >
+            <MoveLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => scroll('right')}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
+          >
+            <MoveRight className="w-4 h-4" />
+          </button>
         </div>
+      </div>
 
+      <div className="relative">
         <div
           ref={scrollRef}
-          className="overflow-x-auto flex gap-6 px-10 scroll-smooth pb-2 snap-x scrollbar-hide"
+          className="overflow-x-auto flex gap-6 px-6 pb-2 scroll-smooth snap-x scrollbar-hide"
         >
           {data.map((item, index) => (
             <div
@@ -163,7 +276,7 @@ function DokanMarketplaceUI() {
                   )}
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-3 h-full flex flex-col justify-between">
                   <div className="flex items-center gap-3">
                     <img
                       src={item.img}
@@ -175,25 +288,22 @@ function DokanMarketplaceUI() {
                       <p className="text-sm text-gray-500">{item.role}</p>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 leading-snug">{item.content}</p>
-                  <p className="text-sm text-gray-400">{item.platform}</p>
+                  <p className="text-sm text-gray-600 leading-snug flex-1">{item.content}</p>
+                  <div className="flex justify-between items-center">
+                    <div className="w-12 h-6">
+                      <img src={item.logo} alt="Logo" className="w-full h-full object-contain" />
+                    </div>
+                    <span className="text-purple-500">★</span>
+                  </div>
                 </div>
               )}
             </div>
           ))}
         </div>
-
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10">
-          <Button onClick={() => scroll('right')} variant="ghost" size="icon" className="rounded-full">
-            <MoveRight className="h-5 w-5" />
-          </Button>
-        </div>
       </div>
-    </div>
+    </section>
   );
 }
-
-
 
 
 interface FeatureData {
@@ -254,11 +364,22 @@ const featureData: Record<string, FeatureData> = {
 };
 
 const FeatureComparison: React.FC = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [activeCategory, setActiveCategory] = useState<string>('vendor');
   const { features, lite, pro } = featureData[activeCategory];
 
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 md:px-6 py-16">
+    <section className="w-full max-w-7xl mx-auto px-4 md:px-6 py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-8">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
           Dokan Lite vs Dokan Pro
@@ -268,63 +389,82 @@ const FeatureComparison: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex flex-col md:flex-row rounded-xl overflow-hidden shadow-sm border border-gray-200">
-        {/* Sidebar */}
-        <div className="flex md:flex-col border-b md:border-b-0 md:border-r border-gray-200 bg-white w-full md:w-72">
-          {categories.map((category) => (
-            <button
-              key={category.key}
-              onClick={() => setActiveCategory(category.key)}
-              className={`w-full text-left px-4 py-4 text-sm font-semibold transition whitespace-normal
-                ${category.key === activeCategory ? 'bg-black text-white' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'}`}
-            >
-              {category.title}
-            </button>
-          ))}
+      <div className="flex justify-between items-center mb-6">
+        <div />
+        <div className="flex space-x-2">
+          <button
+            onClick={() => scroll('left')}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
+          >
+            <MoveLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => scroll('right')}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
+          >
+            <MoveRight className="w-4 h-4" />
+          </button>
         </div>
+      </div>
 
-        {/* Feature Table */}
-        <div className="flex-1 w-full overflow-x-auto">
-          <div className="min-w-[600px]">
-            <div className="grid grid-cols-3 text-sm font-semibold px-6 py-4 bg-white border-b border-gray-200">
-              <div>Features</div>
-              <div className="text-center">Lite</div>
-              <div className="text-center">Pro</div>
-            </div>
-
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-3 items-center text-sm px-6 py-4 bg-white border-b border-gray-100"
+      <div className="relative">
+        <div ref={scrollRef} className="flex flex-col md:flex-row rounded-xl overflow-hidden shadow-sm border border-gray-200">
+          {/* Sidebar */}
+          <div className="flex md:flex-col border-b md:border-b-0 md:border-r border-gray-200 bg-white w-full md:w-72">
+            {categories.map((category) => (
+              <button
+                key={category.key}
+                onClick={() => setActiveCategory(category.key)}
+                className={`w-full text-left px-4 py-4 text-sm font-semibold transition whitespace-normal
+                  ${category.key === activeCategory ? 'bg-black text-white' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'}`}
               >
-                <div>{feature}</div>
-                <div className="text-center">
-                  {lite[index] ? (
-                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-600">
-                      <Check size={16} />
-                    </span>
-                  ) : (
-                    <span className="inline-block w-6 h-6" />
-                  )}
-                </div>
-                <div className="text-center">
-                  {pro[index] ? (
-                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-600">
-                      <Check size={16} />
-                    </span>
-                  ) : (
-                    <span className="inline-block w-6 h-6" />
-                  )}
-                </div>
-              </div>
+                {category.title}
+              </button>
             ))}
+          </div>
+
+          {/* Feature Table */}
+          <div className="flex-1 w-full overflow-x-auto">
+            <div className="min-w-[600px]">
+              <div className="grid grid-cols-3 text-sm font-semibold px-6 py-4 bg-white border-b border-gray-200">
+                <div>Features</div>
+                <div className="text-center">Lite</div>
+                <div className="text-center">Pro</div>
+              </div>
+
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-3 items-center text-sm px-6 py-4 bg-white border-b border-gray-100"
+                >
+                  <div>{feature}</div>
+                  <div className="text-center">
+                    {lite[index] ? (
+                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-600">
+                        <Check size={16} />
+                      </span>
+                    ) : (
+                      <span className="inline-block w-6 h-6" />
+                    )}
+                  </div>
+                  <div className="text-center">
+                    {pro[index] ? (
+                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-600">
+                        <Check size={16} />
+                      </span>
+                    ) : (
+                      <span className="inline-block w-6 h-6" />
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
 };
-
 
 function DokanAIBanner() {
     return (
@@ -476,7 +616,7 @@ function ProFeatures() {
     };
 
     return (
-        <div className="p-6 space-y-10 bg-white">
+        <div className="p-6 space-y-6">
             {/* Hero Banner */}
             <div
                 className="relative min-h-[304px] rounded-2xl overflow-hidden flex items-center"
@@ -508,20 +648,20 @@ function ProFeatures() {
 
             {/* Features Slider */}
             <div>
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex justify-between items-center mb-4">
                     <h3 className="text-2xl font-semibold mb-8">Curated Features for Your Thriving Marketplace</h3>
-                    <div className="space-x-2">
+                    <div className="flex space-x-2">
                         <button
                             onClick={() => scroll('left')}
-                            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 transition"
+                            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
                         >
-                            ←
+                            <MoveLeft className="w-4 h-4" />
                         </button>
                         <button
                             onClick={() => scroll('right')}
-                            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 transition"
+                            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
                         >
-                            →
+                            <MoveRight className="w-4 h-4" />
                         </button>
                     </div>
                 </div>
@@ -559,6 +699,11 @@ function ProFeatures() {
 
             {/* marketplace and testimonial section */}
             <DokanMarketplaceUI />
+
+            {/* Pricing Section */}
+            <div>
+              <PricingSection />
+            </div>
         </div>
     );
 }
