@@ -257,11 +257,8 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
     );
 
     // Sold Individually
-    if ( ! empty( $data['_sold_individually'] ) ) {
-        update_post_meta( $post_id, '_sold_individually', 'yes' );
-    } else {
-        update_post_meta( $post_id, '_sold_individually', '' );
-    }
+    $sold_individually = ! empty( $data['_sold_individually'] ) && 'yes' === $data['_sold_individually'] ? 'yes' : 'no';
+    update_post_meta( $post_id, '_sold_individually', $sold_individually );
 
     // Stock Data
     $manage_stock      = ! empty( $data['_manage_stock'] ) && 'grouped' !== $product_type ? 'yes' : 'no';
