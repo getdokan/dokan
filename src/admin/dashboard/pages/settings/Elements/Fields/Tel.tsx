@@ -1,5 +1,6 @@
-import { useState } from '@wordpress/element';
-import { SettingsProps } from '../../StepSettings';
+import React, { useState } from '@wordpress/element';
+import { SettingsProps } from '../../types';
+import { DokanFieldLabel, TextField } from '../../../../../../components/fields';
 
 const Tel = ( { element, onValueChange }: SettingsProps ) => {
     const [ value, setValue ] = useState( element.value );
@@ -8,32 +9,28 @@ const Tel = ( { element, onValueChange }: SettingsProps ) => {
         return <></>;
     }
 
-    const handleValueChange = ( event ) => {
-        setValue( event.target.value );
+    const handleValueChange = ( newValue: string ) => {
+        setValue( newValue );
         onValueChange( {
             ...element,
-            value: event.target.value,
+            value: newValue,
         } );
     };
 
     return (
-        <div className="col-span-4">
-            <label
-                htmlFor={ element.hook_key }
-                className="block text-sm font-medium text-gray-700"
-            >
-                { element.title }
-            </label>
-            <input
-                type="tel"
+        <div className="flex justify-between p-4" id={ element.hook_key }>
+            <DokanFieldLabel
+                title={ element.title || '' }
+                titleFontWeight="light"
+                helperText={ element.description }
+            />
+            <TextField
+                value={ value as string }
                 onChange={ handleValueChange }
-                pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
-                name={ element.hook_key }
-                id={ element.hook_key }
-                placeholder={ element?.placeholder }
-                autoComplete="off"
-                value={ value }
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                placeholder={ element?.placeholder as string }
+                disabled={ element.disabled }
+                inputType="tel"
+                helperText={ element.description }
             />
         </div>
     );

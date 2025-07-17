@@ -1,34 +1,36 @@
 import { SettingsProps } from '../../types';
 import {
     DokanFieldLabel,
-    TextField,
+    DokanTextArea,
 } from '../../../../../../components/fields';
 
-const Password = ( { element, onValueChange }: SettingsProps ) => {
-    const handleChange = ( value: string ) => {
+const TextArea = ( { element, onValueChange }: SettingsProps ) => {
+    const handleChange = (
+        event: React.ChangeEvent< HTMLTextAreaElement >
+    ) => {
         onValueChange( {
             ...element,
-            value,
+            value: event.target.value,
         } );
     };
 
     return (
-        <div className="p-4">
+        <div className="flex justify-between p-4" id={ element.hook_key }>
             <DokanFieldLabel
                 title={ element.title || '' }
                 titleFontWeight="light"
                 helperText={ element.description }
             />
-            <TextField
+            <DokanTextArea
                 value={ ( element.value as string ) || '' }
                 onChange={ handleChange }
-                placeholder={ element.placeholder as string }
-                disabled={ element.disabled }
-                inputType="password"
-                helperText={ element.description }
+                input={ {
+                    placeholder: element.placeholder as string,
+                    disabled: element.disabled,
+                } }
             />
         </div>
     );
 };
 
-export default Password;
+export default TextArea;

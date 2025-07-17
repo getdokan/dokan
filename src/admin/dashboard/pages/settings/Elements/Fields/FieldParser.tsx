@@ -1,23 +1,31 @@
+import { SettingsProps } from '../../types';
+import { applyFilters } from '@wordpress/hooks';
 import Text from './Text';
-import Password from './Password';
-import Tel from './Tel';
-import { SettingsProps } from '../../StepSettings';
-import RadioBox from './RadioBox';
-import Radio from './Radio';
-import Switcher from './Switcher';
-import Currency from './Currency';
 import Select from './Select';
+import Switch from './Switch';
+import Password from './Password';
+import Email from './Email';
+import Number from './Number';
+import CheckboxGroup from './CheckboxGroup';
+import RadioCapsule from './RadioCapsule';
+import TextArea from './TextArea';
+import Radio from './Radio';
+import RadioBox from './RadioBox';
+import Currency from './Currency';
 import MultiCheck from './MultiCheck';
 import CategoryBasedCommission from './Commission/CategoryBasedCommission';
 import CombineInput from './Commission/CombineInput';
-import { applyFilters } from '@wordpress/hooks';
+import Tel from './Tel';
 
 const FieldParser = ( {
     element,
     getSetting,
     onValueChange,
 }: SettingsProps ) => {
-    // TODO: add support for custom input fields and custom hook.
+    if ( ! element.display ) {
+        return null;
+    }
+
     switch ( element.variant ) {
         case 'text':
             return (
@@ -28,6 +36,7 @@ const FieldParser = ( {
                     getSetting={ getSetting }
                 />
             );
+
         case 'select':
             return (
                 <Select
@@ -37,6 +46,17 @@ const FieldParser = ( {
                     getSetting={ getSetting }
                 />
             );
+
+        case 'switch':
+            return (
+                <Switch
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
         case 'password':
             return (
                 <Password
@@ -46,15 +66,67 @@ const FieldParser = ( {
                     getSetting={ getSetting }
                 />
             );
-        case 'tel':
+
+        case 'email':
             return (
-                <Tel
+                <Email
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
                     getSetting={ getSetting }
                 />
             );
+
+        case 'number':
+            return (
+                <Number
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'checkbox_group':
+            return (
+                <CheckboxGroup
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'radio_capsule':
+            return (
+                <RadioCapsule
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'textarea':
+            return (
+                <TextArea
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'radio':
+            return (
+                <Radio
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
         case 'radio_box':
             return (
                 <RadioBox
@@ -64,65 +136,61 @@ const FieldParser = ( {
                     getSetting={ getSetting }
                 />
             );
-        case 'radio':
-            return (
-                <Radio
-                    element={ element }
-                    key={ element.hook_key }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />
-            );
+
         case 'currency':
             return (
                 <Currency
-                    element={ element }
                     key={ element.hook_key }
+                    element={ element }
                     onValueChange={ onValueChange }
                     getSetting={ getSetting }
                 />
             );
-        case 'switch':
-            return (
-                <Switcher
-                    element={ element }
-                    key={ element.hook_key }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />
-            );
+
         case 'multicheck':
             return (
                 <MultiCheck
-                    element={ element }
                     key={ element.hook_key }
+                    element={ element }
                     onValueChange={ onValueChange }
                     getSetting={ getSetting }
                 />
             );
+
         case 'category_based_commission':
             return (
                 <CategoryBasedCommission
-                    element={ element }
                     key={ element.hook_key }
+                    element={ element }
                     onValueChange={ onValueChange }
                     getSetting={ getSetting }
                 />
             );
+
         case 'combine_input':
             return (
                 <CombineInput
-                    element={ element }
                     key={ element.hook_key }
+                    element={ element }
                     onValueChange={ onValueChange }
                     getSetting={ getSetting }
                 />
             );
+
+        case 'tel':
+            return (
+                <Tel
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
         case 'checkbox':
         case 'color':
         case 'date':
         case 'datetime-local':
-        case 'email':
         case 'file':
         case 'hidden':
         case 'image':
@@ -132,10 +200,9 @@ const FieldParser = ( {
         case 'time':
         case 'url':
         case 'week':
-        case 'number':
         default:
             return applyFilters(
-                'dokan_admin_setup_guide_default_field_parser',
+                'dokan_admin_settings_default_field_parser',
                 <Text
                     key={ element.hook_key }
                     element={ element }

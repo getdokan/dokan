@@ -1,5 +1,6 @@
-import { SettingsProps } from '../../StepSettings';
-import { RawHTML, useState } from '@wordpress/element';
+import React, { useState } from '@wordpress/element';
+import { SettingsProps } from '../../types';
+import { DokanFieldLabel, TextField } from '../../../../../../components/fields';
 
 const Text = ( { element, onValueChange }: SettingsProps ) => {
     const [ value, setValue ] = useState( element.value );
@@ -8,34 +9,28 @@ const Text = ( { element, onValueChange }: SettingsProps ) => {
         return <></>;
     }
 
-    const handleValueChange = ( event ) => {
-        setValue( event.target.value );
+    const handleValueChange = ( newValue: string ) => {
+        setValue( newValue );
         onValueChange( {
             ...element,
-            value: event.target.value,
+            value: newValue,
         } );
     };
 
     return (
-        <div className="col-span-4">
-            <label
-                htmlFor={ element.hook_key }
-                className="block text-sm font-medium text-gray-700"
-            >
-                <RawHTML>{ element.title }</RawHTML>
-            </label>
-            <p className="text-sm text-gray-500">
-                <RawHTML>{ element.description }</RawHTML>
-            </p>
-            <input
-                type="text"
+        <div className="flex justify-between p-4" id={ element.hook_key }>
+            <DokanFieldLabel
+                title={ element.title || '' }
+                titleFontWeight="light"
+                helperText={ element.description }
+            />
+            <TextField
+                value={ value as string }
                 onChange={ handleValueChange }
-                name={ element.hook_key }
-                id={ element.hook_key }
-                placeholder={ element?.placeholder }
-                autoComplete="off"
-                value={ value }
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                placeholder={ element?.placeholder as string }
+                disabled={ element.disabled }
+                inputType="text"
+                helperText={ element.description }
             />
         </div>
     );

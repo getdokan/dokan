@@ -1,16 +1,17 @@
-import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
-import { RawHTML, useState } from '@wordpress/element';
-import { SettingsProps } from '../../StepSettings';
+import React, { useState } from '@wordpress/element';
+import { SettingsProps } from '../../types';
+import { DokanCheckboxGroup, DokanFieldLabel } from '../../../../../../components/fields';
 
 const MultiCheck = ( { element, onValueChange }: SettingsProps ) => {
-    const [ selectedValues, setSelectedValues ] = useState( [] );
+    const [ selectedValues, setSelectedValues ] = useState(
+        ( element.value as Array< string | number > ) || []
+    );
 
     if ( ! element.display ) {
         return <></>;
     }
 
-    // Handle change and propagate to parent component
-    const handleChange = ( values ) => {
+    const handleChange = ( values: Array< string | number > ) => {
         setSelectedValues( values );
         onValueChange( {
             ...element,
@@ -18,34 +19,26 @@ const MultiCheck = ( { element, onValueChange }: SettingsProps ) => {
         } );
     };
 
-    const initialValue = Object.values( element.value || element.default );
-
     return (
-        <div
-            id={ element.hook_key }
-            className=" flex justify-between flex-col items-start p-4 w-full"
-        >
-            <div className="flex flex-col mb-4 w-full">
-                <h2 className="text-sm leading-6 font-semibold text-gray-900">
-                    <RawHTML>{ element?.title }</RawHTML>
-                </h2>
-                <p className=" text-sm font-normal text-[#828282]">
-                    <RawHTML>{ element?.description }</RawHTML>
-                </p>
-            </div>
-            <SimpleCheckboxGroup
-                name={ element?.id }
-                onChange={ handleChange }
-                defaultValue={ initialValue }
-                options={
-                    element?.options?.map( ( option ) => ( {
-                        label: option.title,
-                        value: option.value,
-                    } ) ) || []
-                }
-                value={ selectedValues }
-                className="focus:outline-none outline-none w-full"
+        <div className="p-4">
+            <DokanFieldLabel
+                title={ element.title || '' }
+                titleFontWeight="light"
+                helperText={ element.description }
             />
+
+            <div className="mt-2">
+                <DokanCheckboxGroup
+                    options={
+                        element.options?.map( ( option ) => ( {
+                            label: option.title,
+                            value: option.value,
+                        } ) ) || []
+                    }
+                    defaultValue={ selectedValues }
+                    onChange={ handleChange }
+                />
+            </div>
         </div>
     );
 };

@@ -1,10 +1,10 @@
 import { SettingsProps } from '../../types';
 import {
     DokanFieldLabel,
-    TextField,
+    DokanRadioCapsule,
 } from '../../../../../../components/fields';
 
-const Password = ( { element, onValueChange }: SettingsProps ) => {
+const RadioCapsule = ( { element, onValueChange }: SettingsProps ) => {
     const handleChange = ( value: string ) => {
         onValueChange( {
             ...element,
@@ -19,16 +19,18 @@ const Password = ( { element, onValueChange }: SettingsProps ) => {
                 titleFontWeight="light"
                 helperText={ element.description }
             />
-            <TextField
-                value={ ( element.value as string ) || '' }
+            <DokanRadioCapsule
+                options={
+                    element.options?.map( ( option ) => ( {
+                        value: option.value as string,
+                        title: option.title,
+                    } ) ) || []
+                }
+                selected={ ( element.value as string ) || '' }
                 onChange={ handleChange }
-                placeholder={ element.placeholder as string }
-                disabled={ element.disabled }
-                inputType="password"
-                helperText={ element.description }
             />
         </div>
     );
 };
 
-export default Password;
+export default RadioCapsule;
