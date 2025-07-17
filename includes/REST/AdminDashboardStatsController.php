@@ -42,6 +42,16 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
             ]
         );
 
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/analytics', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_analytics_data' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
+                ],
+            ]
+        );
+
         // Add a new endpoint for a monthly_overview section
         register_rest_route(
             $this->namespace, '/' . $this->rest_base . '/monthly-overview', [
@@ -134,6 +144,34 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'icon'  => 'PanelTop',
                     'count' => $this->get_pending_withdrawals_count(),
                     'title' => esc_html__( 'Pending Withdrawals', 'dokan-lite' ),
+                ],
+            ],
+            $this
+        );
+
+        return rest_ensure_response( $data );
+    }
+
+    /**
+     * Get analytics data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_REST_Response
+     */
+    public function get_analytics_data() {
+        $data = apply_filters(
+            'dokan_rest_admin_dashboard_analytics_data',
+            [
+                'sales_overview' => [
+                    'icon'  => 'Coins',
+                    'url'   => wc_admin_url( '&path=/analytics/overview' ),
+                    'title' => esc_html__( 'Sales Overview', 'dokan-lite' ),
+                ],
+                'revenue_insight' => [
+                    'icon'  => 'BadgeDollarSign',
+                    'url'   => wc_admin_url( '&path=/analytics/revenue' ),
+                    'title' => esc_html__( 'Revenue Insight', 'dokan-lite' ),
                 ],
             ],
             $this
