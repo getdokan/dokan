@@ -160,7 +160,7 @@ const SettingsPage = () => {
 
             <div className="h-screen ">
                 <main className="w-full pb-10 lg:py-5 lg:px-0 bg-white h-screen  shadow rounded-lg">
-                    <div className="lg:grid lg:grid-cols-12 lg:gap-x-5  ">
+                    <div className="lg:grid lg:grid-cols-12 lg:gap-x-5 divide-x h-screen ">
                         { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
                                 key="admin-settings-menu"

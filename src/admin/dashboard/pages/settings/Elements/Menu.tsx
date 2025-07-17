@@ -59,7 +59,7 @@ const Menu = ( {
 } ): JSX.Element => {
     return (
         <aside className="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
-            <nav className="bg-white rounded-bl-[3px] rounded-tl-[3px] border border-[#e9e9e9] p-7">
+            <nav className="bg-white  p-7">
                 <SearchBar />
 
                 <div className="space-y-[22px]">
