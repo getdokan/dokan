@@ -43,30 +43,127 @@ import wordpressLogo from './assets/wordpressLogo.png';
 
 function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(true);
+  
   const pricingPlans = [
     {
       name: 'Starter',
       annualPrice: '$149',
-      lifetimePrice: '$399',
+      lifetimePrice: '$745',
       features: ['Essential Features', '3 Premium Modules', '1 Site License', 'Ticket Based Support'],
+      isPopular: false
     },
     {
-      name: 'Pro',
-      annualPrice: '$299',
-      lifetimePrice: '$799',
-      features: ['All Starter Features', '5 Premium Modules', '3 Site Licenses', 'Priority Support'],
+      name: 'Professional',
+      annualPrice: '$249',
+      lifetimePrice: '$1245',
+      features: ['Everything in Starter', '23 Premium Modules', '3 Sites Licenses', 'Ticket Based Support'],
+      isPopular: false
     },
     {
-      name: 'Premium',
+      name: 'Business',
       annualPrice: '$499',
-      lifetimePrice: '$1299',
-      features: ['All Pro Features', '10 Premium Modules', 'Unlimited Sites', '24/7 Support'],
+      lifetimePrice: '$2495',
+      features: ['Everything in Professional', '39 Premium Modules', '5 Sites Licenses', 'Ticket Based Support'],
+      isPopular: true
     },
+    {
+      name: 'Enterprise',
+      annualPrice: '$999',
+      lifetimePrice: '$4995',
+      features: ['Everything in Business', '39 Premium Modules', '10 Sites Licenses', 'Priority Support', '2 Hours of Theme Compatibility & Installation'],
+      isPopular: false
+    }
   ];
 
   return (
-    <section>
-     <h2>The packages we provide</h2>
+    <section className="w-full max-w-7xl mx-auto px-4 py-12">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+          The Packages We Provide
+        </h2>
+        <p className="text-gray-600 mb-6">
+          Get 20% instant off in all packages with coupon code <span className="font-semibold">LITEUPGRADE20</span>
+        </p>
+        
+        {/* Toggle Switch */}
+        <div className="flex items-center justify-center mb-2">
+          <div className="flex bg-gray-100 rounded-md p-1">
+            <button
+              onClick={() => setIsAnnual(true)}
+              className={`px-6 py-2 rounded text-sm font-medium transition-all ${
+                isAnnual 
+                  ? 'bg-purple-600 text-white shadow-sm' 
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Annual
+            </button>
+            <button
+              onClick={() => setIsAnnual(false)}
+              className={`px-6 py-2 rounded text-sm font-medium transition-all ${
+                !isAnnual 
+                  ? 'bg-purple-600 text-white shadow-sm' 
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Lifetime
+            </button>
+          </div>
+          {!isAnnual && (
+            <span className="ml-4 text-sm text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
+              Save More 20%
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Pricing Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
+        {pricingPlans.map((plan, index) => (
+          <div
+            key={index}
+            className={`relative rounded-lg border p-5 bg-white transition-all ${
+              plan.isPopular
+                ? 'border-purple-200 bg-gradient-to-br from-purple-50 to-white shadow-lg'
+                : 'border-gray-200 bg-gradient-to-br from-blue-50/30 to-white hover:shadow-md'
+            }`}
+          >
+            {plan.isPopular && (
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                  Popular
+                </span>
+              </div>
+            )}
+            
+            <div className="mb-4">
+              <h3 className="text-sm font-semibold text-gray-900 mb-2">{plan.name}</h3>
+              <div className="flex items-baseline gap-2">
+                <span className="text-lg font-bold text-gray-900">
+                  {isAnnual ? plan.annualPrice : plan.lifetimePrice}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {isAnnual ? 'Annually' : 'Lifetime'}
+                </span>
+              </div>
+            </div>
+
+            <div className="mb-6 space-y-2">
+              {plan.features.map((feature, featureIndex) => (
+                <div key={featureIndex} className="flex items-start gap-2">
+                  <Check className="w-3 h-3 text-purple-600 mt-0.5 flex-shrink-0" />
+                  <span className="text-xs text-gray-700">{feature}</span>
+                </div>
+              ))}
+            </div>
+
+            <button className="w-full bg-purple-600 text-white py-2 px-4 rounded text-xs font-bold hover:bg-purple-700 transition-colors">
+              Buy Now
+            </button>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
