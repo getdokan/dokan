@@ -132,9 +132,10 @@ class AdminDashboardStatsStore extends BaseDataStore {
         return apply_filters(
             'dokan_admin_dashboard_customer_metrics',
             [
-                'icon'  => 'FileUser',
-                'count' => (int) ( $result ?? 0 ),
-                'title' => esc_html__( 'Recurring Customers', 'dokan-lite' ),
+                'icon'    => 'FileUser',
+                'count'   => (int) ( $result ?? 0 ),
+                'title'   => esc_html__( 'Recurring Customers', 'dokan-lite' ),
+                'tooltip' => esc_html__( 'Customers who returned and purchased again in the time period', 'dokan-lite' ),
             ],
             $start_date,
             $end_date

@@ -5,7 +5,6 @@ namespace WeDevs\Dokan\DependencyManagement\Providers;
 use WeDevs\Dokan\Admin\Dashboard\Dashboard;
 use WeDevs\Dokan\Admin\Dashboard\Pages\DashboardMenu;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Modules;
-use WeDevs\Dokan\REST\AdminDashboardStatsController;
 use WeDevs\Dokan\Admin\Dashboard\Pages\SetupGuide;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Status;
 use WeDevs\Dokan\Admin\OnboardingSetup\AdminSetupGuide;
@@ -34,7 +33,6 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
         Modules::class,
         Status::class,
         DashboardMenu::class,
-        AdminDashboardStatsController::class,
 	];
 
     /**

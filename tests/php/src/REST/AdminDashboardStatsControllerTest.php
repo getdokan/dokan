@@ -86,6 +86,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
 
         $expected_endpoints = [
             'todo',
+            'analytics',
             'monthly-overview',
             'sales-chart',
             'customer-metrics',
@@ -113,6 +114,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
 
         $expected_endpoints = [
             'todo',
+            'analytics',
             'monthly-overview',
             'sales-chart',
             'customer-metrics',
@@ -179,6 +181,43 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
             $this->assertArrayHasKey( 'title', $data[$key] );
             $this->assertIsInt( $data[$key]['count'] );
         }
+    }
+
+    /**
+     * Test get_analytics_data endpoint
+     * @test
+     * @return void
+     */
+    public function test_get_analytics_data() {
+        wp_set_current_user( $this->admin_id );
+
+        $controller = new AdminDashboardStatsController();
+        $response = $controller->get_analytics_data();
+
+        $this->assertEquals( 200, $response->get_status() );
+
+        $data = $response->get_data();
+        $this->assertIsArray( $data );
+
+        // Check if expected analytics sections exist
+        $this->assertArrayHasKey( 'sales_overview', $data );
+        $this->assertArrayHasKey( 'revenue_insight', $data );
+
+        // Check structure of each analytics item
+        foreach ( ['sales_overview', 'revenue_insight'] as $key ) {
+            $this->assertArrayHasKey( 'icon', $data[$key] );
+            $this->assertArrayHasKey( 'url', $data[$key] );
+            $this->assertArrayHasKey( 'title', $data[$key] );
+            $this->assertIsString( $data[$key]['icon'] );
+            $this->assertIsString( $data[$key]['url'] );
+            $this->assertIsString( $data[$key]['title'] );
+        }
+
+        // Verify specific expected values
+        $this->assertEquals( 'Coins', $data['sales_overview']['icon'] );
+        $this->assertEquals( 'BadgeDollarSign', $data['revenue_insight']['icon'] );
+        $this->assertStringContainsString( '/analytics/overview', $data['sales_overview']['url'] );
+        $this->assertStringContainsString( '/analytics/revenue', $data['revenue_insight']['url'] );
     }
 
     /**
@@ -395,6 +434,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
 
         $endpoints = [
             'todo',
+            'analytics',
             'monthly-overview',
             'sales-chart',
             'customer-metrics',
@@ -441,6 +481,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
 
         $endpoints = [
             'todo',
+            'analytics',
             'monthly-overview',
             'sales-chart',
             'customer-metrics',
@@ -465,6 +506,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
 
         $endpoints = [
             'todo',
+            'analytics',
             'monthly-overview',
             'sales-chart',
             'customer-metrics',
