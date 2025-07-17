@@ -30,6 +30,14 @@ $changelog = [
                     'title'       => 'Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.',
                     'description' => '',
                 ],
+                [
+                    'title'       => 'Improved how product inventory information is retrieved, ensuring more accurate and consistent display of stock values.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.',
+                    'description' => '',
+                ],
         ],
     ],
     [

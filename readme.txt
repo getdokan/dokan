@@ -3,7 +3,7 @@ Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
 Requires at least: 6.5
-Tested up to: 6.8.1
+Tested up to: 6.8.2
 WC requires at least: 8.5.0
 WC tested up to: 10.0.2
 Requires PHP: 7.4
@@ -350,10 +350,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 == Changelog ==
 = v4.0.4 ( Jul 17, 2025 ) =
 
-- **update**- Admin Notice UI with Modern Design and Improved User Experience.
-- **update**- Enhanced Product Brand Integration with Dedicated Template and Manager Methods.
+- **update** Admin Notice UI with Modern Design and Improved User Experience.
+- **update** Enhanced Product Brand Integration with Dedicated Template and Manager Methods.
 - **fix:** Vendor/store names with special characters (e.g., apostrophes) now display correctly in the vendor dropdown on the admin product edit screen.
 - **fix:** Display correct earning in vendor dashboard product add/edit page for different category.
+- **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
+- **fix:** Improved how product inventory information is retrieved, ensuring more accurate and consistent display of stock values.
 - **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
 
 = v4.0.3 ( Jul 02, 2025 ) =
