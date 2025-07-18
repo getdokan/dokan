@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 
 interface CardProps {
     icon: JSX.Element;
-    countDirection?: 'up' | 'down';
+    countDirection?: 'up' | 'down' | 'neutral';
     count?: number | null;
     text: string;
     tooltip?: string;
@@ -24,7 +24,7 @@ function Card( {
                 <div className="bg-[#F8F6FE] w-10 h-10 rounded flex items-center justify-center text-[#7047EB]">
                     { icon }
                 </div>
-                { count && (
+                { count ? (
                     <div
                         className={ twMerge(
                             'text-sm flex',
@@ -42,6 +42,11 @@ function Card( {
                         </span>
                         <span>{ count }</span>
                         <span>%</span>
+                    </div>
+                ) : (
+                    <div className={ 'text-sm text-[#7047EB]' }>
+                        <span>{ count }</span>
+                        { count !== null && <span>%</span> }
                     </div>
                 ) }
             </div>

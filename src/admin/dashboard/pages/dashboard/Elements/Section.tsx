@@ -1,5 +1,6 @@
 import { Tooltip } from '@getdokan/dokan-ui';
 import { CircleAlert } from 'lucide-react';
+import { twMerge } from 'tailwind-merge';
 
 interface SectionProps {
     title: string;
@@ -16,8 +17,8 @@ function Section( {
     return (
         <div className="mt-4">
             <div className="flex justify-between mb-2">
-                <div className="flex flex-row items-end">
-                    <h3 className="font-semibold text-md text-black">
+                <div className="flex flex-row items-center">
+                    <h3 className="font-semibold text-base text-black">
                         { title }
                     </h3>
                     { tooltip && (

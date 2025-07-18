@@ -296,6 +296,10 @@ class Dashboard implements Hookable {
         if ( file_exists( $admin_dashboard_file ) ) {
             $dashboard_script = require $admin_dashboard_file;
             $dependencies     = $dashboard_script['dependencies'] ?? [];
+
+            $dependencies[]   = 'dokan-react-components';
+            $dependencies[]   = 'dokan-react-frontend';
+
             $version          = $dashboard_script['version'] ?? '';
             $data             = [ 'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price() ];
 

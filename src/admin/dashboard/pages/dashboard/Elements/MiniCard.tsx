@@ -1,6 +1,7 @@
 import { Card } from '@getdokan/dokan-ui';
 import { ImageOff } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
+import { RawHTML } from '@wordpress/element';
 
 interface MiniCardProps {
     icon: JSX.Element;
@@ -31,7 +32,7 @@ function MiniCard( {
                     { icon ?? <ImageOff /> }
                 </div>
                 <span className="text-black font-semibold text-sm">
-                    { text }
+                    <RawHTML>{ text }</RawHTML>
                 </span>
             </div>
             <div>
