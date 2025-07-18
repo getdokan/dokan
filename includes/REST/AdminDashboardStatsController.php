@@ -503,23 +503,16 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
         $date_range = $this->parse_date_range( $date );
 
         // Get a daily breakdown
-        $current_daily = VendorOrderStats::get_sales_chart_data(
+        $daily_intervals = VendorOrderStats::get_sales_chart_data(
             $date_range['current_month_start'],
             $date_range['current_month_end'],
-            true // group by day
-        );
-
-        $previous_daily = VendorOrderStats::get_sales_chart_data(
-            $date_range['previous_month_start'],
-            $date_range['previous_month_end'],
             true // group by day
         );
 
         return apply_filters(
             'dokan_rest_admin_dashboard_sales_chart_data',
             [
-                'current_month_daily'  => $current_daily,
-                'previous_month_daily' => $previous_daily,
+                'intervals' => $daily_intervals,
             ],
             $date_range
         );
@@ -589,20 +582,48 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
         // Ensure valid month range
         $month = max( 1, min( 12, $month ) );
 
+        // Get current date information
+        $current_datetime = dokan_current_datetime();
+        $current_year     = (int) $current_datetime->format( 'Y' );
+        $current_month    = (int) $current_datetime->format( 'm' );
+        $current_day      = (int) $current_datetime->format( 'd' );
+
+        // Check if the selected month is the current running month
+        $is_current_running_month = ( $year === $current_year && $month === $current_month );
+
         // Calculate the start and end dates for the selected month
         $current_month_start = dokan_current_datetime()->modify( "$year-$month-01" )->format( 'Y-m-01' );
-        $current_month_end   = dokan_current_datetime()->modify( "$year-$month-01" )->format( 'Y-m-t' );
+
+        if ( $is_current_running_month ) {
+            $current_month_end = $current_datetime->format( 'Y-m-d' );
+        } else {
+            $current_month_end = dokan_current_datetime()->modify( "$year-$month-01" )->format( 'Y-m-t' );
+        }
 
         // Calculate the start and end dates for the previous month
         $previous_month_start = dokan_current_datetime()->modify( "$year-$month-01 -1 month" )->format( 'Y-m-01' );
-        $previous_month_end   = dokan_current_datetime()->modify( "$year-$month-01 -1 month" )->format( 'Y-m-t' );
+        if ( $is_current_running_month ) {
+            $previous_month_datetime = dokan_current_datetime()->modify( "$year-$month-01 -1 month" );
+            $previous_month_year     = (int) $previous_month_datetime->format( 'Y' );
+            $previous_month_num      = (int) $previous_month_datetime->format( 'm' );
 
-        return [
-            'current_month_start'  => $current_month_start,
-            'current_month_end'    => $current_month_end,
-            'previous_month_start' => $previous_month_start,
-            'previous_month_end'   => $previous_month_end,
-        ];
+            $days_in_previous_month = (int) $previous_month_datetime->format( 't' );
+            $target_day = min( $current_day, $days_in_previous_month );
+
+            $previous_month_end = sprintf( '%04d-%02d-%02d', $previous_month_year, $previous_month_num, $target_day );
+        } else {
+            $previous_month_end = dokan_current_datetime()->modify( "$year-$month-01 -1 month" )->format( 'Y-m-t' );
+        }
+
+        return apply_filters(
+            'dokan_rest_admin_dashboard_date_range',
+            [
+                'current_month_start'  => $current_month_start,
+                'current_month_end'    => $current_month_end,
+                'previous_month_start' => $previous_month_start,
+                'previous_month_end'   => $previous_month_end,
+            ]
+        );
     }
 
     /**

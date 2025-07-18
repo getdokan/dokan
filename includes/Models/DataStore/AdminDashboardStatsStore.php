@@ -103,7 +103,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
 
         $this->clear_all_clauses();
         // phpcs:disable
-        $this->add_sql_clause( 'select', 'COUNT(DISTINCT pm.meta_value)' );
+        $this->add_sql_clause( 'select', 'COUNT(DISTINCT pm.meta_value) as recurring_customers' );
         $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() . ' p1' );
         $this->add_sql_clause( 'join', "JOIN {$wpdb->postmeta} pm ON p1.ID = pm.post_id AND pm.meta_key = '_customer_user' AND pm.meta_value > 0" );
         $this->add_sql_clause( 'where', " AND p1.post_type = 'shop_order'" );
@@ -121,7 +121,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
                     AND p2.post_status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )
                     AND DATE(p2.post_date) < %s
                 )",
-                $start_date
+                $end_date
             )
         );
 
@@ -133,7 +133,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
             'dokan_admin_dashboard_customer_metrics',
             [
                 'icon'    => 'FileUser',
-                'count'   => (int) ( $result ?? 0 ),
+                'count'   => (int) ( $result['recurring_customers'] ?? 0 ),
                 'title'   => esc_html__( 'Recurring Customers', 'dokan-lite' ),
                 'tooltip' => esc_html__( 'Customers who returned and purchased again in the time period', 'dokan-lite' ),
             ],
@@ -236,7 +236,18 @@ class AdminDashboardStatsStore extends BaseDataStore {
         $query_statement = $this->get_query_statement();
         $stats = $wpdb->get_results( $query_statement ); // phpcs:ignore
 
-        $order_stats = [];
+        // Initialize order stats with default values.
+        $order_stats = [
+            'current' => [
+                'total_orders'     => 0,
+                'cancelled_orders' => 0,
+            ],
+            'previous' => [
+                'total_orders'     => 0,
+                'cancelled_orders' => 0,
+            ],
+        ];
+
         foreach ( $stats as $stat ) {
             $order_stats[ $stat->period ] = [
                 'total_orders'     => (int) ( $stat->total_orders ?? 0 ),
