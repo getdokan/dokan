@@ -1,6 +1,6 @@
 import domReady from '@wordpress/dom-ready';
 import './tailwind.scss';
-import { DokanAdminRoute } from '../../components/Dashboard';
+import { DokanAdminRoute } from '../admin/dashboard/components/Dashboard';
 import Dashboard from './Dashboard';
 
 domReady( () => {
@@ -10,7 +10,7 @@ domReady( () => {
         'dokan-admin-dashboard-dashboard',
         ( routes: Array< DokanAdminRoute > ) => {
             routes.push( {
-                id: 'dashboard',
+                id: 'dokan-status',
                 element: <Dashboard />,
                 path: '',
             } satisfies DokanAdminRoute );

@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Admin\Dashboard\Pages;
 
-class DashboardMenu extends AbstractPage {
+class Dashboard extends AbstractPage {
 
     /**
      * Get the ID of the page.
