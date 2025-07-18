@@ -1,4 +1,8 @@
-import { Vendor, VendorsStoreState } from '../../definitions/dokan-vendors';
+import {
+    Vendor,
+    VendorsStoreState,
+    Product,
+} from '../../definitions/dokan-vendors';
 
 const selectors = {
     getVendors( state: VendorsStoreState ): Vendor[] {
@@ -17,6 +21,20 @@ const selectors = {
     },
     getError( state: VendorsStoreState ): string | undefined {
         return state.error;
+    },
+    getVendorStats( state: VendorsStoreState, vendorId: number ): any {
+        return state.vendorStats ? state.vendorStats[ vendorId ] : {};
+    },
+    getTopProducts( state: VendorsStoreState, vendorId: number ): Product[] {
+        return state.topProducts?.[ vendorId ] || [];
+    },
+    isLoadingTopProducts(
+        state: VendorsStoreState,
+        vendorId: number
+    ): boolean {
+        return state.loadingTopProducts
+            ? state.loadingTopProducts[ vendorId ] || false
+            : false;
     },
 };
 

@@ -295,9 +295,16 @@ class Dashboard implements Hookable {
         $admin_dashboard_file = DOKAN_DIR . '/assets/js/dokan-admin-dashboard.asset.php';
         if ( file_exists( $admin_dashboard_file ) ) {
             $dashboard_script = require $admin_dashboard_file;
-            $dependencies     = $dashboard_script['dependencies'] ?? [];
+            $dependencies     = array_merge( $dashboard_script['dependencies'] ?? [], [ 'dokan-react-components' ] );
             $version          = $dashboard_script['version'] ?? '';
-            $data             = [ 'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price() ];
+            $data             = apply_filters(
+                'dokan_admin_dashboard_localize_scripts',
+                [
+                    'currency'  => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+                    'states'    => WC()->countries->get_allowed_country_states(),
+                    'countries' => WC()->countries->get_allowed_countries(),
+                ]
+            );
 
             wp_register_script(
                 $this->script_key,
@@ -323,6 +330,17 @@ class Dashboard implements Hookable {
                 $this->script_key,
                 'dokanAdminDashboard',
                 $data,
+            );
+
+            $dokan_frontend = [
+                'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+            ];
+
+            // localize dokan frontend script
+            wp_localize_script(
+                $this->script_key,
+                'dokanFrontend',
+                apply_filters( 'dokan_react_frontend_localized_args', $dokan_frontend ),
             );
         }
     }
