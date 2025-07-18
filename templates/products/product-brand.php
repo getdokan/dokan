@@ -2,7 +2,7 @@
 /**
  * Dokan Product Brand Template
  *
- * @since   DOKAN_SINCE
+ * @since   4.0.4
  *
  * @package dokan
  *

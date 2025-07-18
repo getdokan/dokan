@@ -577,7 +577,7 @@ class Hooks {
     /**
      * Add product brand taxonomy template
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.4
      *
      * @param \WP_Post $post The post object of the product being edited.
      *
@@ -596,7 +596,7 @@ class Hooks {
     /**
      * Update product brands
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.4
      *
      * @param int   $product_id   The ID of the product being updated.
      * @param array $product_data The product data containing brand information.

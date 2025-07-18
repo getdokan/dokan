@@ -124,9 +124,10 @@ class Products {
             return;
         }
         $product            = wc_get_product( $post_id );
-        $_sold_individually = $product ? $product->get_meta( '_sold_individually' ) : '';
-        $_stock             = $product ? $product->get_meta( '_stock' ) : '';
-        $_low_stock_amount  = $product ? $product->get_meta( '_low_stock_amount' ) : '';
+        $_sold_individually = $product ? $product->is_sold_individually() : '';
+        $_stock             = $product ? $product->get_stock_quantity() : '';
+        $_low_stock_amount  = $product ? $product->get_low_stock_amount() : '';
+
         dokan_get_template_part(
             'products/inventory', '', [
                 'post_id'            => $post_id,
@@ -414,6 +415,10 @@ class Products {
                             update_post_meta( $product_id, '_price', wc_format_decimal( $postdata['_sale_price'] ) );
                         }
                     }
+
+                    // Sold Individually
+                    $sold_individually = ! empty( $data['_sold_individually'] ) && 'yes' === $data['_sold_individually'] ? 'yes' : 'no';
+                    update_post_meta( $product_id, '_sold_individually', $sold_individually );
 
                     update_post_meta( $product_id, '_visibility', 'visible' );
                     update_post_meta( $product_id, '_stock_status', 'instock' );

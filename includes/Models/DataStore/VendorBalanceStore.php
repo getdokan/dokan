@@ -9,7 +9,7 @@ use WeDevs\Dokan\Models\VendorBalance;
 /**
  * Class VendorBalanceStore
  *
- * @since DOKAN_SINCE
+ * @since 4.0.4
  */
 class VendorBalanceStore extends BaseDataStore {
 

@@ -771,7 +771,7 @@ class Manager {
     /**
      * Set product brands.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.4
      *
      * @param int   $product_id Product ID.
      * @param array $brands     Array of brand IDs.
@@ -786,7 +786,7 @@ class Manager {
     /**
      * Get product brands.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.4
      *
      * @param int    $product_id Product ID.
      * @param string $fields     Fields to return. Default is 'all'. Other options are 'ids', 'names', 'slugs', 'count', 'all_with_object_id'.
@@ -805,7 +805,7 @@ class Manager {
     /**
      * Get product brand IDs.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.4
      *
      * @param int $product_id Product ID.
      *
