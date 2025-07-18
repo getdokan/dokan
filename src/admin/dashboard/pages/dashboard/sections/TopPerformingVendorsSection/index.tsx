@@ -1,12 +1,12 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import Section from '../../Elements/Section';
-import { DataViews } from '../../../components';
+import { DataViews } from '../../../../../../components';
 import { useDashboardApiData } from '../../hooks/useDashboardApiData';
 import { fetchTopPerformingVendors } from '../../utils/api';
 import { TopPerformingVendorsData } from '../../types';
 import TopPerformingVendorsSkeleton from './Skeleton';
-import PriceHtml from '../../../components/PriceHtml';
+import PriceHtml from '../../../../../../components/PriceHtml';
 import { applyFilters } from '@wordpress/hooks';
 
 const TopPerformingVendorsSection = () => {

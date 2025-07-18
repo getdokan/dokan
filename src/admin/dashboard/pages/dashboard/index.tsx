@@ -1,3 +1,4 @@
+import './tailwind.scss';
 import { __ } from '@wordpress/i18n';
 import TodoSection from './sections/TodoSection';
 import AnalyticsSection from './sections/AnalyticsSection';
@@ -8,7 +9,7 @@ import AllTimeStatsSection from './sections/AllTimeStatsSection';
 import TopPerformingVendorsSection from './sections/TopPerformingVendorsSection';
 import MostReviewedProductsSection from './sections/MostReviewedProductsSection';
 import MostReportedVendorsSection from './sections/MostReportedVendorsSection';
-import getSettings from '../admin/dashboard/settings/getSettings';
+import getSettings from '../../../../admin/dashboard/settings/getSettings';
 
 function Dashboard() {
     return (
@@ -44,7 +45,7 @@ function Dashboard() {
                 <MostReviewedProductsSection />
 
                 { /* Render the most reported vendors section. */ }
-                { getSettings( 'dashboard' )?.show_most_reported_vendors && (
+                { dokanAdminDashboardSettings?.show_most_reported_vendors && (
                     <MostReportedVendorsSection />
                 ) }
             </div>

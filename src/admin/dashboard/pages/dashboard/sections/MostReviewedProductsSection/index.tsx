@@ -1,7 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import Section from '../../Elements/Section';
-import { DataViews } from '../../../components';
+import { DataViews } from '../../../../../../components';
 import { useDashboardApiData } from '../../hooks/useDashboardApiData';
 import { fetchMostReviewedProducts } from '../../utils/api';
 import { MostReviewedProductsData } from '../../types';

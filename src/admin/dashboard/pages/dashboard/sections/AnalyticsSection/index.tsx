@@ -2,7 +2,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import Section from '../../Elements/Section';
 import MiniCard from '../../Elements/MiniCard';
 import DynamicIcon from '../../components/DynamicIcon';
-import { DokanButton } from '../../../components';
+import { DokanButton } from '../../../../../../components';
 import { useDashboardApiData } from '../../hooks/useDashboardApiData';
 import { fetchAnalytics } from '../../utils/api';
 import { AnalyticsData } from '../../types';

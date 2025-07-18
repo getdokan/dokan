@@ -1,2 +1,53 @@
 @use '../../../../base-tailwind';
 @config './tailwind.config.js';
+
+// DataViews styling for dashboard tables
+#dokan-top-performing-vendors,
+#dokan-most-reported-vendors,
+#dokan-most-reviewed-products {
+  &.dokan-dashboard-datatable {
+    .dataviews-wrapper {
+      .dataviews__view-actions {
+        display: none;
+      }
+    }
+  }
+
+  .dataviews-view-table__actions-column {
+    .components-button {
+      &:hover {
+        background: transparent;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .dataviews-view-table__row {
+    td {
+      vertical-align: middle;
+    }
+  }
+
+  table.dataviews-view-table {
+    th {
+      background-color: #f9fafb;
+    }
+  }
+
+  .dataviews-wrapper {
+    .dataviews-no-results {
+      color: #6b7280;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .dataviews-loading {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+  }
+}
+
