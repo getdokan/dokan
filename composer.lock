@@ -62,16 +62,16 @@
         },
         {
             "name": "appsero/updater",
-            "version": "v2.3.4",
+            "version": "v2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Appsero/updater.git",
-                "reference": "7d026d28a7ed7bdeaea061815642961b5fa6a72d"
+                "reference": "078f66e6bb91fdaaba0661d19a3d5d2b25b626ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Appsero/updater/zipball/7d026d28a7ed7bdeaea061815642961b5fa6a72d",
-                "reference": "7d026d28a7ed7bdeaea061815642961b5fa6a72d",
+                "url": "https://api.github.com/repos/Appsero/updater/zipball/078f66e6bb91fdaaba0661d19a3d5d2b25b626ee",
+                "reference": "078f66e6bb91fdaaba0661d19a3d5d2b25b626ee",
                 "shasum": ""
             },
             "type": "library",
@@ -93,9 +93,9 @@
             "description": "Appsero client updater module",
             "support": {
                 "issues": "https://github.com/Appsero/updater/issues",
-                "source": "https://github.com/Appsero/updater/tree/v2.3.4"
+                "source": "https://github.com/Appsero/updater/tree/v2.3.5"
             },
-            "time": "2025-07-17T09:01:00+00:00"
+            "time": "2025-07-17T09:51:28+00:00"
         },
         {
             "name": "jakeasmith/http_build_url",
