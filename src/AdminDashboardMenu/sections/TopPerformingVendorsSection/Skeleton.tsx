@@ -5,9 +5,9 @@ interface TopPerformingVendorsSkeletonProps {
     count?: number;
 }
 
-const TopPerformingVendorsSkeleton: React.FC<
-    TopPerformingVendorsSkeletonProps
-> = ( { count = 5 } ) => {
+const TopPerformingVendorsSkeleton = ( {
+    count = 5,
+}: TopPerformingVendorsSkeletonProps ) => {
     return (
         <Section
             title={ __( 'Top Performing Vendors', 'dokan-lite' ) }

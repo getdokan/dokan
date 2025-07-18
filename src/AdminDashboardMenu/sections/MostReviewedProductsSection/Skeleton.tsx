@@ -5,9 +5,9 @@ interface MostReviewedProductsSkeletonProps {
     count?: number;
 }
 
-const MostReviewedProductsSkeleton: React.FC<
-    MostReviewedProductsSkeletonProps
-> = ( { count = 5 } ) => {
+const MostReviewedProductsSkeleton = ( {
+    count = 5,
+}: MostReviewedProductsSkeletonProps ) => {
     return (
         <Section title={ __( 'Most Reviewed Products', 'dokan-lite' ) }>
             <div className="bg-white rounded-lg shadow">

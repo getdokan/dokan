@@ -5,9 +5,7 @@ interface TodoSectionSkeletonProps {
     count?: number;
 }
 
-const TodoSectionSkeleton: React.FC< TodoSectionSkeletonProps > = ( {
-    count = 8,
-} ) => {
+const TodoSectionSkeleton = ( { count = 8 }: TodoSectionSkeletonProps ) => {
     return (
         <Section title={ __( 'To-Do', 'dokan-lite' ) }>
             <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">

@@ -5,9 +5,9 @@ interface MonthlyOverviewSkeletonProps {
     count?: number;
 }
 
-const MonthlyOverviewSkeleton: React.FC< MonthlyOverviewSkeletonProps > = ( {
+const MonthlyOverviewSkeleton = ( {
     count = 8,
-} ) => {
+}: MonthlyOverviewSkeletonProps ) => {
     return (
         <Section title={ __( 'Monthly Overview', 'dokan-lite' ) }>
             <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">

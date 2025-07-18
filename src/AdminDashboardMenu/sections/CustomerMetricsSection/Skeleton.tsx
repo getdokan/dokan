@@ -5,9 +5,9 @@ interface CustomerMetricsSkeletonProps {
     count?: number;
 }
 
-const CustomerMetricsSkeleton: React.FC< CustomerMetricsSkeletonProps > = ( {
+const CustomerMetricsSkeleton = ( {
     count = 1,
-} ) => {
+}: CustomerMetricsSkeletonProps ) => {
     return (
         <Section title={ __( 'Customer Metrics', 'dokan-lite' ) }>
             <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">

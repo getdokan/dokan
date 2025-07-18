@@ -114,7 +114,10 @@ const TopPerformingVendorsSection = () => {
         return (
             <Section
                 title={ __( 'Top Performing Vendors', 'dokan-lite' ) }
-                tooltip="Top performing vendors of the marketplace, updates daily at 00:01"
+                tooltip={ __(
+                    'Top performing vendors of the marketplace, updates daily at 00:01',
+                    'dokan-lite'
+                ) }
             >
                 <div className="text-red-500 p-4 bg-red-50 rounded-lg">
                     { sprintf(

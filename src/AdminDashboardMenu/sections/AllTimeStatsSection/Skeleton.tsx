@@ -5,9 +5,9 @@ interface AllTimeStatsSkeletonProps {
     count?: number;
 }
 
-const AllTimeStatsSkeleton: React.FC< AllTimeStatsSkeletonProps > = ( {
+const AllTimeStatsSkeleton = ( {
     count = 6,
-} ) => {
+}: AllTimeStatsSkeletonProps ) => {
     return (
         <Section title={ __( 'All Time Stats', 'dokan-lite' ) }>
             <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">

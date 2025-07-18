@@ -89,7 +89,6 @@ const SalesChartSkeleton = () => {
                                 </div>
 
                                 { /* Skeleton curve path */ }
-                                { /*{ [ ...Array( 2 ) ].map( ( _, i ) => (*/ }
                                 <div className="absolute inset-0 p-6">
                                     <svg
                                         className="w-full h-full"
@@ -127,7 +126,6 @@ const SalesChartSkeleton = () => {
                                         />
                                     </svg>
                                 </div>
-                                { /*) ) }*/ }
                             </div>
                         </CardBody>
                     </Card>
