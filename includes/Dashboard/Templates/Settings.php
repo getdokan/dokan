@@ -822,7 +822,8 @@ class Settings {
      * @return array
      */
     private function get_payment_methods( $method_keys ) {
-        $methods = [];
+        $methods  = [];
+        $gateways = WC()->payment_gateways->payment_gateways();
 
         foreach ( $method_keys as $method_key ) {
             $cur_method = dokan_withdraw_get_method( $method_key );
@@ -835,11 +836,20 @@ class Settings {
                     $cur_method['title'] = $method_title;
                 }
 
+                $cur_method['description'] = '';
+                if ( isset( $gateways[ $method_key ] ) ) {
+                    $cur_method['description'] = $gateways[ $method_key ]->get_description();
+                } elseif ( $method_key === 'bank' ) {
+                    $cur_method['description'] = $gateways['bacs']->get_description();
+                } elseif ( $method_key === 'paypal' ) {
+                    $cur_method['description'] = $gateways['bacs']->get_description();
+                }
+
                 $methods[ $method_key ] = $cur_method;
             }
         }
 
-        return $methods;
+        return apply_filters( 'dokan_vendor_payment_withdraw_methods', $methods, $gateways );
     }
 
     /**
