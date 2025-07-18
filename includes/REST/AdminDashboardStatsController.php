@@ -509,6 +509,17 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
             true // group by day
         );
 
+        // Filter out future days from current_month_daily
+        $today = dokan_current_datetime()->format('Y-m-d');
+        $current_daily = array_filter(
+            $current_daily,
+            function ( $item ) use ( $today ) {
+                return $item['date'] <= $today;
+            }
+        );
+        // Re-index array to have sequential keys
+        $current_daily = array_values($current_daily);
+
         $previous_daily = VendorOrderStats::get_sales_chart_data(
             $date_range['previous_month_start'],
             $date_range['previous_month_end'],
