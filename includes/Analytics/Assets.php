@@ -121,6 +121,7 @@ class Assets implements Hookable {
 
         wp_enqueue_script( 'vendor_analytics_script' );
         wp_enqueue_style( 'vendor_analytics_style' );
+        wp_set_script_translations( 'vendor_analytics_script', 'dokan-lite' );
 
 		wp_add_inline_script(
             'vendor_analytics_script', 'var vendorAnalyticsDokanConfig = ' . wp_json_encode(
