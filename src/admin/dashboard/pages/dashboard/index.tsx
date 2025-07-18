@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import Section from './Elements/Section';
 import MiniCard from './Elements/MiniCard';
 import { Coins, BadgeDollarSign, User } from 'lucide-react';
-import { DokanButton } from '../components';
+import { DokanButton } from '../../../../components';
 import Card from './Elements/Card';
 import MonthPicker from './Elements/MonthPicker';
 import { useState } from '@wordpress/element';

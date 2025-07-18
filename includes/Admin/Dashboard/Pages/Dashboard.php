@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Admin\Dashboard\Pages;
 
-class DashboardMenu extends AbstractPage {
+class Dashboard extends AbstractPage {
 
     /**
      * Get the ID of the page.
@@ -12,7 +12,7 @@ class DashboardMenu extends AbstractPage {
      * @return string
      */
 	public function get_id(): string {
-		return 'dokan-admin-dashboard-menu';
+		return 'dashboard';
 	}
 
 	/**
@@ -22,7 +22,7 @@ class DashboardMenu extends AbstractPage {
 		return [
             'page_title' => __( 'Dashboard', 'dokan-lite' ),
             'menu_title' => __( 'Dashboard', 'dokan-lite' ),
-            'route'      => '#',
+            'route'      => $this->get_id(),
             'capability' => $capability,
             'position'   => 99,
         ];

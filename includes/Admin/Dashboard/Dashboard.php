@@ -81,8 +81,8 @@ class Dashboard implements Hookable {
         $menu_slug = 'dokan-dashboard';
         add_submenu_page(
             'dokan',
-            '',
-            '',
+            esc_html__( 'Dokan Admin Dashboard', 'dokan-lite' ),
+            esc_html__( 'Dashboard', 'dokan-lite' ),
             $capability,
             $menu_slug,
             [ $this, 'render_dashboard_page' ],
