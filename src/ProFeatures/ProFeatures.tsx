@@ -741,6 +741,51 @@ function ExceptionalFeatures() {
     );
 }
 
+function WhatMakesDokanStandOut() {
+  return (
+    <section className="py-12 bg-white">
+      <div className="container mx-auto px-4 text-center">
+        <h2 className="text-3xl font-bold text-gray-900 mb-8">What Makes Dokan Stand Out</h2>
+        <div classFeatureCard="flex flex-col md:flex-row justify-center gap-8">
+          <div className="flex-1 max-w-xs">
+            <div className="flex justify-center mb-4">
+              <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 text-purple-600">
+                ✔
+              </span>
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">14 Days Money Back Guarantee</h3>
+            <p className="text-gray-600">
+              Get a full refund within 14 days if our plugin doesn’t meet your needs — no questions asked!
+            </p>
+          </div>
+          <div className="flex-1 max-w-xs">
+            <div className="flex justify-center mb-4">
+              <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 text-purple-600">
+                ✔
+              </span>
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Help Is Just a Click Away, Day or Night!</h3>
+            <p className="text-gray-600">
+              Receive expert support 24/7 to keep your business running smoothly, anytime you need help.
+            </p>
+          </div>
+          <div className="flex-1 max-w-xs">
+            <div className="flex justify-center mb-4">
+              <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 text-purple-600">
+                ✔
+              </span>
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Regular Releases</h3>
+            <p className="text-gray-600">
+              Stay ahead with frequent updates, new features, and enhancements to keep your marketplace running at its best.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 function ProFeatures() {
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -842,6 +887,11 @@ function ProFeatures() {
             {/* Pricing Section */}
             <div>
               <PricingSection />
+            </div>
+
+            {/* What Makes Dokan Stand Out */}
+            <div>
+                <WhatMakesDokanStandOut />
             </div>
         </div>
     );
