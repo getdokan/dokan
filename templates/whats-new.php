@@ -4,6 +4,52 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.0.4',
+        'released' => '2025-07-17',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Admin Notice UI with Modern Design and Improved User Experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enhanced Product Brand Integration with Dedicated Template and Manager Methods.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enhanced product featured image selection with cropping functionality in the product editor.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Vendor/store names with special characters (e.g., apostrophes) now display correctly in the vendor dropdown on the admin product edit screen.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Display correct earning in vendor dashboard product add/edit page for different category.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improved how product inventory information is retrieved, ensuring more accurate and consistent display of stock values.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolve an issue for "sold individually" option does not save on create or update a product.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.3',
         'released' => '2025-07-02',
         'changes'  => [

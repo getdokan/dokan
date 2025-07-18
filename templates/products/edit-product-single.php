@@ -389,19 +389,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                     <?php do_action( 'dokan_product_edit_after_pricing', $post, $post_id ); ?>
                                     </div>
 
-                                    <div class="dokan-form-group">
-                                        <label for="product_tag_edit" class="form-label"><?php esc_html_e( 'Brand', 'dokan-lite' ); ?></label>
-                                        <?php
-                                        $terms_brand = wp_get_post_terms( $post_id, 'product_brand', array( 'fields' => 'all' ) );
-                                        ?>
-                                        <select multiple="multiple" id="product_brand_edit" name="product_brand[]" class="product_brand_search dokan-form-control" data-placeholder="Select Brand">
-                                            <?php if ( ! empty( $terms_brand ) ) : ?>
-                                                <?php foreach ( $terms_brand as $tax_term ) : ?>
-                                                    <option value="<?php echo esc_attr( $tax_term->term_id ); ?>" selected="selected" ><?php echo esc_html( $tax_term->name ); ?></option>
-                                                <?php endforeach ?>
-                                            <?php endif ?>
-                                        </select>
-                                    </div>
+                                    <?php do_action( 'dokan_product_edit_after_pricing_fields', $post, $post_id ); ?>
 
                                     <div class="dokan-form-group">
                                         <label for="product_tag_edit" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
