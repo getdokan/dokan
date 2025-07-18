@@ -13,10 +13,12 @@ import {
 } from '../../types';
 import MonthlyOverviewSkeleton from './Skeleton';
 
+type TrendDirection = 'up' | 'down' | 'neutral';
+
 const MonthlyOverviewSection = () => {
     const [ monthData, setMonthData ] = useState< MonthPickerValue >( {
-        month: '',
-        year: '',
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
     } );
 
     const { data, loading, error, refetch } =
@@ -39,10 +41,18 @@ const MonthlyOverviewSection = () => {
 
     const calculatePercentageChange = (
         current: number,
-        previous: number | any
+        previous: number | any,
+        metricKey: string // Add metric key to determine direction logic
     ): { percentage: number; direction: TrendDirection } => {
         let prevValue = 0;
         let currValue = current;
+
+        // Metrics where increase is considered negative (bad)
+        const negativeMetrics = [
+            'refund',
+            'abuse_reports',
+            'order_cancellation_rate',
+        ];
 
         // Handle order cancellation rate special case
         if (
@@ -65,11 +75,58 @@ const MonthlyOverviewSection = () => {
             prevValue = typeof previous === 'number' ? previous : 0;
         }
 
-        const percentageChange =
-            prevValue > 0 ? ( ( currValue - prevValue ) / prevValue ) * 100 : 0;
+        let percentageChange: number;
+        let direction: TrendDirection;
+
+        // Handle edge cases
+        if ( prevValue === 0 && currValue === 0 ) {
+            // Both are 0 - no change
+            percentageChange = 0;
+            direction = 'neutral';
+        } else if ( prevValue === 0 && currValue !== 0 ) {
+            // Going from 0 to any value - always 100% change
+            percentageChange = 100;
+
+            // Direction depends on metric type and whether current is positive/negative
+            const isPositiveChange = currValue > 0;
+
+            if ( negativeMetrics.includes( metricKey ) ) {
+                direction = isPositiveChange ? 'down' : 'up'; // Increase in negative metrics = bad
+            } else {
+                direction = isPositiveChange ? 'up' : 'down'; // Increase in positive metrics = good
+            }
+        } else if ( currValue === 0 && prevValue !== 0 ) {
+            // Going from any value to 0 - always 100% change
+            percentageChange = 100;
+
+            // Direction depends on metric type
+            if ( negativeMetrics.includes( metricKey ) ) {
+                direction = 'up'; // Reduction to 0 in negative metrics = good
+            } else {
+                direction = 'down'; // Reduction to 0 in positive metrics = bad
+            }
+        } else {
+            // Normal case - both values are non-zero
+            percentageChange =
+                ( ( currValue - prevValue ) / Math.abs( prevValue ) ) * 100;
+
+            // Determine a direction based on change and metric type
+            const isIncrease = currValue > prevValue;
+
+            if ( negativeMetrics.includes( metricKey ) ) {
+                // For negative metrics: increase = bad (down), decrease = good (up)
+                direction = isIncrease ? 'down' : 'up';
+            } else {
+                // For positive metrics: increase = good (up), decrease = bad (down)
+                direction = isIncrease ? 'up' : 'down';
+            }
+
+            percentageChange = Math.abs( percentageChange );
+        }
+
         return {
-            percentage: Math.abs( percentageChange ),
-            direction: percentageChange >= 0 ? 'up' : 'down',
+            percentage: parseFloat( percentageChange.toFixed( 2 ) ),
+            direction,
         };
     };
 
@@ -86,41 +143,12 @@ const MonthlyOverviewSection = () => {
                     : 0;
             return `${ rate.toFixed( 1 ) }%`;
         }
-        return item.current.toString();
+
+        return item.current;
     };
 
     if ( loading ) {
-        return (
-            <Section
-                title={ __( 'Monthly Overview', 'dokan-lite' ) }
-                sectionHeader={
-                    <MonthPicker
-                        value={ monthData }
-                        onChange={ handleMonthChange }
-                    />
-                }
-            >
-                <MonthlyOverviewSkeleton />
-            </Section>
-        );
-    }
-
-    if ( error ) {
-        return (
-            <Section
-                title={ __( 'Monthly Overview', 'dokan-lite' ) }
-                sectionHeader={
-                    <MonthPicker
-                        value={ monthData }
-                        onChange={ handleMonthChange }
-                    />
-                }
-            >
-                <div className="text-red-500 p-4 bg-red-50 rounded-lg">
-                    { error }
-                </div>
-            </Section>
-        );
+        return <MonthlyOverviewSkeleton />;
     }
 
     return (
@@ -129,33 +157,41 @@ const MonthlyOverviewSection = () => {
             sectionHeader={
                 <MonthPicker
                     value={ monthData }
+                    comparisonPosition="left"
                     onChange={ handleMonthChange }
                 />
             }
             tooltip={ __( 'Monthly overview of key metrics', 'dokan-lite' ) }
         >
-            <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                { data &&
-                    Object.entries( data ).map( ( [ key, item ] ) => {
-                        const { percentage, direction } =
-                            calculatePercentageChange(
-                                item.current,
-                                item.previous
-                            );
+            { ! error ? (
+                <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    { data &&
+                        Object.entries( data ).map( ( [ key, item ] ) => {
+                            const { percentage, direction } =
+                                calculatePercentageChange(
+                                    item.current,
+                                    item.previous,
+                                    key
+                                );
 
-                        return (
-                            <Card
-                                key={ key }
-                                icon={ <DynamicIcon iconName={ item.icon } /> }
-                                text={ item.title }
-                                content={ formatDisplayValue( item ) }
-                                count={ percentage }
-                                countDirection={ direction }
-                                tooltip={ item.tooltip }
-                            />
-                        );
-                    } ) }
-            </div>
+                            return (
+                                <Card
+                                    key={ key }
+                                    icon={ <DynamicIcon iconName={ item.icon } /> }
+                                    text={ item.title }
+                                    content={ formatDisplayValue( item ) }
+                                    count={ percentage }
+                                    countDirection={ direction }
+                                    tooltip={ item.tooltip }
+                                />
+                            );
+                        } ) }
+                </div>
+            ) : (
+                <div className="text-red-500 p-4 bg-red-50 rounded-lg">
+                    { error }
+                </div>
+            ) }
         </Section>
     );
 };

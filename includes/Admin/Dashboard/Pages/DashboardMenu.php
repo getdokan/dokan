@@ -12,7 +12,7 @@ class DashboardMenu extends AbstractPage {
      * @return string
      */
 	public function get_id(): string {
-		return 'dokan-admin-dashboard-menu';
+		return 'dashboard';
 	}
 
 	/**
@@ -22,7 +22,7 @@ class DashboardMenu extends AbstractPage {
 		return [
             'page_title' => __( 'Dashboard', 'dokan-lite' ),
             'menu_title' => __( 'Dashboard', 'dokan-lite' ),
-            'route'      => '#',
+            'route'      => $this->get_id(),
             'capability' => $capability,
             'position'   => 99,
         ];
@@ -32,14 +32,17 @@ class DashboardMenu extends AbstractPage {
 	 * @inheritDoc
 	 */
 	public function settings(): array {
-		return [];
+		return apply_filters(
+            'dokan_admin_dashboard_localized_data',
+            []
+        );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function scripts(): array {
-        return [ 'dokan-admin-dashboard-menu' ];
+        return [ 'dokan-admin-dashboard-menu', 'dokan-react-components', 'dokan-react-frontend' ];
 	}
 
     /**
@@ -66,10 +69,7 @@ class DashboardMenu extends AbstractPage {
         wp_register_script(
             'dokan-admin-dashboard-menu',
             DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-dashboard-menu.js',
-            array_merge(
-                $asset_file['dependencies'],
-                [ 'dokan-react-components' ]
-            ),
+            $asset_file['dependencies'],
             $asset_file['version'],
             [
                 'strategy' => 'defer',
@@ -77,6 +77,11 @@ class DashboardMenu extends AbstractPage {
             ]
         );
 
-        wp_register_style( 'dokan-admin-dashboard-menu', DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-dashboard-menu.css', [], $asset_file['version'] );
+        wp_register_style(
+            'dokan-admin-dashboard-menu',
+            DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-dashboard-menu.css',
+            [],
+            $asset_file['version']
+        );
     }
 }

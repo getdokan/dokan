@@ -11,8 +11,8 @@ import CustomerMetricsSkeleton from './Skeleton';
 
 const CustomerMetricsSection = () => {
     const [ monthData, setMonthData ] = useState< MonthPickerValue >( {
-        month: '',
-        year: '',
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
     } );
 
     const { data, loading, error, refetch } =
@@ -34,19 +34,7 @@ const CustomerMetricsSection = () => {
     };
 
     if ( loading ) {
-        return (
-            <Section
-                title={ __( 'Customer Metrics', 'dokan-lite' ) }
-                sectionHeader={
-                    <MonthPicker
-                        value={ monthData }
-                        onChange={ handleMonthChange }
-                    />
-                }
-            >
-                <CustomerMetricsSkeleton />
-            </Section>
-        );
+        return <CustomerMetricsSkeleton />;
     }
 
     if ( error ) {
@@ -80,20 +68,34 @@ const CustomerMetricsSection = () => {
             sectionHeader={
                 <MonthPicker
                     value={ monthData }
+                    comparisonPosition="left"
                     onChange={ handleMonthChange }
                 />
             }
         >
-            <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                { data && (
-                    <Card
-                        icon={ <DynamicIcon iconName={ data.icon } /> }
-                        text={ data.title }
-                        content={ data.count }
-                        tooltip={ data.tooltip }
-                    />
-                ) }
-            </div>
+            { ! error ? (
+                <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    { data && (
+                        <Card
+                            icon={ <DynamicIcon iconName={ data.icon } /> }
+                            text={ data.title }
+                            content={ data.count }
+                            tooltip={ data.tooltip }
+                        />
+                    ) }
+                </div>
+            ) : (
+                <div className="text-red-500 p-4 bg-red-50 rounded-lg">
+                    { sprintf(
+                        /* translators: %s is the error message */
+                        __(
+                            'Error fetching customer metrics: %s',
+                            'dokan-lite'
+                        ),
+                        error
+                    ) }
+                </div>
+            ) }
         </Section>
     );
 };

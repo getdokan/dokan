@@ -18,6 +18,8 @@ interface MonthPickerProps {
     footerTitle?: string;
     footerSubtitle?: string;
     deselectable?: boolean;
+    comparisonPosition?: 'left' | 'right' | 'hide';
+    className?: string;
 }
 function MonthPicker( {
     onChange,
@@ -29,6 +31,8 @@ function MonthPicker( {
     footerTitle = '',
     footerSubtitle = '',
     deselectable = true,
+    comparisonPosition = 'hide',
+    className = '',
 }: MonthPickerProps ) {
     const [ isOpen, setIsOpen ] = useState< boolean >( false );
     const ref = useRef( null );
@@ -96,6 +100,107 @@ function MonthPicker( {
         return placeholder;
     };
 
+    // Comparison date calculation functions
+    const getComparisonDateRanges = () => {
+        if ( ! value?.month || ! value?.year ) {
+            return { currentPeriod: '', previousPeriod: '' };
+        }
+
+        const selectedMonth = parseInt( value.month );
+        const selectedYear = parseInt( value.year );
+        const currentDate = new Date();
+        const currentDay = currentDate.getDate();
+        const currentMonthNum = currentDate.getMonth() + 1;
+        const currentYearNum = currentDate.getFullYear();
+
+        // Determine if we're looking at the current running month
+        const isCurrentMonth =
+            selectedMonth === currentMonthNum &&
+            selectedYear === currentYearNum;
+
+        // Calculate current period range
+        const getCurrentPeriodRange = () => {
+            const monthName = months[ selectedMonth - 1 ];
+
+            if ( isCurrentMonth ) {
+                // For current running month, show from 1st to today
+                return `${ monthName } 1 - ${ currentDay }, ${ selectedYear }`;
+            }
+            // For past months, show full month
+            const daysInMonth = new Date(
+                selectedYear,
+                selectedMonth,
+                0
+            ).getDate();
+            return `${ monthName } 1 - ${ daysInMonth }, ${ selectedYear }`;
+        };
+
+        // Calculate previous period range
+        const getPreviousPeriodRange = () => {
+            // Calculate previous month
+            let prevMonth = selectedMonth - 1;
+            let prevYear = selectedYear;
+
+            if ( prevMonth === 0 ) {
+                prevMonth = 12;
+                prevYear = selectedYear - 1;
+            }
+
+            const prevMonthName = months[ prevMonth - 1 ];
+
+            if ( isCurrentMonth ) {
+                // For current running month, show same day range in previous month
+                return `${ prevMonthName } 1 - ${ currentDay }, ${ prevYear }`;
+            }
+            // For past months, show full previous month
+            const daysInPrevMonth = new Date(
+                prevYear,
+                prevMonth,
+                0
+            ).getDate();
+            return `${ prevMonthName } 1 - ${ daysInPrevMonth }, ${ prevYear }`;
+        };
+
+        return {
+            currentPeriod: getCurrentPeriodRange(),
+            previousPeriod: getPreviousPeriodRange(),
+        };
+    };
+
+    // Comparison Date Display Component
+    const ComparisonDateDisplay = () => {
+        if ( comparisonPosition === 'hide' ) {
+            return null;
+        }
+
+        const { currentPeriod, previousPeriod } = getComparisonDateRanges();
+
+        if ( ! currentPeriod || ! previousPeriod ) {
+            return null;
+        }
+
+        return (
+            <div className="text-sm text-gray-600">
+                <div className="flex flex-col text-xs space-y-1">
+                    <div className={ `ml-4 font-semibold` }>
+                        <span>{ __( 'Month to Date', 'dokan-lite' ) }</span>{ ' ' }
+                        <span className="text-gray-500">
+                            ({ currentPeriod })
+                        </span>
+                    </div>
+                    <div className={ `font-normal` }>
+                        <span>
+                            { __( 'vs Previous Period', 'dokan-lite' ) }
+                        </span>{ ' ' }
+                        <span className="text-gray-500">
+                            ({ previousPeriod })
+                        </span>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     useEffect( () => {
         // If not currentYear is set, set it to the current year.
         if ( ! value?.year || isNaN( Number( String( value?.year ) ) ) ) {
@@ -104,8 +209,9 @@ function MonthPicker( {
         }
     }, [] );
 
-    return (
-        <div>
+    // Render the MonthPicker with comparison date display
+    const monthPickerElement = (
+        <div className={ className }>
             <Popover className="relative">
                 <PopoverButton
                     className="shadow rounded flex gap-2 items-center justify-between w-full px-3 py-2 text-sm bg-white border"
@@ -132,7 +238,7 @@ function MonthPicker( {
                         className="absolute flex rounded shadow-xl border"
                     >
                         <div
-                            className="w-60 flex-auto overflow-hidden bg-white text-sm/6 z-40"
+                            className="w-60 flex-auto overflow-hidden bg-white text-sm/6 z-[9999]"
                             ref={ ref }
                         >
                             { /* Year Navigation */ }
@@ -216,6 +322,28 @@ function MonthPicker( {
             </Popover>
         </div>
     );
+
+    // Return based on comparison position
+    if ( comparisonPosition === 'left' ) {
+        return (
+            <div className="flex items-center space-x-6">
+                <ComparisonDateDisplay />
+                { monthPickerElement }
+            </div>
+        );
+    }
+
+    if ( comparisonPosition === 'right' ) {
+        return (
+            <div className="flex items-center space-x-6">
+                { monthPickerElement }
+                <ComparisonDateDisplay />
+            </div>
+        );
+    }
+
+    // Default case (hide) - just return the month picker
+    return monthPickerElement;
 }
 
 export default MonthPicker;

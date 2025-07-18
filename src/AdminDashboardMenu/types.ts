@@ -74,12 +74,10 @@ export interface SalesChartDataPoint {
     total_sales: number;
     net_sales: number;
     commissions: number;
-    order_count: number;
 }
 
 export interface SalesChartData {
-    current_month_daily: SalesChartDataPoint[];
-    previous_month_daily: SalesChartDataPoint[];
+    intervals: SalesChartDataPoint[];
 }
 
 export interface MonthPickerValue {
@@ -87,7 +85,7 @@ export interface MonthPickerValue {
     year: string;
 }
 
-export type TrendDirection = 'up' | 'down';
+export type TrendDirection = 'up' | 'down' | 'neutral';
 
 // Analytics Types
 export interface AnalyticsItem {

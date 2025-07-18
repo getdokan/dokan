@@ -6,12 +6,35 @@ import { useDashboardApiData } from '../../hooks/useDashboardApiData';
 import { fetchMostReportedVendors } from '../../utils/api';
 import { MostReportedVendorsData } from '../../types';
 import MostReportedVendorsSkeleton from './Skeleton';
+import { applyFilters } from '@wordpress/hooks';
 
 const MostReportedVendorsSection = () => {
     const { data, loading, error } =
         useDashboardApiData< MostReportedVendorsData >( {
             fetchFunction: fetchMostReportedVendors,
         } );
+
+    const padDefaultData = ( originalData ) => {
+        const paddedData = [ ...originalData ];
+
+        // If the data is empty, fill with default values.
+        const emptyString = applyFilters(
+            'dokan_admin_dashboard_most_reported_default_table_data',
+            __( '--', 'dokan-lite' ),
+            originalData
+        );
+
+        // Add empty rows with -- if we have less than 5 items.
+        while ( paddedData.length < 5 ) {
+            paddedData.push( {
+                rank: emptyString,
+                vendor_name: emptyString,
+                abuse_count: emptyString,
+            } );
+        }
+
+        return paddedData;
+    };
 
     const [ view, setView ] = useState( {
         type: 'table' as const,
@@ -27,7 +50,9 @@ const MostReportedVendorsSection = () => {
             label: __( 'Rank', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className="font-medium text-center">#{ item.rank }</div>
+                <div className="font-medium text-center text-gray-900">
+                    { item.rank }
+                </div>
             ),
         },
         {
@@ -35,16 +60,8 @@ const MostReportedVendorsSection = () => {
             label: __( 'Vendor Name', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div>
-                    <button
-                        className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
-                        onClick={ () => {
-                            // Navigate to vendor profile using the provided URL
-                            window.open( item.vendor_url, '_blank' );
-                        } }
-                    >
-                        { item.vendor_name }
-                    </button>
+                <div className="font-medium text-gray-900">
+                    { item.vendor_name }
                 </div>
             ),
         },
@@ -53,10 +70,8 @@ const MostReportedVendorsSection = () => {
             label: __( 'Abuse Reports', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className="text-center">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                        { item.abuse_count }
-                    </span>
+                <div className="text-center text-gray-900">
+                    { item.abuse_count }
                 </div>
             ),
         },
@@ -66,9 +81,27 @@ const MostReportedVendorsSection = () => {
         return <MostReportedVendorsSkeleton />;
     }
 
-    if ( error ) {
-        return (
-            <Section title={ __( 'Most Reported Vendors', 'dokan-lite' ) }>
+    return (
+        <Section title={ __( 'Most Reported Vendors', 'dokan-lite' ) }>
+            { ! error ? (
+                <div className="relative overflow-x-auto shadow-md sm:rounded-lg bg-white">
+                    <DataViews
+                        namespace="dokan-most-reported-vendors"
+                        data={ padDefaultData( data || [] ) }
+                        defaultLayouts={ { table: {}, density: 'comfortable' } }
+                        fields={ fields }
+                        getItemId={ ( item ) => item.vendor_id }
+                        onChangeView={ setView }
+                        search={ false }
+                        paginationInfo={ {
+                            totalItems: data?.length || 0,
+                            totalPages: 1,
+                        } }
+                        view={ view }
+                        isLoading={ loading }
+                    />
+                </div>
+            ) : (
                 <div className="text-red-500 p-4 bg-red-50 rounded-lg">
                     { sprintf(
                         /* translators: %s is the error message */
@@ -79,27 +112,7 @@ const MostReportedVendorsSection = () => {
                         error
                     ) }
                 </div>
-            </Section>
-        );
-    }
-
-    return (
-        <Section title={ __( 'Most Reported Vendors', 'dokan-lite' ) }>
-            <DataViews
-                data={ data || [] }
-                namespace="dokan-most-reported-vendors"
-                defaultLayouts={ { table: {}, density: 'comfortable' } }
-                fields={ fields }
-                getItemId={ ( item ) => item.vendor_id.toString() }
-                onChangeView={ setView }
-                search={ false }
-                paginationInfo={ {
-                    totalItems: data?.length || 0,
-                    totalPages: 1,
-                } }
-                view={ view }
-                isLoading={ loading }
-            />
+            ) }
         </Section>
     );
 };

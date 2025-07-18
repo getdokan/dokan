@@ -59,7 +59,7 @@ export const fetchAllTimeStats = async (
     } );
 };
 
-// Sales Chart API (for future use)
+// Sales Chart API
 export const fetchSalesChart = async (
     date?: string
 ): Promise< SalesChartData > => {

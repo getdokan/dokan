@@ -6,12 +6,35 @@ import { useDashboardApiData } from '../../hooks/useDashboardApiData';
 import { fetchMostReviewedProducts } from '../../utils/api';
 import { MostReviewedProductsData } from '../../types';
 import MostReviewedProductsSkeleton from './Skeleton';
+import { applyFilters } from '@wordpress/hooks';
 
 const MostReviewedProductsSection = () => {
     const { data, loading, error } =
         useDashboardApiData< MostReviewedProductsData >( {
             fetchFunction: fetchMostReviewedProducts,
         } );
+
+    const padDefaultData = ( originalData ) => {
+        const paddedData = [ ...originalData ];
+
+        // If the data is empty, fill with default values.
+        const emptyString = applyFilters(
+            'dokan_admin_dashboard_most_reviewed_default_table_data',
+            __( '--', 'dokan-lite' ),
+            originalData
+        );
+
+        // Add empty rows with -- if we have less than 5 items.
+        while ( paddedData.length < 5 ) {
+            paddedData.push( {
+                rank: emptyString,
+                product_title: emptyString,
+                review_count: emptyString,
+            } );
+        }
+
+        return paddedData;
+    };
 
     const [ view, setView ] = useState( {
         type: 'table' as const,
@@ -27,7 +50,9 @@ const MostReviewedProductsSection = () => {
             label: __( 'Rank', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className="font-medium text-center">#{ item.rank }</div>
+                <div className="font-medium text-center text-gray-900">
+                    { item.rank }
+                </div>
             ),
         },
         {
@@ -35,17 +60,8 @@ const MostReviewedProductsSection = () => {
             label: __( 'Product Name', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div>
-                    <button
-                        className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
-                        onClick={ () => {
-                            // Navigate to product page
-                            const productUrl = `/?p=${ item.product_id }`;
-                            window.open( productUrl, '_blank' );
-                        } }
-                    >
-                        { item.product_title }
-                    </button>
+                <div className="font-medium text-gray-900">
+                    { item.product_title }
                 </div>
             ),
         },
@@ -54,7 +70,9 @@ const MostReviewedProductsSection = () => {
             label: __( 'Review Count', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className="text-center">{ item.review_count }</div>
+                <div className="text-center text-gray-900">
+                    { item.review_count }
+                </div>
             ),
         },
     ];
@@ -82,21 +100,23 @@ const MostReviewedProductsSection = () => {
 
     return (
         <Section title={ __( 'Most Reviewed Products', 'dokan-lite' ) }>
-            <DataViews
-                data={ data || [] }
-                namespace="dokan-most-reviewed-products"
-                defaultLayouts={ { table: {}, density: 'comfortable' } }
-                fields={ fields }
-                getItemId={ ( item ) => item.product_id.toString() }
-                onChangeView={ setView }
-                search={ false }
-                paginationInfo={ {
-                    totalItems: data?.length || 0,
-                    totalPages: 1,
-                } }
-                view={ view }
-                isLoading={ loading }
-            />
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg bg-white">
+                <DataViews
+                    data={ padDefaultData( data || [] ) }
+                    namespace="dokan-most-reviewed-products"
+                    defaultLayouts={ { table: {}, density: 'comfortable' } }
+                    fields={ fields }
+                    getItemId={ ( item ) => item.product_id }
+                    onChangeView={ setView }
+                    search={ false }
+                    paginationInfo={ {
+                        totalItems: data?.length || 0,
+                        totalPages: 1,
+                    } }
+                    view={ view }
+                    isLoading={ loading }
+                />
+            </div>
         </Section>
     );
 };
