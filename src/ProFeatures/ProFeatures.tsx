@@ -43,7 +43,7 @@ import wordpressLogo from './assets/wordpressLogo.png';
 
 function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(true);
-  
+
   const pricingPlans = [
     {
       name: 'Starter',
@@ -76,97 +76,99 @@ function PricingSection() {
   ];
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 py-12">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-          The Packages We Provide
-        </h2>
-        <p className="text-gray-600 mb-6">
-          Get 20% instant off in all packages with coupon code <span className="font-semibold">LITEUPGRADE20</span>
-        </p>
-        
-        {/* Toggle Switch */}
-        <div className="flex items-center justify-center mb-2">
-          <div className="flex bg-gray-100 rounded-md p-1">
-            <button
-              onClick={() => setIsAnnual(true)}
-              className={`px-6 py-2 rounded text-sm font-medium transition-all ${
-                isAnnual 
-                  ? 'bg-purple-600 text-white shadow-sm' 
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Annual
-            </button>
-            <button
-              onClick={() => setIsAnnual(false)}
-              className={`px-6 py-2 rounded text-sm font-medium transition-all ${
-                !isAnnual 
-                  ? 'bg-purple-600 text-white shadow-sm' 
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Lifetime
-            </button>
+    <div className="w-full max-w-6xl mx-auto px-4 py-12 bg-gray-50">
+      <div className="bg-white rounded-2xl p-8 shadow-sm">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            The Packages We Provide
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Get 20% instant off in all packages with coupon code <span className="font-semibold">LITEUPGRADE20</span>
+          </p>
+
+          {/* Toggle Switch */}
+          <div className="flex items-center justify-center mb-2">
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => setIsAnnual(true)}
+                className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
+                  isAnnual 
+                    ? 'bg-[#7047EB] text-white shadow-sm' 
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Annual
+              </button>
+              <button
+                onClick={() => setIsAnnual(false)}
+                className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
+                  !isAnnual 
+                    ? 'bg-[#7047EB] text-white shadow-sm' 
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Lifetime
+              </button>
+            </div>
+            {!isAnnual && (
+              <span className="ml-4 text-sm text-[#7047EB] bg-[#f3efff] px-3 py-1 rounded-full">
+                Save More 20%
+              </span>
+            )}
           </div>
-          {!isAnnual && (
-            <span className="ml-4 text-sm text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
-              Save More 20%
-            </span>
-          )}
+        </div>
+
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {pricingPlans.map((plan, index) => (
+            <div
+              key={index}
+              className={`relative rounded-xl p-6 bg-white transition-all ${
+                plan.isPopular
+                  ? 'border-2 border-[#7047EB] shadow-lg'
+                  : 'border border-gray-200 hover:shadow-md'
+              }`}
+            >
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
+                  {plan.isPopular && (
+                    <span className="bg-[#7047EB] text-white px-3 py-1 rounded-full text-xs font-medium">
+                      Popular
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-bold text-gray-900">
+                    {isAnnual ? plan.annualPrice : plan.lifetimePrice}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    {isAnnual ? 'Annually' : 'Lifetime'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mb-8 space-y-3">
+                {plan.features.map((feature, featureIndex) => (
+                  <div key={featureIndex} className="flex items-start gap-3">
+                    <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
+                    <span className="text-sm text-gray-700">{feature}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button className="w-full bg-[#7047EB] text-white py-3 px-4 rounded-lg text-sm font-semibold hover:bg-[#5d39c4] transition-colors">
+                Buy Now
+              </button>
+            </div>
+          ))}
         </div>
       </div>
-
-      {/* Pricing Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
-        {pricingPlans.map((plan, index) => (
-          <div
-            key={index}
-            className={`relative rounded-lg border p-5 bg-white transition-all ${
-              plan.isPopular
-                ? 'border-purple-200 bg-gradient-to-br from-purple-50 to-white shadow-lg'
-                : 'border-gray-200 bg-gradient-to-br from-blue-50/30 to-white hover:shadow-md'
-            }`}
-          >
-            {plan.isPopular && (
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                  Popular
-                </span>
-              </div>
-            )}
-            
-            <div className="mb-4">
-              <h3 className="text-sm font-semibold text-gray-900 mb-2">{plan.name}</h3>
-              <div className="flex items-baseline gap-2">
-                <span className="text-lg font-bold text-gray-900">
-                  {isAnnual ? plan.annualPrice : plan.lifetimePrice}
-                </span>
-                <span className="text-xs text-gray-500">
-                  {isAnnual ? 'Annually' : 'Lifetime'}
-                </span>
-              </div>
-            </div>
-
-            <div className="mb-6 space-y-2">
-              {plan.features.map((feature, featureIndex) => (
-                <div key={featureIndex} className="flex items-start gap-2">
-                  <Check className="w-3 h-3 text-purple-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-xs text-gray-700">{feature}</span>
-                </div>
-              ))}
-            </div>
-
-            <button className="w-full bg-purple-600 text-white py-2 px-4 rounded text-xs font-bold hover:bg-purple-700 transition-colors">
-              Buy Now
-            </button>
-          </div>
-        ))}
-      </div>
-    </section>
+    </div>
   );
 }
+
 
 const tabs = ['Marketplace', 'Testimonial'];
 
@@ -402,7 +404,6 @@ function DokanMarketplaceUI() {
   );
 }
 
-
 interface FeatureData {
   features: string[];
   lite: boolean[];
@@ -505,56 +506,97 @@ const FeatureComparison: React.FC = () => {
       </div>
 
       <div className="relative">
-        <div ref={scrollRef} className="flex flex-col md:flex-row rounded-xl overflow-hidden shadow-sm border border-gray-200">
+        <div className="flex rounded-xl overflow-hidden shadow-sm border border-gray-200">
           {/* Sidebar */}
-          <div className="flex md:flex-col border-b md:border-b-0 md:border-r border-gray-200 bg-white w-full md:w-72">
-            {categories.map((category) => (
+          <div className="flex flex-col bg-white min-w-[280px] border-r border-gray-200 p-2">
+            {categories.map((category, index) => (
               <button
                 key={category.key}
                 onClick={() => setActiveCategory(category.key)}
-                className={`w-full text-left px-4 py-4 text-sm font-semibold transition whitespace-normal
-                  ${category.key === activeCategory ? 'bg-black text-white' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'}`}
+                className={`text-left transition flex items-center justify-center
+                  ${category.key === activeCategory 
+                    ? 'bg-black text-white' 
+                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                  }`}
+                style={{ 
+                  width: '204px',
+                  height: '100px',
+                  paddingTop: '12px',
+                  paddingBottom: '12px',
+                  borderRadius: '10px',
+                  marginBottom: index === categories.length - 1 ? '0' : '6px'
+                }}
               >
-                {category.title}
+                <span
+                  style={{
+                    width: '159.9375px',
+                    height: '46px',
+                    fontWeight: 700,
+                    fontSize: '18px',
+                    lineHeight: '130%',
+                    letterSpacing: '0%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    textAlign: 'left'
+                  }}
+                >
+                  {category.title}
+                </span>
               </button>
             ))}
           </div>
 
           {/* Feature Table */}
-          <div className="flex-1 w-full overflow-x-auto">
-            <div className="min-w-[600px]">
-              <div className="grid grid-cols-3 text-sm font-semibold px-6 py-4 bg-white border-b border-gray-200">
-                <div>Features</div>
-                <div className="text-center">Lite</div>
-                <div className="text-center">Pro</div>
-              </div>
-
-              {features.map((feature, index) => (
-                <div
-                  key={index}
-                  className="grid grid-cols-3 items-center text-sm px-6 py-4 bg-white border-b border-gray-100"
-                >
-                  <div>{feature}</div>
-                  <div className="text-center">
-                    {lite[index] ? (
-                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-600">
-                        <Check size={16} />
-                      </span>
-                    ) : (
-                      <span className="inline-block w-6 h-6" />
-                    )}
+          <div className="flex-1 overflow-hidden">
+            <div ref={scrollRef} className="overflow-x-auto">
+              <div className="min-w-[500px]">
+                {/* Header */}
+                <div className="grid grid-cols-3 bg-white border-b border-gray-200">
+                  <div className="px-6 py-4 text-sm font-semibold text-gray-900">
+                    Features
                   </div>
-                  <div className="text-center">
-                    {pro[index] ? (
-                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-600">
-                        <Check size={16} />
-                      </span>
-                    ) : (
-                      <span className="inline-block w-6 h-6" />
-                    )}
+                  <div className="px-6 py-4 text-sm font-semibold text-gray-900 text-center bg-gray-100 border-l border-gray-200">
+                    Lite
+                  </div>
+                  <div className="px-6 py-4 text-sm font-semibold text-gray-900 text-center bg-gray-100 border-l border-gray-200">
+                    Pro
                   </div>
                 </div>
-              ))}
+
+                {/* Feature Rows */}
+                {features.map((feature, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-3 bg-white border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="px-6 py-4 text-sm text-gray-700">
+                      {feature}
+                    </div>
+                    <div className="px-6 py-4 text-center bg-gray-100 border-l border-gray-200">
+                      {lite[index] ? (
+                        <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-600 text-white">
+                          <Check size={14} className="stroke-2" />
+                        </div>
+                      ) : (
+                        <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-300">
+                          <Check size={14} className="stroke-2 text-gray-500" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="px-6 py-4 text-center bg-gray-100 border-l border-gray-200">
+                      {pro[index] ? (
+                        <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-600 text-white">
+                          <Check size={14} className="stroke-2" />
+                        </div>
+                      ) : (
+                        <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-300">
+                          <Check size={14} className="stroke-2 text-gray-500" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
