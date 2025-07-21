@@ -1,5 +1,5 @@
-import { SettingsProps } from '../StepSettings';
 import SettingsParser from './SettingsParser';
+import { SettingsProps } from '../types';
 
 const FieldGroup = ( {
     element,
@@ -11,7 +11,7 @@ const FieldGroup = ( {
     }
 
     return (
-        <div className="col-span-4">
+        <div className="flex flex-col gap-4 w-full">
             <div>
                 <p
                     id={ element.hook_key }
@@ -24,7 +24,7 @@ const FieldGroup = ( {
                 </p>
             </div>
 
-            <div className="mt-1 grid grid-cols-8 gap-6">
+            <div className="  w-full ">
                 { element.children.map( ( child ) => {
                     return (
                         <SettingsParser

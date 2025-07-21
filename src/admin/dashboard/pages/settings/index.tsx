@@ -7,6 +7,8 @@ import { SettingsElement } from '../../../../stores/adminSettings/types';
 import Menu from './Elements/Menu';
 import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
+import PageHeading from './Elements/PageHeading';
+// DEMO: Render all Dokan* field components from src/Fields with mock props
 
 const SettingsPage = () => {
     const dispatch = useDispatch();
@@ -152,15 +154,46 @@ const SettingsPage = () => {
     const onValueChange = ( element: SettingsElement ) => {
         dispatch( settingsStore ).updateSettingsValue( element );
     };
+
+    // Get current page/tab information for heading
+    const getCurrentPageInfo = () => {
+        let currentPage: SettingsElement | undefined;
+        let currentTab: SettingsElement | undefined;
+
+        if ( selectedPage && pages?.length > 0 ) {
+            currentPage = pages.find( ( page ) => page.id === selectedPage );
+        }
+
+        if ( selectedTab && tabs?.length > 0 ) {
+            currentTab = tabs.find( ( tab ) => tab.id === selectedTab );
+        }
+
+        // Priority: Tab > Page > Default Settings
+        if ( currentTab ) {
+            return {
+                title: currentTab.title || __( 'Settings', 'dokan-lite' ),
+                description: currentTab.description || '',
+            };
+        } else if ( currentPage ) {
+            return {
+                title: currentPage.title || __( 'Settings', 'dokan-lite' ),
+                description: currentPage.description || '',
+            };
+        }
+
+        return {
+            title: __( 'Settings', 'dokan-lite' ),
+            description: __( 'Configure your store settings', 'dokan-lite' ),
+        };
+    };
+
+    const pageInfo = getCurrentPageInfo();
+
     return (
         <>
-            <h3 className="text-3xl font-bold">
-                { __( 'Settings', 'dokan-lite' ) }
-            </h3>
-
-            <div className="h-screen ">
-                <main className="w-full pb-10 lg:py-5 lg:px-0 bg-white h-screen  shadow rounded-lg">
-                    <div className="lg:grid lg:grid-cols-12 lg:gap-x-5 divide-x h-screen ">
+            <div className="min-h-screen h-full ">
+                <main className="w-full pb-10 lg:py-5 lg:px-0 bg-white h-full  shadow rounded-lg">
+                    <div className="lg:grid lg:grid-cols-12 lg:gap-x-5 divide-x h-full ">
                         { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
                                 key="admin-settings-menu"
@@ -171,7 +204,7 @@ const SettingsPage = () => {
                             />
                         ) }
 
-                        <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+                        <div className="space-y-6 px-8 lg:col-span-9">
                             { tabs && '' !== selectedTab && (
                                 <Tab
                                     key="admin-settings-tab"
@@ -181,7 +214,11 @@ const SettingsPage = () => {
                                     onTabClick={ onTabClick }
                                 />
                             ) }
-
+                            <PageHeading
+                                title={ pageInfo.title }
+                                description={ pageInfo.description }
+                                className="mb-8"
+                            />
                             { elements.map( ( element: SettingsElement ) => {
                                 return (
                                     <SettingsParser
@@ -194,6 +231,8 @@ const SettingsPage = () => {
                                     />
                                 );
                             } ) }
+                            { /* DEMO: Dokan Fields Showcase */ }
+                            { /*<DokanFieldsDemo />*/ }
                         </div>
                     </div>
                     { needSaving && (

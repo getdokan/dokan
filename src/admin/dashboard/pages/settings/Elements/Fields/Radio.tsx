@@ -1,4 +1,4 @@
-import React, { useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import { SettingsProps } from '../../types';
 import { DokanFieldLabel } from '../../../../../../components/fields';
 

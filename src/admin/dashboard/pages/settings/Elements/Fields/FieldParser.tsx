@@ -2,20 +2,18 @@ import { SettingsProps } from '../../types';
 import { applyFilters } from '@wordpress/hooks';
 import Text from './Text';
 import Select from './Select';
-import Switch from './Switch';
 import Password from './Password';
 import Email from './Email';
 import Number from './Number';
-import CheckboxGroup from './CheckboxGroup';
-import RadioCapsule from './RadioCapsule';
 import TextArea from './TextArea';
-import Radio from './Radio';
 import RadioBox from './RadioBox';
 import Currency from './Currency';
-import MultiCheck from './MultiCheck';
 import CategoryBasedCommission from './Commission/CategoryBasedCommission';
 import CombineInput from './Commission/CombineInput';
 import Tel from './Tel';
+import DokanSwitch from './DokanSwitch';
+import DokanRadioCapsule from './DokanRadioCapsule';
+import DokanMultiCheck from './DokanMultiCheck';
 
 const FieldParser = ( {
     element,
@@ -49,11 +47,10 @@ const FieldParser = ( {
 
         case 'switch':
             return (
-                <Switch
+                <DokanSwitch
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
@@ -89,21 +86,10 @@ const FieldParser = ( {
 
         case 'checkbox_group':
             return (
-                <CheckboxGroup
+                <DokanMultiCheck
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />
-            );
-
-        case 'radio_capsule':
-            return (
-                <RadioCapsule
-                    key={ element.hook_key }
-                    element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
@@ -117,13 +103,12 @@ const FieldParser = ( {
                 />
             );
 
-        case 'radio':
+        case 'radio_capsule':
             return (
-                <Radio
+                <DokanRadioCapsule
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
@@ -149,11 +134,10 @@ const FieldParser = ( {
 
         case 'multicheck':
             return (
-                <MultiCheck
+                <DokanMultiCheck
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
