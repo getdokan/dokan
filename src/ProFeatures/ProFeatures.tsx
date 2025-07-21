@@ -24,7 +24,7 @@ import bootstrapImg from './assets/bootstrap.png';
 import designAddictImg from './assets/designAddict.png';
 import parsiankalaImg from './assets/parsiankala.png';
 import zakartoImg from './assets/zakarto.png';
-import { Check, MoveLeft, MoveRight } from 'lucide-react';
+import { Check, MoveLeft, MoveRight, Crown, Clock, Headphones, RefreshCw, CrownIcon } from 'lucide-react';
 import avatar1 from './assets/Avatar1.png';
 import avatar2 from './assets/Avatar2.png';
 import avatar3 from './assets/Avatar3.png';
@@ -40,6 +40,7 @@ import g2Logo from './assets/g2Logo.png';
 import trustpilotLogo from './assets/trustpilotLogo.png';
 import capterraLogo from './assets/capterraLogo.png';
 import wordpressLogo from './assets/wordpressLogo.png';
+import scaleImg from './assets/scale.png';
 
 function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(true);
@@ -652,7 +653,7 @@ function WhySettle() {
 
     return (
         <div className="mt-16">
-            <h2 className="text-2xl font-semibold mb-8">Why Settle? Get More with Dokan PRO!</h2>
+            <h2 className="text-2xl font-bold mb-8">Why Settle? Get More with Dokan PRO!</h2>
             {/* Modules Banner */}
             <div className="relative rounded-2xl overflow-hidden mb-10 min-h-[180px]">
                 <img
@@ -674,7 +675,7 @@ function WhySettle() {
                 {features.map((feature, idx) => (
                     <div key={idx} className="flex items-start space-x-4">
                         <div className="w-10 h-10 flex items-center justify-center bg-indigo-50 rounded-lg flex-shrink-0">
-                            <img src={feature.icon} alt={feature.title} className="w-6 h-6 object-contain" />
+                            <img src={feature.icon} alt={feature.title} className="w-[36px] h-[36px] object-contain" />
                         </div>
                         <div>
                             <h4 className="text-lg font-semibold mb-2">{feature.title}</h4>
@@ -723,16 +724,16 @@ function ExceptionalFeatures() {
 
     return (
         <div className="mt-12">
-            <h3 className="text-2xl font-semibold mb-8">What Makes Pro Exceptional</h3>
+            <h3 className="text-2xl font-bold mb-8">What Makes Pro Exceptional</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {exceptional.map((item, idx) => (
                     <div key={idx} className="flex items-start space-x-4">
                         <div className="w-12 h-12 flex items-center justify-center bg-indigo-50 rounded-lg mr-2 flex-shrink-0">
-                            <img src={item.icon} alt={item.title} className="w-6 h-6 object-contain" />
+                            <img src={item.icon} alt={item.title} className="w-[36px] h-[36px] object-contain" />
                         </div>
                         <div>
-                            <h4 className="text-lg font-semibold mb-2">{item.title}</h4>
-                            <p className="text-gray-600 text-sm">{item.description}</p>
+                            <h4 className="text-[18px] font-bold text-gray-700 mb-2">{item.title}</h4>
+                            <p className="text-gray-600 font-regular text-[14px]">{item.description}</p>
                         </div>
                     </div>
                 ))}
@@ -741,50 +742,97 @@ function ExceptionalFeatures() {
     );
 }
 
-function WhatMakesDokanStandOut() {
+function GuaranteeSection() {
+    return (
+        <div className="w-full max-w-7xl mx-auto px-4 pt-16 pb-20" style={{ fontFamily: 'Inter, sans-serif' }}>
+            {/* What Makes Dokan Stand Out */}
+            <div>
+                <h3 className="text-[24px] font-bold mb-8 text-gray-900">
+                    What Makes Dokan Stand Out
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="flex items-start space-x-4">
+                        <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Check className="w-6 h-6 text-purple-600" />
+                        </div>
+                        <div>
+                            <h4 className="text-[14px] font-semibold text-gray-600 mb-2">
+                                14 Days Money Back Guarantee
+                            </h4>
+                            <p className="text-[12px] font-regular text-gray-400">
+                                Get a full refund within 14 days if our plugin doesn't meet your needs—no questions asked!
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start space-x-4">
+                        <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Check className="w-6 h-6 text-purple-600" />
+                        </div>
+                        <div>
+                            <h4 className="text-[14px] font-semibold text-gray-600 mb-2">
+                                Help Is Just a Click Away, Day or Night!
+                            </h4>
+                            <p className="text-[12px] font-regular text-gray-400">
+                                Receive expert support 24/7 to keep your business running smoothly, anytime you need help.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start space-x-4">
+                        <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Check className="w-6 h-6 text-purple-600" />
+                        </div>
+                        <div>
+                            <h4 className="text-[14px] font-semibold text-gray-600 mb-2">
+                                Regular Releases
+                            </h4>
+                            <p className="text-[12px] font-regular text-gray-400">
+                                Stay ahead with frequent updates, new features, and enhancements to keep your marketplace running at its best.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function ScaleMarketplaceBanner() {
   return (
-    <section className="py-12 bg-white">
-      <div className="container mx-auto px-4 text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">What Makes Dokan Stand Out</h2>
-        <div classFeatureCard="flex flex-col md:flex-row justify-center gap-8">
-          <div className="flex-1 max-w-xs">
-            <div className="flex justify-center mb-4">
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 text-purple-600">
-                ✔
-              </span>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">14 Days Money Back Guarantee</h3>
-            <p className="text-gray-600">
-              Get a full refund within 14 days if our plugin doesn’t meet your needs — no questions asked!
-            </p>
-          </div>
-          <div className="flex-1 max-w-xs">
-            <div className="flex justify-center mb-4">
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 text-purple-600">
-                ✔
-              </span>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Help Is Just a Click Away, Day or Night!</h3>
-            <p className="text-gray-600">
-              Receive expert support 24/7 to keep your business running smoothly, anytime you need help.
-            </p>
-          </div>
-          <div className="flex-1 max-w-xs">
-            <div className="flex justify-center mb-4">
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 text-purple-600">
-                ✔
-              </span>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Regular Releases</h3>
-            <p className="text-gray-600">
-              Stay ahead with frequent updates, new features, and enhancements to keep your marketplace running at its best.
-            </p>
-          </div>
+    <div className="w-full max-w-7xl mx-auto px-4 py-8">
+      <div 
+        className="relative min-h-[200px] rounded-2xl overflow-hidden flex items-center justify-between px-8 py-10"
+        style={{
+          backgroundImage: `url(${scaleImg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        
+        {/* Content */}
+        <div className="flex flex-col justify-center z-10 max-w-2xl">
+          <h2 className="text-4xl font-bold mb-4 leading-tight text-white drop-shadow-lg">
+            Ready to Scale Your Marketplace?
+          </h2>
+          <p className="text-lg text-white/90 drop-shadow">
+            With all the advanced features you get it's hard to resist buying Dokan Pro.
+          </p>
+        </div>
+        
+        {/* Button */}
+        <div className="z-10">
+          <button className="px-8 py-4 bg-yellow-400 text-black font-semibold rounded-lg shadow-lg hover:bg-yellow-300 transition-all transform hover:scale-105 flex items-center gap-2 text-lg">
+            Upgrade to Pro
+            <Crown className="w-5 h-5" />
+          </button>
         </div>
       </div>
-    </section>
+    </div>
   );
-};
+}
 
 function ProFeatures() {
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -818,12 +866,7 @@ function ProFeatures() {
                     <div className="flex items-center gap-4">
                         <button className="px-6 py-3 bg-yellow-400 text-black font-semibold rounded shadow hover:bg-yellow-300 transition flex items-center gap-2 text-base">
                             Upgrade to Pro
-                            <img
-                                src={crownSmallImg}
-                                alt="Crown"
-                                className="inline-block w-5 h-5 ml-1"
-                                draggable={false}
-                            />
+                            <Crown className="inline-block w-5 h-5 ml-1" />
                         </button>
                         <span className="text-white/80 font-medium text-base">with 20% off</span>
                     </div>
@@ -889,9 +932,14 @@ function ProFeatures() {
               <PricingSection />
             </div>
 
-            {/* What Makes Dokan Stand Out */}
+            {/* Guarantee Section */}
             <div>
-                <WhatMakesDokanStandOut />
+                <GuaranteeSection />
+            </div>
+
+            {/* Scale Marketplace Banner */}
+            <div>
+                <ScaleMarketplaceBanner />
             </div>
         </div>
     );
