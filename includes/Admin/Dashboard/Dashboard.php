@@ -303,6 +303,7 @@ class Dashboard implements Hookable {
                     'currency'  => dokan_get_container()->get( 'scripts' )->get_localized_price(),
                     'states'    => WC()->countries->get_allowed_country_states(),
                     'countries' => WC()->countries->get_allowed_countries(),
+                    'nonce'     => wp_create_nonce( 'dokan_admin' ),
                 ]
             );
 
