@@ -51,69 +51,64 @@ function PricingSection() {
       annualPrice: '$149',
       lifetimePrice: '$745',
       features: ['Essential Features', '3 Premium Modules', '1 Site License', 'Ticket Based Support'],
-      isPopular: false
+      isPopular: false,
     },
     {
       name: 'Professional',
       annualPrice: '$249',
       lifetimePrice: '$1245',
       features: ['Everything in Starter', '23 Premium Modules', '3 Sites Licenses', 'Ticket Based Support'],
-      isPopular: false
+      isPopular: false,
     },
     {
       name: 'Business',
       annualPrice: '$499',
       lifetimePrice: '$2495',
       features: ['Everything in Professional', '39 Premium Modules', '5 Sites Licenses', 'Ticket Based Support'],
-      isPopular: true
+      isPopular: true,
     },
     {
       name: 'Enterprise',
       annualPrice: '$999',
       lifetimePrice: '$4995',
       features: ['Everything in Business', '39 Premium Modules', '10 Sites Licenses', 'Priority Support', '2 Hours of Theme Compatibility & Installation'],
-      isPopular: false
-    }
+      isPopular: false,
+    },
   ];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-12 bg-gray-50">
-      <div className="bg-white rounded-2xl p-8 shadow-sm">
+    <div className="w-full max-w-6xl mx-auto px-4 py-6 md:py-8 bg-gray-50">
+      <div className="rounded-2xl p-4 md:p-6 shadow-sm">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-4 md:mb-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-4">
             The Packages We Provide
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 text-sm md:text-base mb-2 md:mb-4">
             Get 20% instant off in all packages with coupon code <span className="font-semibold">LITEUPGRADE20</span>
           </p>
-
           {/* Toggle Switch */}
-          <div className="flex items-center justify-center mb-2">
+          <div className="flex items-center justify-center mb-1 md:mb-2">
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setIsAnnual(true)}
-                className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
-                  isAnnual 
-                    ? 'bg-[#7047EB] text-white shadow-sm' 
-                    : 'text-gray-600 hover:text-gray-900'
+                className={`px-4 md:px-6 py-2 rounded-md text-sm font-medium transition-all ${
+                  isAnnual ? 'bg-[#7047EB] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
                 Annual
               </button>
               <button
                 onClick={() => setIsAnnual(false)}
-                className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
-                  !isAnnual 
-                    ? 'bg-[#7047EB] text-white shadow-sm' 
-                    : 'text-gray-600 hover:text-gray-900'
+                className={`px-4 md:px-6 py-2 rounded-md text-sm font-medium transition-all ${
+                  !isAnnual ? 'bg-[#7047EB] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
                 Lifetime
               </button>
             </div>
             {!isAnnual && (
-              <span className="ml-4 text-sm text-[#7047EB] bg-[#f3efff] px-3 py-1 rounded-full">
+              <span className="ml-2 md:ml-4 text-sm text-[#7047EB] bg-[#f3efff] px-2 md:px-3 py-1 rounded-full">
                 Save More 20%
               </span>
             )}
@@ -121,45 +116,62 @@ function PricingSection() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {pricingPlans.map((plan, index) => (
             <div
               key={index}
-              className={`relative rounded-xl p-6 bg-white transition-all ${
-                plan.isPopular
-                  ? 'border-2 border-[#7047EB] shadow-lg'
-                  : 'border border-gray-200 hover:shadow-md'
+              className={`relative rounded-xl p-4 md:p-5 bg-white ${
+                plan.isPopular ? 'border-2 border-[#7047EB] shadow-lg' : 'border border-gray-200 hover:shadow-md'
               }`}
+              style={{
+                background: plan.name === 'Starter' || plan.name === 'Business'
+                  ? 'linear-gradient(214.33deg, rgba(234, 248, 255, 0.7) 3.79%, #FFFFFF 60.72%)'
+                  : 'linear-gradient(214.33deg, rgba(255, 250, 239, 0.7) 3.79%, #FFFFFF 60.72%)',
+                height: 'auto', // Remove full height to match Figma's fixed height
+              }}
             >
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
+              <div className="mb-3 md:mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-base md:text-lg font-semibold text-gray-900">{plan.name}</h3>
                   {plan.isPopular && (
-                    <span className="bg-[#7047EB] text-white px-3 py-1 rounded-full text-xs font-medium">
-                      Popular
+                    <span className="bg-[#EFEAFF] text-[#7047EB] text-center inline-flex items-center justify-center rounded-full">
+                      <span
+                        style={{
+                          width: '60px',
+                          height: '28px',
+                          padding: '6px 4px',
+                          fontFamily: 'Inter, sans-serif',
+                          fontWeight: 500,
+                          fontSize: '10px',
+                          lineHeight: '14px',
+                          letterSpacing: '0%',
+                        }}
+                      >
+                        Popular
+                      </span>
                     </span>
                   )}
                 </div>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-gray-900">
+                <div className="flex items-baseline gap-1 md:gap-2">
+                  <span className="text-xl md:text-2xl font-bold text-gray-900">
                     {isAnnual ? plan.annualPrice : plan.lifetimePrice}
                   </span>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-xs md:text-sm text-gray-500">
                     {isAnnual ? 'Annually' : 'Lifetime'}
                   </span>
                 </div>
               </div>
 
-              <div className="mb-8 space-y-3">
+              <div className="mb-4 md:mb-6 space-y-2 md:space-y-3 flex-grow">
                 {plan.features.map((feature, featureIndex) => (
-                  <div key={featureIndex} className="flex items-start gap-3">
-                    <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
+                  <div key={featureIndex} className="flex items-start gap-2 md:gap-3">
+                    <Check className="w-3 md:w-4 h-3 md:h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
                     <span className="text-sm text-gray-700">{feature}</span>
                   </div>
                 ))}
               </div>
 
-              <button className="w-full bg-[#7047EB] text-white py-3 px-4 rounded-lg text-sm font-semibold hover:bg-[#5d39c4] transition-colors">
+              <button className="w-full bg-[#7047EB] text-white py-2 md:py-3 px-3 md:px-4 rounded-lg text-sm font-semibold hover:bg-[#5d39c4] transition-colors">
                 Buy Now
               </button>
             </div>
@@ -467,16 +479,6 @@ const FeatureComparison: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('vendor');
   const { features, lite, pro } = featureData[activeCategory];
 
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const scrollAmount = 300;
-      scrollRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
-
   return (
     <section className="w-full max-w-7xl mx-auto px-4 md:px-6 py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-8">
@@ -486,24 +488,6 @@ const FeatureComparison: React.FC = () => {
         <button className="text-sm font-medium border border-purple-500 text-purple-600 px-4 py-2 rounded-md hover:bg-purple-50 transition">
           Explore All Features
         </button>
-      </div>
-
-      <div className="flex justify-between items-center mb-6">
-        <div />
-        <div className="flex space-x-2">
-          <button
-            onClick={() => scroll('left')}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
-          >
-            <MoveLeft className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => scroll('right')}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
-          >
-            <MoveRight className="w-4 h-4" />
-          </button>
-        </div>
       </div>
 
       <div className="relative">
@@ -609,7 +593,7 @@ const FeatureComparison: React.FC = () => {
 function DokanAIBanner() {
     return (
         <div
-            className="relative w-full h-[220px] rounded-2xl overflow-hidden"
+            className="relative w-full h-[280px] rounded-2xl overflow-hidden"
         >
             {/* Background Image */}
             <img
@@ -660,7 +644,7 @@ function WhySettle() {
                     src={moduleBanner}
                     alt="42+ Modules"
                     className="w-full h-full object-cover absolute inset-0"
-                    style={{ minHeight: 100, maxHeight: 200 }}
+                    style={{ minHeight: 200, maxHeight: 200 }}
                     draggable={false}
                 />
                 <div className="relative z-10 flex flex-col justify-center h-full px-8 py-8">
@@ -744,7 +728,7 @@ function ExceptionalFeatures() {
 
 function GuaranteeSection() {
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 pt-16 pb-20" style={{ fontFamily: 'Inter, sans-serif' }}>
+        <div className="w-full max-w-7xl mx-auto pt-10 pb-10" style={{ fontFamily: 'Inter, sans-serif' }}>
             {/* What Makes Dokan Stand Out */}
             <div>
                 <h3 className="text-[24px] font-bold mb-8 text-gray-900">
@@ -824,9 +808,9 @@ function ScaleMarketplaceBanner() {
         
         {/* Button */}
         <div className="z-10">
-          <button className="px-8 py-4 bg-yellow-400 text-black font-semibold rounded-lg shadow-lg hover:bg-yellow-300 transition-all transform hover:scale-105 flex items-center gap-2 text-lg">
+          <button className="px-4 py-2 bg-yellow-400 text-black font-semibold rounded shadow hover:bg-yellow-300 transition flex items-center gap-2 text-base">
             Upgrade to Pro
-            <Crown className="w-5 h-5" />
+            <Crown className="inline-block w-5 h-5 ml-1" />
           </button>
         </div>
       </div>
@@ -864,7 +848,7 @@ function ProFeatures() {
                         Upgrade to Dokan PRO for powerful vendor management, advanced admin controls, and built-in AI assistance. Enjoy exclusive features that simplify operations, boost sales, and scale your business effortlessly.
                     </p>
                     <div className="flex items-center gap-4">
-                        <button className="px-6 py-3 bg-yellow-400 text-black font-semibold rounded shadow hover:bg-yellow-300 transition flex items-center gap-2 text-base">
+                        <button className="px-4 py-2 bg-yellow-400 text-black font-semibold rounded shadow hover:bg-yellow-300 transition flex items-center gap-2 text-base">
                             Upgrade to Pro
                             <Crown className="inline-block w-5 h-5 ml-1" />
                         </button>
