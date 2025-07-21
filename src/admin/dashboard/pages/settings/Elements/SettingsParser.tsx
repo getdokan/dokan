@@ -1,18 +1,27 @@
 import Section from './Section';
 import SubSection from './SubSection';
 import FieldParser from './Fields/FieldParser';
-import FieldGroup from './FiendGroup';
+
 import { applyFilters } from '@wordpress/hooks';
 import { SettingsProps } from '../types';
+import FieldGroup from './FieldGroup';
+import SubPage from './SubPage';
 
 const SettingsParser = ( {
     element,
     getSetting,
     onValueChange,
 }: SettingsProps ) => {
-    console.log( 'SettingsParser', element.type );
     switch ( element.type ) {
-        case 'page':
+        case 'subpage':
+            return (
+                <SubPage
+                    element={ element }
+                    getSetting={ getSetting }
+                    onValueChange={ onValueChange }
+                />
+            );
+        case 'section':
             return (
                 <Section
                     key={ element.hook_key }
@@ -21,7 +30,7 @@ const SettingsParser = ( {
                     onValueChange={ onValueChange }
                 />
             );
-        case 'subpage':
+        case 'subsection':
             return (
                 <SubSection
                     key={ element.hook_key }

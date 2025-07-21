@@ -12,6 +12,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Number;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Password;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Radio;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioBox;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioCapsule;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Select;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
@@ -62,6 +63,7 @@ class Field extends SettingsElement {
 		'currency'                  => Currency::class,
 		'combine_input'             => CombineInput::class,
 		'category_based_commission' => CategoryBasedCommission::class,
+        'radio_capsule' => RadioCapsule::class, // Assuming RadioCapsule extends Radio
 	);
 
 	/**

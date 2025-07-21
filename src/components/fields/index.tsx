@@ -11,3 +11,4 @@ export { default as SocialButton } from './SocialButton';
 export { default as TimePicker } from './TimePicker';
 export { default as TextField } from './TextField';
 export { default as DokanTextArea } from './DokanTextArea';
+export { default as DokanSimpleRadio } from './DokanSimpleRadio';

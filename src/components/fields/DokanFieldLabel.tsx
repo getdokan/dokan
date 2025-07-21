@@ -15,7 +15,7 @@ interface InputLabelProps {
 
 const DokanFieldLabel = ( {
     title,
-    titleFontWeight = 'light',
+    titleFontWeight = 'bold',
     tooltip,
     suffix,
     icon,
@@ -25,7 +25,11 @@ const DokanFieldLabel = ( {
     labelClassName = '',
 }: InputLabelProps ) => {
     return (
-        <div className={ `flex  gap-4 ${ wrapperClassNames }` }>
+        <div
+            className={ twMerge(
+                `flex items-start gap-2 ${ wrapperClassNames }`
+            ) }
+        >
             { icon && <div className="flex items-center">{ icon }</div> }
             <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-1">

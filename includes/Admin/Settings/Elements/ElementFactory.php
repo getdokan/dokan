@@ -14,6 +14,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Text;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Number;
+use WeDevs\Dokan\Admin\Settings\Elements\FieldGroup;
 
 class ElementFactory {
     /**
@@ -72,5 +73,16 @@ class ElementFactory {
         $field = new Field( $id, $type );
 
         return $field->get_input();
+    }
+
+    /**
+     * Get a new FieldGroup object.
+     *
+     * @param string $id ID.
+     *
+     * @return FieldGroup
+     */
+    public static function field_group( string $id ): FieldGroup {
+        return new FieldGroup( $id );
     }
 }
