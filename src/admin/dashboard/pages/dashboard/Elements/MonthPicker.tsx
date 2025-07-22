@@ -12,6 +12,8 @@ interface MonthPickerProps {
     footerTitle?: string;
     footerSubtitle?: string;
     deselectable?: boolean;
+    minDate?: { month: string; year: string };
+    maxDate?: { month: string; year: string };
 }
 function MonthPicker( {
     onChange,
@@ -23,6 +25,8 @@ function MonthPicker( {
     footerTitle = '',
     footerSubtitle = '',
     deselectable = true,
+    minDate = null,
+    maxDate = null,
 }: MonthPickerProps ) {
     const [ popoverAnchor, setPopoverAnchor ] = useState();
     const [ isOpen, setIsOpen ] = useState< boolean >( false );
@@ -169,6 +173,23 @@ function MonthPicker( {
                                     Number( value?.year ) ===
                                         Number( currentYear );
 
+                                const monthNum = index + 1;
+                                const yearNum = Number( currentYear );
+
+                                const minDisabled =
+                                    minDate &&
+                                    ( yearNum < Number( minDate.year ) ||
+                                        ( yearNum === Number( minDate.year ) &&
+                                            monthNum <
+                                                Number( minDate.month ) ) );
+                                const maxDisabled =
+                                    maxDate &&
+                                    ( yearNum > Number( maxDate.year ) ||
+                                        ( yearNum === Number( maxDate.year ) &&
+                                            monthNum >
+                                                Number( maxDate.month ) ) );
+                                const isDisabled = minDisabled || maxDisabled;
+
                                 return (
                                     <button
                                         key={ month }
@@ -177,11 +198,12 @@ function MonthPicker( {
                                             handleMonthSelect( index )
                                         }
                                         className={ twMerge(
-                                            'px-4 py-4 text-sm font-medium rounded border-gray-100 border transition-colors focus:outline-none',
+                                            'px-4 py-4 text-sm font-medium rounded border-neutral-100 border transition-colors focus:outline-none disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:opacity-[0.5]',
                                             isSelected
                                                 ? 'bg-[#7047EB] text-white'
-                                                : 'hover:bg-gray-100 focus:bg-gray-100'
+                                                : 'hover:bg-neutral-100 focus:bg-neutral-100'
                                         ) }
+                                        disabled={ isDisabled }
                                     >
                                         { month }
                                     </button>

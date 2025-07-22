@@ -85,6 +85,8 @@ function Dashboard() {
                 sectionHeader={
                     <MonthPicker
                         value={ monthData }
+                        minDate={ { month: 2, year: 2025 } }
+                        maxDate={ { month: 8, year: 2025 } }
                         onChange={ ( value ) => {
                             setMonthData( value );
                         } }
