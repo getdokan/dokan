@@ -43,7 +43,7 @@ import wordpressLogo from './assets/wordpressLogo.png';
 import scaleImg from './assets/scale.png';
 
 function PricingSection() {
-  const [isAnnual, setIsAnnual] = useState(true);
+  const [isAnnual, setIsAnnual] = useState(true); // Set to true to match your annual image
 
   const pricingPlans = [
     {
@@ -51,48 +51,49 @@ function PricingSection() {
       annualPrice: '$149',
       lifetimePrice: '$745',
       features: ['Essential Features', '3 Premium Modules', '1 Site License', 'Ticket Based Support'],
-      isPopular: false,
+      isPopular: false
     },
     {
       name: 'Professional',
       annualPrice: '$249',
       lifetimePrice: '$1245',
       features: ['Everything in Starter', '23 Premium Modules', '3 Sites Licenses', 'Ticket Based Support'],
-      isPopular: false,
+      isPopular: false
     },
     {
       name: 'Business',
       annualPrice: '$499',
       lifetimePrice: '$2495',
       features: ['Everything in Professional', '39 Premium Modules', '5 Sites Licenses', 'Ticket Based Support'],
-      isPopular: true,
+      isPopular: true
     },
     {
       name: 'Enterprise',
       annualPrice: '$999',
       lifetimePrice: '$4995',
       features: ['Everything in Business', '39 Premium Modules', '10 Sites Licenses', 'Priority Support', '2 Hours of Theme Compatibility & Installation'],
-      isPopular: false,
-    },
+      isPopular: false
+    }
   ];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-6 md:py-8 bg-gray-50">
-      <div className="rounded-2xl p-4 md:p-6 shadow-sm">
+    <div className="w-full max-w-none mx-auto px-0 py-0 bg-gray-50">
+      <div className="bg-white rounded-2xl shadow-sm" style={{ width: '1024px', height: '580.56px', margin: '0 auto' }}>
         {/* Header */}
-        <div className="text-center mb-4 md:mb-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-4">
+        <div className="text-center pt-8 pb-6">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
             The Packages We Provide
           </h2>
-          <p className="text-gray-600 text-sm md:text-base mb-2 md:mb-4">
+          <p className="text-gray-600 mb-6">
             Get 20% instant off in all packages with coupon code <span className="font-semibold">LITEUPGRADE20</span>
           </p>
+
           {/* Toggle Switch */}
-          <div className="flex items-center justify-center mb-1 md:mb-2">
+          <div className="flex items-center justify-center mb-2 md:mb-4">
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setIsAnnual(true)}
-                className={`px-4 md:px-6 py-2 rounded-md text-sm font-medium transition-all ${
+                className={`px-6 py-2 md:py-3 rounded-md text-sm md:text-base font-medium transition-all ${
                   isAnnual ? 'bg-[#7047EB] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
@@ -100,7 +101,7 @@ function PricingSection() {
               </button>
               <button
                 onClick={() => setIsAnnual(false)}
-                className={`px-4 md:px-6 py-2 rounded-md text-sm font-medium transition-all ${
+                className={`px-6 py-2 md:py-3 rounded-md text-sm md:text-base font-medium transition-all ${
                   !isAnnual ? 'bg-[#7047EB] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
@@ -108,7 +109,7 @@ function PricingSection() {
               </button>
             </div>
             {!isAnnual && (
-              <span className="ml-2 md:ml-4 text-sm text-[#7047EB] bg-[#f3efff] px-2 md:px-3 py-1 rounded-full">
+              <span className="ml-4 text-sm md:text-base text-[#7047EB] bg-[#f3efff] px-3 py-1 md:py-2 rounded-full">
                 Save More 20%
               </span>
             )}
@@ -116,63 +117,84 @@ function PricingSection() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="flex justify-center gap-4 px-8 pb-8">
           {pricingPlans.map((plan, index) => (
             <div
               key={index}
-              className={`relative rounded-xl p-4 md:p-5 bg-white ${
-                plan.isPopular ? 'border-2 border-[#7047EB] shadow-lg' : 'border border-gray-200 hover:shadow-md'
+              className={`relative rounded-xl p-4 bg-white flex flex-col ${
+                plan.isPopular
+                  ? 'border-2 border-[#7047EB] shadow-lg'
+                  : 'border border-gray-200 hover:shadow-md'
               }`}
               style={{
+                width: '241px',
+                height: '313px',
                 background: plan.name === 'Starter' || plan.name === 'Business'
                   ? 'linear-gradient(214.33deg, rgba(234, 248, 255, 0.7) 3.79%, #FFFFFF 60.72%)'
-                  : 'linear-gradient(214.33deg, rgba(255, 250, 239, 0.7) 3.79%, #FFFFFF 60.72%)',
-                height: 'auto', // Remove full height to match Figma's fixed height
+                  : 'linear-gradient(214.33deg, rgba(255, 250, 239, 0.7) 3.79%, #FFFFFF 60.72%)'
               }}
             >
-              <div className="mb-3 md:mb-4">
+              <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-base md:text-lg font-semibold text-gray-900">{plan.name}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
                   {plan.isPopular && (
-                    <span className="bg-[#EFEAFF] text-[#7047EB] text-center inline-flex items-center justify-center rounded-full">
-                      <span
-                        style={{
-                          width: '60px',
-                          height: '28px',
-                          padding: '6px 4px',
-                          fontFamily: 'Inter, sans-serif',
-                          fontWeight: 500,
-                          fontSize: '10px',
-                          lineHeight: '14px',
-                          letterSpacing: '0%',
-                        }}
-                      >
-                        Popular
-                      </span>
+                    <span className="bg-[#EFEAFF] text-[#7047EB] px-2 py-1 rounded-full text-xs font-medium">
+                      Popular
                     </span>
                   )}
                 </div>
-                <div className="flex items-baseline gap-1 md:gap-2">
-                  <span className="text-xl md:text-2xl font-bold text-gray-900">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-bold text-gray-900">
                     {isAnnual ? plan.annualPrice : plan.lifetimePrice}
                   </span>
-                  <span className="text-xs md:text-sm text-gray-500">
+                  <span className="text-sm text-gray-500">
                     {isAnnual ? 'Annually' : 'Lifetime'}
                   </span>
                 </div>
               </div>
 
-              <div className="mb-4 md:mb-6 space-y-2 md:space-y-3 flex-grow">
+              <div className="mb-4 space-y-2 flex-grow">
                 {plan.features.map((feature, featureIndex) => (
-                  <div key={featureIndex} className="flex items-start gap-2 md:gap-3">
-                    <Check className="w-3 md:w-4 h-3 md:h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-gray-700">{feature}</span>
+                  <div key={featureIndex} className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
+                    <span className="text-xs text-gray-700 leading-tight">{feature}</span>
                   </div>
                 ))}
               </div>
 
-              <button className="w-full bg-[#7047EB] text-white py-2 md:py-3 px-3 md:px-4 rounded-lg text-sm font-semibold hover:bg-[#5d39c4] transition-colors">
-                Buy Now
+              <button 
+                className="bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors flex items-center justify-center"
+                style={{
+                  width: '201px',
+                  height: '28px',
+                  borderRadius: '5px',
+                  paddingTop: '6px',
+                  paddingRight: '15px',
+                  paddingBottom: '6px',
+                  paddingLeft: '15px',
+                  gap: '6px',
+                  opacity: 1,
+                }}
+              >
+                <span
+                  style={{
+                    width: '52px',
+                    height: '16px',
+                    fontFamily: 'Inter, sans-serif',
+                    fontWeight: 600,
+                    fontStyle: 'normal',
+                    fontSize: '12px',
+                    lineHeight: '16px',
+                    letterSpacing: '0%',
+                    textAlign: 'center',
+                    opacity: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  Buy Now
+                </span>
               </button>
             </div>
           ))}
