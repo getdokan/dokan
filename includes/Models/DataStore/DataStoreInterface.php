@@ -7,14 +7,14 @@ use WeDevs\Dokan\Models\BaseModel;
 /**
  * Data Store interface.
  *
- * @since DOKAN_SINCE
+ * @since 4.0.4
  */
 interface DataStoreInterface {
 
     /**
      * Create a new data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.4
      *
      * @param BaseModel $model
      *
@@ -36,7 +36,7 @@ interface DataStoreInterface {
     /**
      * Update a data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.4
      *
      * @param BaseModel $model The model to update.
      *
@@ -48,7 +48,7 @@ interface DataStoreInterface {
     /**
      * Delete a data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.4
      *
      * @param BaseModel $model The model to delete.
      *
@@ -60,7 +60,7 @@ interface DataStoreInterface {
     /**
      * Get a data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.4
      *
      * @param BaseModel $model The model to get.
      *
@@ -72,7 +72,7 @@ interface DataStoreInterface {
     /**
      * Query data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.4
      *
      * @param array $args
      *
@@ -83,7 +83,7 @@ interface DataStoreInterface {
     /**
      * Count data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.4
      *
      * @param array $args
      *
