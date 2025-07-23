@@ -1,14 +1,14 @@
 # Copyright (c) 2025 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 4.0.3\n"
+"Project-Id-Version: Dokan 4.0.4\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-01T05:22:27+00:00\n"
+"POT-Creation-Date: 2025-07-17T10:01:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -971,7 +971,7 @@ msgstr ""
 #: includes/Admin/OnboardingSetup/Steps/CommissionStep.php:146
 #: includes/Admin/Settings.php:533
 #: includes/Admin/Settings.php:586
-#: includes/Product/Hooks.php:484
+#: includes/Product/Hooks.php:489
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
 msgid "Admin Commission"
@@ -1048,7 +1048,7 @@ msgstr ""
 #: includes/Admin/Settings.php:410
 #: includes/Admin/SetupWizard.php:733
 #: includes/Dashboard/Templates/Dashboard.php:109
-#: includes/Order/functions.php:430
+#: includes/Order/functions.php:415
 #: templates/dashboard/orders-widget.php:33
 msgid "Completed"
 msgstr ""
@@ -1057,7 +1057,7 @@ msgstr ""
 #: includes/Admin/Settings.php:411
 #: includes/Admin/SetupWizard.php:740
 #: includes/Dashboard/Templates/Dashboard.php:119
-#: includes/Order/functions.php:445
+#: includes/Order/functions.php:430
 #: templates/dashboard/orders-widget.php:43
 #: templates/orders/listing.php:142
 msgid "Processing"
@@ -1343,7 +1343,7 @@ msgid "You can configure your site's privacy settings and policy."
 msgstr ""
 
 #: includes/Admin/Settings.php:412
-#: includes/Order/functions.php:440
+#: includes/Order/functions.php:425
 msgid "On-hold"
 msgstr ""
 
@@ -2499,7 +2499,7 @@ msgid "Delete"
 msgstr ""
 
 #: includes/Ajax.php:530
-#: includes/Product/Hooks.php:59
+#: includes/Product/Hooks.php:64
 msgid "Error: Nonce verification failed"
 msgstr ""
 
@@ -3118,17 +3118,17 @@ msgid "Dokan variable products author IDs regenerated successfully!"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:30
-#: templates/products/inventory.php:32
+#: templates/products/inventory.php:27
 msgid "In Stock"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:31
-#: templates/products/inventory.php:33
+#: templates/products/inventory.php:28
 msgid "Out of Stock"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:34
-#: templates/products/inventory.php:74
+#: templates/products/inventory.php:69
 msgid "Do not allow"
 msgstr ""
 
@@ -3137,19 +3137,19 @@ msgid "Allow, but notify customer"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:36
-#: templates/products/inventory.php:76
+#: templates/products/inventory.php:71
 msgid "Allow"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:40
-#: templates/products/edit-product-single.php:411
+#: templates/products/edit-product-single.php:399
 #: templates/products/new-product.php:271
 #: templates/products/tmpl-add-product-popup.php:18
 msgid "Select tags/Add tags"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:40
-#: templates/products/edit-product-single.php:411
+#: templates/products/edit-product-single.php:399
 #: templates/products/new-product.php:271
 #: templates/products/tmpl-add-product-popup.php:18
 msgid "Select product tags"
@@ -3400,7 +3400,7 @@ msgid "Pending"
 msgstr ""
 
 #: includes/Dashboard/Templates/Dashboard.php:124
-#: includes/Order/functions.php:455
+#: includes/Order/functions.php:440
 #: templates/dashboard/orders-widget.php:48
 #: assets/js/frontend.js:172
 #: assets/js/vue-admin.js:2
@@ -3408,7 +3408,7 @@ msgid "Cancelled"
 msgstr ""
 
 #: includes/Dashboard/Templates/Dashboard.php:129
-#: includes/Order/functions.php:450
+#: includes/Order/functions.php:435
 #: templates/dashboard/orders-widget.php:53
 msgid "Refunded"
 msgstr ""
@@ -3436,7 +3436,7 @@ msgid "Nonce verification failed!"
 msgstr ""
 
 #: includes/Dashboard/Templates/Orders.php:141
-#: includes/Dashboard/Templates/Products.php:267
+#: includes/Dashboard/Templates/Products.php:268
 #: assets/js/vue-admin.js:2
 msgid "Bulk Actions"
 msgstr ""
@@ -3453,51 +3453,51 @@ msgstr ""
 msgid "Change status to completed"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:222
+#: includes/Dashboard/Templates/Products.php:223
 #: includes/Dashboard/Templates/Settings.php:138
 #: includes/Shortcodes/Dashboard.php:30
 #: templates/global/no-permission.php:54
 msgid "You have no permission to view this page"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:268
+#: includes/Dashboard/Templates/Products.php:269
 #: includes/Product/functions.php:494
 msgid "Delete Permanently"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:303
+#: includes/Dashboard/Templates/Products.php:304
 msgid "Details of your product ..."
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:312
-#: includes/Dashboard/Templates/Products.php:476
+#: includes/Dashboard/Templates/Products.php:313
+#: includes/Dashboard/Templates/Products.php:481
 #: includes/Product/functions.php:33
 msgid "Please enter product title"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:318
-#: includes/Dashboard/Templates/Products.php:324
-#: includes/Dashboard/Templates/Products.php:496
+#: includes/Dashboard/Templates/Products.php:319
+#: includes/Dashboard/Templates/Products.php:325
+#: includes/Dashboard/Templates/Products.php:501
 #: includes/Product/functions.php:39
 #: includes/Product/functions.php:47
 msgid "Please select a category"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:321
+#: includes/Dashboard/Templates/Products.php:322
 #: includes/Product/functions.php:43
 msgid "Please select at least one category"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:481
+#: includes/Dashboard/Templates/Products.php:486
 msgid "No product found!"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:492
+#: includes/Dashboard/Templates/Products.php:497
 msgid "I swear this is not your product!"
 msgstr ""
 
 #. translators: %s: maximum tag length
-#: includes/Dashboard/Templates/Products.php:513
+#: includes/Dashboard/Templates/Products.php:518
 #: includes/Product/functions.php:121
 msgid "You can only select %s tags"
 msgstr ""
@@ -4189,7 +4189,7 @@ msgid "Online"
 msgstr ""
 
 #: includes/functions.php:686
-#: includes/Order/functions.php:464
+#: includes/Order/functions.php:449
 msgid "Draft"
 msgstr ""
 
@@ -4826,6 +4826,19 @@ msgstr ""
 msgid "Craft Your Description"
 msgstr ""
 
+#: includes/Models/DataStore/BaseDataStore.php:65
+#: includes/Models/DataStore/BaseDataStore.php:92
+msgid "Invalid entity item."
+msgstr ""
+
+#: includes/Models/DataStore/BaseDataStore.php:181
+msgid "Failed to delete."
+msgstr ""
+
+#: includes/Models/DataStore/BaseDataStore.php:222
+msgid "Failed to update."
+msgstr ""
+
 #: includes/Order/Admin/Hooks.php:98
 #: assets/js/vue-admin.js:2
 msgid "Actions"
@@ -4877,147 +4890,147 @@ msgstr ""
 msgid "Your {site_title} order from {order_date} is complete"
 msgstr ""
 
-#: includes/Order/functions.php:435
+#: includes/Order/functions.php:420
 msgid "Pending Payment"
 msgstr ""
 
-#: includes/Order/functions.php:460
+#: includes/Order/functions.php:445
 msgid "Failed"
 msgstr ""
 
-#: includes/Order/functions.php:647
+#: includes/Order/functions.php:632
 msgid "Order No"
 msgstr ""
 
-#: includes/Order/functions.php:648
+#: includes/Order/functions.php:633
 #: templates/orders/details.php:19
 msgid "Order Items"
 msgstr ""
 
-#: includes/Order/functions.php:649
+#: includes/Order/functions.php:634
 msgid "Shipping method"
 msgstr ""
 
-#: includes/Order/functions.php:650
+#: includes/Order/functions.php:635
 msgid "Shipping Cost"
 msgstr ""
 
-#: includes/Order/functions.php:651
+#: includes/Order/functions.php:636
 msgid "Payment method"
 msgstr ""
 
-#: includes/Order/functions.php:652
+#: includes/Order/functions.php:637
 #: templates/orders/listing.php:31
 #: templates/orders/listing.php:77
 msgid "Order Total"
 msgstr ""
 
-#: includes/Order/functions.php:653
+#: includes/Order/functions.php:638
 msgid "Earnings"
 msgstr ""
 
-#: includes/Order/functions.php:654
+#: includes/Order/functions.php:639
 #: includes/REST/OrderController.php:107
 msgid "Order Status"
 msgstr ""
 
-#: includes/Order/functions.php:655
+#: includes/Order/functions.php:640
 msgid "Order Date"
 msgstr ""
 
-#: includes/Order/functions.php:656
+#: includes/Order/functions.php:641
 msgid "Billing Company"
 msgstr ""
 
-#: includes/Order/functions.php:657
+#: includes/Order/functions.php:642
 msgid "Billing First Name"
 msgstr ""
 
-#: includes/Order/functions.php:658
+#: includes/Order/functions.php:643
 msgid "Billing Last Name"
 msgstr ""
 
-#: includes/Order/functions.php:659
+#: includes/Order/functions.php:644
 msgid "Billing Full Name"
 msgstr ""
 
-#: includes/Order/functions.php:660
+#: includes/Order/functions.php:645
 msgid "Billing Email"
 msgstr ""
 
-#: includes/Order/functions.php:661
+#: includes/Order/functions.php:646
 msgid "Billing Phone"
 msgstr ""
 
-#: includes/Order/functions.php:662
+#: includes/Order/functions.php:647
 msgid "Billing Address 1"
 msgstr ""
 
-#: includes/Order/functions.php:663
+#: includes/Order/functions.php:648
 msgid "Billing Address 2"
 msgstr ""
 
-#: includes/Order/functions.php:664
+#: includes/Order/functions.php:649
 msgid "Billing City"
 msgstr ""
 
-#: includes/Order/functions.php:665
+#: includes/Order/functions.php:650
 msgid "Billing State"
 msgstr ""
 
-#: includes/Order/functions.php:666
+#: includes/Order/functions.php:651
 msgid "Billing Postcode"
 msgstr ""
 
-#: includes/Order/functions.php:667
+#: includes/Order/functions.php:652
 msgid "Billing Country"
 msgstr ""
 
-#: includes/Order/functions.php:668
+#: includes/Order/functions.php:653
 msgid "Shipping Company"
 msgstr ""
 
-#: includes/Order/functions.php:669
+#: includes/Order/functions.php:654
 msgid "Shipping First Name"
 msgstr ""
 
-#: includes/Order/functions.php:670
+#: includes/Order/functions.php:655
 msgid "Shipping Last Name"
 msgstr ""
 
-#: includes/Order/functions.php:671
+#: includes/Order/functions.php:656
 msgid "Shipping Full Name"
 msgstr ""
 
-#: includes/Order/functions.php:672
+#: includes/Order/functions.php:657
 msgid "Shipping Address 1"
 msgstr ""
 
-#: includes/Order/functions.php:673
+#: includes/Order/functions.php:658
 msgid "Shipping Address 2"
 msgstr ""
 
-#: includes/Order/functions.php:674
+#: includes/Order/functions.php:659
 msgid "Shipping City"
 msgstr ""
 
-#: includes/Order/functions.php:675
+#: includes/Order/functions.php:660
 msgid "Shipping State"
 msgstr ""
 
-#: includes/Order/functions.php:676
+#: includes/Order/functions.php:661
 msgid "Shipping Postcode"
 msgstr ""
 
-#: includes/Order/functions.php:677
+#: includes/Order/functions.php:662
 msgid "Shipping Country"
 msgstr ""
 
-#: includes/Order/functions.php:678
+#: includes/Order/functions.php:663
 msgid "Customer IP"
 msgstr ""
 
-#: includes/Order/functions.php:679
+#: includes/Order/functions.php:664
 msgid "Customer Note"
 msgstr ""
 
@@ -5364,7 +5377,7 @@ msgid "Set scheduled sale dates"
 msgstr ""
 
 #: includes/Product/functions.php:229
-#: templates/products/inventory.php:8
+#: templates/products/inventory.php:3
 msgid "Inventory"
 msgstr ""
 
@@ -5471,7 +5484,7 @@ msgid "Catalog"
 msgstr ""
 
 #: includes/Product/functions.php:363
-#: includes/Product/Hooks.php:196
+#: includes/Product/Hooks.php:201
 #: templates/products/listing-filter.php:110
 #: assets/js/dashboard-charts.js:1
 msgid "Search"
@@ -5522,29 +5535,29 @@ msgstr ""
 msgid "Relevance"
 msgstr ""
 
-#: includes/Product/Hooks.php:66
+#: includes/Product/Hooks.php:71
 msgid "Products not found with this search"
 msgstr ""
 
-#: includes/Product/Hooks.php:155
+#: includes/Product/Hooks.php:160
 #: templates/orders/commission-meta-box-html.php:85
 msgid "SKU:"
 msgstr ""
 
-#: includes/Product/Hooks.php:192
+#: includes/Product/Hooks.php:197
 msgid "Enter product name"
 msgstr ""
 
-#: includes/Product/Hooks.php:200
+#: includes/Product/Hooks.php:205
 msgid "Shop order"
 msgstr ""
 
-#: includes/Product/Hooks.php:418
+#: includes/Product/Hooks.php:423
 msgid "As this is your own product, the \"Add to Cart\" button has been removed. Please visit as a guest to view it."
 msgstr ""
 
-#: includes/Product/Hooks.php:488
-#: includes/Product/Hooks.php:489
+#: includes/Product/Hooks.php:493
+#: includes/Product/Hooks.php:494
 #: assets/js/vue-admin.js:2
 msgid "When the value is 0, no commissions will be deducted from this vendor."
 msgstr ""
@@ -8587,11 +8600,11 @@ msgstr ""
 msgid "The listed templates or vendor dashboard routes are currently overridden, which are preventing enabling new features."
 msgstr ""
 
-#: includes/wc-functions.php:390
+#: includes/wc-functions.php:387
 msgid "Product SKU must be unique"
 msgstr ""
 
-#: includes/wc-functions.php:854
+#: includes/wc-functions.php:851
 #: templates/account/update-customer-to-vendor.php:26
 #: templates/account/vendor-registration.php:18
 #: templates/global/seller-registration-form.php:16
@@ -8600,7 +8613,7 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: includes/wc-functions.php:855
+#: includes/wc-functions.php:852
 #: templates/account/update-customer-to-vendor.php:30
 #: templates/account/vendor-registration.php:23
 #: templates/global/seller-registration-form.php:21
@@ -8609,57 +8622,57 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: includes/wc-functions.php:856
+#: includes/wc-functions.php:853
 #: templates/account/vendor-registration.php:36
 #: templates/dashboard/edit-account.php:65
 msgid "Email address"
 msgstr ""
 
-#: includes/wc-functions.php:862
+#: includes/wc-functions.php:859
 msgid "is a required field."
 msgstr ""
 
-#: includes/wc-functions.php:868
+#: includes/wc-functions.php:865
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: includes/wc-functions.php:870
+#: includes/wc-functions.php:867
 msgid "This email address is already registered."
 msgstr ""
 
-#: includes/wc-functions.php:876
+#: includes/wc-functions.php:873
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/wc-functions.php:881
+#: includes/wc-functions.php:878
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/wc-functions.php:884
+#: includes/wc-functions.php:881
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/wc-functions.php:887
+#: includes/wc-functions.php:884
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/wc-functions.php:890
+#: includes/wc-functions.php:887
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/wc-functions.php:910
+#: includes/wc-functions.php:907
 msgid "Account details changed successfully."
 msgstr ""
 
-#: includes/wc-functions.php:956
+#: includes/wc-functions.php:953
 msgid "More Products"
 msgstr ""
 
-#: includes/wc-functions.php:1009
+#: includes/wc-functions.php:1006
 msgid "No product has been found!"
 msgstr ""
 
-#: includes/wc-functions.php:1082
+#: includes/wc-functions.php:1079
 msgid "Reviews cannot be posted for products that you own."
 msgstr ""
 
@@ -10393,94 +10406,90 @@ msgstr ""
 msgid "YYYY-MM-DD"
 msgstr ""
 
-#: templates/products/edit-product-single.php:393
-msgid "Brand"
-msgstr ""
-
-#: templates/products/edit-product-single.php:407
+#: templates/products/edit-product-single.php:395
 #: templates/products/new-product.php:270
 #: templates/products/tmpl-add-product-popup.php:104
 msgid "Tags"
 msgstr ""
 
-#: templates/products/edit-product-single.php:448
+#: templates/products/edit-product-single.php:436
 #: templates/products/tmpl-add-product-popup.php:24
 msgid "Upload a product cover image"
 msgstr ""
 
-#: templates/products/edit-product-single.php:488
+#: templates/products/edit-product-single.php:476
 #: templates/products/new-product.php:195
 msgid "Delete image"
 msgstr ""
 
-#: templates/products/edit-product-single.php:494
+#: templates/products/edit-product-single.php:482
 #: templates/products/new-product.php:202
 #: templates/products/tmpl-add-product-popup.php:38
 msgid "Add gallery image"
 msgstr ""
 
-#: templates/products/edit-product-single.php:510
+#: templates/products/edit-product-single.php:498
 msgid "Short Description"
 msgstr ""
 
-#: templates/products/edit-product-single.php:530
+#: templates/products/edit-product-single.php:518
 #: templates/products/new-product.php:286
 msgid "Description"
 msgstr ""
 
-#: templates/products/edit-product-single.php:562
-#: templates/products/edit-product-single.php:563
+#: templates/products/edit-product-single.php:550
+#: templates/products/edit-product-single.php:551
 msgid "Save Product"
 msgstr ""
 
-#: templates/products/inventory.php:9
+#: templates/products/inventory.php:4
 msgid "Manage inventory for this product."
 msgstr ""
 
-#: templates/products/inventory.php:19
+#: templates/products/inventory.php:14
 #: templates/products/products-listing-row.php:171
 #: templates/products/products-listing.php:125
 msgid "SKU"
 msgstr ""
 
-#: templates/products/inventory.php:19
+#: templates/products/inventory.php:14
 msgid "(Stock Keeping Unit)"
 msgstr ""
 
-#: templates/products/inventory.php:24
+#: templates/products/inventory.php:19
 msgid "Stock Status"
 msgstr ""
 
-#: templates/products/inventory.php:34
+#: templates/products/inventory.php:29
 msgid "On Backorder"
 msgstr ""
 
-#: templates/products/inventory.php:46
+#: templates/products/inventory.php:41
 msgid "Enable product stock management"
 msgstr ""
 
-#: templates/products/inventory.php:52
+#: templates/products/inventory.php:47
 msgid "Stock quantity"
 msgstr ""
 
-#: templates/products/inventory.php:53
-#: templates/products/inventory.php:61
+#: templates/products/inventory.php:48
+#: templates/products/inventory.php:56
 msgid "1"
 msgstr ""
 
-#: templates/products/inventory.php:60
+#: templates/products/inventory.php:55
 msgid "Low stock threshold"
 msgstr ""
 
-#: templates/products/inventory.php:66
+#: templates/products/inventory.php:61
 msgid "Allow Backorders"
 msgstr ""
 
-#: templates/products/inventory.php:75
+#: templates/products/inventory.php:70
 msgid "Allow but notify customer"
 msgstr ""
 
-#: templates/products/inventory.php:90
+#: templates/products/inventory.php:83
 msgid "Allow only one quantity of this product to be bought in a single order"
 msgstr ""
 
@@ -10560,6 +10569,14 @@ msgstr ""
 
 #: templates/products/others.php:52
 msgid "Enable product reviews"
+msgstr ""
+
+#: templates/products/product-brand.php:14
+msgid "Brand"
+msgstr ""
+
+#: templates/products/product-brand.php:15
+msgid "Select brand"
 msgstr ""
 
 #: templates/products/products-listing-row.php:83
@@ -11111,11 +11128,13 @@ msgid "Enter amount"
 msgstr ""
 
 #: assets/js/components.js:179
+#: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/frontend.js:172
 msgid "Sorry, the page can’t be found"
 msgstr ""
 
 #: assets/js/components.js:179
+#: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/frontend.js:172
 msgid "The page you were looking for appears to have been moved, deleted or does not exist"
 msgstr ""
@@ -11964,6 +11983,24 @@ msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:172
 msgid "%1$s of %1$s tasks completed"
+msgstr ""
+
+#: assets/js/dokan-admin-notice.js:2
+#: assets/js/dokan-promo-notice.js:2
+#: assets/js/vue-bootstrap.js:2
+msgid "Dismiss"
+msgstr ""
+
+#: assets/js/dokan-admin-notice.js:2
+#: assets/js/dokan-promo-notice.js:2
+#: assets/js/vue-bootstrap.js:2
+msgid "Dismissing..."
+msgstr ""
+
+#: assets/js/dokan-admin-notice.js:2
+#: assets/js/dokan-promo-notice.js:2
+#: assets/js/vue-bootstrap.js:2
+msgid "Dismissed"
 msgstr ""
 
 #: assets/js/dokan-admin-onboard.js:172
