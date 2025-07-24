@@ -1,9 +1,15 @@
+import {
+    Popover,
+    PopoverButton,
+    PopoverPanel,
+    Transition,
+} from '@headlessui/react';
 import { ChevronDown, ChevronRight, ChevronLeft } from 'lucide-react';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
+import { useOnClickOutside } from 'usehooks-ts';
 import { twMerge } from 'tailwind-merge';
 import { getSettings } from '@wordpress/date';
 import { __ } from '@wordpress/i18n';
-import Popover from '../../../../../components/Popover';
 
 interface MonthPickerProps {
     onChange: ( value: { month: number; year: number } ) => void;
@@ -12,8 +18,8 @@ interface MonthPickerProps {
     footerTitle?: string;
     footerSubtitle?: string;
     deselectable?: boolean;
-    minDate?: { month: string; year: string };
-    maxDate?: { month: string; year: string };
+    comparisonPosition?: 'left' | 'right' | 'hide';
+    className?: string;
 }
 function MonthPicker( {
     onChange,
@@ -25,11 +31,12 @@ function MonthPicker( {
     footerTitle = '',
     footerSubtitle = '',
     deselectable = true,
-    minDate = null,
-    maxDate = null,
+    comparisonPosition = 'hide',
+    className = '',
 }: MonthPickerProps ) {
-    const [ popoverAnchor, setPopoverAnchor ] = useState();
     const [ isOpen, setIsOpen ] = useState< boolean >( false );
+    const ref = useRef( null );
+    useOnClickOutside( ref, () => setIsOpen( ! isOpen ) );
 
     const [ currentYear, setCurrentYear ] = useState( value?.year );
 
@@ -93,6 +100,107 @@ function MonthPicker( {
         return placeholder;
     };
 
+    // Comparison date calculation functions
+    const getComparisonDateRanges = () => {
+        if ( ! value?.month || ! value?.year ) {
+            return { currentPeriod: '', previousPeriod: '' };
+        }
+
+        const selectedMonth = parseInt( value.month );
+        const selectedYear = parseInt( value.year );
+        const currentDate = new Date();
+        const currentDay = currentDate.getDate();
+        const currentMonthNum = currentDate.getMonth() + 1;
+        const currentYearNum = currentDate.getFullYear();
+
+        // Determine if we're looking at the current running month
+        const isCurrentMonth =
+            selectedMonth === currentMonthNum &&
+            selectedYear === currentYearNum;
+
+        // Calculate current period range
+        const getCurrentPeriodRange = () => {
+            const monthName = months[ selectedMonth - 1 ];
+
+            if ( isCurrentMonth ) {
+                // For current running month, show from 1st to today
+                return `${ monthName } 1 - ${ currentDay }, ${ selectedYear }`;
+            }
+            // For past months, show full month
+            const daysInMonth = new Date(
+                selectedYear,
+                selectedMonth,
+                0
+            ).getDate();
+            return `${ monthName } 1 - ${ daysInMonth }, ${ selectedYear }`;
+        };
+
+        // Calculate previous period range
+        const getPreviousPeriodRange = () => {
+            // Calculate previous month
+            let prevMonth = selectedMonth - 1;
+            let prevYear = selectedYear;
+
+            if ( prevMonth === 0 ) {
+                prevMonth = 12;
+                prevYear = selectedYear - 1;
+            }
+
+            const prevMonthName = months[ prevMonth - 1 ];
+
+            if ( isCurrentMonth ) {
+                // For current running month, show same day range in previous month
+                return `${ prevMonthName } 1 - ${ currentDay }, ${ prevYear }`;
+            }
+            // For past months, show full previous month
+            const daysInPrevMonth = new Date(
+                prevYear,
+                prevMonth,
+                0
+            ).getDate();
+            return `${ prevMonthName } 1 - ${ daysInPrevMonth }, ${ prevYear }`;
+        };
+
+        return {
+            currentPeriod: getCurrentPeriodRange(),
+            previousPeriod: getPreviousPeriodRange(),
+        };
+    };
+
+    // Comparison Date Display Component
+    const ComparisonDateDisplay = () => {
+        if ( comparisonPosition === 'hide' ) {
+            return null;
+        }
+
+        const { currentPeriod, previousPeriod } = getComparisonDateRanges();
+
+        if ( ! currentPeriod || ! previousPeriod ) {
+            return null;
+        }
+
+        return (
+            <div className="text-sm text-gray-600">
+                <div className="flex flex-col text-xs space-y-1">
+                    <div className={ `ml-4 font-semibold` }>
+                        <span>{ __( 'Month to Date', 'dokan-lite' ) }</span>{ ' ' }
+                        <span className="text-gray-500">
+                            ({ currentPeriod })
+                        </span>
+                    </div>
+                    <div className={ `font-normal` }>
+                        <span>
+                            { __( 'vs Previous Period', 'dokan-lite' ) }
+                        </span>{ ' ' }
+                        <span className="text-gray-500">
+                            ({ previousPeriod })
+                        </span>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     useEffect( () => {
         // If not currentYear is set, set it to the current year.
         if ( ! value?.year || isNaN( Number( String( value?.year ) ) ) ) {
@@ -101,134 +209,141 @@ function MonthPicker( {
         }
     }, [] );
 
-    return (
-        <div>
-            <button
-                className="shadow rounded flex gap-2 items-center justify-between w-full px-3 py-2 text-sm bg-white border"
-                onClick={ () => setIsOpen( ! isOpen ) }
-                // @ts-ignore
-                ref={ setPopoverAnchor }
-            >
-                <span>{ getDisplayText() }</span>
-                <ChevronDown
-                    className={ `w-4 h-4 transition-transform ${
-                        isOpen ? 'rotate-180' : ''
-                    }` }
-                />
-            </button>
-
-            { isOpen && (
-                <Popover
-                    className="dokan-layout"
-                    animate
-                    anchor={ popoverAnchor }
-                    focusOnMount={ true }
-                    onClose={ () => {
-                        setIsOpen( ! isOpen );
-                    } }
-                    onFocusOutside={ () => {
-                        setIsOpen( ! isOpen );
-                    } }
+    // Render the MonthPicker with comparison date display
+    const monthPickerElement = (
+        <div className={ className }>
+            <Popover className="relative">
+                <PopoverButton
+                    className="shadow rounded flex gap-2 items-center justify-between w-full px-3 py-2 text-sm bg-white border"
+                    onClick={ () => setIsOpen( ! isOpen ) }
                 >
-                    <div className="w-60 flex-auto overflow-hidden bg-white text-sm/6">
-                        { /* Year Navigation */ }
-                        <div className="flex items-center justify-between p-4 pb-2.5">
-                            <button
-                                type="button"
-                                onClick={ handlePreviousYear }
-                                className="p-1 rounded-md hover:bg-gray-100 focus:outline-none"
-                            >
-                                <ChevronLeft className="w-5 h-5" />
-                            </button>
+                    <span>{ getDisplayText() }</span>
+                    <ChevronDown
+                        className={ `w-4 h-4 transition-transform ${
+                            isOpen ? 'rotate-180' : ''
+                        }` }
+                    />
+                </PopoverButton>
+                <Transition
+                    show={ isOpen }
+                    enter="transition duration-200 ease-out"
+                    enterFrom="transform scale-95 opacity-0"
+                    enterTo="transform scale-100 opacity-100"
+                    leave="transition duration-150 ease-out"
+                    leaveFrom="transform scale-100 opacity-100"
+                    leaveTo="transform scale-95 opacity-0"
+                >
+                    <PopoverPanel
+                        anchor="bottom"
+                        className="absolute flex rounded shadow-xl border"
+                    >
+                        <div
+                            className="w-60 flex-auto overflow-hidden bg-white text-sm/6 z-[9999]"
+                            ref={ ref }
+                        >
+                            { /* Year Navigation */ }
+                            <div className="flex items-center justify-between p-4 pb-2.5">
+                                <button
+                                    type="button"
+                                    onClick={ handlePreviousYear }
+                                    className="p-1 rounded-md hover:bg-gray-100 focus:outline-none"
+                                >
+                                    <ChevronLeft className="w-5 h-5" />
+                                </button>
 
-                            <h2 className="text-lg font-semibold">
-                                { ! currentYear ||
-                                isNaN( Number( currentYear ) )
-                                    ? new Date().getFullYear()
-                                    : currentYear }
-                            </h2>
+                                <h2 className="text-lg font-semibold">
+                                    { ! currentYear ||
+                                    isNaN( Number( currentYear ) )
+                                        ? new Date().getFullYear()
+                                        : currentYear }
+                                </h2>
 
-                            <button
-                                type="button"
-                                onClick={ handleNextYear }
-                                className="p-1 rounded-md hover:bg-gray-100 focus:outline-none"
-                            >
-                                <ChevronRight className="w-5 h-5" />
-                            </button>
-                        </div>
+                                <button
+                                    type="button"
+                                    onClick={ handleNextYear }
+                                    className="p-1 rounded-md hover:bg-gray-100 focus:outline-none"
+                                >
+                                    <ChevronRight className="w-5 h-5" />
+                                </button>
+                            </div>
 
-                        <div className="pl-4 pr-4">
-                            <span className="block w-full h-[1px] bg-gray-100"></span>
-                        </div>
+                            <div className="pl-4 pr-4">
+                                <span className="block w-full h-[1px] bg-gray-100"></span>
+                            </div>
 
-                        { /* Month Grid */ }
-                        <div className="grid grid-cols-3 gap-2 p-4">
-                            { months.map( ( month, index ) => {
-                                const isSelected =
-                                    // @ts-ignore
-                                    value?.month &&
-                                    Number( value?.month ) === index + 1 &&
-                                    value?.year &&
-                                    // @ts-ignore
-                                    Number( value?.year ) ===
+                            { /* Month Grid */ }
+                            <div className="grid grid-cols-3 gap-2 p-4">
+                                { months.map( ( month, index ) => {
+                                    const isSelected =
+                                        // @ts-ignore
+                                        value?.month &&
+                                        Number( value?.month ) === index + 1 &&
+                                        value?.year &&
+                                        // @ts-ignore
+                                        Number( value?.year ) ===
                                         Number( currentYear );
 
-                                const monthNum = index + 1;
-                                const yearNum = Number( currentYear );
-
-                                const minDisabled =
-                                    minDate &&
-                                    ( yearNum < Number( minDate.year ) ||
-                                        ( yearNum === Number( minDate.year ) &&
-                                            monthNum <
-                                                Number( minDate.month ) ) );
-                                const maxDisabled =
-                                    maxDate &&
-                                    ( yearNum > Number( maxDate.year ) ||
-                                        ( yearNum === Number( maxDate.year ) &&
-                                            monthNum >
-                                                Number( maxDate.month ) ) );
-                                const isDisabled = minDisabled || maxDisabled;
-
-                                return (
-                                    <button
-                                        key={ month }
-                                        type="button"
-                                        onClick={ () =>
-                                            handleMonthSelect( index )
-                                        }
-                                        className={ twMerge(
-                                            'px-4 py-4 text-sm font-medium rounded border-neutral-100 border transition-colors focus:outline-none disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:opacity-[0.5]',
-                                            isSelected
-                                                ? 'bg-[#7047EB] text-white'
-                                                : 'hover:bg-neutral-100 focus:bg-neutral-100'
-                                        ) }
-                                        disabled={ isDisabled }
-                                    >
-                                        { month }
-                                    </button>
-                                );
-                            } ) }
-                        </div>
-
-                        { ( footerTitle || footerSubtitle ) && (
-                            <div className="p-4 pt-0">
-                                <div className="w-full h-[1px] bg-gray-100 mb-2"></div>
-                                <div className="flex flex-col">
-                                    <span className="font-semibold text-neutral-500 text-xs">
-                                        { footerTitle }
-                                    </span>
-                                    <span className="text-neutral-400 text-xs">
-                                        { footerSubtitle }
-                                    </span>
-                                </div>
+                                    return (
+                                        <button
+                                            key={ month }
+                                            type="button"
+                                            onClick={ () =>
+                                                handleMonthSelect( index )
+                                            }
+                                            className={ twMerge(
+                                                'px-4 py-4 text-sm font-medium rounded border-gray-100 border transition-colors focus:outline-none',
+                                                isSelected
+                                                    ? 'bg-[#7047EB] text-white'
+                                                    : 'hover:bg-gray-100 focus:bg-gray-100'
+                                            ) }
+                                        >
+                                            { month }
+                                        </button>
+                                    );
+                                } ) }
                             </div>
-                        ) }
-                    </div>
-                </Popover>
-            ) }
+
+                            { ( footerTitle || footerSubtitle ) && (
+                                <div className="p-4 pt-0">
+                                    <div className="w-full h-[1px] bg-gray-100 mb-2"></div>
+                                    <div className="flex flex-col">
+                                        <span className="font-semibold text-neutral-500 text-xs">
+                                            { footerTitle }
+                                        </span>
+                                        <span className="text-neutral-400 text-xs">
+                                            { footerSubtitle }
+                                        </span>
+                                    </div>
+                                </div>
+                            ) }
+                        </div>
+                    </PopoverPanel>
+                </Transition>
+            </Popover>
         </div>
     );
+
+    // Return based on comparison position
+    if ( comparisonPosition === 'left' ) {
+        return (
+            <div className="flex items-center space-x-4">
+                <ComparisonDateDisplay />
+                { monthPickerElement }
+            </div>
+        );
+    }
+
+    if ( comparisonPosition === 'right' ) {
+        return (
+            <div className="flex items-center space-x-4">
+                { monthPickerElement }
+                <ComparisonDateDisplay />
+            </div>
+        );
+    }
+
+    // Default case (hide) - just return the month picker
+    return monthPickerElement;
 }
 
 export default MonthPicker;
