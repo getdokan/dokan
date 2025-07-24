@@ -201,7 +201,7 @@ class SetupWizard {
                 'onboardingData',
                 [
                     'site_url'                  => esc_url( get_site_url() ),
-                    'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=dokan' ) ),
+                    'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=dokan-dashboard' ) ),
                 ]
             );
         }
@@ -900,7 +900,7 @@ class SetupWizard {
 
         <div class="dokan-setup-done-content">
             <p class="wc-setup-actions step">
-                <a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan' ) ); ?>"><?php esc_html_e( 'Visit Dokan Dashboard', 'dokan-lite' ); ?></a>
+                <a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-dashboard' ) ); ?>"><?php esc_html_e( 'Visit Dokan Dashboard', 'dokan-lite' ); ?></a>
                 <a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php esc_html_e( 'More Settings', 'dokan-lite' ); ?></a>
             </p>
         </div>

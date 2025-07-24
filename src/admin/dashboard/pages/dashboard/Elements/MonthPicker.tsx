@@ -281,7 +281,7 @@ function MonthPicker( {
                                         value?.year &&
                                         // @ts-ignore
                                         Number( value?.year ) ===
-                                            Number( currentYear );
+                                        Number( currentYear );
 
                                     return (
                                         <button
@@ -326,7 +326,7 @@ function MonthPicker( {
     // Return based on comparison position
     if ( comparisonPosition === 'left' ) {
         return (
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-4">
                 <ComparisonDateDisplay />
                 { monthPickerElement }
             </div>
@@ -335,7 +335,7 @@ function MonthPicker( {
 
     if ( comparisonPosition === 'right' ) {
         return (
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-4">
                 { monthPickerElement }
                 <ComparisonDateDisplay />
             </div>

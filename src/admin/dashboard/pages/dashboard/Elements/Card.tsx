@@ -1,5 +1,5 @@
 import { Card as DokanCard, Tooltip } from '@getdokan/dokan-ui';
-import { CircleAlert, MoveUp, MoveDown } from 'lucide-react';
+import { Info, MoveUp, MoveDown } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 interface CardProps {
@@ -56,10 +56,7 @@ function Card( {
                 </span>
                 { tooltip && (
                     <Tooltip content={ tooltip }>
-                        <CircleAlert
-                            size="18"
-                            className="text-[#9EA3A8] ml-2"
-                        />
+                        <Info size="18" className="text-[#9EA3A8] ml-2" />
                     </Tooltip>
                 ) }
             </div>
