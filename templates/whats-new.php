@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.0.5',
+        'released' => '2025-07-25',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.4',
         'released' => '2025-07-17',
         'changes'  => [
