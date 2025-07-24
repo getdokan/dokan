@@ -1,6 +1,7 @@
 import { RawHTML } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { useAdminNotices } from '../hooks/useAdminNotices';
+import DokanLogo from './DokanLogo';
 
 interface AdminNoticesProps {
     endpoint?: string;
@@ -22,7 +23,6 @@ const AdminNotices = ( {
         prevNotice,
         pauseAutoSlide,
         resumeAutoSlide,
-        closeNotice,
         executeAction,
         actionLoading,
     } = useAdminNotices( { endpoint, scope, interval } );
@@ -33,41 +33,21 @@ const AdminNotices = ( {
 
     const handleActionClick = async ( action: any, noticeIndex: number ) => {
         if ( action.confirm_message ) {
-            // eslint-disable-next-line no-alert
-            const confirmed = window.confirm( action.confirm_message );
-            if ( ! confirmed ) {
+            const result = await ( window as any ).Swal.fire( {
+                title: __( 'Are you sure?', 'dokan-lite' ),
+                icon: 'warning',
+                html: action.confirm_message,
+                showCancelButton: true,
+                confirmButtonText: action.text,
+                cancelButtonText: __( 'Cancel', 'dokan-lite' ),
+            } );
+
+            if ( ! result.value ) {
                 return;
             }
         }
 
         await executeAction( action, noticeIndex );
-    };
-
-    const renderCloseButton = ( notice: any, index: number ) => {
-        if ( ! notice.show_close_button ) {
-            return null;
-        }
-
-        if ( notice.close_url ) {
-            return (
-                <a href={ notice.close_url } className="close-notice">
-                    <span className="dashicons dashicons-no-alt"></span>
-                </a>
-            );
-        }
-
-        if ( notice.ajax_data ) {
-            return (
-                <button
-                    className="close-notice"
-                    onClick={ () => closeNotice( notice, index ) }
-                >
-                    <span className="dashicons dashicons-no-alt"></span>
-                </button>
-            );
-        }
-
-        return null;
     };
 
     return (
@@ -81,30 +61,21 @@ const AdminNotices = ( {
                     { notices.map( ( notice, index ) => (
                         <div
                             key={ index }
-                            className={ `dokan-admin-notice dokan-${ notice.type }` }
+                            className={ `dokan-admin-notice dokan-${
+                                notice.type
+                            } ${
+                                index + 1 === currentNotice
+                                    ? 'fade-in'
+                                    : 'fade-out'
+                            }` }
                             style={ {
-                                display:
-                                    index + 1 === currentNotice
-                                        ? 'flex'
-                                        : 'none',
+                                opacity: index + 1 === currentNotice ? 1 : 0,
+                                transition: 'opacity 0.3s ease-in-out',
                             } }
                         >
-                            <div
-                                className="notice-content"
-                                style={ {
-                                    alignItems:
-                                        ! notice.title ||
-                                        ! notice.actions ||
-                                        ! notice.description
-                                            ? 'center'
-                                            : 'start',
-                                } }
-                            >
+                            <div className="notice-content relative z-10">
                                 <div className="logo-wrap">
-                                    <div className="dokan-logo"></div>
-                                    <span
-                                        className={ `dokan-icon dokan-icon-${ notice.type }` }
-                                    ></span>
+                                    { ! notice.hide_logo && <DokanLogo /> }
                                 </div>
 
                                 <div className="dokan-message">
@@ -122,16 +93,27 @@ const AdminNotices = ( {
                                             <div>
                                                 { notice.actions.map(
                                                     ( action, actionIndex ) =>
-                                                        action.action ? (
+                                                        action.action &&
+                                                        ! action.ajax_data ? (
                                                             <a
                                                                 key={
                                                                     actionIndex
                                                                 }
-                                                                className={ `dokan-btn dokan-btn-${
+                                                                className={ `dokan-btn-${
                                                                     action.type
                                                                 } ${
                                                                     action.class ||
                                                                     ''
+                                                                } text-xs font-light leading-4 px-3 py-1.5 mr-1 mt-2.5 rounded-sm border border-[#7047EB] cursor-pointer transition-all duration-200 no-underline inline-block ${
+                                                                    action.type ===
+                                                                    'primary'
+                                                                        ? 'text-white bg-[#7047EB] font-normal hover:bg-transparent hover:text-[#7047EB]'
+                                                                        : ''
+                                                                } ${
+                                                                    action.type ===
+                                                                    'secondary'
+                                                                        ? 'text-[#7047EB] bg-transparent font-normal hover:text-white hover:bg-[#7047EB]'
+                                                                        : ''
                                                                 }` }
                                                                 href={
                                                                     action.action
@@ -148,11 +130,21 @@ const AdminNotices = ( {
                                                                 key={
                                                                     actionIndex
                                                                 }
-                                                                className={ `dokan-btn btn-dokan dokan-btn-${
+                                                                className={ `dokan-btn-${
                                                                     action.type
                                                                 } ${
                                                                     action.class ||
                                                                     ''
+                                                                } text-xs font-light leading-4 px-3 py-1.5 mr-1 mt-2.5 rounded-sm border border-[#7047EB] cursor-pointer transition-all duration-200 no-underline inline-block ${
+                                                                    action.type ===
+                                                                    'primary'
+                                                                        ? 'text-white bg-[#7047EB] font-normal hover:bg-transparent hover:text-[#7047EB]'
+                                                                        : ''
+                                                                } ${
+                                                                    action.type ===
+                                                                    'secondary'
+                                                                        ? 'text-[#7047EB] bg-transparent font-normal hover:text-white hover:bg-[#7047EB]'
+                                                                        : ''
                                                                 }` }
                                                                 disabled={
                                                                     actionLoading[
@@ -181,8 +173,6 @@ const AdminNotices = ( {
                                             </div>
                                         ) }
                                 </div>
-
-                                { renderCloseButton( notice, index ) }
                             </div>
                         </div>
                     ) ) }

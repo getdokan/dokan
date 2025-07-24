@@ -128,8 +128,14 @@ export const dismissAdminNotice = async ( ajaxData: {
         formData.append( key, value );
     } );
 
+    // Use dokan_promo.ajaxurl like the Vue component
+    const ajaxUrl =
+        window.dokan_promo?.ajaxurl ||
+        window.ajaxurl ||
+        '/wp-admin/admin-ajax.php';
+
     return await apiFetch( {
-        url: window.ajaxurl || '/wp-admin/admin-ajax.php',
+        url: ajaxUrl,
         method: 'POST',
         body: formData,
     } );
@@ -145,8 +151,14 @@ export const executeNoticeAction = async ( ajaxData: {
         formData.append( key, value );
     } );
 
+    // Use dokan_promo.ajaxurl like the Vue component
+    const ajaxUrl =
+        window.dokan_promo?.ajaxurl ||
+        window.ajaxurl ||
+        '/wp-admin/admin-ajax.php';
+
     return await apiFetch( {
-        url: window.ajaxurl || '/wp-admin/admin-ajax.php',
+        url: ajaxUrl,
         method: 'POST',
         body: formData,
     } );
