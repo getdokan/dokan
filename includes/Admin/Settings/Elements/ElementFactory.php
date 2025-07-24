@@ -5,6 +5,8 @@ namespace WeDevs\Dokan\Admin\Settings\Elements;
 use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Checkbox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Currency;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\DoubleTextField;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\InfoField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\MultiCheck;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Password;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Radio;
@@ -67,7 +69,7 @@ class ElementFactory {
      * @param string $id ID.
      * @param string $type Field Type.
      *
-     * @return Text|Number|Checkbox|Radio|Select|Tel|Password|RadioBox|Switcher|MultiCheck|Currency
+     * @return Text|Number|Checkbox|Radio|Select|Tel|Password|RadioBox|Switcher|MultiCheck|Currency|InfoField|DoubleTextField
      */
     public static function field( string $id, string $type = 'text' ): SettingsElement {
         $field = new Field( $id, $type );

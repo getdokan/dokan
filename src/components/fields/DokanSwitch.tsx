@@ -1,7 +1,7 @@
 import { ToggleSwitch } from '@getdokan/dokan-ui';
 import { twMerge } from 'tailwind-merge';
 
-interface DokanSwitchProps {
+interface DokanBaseSwitchProps {
     containerClassName?: string;
     checked: boolean;
     onChange: ( value: boolean ) => void;
@@ -16,14 +16,16 @@ interface DokanSwitchProps {
     id?: string;
     required?: boolean;
 }
-const DokanSwitch = ( {
+
+const DokanBaseSwitch = ( {
     containerClassName,
     checked,
     onChange,
     disabled = false,
     label,
+    color = 'primary',
     ...others
-}: DokanSwitchProps ) => {
+}: DokanBaseSwitchProps ) => {
     return (
         <div
             className={ twMerge(
@@ -36,6 +38,7 @@ const DokanSwitch = ( {
                 checked={ checked }
                 onChange={ onChange }
                 disabled={ disabled }
+                color={ color }
                 label={
                     typeof label === 'string' ? (
                         <span className="text-sm font-normal text-gray-700 ms-2">
@@ -51,4 +54,4 @@ const DokanSwitch = ( {
     );
 };
 
-export default DokanSwitch;
+export default DokanBaseSwitch;

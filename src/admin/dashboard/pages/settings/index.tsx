@@ -8,6 +8,7 @@ import Menu from './Elements/Menu';
 import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import PageHeading from './Elements/PageHeading';
+import { twMerge } from 'tailwind-merge';
 // DEMO: Render all Dokan* field components from src/Fields with mock props
 
 const SettingsPage = () => {
@@ -188,7 +189,10 @@ const SettingsPage = () => {
     };
 
     const pageInfo = getCurrentPageInfo();
-
+    // check all elements are field type
+    const allElementsAreFields = elements.every(
+        ( element ) => element.type === 'field'
+    );
     return (
         <>
             <div className="min-h-screen h-full ">
@@ -219,18 +223,28 @@ const SettingsPage = () => {
                                 description={ pageInfo.description }
                                 className="mb-8"
                             />
-                            { elements.map( ( element: SettingsElement ) => {
-                                return (
-                                    <SettingsParser
-                                        key={
-                                            element.hook_key +
-                                            '-settings-parser'
-                                        }
-                                        element={ element }
-                                        onValueChange={ onValueChange }
-                                    />
-                                );
-                            } ) }
+                            <div
+                                className={ `flex flex-col gap-6 ${ twMerge(
+                                    allElementsAreFields
+                                        ? 'divide-gray-200 divide-y border border-[#E9E9E9]'
+                                        : ''
+                                ) }` }
+                            >
+                                { elements.map(
+                                    ( element: SettingsElement ) => {
+                                        return (
+                                            <SettingsParser
+                                                key={
+                                                    element.hook_key +
+                                                    '-settings-parser'
+                                                }
+                                                element={ element }
+                                                onValueChange={ onValueChange }
+                                            />
+                                        );
+                                    }
+                                ) }
+                            </div>
                             { /* DEMO: Dokan Fields Showcase */ }
                             { /*<DokanFieldsDemo />*/ }
                         </div>

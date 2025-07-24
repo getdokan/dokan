@@ -1,10 +1,9 @@
-import React from 'react';
 import {
     DokanFieldLabel,
-    DokanTextArea,
+    DokanTextArea as BasicTextArea,
 } from '../../../../../../components/fields';
 
-export default function DokanTextAreaField( { element, onValueChange } ) {
+export default function DokanTextArea( { element, onValueChange } ) {
     return (
         <div className="flex flex-col gap-2 w-full">
             <DokanFieldLabel
@@ -12,7 +11,7 @@ export default function DokanTextAreaField( { element, onValueChange } ) {
                 titleFontWeight="light"
                 helperText={ element.description }
             />
-            <DokanTextArea
+            <BasicTextArea
                 value={ element.value }
                 onChange={ ( e ) =>
                     onValueChange( { ...element, value: e.target.value } )

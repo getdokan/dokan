@@ -106,6 +106,22 @@ class GeneralPage extends AbstractPage {
                 ElementFactory::sub_page( 'marketplace' )
                 ->set_title( __( 'Marketplace', 'dokan-lite' ) )
                 ->set_description( __( 'Configure core marketplace functionalities and customer shopping experience.', 'dokan-lite' ) )
+                ->add(
+                    ElementFactory::section( 'info' )
+                    ->set_title( __( 'Info', 'dokan-lite' ) )
+                    ->set_description( __( 'Configure the info for your marketplace.', 'dokan-lite' ) )
+                    ->add(
+                        ElementFactory::field( 'test_info', 'info' )
+                        ->set_title( __( 'Info', 'dokan-lite' ) )
+                        ->set_description( __( 'Configure the info for your marketplace.', 'dokan-lite' ) )
+                    )
+                    ->add(
+                        ElementFactory::field( 'double_text', 'double_text' )
+                                      ->set_label( __( 'Double Text Field Example', 'dokan-lite' ) )
+                                      ->set_first_value( 'Example First Value' )
+                                      ->set_second_value( 'Example Second Value' )
+                    )
+                )
             )
             ->add(
                 $dokan_page
@@ -114,6 +130,6 @@ class GeneralPage extends AbstractPage {
                 ElementFactory::sub_page( 'location' )
                 ->set_title( __( 'Location', 'dokan-lite' ) )
                 ->set_description( __( 'Configure the location for your marketplace.', 'dokan-lite' ) )
-		    );
+            );
     }
 }

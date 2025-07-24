@@ -1,7 +1,7 @@
 import { SimpleCheckbox } from '@getdokan/dokan-ui';
 import { twMerge } from 'tailwind-merge';
 
-export interface DokanCheckboxProps {
+export interface DokanBaseCheckboxProps {
     checked?: boolean;
     indeterminate?: boolean;
     input: {
@@ -13,14 +13,15 @@ export interface DokanCheckboxProps {
     onChange?: React.ChangeEventHandler< HTMLInputElement >;
     wrapperClassName?: string;
 }
-const DokanCheckbox = ( {
+
+const DokanBaseCheckbox = ( {
     checked,
     onChange,
     disabled = false,
     label,
     input,
     wrapperClassName,
-}: DokanCheckboxProps ) => {
+}: DokanBaseCheckboxProps ) => {
     return (
         <div
             className={ twMerge(
@@ -39,4 +40,4 @@ const DokanCheckbox = ( {
     );
 };
 
-export default DokanCheckbox;
+export default DokanBaseCheckbox;

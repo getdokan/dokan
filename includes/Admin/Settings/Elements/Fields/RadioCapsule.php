@@ -10,5 +10,4 @@ class RadioCapsule extends Radio {
      * @var string $input_type Input Type.
      */
     protected $input_type = 'radio_capsule';
-    
 }

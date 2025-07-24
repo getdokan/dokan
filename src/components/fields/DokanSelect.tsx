@@ -1,6 +1,6 @@
 import { FormSelect } from '@getdokan/dokan-ui';
 
-export type DokanSelectProps = {
+export type DokanBaseSelectProps = {
     value?: string | number;
     onChange?: ( value: string | number ) => void;
     id?: string;
@@ -13,15 +13,15 @@ export type DokanSelectProps = {
     isError?: boolean;
     containerClassName?: string;
 };
-const DokanSelect = ( {
+const DokanBaseSelect = ( {
     containerClassName = '',
     ...props
-}: DokanSelectProps ) => {
+}: DokanBaseSelectProps ) => {
     return (
-        <div className={ `w-full ${ containerClassName }` }>
+        <div className={ ` ${ containerClassName }` }>
             <FormSelect { ...props } />
         </div>
     );
 };
 
-export default DokanSelect;
+export default DokanBaseSelect;
