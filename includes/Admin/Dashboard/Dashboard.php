@@ -418,7 +418,7 @@ class Dashboard implements Hookable {
      * @return void
      */
     public function clear_dokan_submenu_title(): void {
-        global $submenu;
+        global $submenu, $menu;
 
 //        $legacy = false;
 //        $position = (int) $legacy;
@@ -431,6 +431,16 @@ class Dashboard implements Hookable {
         if ( isset( $submenu['dokan'][ $position ][0] ) ) {
             $submenu['dokan'][ $position ][0] = '';
         }
+
+//        $menu_position = 111; // TODO: Get the actual menu position dynamically.
+//        // TODO: set the url at position 2 accordingly.
+//
+//        error_log( print_r( $menu, 1 ) );
+//
+//        $dokan_menu_position = dokan_admin_menu_position();
+//        $menu[ $dokan_menu_position ][ 2 ] = 'admin.php?page=dokan-dashboard';
+//
+//        error_log( print_r( $menu, 1 ) );
     }
 
     /**
