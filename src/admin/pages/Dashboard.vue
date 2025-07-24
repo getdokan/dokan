@@ -115,6 +115,12 @@
             </div>
         </div>
 
+        <div class="new-dashboard-url">
+            {{ __( 'To try Dokan new dashboard, ', 'dokan-lite' ) }}
+            <a :href="getNewDashboardUrl()">
+                {{ __( 'Click Here', 'dokan-lite' ) }}
+            </a>
+        </div>
     </div>
 </template>
 
@@ -184,6 +190,10 @@ export default {
             });
         },
 
+        getNewDashboardUrl() {
+            return dokan.urls.adminRoot + 'admin.php?page=dokan-dashboard';
+        },
+
         validEmail(email) {
             var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(email);
@@ -221,6 +231,16 @@ export default {
 
 <style lang="less">
 .dokan-dashboard {
+    .new-dashboard-url {
+        font-size: 14px;
+        font-weight: 500;
+        padding-top: 20px;
+
+        a {
+            font-weight: 700;
+            text-decoration: underline;
+        }
+    }
 
     .widgets-wrapper {
         display: block;

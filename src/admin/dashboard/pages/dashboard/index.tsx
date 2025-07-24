@@ -1,5 +1,6 @@
 import './tailwind.scss';
 import { __ } from '@wordpress/i18n';
+import AdminNotices from './components/AdminNotices';
 import TodoSection from './sections/TodoSection';
 import AnalyticsSection from './sections/AnalyticsSection';
 import SalesChartSection from './sections/SalesChartSection';
@@ -9,15 +10,31 @@ import AllTimeStatsSection from './sections/AllTimeStatsSection';
 import TopPerformingVendorsSection from './sections/TopPerformingVendorsSection';
 import MostReviewedProductsSection from './sections/MostReviewedProductsSection';
 import MostReportedVendorsSection from './sections/MostReportedVendorsSection';
-import getSettings from '../../../../admin/dashboard/settings/getSettings';
+import { applyFilters } from '@wordpress/hooks';
 
 function Dashboard() {
+    const noticeScopes = applyFilters( 'dokan_admin_dashboard_notices_scopes', [
+        { scope: 'global', endpoint: 'admin' },
+        { scope: '', endpoint: 'admin' },
+        { scope: 'promo', endpoint: 'promo' },
+    ] );
+
     return (
         <div>
             <h1 className="wp-heading-inline">
                 { __( 'Dashboard', 'dokan-lite' ) }
             </h1>
             <hr className="wp-header-end" />
+
+            { noticeScopes?.map( ( noticeConfig ) => (
+                <AdminNotices
+                    key={ `${ noticeConfig.endpoint }-${
+                        noticeConfig.scope || 'local'
+                    }` }
+                    endpoint={ noticeConfig.endpoint }
+                    scope={ noticeConfig.scope }
+                />
+            ) ) }
 
             { /* Render todo section. */ }
             <TodoSection />
@@ -48,6 +65,21 @@ function Dashboard() {
                 { dokanAdminDashboardSettings?.show_most_reported_vendors && (
                     <MostReportedVendorsSection />
                 ) }
+            </div>
+
+            <div className={ `legacy-dashboard-url text-sm font-medium pt-10` }>
+                { __(
+                    'If you want to go back to old dashboard,',
+                    'dokan-lite'
+                ) }{ ' ' }
+                <a
+                    className={ `skip-color-module underline font-bold text-sm !text-[#2271b1]` }
+                    href={
+                        dokanAdminDashboardSettings?.legacy_dashboard_url || '#'
+                    }
+                >
+                    { __( 'Click Here', 'dokan-lite' ) }
+                </a>
             </div>
         </div>
     );
