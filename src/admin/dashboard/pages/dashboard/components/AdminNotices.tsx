@@ -9,10 +9,10 @@ interface AdminNoticesProps {
 }
 
 const AdminNotices = ( {
-                           endpoint = 'admin',
-                           scope = 'local',
-                           interval = 5000,
-                       }: AdminNoticesProps ) => {
+    endpoint = 'admin',
+    scope = 'local',
+    interval = 5000,
+}: AdminNoticesProps ) => {
     const {
         notices,
         loading,
@@ -157,7 +157,7 @@ const AdminNotices = ( {
                                                                 disabled={
                                                                     actionLoading[
                                                                         index
-                                                                        ]
+                                                                    ]
                                                                 }
                                                                 onClick={ () =>
                                                                     handleActionClick(
@@ -168,12 +168,12 @@ const AdminNotices = ( {
                                                             >
                                                                 { actionLoading[
                                                                     index
-                                                                    ]
+                                                                ]
                                                                     ? action.loading_text ||
-                                                                    __(
-                                                                        'Loading…',
-                                                                        'dokan-lite'
-                                                                    )
+                                                                      __(
+                                                                          'Loading…',
+                                                                          'dokan-lite'
+                                                                      )
                                                                     : action.text }
                                                             </button>
                                                         )
@@ -192,7 +192,7 @@ const AdminNotices = ( {
                     <div className="slide-notice">
                         <button
                             type="button"
-                            className={ `prev ${
+                            className={ `prev !mt-0 ${
                                 currentNotice > 1 ? 'active' : ''
                             }` }
                             onClick={ prevNotice }
@@ -230,7 +230,7 @@ const AdminNotices = ( {
 
                         <button
                             type="button"
-                            className={ `next ${
+                            className={ `next !mt-0 ${
                                 currentNotice < notices.length ? 'active' : ''
                             }` }
                             onClick={ nextNotice }

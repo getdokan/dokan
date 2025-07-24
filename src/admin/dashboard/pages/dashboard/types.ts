@@ -7,6 +7,8 @@ export interface TodoItem {
     icon: string;
     count: number;
     title: string;
+}
+
 // Admin Notice Types
 export interface AdminNoticeAction {
     type: 'primary' | 'secondary';
