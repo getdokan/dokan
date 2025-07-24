@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import crownSmallImg from './assets/crown-small.png';
 import fcmImg from './assets/FCM.png';
 import aerImg from './assets/AER.png';
 import awdImg from './assets/AWD.png';
@@ -24,7 +23,7 @@ import bootstrapImg from './assets/bootstrap.png';
 import designAddictImg from './assets/designAddict.png';
 import parsiankalaImg from './assets/parsiankala.png';
 import zakartoImg from './assets/zakarto.png';
-import { Check, MoveLeft, MoveRight, Crown, Clock, Headphones, RefreshCw, CrownIcon } from 'lucide-react';
+import { Check, MoveLeft, MoveRight, Crown } from 'lucide-react';
 import avatar1 from './assets/Avatar1.png';
 import avatar2 from './assets/Avatar2.png';
 import avatar3 from './assets/Avatar3.png';
@@ -507,46 +506,26 @@ const FeatureComparison: React.FC = () => {
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
           Dokan Lite vs Dokan Pro
         </h2>
-        <button className="text-sm font-medium border border-purple-500 text-purple-600 px-4 py-2 rounded-md hover:bg-purple-50 transition">
+        <button className="text-sm font-medium text-purple-600 px-4 py-2 rounded-md hover:bg-purple-50 transition border border-purple-200">
           Explore All Features
         </button>
       </div>
 
       <div className="relative">
-        <div className="flex rounded-xl overflow-hidden shadow-sm border border-gray-200">
+        <div className="flex rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-white">
           {/* Sidebar */}
-          <div className="flex flex-col bg-white min-w-[280px] border-r border-gray-200 p-2">
+          <div className="flex flex-col bg-white min-w-[300px] p-4 space-y-2">
             {categories.map((category, index) => (
               <button
                 key={category.key}
                 onClick={() => setActiveCategory(category.key)}
-                className={`text-left transition flex items-center justify-center
-                  ${category.key === activeCategory 
-                    ? 'bg-black text-white' 
-                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                  }`}
-                style={{ 
-                  width: '204px',
-                  height: '100px',
-                  paddingTop: '12px',
-                  paddingBottom: '12px',
-                  borderRadius: '10px',
-                  marginBottom: index === categories.length - 1 ? '0' : '6px'
-                }}
+                className={`text-left transition-all duration-200 flex items-center justify-start px-6 py-6 rounded-2xl font-bold text-lg leading-tight ${
+                  category.key === activeCategory 
+                    ? 'bg-black text-white shadow-md' 
+                    : 'bg-gray-50 text-gray-800 hover:bg-gray-100 hover:shadow-sm'
+                }`}
               >
-                <span
-                  style={{
-                    width: '159.9375px',
-                    height: '46px',
-                    fontWeight: 700,
-                    fontSize: '18px',
-                    lineHeight: '130%',
-                    letterSpacing: '0%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    textAlign: 'left'
-                  }}
-                >
+                <span className="block max-w-[200px]">
                   {category.title}
                 </span>
               </button>
@@ -556,16 +535,16 @@ const FeatureComparison: React.FC = () => {
           {/* Feature Table */}
           <div className="flex-1 overflow-hidden">
             <div ref={scrollRef} className="overflow-x-auto">
-              <div className="min-w-[500px]">
+              <div className="min-w-[600px]">
                 {/* Header */}
-                <div className="grid grid-cols-3 bg-white border-b border-gray-200">
-                  <div className="px-6 py-4 text-sm font-semibold text-gray-900">
+                <div className="grid grid-cols-3 bg-white">
+                  <div className="px-8 py-6 text-lg font-bold text-gray-900 border-b-2 border-gray-100">
                     Features
                   </div>
-                  <div className="px-6 py-4 text-sm font-semibold text-gray-900 text-center bg-gray-100 border-l border-gray-200">
+                  <div className="px-8 py-6 text-lg font-bold text-gray-900 text-center bg-gray-50 border-b-2 border-gray-100">
                     Lite
                   </div>
-                  <div className="px-6 py-4 text-sm font-semibold text-gray-900 text-center bg-gray-100 border-l border-gray-200">
+                  <div className="px-8 py-6 text-lg font-bold text-gray-900 text-center bg-gray-50 border-b-2 border-gray-100">
                     Pro
                   </div>
                 </div>
@@ -574,30 +553,30 @@ const FeatureComparison: React.FC = () => {
                 {features.map((feature, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-3 bg-white border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                    className="grid grid-cols-3 bg-white hover:bg-gray-50 transition-colors group"
                   >
-                    <div className="px-6 py-4 text-sm text-gray-700">
+                    <div className="px-8 py-5 text-base text-gray-700 border-b border-gray-100 group-hover:text-gray-900">
                       {feature}
                     </div>
-                    <div className="px-6 py-4 text-center bg-gray-100 border-l border-gray-200">
+                    <div className="px-8 py-5 text-center bg-gray-50 border-b border-gray-100 flex items-center justify-center">
                       {lite[index] ? (
-                        <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-600 text-white">
-                          <Check size={14} className="stroke-2" />
+                        <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-purple-600 text-white shadow-sm">
+                          <Check size={16} className="stroke-2" />
                         </div>
                       ) : (
-                        <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-300">
-                          <Check size={14} className="stroke-2 text-gray-500" />
+                        <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-200">
+                          <Check size={16} className="stroke-2 text-gray-400" />
                         </div>
                       )}
                     </div>
-                    <div className="px-6 py-4 text-center bg-gray-100 border-l border-gray-200">
+                    <div className="px-8 py-5 text-center bg-gray-50 border-b border-gray-100 flex items-center justify-center">
                       {pro[index] ? (
-                        <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-600 text-white">
-                          <Check size={14} className="stroke-2" />
+                        <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-purple-600 text-white shadow-sm">
+                          <Check size={16} className="stroke-2" />
                         </div>
                       ) : (
-                        <div className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-300">
-                          <Check size={14} className="stroke-2 text-gray-500" />
+                        <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-200">
+                          <Check size={16} className="stroke-2 text-gray-400" />
                         </div>
                       )}
                     </div>
