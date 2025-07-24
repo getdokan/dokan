@@ -70,7 +70,7 @@ const MostReviewedProductsSection = () => {
             label: __( 'Review Count', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className="text-center text-gray-900">
+                <div className="w-full text-right px-2 text-gray-900">
                     { item.review_count }
                 </div>
             ),

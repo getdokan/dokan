@@ -461,7 +461,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'title' => esc_html__( 'Total Products', 'dokan-lite' ),
                 ],
                 'total_vendors'     => [
-                    'icon'  => 'User',
+                    'icon'  => 'UserRound',
                     'count' => (int) $total_vendors,
                     'title' => esc_html__( 'Total Vendors', 'dokan-lite' ),
                 ],

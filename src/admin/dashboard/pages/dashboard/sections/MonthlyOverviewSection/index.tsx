@@ -43,7 +43,7 @@ const MonthlyOverviewSection = () => {
         current: number,
         previous: number | any,
         metricKey: string // Add metric key to determine direction logic
-    ): { percentage: number; direction: TrendDirection } => {
+    ): { percentage: number | float; direction: TrendDirection } => {
         let prevValue = 0;
         let currValue = current;
 
@@ -125,7 +125,7 @@ const MonthlyOverviewSection = () => {
         }
 
         return {
-            percentage: parseFloat( percentageChange.toFixed( 2 ) ),
+            percentage: percentageChange.toFixed( 2 ),
             direction,
         };
     };

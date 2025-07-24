@@ -79,7 +79,7 @@ const TopPerformingVendorsSection = () => {
             label: __( 'Total Earning', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className={ `text-gray-900` }>
+                <div className={ `w-full text-right px-2 text-gray-900` }>
                     <PriceHtml price={ `${ item.total_earning }` } />
                 </div>
             ),
@@ -89,7 +89,7 @@ const TopPerformingVendorsSection = () => {
             label: __( 'Total Orders', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className="text-center text-gray-900">
+                <div className="w-full text-right px-2 text-gray-900">
                     { item.total_orders }
                 </div>
             ),
@@ -99,7 +99,7 @@ const TopPerformingVendorsSection = () => {
             label: __( 'Total Commission', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className={ `text-gray-900` }>
+                <div className={ `w-full text-right px-2 text-gray-900` }>
                     <PriceHtml price={ `${ item.total_commission }` } />
                 </div>
             ),
@@ -138,7 +138,7 @@ const TopPerformingVendorsSection = () => {
             title={ __( 'Top Performing Vendors', 'dokan-lite' ) }
             tooltip="Top performing vendors of the marketplace, updates daily at 00:01"
         >
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg bg-white">
+            <div className="top-vendors-table relative overflow-x-auto shadow-md sm:rounded-lg bg-white">
                 <DataViews
                     data={ padDefaultData( data || [] ) }
                     namespace="dokan-top-performing-vendors"

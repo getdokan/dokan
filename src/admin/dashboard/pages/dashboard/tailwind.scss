@@ -11,6 +11,24 @@
         display: none;
       }
     }
+
+    .dataviews-view-table-header-button {
+      pointer-events: none;
+      cursor: text;
+
+      &:hover,
+      &:focus,
+      &:active {
+        background: transparent;
+        box-shadow: none;
+        outline: none;
+      }
+    }
+
+    // Hide the dropdown arrow if present
+    .dataviews-view-table-header-button::after {
+      display: none;
+    }
   }
 
   .dataviews-view-table__actions-column {
@@ -29,25 +47,34 @@
     td {
       vertical-align: middle;
     }
+
+    &.is-hovered {
+      background-color: transparent;
+    }
   }
 
   table.dataviews-view-table {
+    //padding: 20px 0 !important;
+
     th {
       background-color: #f9fafb;
     }
   }
+}
 
-  .dataviews-wrapper {
-    .dataviews-no-results {
-      color: #6b7280;
-      padding-top: 1rem;
-      padding-bottom: 1rem;
-    }
-
-    .dataviews-loading {
-      padding-top: 1rem;
-      padding-bottom: 1rem;
+#dokan-top-performing-vendors {
+  table.dataviews-view-table {
+    th:nth-last-child(-n+3) {
+      text-align: right;
     }
   }
 }
 
+#dokan-most-reported-vendors,
+#dokan-most-reviewed-products {
+  table.dataviews-view-table {
+    th:last-child {
+      text-align: right;
+    }
+  }
+}
