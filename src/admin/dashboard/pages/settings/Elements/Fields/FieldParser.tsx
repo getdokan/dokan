@@ -1,19 +1,21 @@
 import { SettingsProps } from '../../types';
 import { applyFilters } from '@wordpress/hooks';
-import Text from './Text';
-import Select from './Select';
-import Password from './Password';
-import Email from './Email';
-import Number from './Number';
-import TextArea from './TextArea';
 import RadioBox from './RadioBox';
-import Currency from './Currency';
 import CategoryBasedCommission from './Commission/CategoryBasedCommission';
 import CombineInput from './Commission/CombineInput';
-import Tel from './Tel';
 import DokanSwitch from './DokanSwitch';
-import DokanRadioCapsule from './DokanRadioCapsule';
 import DokanMultiCheck from './DokanMultiCheck';
+import DokanInfoField from './DokanInfoField';
+import DokanPassword from './DokanPassword';
+import DokanEmail from './DokanEmail';
+import DokanNumber from './DokanNumber';
+import DokanTextArea from './DokanTextArea';
+import DokanCurrency from './DokanCurrency';
+import DokanTel from './DokanTel';
+import DataClearField from './DataClearField';
+import DokanApiConnectionField from './DokanApiConnectionField';
+import DokanDoubleTextField from './DokanDoubleTextField';
+import DokanTextField from './DokanTextField';
 
 const FieldParser = ( {
     element,
@@ -27,7 +29,7 @@ const FieldParser = ( {
     switch ( element.variant ) {
         case 'text':
             return (
-                <Text
+                <DokanTextField
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
@@ -37,11 +39,10 @@ const FieldParser = ( {
 
         case 'select':
             return (
-                <Select
+                <DokanApiConnectionField
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
@@ -56,31 +57,28 @@ const FieldParser = ( {
 
         case 'password':
             return (
-                <Password
+                <DokanPassword
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
         case 'email':
             return (
-                <Email
+                <DokanEmail
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
         case 'number':
             return (
-                <Number
+                <DokanNumber
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
@@ -95,17 +93,16 @@ const FieldParser = ( {
 
         case 'textarea':
             return (
-                <TextArea
+                <DokanTextArea
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
         case 'radio_capsule':
             return (
-                <DokanRadioCapsule
+                <DataClearField
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
@@ -124,11 +121,10 @@ const FieldParser = ( {
 
         case 'currency':
             return (
-                <Currency
+                <DokanCurrency
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
@@ -161,13 +157,30 @@ const FieldParser = ( {
                 />
             );
 
+        case 'info':
+            return (
+                <DokanInfoField
+                    key={ element.hook_key }
+                    element={ element }
+                    getSetting={ getSetting }
+                />
+            );
+
         case 'tel':
             return (
-                <Tel
+                <DokanTel
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
-                    getSetting={ getSetting }
+                />
+            );
+
+        case 'double_text':
+            return (
+                <DokanDoubleTextField
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
                 />
             );
 
@@ -187,7 +200,7 @@ const FieldParser = ( {
         default:
             return applyFilters(
                 'dokan_admin_settings_default_field_parser',
-                <Text
+                <DokanInfoField
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }

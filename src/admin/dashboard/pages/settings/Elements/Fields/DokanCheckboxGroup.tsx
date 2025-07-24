@@ -2,10 +2,15 @@ import {
     DokanCheckboxGroup as BaseCheckboxGroup,
     DokanFieldLabel,
 } from '../../../../../../components/fields';
+import { twMerge } from 'tailwind-merge';
 
-export default function DokanCheckboxGroup( { element, onValueChange } ) {
+export default function DokanCheckboxGroup( {
+    element,
+    onValueChange,
+    className,
+} ) {
     return (
-        <div className="flex flex-col gap-2 w-full">
+        <div className={ twMerge( 'flex flex-col gap-2 w-full', className ) }>
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="light"

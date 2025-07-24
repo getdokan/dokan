@@ -109,7 +109,7 @@ const TextField: React.FC< TextFieldProps > = ( {
         >
             <div
                 className={ twMerge(
-                    'flex flex-col w-full flex-1 ',
+                    'flex flex-col flex-1 w-[18rem] ',
                     wrapperClassName
                 ) }
             >
@@ -125,7 +125,7 @@ const TextField: React.FC< TextFieldProps > = ( {
                     errors={ displayError ? [ displayError ] : [] }
                     label={ label }
                     className={ twMerge(
-                        'rounded-[5px] w-[18rem] max-w-full',
+                        'rounded-[5px]  w-full',
                         getBorderColorClass(),
                         disabled ? 'bg-[#F1F1F4] border-gray-200' : '',
                         inputClassName

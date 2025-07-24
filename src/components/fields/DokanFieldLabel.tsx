@@ -3,7 +3,7 @@ import DokanTooltip from './DokanTooltip';
 
 interface InputLabelProps {
     title: string;
-    titleFontWeight: 'light' | 'bold';
+    titleFontWeight?: 'light' | 'bold';
     tooltip?: React.ReactNode;
     suffix?: React.ReactNode;
     icon?: React.ReactNode;

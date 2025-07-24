@@ -16,7 +16,12 @@ export type SettingsElement = {
     icon?: string;
     title?: string;
     description?: string;
-    value?: string | number | Array< string | number | number[] >;
+    value?:
+        | string
+        | number
+        | Array< string | number | number[] >
+        | Record< string, string | number >
+        | boolean;
     default?: string;
     options?: Array< { title: string; value: string | number } >;
     readonly?: boolean;

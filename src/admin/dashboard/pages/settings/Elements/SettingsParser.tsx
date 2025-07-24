@@ -5,7 +5,6 @@ import FieldParser from './Fields/FieldParser';
 import { applyFilters } from '@wordpress/hooks';
 import { SettingsProps } from '../types';
 import FieldGroup from './FieldGroup';
-import SubPage from './SubPage';
 
 const SettingsParser = ( {
     element,
@@ -13,14 +12,6 @@ const SettingsParser = ( {
     onValueChange,
 }: SettingsProps ) => {
     switch ( element.type ) {
-        case 'subpage':
-            return (
-                <SubPage
-                    element={ element }
-                    getSetting={ getSetting }
-                    onValueChange={ onValueChange }
-                />
-            );
         case 'section':
             return (
                 <Section

@@ -2,7 +2,7 @@ import { TextArea } from '@getdokan/dokan-ui';
 
 export type TextAreaProps = {
     className?: string;
-    label?: React.ReactNode;
+    label?: ReactNode;
     errors?: string[];
     defaultValue?: string;
     value?: string;
@@ -11,9 +11,10 @@ export type TextAreaProps = {
     helpText?: string;
     required?: boolean;
     disabled?: boolean;
+    wrapperClassName?: string;
 };
 
-const DokanTextArea = ( {
+const DokanBaseTextArea = ( {
     input,
     label,
     className,
@@ -44,4 +45,4 @@ const DokanTextArea = ( {
     );
 };
 
-export default DokanTextArea;
+export default DokanBaseTextArea;

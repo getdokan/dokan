@@ -1,18 +1,18 @@
-import React from 'react';
 import {
     DokanFieldLabel,
-    DokanSelect,
+    DokanSelect as BaseDokanSelect,
 } from '../../../../../../components/fields';
 
-export default function DokanSelectField( { element, onValueChange } ) {
+export default function DokanSelect( { element, onValueChange } ) {
     return (
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex justify-between w-full">
             <DokanFieldLabel
                 title={ element.title }
-                titleFontWeight="light"
+                titleFontWeight="bold"
                 helperText={ element.description }
+                wrapperClassNames={ 'flex-1' }
             />
-            <DokanSelect
+            <BaseDokanSelect
                 value={ element.value }
                 onChange={ ( val ) =>
                     onValueChange( { ...element, value: val } )
@@ -24,7 +24,6 @@ export default function DokanSelectField( { element, onValueChange } ) {
                     } ) ) || []
                 }
                 disabled={ element.disabled }
-                containerClassName="w-full"
             />
         </div>
     );

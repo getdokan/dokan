@@ -5,7 +5,7 @@ import { twMerge } from 'tailwind-merge';
 interface SocialButtonProps {
     network: 'facebook' | 'google' | 'twitter' | string;
     label?: string | JSX.Element;
-    onClick: () => void;
+    onClick?: () => void;
     className?: string;
     disabled?: boolean;
 }
@@ -36,7 +36,7 @@ const getNetworkConfig = ( network: string, hovered: boolean ) => {
 };
 
 export const SocialButton: React.FC< SocialButtonProps > = ( {
-    network,
+    network = 'google',
     label,
     onClick,
     className = '',
