@@ -1,4 +1,5 @@
 import { useState, useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { AdminNoticesData, AdminNotice } from '../types';
 import {
     fetchAdminNotices,
@@ -14,11 +15,11 @@ interface UseAdminNoticesOptions {
 }
 
 export const useAdminNotices = ( {
-                                     endpoint = 'admin',
-                                     scope,
-                                     interval = 5000,
-                                     autoSlide = true,
-                                 }: UseAdminNoticesOptions = {} ) => {
+    endpoint = 'admin',
+    scope,
+    interval = 5000,
+    autoSlide = true,
+}: UseAdminNoticesOptions = {} ) => {
     const [ notices, setNotices ] = useState< AdminNoticesData >( [] );
     const [ loading, setLoading ] = useState( true );
     const [ error, setError ] = useState< string | null >( null );
@@ -34,10 +35,37 @@ export const useAdminNotices = ( {
             setLoading( true );
             setError( null );
             const response = await fetchAdminNotices( endpoint, scope );
-            const filteredNotices = response.filter(
-                ( notice ) => notice.description || notice.title
-            );
-            setNotices( filteredNotices );
+
+            // Add close action to notices with show_close_button (like Vue component)
+            const processedNotices = response
+                .filter( ( notice ) => notice.description || notice.title )
+                .map( ( notice ) => {
+                    if ( notice.show_close_button ) {
+                        const closeAction = {
+                            type: 'secondary',
+                            class: 'dokan-notice-close',
+                            text: __( 'Dismiss', 'dokan-lite' ),
+                            loading_text: __( 'Dismissing…', 'dokan-lite' ),
+                            completed_text: __( 'Dismissed', 'dokan-lite' ),
+                            ...( notice.close_url
+                                ? { action: notice.close_url }
+                                : {} ),
+                            ...( notice.ajax_data
+                                ? { ajax_data: notice.ajax_data }
+                                : {} ),
+                        };
+                        return {
+                            ...notice,
+                            actions: [
+                                ...( notice.actions || [] ),
+                                closeAction,
+                            ],
+                        };
+                    }
+                    return notice;
+                } );
+
+            setNotices( processedNotices );
         } catch ( err ) {
             setError(
                 err instanceof Error ? err.message : 'Failed to fetch notices'
@@ -98,24 +126,42 @@ export const useAdminNotices = ( {
 
     // Execute action
     const executeAction = async ( action: any, noticeIndex: number ) => {
-        if ( ! action.ajax_data ) {
-            return;
-        }
-
         setActionLoading( ( prev ) => ( { ...prev, [ noticeIndex ]: true } ) );
 
         try {
-            await executeNoticeAction( action.ajax_data );
+            // Handle AJAX request if ajax_data exists (like Vue component)
+            if ( action.ajax_data ) {
+                await executeNoticeAction( action.ajax_data );
+            }
+
+            // Remove notice from array first (like Vue component)
+            setNotices( ( prev ) => {
+                const newNotices = prev.filter( ( _, i ) => i !== noticeIndex );
+
+                // Adjust the current notice if needed
+                if (
+                    currentNotice > newNotices.length &&
+                    newNotices.length > 0
+                ) {
+                    setCurrentNotice( 1 );
+                } else if (
+                    currentNotice > 1 &&
+                    noticeIndex < currentNotice - 1
+                ) {
+                    setCurrentNotice( ( prevCurrent ) => prevCurrent - 1 );
+                }
+
+                return newNotices;
+            } );
+
+            // Handle URL redirection after notice removal (like Vue component)
+            if ( action.action ) {
+                window.location.href = action.action;
+                return; // Don't continue if redirecting
+            }
 
             if ( action.reload ) {
                 window.location.reload();
-            } else {
-                setNotices( ( prev ) =>
-                    prev.filter( ( _, i ) => i !== noticeIndex )
-                );
-                if ( currentNotice > notices.length - 1 ) {
-                    setCurrentNotice( 1 );
-                }
             }
         } catch ( err ) {
             // eslint-disable-next-line no-console
