@@ -1,11 +1,13 @@
 import { __ } from '@wordpress/i18n';
 import Section from './Elements/Section';
 import MiniCard from './Elements/MiniCard';
+import AdminNotices from './components/AdminNotices';
 import { Coins, BadgeDollarSign, User } from 'lucide-react';
 import { DokanButton } from '../../../../components';
 import Card from './Elements/Card';
 import MonthPicker from './Elements/MonthPicker';
 import { useState } from '@wordpress/element';
+import { applyFilters } from '@wordpress/hooks';
 
 function Dashboard() {
     const [ monthData, setMonthData ] = useState( {
@@ -13,12 +15,28 @@ function Dashboard() {
         year: '',
     } );
 
+    const noticeScopes = applyFilters( 'dokan_admin_dashboard_notices_scopes', [
+        { scope: 'global', endpoint: 'admin' },
+        { scope: '', endpoint: 'admin' },
+        { scope: 'promo', endpoint: 'promo' },
+    ] );
+
     return (
         <div>
             <h1 className="wp-heading-inline">
                 { __( 'Dashboard', 'dokan-lite' ) }
             </h1>
             <hr className="wp-header-end" />
+
+            { noticeScopes?.map( ( noticeConfig ) => (
+                <AdminNotices
+                    key={ `${ noticeConfig.endpoint }-${
+                        noticeConfig.scope || 'local'
+                    }` }
+                    endpoint={ noticeConfig.endpoint }
+                    scope={ noticeConfig.scope }
+                />
+            ) ) }
 
             <Section title={ __( 'To-Do', 'dokan-lite' ) }>
                 <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -85,6 +103,8 @@ function Dashboard() {
                 sectionHeader={
                     <MonthPicker
                         value={ monthData }
+                        minDate={ { month: 2, year: 2025 } }
+                        maxDate={ { month: 8, year: 2025 } }
                         onChange={ ( value ) => {
                             setMonthData( value );
                         } }
@@ -138,6 +158,21 @@ function Dashboard() {
                     />
                 </div>
             </Section>
+
+            <div className={ `legacy-dashboard-url text-sm font-medium pt-10` }>
+                { __(
+                    'If you want to go back to old dashboard,',
+                    'dokan-lite'
+                ) }{ ' ' }
+                <a
+                    className={ `skip-color-module underline font-bold text-sm !text-[#2271b1]` }
+                    href={
+                        dokanAdminDashboardSettings?.legacy_dashboard_url || '#'
+                    }
+                >
+                    { __( 'Click Here', 'dokan-lite' ) }
+                </a>
+            </div>
         </div>
     );
 }

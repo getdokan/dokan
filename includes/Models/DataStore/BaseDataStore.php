@@ -10,7 +10,7 @@ use WeDevs\Dokan\Models\BaseModel;
 /**
  * Base data store class.
  *
- * @since DOKAN_SINCE
+ * @since 4.0.4
  */
 abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
     protected $selected_columns = [ '*' ];
