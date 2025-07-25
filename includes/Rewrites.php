@@ -306,6 +306,7 @@ class Rewrites {
         global $wp_query;
 
         $author = get_query_var( $this->custom_store_url );
+
         if ( ! is_admin() && $query->is_main_query() && ! empty( $author ) ) {
             $seller_info = get_user_by( 'slug', $author );
 
@@ -316,8 +317,9 @@ class Rewrites {
             $store_info  = dokan_get_store_info( $seller_info->data->ID );
             $product_ppp = dokan_get_option( 'store_products_per_page', 'dokan_general', 12 );
 
+            do_action( 'dokan_store_page_query_filter', $query, $store_info );
             set_query_var( 'posts_per_page', apply_filters( 'dokan_store_products_per_page', $product_ppp ) );
-            var_dump($product_ppp);
+
             $query->set( 'post_type', 'product' );
             $query->set( 'author_name', $author );
 
