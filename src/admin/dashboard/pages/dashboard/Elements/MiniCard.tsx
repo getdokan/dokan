@@ -1,6 +1,7 @@
 import { Card } from '@getdokan/dokan-ui';
 import { ImageOff } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
+import { RawHTML } from '@wordpress/element';
 
 interface MiniCardProps {
     icon: JSX.Element;
@@ -49,7 +50,7 @@ function MiniCard( {
                     { icon ?? <ImageOff /> }
                 </div>
                 <span className="text-black font-semibold text-sm">
-                    { text }
+                    <RawHTML>{ text }</RawHTML>
                 </span>
             </div>
             <div>
@@ -68,7 +69,9 @@ function MiniCard( {
                                 'font-semibold text-sm',
                                 countType === 'primary'
                                     ? 'text-white'
-                                    : 'text-black'
+                                    : 'text-black',
+                                isClickable &&
+                                    'transition group-hover:text-white'
                             ) }
                         >
                             { count ?? 0 }
