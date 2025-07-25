@@ -1,10 +1,10 @@
 import { Card as DokanCard, Tooltip } from '@getdokan/dokan-ui';
-import { CircleAlert, MoveUp, MoveDown } from 'lucide-react';
+import { Info, MoveUp, MoveDown } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 interface CardProps {
     icon: JSX.Element;
-    countDirection?: 'up' | 'down';
+    countDirection?: 'up' | 'down' | 'neutral';
     count?: number | null;
     text: string;
     tooltip?: string;
@@ -24,7 +24,7 @@ function Card( {
                 <div className="bg-[#F8F6FE] w-10 h-10 rounded flex items-center justify-center text-[#7047EB]">
                     { icon }
                 </div>
-                { count && (
+                { count ? (
                     <div
                         className={ twMerge(
                             'text-sm flex',
@@ -43,6 +43,11 @@ function Card( {
                         <span>{ count }</span>
                         <span>%</span>
                     </div>
+                ) : (
+                    <div className={ 'text-sm text-[#7047EB]' }>
+                        <span>{ count }</span>
+                        { count !== null && <span>%</span> }
+                    </div>
                 ) }
             </div>
             <div className="flex items-center">
@@ -51,10 +56,7 @@ function Card( {
                 </span>
                 { tooltip && (
                     <Tooltip content={ tooltip }>
-                        <CircleAlert
-                            size="18"
-                            className="text-[#9EA3A8] ml-2"
-                        />
+                        <Info size="18" className="text-[#9EA3A8] ml-2" />
                     </Tooltip>
                 ) }
             </div>

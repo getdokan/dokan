@@ -5,6 +5,7 @@ import ModulePage from '../pages/modules';
 import { useMutationObserver } from '../../../hooks';
 import SetupGuide from '../pages/setup-guide';
 import NotFound from '../../../layout/404';
+import AdminDashboard from '../pages/dashboard';
 
 export type DokanAdminRoute = {
     id: string;
@@ -15,6 +16,11 @@ export type DokanAdminRoute = {
 
 const getAdminRoutes = () => {
     let routes: Array< DokanAdminRoute > = [
+        {
+            id: 'dashboard',
+            element: <AdminDashboard />,
+            path: '/',
+        },
         {
             id: 'setup',
             element: <SetupGuide />,

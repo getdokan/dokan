@@ -7,6 +7,7 @@ interface MiniCardProps {
     iconType?: 'primary' | 'secondary';
     text: string;
     count?: number;
+    redirect?: string;
     countType?: 'primary' | 'secondary' | 'component';
     countComponent?: JSX.Element;
 }
@@ -15,12 +16,29 @@ function MiniCard( {
     text,
     count,
     countComponent,
+    redirect = '',
     countType = 'primary',
     iconType = 'primary',
 }: MiniCardProps ) {
     const showCount = [ 'primary', 'secondary' ].includes( countType );
+    const isClickable = redirect && redirect.trim() !== '';
+
+    const handleClick = () => {
+        if ( isClickable ) {
+            window.location.href = redirect;
+        }
+    };
+
     return (
-        <Card className="bg-white rounded shadow flex justify-between items-center p-4">
+        <Card
+            className={ twMerge(
+                'bg-white rounded shadow flex justify-between items-center p-4',
+                isClickable &&
+                'group cursor-pointer hover:shadow-md transition-shadow duration-200'
+            ) }
+            clickable={ isClickable }
+            onClick={ handleClick }
+        >
             <div className="flex items-center">
                 <div
                     className={ twMerge(
@@ -41,7 +59,8 @@ function MiniCard( {
                             'w-10 h-10 rounded-full flex items-center justify-center',
                             countType === 'primary'
                                 ? 'bg-[#7047EB]'
-                                : 'bg-[#F8F6FE]'
+                                : 'bg-[#F8F6FE]',
+                            isClickable && 'transition group-hover:bg-[#502BBF]'
                         ) }
                     >
                         <span
