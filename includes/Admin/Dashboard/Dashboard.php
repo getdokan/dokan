@@ -31,12 +31,12 @@ class Dashboard implements Hookable {
      * Register hooks.
      */
     public function register_hooks(): void {
-        add_action( 'admin_menu', [ $this, 'handle_legacy_dashboard_redirect' ] );
         add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
         add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
         add_action( 'admin_menu', [ $this, 'clear_dokan_submenu_title' ], 20 );
         add_action( 'admin_head', [ $this, 'cleanup_admin_notices' ], 1 );
+        add_action( 'admin_init', [ $this, 'handle_dashboard_redirect' ] );
     }
 
     /**
@@ -207,12 +207,14 @@ class Dashboard implements Hookable {
         }
 
         $settings = [
-            'nonce'                => wp_create_nonce( 'dokan_admin_dashboard' ),
-            'header_info'          => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
-            'legacy_dashboard_url' => add_query_arg(
-                'dokan_legacy_nonce',
-                wp_create_nonce( 'dokan_legacy_dashboard' ),
-                admin_url( 'admin.php?page=dokan' )
+            'nonce'         => wp_create_nonce( 'dokan_admin_dashboard' ),
+            'header_info'   => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
+            'dashboard_url' => add_query_arg(
+                [
+                    'dokan_legacy_nonce' => wp_create_nonce( 'dokan_legacy_dashboard' ),
+                    'dokan_action'       => 'switch_dashboard',
+                ],
+                admin_url()
             ),
         ];
 
@@ -455,38 +457,38 @@ class Dashboard implements Hookable {
     }
 
     /**
-     * Handle legacy dashboard redirect and persist dashboard preference.
+     * Handle dashboard redirect based on legacy dashboard preference.
+     *
+     * This method checks if the user has requested to switch the dashboard and updates
+     * the option accordingly. It then redirects the user to the appropriate dashboard page.
      *
      * @since DOKAN_SINCE
      *
      * @return void
      */
-    public function handle_legacy_dashboard_redirect(): void {
-        // Only handle admin requests
-        if ( ! is_admin() ) {
+    public function handle_dashboard_redirect(): void {
+        // Early return if not a dashboard switch request.
+        if ( ! isset( $_GET['dokan_action'] ) || 'switch_dashboard' !== sanitize_key( wp_unslash( $_GET['dokan_action'] ) ) ) {
             return;
         }
 
-        // Check if nonce is present in the request
-        if ( ! isset( $_GET['dokan_legacy_nonce'] ) ) {
+        // Early return if nonce verification fails.
+        if ( ! isset( $_GET['dokan_legacy_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['dokan_legacy_nonce'] ) ), 'dokan_legacy_dashboard' ) ) {
             return;
         }
 
-        // Verify the nonce
-        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['dokan_legacy_nonce'] ) ), 'dokan_legacy_dashboard' ) ) {
-            return;
-        }
+        // Get the current state and toggle it.
+        $current_is_legacy = get_option( 'dokan_legacy_dashboard_page', false );
+        $new_legacy_state  = apply_filters( 'dokan_is_legacy_dashboard_page', ! $current_is_legacy );
 
-        // Only process dokan-related pages
-        $current_page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
-        if ( ! in_array( $current_page, [ 'dokan', 'dokan-dashboard' ], true ) ) {
-            return;
-        }
+        // Update the option
+        update_option( 'dokan_legacy_dashboard_page', $new_legacy_state );
 
-        // Determine if the current page is a legacy dashboard page
-        $is_legacy_dashboard_page = (int) ( 'dokan-dashboard' !== $current_page );
+        // Build redirect URL and redirect.
+        $page_slug    = $new_legacy_state ? 'dokan' : 'dokan-dashboard';
+        $redirect_url = add_query_arg( [ 'page' => $page_slug ], admin_url( 'admin.php' ) );
 
-        // Set the legacy dashboard option based on the page
-        update_option( 'dokan_legacy_dashboard_page', $is_legacy_dashboard_page );
+        wp_safe_redirect( $redirect_url );
+        exit;
     }
 }

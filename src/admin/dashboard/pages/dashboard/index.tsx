@@ -81,9 +81,7 @@ function Dashboard() {
                 ) }{ ' ' }
                 <a
                     className={ `skip-color-module underline font-bold text-sm text-[#7047EB] hover:text-[#502BBF]` }
-                    href={
-                        dokanAdminDashboardSettings?.legacy_dashboard_url || '#'
-                    }
+                    href={ dokanAdminDashboardSettings?.dashboard_url || '#' }
                 >
                     { __( 'Click Here', 'dokan-lite' ) }
                 </a>
