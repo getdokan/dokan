@@ -31,9 +31,9 @@ const AnalyticsSection = () => {
                                 countType="component"
                                 countComponent={
                                     <DokanButton
-                                        onClick={ () =>
-                                            window.open( item.url, '_blank' )
-                                        }
+                                        onClick={ () => {
+                                            window.location.href = item.url;
+                                        } }
                                     >
                                         { __( 'View Report', 'dokan-lite' ) }
                                     </DokanButton>
