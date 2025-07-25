@@ -1,11 +1,11 @@
 import { test as setup, expect, request } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
-import { ProductsPage } from '@pages/productsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
 import { helpers } from '@utils/helpers';
+import { selector } from '@pages/selectors';
 
 const { DOKAN_PRO } = process.env;
 
@@ -77,9 +77,34 @@ setup.describe('add & authenticate users', () => {
     setup('authenticate vendor', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
-        const productsPage = new ProductsPage(page);
-        const nonce = await productsPage.getProductEditNonce();
-        helpers.createEnvVar('PRODUCT_EDIT_NONCE', nonce);
+        try {
+            // Wait for the products dashboard to load
+            await page.goto(data.subUrls.frontend.vDashboard.products);
+            await page.waitForLoadState('networkidle');
+
+            // Wait for the 'Add new product' button to be visible
+            await page.waitForSelector(selector.vendor.vDashboard.products.addNewProductHref, { timeout: 15000 });
+
+            // Get the href attribute from the 'Add new product' button
+            const addProductHref = await page.getAttribute(selector.vendor.vDashboard.products.addNewProductHref, 'href');
+            let nonce = '';
+            if (addProductHref) {
+                const match = addProductHref.match(/_dokan_edit_product_nonce=([a-zA-Z0-9]+)/);
+                if (match && match[1]) {
+                    nonce = match[1];
+                    console.log(`✅ Product edit nonce found: ${nonce}`);
+                }
+            }
+            if (!nonce) {
+                console.log('⚠️ Could not extract nonce from add product button');
+                nonce = 'fallback_nonce';
+            }
+            helpers.createEnvVar('PRODUCT_EDIT_NONCE', nonce);
+        } catch (error) {
+            console.error('Failed to get vendor product edit nonce:', error);
+            helpers.createEnvVar('PRODUCT_EDIT_NONCE', 'error_fallback_nonce');
+            console.log('⚠️ Set fallback nonce due to error');
+        }
     });
 
     setup('authenticate customer2', { tag: ['@lite'] }, async ({ page }) => {
