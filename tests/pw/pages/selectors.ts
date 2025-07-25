@@ -3876,11 +3876,11 @@ export const selector = {
             products: {
                 productsDiv: '.dashboard-widget.products',
                 widgetTitle: '.products .widget-title',
+                addNewProduct: '//a[normalize-space()="+ Add new product"]',
                 totalTitle: '//div[@class="dashboard-widget products"]//span[normalize-space()="Total"]',
                 liveTitle: '//div[@class="dashboard-widget products"]//span[normalize-space()="Live"]',
                 offlineTitle: '//div[@class="dashboard-widget products"]//span[normalize-space()="Offline"]',
                 pendingReviewTitle: '//div[@class="dashboard-widget products"]//span[normalize-space()="Pending Review"]',
-                addNewProduct: 'a.dokan-btn[href*="_dokan_edit_product_nonce"]',
                 addNewProductHref: 'a.dokan-btn[href*="_dokan_edit_product_nonce"]',
                 totalValue: '//div[@class="dashboard-widget products"]//span[normalize-space()="Total"]/..//span[@class="count"]',
                 liveValue: '//div[@class="dashboard-widget products"]//span[normalize-space()="Live"]/..//span[@class="count"]',

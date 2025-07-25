@@ -3,6 +3,9 @@ import { customExpect } from '@utils/pwMatchers';
 // import 'dotenv/config';
 const { CI, NON_HEADLESS, BASE_URL, SLOWMO } = process.env;
 
+console.log('NON_HEADLESS', NON_HEADLESS, typeof NON_HEADLESS);
+
+
 export default defineConfig({
     testDir: 'tests',
     testMatch: /.*\.spec\.ts/,
@@ -75,7 +78,7 @@ export default defineConfig({
         // colorScheme: 'dark' ,
         /* Whether to run tests on headless or non-headless mode */
 
-        headless: Boolean(NON_HEADLESS), // Because NON_HEADLESS is a string, we convert it to boolean
+        headless: NON_HEADLESS !== 'false', // Because NON_HEADLESS is a string, we convert it to boolean
         /* Whether to ignore HTTPS errors during navigation. */
         ignoreHTTPSErrors: true,
         /* Record trace only when retrying a test for the first time. */

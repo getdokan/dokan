@@ -83,7 +83,7 @@ setup.describe('add & authenticate users', () => {
             await page.waitForLoadState('networkidle');
 
             // Wait for the 'Add new product' button to be visible
-            await page.waitForSelector(selector.vendor.vDashboard.products.addNewProduct, { timeout: 15000 });
+            await page.waitForSelector(selector.vendor.vDashboard.products.addNewProductHref, { timeout: 15000 });
 
             // Get the href attribute from the 'Add new product' button
             const addProductHref = await page.getAttribute(selector.vendor.vDashboard.products.addNewProductHref, 'href');
