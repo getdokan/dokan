@@ -15,13 +15,17 @@ const Section = ( {
         <section aria-labelledby="settings-section-heading" key={ element.id }>
             <div
                 className={ `flex flex-col
-                           divide-y border border-[#E9E9E9] mb-8 divide-gray-200'
+                           divide-y border border-[#E9E9E9]  divide-gray-200'
                     ` }
             >
                 <PageHeading
                     title={ element.title }
                     description={ element.description }
-                    className={ 'p-5 mb-0' }
+                    className={ 'p-5 mb-0 gap-2 ' }
+                    titleClassName={ 'text-base font-semibold  ' }
+                    descriptionClassName={ 'text-sm text-[#828282]' }
+                    id={ `settings-section-heading-${ element.hook_key }` }
+                    documentationLink={ element.documentationLink }
                 />
                 { element.children.map( ( child ) => {
                     return (

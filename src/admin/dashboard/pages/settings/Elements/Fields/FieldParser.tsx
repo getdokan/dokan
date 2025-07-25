@@ -12,10 +12,11 @@ import DokanNumber from './DokanNumber';
 import DokanTextArea from './DokanTextArea';
 import DokanCurrency from './DokanCurrency';
 import DokanTel from './DokanTel';
-import DataClearField from './DataClearField';
 import DokanApiConnectionField from './DokanApiConnectionField';
 import DokanDoubleTextField from './DokanDoubleTextField';
 import DokanTextField from './DokanTextField';
+import DokanRadioCapsule from './DokanRadioCapsule';
+import DokanSelect from './DokanSelect';
 
 const FieldParser = ( {
     element,
@@ -39,7 +40,7 @@ const FieldParser = ( {
 
         case 'select':
             return (
-                <DokanApiConnectionField
+                <DokanSelect
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
@@ -102,7 +103,7 @@ const FieldParser = ( {
 
         case 'radio_capsule':
             return (
-                <DataClearField
+                <DokanRadioCapsule
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
@@ -154,6 +155,14 @@ const FieldParser = ( {
                     element={ element }
                     onValueChange={ onValueChange }
                     getSetting={ getSetting }
+                />
+            );
+        case 'api_connection':
+            return (
+                <DokanApiConnectionField
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
                 />
             );
 

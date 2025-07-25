@@ -5,7 +5,7 @@ import {
 
 export default function DokanSelect( { element, onValueChange } ) {
     return (
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between w-full p-5">
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"

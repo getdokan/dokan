@@ -9,6 +9,7 @@ const DataClearField = ( { element, onValueChange }: SettingsProps ) => {
             className={
                 'w-full flex justify-between items-center bg-[#E64E6112] p-5'
             }
+            id={ element.id }
         >
             <div className="flex flex-col">
                 <div className="flex gap-2">
