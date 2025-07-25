@@ -1316,10 +1316,12 @@ class Assets {
                     'dummy_data'        => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
                     'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
                     'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
-                    'new_dashboard_url' => add_query_arg(
-                        'dokan_legacy_nonce',
-                        wp_create_nonce( 'dokan_legacy_dashboard' ),
-                        admin_url( 'admin.php?page=dokan-dashboard' )
+                    'dashboard_url'     => add_query_arg(
+                        [
+                            'dokan_legacy_nonce' => wp_create_nonce( 'dokan_legacy_dashboard' ),
+                            'dokan_action'       => 'switch_dashboard',
+                        ],
+                        admin_url()
                     )
                 ],
                 'states'                            => WC()->countries->get_allowed_country_states(),

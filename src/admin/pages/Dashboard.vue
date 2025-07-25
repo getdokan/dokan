@@ -191,7 +191,7 @@ export default {
         },
 
         getNewDashboardUrl() {
-            return dokan.urls.new_dashboard_url;
+            return dokan.urls.dashboard_url;
         },
 
         validEmail(email) {
