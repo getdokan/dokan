@@ -191,7 +191,7 @@ export default {
         },
 
         getNewDashboardUrl() {
-            return dokan.urls.adminRoot + 'admin.php?page=dokan-dashboard';
+            return dokan.urls.new_dashboard_url;
         },
 
         validEmail(email) {
@@ -234,10 +234,16 @@ export default {
     .new-dashboard-url {
         font-size: 14px;
         font-weight: 500;
-        padding-top: 20px;
+        padding-top: 16px;
+
         a {
+            color: #7047EB;
             font-weight: 700;
             text-decoration: underline;
+
+            &:hover {
+                color: #502BBF;
+            }
         }
     }
 

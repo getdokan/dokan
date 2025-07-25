@@ -16,7 +16,7 @@ function Section( {
     return (
         <div className="mt-4">
             <div className="flex justify-between mb-2">
-                <div className="flex flex-row items-end">
+                <div className="flex justify-between mb-3">
                     <h3 className="font-semibold text-md text-black">
                         { title }
                     </h3>

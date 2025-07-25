@@ -104,7 +104,7 @@ const AdminNotices = ( {
                                                                 } ${
                                                                     action.class ||
                                                                     ''
-                                                                } text-xs font-light leading-4 px-3 py-1.5 mr-1 mt-2.5 rounded-sm border border-[#7047EB] cursor-pointer transition-all duration-200 no-underline inline-block ${
+                                                                } text-xs font-light leading-4 px-3 py-1.5 mr-1.5 mt-2.5 rounded-sm border border-[#7047EB] cursor-pointer transition-all duration-200 no-underline inline-block ${
                                                                     action.type ===
                                                                     'primary'
                                                                         ? 'text-white bg-[#7047EB] font-normal hover:bg-transparent hover:text-[#7047EB]'
@@ -135,7 +135,7 @@ const AdminNotices = ( {
                                                                 } ${
                                                                     action.class ||
                                                                     ''
-                                                                } text-xs font-light leading-4 px-3 py-1.5 mr-1 mt-2.5 rounded-sm border border-[#7047EB] cursor-pointer transition-all duration-200 no-underline inline-block ${
+                                                                } text-xs font-light leading-4 px-3 py-1.5 mr-1.5 mt-2.5 rounded-sm border border-[#7047EB] cursor-pointer transition-all duration-200 no-underline inline-block ${
                                                                     action.type ===
                                                                     'primary'
                                                                         ? 'text-white bg-[#7047EB] font-normal hover:bg-transparent hover:text-[#7047EB]'

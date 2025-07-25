@@ -31,6 +31,7 @@ class Dashboard implements Hookable {
      * Register hooks.
      */
     public function register_hooks(): void {
+        add_action( 'admin_menu', [ $this, 'handle_legacy_dashboard_redirect' ] );
         add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
         add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -208,7 +209,11 @@ class Dashboard implements Hookable {
         $settings = [
             'nonce'                => wp_create_nonce( 'dokan_admin_dashboard' ),
             'header_info'          => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
-            'legacy_dashboard_url' => admin_url( 'admin.php?page=dokan' ),
+            'legacy_dashboard_url' => add_query_arg(
+                'dokan_legacy_nonce',
+                wp_create_nonce( 'dokan_legacy_dashboard' ),
+                admin_url( 'admin.php?page=dokan' )
+            ),
         ];
 
         foreach ( $this->get_pages() as $page ) {
@@ -418,29 +423,18 @@ class Dashboard implements Hookable {
      * @return void
      */
     public function clear_dokan_submenu_title(): void {
-        global $submenu, $menu;
+        global $submenu;
 
-//        $legacy = false;
-//        $position = (int) $legacy;
-//
-//        if ( isset( $submenu['dokan'][ $position ][0] ) ) {
-//            $submenu['dokan'][ $position ][0] = '';
-//        }
+        $legacy   = get_option( 'dokan_legacy_dashboard_page', false );
+        $position = (int) $legacy;
 
-        $position = (int) ( isset( $_GET['page'] ) && $_GET['page'] === 'dokan' );
         if ( isset( $submenu['dokan'][ $position ][0] ) ) {
             $submenu['dokan'][ $position ][0] = '';
         }
 
-//        $menu_position = 111; // TODO: Get the actual menu position dynamically.
-//        // TODO: set the url at position 2 accordingly.
-//
-//        error_log( print_r( $menu, 1 ) );
-//
-//        $dokan_menu_position = dokan_admin_menu_position();
-//        $menu[ $dokan_menu_position ][ 2 ] = 'admin.php?page=dokan-dashboard';
-//
-//        error_log( print_r( $menu, 1 ) );
+        if ( ! $legacy ) {
+            $submenu['dokan'][0][2] = 'admin.php?page=dokan-dashboard';
+        }
     }
 
     /**
@@ -454,5 +448,41 @@ class Dashboard implements Hookable {
         if ( 'dokan_page_dokan-dashboard' === get_current_screen()->id ) {
             remove_all_actions( 'admin_notices' );
         }
+    }
+
+    /**
+     * Handle legacy dashboard redirect and persist dashboard preference.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function handle_legacy_dashboard_redirect(): void {
+        // Only handle admin requests
+        if ( ! is_admin() ) {
+            return;
+        }
+
+        // Check if nonce is present in the request
+        if ( ! isset( $_GET['dokan_legacy_nonce'] ) ) {
+            return;
+        }
+
+        // Verify the nonce
+        if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['dokan_legacy_nonce'] ) ), 'dokan_legacy_dashboard' ) ) {
+            return;
+        }
+
+        // Only process dokan-related pages
+        $current_page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+        if ( ! in_array( $current_page, [ 'dokan', 'dokan-dashboard' ], true ) ) {
+            return;
+        }
+
+        // Determine if the current page is a legacy dashboard page
+        $is_legacy_dashboard_page = (int) ( 'dokan-dashboard' !== $current_page );
+
+        // Set the legacy dashboard option based on the page
+        update_option( 'dokan_legacy_dashboard_page', $is_legacy_dashboard_page );
     }
 }
