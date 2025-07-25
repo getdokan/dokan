@@ -56,7 +56,7 @@ declare global {
             BASE_URL: string;
             ADMIN_EMAIL: string;
             QUERY: string;
-            NON_HEADLESS: string;
+            NON_HEADLESS: boolean;
             SLOWMO: number;
             DEVTOOLS: string;
             RETRY_TIMES: string;
