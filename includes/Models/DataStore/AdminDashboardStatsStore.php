@@ -132,10 +132,13 @@ class AdminDashboardStatsStore extends BaseDataStore {
         return apply_filters(
             'dokan_admin_dashboard_customer_metrics',
             [
-                'icon'    => 'FileUser',
-                'count'   => (int) ( $result['recurring_customers'] ?? 0 ),
-                'title'   => esc_html__( 'Recurring Customers', 'dokan-lite' ),
-                'tooltip' => esc_html__( 'Customers who returned and purchased again in the time period', 'dokan-lite' ),
+                'recurring_customers' => [
+                    'icon'     => 'FileUser',
+                    'count'    => (int) ( $result['recurring_customers'] ?? 0 ),
+                    'title'    => esc_html__( 'Recurring Customers', 'dokan-lite' ),
+                    'tooltip'  => esc_html__( 'Customers who returned and purchased again in the time period', 'dokan-lite' ),
+                    'position' => 1,
+                ],
             ],
             $start_date,
             $end_date
@@ -188,6 +191,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
                 'previous' => (int) ( $result['previous_count'] ?? 0 ),
                 'title'    => esc_html__( 'New Customers', 'dokan-lite' ),
                 'tooltip'  => esc_html__( 'Total new customers registered in the time period', 'dokan-lite' ),
+                'position' => 3,
             ],
             $date_range
         );
@@ -259,9 +263,10 @@ class AdminDashboardStatsStore extends BaseDataStore {
             'dokan_admin_dashboard_order_cancellation_rate_data',
             [
                 ...$order_stats,
-                'icon'    => 'BanknoteX',
-                'title'   => esc_html__( 'Order Cancellation Rate', 'dokan-lite' ),
-                'tooltip' => esc_html__( 'Rate of orders which got cancelled in the time period', 'dokan-lite' ),
+                'icon'     => 'BanknoteX',
+                'title'    => esc_html__( 'Order Cancellation Rate', 'dokan-lite' ),
+                'tooltip'  => esc_html__( 'Rate of orders which got cancelled in the time period', 'dokan-lite' ),
+                'position' => 8,
             ],
             $date_range
         );
@@ -310,6 +315,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
                 'previous' => count( $previous_products ),
                 'title'    => esc_html__( 'New Products', 'dokan-lite' ),
                 'tooltip'  => esc_html__( 'New products published in the month', 'dokan-lite' ),
+                'position' => 1,
             ],
             $date_range
         );
@@ -344,6 +350,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
                 'previous' => (int) $previous_count,
                 'title'    => esc_html__( 'Active Vendors', 'dokan-lite' ),
                 'tooltip'  => esc_html__( 'Vendors sold minimum 1 product', 'dokan-lite' ),
+                'position' => 2,
             ],
             $date_range
         );

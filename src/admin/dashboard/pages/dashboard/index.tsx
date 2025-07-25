@@ -9,14 +9,7 @@ import AllTimeStatsSection from './sections/AllTimeStatsSection';
 import TopPerformingVendorsSection from './sections/TopPerformingVendorsSection';
 import MostReviewedProductsSection from './sections/MostReviewedProductsSection';
 import MostReportedVendorsSection from './sections/MostReportedVendorsSection';
-import Section from './Elements/Section';
-import MiniCard from './Elements/MiniCard';
 import AdminNotices from './components/AdminNotices';
-import { Coins, BadgeDollarSign, User } from 'lucide-react';
-import { DokanButton } from '../../../../components';
-import Card from './Elements/Card';
-import MonthPicker from './Elements/MonthPicker';
-import { useState } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 
 function Dashboard() {
@@ -74,13 +67,13 @@ function Dashboard() {
                 ) }
             </div>
 
-            <div className={ `legacy-dashboard-url text-sm font-medium pt-10` }>
+            <div className={ `legacy-dashboard-url text-sm font-medium pt-8` }>
                 { __(
                     'If you want to go back to old dashboard,',
                     'dokan-lite'
                 ) }{ ' ' }
                 <a
-                    className={ `skip-color-module underline font-bold text-sm !text-[#2271b1]` }
+                    className={ `skip-color-module underline font-bold text-sm text-[#7047EB] hover:text-[#502BBF]` }
                     href={
                         dokanAdminDashboardSettings?.legacy_dashboard_url || '#'
                     }

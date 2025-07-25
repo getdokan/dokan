@@ -179,6 +179,7 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
             $this->assertArrayHasKey( 'icon', $data[ $key ] );
             $this->assertArrayHasKey( 'count', $data[ $key ] );
             $this->assertArrayHasKey( 'title', $data[ $key ] );
+            $this->assertArrayHasKey( 'redirect_url', $data[ $key ] );
             $this->assertIsInt( $data[ $key ]['count'] );
         }
     }

@@ -181,7 +181,7 @@ function MonthPicker( {
 
         return (
             <div className="text-sm text-gray-600">
-                <div className="flex flex-col text-xs space-y-1">
+                <div className="flex flex-col text-xs">
                     <div className={ `ml-4 font-semibold` }>
                         <span>{ __( 'Month to Date', 'dokan-lite' ) }</span>{ ' ' }
                         <span className="text-gray-500">
