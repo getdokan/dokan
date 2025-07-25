@@ -39,15 +39,7 @@ const DokanBaseSwitch = ( {
                 onChange={ onChange }
                 disabled={ disabled }
                 color={ color }
-                label={
-                    typeof label === 'string' ? (
-                        <span className="text-sm font-normal text-gray-700 ms-2">
-                            { label }
-                        </span>
-                    ) : (
-                        label
-                    )
-                }
+                label={ label }
                 { ...others }
             />
         </div>

@@ -2,12 +2,12 @@ import { TextArea } from '@getdokan/dokan-ui';
 
 export type TextAreaProps = {
     className?: string;
-    label?: ReactNode;
+    label?: React.ReactNode;
     errors?: string[];
     defaultValue?: string;
     value?: string;
-    input: TextareaHTMLAttributes< HTMLTextAreaElement >;
-    onChange: ChangeEventHandler< HTMLTextAreaElement >;
+    input: React.TextareaHTMLAttributes< HTMLTextAreaElement >;
+    onChange: React.ChangeEventHandler< HTMLTextAreaElement >;
     helpText?: string;
     required?: boolean;
     disabled?: boolean;

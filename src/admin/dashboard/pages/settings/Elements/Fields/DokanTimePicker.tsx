@@ -1,7 +1,6 @@
-import React from 'react';
 import {
     DokanFieldLabel,
-    TimePicker,
+    DokanTimePicker,
 } from '../../../../../../components/fields';
 
 export default function DokanTimePickerField( { element, onValueChange } ) {
@@ -12,7 +11,7 @@ export default function DokanTimePickerField( { element, onValueChange } ) {
                 titleFontWeight="light"
                 helperText={ element.description }
             />
-            <TimePicker
+            <DokanTimePicker
                 value={ element.value }
                 onChange={ ( val ) =>
                     onValueChange( { ...element, value: val } )

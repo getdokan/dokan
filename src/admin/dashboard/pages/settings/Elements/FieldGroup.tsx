@@ -1,5 +1,5 @@
-import SettingsParser from './SettingsParser';
 import { SettingsProps } from '../types';
+import FieldParser from './Fields/FieldParser';
 
 const FieldGroup = ( {
     element,
@@ -24,10 +24,10 @@ const FieldGroup = ( {
                 </p>
             </div>
 
-            <div className="  w-full ">
+            <div className="w-full ">
                 { element.children.map( ( child ) => {
                     return (
-                        <SettingsParser
+                        <FieldParser
                             element={ child }
                             key={
                                 element.hook_key + '-' + child.id + '-parser'

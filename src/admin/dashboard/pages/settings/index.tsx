@@ -196,7 +196,7 @@ const SettingsPage = () => {
     return (
         <>
             <div className="min-h-screen h-full ">
-                <main className="w-full pb-10 lg:py-5 lg:px-0 bg-white h-full  shadow rounded-lg">
+                <main className="w-full pb-10 lg:py-5 lg:px-0 bg-white h-full shadow rounded-lg">
                     <div className="lg:grid lg:grid-cols-12 lg:gap-x-5 divide-x h-full ">
                         { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
@@ -208,7 +208,7 @@ const SettingsPage = () => {
                             />
                         ) }
 
-                        <div className="space-y-6 px-8 lg:col-span-9">
+                        <div className="space-y-6 p-8 lg:col-span-9">
                             { tabs && '' !== selectedTab && (
                                 <Tab
                                     key="admin-settings-tab"
@@ -221,10 +221,9 @@ const SettingsPage = () => {
                             <PageHeading
                                 title={ pageInfo.title }
                                 description={ pageInfo.description }
-                                className="mb-8"
                             />
                             <div
-                                className={ `flex flex-col gap-6 ${ twMerge(
+                                className={ `flex flex-col  ${ twMerge(
                                     allElementsAreFields
                                         ? 'divide-gray-200 divide-y border border-[#E9E9E9]'
                                         : ''
@@ -262,8 +261,8 @@ const SettingsPage = () => {
                                     aria-hidden="true"
                                 />
                                 { isSaving
-                                    ? __( 'Saving..', 'dokan-driver' )
-                                    : __( 'Save', 'dokan-driver' ) }
+                                    ? __( 'Saving..', 'dokan-lite' )
+                                    : __( 'Save', 'dokan-lite' ) }
                             </button>
                         </div>
                     ) }

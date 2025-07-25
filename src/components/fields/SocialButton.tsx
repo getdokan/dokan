@@ -52,7 +52,6 @@ export const SocialButton: React.FC< SocialButtonProps > = ( {
             disabled={ disabled }
             className={ twMerge( `flex flex-row min-w-48 max-w-full items-center p-0 rounded-[5px] overflow-hidden font-inter text-[14px] font-normal leading-[1.4] not-italic transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${ config.bg } ${ disabled } ${ className }
             ` ) }
-            aria-label={ label || config.text }
             onMouseEnter={ () => setHovered( true ) }
             onMouseLeave={ () => setHovered( false ) }
             style={ { minWidth: 180 } }
