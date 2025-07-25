@@ -563,9 +563,14 @@ class Hooks {
 
         $order         = dokan()->order->get( OrderUtil::get_post_or_order_id( $post ) );
         $has_sub_order = '1' === $order->get_meta( 'has_sub_order', true );
+        $show_commission_meta_box = apply_filters(
+            'dokan_show_commission_meta_box',
+            ! $has_sub_order,
+            $order
+        );
 
         // Check if the screen is order details page and if it is a child order.
-        if ( ! $has_sub_order ) {
+        if ( $show_commission_meta_box ) {
             add_meta_box(
                 'dokan_commission_box',
                 __( 'Commissions', 'dokan-lite' ),
