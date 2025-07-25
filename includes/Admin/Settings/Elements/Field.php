@@ -7,11 +7,14 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Checkbox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CategoryBasedCommission;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CombineInput;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Currency;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\DoubleTextField;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\InfoField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\MultiCheck;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Number;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Password;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Radio;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioBox;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioCapsule;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Select;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
@@ -62,6 +65,9 @@ class Field extends SettingsElement {
 		'currency'                  => Currency::class,
 		'combine_input'             => CombineInput::class,
 		'category_based_commission' => CategoryBasedCommission::class,
+        'radio_capsule' => RadioCapsule::class, // Assuming RadioCapsule extends Radio
+        'info'        => InfoField::class,
+        'double_text' => DoubleTextField::class,
 	);
 
 	/**
@@ -92,7 +98,8 @@ class Field extends SettingsElement {
 	public function populate(): array {
 		$data            = parent::populate();
 		$data['variant'] = $this->input_type;
-		$data['value']   = $this->escape_element( $this->get_value() );
+        error_log( 'Field type: ' . $this->input_type ); // Debugging line to check the input type
+		$data['value'] = $this->escape_element( $this->get_value() );
 
 		return $data;
 	}

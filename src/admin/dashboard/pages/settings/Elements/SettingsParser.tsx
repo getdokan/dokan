@@ -1,9 +1,10 @@
-import { SettingsProps } from '../StepSettings';
 import Section from './Section';
 import SubSection from './SubSection';
 import FieldParser from './Fields/FieldParser';
-import FieldGroup from './FiendGroup';
+
 import { applyFilters } from '@wordpress/hooks';
+import { SettingsProps } from '../types';
+import FieldGroup from './FieldGroup';
 
 const SettingsParser = ( {
     element,
