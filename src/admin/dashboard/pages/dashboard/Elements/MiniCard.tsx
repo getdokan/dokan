@@ -69,7 +69,9 @@ function MiniCard( {
                                 'font-semibold text-sm',
                                 countType === 'primary'
                                     ? 'text-white'
-                                    : 'text-black'
+                                    : 'text-black',
+                                isClickable &&
+                                    'transition group-hover:text-white'
                             ) }
                         >
                             { count ?? 0 }
