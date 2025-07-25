@@ -5,6 +5,7 @@ import DynamicIcon from '../../components/DynamicIcon';
 import { useDashboardApiData } from '../../hooks/useDashboardApiData';
 import { fetchTodoData } from '../../utils/api';
 import { TodoData } from '../../types';
+import { sortByPosition } from '../../utils/sorting';
 import TodoSectionSkeleton from './Skeleton';
 
 const TodoSection = () => {
@@ -16,22 +17,25 @@ const TodoSection = () => {
         return <TodoSectionSkeleton />;
     }
 
+    // Sort data by position on the frontend
+    const sortedData = data ? sortByPosition( data ) : [];
+
     return (
         <Section title={ __( 'To-Do', 'dokan-lite' ) }>
             { ! error ? (
                 <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    { data &&
-                        Object.entries( data ).map( ( [ key, item ] ) => (
-                            <MiniCard
-                                key={ key }
-                                icon={ <DynamicIcon iconName={ item.icon } /> }
-                                text={ item.title }
-                                count={ item.count }
-                                countType={
-                                    item.count > 0 ? 'primary' : 'secondary'
-                                }
-                            />
-                        ) ) }
+                    { sortedData.map( ( [ key, item ] ) => (
+                        <MiniCard
+                            key={ key }
+                            icon={ <DynamicIcon iconName={ item.icon } /> }
+                            text={ item.title }
+                            count={ item.count }
+                            redirect={ item.redirect_url }
+                            countType={
+                                item.count > 0 ? 'primary' : 'secondary'
+                            }
+                        />
+                    ) ) }
                 </div>
             ) : (
                 <div className="text-red-500 p-4 bg-red-50 rounded-lg">
@@ -46,5 +50,4 @@ const TodoSection = () => {
     );
 };
 
-// @ts-ignore
 export default TodoSection;

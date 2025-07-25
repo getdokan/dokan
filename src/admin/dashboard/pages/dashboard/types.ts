@@ -7,6 +7,8 @@ export interface TodoItem {
     icon: string;
     count: number;
     title: string;
+    redirect_url?: string;
+    position: number;
 }
 
 // Admin Notice Types
@@ -44,6 +46,7 @@ export interface MonthlyOverviewItem {
     previous: number | { total_orders: number; cancelled_orders: number };
     title: string;
     tooltip: string;
+    position: number;
 }
 
 export interface MonthlyOverviewData {
@@ -64,6 +67,7 @@ export interface CustomerMetricsItem {
     previous: number;
     title: string;
     tooltip: string;
+    position: number;
 }
 
 export interface CustomerMetricsData {

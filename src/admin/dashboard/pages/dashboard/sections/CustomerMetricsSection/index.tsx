@@ -8,6 +8,7 @@ import { useDashboardApiData } from '../../hooks/useDashboardApiData';
 import { fetchCustomerMetrics, formatDateForApi } from '../../utils/api';
 import { CustomerMetricsData, MonthPickerValue } from '../../types';
 import CustomerMetricsSkeleton from './Skeleton';
+import { sortByPosition } from '../../utils/sorting';
 
 const CustomerMetricsSection = () => {
     const [ monthData, setMonthData ] = useState< MonthPickerValue >( {
@@ -37,30 +38,10 @@ const CustomerMetricsSection = () => {
         return <CustomerMetricsSkeleton />;
     }
 
-    if ( error ) {
-        return (
-            <Section
-                title={ __( 'Customer Metrics', 'dokan-lite' ) }
-                sectionHeader={
-                    <MonthPicker
-                        value={ monthData }
-                        onChange={ handleMonthChange }
-                    />
-                }
-            >
-                <div className="text-red-500 p-4 bg-red-50 rounded-lg">
-                    { sprintf(
-                        /* translators: %s is the error message */
-                        __(
-                            'Error fetching customer metrics: %s',
-                            'dokan-lite'
-                        ),
-                        error
-                    ) }
-                </div>
-            </Section>
-        );
-    }
+    // Sort data by position on the frontend
+    const sortedData = data ? sortByPosition( data ) : [];
+
+    console.log( sortedData, ':::::::::::::sortedData' );
 
     return (
         <Section
@@ -75,14 +56,18 @@ const CustomerMetricsSection = () => {
         >
             { ! error ? (
                 <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    { data && (
-                        <Card
-                            icon={ <DynamicIcon iconName={ data.icon } /> }
-                            text={ data.title }
-                            content={ data.count }
-                            tooltip={ data.tooltip }
-                        />
-                    ) }
+                    { /* eslint-disable-next-line @typescript-eslint/no-shadow */ }
+                    { sortedData.map( ( [ key, data ] ) => {
+                        return (
+                            <Card
+                                key={ key }
+                                icon={ <DynamicIcon iconName={ data?.icon } /> }
+                                text={ data?.title }
+                                content={ data?.count }
+                                tooltip={ data?.tooltip }
+                            />
+                        );
+                    } ) }
                 </div>
             ) : (
                 <div className="text-red-500 p-4 bg-red-50 rounded-lg">

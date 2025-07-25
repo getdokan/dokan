@@ -11,9 +11,8 @@ import {
     MonthPickerValue,
     TrendDirection,
 } from '../../types';
+import { sortByPosition } from '../../utils/sorting';
 import MonthlyOverviewSkeleton from './Skeleton';
-
-type TrendDirection = 'up' | 'down' | 'neutral';
 
 const MonthlyOverviewSection = () => {
     const [ monthData, setMonthData ] = useState< MonthPickerValue >( {
@@ -151,6 +150,9 @@ const MonthlyOverviewSection = () => {
         return <MonthlyOverviewSkeleton />;
     }
 
+    // Sort data by position on the frontend
+    const sortedData = data ? sortByPosition( data ) : [];
+
     return (
         <Section
             title={ __( 'Monthly Overview', 'dokan-lite' ) }
@@ -165,27 +167,26 @@ const MonthlyOverviewSection = () => {
         >
             { ! error ? (
                 <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    { data &&
-                        Object.entries( data ).map( ( [ key, item ] ) => {
-                            const { percentage, direction } =
-                                calculatePercentageChange(
-                                    item.current,
-                                    item.previous,
-                                    key
-                                );
-
-                            return (
-                                <Card
-                                    key={ key }
-                                    icon={ <DynamicIcon iconName={ item.icon } /> }
-                                    text={ item.title }
-                                    content={ formatDisplayValue( item ) }
-                                    count={ percentage }
-                                    countDirection={ direction }
-                                    tooltip={ item.tooltip }
-                                />
+                    { sortedData.map( ( [ key, item ] ) => {
+                        const { percentage, direction } =
+                            calculatePercentageChange(
+                                item.current,
+                                item.previous,
+                                key
                             );
-                        } ) }
+
+                        return (
+                            <Card
+                                key={ key }
+                                icon={ <DynamicIcon iconName={ item.icon } /> }
+                                text={ item.title }
+                                content={ formatDisplayValue( item ) }
+                                count={ percentage }
+                                countDirection={ direction }
+                                tooltip={ item.tooltip }
+                            />
+                        );
+                    } ) }
                 </div>
             ) : (
                 <div className="text-red-500 p-4 bg-red-50 rounded-lg">
