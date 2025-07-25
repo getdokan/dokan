@@ -40,6 +40,9 @@ import trustpilotLogo from './assets/trustpilotLogo.png';
 import capterraLogo from './assets/capterraLogo.png';
 import wordpressLogo from './assets/wordpressLogo.png';
 import scaleImg from './assets/scale.png';
+import unlockBannerMobile from './assets/unlock-banner-mobile.png';
+import unlockBannerTablet from './assets/unlock-banner-tablet.png';
+
 
 function PricingSection() {
   const [isAnnual, setIsAnnual] = useState(true); // Set to true to match your annual image
