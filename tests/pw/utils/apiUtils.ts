@@ -3,6 +3,8 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
@@ -860,24 +862,73 @@ export class ApiUtils {
     async getAllModuleIds(params = {}, auth?: auth): Promise<string[]> {
         const allModules = await this.getAllModules(params, auth);
         const allModuleIds = allModules.map((o: { id: unknown }) => o.id);
+        fs.writeFileSync(
+            path.resolve(__dirname, '../playwright/modules.json'),
+            JSON.stringify(allModules, null, 2)
+        );
         return allModuleIds;
     }
 
+    async getAllModulesFromLocalJson(): Promise<{ id: string; active: boolean }[]> {
+        try {
+            const allModules = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../playwright/modules.json'), 'utf8'));
+            return allModules;
+        } catch (error) {
+            // Return empty array if file doesn't exist or is invalid
+            return [];
+        }
+    }
+
+    async checkIsModulesActiveFromLocal(moduleId: string): Promise<boolean> {
+        const allModules = await this.getAllModulesFromLocalJson();
+        const isActive = allModules.find((module: { id: string; active: boolean }) => module.id === moduleId)?.active;
+
+        return isActive ?? false;
+    }
+
     // get activate modules
-    async activateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+    async activateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse | null, responseBody | null]> {
         if (!Array.isArray(moduleIds)) {
             moduleIds = [moduleIds];
         }
+        // Check if all modules are already active
+        const activeChecks = await Promise.all(
+            moduleIds.map(moduleId => this.checkIsModulesActiveFromLocal(moduleId))
+        );
+        const isAllActive = activeChecks.every(isActive => isActive);
+
+        if (isAllActive) {
+            console.log(moduleIds.join(', ') + ' modules are already active');
+            return [null, null];
+        }
+
         const [response, responseBody] = await this.put(endPoints.activateModule, { data: { module: moduleIds }, headers: auth });
+        // Refetch the all modules to store in local json file
+        await this.getAllModuleIds({}, auth);
+
         return [response, responseBody];
     }
 
     // get deactivated modules
-    async deactivateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+    async deactivateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse | null, responseBody | null]> {
         if (!Array.isArray(moduleIds)) {
             moduleIds = [moduleIds];
         }
+         // Check if all modules are already active
+         const activeChecks = await Promise.all(
+            moduleIds.map(moduleId => this.checkIsModulesActiveFromLocal(moduleId))
+        );
+        const isAllActive = activeChecks.every(isActive => isActive);
+
+        if (! isAllActive) {
+            console.log(moduleIds.join(', ') + ' modules are already deactivated');
+            return [null, null];
+        }
+
         const [response, responseBody] = await this.put(endPoints.deactivateModule, { data: { module: moduleIds }, headers: auth });
+        // Refetch the all modules to store in local json file
+        await this.getAllModuleIds({}, auth);
+        
         return [response, responseBody];
     }
 
