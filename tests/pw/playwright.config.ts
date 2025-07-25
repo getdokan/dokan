@@ -3,9 +3,6 @@ import { customExpect } from '@utils/pwMatchers';
 // import 'dotenv/config';
 const { CI, NON_HEADLESS, BASE_URL, SLOWMO } = process.env;
 
-console.log('NON_HEADLESS', NON_HEADLESS, typeof NON_HEADLESS);
-
-
 export default defineConfig({
     testDir: 'tests',
     testMatch: /.*\.spec\.ts/,
