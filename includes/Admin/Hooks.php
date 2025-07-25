@@ -98,7 +98,7 @@ class Hooks {
             data-action="dokan_product_search_author"
             data-close_on_select="true"
             data-minimum_input_length="0"
-            data-data='<?php echo wp_json_encode( $user ); ?>'
+            data-data="<?php echo esc_attr( wp_json_encode( $user ) ); ?>"
         >
         </select> <?php echo wp_kses( wc_help_tip( esc_html__( 'You can search vendors and assign them.', 'dokan-lite' ) ), wp_kses_allowed_html( 'user_description' ) ); ?>
         <?php

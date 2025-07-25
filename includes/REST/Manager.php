@@ -144,7 +144,7 @@ class Manager {
             return;
         }
 
-        do_action( 'dokan_new_product_added', $data->get_id(), $request );
+        do_action( 'dokan_new_product_added', $data->get_id(), $request->get_params() );
     }
 
     /**

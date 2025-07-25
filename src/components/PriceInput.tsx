@@ -11,6 +11,7 @@ interface DokanPriceInputProps extends Omit< SimpleInputProps, 'onChange' > {
     namespace: string;
     onChange: ( formatedValue: string, unformattedValue: number ) => void;
     maskRule?: MaskedInputProps[ 'maskRule' ];
+    showAddOn?: boolean;
 }
 
 export const DokanPriceInput = ( props: DokanPriceInputProps ) => {
@@ -42,28 +43,32 @@ export const DokanPriceInput = ( props: DokanPriceInputProps ) => {
             disabled: false,
             ...props.input,
         },
+        showAddOn: true,
         ...props,
     };
-    const position = window?.dokanFrontend?.currency?.position ?? 'left';
-    switch ( position ) {
-        case 'left':
-        case 'left_space':
-            InputProps.addOnLeft = currencySymbol;
-            InputProps.className = twMerge(
-                'rounded-l-none',
-                InputProps.className
-            );
-            break;
-        case 'right':
-        case 'right_space':
-            InputProps.addOnRight = currencySymbol;
-            InputProps.className = twMerge(
-                'rounded-r-none',
-                InputProps.className
-            );
-            break;
-        default:
-            break;
+
+    if ( InputProps?.showAddOn ) {
+        const position = window?.dokanFrontend?.currency?.position ?? 'left';
+        switch ( position ) {
+            case 'left':
+            case 'left_space':
+                InputProps.addOnLeft = currencySymbol;
+                InputProps.className = twMerge(
+                    'rounded-l-none',
+                    InputProps.className
+                );
+                break;
+            case 'right':
+            case 'right_space':
+                InputProps.addOnRight = currencySymbol;
+                InputProps.className = twMerge(
+                    'rounded-r-none',
+                    InputProps.className
+                );
+                break;
+            default:
+                break;
+        }
     }
 
     // Apply filter for mask input props.
