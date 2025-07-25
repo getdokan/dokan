@@ -21,31 +21,31 @@ class Hooks {
      * @since 3.0.0
      */
     public function __construct() {
-//        add_action( 'template_redirect', [ $this, 'bulk_product_status_change' ] );
-//        add_action( 'dokan_bulk_product_status_change', [ $this, 'bulk_product_delete' ], 10, 2 );
-//        add_action( 'dokan_store_profile_frame_after', [ $this, 'store_products_orderby' ], 30, 2 );
-//        add_action( 'wp_ajax_dokan_store_product_search_action', [ $this, 'store_product_search_action' ], 10, 2 );
-//        add_action( 'wp_ajax_nopriv_dokan_store_product_search_action', [ $this, 'store_product_search_action' ], 10, 2 );
-//        add_action( 'woocommerce_product_quick_edit_save', [ $this, 'update_category_data_for_bulk_and_quick_edit' ], 10, 1 );
-//        add_action( 'woocommerce_product_bulk_edit_save', [ $this, 'update_category_data_for_bulk_and_quick_edit' ], 10, 1 );
-//        add_action( 'woocommerce_new_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
-//        add_action( 'woocommerce_update_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
-//        add_filter( 'dokan_post_status', [ $this, 'set_product_status' ], 1, 2 );
-//        add_action( 'dokan_new_product_added', [ $this, 'set_new_product_email_status' ], 1, 1 );
-//
-//        // Remove product type filter if pro not exists.
-//        add_filter( 'dokan_product_listing_filter_args', [ $this, 'remove_product_type_filter' ] );
-//        add_action( 'woocommerce_before_single_product', [ $this, 'own_product_not_purchasable_notice' ] );
-//        // product review action hook
-//        add_action( 'comment_notification_recipients', [ $this, 'product_review_notification_recipients' ], 10, 2 );
-//        // Init Product Cache Class
-//        new VendorStoreInfo();
-//        new ProductCache();
-//
-//        // Product commission
-//        add_action( 'woocommerce_product_options_advanced', array( $this, 'add_per_product_commission_options' ), 15 );
-//        add_action( 'woocommerce_process_product_meta_simple', array( $this, 'save_per_product_commission_options' ), 15 );
-//        add_action( 'woocommerce_process_product_meta_variable', array( $this, 'save_per_product_commission_options' ), 15 );
+        add_action( 'template_redirect', [ $this, 'bulk_product_status_change' ] );
+        add_action( 'dokan_bulk_product_status_change', [ $this, 'bulk_product_delete' ], 10, 2 );
+        add_action( 'dokan_store_profile_frame_after', [ $this, 'store_products_orderby' ], 30, 2 );
+        add_action( 'wp_ajax_dokan_store_product_search_action', [ $this, 'store_product_search_action' ], 10, 2 );
+        add_action( 'wp_ajax_nopriv_dokan_store_product_search_action', [ $this, 'store_product_search_action' ], 10, 2 );
+        add_action( 'woocommerce_product_quick_edit_save', [ $this, 'update_category_data_for_bulk_and_quick_edit' ], 10, 1 );
+        add_action( 'woocommerce_product_bulk_edit_save', [ $this, 'update_category_data_for_bulk_and_quick_edit' ], 10, 1 );
+        add_action( 'woocommerce_new_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
+        add_action( 'woocommerce_update_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
+        add_filter( 'dokan_post_status', [ $this, 'set_product_status' ], 1, 2 );
+        add_action( 'dokan_new_product_added', [ $this, 'set_new_product_email_status' ], 1, 1 );
+
+        // Remove product type filter if pro not exists.
+        add_filter( 'dokan_product_listing_filter_args', [ $this, 'remove_product_type_filter' ] );
+        add_action( 'woocommerce_before_single_product', [ $this, 'own_product_not_purchasable_notice' ] );
+        // product review action hook
+        add_action( 'comment_notification_recipients', [ $this, 'product_review_notification_recipients' ], 10, 2 );
+        // Init Product Cache Class
+        new VendorStoreInfo();
+        new ProductCache();
+
+        // Product commission
+        add_action( 'woocommerce_product_options_advanced', array( $this, 'add_per_product_commission_options' ), 15 );
+        add_action( 'woocommerce_process_product_meta_simple', array( $this, 'save_per_product_commission_options' ), 15 );
+        add_action( 'woocommerce_process_product_meta_variable', array( $this, 'save_per_product_commission_options' ), 15 );
     }
 
     /**
