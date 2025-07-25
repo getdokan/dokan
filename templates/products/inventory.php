@@ -1,8 +1,3 @@
-<?php
-// Get product stock quantity by postid
-$product = wc_get_product( $post_id ?? 0 );
-$_stock = $product ? $product->get_stock_quantity() : '';
-?>
 <div class="dokan-product-inventory dokan-edit-row <?php echo esc_attr( $class ); ?>">
     <div class="dokan-section-heading" data-togglehandler="dokan_product_inventory">
         <h2><i class="fas fa-cubes" aria-hidden="true"></i> <?php esc_html_e( 'Inventory', 'dokan-lite' ); ?></h2>
@@ -85,10 +80,7 @@ $_stock = $product ? $product->get_stock_quantity() : '';
         <?php endif; ?>
 
         <div class="dokan-form-group hide_if_grouped hide_if_external">
-            <label class="" for="_sold_individually">
-                <input name="_sold_individually" id="_sold_individually" value="yes" type="checkbox" <?php checked( $_sold_individually, 'yes' ); ?>>
-                <?php esc_html_e( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ); ?>
-            </label>
+            <?php dokan_post_input_box( $post_id, '_sold_individually', array( 'label' => __( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ) ), 'checkbox' ); ?>
         </div>
 
         <?php if ( $post_id ) : ?>
