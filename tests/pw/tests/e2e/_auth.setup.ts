@@ -6,6 +6,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
 import { helpers } from '@utils/helpers';
+import { dbData } from '@utils/dbData';
 
 const { DOKAN_PRO } = process.env;
 
@@ -14,6 +15,7 @@ setup.describe('add & authenticate users', () => {
 
     setup.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
+        await dbUtils.setOptionValue(dbData.dokan.optionName.emailVerification, { ...dbData.dokan.emailVerificationSettings, enabled: 'off' });
     });
 
     setup.afterAll(async () => {
@@ -77,6 +79,7 @@ setup.describe('add & authenticate users', () => {
     setup('authenticate vendor', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
+        await page.waitForTimeout(500);
         const productsPage = new ProductsPage(page);
         const nonce = await productsPage.getProductEditNonce();
         helpers.createEnvVar('PRODUCT_EDIT_NONCE', nonce);
