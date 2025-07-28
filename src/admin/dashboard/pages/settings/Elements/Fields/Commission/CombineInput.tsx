@@ -21,12 +21,14 @@ const CombineInput = ( { element, onValueChange }: SettingsProps ) => {
     };
 
     return (
-        <div className="p-4">
+        <div className="p-4 grid grid-cols-4 justify-between items-center flex-wrap gap-2">
+            <div className="col-span-2">
             <DokanFieldLabel
                 title={ element.title || '' }
-                titleFontWeight="light"
                 helperText={ element.description }
             />
+            </div>
+            <div className="col-span-2 flex justify-between">
             <div className="mt-2 flex gap-2">
                 <TextField
                     value={ value as string }
@@ -34,7 +36,6 @@ const CombineInput = ( { element, onValueChange }: SettingsProps ) => {
                     placeholder={ element?.placeholder as string }
                     disabled={ element.disabled }
                     inputType="number"
-                    helperText={ element.description }
                     postfix="%"
                 />
                 <TextField
@@ -43,9 +44,9 @@ const CombineInput = ( { element, onValueChange }: SettingsProps ) => {
                     placeholder={ element?.placeholder as string }
                     disabled={ element.disabled }
                     inputType="number"
-                    helperText={ element.description }
-                    postfix="$"
-                />
+                        postfix="$"
+                    />
+                </div>
             </div>
         </div>
     );
