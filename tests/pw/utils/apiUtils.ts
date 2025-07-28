@@ -855,6 +855,13 @@ export class ApiUtils {
     // get all modules
     async getAllModules(params = {}, auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.get(endPoints.getAllModules, { params: params, headers: auth });
+        
+        // Save modules to local JSON file
+        fs.writeFileSync(
+            path.resolve(__dirname, '../playwright/modules.json'),
+            JSON.stringify(responseBody, null, 2)
+        );
+        
         return responseBody;
     }
 
@@ -862,10 +869,6 @@ export class ApiUtils {
     async getAllModuleIds(params = {}, auth?: auth): Promise<string[]> {
         const allModules = await this.getAllModules(params, auth);
         const allModuleIds = allModules.map((o: { id: unknown }) => o.id);
-        fs.writeFileSync(
-            path.resolve(__dirname, '../playwright/modules.json'),
-            JSON.stringify(allModules, null, 2)
-        );
         return allModuleIds;
     }
 
@@ -879,11 +882,13 @@ export class ApiUtils {
         }
     }
 
-    async checkIsModulesActiveFromLocal(moduleId: string): Promise<boolean> {
-        const allModules = await this.getAllModulesFromLocalJson();
-        const isActive = allModules.find((module: { id: string; active: boolean }) => module.id === moduleId)?.active;
 
-        return isActive ?? false;
+    // Check if a single module is active from local storage
+    async checkIsModuleActiveFromLocal(moduleId: string): Promise<boolean> {
+        const allModules = await this.getAllModulesFromLocalJson();
+        const module = allModules.find((module: { id: string; active: boolean }) => module.id === moduleId);
+        
+        return module?.active ?? false;
     }
 
     // get activate modules
@@ -891,9 +896,10 @@ export class ApiUtils {
         if (!Array.isArray(moduleIds)) {
             moduleIds = [moduleIds];
         }
-        // Check if all modules are already active
+        
+        // Check if all modules are already active from local storage
         const activeChecks = await Promise.all(
-            moduleIds.map(moduleId => this.checkIsModulesActiveFromLocal(moduleId))
+            moduleIds.map(moduleId => this.checkIsModuleActiveFromLocal(moduleId))
         );
         const isAllActive = activeChecks.every(isActive => isActive);
 
@@ -903,8 +909,9 @@ export class ApiUtils {
         }
 
         const [response, responseBody] = await this.put(endPoints.activateModule, { data: { module: moduleIds }, headers: auth });
-        // Refetch the all modules to store in local json file
-        await this.getAllModuleIds({}, auth);
+        
+        // Refetch all modules to update local JSON file
+        await this.getAllModules({}, auth);
 
         return [response, responseBody];
     }
@@ -914,20 +921,22 @@ export class ApiUtils {
         if (!Array.isArray(moduleIds)) {
             moduleIds = [moduleIds];
         }
-         // Check if all modules are already active
-         const activeChecks = await Promise.all(
-            moduleIds.map(moduleId => this.checkIsModulesActiveFromLocal(moduleId))
+        
+        // Check if all modules are already inactive from local storage
+        const activeChecks = await Promise.all(
+            moduleIds.map(moduleId => this.checkIsModuleActiveFromLocal(moduleId))
         );
-        const isAllActive = activeChecks.every(isActive => isActive);
+        const isAllInactive = activeChecks.every(isActive => !isActive);
 
-        if (! isAllActive) {
+        if (isAllInactive) {
             console.log(moduleIds.join(', ') + ' modules are already deactivated');
             return [null, null];
         }
 
         const [response, responseBody] = await this.put(endPoints.deactivateModule, { data: { module: moduleIds }, headers: auth });
-        // Refetch the all modules to store in local json file
-        await this.getAllModuleIds({}, auth);
+        
+        // Refetch all modules to update local JSON file
+        await this.getAllModules({}, auth);
         
         return [response, responseBody];
     }
