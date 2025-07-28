@@ -1,7 +1,6 @@
 import { SettingsProps } from '../../types';
 import { applyFilters } from '@wordpress/hooks';
 import RadioBox from './RadioBox';
-import CategoryBasedCommission from './Commission/CategoryBasedCommission';
 import CombineInput from './Commission/CombineInput';
 import DokanSwitch from './DokanSwitch';
 import DokanMultiCheck from './DokanMultiCheck';
@@ -17,15 +16,16 @@ import DokanDoubleTextField from './DokanDoubleTextField';
 import DokanTextField from './DokanTextField';
 import DokanRadioCapsule from './DokanRadioCapsule';
 import DokanSelect from './DokanSelect';
+import CategoryBasedCommission from './Commission/CategoryBasedCommission';
 
 const FieldParser = ( {
     element,
     getSetting,
     onValueChange,
 }: SettingsProps ) => {
-    if ( ! element.display ) {
-        return null;
-    }
+    // if ( ! element.display ) {
+    //     return null;
+    // }
 
     switch ( element.variant ) {
         case 'text':
