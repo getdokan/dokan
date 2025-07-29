@@ -1,59 +1,26 @@
-import React, { useCallback, useMemo, useState } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
-import { MaskedInput, SimpleInput } from '@getdokan/dokan-ui';
+import React, { useCallback, useMemo, useState } from 'react';
 import { debounce } from '@wordpress/compose';
-import SquarePlus from '../../../../../../../components/Icons/SquarePlus';
-import SquareMinus from '../../../../../../../components/Icons/SquareMinus';
-import Plus from '../../../../../../../components/Icons/Plus';
-
-interface Category {
-    term_id: string | number;
-    name: string;
-    parent_id: string | number;
-    parents: number[];
-    children: Category[];
-}
-
-interface CommissionValues {
-    all?: {
-        percentage: string;
-        flat: string;
-    };
-    items?: {
-        [ categoryId: string ]: {
-            percentage: string;
-            flat: string;
-        };
-    };
-}
-
-interface SettingsProps {
-    element: any;
-    onValueChange: ( value: any ) => void;
-}
-
-interface SettingsElement {
-    hook_key: string;
-    children?: SettingsElement[];
-    display?: boolean;
-    value?: any;
-    categories?: { [ key: string ]: Category };
-}
-
-// Extend Window interface for accounting library
-declare global {
-    interface Window {
-        accounting: {
-            unformat: ( value: string, decimal?: string ) => number;
-            formatNumber: (
-                value: string | number,
-                precision?: number,
-                thousand?: string,
-                decimal?: string
-            ) => string;
-        };
-    }
-}
+import { useSelect } from '@wordpress/data';
+import { SETTINGS_STORE } from '../../../../../../../stores/adminSettings';
+import CommissionHeader from './CommissionHeader';
+import CategoryRow from './CategoryRow';
+import CategoryTree from './CategoryTree';
+import {
+    CommissionValues,
+    SettingsProps,
+    SettingsElement,
+    CommissionInputsProps,
+} from './types';
+import {
+    defaultCommission,
+    buildCategoriesTree,
+    getAllNestedChildren,
+    unFormatValue,
+    formatValue,
+    validatePercentage,
+    isEqual,
+    getCommissionValue,
+} from './utils';
 
 // Declare adminWithdrawData as a global variable
 declare const adminWithdrawData: {
@@ -91,8 +58,6 @@ export const getSettingById = (
     return getSettingInChildren( id, settings );
 };
 
-const defaultCommission = { percentage: '0', flat: '2500' };
-
 const CategoryBasedCommission = ( {
     element,
     onValueChange,
@@ -117,7 +82,6 @@ const CategoryBasedCommission = ( {
     const [ allCategoryOpen, setAllCategoryOpen ] = useState( false );
 
     const { currency } = adminWithdrawData;
-    const getCurrencySymbol = currency?.symbol;
 
     // Memoize categories to avoid dependency issues
     const categories = useMemo(
@@ -126,181 +90,14 @@ const CategoryBasedCommission = ( {
     );
 
     // For now, use a default value since the SettingsElement doesn't have a value property
-    const resetSubCategoryValue = false;
-
-    // Fixed category building function
-    const getCategories = useCallback(
-        ( categoriesData: { [ key: string ]: Category } ) => {
-            const result: Category[] = [];
-            const categoryMap: { [ key: string ]: Category } = {};
-
-            // First, create a map of all categories with empty children arrays
-            for ( const termId in categoriesData ) {
-                const category = categoriesData[ termId ];
-                categoryMap[ termId ] = {
-                    ...category,
-                    children: [],
-                };
-            }
-
-            // Build the nested structure - handle both parent_id and parents array
-            for ( const termId in categoryMap ) {
-                const category = categoryMap[ termId ];
-
-                // Check if this is a top-level category
-                const isTopLevel =
-                    category.parent_id === '0' ||
-                    category.parent_id === 0 ||
-                    ! category.parent_id ||
-                    ( category.parents && category.parents.length === 0 );
-
-                if ( isTopLevel ) {
-                    // This is a top-level category
-                    result.push( category );
-                } else {
-                    // This is a child category - find its parent
-                    const parentId = category.parent_id;
-                    const parent = categoryMap[ parentId ];
-
-                    if ( parent ) {
-                        parent.children.push( category );
-                    } else {
-                        // If parent not found, treat as top-level
-                        result.push( category );
-                    }
-                }
-            }
-
-            // Sort categories by name for consistent ordering
-            const sortCategories = ( cats: Category[] ): Category[] => {
-                return cats
-                    .sort( ( a, b ) => a.name.localeCompare( b.name ) )
-                    .map( ( cat ) => ( {
-                        ...cat,
-                        children: sortCategories( cat.children ),
-                    } ) );
-            };
-
-            return sortCategories( result );
-        },
-        []
-    );
-
-    const getChildren = useCallback(
-        ( parentId: string | number ) => {
-            const categoriesArray = Object.values( categories );
-            const children = categoriesArray.filter( ( item: any ) => {
-                return (
-                    item?.parent_id === parentId ||
-                    item?.parents?.includes( Number( parentId ) )
-                );
-            } );
-            return children.map( ( item: any ) => item?.term_id );
-        },
-        [ categories ]
-    );
-
-    const getCommissionValue = useCallback(
-        ( commissionType: 'percentage' | 'flat', termId: string | number ) => {
-            if ( commission?.items?.hasOwnProperty( termId ) ) {
-                return commission?.items[ termId ][ commissionType ];
-            }
-            return commission?.all?.[ commissionType ];
-        },
-        [ commission ]
-    );
-
-    const unFormatValue = useCallback(
-        ( inputValue: string ) => {
-            if ( inputValue === '' ) {
-                return inputValue;
-            }
-
-            if ( window.accounting ) {
-                return String(
-                    window.accounting.unformat(
-                        inputValue,
-                        currency?.decimal || '.'
-                    )
-                );
-            }
-
-            return String( inputValue ).replace( /[^0-9.-]/g, '' );
-        },
-        [ currency?.decimal ]
-    );
-
-    const formatValue = useCallback(
-        ( inputValue: string ) => {
-            if ( inputValue === '' ) {
-                return inputValue;
-            }
-
-            if ( ! window.accounting ) {
-                return inputValue;
-            }
-
-            return window.accounting.formatNumber(
-                inputValue,
-                currency?.precision,
-                currency?.thousand,
-                currency?.decimal
+    const resetSubCategoryValue = useSelect( ( select: any ) => {
+        const store = select( SETTINGS_STORE );
+        if ( store && store.getSettingById ) {
+            const setting = store.getSettingById(
+                'dokan_settings_transaction_commission_commission_reset_sub_category_when_edit_all_category'
             );
-        },
-        [ currency?.precision, currency?.thousand, currency?.decimal ]
-    );
-
-    const validatePercentage = useCallback( ( percentage: string ) => {
-        if ( percentage === '' ) {
-            return percentage;
+            return setting?.value === 'on';
         }
-
-        const numVal = Number( percentage );
-        if ( numVal < 0 || numVal > 100 ) {
-            return '';
-        }
-
-        return percentage;
-    }, [] );
-
-    const isEqual = useCallback( ( value1: any, value2: any ): boolean => {
-        if ( value1 === value2 ) {
-            return true;
-        }
-
-        if (
-            value1 === null ||
-            value2 === null ||
-            value1 === undefined ||
-            value2 === undefined
-        ) {
-            return false;
-        }
-
-        if ( typeof value1 !== typeof value2 ) {
-            return false;
-        }
-
-        if ( typeof value1 === 'object' && typeof value2 === 'object' ) {
-            const keys1 = Object.keys( value1 );
-            const keys2 = Object.keys( value2 );
-
-            if ( keys1.length !== keys2.length ) {
-                return false;
-            }
-
-            for ( const key of keys1 ) {
-                if ( ! keys2.includes( key ) ) {
-                    return false;
-                }
-                if ( ! isEqual( value1[ key ], value2[ key ] ) ) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         return false;
     }, [] );
 
@@ -317,58 +114,73 @@ const CategoryBasedCommission = ( {
         [ onValueChange, element ]
     );
 
-    // Handle commission changes with immediate local update and debounced parent update
+    // Handle commission changes with proper nested state management (real-time)
     const handleCommissionChange = useCallback(
         (
             inputValue: string,
             commissionType: 'percentage' | 'flat',
-            termId: string | number
+            termId: string | number,
+            shouldDebounce: boolean = true
         ) => {
             let processedValue = inputValue;
             if ( commissionType === 'percentage' ) {
                 processedValue = validatePercentage(
-                    unFormatValue( inputValue )
+                    unFormatValue( inputValue, currency )
                 );
             } else {
-                processedValue = unFormatValue( inputValue );
+                processedValue = unFormatValue( inputValue, currency );
             }
 
             setCommission( ( prevCommission ) => {
                 const newCommission = { ...prevCommission };
-                const commissions = newCommission?.items
-                    ? { ...newCommission.items }
-                    : {};
 
-                let data: { percentage: string; flat: string } =
-                    resetSubCategoryValue
-                        ? {
-                              percentage: newCommission?.all?.percentage || '',
-                              flat: newCommission?.all?.flat || '',
-                          }
-                        : { flat: '', percentage: '' };
+                // Ensure items object exists
+                if ( ! newCommission.items ) {
+                    newCommission.items = {};
+                }
+
+                const commissions = { ...newCommission.items };
+
+                // Get existing data for this category or create new
+                let categoryData: { percentage: string; flat: string };
 
                 if ( commissions.hasOwnProperty( termId ) ) {
-                    data = {
+                    categoryData = {
                         percentage: commissions[ termId ]?.percentage || '',
                         flat: commissions[ termId ]?.flat || '',
                     };
+                } else if ( resetSubCategoryValue && newCommission.all ) {
+                    // If reset is enabled, inherit from 'all' category
+                    categoryData = {
+                        percentage: newCommission.all.percentage || '',
+                        flat: newCommission.all.flat || '',
+                    };
+                } else {
+                    // Default empty values
+                    categoryData = { percentage: '', flat: '' };
                 }
 
-                data[ commissionType ] = processedValue;
-                commissions[ termId ] = data;
-
+                // Update the specific field
+                categoryData[ commissionType ] = processedValue;
+                commissions[ termId ] = categoryData;
                 newCommission.items = commissions;
 
+                // If resetSubCategoryValue is enabled, update all nested children
                 if ( resetSubCategoryValue ) {
-                    const allNestedChildrenIds = getChildren( termId );
-                    allNestedChildrenIds.forEach( ( id ) => {
-                        if ( newCommission.items ) {
-                            newCommission.items[ id ] = { ...data };
+                    const allNestedChildrenIds = getAllNestedChildren(
+                        termId,
+                        categories
+                    );
+                    allNestedChildrenIds.forEach( ( childId ) => {
+                        if ( newCommission.items && childId !== termId ) {
+                            newCommission.items[ childId ] = {
+                                ...categoryData,
+                            };
                         }
                     } );
                 }
 
-                // Remove categories with same values as 'all'
+                // Clean up: Remove categories with same values as 'all'
                 if ( newCommission.items && newCommission.all ) {
                     Object.keys( newCommission.items ).forEach( ( key ) => {
                         if (
@@ -382,48 +194,74 @@ const CategoryBasedCommission = ( {
                     } );
                 }
 
-                // Debounce the parent update
-                debouncedValueChange( newCommission );
+                // Update parent with or without debounce
+                if ( shouldDebounce ) {
+                    debouncedValueChange( newCommission );
+                } else {
+                    onValueChange( {
+                        ...element,
+                        value: newCommission,
+                    } );
+                }
 
                 return newCommission;
             } );
         },
         [
             resetSubCategoryValue,
-            getChildren,
-            isEqual,
+            categories,
             debouncedValueChange,
-            validatePercentage,
-            unFormatValue,
+            onValueChange,
+            element,
+            currency,
         ]
     );
 
-    // Handle all category changes
+    // Handle all category changes with proper nested updates (real-time)
     const handleAllCategoryChange = useCallback(
-        ( inputValue: string, commissionType: 'percentage' | 'flat' ) => {
+        (
+            inputValue: string,
+            commissionType: 'percentage' | 'flat',
+            shouldDebounce: boolean = true
+        ) => {
             let processedValue = inputValue;
             if ( commissionType === 'percentage' ) {
                 processedValue = validatePercentage(
-                    unFormatValue( inputValue )
+                    unFormatValue( inputValue, currency )
                 );
             } else {
-                processedValue = unFormatValue( inputValue );
+                processedValue = unFormatValue( inputValue, currency );
             }
 
             setCommission( ( prevCommission ) => {
                 const newCommission = { ...prevCommission };
+
+                // Ensure 'all' object exists
+                if ( ! newCommission.all ) {
+                    newCommission.all = { percentage: '', flat: '' };
+                }
+
+                // Update the 'all' category
                 newCommission.all = {
-                    percentage: newCommission?.all?.percentage || '',
-                    flat: newCommission?.all?.flat || '',
+                    percentage: newCommission.all.percentage || '',
+                    flat: newCommission.all.flat || '',
                     [ commissionType ]: processedValue,
                 };
 
+                // If resetSubCategoryValue is enabled, clear all specific category settings
                 if ( resetSubCategoryValue ) {
                     newCommission.items = {};
                 }
 
-                // Debounce the parent update
-                debouncedValueChange( newCommission );
+                // Update parent with or without debounce
+                if ( shouldDebounce ) {
+                    debouncedValueChange( newCommission );
+                } else {
+                    onValueChange( {
+                        ...element,
+                        value: newCommission,
+                    } );
+                }
 
                 return newCommission;
             } );
@@ -431,12 +269,13 @@ const CategoryBasedCommission = ( {
         [
             resetSubCategoryValue,
             debouncedValueChange,
-            validatePercentage,
-            unFormatValue,
+            onValueChange,
+            element,
+            currency,
         ]
     );
 
-    // Handle blur events for immediate updates
+    // Handle blur events for final validation and immediate saves
     const handleBlur = useCallback(
         (
             inputValue: string,
@@ -444,279 +283,60 @@ const CategoryBasedCommission = ( {
             termId: string | number,
             isAllCategory: boolean = false
         ) => {
+            // On blur, trigger immediate save without debounce for final validation
             if ( isAllCategory ) {
-                handleAllCategoryChange( inputValue, commissionType );
+                handleAllCategoryChange( inputValue, commissionType, false );
             } else {
-                handleCommissionChange( inputValue, commissionType, termId );
+                handleCommissionChange(
+                    inputValue,
+                    commissionType,
+                    termId,
+                    false
+                );
             }
         },
         [ handleAllCategoryChange, handleCommissionChange ]
     );
 
     const handleToggle = useCallback( ( id: string | number ) => {
-        setExpandedIds( ( prev ) =>
-            prev.includes( id )
-                ? prev.filter( ( eid ) => eid !== id )
-                : [ ...prev, id ]
-        );
+        if ( id === 'all' ) {
+            setAllCategoryOpen( ( prev ) => ! prev );
+        } else {
+            setExpandedIds( ( prev ) =>
+                prev.includes( id )
+                    ? prev.filter( ( eid ) => eid !== id )
+                    : [ ...prev, id ]
+            );
+        }
     }, [] );
 
-    const renderCategoryRow = useCallback(
-        ( cat: Category, level = 0 ) => {
-            const hasChildren = !! cat.children && cat.children.length > 0;
-            const isExpanded = expandedIds.includes( cat.term_id );
-            const isAllCategory = cat.term_id === 'all';
-
-            const renderIcon = () => {
-                if ( isAllCategory ) {
-                    return allCategoryOpen ? (
-                        <SquareMinus color="#7047EB" />
-                    ) : (
-                        <SquarePlus />
-                    );
-                }
-
-                if ( hasChildren ) {
-                    if ( isExpanded ) {
-                        return <SquareMinus color="#7047EB" />;
-                    }
-                    return <SquarePlus />;
-                }
-
-                return (
-                    <SquarePlus className={ 'opacity-50 cursor-not-allowed' } />
-                );
-            };
-
-            return (
-                <div
-                    key={ `${ cat.term_id }-${ level }` }
-                    className="bg-white border-b border-[#E9E9E9] h-20"
-                >
-                    <div className="h-20 w-full flex items-center px-5">
-                        <div
-                            className="flex items-center"
-                            style={ { paddingLeft: `${ level * 24 }px` } }
-                        >
-                            <button
-                                type="button"
-                                className={ `mr-3 p-1 text-[#828282] hover:text-[#575757] focus:!outline-none rounded transition-colors duration-150 ${
-                                    ! hasChildren && ! isAllCategory
-                                        ? 'opacity-50 cursor-not-allowed'
-                                        : ''
-                                }` }
-                                onClick={ () => {
-                                    if ( isAllCategory ) {
-                                        setAllCategoryOpen(
-                                            ( prev ) => ! prev
-                                        );
-                                    } else if ( hasChildren ) {
-                                        handleToggle( cat.term_id );
-                                    }
-                                } }
-                                disabled={ ! hasChildren && ! isAllCategory }
-                            >
-                                { renderIcon() }
-                            </button>
-                            <div className="flex items-center">
-                                <span className="font-semibold text-[14px] text-[#575757]">
-                                    { isAllCategory
-                                        ? __( 'All Category', 'dokan-lite' )
-                                        : cat.name }
-                                </span>
-                                <span className="ml-2 text-xs text-[#A5A5AA] bg-[#F1F1F4] px-2 py-0.5 rounded">
-                                    { sprintf(
-                                        /* translators: %s: category ID */
-                                        __( '#%s', 'dokan-lite' ),
-                                        cat.term_id
-                                    ) }
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center ml-auto gap-3">
-                            <div className="flex items-center">
-                                <div className="w-[142px]">
-                                    <SimpleInput
-                                        input={ {
-                                            type: 'number',
-                                        } }
-                                        value={ formatValue(
-                                            getCommissionValue(
-                                                'percentage',
-                                                cat.term_id
-                                            ) || ''
-                                        ) }
-                                        addOnRight={
-                                            <span className="text-[#575757] text-sm">
-                                                %
-                                            </span>
-                                        }
-                                        onChange={ ( e ) => {
-                                            // Immediate local state update for better UX
-                                            const value = e.target.value;
-                                            if ( isAllCategory ) {
-                                                setCommission( ( prev ) => ( {
-                                                    ...prev,
-                                                    all: {
-                                                        percentage: value,
-                                                        flat:
-                                                            prev.all?.flat ||
-                                                            '',
-                                                    },
-                                                } ) );
-                                            } else {
-                                                setCommission( ( prev ) => ( {
-                                                    ...prev,
-                                                    items: {
-                                                        ...prev.items,
-                                                        [ cat.term_id ]: {
-                                                            percentage: value,
-                                                            flat:
-                                                                prev.items?.[
-                                                                    cat.term_id
-                                                                ]?.flat || '',
-                                                        },
-                                                    },
-                                                } ) );
-                                            }
-                                        } }
-                                        onBlur={ ( e ) =>
-                                            handleBlur(
-                                                e.target.value,
-                                                'percentage',
-                                                cat.term_id,
-                                                isAllCategory
-                                            )
-                                        }
-                                        className={ `w-full h-10 pl-6 pr-8 text-sm border ${
-                                            cat.term_id === 23
-                                                ? 'border-[#7047EB]'
-                                                : 'border-[#E9E9E9]'
-                                        } rounded-r-none bg-white transition-colors placeholder-[#828282] text-[#575757]` }
-                                    />
-                                </div>
-                                <div className="mx-2">
-                                    <Plus />
-                                </div>
-                                <div className="w-[120px]">
-                                    <MaskedInput
-                                        addOnLeft={
-                                            <span className="text-[#575757] text-sm">
-                                                { getCurrencySymbol }
-                                            </span>
-                                        }
-                                        value={ formatValue(
-                                            getCommissionValue(
-                                                'flat',
-                                                cat.term_id
-                                            ) || ''
-                                        ) }
-                                        onChange={ ( e ) => {
-                                            // Immediate local state update for better UX
-                                            const value = e.target.value;
-                                            if ( isAllCategory ) {
-                                                setCommission( ( prev ) => ( {
-                                                    ...prev,
-                                                    all: {
-                                                        ...prev.all,
-                                                        flat: value,
-                                                        percentage:
-                                                            prev.all
-                                                                ?.percentage ||
-                                                            '',
-                                                    },
-                                                } ) );
-                                            } else {
-                                                setCommission( ( prev ) => ( {
-                                                    ...prev,
-                                                    items: {
-                                                        ...prev.items,
-                                                        [ cat.term_id ]: {
-                                                            ...prev.items?.[
-                                                                cat.term_id
-                                                            ],
-                                                            flat: value,
-                                                            percentage:
-                                                                prev.items?.[
-                                                                    cat.term_id
-                                                                ]?.percentage ||
-                                                                '',
-                                                        },
-                                                    },
-                                                } ) );
-                                            }
-                                        } }
-                                        onBlur={ ( e ) =>
-                                            handleBlur(
-                                                e.target.value,
-                                                'flat',
-                                                cat.term_id,
-                                                isAllCategory
-                                            )
-                                        }
-                                        maskRule={ {
-                                            numeral: true,
-                                            delimiter: currency.thousand,
-                                            numeralDecimalMark:
-                                                currency.decimal,
-                                            numeralDecimalScale:
-                                                currency.precision,
-                                        } }
-                                        className={ `w-full h-10 pl-6 pr-3 text-sm border ${
-                                            cat.term_id === 23
-                                                ? 'border-[#7047EB]'
-                                                : 'border-[#E9E9E9]'
-                                        } rounded-r-[3px] bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB] focus:ring-opacity-20 transition-colors placeholder-[#828282] text-[#575757]` }
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
+    const getCommissionValueCallback = useCallback(
+        ( commissionType: 'percentage' | 'flat', termId: string | number ) => {
+            return getCommissionValue( commission, commissionType, termId );
         },
-        [
-            expandedIds,
-            allCategoryOpen,
-            handleToggle,
-            getCommissionValue,
-            formatValue,
-            handleBlur,
-            getCurrencySymbol,
-            currency,
-        ]
+        [ commission ]
     );
 
-    const renderCategories = useCallback(
-        ( cats: Category[], level = 0 ): JSX.Element[] => {
-            const result: JSX.Element[] = [];
-
-            cats.forEach( ( cat ) => {
-                // Render the current category
-                result.push( renderCategoryRow( cat, level ) );
-
-                // Render children if expanded and has children
-                if (
-                    cat.children &&
-                    cat.children.length > 0 &&
-                    expandedIds.includes( cat.term_id )
-                ) {
-                    // Recursively render children with increased level
-                    result.push(
-                        ...renderCategories( cat.children, level + 1 )
-                    );
-                }
-            } );
-
-            return result;
+    const formatValueCallback = useCallback(
+        ( inputValue: string ) => {
+            return formatValue( inputValue, currency );
         },
-        [ renderCategoryRow, expandedIds ]
+        [ currency ]
     );
+
+    const commissionInputsProps: CommissionInputsProps = {
+        categoryId: '',
+        onCommissionChange: handleCommissionChange,
+        onAllCategoryChange: handleAllCategoryChange,
+        onBlur: handleBlur,
+        getCommissionValue: getCommissionValueCallback,
+        formatValue: formatValueCallback,
+        currency,
+    };
 
     const categoriesList = useMemo(
-        () => getCategories( categories ),
-        [ getCategories, categories ]
+        () => buildCategoriesTree( categories ),
+        [ categories ]
     );
 
     if ( ! element.display ) {
@@ -724,40 +344,31 @@ const CategoryBasedCommission = ( {
     }
 
     return (
-        <div className="w-full overflow-auto">
-            { /* Header */ }
-            <div className="h-16 flex items-center px-5">
-                <div className="flex items-center">
-                    <span className="font-normal text-xs text-[#828282] uppercase">
-                        { __( 'Category Title', 'dokan-lite' ) }
-                    </span>
-                </div>
-                <div className="flex items-center ml-auto gap-3">
-                    <div className="flex items-center">
-                        <div className="w-[142px]">
-                            <span className="font-normal text-xs text-[#828282] uppercase">
-                                { __( 'Percentage', 'dokan-lite' ) }
-                            </span>
-                        </div>
-                        <div className="mx-2 w-4"></div>
-                        <div className="w-[120px]">
-                            <span className="font-normal text-xs text-[#828282] uppercase">
-                                { __( 'Flat', 'dokan-lite' ) }
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            { /* Categories List */ }
+        <div className="w-full bg-white border border-[#E9E9E9] rounded-lg overflow-hidden">
+            <CommissionHeader />
             <div className="border-t border-[#E9E9E9]">
-                { renderCategoryRow( {
-                    term_id: 'all',
-                    name: 'All Category',
-                    parent_id: '0',
-                    parents: [],
-                    children: [],
-                } ) }
-                { allCategoryOpen && renderCategories( categoriesList ) }
+                <CategoryRow
+                    category={ {
+                        term_id: 'all',
+                        name: 'All Category',
+                        parent_id: '0',
+                        parents: [],
+                        children: [],
+                    } }
+                    level={ 0 }
+                    isExpanded={ allCategoryOpen }
+                    hasChildren={ categoriesList.length > 0 }
+                    onToggle={ handleToggle }
+                    commissionInputsProps={ commissionInputsProps }
+                />
+                { allCategoryOpen && (
+                    <CategoryTree
+                        categories={ categoriesList }
+                        expandedIds={ expandedIds }
+                        onToggle={ handleToggle }
+                        commissionInputsProps={ commissionInputsProps }
+                    />
+                ) }
             </div>
         </div>
     );
