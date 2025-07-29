@@ -362,7 +362,8 @@ class ProductControllerV2 extends ProductController {
      *
      * @since DOKAN_SINCE
      *
-     * @param array $exclude_product_type Exclude product type.
+     * @param array           $exclude_product_type Exclude product type.
+     * @param WP_REST_Request $request              Request object.
      *
      * @return array
      */
