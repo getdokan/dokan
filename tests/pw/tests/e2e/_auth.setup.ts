@@ -3,9 +3,10 @@ import { LoginPage } from '@pages/loginPage';
 import { ProductsPage } from '@pages/productsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
-import { data } from '@utils/testData';
+import { admin, data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
 import { helpers } from '@utils/helpers';
+import { customer, vendor } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
@@ -21,7 +22,7 @@ setup.describe('add & authenticate users', () => {
 
     setup('authenticate admin', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
-        await loginPage.adminLogin(data.admin as any, data.auth.adminAuthFile);
+        await loginPage.adminLogin(data.admin as admin, data.auth.adminAuthFile);
     });
 
     setup('enable admin selling status', { tag: ['@lite'] }, async () => {
@@ -96,12 +97,12 @@ setup.describe('add & authenticate users', () => {
 
     setup('authenticate customer', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
-        await loginPage.login(data.customer as any, data.auth.customerAuthFile);
+        await loginPage.login(data.customer as customer, data.auth.customerAuthFile);
     });
 
     setup('authenticate vendor', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
-        await loginPage.login(data.vendor as any, data.auth.vendorAuthFile);
+        await loginPage.login(data.vendor as vendor, data.auth.vendorAuthFile);
         
         // Skip getting nonce if dashboard access fails
         try {
@@ -116,11 +117,11 @@ setup.describe('add & authenticate users', () => {
 
     setup('authenticate customer2', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
-        await loginPage.login(data.customer.customer2 as any, data.auth.customer2AuthFile);
+        await loginPage.login(data.customer.customer2 as customer, data.auth.customer2AuthFile);
     });
 
     setup('authenticate vendor2', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
-        await loginPage.login(data.vendor.vendor2 as any, data.auth.vendor2AuthFile);
+        await loginPage.login(data.vendor.vendor2 as vendor, data.auth.vendor2AuthFile);
     });
 });
