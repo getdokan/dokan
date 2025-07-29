@@ -1,9 +1,8 @@
-import React from 'react';
 import { __ } from '@wordpress/i18n';
 
 const CommissionHeader: React.FC = () => {
     return (
-        <div className="bg-[#F8F8F8] border-b border-[#E9E9E9] h-16 flex items-center px-5">
+        <div className=" h-16 flex items-center px-5">
             <div className="flex items-center">
                 <span className="font-semibold text-[14px] text-[#575757]">
                     { __( 'Category', 'dokan-lite' ) }

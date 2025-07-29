@@ -3,7 +3,6 @@ import {
     TextField,
 } from '../../../../../../components/fields';
 import { SettingsElement } from '../../types';
-import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 
 interface DokanDoubleTextFieldElement extends SettingsElement {
@@ -15,6 +14,8 @@ interface DokanDoubleTextFieldElement extends SettingsElement {
     secondValue: string | number;
     className?: string;
     display?: boolean;
+    firstPrefix?: string;
+    secondPrefix?: string;
 }
 
 const DokanDoubleTextField = ( {
@@ -22,7 +23,7 @@ const DokanDoubleTextField = ( {
 }: {
     element: DokanDoubleTextFieldElement;
 } ) => {
-    if ( element.display === false ) {
+    if ( ! element.display ) {
         return null;
     }
     return (
@@ -44,7 +45,7 @@ const DokanDoubleTextField = ( {
                     onChange={ () => {} }
                     label={ element.firstLabel }
                     disabled
-                    prefix={ __( 'Width', 'dokan-lite' ) }
+                    prefix={ element.firstPrefix }
                     inputClassName="bg-white border-[#E9E9E9] rounded h-10 px-4 text-[#25252D] text-sm"
                 />
 
@@ -53,7 +54,7 @@ const DokanDoubleTextField = ( {
                     onChange={ () => {} }
                     label={ element.secondLabel }
                     disabled
-                    prefix={ __( 'Height', 'dokan-lite' ) }
+                    prefix={ element.secondPrefix }
                     inputClassName="bg-white border-[#E9E9E9] rounded h-10 px-4 text-[#25252D] text-sm"
                     containerClassName="w-full"
                 />

@@ -5,6 +5,7 @@ import { MaskedInput } from '@getdokan/dokan-ui';
 import { SettingsProps } from '../../../types';
 import { dispatch } from '@wordpress/data';
 import settingsStore from '../../../../../../../stores/adminSettings';
+import { SettingsElement } from './../../../../../stores/adminSettings/types';
 
 const CombineInput = ( { element }: SettingsProps ) => {
     const [ values, setValues ] = useState( element.value );
@@ -12,7 +13,7 @@ const CombineInput = ( { element }: SettingsProps ) => {
     if ( ! element.display ) {
         return null;
     }
-    const onValueChange = ( updatedElement ) => {
+    const onValueChange = ( updatedElement: SettingsElement ) => {
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
     const { currency } = adminWithdrawData;
