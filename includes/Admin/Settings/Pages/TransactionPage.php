@@ -123,20 +123,16 @@ class TransactionPage extends AbstractPage {
 
         // Create commission subpage
         $commission_page = ElementFactory::sub_page( 'commission' )
-            ->set_title( esc_html( 'Commission', 'dokan-lite' ) )
-            ->set_description( esc_html( 'Configure commission settings for your marketplace.', 'dokan-lite' ) );
+            ->set_title( esc_html( 'Commission', 'dokan-lite' ) );
 
         // Create commission section
-        $commission_section = ElementFactory::section( 'commission' )
-            ->set_title( esc_html( 'Commission', 'dokan-lite' ) )
-            ->set_description( esc_html( 'Configure commission types and rates for your marketplace.', 'dokan-lite' ) );
-
+        $commission_section = ElementFactory::section( 'commission' );
         // Add commission fields
         $commission_section
             ->add(
                 ElementFactory::field( 'commission_type', 'radio_capsule' )
-                    ->set_title( esc_html( 'Commission Type', 'dokan-lite' ) )
-                    ->set_description( __( 'Select a commission type for your marketplace', 'dokan-lite' ) )
+                    ->set_title( esc_html__( 'Commission Type', 'dokan-lite' ) )
+                    ->set_description( esc_html__( 'Select a commission type for your marketplace', 'dokan-lite' ) )
                     ->add_option( esc_html__( 'Fixed', 'dokan-lite' ), 'fixed' )
                     ->add_option( esc_html__( 'Category Based', 'dokan-lite' ), 'category_based' )
                     ->set_default( $default_settings['commission_type'] )
@@ -144,8 +140,8 @@ class TransactionPage extends AbstractPage {
             )
             ->add(
                 ElementFactory::field( 'admin_commission', 'combine_input' )
-                    ->set_title( __( 'Admin Commission', 'dokan-lite' ) )
-                    ->set_description( __( 'Amount you will get from sales in both percentage and fixed fee', 'dokan-lite' ) )
+                    ->set_title( esc_html__( 'Admin Commission', 'dokan-lite' ) )
+                    ->set_description( esc_html__( 'Amount you will get from sales in both percentage and fixed fee', 'dokan-lite' ) )
                     ->add_dependency( 'commission.commission.commission_type', 'fixed', true, 'display', 'hide', '!=' )
                     ->add_dependency( 'commission.commission.commission_type', 'fixed', true, 'display', 'show', '==' )
                     ->set_admin_percentage( $dokan_selling['admin_percentage'] ?? $default_settings['admin_percentage'] )
@@ -159,19 +155,19 @@ class TransactionPage extends AbstractPage {
             )
             ->add(
                 ElementFactory::field( 'reset_sub_category_when_edit_all_category', 'switch' )
-                    ->set_title( __( 'Apply Parent Category Commission to All Subcategories', 'dokan-lite' ) )
-                    ->set_description( __( "Important: 'All Categories' commission serves as your marketplace's default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors", 'dokan-lite' ) )
+                    ->set_title( esc_html__( 'Apply Parent Category Commission to All Subcategories', 'dokan-lite' ) )
+                    ->set_description( esc_html__( "Important: 'All Categories' commission serves as your marketplace's default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors", 'dokan-lite' ) )
                     ->add_dependency( 'commission.commission.commission_type', 'category_based', true, 'display', 'hide', '!==' )
                     ->add_dependency( 'commission.commission.commission_type', 'category_based', true, 'display', 'show', '===' )
-                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                    ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
+                    ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
                     ->set_default( $default_settings['reset_sub_category_when_edit_all_category'] )
                     ->set_value( $dokan_selling['reset_sub_category_when_edit_all_category'] ?? $default_settings['reset_sub_category_when_edit_all_category'] )
             )
             ->add(
                 ElementFactory::field( 'commission_category_based_values', 'category_based_commission' )
-                    ->set_title( esc_html( 'Admin Commission', 'dokan-lite' ) )
-                    ->set_description( esc_html( 'Amount you will get from each sale', 'dokan-lite' ) )
+                    ->set_title( esc_html__( 'Admin Commission', 'dokan-lite' ) )
+                    ->set_description( esc_html__( 'Amount you will get from each sale', 'dokan-lite' ) )
                     ->add_dependency( 'commission.commission.commission_type', 'category_based', true, 'display', 'hide', '!==' )
                     ->add_dependency( 'commission.commission.commission_type', 'category_based', true, 'display', 'show', '===' )
                     ->add_dependency( 'commission.commission.reset_sub_category_when_edit_all_category', 'on', true, 'custom', 'custom', '===' )
@@ -184,8 +180,8 @@ class TransactionPage extends AbstractPage {
         $commission_page->add( $commission_section );
 
         $this
-            ->set_title( esc_html( 'Transaction', 'dokan-lite' ) )
-            ->set_description( esc_html( 'Configure transaction-related settings including commissions and fees.', 'dokan-lite' ) )
+            ->set_title( esc_html__( 'Transaction', 'dokan-lite' ) )
+            ->set_description( esc_html__( 'Configure transaction-related settings including commissions and fees.', 'dokan-lite' ) )
             ->add( $commission_page );
     }
 

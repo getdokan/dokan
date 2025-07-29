@@ -1,5 +1,5 @@
 import React from 'react';
-import { MaskedInput, SimpleInput } from '@getdokan/dokan-ui';
+import { MaskedInput } from '@getdokan/dokan-ui';
 import Plus from '../../../../../../../components/Icons/Plus';
 import { CommissionInputsProps } from './types';
 
@@ -34,7 +34,7 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
     return (
         <div className="flex items-center">
             <div className="w-[142px]">
-                <SimpleInput
+                <MaskedInput
                     input={ {
                         type: 'number',
                     } }
@@ -55,11 +55,13 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                             isAllCategory
                         )
                     }
-                    className={ `w-full h-10 pl-6 pr-8 text-sm border ${
-                        categoryId === 23
-                            ? 'border-[#7047EB]'
-                            : 'border-[#E9E9E9]'
-                    } rounded-r-none bg-white transition-colors placeholder-[#828282] text-[#575757]` }
+                    className={ `w-full h-10 pl-6  text-sm  rounded-r-[3px] bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB] focus:ring-opacity-20 transition-colors placeholder-[#828282] text-[#575757]` }
+                    maskRule={ {
+                        numeral: true,
+                        delimiter: currency.thousand,
+                        numeralDecimalMark: currency.decimal,
+                        numeralDecimalScale: currency.precision,
+                    } }
                 />
             </div>
             <div className="mx-2">
@@ -90,11 +92,7 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                         numeralDecimalMark: currency.decimal,
                         numeralDecimalScale: currency.precision,
                     } }
-                    className={ `w-full h-10 pl-6 pr-3 text-sm border ${
-                        categoryId === 23
-                            ? 'border-[#7047EB]'
-                            : 'border-[#E9E9E9]'
-                    } rounded-r-[3px] bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB] focus:ring-opacity-20 transition-colors placeholder-[#828282] text-[#575757]` }
+                    className={ `w-full h-10 pl-6 pr-3 text-sm  rounded-r-[3px] bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB] focus:ring-opacity-20 transition-colors placeholder-[#828282] text-[#575757]` }
                 />
             </div>
         </div>

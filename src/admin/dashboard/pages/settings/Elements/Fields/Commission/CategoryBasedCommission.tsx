@@ -1,25 +1,26 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from '@wordpress/element';
 import { debounce } from '@wordpress/compose';
 import { useSelect } from '@wordpress/data';
 import { SETTINGS_STORE } from '../../../../../../../stores/adminSettings';
 import CommissionHeader from './CommissionHeader';
 import CategoryRow from './CategoryRow';
 import CategoryTree from './CategoryTree';
+import { __ } from '@wordpress/i18n';
 import {
-    CommissionValues,
-    SettingsProps,
-    SettingsElement,
     CommissionInputsProps,
+    CommissionValues,
+    SettingsElement,
+    SettingsProps,
 } from './types';
 import {
-    defaultCommission,
     buildCategoriesTree,
-    getAllNestedChildren,
-    unFormatValue,
+    defaultCommission,
     formatValue,
-    validatePercentage,
-    isEqual,
+    getAllNestedChildren,
     getCommissionValue,
+    isEqual,
+    unFormatValue,
+    validatePercentage,
 } from './utils';
 
 // Declare adminWithdrawData as a global variable
@@ -344,13 +345,13 @@ const CategoryBasedCommission = ( {
     }
 
     return (
-        <div className="w-full bg-white border border-[#E9E9E9] rounded-lg overflow-hidden">
+        <div className="w-full bg-white  overflow-auto">
             <CommissionHeader />
             <div className="border-t border-[#E9E9E9]">
                 <CategoryRow
                     category={ {
                         term_id: 'all',
-                        name: 'All Category',
+                        name: __( 'All Categories', 'dokan-lite' ),
                         parent_id: '0',
                         parents: [],
                         children: [],

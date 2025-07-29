@@ -1,14 +1,26 @@
 import React from 'react';
 import { DokanFieldLabel } from '../../../../../../components/fields';
 import { MaskedInput } from '@getdokan/dokan-ui';
+import settingsStore from '../../../../../../stores/adminSettings';
+import { dispatch } from '@wordpress/data';
 
-export default function DokanCurrency( { element, onValueChange } ) {
+export default function DokanCurrency( { element } ) {
+    if ( ! element.display ) {
+        return null;
+    }
+
     const currency = window?.dokanWithdrawDashboard?.currency || {
         symbol: '$',
         thousand: ',',
         decimal: '.',
         precision: 2,
     };
+
+    const onValueChange = ( updatedElement ) => {
+        // Dispatch the updated value to the settings store
+        dispatch( settingsStore ).updateSettingsValue( updatedElement );
+    };
+
     return (
         <div className="flex flex-col gap-2 w-full">
             <DokanFieldLabel

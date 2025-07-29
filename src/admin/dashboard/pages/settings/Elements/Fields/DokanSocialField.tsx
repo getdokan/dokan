@@ -1,9 +1,14 @@
+import React from 'react';
 import {
     DokanFieldLabel,
     SocialButton,
 } from '../../../../../../components/fields';
 
 const DokanSocialField = ( { element } ) => {
+    if ( ! element.display ) {
+        return null;
+    }
+
     return (
         <div className="flex justify-between gap-2 w-full">
             <DokanFieldLabel
