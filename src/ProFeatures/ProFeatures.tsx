@@ -10,7 +10,10 @@ import brushIcon from './assets/PaintIcon.png';
 import gearIcon from './assets/settingsIcon.png';
 import moduleBanner from './assets/modules-banner.png';
 import moduleBannerMobile from './assets/modules-banner-mobile.png';
+import moduleBannerTablet from './assets/modules-banner-tablet.png';
 import unlockBanner from './assets/unlock-banner.png';
+import unlockBannerMobile from './assets/unlock-banner-mobile.png';
+import unlockBannerTablet from './assets/unlock-banner-tablet.png';
 import shippingImg from './assets/shipping.png';
 import paymentImg from './assets/payment.png';
 import smartImg from './assets/smart.png';
@@ -19,6 +22,7 @@ import brandingImg from './assets/branding.png';
 import supportImg from './assets/support.png';
 import dokanAiBanner from './assets/DokanAi.png';
 import dokanAiBannerMobile from './assets/DokanAiMobile.png';
+import dokanAiBannerTablet from './assets/DokanAiTablet.png';
 import iftsyImg from "./assets/iftsy.png";
 import bidCuriousImg from './assets/bidCurious.png';
 import bootstrapImg from './assets/bootstrap.png';
@@ -81,10 +85,10 @@ function PricingSection() {
   ];
 
   return (
-    <div className="w-full max-w-none mx-auto px-4 md:px-0 py-8 md:py-0 bg-gray-50">
-      <div className="bg-white rounded-2xl shadow-sm w-full md:w-[1024px] md:h-[580.56px] mx-auto">
+    <div className="w-full bg-white">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center pt-8 pb-6">
+        <div className="text-center pt-8 pb-6 px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
             The Packages We Provide
           </h2>
@@ -120,69 +124,186 @@ function PricingSection() {
           </div>
         </div>
 
-        {/* Pricing Cards Container */}
-        <div className="flex flex-col md:flex-row items-center md:items-stretch justify-center gap-[29px] px-4 md:px-8 pb-8">
-          {pricingPlans.map((plan, index) => (
-            <div
-              key={index}
-              className={`w-full md:w-[241px] ${
-                plan.isPopular
-                  ? 'border-2 border-[#7047EB] shadow-lg'
-                  : 'border border-gray-200'
-              } rounded-xl bg-white`}
-              style={{
-                maxWidth: '349px',
-                height: '320px',
-                background: plan.name === 'Starter' || plan.name === 'Business'
-                  ? 'linear-gradient(214.33deg, rgba(234, 248, 255, 0.7) 3.79%, #FFFFFF 60.72%)'
-                  : 'linear-gradient(214.33deg, rgba(255, 250, 239, 0.7) 3.79%, #FFFFFF 60.72%)'
-              }}
-            >
-              <div className="p-4 h-full flex flex-col">
-                {/* Package Header */}
-                <div className="mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
-                    {plan.isPopular && (
-                      <span className="bg-[#EFEAFF] text-[#7047EB] px-2 py-1 rounded-full text-xs font-medium">
-                        Popular
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-bold text-gray-900">
-                      {isAnnual ? plan.annualPrice : plan.lifetimePrice}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      {isAnnual ? 'Annually' : 'Lifetime'}
-                    </span>
-                  </div>
-                </div>
+        {/* Pricing Cards - Completely rewritten layout */}
+        <div className="pb-12">
+          {/* Mobile: 1 column */}
+          <div className="block md:hidden px-6">
+            <div className="space-y-6">
+              {pricingPlans.map((plan, index) => (
+                <div key={index} className="max-w-sm mx-auto">
+                  <div 
+                    className={`${
+                      plan.isPopular
+                        ? 'border-2 border-[#7047EB] shadow-lg'
+                        : 'border border-gray-200'
+                    } rounded-xl bg-white`}
+                    style={{
+                      background: plan.name === 'Starter' || plan.name === 'Business'
+                        ? 'linear-gradient(214.33deg, rgba(234, 248, 255, 0.7) 3.79%, #FFFFFF 60.72%)'
+                        : 'linear-gradient(214.33deg, rgba(255, 250, 239, 0.7) 3.79%, #FFFFFF 60.72%)'
+                    }}
+                  >
+                    <div className="p-4">
+                      {/* Package Header */}
+                      <div className="mb-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
+                          {plan.isPopular && (
+                            <span className="bg-[#EFEAFF] text-[#7047EB] px-2 py-1 rounded-full text-xs font-medium">
+                              Popular
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-2xl font-bold text-gray-900">
+                            {isAnnual ? plan.annualPrice : plan.lifetimePrice}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            {isAnnual ? 'Annually' : 'Lifetime'}
+                          </span>
+                        </div>
+                      </div>
 
-                {/* Features List */}
-                <div className="flex-grow space-y-3">
-                  {plan.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
-                      <span className="text-xs text-gray-700 leading-tight">{feature}</span>
+                      {/* Features List */}
+                      <div className="space-y-3 mb-4">
+                        {plan.features.map((feature, featureIndex) => (
+                          <div key={featureIndex} className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
+                            <span className="text-xs text-gray-700 leading-tight">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Buy Now Button */}
+                      <button className="w-full bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[28px] text-xs font-semibold">
+                        Buy Now
+                      </button>
                     </div>
-                  ))}
+                  </div>
                 </div>
+              ))}
+            </div>
+          </div>
 
-                {/* Buy Now Button */}
-                <button
-                  className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded"
-                  style={{
-                    height: '28px',
-                    fontSize: '12px',
-                    fontWeight: 600
-                  }}
-                >
-                  Buy Now
-                </button>
+          {/* Tablet: 2 columns, 2 rows (2x2 grid), 332x313 cards */}
+          <div className="hidden md:block lg:hidden">
+            <div className="max-w-4xl mx-auto px-4">
+              <div className="grid grid-cols-2 gap-4 justify-items-center">
+                {pricingPlans.map((plan, index) => (
+                  <div key={index} className="w-[320px] h-[313px]">
+                    <div 
+                      className={`w-full h-full ${
+                        plan.isPopular
+                          ? 'border-2 border-[#7047EB] shadow-lg'
+                          : 'border border-gray-200'
+                      } rounded-xl bg-white`}
+                      style={{
+                        background: plan.name === 'Starter' || plan.name === 'Business'
+                          ? 'linear-gradient(214.33deg, rgba(234, 248, 255, 0.7) 3.79%, #FFFFFF 60.72%)'
+                          : 'linear-gradient(214.33deg, rgba(255, 250, 239, 0.7) 3.79%, #FFFFFF 60.72%)'
+                      }}
+                    >
+                      <div className="p-4 h-full flex flex-col">
+                        {/* Package Header */}
+                        <div className="mb-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
+                            {plan.isPopular && (
+                              <span className="bg-[#EFEAFF] text-[#7047EB] px-2 py-1 rounded-full text-xs font-medium">
+                                Popular
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-2xl font-bold text-gray-900">
+                              {isAnnual ? plan.annualPrice : plan.lifetimePrice}
+                            </span>
+                            <span className="text-sm text-gray-500">
+                              {isAnnual ? 'Annually' : 'Lifetime'}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Features List */}
+                        <div className="flex-grow space-y-3">
+                          {plan.features.map((feature, featureIndex) => (
+                            <div key={featureIndex} className="flex items-start gap-2">
+                              <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
+                              <span className="text-xs text-gray-700 leading-tight">{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Buy Now Button */}
+                        <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[28px] text-xs font-semibold">
+                          Buy Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Desktop: 4 columns */}
+          <div className="hidden lg:block px-8">
+            <div className="grid grid-cols-4 gap-6 max-w-6xl mx-auto">
+              {pricingPlans.map((plan, index) => (
+                <div key={index}>
+                  <div 
+                    className={`h-full ${
+                      plan.isPopular
+                        ? 'border-2 border-[#7047EB] shadow-lg'
+                        : 'border border-gray-200'
+                    } rounded-xl bg-white`}
+                    style={{
+                      background: plan.name === 'Starter' || plan.name === 'Business'
+                        ? 'linear-gradient(214.33deg, rgba(234, 248, 255, 0.7) 3.79%, #FFFFFF 60.72%)'
+                        : 'linear-gradient(214.33deg, rgba(255, 250, 239, 0.7) 3.79%, #FFFFFF 60.72%)'
+                    }}
+                  >
+                    <div className="p-4 h-full flex flex-col">
+                      {/* Package Header */}
+                      <div className="mb-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
+                          {plan.isPopular && (
+                            <span className="bg-[#EFEAFF] text-[#7047EB] px-2 py-1 rounded-full text-xs font-medium">
+                              Popular
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-2xl font-bold text-gray-900">
+                            {isAnnual ? plan.annualPrice : plan.lifetimePrice}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            {isAnnual ? 'Annually' : 'Lifetime'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Features List */}
+                      <div className="flex-grow space-y-3">
+                        {plan.features.map((feature, featureIndex) => (
+                          <div key={featureIndex} className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
+                            <span className="text-xs text-gray-700 leading-tight">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Buy Now Button */}
+                      <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[28px] text-xs font-semibold">
+                        Buy Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -203,7 +324,7 @@ interface Marketplace {
 
 function MarketplaceCard({ item }: { item: Marketplace }) {
   return (
-    <div 
+    <div
       className="relative bg-white overflow-hidden"
       style={{
         width: '274.51px',
@@ -215,7 +336,7 @@ function MarketplaceCard({ item }: { item: Marketplace }) {
       }}
     >
       {/* Image Container */}
-      <div 
+      <div
         className="overflow-hidden"
         style={{
           width: '273.94px',
@@ -248,7 +369,7 @@ function MarketplaceCard({ item }: { item: Marketplace }) {
         </div>
 
         <div className="absolute bottom-4 right-4">
-          <span 
+          <span
             className="inline-flex items-center px-3 py-1 rounded-full text-xs"
             style={{
               backgroundColor: 'rgba(124, 58, 237, 0.1)',
@@ -412,9 +533,8 @@ function DokanMarketplaceUI() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`text-base md:text-lg font-medium transition relative ${
-              activeTab === tab ? 'text-purple-700' : 'text-gray-500'
-            }`}
+            className={`text-base md:text-lg font-medium transition relative ${activeTab === tab ? 'text-purple-700' : 'text-gray-500'
+              }`}
           >
             {tab}
             {activeTab === tab && (
@@ -472,7 +592,7 @@ function DokanMarketplaceUI() {
               {activeTab === 'Marketplace' ? (
                 <MarketplaceCard item={item} />
               ) : (
-                <div 
+                <div
                   className="bg-white rounded-xl border border-gray-100 p-4 flex flex-col justify-between"
                   style={{
                     width: '220px',
@@ -590,7 +710,7 @@ const FeatureComparison: React.FC = () => {
         <div className="flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-white">
           {/* Categories Section with Touch Sliding */}
           <div className="w-full md:w-auto md:min-w-[300px] bg-white p-2 md:p-4">
-            <div 
+            <div
               ref={categoriesRef}
               className="flex md:block overflow-x-auto whitespace-nowrap scrollbar-hide touch-pan-x"
               style={{
@@ -660,7 +780,7 @@ const FeatureComparison: React.FC = () => {
               {/* Feature Rows */}
               {features.map((feature, index) => (
                 <div key={index} className="grid grid-cols-3 border-t border-gray-100">
-                  <div 
+                  <div
                     className="px-4 py-3 text-gray-700"
                     style={{
                       fontFamily: 'Inter, sans-serif',
@@ -721,12 +841,20 @@ function DokanAIBanner() {
         style={{ width: '349px', height: '218px' }}
         draggable={false}
       />
-      
+
+      {/* Tablet Background Image - visible on tablet only */}
+      <img
+        src={dokanAiBannerTablet}
+        alt="Dokan AI Banner Tablet"
+        className="w-full h-full object-cover hidden md:block lg:hidden"
+        draggable={false}
+      />
+
       {/* Desktop Background Image - visible on desktop only */}
       <img
         src={dokanAiBanner}
         alt="Dokan AI Banner"
-        className="w-full h-full object-cover hidden md:block"
+        className="w-full h-full object-cover hidden lg:block"
         draggable={false}
       />
 
@@ -734,7 +862,7 @@ function DokanAIBanner() {
       <div className="absolute inset-0 md:flex md:items-center md:pl-10 md:pr-4">
         {/* Mobile Text Layout */}
         <div className="block md:hidden">
-          <h2 
+          <h2
             className="text-white font-bold absolute"
             style={{
               width: '426px',
@@ -750,7 +878,7 @@ function DokanAIBanner() {
           >
             Dokan AI
           </h2>
-          <p 
+          <p
             className="text-white absolute"
             style={{
               width: '307px',
@@ -768,7 +896,7 @@ function DokanAIBanner() {
           </p>
         </div>
 
-        {/* Desktop Text Layout */}
+        {/* Tablet and Desktop Text Layout */}
         <div className="hidden md:block max-w-sm text-white">
           <h2 className="text-white text-3xl font-bold mb-2">Dokan AI</h2>
           <p className="text-base leading-relaxed opacity-90">
@@ -802,7 +930,7 @@ function WhySettle() {
   return (
     <div className="mt-8 md:mt-16">
       <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">Why Settle? Get More with Dokan PRO!</h2>
-      
+
       {/* Modules Banner with Responsive Images */}
       <div className="relative rounded-2xl overflow-hidden mb-6 md:mb-10 min-h-[150px] md:min-h-[180px]">
         {/* Mobile Image - visible on mobile only */}
@@ -813,16 +941,25 @@ function WhySettle() {
           style={{ minHeight: 150, maxHeight: 150 }}
           draggable={false}
         />
-        
+
+        {/* Tablet Image - visible on tablet only */}
+        <img
+          src={moduleBannerTablet}
+          alt="42+ Modules"
+          className="w-full h-full object-cover absolute inset-0 hidden md:block lg:hidden"
+          style={{ minHeight: 180, maxHeight: 180 }}
+          draggable={false}
+        />
+
         {/* Desktop Image - visible on desktop only */}
         <img
           src={moduleBanner}
           alt="42+ Modules"
-          className="w-full h-full object-cover absolute inset-0 hidden md:block"
+          className="w-full h-full object-cover absolute inset-0 hidden lg:block"
           style={{ minHeight: 200, maxHeight: 200 }}
           draggable={false}
         />
-        
+
         <div className="relative z-10 flex flex-col justify-center h-full px-4 py-6 md:px-8 md:py-8">
           {/* Mobile Text Layout */}
           <div className="block md:hidden">
@@ -843,8 +980,18 @@ function WhySettle() {
             </p>
           </div>
 
+          {/* Tablet Text Layout with Custom Line Breaks */}
+          <div className="hidden md:block lg:hidden">
+            <h3 className="text-3xl font-bold text-white mb-2">42+ Modules</h3>
+            <p className="text-white text-base max-w-xs">
+              Access an extensive range of modules<br />
+              designed to enhance both admin and<br />
+              vendor experiences.
+            </p>
+          </div>
+
           {/* Desktop Text Layout - Original Styles */}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <h3 className="text-3xl font-bold text-white mb-2">42+ Modules</h3>
             <p className="text-white text-base max-w-xs">
               Access an extensive range of modules designed to enhance both admin and vendor experiences.
@@ -852,7 +999,7 @@ function WhySettle() {
           </div>
         </div>
       </div>
-      
+
       {/* Feature Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
         {features.map((feature, idx) => (
@@ -999,7 +1146,7 @@ function ScaleMarketplaceBanner() {
       >
         <div className="p-5">
           <div className="flex flex-col">
-            <h2 
+            <h2
               className="text-white"
               style={{
                 width: '298px',
@@ -1017,12 +1164,12 @@ function ScaleMarketplaceBanner() {
             >
               Ready to Scale Your Marketplace?
             </h2>
-            
-            <p 
+
+            <p
               className="text-white/90 mt-3"
               style={{
                 width: '298px',
-                height: '40px',
+                height: '30px',
                 fontSize: '12px',
                 fontWeight: 400,
                 lineHeight: '130%',
@@ -1113,34 +1260,60 @@ function ProFeatures() {
   };
 
   return (
-    <div 
-            className="p-6 space-y-6" 
-            style={{ 
-                touchAction: 'pan-x pan-y',
-                WebkitTouchCallout: 'none',
-                WebkitUserSelect: 'none',
-                maxWidth: '100vw',
-                overflow: 'hidden'
-            }}
-        >
+    <div
+      className="p-6 space-y-6"
+      style={{
+        touchAction: 'pan-x pan-y',
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        maxWidth: '100vw',
+        overflow: 'hidden'
+      }}
+    >
       {/* Hero Banner */}
-      <div
-        className="relative min-h-[150px] md:min-h-[304px] rounded-2xl overflow-hidden flex items-center"
-        style={{
-          background: `url(${unlockBanner}) center center / cover no-repeat`,
-        }}
-      >
+      <div className="relative min-h-[150px] md:min-h-[304px] lg:h-[350px] rounded-2xl overflow-hidden flex items-center">
+        {/* Mobile Banner */}
+        <div 
+          className="absolute inset-0 md:hidden"
+          style={{
+            background: `url(${unlockBannerMobile}) center center / cover no-repeat`,
+          }}
+        />
+        
+        {/* Tablet Banner */}
+        <div 
+          className="absolute inset-0 hidden md:block lg:hidden"
+          style={{
+            background: `url(${unlockBannerTablet}) center center / cover no-repeat`,
+          }}
+        />
+        
+        {/* Desktop Banner */}
+        <div 
+          className="absolute inset-0 hidden lg:block"
+          style={{
+            background: `url(${unlockBanner}) center center / cover no-repeat`,
+          }}
+        />
         <div className="flex flex-col justify-center px-4 py-6 md:px-8 md:py-10 z-10 max-w-xl">
           {/* Mobile: text-2xl, Desktop: text-4xl */}
           <h2 className="text-2xl md:text-4xl font-bold mb-4 leading-tight text-white drop-shadow">
             Unlock the Full Potential of<br />Your Marketplace!
           </h2>
-          
-          {/* Mobile: text-sm, Desktop: text-base */}
-          <p className="mb-6 text-sm md:text-base text-white/90 drop-shadow">
+
+          {/* Mobile and Desktop Text */}
+          <p className="mb-6 text-sm lg:text-base text-white/90 drop-shadow block md:hidden lg:block">
             Upgrade to Dokan PRO for powerful vendor management, advanced admin controls, and built-in AI assistance. Enjoy exclusive features that simplify operations, boost sales, and scale your business effortlessly.
           </p>
-          
+
+          {/* Tablet Text with Custom Line Breaks */}
+          <p className="mb-6 text-base text-white/90 drop-shadow hidden md:block lg:hidden">
+            Upgrade to Dokan PRO for powerful vendor management,<br />
+            advanced admin controls, and built-in AI assistance. Enjoy<br />
+            exclusive features that simplify operations, boost sales,<br />
+            and scale your business effortlessly.
+          </p>
+
           {/* Button and text remain horizontal on both mobile and desktop */}
           <div className="flex items-center gap-4">
             <a
