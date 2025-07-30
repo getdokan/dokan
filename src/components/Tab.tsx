@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import { IconType, Slot, TabPanel } from '@wordpress/components';
-import { snakeCase } from '@dokan/utilities';
+import { snakeCase } from '../utilities/ChangeCase';
 import { applyFilters } from '@wordpress/hooks';
 
 export type TabVariant = 'primary' | 'secondary' | 'tertiary';

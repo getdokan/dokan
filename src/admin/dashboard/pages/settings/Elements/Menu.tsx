@@ -8,6 +8,7 @@ import {
     SearchIcon,
     SettingsIcon,
     UsersIcon,
+    PanelsRightBottom,
 } from 'lucide-react';
 import { SettingsElement } from '../../../../../stores/adminSettings/types';
 
@@ -40,6 +41,8 @@ const getIcon = ( iconName: string ) => {
             return <SettingsIcon { ...iconProps } />;
         case 'users':
             return <UsersIcon { ...iconProps } />;
+        case 'appearance':
+            return <PanelsRightBottom { ...iconProps } />;
         default:
             return <SettingsIcon { ...iconProps } />;
     }

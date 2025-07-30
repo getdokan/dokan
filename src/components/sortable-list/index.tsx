@@ -29,7 +29,7 @@ import {
 
 import { Slot } from "@wordpress/components";
 import { Fragment } from "@wordpress/element";
-import { snakeCase, kebabCase } from "@dokan/utilities";
+import { snakeCase, kebabCase } from "../../utilities";
 import SortableItem from './SortableItem';
 import type { Announcements, ScreenReaderInstructions } from "@dnd-kit/core";
 import type { AutoScrollOptions } from "@dnd-kit/core";
