@@ -197,4 +197,7 @@ export type VendorsStoreState = {
     vendorStats: Record< number, VendorStats >;
     topProducts: Record< number, Product[] >;
     loadingTopProducts: Record< number, boolean >;
+    createOrEditVendorLoading: boolean;
+    createOrEditVendor: Vendor;
+    createOrEditVendorErrors: String[];
 };

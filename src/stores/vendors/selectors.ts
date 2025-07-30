@@ -36,6 +36,15 @@ const selectors = {
             ? state.loadingTopProducts[ vendorId ] || false
             : false;
     },
+    getCreateOrEditVendor( state: VendorsStoreState ): Vendor {
+        return state.createOrEditVendor;
+    },
+    getCreateOrEditVendorLoading( state: VendorsStoreState ): boolean {
+        return state.createOrEditVendorLoading;
+    },
+    getCreateOrEditVendorErrors( state: VendorsStoreState ): String[] {
+        return state.createOrEditVendorErrors;
+    },
 };
 
 export default selectors;

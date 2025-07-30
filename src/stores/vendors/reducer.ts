@@ -70,6 +70,22 @@ const reducer = ( state = defaultState, action: any ): VendorsStoreState => {
                 },
             };
 
+        case 'SET_CREATE_OR_EDIT_VENDOR':
+            return {
+                ...state,
+                createOrEditVendor: action.vendor,
+            };
+        case 'SET_CREATE_OR_EDIT_VENDOR_LOADING':
+            return {
+                ...state,
+                createOrEditVendorLoading: action.loading,
+            };
+        case 'SET_CREATE_OR_EDIT_VENDOR_ERRORS':
+            return {
+                ...state,
+                createOrEditVendorErrors: action.errors,
+            };
+
         default:
             return state;
     }
