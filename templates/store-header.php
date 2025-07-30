@@ -1,5 +1,8 @@
 <?php
 $store_user    = dokan()->vendor->get( get_query_var( 'author' ) );
+
+error_log( print_r( $store_user, true ) );
+
 $store_info    = $store_user->get_shop_info();
 $social_info   = $store_user->get_social_profiles();
 $store_tabs    = dokan_get_store_tabs( $store_user->get_id() );
@@ -42,7 +45,7 @@ if ( 'layout3' === $profile_layout ) {
     <div class="profile-frame<?php echo esc_attr( $no_banner_class ); ?>">
 
         <div class="profile-info-box profile-layout-<?php echo esc_attr( $profile_layout ); ?>">
-            <?php if ( ! $store_user->get_banner() ) { ?>
+            <?php if ( $store_user->get_banner() ) { ?>
                 <img src="<?php echo esc_url( $store_user->get_banner() ); ?>"
                     alt="<?php echo esc_attr( $store_user->get_shop_name() ); ?>"
                     title="<?php echo esc_attr( $store_user->get_shop_name() ); ?>"
