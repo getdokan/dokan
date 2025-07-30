@@ -1,8 +1,5 @@
 <?php
 $store_user    = dokan()->vendor->get( get_query_var( 'author' ) );
-
-error_log( print_r( $store_user, true ) );
-
 $store_info    = $store_user->get_shop_info();
 $social_info   = $store_user->get_social_profiles();
 $store_tabs    = dokan_get_store_tabs( $store_user->get_id() );
