@@ -178,7 +178,7 @@ export default function DokanMenuManager( {
 } ) {
     const [ menuData, setMenuData ] =
         useState< MenuData >( HARDCODED_MENU_DATA );
-    const [ success, setSuccess ] = useState< string | null >( null );
+    // const [ success, setSuccess ] = useState< string | null >( null );
     const [ showResetConfirm, setShowResetConfirm ] = useState( false );
 
     const fetchMenuData = async () => {
@@ -218,8 +218,8 @@ export default function DokanMenuManager( {
         onValueChange( { ...element, value: newMenuData } );
 
         // Show success message
-        setSuccess( __( 'Menu settings updated successfully.', 'dokan-lite' ) );
-        setTimeout( () => setSuccess( null ), 3000 );
+        // setSuccess( __( 'Menu settings updated successfully.', 'dokan-lite' ) );
+        // setTimeout( () => setSuccess( null ), 3000 );
     };
 
     // Show reset confirmation
@@ -237,8 +237,8 @@ export default function DokanMenuManager( {
         setShowResetConfirm( false );
         setMenuData( HARDCODED_MENU_DATA );
         onValueChange( { ...element, value: HARDCODED_MENU_DATA } );
-        setSuccess( __( 'Menu settings reset successfully.', 'dokan-lite' ) );
-        setTimeout( () => setSuccess( null ), 3000 );
+        // setSuccess( __( 'Menu settings reset successfully.', 'dokan-lite' ) );
+        // setTimeout( () => setSuccess( null ), 3000 );
     };
 
     // Tab configuration
@@ -246,10 +246,12 @@ export default function DokanMenuManager( {
         {
             name: 'left_menus',
             title: __( 'Left Menu', 'dokan-lite' ),
+            className: 'px-4 text-[#626262] hover:border-[#7047EB]'
         },
         {
             name: 'settings_sub_menu',
             title: __( 'Settings Sub Menu', 'dokan-lite' ),
+            className: 'px-4 text-[#626262] hover:border-[#7047EB]',
         },
     ];
 
@@ -262,122 +264,85 @@ export default function DokanMenuManager( {
                 tooltip={ element.tooltip }
             />
 
-            <div className="mt-4 bg-white border border-gray-200 rounded-lg">
-                { /* Header with Reset Button */ }
-                <div className="flex justify-between items-start p-5 border-b border-gray-200">
-                    <div>
-                        <h2 className="text-lg font-semibold text-gray-900 mb-2">
-                            { __( 'Dashboard Menu Manager', 'dokan-lite' ) }
-                        </h2>
-                        <p className="text-sm text-gray-600">
+            { /* Notifications */ }
+            {/*{ success && (*/}
+            {/*    <div className="p-5">*/}
+            {/*        <Notice*/}
+            {/*            status="success"*/}
+            {/*            isDismissible*/}
+            {/*            onRemove={ () => setSuccess( null ) }*/}
+            {/*        >*/}
+            {/*            { success }*/}
+            {/*        </Notice>*/}
+            {/*    </div>*/}
+            {/*) }*/}
+
+            { /* Tab Content using DokanTab */ }
+            <div className="p-4 relative">
+                <DokanTab
+                    className="dokan-menu-manager-tabs m-0"
+                    tabs={ tabs }
+                    initialTabName="left_menus"
+                    namespace="menu-manager"
+                >
+                    { ( tab ) => {
+                        const tabKey = tab.name as
+                            | 'left_menus'
+                            | 'settings_sub_menu';
+                        return (
+                            <SortableMenuList
+                                menuItems={ menuData[ tabKey ] }
+                                onUpdate={ ( updatedMenus ) =>
+                                    handleMenuUpdate(
+                                        tabKey,
+                                        updatedMenus
+                                    )
+                                }
+                                namespace={ `menu-manager-${ tabKey }` }
+                            />
+                        );
+                    } }
+                </DokanTab>
+
+                <div className="absolute top-3 right-0 flex justify-between items-start p-5 border-gray-200">
+                    <div className={ 'flex items-center gap-2 text-sm text-[#7047EB] cursor-pointer' }>
+                        <RotateCcw size={ 20 } color={ '#7047EB' } />
+                        { __( 'Reset All', 'dokan-lite' ) }
+                    </div>
+                </div>
+            </div>
+
+            { /* Reset Confirmation Dialog */ }
+            { showResetConfirm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-6 max-w-md mx-4">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                            { __( 'Confirm Reset', 'dokan-lite' ) }
+                        </h3>
+                        <p className="text-gray-600 mb-6">
                             { __(
-                                'Reorder, Rename, Activate, and Deactivate menus for your vendor dashboard.',
+                                'Are you sure? You want to reset all data! This action cannot be undone.',
                                 'dokan-lite'
                             ) }
                         </p>
-                    </div>
-                    <div>
-                        <Button
-                            variant="secondary"
-                            onClick={ showResetConfirmation }
-                            className="text-gray-500 border-gray-300 hover:text-gray-700 hover:border-gray-400"
-                        >
-                            <RotateCcw className="w-4 h-4 mr-2" />
-                            { __( 'Reset All', 'dokan-lite' ) }
-                        </Button>
-                    </div>
-                </div>
-
-                { /* Notifications */ }
-                { success && (
-                    <div className="p-5">
-                        <Notice
-                            status="success"
-                            isDismissible
-                            onRemove={ () => setSuccess( null ) }
-                        >
-                            { success }
-                        </Notice>
-                    </div>
-                ) }
-
-                { /* Tab Content using DokanTab */ }
-                <div className="p-0">
-                    <DokanTab
-                        className="dokan-menu-manager-tabs"
-                        activeClass="is-active"
-                        tabs={ tabs }
-                        initialTabName="left_menus"
-                        namespace="menu-manager"
-                    >
-                        { ( tab ) => {
-                            const tabKey = tab.name as
-                                | 'left_menus'
-                                | 'settings_sub_menu';
-                            return (
-                                <div className="p-4">
-                                    <div className="mb-4">
-                                        <p className="text-sm text-gray-600">
-                                            { tabKey === 'left_menus'
-                                                ? __(
-                                                      'Drag and drop to reorder menu items, click to edit titles, and use toggles to enable/disable menu items.',
-                                                      'dokan-lite'
-                                                  )
-                                                : __(
-                                                      'Configure settings submenu items visibility and order.',
-                                                      'dokan-lite'
-                                                  ) }
-                                        </p>
-                                    </div>
-
-                                    <SortableMenuList
-                                        menuItems={ menuData[ tabKey ] }
-                                        onUpdate={ ( updatedMenus ) =>
-                                            handleMenuUpdate(
-                                                tabKey,
-                                                updatedMenus
-                                            )
-                                        }
-                                        namespace={ `menu-manager-${ tabKey }` }
-                                    />
-                                </div>
-                            );
-                        } }
-                    </DokanTab>
-                </div>
-
-                { /* Reset Confirmation Dialog */ }
-                { showResetConfirm && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-lg p-6 max-w-md mx-4">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                                { __( 'Confirm Reset', 'dokan-lite' ) }
-                            </h3>
-                            <p className="text-gray-600 mb-6">
-                                { __(
-                                    'Are you sure? You want to reset all data! This action cannot be undone.',
-                                    'dokan-lite'
-                                ) }
-                            </p>
-                            <div className="flex justify-end space-x-3">
-                                <Button
-                                    variant="secondary"
-                                    onClick={ cancelReset }
-                                >
-                                    { __( 'Cancel', 'dokan-lite' ) }
-                                </Button>
-                                <Button
-                                    variant="primary"
-                                    onClick={ confirmReset }
-                                    className="bg-red-600 hover:bg-red-700 border-red-600 hover:border-red-700"
-                                >
-                                    { __( 'Reset All', 'dokan-lite' ) }
-                                </Button>
-                            </div>
+                        <div className="flex justify-end space-x-3">
+                            <Button
+                                variant="secondary"
+                                onClick={ cancelReset }
+                            >
+                                { __( 'Cancel', 'dokan-lite' ) }
+                            </Button>
+                            <Button
+                                variant="primary"
+                                onClick={ confirmReset }
+                                className="bg-red-600 hover:bg-red-700 border-red-600 hover:border-red-700"
+                            >
+                                { __( 'Reset All', 'dokan-lite' ) }
+                            </Button>
                         </div>
                     </div>
-                ) }
-            </div>
+                </div>
+            ) }
         </div>
     );
 }

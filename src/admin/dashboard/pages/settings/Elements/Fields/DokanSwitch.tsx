@@ -2,10 +2,14 @@ import {
     DokanFieldLabel,
     DokanSwitch as BaseSwitch,
 } from '../../../../../../components/fields';
+import {twMerge} from "tailwind-merge";
 
-export default function DokanSwitch( { element, onValueChange } ) {
+export default function DokanSwitch( { element, onValueChange, className = '' } ) {
     return (
-        <div className="flex justify-between items-center flex-wrap gap-2 p-5 w-full">
+        <div className={ twMerge(
+            'flex justify-between items-center flex-wrap gap-2 p-5 w-full',
+            className
+        ) }>
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"

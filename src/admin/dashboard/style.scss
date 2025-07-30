@@ -14,3 +14,9 @@
 .animate-complete-step {
     animation: completeStep 0.9s ease-in-out;
 }
+
+#dokan-tab-menu_manager {
+    .components-tab-panel__tabs {
+        border-bottom: none;
+    }
+}

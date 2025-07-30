@@ -83,7 +83,7 @@ class AppearancePage extends AbstractPage {
             ->set_description( esc_html__( 'Reorder, Rename, Activate, and Deactivate menus for your vendor dashboard.', 'dokan-lite' ) );
 
         // Create a single section for all vendor capabilities
-        $dashboard_menu_section = ElementFactory::section( 'dokan_manager_section' );
+        $dashboard_menu_section = ElementFactory::sub_section( 'dokan_manager_section' );
 
         // Add the section to the page
         $dashboard_menu_section->add(
