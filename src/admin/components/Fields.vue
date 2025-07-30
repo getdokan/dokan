@@ -734,8 +734,27 @@
                 );
             },
 
+            validateCustomStoreUrl( value ) {
+                // Remove any existing validation error for this field first
+                this.validationErrors = this.validationErrors.filter( e => e.name !== 'custom_store_url' );
+
+                // Check if the value is 's' (case-insensitive)
+                if ( value && value.toLowerCase() === 's' ) {
+                    // Add validation error
+                    this.validationErrors.push({
+                        name: 'custom_store_url',
+                        error: this.__( 'The store URL "s" conflicts with WordPress search functionality. Please choose a different value like "store".', 'dokan-lite' )
+                    });
+                }
+            },
+
             inputValueHandler( name, newValue, oldValue ) {
-              this.fieldValue[ name ] = this.validateInputData( name, newValue, oldValue, this.fieldData );
+                // Add validation for the custom_store_url field
+                if ( name === 'custom_store_url' ) {
+                    this.validateCustomStoreUrl( newValue );
+                }
+
+                this.fieldValue[ name ] = this.validateInputData( name, newValue, oldValue, this.fieldData );
             },
 
             containCommonFields( type ) {
