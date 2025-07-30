@@ -45,6 +45,8 @@ const BasicInfoScreen = ( {
 
         if ( ! value ) {
             setError( __( 'Please enter a valid input', 'dokan-lite' ) );
+        } else if ( 's' === value ) {
+            setError( __( 'The store URL "s" conflicts with WordPress search functionality. Please choose a different value like "store".', 'dokan-lite' ) )
         } else {
             setError( '' );
         }

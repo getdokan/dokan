@@ -735,13 +735,13 @@
             },
 
             validateCustomStoreUrl( value ) {
-                // Remove any existing validation error for this field first
-                this.validationErrors = this.validationErrors.filter( e => e.name !== 'custom_store_url' );
+                // Emit event to remove any existing validation error for this field first
+                this.$emit('removeValidationError', 'custom_store_url');
 
-                // Check if the value is 's' (case-insensitive)
-                if ( value && value.toLowerCase() === 's' ) {
-                    // Add validation error
-                    this.validationErrors.push({
+                // Check if the value is 's' (case-sensitive)
+                if ( value && ( value === 's' ) ) {
+                    // Emit event to add validation error
+                    this.$emit('addValidationError', {
                         name: 'custom_store_url',
                         error: this.__( 'The store URL "s" conflicts with WordPress search functionality. Please choose a different value like "store".', 'dokan-lite' )
                     });

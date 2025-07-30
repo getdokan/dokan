@@ -163,6 +163,8 @@
                                             :field-value="settingValues[index]"
                                             :all-settings-values="settingValues"
                                             @openMedia="showMedia"
+                                            @addValidationError="addValidationError"
+                                            @removeValidationError="removeValidationError"
                                             :key="fieldId"
                                             :errors="errors"
                                             :validationErrors="validationErrors"
@@ -496,6 +498,11 @@
                     return false;
                 }
 
+                // Check for custom validation errors first
+                if ( this.validationErrors && this.validationErrors.length > 0 ) {
+                    return false;
+                }
+
                 allFields.forEach( ( fields, index ) => {
                     if ( section === fields ) {
                         let sectionFields = this.settingFields[fields];
@@ -565,7 +572,8 @@
                     } );
                 } );
 
-                if ( this.errors.length < 1 ) {
+                // Check both required field errors and validation errors
+                if ( this.errors.length < 1 && this.validationErrors.length < 1 ) {
                     return true;
                 }
 
@@ -576,6 +584,18 @@
                return array.filter( ( element ) => {
                    return element !== value;
                });
+            },
+
+            addValidationError( error ) {
+                // Remove any existing error for the same field first
+                this.validationErrors = this.validationErrors.filter( e => e.name !== error.name );
+                // Add the new validation error
+                this.validationErrors.push( error );
+            },
+
+            removeValidationError( fieldName ) {
+                // Remove validation error for the specified field
+                this.validationErrors = this.validationErrors.filter( e => e.name !== fieldName );
             },
 
             toggleLoadingState() {
