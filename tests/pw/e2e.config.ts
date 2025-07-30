@@ -71,7 +71,7 @@ export default defineConfig({
         /* Maximum time each navigation such as 'goto()' can take. */
         navigationTimeout: 20 * 1000,
         /* Base URL */
-        baseURL: BASE_URL ?? 'http://localhost:9999',
+        baseURL: BASE_URL ?? 'https://dokan-atutomation.test',
         /* Name of the browser that runs tests. */
         // browserName: 'chromium',
         /* Toggles bypassing page's Content-Security-Policy. */
