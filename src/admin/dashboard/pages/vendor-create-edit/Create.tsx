@@ -115,6 +115,10 @@ function Create() {
             .then( async ( response ) => {
                 await setCreateOrEditVendor( initialData );
                 await setCreateOrEditVendorErrors( [] );
+                toast( {
+                    type: 'success',
+                    title: __( 'Vendor Added Successfully.', 'dokan-lite' ),
+                } );
             } )
             .catch( async ( err ) => {
                 if ( err.message ) {

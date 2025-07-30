@@ -25,11 +25,14 @@ import { twMerge } from 'tailwind-merge';
 import DebouncedInput from '@dokan/admin/dashboard/pages/vendor-create-edit/DebouncedInput';
 import { addQueryArgs } from '@wordpress/url';
 import wpMedia from '@dokan/admin/dashboard/pages/vendor-create-edit/WpMedia';
+import { Slot } from "@wordpress/components";
+import { PluginArea } from "@wordpress/plugins";
 interface Props {
     vendor: Vendor;
     requiredFields: Record< any, any >;
+    formKey: string;
 }
-function Form( { vendor, requiredFields }: Props ) {
+function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: Props ) {
     const { setCreateOrEditVendor } = useDispatch( store );
     const errors: String[] = useSelect( ( select ) => {
         return select( store ).getCreateOrEditVendorErrors();
@@ -328,6 +331,9 @@ function Form( { vendor, requiredFields }: Props ) {
                                 />
                             </div>
                         </div>
+
+                        <Slot name={`${formKey}-after-enable-selling-permission`} />
+
                         <div className="border-b p-6 flex flex-row justify-between">
                             <div className="flex flex-col gap-1">
                                 <h3 className="text-md font-semibold">
@@ -352,6 +358,9 @@ function Form( { vendor, requiredFields }: Props ) {
                                 />
                             </div>
                         </div>
+
+                        <Slot name={`${formKey}-after-publish-product-directly-permission`} />
+
                         <div className="p-6 flex flex-row justify-between">
                             <div className="flex flex-col gap-1">
                                 <h3 className="text-md font-semibold">
@@ -376,6 +385,9 @@ function Form( { vendor, requiredFields }: Props ) {
                                 />
                             </div>
                         </div>
+
+                        <Slot name={`${formKey}-after-make-vendor-featured-permission`} />
+
                     </Card>
                 </div>
 
@@ -435,6 +447,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                 </div>
                             </div>
 
+                            <Slot name={`${formKey}-after-first-last-name-vendor-information`} />
+
                             <div>
                                 <DebouncedInput
                                     label={ __( 'Email', 'dokan-lite' ) }
@@ -469,6 +483,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                 </div>
                             </div>
 
+                            <Slot name={`${formKey}-after-email-vendor-information`} />
+
                             <div>
                                 <DebouncedInput
                                     label={ __( 'Username', 'dokan-lite' ) }
@@ -501,6 +517,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                     ) }
                                 </div>
                             </div>
+
+                            <Slot name={`${formKey}-after-username-vendor-information`} />
 
                             <div className="flex flex-row gap-2">
                                 <div className="w-full">
@@ -547,6 +565,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                 </div>
                             </div>
 
+                            <Slot name={`${formKey}-after-password-vendor-information`} />
+
                             <div>
                                 <SimpleInput
                                     label={ __( 'Phone', 'dokan-lite' ) }
@@ -574,59 +594,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                 />
                             </div>
 
-                            { /*<div>*/ }
-                            { /*    <SimpleInput*/ }
-                            { /*        label={ __( 'Company name', 'dokan-lite' ) }*/ }
-                            { /*        value=""*/ }
-                            { /*        input={ {*/ }
-                            { /*            placeholder: __(*/ }
-                            { /*                'Enter company name',*/ }
-                            { /*                'dokan-lite'*/ }
-                            { /*            ),*/ }
-                            { /*            id: 'company-name',*/ }
-                            { /*            type: 'text',*/ }
-                            { /*            required: true,*/ }
-                            { /*        } }*/ }
-                            { /*    />*/ }
-                            { /*</div>*/ }
+                            <Slot name={`${formKey}-after-phone-vendor-information`} />
 
-                            { /*<div>*/ }
-                            { /*    <SimpleInput*/ }
-                            { /*        label={ __(*/ }
-                            { /*            'Company ID/EUID number',*/ }
-                            { /*            'dokan-lite'*/ }
-                            { /*        ) }*/ }
-                            { /*        value=""*/ }
-                            { /*        input={ {*/ }
-                            { /*            placeholder: __(*/ }
-                            { /*                'Enter company ID/EUID number',*/ }
-                            { /*                'dokan-lite'*/ }
-                            { /*            ),*/ }
-                            { /*            id: 'company-id-euid',*/ }
-                            { /*            type: 'text',*/ }
-                            { /*            required: true,*/ }
-                            { /*        } }*/ }
-                            { /*    />*/ }
-                            { /*</div>*/ }
-
-                            { /*<div>*/ }
-                            { /*    <SimpleInput*/ }
-                            { /*        label={ __(*/ }
-                            { /*            'Vat / Tax number',*/ }
-                            { /*            'dokan-lite'*/ }
-                            { /*        ) }*/ }
-                            { /*        value=""*/ }
-                            { /*        input={ {*/ }
-                            { /*            placeholder: __(*/ }
-                            { /*                'Enter Vat / Tax number',*/ }
-                            { /*                'dokan-lite'*/ }
-                            { /*            ),*/ }
-                            { /*            id: 'company-vat-tax',*/ }
-                            { /*            type: 'text',*/ }
-                            { /*            required: true,*/ }
-                            { /*        } }*/ }
-                            { /*    />*/ }
-                            { /*</div>*/ }
                         </div>
                     </Card>
                 </div>
@@ -661,6 +630,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                 />
                             </div>
 
+                            <Slot name={`${formKey}-after-store-name-store-information`} />
+
                             <div>
                                 <DebouncedInput
                                     label={ __( 'Store Url', 'dokan-lite' ) }
@@ -691,20 +662,9 @@ function Form( { vendor, requiredFields }: Props ) {
                                 </div>
                             </div>
 
-                            { /*<div>*/ }
-                            { /*    <AsyncSearchableSelect*/ }
-                            { /*        label={ __(*/ }
-                            { /*            'Store category',*/ }
-                            { /*            'dokan-lite'*/ }
-                            { /*        ) }*/ }
-                            { /*        placeholder={ __(*/ }
-                            { /*            'Select category',*/ }
-                            { /*            'dokan-lite'*/ }
-                            { /*        ) }*/ }
-                            { /*        required={ isRequired( 'category' ) }*/ }
-                            { /*        errors={ getError( 'store_url' ) }*/ }
-                            { /*    />*/ }
-                            { /*</div>*/ }
+                            <Slot
+                                name={ `${ formKey }-after-store-url-store-information` }
+                            />
 
                             <div>
                                 <label
@@ -764,6 +724,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                     </div>
                                 </div>
                             </div>
+
+                            <Slot name={`${formKey}-after-store-logo-store-information`} />
 
                             <div>
                                 <div className="flex flex-row justify-between">
@@ -853,6 +815,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                     ) }
                                 </div>
                             </div>
+
+                            <Slot name={`${formKey}-after-banner-store-information`} />
                         </div>
                     </Card>
                 </div>
@@ -889,6 +853,9 @@ function Form( { vendor, requiredFields }: Props ) {
                                     } }
                                 />
                             </div>
+
+                            <Slot name={`${formKey}-after-country-address-information`} />
+
                             <div>
                                 { getStatesFromCountryCode(
                                     vendor?.address?.country
@@ -939,6 +906,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                 ) }
                             </div>
 
+                            <Slot name={`${formKey}-after-state-address-information`} />
+
                             <div>
                                 <SimpleInput
                                     label={ __( 'City', 'dokan-lite' ) }
@@ -961,6 +930,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                     errors={ getError( 'city' ) }
                                 />
                             </div>
+
+                            <Slot name={`${formKey}-after-city-address-information`} />
 
                             <div>
                                 <SimpleInput
@@ -988,6 +959,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                 />
                             </div>
 
+                            <Slot name={`${formKey}-after-street-1-address-information`} />
+
                             <div>
                                 <SimpleInput
                                     label={ __(
@@ -1014,6 +987,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                 />
                             </div>
 
+                            <Slot name={`${formKey}-after-street-2-address-information`} />
+
                             <div>
                                 <SimpleInput
                                     label={ __( 'Zip', 'dokan-lite' ) }
@@ -1036,6 +1011,8 @@ function Form( { vendor, requiredFields }: Props ) {
                                     errors={ getError( 'zip' ) }
                                 />
                             </div>
+
+                            <Slot name={`${formKey}-after-zip-address-information`} />
                         </div>
                     </Card>
                 </div>
@@ -1059,7 +1036,11 @@ function Form( { vendor, requiredFields }: Props ) {
                         errors={ getError( 'show_email' ) }
                     />
                 </div>
+
+                <Slot name={`${formKey}-after-send-email`} />
             </div>
+
+            <PluginArea scope={ `dokan-admin-dashboard-vendor-form-${formKey}` } />
         </>
     );
 }
