@@ -17,6 +17,7 @@ import DokanDoubleTextField from './DokanDoubleTextField';
 import DokanTextField from './DokanTextField';
 import DokanRadioCapsule from './DokanRadioCapsule';
 import DokanSelect from './DokanSelect';
+import DokanMenuManager from './DokanMenuManager';
 
 const FieldParser = ( {
     element,
@@ -190,6 +191,16 @@ const FieldParser = ( {
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
+                />
+            );
+
+        case 'menu_manager':
+            return (
+                <DokanMenuManager
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
                 />
             );
 

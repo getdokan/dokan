@@ -9,6 +9,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CombineInput;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Currency;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\DoubleTextField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\InfoField;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\MenuManager;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\MultiCheck;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Number;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Password;
@@ -65,9 +66,10 @@ class Field extends SettingsElement {
 		'currency'                  => Currency::class,
 		'combine_input'             => CombineInput::class,
 		'category_based_commission' => CategoryBasedCommission::class,
-        'radio_capsule' => RadioCapsule::class, // Assuming RadioCapsule extends Radio
-        'info'        => InfoField::class,
-        'double_text' => DoubleTextField::class,
+        'radio_capsule'             => RadioCapsule::class, // Assuming RadioCapsule extends Radio
+        'info'                      => InfoField::class,
+        'double_text'               => DoubleTextField::class,
+        'menu_manager'              => MenuManager::class,
 	);
 
 	/**
@@ -98,7 +100,7 @@ class Field extends SettingsElement {
 	public function populate(): array {
 		$data            = parent::populate();
 		$data['variant'] = $this->input_type;
-        error_log( 'Field type: ' . $this->input_type ); // Debugging line to check the input type
+//        error_log( 'Field type: ' . $this->input_type ); // Debugging line to check the input type
 		$data['value'] = $this->escape_element( $this->get_value() );
 
 		return $data;
@@ -124,7 +126,14 @@ class Field extends SettingsElement {
 	 * @return SettingsElement
 	 */
 	private function input_map( string $id, string $input_type ): SettingsElement {
-		$class_name = $this->field_map[ $input_type ] ?? $this->field_map['text'];
+        $field_map = apply_filters(
+            'dokan_admin_setup_guide_field_map',
+            $this->field_map,
+            $id,
+            $input_type
+        );
+
+		$class_name = $field_map[ $input_type ] ?? $field_map['text'];
 
         /**
          * Filters for setup guide field mapper.
