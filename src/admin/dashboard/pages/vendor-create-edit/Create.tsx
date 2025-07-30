@@ -3,11 +3,6 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import store from '../../../../stores/vendors';
 import { useEffect } from '@wordpress/element';
 import {
-    AsyncSearchableSelect,
-    Card,
-    SimpleCheckbox,
-    SimpleInput,
-    ToggleSwitch,
     useToast,
 } from '@getdokan/dokan-ui';
 import { DokanButton, DokanLink } from '@dokan/components';
@@ -15,13 +10,7 @@ import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { applyFilters } from '@wordpress/hooks';
 import {
-    CheckCircle,
     ChevronLeft,
-    CircleX,
-    Mail,
-    Trash,
-    Upload,
-    Pencil,
 } from 'lucide-react';
 
 function Create() {
