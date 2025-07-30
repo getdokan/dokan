@@ -7,6 +7,7 @@ export { default as DokanSelect } from './DokanSelect';
 export { default as List } from './DokanList/List';
 export { default as DokanFileUpload } from './DokanFileUpload';
 export { default as DokanFieldLabel } from './DokanFieldLabel';
+export { default as DokanBaseFieldLabel } from './DokanFieldLabel';
 export { default as SocialButton } from './SocialButton';
 export { default as TextField } from './TextField';
 export { default as DokanTextArea } from './DokanTextArea';

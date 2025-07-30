@@ -15,7 +15,7 @@ const Section = ( {
         <section aria-labelledby="settings-section-heading" key={ element.id }>
             <div
                 className={ `flex flex-col
-                           divide-y border border-[#E9E9E9]  divide-gray-200'
+                           divide-y border border-[#E9E9E9] rounded  divide-gray-200'
                     ` }
             >
                 { element.title && (

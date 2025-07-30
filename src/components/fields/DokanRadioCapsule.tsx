@@ -105,7 +105,7 @@ const DokanRadioCapsule = ( {
                     className={ twMerge(
                         `px-5 py-3 text-sm font-semibold flex gap-[10px] items-center border
                          transition-colors duration-150 ease-in-out
-                         focus:outline-none focus:ring-2 focus:ring-dokan-btn focus:ring-offset-2
+                         focus:!outline-none 
                          ${ index === 0 && 'rounded-l-md' }
                          ${ index === options.length - 1 && 'rounded-r-md' }
                          ${

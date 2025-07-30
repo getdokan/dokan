@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Admin\Settings\Elements;
 
 use WeDevs\Dokan\Abstracts\SettingsElement;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\BaseFieldLabel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Checkbox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CategoryBasedCommission;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CombineInput;
@@ -15,10 +16,12 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Password;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Radio;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioBox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioCapsule;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\RefreshSelectField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Select;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Text;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\CustomizeRadio;
 
 /**
  * Settings element Field.
@@ -56,6 +59,7 @@ class Field extends SettingsElement {
 		'number'                    => Number::class,
 		'checkbox'                  => Checkbox::class,
 		'select'                    => Select::class,
+        'refresh_select'   => RefreshSelectField::class,
 		'radio'                     => Radio::class,
 		'tel'                       => Tel::class,
 		'password'                  => Password::class,
@@ -65,9 +69,11 @@ class Field extends SettingsElement {
 		'currency'                  => Currency::class,
 		'combine_input'             => CombineInput::class,
 		'category_based_commission' => CategoryBasedCommission::class,
-        'radio_capsule' => RadioCapsule::class, // Assuming RadioCapsule extends Radio
-        'info'        => InfoField::class,
-        'double_text' => DoubleTextField::class,
+        'radio_capsule'    => RadioCapsule::class,
+        'info'             => InfoField::class,
+        'double_text'      => DoubleTextField::class,
+        'base_field_label' => BaseFieldLabel::class,
+        'customize_radio'  => CustomizeRadio::class,
 	);
 
 	/**

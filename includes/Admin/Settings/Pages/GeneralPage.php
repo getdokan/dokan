@@ -117,9 +117,9 @@ class GeneralPage extends AbstractPage {
                     )
                     ->add(
                         ElementFactory::field( 'double_text', 'double_text' )
-                                      ->set_label( __( 'Double Text Field Example', 'dokan-lite' ) )
-                                      ->set_first_value( 'Example First Value' )
-                                      ->set_second_value( 'Example Second Value' )
+                            ->set_label( __( 'Double Text Field Example', 'dokan-lite' ) )
+                            ->set_first_value( 'Example First Value' )
+                            ->set_second_value( 'Example Second Value' )
                     )
                 )
             )
@@ -130,6 +130,54 @@ class GeneralPage extends AbstractPage {
                 ElementFactory::sub_page( 'location' )
                 ->set_title( __( 'Location', 'dokan-lite' ) )
                 ->set_description( __( 'Configure the location for your marketplace.', 'dokan-lite' ) )
+                    ->add(
+                        ElementFactory::section( 'location_display' )
+                                      ->set_title( __( 'Location Display', 'dokan-lite' ) )
+                                      ->set_description( __( 'Configure how location information is displayed in your marketplace.', 'dokan-lite' ) )
+                                      ->add(
+                                          ElementFactory::field( 'location_display_mode', 'customize_radio' )
+                                                        ->set_title( __( 'Location Display Mode', 'dokan-lite' ) )
+                                                        ->set_description( __( 'Choose how location information should be displayed to customers.', 'dokan-lite' ) )
+                                                        ->add_enhanced_option(
+                                                            __( 'Map View', 'dokan-lite' ),
+                                                            'map',
+                                                            __( 'Display locations using interactive maps', 'dokan-lite' )
+                                                        )
+                                                        ->add_enhanced_option(
+                                                            __( 'List View', 'dokan-lite' ),
+                                                            'list',
+                                                            __( 'Display locations as a simple list', 'dokan-lite' )
+                                                        )
+                                                        ->set_default( 'map' )
+                                      )
+                                      ->add(
+                                          ElementFactory::field( 'location_template_style', 'customize_radio' )
+                                                        ->set_title( __( 'Location Template Style', 'dokan-lite' ) )
+                                                        ->set_description( __( 'Select the template style for location pages.', 'dokan-lite' ) )
+                                                        ->add_enhanced_option(
+                                                            __( 'Classic Template', 'dokan-lite' ),
+                                                            'classic',
+                                                            __( 'Traditional layout with standard styling', 'dokan-lite' ),
+                                                            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><rect x="7" y="8" width="10" height="2" stroke="currentColor" stroke-width="2"/><rect x="7" y="12" width="6" height="2" stroke="currentColor" stroke-width="2"/></svg>',
+                                                            'http://dokan-dev.test/wp-content/uploads/2025/07/Group-1000006638.png',
+                                                            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>'
+                                                        )
+                                                        ->add_enhanced_option(
+                                                            __( 'Modern Template', 'dokan-lite' ),
+                                                            'modern',
+                                                            __( 'Contemporary design with enhanced features', 'dokan-lite' ),
+                                                            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="4" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>'
+                                                        )
+                                                        ->add_enhanced_option(
+                                                            __( 'Minimal Template', 'dokan-lite' ),
+                                                            'minimal',
+                                                            __( 'Clean and simple design approach', 'dokan-lite' ),
+                                                            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="5" y="6" width="14" height="12" rx="1" stroke="currentColor" stroke-width="2"/><path d="M9 10h6M9 14h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+                                                        )
+                                                        ->set_default( 'modern' )
+                                                        ->set_variant( 'card' )
+                                      )
+                    )
             );
     }
 }

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from '@wordpress/element';
 import { debounce } from '@wordpress/compose';
-import { useSelect } from '@wordpress/data';
+import { dispatch, useSelect } from '@wordpress/data';
 import { SETTINGS_STORE } from '../../../../../../../stores/adminSettings';
 import CommissionHeader from './CommissionHeader';
 import CategoryRow from './CategoryRow';
@@ -59,10 +59,11 @@ export const getSettingById = (
     return getSettingInChildren( id, settings );
 };
 
-const CategoryBasedCommission = ( {
-    element,
-    onValueChange,
-}: SettingsProps ) => {
+const CategoryBasedCommission = ( { element }: SettingsProps ) => {
+    const onValueChange = useCallback( ( updatedElement: SettingsElement ) => {
+        // Dispatch the value change to the settings store
+        dispatch( SETTINGS_STORE ).updateSettingsValue( updatedElement );
+    }, [] );
     // Initialize commission state with proper memoization
     const initialCommission = useMemo( (): CommissionValues => {
         const commissionValues = element?.value || {};

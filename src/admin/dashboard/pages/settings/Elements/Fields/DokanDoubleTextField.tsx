@@ -4,6 +4,8 @@ import {
 } from '../../../../../../components/fields';
 import { SettingsElement } from '../../types';
 import { twMerge } from 'tailwind-merge';
+import { dispatch } from '@wordpress/data';
+import settingsStore from '../../../../../../stores/adminSettings';
 
 interface DokanDoubleTextFieldElement extends SettingsElement {
     label: string;
@@ -26,6 +28,11 @@ const DokanDoubleTextField = ( {
     if ( ! element.display ) {
         return null;
     }
+
+    const onValueChange = ( updatedElement ) => {
+        // Dispatch the updated value to the settings store
+        dispatch( settingsStore ).updateSettingsValue( updatedElement );
+    };
     return (
         <div
             className={ twMerge(
@@ -42,7 +49,12 @@ const DokanDoubleTextField = ( {
             <div className="flex gap-6 ">
                 <TextField
                     value={ String( element.firstValue ) }
-                    onChange={ () => {} }
+                    onChange={ () =>
+                        onValueChange( {
+                            ...element,
+                            firstValue: element.firstValue,
+                        } )
+                    }
                     label={ element.firstLabel }
                     disabled
                     prefix={ element.firstPrefix }
@@ -51,7 +63,12 @@ const DokanDoubleTextField = ( {
 
                 <TextField
                     value={ String( element.secondValue ) }
-                    onChange={ () => {} }
+                    onChange={ () =>
+                        onValueChange( {
+                            ...element,
+                            secondValue: element.secondValue,
+                        } )
+                    }
                     label={ element.secondLabel }
                     disabled
                     prefix={ element.secondPrefix }
