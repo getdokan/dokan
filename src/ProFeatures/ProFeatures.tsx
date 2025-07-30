@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import fcmImg from './assets/FCM.png';
 import aerImg from './assets/AER.png';
 import awdImg from './assets/AWD.png';
@@ -92,8 +92,27 @@ function PricingSection() {
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
             The Packages We Provide
           </h2>
-          <p className="text-gray-600 mb-6">
-            Get 20% instant off in all packages with coupon code <span className="font-semibold">LITEUPGRADE20</span>
+          <p 
+            className="text-gray-600 mb-6"
+            style={{
+              fontWeight: 400,
+              fontSize: '16px',
+              lineHeight: '140%',
+              letterSpacing: '0%',
+              textAlign: 'center'
+            }}
+          >
+            Get 20% instant off in all packages with coupon code <span 
+              style={{
+                fontWeight: 600,
+                fontSize: '16px',
+                lineHeight: '140%',
+                letterSpacing: '0%',
+                textAlign: 'center'
+              }}
+            >
+              LITEUPGRADE20
+            </span>
           </p>
 
           {/* Toggle Switch */}
@@ -101,26 +120,28 @@ function PricingSection() {
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setIsAnnual(true)}
-                className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
-                  isAnnual ? 'bg-[#7047EB] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`px-6 py-2 rounded text-sm font-medium transition-all ${isAnnual ? 'bg-[#7047EB] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                  }`}
               >
                 Annual
               </button>
               <button
                 onClick={() => setIsAnnual(false)}
-                className={`px-6 py-2 rounded-md text-sm font-medium transition-all ${
-                  !isAnnual ? 'bg-[#7047EB] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`px-6 py-2 rounded text-sm font-medium transition-all ${!isAnnual ? 'bg-[#7047EB] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                  }`}
               >
                 Lifetime
               </button>
             </div>
-            {!isAnnual && (
-              <span className="ml-4 text-sm text-[#7047EB] bg-[#f3efff] px-3 py-1 rounded-full">
-                Save More 20%
-              </span>
-            )}
+            <span 
+              className={`ml-4 text-sm px-3 py-1 rounded-full transition-all duration-300 ${
+                !isAnnual 
+                  ? 'text-[#7047EB] bg-[#f3efff] opacity-100' 
+                  : 'text-[#7047EB] bg-[#f3efff] opacity-60'
+              }`}
+            >
+              Save More 20%
+            </span>
           </div>
         </div>
 
@@ -131,12 +152,11 @@ function PricingSection() {
             <div className="space-y-6">
               {pricingPlans.map((plan, index) => (
                 <div key={index} className="max-w-sm mx-auto">
-                  <div 
-                    className={`${
-                      plan.isPopular
-                        ? 'border-2 border-[#7047EB] shadow-lg'
-                        : 'border border-gray-200'
-                    } rounded-xl bg-white`}
+                  <div
+                    className={`${plan.isPopular
+                      ? 'border-2 border-[#7047EB] shadow-lg'
+                      : 'border border-gray-200'
+                      } rounded bg-white`}
                     style={{
                       background: plan.name === 'Starter' || plan.name === 'Business'
                         ? 'linear-gradient(214.33deg, rgba(234, 248, 255, 0.7) 3.79%, #FFFFFF 60.72%)'
@@ -175,7 +195,7 @@ function PricingSection() {
                       </div>
 
                       {/* Buy Now Button */}
-                      <button className="w-full bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[28px] text-xs font-semibold">
+                      <button className="w-full bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
                         Buy Now
                       </button>
                     </div>
@@ -191,12 +211,11 @@ function PricingSection() {
               <div className="grid grid-cols-2 gap-4 justify-items-center">
                 {pricingPlans.map((plan, index) => (
                   <div key={index} className="w-[320px] h-[313px]">
-                    <div 
-                      className={`w-full h-full ${
-                        plan.isPopular
-                          ? 'border-2 border-[#7047EB] shadow-lg'
-                          : 'border border-gray-200'
-                      } rounded-xl bg-white`}
+                    <div
+                      className={`w-full h-full ${plan.isPopular
+                        ? 'border-2 border-[#7047EB] shadow-lg'
+                        : 'border border-gray-200'
+                        } rounded bg-white`}
                       style={{
                         background: plan.name === 'Starter' || plan.name === 'Business'
                           ? 'linear-gradient(214.33deg, rgba(234, 248, 255, 0.7) 3.79%, #FFFFFF 60.72%)'
@@ -235,7 +254,7 @@ function PricingSection() {
                         </div>
 
                         {/* Buy Now Button */}
-                        <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[28px] text-xs font-semibold">
+                        <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
                           Buy Now
                         </button>
                       </div>
@@ -251,12 +270,11 @@ function PricingSection() {
             <div className="grid grid-cols-4 gap-6 max-w-6xl mx-auto">
               {pricingPlans.map((plan, index) => (
                 <div key={index}>
-                  <div 
-                    className={`h-full ${
-                      plan.isPopular
-                        ? 'border-2 border-[#7047EB] shadow-lg'
-                        : 'border border-gray-200'
-                    } rounded-xl bg-white`}
+                  <div
+                    className={`h-full ${plan.isPopular
+                      ? 'border-2 border-[#7047EB] shadow-lg'
+                      : 'border border-gray-200'
+                      } rounded bg-white`}
                     style={{
                       background: plan.name === 'Starter' || plan.name === 'Business'
                         ? 'linear-gradient(214.33deg, rgba(234, 248, 255, 0.7) 3.79%, #FFFFFF 60.72%)'
@@ -295,7 +313,7 @@ function PricingSection() {
                       </div>
 
                       {/* Buy Now Button */}
-                      <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[28px] text-xs font-semibold">
+                      <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
                         Buy Now
                       </button>
                     </div>
@@ -511,17 +529,106 @@ const testimonials = [
 
 function DokanMarketplaceUI() {
   const [activeTab, setActiveTab] = useState('Marketplace');
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const scroll = (direction: 'left' | 'right') => {
+  const checkScrollability = () => {
     if (scrollRef.current) {
-      const scrollAmount = 300;
-      scrollRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      const hasOverflow = scrollWidth > clientWidth + 1; // Adding small buffer for precision
+      
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(hasOverflow && scrollLeft < scrollWidth - clientWidth - 5);
     }
   };
+
+  const scrollToNextCard = (direction: 'left' | 'right') => {
+    if (isScrolling || !scrollRef.current) return;
+    
+    setIsScrolling(true);
+    // Calculate card width based on active tab
+    const cardWidth = activeTab === 'Marketplace' ? 274.51 + 24 : 220 + 24; // Card width + gap (24px from gap-6)
+    const scrollAmount = direction === 'right' ? cardWidth : -cardWidth;
+    
+    // Custom smooth scrolling animation
+    const startScrollLeft = scrollRef.current.scrollLeft;
+    const targetScrollLeft = startScrollLeft + scrollAmount;
+    const duration = 400; // Longer duration for more noticeable smoothness
+    const startTime = performance.now();
+    
+    const animateScroll = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function for smooth animation (ease-out)
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      
+      if (scrollRef.current) {
+        scrollRef.current.scrollLeft = startScrollLeft + (scrollAmount * easeOut);
+      }
+      
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      } else {
+        // Animation complete
+        setIsScrolling(false);
+        checkScrollability();
+      }
+    };
+    
+    requestAnimationFrame(animateScroll);
+  };
+
+  const handleScrollClick = (direction: 'left' | 'right') => {
+    if (isScrolling) return;
+    scrollToNextCard(direction);
+  };
+
+  // Reset and check when tab changes
+  useEffect(() => {
+    // Clear any ongoing scroll
+    setIsScrolling(false);
+    setCanScrollLeft(false);
+    setCanScrollRight(false);
+    
+    // Reset scroll position
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = 0;
+    }
+    
+    // Check scrollability after content renders - multiple attempts with increasing delays
+    setTimeout(() => checkScrollability(), 100);
+    setTimeout(() => checkScrollability(), 300);
+    setTimeout(() => checkScrollability(), 600);
+    setTimeout(() => checkScrollability(), 1000);
+    
+  }, [activeTab]);
+
+  // Initial setup
+  useEffect(() => {
+    // Force a recheck after component mounts
+    const checkAfterMount = () => {
+      setTimeout(() => checkScrollability(), 200);
+      setTimeout(() => checkScrollability(), 500);
+      setTimeout(() => checkScrollability(), 1000);
+      setTimeout(() => checkScrollability(), 1500);
+    };
+    
+    checkAfterMount();
+    
+    // Add window resize listener
+    const handleResize = () => {
+      setTimeout(() => checkScrollability(), 100);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const data = activeTab === 'Marketplace' ? marketplaces : testimonials;
 
@@ -546,29 +653,48 @@ function DokanMarketplaceUI() {
 
       {/* Title */}
       <div className="text-center mb-4">
-        <h2 className="text-2xl md:text-3xl font-semibold inline-block">
+        <h2 
+          className="inline-block"
+          style={{
+            fontWeight: 700,
+            fontSize: '24px',
+            lineHeight: '130%',
+            letterSpacing: '0%',
+            textAlign: 'center'
+          }}
+        >
           {activeTab === 'Marketplace'
             ? 'Dokan Powered Marketplace Across the Globe'
             : 'Great People, Great Minds Choose Dokan'}
         </h2>
       </div>
 
-      {/* Scroll Buttons - Updated positioning */}
+      {/* Scroll Buttons */}
       <div className="flex md:justify-end mb-6">
-        <div className="flex space-x-2 mx-auto md:mx-0"> {/* Center on mobile, right-aligned on desktop */}
+        <div className="flex space-x-2 mx-auto md:mx-0">
           <button
-            onClick={() => scroll('left')}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
+            onClick={() => handleScrollClick('left')}
+            disabled={!canScrollLeft || isScrolling}
+            className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${
+              canScrollLeft && !isScrolling
+                ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
+                : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
+            }`}
             aria-label="Scroll left"
           >
-            <MoveLeft className="w-4 h-4" />
+            <span className="text-lg font-bold">&lt;</span>
           </button>
           <button
-            onClick={() => scroll('right')}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
+            onClick={() => handleScrollClick('right')}
+            disabled={!canScrollRight || isScrolling}
+            className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${
+              canScrollRight && !isScrolling
+                ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
+                : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
+            }`}
             aria-label="Scroll right"
           >
-            <MoveRight className="w-4 h-4" />
+            <span className="text-lg font-bold">&gt;</span>
           </button>
         </div>
       </div>
@@ -577,17 +703,18 @@ function DokanMarketplaceUI() {
       <div className="relative">
         <div
           ref={scrollRef}
-          className="overflow-x-auto flex gap-6 px-6 pb-2 scroll-smooth snap-x scrollbar-hide"
+          className="overflow-x-auto flex gap-6 px-6 pb-2 scrollbar-hide"
           style={{
-            scrollSnapType: 'x mandatory',
+            scrollBehavior: 'auto', // Removed 'smooth' to prevent conflicts
             WebkitOverflowScrolling: 'touch',
             msOverflowStyle: '-ms-autohiding-scrollbar'
           }}
+          onScroll={checkScrollability} // Add scroll event listener
         >
           {data.map((item, index) => (
             <div
-              key={index}
-              className="snap-start shrink-0"
+              key={`${activeTab}-${index}`}
+              className="flex-shrink-0" // Changed from snap-start shrink-0
             >
               {activeTab === 'Marketplace' ? (
                 <MarketplaceCard item={item} />
@@ -743,16 +870,10 @@ const FeatureComparison: React.FC = () => {
                   `}
                   style={{
                     fontFamily: 'Inter, sans-serif',
-                    fontSize: '12px',
-                    fontWeight: 600,
+                    fontSize: '15px',
+                    fontWeight: 700,
                     lineHeight: '130%',
-                    letterSpacing: '0%',
-                    '@media (min-width: 768px)': {
-                      fontSize: '18px',
-                      fontWeight: 700,
-                      lineHeight: '130%',
-                      letterSpacing: '0%'
-                    }
+                    letterSpacing: '0%'
                   }}
                 >
                   {category.title}
@@ -766,13 +887,37 @@ const FeatureComparison: React.FC = () => {
             <div className="min-w-full">
               {/* Header */}
               <div className="grid grid-cols-3">
-                <div className="px-4 py-3 text-xs md:text-base font-medium text-gray-900">
+                <div
+                  className="px-4 py-3 text-gray-900"
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '15px',
+                    lineHeight: '130%',
+                    letterSpacing: '0%'
+                  }}
+                >
                   Features
                 </div>
-                <div className="px-4 py-3 text-xs md:text-base font-medium text-gray-900 text-center bg-gray-50">
+                <div
+                  className="px-4 py-3 text-gray-900 text-center bg-gray-50"
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '15px',
+                    lineHeight: '130%',
+                    letterSpacing: '0%'
+                  }}
+                >
                   Lite
                 </div>
-                <div className="px-4 py-3 text-xs md:text-base font-medium text-gray-900 text-center bg-gray-50">
+                <div
+                  className="px-4 py-3 text-gray-900 text-center bg-gray-50"
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '15px',
+                    lineHeight: '130%',
+                    letterSpacing: '0%'
+                  }}
+                >
                   Pro
                 </div>
               </div>
@@ -832,13 +977,12 @@ const FeatureComparison: React.FC = () => {
 
 function DokanAIBanner() {
   return (
-    <div className="relative w-[349px] h-[218px] md:w-full md:h-[280px] rounded-2xl overflow-hidden">
+    <div className="mt-15 relative h-[218px] md:w-full md:h-[280px] rounded overflow-hidden">
       {/* Mobile Background Image - visible on mobile only */}
       <img
         src={dokanAiBannerMobile}
         alt="Dokan AI Banner Mobile"
         className="block md:hidden object-cover"
-        style={{ width: '349px', height: '218px' }}
         draggable={false}
       />
 
@@ -932,13 +1076,12 @@ function WhySettle() {
       <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">Why Settle? Get More with Dokan PRO!</h2>
 
       {/* Modules Banner with Responsive Images */}
-      <div className="relative rounded-2xl overflow-hidden mb-6 md:mb-10 min-h-[150px] md:min-h-[180px]">
+      <div className="relative rounded overflow-hidden mb-6 md:mb-10">
         {/* Mobile Image - visible on mobile only */}
         <img
           src={moduleBannerMobile}
           alt="42+ Modules"
-          className="w-full h-full object-cover absolute inset-0 block md:hidden"
-          style={{ minHeight: 150, maxHeight: 150 }}
+          className="w-full h-auto object-contain block md:hidden"
           draggable={false}
         />
 
@@ -946,8 +1089,7 @@ function WhySettle() {
         <img
           src={moduleBannerTablet}
           alt="42+ Modules"
-          className="w-full h-full object-cover absolute inset-0 hidden md:block lg:hidden"
-          style={{ minHeight: 180, maxHeight: 180 }}
+          className="w-full h-auto object-contain hidden md:block lg:hidden"
           draggable={false}
         />
 
@@ -955,33 +1097,33 @@ function WhySettle() {
         <img
           src={moduleBanner}
           alt="42+ Modules"
-          className="w-full h-full object-cover absolute inset-0 hidden lg:block"
-          style={{ minHeight: 200, maxHeight: 200 }}
+          className="w-full h-auto object-contain hidden lg:block"
           draggable={false}
         />
 
-        <div className="relative z-10 flex flex-col justify-center h-full px-4 py-6 md:px-8 md:py-8">
-          {/* Mobile Text Layout */}
-          <div className="block md:hidden">
-            <h3 className="text-white mb-2 font-bold" style={{
-              fontSize: '18px',
-              lineHeight: '130%',
-              letterSpacing: '0%'
-            }}>
-              42+ Modules
-            </h3>
-            <p className="text-white max-w-xs" style={{
-              fontSize: '12px',
-              lineHeight: '140%',
-              letterSpacing: '0%',
-              fontWeight: '400'
-            }}>
-              Access an extensive range of modules designed to enhance both admin and vendor experiences.
-            </p>
-          </div>
+        {/* Mobile Text Overlay - positioned at top */}
+        <div className="absolute top-0 left-0 right-0 px-4 py-4 md:hidden">
+          <h3 className="text-white mb-2 font-bold" style={{
+            fontSize: '18px',
+            lineHeight: '130%',
+            letterSpacing: '0%'
+          }}>
+            42+ Modules
+          </h3>
+          <p className="text-white max-w-xs" style={{
+            fontSize: '12px',
+            lineHeight: '140%',
+            letterSpacing: '0%',
+            fontWeight: '400'
+          }}>
+            Access an extensive range of modules designed to enhance both admin and vendor experiences.
+          </p>
+        </div>
 
+        {/* Tablet and Desktop Text Overlay - centered */}
+        <div className="absolute inset-0 hidden md:flex flex-col justify-center px-8 py-8">
           {/* Tablet Text Layout with Custom Line Breaks */}
-          <div className="hidden md:block lg:hidden">
+          <div className="block lg:hidden">
             <h3 className="text-3xl font-bold text-white mb-2">42+ Modules</h3>
             <p className="text-white text-base max-w-xs">
               Access an extensive range of modules<br />
@@ -1008,7 +1150,17 @@ function WhySettle() {
               <img src={feature.icon} alt={feature.title} className="w-[36px] h-[36px] object-contain" />
             </div>
             <div>
-              <h4 className="text-base md:text-lg font-semibold mb-2">{feature.title}</h4>
+              <h4
+                className="mb-2"
+                style={{
+                  fontWeight: 700,
+                  fontSize: '18px',
+                  lineHeight: '130%',
+                  letterSpacing: '0%'
+                }}
+              >
+                {feature.title}
+              </h4>
               <p className="text-gray-600 text-sm">{feature.description}</p>
             </div>
           </div>
@@ -1028,7 +1180,7 @@ function ExceptionalFeatures() {
     {
       icon: aerImg,
       title: 'Admin & Earning Reports',
-      description: 'Track daily, yearly, and vendor-specific earnings from a single dashboard.',
+      description: 'Track daily, yearly, and vendor specific earnings from a single dashboard.',
     },
     {
       icon: iaImg,
@@ -1072,6 +1224,26 @@ function ExceptionalFeatures() {
   );
 }
 
+const CustomCheckIcon = () => (
+  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
+    <circle 
+      cx="12" 
+      cy="12" 
+      r="8.5" 
+      stroke="#7047EB" 
+      strokeWidth="1.33"
+      fill="none"
+    />
+    <path 
+      d="M8 12l3 3 5-6" 
+      stroke="#7047EB" 
+      strokeWidth="1.33" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 function GuaranteeSection() {
   return (
     <div className="w-full max-w-7xl mx-auto pt-10 pb-10" style={{ fontFamily: 'Inter, sans-serif' }}>
@@ -1083,8 +1255,8 @@ function GuaranteeSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex items-start space-x-4">
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <Check className="w-6 h-6 text-purple-600" />
+            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-start justify-center pt-3 flex-shrink-0">
+              <CustomCheckIcon />
             </div>
             <div>
               <h4 className="text-[14px] font-semibold text-gray-600 mb-2">
@@ -1097,8 +1269,8 @@ function GuaranteeSection() {
           </div>
 
           <div className="flex items-start space-x-4">
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <Check className="w-6 h-6 text-purple-600" />
+            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-start justify-center pt-3 flex-shrink-0">
+              <CustomCheckIcon />
             </div>
             <div>
               <h4 className="text-[14px] font-semibold text-gray-600 mb-2">
@@ -1111,8 +1283,8 @@ function GuaranteeSection() {
           </div>
 
           <div className="flex items-start space-x-4">
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <Check className="w-6 h-6 text-purple-600" />
+            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-start justify-center pt-3 flex-shrink-0">
+              <CustomCheckIcon />
             </div>
             <div>
               <h4 className="text-[14px] font-semibold text-gray-600 mb-2">
@@ -1134,7 +1306,7 @@ function ScaleMarketplaceBanner() {
     <div className="w-[349px] md:w-full mx-auto">
       {/* Mobile Banner */}
       <div
-        className="md:hidden relative rounded-2xl overflow-hidden"
+        className="md:hidden relative rounded overflow-hidden"
         style={{
           width: '349px',
           height: '218px',
@@ -1221,7 +1393,7 @@ function ScaleMarketplaceBanner() {
         }}
       >
         <div className="flex flex-col justify-center z-10 max-w-2xl">
-          <h2 className="text-4xl font-bold mb-4 leading-tight text-white drop-shadow-lg">
+          <h2 className="text-3xl font-bold mb-4 leading-tight text-white drop-shadow-lg">
             Ready to Scale Your Marketplace?
           </h2>
           <p className="text-lg text-white/90 drop-shadow">
@@ -1247,21 +1419,67 @@ function ScaleMarketplaceBanner() {
 }
 
 function ProFeatures() {
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [isScrolling, setIsScrolling] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const scroll = (direction: 'left' | 'right') => {
+  const checkScrollability = () => {
     if (scrollRef.current) {
-      const scrollAmount = 300;
-      scrollRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5); // Adding small buffer
     }
   };
 
+  const scrollToNextCard = (direction: 'left' | 'right') => {
+    if (isScrolling || !scrollRef.current) return;
+    
+    setIsScrolling(true);
+    const cardWidth = 258 + 24; // Card width (258px) + gap (24px from space-x-6)
+    const scrollAmount = direction === 'right' ? cardWidth : -cardWidth;
+    
+    // Custom smooth scrolling animation
+    const startScrollLeft = scrollRef.current.scrollLeft;
+    const targetScrollLeft = startScrollLeft + scrollAmount;
+    const duration = 400; // Longer duration for more noticeable smoothness
+    const startTime = performance.now();
+    
+    const animateScroll = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function for smooth animation (ease-out)
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      
+      if (scrollRef.current) {
+        scrollRef.current.scrollLeft = startScrollLeft + (scrollAmount * easeOut);
+      }
+      
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      } else {
+        // Animation complete
+        setIsScrolling(false);
+        checkScrollability();
+      }
+    };
+    
+    requestAnimationFrame(animateScroll);
+  };
+
+  const handleScrollClick = (direction: 'left' | 'right') => {
+    if (isScrolling) return;
+    scrollToNextCard(direction);
+  };
+
+  useEffect(() => {
+    checkScrollability();
+  }, []);
+
   return (
     <div
-      className="p-6 space-y-6"
+      className="space-y-6"
       style={{
         touchAction: 'pan-x pan-y',
         WebkitTouchCallout: 'none',
@@ -1271,25 +1489,25 @@ function ProFeatures() {
       }}
     >
       {/* Hero Banner */}
-      <div className="relative min-h-[150px] md:min-h-[304px] lg:h-[350px] rounded-2xl overflow-hidden flex items-center">
+      <div className="relative min-h-[150px] md:min-h-[304px] lg:h-[350px] rounded overflow-hidden flex items-center">
         {/* Mobile Banner */}
-        <div 
+        <div
           className="absolute inset-0 md:hidden"
           style={{
             background: `url(${unlockBannerMobile}) center center / cover no-repeat`,
           }}
         />
-        
+
         {/* Tablet Banner */}
-        <div 
+        <div
           className="absolute inset-0 hidden md:block lg:hidden"
           style={{
             background: `url(${unlockBannerTablet}) center center / cover no-repeat`,
           }}
         />
-        
+
         {/* Desktop Banner */}
-        <div 
+        <div
           className="absolute inset-0 hidden lg:block"
           style={{
             background: `url(${unlockBanner}) center center / cover no-repeat`,
@@ -1335,20 +1553,41 @@ function ProFeatures() {
 
       {/* Features Slider */}
       <div>
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-2xl font-semibold mb-8">Curated Features for Your Thriving Marketplace</h3>
+        <div className="flex justify-between items-center mb-2">
+          <h3
+            style={{
+              fontWeight: 700,
+              fontSize: '24px',
+              lineHeight: '130%',
+              letterSpacing: '0%'
+            }}
+          >
+            Curated Features for Your Thriving Marketplace
+          </h3>
           <div className="flex space-x-2">
             <button
-              onClick={() => scroll('left')}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
+              onClick={() => handleScrollClick('left')}
+              disabled={!canScrollLeft || isScrolling}
+              className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${
+                canScrollLeft && !isScrolling
+                  ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
+                  : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
+              }`}
+              aria-label="Scroll left"
             >
-              <MoveLeft className="w-4 h-4" />
+              <span className="text-lg font-bold">&lt;</span>
             </button>
             <button
-              onClick={() => scroll('right')}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
+              onClick={() => handleScrollClick('right')}
+              disabled={!canScrollRight || isScrolling}
+              className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${
+                canScrollRight && !isScrolling
+                  ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
+                  : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
+              }`}
+              aria-label="Scroll right"
             >
-              <MoveRight className="w-4 h-4" />
+              <span className="text-lg font-bold">&gt;</span>
             </button>
           </div>
         </div>
@@ -1440,7 +1679,7 @@ const features = [
 
 function FeatureCard({ title, description, image }: { title: string, description: string, image: string }) {
   return (
-    <div className="min-w-[258px] max-w-[258px] bg-white rounded-2xl shadow border flex-shrink-0 overflow-hidden flex flex-col">
+    <div className="min-w-[258px] max-w-[258px] bg-white rounded shadow border flex-shrink-0 overflow-hidden flex flex-col">
       <div className="w-full h-[140px] bg-[#f5f6fa] flex items-center justify-center">
         <img
           src={image}
@@ -1450,7 +1689,17 @@ function FeatureCard({ title, description, image }: { title: string, description
         />
       </div>
       <div className="p-5 flex flex-col flex-1">
-        <h4 className="text-lg font-semibold mb-2">{title}</h4>
+        <h4
+          className="mb-2"
+          style={{
+            fontWeight: 700,
+            fontSize: '18px',
+            lineHeight: '130%',
+            letterSpacing: '0%'
+          }}
+        >
+          {title}
+        </h4>
         <p className="text-sm text-gray-600">{description}</p>
       </div>
     </div>
