@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+
 import {
     DokanCheckboxGroup,
     DokanFieldLabel,
 } from '../../../../../../components/fields';
+import settingsStore from '../../../../../../stores/adminSettings';
+import { dispatch } from '@wordpress/data';
 
-export default function DokanMultiCheck( { element, onValueChange } ) {
-    const [ selectedValues, setSelectedValues ] = useState(
-        element.value || []
-    );
+export default function DokanMultiCheck( { element } ) {
+    if ( ! element.display ) {
+        return null;
+    }
+    const onValueChange = ( updatedElement ) => {
+        // Dispatch the updated value to the settings store
+        dispatch( settingsStore ).updateSettingsValue( updatedElement );
+    };
+
     return (
         <div className="flex flex-col gap-2 p-5 w-full">
             <DokanFieldLabel
@@ -22,9 +29,8 @@ export default function DokanMultiCheck( { element, onValueChange } ) {
                         value: option.value,
                     } ) ) || []
                 }
-                defaultValue={ selectedValues }
+                defaultValue={ element?.default || [] }
                 onChange={ ( values ) => {
-                    setSelectedValues( values );
                     onValueChange( { ...element, value: values } );
                 } }
             />

@@ -2,6 +2,10 @@ import React from 'react';
 import { ShowHideField } from '../../../../../../components/fields';
 
 export default function DokanShowHideField( { element } ) {
+    if ( ! element.display ) {
+        return null;
+    }
+
     return (
         <ShowHideField
             value={ element.value }

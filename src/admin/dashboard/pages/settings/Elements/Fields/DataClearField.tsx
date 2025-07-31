@@ -2,8 +2,18 @@ import { SettingsProps } from '../../types';
 import AlertIcon from '../../../../icons/AlertIcon';
 import { DokanSwitch } from '../../../../../../components/fields';
 import { __ } from '@wordpress/i18n';
+import settingsStore from '../../../../../../stores/adminSettings';
+import { dispatch } from '@wordpress/data';
 
-const DataClearField = ( { element, onValueChange }: SettingsProps ) => {
+const DataClearField = ( { element }: SettingsProps ) => {
+    if ( ! element.display ) {
+        return null;
+    }
+
+    const onValueChange = ( updatedElement ) => {
+        // Dispatch the updated value to the settings store
+        dispatch( settingsStore ).updateSettingsValue( updatedElement );
+    };
     return (
         <div
             className={
@@ -44,3 +54,4 @@ const DataClearField = ( { element, onValueChange }: SettingsProps ) => {
 };
 
 export default DataClearField;
+

@@ -11,7 +11,7 @@ const FieldGroup = ( {
     }
 
     return (
-        <div className="flex flex-col gap-4 w-full">
+        <div className="flex flex-col  w-full">
             <div>
                 <p
                     id={ element.hook_key }

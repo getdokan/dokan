@@ -125,10 +125,12 @@ const TextField: React.FC< TextFieldProps > = ( {
                     errors={ displayError ? [ displayError ] : [] }
                     label={ label }
                     className={ twMerge(
-                        'rounded-[5px]  w-full',
+                        'rounded  w-full',
                         getBorderColorClass(),
                         disabled ? 'bg-[#F1F1F4] border-gray-200' : '',
-                        inputClassName
+                        inputClassName,
+                        prefix ? 'rounded-l-none' : '',
+                        postfix ? 'rounded-r-none' : ''
                     ) }
                     input={ {
                         type: inputType,

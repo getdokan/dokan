@@ -14,7 +14,7 @@ const reducer = ( state = SETTINGS_DEFAULT_STATE, action ) => {
                 settings: [
                     ...settingsDependencyApplicator(
                         [ ...action.settings ],
-                        state.dependencies
+                        settingsDependencyParser( [ ...action.settings ] )
                     ),
                 ],
             };
