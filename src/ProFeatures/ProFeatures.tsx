@@ -92,7 +92,7 @@ function PricingSection() {
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
             The Packages We Provide
           </h2>
-          <p 
+          <p
             className="text-gray-600 mb-6"
             style={{
               fontWeight: 400,
@@ -102,7 +102,7 @@ function PricingSection() {
               textAlign: 'center'
             }}
           >
-            Get 20% instant off in all packages with coupon code <span 
+            Get 20% instant off in all packages with coupon code <span
               style={{
                 fontWeight: 600,
                 fontSize: '16px',
@@ -133,12 +133,11 @@ function PricingSection() {
                 Lifetime
               </button>
             </div>
-            <span 
-              className={`ml-4 text-sm px-3 py-1 rounded-full transition-all duration-300 ${
-                !isAnnual 
-                  ? 'text-[#7047EB] bg-[#f3efff] opacity-100' 
+            <span
+              className={`ml-4 text-sm px-3 py-1 rounded-full transition-all duration-300 ${!isAnnual
+                  ? 'text-[#7047EB] bg-[#f3efff] opacity-100'
                   : 'text-[#7047EB] bg-[#f3efff] opacity-60'
-              }`}
+                }`}
             >
               Save More 20%
             </span>
@@ -195,9 +194,16 @@ function PricingSection() {
                       </div>
 
                       {/* Buy Now Button */}
-                      <button className="w-full bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
-                        Buy Now
-                      </button>
+                      <a
+                        href="https://dokan.co/wordpress/pricing/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block mt-8"
+                      >
+                        <button className="w-full bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
+                          Buy Now
+                        </button>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -254,9 +260,16 @@ function PricingSection() {
                         </div>
 
                         {/* Buy Now Button */}
-                        <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
-                          Buy Now
-                        </button>
+                        <a
+                          href="https://dokan.co/wordpress/pricing/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block mt-8"
+                        >
+                          <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
+                            Buy Now
+                          </button>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -313,9 +326,16 @@ function PricingSection() {
                       </div>
 
                       {/* Buy Now Button */}
-                      <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
-                        Buy Now
-                      </button>
+                      <a
+                        href="https://dokan.co/wordpress/pricing/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block mt-8"
+                      >
+                        <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
+                          Buy Now
+                        </button>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -538,7 +558,7 @@ function DokanMarketplaceUI() {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
       const hasOverflow = scrollWidth > clientWidth + 1; // Adding small buffer for precision
-      
+
       setCanScrollLeft(scrollLeft > 0);
       setCanScrollRight(hasOverflow && scrollLeft < scrollWidth - clientWidth - 5);
     }
@@ -546,29 +566,29 @@ function DokanMarketplaceUI() {
 
   const scrollToNextCard = (direction: 'left' | 'right') => {
     if (isScrolling || !scrollRef.current) return;
-    
+
     setIsScrolling(true);
     // Calculate card width based on active tab
     const cardWidth = activeTab === 'Marketplace' ? 274.51 + 24 : 220 + 24; // Card width + gap (24px from gap-6)
     const scrollAmount = direction === 'right' ? cardWidth : -cardWidth;
-    
+
     // Custom smooth scrolling animation
     const startScrollLeft = scrollRef.current.scrollLeft;
     const targetScrollLeft = startScrollLeft + scrollAmount;
     const duration = 400; // Longer duration for more noticeable smoothness
     const startTime = performance.now();
-    
+
     const animateScroll = (currentTime) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
+
       // Easing function for smooth animation (ease-out)
       const easeOut = 1 - Math.pow(1 - progress, 3);
-      
+
       if (scrollRef.current) {
         scrollRef.current.scrollLeft = startScrollLeft + (scrollAmount * easeOut);
       }
-      
+
       if (progress < 1) {
         requestAnimationFrame(animateScroll);
       } else {
@@ -577,7 +597,7 @@ function DokanMarketplaceUI() {
         checkScrollability();
       }
     };
-    
+
     requestAnimationFrame(animateScroll);
   };
 
@@ -592,18 +612,18 @@ function DokanMarketplaceUI() {
     setIsScrolling(false);
     setCanScrollLeft(false);
     setCanScrollRight(false);
-    
+
     // Reset scroll position
     if (scrollRef.current) {
       scrollRef.current.scrollLeft = 0;
     }
-    
+
     // Check scrollability after content renders - multiple attempts with increasing delays
     setTimeout(() => checkScrollability(), 100);
     setTimeout(() => checkScrollability(), 300);
     setTimeout(() => checkScrollability(), 600);
     setTimeout(() => checkScrollability(), 1000);
-    
+
   }, [activeTab]);
 
   // Initial setup
@@ -615,16 +635,16 @@ function DokanMarketplaceUI() {
       setTimeout(() => checkScrollability(), 1000);
       setTimeout(() => checkScrollability(), 1500);
     };
-    
+
     checkAfterMount();
-    
+
     // Add window resize listener
     const handleResize = () => {
       setTimeout(() => checkScrollability(), 100);
     };
-    
+
     window.addEventListener('resize', handleResize);
-    
+
     return () => {
       window.removeEventListener('resize', handleResize);
     };
@@ -653,7 +673,7 @@ function DokanMarketplaceUI() {
 
       {/* Title */}
       <div className="text-center mb-4">
-        <h2 
+        <h2
           className="inline-block"
           style={{
             fontWeight: 700,
@@ -675,11 +695,10 @@ function DokanMarketplaceUI() {
           <button
             onClick={() => handleScrollClick('left')}
             disabled={!canScrollLeft || isScrolling}
-            className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${
-              canScrollLeft && !isScrolling
+            className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${canScrollLeft && !isScrolling
                 ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
                 : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
-            }`}
+              }`}
             aria-label="Scroll left"
           >
             <span className="text-lg font-bold">&lt;</span>
@@ -687,11 +706,10 @@ function DokanMarketplaceUI() {
           <button
             onClick={() => handleScrollClick('right')}
             disabled={!canScrollRight || isScrolling}
-            className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${
-              canScrollRight && !isScrolling
+            className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${canScrollRight && !isScrolling
                 ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
                 : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
-            }`}
+              }`}
             aria-label="Scroll right"
           >
             <span className="text-lg font-bold">&gt;</span>
@@ -1226,19 +1244,19 @@ function ExceptionalFeatures() {
 
 const CustomCheckIcon = () => (
   <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
-    <circle 
-      cx="12" 
-      cy="12" 
-      r="8.5" 
-      stroke="#7047EB" 
+    <circle
+      cx="12"
+      cy="12"
+      r="8.5"
+      stroke="#7047EB"
       strokeWidth="1.33"
       fill="none"
     />
-    <path 
-      d="M8 12l3 3 5-6" 
-      stroke="#7047EB" 
-      strokeWidth="1.33" 
-      strokeLinecap="round" 
+    <path
+      d="M8 12l3 3 5-6"
+      stroke="#7047EB"
+      strokeWidth="1.33"
+      strokeLinecap="round"
       strokeLinejoin="round"
     />
   </svg>
@@ -1434,28 +1452,28 @@ function ProFeatures() {
 
   const scrollToNextCard = (direction: 'left' | 'right') => {
     if (isScrolling || !scrollRef.current) return;
-    
+
     setIsScrolling(true);
     const cardWidth = 258 + 24; // Card width (258px) + gap (24px from space-x-6)
     const scrollAmount = direction === 'right' ? cardWidth : -cardWidth;
-    
+
     // Custom smooth scrolling animation
     const startScrollLeft = scrollRef.current.scrollLeft;
     const targetScrollLeft = startScrollLeft + scrollAmount;
     const duration = 400; // Longer duration for more noticeable smoothness
     const startTime = performance.now();
-    
+
     const animateScroll = (currentTime) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
+
       // Easing function for smooth animation (ease-out)
       const easeOut = 1 - Math.pow(1 - progress, 3);
-      
+
       if (scrollRef.current) {
         scrollRef.current.scrollLeft = startScrollLeft + (scrollAmount * easeOut);
       }
-      
+
       if (progress < 1) {
         requestAnimationFrame(animateScroll);
       } else {
@@ -1464,7 +1482,7 @@ function ProFeatures() {
         checkScrollability();
       }
     };
-    
+
     requestAnimationFrame(animateScroll);
   };
 
@@ -1568,11 +1586,10 @@ function ProFeatures() {
             <button
               onClick={() => handleScrollClick('left')}
               disabled={!canScrollLeft || isScrolling}
-              className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${
-                canScrollLeft && !isScrolling
+              className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${canScrollLeft && !isScrolling
                   ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
                   : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
-              }`}
+                }`}
               aria-label="Scroll left"
             >
               <span className="text-lg font-bold">&lt;</span>
@@ -1580,11 +1597,10 @@ function ProFeatures() {
             <button
               onClick={() => handleScrollClick('right')}
               disabled={!canScrollRight || isScrolling}
-              className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${
-                canScrollRight && !isScrolling
+              className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${canScrollRight && !isScrolling
                   ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
                   : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
-              }`}
+                }`}
               aria-label="Scroll right"
             >
               <span className="text-lg font-bold">&gt;</span>
