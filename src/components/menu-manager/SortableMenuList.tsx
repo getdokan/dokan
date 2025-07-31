@@ -6,10 +6,9 @@ import {
     Pencil,
     Check,
 } from 'lucide-react';
-import DokanSwitch from '../../admin/dashboard/pages/settings/Elements/Fields/DokanSwitch';
 import { twMerge } from "tailwind-merge";
+import { TextField, DokanSwitch } from "../fields";
 import SortableList from '@dokan/components/sortable-list';
-import { TextField } from "../fields";
 
 interface MenuItemData {
     title: string;
@@ -81,9 +80,9 @@ const MenuManagerItem = (
         setIsEditing(false);
     };
 
-    const handleToggle = (value: string) => {
-        const isVisible = value === 'on';
-        onToggle(itemKey, isVisible);
+    const handleToggle = (value: boolean) => {
+        // const isVisible = value === 'on';
+        onToggle(itemKey, value);
     };
 
     return (
@@ -96,24 +95,11 @@ const MenuManagerItem = (
                 {/* Menu Name / Edit Input */}
                 <div className="flex-1">
                     {isEditing ? (
-                        // <input
-                        //     type="text"
-                        //     value={editValue}
-                        //     onChange={(e) => setEditValue(e.target.value)}
-                        //     className="px-2 py-1 border border-gray-300 rounded text-sm w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        //     maxLength={45}
-                        //     autoFocus
-                        //     onKeyDown={(e) => {
-                        //         if (e.key === 'Enter') handleSave();
-                        //         if (e.key === 'Escape') handleCancel();
-                        //     }}
-                        // />
-
                         <TextField
                             inputType="text"
                             value={ editValue }
                             containerClassName='w-fit'
-                            onChange={ (e) => setEditValue( e.target.value ) }
+                            onChange={ ( val ) => setEditValue( val ) }
                             inputClassName="w-96 bg-white border-[#E9E9E9] rounded-[5px] h-10 px-4 text-[#25252D] text-sm border-[#7047eb]"
                         />
                     ) : (
@@ -164,13 +150,8 @@ const MenuManagerItem = (
                     item.switchable === false && 'cursor-not-allowed opacity-50'
                 )}>
                     <DokanSwitch
-                        element={{
-                            value: item.is_switched_on ? 'on' : 'off',
-                            enable_state: { title: __('Visible', 'dokan-lite'), value: 'on' },
-                            disable_state: { title: __('Hidden', 'dokan-lite'), value: 'off' }
-                        }}
-                        onValueChange={item.switchable === false ? undefined : (updatedElement) => handleToggle(updatedElement.value)}
-                        className='p-0'
+                        checked={ item.is_switched_on }
+                        onChange={ item.switchable === false ? undefined : ( val)=> handleToggle(val) }
                     />
                     {item.switchable === false && (
                         <div className="absolute inset-0 cursor-not-allowed"></div>
