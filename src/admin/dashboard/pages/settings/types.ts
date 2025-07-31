@@ -47,6 +47,7 @@ export type SettingsElement = {
         value: string | number;
     };
     documentationLink?: string;
+    css_class?: string;
 };
 
 export interface SettingsProps {

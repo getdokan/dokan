@@ -179,7 +179,7 @@ const CardRadioOption = ( {
                 <RadioButton checked={ isSelected } disabled={ disabled } />
             </div>
 
-            { option.preview && (
+            { option.image && (
                 <div className="bg-[#F3F3F3]">
                     <img
                         src={ option.image }

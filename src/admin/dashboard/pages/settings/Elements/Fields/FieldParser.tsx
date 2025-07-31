@@ -168,11 +168,7 @@ const FieldParser = ( {
         default:
             return applyFilters(
                 'dokan_admin_settings_default_field_parser',
-                <DokanInfoField
-                    key={ element.hook_key }
-                    element={ element }
-                    getSetting={ getSetting }
-                />,
+                <DokanInfoField key={ element.hook_key } element={ element } />,
                 element,
                 getSetting,
                 onValueChange
