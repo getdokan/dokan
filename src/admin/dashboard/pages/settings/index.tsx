@@ -218,14 +218,16 @@ const SettingsPage = () => {
                                     onTabClick={ onTabClick }
                                 />
                             ) }
-                            <PageHeading
-                                title={ pageInfo.title }
-                                description={ pageInfo.description }
-                            />
+                            { pageInfo.title && (
+                                <PageHeading
+                                    title={ pageInfo.title }
+                                    description={ pageInfo.description }
+                                />
+                            ) }
                             <div
                                 className={ `flex flex-col  ${ twMerge(
                                     allElementsAreFields
-                                        ? 'divide-gray-200 divide-y border border-[#E9E9E9]'
+                                        ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
                                         : ''
                                 ) }` }
                             >
@@ -244,8 +246,6 @@ const SettingsPage = () => {
                                     }
                                 ) }
                             </div>
-                            { /* DEMO: Dokan Fields Showcase */ }
-                            { /*<DokanFieldsDemo />*/ }
                         </div>
                     </div>
                     { needSaving && (

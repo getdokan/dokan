@@ -85,6 +85,7 @@ const settingsDependencyApplicator = (
                     element = {
                         ...applyEffectToElement( { ...element }, elDep ),
                     };
+
                 }
             } );
 

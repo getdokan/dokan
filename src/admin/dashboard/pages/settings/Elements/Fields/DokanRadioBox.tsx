@@ -1,8 +1,16 @@
-import React from 'react';
 import { DokanFieldLabel } from '../../../../../../components/fields';
+import settingsStore from '../../../../../../stores/adminSettings';
+import { dispatch } from '@wordpress/data';
 
-export default function DokanRadioBox( { element, onValueChange } ) {
-    const selected = element.value || element.default;
+export default function DokanRadioBox( { element } ) {
+    if ( ! element.display ) {
+        return null;
+    }
+    const onValueChange = ( updatedElement ) => {
+        // Dispatch the updated value to the settings store
+        dispatch( settingsStore ).updateSettingsValue( updatedElement );
+    };
+    const selected = element.value || element?.default;
     return (
         <div className="flex flex-col gap-2 w-full">
             <DokanFieldLabel

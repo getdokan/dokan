@@ -1,5 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import DokanTooltip from './DokanTooltip';
+import { RawHTML } from '@wordpress/element';
 
 interface InputLabelProps {
     title: string;
@@ -13,7 +14,7 @@ interface InputLabelProps {
     labelClassName?: string;
 }
 
-const DokanFieldLabel = ( {
+const DokanBaseFieldLabel = ( {
     title,
     titleFontWeight = 'bold',
     tooltip,
@@ -44,7 +45,7 @@ const DokanFieldLabel = ( {
                             labelClassName
                         ) }
                     >
-                        { title }
+                        <RawHTML> { title } </RawHTML>
                     </label>
                     { tooltip && (
                         <span className="flex items-center">
@@ -56,7 +57,9 @@ const DokanFieldLabel = ( {
                 { helperText && (
                     <div>
                         { typeof helperText === 'string' ? (
-                            <p className="text-sm ">{ helperText }</p>
+                            <p className="text-sm ">
+                                <RawHTML>{ helperText }</RawHTML>
+                            </p>
                         ) : (
                             helperText
                         ) }
@@ -67,4 +70,4 @@ const DokanFieldLabel = ( {
     );
 };
 
-export default DokanFieldLabel;
+export default DokanBaseFieldLabel;

@@ -59,8 +59,7 @@ class DoubleTextField extends Text {
      * Label for the field.
      */
 
-    public function set_label( string $label )
-    : self {
+    public function set_label( string $label ): self {
         $this->label = $label;
 
         return $this;
@@ -75,8 +74,7 @@ class DoubleTextField extends Text {
      *
      * @return self
      */
-    public function set_first_label( string $label )
-    : self {
+    public function set_first_label( string $label ): self {
         $this->first_label = $label;
 
         return $this;
@@ -91,8 +89,7 @@ class DoubleTextField extends Text {
      *
      * @return self
      */
-    public function set_first_value( $value )
-    : self {
+    public function set_first_value( $value ): self {
         $this->first_value = $value;
 
         return $this;
@@ -107,8 +104,7 @@ class DoubleTextField extends Text {
      *
      * @return self
      */
-    public function set_second_label( string $label )
-    : self {
+    public function set_second_label( string $label ): self {
         $this->second_label = $label;
 
         return $this;
@@ -123,11 +119,25 @@ class DoubleTextField extends Text {
      *
      * @return self
      */
-    public function set_second_value( $value )
-    : self {
+    public function set_second_value( $value ): self {
         $this->second_value = $value;
 
         return $this;
+    }
+
+    public function data_validation( $data ): bool {
+        return isset( $data );
+    }
+
+    /**
+     * Escape data for display.
+     *
+     * @param string $data Data for display.
+     *
+     * @return string
+     */
+    public function escape_element( $data ): string {
+        return esc_attr( $data );
     }
 
     /**
@@ -137,8 +147,7 @@ class DoubleTextField extends Text {
      *
      * @return array
      */
-    public function populate()
-    : array {
+    public function populate(): array {
         $element                = parent::populate();
         $element['label']       = $this->label;
         $element['firstLabel']  = $this->first_label;

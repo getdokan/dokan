@@ -1,6 +1,8 @@
 import React, { useState } from '@wordpress/element';
 import { SettingsProps } from '../../types';
 import { DokanFieldLabel } from '../../../../../../components/fields';
+import settingsStore from '../../../../../../stores/adminSettings';
+import { dispatch } from '@wordpress/data';
 
 const SelectorCard = ( {
     value,
@@ -65,7 +67,7 @@ const SelectorCard = ( {
     );
 };
 
-const RadioBox = ( { element, onValueChange }: SettingsProps ) => {
+const RadioBox = ( { element }: SettingsProps ) => {
     const [ selected, setSelected ] = useState(
         element?.value || element?.default
     );
@@ -73,6 +75,11 @@ const RadioBox = ( { element, onValueChange }: SettingsProps ) => {
     if ( ! element.display ) {
         return null;
     }
+
+    const onValueChange = ( updatedElement ) => {
+        // Dispatch the updated value to the settings store
+        dispatch( settingsStore ).updateSettingsValue( updatedElement );
+    };
 
     const handleChange = ( newValue: string | number ) => {
         setSelected( newValue );

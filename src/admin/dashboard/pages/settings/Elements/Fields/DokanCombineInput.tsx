@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import { useState } from '@wordpress/element';
 import {
     DokanFieldLabel,
     TextField,
 } from '../../../../../../components/fields';
+import settingsStore from '../../../../../../stores/adminSettings';
+import { dispatch } from '@wordpress/data';
 
-export default function DokanCombineInput( { element, onValueChange } ) {
+export default function DokanCombineInput( { element } ) {
     const [ value, setValue ] = useState( element.value );
     if ( ! element.display ) {
         return null;
     }
+
+    const onValueChange = ( updatedElement ) => {
+        // Dispatch the updated value to the settings store
+        dispatch( settingsStore ).updateSettingsValue( updatedElement );
+    };
+
     return (
         <div className="flex flex-col gap-2 w-full">
             <DokanFieldLabel
@@ -25,7 +33,6 @@ export default function DokanCombineInput( { element, onValueChange } ) {
                     } }
                     placeholder={ element.placeholder }
                     disabled={ element.disabled }
-                    inputType="number"
                     helperText={ element.description }
                     postfix="%"
                 />
@@ -37,7 +44,6 @@ export default function DokanCombineInput( { element, onValueChange } ) {
                     } }
                     placeholder={ element.placeholder }
                     disabled={ element.disabled }
-                    inputType="number"
                     helperText={ element.description }
                     postfix="$"
                 />

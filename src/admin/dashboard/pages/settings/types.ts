@@ -10,6 +10,7 @@ export type SettingsElementDependency = {
 };
 
 export type SettingsElement = {
+    radio_variant?: 'simple' | 'card' | 'template' | string;
     id: string;
     type: string;
     variant?: string;
@@ -46,6 +47,7 @@ export type SettingsElement = {
         value: string | number;
     };
     documentationLink?: string;
+    css_class?: string;
 };
 
 export interface SettingsProps {
