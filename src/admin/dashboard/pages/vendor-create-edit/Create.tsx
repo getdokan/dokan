@@ -2,17 +2,12 @@ import Form from './Form';
 import { useDispatch, useSelect } from '@wordpress/data';
 import store from '../../../../stores/vendors';
 import { useEffect } from '@wordpress/element';
-import {
-    useToast,
-    Card,
-} from '@getdokan/dokan-ui';
+import { useToast, Card } from '@getdokan/dokan-ui';
 import { DokanButton, DokanLink } from '@dokan/components';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { applyFilters } from '@wordpress/hooks';
-import {
-    ChevronLeft,
-} from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 
 function Create() {
     const initialData = {
@@ -131,7 +126,7 @@ function Create() {
                 { /*Back to vendors list*/ }
                 <div>
                     <DokanLink
-                        href=""
+                        href={ `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors` }
                         className="flex flex-row w-auto items-center gap-1 !text-neutral-500 hover:!underline"
                     >
                         <ChevronLeft size="15" />
@@ -145,7 +140,12 @@ function Create() {
                         <h1>{ __( 'Add New Vendor', 'dokan-lite' ) }</h1>
                     </div>
                     <div className="sm:w-full md:w-1/2 flex flex-row justify-end gap-3">
-                        <DokanButton variant="secondary">
+                        <DokanButton
+                            variant="secondary"
+                            onClick={ () =>
+                                ( window.location.href = `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors` )
+                            }
+                        >
                             { __( 'Cancel', 'dokan-lite' ) }
                         </DokanButton>
                         <DokanButton onClick={ addVendor }>
