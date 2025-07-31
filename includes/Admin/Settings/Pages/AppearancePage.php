@@ -99,5 +99,16 @@ class AppearancePage extends AbstractPage {
             ->set_icon( 'appearance' )
             ->set_description( esc_html__( 'Configure dashboard menu settings, visibility, and customization options.', 'dokan-lite' ) )
             ->add( $dashboard_menu_page );
+
+        // Allow dokan-pro modules to add additional sub-pages
+        $additional_sub_pages = apply_filters( 'dokan_appearance_page_sub_pages', [] );
+
+        if ( ! empty( $additional_sub_pages ) && is_array( $additional_sub_pages ) ) {
+            foreach ( $additional_sub_pages as $sub_page ) {
+                if ( $sub_page instanceof \WeDevs\Dokan\Admin\Settings\Elements\SubPage ) {
+                    $this->add( $sub_page );
+                }
+            }
+        }
     }
 }

@@ -20,6 +20,7 @@ import DokanMenuManager from './DokanMenuManager';
 import DokanFieldLabel from './DokanFieldLabel';
 import DokanMediaInputField from './DokanMediaInputField';
 import CustomizeRadio from './CustomizeRadio';
+import CategoryBasedCommission from './Commission/CategoryBasedCommission';
 
 const FieldParser = ( {
     element,

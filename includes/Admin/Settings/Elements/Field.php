@@ -106,7 +106,7 @@ class Field extends SettingsElement {
 	public function populate(): array {
 		$data            = parent::populate();
 		$data['variant'] = $this->input_type;
-//        error_log( 'Field type: ' . $this->input_type ); // Debugging line to check the input type
+		//        error_log( 'Field type: ' . $this->input_type ); // Debugging line to check the input type
 		$data['value'] = $this->escape_element( $this->get_value() );
 
 		return $data;
