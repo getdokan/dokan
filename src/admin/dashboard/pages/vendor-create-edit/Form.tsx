@@ -7,7 +7,8 @@ import {
     Trash,
     Upload,
     Pencil,
-} from 'lucide-react';
+    LoaderCircle
+} from "lucide-react";
 import {
     AsyncSearchableSelect,
     Card,
@@ -274,6 +275,7 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
         if ( text === 'searching' ) {
             return (
                 <span className="flex flex-row gap-1 items-center text-neutral-500">
+                    <LoaderCircle size={ 13 } className="animate-spin" />
                     <span>{ __( 'Searching…', 'dokan-lite' ) }</span>
                 </span>
             );

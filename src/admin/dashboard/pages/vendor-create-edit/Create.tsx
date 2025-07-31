@@ -4,6 +4,7 @@ import store from '../../../../stores/vendors';
 import { useEffect } from '@wordpress/element';
 import {
     useToast,
+    Card,
 } from '@getdokan/dokan-ui';
 import { DokanButton, DokanLink } from '@dokan/components';
 import { __ } from '@wordpress/i18n';
