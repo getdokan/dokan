@@ -6,6 +6,7 @@ import { DokanFieldLabel } from '../../../../../../components/fields';
 import { SortableMenuList } from '../../../../../../components/menu-manager/SortableMenuList';
 import DokanTab from '../../../../../../components/Tab';
 import apiFetch from '@wordpress/api-fetch';
+import {addFilter} from "@wordpress/hooks";
 
 interface MenuItemData {
     title: string;
@@ -178,7 +179,6 @@ export default function DokanMenuManager( {
 } ) {
     const [ menuData, setMenuData ] =
         useState< MenuData >( HARDCODED_MENU_DATA );
-    // const [ success, setSuccess ] = useState< string | null >( null );
     const [ showResetConfirm, setShowResetConfirm ] = useState( false );
 
     const fetchMenuData = async () => {
@@ -216,10 +216,6 @@ export default function DokanMenuManager( {
         setMenuData( newMenuData );
         // Update element value for WordPress options sync
         onValueChange( { ...element, value: newMenuData } );
-
-        // Show success message
-        // setSuccess( __( 'Menu settings updated successfully.', 'dokan-lite' ) );
-        // setTimeout( () => setSuccess( null ), 3000 );
     };
 
     // Show reset confirmation
@@ -237,8 +233,6 @@ export default function DokanMenuManager( {
         setShowResetConfirm( false );
         setMenuData( HARDCODED_MENU_DATA );
         onValueChange( { ...element, value: HARDCODED_MENU_DATA } );
-        // setSuccess( __( 'Menu settings reset successfully.', 'dokan-lite' ) );
-        // setTimeout( () => setSuccess( null ), 3000 );
     };
 
     // Tab configuration
@@ -264,21 +258,8 @@ export default function DokanMenuManager( {
                 tooltip={ element.tooltip }
             />
 
-            { /* Notifications */ }
-            {/*{ success && (*/}
-            {/*    <div className="p-5">*/}
-            {/*        <Notice*/}
-            {/*            status="success"*/}
-            {/*            isDismissible*/}
-            {/*            onRemove={ () => setSuccess( null ) }*/}
-            {/*        >*/}
-            {/*            { success }*/}
-            {/*        </Notice>*/}
-            {/*    </div>*/}
-            {/*) }*/}
-
             { /* Tab Content using DokanTab */ }
-            <div className="p-4 relative">
+            <div className="relative">
                 <DokanTab
                     className="dokan-menu-manager-tabs m-0"
                     tabs={ tabs }
@@ -304,7 +285,7 @@ export default function DokanMenuManager( {
                     } }
                 </DokanTab>
 
-                <div className="absolute top-3 right-0 flex justify-between items-start p-5 border-gray-200">
+                <div className="absolute top-0 right-0 flex justify-between items-start p-4 border-gray-200">
                     <div className={ 'flex items-center gap-2 text-sm text-[#7047EB] cursor-pointer' }>
                         <RotateCcw size={ 20 } color={ '#7047EB' } />
                         { __( 'Reset All', 'dokan-lite' ) }
@@ -346,3 +327,10 @@ export default function DokanMenuManager( {
         </div>
     );
 }
+
+// Disable the filter for all children fields in Dokan Admin Settings.
+addFilter(
+    'dokan_admin_settings_subsection_all_children_fields',
+    'dokan-pro/admin-settings',
+    () => false
+);
