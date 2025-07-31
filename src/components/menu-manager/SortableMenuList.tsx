@@ -210,13 +210,25 @@ export const SortableMenuList = ({
 
     // Handle drag and drop reordering
     const handleOrderUpdate = (updatedItems: MenuItemData[]) => {
+        const menuArray     = getMenuItemsArray();
+        const [ firstItem ] = menuArray;
         const reorderedItems: Record<string, MenuItemData> = {};
 
+        // Keep the first item at position 0
+        if ( firstItem ) {
+            const firstKey = firstItem.menu_key || firstItem.id;
+            reorderedItems[ firstKey ] = {
+                ...firstItem,
+                menu_manager_position: 0
+            };
+        }
+
+        // Update positions for sortable items (starting from position 1)
         updatedItems.forEach((item, index) => {
             const key = item.menu_key || item.id;
             reorderedItems[key] = {
                 ...item,
-                menu_manager_position: index
+                menu_manager_position: index + 1 // Start from position 1 since the first item is at position 0
             };
         });
 
@@ -259,23 +271,58 @@ export const SortableMenuList = ({
         );
     };
 
+    // Render individual menu item for non-sortable first item (without drag handle)
+    const renderNonSortableMenuItem = (item: MenuItemData) => {
+        const key = item.menu_key || item.id || '';
+
+        return (
+            <div className="border-b border-gray-200 flex items-center not-sortable">
+                {/* Non-draggable handle placeholder */}
+                <div className="relative flex items-center pl-5 pr-3 cursor-not-allowed opacity-30">
+                    <Menu className="cursor-not-allowed" color="#828282" size={16} />
+                    <div className="absolute inset-0 cursor-not-allowed"></div>
+                </div>
+
+                {/* Menu Item Content */}
+                <div className="flex-1">
+                    <MenuManagerItem
+                        item={item}
+                        itemKey={key}
+                        onUpdate={handleMenuItemUpdate}
+                        onToggle={handleMenuItemToggle}
+                    />
+                </div>
+            </div>
+        );
+    };
+
     const menuArray = getMenuItemsArray();
+    const [ firstItem, ...sortableItems ] = menuArray;
 
     return (
         <div className={`tabs-details menu-manager-${namespace} mt-5`}>
             {menuArray.length > 0 ? (
                 <div className="border border-gray-300 rounded-md overflow-hidden">
-                    <SortableList
-                        wrapperElement=""
-                        items={menuArray}
-                        namespace={`menu-manager-${namespace}`}
-                        onChange={handleOrderUpdate}
-                        renderItem={renderMenuItem}
-                        orderProperty="menu_manager_position"
-                        strategy="vertical"
-                        className=""
-                        dragSelector="drag-handle"
-                    />
+                    {/* Render first item outside sortable list */}
+                    { firstItem && (
+                        <div>
+                            { renderNonSortableMenuItem( firstItem ) }
+                        </div>
+                    ) }
+                    
+                    {/* Render remaining items in sortable list */}
+                    { sortableItems.length > 0 && (
+                        <SortableList
+                            wrapperElement=""
+                            items={ sortableItems }
+                            namespace={ `menu-manager-${namespace}` }
+                            onChange={ handleOrderUpdate }
+                            renderItem={ renderMenuItem }
+                            orderProperty="menu_manager_position"
+                            dragSelector="drag-handle"
+                            strategy="vertical"
+                        />
+                    ) }
                 </div>
             ) : (
                 <div className="border border-gray-300 rounded-md overflow-hidden">
