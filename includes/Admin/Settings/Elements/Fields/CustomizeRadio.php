@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin\Settings\Elements\Fields;
 
+use InvalidArgumentException;
+
 /**
  * CustomizeRadio Field.
  *
@@ -142,38 +144,38 @@ class CustomizeRadio extends Radio {
     /**
      * Add enhanced option with extended properties.
      *
-     * @param string      $title       Option title.
-     * @param string      $value       Option value.
-     * @param string|null $description Option description.
-     * @param string|null $icon        Option icon HTML.
-     * @param string|null $image       Option image URL.
-     * @param string|null $preview     Option preview HTML.
+     * @param array $option Option properties array with these keys:
+     *                      - title (string) Required: Option title
+     *                      - value (string) Required: Option value
+     *                      - description (string) Optional: Option description
+     *                      - icon (string) Optional: Option icon HTML
+     *                      - image (string) Optional: Option image URL
+     *                      - preview (boolean) Optional: Option preview HTML
      *
+     * @throws \InvalidArgumentException If required fields are missing
      * @return CustomizeRadio
      */
-    public function add_enhanced_option( string $title, string $value, ?string $description = null, ?string $icon = null, ?string $image = null, ?string $preview = null ): CustomizeRadio {
-        $option = [
-            'title' => $title,
-            'value' => $value,
+    public function add_enhanced_option( array $option ): CustomizeRadio {
+        // Check required fields
+        if ( ! isset( $option['title'] ) || ! isset( $option['value'] ) ) {
+            throw new InvalidArgumentException( 'Option array must contain "title" and "value" keys' );
+        }
+
+        // Create basic option array
+        $option_data = [
+            'title' => $option['title'],
+            'value' => $option['value'],
         ];
 
-        if ( $description !== null ) {
-            $option['description'] = $description;
+        // Add optional fields if they exist
+        $optional_fields = [ 'description', 'icon', 'image', 'preview' ];
+        foreach ( $optional_fields as $field ) {
+            if ( isset( $option[ $field ] ) ) {
+                $option_data[ $field ] = $option[ $field ];
+            }
         }
 
-        if ( $icon !== null ) {
-            $option['icon'] = $icon;
-        }
-
-        if ( $image !== null ) {
-            $option['image'] = $image;
-        }
-
-        if ( $preview !== null ) {
-            $option['preview'] = $preview;
-        }
-
-        $this->options[] = $option;
+        $this->options[] = $option_data;
 
         return $this;
     }
