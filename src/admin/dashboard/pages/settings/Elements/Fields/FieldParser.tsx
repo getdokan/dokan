@@ -16,7 +16,6 @@ import DokanDoubleTextField from './DokanDoubleTextField';
 import DokanTextField from './DokanTextField';
 import DokanRadioCapsule from './DokanRadioCapsule';
 import DokanSelect from './DokanSelect';
-import DokanMenuManager from './DokanMenuManager';
 import DokanFieldLabel from './DokanFieldLabel';
 import CustomizeRadio from './CustomizeRadio';
 import CategoryBasedCommission from "./Commission/CategoryBasedCommission";
@@ -139,16 +138,6 @@ const FieldParser = ( {
             );
         case 'base_field_label':
             return <DokanFieldLabel element={ element } />;
-
-        case 'menu_manager':
-            return (
-                <DokanMenuManager
-                    key={ element.hook_key }
-                    element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />
-            );
 
         case 'checkbox':
         case 'color':

@@ -26,3 +26,4 @@ export { default as DokanPriceInput } from './PriceInput';
 export { default as WpDatePicker } from './WpDatePicker';
 export { default as DokanTab } from './Tab';
 export { default as PageHeading } from '../admin/dashboard/pages/settings/Elements/PageHeading';
+export * from './fields';

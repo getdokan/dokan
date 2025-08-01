@@ -138,9 +138,6 @@ class Field extends SettingsElement {
             $input_type
         );
 
-        error_log( print_r( 'From Dokan Lite::::::::::::::', 1 ) );
-        error_log( print_r( $field_map, 1 ) );
-
 		$class_name = $field_map[ $input_type ] ?? $field_map['text'];
 
         /**
