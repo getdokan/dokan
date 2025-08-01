@@ -12,7 +12,6 @@ import DokanTextArea from './DokanTextArea';
 import DokanCurrency from './DokanCurrency';
 import DokanTel from './DokanTel';
 import DokanRefreshSelectField from './DokanRefreshSelectField';
-import DokanDoubleTextField from './DokanDoubleTextField';
 import DokanTextField from './DokanTextField';
 import DokanRadioCapsule from './DokanRadioCapsule';
 import DokanSelect from './DokanSelect';
@@ -20,6 +19,7 @@ import CategoryBasedCommission from './Commission/CategoryBasedCommission';
 import DokanFieldLabel from './DokanFieldLabel';
 import DokanMediaInputField from './DokanMediaInputField';
 import CustomizeRadio from './CustomizeRadio';
+import DokanDoubleInput from './DokanDoubleInput';
 
 const FieldParser = ( {
     element,
@@ -134,9 +134,9 @@ const FieldParser = ( {
         case 'tel':
             return <DokanTel key={ element.hook_key } element={ element } />;
 
-        case 'double_text':
+        case 'double_input':
             return (
-                <DokanDoubleTextField
+                <DokanDoubleInput
                     key={ element.hook_key }
                     element={ element }
                 />

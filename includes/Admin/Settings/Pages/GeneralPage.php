@@ -106,22 +106,24 @@ class GeneralPage extends AbstractPage {
                 ElementFactory::sub_page( 'marketplace' )
                 ->set_title( __( 'Marketplace', 'dokan-lite' ) )
                 ->set_description( __( 'Configure core marketplace functionalities and customer shopping experience.', 'dokan-lite' ) )
-                //                ->add(
-                //                    ElementFactory::section( 'info' )
-                //                    ->set_title( __( 'Info', 'dokan-lite' ) )
-                //                    ->set_description( __( 'Configure the info for your marketplace.', 'dokan-lite' ) )
-                //                    ->add(
-                //                        ElementFactory::field( 'test_info', 'info' )
-                //                        ->set_title( __( 'Info', 'dokan-lite' ) )
-                //                        ->set_description( __( 'Configure the info for your marketplace.', 'dokan-lite' ) )
-                //                    )
-                //                    ->add(
-                //                        ElementFactory::field( 'double_text', 'double_text' )
-                //                            ->set_label( __( 'Double Text Field Example', 'dokan-lite' ) )
-                //                            ->set_first_value( 'Example First Value' )
-                //                            ->set_second_value( 'Example Second Value' )
-                //                    )
-                //                )
+                    ->add(
+                        ElementFactory::section( 'info' )
+                                        ->set_title( __( 'Info', 'dokan-lite' ) )
+                                        ->set_description( __( 'Configure the info for your marketplace.', 'dokan-lite' ) )
+                                        ->add(
+                                            ElementFactory::field( 'double_text', 'double_input' )
+                                                        ->set_label( __( 'Double Text Field Example', 'dokan-lite' ) )
+                                                        ->set_first_prefix(
+                                                            __( 'width', 'dokan-lite' )
+                                                        )
+                                                        ->set_first_value( 'Example First Value' )
+                                                        ->set_first_value_type( 'string' )
+                                                        ->set_second_prefix(
+                                                            __( 'Height', 'dokan-lite' )
+                                                        )
+                                                        ->set_second_value_type( 'number' )
+                                        )
+                    )
             )
             ->add(
                 $dokan_page

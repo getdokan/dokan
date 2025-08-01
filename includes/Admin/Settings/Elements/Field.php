@@ -8,7 +8,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Checkbox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CategoryBasedCommission;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CombineInput;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Currency;
-use WeDevs\Dokan\Admin\Settings\Elements\Fields\DoubleTextField;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\DoubleInput;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\InfoField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\MultiCheck;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Number;
@@ -59,7 +59,7 @@ class Field extends SettingsElement {
 		'number'                    => Number::class,
 		'checkbox'                  => Checkbox::class,
 		'select'                    => Select::class,
-        'refresh_select'   => RefreshSelectField::class,
+        'refresh_select'            => RefreshSelectField::class,
 		'radio'                     => Radio::class,
 		'tel'                       => Tel::class,
 		'password'                  => Password::class,
@@ -69,11 +69,11 @@ class Field extends SettingsElement {
 		'currency'                  => Currency::class,
 		'combine_input'             => CombineInput::class,
 		'category_based_commission' => CategoryBasedCommission::class,
-        'radio_capsule'    => RadioCapsule::class,
-        'info'             => InfoField::class,
-        'double_text'      => DoubleTextField::class,
-        'base_field_label' => BaseFieldLabel::class,
-        'customize_radio'  => CustomizeRadio::class,
+        'radio_capsule'             => RadioCapsule::class,
+        'info'                      => InfoField::class,
+        'double_input'              => DoubleInput::class,
+        'base_field_label'          => BaseFieldLabel::class,
+        'customize_radio'           => CustomizeRadio::class,
 	);
 
 	/**
