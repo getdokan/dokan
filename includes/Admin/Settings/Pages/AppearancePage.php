@@ -78,37 +78,30 @@ class AppearancePage extends AbstractPage {
      * @return void
      */
     public function describe_settings(): void {
-        // Create dashboard menu manager subpage
-        $dashboard_menu_page = ElementFactory::sub_page( 'dashboard_menu_manager' )
-            ->set_title( esc_html__( 'Dashboard Menu Manager', 'dokan-lite' ) )
-            ->set_description( esc_html__( 'Reorder, Rename, Activate, and Deactivate menus for your vendor dashboard.', 'dokan-lite' ) );
-
-        // Create a single section for all vendor capabilities
-        $dashboard_menu_section = ElementFactory::sub_section( 'dokan_manager_section' );
-
-        // Add the section to the page
-        $dashboard_menu_section->add(
-            ElementFactory::field( 'dashboard_menu_manager', 'menu_manager' )
-        );
-
-        // Add the section to the dashboard menu page
-        $dashboard_menu_page->add( $dashboard_menu_section );
-
-        // Set up the main page
-        $this
+        $appearance_page = $this
             ->set_title( esc_html__( 'Appearance', 'dokan-lite' ) )
             ->set_icon( 'appearance' )
             ->set_description( esc_html__( 'Configure dashboard menu settings, visibility, and customization options.', 'dokan-lite' ) );
-//            ->add( $dashboard_menu_page );
-        // Allow dokan-pro modules to add additional sub-pages
-        $additional_sub_pages = apply_filters( 'dokan_appearance_page_sub_pages', [] );
 
-        if ( ! empty( $additional_sub_pages ) && is_array( $additional_sub_pages ) ) {
-            foreach ( $additional_sub_pages as $sub_page ) {
-                if ( $sub_page instanceof SubPage ) {
-                    $this->add( $sub_page );
-                }
-            }
-        }
+        // Create dashboard menu manager subpage
+        $store_page = ElementFactory::sub_page( 'store' )
+            ->set_title( esc_html__( 'Store Page', 'dokan-lite' ) )
+            ->set_description( esc_html__( 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'dokan-lite' ) );
+
+        // Create a single section for all vendor capabilities
+        $store_section = ElementFactory::sub_section( 'store_page_section' );
+
+        // Add the section to the page
+        $store_section->add(
+            ElementFactory::field( 'store_radio', 'radio' )
+                ->set_description( esc_html__( 'Select the radio for your vendor dashboard.', 'dokan-lite' ) )
+        );
+
+        // Add the section to the store page.
+        $store_page->add( $store_section );
+        $appearance_page->add( $store_page );
+
+        // Create dashboard menu manager subpage.
+        do_action( 'dokan_appearance_page_sub_pages', $appearance_page );
     }
 }

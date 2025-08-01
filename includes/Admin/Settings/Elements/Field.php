@@ -60,7 +60,7 @@ class Field extends SettingsElement {
 		'number'                    => Number::class,
 		'checkbox'                  => Checkbox::class,
 		'select'                    => Select::class,
-        'refresh_select'   => RefreshSelectField::class,
+        'refresh_select'            => RefreshSelectField::class,
 		'radio'                     => Radio::class,
 		'tel'                       => Tel::class,
 		'password'                  => Password::class,
@@ -70,12 +70,11 @@ class Field extends SettingsElement {
 		'currency'                  => Currency::class,
 		'combine_input'             => CombineInput::class,
 		'category_based_commission' => CategoryBasedCommission::class,
-        'radio_capsule'    => RadioCapsule::class,
-        'info'             => InfoField::class,
-        'double_text'      => DoubleTextField::class,
-        'base_field_label' => BaseFieldLabel::class,
-        'customize_radio'  => CustomizeRadio::class,
-        //        'menu_manager'              => MenuManager::class,
+        'radio_capsule'             => RadioCapsule::class,
+        'info'                      => InfoField::class,
+        'double_text'               => DoubleTextField::class,
+        'base_field_label'          => BaseFieldLabel::class,
+        'customize_radio'           => CustomizeRadio::class,
 	);
 
 	/**
@@ -138,6 +137,9 @@ class Field extends SettingsElement {
             $id,
             $input_type
         );
+
+        error_log( print_r( 'From Dokan Lite::::::::::::::', 1 ) );
+        error_log( print_r( $field_map, 1 ) );
 
 		$class_name = $field_map[ $input_type ] ?? $field_map['text'];
 

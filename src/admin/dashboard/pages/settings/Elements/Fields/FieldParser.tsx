@@ -18,8 +18,8 @@ import DokanRadioCapsule from './DokanRadioCapsule';
 import DokanSelect from './DokanSelect';
 import DokanMenuManager from './DokanMenuManager';
 import DokanFieldLabel from './DokanFieldLabel';
-import DokanMediaInputField from './DokanMediaInputField';
 import CustomizeRadio from './CustomizeRadio';
+import CategoryBasedCommission from "./Commission/CategoryBasedCommission";
 
 const FieldParser = ( {
     element,
@@ -139,14 +139,6 @@ const FieldParser = ( {
             );
         case 'base_field_label':
             return <DokanFieldLabel element={ element } />;
-
-        case 'media_input':
-            return (
-                <DokanMediaInputField
-                    key={ element.hook_key }
-                    element={ element }
-                />
-            );
 
         case 'menu_manager':
             return (
