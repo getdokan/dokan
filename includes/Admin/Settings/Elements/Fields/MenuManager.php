@@ -164,9 +164,9 @@ class MenuManager extends Field {
         }
 
         // Validate data types
-        if ( ! is_string( $menu_item['title'] ) || 
-             ! is_string( $menu_item['url'] ) || 
-             ! is_string( $menu_item['menu_manager_title'] ) ) {
+        if ( ! is_string( $menu_item['title'] ) ||
+            ! is_string( $menu_item['url'] ) ||
+            ! is_string( $menu_item['menu_manager_title'] ) ) {
             return false;
         }
 
@@ -174,8 +174,8 @@ class MenuManager extends Field {
             return false;
         }
 
-        if ( ! is_numeric( $menu_item['pos'] ) || 
-             ! is_numeric( $menu_item['menu_manager_position'] ) ) {
+        if ( ! is_numeric( $menu_item['pos'] ) ||
+            ! is_numeric( $menu_item['menu_manager_position'] ) ) {
             return false;
         }
 
@@ -323,12 +323,14 @@ class MenuManager extends Field {
 
         // Icon field needs special handling (contains HTML)
         if ( isset( $menu_item['icon'] ) ) {
-            $escaped['icon'] = wp_kses( $menu_item['icon'], array(
-                'i' => array(
-                    'class' => array(),
-                    'aria-hidden' => array(),
-                ),
-            ) );
+            $escaped['icon'] = wp_kses(
+                $menu_item['icon'], array(
+					'i' => array(
+						'class' => array(),
+						'aria-hidden' => array(),
+					),
+                )
+            );
         }
 
         // Numeric and boolean fields don't need escaping, just pass through
