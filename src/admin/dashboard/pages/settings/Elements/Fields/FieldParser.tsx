@@ -29,11 +29,7 @@ const FieldParser = ( {
     switch ( element.variant ) {
         case 'text':
             return (
-                <DokanTextField
-                    key={ element.hook_key }
-                    element={ element }
-                    getSetting={ getSetting }
-                />
+                <DokanTextField key={ element.hook_key } element={ element } />
             );
 
         case 'select':

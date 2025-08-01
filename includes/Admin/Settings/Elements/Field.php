@@ -75,7 +75,7 @@ class Field extends SettingsElement {
         'double_text'      => DoubleTextField::class,
         'base_field_label' => BaseFieldLabel::class,
         'customize_radio'  => CustomizeRadio::class,
-        'menu_manager'              => MenuManager::class,
+        //        'menu_manager'              => MenuManager::class,
 	);
 
 	/**
