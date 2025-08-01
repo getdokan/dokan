@@ -6,7 +6,7 @@ import { DokanFieldLabel } from '../../../../../../components/fields';
 import { SortableMenuList } from '../../../../../../components/menu-manager/SortableMenuList';
 import DokanTab from '../../../../../../components/Tab';
 import apiFetch from '@wordpress/api-fetch';
-import {addFilter} from "@wordpress/hooks";
+import {addAction, addFilter} from "@wordpress/hooks";
 
 interface MenuItemData {
     title: string;
@@ -331,6 +331,14 @@ export default function DokanMenuManager( {
 // Disable the filter for all children fields in Dokan Admin Settings.
 addFilter(
     'dokan_admin_settings_subsection_all_children_fields',
-    'dokan-pro/admin-settings',
+    'dokan/admin-settings',
     () => false
 );
+
+addAction(
+    'dokan_before_admin_settings_data_save',
+    'dokan/admin-settings/before-save',
+    function ( element, settingsStore ) {
+        console.log( element, settingsStore, ':::::::::::::::::loaded from before admin settings element' );
+    }
+)

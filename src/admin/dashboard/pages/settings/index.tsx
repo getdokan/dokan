@@ -9,6 +9,7 @@ import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import PageHeading from './Elements/PageHeading';
 import { twMerge } from 'tailwind-merge';
+import {doAction} from "@wordpress/hooks";
 // DEMO: Render all Dokan* field components from src/Fields with mock props
 
 const SettingsPage = () => {
@@ -153,6 +154,7 @@ const SettingsPage = () => {
     };
 
     const onValueChange = ( element: SettingsElement ) => {
+        doAction( 'dokan_before_admin_settings_data_save', element, settingsStore );
         dispatch( settingsStore ).updateSettingsValue( element );
     };
 
