@@ -37,17 +37,17 @@ const CHART_CONFIG = {
 const metrics = [
     {
         key: 'total_sales',
-        label: 'Total Sales',
+        label: __( 'Total Sales', 'dokan-lite' ),
         color: CHART_CONFIG.colors.total_sales,
     },
     {
         key: 'net_sales',
-        label: 'Net Sales',
+        label: __( 'Net Sales', 'dokan-lite' ),
         color: CHART_CONFIG.colors.net_sales,
     },
     {
         key: 'commissions',
-        label: 'Commissions',
+        label: __( 'Commissions', 'dokan-lite' ),
         color: CHART_CONFIG.colors.commissions,
     },
 ];
@@ -316,48 +316,53 @@ const SalesChartSection = () => {
     const currentMonthData = salesData?.intervals || [];
 
     return (
-        <Section title={ __( 'Daily Sales Chart', 'dokan-lite' ) }>
+        <Section>
             <div className="woocommerce-dashboard__dashboard-charts">
                 <div className="woocommerce-dashboard__chart-block-wrapper">
                     <Card className="woocommerce-dashboard__chart-block">
                         <CardHeader>
                             <div className="flex justify-between items-center w-full">
-                                <div className={ `sales-chart-monthly-picker` }>
-                                    <MonthPicker
-                                        value={ {
-                                            month: selectedMonth.month.toString(),
-                                            year: selectedMonth.year.toString(),
-                                        } }
-                                        onChange={ handleMonthChange }
-                                        placeholder={ __(
-                                            'Select Month',
-                                            'dokan-lite'
-                                        ) }
-                                    />
-                                </div>
-                                <div className="flex gap-4 items-center">
-                                    { metrics.map( ( metric ) => (
-                                        <div
-                                            key={ metric.key }
-                                            className="flex items-center gap-2"
-                                        >
+                                <h3 className="font-semibold text-base text-black">
+                                    { __( 'Daily Sales Chart', 'dokan-lite' ) }
+                                </h3>
+                                <div className={ `flex items-center gap-6` }>
+                                    <div className="flex gap-4 items-center">
+                                        { metrics.map( ( metric ) => (
                                             <div
-                                                className="w-4 h-4 rounded"
-                                                style={ {
-                                                    backgroundColor:
-                                                        metric.color,
-                                                } }
-                                            ></div>
-                                            <span
-                                                className="text-sm font-medium"
-                                                style={ {
-                                                    color: metric.color,
-                                                } }
+                                                key={ metric.key }
+                                                className="flex items-center gap-2"
                                             >
+                                                <div
+                                                    className="w-4 h-4 rounded"
+                                                    style={ {
+                                                        backgroundColor:
+                                                        metric.color,
+                                                    } }
+                                                ></div>
+                                                <span
+                                                    className="text-sm font-medium"
+                                                    style={ {
+                                                        color: metric.color,
+                                                    } }
+                                                >
                                                 { metric.label }
                                             </span>
-                                        </div>
-                                    ) ) }
+                                            </div>
+                                        ) ) }
+                                    </div>
+                                    <div className={ `sales-chart-monthly-picker` }>
+                                        <MonthPicker
+                                            value={ {
+                                                month: selectedMonth.month.toString(),
+                                                year: selectedMonth.year.toString(),
+                                            } }
+                                            onChange={ handleMonthChange }
+                                            placeholder={ __(
+                                                'Select Month',
+                                                'dokan-lite'
+                                            ) }
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </CardHeader>

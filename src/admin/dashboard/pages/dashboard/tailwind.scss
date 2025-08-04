@@ -54,10 +54,19 @@
   }
 
   table.dataviews-view-table {
-    //padding: 20px 0 !important;
-
     th {
       background-color: #f9fafb;
+    }
+
+    td,
+    th {
+      &:first-child {
+        padding-left: 32px;
+      }
+
+      &:last-child {
+        padding-right: 32px;
+      }
     }
   }
 }

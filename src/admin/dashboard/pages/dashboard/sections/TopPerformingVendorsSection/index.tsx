@@ -15,15 +15,15 @@ const TopPerformingVendorsSection = () => {
             fetchFunction: fetchTopPerformingVendors,
         } );
 
+    // If the data is empty, fill with default values.
+    const emptyString = applyFilters(
+        'dokan_admin_dashboard_top_performing_default_table_data',
+        __( '--', 'dokan-lite' ),
+        data
+    );
+
     const padDefaultData = ( originalData ) => {
         const paddedData = [ ...originalData ];
-
-        // If the data is empty, fill with default values.
-        const emptyString = applyFilters(
-            'dokan_admin_dashboard_top_performing_default_table_data',
-            __( '--', 'dokan-lite' ),
-            originalData
-        );
 
         // Add empty rows with -- if we have less than 5 items.
         while ( paddedData.length < 5 ) {
@@ -78,11 +78,17 @@ const TopPerformingVendorsSection = () => {
             id: 'total_earning',
             label: __( 'Total Earning', 'dokan-lite' ),
             enableSorting: false,
-            render: ( { item } ) => (
-                <div className={ `w-full text-right px-2 text-gray-900` }>
-                    <PriceHtml price={ `${ item.total_earning }` } />
-                </div>
-            ),
+            render: ( { item } ) => {
+                return (
+                    <div className={ `w-full text-right px-2 text-gray-900` }>
+                        {
+                            ( item.total_earning !== emptyString )
+                                ? <PriceHtml price={ `${ item.total_earning }` } />
+                                : emptyString
+                        }
+                    </div>
+                )
+            },
         },
         {
             id: 'total_orders',
@@ -100,7 +106,11 @@ const TopPerformingVendorsSection = () => {
             enableSorting: false,
             render: ( { item } ) => (
                 <div className={ `w-full text-right px-2 text-gray-900` }>
-                    <PriceHtml price={ `${ item.total_commission }` } />
+                    {
+                        ( item.total_commission !== emptyString )
+                            ? <PriceHtml price={ `${ item.total_commission }` } />
+                            : emptyString
+                    }
                 </div>
             ),
         },

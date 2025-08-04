@@ -16,7 +16,7 @@ function Section( {
 }: SectionProps ) {
     return (
         <div className="mt-8">
-            <div className="flex justify-between mb-2">
+            <div className="flex justify-between mb-3">
                 <div className="flex flex-row items-end">
                     <div className={ `flex items-center` }>
                         <h3 className="font-semibold text-base text-black">

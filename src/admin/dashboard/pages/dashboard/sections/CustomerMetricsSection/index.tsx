@@ -41,8 +41,6 @@ const CustomerMetricsSection = () => {
     // Sort data by position on the frontend
     const sortedData = data ? sortByPosition( data ) : [];
 
-    console.log( sortedData, ':::::::::::::sortedData' );
-
     return (
         <Section
             title={ __( 'Customer Metrics', 'dokan-lite' ) }
