@@ -18,7 +18,6 @@ import DokanRadioCapsule from './DokanRadioCapsule';
 import DokanSelect from './DokanSelect';
 import CategoryBasedCommission from './Commission/CategoryBasedCommission';
 import DokanFieldLabel from './DokanFieldLabel';
-import DokanMediaInputField from './DokanMediaInputField';
 import CustomizeRadio from './CustomizeRadio';
 
 const FieldParser = ( {
@@ -143,14 +142,6 @@ const FieldParser = ( {
             );
         case 'base_field_label':
             return <DokanFieldLabel element={ element } />;
-
-        case 'media_input':
-            return (
-                <DokanMediaInputField
-                    key={ element.hook_key }
-                    element={ element }
-                />
-            );
 
         case 'checkbox':
         case 'color':

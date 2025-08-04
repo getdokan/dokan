@@ -54,8 +54,15 @@ const SettingsPage = () => {
 
     useEffect( () => {
         if ( ! loading && pages.length > 0 ) {
+            let selectedSettings = typeof localStorage !== 'undefined' ? localStorage.getItem( 'dokan_active_settings_tab' ) : '',
+                selectedPageName = selectedSettings ? selectedSettings.split( '.' )[1] : selectedPage;
+
             setSelectedPage(
-                selectedPage === '' ? pages[ 0 ].id : selectedPage
+                // @ts-ignore
+                wp.hooks.applyFilters(
+                    'dokan_admin_settings_active_page_id',
+                    selectedPageName ? selectedPageName : pages[ 0 ].id
+                )
             );
         }
     }, [ pages, loading ] );
