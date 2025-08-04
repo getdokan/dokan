@@ -57,6 +57,28 @@ const Menu = ( {
     activePage: string;
     onMenuClick: ( page: string ) => void;
 } ): JSX.Element => {
+    const handleMenuClick = ( pageId: string, parentId?: string ) => {
+        let storageValue = pageId;
+        if ( parentId ) { // Construct section.page format for localStorage.
+            storageValue = `${parentId}.${pageId}`;
+        }
+
+        // Store in localStorage with a more descriptive key name
+        if ( typeof localStorage !== 'undefined' ) {
+            localStorage.setItem(
+                'dokan_active_settings_tab',
+                // @ts-ignore
+                wp.hooks.applyFilters(
+                    'dokan_admin_settings_active_tab_data',
+                    storageValue
+                )
+            );
+        }
+
+        // Call the original onMenuClick handler
+        onMenuClick( pageId );
+    };
+
     return (
         <aside className="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
             <nav className="bg-white  p-7">
@@ -82,7 +104,7 @@ const Menu = ( {
                                             href={ item.id }
                                             onClick={ ( e ) => {
                                                 e.preventDefault();
-                                                onMenuClick( item.id );
+                                                handleMenuClick( item.id );
                                             } }
                                             className={ classNames(
                                                 isActive
@@ -153,8 +175,9 @@ const Menu = ( {
                                                                             e
                                                                         ) => {
                                                                             e.preventDefault();
-                                                                            onMenuClick(
-                                                                                subItem.id
+                                                                            handleMenuClick(
+                                                                                subItem.id,
+                                                                                item.id
                                                                             );
                                                                         } }
                                                                         className={ classNames(
