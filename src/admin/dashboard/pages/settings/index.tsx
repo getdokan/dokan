@@ -203,8 +203,8 @@ const SettingsPage = () => {
     return (
         <>
             <div className="min-h-screen h-full ">
-                <main className="w-full pb-10 lg:py-5 lg:px-0 bg-white h-full shadow rounded-lg">
-                    <div className="lg:grid lg:grid-cols-12 lg:gap-x-5 divide-x h-full ">
+                <main className="w-full lg:px-0 bg-white h-full shadow rounded-lg">
+                    <div className="lg:grid lg:grid-cols-12 divide-x h-full ">
                         { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
                                 key="admin-settings-menu"
@@ -215,7 +215,7 @@ const SettingsPage = () => {
                             />
                         ) }
 
-                        <div className="space-y-6 p-8 lg:col-span-9">
+                        <div className="space-y-6 p-7 lg:py-12 lg:col-span-9">
                             { tabs && '' !== selectedTab && (
                                 <Tab
                                     key="admin-settings-tab"
@@ -253,26 +253,27 @@ const SettingsPage = () => {
                                     }
                                 ) }
                             </div>
+
+                            { needSaving && (
+                                <div className="sticky flex justify-end bottom-0 !mt-8 py-5">
+                                    <button
+                                        type="button"
+                                        disabled={ isSaving }
+                                        onClick={ saveSettings }
+                                        className="inline-flex shadow shadow-lg shadow-gray-800/30 items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    >
+                                        <SaveIcon
+                                            className="-ml-1 mr-3 h-5 w-5"
+                                            aria-hidden="true"
+                                        />
+                                        { isSaving
+                                            ? __( 'Saving..', 'dokan-lite' )
+                                            : __( 'Save', 'dokan-lite' ) }
+                                    </button>
+                                </div>
+                            ) }
                         </div>
                     </div>
-                    { needSaving && (
-                        <div className="sticky flex justify-end bottom-0 mt-5 p-5 pr-0">
-                            <button
-                                type="button"
-                                disabled={ isSaving }
-                                onClick={ saveSettings }
-                                className="inline-flex shadow shadow-lg shadow-gray-800/30 items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                                <SaveIcon
-                                    className="-ml-1 mr-3 h-5 w-5"
-                                    aria-hidden="true"
-                                />
-                                { isSaving
-                                    ? __( 'Saving..', 'dokan-lite' )
-                                    : __( 'Save', 'dokan-lite' ) }
-                            </button>
-                        </div>
-                    ) }
                 </main>
             </div>
         </>
