@@ -738,13 +738,27 @@
                 // Emit event to remove any existing validation error for this field first
                 this.$emit('removeValidationError', 'custom_store_url');
 
-                // Check if the value is 's' (case-sensitive)
-                if ( value && ( value === 's' ) ) {
+                if ( ! value ) {
+                    return;
+                }
+
+                // List of reserved WordPress keywords
+                const reservedSlugs = dokan.hooks.applyFilters(
+                    'dokan_reserved_url_slugs',
+                    [
+                        's', 'p', 'page', 'paged', 'author', 'feed', 'search', 'post',
+                        'tag', 'category', 'attachment', 'name', 'order', 'orderby',
+                        'rest', 'rest_route', 'wp-json', 'shop', 'cart', 'checkout'
+                    ]
+                );
+
+                // Check if the value is in the reserved slugs list (case-sensitive)
+                if ( reservedSlugs.includes( value ) ) {
                     // Emit event to add validation error
-                    this.$emit('addValidationError', {
+                    this.$emit( 'addValidationError', {
                         name: 'custom_store_url',
-                        error: this.__( 'The store URL "s" conflicts with WordPress search functionality. Please choose a different value like "store".', 'dokan-lite' )
-                    });
+                        error: this.__( 'The store URL "%s" is reserved by WordPress and cannot be used. Please choose a different value like "store".', 'dokan-lite' ).replace( '%s', value )
+                    } );
                 }
             },
 

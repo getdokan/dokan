@@ -429,12 +429,13 @@ class Settings {
                     'default' => 'on',
                 ],
                 'custom_store_url'       => [
-                    'name'    => 'custom_store_url',
-                    'label'   => __( 'Vendor Store URL', 'dokan-lite' ),
+                    'name'              => 'custom_store_url',
+                    'label'             => __( 'Vendor Store URL', 'dokan-lite' ),
                     /* translators: %s: store url */
-                    'desc'    => sprintf( __( 'Define the vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])', 'dokan-lite' ), site_url( '/' ) ),
-                    'default' => 'store',
-                    'type'    => 'text',
+                    'desc'              => sprintf( __( 'Define the vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])', 'dokan-lite' ), site_url( '/' ) ),
+                    'default'           => 'store',
+                    'type'              => 'text',
+                    'sanitize_callback' => [ $this, 'sanitize_custom_store_url' ],
                 ],
                 'setup_wizard_logo_url'  => [
                     'name'  => 'setup_wizard_logo_url',
@@ -1120,5 +1121,40 @@ class Settings {
         ];
 
         return $settings_fields;
+    }
+
+    /**
+     * Sanitize custom store URL to prevent reserved WordPress keywords
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $value The custom store URL value
+     *
+     * @return string
+     * @throws DokanException
+     */
+    public function sanitize_custom_store_url( $value ) {
+        $value = sanitize_text_field( $value );
+        
+        if ( empty( $value ) ) {
+            return $value;
+        }
+
+        $reserved_slugs = dokan_get_reserved_url_slugs();
+        
+        // Check if the value is in the reserved slugs list.
+        if ( in_array( $value, $reserved_slugs, true ) ) {
+            throw new DokanException(
+                'dokan_reserved_slug_error',
+                sprintf(
+                    /* translators: %s: the reserved slug */
+                    esc_html__( 'The store URL "%s" is reserved by WordPress and cannot be used. Please choose a different value like "store".', 'dokan-lite' ),
+                    $value
+                ),
+                400
+            );
+        }
+
+        return $value;
     }
 }

@@ -38,6 +38,17 @@ const BasicInfoScreen = ( {
         } );
     };
 
+    // List of reserved WordPress keywords.
+    // @ts-ignore
+    const reservedSlugs = wp.hooks.applyFilters(
+        'dokan_reserved_url_slugs',
+        [
+            's', 'p', 'page', 'paged', 'author', 'feed', 'search', 'post',
+            'tag', 'category', 'attachment', 'name', 'order', 'orderby',
+            'rest', 'rest_route', 'wp-json', 'shop', 'cart', 'checkout'
+        ]
+    );
+
     // Handle immediate UI updates
     const onHandleInputChange = ( event ) => {
         const value = event.target.value;
@@ -45,8 +56,8 @@ const BasicInfoScreen = ( {
 
         if ( ! value ) {
             setError( __( 'Please enter a valid input', 'dokan-lite' ) );
-        } else if ( 's' === value ) {
-            setError( __( 'The store URL "s" conflicts with WordPress search functionality. Please choose a different value like "store".', 'dokan-lite' ) )
+        } else if ( reservedSlugs.includes( value ) ) {
+            setError( sprintf( __( 'The store URL "%s" is reserved by WordPress and cannot be used. Please choose a different value like "store".', 'dokan-lite' ), value ) );
         } else {
             setError( '' );
         }
