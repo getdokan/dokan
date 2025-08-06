@@ -4,12 +4,13 @@ import {
     DisclosurePanel,
 } from '@headlessui/react';
 import {
-    ChevronRightIcon,
-    SearchIcon,
+    ChevronDown,
+    Search,
     SettingsIcon,
     UsersIcon,
 } from 'lucide-react';
 import { SettingsElement } from '../../../../../stores/adminSettings/types';
+import { __ } from "@wordpress/i18n";
 
 function classNames( ...classes ) {
     return classes.filter( Boolean ).join( ' ' );
@@ -17,14 +18,14 @@ function classNames( ...classes ) {
 
 // Search component
 const SearchBar = () => (
-    <div className="mb-7">
+    <div className="mb-6">
         <div className="relative">
             <div className="bg-white border border-[#e9e9e9] rounded-[5px] h-9 flex items-center px-3 gap-3">
-                <SearchIcon className="w-[18px] h-[18px] text-[#828282]" />
+                <Search className="w-[18px] h-[18px] text-[#828282]" />
                 <input
                     type="text"
-                    placeholder="Search"
-                    className="flex-1 text-[12px] text-[#a5a5aa] bg-transparent border-none outline-none font-normal"
+                    placeholder={ __( 'Search', 'dokan-lite' ) }
+                    className="flex-1 text-[12px] text-[#a5a5aa] bg-transparent border-none outline-none font-normal p-0 focus:ring-0"
                 />
             </div>
         </div>
@@ -81,10 +82,10 @@ const Menu = ( {
 
     return (
         <aside className="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
-            <nav className="bg-white  p-7">
+            <nav className="bg-white p-7 lg:py-12">
                 <SearchBar />
 
-                <div className="space-y-[22px]">
+                <div className="space-y-6">
                     { ! loading &&
                         pages.map( ( item ) => {
                             if ( ! item.display ) {
@@ -131,12 +132,7 @@ const Menu = ( {
                                             { ( { open } ) => (
                                                 <>
                                                     <DisclosureButton
-                                                        className={ classNames(
-                                                            isActive
-                                                                ? 'bg-gray-50'
-                                                                : 'hover:bg-gray-50',
-                                                            'flex w-full items-center justify-between rounded-[3px] px-0 py-2 text-left text-[14px] font-medium text-[#575757] transition-colors'
-                                                        ) }
+                                                        className={ 'group flex w-full items-center justify-between rounded-[3px] p-0 text-left text-[14px] font-medium transition-colors' }
                                                     >
                                                         <div className="flex items-center gap-2">
                                                             { getIcon(
@@ -147,16 +143,16 @@ const Menu = ( {
                                                                 { item.title }
                                                             </span>
                                                         </div>
-                                                        <ChevronRightIcon
+                                                        <ChevronDown
                                                             className={ classNames(
-                                                                'w-3.5 h-3.5 text-[#828282] transition-transform',
+                                                                'w-3.5 h-3.5 transition-transform',
                                                                 open
-                                                                    ? 'rotate-90'
-                                                                    : ''
+                                                                    ? 'rotate-180 text-[#7047EB]'
+                                                                    : 'text-[#828282] group-hover:text-[#7047EB]'
                                                             ) }
                                                         />
                                                     </DisclosureButton>
-                                                    <DisclosurePanel className="mt-5 space-y-0">
+                                                    <DisclosurePanel className="mt-5 space-y-1.5">
                                                         { item?.children?.map(
                                                             ( subItem ) => {
                                                                 const isSubActive =
@@ -183,8 +179,8 @@ const Menu = ( {
                                                                         className={ classNames(
                                                                             isSubActive
                                                                                 ? 'bg-[#efeaff] text-[#7047eb] font-semibold'
-                                                                                : 'text-[#575757] font-medium hover:bg-gray-50',
-                                                                            'block rounded-[3px] px-7 py-2 text-[14px] leading-[1.3] transition-colors'
+                                                                                : 'text-[#575757] font-medium hover:bg-[#efeaff] hover:text-[#7047eb]',
+                                                                            'block rounded-[3px] px-7 py-2 text-[14px] leading-[1.3] transition-colors focus:!outline-transparent focus:shadow-none skip-color-module'
                                                                         ) }
                                                                     >
                                                                         {
