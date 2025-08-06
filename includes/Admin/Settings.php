@@ -1135,13 +1135,13 @@ class Settings {
      */
     public function sanitize_custom_store_url( $value ) {
         $value = sanitize_text_field( $value );
-        
+
         if ( empty( $value ) ) {
             return $value;
         }
 
         $reserved_slugs = dokan_get_reserved_url_slugs();
-        
+
         // Check if the value is in the reserved slugs list.
         if ( in_array( $value, $reserved_slugs, true ) ) {
             throw new DokanException(
@@ -1149,7 +1149,7 @@ class Settings {
                 sprintf(
                     /* translators: %s: the reserved slug */
                     esc_html__( 'The store URL "%s" is reserved by WordPress and cannot be used. Please choose a different value like "store".', 'dokan-lite' ),
-                    $value
+                    esc_html( $value )
                 ),
                 400
             );

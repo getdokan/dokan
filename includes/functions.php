@@ -102,9 +102,26 @@ function dokan_is_user_customer( $user_id ) {
  */
 function dokan_get_reserved_url_slugs() {
     $reserved_slugs = [
-        's', 'p', 'page', 'paged', 'author', 'feed', 'search', 'post',
-        'tag', 'category', 'attachment', 'name', 'order', 'orderby',
-        'rest', 'rest_route', 'wp-json', 'shop', 'cart', 'checkout'
+        's',
+        'p',
+        'page',
+        'paged',
+        'author',
+        'feed',
+        'search',
+        'post',
+        'tag',
+        'category',
+        'attachment',
+        'name',
+        'order',
+        'orderby',
+        'rest',
+        'rest_route',
+        'wp-json',
+        'shop',
+        'cart',
+        'checkout',
     ];
 
     /**
