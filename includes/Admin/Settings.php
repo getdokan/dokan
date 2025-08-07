@@ -93,13 +93,9 @@ class Settings {
     public function validate_fixed_price_values( $option_values, $option_name ) {
         $clickable_types = [ 'flat', 'fixed' ];
 
-        if (
-            'dokan_selling' === $option_name &&
-            isset( $option_values['commission_type'] ) &&
-            in_array( $option_values['commission_type'], $clickable_types, true )
-        ) {
-            $admin_percentage = isset( $option_values['admin_percentage'] ) ? (float) $option_values['admin_percentage'] : 0;
-            $saved_admin_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', '' );
+        if ( 'dokan_selling' === $option_name && isset( $option_values['commission_type'] ) && in_array( $option_values['commission_type'], $clickable_types, true ) ) {
+                $admin_percentage = isset( $option_values['admin_percentage'] ) ? (float) $option_values['admin_percentage'] : 0;
+                $saved_admin_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', '' );
 
             if ( $admin_percentage < 0 || $admin_percentage > 100 ) {
                 $option_values['admin_percentage'] = $saved_admin_percentage;
