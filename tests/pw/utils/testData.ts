@@ -3,10 +3,7 @@ import { helpers } from '@utils/helpers';
 import 'dotenv/config';
 import path from 'path';
 const rootDir = path.resolve(__dirname, '..');
-
 const { VARIABLE_PRODUCT, SIMPLE_PRODUCT, SIMPLE_PRODUCT_2 } = process.env;
-
-console.log(SIMPLE_PRODUCT, "SIMPLE")
 
 const {
     ADMIN,
