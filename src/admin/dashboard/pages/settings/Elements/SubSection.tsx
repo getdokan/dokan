@@ -16,7 +16,7 @@ const SubSection = ( {
     } );
 
     return (
-        <div className="col-span-4">
+        <div className="col-span-4 bg-white rounded-lg">
             <div className={ `mb-6` }>
                 <h2
                     id={ element.hook_key }
