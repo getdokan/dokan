@@ -11,6 +11,26 @@ import PageHeading from './Elements/PageHeading';
 import { twMerge } from 'tailwind-merge';
 // DEMO: Render all Dokan* field components from src/Fields with mock props
 
+// Dashboard Switch Link Component
+const DashboardSwitchLink = () => {
+    // Get the switch URL from localized settings
+    const switchUrl = dokanAdminDashboardSettings?.legacy_settings_url || '#';
+    
+    return (
+        <div className="legacy-dashboard-url text-sm font-medium pt-8 mt-8">
+            <div className="flex items-center gap-2 text-gray-600">
+                { __( 'If you want to go back to old dashboard,', 'dokan-lite' ) }{' '}
+                <a
+                    className="skip-color-module underline font-bold text-[#7047EB] hover:text-[#502BBF] transition-colors"
+                    href={ switchUrl }
+                >
+                    { __( 'Click Here', 'dokan-lite' ) }
+                </a>
+            </div>
+        </div>
+    );
+};
+
 const SettingsPage = () => {
     const dispatch = useDispatch();
     const allSettings: Array< SettingsElement > = useSelect(
@@ -279,6 +299,10 @@ const SettingsPage = () => {
                         </div>
                     </div>
                 </main>
+
+                { dokanAdminDashboardSettings?.legacy_settings_url && (
+                    <DashboardSwitchLink />
+                ) }
             </div>
         </>
     );
