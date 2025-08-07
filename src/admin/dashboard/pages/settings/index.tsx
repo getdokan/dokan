@@ -106,7 +106,7 @@ const SettingsPage = () => {
         } else if ( ! pages?.length && tabs?.length && '' !== selectedTab ) {
             setElements(
                 tabs.find( ( child ) => child.id === selectedTab )?.children ??
-                    []
+                []
             );
         } else if (
             pages?.length &&
@@ -116,7 +116,7 @@ const SettingsPage = () => {
         ) {
             setElements(
                 tabs.find( ( child ) => child.id === selectedTab )?.children ??
-                    []
+                []
             );
         }
     }, [
@@ -200,11 +200,15 @@ const SettingsPage = () => {
     const allElementsAreFields = elements.every(
         ( element ) => element.type === 'field'
     );
+
     return (
         <>
-            <div className="min-h-screen h-full ">
-                <main className="w-full lg:px-0 bg-white h-full shadow rounded-lg">
-                    <div className="lg:grid lg:grid-cols-12 divide-x h-full ">
+            <div className="min-h-screen h-full">
+                <h2 className={ `text-2xl text-[#25252D] font-bold my-6 lg:mb-8 lg:mt-10` }>
+                    { __( 'Settings', 'dokan-lite' ) }
+                </h2>
+                <main className="w-full lg:px-0 lg:bg-white h-full lg:shadow rounded-lg overflow-hidden">
+                    <div className="lg:grid lg:grid-cols-12 lg:divide-x h-full">
                         { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
                                 key="admin-settings-menu"
@@ -215,7 +219,7 @@ const SettingsPage = () => {
                             />
                         ) }
 
-                        <div className="space-y-6 p-7 lg:py-12 lg:col-span-9">
+                        <div className="space-y-6 lg:p-7 lg:py-12 lg:col-span-9 pt-10">
                             { tabs && '' !== selectedTab && (
                                 <Tab
                                     key="admin-settings-tab"
@@ -232,7 +236,7 @@ const SettingsPage = () => {
                                 />
                             ) }
                             <div
-                                className={ `flex flex-col  ${ twMerge(
+                                className={ `flex flex-col bg-white rounded-lg ${ twMerge(
                                     allElementsAreFields
                                         ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
                                         : ''
