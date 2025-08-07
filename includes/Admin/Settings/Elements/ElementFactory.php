@@ -16,6 +16,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Text;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Number;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\HtmlField;
 use WeDevs\Dokan\Admin\Settings\Elements\FieldGroup;
 
 class ElementFactory {
@@ -69,7 +70,7 @@ class ElementFactory {
      * @param string $id ID.
      * @param string $type Field Type.
      *
-     * @return Text|Number|Checkbox|Radio|Select|Tel|Password|RadioBox|Switcher|MultiCheck|Currency|InfoField|DoubleTextField
+     * @return Text|Number|Checkbox|Radio|Select|Tel|Password|RadioBox|Switcher|MultiCheck|Currency|InfoField|DoubleTextField|HtmlField
      */
     public static function field( string $id, string $type = 'text' ): SettingsElement {
         $field = new Field( $id, $type );
