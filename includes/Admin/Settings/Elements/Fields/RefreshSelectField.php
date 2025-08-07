@@ -21,7 +21,6 @@ class RefreshSelectField extends Select {
      */
     protected $on_refresh = null;
 
-
     /**
      * Execute refresh callback if set.
      *
@@ -41,31 +40,10 @@ class RefreshSelectField extends Select {
      * @return array
      */
     public function populate(): array {
-        $data              = parent::populate();
-        $data['onRefresh'] = $this->get_on_refresh();
+        $data = parent::populate();
+
 
         return $data;
     }
 
-    /**
-     * Get refresh callback.
-     *
-     * @return callable|null
-     */
-    public function get_on_refresh() {
-        return $this->on_refresh;
-    }
-
-    /**
-     * Set refresh callback.
-     *
-     * @param callable $callback Refresh callback function.
-     *
-     * @return DokanRefreshSelectField
-     */
-    public function set_on_refresh( callable $callback ) {
-        $this->on_refresh = $callback;
-
-        return $this;
-    }
 }

@@ -32,7 +32,24 @@ const DokanRefreshSelectField = ( {
         if ( element.onRefresh ) {
             element.onRefresh();
         }
-        setSelectedProfile( element.default ? element.default : '' );
+        // fetchSettings from the store
+        dispatch( settingsStore )
+            .fetchSettings()
+            .then( ( updatedSettings ) => {
+                // Update the selected profile with the new value
+                const updatedElement = updatedSettings.find(
+                    ( setting ) => setting.hook_key === element.hook_key
+                );
+                if ( updatedElement ) {
+                    setSelectedProfile( updatedElement.value || '' );
+                }
+            } )
+            .catch( ( error ) => {
+                console.error( 'Error refreshing settings:', error );
+                // Optionally, you can handle the error here, e.g., show a notification
+                // or revert to the previous value.
+                setSelectedProfile( element.value || element.default || '' );
+            } );
     };
 
     const onValueChange = ( updatedElement ) => {
@@ -46,6 +63,8 @@ const DokanRefreshSelectField = ( {
                     <DokanFieldLabel
                         title={ element?.title }
                         helperText={ element.description }
+                        tooltip={ element?.helper_text }
+                        icon={ element.icon || '' }
                     />
                 </div>
 

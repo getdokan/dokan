@@ -7,7 +7,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Field;
 /**
  * Base Field Label - A label field with advanced styling and content options.
  */
-class BaseFieldLabel extends Field {
+class BaseFieldLabel extends Text {
 
     /**
      * Input type for this field.
@@ -17,12 +17,7 @@ class BaseFieldLabel extends Field {
     protected $input_type = 'base_field_label';
 
 
-    /**
-     * Tooltip text.
-     *
-     * @var string $tooltip Tooltip text.
-     */
-    protected $tooltip = '';
+
 
 
     /**
@@ -33,11 +28,11 @@ class BaseFieldLabel extends Field {
     protected $icon = '';
 
     /**
-     * Helper text.
+     * Description.
      *
-     * @var string $helper_text Helper text.
+     * @var string $description Description.
      */
-    protected $helper_text = '';
+    protected $description = '';
 
     /**
      * Suffix content.
@@ -78,7 +73,7 @@ class BaseFieldLabel extends Field {
         $data                = parent::populate();
         $data['suffix']      = $this->get_suffix();
         $data['icon']        = $this->get_icon();
-        $data['helper_text'] = $this->get_helper_text();
+        $data['description'] = $this->get_description();
 
         return $data;
     }
@@ -132,25 +127,25 @@ class BaseFieldLabel extends Field {
     }
 
     /**
-     * Get helper text.
+     * Get description.
      *
      * @return string
      */
-    public function get_helper_text()
+    public function get_description()
     : string {
-        return $this->helper_text;
+        return $this->description;
     }
 
     /**
-     * Set helper text.
+     * Set description.
      *
-     * @param string $helper_text Helper text.
+     * @param string $description Description.
      *
      * @return BaseFieldLabel
      */
-    public function set_helper_text( string $helper_text )
+    public function set_description( string $description )
     : BaseFieldLabel {
-        $this->helper_text = $helper_text;
+        $this->description = $description;
 
         return $this;
     }

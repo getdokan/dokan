@@ -22,6 +22,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Text;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\CustomizeRadio;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\HtmlField;
 
 /**
  * Settings element Field.
@@ -74,6 +75,7 @@ class Field extends SettingsElement {
         'double_text'      => DoubleTextField::class,
         'base_field_label' => BaseFieldLabel::class,
         'customize_radio'  => CustomizeRadio::class,
+        'html'             => HtmlField::class,
 	);
 
 	/**

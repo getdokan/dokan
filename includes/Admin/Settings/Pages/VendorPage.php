@@ -228,45 +228,6 @@ class VendorPage extends AbstractPage {
         // Store state sub-page
         $store_state_page->add(
             ElementFactory::section( 'vendor_state' )
-                            ->add(
-                                ElementFactory::field_group( 'vendor_state_settings' )
-                                            ->add(
-                                                ElementFactory::field( 'vendor_state_description', 'base_field_label' )
-                                                                ->set_title( __( 'Vendor State Description', 'dokan-lite' ) )
-                                                                ->set_description( __( 'Select the state for vendors and notify them when their state changes.', 'dokan-lite' ) )
-                                                                ->set_helper_text( __( 'This setting allows you to manage vendor states and notify them accordingly.', 'dokan-lite' ) )
-                                            )
-                                            ->add(
-                                                ElementFactory::field( 'vendor_state', 'refresh_select' )
-                                                                ->set_title( __( 'Vendor State', 'dokan-lite' ) )
-                                                                ->set_description( __( 'Select the state for vendors.', 'dokan-lite' ) )
-                                                                ->set_options(
-                                                                    [
-                                                                        [
-                                                                            'value' => 'active',
-                                                                            'title' => __( 'Active', 'dokan-lite' ),
-                                                                        ],
-                                                                        [
-                                                                            'value' => 'inactive',
-                                                                            'title' => __( 'Inactive', 'dokan-lite' ),
-                                                                        ],
-                                                                        [
-                                                                            'value' => 'pending',
-                                                                            'title' => __( 'Pending', 'dokan-lite' ),
-                                                                        ],
-                                                                    ]
-                                                                )
-                                                                ->set_default( 'active' )
-                                            )
-                            )
-                            ->add(
-                                ElementFactory::field( 'vendor_state_notification', 'switch' )
-                                            ->set_title( __( 'Vendor State Notification', 'dokan-lite' ) )
-                                            ->set_description( __( 'Notify vendors when their state changes.', 'dokan-lite' ) )
-                                            ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                            ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                            ->set_default( 'on' )
-                            )
         );
 
         $this
