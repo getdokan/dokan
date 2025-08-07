@@ -1,6 +1,7 @@
 import mysql from 'mysql2/promise';
 import { serialize, unserialize, isSerialized } from 'php-serialize';
 import { helpers } from '@utils/helpers';
+import 'dotenv/config';
 
 const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 

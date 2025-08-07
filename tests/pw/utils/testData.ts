@@ -1,6 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import 'dotenv/config';
+import path from 'path';
+const rootDir = path.resolve(__dirname, '..');
+
+const { VARIABLE_PRODUCT, SIMPLE_PRODUCT, SIMPLE_PRODUCT_2 } = process.env;
+
+console.log(SIMPLE_PRODUCT, "SIMPLE")
 
 const {
     ADMIN,
@@ -75,30 +81,33 @@ export const data = {
     },
 
     auth: {
-        adminAuthFile: 'playwright/.auth/adminStorageState.json',
-        vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
-        vendor2AuthFile: 'playwright/.auth/vendor2StorageState.json',
-        customerAuthFile: 'playwright/.auth/customerStorageState.json',
-        customer2AuthFile: 'playwright/.auth/customer2StorageState.json',
+        adminAuthFile: path.resolve(rootDir, 'playwright/.auth/adminStorageState.json'),
+        vendorAuthFile: path.resolve(rootDir, 'playwright/.auth/vendorStorageState.json'),
+        vendor2AuthFile: path.resolve(rootDir, 'playwright/.auth/vendor2StorageState.json'),
+        customerAuthFile: path.resolve(rootDir, 'playwright/.auth/customerStorageState.json'),
+        customer2AuthFile: path.resolve(rootDir, 'playwright/.auth/customer2StorageState.json'),
+
 
         adminAuth: {
-            storageState: 'playwright/.auth/adminStorageState.json',
+            storageState: path.resolve(rootDir, 'playwright/.auth/adminStorageState.json'),
         },
 
+        
+
         vendorAuth: {
-            storageState: 'playwright/.auth/vendorStorageState.json',
+            storageState:path.resolve(rootDir, 'playwright/.auth/vendorStorageState.json'),
         },
 
         vendor2Auth: {
-            storageState: 'playwright/.auth/vendor2StorageState.json',
+            storageState: path.resolve(rootDir, 'playwright/.auth/vendor2StorageState.json'),
         },
 
         customerAuth: {
-            storageState: 'playwright/.auth/customerStorageState.json',
+            storageState: path.resolve(rootDir, 'playwright/.auth/customerStorageState.json'),
         },
 
         customer2Auth: {
-            storageState: 'playwright/.auth/customer2StorageState.json',
+            storageState: path.resolve(rootDir, 'playwright/.auth/customer2StorageState.json'),
         },
 
         noAuth: {
@@ -122,7 +131,6 @@ export const data = {
         activeClass: 'active',
         pluginName: {
             dokanLite: 'dokan-lite',
-            dokanPro: 'dokan-pro',
         },
         pluginList: {
             basicAuth: 'Basic-Auth-master/basic-auth',
@@ -302,7 +310,7 @@ export const data = {
         external: {
             productType: 'external',
             productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (External)`,
-            productUrl: '/product/p1_v1-simple/',
+            productUrl: '/product/cap/',
             buttonText: 'Buy product',
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
@@ -315,7 +323,7 @@ export const data = {
         grouped: {
             productType: 'grouped',
             productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Grouped)`,
-            groupedProducts: ['p1_v1 (simple)'],
+            groupedProducts: ['cap'],
             category: 'Uncategorized',
             storeName: `${VENDOR}store`,
             status: 'publish',
@@ -577,8 +585,8 @@ export const data = {
             },
 
             linkedProducts: {
-                upSells: ['p1_v1 (simple)'],
-                crossSells: ['p1_v1 (simple)'],
+                upSells: ['cap'],
+                crossSells: ['cap'],
             },
 
             attribute: {
@@ -702,7 +710,7 @@ export const data = {
 
     // order Shipment Details
     orderShipmentDetails: {
-        shipmentOrderItem: 'p1_v1 (simple)',
+        shipmentOrderItem: 'cap',
         shipmentOrderItemQty: '1',
         shippingStatus: 'ss_proceccing', // ss_delivered, ss_cancelled, ss_proceccing, ss_ready_for_pickup, ss_pickedup, ss_on_the_way
         shippingProvider: 'sp-dhl', // sp-dhl, sp-dpd, sp-fedex, sp-polish-shipping-providers, sp-ups, sp-usps, sp-other
@@ -1900,7 +1908,7 @@ export const data = {
             userRole: 'customer',
             applyOnAllProducts: false,
             specificProducts: true,
-            includeProducts: 'p1_v1 (simple)',
+            includeProducts: 'cap',
             // excludeProducts: 'p1_v2 (simple)',
             specificCategories: false,
             categories: ['Uncategorized'],
@@ -2036,7 +2044,7 @@ export const data = {
 
         filter: {
             byVendor: `${VENDOR}store`,
-            byProduct: 'p1_v1 (simple)',
+            byProduct: 'cap',
         },
     }),
 
@@ -2154,7 +2162,7 @@ export const data = {
     // product advertisement
     productAdvertisement: {
         advertisedProductStore: `${VENDOR}store`,
-        advertisedProduct: 'p1_v1 (simple)',
+        advertisedProduct: 'cap',
 
         filter: {
             byStore: `${VENDOR}store`,
@@ -2723,24 +2731,24 @@ export const data = {
         vendor2: {
             simpleProduct: {
                 product1: {
-                    name: 'p1_v2 (simple)',
-                    productName: () => 'p1_v2 (simple)',
+                    name: SIMPLE_PRODUCT_2 || "Polo",
+                    productName: () => SIMPLE_PRODUCT_2 || "Polo",
                 },
             },
         },
 
         simpleProduct: {
             product1: {
-                name: 'p1_v1 (simple)',
-                productName: () => 'p1_v1 (simple)',
+                name: SIMPLE_PRODUCT || "cap",
+                productName: () => SIMPLE_PRODUCT || "cap",
             },
-            product2: 'p2_v1 (simple)',
-            productFrac1: 'p1_F1_v1 (simple)',
-            productFrac2: 'p2_F2_v1 (simple)',
+            product2: SIMPLE_PRODUCT_2 || "Polo",
+            productFrac1: SIMPLE_PRODUCT_2 || "Polo",
+            productFrac2: SIMPLE_PRODUCT_2 || "Polo",
         },
 
         variableProduct: {
-            product1: 'p1_v1 (variable)',
+            product1: VARIABLE_PRODUCT || "Hoodie",
         },
 
         simpleSubscription: {
