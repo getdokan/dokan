@@ -116,22 +116,16 @@ class GeneralPage extends AbstractPage {
                                                         ->set_description( __( 'Choose what vendor details to show customers in single store page.', 'dokan-lite' ) )
                                         )
                     )
-                //                ->add(
-                //                    ElementFactory::section( 'info' )
-                //                    ->set_title( __( 'Info', 'dokan-lite' ) )
-                //                    ->set_description( __( 'Configure the info for your marketplace.', 'dokan-lite' ) )
-                //                    ->add(
-                //                        ElementFactory::field( 'test_info', 'info' )
-                //                        ->set_title( __( 'Info', 'dokan-lite' ) )
-                //                        ->set_description( __( 'Configure the info for your marketplace.', 'dokan-lite' ) )
-                //                    )
-                //                    ->add(
-                //                        ElementFactory::field( 'double_text', 'double_text' )
-                //                            ->set_label( __( 'Double Text Field Example', 'dokan-lite' ) )
-                //                            ->set_first_value( 'Example First Value' )
-                //                            ->set_second_value( 'Example Second Value' )
-                //                    )
-                //                )
+                    ->add(
+                        ElementFactory::section( 'single_product_display' )
+                        ->set_title( __( 'Single Product Page', 'dokan-lite' ) )
+                        ->set_description( __( 'Configure which sections to show when customers view individual products.', 'dokan-lite' ) )
+                        ->add(
+                            ElementFactory::field( 'single_product_appearance', 'single_product_preview' )
+                            ->set_title( __( 'Single Product Page Appearance', 'dokan-lite' ) )
+                            ->set_description( __( 'Choose which sections to show when customers view individual products.', 'dokan-lite' ) )
+                        )
+                    )
             )
             ->add(
                 $dokan_page
