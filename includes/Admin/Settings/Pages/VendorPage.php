@@ -87,7 +87,8 @@ class VendorPage extends AbstractPage {
         // Store state sub-page
         $store_state_page = ElementFactory::sub_page( 'store_state' )
                                             ->set_title( __( 'Store State', 'dokan-lite' ) )
-                                            ->set_description( __( 'Configure store state settings.', 'dokan-lite' ) );
+            ->set_description( __( 'Configure store state settings.', 'dokan-lite' ) )
+            ->set_doc_link( esc_url( 'https://wedevs.com/docs/dokan/vendor-settings/store-state/' ) );
 
         // Create a single section for all vendor capabilities
         $vendor_capabilities_section = ElementFactory::section( 'vendor_capabilities' )

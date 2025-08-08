@@ -29,7 +29,7 @@ const DokanBaseFieldLabel = ( {
     return (
         <div
             className={ twMerge(
-                `flex items-start gap-2 ${ wrapperClassNames }`
+                `flex items-start gap-4 ${ wrapperClassNames }`
             ) }
         >
             { icon && (
@@ -60,7 +60,7 @@ const DokanBaseFieldLabel = ( {
                 { helperText && (
                     <div>
                         { typeof helperText === 'string' ? (
-                            <p className="text-sm ">
+                            <p className="text-sm font-light">
                                 <RawHTML>{ helperText }</RawHTML>
                             </p>
                         ) : (
