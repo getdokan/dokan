@@ -15,6 +15,7 @@ import DokanPassword from './DokanPassword';
 import DokanRadioCapsule from './DokanRadioCapsule';
 import DokanRefreshSelectField from './DokanRefreshSelectField';
 import DokanSelect from './DokanSelect';
+import DokanSingleProductPreview from './DokanSingleProductPreview';
 import DokanSwitch from './DokanSwitch';
 import DokanTel from './DokanTel';
 import DokanTextArea from './DokanTextArea';
@@ -146,6 +147,16 @@ const FieldParser = ( {
         case 'vendor_info_preview':
             return (
                 <DokanVendorInfoPreview
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'single_product_preview':
+            return (
+                <DokanSingleProductPreview
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }

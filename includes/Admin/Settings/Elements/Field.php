@@ -18,6 +18,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioBox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioCapsule;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RefreshSelectField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Select;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\SingleProductPreview;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Text;
@@ -78,6 +79,7 @@ class Field extends SettingsElement {
         'customize_radio'  => CustomizeRadio::class,
         'html'             => HtmlField::class,
         'vendor_info_preview' => VendorInfoPreview::class,
+        'single_product_preview' => SingleProductPreview::class,
 	);
 
 	/**
