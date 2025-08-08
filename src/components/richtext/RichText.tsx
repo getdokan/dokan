@@ -73,6 +73,7 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
     const containerRef = useRef< HTMLDivElement >( null );
     const quillInstanceRef = useRef< Quill | null >( null );
     const onChangeRef = useRef( onChange );
+    const isInternalChange = useRef( false );
 
     // Expose the Quill instance via the forwarded ref.
     useImperativeHandle( ref, () => quillInstanceRef.current as Quill, [] );
@@ -176,6 +177,7 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
         quill.on( 'text-change', ( delta, oldDelta, source ) => {
             if ( source === 'user' && onChangeRef.current ) {
                 const newHtml = quill.root.innerHTML;
+                isInternalChange.current = true;
                 onChangeRef.current( newHtml === '<p><br></p>' ? '' : newHtml );
             }
         } );
@@ -191,12 +193,21 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
 
     // Effect to handle changes to the `value` prop
     useEffect( () => {
+        if ( isInternalChange.current ) {
+            isInternalChange.current = false;
+            return;
+        }
+
         const quill = quillInstanceRef.current;
         if ( quill && value !== quill.root.innerHTML ) {
             const selection = quill.getSelection();
             quill.clipboard.dangerouslyPasteHTML( value || '' );
             if ( selection ) {
-                quill.setSelection( selection, 'silent' );
+                quill.setSelection(
+                    selection.index,
+                    selection.length,
+                    'silent'
+                );
             }
         }
     }, [ value ] );
