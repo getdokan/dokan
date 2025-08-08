@@ -9,6 +9,6 @@ use WeDevs\Dokan\ThirdParty\Packages\League\Container\ContainerAwareInterface;
 
 interface InflectorAggregateInterface extends ContainerAwareInterface, IteratorAggregate
 {
-    public function add(string $type, callable $callback = null): Inflector;
+    public function add(string $type, ?callable $callback = null): Inflector;
     public function inflect(object $object);
 }
