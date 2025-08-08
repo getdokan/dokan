@@ -1,4 +1,9 @@
-import { useEffect, useRef } from '@wordpress/element';
+import {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+} from '@wordpress/element';
 import Quill, { QuillOptions } from 'quill';
 import 'quill/dist/quill.snow.css';
 import './styles.scss';
@@ -53,9 +58,9 @@ interface RichTextProps extends QuillOptions {
 /**
  * A flexible and controlled Quill Rich Text Editor component for React.
  * It allows full customization of the Quill editor by accepting any valid QuillOptions as props.
- * @param props
+ * It also forwards a ref to the Quill instance for advanced imperative control.
  */
-function RichText( props: RichTextProps ) {
+const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
     const {
         value,
         onChange,
@@ -68,6 +73,9 @@ function RichText( props: RichTextProps ) {
     const containerRef = useRef< HTMLDivElement >( null );
     const quillInstanceRef = useRef< Quill | null >( null );
     const onChangeRef = useRef( onChange );
+
+    // Expose the Quill instance via the forwarded ref.
+    useImperativeHandle( ref, () => quillInstanceRef.current as Quill, [] );
 
     useEffect( () => {
         onChangeRef.current = onChange;
@@ -136,14 +144,16 @@ function RichText( props: RichTextProps ) {
             },
         };
 
+        // Deep merge modules, giving precedence to custom modules.
         const modules: QuillOptions[ 'modules' ] = {
             ...defaultModules,
             ...customModules,
             toolbar: {
-                ...defaultModules.toolbar,
+                ...( defaultModules.toolbar as object ),
                 ...( customModules?.toolbar as object ),
                 handlers: {
-                    ...defaultModules.toolbar?.handlers,
+                    ...( defaultModules.toolbar as { handlers?: object } )
+                        ?.handlers,
                     ...( customModules?.toolbar as { handlers?: object } )
                         ?.handlers,
                 },
@@ -197,7 +207,7 @@ function RichText( props: RichTextProps ) {
     }, [ readOnly ] );
 
     return <div ref={ containerRef }></div>;
-}
+} );
 
 RichText.displayName = 'Editor';
 

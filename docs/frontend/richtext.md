@@ -10,12 +10,13 @@
     - [2. Read-Only Mode](#2-read-only-mode)
     - [3. Customizing the Toolbar](#3-customizing-the-toolbar)
     - [4. Adding a Placeholder](#4-adding-a-placeholder)
+    - [5. Advanced Usage: Accessing the Quill Instance](#5-advanced-usage-accessing-the-quill-instance)
 
 ## Introduction
 
 The `RichText` component is a flexible and controlled rich text editor for React, built as a wrapper around the popular Quill.js library. It is designed to integrate seamlessly within the WordPress environment, featuring built-in support for the WordPress Media Uploader for images and videos.
 
-It behaves like a standard React controlled input, managed via `value` and `onChange` props, making state management predictable and straightforward.
+It behaves like a standard React controlled input, managed via `value` and `onChange` props. For advanced customization, it also provides direct access to the underlying Quill instance via a `ref`.
 
 ## Component Dependency
 
@@ -53,6 +54,7 @@ export default MyEditor;
 -   **Customizable Toolbar:** The Quill toolbar is easily customizable through the `modules` prop. The component intelligently deep-merges custom modules with the default configuration.
 -   **Themable:** Supports Quill's built-in themes (e.g., `snow`, `bubble`).
 -   **Read-Only Mode:** Can be easily toggled to a non-editable state.
+-   **Direct Quill Instance Access:** For advanced use cases, you can get a direct reference to the Quill editor instance using a React `ref`, allowing you to call any Quill API method.
 
 ## Props API
 
@@ -64,6 +66,7 @@ export default MyEditor;
 | `theme` | `string` | No | `'snow'` | The name of the Quill theme to use (e.g., `'snow'`, `'bubble'`). |
 | `modules` | `object` | No | `{...}` | A Quill modules configuration object. This will be deep-merged with the default modules, allowing for customization of the toolbar and other features. |
 | `...rest` | `object` | No | `{}` | Any other props are passed directly to the Quill constructor, allowing for advanced configuration (e.g., `placeholder`, `formats`). |
+| `ref` | `React.Ref<Quill>` | No | - | A ref that will be populated with the Quill instance upon initialization. |
 
 ---
 
@@ -149,3 +152,47 @@ You can pass any additional Quill options (like `placeholder`) directly as props
     placeholder={ 'Start writing your masterpiece...' }
 />
 ```
+
+### 5. Advanced Usage: Accessing the Quill Instance
+
+For advanced customization, such as adding custom event listeners or calling Quill API methods, you can get a reference to the Quill instance using `useRef` and passing it to the component's `ref` prop.
+
+This example shows how to listen for selection changes and log the selected text to the console.
+
+```jsx
+import { useState, useRef, useEffect } from '@wordpress/element';
+import { RichText } from '@dokan/components';
+import Quill from 'quill'; // Import Quill type for type safety
+
+const AdvancedEditor = () => {
+    const [ content, setContent ] = useState( '' );
+    const quillRef = useRef<Quill>( null );
+
+    useEffect( () => {
+        const quill = quillRef.current;
+
+        if ( quill ) {
+            // Now you can use the full Quill API
+            const onSelectionChange = ( range ) => {
+                if ( range ) {
+                    console.log( 'User selected text:', quill.getText( range.index, range.length ) );
+                }
+            };
+
+            quill.on( 'selection-change', onSelectionChange );
+
+            return () => {
+                quill.off( 'selection-change', onSelectionChange );
+            };
+        }
+    }, [] );
+
+    return (
+        <RichText
+            ref={ quillRef }
+            value={ content }
+            onChange={ setContent }
+            placeholder={ 'Interact with the editor...' }
+        />
+    );
+};
