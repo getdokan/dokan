@@ -48,18 +48,21 @@ export const dbUtils = {
     async getUserMeta(userId: string, metaKey: string): Promise<any> {
         const querySelect = `SELECT meta_value FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key = ?;`;
         const res = await dbUtils.dbQuery(querySelect, [userId, metaKey]);
-        
-        // Check if result exists before accessing
-        if (!res || res.length === 0 || !res[0]) {
+
+        // handle empty result
+        if (!res || res.length === 0 || !res[0] || res[0].meta_value === undefined) {
             return null;
         }
-        
-        const userMeta = unserialize(res[0].meta_value, {
-            WP_Term: function () {
-                return {};
-            },
-        }); // todo: added to handle WP_Term error, test if it works for further cases
-        return userMeta;
+
+        const rawValue = res[0].meta_value as string;
+        // return deserialized value if serialized; otherwise return raw value
+        return isSerialized(rawValue)
+            ? unserialize(rawValue, {
+                  WP_Term: function () {
+                      return {};
+                  },
+              })
+            : rawValue;
     },
 
     // set user meta
@@ -83,8 +86,21 @@ export const dbUtils = {
     async getOptionValue(optionName: string): Promise<any> {
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = ?;`;
         const res = await dbUtils.dbQuery(query, [optionName]);
-        const optionValue = unserialize(res[0].option_value);
-        return optionValue;
+
+        // when option row does not exist yet, return empty object to allow deep merge
+        if (!res || res.length === 0 || !res[0] || res[0].option_value === undefined) {
+            return {};
+        }
+
+        const rawValue = res[0].option_value as string;
+        // some options are plain strings (e.g., 'yes'/'no'); only unserialize serialized values
+        return isSerialized(rawValue)
+            ? unserialize(rawValue, {
+                  WP_Term: function () {
+                      return {};
+                  },
+              })
+            : rawValue;
     },
 
     // set option value
