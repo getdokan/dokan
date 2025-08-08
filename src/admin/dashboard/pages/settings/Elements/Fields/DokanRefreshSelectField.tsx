@@ -65,6 +65,7 @@ const DokanRefreshSelectField = ( {
                         helperText={ element.description }
                         tooltip={ element?.helper_text }
                         icon={ element.icon || '' }
+                        titleFontWeight="light"
                     />
                 </div>
 
@@ -83,6 +84,8 @@ const DokanRefreshSelectField = ( {
                                 value: value as string,
                             } );
                         } }
+                        placeholder={ element.placeholder as string }
+                        disabled={ element.disabled }
                         value={ selectedProfile as string }
                         containerClassName={ 'w-72' }
                     />

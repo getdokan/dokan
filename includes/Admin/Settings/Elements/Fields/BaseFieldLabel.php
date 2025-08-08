@@ -16,10 +16,6 @@ class BaseFieldLabel extends Text {
      */
     protected $input_type = 'base_field_label';
 
-
-
-
-
     /**
      * Icon content.
      *
@@ -58,8 +54,7 @@ class BaseFieldLabel extends Text {
      *
      * @return bool
      */
-    public function data_validation( $data )
-    : bool {
+    public function data_validation( $data ): bool {
         return true; // Labels don't require validation
     }
 
@@ -68,8 +63,7 @@ class BaseFieldLabel extends Text {
      *
      * @return array
      */
-    public function populate()
-    : array {
+    public function populate(): array {
         $data                = parent::populate();
         $data['suffix']      = $this->get_suffix();
         $data['icon']        = $this->get_icon();
@@ -83,8 +77,7 @@ class BaseFieldLabel extends Text {
      *
      * @return string
      */
-    public function get_suffix()
-    : string {
+    public function get_suffix(): string {
         return $this->suffix;
     }
 
@@ -95,8 +88,7 @@ class BaseFieldLabel extends Text {
      *
      * @return BaseFieldLabel
      */
-    public function set_suffix( string $suffix )
-    : BaseFieldLabel {
+    public function set_suffix( string $suffix ): BaseFieldLabel {
         $this->suffix = $suffix;
 
         return $this;
@@ -107,8 +99,7 @@ class BaseFieldLabel extends Text {
      *
      * @return string
      */
-    public function get_icon()
-    : string {
+    public function get_icon(): string {
         return $this->icon;
     }
 
@@ -119,8 +110,7 @@ class BaseFieldLabel extends Text {
      *
      * @return BaseFieldLabel
      */
-    public function set_icon( string $icon )
-    : BaseFieldLabel {
+    public function set_icon( string $icon ): BaseFieldLabel {
         $this->icon = $icon;
 
         return $this;
@@ -131,8 +121,7 @@ class BaseFieldLabel extends Text {
      *
      * @return string
      */
-    public function get_description()
-    : string {
+    public function get_description(): string {
         return $this->description;
     }
 
@@ -143,8 +132,7 @@ class BaseFieldLabel extends Text {
      *
      * @return BaseFieldLabel
      */
-    public function set_description( string $description )
-    : BaseFieldLabel {
+    public function set_description( string $description ): BaseFieldLabel {
         $this->description = $description;
 
         return $this;
@@ -158,8 +146,7 @@ class BaseFieldLabel extends Text {
      *
      * @return string
      */
-    public function escape_element( $data )
-    : string {
+    public function escape_element( $data ): string {
         return esc_html( $data );
     }
 }

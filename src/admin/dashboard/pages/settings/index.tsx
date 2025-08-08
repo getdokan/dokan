@@ -179,6 +179,7 @@ const SettingsPage = () => {
             return {
                 title: currentPage.title || __( 'Settings', 'dokan-lite' ),
                 description: currentPage.description || '',
+                documentationLink: currentPage?.doc_link || '',
             };
         }
 
@@ -222,6 +223,9 @@ const SettingsPage = () => {
                                 <PageHeading
                                     title={ pageInfo.title }
                                     description={ pageInfo.description }
+                                    documentationLink={
+                                        pageInfo.documentationLink
+                                    }
                                 />
                             ) }
                             <div
