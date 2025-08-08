@@ -92,6 +92,7 @@
     "tailwind-merge": "^2.5.5",
     "usehooks-ts": "^3.1.0",
     "dompurify": "^3.2.4",
-    "@wordpress/core-data": "^7.17.0"
+    "@wordpress/core-data": "^7.17.0",
+    "quill": "^2.0.3"
   }
 }
