@@ -23,6 +23,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Text;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\CustomizeRadio;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\HtmlField;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\VendorInfoPreview;
 
 /**
  * Settings element Field.
@@ -76,6 +77,7 @@ class Field extends SettingsElement {
         'base_field_label' => BaseFieldLabel::class,
         'customize_radio'  => CustomizeRadio::class,
         'html'             => HtmlField::class,
+        'vendor_info_preview' => VendorInfoPreview::class,
 	);
 
 	/**

@@ -19,6 +19,7 @@ import DokanSwitch from './DokanSwitch';
 import DokanTel from './DokanTel';
 import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
+import DokanVendorInfoPreview from './DokanVendorInfoPreview';
 import RadioBox from './RadioBox';
 
 const FieldParser = ( {
@@ -141,6 +142,17 @@ const FieldParser = ( {
                     element={ element }
                 />
             );
+
+        case 'vendor_info_preview':
+            return (
+                <DokanVendorInfoPreview
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
         case 'base_field_label':
             return <DokanFieldLabel element={ element } />;
 
