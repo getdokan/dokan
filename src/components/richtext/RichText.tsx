@@ -1,15 +1,19 @@
 import { useEffect, useRef } from '@wordpress/element';
-import Quill from 'quill';
+import Quill, { QuillOptions } from 'quill';
 import 'quill/dist/quill.snow.css';
 import './styles.scss';
 
 /**
  * Opens the WordPress media uploader to select an image or video.
+ * For usage example and Documentation for this component please go through dokan-lite/docs/frontend/richtext.md
  *
  * @param {function(string, object): void} onSelect       - Callback function to run when media is selected. It receives the URL and the full attachment object.
  * @param {string}                         [type='image'] - The type of media to select ('image' or 'video').
  */
-const openWpMediaUploader = ( onSelect, type = 'image' ) => {
+const openWpMediaUploader = (
+    onSelect: ( url: string, attachment: any ) => void,
+    type = 'image'
+) => {
     // @ts-ignore
     if ( typeof wp === 'undefined' || ! wp.media ) {
         return;
@@ -36,28 +40,33 @@ const openWpMediaUploader = ( onSelect, type = 'image' ) => {
 };
 
 /**
- * A flexible and controlled Quill Rich Text Editor component for React.
- *
- * @param {Object}                 props                  - The component props.
- * @param {string}                 props.value            - The HTML content to display in the editor.
- * @param {function(string): void} props.onChange         - Callback that returns the new HTML content when it changes.
- * @param {boolean}                [props.readOnly=false] - Sets the editor to read-only mode.
- * @param {string}                 [props.theme='snow']   - The theme to use for the editor (e.g., 'snow', 'bubble').
- * @param {Object}                 [props.modules]        - Custom Quill modules configuration. Merged with defaults.
- * @param {Object}                 [props.rest]           - Any other props will be passed to the Quill constructor.
+ * Props for the RichText component.
+ * Extends QuillOptions to allow full editor customization.
  */
-function RichText( props ) {
+interface RichTextProps extends QuillOptions {
+    /** The HTML content to display in the editor. */
+    value: string;
+    /** Callback that returns the new HTML content when it changes. */
+    onChange: ( value: string ) => void;
+}
+
+/**
+ * A flexible and controlled Quill Rich Text Editor component for React.
+ * It allows full customization of the Quill editor by accepting any valid QuillOptions as props.
+ * @param props
+ */
+function RichText( props: RichTextProps ) {
     const {
         value,
         onChange,
         readOnly = false,
         theme = 'snow',
         modules: customModules,
-        ...rest
+        ...quillProps
     } = props;
 
-    const containerRef = useRef( null );
-    const quillInstanceRef = useRef( null );
+    const containerRef = useRef< HTMLDivElement >( null );
+    const quillInstanceRef = useRef< Quill | null >( null );
     const onChangeRef = useRef( onChange );
 
     useEffect( () => {
@@ -74,7 +83,6 @@ function RichText( props ) {
             containerRef.current.ownerDocument.createElement( 'div' )
         );
 
-        // Custom handlers for image and video uploads
         const customImageHandler = () => {
             const quill = quillInstanceRef.current;
             if ( ! quill ) {
@@ -110,8 +118,7 @@ function RichText( props ) {
             }, 'video' );
         };
 
-        // Define default modules and merge with custom ones
-        const defaultModules = {
+        const defaultModules: QuillOptions[ 'modules' ] = {
             toolbar: {
                 container: [
                     [ { header: [ 1, 2, 3, 4, 5, 6, false ] } ],
@@ -129,18 +136,16 @@ function RichText( props ) {
             },
         };
 
-        // Deep merge the modules, giving precedence to custom modules
-        const modules = {
+        const modules: QuillOptions[ 'modules' ] = {
             ...defaultModules,
             ...customModules,
             toolbar: {
                 ...defaultModules.toolbar,
-                ...( customModules && customModules.toolbar ),
+                ...( customModules?.toolbar as object ),
                 handlers: {
-                    ...defaultModules.toolbar.handlers,
-                    ...( customModules &&
-                        customModules.toolbar &&
-                        customModules.toolbar.handlers ),
+                    ...defaultModules.toolbar?.handlers,
+                    ...( customModules?.toolbar as { handlers?: object } )
+                        ?.handlers,
                 },
             },
         };
@@ -149,7 +154,7 @@ function RichText( props ) {
             theme,
             modules,
             readOnly,
-            ...rest,
+            ...quillProps,
         } );
 
         quillInstanceRef.current = quill;
@@ -161,11 +166,7 @@ function RichText( props ) {
         quill.on( 'text-change', ( delta, oldDelta, source ) => {
             if ( source === 'user' && onChangeRef.current ) {
                 const newHtml = quill.root.innerHTML;
-                if ( newHtml === '<p><br></p>' && ! value ) {
-                    onChangeRef.current( '' );
-                } else {
-                    onChangeRef.current( newHtml );
-                }
+                onChangeRef.current( newHtml === '<p><br></p>' ? '' : newHtml );
             }
         } );
 
@@ -175,7 +176,6 @@ function RichText( props ) {
                 containerRef.current.innerHTML = '';
             }
         };
-        // The effect should only run once on mount.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [] );
 
@@ -186,17 +186,14 @@ function RichText( props ) {
             const selection = quill.getSelection();
             quill.clipboard.dangerouslyPasteHTML( value || '' );
             if ( selection ) {
-                quill.setSelection( selection );
+                quill.setSelection( selection, 'silent' );
             }
         }
     }, [ value ] );
 
     // Effect to toggle the read-only state.
     useEffect( () => {
-        const quill = quillInstanceRef.current;
-        if ( quill ) {
-            quill.enable( ! readOnly );
-        }
+        quillInstanceRef.current?.enable( ! readOnly );
     }, [ readOnly ] );
 
     return <div ref={ containerRef }></div>;
