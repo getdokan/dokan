@@ -33,7 +33,7 @@ const DokanBaseFieldLabel = ( {
         >
             { icon && <div className="flex items-center">{ icon }</div> }
             <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2.5">
                     <label
                         htmlFor={ htmlFor }
                         className={ twMerge(

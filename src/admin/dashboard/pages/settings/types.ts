@@ -17,6 +17,7 @@ export type SettingsElement = {
     icon?: string;
     title?: string;
     description?: string;
+    tooltip?: string;
     value?:
         | string
         | number

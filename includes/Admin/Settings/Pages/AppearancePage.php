@@ -12,7 +12,7 @@ class AppearancePage extends AbstractPage {
      *
      * @var string
      */
-    protected $id = 'menu_manager';
+    protected $id = 'appearance';
 
     /**
      * The page priority.
@@ -28,7 +28,7 @@ class AppearancePage extends AbstractPage {
      *
      * @return string
      */
-    protected $storage_key = 'dokan_menu_manager';
+    protected $storage_key = 'dokan_settings_appearance';
 
     /**
      * Register the page scripts and styles.
@@ -100,8 +100,5 @@ class AppearancePage extends AbstractPage {
         // Add the section to the store page.
         $store_page->add( $store_section );
         $appearance_page->add( $store_page );
-
-        // Create dashboard menu manager subpage.
-        do_action( 'dokan_appearance_page_sub_pages', $appearance_page );
     }
 }

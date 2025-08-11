@@ -16,7 +16,8 @@ const SubSection = ( {
         'dokan_admin_settings_subsection_all_children_fields',
         element?.children?.every( ( child ) => {
             return child.type === 'field';
-        } )
+        } ),
+        element
     );
 
     return (
