@@ -94,7 +94,7 @@ class Settings {
         $clickable_types = [ 'flat', 'fixed' ];
 
         if ( 'dokan_selling' === $option_name && isset( $option_values['commission_type'] ) && in_array( $option_values['commission_type'], $clickable_types, true ) ) {
-            $admin_percentage       = isset( $option_values['admin_percentage'] ) ? (float) $option_values['admin_percentage'] : 0;
+            $admin_percentage       = (float) ( $option_values['admin_percentage'] ?? 0 );
             $saved_admin_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', '0' );
 
             if ( $admin_percentage < 0 || $admin_percentage > 100 ) {
@@ -127,9 +127,7 @@ class Settings {
             $settings[ $section['id'] ] = apply_filters( 'dokan_get_settings_values', $this->sanitize_options( get_option( $section['id'], [] ), 'read' ), $section['id'] );
         }
 
-        $new_seller_enable_selling_statuses = isset( $settings['dokan_selling'] ) && isset( $settings['dokan_selling']['new_seller_enable_selling'] ) 
-            ? $settings['dokan_selling']['new_seller_enable_selling'] 
-            : 'automatically';
+        $new_seller_enable_selling_statuses = isset( $settings['dokan_selling']['new_seller_enable_selling'] ) ? $settings['dokan_selling']['new_seller_enable_selling'] : 'automatically';
 
         /**
          * This is the mapper of enabled selling admin setting option for before and after of 4.0.2
