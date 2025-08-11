@@ -232,6 +232,12 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
             return floatval( $gateway_fee['fee'] );
         }
 
+        // if order has admin gateway fee, return it
+        $admin_gateway_fee = $this->order->get_meta( 'dokan_admin_gateway_fee', true );
+        if ( ! empty( $admin_gateway_fee ) ) {
+            return floatval( $admin_gateway_fee );
+        }
+
         return 0;
     }
 
