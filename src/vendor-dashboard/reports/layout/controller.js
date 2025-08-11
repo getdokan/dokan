@@ -48,7 +48,7 @@ export const getPages = () => {
       path        : "/analytics/overview",
       breadcrumbs : [
         ...initialBreadcrumbs,
-        [ "/analytics/overview", __( "Analytics", 'dokan-lite' ) ], // TODO: The Analytics keyword can be change into anything ( Report, anything ) here
+        [ "/analytics/overview", __( "Reports", 'dokan-lite' ) ],
         __( "Overview", 'dokan-lite' ),
       ],
       wpOpenMenu  : "toplevel_page_wc-admin-path--analytics-overview",
