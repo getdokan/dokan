@@ -19,6 +19,7 @@ import DokanSelect from './DokanSelect';
 import DokanFieldLabel from './DokanFieldLabel';
 import CustomizeRadio from './CustomizeRadio';
 import CategoryBasedCommission from "./Commission/CategoryBasedCommission";
+// import DokanRepeatableList from "./DokanRepeatableList";
 
 const FieldParser = ( {
     element,
@@ -138,6 +139,14 @@ const FieldParser = ( {
             );
         case 'base_field_label':
             return <DokanFieldLabel element={ element } />;
+
+        // case 'repeater':
+        //     return (
+        //         <DokanRepeatableList
+        //             key={element.hook_key}
+        //             element={element}
+        //         />
+        //     );
 
         case 'checkbox':
         case 'color':

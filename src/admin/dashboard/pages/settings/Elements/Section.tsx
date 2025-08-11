@@ -14,14 +14,13 @@ const Section = ( {
     return (
         <section aria-labelledby="settings-section-heading" key={ element.id }>
             <div
-                className={ `flex flex-col
-                           divide-y border border-[#E9E9E9] rounded  divide-gray-200'
-                    ` }
+                className={ `flex flex-col divide-y border border-[#E9E9E9] rounded divide-gray-200` }
             >
                 { element.title && (
                     <PageHeading
                         title={ element.title }
                         description={ element.description }
+                        tooltip={ element?.tooltip || '' }
                         className={ 'p-5 mb-0 gap-2 ' }
                         titleClassName={ 'text-base font-semibold  ' }
                         descriptionClassName={ 'text-sm text-[#828282]' }

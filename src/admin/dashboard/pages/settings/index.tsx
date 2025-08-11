@@ -9,7 +9,6 @@ import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import PageHeading from './Elements/PageHeading';
 import { twMerge } from 'tailwind-merge';
-import {doAction} from "@wordpress/hooks";
 // DEMO: Render all Dokan* field components from src/Fields with mock props
 
 const SettingsPage = () => {
@@ -154,7 +153,6 @@ const SettingsPage = () => {
     };
 
     const onValueChange = ( element: SettingsElement ) => {
-        doAction( 'dokan_before_admin_settings_data_save', element, settingsStore );
         dispatch( settingsStore ).updateSettingsValue( element );
     };
 
@@ -227,7 +225,7 @@ const SettingsPage = () => {
                                 />
                             ) }
                             <div
-                                className={ `flex flex-col  ${ twMerge(
+                                className={ `flex flex-col gap-8 ${ twMerge(
                                     allElementsAreFields
                                         ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
                                         : ''
