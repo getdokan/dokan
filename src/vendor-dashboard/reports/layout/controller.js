@@ -40,7 +40,7 @@ export const PAGES_FILTER = "dokan_analytics_pages_list";
 
 export const getPages = () => {
   const pages = [];
-  const initialBreadcrumbs = [["", getAdminSetting("woocommerceTranslation")]];
+  const initialBreadcrumbs = [["", __( 'Dashboard', 'dokan-lite' )]];
 
   if ( getAdminSetting( 'isAnalyticsEnabled' ) ) {
     pages.push({
@@ -48,7 +48,7 @@ export const getPages = () => {
       path        : "/analytics/overview",
       breadcrumbs : [
         ...initialBreadcrumbs,
-        [ "/analytics/overview", __( "Analytics", 'dokan-lite' ) ],
+        [ "/analytics/overview", __( "Analytics", 'dokan-lite' ) ], // TODO: The Analytics keyword can be change into anything ( Report, anything ) here
         __( "Overview", 'dokan-lite' ),
       ],
       wpOpenMenu  : "toplevel_page_wc-admin-path--analytics-overview",
