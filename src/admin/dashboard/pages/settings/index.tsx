@@ -231,7 +231,7 @@ const SettingsPage = () => {
                             <div
                                 className={ `flex flex-col  ${ twMerge(
                                     allElementsAreFields
-                                        ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
+                                        ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded overflow-hidden'
                                         : ''
                                 ) }` }
                             >
