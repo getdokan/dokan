@@ -17,7 +17,7 @@ const VendorPreviewImage: React.FC< VendorPreviewImageProps > = ( {
     showAddress,
 } ) => {
     return (
-        <div className="bg-[#efeaff] rounded-[5px] p-2 w-[156px]  flex flex-col relative overflow-hidden">
+        <div className="bg-[#efeaff] rounded p-2 w-[156px] h-[10rem] flex flex-col relative overflow-hidden">
             { /* Store Icon and Name - Centered at top */ }
             <div className="flex flex-col items-center mb-4 mt-1">
                 <div className="w-8 h-8 bg-[#7047eb] rounded-full flex items-center justify-center mb-2 relative">
@@ -31,7 +31,12 @@ const VendorPreviewImage: React.FC< VendorPreviewImageProps > = ( {
                     </svg>
                 </div>
                 <span className="text-xs font-bold text-black opacity-85 leading-[1.3] text-center">
-                    Store Name
+                    {
+                        __(
+                            'Store Name',
+                            'dokan-lite'
+                        ) /* Placeholder for store name */
+                    }
                 </span>
             </div>
 
@@ -152,7 +157,7 @@ export default function DokanVendorInfoPreview( { element } ) {
     }
 
     return (
-        <div className="bg-white rounded-md border border-gray-200 p-5">
+        <div className="bg-white  p-5">
             <div className="flex items-start justify-between">
                 <div className="flex-1 max-w-lg">
                     { /* Field Header */ }
@@ -161,20 +166,8 @@ export default function DokanVendorInfoPreview( { element } ) {
                             title={ element.title }
                             titleFontWeight="bold"
                             helperText={ element.description }
+                            tooltip={ element?.help_text }
                         />
-                        <svg
-                            className="w-4 h-4 text-gray-500"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={ 2 }
-                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                        </svg>
                     </div>
 
                     { /* Checkboxes using SimpleCheckboxGroup */ }
