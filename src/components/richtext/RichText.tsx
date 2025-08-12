@@ -120,7 +120,7 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
                 const range = quill.getSelection( true );
                 quill.clipboard.dangerouslyPasteHTML(
                     range.index,
-                    `<video controls src="${ url }"></video>`,
+                    `<video class="ql-video" height="280" width="500" controls src="${ url }"></video>`,
                     'user'
                 );
                 quill.setSelection( range.index + 1, 'silent' );
