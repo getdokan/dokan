@@ -107,24 +107,14 @@ class GeneralPage extends AbstractPage {
                 ->set_title( __( 'Marketplace', 'dokan-lite' ) )
                 ->set_description( __( 'Configure core marketplace functionalities and customer shopping experience.', 'dokan-lite' ) )
                     ->add(
-                        ElementFactory::section( 'vendor_info_display' )
-                                        ->set_title( __( 'Vendor Information Display', 'dokan-lite' ) )
-                                        ->set_description( __( 'Configure what vendor details to show customers in single store page.', 'dokan-lite' ) )
-                                        ->add(
-                                            ElementFactory::field( 'vendor_info_visibility', 'vendor_info_preview' )
+                        ElementFactory::field( 'vendor_info_visibility', 'vendor_info_preview' )
                                                         ->set_title( __( 'Vendor Info Visibility', 'dokan-lite' ) )
                                                         ->set_description( __( 'Choose what vendor details to show customers in single store page.', 'dokan-lite' ) )
-                                        )
                     )
                     ->add(
-                        ElementFactory::section( 'single_product_display' )
-                        ->set_title( __( 'Single Product Page', 'dokan-lite' ) )
-                        ->set_description( __( 'Configure which sections to show when customers view individual products.', 'dokan-lite' ) )
-                        ->add(
-                            ElementFactory::field( 'single_product_appearance', 'single_product_preview' )
+                        ElementFactory::field( 'single_product_appearance', 'single_product_preview' )
                             ->set_title( __( 'Single Product Page Appearance', 'dokan-lite' ) )
                             ->set_description( __( 'Choose which sections to show when customers view individual products.', 'dokan-lite' ) )
-                        )
                     )
             )
             ->add(
