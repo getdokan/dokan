@@ -26,9 +26,9 @@ const openWpMediaUploader = (
 
     // @ts-ignore
     const frame = wp.media( {
-        title: 'Select or Upload Media',
+        title: __( 'Select or Upload Media', 'dokan-lite' ),
         button: {
-            text: 'Use this media',
+            text: __( 'Use this media', 'dokan-lite' ),
         },
         library: {
             type, // 'image' or 'video'
