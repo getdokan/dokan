@@ -10,7 +10,6 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CombineInput;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Currency;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\DoubleTextField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\InfoField;
-use WeDevs\Dokan\Admin\Settings\Elements\Fields\MenuManager;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\MultiCheck;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Number;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Password;
@@ -18,6 +17,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Radio;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioBox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioCapsule;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RefreshSelectField;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Repeater;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Select;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
@@ -77,6 +77,7 @@ class Field extends SettingsElement {
         'base_field_label'          => BaseFieldLabel::class,
         'customize_radio'           => CustomizeRadio::class,
         'html'                      => HtmlField::class,
+        'repeater'                  => Repeater::class,
 	);
 
 	/**

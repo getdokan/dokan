@@ -20,6 +20,7 @@ import DokanTel from './DokanTel';
 import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
 import RadioBox from './RadioBox';
+import DokanRepeater from "./DokanReapeater";
 
 const FieldParser = ( {
     element,
@@ -148,6 +149,20 @@ const FieldParser = ( {
                     onValueChange={ onValueChange }
                     getSetting={ getSetting }
                 />
+            );
+
+        case 'repeater':
+            return applyFilters(
+                'dokan_admin_settings_repeater_field_parser',
+                <DokanRepeater
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />,
+                element,
+                getSetting,
+                onValueChange
             );
 
         case 'checkbox':
