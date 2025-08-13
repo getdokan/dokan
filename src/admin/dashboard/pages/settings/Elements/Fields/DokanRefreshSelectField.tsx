@@ -44,11 +44,10 @@ const DokanRefreshSelectField = ( {
                     setSelectedProfile( updatedElement.value || '' );
                 }
             } )
-            .catch( ( error ) => {
-                console.error( 'Error refreshing settings:', error );
+            .catch( () => {
                 // Optionally, you can handle the error here, e.g., show a notification
                 // or revert to the previous value.
-                setSelectedProfile( element.value || element.default || '' );
+                setSelectedProfile( element.default || element.value || '' );
             } );
     };
 
@@ -58,7 +57,7 @@ const DokanRefreshSelectField = ( {
     };
     return (
         <div className={ twMerge( 'w-full p-5 ', className ) }>
-            <div className="grid grid-cols-12">
+            <div className="grid grid-cols-12 gap-2">
                 <div className="col-span-12 md:col-span-6 ">
                     <DokanFieldLabel
                         title={ element?.title }
@@ -69,7 +68,7 @@ const DokanRefreshSelectField = ( {
                     />
                 </div>
 
-                <div className="flex col-span-12 md:col-span-6 items-center justify-end gap-4">
+                <div className="flex col-span-12 md:col-span-6 items-center flex-wrap justify-end gap-4">
                     <DokanSelect
                         options={
                             element.options?.map( ( option ) => ( {
@@ -87,7 +86,7 @@ const DokanRefreshSelectField = ( {
                         placeholder={ element.placeholder as string }
                         disabled={ element.disabled }
                         value={ selectedProfile as string }
-                        containerClassName={ 'w-72' }
+                        containerClassName={ 'min-w-72 w-full' }
                     />
 
                     { /* Refresh Button */ }

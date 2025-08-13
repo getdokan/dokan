@@ -49,6 +49,7 @@ export type SettingsElement = {
     };
     documentationLink?: string;
     css_class?: string;
+    helper_text?: string;
 };
 
 export interface SettingsProps {
