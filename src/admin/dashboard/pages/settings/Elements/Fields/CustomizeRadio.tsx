@@ -180,7 +180,7 @@ const CardRadioOption = ( {
             </div>
 
             { option.image && (
-                <div className="bg-[#F3F3F3]">
+                <div className="pt-4">
                     <img
                         src={ option.image }
                         alt={ option.title }
@@ -300,7 +300,7 @@ const CustomizeRadio = ( { element }: SettingsProps ) => {
         <div className="p-4">
             <DokanFieldLabel
                 title={ element.title || '' }
-                titleFontWeight="light"
+                titleFontWeight="bold"
                 helperText={ element.description }
             />
             <div className="mt-4">

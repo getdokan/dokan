@@ -37,7 +37,7 @@ class BaseFieldLabel extends Text {
      */
     protected $suffix = '';
 
-
+   
     /**
      * Constructor.
      *
@@ -68,6 +68,7 @@ class BaseFieldLabel extends Text {
         $data['suffix']      = $this->get_suffix();
         $data['icon']        = $this->get_icon();
         $data['description'] = $this->get_description();
+        $data['doc_link'] = $this->get_doc_link();
 
         return $data;
     }

@@ -16,35 +16,7 @@ class SubPage extends SettingsElement {
 	 */
 	protected $type = 'subpage';
 
-    /**
-     * Page doc link.
-     *
-     * @var string|null $doc_link
-     */
-    protected ?string $doc_link = null;
-
-    /**
-     * Get the subpage doc link.
-     *
-     * @return string|null
-     */
-    public function get_doc_link(): ?string {
-        return $this->doc_link;
-    }
-
-    /**
-     * Set the subpage doc link.
-     *
-     * @param string $doc_link
-     *  return SubPage
-     */
-    public function set_doc_link( string $doc_link ): SubPage {
-        $this->doc_link = $doc_link;
-
-        return $this;
-    }
-
-
+   
     /**
 	 * Data validation.
 	 *

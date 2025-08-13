@@ -38,7 +38,7 @@ const PageHeading = ( {
             id={ id }
             className={ twMerge( 'mb-6 flex justify-between ', className ) }
         >
-            <div className={ 'flex flex-col gap-2' }>
+            <div className={ 'flex flex-col gap-4' }>
                 <h2 className={ headingClass }>
                     <RawHTML>{ title }</RawHTML>
                 </h2>
