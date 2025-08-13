@@ -138,7 +138,13 @@ const SettingsPage = () => {
         setSelectedTab( tab );
     };
 
+    const onValueChange = ( element: SettingsElement ) => {
+        dispatch( settingsStore ).updateSettingsValue( element );
+    };
+
     const saveSettings = () => {
+        wp.hooks.doAction( 'dokan_admin_settings_before_save_settings', allSettings );
+
         setIsSaving( true );
         dispatch( settingsStore )
             .saveSettings( allSettings )
@@ -150,10 +156,8 @@ const SettingsPage = () => {
                 setIsSaving( false );
                 // TODO: Say Error.
             } );
-    };
 
-    const onValueChange = ( element: SettingsElement ) => {
-        dispatch( settingsStore ).updateSettingsValue( element );
+        wp.hooks.doAction( 'dokan_admin_settings_after_save_settings', allSettings );
     };
 
     // Get current page/tab information for heading

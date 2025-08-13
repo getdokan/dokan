@@ -82,7 +82,6 @@ const entryPoints = {
             type: 'window',
         },
     },
-    // 'menu-manager': './src/components/menu-manager/MenuManager.tsx',
 };
 
 module.exports = entryPoints;

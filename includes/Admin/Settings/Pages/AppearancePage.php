@@ -80,7 +80,7 @@ class AppearancePage extends AbstractPage {
     public function describe_settings(): void {
         $appearance_page = $this
             ->set_title( esc_html__( 'Appearance', 'dokan-lite' ) )
-            ->set_icon( 'appearance' )
+            ->set_icon( 'PanelsRightBottom' )
             ->set_description( esc_html__( 'Configure dashboard menu settings, visibility, and customization options.', 'dokan-lite' ) );
 
         // Create dashboard menu manager subpage
