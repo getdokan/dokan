@@ -29,11 +29,12 @@ const DokanBaseFieldLabel = ( {
     return (
         <div
             className={ twMerge(
-                `flex items-start gap-4 ${ wrapperClassNames }`
+                `flex items-start gap-4 `,
+                wrapperClassNames
             ) }
         >
             { icon && (
-                <div className="flex items-center">{ parse( icon ) }</div>
+                <div className="flex items-center ">{ parse( icon ) }</div>
             ) }
             <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-1">
