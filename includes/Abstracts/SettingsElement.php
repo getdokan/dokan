@@ -332,7 +332,6 @@ abstract class SettingsElement {
          * @param SettingsElement $this
          */
 		$filtered_children = apply_filters( $this->get_hook_key() . '_children', $this->children, $this ); // phpcs:ignore.
-
 		foreach ( $filtered_children as $child ) {
 			$child->set_hook_key( $this->get_hook_key() . '_' . $child->get_id() );
 			$child->set_dependency_key( trim( $this->get_dependency_key() . '.' . $child->get_id(), '. ' ) );

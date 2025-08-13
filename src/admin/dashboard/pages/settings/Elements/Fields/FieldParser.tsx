@@ -1,25 +1,25 @@
-import { SettingsProps } from '../../types';
 import { applyFilters } from '@wordpress/hooks';
-import RadioBox from './RadioBox';
+import { SettingsProps } from '../../types';
+import CategoryBasedCommission from './Commission/CategoryBasedCommission';
 import CombineInput from './Commission/CombineInput';
-import DokanSwitch from './DokanSwitch';
-import DokanMultiCheck from './DokanMultiCheck';
-import DokanInfoField from './DokanInfoField';
-import DokanPassword from './DokanPassword';
-import DokanEmail from './DokanEmail';
-import DokanNumber from './DokanNumber';
-import DokanTextArea from './DokanTextArea';
-import DokanCurrency from './DokanCurrency';
-import DokanTel from './DokanTel';
-import DokanRefreshSelectField from './DokanRefreshSelectField';
-import DokanDoubleTextField from './DokanDoubleTextField';
-import DokanTextField from './DokanTextField';
-import DokanRadioCapsule from './DokanRadioCapsule';
-import DokanSelect from './DokanSelect';
-import DokanFieldLabel from './DokanFieldLabel';
 import CustomizeRadio from './CustomizeRadio';
-import CategoryBasedCommission from "./Commission/CategoryBasedCommission";
-// import DokanRepeatableList from "./DokanRepeatableList";
+import DokanCurrency from './DokanCurrency';
+import DokanDoubleTextField from './DokanDoubleTextField';
+import DokanEmail from './DokanEmail';
+import DokanFieldLabel from './DokanFieldLabel';
+import DokanHtmlField from './DokanHtmlField';
+import DokanInfoField from './DokanInfoField';
+import DokanMultiCheck from './DokanMultiCheck';
+import DokanNumber from './DokanNumber';
+import DokanPassword from './DokanPassword';
+import DokanRadioCapsule from './DokanRadioCapsule';
+import DokanRefreshSelectField from './DokanRefreshSelectField';
+import DokanSelect from './DokanSelect';
+import DokanSwitch from './DokanSwitch';
+import DokanTel from './DokanTel';
+import DokanTextArea from './DokanTextArea';
+import DokanTextField from './DokanTextField';
+import RadioBox from './RadioBox';
 
 const FieldParser = ( {
     element,
@@ -140,13 +140,15 @@ const FieldParser = ( {
         case 'base_field_label':
             return <DokanFieldLabel element={ element } />;
 
-        // case 'repeater':
-        //     return (
-        //         <DokanRepeatableList
-        //             key={element.hook_key}
-        //             element={element}
-        //         />
-        //     );
+        case 'html':
+            return (
+                <DokanHtmlField
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
 
         case 'checkbox':
         case 'color':
