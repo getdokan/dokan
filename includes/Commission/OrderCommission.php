@@ -297,6 +297,27 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         return $this->get_vendor_net_earning() + $this->get_total_vendor_fees();
     }
 
+    /*
+     * Get vendor net earning without subsidy.
+     * This method calculates the vendor's net earning without considering any subsidies provided by the admin.
+     * The deducted amount will add the vendor balance, vendor manual withdraw.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return float|int
+     */
+    public function get_vendor_earning_without_subsidy(): float {
+
+        $admin_commission = $this->get_admin_commission();
+
+        // If admin commission is negative, it means admin has subsidized the vendor.
+        if ( $admin_commission < 0 ) {
+            return $this->get_vendor_earning() - abs( $admin_commission );
+        }
+
+        return $this->get_vendor_earning();
+    }
+
     /**
      * Get dokan gateway fee.
      *
