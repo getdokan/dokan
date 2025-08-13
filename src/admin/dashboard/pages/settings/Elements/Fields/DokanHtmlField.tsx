@@ -13,10 +13,7 @@ interface DokanHtmlFieldProps extends SettingsProps {
     element: DokanHtmlElement;
 }
 
-const DokanHtmlField: React.FC< DokanHtmlFieldProps > = ( {
-    element,
-    onValueChange,
-} ) => {
+const DokanHtmlField = ( { element, onValueChange }: DokanHtmlFieldProps ) => {
     if ( ! element.display ) {
         return null;
     }
