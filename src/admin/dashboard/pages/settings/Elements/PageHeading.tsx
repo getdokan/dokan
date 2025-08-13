@@ -5,6 +5,7 @@ import { Tooltip } from '@getdokan/dokan-ui';
 import { Info } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 import DokanTooltip from "../../../../../components/fields/DokanTooltip";
+import { FileSpreadsheet } from 'lucide-react';
 
 interface PageHeadingProps {
     title: string;
@@ -59,9 +60,9 @@ const PageHeading = ( {
                     href={ documentationLink }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline text-sm"
+                    className="!text-[#828282] flex gap-1 items-center  text-sm"
                 >
-                    <DocumentLink />
+                    <FileSpreadsheet />
                     { __( 'Doc', 'dokan-lite' ) }
                 </a>
             ) }

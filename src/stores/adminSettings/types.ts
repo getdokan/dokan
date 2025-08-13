@@ -46,6 +46,7 @@ export interface SettingsElement {
         | Record< string, any >;
     css_class?: string;
     disabled?: boolean;
+    doc_link?: string;
 }
 
 export type SettingsState = {
