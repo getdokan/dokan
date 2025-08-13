@@ -14,7 +14,7 @@ export default function DokanSelect( { element } ) {
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
     return (
-        <div className="flex justify-between w-full p-5">
+        <div className="flex justify-between flex-wrap w-full p-5">
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"
@@ -22,7 +22,8 @@ export default function DokanSelect( { element } ) {
                 wrapperClassNames={ 'flex-1' }
             />
             <BaseDokanSelect
-                value={ element.value }
+                value={ element.value || element?.defaultValue || '' }
+                id={ element.id }
                 onChange={ ( val ) =>
                     onValueChange( { ...element, value: val } )
                 }
@@ -33,6 +34,7 @@ export default function DokanSelect( { element } ) {
                     } ) ) || []
                 }
                 disabled={ element.disabled }
+                containerClassName={ 'w-[14rem] max-w-full' }
             />
         </div>
     );

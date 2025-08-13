@@ -1,7 +1,6 @@
 import { useState } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
 import TextField from './TextField';
-import DokanFieldLabel from './DokanFieldLabel';
 import EyeIcon from '../Icons/EyeIcon';
 import EyeOffIcon from '../Icons/EyeOffIcon';
 
@@ -17,20 +16,18 @@ interface ShowHideFieldProps {
     actionClassName?: string;
     displayValue?: boolean;
     handleDisplayValue?: () => void;
+    onChange?: ( value: string ) => void;
 }
 
 const ShowHideField: React.FC< ShowHideFieldProps > = ( {
     value,
-    label,
-    tooltip,
     disabled = false,
-    containerClassName = '',
-    labelClassName = '',
     helperText = '',
     placeholder = '',
     actionClassName = '',
     handleDisplayValue,
     displayValue,
+    onChange = () => {},
 } ) => {
     const [ showValue, setShowValue ] = useState( displayValue || false );
 
@@ -63,35 +60,25 @@ const ShowHideField: React.FC< ShowHideFieldProps > = ( {
     // Display value based on visibility setting
 
     return (
-        <div className={ twMerge( '@container', containerClassName ) }>
-            <div className="flex flex-col gap-2">
-                <DokanFieldLabel
-                    title={ label }
-                    titleFontWeight="light"
-                    tooltip={ tooltip }
-                    className={ labelClassName }
-                />
-
-                <div className="flex @sm:flex-col items-center gap-4">
-                    <div className="flex-1">
-                        <TextField
-                            value={ value }
-                            onChange={ () => {} } // Read-only field
-                            disabled={ disabled }
-                            required={ false }
-                            inputType={ showValue ? 'text' : 'password' }
-                            placeholder={ placeholder }
-                            helperText={ helperText }
-                            inputClassName={ twMerge(
-                                'bg-white',
-                                ! showValue ? 'text-[#828282]' : '',
-                                disabled ? 'bg-[#F1F1F4]' : ''
-                            ) }
-                            actionsButtons={ renderToggleButton() }
-                        />
-                    </div>
-                </div>
-            </div>
+        <div className={ 'w-full' }>
+            <TextField
+                value={ value }
+                onChange={ ( val ) => {
+                    onChange( val );
+                } }
+                disabled={ disabled }
+                required={ false }
+                inputType={ showValue ? 'text' : 'password' }
+                placeholder={ placeholder }
+                helperText={ helperText }
+                inputClassName={ twMerge(
+                    'bg-white w-full',
+                    ! showValue ? 'text-[#828282]' : '',
+                    disabled ? 'bg-[#F1F1F4]' : ''
+                ) }
+                actionsButtons={ renderToggleButton() }
+                wrapperClassName={ 'w-full' }
+            />
         </div>
     );
 };

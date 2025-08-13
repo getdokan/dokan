@@ -20,6 +20,7 @@ import DokanTel from './DokanTel';
 import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
 import RadioBox from './RadioBox';
+import DokanShowHideField from './DokanShowHideField';
 
 const FieldParser = ( {
     element,
@@ -153,6 +154,8 @@ const FieldParser = ( {
                     getSetting={ getSetting }
                 />
             );
+        case 'show_hide':
+            return <DokanShowHideField element={ element } />;
 
         case 'checkbox':
         case 'color':

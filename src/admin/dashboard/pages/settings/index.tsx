@@ -232,7 +232,7 @@ const SettingsPage = () => {
                                 className={ `flex flex-col  ${ twMerge(
                                     allElementsAreFields
                                         ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
-                                        : ''
+                                        : 'gap-6'
                                 ) }` }
                             >
                                 { elements.map(
