@@ -15,12 +15,14 @@ export default function DokanTextField( { element } ) {
     };
 
     return (
-        <div className="flex flex-col gap-2 w-full p-4">
-            <DokanFieldLabel
-                title={ element.title }
-                titleFontWeight="light"
-                helperText={ element.description }
-            />
+        <div className="flex flex-wrap gap-2 justify-between w-full p-4">
+            <div>
+                <DokanFieldLabel
+                    title={ element.title }
+                    titleFontWeight="bold"
+                    helperText={ element.description }
+                />
+            </div>
             <TextField
                 value={ element.value }
                 onChange={ ( val ) =>
@@ -29,8 +31,10 @@ export default function DokanTextField( { element } ) {
                 inputType="text"
                 placeholder={ element.placeholder }
                 disabled={ element.disabled }
-                helperText={ element.description }
+                prefix={ element.prefix }
+                postfix={ element.postfix }
                 inputClassName="bg-white border-[#E9E9E9] rounded-[5px] h-10 px-4 text-[#25252D] text-sm"
+                containerClassName={ 'max-w-[13rem]' }
             />
         </div>
     );

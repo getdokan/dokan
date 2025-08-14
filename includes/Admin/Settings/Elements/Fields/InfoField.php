@@ -8,7 +8,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Field;
 /**
  * Info Field - Displays informational content with optional link.
  */
-class InfoField extends Field {
+class InfoField extends Text {
 
     /**
      * Link text.
@@ -22,14 +22,21 @@ class InfoField extends Field {
      *
      * @var string $link_url Link URL.
      */
-    protected $link_url = '';
+    protected string $link_url = '';
+
+    /**
+     * Link text.
+     *
+     * @var string $link_text Link text.
+     */
+    protected string $link_text = '';
 
     /**
      * Whether to show icon.
      *
      * @var bool $show_icon Whether to show icon.
      */
-    protected $show_icon = true;
+    protected bool $show_icon = true;
 
     /**
      * Constructor.
@@ -130,28 +137,4 @@ class InfoField extends Field {
 
         return $data;
     }
-
-    /**
-     * Sanitize data for storage.
-     *
-     * @param mixed $data Data for sanitization.
-     *
-     * @return array|float|string
-     */
-    public function sanitize_element( $data ) {
-        return parent::sanitize_element( $data );
-    }
-
-    /**
-     * Escape data for display.
-     *
-     * @param mixed $data Data for display.
-     *
-     * @return mixed
-     */
-    public function escape_element( $data ) {
-        return parent::escape_element( $data );
-    }
-
-
 }

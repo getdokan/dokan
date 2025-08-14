@@ -14,12 +14,11 @@ export default function DokanSelect( { element } ) {
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
     return (
-        <div className="flex justify-between flex-wrap w-full p-5">
+        <div className="flex justify-between gap-4 flex-wrap w-full p-5">
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"
                 helperText={ element.description }
-                wrapperClassNames={ 'flex-1' }
             />
             <BaseDokanSelect
                 value={ element.value || element?.defaultValue || '' }

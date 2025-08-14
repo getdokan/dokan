@@ -235,6 +235,20 @@ class GeneralPage extends AbstractPage {
                                                         ->add_dependency( 'location.map_api_configuration.map_api_source', 'google', true, 'display', 'show', '==' )
                                                         ->add_dependency( 'location.map_api_configuration.map_api_source', 'mapbox', true, 'display', 'hide', '==' )
                                         )
+                            ->add(
+                                ElementFactory::field_group( 'mapbox_api_key' )
+                                                ->add(
+                                                    ElementFactory::field( 'mapbox_map_base', 'base_field_label' )
+                                                                ->set_title( __( 'Mapbox API Key', 'dokan-lite' ) )
+                                                                ->set_description( __( 'Enter your Mapbox API key to enable map functionality.', 'dokan-lite' ) )
+                                                )
+                                                ->add(
+                                                    ElementFactory::field( 'mapbox_api_key', 'show_hide' )
+                                                                ->set_placeholder( __( 'Enter your Mapbox API key', 'dokan-lite' ) )
+                                                )
+                                                ->add_dependency( 'location.map_api_configuration.map_api_source', 'mapbox', true, 'display', 'show', '==' )
+                                                ->add_dependency( 'location.map_api_configuration.map_api_source', 'google', true, 'display', 'hide', '==' )
+                            )
                     )
                     ->add(
                         ElementFactory::section( 'map_display_settings' )
@@ -249,9 +263,11 @@ class GeneralPage extends AbstractPage {
                                                         ->set_default( 'top' )
                                         )
                                         ->add(
-                                            ElementFactory::field( 'show_filters_before_map', 'toggle' )
+                                            ElementFactory::field( 'show_filters_before_map', 'switch' )
                                                         ->set_title( __( 'Show Filters Before Location Map', 'dokan-lite' ) )
-                                                        ->set_default( true )
+                                                            ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                                                            ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                                                            ->set_default( 'on' )
                                         )
                                         ->add(
                                             ElementFactory::field( 'radius_search_unit', 'radio_capsule' )
@@ -265,12 +281,14 @@ class GeneralPage extends AbstractPage {
                                                         ->set_title( __( 'Radius Search - Minimum Distance', 'dokan-lite' ) )
                                                         ->set_description( __( 'Set minimum distance for radius search.', 'dokan-lite' ) )
                                                         ->set_default( 1 )
+                                                ->set_postfix( 'km' )
                                         )
                                         ->add(
                                             ElementFactory::field( 'radius_search_max_distance', 'number' )
                                                         ->set_title( __( 'Radius Search - Maximum Distance', 'dokan-lite' ) )
                                                         ->set_description( __( 'Set maximum distance for radius search.', 'dokan-lite' ) )
                                                         ->set_default( 100 )
+                                                ->set_postfix( 'km' )
                                         )
                                         ->add(
                                             ElementFactory::field( 'map_zoom_level', 'number' )
@@ -281,40 +299,15 @@ class GeneralPage extends AbstractPage {
                     )
                     ->add(
                         ElementFactory::section( 'map_placement' )
-                                        ->set_title( __( 'Map Placement', 'dokan-lite' ) )
-                                        ->set_description( __( 'Enable map of the store location in the store sidebar.', 'dokan-lite' ) )
-                                        ->add(
-                                            ElementFactory::field( 'enable_map_placement', 'toggle' )
-                                                        ->set_title( __( 'Enable Map Placement', 'dokan-lite' ) )
-                                                        ->set_default( false )
-                                        )
-                                        ->add(
-                                            ElementFactory::field( 'map_placement_locations', 'multicheck' )
+                            ->add(
+                                ElementFactory::field( 'map_placement_locations', 'multicheck' )
                                                         ->set_title( __( 'Map Placement Locations', 'dokan-lite' ) )
+                                                ->set_description( __( 'Choose where the store location map appears', 'dokan-lite' ) )
+                                                ->set_helper_text( __( 'Select the pages where you want to display the store location map.', 'dokan-lite' ) )
                                                         ->add_option( 'store_listing', __( 'Store Listing', 'dokan-lite' ) )
                                                         ->add_option( 'shop_page', __( 'Shop Page', 'dokan-lite' ) )
                                                         ->add_option( 'single_product_location_tab', __( 'Location tab in single product page.', 'dokan-lite' ) )
                                                         ->set_default( [ 'store_listing', 'shop_page' ] )
-                                        )
-                    )
-                    ->add(
-                        ElementFactory::section( 'location_display' )
-                            ->set_title( __( 'Location Display', 'dokan-lite' ) )
-                            ->set_description( __( 'Configure how location information is displayed in your marketplace.', 'dokan-lite' ) )
-                            ->add(
-                                ElementFactory::field( 'location_display_mode', 'radio_capsule' )
-                                                        ->set_title( __( 'Location Display Mode', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Choose how location information should be displayed to customers.', 'dokan-lite' ) )
-                                                ->add_option( __( 'Map View', 'dokan-lite' ), 'map' )
-                                                ->add_option( __( 'List View', 'dokan-lite' ), 'list' )
-                                                        ->set_default( 'map' )
-                            )
-                            ->add(
-                                ElementFactory::field( 'location_template_style', 'radio_capsule' )
-                                                ->add_option( __( 'Classic Template', 'dokan-lite' ), 'classic' )
-                                                ->add_option( __( 'Modern Template', 'dokan-lite' ), 'modern' )
-                                                ->add_option( __( 'Minimal Template', 'dokan-lite' ), 'minimal' )
-                                                        ->set_default( 'modern' )
                             )
                     )
             );

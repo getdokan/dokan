@@ -30,11 +30,7 @@ const FieldParser = ( {
     switch ( element.variant ) {
         case 'text':
             return (
-                <DokanTextField
-                    key={ element.hook_key }
-                    element={ element }
-                    getSetting={ getSetting }
-                />
+                <DokanTextField key={ element.hook_key } element={ element } />
             );
 
         case 'select':
@@ -157,7 +153,6 @@ const FieldParser = ( {
         case 'show_hide':
             return <DokanShowHideField element={ element } />;
 
-        case 'checkbox':
         case 'color':
         case 'date':
         case 'datetime-local':
