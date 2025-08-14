@@ -38,6 +38,17 @@ const actions = {
             needSaving,
         };
     },
+    setSearchText( searchText: string ) {
+        return {
+            type: 'SET_SEARCH_TEXT',
+            searchText,
+        };
+    },
+    clearSearch() {
+        return {
+            type: 'CLEAR_SEARCH',
+        };
+    },
     fetchSettings() {
         return async ( { dispatch } ) => {
             dispatch( actions.setLoading( true ) );
@@ -50,7 +61,7 @@ const actions = {
     },
     saveSettings( payload: SettingsElement ) {
         return async ( { dispatch } ) => {
-            actions.setSaving( true );
+            dispatch( actions.setSaving( true ) );
             const response = await apiFetch< SettingsElement >( {
                 path: '/dokan/v1/admin/settings',
                 method: 'POST',

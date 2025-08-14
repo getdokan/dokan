@@ -53,4 +53,5 @@ export type SettingsState = {
     loading: boolean;
     saving: boolean;
     needSaving: boolean;
+    searchText: string;
 };
