@@ -260,7 +260,11 @@ class Commission {
         }
 
         if ( ! $order ) {
-            new WP_Error( 'invalid_order', __( 'Order not found', 'dokan-lite' ), [ 'status' => 404 ] );
+            return new WP_Error( 'invalid_order', __( 'Order not found', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
+        if ( $order->get_meta( 'has_sub_order' ) ) {
+            return null;
         }
 
         try {
@@ -270,7 +274,15 @@ class Commission {
         } catch ( \Exception $exception ) {
             return new WP_Error( 'commission_calculation_failed', __( 'Commission calculation failed', 'dokan-lite' ), [ 'status' => 500 ] );
         }
-        return $order_commission->get_vendor_earning_without_subsidy();
+        $earning = $order_commission->get_vendor_earning_without_subsidy();
+
+        /**
+         * Vendor earning without subsidy for a given order.
+         *
+         * @param float    $earning Calculated earning (without subsidy).
+         * @param WC_Order $order   Order object.
+         */
+        return apply_filters( 'dokan_get_earning_by_order_without_subsidy', $earning, $order );
     }
 
     /**
