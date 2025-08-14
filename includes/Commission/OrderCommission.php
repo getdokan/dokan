@@ -512,14 +512,28 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         return $this->get_should_adjust_refund() ? dokan()->fees->get_total_shipping_tax_refunded( $this->order ) : 0.0;
     }
 
+    /**
+     * Get the order fee for admin.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return float
+     */
     protected function get_admin_order_fees(): float {
         if ( self::ADMIN === $this->get_order_fee_recipient() ) {
-            return $this->order->get_total_fees();
+            return $this->order->get_total_fees() - $this->get_order_fee_refunded();
         }
 
         return 0.0;
     }
 
+    /**
+     * Get the order fee for vendor.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return float
+     */
     protected function get_vendor_order_fees(): float {
         if ( self::SELLER === $this->get_order_fee_recipient() ) {
             return $this->order->get_total_fees();
@@ -542,5 +556,28 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         }
 
         return self::ADMIN;
+    }
+
+    /**
+     * Get the refunded order fee.
+     *
+     * @return float
+     */
+    protected function get_order_fee_refunded(): float {
+        $total_refunded_fees = 0.0;
+        if ( ! $this->get_should_adjust_refund() ) {
+            return $total_refunded_fees;
+        }
+
+        $fee_items = $this->order->get_items( 'fee' );
+
+        if ( ! empty( $fee_items ) ) {
+            foreach ( $fee_items as $item_id => $item ) {
+                $refunded_amount = $this->order->get_total_refunded_for_item( $item_id, 'fee' );
+                $total_refunded_fees += (float) $refunded_amount;
+            }
+        }
+
+        return $total_refunded_fees;
     }
 }
