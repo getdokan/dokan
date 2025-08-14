@@ -6,6 +6,7 @@ import { useMutationObserver } from '../../../hooks';
 import SetupGuide from '../pages/setup-guide';
 import VendorsSingle from '../pages/vendors-single';
 import Create from '../pages/vendor-create-edit/Create';
+import Edit from '../pages/vendor-create-edit/Edit';
 
 export type DokanAdminRoute = {
     id: string;
@@ -35,6 +36,11 @@ const getAdminRoutes = () => {
             id: 'vendor-create',
             element: <Create />,
             path: '/vendors/create',
+        },
+        {
+            id: 'vendor-edit',
+            element: <Edit />,
+            path: '/vendors/edit/:id',
         },
     ];
 

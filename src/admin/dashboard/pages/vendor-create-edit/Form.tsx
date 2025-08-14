@@ -7,8 +7,8 @@ import {
     Trash,
     Upload,
     Pencil,
-    LoaderCircle
-} from "lucide-react";
+    LoaderCircle,
+} from 'lucide-react';
 import {
     AsyncSearchableSelect,
     Card,
@@ -26,14 +26,20 @@ import { twMerge } from 'tailwind-merge';
 import DebouncedInput from '@dokan/admin/dashboard/pages/vendor-create-edit/DebouncedInput';
 import { addQueryArgs } from '@wordpress/url';
 import wpMedia from '@dokan/admin/dashboard/pages/vendor-create-edit/WpMedia';
-import { Slot } from "@wordpress/components";
-import { PluginArea } from "@wordpress/plugins";
+import { Slot } from '@wordpress/components';
+import { PluginArea } from '@wordpress/plugins';
 interface Props {
     vendor: Vendor;
     requiredFields: Record< any, any >;
-    formKey: string;
+    formKey?: string;
+    createForm?: boolean;
 }
-function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: Props ) {
+function Form( {
+    vendor,
+    requiredFields,
+    formKey = 'dokan-create-new-vendor',
+    createForm = true,
+}: Props ) {
     const { setCreateOrEditVendor } = useDispatch( store );
     const errors: String[] = useSelect( ( select ) => {
         return select( store ).getCreateOrEditVendorErrors();
@@ -121,16 +127,20 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
         setCreateOrEditVendor( {
             ...vendor,
             store_name: value,
-            user_nicename: storeUrl,
+            ...( createForm ? { user_nicename: storeUrl } : {} ),
         } ).then( async ( data ) => {
-            await checkStore( storeUrl, data.vendor );
+            if ( createForm ) {
+                await checkStore( storeUrl, data.vendor );
+            }
         } );
     };
 
     const onChangeStoreUrl = async ( storeUrl ) => {
         storeUrl = formatStoreUrl( storeUrl );
-        // @ts-ignore
-        const data = await setData( 'user_nicename', storeUrl );
+        const data = await setCreateOrEditVendor( {
+            ...vendor,
+            user_nicename: storeUrl,
+        } );
         await checkStore( storeUrl, data.vendor );
     };
 
@@ -334,7 +344,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                             </div>
                         </div>
 
-                        <Slot name={`${formKey}-after-enable-selling-permission`} />
+                        <Slot
+                            name={ `${ formKey }-after-enable-selling-permission` }
+                        />
 
                         <div className="border-b p-6 flex flex-row justify-between">
                             <div className="flex flex-col gap-1">
@@ -361,7 +373,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                             </div>
                         </div>
 
-                        <Slot name={`${formKey}-after-publish-product-directly-permission`} />
+                        <Slot
+                            name={ `${ formKey }-after-publish-product-directly-permission` }
+                        />
 
                         <div className="p-6 flex flex-row justify-between">
                             <div className="flex flex-col gap-1">
@@ -388,8 +402,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                             </div>
                         </div>
 
-                        <Slot name={`${formKey}-after-make-vendor-featured-permission`} />
-
+                        <Slot
+                            name={ `${ formKey }-after-make-vendor-featured-permission` }
+                        />
                     </Card>
                 </div>
 
@@ -449,7 +464,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 </div>
                             </div>
 
-                            <Slot name={`${formKey}-after-first-last-name-vendor-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-first-last-name-vendor-information` }
+                            />
 
                             <div>
                                 <DebouncedInput
@@ -485,89 +502,120 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 </div>
                             </div>
 
-                            <Slot name={`${formKey}-after-email-vendor-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-email-vendor-information` }
+                            />
 
-                            <div>
-                                <DebouncedInput
-                                    label={ __( 'Username', 'dokan-lite' ) }
-                                    value={ vendor?.user_login ?? '' }
-                                    onChange={ ( value ) => {
-                                        setData( 'user_login', value ).then(
-                                            async ( updatedVendor ) => {
-                                                await searchUsername(
-                                                    value,
-                                                    updatedVendor.vendor
-                                                );
-                                            }
-                                        );
-                                    } }
-                                    input={ {
-                                        placeholder: __(
-                                            'Enter username',
-                                            'dokan-lite'
-                                        ),
-                                        id: 'username',
-                                        type: 'text',
-                                        required: true,
-                                    } }
-                                    required={ isRequired( 'user_login' ) }
-                                    errors={ getError( 'user_login' ) }
-                                />
-                                <div className="flex justify-between mt-2">
-                                    { getStoreSearchText(
-                                        vendor?.userSearchText ?? ''
-                                    ) }
-                                </div>
-                            </div>
-
-                            <Slot name={`${formKey}-after-username-vendor-information`} />
-
-                            <div className="flex flex-row gap-2">
-                                <div className="w-full">
-                                    <SimpleInput
-                                        label={ __( 'Password', 'dokan-lite' ) }
-                                        value={ vendor?.user_pass ?? '' }
-                                        onChange={ ( e ) => {
-                                            setData(
-                                                'user_pass',
-                                                e.target.value
-                                            );
-                                        } }
-                                        onFocus={ () => {
-                                            ! vendor?.user_pass
-                                                ? generatePassword()
-                                                : () => {};
-                                        } }
-                                        input={ {
-                                            placeholder: __(
-                                                'Enter password or Generate',
+                            { createForm && (
+                                <>
+                                    <div>
+                                        <DebouncedInput
+                                            label={ __(
+                                                'Username',
                                                 'dokan-lite'
-                                            ),
-                                            id: 'password',
-                                            type: 'text',
-                                            required: true,
-                                        } }
-                                        required={ isRequired( 'user_pass' ) }
-                                        errors={ getError( 'user_pass' ) }
-                                    />
-                                </div>
-                                <div className="flex items-end">
-                                    <DokanButton
-                                        variant="secondary"
-                                        className={ twMerge(
-                                            '!bg-white !h-10',
-                                            getError( 'user_pass' ).length
-                                                ? 'mb-[22px]'
-                                                : 'mb-0'
-                                        ) }
-                                        onClick={ generatePassword }
-                                    >
-                                        { __( 'Generate', 'dokan-lite' ) }
-                                    </DokanButton>
-                                </div>
-                            </div>
+                                            ) }
+                                            value={ vendor?.user_login ?? '' }
+                                            onChange={ ( value ) => {
+                                                setData(
+                                                    'user_login',
+                                                    value
+                                                ).then(
+                                                    async ( updatedVendor ) => {
+                                                        await searchUsername(
+                                                            value,
+                                                            updatedVendor.vendor
+                                                        );
+                                                    }
+                                                );
+                                            } }
+                                            input={ {
+                                                placeholder: __(
+                                                    'Enter username',
+                                                    'dokan-lite'
+                                                ),
+                                                id: 'username',
+                                                type: 'text',
+                                                required: true,
+                                            } }
+                                            required={ isRequired(
+                                                'user_login'
+                                            ) }
+                                            errors={ getError( 'user_login' ) }
+                                        />
+                                        <div className="flex justify-between mt-2">
+                                            { getStoreSearchText(
+                                                vendor?.userSearchText ?? ''
+                                            ) }
+                                        </div>
+                                    </div>
 
-                            <Slot name={`${formKey}-after-password-vendor-information`} />
+                                    <Slot
+                                        name={ `${ formKey }-after-username-vendor-information` }
+                                    />
+
+                                    <div className="flex flex-row gap-2">
+                                        <div className="w-full">
+                                            <SimpleInput
+                                                label={ __(
+                                                    'Password',
+                                                    'dokan-lite'
+                                                ) }
+                                                value={
+                                                    vendor?.user_pass ?? ''
+                                                }
+                                                onChange={ ( e ) => {
+                                                    setData(
+                                                        'user_pass',
+                                                        e.target.value
+                                                    );
+                                                } }
+                                                onFocus={ () => {
+                                                    ! vendor?.user_pass
+                                                        ? generatePassword()
+                                                        : () => {};
+                                                } }
+                                                input={ {
+                                                    placeholder: __(
+                                                        'Enter password or Generate',
+                                                        'dokan-lite'
+                                                    ),
+                                                    id: 'password',
+                                                    type: 'text',
+                                                    required: true,
+                                                } }
+                                                required={ isRequired(
+                                                    'user_pass'
+                                                ) }
+                                                errors={ getError(
+                                                    'user_pass'
+                                                ) }
+                                            />
+                                        </div>
+                                        <div className="flex items-end">
+                                            <DokanButton
+                                                variant="secondary"
+                                                className={ twMerge(
+                                                    '!bg-white !h-10',
+                                                    getError( 'user_pass' )
+                                                        .length
+                                                        ? 'mb-[22px]'
+                                                        : 'mb-0'
+                                                ) }
+                                                onClick={ generatePassword }
+                                            >
+                                                { __(
+                                                    'Generate',
+                                                    'dokan-lite'
+                                                ) }
+                                            </DokanButton>
+                                        </div>
+                                    </div>
+
+                                    <Slot
+                                        name={ `${ formKey }-after-password-vendor-information` }
+                                    />
+                                </>
+                            ) }
 
                             <div>
                                 <SimpleInput
@@ -596,8 +644,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-phone-vendor-information`} />
-
+                            <Slot
+                                name={ `${ formKey }-after-phone-vendor-information` }
+                            />
                         </div>
                     </Card>
                 </div>
@@ -632,41 +681,52 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-store-name-store-information`} />
-
-                            <div>
-                                <DebouncedInput
-                                    label={ __( 'Store Url', 'dokan-lite' ) }
-                                    value={ vendor?.user_nicename ?? '' }
-                                    onChange={ ( e ) => {
-                                        onChangeStoreUrl( e );
-                                    } }
-                                    input={ {
-                                        placeholder: __(
-                                            'Enter store url',
-                                            'dokan-lite'
-                                        ),
-                                        id: 'store-url',
-                                        type: 'text',
-                                        required: true,
-                                    } }
-                                    // helpText={ storeUrl() }
-                                    required={ isRequired( 'store_url' ) }
-                                    errors={ getError( 'store_url' ) }
-                                />
-                                <div className="flex justify-between mt-2">
-                                    <span className="text-neutral-500">
-                                        { storeUrl() }
-                                    </span>
-                                    { getStoreSearchText(
-                                        vendor?.storeSearchText ?? ''
-                                    ) }
-                                </div>
-                            </div>
-
                             <Slot
-                                name={ `${ formKey }-after-store-url-store-information` }
+                                name={ `${ formKey }-after-store-name-store-information` }
                             />
+
+                            { createForm && (
+                                <>
+                                    <div>
+                                        <DebouncedInput
+                                            label={ __(
+                                                'Store Url',
+                                                'dokan-lite'
+                                            ) }
+                                            value={ vendor?.user_nicename ?? '' }
+                                            onChange={ ( e ) => {
+                                                onChangeStoreUrl( e );
+                                            } }
+                                            input={ {
+                                                placeholder: __(
+                                                    'Enter store url',
+                                                    'dokan-lite'
+                                                ),
+                                                id: 'store-url',
+                                                type: 'text',
+                                                required: true,
+                                            } }
+                                            // helpText={ storeUrl() }
+                                            required={ isRequired( 'store_url' ) }
+                                            errors={ getError( 'store_url' ) }
+                                        />
+                                        <div className="flex justify-between mt-2">
+                                        <span className="text-neutral-500">
+                                            { storeUrl() }
+                                        </span>
+                                            { getStoreSearchText(
+                                                vendor?.storeSearchText ?? ''
+                                            ) }
+                                        </div>
+                                    </div>
+
+                                    <Slot
+                                        name={ `${ formKey }-after-store-url-store-information` }
+                                    />
+                                </>
+                            ) }
+
+                            <Slot name={ `${ formKey }-before-store-image` } />
 
                             <div>
                                 <label
@@ -727,7 +787,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 </div>
                             </div>
 
-                            <Slot name={`${formKey}-after-store-logo-store-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-store-logo-store-information` }
+                            />
 
                             <div>
                                 <div className="flex flex-row justify-between">
@@ -818,7 +880,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 </div>
                             </div>
 
-                            <Slot name={`${formKey}-after-banner-store-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-banner-store-information` }
+                            />
                         </div>
                     </Card>
                 </div>
@@ -856,7 +920,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-country-address-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-country-address-information` }
+                            />
 
                             <div>
                                 { getStatesFromCountryCode(
@@ -908,7 +974,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 ) }
                             </div>
 
-                            <Slot name={`${formKey}-after-state-address-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-state-address-information` }
+                            />
 
                             <div>
                                 <SimpleInput
@@ -933,7 +1001,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-city-address-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-city-address-information` }
+                            />
 
                             <div>
                                 <SimpleInput
@@ -961,7 +1031,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-street-1-address-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-street-1-address-information` }
+                            />
 
                             <div>
                                 <SimpleInput
@@ -989,7 +1061,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-street-2-address-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-street-2-address-information` }
+                            />
 
                             <div>
                                 <SimpleInput
@@ -1014,7 +1088,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-zip-address-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-zip-address-information` }
+                            />
                         </div>
                     </Card>
                 </div>
@@ -1039,7 +1115,7 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                     />
                 </div>
 
-                <Slot name={`${formKey}-after-send-email`} />
+                <Slot name={ `${ formKey }-after-send-email` } />
             </div>
 
             <PluginArea scope={ `dokan-admin-dashboard-vendor-form-${formKey}` } />
