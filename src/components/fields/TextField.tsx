@@ -18,7 +18,6 @@ interface TextFieldProps {
     password?: boolean;
     prefix?: React.ReactNode;
     postfix?: React.ReactNode;
-    label?: string;
     helperText?: string;
     required?: boolean;
     variant?: Partial< TextFieldVariant >;
@@ -46,11 +45,9 @@ const TextField: React.FC< TextFieldProps > = ( {
     error,
     prefix,
     postfix,
-    label,
     helperText,
     required = false,
     containerClassName = '',
-    wrapperClassName = '',
     inputClassName = '',
     maxLength,
     showCharCount = false,
@@ -58,7 +55,6 @@ const TextField: React.FC< TextFieldProps > = ( {
     onBlur,
     validation,
     actionsButtons,
-    status = 'default',
 } ) => {
     const [ validationError, setValidationError ] = useState< string | null >(
         null
@@ -78,27 +74,8 @@ const TextField: React.FC< TextFieldProps > = ( {
 
     const displayError = error || validationError;
 
-    // If there's an error, override the status
-    const fieldStatus = displayError ? 'error' : status;
-
     // Determine if counter should be shown
     const showCounter = showCharCount || !! maxLength;
-
-    // Get appropriate border color based on status
-    const getBorderColorClass = () => {
-        switch ( fieldStatus ) {
-            case 'error':
-                return 'border-dokan-danger hover:border-dokan-danger-hover';
-            case 'success':
-                return 'border-dokan-success hover:border-dokan-success-hover';
-            case 'warning':
-                return 'border-dokan-warning hover:border-dokan-warning-hover';
-            case 'info':
-                return 'border-dokan-info hover:border-dokan-info-hover';
-            default:
-                return 'border-[#E9E9E9] focus:border-dokan-btn hover:border-dokan-btn-hover';
-        }
-    };
 
     return (
         <div

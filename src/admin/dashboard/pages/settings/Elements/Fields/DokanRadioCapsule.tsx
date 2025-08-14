@@ -1,4 +1,3 @@
-
 import {
     DokanFieldLabel,
     DokanRadioCapsule as BaseRadioCapsule,
@@ -16,7 +15,7 @@ export default function DokanRadioCapsule( { element } ) {
     };
 
     return (
-        <div className="flex justify-between w-full p-5 ">
+        <div className="flex flex-wrap gap-4 justify-between w-full p-5 ">
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"
