@@ -7,6 +7,7 @@ import {
 import Quill, { QuillOptions } from 'quill';
 import 'quill/dist/quill.snow.css';
 import './styles.scss';
+import { __ } from "@wordpress/i18n";
 
 /**
  * Opens the WordPress media uploader to select an image or video.
