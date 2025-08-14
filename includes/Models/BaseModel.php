@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Models;
 
 use WC_Data;
+use WC_Data_Store_WP;
 
 abstract class BaseModel extends WC_Data {
 	/**
@@ -11,7 +12,6 @@ abstract class BaseModel extends WC_Data {
 	 * @return int
 	 */
 	public function save() {
-		// wc_get_product()
 		if ( ! $this->data_store ) {
 			return $this->get_id();
 		}
