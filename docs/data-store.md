@@ -190,7 +190,8 @@ We could do the same thing by overriding the following methods in Data Store.
 ### Overview
 Dokan provides a simple caching mechanism to speed up read-heavy operations in your Models and Data Stores. Caching is grouped using a cache group string so that related entries can be invalidated together when underlying data changes.
 
-- Use `\WeDevs\Dokan\Cache::remember( $key, $group, $ttl, $callback )` to cache expensive reads.
+- Use `\WeDevs\Dokan\Cache::get( $key, $group )` to get cache of expensive reads.
+- Use `\WeDevs\Dokan\Cache::set( $key, $value, $group )` to cache expensive reads.
 - Use `\WeDevs\Dokan\Cache::invalidate_group( $group )` to clear all cached entries in a group.
 - The BaseModel automatically invalidates the model’s cache group after `create`, `update`, and `delete` operations when a `$cache_group` is defined.
 
