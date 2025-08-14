@@ -19,7 +19,7 @@ const DashboardSwitchLink = () => {
     return (
         <div className="legacy-dashboard-url text-sm font-medium pt-8 mt-8">
             <div className="flex items-center gap-2 text-gray-600">
-                { __( 'If you want to go back to old dashboard,', 'dokan-lite' ) }{' '}
+                { __( 'If you want to go back to old settings panel,', 'dokan-lite' ) }{' '}
                 <a
                     className="skip-color-module underline font-bold text-[#7047EB] hover:text-[#502BBF] transition-colors"
                     href={ switchUrl }

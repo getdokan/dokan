@@ -198,7 +198,7 @@
             <!-- Add dashboard switch link for Vue settings -->
             <div class="legacy-dashboard-url text-sm font-medium pt-8 border-t border-gray-200 mt-8">
                 <div class="flex items-center gap-2 text-gray-600">
-                    {{ __( 'If you want to go to new dashboard,', 'dokan-lite' ) }}
+                    {{ __( 'If you want to go to new settings panel,', 'dokan-lite' ) }}
                     <a
                         class="skip-color-module underline font-bold text-[#7047EB] hover:text-[#502BBF] transition-colors"
                         :href="newSettingsUrl()"
@@ -291,7 +291,6 @@
 
         methods: {
             newSettingsUrl() {
-              console.log( dokan.urls, ':::::::::::::::::::::::dokan.urls' );
                 return dokan.urls.newSettingsUrl;
             },
             changeTab( section ) {
