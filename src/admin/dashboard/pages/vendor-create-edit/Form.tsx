@@ -1,4 +1,4 @@
-import { DokanButton } from '@dokan/components';
+import { DokanButton, CategoryBasedCommissionPure, FixedCommissionInput } from '@dokan/components';
 import { __ } from '@wordpress/i18n';
 import {
     CheckCircle,
@@ -11,11 +11,11 @@ import {
 } from 'lucide-react';
 import {
     AsyncSearchableSelect,
-    Card,
+    Card, SearchableSelect,
     SimpleCheckbox,
     SimpleInput,
-    ToggleSwitch,
-} from '@getdokan/dokan-ui';
+    ToggleSwitch
+} from "@getdokan/dokan-ui";
 import StoreImage from './StoreImage';
 import VendorFormSkeleton from '@dokan/admin/dashboard/pages/vendor-create-edit/VendorFormSkeleton';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
@@ -28,6 +28,8 @@ import { addQueryArgs } from '@wordpress/url';
 import wpMedia from '@dokan/admin/dashboard/pages/vendor-create-edit/WpMedia';
 import { Slot } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
+import { useEffect, useState } from '@wordpress/element';
+
 interface Props {
     vendor: Vendor;
     requiredFields: Record< any, any >;
@@ -44,6 +46,7 @@ export default function Form( {
     const errors: String[] = useSelect( ( select ) => {
         return select( store ).getCreateOrEditVendorErrors();
     }, [] );
+    const [ categories, setCategories ] = useState( [] );
 
     const setData = async (
         key: string,
@@ -320,6 +323,16 @@ export default function Form( {
         }
         return '';
     };
+
+    useEffect(() => {
+        apiFetch( { path: 'dokan/v2/products/multistep-categories' } ).then(
+            ( response: Record< string, unknown > ) => {
+                if ( response && typeof response === 'object' ) {
+                    setCategories( Object.values( response ) );
+                }
+            }
+        );
+    }, []);
 
     if ( ! vendor || Object.keys( vendor ).length === 0 ) {
         return <VendorFormSkeleton />;
@@ -1345,10 +1358,32 @@ export default function Form( {
                             </h2>
                         </div>
                         <div className="p-6 flex flex-col gap-3">
-                            <h2 className="text-lg font-bold text-red-500">
-                                { ' ' }
-                                👨🏻‍💻 This is under development...🔨⚙️
-                            </h2>
+                            <div>
+                                <SearchableSelect
+                                    label={__( 'Admin Commission type', 'dokan-lite' )}
+                                    placeholder={ __(
+                                        'Select commission type',
+                                        'dokan-lite'
+                                    ) }
+                                />
+                            </div>
+                            <CategoryBasedCommissionPure
+                                categories={categories}
+                                commissionValues={ [] }
+                                currency={'@'}
+                                onCommissionChange={(data) => {
+                                    console.log(data)
+                                }}
+                                resetSubCategoryValue={true}
+                            />
+
+                            <FixedCommissionInput
+                                values={{ admin_percentage: 10, additional_fee: 500 }}
+                                currency={'@'}
+                                onValueChange={(data) => {
+                                    console.log(data)
+                                }}
+                            />
                         </div>
                     </Card>
                 </div>
