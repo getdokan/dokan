@@ -5,10 +5,13 @@ import { useEffect, useState } from '@wordpress/element';
 import { useToast, Card } from '@getdokan/dokan-ui';
 import { DokanButton, DokanLink } from '@dokan/components';
 import { __ } from '@wordpress/i18n';
-import apiFetch from '@wordpress/api-fetch';
 import { applyFilters } from '@wordpress/hooks';
 import { ChevronLeft } from 'lucide-react';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
+import {
+    requestCreateVendor,
+    validateForm,
+} from '@dokan/admin/dashboard/pages/vendor-create-edit/Utils';
 
 function Create( props: any ) {
     const [ saving, setSaving ] = useState( false );
@@ -19,7 +22,7 @@ function Create( props: any ) {
         last_name: '',
         email: '',
         phone: '',
-        show_email: false,
+        show_email: true,
         address: {
             street_1: '',
             street_2: '',
@@ -36,7 +39,7 @@ function Create( props: any ) {
         shop_url: '',
         toc_enabled: false,
         featured: false,
-        enabled: false,
+        enabled: true,
         trusted: false,
     };
 
@@ -56,43 +59,16 @@ function Create( props: any ) {
             user_login: __( 'Username is required', 'dokan-lite' ),
             user_pass: __( 'Password is required', 'dokan-lite' ),
         }
-    );
-
-    const validateForm = async ( checkVendor ) => {
-        const errors: string[] = [];
-
-        Object.keys( requiredFields ).forEach( ( key ) => {
-            if ( ! checkVendor[ key ] && requiredFields[ key ] ) {
-                errors.push( key );
-            }
-        } );
-
-        await setCreateOrEditVendorErrors( errors );
-        return errors;
-    };
-
-    const sendRequest = async () => {
-        try {
-            const response = await apiFetch( {
-                path: '/dokan/v1/stores/',
-                method: 'POST',
-                data: vendor,
-            } );
-            // Handle success (e.g., show notification, redirect)
-            return response;
-        } catch ( error ) {
-            // Handle error (e.g., show error message)
-            throw error;
-        }
-    };
+    ) as Record< string, string >;
 
     const addVendor = async () => {
-        const validatedErrors = await validateForm( vendor );
+        const validatedErrors = await validateForm( vendor, requiredFields );
+        await setCreateOrEditVendorErrors( validatedErrors );
         const shouldSubmit = applyFilters(
             'dokan-should-submit-vendor-form',
             true,
             validatedErrors,
-            sendRequest
+            requestCreateVendor
         );
 
         if ( validatedErrors.length > 0 || ! shouldSubmit ) {
@@ -100,7 +76,7 @@ function Create( props: any ) {
         }
 
         setSaving( true );
-        sendRequest()
+        requestCreateVendor( vendor )
             .then( async ( response: Vendor ) => {
                 await setCreateOrEditVendor( response );
                 await setCreateOrEditVendorErrors( [] );
@@ -135,7 +111,10 @@ function Create( props: any ) {
                 { /*Back to vendors list*/ }
                 <div>
                     <DokanLink
-                        href={ `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors` }
+                        href={
+                            // @ts-ignore
+                            `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors`
+                        }
                         className="flex flex-row w-auto items-center gap-1 !text-neutral-500 hover:!underline"
                     >
                         <ChevronLeft size="15" />
@@ -152,6 +131,7 @@ function Create( props: any ) {
                         <DokanButton
                             variant="secondary"
                             onClick={ () =>
+                                // @ts-ignore
                                 ( window.location.href = `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors` )
                             }
                         >

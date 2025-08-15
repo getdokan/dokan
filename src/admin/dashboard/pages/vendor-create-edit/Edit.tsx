@@ -10,6 +10,10 @@ import { applyFilters } from '@wordpress/hooks';
 import { ChevronLeft } from 'lucide-react';
 import { addQueryArgs } from '@wordpress/url';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
+import {
+    requestEditVendor,
+    validateForm,
+} from '@dokan/admin/dashboard/pages/vendor-create-edit/Utils';
 
 function Edit( props ) {
     const { params } = props;
@@ -29,43 +33,16 @@ function Edit( props ) {
             email: __( 'Email is required', 'dokan-lite' ),
             store_name: __( 'Store Name is required', 'dokan-lite' ),
         }
-    );
-
-    const validateForm = async ( checkVendor ) => {
-        const errors: string[] = [];
-
-        Object.keys( requiredFields ).forEach( ( key ) => {
-            if ( ! checkVendor[ key ] && requiredFields[ key ] ) {
-                errors.push( key );
-            }
-        } );
-
-        await setCreateOrEditVendorErrors( errors );
-        return errors;
-    };
-
-    const sendRequest = async () => {
-        try {
-            const response = await apiFetch( {
-                path: `/dokan/v1/stores/${ vendor?.id }`,
-                method: 'POST',
-                data: vendor,
-            } );
-            // Handle success (e.g., show notification, redirect)
-            return response;
-        } catch ( error ) {
-            // Handle error (e.g., show error message)
-            throw error;
-        }
-    };
+    ) as Record< string, string >;
 
     const updateVendor = async () => {
-        const validatedErrors = await validateForm( vendor );
+        const validatedErrors = await validateForm( vendor, requiredFields );
+        await setCreateOrEditVendorErrors( validatedErrors );
         const shouldSubmit = applyFilters(
             'dokan-should-submit-vendor-edit-form',
             true,
             validatedErrors,
-            sendRequest
+            requestEditVendor
         );
 
         if ( validatedErrors.length > 0 || ! shouldSubmit ) {
@@ -74,7 +51,7 @@ function Edit( props ) {
 
         setSaving( true );
 
-        sendRequest()
+        requestEditVendor( vendor )
             .then( async ( response: Vendor ) => {
                 await setCreateOrEditVendor( response );
                 await setCreateOrEditVendorErrors( [] );
@@ -113,7 +90,10 @@ function Edit( props ) {
                 { /*Back to vendors list*/ }
                 <div className="flex flex-row justify-start">
                     <DokanLink
-                        href={ `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors` }
+                        href={
+                            // @ts-ignore
+                            `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors`
+                        }
                         className="flex flex-row w-auto items-center gap-1 !text-neutral-500 hover:!underline"
                     >
                         <ChevronLeft size="15" />
@@ -130,6 +110,7 @@ function Edit( props ) {
                         <DokanButton
                             variant="secondary"
                             onClick={ () =>
+                                // @ts-ignore
                                 ( window.location.href = `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors` )
                             }
                         >

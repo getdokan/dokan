@@ -34,7 +34,7 @@ interface Props {
     formKey?: string;
     createForm?: boolean;
 }
-function Form( {
+export default function Form( {
     vendor,
     requiredFields,
     formKey = 'dokan-create-new-vendor',
@@ -43,14 +43,16 @@ function Form( {
     const { setCreateOrEditVendor } = useDispatch( store );
     const errors: String[] = useSelect( ( select ) => {
         return select( store ).getCreateOrEditVendorErrors();
-    } );
+    }, [] );
 
     const setData = async (
         key: string,
         value: any,
         existingVendor?: object
     ) => {
-        const updatableVendor = existingVendor ?? vendor;
+        const updatableVendor: Vendor = ( existingVendor as Vendor ) ?? vendor;
+
+        // @ts-ignore
         return await setCreateOrEditVendor( {
             ...updatableVendor,
             [ key ]: value,
@@ -65,7 +67,7 @@ function Form( {
         return !! requiredFields[ key ];
     };
 
-    const getError = ( key: string ): string => {
+    const getError = ( key: string ) => {
         if ( errors && errors.includes( key ) && isRequired( key ) ) {
             return requiredFields[ key ];
         }
@@ -108,7 +110,9 @@ function Form( {
     };
 
     const defaultUrl =
+        // @ts-ignore
         dokanAdminDashboard.urls.siteUrl +
+        // @ts-ignore
         dokanAdminDashboard.urls.storePrefix +
         '/';
 
@@ -139,17 +143,20 @@ function Form( {
         storeUrl = formatStoreUrl( storeUrl );
         const data = await setCreateOrEditVendor( {
             ...vendor,
+            // @ts-ignore
             user_nicename: storeUrl,
         } );
         await checkStore( storeUrl, data.vendor );
     };
 
     const storeUrl = () => {
-        const storeUrl = vendor?.user_nicename
-            ? vendor?.user_nicename
+        // @ts-ignore
+        const printableStoreUrl = vendor?.user_nicename
+            ? // @ts-ignore
+              vendor?.user_nicename
             : vendor?.store_name;
 
-        return defaultUrl + storeUrl;
+        return defaultUrl + printableStoreUrl;
     };
 
     const checkStore = async ( storeName, updatedData = null ) => {
@@ -165,6 +172,7 @@ function Form( {
             } ),
         } );
 
+        // @ts-ignore
         if ( response.available ) {
             await setData( 'storeSearchText', 'available', updatedData );
         } else {
@@ -185,6 +193,7 @@ function Form( {
             } ),
         } );
 
+        // @ts-ignore
         if ( response.available ) {
             await setData( 'userSearchText', 'available', updatedVendor );
         } else {
@@ -205,6 +214,7 @@ function Form( {
             } ),
         } );
 
+        // @ts-ignore
         if ( response.available ) {
             await setData( 'userEmailText', 'available', upatedVendor );
         } else {
@@ -213,7 +223,8 @@ function Form( {
     };
 
     const getCountries = () => {
-        const dokanCountries = dokanAdminDashboard.countries;
+        // @ts-ignore
+        const dokanCountries = window?.dokanAdminDashboard.countries;
         return Object.keys( dokanCountries ).map( ( key ) => {
             return {
                 label: dokanCountries[ key ],
@@ -224,7 +235,8 @@ function Form( {
 
     const getCountry = ( code ) => {
         const dokanCountries: Record< string, string > =
-            dokanAdminDashboard.countries;
+            // @ts-ignore
+            window?.dokanAdminDashboard.countries;
 
         if ( ! dokanCountries[ code ] ) {
             return '';
@@ -238,6 +250,7 @@ function Form( {
 
     const getStatesFromCountryCode = ( countryCode ) => {
         const states = [];
+        // @ts-ignore
         const statesObject = dokanAdminDashboard.states;
         if ( '' === countryCode || ! statesObject ) {
             return states;
@@ -268,6 +281,7 @@ function Form( {
             return;
         }
 
+        // @ts-ignore
         const states = dokanAdminDashboard.states[ countryCode ];
         const state = states && states[ stateCode ];
 
@@ -424,7 +438,10 @@ function Form( {
                             <div className="flex flex-row gap-6">
                                 <div className="w-1/2">
                                     <SimpleInput
-                                        label={ __( 'First Name' ) }
+                                        label={ __(
+                                            'First Name',
+                                            'dokan-lite'
+                                        ) }
                                         value={ vendor?.first_name ?? '' }
                                         onChange={ ( e ) => {
                                             setData(
@@ -501,6 +518,7 @@ function Form( {
                                 />
                                 <div className="flex justify-between mt-2">
                                     { getStoreSearchText(
+                                        // @ts-ignore
                                         vendor?.userEmailText ?? ''
                                     ) }
                                 </div>
@@ -518,7 +536,10 @@ function Form( {
                                                 'Username',
                                                 'dokan-lite'
                                             ) }
-                                            value={ vendor?.user_login ?? '' }
+                                            value={
+                                                // @ts-ignore
+                                                vendor?.user_login ?? ''
+                                            }
                                             onChange={ ( value ) => {
                                                 setData(
                                                     'user_login',
@@ -548,6 +569,7 @@ function Form( {
                                         />
                                         <div className="flex justify-between mt-2">
                                             { getStoreSearchText(
+                                                // @ts-ignore
                                                 vendor?.userSearchText ?? ''
                                             ) }
                                         </div>
@@ -565,6 +587,7 @@ function Form( {
                                                     'dokan-lite'
                                                 ) }
                                                 value={
+                                                    // @ts-ignore
                                                     vendor?.user_pass ?? ''
                                                 }
                                                 onChange={ ( e ) => {
@@ -574,6 +597,8 @@ function Form( {
                                                     );
                                                 } }
                                                 onFocus={ () => {
+                                                    // @ts-ignore
+                                                    // eslint-disable-next-line no-unused-expressions
                                                     ! vendor?.user_pass
                                                         ? generatePassword()
                                                         : () => {};
@@ -700,6 +725,7 @@ function Form( {
                                                 'dokan-lite'
                                             ) }
                                             value={
+                                                // @ts-ignore
                                                 vendor?.user_nicename ?? ''
                                             }
                                             onChange={ ( e ) => {
@@ -725,6 +751,7 @@ function Form( {
                                                 { storeUrl() }
                                             </span>
                                             { getStoreSearchText(
+                                                // @ts-ignore
                                                 vendor?.storeSearchText ?? ''
                                             ) }
                                         </div>
@@ -739,6 +766,7 @@ function Form( {
                             <Slot name={ `${ formKey }-before-store-image` } />
 
                             <div>
+                                { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
                                 <label
                                     htmlFor=""
                                     className="mb-2 inline-block cursor-pointer text-sm font-medium leading-[21px] text-gray-900"
@@ -786,6 +814,7 @@ function Form( {
                                                     setCreateOrEditVendor( {
                                                         ...vendor,
                                                         gravatar: '',
+                                                        // @ts-ignore
                                                         gravatar_id: '',
                                                     } )
                                                 }
@@ -804,6 +833,7 @@ function Form( {
                             <div>
                                 <div className="flex flex-row flex-wrap justify-between">
                                     <div className="flex flex-col">
+                                        { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
                                         <label
                                             htmlFor=""
                                             className="mb-2 inline-block cursor-pointer text-sm font-medium leading-[21px] text-gray-900"
@@ -853,6 +883,7 @@ function Form( {
                                                     setCreateOrEditVendor( {
                                                         ...vendor,
                                                         banner: '',
+                                                        // @ts-ignore
                                                         banner_id: '',
                                                     } )
                                                 }
@@ -925,6 +956,7 @@ function Form( {
                                     onChange={ ( value ) => {
                                         setData( 'address', {
                                             ...vendor?.address,
+                                            // @ts-ignore
                                             country: value.value,
                                             state: '',
                                         } );
@@ -975,6 +1007,7 @@ function Form( {
                                         onChange={ ( value ) => {
                                             setData( 'address', {
                                                 ...vendor?.address,
+                                                // @ts-ignore
                                                 state: value.value,
                                             } );
                                         } }
@@ -1341,7 +1374,6 @@ function Form( {
                                 onChange={ ( e ) => {
                                     setData( 'show_email', e.target.checked );
                                 } }
-                                required={ isRequired( 'show_email' ) }
                                 errors={ getError( 'show_email' ) }
                             />
                         </div>
@@ -1357,5 +1389,3 @@ function Form( {
         </>
     );
 }
-
-export default Form;
