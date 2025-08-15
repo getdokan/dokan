@@ -6,6 +6,7 @@ import { useMutationObserver } from '../../../hooks';
 import SetupGuide from '../pages/setup-guide';
 import VendorsSingle from '../pages/vendors-single';
 import Create from '../pages/vendor-create-edit/Create';
+import NotFound from '../../../layout/404';
 
 export type DokanAdminRoute = {
     id: string;
@@ -46,7 +47,9 @@ const getAdminRoutes = () => {
 
     routes.push( {
         id: 'dokan-404',
-        element: <h3>404</h3>,
+        element: (
+            <NotFound className="h-screen" backToDashboardUrl="?page=dokan" />
+        ),
         path: '*',
     } );
 
