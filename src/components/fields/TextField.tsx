@@ -34,6 +34,7 @@ interface TextFieldProps {
     inputType?: React.HTMLInputTypeAttribute;
     wrapperClassName?: string;
     status?: 'default' | 'error' | 'success' | 'warning' | 'info';
+    inputProps?: React.InputHTMLAttributes< HTMLInputElement >;
 }
 
 const TextField: React.FC< TextFieldProps > = ( {
@@ -55,6 +56,7 @@ const TextField: React.FC< TextFieldProps > = ( {
     onBlur,
     validation,
     actionsButtons,
+    inputProps = {},
 } ) => {
     const [ validationError, setValidationError ] = useState< string | null >(
         null
@@ -104,9 +106,11 @@ const TextField: React.FC< TextFieldProps > = ( {
                     ) }
                     input={ {
                         type: inputType,
-                        placeholder,
                         maxLength,
+                        placeholder,
+                        ...inputProps,
                     } }
+                    placeholder={ placeholder }
                     addOnLeft={ prefix || null }
                     addOnRight={ postfix || null }
                 />

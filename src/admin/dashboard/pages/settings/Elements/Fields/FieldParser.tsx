@@ -15,12 +15,12 @@ import DokanPassword from './DokanPassword';
 import DokanRadioCapsule from './DokanRadioCapsule';
 import DokanRefreshSelectField from './DokanRefreshSelectField';
 import DokanSelect from './DokanSelect';
+import DokanShowHideField from './DokanShowHideField';
 import DokanSwitch from './DokanSwitch';
 import DokanTel from './DokanTel';
 import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
 import RadioBox from './RadioBox';
-import DokanShowHideField from './DokanShowHideField';
 
 const FieldParser = ( {
     element,

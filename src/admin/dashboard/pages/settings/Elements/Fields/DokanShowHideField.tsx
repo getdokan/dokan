@@ -11,7 +11,8 @@ export default function DokanShowHideField( { element } ) {
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"
-                tooltip={ element.tooltip }
+                helperText={ element.description }
+                tooltip={ element.helper_text }
             />
 
             <div className="flex items-center gap-4 w-full">

@@ -18,11 +18,12 @@ export default function DokanTel( { element } ) {
     };
 
     return (
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-wrap justify-between gap-2 w-full">
             <DokanFieldLabel
-                title={ element.title || '' }
-                titleFontWeight="light"
+                title={ element.title }
+                titleFontWeight="bold"
                 helperText={ element.description }
+                tooltip={ element.helper_text }
             />
             <TextField
                 value={ value }

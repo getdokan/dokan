@@ -42,9 +42,10 @@ const DokanDoubleTextField = ( {
         >
             { /* Field label with tooltip */ }
             <DokanFieldLabel
-                title={ element.label }
+                title={ element.title }
                 titleFontWeight="bold"
-                tooltip={ element.tooltip }
+                helperText={ element.description }
+                tooltip={ element.helper_text }
             />
             <div className="flex gap-6 ">
                 <TextField

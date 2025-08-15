@@ -19,6 +19,7 @@ export default function DokanSelect( { element } ) {
                 title={ element.title }
                 titleFontWeight="bold"
                 helperText={ element.description }
+                tooltip={ element.helper_text }
             />
             <BaseDokanSelect
                 value={ element.value || element?.defaultValue || '' }

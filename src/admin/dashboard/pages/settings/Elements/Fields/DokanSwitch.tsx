@@ -20,7 +20,7 @@ export default function DokanSwitch( { element } ) {
                     title={ element.title }
                     titleFontWeight="bold"
                     helperText={ element.description }
-                    tooltip={ element.tooltip }
+                    tooltip={ element.helper_text }
                 />
             </div>
             <div className="md:col-span-1 col-span-4 flex justify-end">
