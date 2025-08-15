@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect, useRef, useMemo } from '@wordpress/element';
-import { useDispatch, useSelect } from '@wordpress/data';
+import {useState, useCallback, useEffect, useRef, useMemo, memo} from '@wordpress/element';
+import {dispatch, useDispatch, useSelect} from '@wordpress/data';
 import { twMerge } from "tailwind-merge";
 import * as LucideIcons from 'lucide-react';
 import { __ } from "@wordpress/i18n";
@@ -10,92 +10,11 @@ import {
     DisclosureButton,
     DisclosurePanel,
 } from '@headlessui/react';
+import SearchBar from "../components/SearchBar";
 
 function classNames( ...classes ) {
     return classes.filter( Boolean ).join( ' ' );
 }
-
-// Search component with stable references and isolated state management
-const SearchBar = ({ className = '' }) => {
-    const dispatch = useDispatch();
-    const [searchText, setSearchText] = useState('');
-    
-    // Use refs to maintain stable references
-    const dispatchRef = useRef(dispatch);
-    const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    
-    // Update dispatch reference without causing re-renders
-    useEffect(() => {
-        dispatchRef.current = dispatch;
-    }, [dispatch]);
-    
-    // Debounced dispatch function
-    const debouncedDispatch = useCallback((value: string) => {
-        if (debounceTimeoutRef.current) {
-            clearTimeout(debounceTimeoutRef.current);
-        }
-        
-        debounceTimeoutRef.current = setTimeout(() => {
-            dispatchRef.current(settingsStore).setSearchText(value);
-        }, 300);
-    }, []);
-    
-    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setSearchText(value); // Update local state immediately (no rerender issues)
-        debouncedDispatch(value); // Debounced store update
-    }, [debouncedDispatch]);
-    
-    const handleClearSearch = useCallback(() => {
-        setSearchText('');
-        if (debounceTimeoutRef.current) {
-            clearTimeout(debounceTimeoutRef.current);
-        }
-        dispatchRef.current(settingsStore).setSearchText('');
-    }, []);
-    
-    const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Escape') {
-            handleClearSearch();
-        }
-    }, [handleClearSearch]);
-    
-    // Cleanup timeout on unmount
-    useEffect(() => {
-        return () => {
-            if (debounceTimeoutRef.current) {
-                clearTimeout(debounceTimeoutRef.current);
-            }
-        };
-    }, []);
-
-    return (
-        <div className={twMerge('mb-6', className)}>
-            <div className="relative">
-                <div className="bg-white border border-[#e9e9e9] rounded-[5px] lg:h-9 h-fit flex items-center px-3 gap-3">
-                    <LucideIcons.Search className="lg:!w-[18px] lg:!h-[18px] w-5 h-5 text-[#828282]" />
-                    <input
-                        type="text"
-                        placeholder={__('Search', 'dokan-lite')}
-                        value={searchText}
-                        onChange={handleInputChange}
-                        onKeyDown={handleKeyDown}
-                        className="flex-1 lg:!text-[12px] text-base text-[#25252D] bg-transparent border-none outline-none font-normal p-0 focus:ring-0 placeholder:text-[#a5a5aa]"
-                    />
-                    {searchText && (
-                        <button
-                            onClick={handleClearSearch}
-                            className="p-1 hover:bg-gray-100 rounded transition-colors"
-                            title={__('Clear search', 'dokan-lite')}
-                        >
-                            <LucideIcons.X className="w-4 h-4 text-[#828282] hover:text-[#25252D]" />
-                        </button>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-};
 
 
 // Dynamic Icon component
@@ -133,6 +52,25 @@ const Menu = ({
         []
     );
     
+    // Track search session and manual navigation
+    const [hasAutoSelectedForCurrentSearch, setHasAutoSelectedForCurrentSearch] = useState(false);
+    const [previousSearchText, setPreviousSearchText] = useState('');
+    const [userHasManuallyNavigated, setUserHasManuallyNavigated] = useState(false);
+    
+    // Reset search session tracking when search is cleared or new search starts
+    useEffect(() => {
+        const isNewSearch = !previousSearchText.trim() && searchText.trim();
+        const isSearchCleared = previousSearchText.trim() && !searchText.trim();
+        const isCompletelyNewSearch = searchText.trim() && !searchText.startsWith(previousSearchText);
+        
+        if (isNewSearch || isSearchCleared || isCompletelyNewSearch) {
+            setHasAutoSelectedForCurrentSearch(false);
+            setUserHasManuallyNavigated(false);
+        }
+        
+        setPreviousSearchText(searchText);
+    }, [searchText, previousSearchText]);
+    
     // Find first visible menu and submenu when search is active
     const getFirstVisibleMenuAndSubmenu = useCallback(() => {
         if (!searchText.trim() || loading) {
@@ -157,21 +95,27 @@ const Menu = ({
         };
     }, [pages, searchText, loading]);
     
-    // Auto-select first submenu when search becomes active
+    // Auto-select first submenu only on initial search, not on every search text change
     useEffect(() => {
-        if (searchText.trim() && !loading) {
+        if (searchText.trim() && !loading && !hasAutoSelectedForCurrentSearch && !userHasManuallyNavigated) {
             const { firstSubmenu } = getFirstVisibleMenuAndSubmenu();
             if (firstSubmenu && firstSubmenu.id !== activePage) {
                 // Only trigger if it's different from current active page
                 setTimeout(() => {
                     onMenuClick(firstSubmenu.id);
+                    setHasAutoSelectedForCurrentSearch(true);
                 }, 100); // Small delay to ensure search results are rendered
             }
         }
-    }, [searchText, loading, getFirstVisibleMenuAndSubmenu, activePage, onMenuClick]);
+    }, [searchText, loading, getFirstVisibleMenuAndSubmenu, activePage, onMenuClick, hasAutoSelectedForCurrentSearch, userHasManuallyNavigated]);
 
     // Memoize the menu click handler to prevent recreation
     const handleMenuClick = useCallback((pageId: string, parentId?: string) => {
+        // Track that user has manually navigated during search
+        if (searchText.trim()) {
+            setUserHasManuallyNavigated(true);
+        }
+        
         let storageValue = pageId;
         if (parentId) {
             storageValue = `${parentId}.${pageId}`;
@@ -190,144 +134,137 @@ const Menu = ({
 
         setIsMobileMenuOpen(false);
         onMenuClick(pageId);
-    }, [onMenuClick]);
+    }, [onMenuClick, searchText]);
 
     // Memoize MenuContent to prevent recreation
-    const MenuContent = useCallback(({ isSearch = false }) => (
-        <nav className="bg-white p-7 lg:py-12">
-            {isSearch && <SearchBar />}
+    const MenuContent = (
+        { children } : { children?: JSX.Element }
+    ) => (
+        <div className="space-y-6">
+            { ! loading &&
+                pages.map( ( item ) => {
+                    if ( ! item.display ) {
+                        return null;
+                    }
 
-            <div className="space-y-6">
-                {!loading &&
-                    pages.map((item) => {
-                        if (!item.display) {
-                            return null;
-                        }
-
-                        const isActive =
-                            item.id === activePage ||
-                            item.children?.some(
-                                (child) => child.id === activePage
-                            );
-                        
-                        // Check if this should be expanded due to search
-                        const shouldExpandForSearch = searchText.trim() && 
-                            item.display && 
-                            item.children && 
-                            item.children.some(child => child.display) &&
-                            pages.findIndex(menu => 
-                                menu.display && 
-                                menu.children && 
-                                menu.children.some(child => child.display)
-                            ) === pages.findIndex(menu => menu.id === item.id);
-
-                        return (
-                            <div key={item.id}>
-                                {!item.children ? (
-                                    <a
-                                        href={item.id}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            handleMenuClick(item.id);
-                                        }}
-                                        className={classNames(
-                                            isActive
-                                                ? 'bg-[#efeaff]'
-                                                : 'hover:bg-gray-50',
-                                            'flex items-center gap-2 rounded-[3px] px-0 py-2 text-[14px] font-medium transition-colors',
-                                            isActive
-                                                ? 'text-[#7047eb]'
-                                                : 'text-[#575757]'
-                                        )}
-                                    >
-                                        {getIcon(
-                                            item.icon || 'Settings'
-                                        )}
-                                        <span className="leading-5">
-                                            {item.title}
-                                        </span>
-                                    </a>
-                                ) : (
-                                    <Disclosure
-                                        as="div"
-                                        defaultOpen={isActive || shouldExpandForSearch}
-                                    >
-                                        {({ open }) => (
-                                            <>
-                                                <DisclosureButton
-                                                    className={'group flex w-full items-center justify-between rounded-[3px] p-0 text-left text-[14px] font-medium transition-colors'}
-                                                >
-                                                    <div className="flex items-center gap-2">
-                                                        {getIcon(
-                                                            item.icon ||
-                                                            'Settings'
-                                                        )}
-                                                        <span className="leading-5">
-                                                            {item.title}
-                                                        </span>
-                                                    </div>
-                                                    <LucideIcons.ChevronDown
-                                                        className={classNames(
-                                                            'w-3.5 h-3.5 transition-transform',
-                                                            open
-                                                                ? 'rotate-180 text-[#7047EB]'
-                                                                : 'text-[#828282] group-hover:text-[#7047EB]'
-                                                        )}
-                                                    />
-                                                </DisclosureButton>
-                                                <DisclosurePanel className="mt-5 space-y-1.5">
-                                                    {item?.children?.map(
-                                                        (subItem) => {
-                                                            if (!subItem.display) {
-                                                                return null;
-                                                            }
-                                                            
-                                                            const isSubActive =
-                                                                subItem.id ===
-                                                                activePage;
-
-                                                            return (
-                                                                <a
-                                                                    key={
-                                                                        subItem.id
-                                                                    }
-                                                                    href={
-                                                                        subItem.id
-                                                                    }
-                                                                    onClick={(
-                                                                        e
-                                                                    ) => {
-                                                                        e.preventDefault();
-                                                                        handleMenuClick(
-                                                                            subItem.id,
-                                                                            item.id
-                                                                        );
-                                                                    }}
-                                                                    className={classNames(
-                                                                        isSubActive
-                                                                            ? 'bg-[#efeaff] text-[#7047eb] font-semibold'
-                                                                            : 'text-[#575757] font-medium hover:bg-[#efeaff] hover:text-[#7047eb]',
-                                                                        'block rounded-[3px] px-7 py-2 text-[14px] leading-[1.3] transition-colors focus:!outline-transparent focus:shadow-none skip-color-module'
-                                                                    )}
-                                                                >
-                                                                    {
-                                                                        subItem.title
-                                                                    }
-                                                                </a>
-                                                            );
-                                                        }
-                                                    )}
-                                                </DisclosurePanel>
-                                            </>
-                                        )}
-                                    </Disclosure>
-                                )}
-                            </div>
+                    const isActive =
+                        item.id === activePage ||
+                        item.children?.some(
+                            ( child ) => child.id === activePage
                         );
-                    })}
-            </div>
-        </nav>
-    ), [pages, loading, activePage, handleMenuClick]);
+
+                    // Check if this should be expanded due to search - allow all menus with visible children
+                    const shouldExpandForSearch = searchText.trim() &&
+                        item.display &&
+                        item.children &&
+                        item.children.some( child => child.display );
+
+                    return (
+                        <div key={ item.id }>
+                            { ! item.children ? (
+                                <a
+                                    href={ item.id }
+                                    onClick={ ( e ) => {
+                                        e.preventDefault();
+                                        handleMenuClick( item.id );
+                                    }}
+                                    className={ classNames(
+                                        isActive
+                                            ? 'bg-[#efeaff]'
+                                            : 'hover:bg-gray-50',
+                                        'flex items-center gap-2 rounded-[3px] px-0 py-2 text-[14px] font-medium transition-colors',
+                                        isActive
+                                            ? 'text-[#7047eb]'
+                                            : 'text-[#575757]'
+                                    ) }
+                                >
+                                    { getIcon(
+                                        item.icon || 'Settings'
+                                    ) }
+                                    <span className="leading-5">
+                                        { item.title }
+                                    </span>
+                                </a>
+                            ) : (
+                                <Disclosure
+                                    as="div"
+                                    defaultOpen={ isActive || shouldExpandForSearch }
+                                >
+                                    { ( { open }) => (
+                                        <>
+                                            <DisclosureButton
+                                                className={'group flex w-full items-center justify-between rounded-[3px] p-0 text-left text-[14px] font-medium transition-colors'}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    {getIcon(
+                                                        item.icon ||
+                                                        'Settings'
+                                                    )}
+                                                    <span className="leading-5">
+                                                        {item.title}
+                                                    </span>
+                                                </div>
+                                                <LucideIcons.ChevronDown
+                                                    className={classNames(
+                                                        'w-3.5 h-3.5 transition-transform',
+                                                        open
+                                                            ? 'rotate-180 text-[#7047EB]'
+                                                            : 'text-[#828282] group-hover:text-[#7047EB]'
+                                                    )}
+                                                />
+                                            </DisclosureButton>
+                                            <DisclosurePanel className="mt-5 space-y-1.5">
+                                                {item?.children?.map(
+                                                    (subItem) => {
+                                                        if (!subItem.display) {
+                                                            return null;
+                                                        }
+
+                                                        const isSubActive =
+                                                            subItem.id ===
+                                                            activePage;
+
+                                                        return (
+                                                            <a
+                                                                key={
+                                                                    subItem.id
+                                                                }
+                                                                href={
+                                                                    subItem.id
+                                                                }
+                                                                onClick={(
+                                                                    e
+                                                                ) => {
+                                                                    e.preventDefault();
+                                                                    handleMenuClick(
+                                                                        subItem.id,
+                                                                        item.id
+                                                                    );
+                                                                }}
+                                                                className={classNames(
+                                                                    isSubActive
+                                                                        ? 'bg-[#efeaff] text-[#7047eb] font-semibold'
+                                                                        : 'text-[#575757] font-medium hover:bg-[#efeaff] hover:text-[#7047eb]',
+                                                                    'block rounded-[3px] px-7 py-2 text-[14px] leading-[1.3] transition-colors focus:!outline-transparent focus:shadow-none skip-color-module'
+                                                                )}
+                                                            >
+                                                                {
+                                                                    subItem.title
+                                                                }
+                                                            </a>
+                                                        );
+                                                    }
+                                                )}
+                                            </DisclosurePanel>
+                                        </>
+                                    )}
+                                </Disclosure>
+                            )}
+                        </div>
+                    );
+                })}
+        </div>
+    );
 
     return (
         <>
@@ -350,7 +287,10 @@ const Menu = ({
 
             { /* Your original desktop sidebar - unchanged */ }
             <aside className="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3 hidden lg:!block">
-                <MenuContent isSearch={ true } />
+                <nav className="bg-white p-7 lg:py-12">
+                    <SearchBar />
+                    <MenuContent />
+                </nav>
             </aside>
 
             { /* Mobile drawer overlay and sidebar with smooth transitions */ }
@@ -367,7 +307,9 @@ const Menu = ({
                 <div className={`fixed inset-y-0 left-0 w-80 max-w-sm transform transition-transform duration-300 ease-in-out flex flex-col h-full bg-white shadow-xl ${
                     isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}>
-                    <MenuContent />
+                    <nav className="bg-white p-7 lg:py-12">
+                        <MenuContent />
+                    </nav>
                 </div>
             </div>
         </>

@@ -18,6 +18,9 @@ const reducer = ( state = SETTINGS_DEFAULT_STATE, action ) => {
                         settingsDependencyParser( [ ...action.settings ] )
                     ),
                 ],
+                originalSettings: [
+                    ...action.settings,
+                ],
             };
 
         case 'UPDATE_SETTINGS':
@@ -71,9 +74,20 @@ const reducer = ( state = SETTINGS_DEFAULT_STATE, action ) => {
             };
 
         case 'SET_SEARCH_TEXT':
-            // First apply dependencies to get clean base state, then apply search filtering
+            if ( ! action.searchText.trim() ) {
+                const restoredSettings = settingsDependencyApplicator(
+                    [ ...state.originalSettings ],
+                    [ ...state.dependencies ]
+                );
+                return {
+                    ...state,
+                    searchText: action.searchText,
+                    settings: restoredSettings,
+                };
+            }
+
             const baseSettingsWithDependencies = settingsDependencyApplicator(
-                [ ...state.settings ],
+                [ ...state.originalSettings ],
                 [ ...state.dependencies ]
             );
             

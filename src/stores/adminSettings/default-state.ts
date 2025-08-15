@@ -2,6 +2,7 @@ import { SettingsState } from './types';
 
 const SETTINGS_DEFAULT_STATE: SettingsState = {
     settings: [],
+    originalSettings: [],
     dependencies: [],
     loading: true,
     saving: false,
