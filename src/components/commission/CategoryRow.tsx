@@ -1,17 +1,16 @@
 import { __, sprintf } from '@wordpress/i18n';
-
 import CommissionInputs from './CommissionInputs';
 import { CategoryRowProps } from './types';
 import { SquareMinus, SquarePlus } from 'lucide-react';
 
-const CategoryRow: React.FC< CategoryRowProps > = ( {
+const CategoryRow = ( {
     category,
     level = 0,
     isExpanded,
     hasChildren,
     onToggle,
     commissionInputsProps,
-} ) => {
+}: CategoryRowProps ) => {
     const isAllCategory = category.term_id === 'all';
 
     const renderIcon = () => {

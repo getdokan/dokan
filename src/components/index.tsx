@@ -16,6 +16,7 @@ export { default as DokanLink } from './Link';
 export { default as MediaUploader } from './Upload';
 export { default as VisitStore } from './VisitStore';
 export { default as WpDatePicker } from './WpDatePicker';
+export { default as DokanTab } from './Tab';
 
 // Commission Components
 export * from './commission';
