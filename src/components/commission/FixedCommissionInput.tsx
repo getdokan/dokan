@@ -3,6 +3,7 @@ import { debounce } from '@wordpress/compose';
 import { RawHTML, useCallback, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { CombineInputProps, FixedCommissionInputValues } from './types';
+import { twMerge } from 'tailwind-merge';
 
 const FixedCommissionInput = ( {
     values,
@@ -141,11 +142,11 @@ const FixedCommissionInput = ( {
                 </div>
             ) }
             <div
-                className={ `${
-                    hasContent ? '@xl/combine:col-span-5' : ''
-                } col-span-12 flex items-center ${
-                    hasContent ? 'justify-end' : 'justify-center'
-                } space-x-2` }
+                className={ twMerge(
+                    'col-span-12 flex items-center space-x-2',
+                    hasContent ? '@xl/combine:col-span-5' : '',
+                    hasContent ? 'justify-end' : 'justify-start'
+                ) }
             >
                 <MaskedInput
                     value={ formatValue( localValues.admin_percentage ) }
