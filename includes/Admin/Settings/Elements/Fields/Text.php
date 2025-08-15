@@ -99,8 +99,7 @@ class Text extends Field {
      *
      * @return SettingsElement
      */
-    public function set_prefix( string $prefix )
-    : SettingsElement {
+    public function set_prefix( string $prefix ): SettingsElement {
         $this->prefix = $prefix;
 
         return $this;
@@ -122,8 +121,7 @@ class Text extends Field {
      *
      * @return SettingsElement
      */
-    public function set_postfix( string $postfix )
-    : SettingsElement {
+    public function set_postfix( string $postfix ): SettingsElement {
         $this->postfix = $postfix;
 
         return $this;

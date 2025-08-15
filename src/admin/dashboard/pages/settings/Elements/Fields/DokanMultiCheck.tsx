@@ -21,6 +21,7 @@ export default function DokanMultiCheck( { element } ) {
                 titleFontWeight="bold"
                 helperText={ element.description }
                 tooltip={ element.helper_text }
+                icon={ element?.icon }
             />
             <DokanCheckboxGroup
                 options={

@@ -16,6 +16,7 @@ const DokanSocialField = ( { element } ) => {
                 titleFontWeight="bold"
                 helperText={ element.description }
                 tooltip={ element.helper_text }
+                icon={ element?.icon }
             />
             <SocialButton
                 network={ element.network }

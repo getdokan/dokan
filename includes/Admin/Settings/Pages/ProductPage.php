@@ -143,77 +143,62 @@ class ProductPage extends AbstractPage {
         )
                                                 ->set_title( __( 'Printful', 'dokan-lite' ) )
                                                 ->set_description( __( 'Configure Printful integration settings for print-on-demand products.', 'dokan-lite' ) )
-                                                ->set_icon( 'dashicons dashicons-admin-customizer' )
-                                                ->add(
-                                                    ElementFactory::section( 'printful_api_settings' )
-                                                                ->set_title( __( 'API Configuration', 'dokan-lite' ) )
-                                                                ->set_description( __( 'Connect to your Printful account with your website.', 'dokan-lite' ) )
-                                                                ->add(
-                                                                    ElementFactory::field_group( 'printful_enable_group' )
-                                                                                    ->set_title( __( 'Printful App', 'dokan-lite' ) )
-                                                                                    ->add(
-                                                                                        ElementFactory::field( 'printful_enable', 'switch' )
-                                                                                                    ->set_title( __( 'Enable Printful Integration', 'dokan-lite' ) )
-                                                                                                    ->set_description( __( 'Enable or disable Printful integration for your marketplace.', 'dokan-lite' ) )
-                                                                                                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                                                                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                                                                    ->set_default( 'off' )
-                                                                                    )
-                                                                )
-                                                                ->add(
-                                                                    ElementFactory::field_group( 'printful_app_url_group' )
-                                                                                    ->set_title( __( 'App URL', 'dokan-lite' ) )
-                                                                                    ->add(
-                                                                                        ElementFactory::field( 'printful_app_url', 'text' )
-                                                                                                    ->set_title( __( 'App URL', 'dokan-lite' ) )
-                                                                                                    ->set_description( __( 'Your website URL for Printful app configuration.', 'dokan-lite' ) )
-                                                                                                    ->set_placeholder( __( 'https://yoursite.com', 'dokan-lite' ) )
-                                                                                                    ->set_helper_text( __( 'This URL will be used by Printful to communicate with your website.', 'dokan-lite' ) )
-                                                                                    )
-                                                                )
-                                                                ->add(
-                                                                    ElementFactory::field_group( 'printful_redirection_domains_group' )
-                                                                                    ->set_title( __( 'Redirection Domains', 'dokan-lite' ) )
-                                                                                    ->add(
-                                                                                        ElementFactory::field( 'printful_redirection_domains', 'text' )
-                                                                                                    ->set_title( __( 'Redirection Domains', 'dokan-lite' ) )
-                                                                                                    ->set_description( __( 'Domains allowed for redirection after Printful authentication.', 'dokan-lite' ) )
-                                                                                                    ->set_placeholder( __( 'yoursite.com, subdomain.yoursite.com', 'dokan-lite' ) )
-                                                                                                    ->set_helper_text( __( 'Enter comma-separated list of domains.', 'dokan-lite' ) )
-                                                                                    )
-                                                                )
-                                                                ->add(
-                                                                    ElementFactory::field_group( 'printful_client_id_group' )
-                                                                                    ->set_title( __( 'Client ID', 'dokan-lite' ) )
-                                                                                    ->add(
-                                                                                        ElementFactory::field( 'printful_client_id', 'text' )
-                                                                                                    ->set_title( __( 'Client ID', 'dokan-lite' ) )
-                                                                                                    ->set_description( __( 'Your Printful app Client ID.', 'dokan-lite' ) )
-                                                                                                    ->set_placeholder( __( 'Enter your Client ID', 'dokan-lite' ) )
-                                                                                                    ->set_helper_text( __( 'You can find this in your Printful app settings.', 'dokan-lite' ) )
-                                                                                    )
-                                                                )
-                                                                ->add(
-                                                                    ElementFactory::field_group( 'printful_secret_key_group' )
-                                                                                    ->set_title( __( 'Secret Key', 'dokan-lite' ) )
-                                                                                    ->add(
-                                                                                        ElementFactory::field( 'printful_secret_key', 'password' )
-                                                                                                    ->set_title( __( 'Secret Key', 'dokan-lite' ) )
-                                                                                                    ->set_description( __( 'Your Printful app Secret Key.', 'dokan-lite' ) )
-                                                                                                    ->set_placeholder( __( 'Enter your Secret Key', 'dokan-lite' ) )
-                                                                                                    ->set_helper_text( __( 'Keep this secure and never share it publicly.', 'dokan-lite' ) )
-                                                                                    )
-                                                                )
+            ->set_doc_link( 'https://wedevs.com/docs/dokan-lite/printful-integration/' )
+            ->add(
+                ElementFactory::section( 'printful_integration_section' )
+                                ->add(
+                                    ElementFactory::field( 'printful_integration_enable', 'switch' )
+                                                ->set_title( __( 'Enable Printful Integration', 'dokan-lite' ) )
+                                                ->set_description( __( 'Enable or disable Printful integration for your marketplace.', 'dokan-lite' ) )
+                                                ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                                                ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                                                ->set_default( 'off' )
+                                )
+            )
+            ->add(
+                ElementFactory::section( 'printful_api_settings' )
+                                ->set_title( __( 'API Settings', 'dokan-lite' ) )
+                                ->set_description( __( 'Configure your Printful API connection settings.', 'dokan-lite' ) )
+                                ->add(
+                                    ElementFactory::field( 'printful_enable', 'switch' )
+                                                ->set_title( __( 'Printful App', 'dokan-lite' ) )
+                                                ->set_description(
+                                                    __(
+                                                        'These settings control how the size guide will look on your
+Single Product Page.', 'dokan-lite'
+                                                    )
                                                 )
-                                                ->add(
-                                                    ElementFactory::section( 'printful_help_section' )
-                                                                ->set_title( __( 'Getting Started', 'dokan-lite' ) )
-                                                                ->set_description( __( 'If you don\'t have a Printful app, you can create one to get started.', 'dokan-lite' ) )
-                                                                ->add(
-                                                                    ElementFactory::field_group( 'printful_help_group' )
-                                                                                    ->set_title( __( 'Need Help?', 'dokan-lite' ) )
-                                                                )
-                                                );
+                                                ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                                                ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                                                ->set_default( 'off' )
+                                )
+                                ->add(
+                                    ElementFactory::field( 'printful_app_url', 'copy_field' )
+                                                ->set_title( __( 'App URL', 'dokan-lite' ) )
+                                                ->set_description( __( 'Your website URL for Printful app configuration.', 'dokan-lite' ) )
+                                                ->set_placeholder( __( 'https://yoursite.com', 'dokan-lite' ) )
+                                                ->set_helper_text( __( 'This URL will be used by Printful to communicate with your website.', 'dokan-lite' ) )
+                                )
+                                ->add(
+                                    ElementFactory::field( 'printful_redirection_domains', 'copy_field' )
+                                                ->set_title( __( 'Redirection Domains', 'dokan-lite' ) )
+                                                ->set_description( __( 'Domains allowed for redirection after Printful authentication. Enter one domain per line.', 'dokan-lite' ) )
+                                                ->set_placeholder( __( "yoursite.com\nsubdomain.yoursite.com", 'dokan-lite' ) )
+                                                ->set_helper_text( __( 'These domains will be whitelisted for OAuth redirects.', 'dokan-lite' ) )
+                                )
+                                ->add(
+                                    ElementFactory::field( 'printful_client_id', 'text' )
+                                                ->set_title( __( 'Client ID', 'dokan-lite' ) )
+                                                ->set_description( __( 'Your Printful app Client ID.', 'dokan-lite' ) )
+                                                ->set_placeholder( __( 'Enter your Client ID', 'dokan-lite' ) )
+                                )
+                                ->add(
+                                    ElementFactory::field( 'printful_secret_key', 'password' )
+                                                ->set_title( __( 'Secret Key', 'dokan-lite' ) )
+                                                ->set_description( __( 'Your Printful app Secret Key.', 'dokan-lite' ) )
+                                                ->set_placeholder( __( 'Enter your Secret Key', 'dokan-lite' ) )
+                                )
+            );
 
         $this->add( $product_advertisement )
             ->add( $printful_integration )
