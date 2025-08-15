@@ -25,6 +25,7 @@ export default function DokanTel( { element } ) {
                 helperText={ element.description }
                 tooltip={ element.helper_text }
                 icon={ element?.icon }
+                wrapperClassNames={ 'md:max-w-[60%]' }
             />
             <TextField
                 value={ value }

@@ -19,6 +19,7 @@ export default function DokanTimePickerField( { element } ) {
                 helperText={ element.description }
                 tooltip={ element.helper_text }
                 icon={ element?.icon }
+                wrapperClassNames={ 'md:max-w-[60%]' }
             />
             <DokanTimePicker
                 value={ element.value }

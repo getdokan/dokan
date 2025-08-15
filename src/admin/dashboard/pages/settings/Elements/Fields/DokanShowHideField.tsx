@@ -7,31 +7,27 @@ export default function DokanShowHideField( { element } ) {
     }
 
     return (
-        <div className="flex p-4 gap-2 w-full">
-            <DokanFieldLabel
-                title={ element.title }
-                titleFontWeight="bold"
-                helperText={ element.description }
-                tooltip={ element.helper_text }
-            />
-
-            <div className="flex items-center gap-4 w-full">
-                <div className="flex-1">
-                    <ShowHideField
-                        value={ element.value }
-                        label={ element.title }
-                        tooltip={ element.tooltip }
-                        disabled={ element.disabled }
-                        helperText={ element.description }
-                        placeholder={ element.placeholder }
-                        onChange={ ( value ) =>
-                            element.onChange( {
-                                ...element,
-                                value,
-                            } )
-                        }
-                    />
-                </div>
+        <div className="grid grid-cols-6 p-4 gap-4 w-full">
+            <div className="md:col-span-2 col-span-6">
+                <DokanFieldLabel
+                    title={ element.title }
+                    helperText={ element.description }
+                    tooltip={ element.help_text }
+                    titleFontWeight="bold"
+                />
+            </div>
+            <div className="md:col-span-4 col-span-6">
+                <ShowHideField
+                    value={ element.value }
+                    disabled={ element.disabled }
+                    placeholder={ element.placeholder }
+                    onChange={ ( value ) =>
+                        element.onChange( {
+                            ...element,
+                            value,
+                        } )
+                    }
+                />
             </div>
         </div>
     );
