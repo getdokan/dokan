@@ -21,6 +21,7 @@ export default function DokanTextField( { element } ) {
                     title={ element.title }
                     titleFontWeight="bold"
                     helperText={ element.description }
+                    tooltip={ element.helper_text }
                 />
             </div>
             <TextField

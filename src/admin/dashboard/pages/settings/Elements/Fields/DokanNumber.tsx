@@ -19,7 +19,9 @@ export default function DokanNumber( { element } ) {
         <div className="flex flex-wrap gap-2 justify-between w-full p-4">
             <DokanFieldLabel
                 title={ element.title }
+                titleFontWeight="bold"
                 helperText={ element.description }
+                tooltip={ element.helper_text }
             />
             <TextField
                 value={ element.value }
@@ -33,6 +35,11 @@ export default function DokanNumber( { element } ) {
                 postfix={ element.postfix }
                 inputClassName="bg-white border-[#E9E9E9] rounded-[5px] h-10 px-4 text-[#25252D] text-sm"
                 containerClassName={ 'max-w-[13rem]' }
+                inputProps={ {
+                    min: element.min || undefined,
+                    max: element.max || undefined,
+                    step: element.step || 'any', // Default to 'any' for decimal numbers
+                } }
             />
         </div>
     );
