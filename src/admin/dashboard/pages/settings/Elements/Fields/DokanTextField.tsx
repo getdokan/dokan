@@ -23,6 +23,7 @@ export default function DokanTextField( { element } ) {
                     helperText={ element.description }
                     tooltip={ element.helper_text }
                     icon={ element?.icon }
+                    wrapperClassNames={ 'md:max-w-[60%]' }
                 />
             </div>
             <TextField
