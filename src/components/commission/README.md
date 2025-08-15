@@ -29,7 +29,7 @@ import { CategoryBasedCommissionPure } from '@dokan/components/commission';
 />
 ```
 
-#### CombineInputPure
+#### FixedCommissionInput
 A pure, reusable component for combined percentage and fixed amount inputs.
 
 **Features:**
@@ -40,9 +40,9 @@ A pure, reusable component for combined percentage and fixed amount inputs.
 
 **Usage:**
 ```typescript
-import { CombineInputPure } from '@dokan/components/commission';
+import { FixedCommissionInput } from '@dokan/components/commission';
 
-<CombineInputPure
+<FixedCommissionInput
     values={{ admin_percentage: 10, additional_fee: 500 }}
     currency={currency}
     title="Commission Settings"
@@ -106,12 +106,12 @@ src/components/commission/
 **Before:**
 ```typescript
 import CategoryBasedCommissionPure from './CategoryBasedCommissionPure';
-import CombineInputPure from './CombineInputPure';
+import FixedCommissionInput from './FixedCommissionInput';
 ```
 
 **After:**
 ```typescript
-import { CategoryBasedCommissionPure, CombineInputPure } from '@dokan/components/commission';
+import { CategoryBasedCommissionPure, FixedCommissionInput } from '@dokan/components/commission';
 ```
 
 ## Benefits
@@ -127,7 +127,7 @@ import { CategoryBasedCommissionPure, CombineInputPure } from '@dokan/components
 ```
 src/components/commission/
 ├── CategoryBasedCommissionPure.tsx
-├── CombineInputPure.tsx
+├── FixedCommissionInput.tsx
 ├── CommissionHeader.tsx
 ├── CategoryRow.tsx
 ├── CategoryTree.tsx

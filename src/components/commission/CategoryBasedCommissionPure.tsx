@@ -20,7 +20,9 @@ import {
     validatePercentage,
 } from './utils';
 
-const CategoryBasedCommissionPure = ( {
+const CategoryBasedCommissionPure: React.FC<
+    CategoryBasedCommissionProps
+> = ( {
     categories,
     commissionValues,
     currency,
@@ -28,7 +30,7 @@ const CategoryBasedCommissionPure = ( {
     onCommissionChange,
     display = true,
     debounceDelay = 500,
-}: CategoryBasedCommissionProps ) => {
+} ) => {
     // Initialize commission state with proper memoization
     const initialCommission = useMemo( (): CommissionValues => {
         if ( Object.keys( commissionValues ).length > 0 ) {
