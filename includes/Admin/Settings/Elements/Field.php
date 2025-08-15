@@ -7,6 +7,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\BaseFieldLabel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Checkbox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CategoryBasedCommission;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CombineInput;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\CopyField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Currency;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\DoubleTextField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\InfoField;
@@ -18,6 +19,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioBox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioCapsule;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RefreshSelectField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Select;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\SelectColorPicker;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\ShowHide;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
@@ -78,6 +80,8 @@ class Field extends SettingsElement {
         'customize_radio'  => CustomizeRadio::class,
         'html'             => HtmlField::class,
         'show_hide'        => ShowHide::class,
+        'select_color_picker' => SelectColorPicker::class,
+        'copy_field'          => CopyField::class,
 	);
 
 	/**

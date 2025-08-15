@@ -22,6 +22,7 @@ export default function DokanPassword( { element } ) {
                 titleFontWeight="bold"
                 helperText={ element.description }
                 tooltip={ element.helper_text }
+                icon={ element?.icon }
             />
             <TextField
                 value={ element.value }

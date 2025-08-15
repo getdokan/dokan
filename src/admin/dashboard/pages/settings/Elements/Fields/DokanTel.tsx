@@ -24,6 +24,7 @@ export default function DokanTel( { element } ) {
                 titleFontWeight="bold"
                 helperText={ element.description }
                 tooltip={ element.helper_text }
+                icon={ element?.icon }
             />
             <TextField
                 value={ value }

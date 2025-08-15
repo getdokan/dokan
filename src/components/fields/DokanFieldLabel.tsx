@@ -1,7 +1,7 @@
-import { twMerge } from 'tailwind-merge';
-import DokanTooltip from './DokanTooltip';
 import { RawHTML } from '@wordpress/element';
 import parse from 'html-react-parser';
+import { twMerge } from 'tailwind-merge';
+import DokanTooltip from './DokanTooltip';
 
 interface InputLabelProps {
     title: string;

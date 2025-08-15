@@ -46,6 +46,7 @@ const DokanDoubleTextField = ( {
                 titleFontWeight="bold"
                 helperText={ element.description }
                 tooltip={ element.helper_text }
+                icon={ element?.icon }
             />
             <div className="flex gap-6 ">
                 <TextField

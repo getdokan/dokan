@@ -20,8 +20,10 @@ export default function DokanEmail( { element } ) {
         <div className="flex justify-between gap-2 w-full">
             <DokanFieldLabel
                 title={ element.title }
-                titleFontWeight="light"
+                titleFontWeight="bold"
                 helperText={ element.description }
+                tooltip={ element.helper_text }
+                icon={ element?.icon }
             />
             <TextField
                 value={ element.value }

@@ -1,9 +1,8 @@
 import { __, sprintf } from '@wordpress/i18n';
-import React from 'react';
-import SquareMinus from '../Icons/SquareMinus';
-import SquarePlus from '../Icons/SquarePlus';
+
 import CommissionInputs from './CommissionInputs';
 import { CategoryRowProps } from './types';
+import { SquareMinus, SquarePlus } from 'lucide-react';
 
 const CategoryRow: React.FC< CategoryRowProps > = ( {
     category,

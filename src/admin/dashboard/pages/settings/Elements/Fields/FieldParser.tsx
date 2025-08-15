@@ -21,6 +21,7 @@ import DokanTel from './DokanTel';
 import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
 import RadioBox from './RadioBox';
+import DokanColorPicker from './DokanColorPicker';
 
 const FieldParser = ( {
     element,
@@ -152,6 +153,8 @@ const FieldParser = ( {
             );
         case 'show_hide':
             return <DokanShowHideField element={ element } />;
+        case 'select_color_picker':
+            return <DokanColorPicker element={ element } />;
 
         case 'color':
         case 'date':
