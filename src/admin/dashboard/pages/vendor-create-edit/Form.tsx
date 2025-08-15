@@ -408,6 +408,10 @@ function Form( {
                     </Card>
                 </div>
 
+                <Slot
+                    name={ `${ formKey }-after-permission-information-card` }
+                />
+
                 { /*Vendor information section*/ }
                 <div className="mt-6">
                     <Card className="bg-white">
@@ -651,6 +655,8 @@ function Form( {
                     </Card>
                 </div>
 
+                <Slot name={ `${ formKey }-after-vendor-information-card` } />
+
                 { /*Store information section*/ }
                 <div className="mt-6">
                     <Card className="bg-white">
@@ -693,7 +699,9 @@ function Form( {
                                                 'Store Url',
                                                 'dokan-lite'
                                             ) }
-                                            value={ vendor?.user_nicename ?? '' }
+                                            value={
+                                                vendor?.user_nicename ?? ''
+                                            }
                                             onChange={ ( e ) => {
                                                 onChangeStoreUrl( e );
                                             } }
@@ -707,13 +715,15 @@ function Form( {
                                                 required: true,
                                             } }
                                             // helpText={ storeUrl() }
-                                            required={ isRequired( 'store_url' ) }
+                                            required={ isRequired(
+                                                'store_url'
+                                            ) }
                                             errors={ getError( 'store_url' ) }
                                         />
                                         <div className="flex justify-between mt-2">
-                                        <span className="text-neutral-500">
-                                            { storeUrl() }
-                                        </span>
+                                            <span className="text-neutral-500">
+                                                { storeUrl() }
+                                            </span>
                                             { getStoreSearchText(
                                                 vendor?.storeSearchText ?? ''
                                             ) }
@@ -735,7 +745,7 @@ function Form( {
                                 >
                                     { __( 'Logo', 'dokan-lite' ) }
                                 </label>
-                                <div className="flex flex-row gap-6">
+                                <div className="flex flex-row flex-wrap gap-6">
                                     <div>
                                         <StoreImage
                                             image={ vendor?.gravatar ?? '' }
@@ -792,7 +802,7 @@ function Form( {
                             />
 
                             <div>
-                                <div className="flex flex-row justify-between">
+                                <div className="flex flex-row flex-wrap justify-between">
                                     <div className="flex flex-col">
                                         <label
                                             htmlFor=""
@@ -886,6 +896,8 @@ function Form( {
                         </div>
                     </Card>
                 </div>
+
+                <Slot name={ `${ formKey }-after-store-information-card` } />
 
                 { /*Address information section*/ }
                 <div className="mt-6">
@@ -1095,30 +1107,253 @@ function Form( {
                     </Card>
                 </div>
 
+                <Slot name={ `${ formKey }-after-address-information-card` } />
+
+                { /*Social information section*/ }
                 <div className="mt-6">
-                    <SimpleCheckbox
-                        label={ __(
-                            'Send an email to vendor about account',
-                            'dokan-lite'
-                        ) }
-                        input={ {
-                            id: 'send_email',
-                            name: 'send_email',
-                            type: 'checkbox',
-                        } }
-                        checked={ vendor?.show_email }
-                        onChange={ ( e ) => {
-                            setData( 'show_email', e.target.checked );
-                        } }
-                        required={ isRequired( 'show_email' ) }
-                        errors={ getError( 'show_email' ) }
-                    />
+                    <Card className="bg-white">
+                        <div className="border-b p-6">
+                            <h2 className="text-lg font-bold">
+                                { __( 'Social Information', 'dokan' ) }
+                            </h2>
+                        </div>
+                        <div className="p-6 flex flex-col gap-3">
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Facebook', 'dokan' ) }
+                                    value={ vendor?.social?.fb || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            fb: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'fb',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-fb-social-information" />
+
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'X', 'dokan' ) }
+                                    value={ vendor?.social?.twitter || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            twitter: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'twitter',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-x-social-information" />
+
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Pinterest', 'dokan' ) }
+                                    value={ vendor?.social?.pinterest || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            pinterest: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'pinterest',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-pinterest-social-information" />
+
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Linkedin', 'dokan' ) }
+                                    value={ vendor?.social?.linkedin || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            linkedin: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'linkedin',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-pinterest-social-information" />
+
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Youtube', 'dokan' ) }
+                                    value={ vendor?.social?.youtube || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            youtube: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'youtube',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-youtube-social-information" />
+
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Instagram', 'dokan' ) }
+                                    value={ vendor?.social?.instagram || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            instagram: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'instagram',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-instagram-social-information" />
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Flickr', 'dokan' ) }
+                                    value={ vendor?.social?.flickr || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            flickr: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'flickr',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-flickr-social-information" />
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Threads', 'dokan' ) }
+                                    value={ vendor?.social?.threads || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            threads: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'threads',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-threads-social-information" />
+                        </div>
+                    </Card>
                 </div>
 
-                <Slot name={ `${ formKey }-after-send-email` } />
+                { /*Commission information section*/ }
+                <div className="mt-6">
+                    <Card className="bg-white">
+                        <div className="border-b p-6">
+                            <h2 className="text-lg font-bold">
+                                { __( 'Commission Information', 'dokan' ) }
+                            </h2>
+                        </div>
+                        <div className="p-6 flex flex-col gap-3">
+                            <h2 className="text-lg font-bold text-red-500">
+                                { ' ' }
+                                👨🏻‍💻 This is under development...🔨⚙️
+                            </h2>
+                        </div>
+                    </Card>
+                </div>
+
+                <Slot
+                    name={ `${ formKey }-after-commission-information-card` }
+                />
+
+                { createForm && (
+                    <>
+                        <div className="mt-6">
+                            <SimpleCheckbox
+                                label={ __(
+                                    'Send an email to vendor about account',
+                                    'dokan-lite'
+                                ) }
+                                input={ {
+                                    id: 'send_email',
+                                    name: 'send_email',
+                                    type: 'checkbox',
+                                } }
+                                checked={ vendor?.show_email }
+                                onChange={ ( e ) => {
+                                    setData( 'show_email', e.target.checked );
+                                } }
+                                required={ isRequired( 'show_email' ) }
+                                errors={ getError( 'show_email' ) }
+                            />
+                        </div>
+
+                        <Slot name={ `${ formKey }-after-send-email` } />
+                    </>
+                ) }
             </div>
 
-            <PluginArea scope={ `dokan-admin-dashboard-vendor-form-${formKey}` } />
+            <PluginArea
+                scope={ `dokan-admin-dashboard-vendor-form-${ formKey }` }
+            />
         </>
     );
 }

@@ -111,7 +111,7 @@ function Edit( props ) {
         <Card className="bg-white p-6">
             <div>
                 { /*Back to vendors list*/ }
-                <div>
+                <div className="flex flex-row justify-start">
                     <DokanLink
                         href={ `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors` }
                         className="flex flex-row w-auto items-center gap-1 !text-neutral-500 hover:!underline"
@@ -122,11 +122,11 @@ function Edit( props ) {
                 </div>
 
                 { /*Add new vendor header*/ }
-                <div className="flex flex-row">
-                    <div className="sm:w-full md:w-1/2">
+                <div className="gap-4 flex flex-col md:!flex-row md:!justify-between">
+                    <div className="">
                         <h1>{ __( 'Update Vendor', 'dokan-lite' ) }</h1>
                     </div>
-                    <div className="sm:w-full md:w-1/2 flex flex-row justify-end gap-3">
+                    <div className="flex flex-col md:!flex-row gap-3">
                         <DokanButton
                             variant="secondary"
                             onClick={ () =>
