@@ -32,6 +32,13 @@ class Repeater extends Field {
     protected $options = array();
 
     /**
+     * Create New Title.
+     *
+     * @var string $new_title
+     */
+    protected $new_title = '';
+
+    /**
      * Constructor.
      *
      * @param string $id Input ID.
@@ -58,6 +65,28 @@ class Repeater extends Field {
      */
     public function set_options( array $options ) {
         $this->options = $options;
+
+        return $this;
+    }
+
+    /**
+     * Get options.
+     *
+     * @return string
+     */
+    public function get_new_title(): string {
+        return $this->new_title ?? esc_html__( 'Add New Item', 'dokan-lite' );
+    }
+
+    /**
+     * Set a new title.
+     *
+     * @param string $new_title.
+     *
+     * @return SettingsElement
+     */
+    public function set_new_title( string $new_title ): SettingsElement {
+        $this->new_title = $new_title;
 
         return $this;
     }
@@ -118,10 +147,11 @@ class Repeater extends Field {
      * @return array
      */
     public function populate(): array {
-        $data            = parent::populate();
-        $data['value']   = $this->get_value();
-        $data['default'] = $this->get_default();
-        $data['options'] = $this->get_options();
+        $data              = parent::populate();
+        $data['value']     = $this->get_value();
+        $data['default']   = $this->get_default();
+        $data['options']   = $this->get_options();
+        $data['new_title'] = $this->get_new_title();
 
         return $data;
     }

@@ -77,7 +77,6 @@ interface SortableListProps<T> {
     onDragEnd?: (event: DragEndEvent) => void;
     onDragCancel?: (event: DragCancelEvent) => void;
 }
-
 const SortableList = <T extends object>( props: SortableListProps<T> ): JSX.Element => {
     if ( ! props.namespace ) {
         throw new Error( 'Namespace is required for the SortableList component' );

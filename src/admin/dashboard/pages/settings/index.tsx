@@ -145,6 +145,8 @@ const SettingsPage = () => {
     const saveSettings = () => {
         wp.hooks.doAction( 'dokan_admin_settings_before_save_settings', allSettings );
 
+        console.log( 'allSettings', allSettings );
+
         setIsSaving( true );
         dispatch( settingsStore )
             .saveSettings( allSettings )
