@@ -1,14 +1,14 @@
 # Copyright (c) 2025 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 4.0.4\n"
+"Project-Id-Version: Dokan 4.0.5\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-17T10:01:35+00:00\n"
+"POT-Creation-Date: 2025-07-24T12:49:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -160,7 +160,7 @@ msgstr ""
 #: includes/Admin/Menu.php:56
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:104
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:107
-#: includes/Admin/SetupWizard.php:277
+#: includes/Admin/SetupWizard.php:286
 #: includes/functions-dashboard-navigation.php:55
 #: includes/functions.php:2783
 #: templates/withdraw/header.php:11
@@ -661,7 +661,7 @@ msgstr ""
 #: includes/Admin/Settings.php:613
 #: includes/Admin/Settings.php:624
 #: includes/Admin/Settings.php:635
-#: includes/Admin/SetupWizard.php:481
+#: includes/Admin/SetupWizard.php:490
 #: includes/Install/Installer.php:170
 #: includes/Order/Admin/Hooks.php:97
 #: includes/Order/Admin/Hooks.php:403
@@ -878,7 +878,7 @@ msgstr ""
 #: includes/Admin/Settings.php:614
 #: includes/Admin/Settings.php:625
 #: includes/Admin/Settings.php:636
-#: includes/Admin/SetupWizard.php:482
+#: includes/Admin/SetupWizard.php:491
 msgid "Admin"
 msgstr ""
 
@@ -939,7 +939,7 @@ msgstr ""
 #: includes/Admin/OnboardingSetup/Steps/CommissionStep.php:105
 #: includes/Admin/OnboardingSetup/Steps/CommissionStep.php:108
 #: includes/Admin/Settings.php:518
-#: includes/Admin/SetupWizard.php:272
+#: includes/Admin/SetupWizard.php:281
 #: includes/functions.php:997
 #: includes/Order/Admin/Hooks.php:96
 #: includes/ReverseWithdrawal/Helper.php:65
@@ -1036,7 +1036,7 @@ msgstr ""
 
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:145
 #: includes/Admin/Settings.php:753
-#: includes/Admin/SetupWizard.php:726
+#: includes/Admin/SetupWizard.php:735
 msgid "Order Status for Withdraw"
 msgstr ""
 
@@ -1046,7 +1046,7 @@ msgstr ""
 
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:147
 #: includes/Admin/Settings.php:410
-#: includes/Admin/SetupWizard.php:733
+#: includes/Admin/SetupWizard.php:742
 #: includes/Dashboard/Templates/Dashboard.php:109
 #: includes/Order/functions.php:415
 #: templates/dashboard/orders-widget.php:33
@@ -1055,7 +1055,7 @@ msgstr ""
 
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:148
 #: includes/Admin/Settings.php:411
-#: includes/Admin/SetupWizard.php:740
+#: includes/Admin/SetupWizard.php:749
 #: includes/Dashboard/Templates/Dashboard.php:119
 #: includes/Order/functions.php:430
 #: templates/dashboard/orders-widget.php:43
@@ -1589,7 +1589,7 @@ msgid "Allow vendors to select any category while creating/editing products."
 msgstr ""
 
 #: includes/Admin/Settings.php:715
-#: includes/Admin/SetupWizard.php:676
+#: includes/Admin/SetupWizard.php:685
 msgid "Withdraw Methods"
 msgstr ""
 
@@ -1610,7 +1610,7 @@ msgid "Select suitable withdraw charges for vendors"
 msgstr ""
 
 #: includes/Admin/Settings.php:743
-#: includes/Admin/SetupWizard.php:719
+#: includes/Admin/SetupWizard.php:728
 msgid "Minimum Withdraw Limit"
 msgstr ""
 
@@ -1619,7 +1619,7 @@ msgid "Minimum balance required to make a withdraw request. Leave blank to set n
 msgstr ""
 
 #: includes/Admin/Settings.php:754
-#: includes/Admin/SetupWizard.php:745
+#: includes/Admin/SetupWizard.php:754
 msgid "Order status for which vendor can make a withdraw request."
 msgstr ""
 
@@ -1703,13 +1703,13 @@ msgid "Which map API source you want to use in your site?"
 msgstr ""
 
 #: includes/Admin/Settings.php:827
-#: includes/Admin/SetupWizard.php:496
+#: includes/Admin/SetupWizard.php:505
 #: assets/js/vue-admin.js:2
 msgid "Google Maps"
 msgstr ""
 
 #: includes/Admin/Settings.php:828
-#: includes/Admin/SetupWizard.php:497
+#: includes/Admin/SetupWizard.php:506
 msgid "Mapbox"
 msgstr ""
 
@@ -1920,80 +1920,80 @@ msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:258
+#: includes/Admin/SetupWizard.php:267
 #: includes/Vendor/SetupWizard.php:700
 msgid "Introduction"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:262
+#: includes/Admin/SetupWizard.php:271
 #: includes/functions-dashboard-navigation.php:72
 #: includes/Vendor/SetupWizard.php:705
 #: assets/js/vue-admin.js:2
 msgid "Store"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:267
+#: includes/Admin/SetupWizard.php:276
 #: includes/Admin/UserProfile.php:306
 msgid "Selling"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:282
+#: includes/Admin/SetupWizard.php:291
 msgid "Recommended"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:287
+#: includes/Admin/SetupWizard.php:296
 #: includes/Vendor/SetupWizard.php:722
 msgid "Ready!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:386
+#: includes/Admin/SetupWizard.php:395
 msgid "Dokan &rsaquo; Setup Wizard"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:406
+#: includes/Admin/SetupWizard.php:415
 #: includes/Admin/SetupWizardNoWC.php:95
 msgid "Return to the WordPress Dashboard"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:455
+#: includes/Admin/SetupWizard.php:464
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:2
 msgid "Welcome to the world of Dokan!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:456
+#: includes/Admin/SetupWizard.php:465
 msgid "Thank you for choosing Dokan to power your online marketplace! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:457
+#: includes/Admin/SetupWizard.php:466
 msgid "No time right now? If you don’t want to go through the wizard, you can skip and return to the WordPress dashboard. Come back anytime if you change your mind!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:459
+#: includes/Admin/SetupWizard.php:468
 #: includes/Vendor/SetupWizard.php:171
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:74
 msgid "Let's Go!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:460
+#: includes/Admin/SetupWizard.php:469
 #: includes/Vendor/SetupWizard.php:172
 msgid "Not right now"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:672
+#: includes/Admin/SetupWizard.php:681
 msgid "Withdraw Setup"
 msgstr ""
 
 #. translators: %s: withdraw method name
-#: includes/Admin/SetupWizard.php:694
+#: includes/Admin/SetupWizard.php:703
 msgid "Enable %s for your vendor as a withdraw method"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:722
+#: includes/Admin/SetupWizard.php:731
 msgid "Minimum balance required to make a withdraw request ( Leave it blank to set no limits )"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:750
-#: includes/Admin/SetupWizard.php:783
+#: includes/Admin/SetupWizard.php:759
+#: includes/Admin/SetupWizard.php:792
 #: includes/Admin/SetupWizardWCAdmin.php:232
 #: includes/Vendor/SetupWizard.php:351
 #: includes/Vendor/SetupWizard.php:560
@@ -2003,7 +2003,7 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:751
+#: includes/Admin/SetupWizard.php:760
 #: includes/Vendor/SetupWizard.php:353
 #: includes/Vendor/SetupWizard.php:562
 #: templates/admin-setup-wizard/step-commission.php:13
@@ -2013,28 +2013,28 @@ msgstr ""
 msgid "Skip this step"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:767
+#: includes/Admin/SetupWizard.php:776
 msgid "Recommended for All Dokan Marketplaces"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:769
+#: includes/Admin/SetupWizard.php:778
 msgid "Enhance your store with these recommended features."
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:898
+#: includes/Admin/SetupWizard.php:907
 msgid "Your Marketplace is Ready!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:903
+#: includes/Admin/SetupWizard.php:912
 #: assets/js/dokan-admin-dashboard.js:172
 msgid "Visit Dokan Dashboard"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:904
+#: includes/Admin/SetupWizard.php:913
 msgid "More Settings"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:989
+#: includes/Admin/SetupWizard.php:998
 msgid "The following plugins will be installed and activated for you:"
 msgstr ""
 
@@ -2119,14 +2119,14 @@ msgstr ""
 
 #: includes/Admin/UserProfile.php:38
 #: includes/Ajax.php:143
-#: includes/Assets.php:712
+#: includes/Assets.php:724
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Available"
 msgstr ""
 
 #: includes/Admin/UserProfile.php:39
-#: includes/Assets.php:713
+#: includes/Assets.php:725
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Not Available"
@@ -2576,7 +2576,7 @@ msgstr ""
 msgid "Are you sure ?"
 msgstr ""
 
-#: includes/Assets.php:715
+#: includes/Assets.php:727
 #: includes/Product/functions.php:504
 #: templates/products/products-listing.php:109
 #: assets/js/dokan-admin-notice.js:2
@@ -2586,54 +2586,54 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: includes/Assets.php:716
+#: includes/Assets.php:728
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: includes/Assets.php:730
+#: includes/Assets.php:742
 msgid "Are you sure you want to revoke access to this download?"
 msgstr ""
 
-#: includes/Assets.php:731
+#: includes/Assets.php:743
 msgid "Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved."
 msgstr ""
 
-#: includes/Assets.php:863
+#: includes/Assets.php:875
 msgctxt "time constant"
 msgid "am"
 msgstr ""
 
-#: includes/Assets.php:864
+#: includes/Assets.php:876
 msgctxt "time constant"
 msgid "pm"
 msgstr ""
 
-#: includes/Assets.php:865
+#: includes/Assets.php:877
 msgctxt "time constant"
 msgid "AM"
 msgstr ""
 
-#: includes/Assets.php:866
+#: includes/Assets.php:878
 msgctxt "time constant"
 msgid "PM"
 msgstr ""
 
-#: includes/Assets.php:867
+#: includes/Assets.php:879
 msgctxt "time constant"
 msgid "hr"
 msgstr ""
 
-#: includes/Assets.php:868
+#: includes/Assets.php:880
 msgctxt "time constant"
 msgid "hrs"
 msgstr ""
 
-#: includes/Assets.php:869
+#: includes/Assets.php:881
 msgctxt "time constant"
 msgid "mins"
 msgstr ""
 
-#: includes/Assets.php:872
+#: includes/Assets.php:884
 #: templates/products/edit-product-single.php:381
 #: templates/products/new-product.php:252
 #: templates/products/tmpl-add-product-popup.php:87
@@ -2641,22 +2641,22 @@ msgstr ""
 msgid "To"
 msgstr ""
 
-#: includes/Assets.php:874
+#: includes/Assets.php:886
 #: templates/products/edit-product-single.php:374
 #: templates/products/new-product.php:245
 #: templates/products/tmpl-add-product-popup.php:80
 msgid "From"
 msgstr ""
 
-#: includes/Assets.php:875
+#: includes/Assets.php:887
 msgid " - "
 msgstr ""
 
-#: includes/Assets.php:876
+#: includes/Assets.php:888
 msgid "W"
 msgstr ""
 
-#: includes/Assets.php:877
+#: includes/Assets.php:889
 #: templates/orders/listing.php:20
 #: templates/products/products-listing.php:108
 #: templates/store-lists-filter.php:84
@@ -2664,95 +2664,95 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-#: includes/Assets.php:878
+#: includes/Assets.php:890
 #: assets/js/components.js:172
 #: assets/js/vue-admin.js:2
 msgid "Clear"
 msgstr ""
 
-#: includes/Assets.php:879
+#: includes/Assets.php:891
 #: includes/Withdraw/Hooks.php:84
 msgid "Custom"
 msgstr ""
 
-#: includes/Assets.php:881
+#: includes/Assets.php:893
 msgid "Su"
 msgstr ""
 
-#: includes/Assets.php:882
+#: includes/Assets.php:894
 msgid "Mo"
 msgstr ""
 
-#: includes/Assets.php:883
+#: includes/Assets.php:895
 msgid "Tu"
 msgstr ""
 
-#: includes/Assets.php:884
+#: includes/Assets.php:896
 msgid "We"
 msgstr ""
 
-#: includes/Assets.php:885
+#: includes/Assets.php:897
 msgid "Th"
 msgstr ""
 
-#: includes/Assets.php:886
+#: includes/Assets.php:898
 msgid "Fr"
 msgstr ""
 
-#: includes/Assets.php:887
+#: includes/Assets.php:899
 msgid "Sa"
 msgstr ""
 
-#: includes/Assets.php:890
+#: includes/Assets.php:902
 msgid "January"
 msgstr ""
 
-#: includes/Assets.php:891
+#: includes/Assets.php:903
 msgid "February"
 msgstr ""
 
-#: includes/Assets.php:892
+#: includes/Assets.php:904
 msgid "March"
 msgstr ""
 
-#: includes/Assets.php:893
+#: includes/Assets.php:905
 msgid "April"
 msgstr ""
 
-#: includes/Assets.php:894
+#: includes/Assets.php:906
 msgid "May"
 msgstr ""
 
-#: includes/Assets.php:895
+#: includes/Assets.php:907
 msgid "June"
 msgstr ""
 
-#: includes/Assets.php:896
+#: includes/Assets.php:908
 msgid "July"
 msgstr ""
 
-#: includes/Assets.php:897
+#: includes/Assets.php:909
 msgid "August"
 msgstr ""
 
-#: includes/Assets.php:898
+#: includes/Assets.php:910
 msgid "September"
 msgstr ""
 
-#: includes/Assets.php:899
+#: includes/Assets.php:911
 msgid "October"
 msgstr ""
 
-#: includes/Assets.php:900
+#: includes/Assets.php:912
 msgid "November"
 msgstr ""
 
-#: includes/Assets.php:901
+#: includes/Assets.php:913
 msgid "December"
 msgstr ""
 
-#: includes/Assets.php:905
-#: includes/Assets.php:1189
+#: includes/Assets.php:917
+#: includes/Assets.php:1201
 #: includes/Product/functions.php:310
 #: templates/my-orders.php:95
 #: templates/orders/details.php:196
@@ -2777,7 +2777,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: includes/Assets.php:906
+#: includes/Assets.php:918
 #: includes/Product/functions.php:321
 #: templates/orders/details.php:347
 #: templates/settings/store-form.php:38
@@ -2785,12 +2785,12 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: includes/Assets.php:907
-#: includes/Assets.php:1188
+#: includes/Assets.php:919
+#: includes/Assets.php:1200
 msgid "OK"
 msgstr ""
 
-#: includes/Assets.php:908
+#: includes/Assets.php:920
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:283
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:430
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:446
@@ -2800,312 +2800,312 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: includes/Assets.php:909
+#: includes/Assets.php:921
 msgid "Close this dialog"
 msgstr ""
 
-#: includes/Assets.php:935
+#: includes/Assets.php:947
 msgid "This field is required"
 msgstr ""
 
-#: includes/Assets.php:936
+#: includes/Assets.php:948
 msgid "Please fix this field."
 msgstr ""
 
-#: includes/Assets.php:937
+#: includes/Assets.php:949
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: includes/Assets.php:938
+#: includes/Assets.php:950
 msgid "Please enter a valid URL."
 msgstr ""
 
-#: includes/Assets.php:939
+#: includes/Assets.php:951
 msgid "Please enter a valid date."
 msgstr ""
 
-#: includes/Assets.php:940
+#: includes/Assets.php:952
 msgid "Please enter a valid date (ISO)."
 msgstr ""
 
-#: includes/Assets.php:941
+#: includes/Assets.php:953
 msgid "Please enter a valid number."
 msgstr ""
 
-#: includes/Assets.php:942
+#: includes/Assets.php:954
 msgid "Please enter only digits."
 msgstr ""
 
-#: includes/Assets.php:943
+#: includes/Assets.php:955
 msgid "Please enter a valid credit card number."
 msgstr ""
 
-#: includes/Assets.php:944
+#: includes/Assets.php:956
 msgid "Please enter the same value again."
 msgstr ""
 
-#: includes/Assets.php:945
+#: includes/Assets.php:957
 msgid "Please enter no more than {0} characters."
 msgstr ""
 
-#: includes/Assets.php:946
+#: includes/Assets.php:958
 msgid "Please enter at least {0} characters."
 msgstr ""
 
-#: includes/Assets.php:947
+#: includes/Assets.php:959
 msgid "Please enter a value between {0} and {1} characters long."
 msgstr ""
 
-#: includes/Assets.php:948
+#: includes/Assets.php:960
 msgid "Please enter a value between {0} and {1}."
 msgstr ""
 
-#: includes/Assets.php:949
+#: includes/Assets.php:961
 msgid "Please enter a value less than or equal to {0}."
 msgstr ""
 
-#: includes/Assets.php:950
+#: includes/Assets.php:962
 msgid "Please enter a value greater than or equal to {0}."
 msgstr ""
 
-#: includes/Assets.php:1112
+#: includes/Assets.php:1124
 msgid "Upload featured image"
 msgstr ""
 
-#: includes/Assets.php:1113
+#: includes/Assets.php:1125
 msgid "Choose a file"
 msgstr ""
 
-#: includes/Assets.php:1114
+#: includes/Assets.php:1126
 msgid "Add Images to Product Gallery"
 msgstr ""
 
-#: includes/Assets.php:1115
+#: includes/Assets.php:1127
 msgid "Set featured image"
 msgstr ""
 
-#: includes/Assets.php:1116
+#: includes/Assets.php:1128
 #: includes/woo-views/html-product-download.php:8
 msgid "Insert file URL"
 msgstr ""
 
-#: includes/Assets.php:1117
+#: includes/Assets.php:1129
 msgid "Add to gallery"
 msgstr ""
 
-#: includes/Assets.php:1118
+#: includes/Assets.php:1130
 msgid "Sorry, this attribute option already exists, Try a different one."
 msgstr ""
 
-#: includes/Assets.php:1119
+#: includes/Assets.php:1131
 msgid "Warning! This product will not have any variations if this option is not checked."
 msgstr ""
 
-#: includes/Assets.php:1120
+#: includes/Assets.php:1132
 msgid "Enter a name for the new attribute term:"
 msgstr ""
 
-#: includes/Assets.php:1121
+#: includes/Assets.php:1133
 msgid "Remove this attribute?"
 msgstr ""
 
 #. translators: %d: max linked variation.
-#: includes/Assets.php:1130
+#: includes/Assets.php:1142
 msgid "Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run)."
 msgstr ""
 
-#: includes/Assets.php:1131
+#: includes/Assets.php:1143
 msgid "Enter a value"
 msgstr ""
 
-#: includes/Assets.php:1132
+#: includes/Assets.php:1144
 msgid "Variation menu order (determines position in the list of variations)"
 msgstr ""
 
-#: includes/Assets.php:1133
+#: includes/Assets.php:1145
 msgid "Enter a value (fixed or %)"
 msgstr ""
 
-#: includes/Assets.php:1134
+#: includes/Assets.php:1146
 msgid "Are you sure you want to delete all variations? This cannot be undone."
 msgstr ""
 
-#: includes/Assets.php:1135
+#: includes/Assets.php:1147
 msgid "Last warning, are you sure?"
 msgstr ""
 
-#: includes/Assets.php:1136
+#: includes/Assets.php:1148
 msgid "Choose an image"
 msgstr ""
 
-#: includes/Assets.php:1137
+#: includes/Assets.php:1149
 msgid "Set variation image"
 msgstr ""
 
-#: includes/Assets.php:1138
+#: includes/Assets.php:1150
 msgid "variation added"
 msgstr ""
 
-#: includes/Assets.php:1139
+#: includes/Assets.php:1151
 msgid "variations added"
 msgstr ""
 
-#: includes/Assets.php:1140
+#: includes/Assets.php:1152
 msgid "No variations added"
 msgstr ""
 
-#: includes/Assets.php:1141
+#: includes/Assets.php:1153
 msgid "Are you sure you want to remove this variation?"
 msgstr ""
 
-#: includes/Assets.php:1142
+#: includes/Assets.php:1154
 msgid "Sale start date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/Assets.php:1143
+#: includes/Assets.php:1155
 msgid "Sale end date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/Assets.php:1144
+#: includes/Assets.php:1156
 msgid "Save changes before changing page?"
 msgstr ""
 
-#: includes/Assets.php:1145
+#: includes/Assets.php:1157
 msgid "%qty% variation"
 msgstr ""
 
-#: includes/Assets.php:1146
+#: includes/Assets.php:1158
 msgid "%qty% variations"
 msgstr ""
 
-#: includes/Assets.php:1147
+#: includes/Assets.php:1159
 msgid "No Result Found"
 msgstr ""
 
-#: includes/Assets.php:1148
+#: includes/Assets.php:1160
 msgid "Please insert value less than the regular price!"
 msgstr ""
 
 #. translators: %s: decimal
-#: includes/Assets.php:1150
-#: includes/Assets.php:1331
+#: includes/Assets.php:1162
+#: includes/Assets.php:1343
 msgid "Please enter with one decimal point (%s) without thousand separators."
 msgstr ""
 
 #. translators: %s: price decimal separator
-#: includes/Assets.php:1152
-#: includes/Assets.php:1333
+#: includes/Assets.php:1164
+#: includes/Assets.php:1345
 msgid "Please enter with one monetary decimal point (%s) without thousand separators and currency symbols."
 msgstr ""
 
-#: includes/Assets.php:1153
-#: includes/Assets.php:1334
+#: includes/Assets.php:1165
+#: includes/Assets.php:1346
 msgid "Please enter in country code with two capital letters."
 msgstr ""
 
-#: includes/Assets.php:1154
-#: includes/Assets.php:1335
+#: includes/Assets.php:1166
+#: includes/Assets.php:1347
 msgid "Please enter in a value less than the regular price."
 msgstr ""
 
-#: includes/Assets.php:1155
-#: includes/Assets.php:1336
+#: includes/Assets.php:1167
+#: includes/Assets.php:1348
 msgid "This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?"
 msgstr ""
 
-#: includes/Assets.php:1156
-#: includes/Assets.php:1337
+#: includes/Assets.php:1168
+#: includes/Assets.php:1349
 msgid "This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?"
 msgstr ""
 
-#: includes/Assets.php:1166
+#: includes/Assets.php:1178
 msgid "Select and Crop"
 msgstr ""
 
-#: includes/Assets.php:1167
+#: includes/Assets.php:1179
 msgid "Choose Image"
 msgstr ""
 
-#: includes/Assets.php:1168
+#: includes/Assets.php:1180
 msgid "Product title is required"
 msgstr ""
 
-#: includes/Assets.php:1169
+#: includes/Assets.php:1181
 msgid "Product category is required"
 msgstr ""
 
-#: includes/Assets.php:1170
+#: includes/Assets.php:1182
 msgid "Product created successfully"
 msgstr ""
 
-#: includes/Assets.php:1175
+#: includes/Assets.php:1187
 msgid "One result is available, press enter to select it."
 msgstr ""
 
-#: includes/Assets.php:1176
+#: includes/Assets.php:1188
 msgid "%qty% results are available, use up and down arrow keys to navigate."
 msgstr ""
 
-#: includes/Assets.php:1177
+#: includes/Assets.php:1189
 msgid "No matches found"
 msgstr ""
 
-#: includes/Assets.php:1178
+#: includes/Assets.php:1190
 msgid "Loading failed"
 msgstr ""
 
-#: includes/Assets.php:1179
+#: includes/Assets.php:1191
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/Assets.php:1180
+#: includes/Assets.php:1192
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/Assets.php:1181
+#: includes/Assets.php:1193
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/Assets.php:1182
+#: includes/Assets.php:1194
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/Assets.php:1183
+#: includes/Assets.php:1195
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/Assets.php:1184
+#: includes/Assets.php:1196
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/Assets.php:1185
+#: includes/Assets.php:1197
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/Assets.php:1186
+#: includes/Assets.php:1198
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/Assets.php:1187
+#: includes/Assets.php:1199
 msgid "Calculating"
 msgstr ""
 
-#: includes/Assets.php:1190
+#: includes/Assets.php:1202
 msgid "Attribute Name"
 msgstr ""
 
-#: includes/Assets.php:1192
+#: includes/Assets.php:1204
 msgid "Are you sure? You have uploaded banner but didn't click the Update Settings button!"
 msgstr ""
 
-#: includes/Assets.php:1193
+#: includes/Assets.php:1205
 #: templates/settings/header.php:20
 #: templates/settings/payment-manage.php:48
 #: templates/settings/store-form.php:270
 msgid "Update Settings"
 msgstr ""
 
-#: includes/Assets.php:1195
+#: includes/Assets.php:1207
 msgid "Please enter 3 or more characters"
 msgstr ""
 
