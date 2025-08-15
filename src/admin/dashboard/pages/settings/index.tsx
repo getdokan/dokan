@@ -9,9 +9,7 @@ import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import PageHeading from './Elements/PageHeading';
 import { twMerge } from 'tailwind-merge';
-// DEMO: Render all Dokan* field components from src/Fields with mock props
 
-// Dashboard Switch Link Component
 const DashboardSwitchLink = () => {
     // Get the switch URL from localized settings
     const switchUrl = dokanAdminDashboardSettings?.legacy_settings_url || '#';
@@ -192,6 +190,10 @@ const SettingsPage = () => {
             currentPage = pages.find( ( page ) => page.id === selectedPage );
         }
 
+        if ( ! currentPage?.display ) {
+            return {};
+        }
+
         if ( selectedTab && tabs?.length > 0 ) {
             currentTab = tabs.find( ( tab ) => tab.id === selectedTab );
         }
@@ -216,7 +218,6 @@ const SettingsPage = () => {
     };
 
     const pageInfo = getCurrentPageInfo();
-    // check all elements are field type
     const allElementsAreFields = elements.every(
         ( element ) => element.type === 'field'
     );
@@ -257,7 +258,7 @@ const SettingsPage = () => {
                             ) }
                             <div
                                 className={ `flex flex-col bg-white rounded-lg ${ twMerge(
-                                    allElementsAreFields
+                                    allElementsAreFields && ( pageInfo?.title || pageInfo?.description )
                                         ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
                                         : ''
                                 ) }` }

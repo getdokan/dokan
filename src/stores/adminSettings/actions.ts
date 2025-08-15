@@ -44,11 +44,6 @@ const actions = {
             searchText,
         };
     },
-    clearSearch() {
-        return {
-            type: 'CLEAR_SEARCH',
-        };
-    },
     fetchSettings() {
         return async ( { dispatch } ) => {
             dispatch( actions.setLoading( true ) );
