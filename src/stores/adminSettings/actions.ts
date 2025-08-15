@@ -15,6 +15,7 @@ const actions = {
         };
     },
     updateSettingsValue( item: SettingsElement ) {
+        console.log( item, ':::::::::::::::::::::item' );
         return {
             type: 'UPDATE_SETTINGS_VALUE',
             item,
