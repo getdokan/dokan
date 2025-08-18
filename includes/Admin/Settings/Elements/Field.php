@@ -18,6 +18,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioBox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioCapsule;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RefreshSelectField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Repeater;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\RichText;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Select;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
@@ -78,6 +79,7 @@ class Field extends SettingsElement {
         'customize_radio'           => CustomizeRadio::class,
         'html'                      => HtmlField::class,
         'repeater'                  => Repeater::class,
+        'rich_text'                 => RichText::class,
 	);
 
 	/**
