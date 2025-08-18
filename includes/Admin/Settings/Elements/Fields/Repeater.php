@@ -145,13 +145,16 @@ class Repeater extends Field {
         }
 
         // Filter out empty entries.
-        $filtered_data = array_filter( $value, function( $item ) {
-            $id    = $this->sanitize_element( $item['id'] ?? '' );
-            $order = $this->sanitize_element( $item['order'] ?? '' );
-            $title = $this->sanitize_element( $item['title'] ?? '' );
+        $filtered_data = array_filter(
+            $value,
+            function( $item ) {
+                $id    = $this->sanitize_element( $item['id'] ?? '' );
+                $order = $this->sanitize_element( $item['order'] ?? '' );
+                $title = $this->sanitize_element( $item['title'] ?? '' );
 
-            return ! empty( $id ) && ! empty( $title ) && ( $order !== '' );
-        } );
+                return ! empty( $id ) && ! empty( $title ) && ( $order !== '' );
+            }
+        );
 
         // Reset array keys to maintain proper indexing.
         return array_values( $filtered_data );
