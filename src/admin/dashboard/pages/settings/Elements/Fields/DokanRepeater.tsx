@@ -7,7 +7,6 @@ import { DokanFieldLabel } from '../../../../../../components/fields';
 import { SettingsProps } from '../../types';
 import TextField from "../../../../../../components/fields/TextField";
 import DokanModal from "../../../../../../components/modals/DokanModal";
-import actions from "../../../../../../stores/adminSettings/actions";
 import { snakeCase } from '../../../../../../utilities/ChangeCase';
 
 interface RepeaterItemData {

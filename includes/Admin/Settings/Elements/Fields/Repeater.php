@@ -150,7 +150,7 @@ class Repeater extends Field {
             $order = $this->sanitize_element( $item['order'] ?? '' );
             $title = $this->sanitize_element( $item['title'] ?? '' );
 
-            return ! empty( $id ) && ! empty( $order ) && ! empty( $title );
+            return ! empty( $id ) && ! empty( $title ) && ( $order !== '' );
         } );
 
         // Reset array keys to maintain proper indexing.
