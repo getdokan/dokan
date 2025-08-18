@@ -147,7 +147,7 @@ class Repeater extends Field {
         // Filter out empty entries.
         $filtered_data = array_filter(
             $value,
-            function( $item ) {
+            function ( $item ) {
                 $id    = $this->sanitize_element( $item['id'] ?? '' );
                 $order = $this->sanitize_element( $item['order'] ?? '' );
                 $title = $this->sanitize_element( $item['title'] ?? '' );
