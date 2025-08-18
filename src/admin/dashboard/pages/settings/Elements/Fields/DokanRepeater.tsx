@@ -4,11 +4,11 @@ import { X, Trash, Menu, Pencil, Check, Plus } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import SortableList from '../../../../../../components/sortable-list'
 import { DokanFieldLabel } from '../../../../../../components/fields';
-import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 import { SettingsProps } from '../../types';
 import TextField from "../../../../../../components/fields/TextField";
 import DokanModal from "../../../../../../components/modals/DokanModal";
+import actions from "../../../../../../stores/adminSettings/actions";
+import { snakeCase } from '../../../../../../utilities/ChangeCase';
 
 interface RepeaterItemData {
     id: string;
@@ -16,6 +16,7 @@ interface RepeaterItemData {
     title: string;
     required?: boolean;
 }
+
 
 // Individual Repeater Item Component
 const RepeaterItem = ( {
@@ -35,10 +36,12 @@ const RepeaterItem = ( {
     const [ editValue, setEditValue ] = useState( item.title );
     const [ originalValue, setOriginalValue ] = useState( item.title );
     const [ hasValidationError, setHasValidationError ] = useState( false );
+    const [ hasBeenModified, setHasBeenModified ] = useState( false );
 
     const handleEdit = () => {
         setIsEditing( true );
         setOriginalValue( editValue );
+        setHasBeenModified( false );
     };
 
     const handleSave = () => {
@@ -63,6 +66,7 @@ const RepeaterItem = ( {
     const handleCancel = () => {
         setEditValue( originalValue );
         setIsEditing( false );
+        setHasBeenModified( false );
     };
 
     const handleDelete = () => {
@@ -86,19 +90,16 @@ const RepeaterItem = ( {
                             inputType="text"
                             value={ editValue }
                             containerClassName="w-fit"
-                            onChange={ ( val ) => setEditValue( val ) }
-                            inputClassName="bg-white border-[#E9E9E9] rounded-[5px] h-10 px-4 text-[#25252D] text-sm border-[#7047eb]"
-
-                            // onChange={ ( val ) => {
-                            //     setEditValue( val );
-                            //     // Clear validation error when user starts typing
-                            //     if ( hasValidationError && val.trim() !== '' ) {
-                            //         setHasValidationError( false );
-                            //     }
-                            // } }
-                            // error={ hasValidationError ? __( 'This field is required', 'dokan-lite' ) : undefined }
-                            // status={ hasValidationError ? 'error' : 'default' }
-                            // inputClassName="bg-white rounded-[5px] h-10 px-4 text-[#25252D] text-sm"
+                            onChange={ ( val ) => {
+                                setEditValue( val );
+                                setHasBeenModified( true );
+                            } }
+                            inputClassName={
+                                twMerge(
+                                    "bg-white border-[#E9E9E9] rounded-[5px] h-10 px-4 text-[#25252D] text-sm border-[#7047eb]",
+                                    hasBeenModified && !editValue && 'border-red-500 hover:border-red-500',
+                                )
+                            }
                         />
                     ) : (
                         <span className="text-sm font-medium text-[#25252D]">
@@ -194,10 +195,21 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
 
     // Update local state when element changes
     useEffect( () => {
-        if ( element?.value ) {
-            setItems( element.value );
+        // Filter out items with empty titles (keep only items with content or required items)
+        const filteredItems = element.value?.filter( item =>
+            item.title.trim() !== '' || item.required
+        );
+
+        // Only update if there are items to remove
+        if ( element.value?.length && filteredItems.length !== element.value?.length ) {
+            setItems( filteredItems );
+            onValueChange( {
+                ...element,
+                value: filteredItems,
+            } );
         }
-    }, [ element?.value ] );
+
+    }, [] );
 
     if ( ! element.display ) {
         return null;
@@ -206,35 +218,37 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
     // Handle value changes and update store
     const handleItemsChange = ( updatedItems: RepeaterItemData[] ) => {
         setItems( updatedItems );
-        
-        // Use provided onValueChange callback or dispatch to store
-        if ( onValueChange ) {
-            onValueChange( {
-                ...element,
-                value: updatedItems,
-            } );
-        } else {
-            dispatch( settingsStore ).updateSettingsValue( {
-                ...element,
-                value: updatedItems,
-            } );
-        }
+
+        // This code only runs if no empty titles are found
+        onValueChange( {
+            ...element,
+            value: updatedItems,
+        } );
     };
 
     // Handle individual item updates
     const handleItemUpdate = ( id: string, updatedItem: RepeaterItemData ) => {
-        const newItems = items.map( item =>
-            item.id === id ? updatedItem : item
-        );
+        let finalUpdatedItem = updatedItem;
         
-        // Remove from new items tracking when successfully updated with content
+        // If this is a new item with a title, generate snake_case ID
         if ( updatedItem.title.trim() !== '' && newItemIds.has( id ) ) {
+            const newId = snakeCase( updatedItem.title );
+            finalUpdatedItem = {
+                ...updatedItem,
+                id: newId
+            };
+            
+            // Remove from new items tracking
             setNewItemIds( prev => {
                 const newSet = new Set( prev );
                 newSet.delete( id );
                 return newSet;
             } );
         }
+        
+        const newItems = items.map( item =>
+            item.id === id ? finalUpdatedItem : item
+        );
         
         handleItemsChange( newItems );
     };
@@ -266,22 +280,39 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
 
     // Handle drag and drop reordering
     const handleOrderUpdate = ( updatedItems: RepeaterItemData[] ) => {
-        // Update order property based on new positions
-        const reorderedItems = updatedItems.map( ( item, index ) => ( {
-            ...item,
-            order: index,
-        } ) );
-        handleItemsChange( reorderedItems );
+        // Get current required items to maintain their positions
+        const requiredItems = sortedItems.filter( item => item.required );
+        
+        // Update order property for sortable items, accounting for required items' positions
+        const reorderedItems = updatedItems.map( ( item, index ) => {
+            // Calculate the correct order considering required items
+            let newOrder = index;
+            requiredItems.forEach( reqItem => {
+                if ( reqItem.order <= newOrder ) {
+                    newOrder++;
+                }
+            });
+            
+            return {
+                ...item,
+                order: newOrder,
+            };
+        } );
+        
+        // Combine required items with reordered sortable items
+        const finalItems = [ ...requiredItems, ...reorderedItems ]
+            .sort( ( a, b ) => a.order - b.order );
+        
+        handleItemsChange( finalItems );
     };
 
     // Add new item with blank title that starts in edit mode
     const handleAddNew = () => {
-        const newId = `item_${ Date.now() }_${ Math.random().toString( 36 ).substr( 2, 9 ) }`;
+        const newId = `item_${ Math.random().toString( 36 ).substr( 2, 9 ) }`;
         const newItem: RepeaterItemData = {
-            id: newId,
-            order: items.length,
-            title: '', // Start with blank text
-            required: false,
+            id       : newId,
+            order    : items.length,
+            title    : '',
         };
         
         // Track this as a new item
@@ -289,26 +320,43 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
         handleItemsChange( [ ...items, newItem ] );
     };
 
-    // Render individual item for SortableList
+    // Render individual item for SortableList (sortable items only)
     const renderItem = ( item: RepeaterItemData ) => {
         return (
             <div className="border-b border-gray-200 last:border-b-0 flex items-center">
                 { /* Drag Handle */ }
                 <div
-                    className={ twMerge(
-                        'relative flex items-center pl-5 pr-3',
-                        item.required &&
-                        'cursor-not-allowed opacity-50',
-                        ! item.required &&
-                        'cursor-grab active:cursor-grabbing',
-                        ! item.required && 'drag-handle'
-                    ) }
+                    className="relative flex items-center pl-5 pr-3 cursor-grab active:cursor-grabbing drag-handle"
                     data-drag-handle="true"
                 >
                     <Menu className="cursor-grab" color="#828282" size={ 16 } />
-                    { item.required && (
-                        <div className="absolute inset-0 cursor-not-allowed"></div>
-                    ) }
+                </div>
+
+                { /* Item Content */ }
+                <div className="flex-1">
+                    <RepeaterItem
+                        item={ item }
+                        onUpdate={ handleItemUpdate }
+                        onDeleteRequest={ handleDeleteRequest }
+                        isNewItem={ newItemIds.has( item.id ) }
+                    />
+                </div>
+            </div>
+        );
+    };
+
+    // Render individual non-sortable item (required items)
+    const renderNonSortableItem = ( item: RepeaterItemData ) => {
+        return (
+            <div className="border-b border-gray-200 flex items-center not-sortable">
+                { /* Non-draggable handle placeholder */ }
+                <div className="relative flex items-center pl-5 pr-3 cursor-not-allowed opacity-50">
+                    <Menu
+                        className="cursor-not-allowed"
+                        color="#828282"
+                        size={ 16 }
+                    />
+                    <div className="absolute inset-0 cursor-not-allowed"></div>
                 </div>
 
                 { /* Item Content */ }
@@ -326,6 +374,10 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
 
     // Sort items by order
     const sortedItems = [ ...items ].sort( ( a, b ) => a.order - b.order );
+    
+    // Separate required items from sortable items
+    const requiredItems = sortedItems.filter( item => item.required );
+    const sortableItems = sortedItems.filter( item => ! item.required );
 
     return (
         <>
@@ -338,16 +390,28 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
                 />
 
                 { sortedItems.length > 0 ? (
-                    <SortableList
-                        wrapperElement=""
-                        items={ sortedItems }
-                        namespace={ `dokan-repeater-${ element.id || 'default' }` }
-                        onChange={ handleOrderUpdate }
-                        renderItem={ renderItem }
-                        orderProperty="order"
-                        dragSelector="drag-handle"
-                        strategy="vertical"
-                    />
+                    <div className='overflow-hidden'>
+                        { /* Render required items outside sortable list */ }
+                        { requiredItems.map( ( item ) => (
+                            <div key={ item.id }>
+                                { renderNonSortableItem( item ) }
+                            </div>
+                        ) ) }
+
+                        { /* Render sortable items in sortable list */ }
+                        { sortableItems.length > 0 && (
+                            <SortableList
+                                wrapperElement=""
+                                items={ sortableItems }
+                                namespace={ `dokan-repeater-${ element.id || 'default' }` }
+                                onChange={ handleOrderUpdate }
+                                renderItem={ renderItem }
+                                orderProperty="order"
+                                dragSelector="drag-handle"
+                                strategy="vertical"
+                            />
+                        ) }
+                    </div>
                 ) : (
                     <div className="text-center py-8 text-gray-500">
                         <p>{ __( 'No items found.', 'dokan-lite' ) }</p>

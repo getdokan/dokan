@@ -20,7 +20,7 @@ import DokanTel from './DokanTel';
 import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
 import RadioBox from './RadioBox';
-import DokanRepeater from "./DokanReapeater";
+import DokanRepeater from "./DokanRepeater";
 
 const FieldParser = ( {
     element,
