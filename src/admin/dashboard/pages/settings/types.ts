@@ -16,6 +16,7 @@ export type SettingsElement = {
     variant?: string;
     icon?: string;
     title?: string;
+    new_title?: string;
     description?: string;
     tooltip?: string;
     value?:
