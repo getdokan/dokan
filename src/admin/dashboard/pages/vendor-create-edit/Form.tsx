@@ -1,4 +1,8 @@
-import { DokanButton } from '@dokan/components';
+import {
+    DokanButton,
+    CategoryBasedCommissionPure,
+    FixedCommissionInput,
+} from '@dokan/components';
 import { __ } from '@wordpress/i18n';
 import {
     CheckCircle,
@@ -7,11 +11,12 @@ import {
     Trash,
     Upload,
     Pencil,
-    LoaderCircle
-} from "lucide-react";
+    LoaderCircle,
+} from 'lucide-react';
 import {
     AsyncSearchableSelect,
     Card,
+    SearchableSelect,
     SimpleCheckbox,
     SimpleInput,
     ToggleSwitch,
@@ -26,29 +31,63 @@ import { twMerge } from 'tailwind-merge';
 import DebouncedInput from '@dokan/admin/dashboard/pages/vendor-create-edit/DebouncedInput';
 import { addQueryArgs } from '@wordpress/url';
 import wpMedia from '@dokan/admin/dashboard/pages/vendor-create-edit/WpMedia';
-import { Slot } from "@wordpress/components";
-import { PluginArea } from "@wordpress/plugins";
+import { Slot } from '@wordpress/components';
+import { PluginArea } from '@wordpress/plugins';
+import { useEffect, useState } from '@wordpress/element';
+import DokanModal from '@dokan/components/modals/DokanModal';
+import { applyFilters } from '@wordpress/hooks';
+
 interface Props {
     vendor: Vendor;
     requiredFields: Record< any, any >;
-    formKey: string;
+    formKey?: string;
+    createForm?: boolean;
 }
-function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: Props ) {
+export default function Form( {
+    vendor,
+    requiredFields,
+    formKey = 'dokan-create-new-vendor',
+    createForm = true,
+}: Props ) {
     const { setCreateOrEditVendor } = useDispatch( store );
     const errors: String[] = useSelect( ( select ) => {
         return select( store ).getCreateOrEditVendorErrors();
-    } );
+    }, [] );
+    const [ categories, setCategories ] = useState( [] );
+    const [ commissionSubCategoryConfirm, setCommissionSubCategoryConfirm ] =
+        useState( false );
 
     const setData = async (
         key: string,
         value: any,
         existingVendor?: object
     ) => {
-        const updatableVendor = existingVendor ?? vendor;
+        const updatableVendor: Vendor = ( existingVendor as Vendor ) ?? vendor;
+
+        // @ts-ignore
         return await setCreateOrEditVendor( {
             ...updatableVendor,
             [ key ]: value,
         } );
+    };
+
+    // @ts-ignore
+    const commissionTypes: Array< Record< string, string > > = applyFilters(
+        'dokan_vendor_add_edit_commission_types',
+        [
+            {
+                label: __( 'Fixed', 'dokan-lite' ),
+                value: 'fixed',
+            },
+            {
+                label: __( 'Category Based', 'dokan-lite' ),
+                value: 'category_based',
+            },
+        ]
+    );
+
+    const getCommission = ( type ) => {
+        return commissionTypes.find( ( item ) => item.value === type );
     };
 
     const generatePassword = () => {
@@ -59,7 +98,7 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
         return !! requiredFields[ key ];
     };
 
-    const getError = ( key: string ): string => {
+    const getError = ( key: string ) => {
         if ( errors && errors.includes( key ) && isRequired( key ) ) {
             return requiredFields[ key ];
         }
@@ -102,7 +141,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
     };
 
     const defaultUrl =
+        // @ts-ignore
         dokanAdminDashboard.urls.siteUrl +
+        // @ts-ignore
         dokanAdminDashboard.urls.storePrefix +
         '/';
 
@@ -121,25 +162,32 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
         setCreateOrEditVendor( {
             ...vendor,
             store_name: value,
-            user_nicename: storeUrl,
+            ...( createForm ? { user_nicename: storeUrl } : {} ),
         } ).then( async ( data ) => {
-            await checkStore( storeUrl, data.vendor );
+            if ( createForm ) {
+                await checkStore( storeUrl, data.vendor );
+            }
         } );
     };
 
     const onChangeStoreUrl = async ( storeUrl ) => {
         storeUrl = formatStoreUrl( storeUrl );
-        // @ts-ignore
-        const data = await setData( 'user_nicename', storeUrl );
+        const data = await setCreateOrEditVendor( {
+            ...vendor,
+            // @ts-ignore
+            user_nicename: storeUrl,
+        } );
         await checkStore( storeUrl, data.vendor );
     };
 
     const storeUrl = () => {
-        const storeUrl = vendor?.user_nicename
-            ? vendor?.user_nicename
+        // @ts-ignore
+        const printableStoreUrl = vendor?.user_nicename
+            ? // @ts-ignore
+              vendor?.user_nicename
             : vendor?.store_name;
 
-        return defaultUrl + storeUrl;
+        return defaultUrl + printableStoreUrl;
     };
 
     const checkStore = async ( storeName, updatedData = null ) => {
@@ -155,6 +203,7 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
             } ),
         } );
 
+        // @ts-ignore
         if ( response.available ) {
             await setData( 'storeSearchText', 'available', updatedData );
         } else {
@@ -175,6 +224,7 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
             } ),
         } );
 
+        // @ts-ignore
         if ( response.available ) {
             await setData( 'userSearchText', 'available', updatedVendor );
         } else {
@@ -195,6 +245,7 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
             } ),
         } );
 
+        // @ts-ignore
         if ( response.available ) {
             await setData( 'userEmailText', 'available', upatedVendor );
         } else {
@@ -203,7 +254,8 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
     };
 
     const getCountries = () => {
-        const dokanCountries = dokanAdminDashboard.countries;
+        // @ts-ignore
+        const dokanCountries = window?.dokanAdminDashboard.countries;
         return Object.keys( dokanCountries ).map( ( key ) => {
             return {
                 label: dokanCountries[ key ],
@@ -214,7 +266,8 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
 
     const getCountry = ( code ) => {
         const dokanCountries: Record< string, string > =
-            dokanAdminDashboard.countries;
+            // @ts-ignore
+            window?.dokanAdminDashboard.countries;
 
         if ( ! dokanCountries[ code ] ) {
             return '';
@@ -228,6 +281,7 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
 
     const getStatesFromCountryCode = ( countryCode ) => {
         const states = [];
+        // @ts-ignore
         const statesObject = dokanAdminDashboard.states;
         if ( '' === countryCode || ! statesObject ) {
             return states;
@@ -258,6 +312,7 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
             return;
         }
 
+        // @ts-ignore
         const states = dokanAdminDashboard.states[ countryCode ];
         const state = states && states[ stateCode ];
 
@@ -297,6 +352,22 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
         return '';
     };
 
+    const getResetSubCategory = () => {
+        return vendor && vendor.hasOwnProperty( 'reset_sub_category' )
+            ? vendor?.reset_sub_category
+            : true;
+    };
+
+    useEffect( () => {
+        apiFetch( { path: 'dokan/v2/products/multistep-categories' } ).then(
+            ( response: Record< string, unknown > ) => {
+                if ( response && typeof response === 'object' ) {
+                    setCategories( Object.values( response ) );
+                }
+            }
+        );
+    }, [] );
+
     if ( ! vendor || Object.keys( vendor ).length === 0 ) {
         return <VendorFormSkeleton />;
     }
@@ -334,7 +405,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                             </div>
                         </div>
 
-                        <Slot name={`${formKey}-after-enable-selling-permission`} />
+                        <Slot
+                            name={ `${ formKey }-after-enable-selling-permission` }
+                        />
 
                         <div className="border-b p-6 flex flex-row justify-between">
                             <div className="flex flex-col gap-1">
@@ -361,7 +434,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                             </div>
                         </div>
 
-                        <Slot name={`${formKey}-after-publish-product-directly-permission`} />
+                        <Slot
+                            name={ `${ formKey }-after-publish-product-directly-permission` }
+                        />
 
                         <div className="p-6 flex flex-row justify-between">
                             <div className="flex flex-col gap-1">
@@ -388,10 +463,15 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                             </div>
                         </div>
 
-                        <Slot name={`${formKey}-after-make-vendor-featured-permission`} />
-
+                        <Slot
+                            name={ `${ formKey }-after-make-vendor-featured-permission` }
+                        />
                     </Card>
                 </div>
+
+                <Slot
+                    name={ `${ formKey }-after-permission-information-card` }
+                />
 
                 { /*Vendor information section*/ }
                 <div className="mt-6">
@@ -405,7 +485,10 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                             <div className="flex flex-row gap-6">
                                 <div className="w-1/2">
                                     <SimpleInput
-                                        label={ __( 'First Name' ) }
+                                        label={ __(
+                                            'First Name',
+                                            'dokan-lite'
+                                        ) }
                                         value={ vendor?.first_name ?? '' }
                                         onChange={ ( e ) => {
                                             setData(
@@ -449,7 +532,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 </div>
                             </div>
 
-                            <Slot name={`${formKey}-after-first-last-name-vendor-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-first-last-name-vendor-information` }
+                            />
 
                             <div>
                                 <DebouncedInput
@@ -480,94 +565,133 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                                 <div className="flex justify-between mt-2">
                                     { getStoreSearchText(
+                                        // @ts-ignore
                                         vendor?.userEmailText ?? ''
                                     ) }
                                 </div>
                             </div>
 
-                            <Slot name={`${formKey}-after-email-vendor-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-email-vendor-information` }
+                            />
 
-                            <div>
-                                <DebouncedInput
-                                    label={ __( 'Username', 'dokan-lite' ) }
-                                    value={ vendor?.user_login ?? '' }
-                                    onChange={ ( value ) => {
-                                        setData( 'user_login', value ).then(
-                                            async ( updatedVendor ) => {
-                                                await searchUsername(
-                                                    value,
-                                                    updatedVendor.vendor
-                                                );
-                                            }
-                                        );
-                                    } }
-                                    input={ {
-                                        placeholder: __(
-                                            'Enter username',
-                                            'dokan-lite'
-                                        ),
-                                        id: 'username',
-                                        type: 'text',
-                                        required: true,
-                                    } }
-                                    required={ isRequired( 'user_login' ) }
-                                    errors={ getError( 'user_login' ) }
-                                />
-                                <div className="flex justify-between mt-2">
-                                    { getStoreSearchText(
-                                        vendor?.userSearchText ?? ''
-                                    ) }
-                                </div>
-                            </div>
-
-                            <Slot name={`${formKey}-after-username-vendor-information`} />
-
-                            <div className="flex flex-row gap-2">
-                                <div className="w-full">
-                                    <SimpleInput
-                                        label={ __( 'Password', 'dokan-lite' ) }
-                                        value={ vendor?.user_pass ?? '' }
-                                        onChange={ ( e ) => {
-                                            setData(
-                                                'user_pass',
-                                                e.target.value
-                                            );
-                                        } }
-                                        onFocus={ () => {
-                                            ! vendor?.user_pass
-                                                ? generatePassword()
-                                                : () => {};
-                                        } }
-                                        input={ {
-                                            placeholder: __(
-                                                'Enter password or Generate',
+                            { createForm && (
+                                <>
+                                    <div>
+                                        <DebouncedInput
+                                            label={ __(
+                                                'Username',
                                                 'dokan-lite'
-                                            ),
-                                            id: 'password',
-                                            type: 'text',
-                                            required: true,
-                                        } }
-                                        required={ isRequired( 'user_pass' ) }
-                                        errors={ getError( 'user_pass' ) }
-                                    />
-                                </div>
-                                <div className="flex items-end">
-                                    <DokanButton
-                                        variant="secondary"
-                                        className={ twMerge(
-                                            '!bg-white !h-10',
-                                            getError( 'user_pass' ).length
-                                                ? 'mb-[22px]'
-                                                : 'mb-0'
-                                        ) }
-                                        onClick={ generatePassword }
-                                    >
-                                        { __( 'Generate', 'dokan-lite' ) }
-                                    </DokanButton>
-                                </div>
-                            </div>
+                                            ) }
+                                            value={
+                                                // @ts-ignore
+                                                vendor?.user_login ?? ''
+                                            }
+                                            onChange={ ( value ) => {
+                                                setData(
+                                                    'user_login',
+                                                    value
+                                                ).then(
+                                                    async ( updatedVendor ) => {
+                                                        await searchUsername(
+                                                            value,
+                                                            updatedVendor.vendor
+                                                        );
+                                                    }
+                                                );
+                                            } }
+                                            input={ {
+                                                placeholder: __(
+                                                    'Enter username',
+                                                    'dokan-lite'
+                                                ),
+                                                id: 'username',
+                                                type: 'text',
+                                                required: true,
+                                            } }
+                                            required={ isRequired(
+                                                'user_login'
+                                            ) }
+                                            errors={ getError( 'user_login' ) }
+                                        />
+                                        <div className="flex justify-between mt-2">
+                                            { getStoreSearchText(
+                                                // @ts-ignore
+                                                vendor?.userSearchText ?? ''
+                                            ) }
+                                        </div>
+                                    </div>
 
-                            <Slot name={`${formKey}-after-password-vendor-information`} />
+                                    <Slot
+                                        name={ `${ formKey }-after-username-vendor-information` }
+                                    />
+
+                                    <div className="flex flex-row gap-2">
+                                        <div className="w-full">
+                                            <SimpleInput
+                                                label={ __(
+                                                    'Password',
+                                                    'dokan-lite'
+                                                ) }
+                                                value={
+                                                    // @ts-ignore
+                                                    vendor?.user_pass ?? ''
+                                                }
+                                                onChange={ ( e ) => {
+                                                    setData(
+                                                        'user_pass',
+                                                        e.target.value
+                                                    );
+                                                } }
+                                                onFocus={ () => {
+                                                    // @ts-ignore
+                                                    // eslint-disable-next-line no-unused-expressions
+                                                    ! vendor?.user_pass
+                                                        ? generatePassword()
+                                                        : () => {};
+                                                } }
+                                                input={ {
+                                                    placeholder: __(
+                                                        'Enter password or Generate',
+                                                        'dokan-lite'
+                                                    ),
+                                                    id: 'password',
+                                                    type: 'text',
+                                                    required: true,
+                                                } }
+                                                required={ isRequired(
+                                                    'user_pass'
+                                                ) }
+                                                errors={ getError(
+                                                    'user_pass'
+                                                ) }
+                                            />
+                                        </div>
+                                        <div className="flex items-end">
+                                            <DokanButton
+                                                variant="secondary"
+                                                className={ twMerge(
+                                                    '!bg-white !h-10',
+                                                    getError( 'user_pass' )
+                                                        .length
+                                                        ? 'mb-[22px]'
+                                                        : 'mb-0'
+                                                ) }
+                                                onClick={ generatePassword }
+                                            >
+                                                { __(
+                                                    'Generate',
+                                                    'dokan-lite'
+                                                ) }
+                                            </DokanButton>
+                                        </div>
+                                    </div>
+
+                                    <Slot
+                                        name={ `${ formKey }-after-password-vendor-information` }
+                                    />
+                                </>
+                            ) }
 
                             <div>
                                 <SimpleInput
@@ -596,11 +720,14 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-phone-vendor-information`} />
-
+                            <Slot
+                                name={ `${ formKey }-after-phone-vendor-information` }
+                            />
                         </div>
                     </Card>
                 </div>
+
+                <Slot name={ `${ formKey }-after-vendor-information-card` } />
 
                 { /*Store information section*/ }
                 <div className="mt-6">
@@ -632,50 +759,68 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-store-name-store-information`} />
-
-                            <div>
-                                <DebouncedInput
-                                    label={ __( 'Store Url', 'dokan-lite' ) }
-                                    value={ vendor?.user_nicename ?? '' }
-                                    onChange={ ( e ) => {
-                                        onChangeStoreUrl( e );
-                                    } }
-                                    input={ {
-                                        placeholder: __(
-                                            'Enter store url',
-                                            'dokan-lite'
-                                        ),
-                                        id: 'store-url',
-                                        type: 'text',
-                                        required: true,
-                                    } }
-                                    // helpText={ storeUrl() }
-                                    required={ isRequired( 'store_url' ) }
-                                    errors={ getError( 'store_url' ) }
-                                />
-                                <div className="flex justify-between mt-2">
-                                    <span className="text-neutral-500">
-                                        { storeUrl() }
-                                    </span>
-                                    { getStoreSearchText(
-                                        vendor?.storeSearchText ?? ''
-                                    ) }
-                                </div>
-                            </div>
-
                             <Slot
-                                name={ `${ formKey }-after-store-url-store-information` }
+                                name={ `${ formKey }-after-store-name-store-information` }
                             />
 
+                            { createForm && (
+                                <>
+                                    <div>
+                                        <DebouncedInput
+                                            label={ __(
+                                                'Store Url',
+                                                'dokan-lite'
+                                            ) }
+                                            value={
+                                                // @ts-ignore
+                                                vendor?.user_nicename ?? ''
+                                            }
+                                            onChange={ ( e ) => {
+                                                onChangeStoreUrl( e );
+                                            } }
+                                            input={ {
+                                                placeholder: __(
+                                                    'Enter store url',
+                                                    'dokan-lite'
+                                                ),
+                                                id: 'store-url',
+                                                type: 'text',
+                                                required: true,
+                                            } }
+                                            // helpText={ storeUrl() }
+                                            required={ isRequired(
+                                                'store_url'
+                                            ) }
+                                            errors={ getError( 'store_url' ) }
+                                        />
+                                        <div className="flex justify-between mt-2">
+                                            <span className="text-neutral-500">
+                                                { storeUrl() }
+                                            </span>
+                                            { getStoreSearchText(
+                                                // @ts-ignore
+                                                vendor?.storeSearchText ?? ''
+                                            ) }
+                                        </div>
+                                    </div>
+
+                                    <Slot
+                                        name={ `${ formKey }-after-store-url-store-information` }
+                                    />
+                                </>
+                            ) }
+
+                            <Slot name={ `${ formKey }-before-store-image` } />
+
                             <div>
+                                { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
                                 <label
                                     htmlFor=""
                                     className="mb-2 inline-block cursor-pointer text-sm font-medium leading-[21px] text-gray-900"
                                 >
                                     { __( 'Logo', 'dokan-lite' ) }
                                 </label>
-                                <div className="flex flex-row gap-6">
+                                <div className="flex flex-row flex-wrap gap-6">
                                     <div>
                                         <StoreImage
                                             image={ vendor?.gravatar ?? '' }
@@ -716,6 +861,7 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                                     setCreateOrEditVendor( {
                                                         ...vendor,
                                                         gravatar: '',
+                                                        // @ts-ignore
                                                         gravatar_id: '',
                                                     } )
                                                 }
@@ -727,11 +873,14 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 </div>
                             </div>
 
-                            <Slot name={`${formKey}-after-store-logo-store-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-store-logo-store-information` }
+                            />
 
                             <div>
-                                <div className="flex flex-row justify-between">
+                                <div className="flex flex-row flex-wrap justify-between">
                                     <div className="flex flex-col">
+                                        { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
                                         <label
                                             htmlFor=""
                                             className="mb-2 inline-block cursor-pointer text-sm font-medium leading-[21px] text-gray-900"
@@ -781,6 +930,7 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                                     setCreateOrEditVendor( {
                                                         ...vendor,
                                                         banner: '',
+                                                        // @ts-ignore
                                                         banner_id: '',
                                                     } )
                                                 }
@@ -818,10 +968,14 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 </div>
                             </div>
 
-                            <Slot name={`${formKey}-after-banner-store-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-banner-store-information` }
+                            />
                         </div>
                     </Card>
                 </div>
+
+                <Slot name={ `${ formKey }-after-store-information-card` } />
 
                 { /*Address information section*/ }
                 <div className="mt-6">
@@ -849,6 +1003,7 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                     onChange={ ( value ) => {
                                         setData( 'address', {
                                             ...vendor?.address,
+                                            // @ts-ignore
                                             country: value.value,
                                             state: '',
                                         } );
@@ -856,7 +1011,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-country-address-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-country-address-information` }
+                            />
 
                             <div>
                                 { getStatesFromCountryCode(
@@ -897,6 +1054,7 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                         onChange={ ( value ) => {
                                             setData( 'address', {
                                                 ...vendor?.address,
+                                                // @ts-ignore
                                                 state: value.value,
                                             } );
                                         } }
@@ -908,7 +1066,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 ) }
                             </div>
 
-                            <Slot name={`${formKey}-after-state-address-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-state-address-information` }
+                            />
 
                             <div>
                                 <SimpleInput
@@ -933,7 +1093,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-city-address-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-city-address-information` }
+                            />
 
                             <div>
                                 <SimpleInput
@@ -961,7 +1123,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-street-1-address-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-street-1-address-information` }
+                            />
 
                             <div>
                                 <SimpleInput
@@ -989,7 +1153,9 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-street-2-address-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-street-2-address-information` }
+                            />
 
                             <div>
                                 <SimpleInput
@@ -1014,37 +1180,441 @@ function Form( { vendor, requiredFields, formKey = 'dokan-create-new-vendor' }: 
                                 />
                             </div>
 
-                            <Slot name={`${formKey}-after-zip-address-information`} />
+                            <Slot
+                                name={ `${ formKey }-after-zip-address-information` }
+                            />
                         </div>
                     </Card>
                 </div>
 
+                <Slot name={ `${ formKey }-after-address-information-card` } />
+
+                { /*Social information section*/ }
                 <div className="mt-6">
-                    <SimpleCheckbox
-                        label={ __(
-                            'Send an email to vendor about account',
-                            'dokan-lite'
-                        ) }
-                        input={ {
-                            id: 'send_email',
-                            name: 'send_email',
-                            type: 'checkbox',
-                        } }
-                        checked={ vendor?.show_email }
-                        onChange={ ( e ) => {
-                            setData( 'show_email', e.target.checked );
-                        } }
-                        required={ isRequired( 'show_email' ) }
-                        errors={ getError( 'show_email' ) }
-                    />
+                    <Card className="bg-white">
+                        <div className="border-b p-6">
+                            <h2 className="text-lg font-bold">
+                                { __( 'Social Information', 'dokan' ) }
+                            </h2>
+                        </div>
+                        <div className="p-6 flex flex-col gap-3">
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Facebook', 'dokan' ) }
+                                    value={ vendor?.social?.fb || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            fb: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'fb',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-fb-social-information" />
+
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'X', 'dokan' ) }
+                                    value={ vendor?.social?.twitter || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            twitter: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'twitter',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-x-social-information" />
+
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Pinterest', 'dokan' ) }
+                                    value={ vendor?.social?.pinterest || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            pinterest: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'pinterest',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-pinterest-social-information" />
+
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Linkedin', 'dokan' ) }
+                                    value={ vendor?.social?.linkedin || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            linkedin: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'linkedin',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-pinterest-social-information" />
+
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Youtube', 'dokan' ) }
+                                    value={ vendor?.social?.youtube || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            youtube: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'youtube',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-youtube-social-information" />
+
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Instagram', 'dokan' ) }
+                                    value={ vendor?.social?.instagram || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            instagram: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'instagram',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-instagram-social-information" />
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Flickr', 'dokan' ) }
+                                    value={ vendor?.social?.flickr || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            flickr: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'flickr',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-flickr-social-information" />
+                            <div>
+                                <SimpleInput
+                                    label={ __( 'Threads', 'dokan' ) }
+                                    value={ vendor?.social?.threads || '' }
+                                    onChange={ ( e ) => {
+                                        setData( 'social', {
+                                            ...vendor?.social,
+                                            threads: e.target.value,
+                                        } );
+                                    } }
+                                    input={ {
+                                        placeholder: __(
+                                            'https://example.com',
+                                            'dokan'
+                                        ),
+                                        id: 'threads',
+                                        type: 'text',
+                                    } }
+                                />
+                            </div>
+
+                            <Slot name="dokan-vendor-edit-after-threads-social-information" />
+                        </div>
+                    </Card>
                 </div>
 
-                <Slot name={`${formKey}-after-send-email`} />
+                { /*Commission information section*/ }
+                <div className="mt-6">
+                    <Card className="bg-white">
+                        <div className="border-b p-6">
+                            <h2 className="text-lg font-bold">
+                                { __( 'Commission Information', 'dokan' ) }
+                            </h2>
+                        </div>
+                        <div className="p-6 flex flex-col gap-3">
+                            <div>
+                                <SearchableSelect
+                                    label={ __(
+                                        'Admin Commission type',
+                                        'dokan-lite'
+                                    ) }
+                                    placeholder={ __(
+                                        'Select commission type',
+                                        'dokan-lite'
+                                    ) }
+                                    // @ts-ignore
+                                    value={ getCommission(
+                                        vendor?.admin_commission_type
+                                    ) }
+                                    // @ts-ignore
+                                    options={ commissionTypes }
+                                    onChange={ ( data ) => {
+                                        setData(
+                                            'admin_commission_type',
+                                            // @ts-ignore
+                                            data.value
+                                        );
+                                    } }
+                                />
+                            </div>
+                            { vendor?.admin_commission_type ===
+                                'category_based' && (
+                                <>
+                                    <div className="mb-3">
+                                        <ToggleSwitch
+                                            checked={ getResetSubCategory() }
+                                            onChange={ () => {
+                                                setCommissionSubCategoryConfirm(
+                                                    true
+                                                );
+                                            } }
+                                            label={ __(
+                                                'Apply Parent Category Commission to All Subcategories',
+                                                'dokan-lite'
+                                            ) }
+                                            helpText={ __(
+                                                "When enabled, changing a parent category's commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories",
+                                                'dokan-lite'
+                                            ) }
+                                        />
+
+                                        <DokanModal
+                                            isOpen={
+                                                commissionSubCategoryConfirm
+                                            }
+                                            namespace="commission-sub-category-confirm"
+                                            onConfirm={ () => {
+                                                setData(
+                                                    'reset_sub_category',
+                                                    ! getResetSubCategory()
+                                                ).then( () => {
+                                                    setCommissionSubCategoryConfirm(
+                                                        false
+                                                    );
+                                                } );
+                                            } }
+                                            onClose={ () =>
+                                                setCommissionSubCategoryConfirm(
+                                                    false
+                                                )
+                                            }
+                                            confirmationTitle={
+                                                getResetSubCategory()
+                                                    ? __(
+                                                          'Disable Commission Inheritance Setting?',
+                                                          'dokan-lite'
+                                                      )
+                                                    : __(
+                                                          'Enable Commission Inheritance Setting?',
+                                                          'dokan-lite'
+                                                      )
+                                            }
+                                            confirmationDescription={
+                                                getResetSubCategory()
+                                                    ? __(
+                                                          'Subcategories will maintain their independent commission rates when parent category rates are changed.',
+                                                          'dokan-lite'
+                                                      )
+                                                    : __(
+                                                          'Parent category commission changes will automatically update all subcategories. Existing rates will remain unchanged until parent category is modified.',
+                                                          'dokan-lite'
+                                                      )
+                                            }
+                                            confirmButtonText={
+                                                getResetSubCategory()
+                                                    ? __(
+                                                          'Disable',
+                                                          'dokan-lite'
+                                                      )
+                                                    : __(
+                                                          'Enable',
+                                                          'dokan-lite'
+                                                      )
+                                            }
+                                            cancelButtonText={ __(
+                                                'Cancel',
+                                                'dokan-lite'
+                                            ) }
+                                        />
+                                    </div>
+                                    <div>
+                                        { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
+                                        <label
+                                            htmlFor=""
+                                            className="mb-2 inline-block cursor-pointer text-sm font-medium leading-[21px] text-gray-900"
+                                        >
+                                            { __(
+                                                'Admin Commission',
+                                                'dokan-lite'
+                                            ) }
+                                        </label>
+                                        <CategoryBasedCommissionPure
+                                            // @ts-ignore
+                                            categories={ categories }
+                                            // @ts-ignore
+                                            commissionValues={
+                                                vendor?.admin_category_commission ||
+                                                []
+                                            }
+                                            currency={
+                                                // @ts-ignore
+                                                window?.dokanAdminDashboard
+                                                    .currency
+                                            }
+                                            onCommissionChange={ ( data ) => {
+                                                setData(
+                                                    'admin_category_commission',
+                                                    data
+                                                );
+                                            } }
+                                            resetSubCategoryValue={ getResetSubCategory() }
+                                        />
+                                    </div>
+                                </>
+                            ) }
+
+                            { vendor?.admin_commission_type === 'fixed' && (
+                                <div>
+                                    { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
+                                    <label
+                                        htmlFor=""
+                                        className="mb-2 inline-block cursor-pointer text-sm font-medium leading-[21px] text-gray-900"
+                                    >
+                                        { __(
+                                            'Admin Commission',
+                                            'dokan-lite'
+                                        ) }
+                                    </label>
+                                    <div className="-ml-4 -mt-4">
+                                        <FixedCommissionInput
+                                            values={ {
+                                                // @ts-ignore
+                                                admin_percentage:
+                                                    vendor?.admin_commission ||
+                                                    '',
+                                                // @ts-ignore
+                                                additional_fee:
+                                                    vendor?.admin_additional_fee ||
+                                                    '',
+                                            } }
+                                            currency={
+                                                // @ts-ignore
+                                                window?.dokanAdminDashboard
+                                                    .currency
+                                            }
+                                            onValueChange={ ( data ) => {
+                                                setCreateOrEditVendor( {
+                                                    ...vendor,
+                                                    // @ts-ignore
+                                                    admin_commission:
+                                                        data?.admin_percentage,
+                                                    // @ts-ignore
+                                                    admin_additional_fee:
+                                                        data?.additional_fee,
+                                                } );
+                                            } }
+                                        />
+                                    </div>
+                                </div>
+                            ) }
+                        </div>
+                    </Card>
+                </div>
+
+                <Slot
+                    name={ `${ formKey }-after-commission-information-card` }
+                />
+
+                { createForm && (
+                    <>
+                        <div className="mt-6">
+                            <SimpleCheckbox
+                                label={ __(
+                                    'Send an email to vendor about account',
+                                    'dokan-lite'
+                                ) }
+                                input={ {
+                                    id: 'send_email',
+                                    name: 'send_email',
+                                    type: 'checkbox',
+                                } }
+                                checked={ vendor?.show_email }
+                                onChange={ ( e ) => {
+                                    setData( 'show_email', e.target.checked );
+                                } }
+                                // @ts-ignore
+                                errors={ getError( 'show_email' ) }
+                            />
+                        </div>
+
+                        <Slot name={ `${ formKey }-after-send-email` } />
+                    </>
+                ) }
             </div>
 
-            <PluginArea scope={ `dokan-admin-dashboard-vendor-form-${formKey}` } />
+            <PluginArea
+                scope={ `dokan-admin-dashboard-vendor-form-${ formKey }` }
+            />
         </>
     );
 }
-
-export default Form;

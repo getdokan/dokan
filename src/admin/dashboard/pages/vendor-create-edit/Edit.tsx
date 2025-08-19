@@ -5,70 +5,44 @@ import { useEffect, useState } from '@wordpress/element';
 import { useToast, Card } from '@getdokan/dokan-ui';
 import { DokanButton, DokanLink } from '@dokan/components';
 import { __ } from '@wordpress/i18n';
+import apiFetch from '@wordpress/api-fetch';
 import { applyFilters } from '@wordpress/hooks';
 import { ChevronLeft } from 'lucide-react';
+import { addQueryArgs } from '@wordpress/url';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
 import {
-    requestCreateVendor,
+    requestEditVendor,
     validateForm,
 } from '@dokan/admin/dashboard/pages/vendor-create-edit/Utils';
 
-function Create( props: any ) {
-    const [ saving, setSaving ] = useState( false );
-    const { navigate } = props;
-    const initialData = {
-        store_name: '',
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone: '',
-        show_email: true,
-        address: {
-            street_1: '',
-            street_2: '',
-            city: '',
-            zip: '',
-            country: '',
-            state: '',
-            location_name: '',
-        },
-        banner: '',
-        banner_id: '',
-        gravatar: '',
-        gravatar_id: '',
-        shop_url: '',
-        toc_enabled: false,
-        featured: false,
-        enabled: true,
-        trusted: false,
-    };
-
+function Edit( props ) {
+    const { params } = props;
+    const { id } = params;
     const { setCreateOrEditVendor, setCreateOrEditVendorErrors } =
         useDispatch( store );
     const toast = useToast();
+    const [ saving, setSaving ] = useState( false );
 
     const vendor = useSelect( ( select ) => {
         return select( store ).getCreateOrEditVendor();
     }, [] );
 
     const requiredFields: Record< string, string > = applyFilters(
-        'dokan-create-vendor-required-fields',
+        'dokan-edit-vendor-required-fields',
         {
             email: __( 'Email is required', 'dokan-lite' ),
             store_name: __( 'Store Name is required', 'dokan-lite' ),
-            user_login: __( 'Username is required', 'dokan-lite' ),
-            user_pass: __( 'Password is required', 'dokan-lite' ),
         }
     ) as Record< string, string >;
 
-    const addVendor = async () => {
+    const updateVendor = async () => {
         const validatedErrors = await validateForm( vendor, requiredFields );
         await setCreateOrEditVendorErrors( validatedErrors );
         const shouldSubmit = applyFilters(
-            'dokan-should-submit-vendor-form',
+            'dokan-should-submit-vendor-edit-form',
             true,
             validatedErrors,
-            requestCreateVendor
+            requestEditVendor
         );
 
         if ( validatedErrors.length > 0 || ! shouldSubmit ) {
@@ -76,17 +50,17 @@ function Create( props: any ) {
         }
 
         setSaving( true );
-        requestCreateVendor( vendor )
+
+        requestEditVendor( vendor )
             .then( async ( response: Vendor ) => {
                 await setCreateOrEditVendor( response );
                 await setCreateOrEditVendorErrors( [] );
-                setSaving( false );
                 toast( {
                     type: 'success',
                     title: __( 'Vendor Added Successfully.', 'dokan-lite' ),
                 } );
 
-                navigate( `/vendors/edit/${ response?.id }` );
+                setSaving( false );
             } )
             .catch( async ( err ) => {
                 if ( err.message ) {
@@ -95,21 +69,26 @@ function Create( props: any ) {
                         title: err.message,
                     } );
                 }
-
                 setSaving( false );
             } );
     };
 
     useEffect( () => {
-        // @ts-ignore
-        setCreateOrEditVendor( initialData );
-    }, [] );
+        setCreateOrEditVendor( {} as Vendor );
+        setCreateOrEditVendorErrors( [] );
+
+        apiFetch( {
+            path: addQueryArgs( `dokan/v1/stores/${ id }`, {} ),
+        } ).then( async ( response: Vendor ) => {
+            await setCreateOrEditVendor( response );
+        } );
+    }, [ id ] );
 
     return (
         <Card className="bg-white p-6">
             <div>
                 { /*Back to vendors list*/ }
-                <div>
+                <div className="flex flex-row justify-start">
                     <DokanLink
                         href={
                             // @ts-ignore
@@ -123,11 +102,11 @@ function Create( props: any ) {
                 </div>
 
                 { /*Add new vendor header*/ }
-                <div className="flex flex-row">
-                    <div className="sm:w-full md:w-1/2">
-                        <h1>{ __( 'Add New Vendor', 'dokan-lite' ) }</h1>
+                <div className="gap-4 flex flex-col md:!flex-row md:!justify-between">
+                    <div className="">
+                        <h1>{ __( 'Update Vendor', 'dokan-lite' ) }</h1>
                     </div>
-                    <div className="sm:w-full md:w-1/2 flex flex-row justify-end gap-3">
+                    <div className="flex flex-col md:!flex-row gap-3">
                         <DokanButton
                             variant="secondary"
                             onClick={ () =>
@@ -138,18 +117,23 @@ function Create( props: any ) {
                             { __( 'Cancel', 'dokan-lite' ) }
                         </DokanButton>
                         <DokanButton
-                            onClick={ addVendor }
+                            onClick={ updateVendor }
                             loading={ saving }
                             disabled={ saving }
-                            label={ __( 'Add Vendor', 'dokan-lite' ) }
+                            label={ __( 'Update', 'dokan-lite' ) }
                         />
                     </div>
                 </div>
             </div>
 
-            <Form vendor={ vendor } requiredFields={ requiredFields } />
+            <Form
+                vendor={ vendor }
+                requiredFields={ requiredFields }
+                formKey="dokan-edit-vendor"
+                createForm={ false }
+            />
         </Card>
     );
 }
 
-export default Create;
+export default Edit;

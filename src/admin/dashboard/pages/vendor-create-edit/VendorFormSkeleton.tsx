@@ -2,7 +2,7 @@ import { Card } from '@getdokan/dokan-ui';
 
 const VendorFormSkeleton = () => {
     return (
-        <Card className="bg-white p-6">
+        <Card className="bg-white p-6 mt-6">
             <div>
                 {/* Back to vendors list skeleton */}
                 <div className="mb-4">
@@ -13,11 +13,11 @@ const VendorFormSkeleton = () => {
                 </div>
 
                 {/* Header skeleton */}
-                <div className="flex flex-row mb-6">
+                <div className="gap-4 flex flex-col md:!flex-row md:!justify-between mb-6">
                     <div className="sm:w-full md:w-1/2">
                         <div className="h-8 w-48 bg-gray-200 rounded animate-pulse"></div>
                     </div>
-                    <div className="sm:w-full md:w-1/2 flex flex-row justify-end gap-3">
+                    <div className="flex flex-col md:!flex-row gap-3">
                         <div className="h-10 w-20 bg-gray-200 rounded animate-pulse"></div>
                         <div className="h-10 w-28 bg-gray-200 rounded animate-pulse"></div>
                     </div>
