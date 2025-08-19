@@ -8,7 +8,7 @@ export type DokanBaseSelectProps = {
     triggerClass?: string;
     name?: string;
     options: { label: string; value: string | number }[];
-    placeholder?: string;
+    placeholder?: string | null;
     disabled?: boolean;
     isError?: boolean;
     containerClassName?: string;

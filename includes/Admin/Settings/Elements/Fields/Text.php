@@ -46,6 +46,13 @@ class Text extends Field {
     protected $size = 20;
 
     /**
+     *  Helper text for the field.
+     *
+     * @var string $helper_text Helper text.
+     */
+    protected $helper_text = '';
+
+    /**
      * Constructor.
      *
      * @param string $id Input ID.
@@ -165,6 +172,28 @@ class Text extends Field {
     }
 
     /**
+     * Get helper text.
+     *
+     * @return string
+     */
+    public function get_helper_text(): string {
+        return $this->helper_text;
+    }
+
+    /**
+     * Set helper text.
+     *
+     * @param string $helper_text Helper text.
+     *
+     * @return Text
+     */
+    public function set_helper_text( string $helper_text ): Text {
+        $this->helper_text = $helper_text;
+
+        return $this;
+    }
+
+    /**
      * Data validation.
      *
      * @param mixed $data Data for validation.
@@ -187,6 +216,7 @@ class Text extends Field {
         $data['readonly']    = $this->is_readonly();
         $data['disabled']    = $this->is_disabled();
         $data['size']        = $this->get_size();
+        $data['helper_text'] = $this->get_helper_text();
 
         return $data;
     }
