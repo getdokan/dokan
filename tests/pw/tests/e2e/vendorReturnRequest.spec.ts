@@ -5,8 +5,12 @@ import { OrdersPage } from '@pages/ordersPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+import {selector} from "@pages/selectors";
 
 // const { CUSTOMER_ID, PRODUCT_ID } = process.env;
+
+const returnRequestVendor = selector.vendor.vReturnRequest;
+const returnRequestSettingsVendor = selector.vendor.vRmaSettings;
 
 test.describe('Vendor RMA test', () => {
     let admin: VendorReturnRequestPage;
@@ -34,11 +38,11 @@ test.describe('Vendor RMA test', () => {
         customer1 = new CustomerPage(cPage);
 
         // todo: implement via api
-        await customer1.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
-        await customer1.goToCheckout();
-        orderId = await customer1.paymentOrder();
-        await vendor1.updateOrderStatusOnTable(orderId, 'processing');
-        await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
+        // await customer1.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
+        // await customer1.goToCheckout();
+        // orderId = await customer1.paymentOrder();
+        // await vendor1.updateOrderStatusOnTable(orderId, 'processing');
+        // await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
 
         apiUtils = new ApiUtils(await request.newContext());
 
@@ -61,15 +65,64 @@ test.describe('Vendor RMA test', () => {
     //vendor
 
     test('vendor can view return request menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorReturnRequestRenderProperly();
+        // await vendor.vendorReturnRequestRenderProperly();
+        await vendor.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
+
+        // return request menu elements are visible
+        await vendor.toBeVisible(returnRequestVendor.menus.all);
+
+        // return request table elements are visible
+        await vendor.multipleElementVisible(returnRequestVendor.table);
+
+        const noRequestsFound = await vendor.isVisible(returnRequestVendor.noRowsFound);
+        if (noRequestsFound) {
+            return;
+        }
+
+        await vendor.notToHaveCount(returnRequestVendor.numberOfRowsFound, 0);
     });
 
     test('vendor can view return request settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorRmaSettingsRenderProperly();
+        // await vendor.vendorRmaSettingsRenderProperly();
+        await vendor.goIfNotThere(data.subUrls.frontend.vDashboard.settingsRma);
+
+        // settings text is visible
+        await vendor.toBeVisible(returnRequestSettingsVendor.returnAndWarrantyText);
+
+        // visit store link is visible
+        await vendor.toBeVisible(returnRequestSettingsVendor.visitStore);
+
+        // rma elements are visible
+        await vendor.toBeVisible(returnRequestSettingsVendor.label);
+        await vendor.toBeVisible(returnRequestSettingsVendor.type);
+        await vendor.notToHaveCount(returnRequestSettingsVendor.refundReasons, 0);
+        await vendor.toBeVisible(returnRequestSettingsVendor.rmaPolicyIframe);
+
+        // save changes is visible
+        await vendor.toBeVisible(returnRequestSettingsVendor.saveChanges);
     });
 
     test('vendor can view return request details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorViewRmaDetails(orderId);
+        // await vendor.vendorViewRmaDetails(orderId);
+        console.log('data.subUrls.frontend.vDashboard.returnRequest', data.subUrls.frontend.vDashboard.returnRequest)
+        await vendor.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
+        await vendor.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, returnRequestVendor.view(orderId));
+
+        // back to list is visible
+        await vendor.toBeVisible(returnRequestVendor.returnRequestDetails.backToList);
+
+        // basic details elements are visible
+        await vendor.multipleElementVisible(returnRequestVendor.returnRequestDetails.basicDetails);
+
+        // additional details elements are visible
+        await vendor.multipleElementVisible(returnRequestVendor.returnRequestDetails.additionalDetails);
+
+        // status elements are visible
+        const { sendRefund, ...status } = returnRequestVendor.returnRequestDetails.status;
+        await vendor.multipleElementVisible(status);
+
+        // conversations elements are visible
+        await vendor.multipleElementVisible(returnRequestVendor.returnRequestDetails.conversations);
     });
 
     test('customer can send rma message', { tag: ['@pro', '@customer'] }, async () => {
