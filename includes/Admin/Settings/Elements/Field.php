@@ -17,6 +17,8 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Radio;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioBox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RadioCapsule;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RefreshSelectField;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\Repeater;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\RichText;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Select;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
@@ -56,26 +58,28 @@ class Field extends SettingsElement {
 	 * @var string[] $field_map Map for the Input type.
 	 */
     protected $field_map = array(
-		'text'                      => Text::class,
-		'number'                    => Number::class,
-		'checkbox'                  => Checkbox::class,
-		'select'                    => Select::class,
-        'refresh_select'   => RefreshSelectField::class,
-		'radio'                     => Radio::class,
-		'tel'                       => Tel::class,
-		'password'                  => Password::class,
-		'radio_box'                 => RadioBox::class,
-		'switch'                    => Switcher::class,
-		'multicheck'                => MultiCheck::class,
-		'currency'                  => Currency::class,
-		'combine_input'             => CombineInput::class,
-		'category_based_commission' => CategoryBasedCommission::class,
-        'radio_capsule'    => RadioCapsule::class,
-        'info'             => InfoField::class,
-        'double_text'      => DoubleTextField::class,
-        'base_field_label' => BaseFieldLabel::class,
-        'customize_radio'  => CustomizeRadio::class,
-        'html'             => HtmlField::class,
+        'text'                      => Text::class,
+        'number'                    => Number::class,
+        'checkbox'                  => Checkbox::class,
+        'select'                    => Select::class,
+        'refresh_select'            => RefreshSelectField::class,
+        'radio'                     => Radio::class,
+        'tel'                       => Tel::class,
+        'password'                  => Password::class,
+        'radio_box'                 => RadioBox::class,
+        'switch'                    => Switcher::class,
+        'multicheck'                => MultiCheck::class,
+        'currency'                  => Currency::class,
+        'combine_input'             => CombineInput::class,
+        'category_based_commission' => CategoryBasedCommission::class,
+        'radio_capsule'             => RadioCapsule::class,
+        'info'                      => InfoField::class,
+        'double_text'               => DoubleTextField::class,
+        'base_field_label'          => BaseFieldLabel::class,
+        'customize_radio'           => CustomizeRadio::class,
+        'html'                      => HtmlField::class,
+        'repeater'                  => Repeater::class,
+        'rich_text'                 => RichText::class,
 	);
 
 	/**
@@ -106,8 +110,7 @@ class Field extends SettingsElement {
 	public function populate(): array {
 		$data            = parent::populate();
 		$data['variant'] = $this->input_type;
-        error_log( 'Field type: ' . $this->input_type ); // Debugging line to check the input type
-		$data['value'] = $this->escape_element( $this->get_value() );
+		$data['value']   = $this->escape_element( $this->get_value() );
 
 		return $data;
 	}
@@ -132,7 +135,14 @@ class Field extends SettingsElement {
 	 * @return SettingsElement
 	 */
 	private function input_map( string $id, string $input_type ): SettingsElement {
-		$class_name = $this->field_map[ $input_type ] ?? $this->field_map['text'];
+        $field_map = apply_filters(
+            'dokan_admin_setup_guide_field_map',
+            $this->field_map,
+            $id,
+            $input_type
+        );
+
+		$class_name = $field_map[ $input_type ] ?? $field_map['text'];
 
         /**
          * Filters for setup guide field mapper.

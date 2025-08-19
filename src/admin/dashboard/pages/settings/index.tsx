@@ -13,7 +13,7 @@ import { twMerge } from 'tailwind-merge';
 const DashboardSwitchLink = () => {
     // Get the switch URL from localized settings
     const switchUrl = dokanAdminDashboardSettings?.legacy_settings_url || '#';
-    
+
     return (
         <div className="legacy-dashboard-url text-sm font-medium pt-8 mt-8">
             <div className="flex items-center gap-2 text-gray-600">
@@ -163,7 +163,15 @@ const SettingsPage = () => {
         setSelectedTab( tab );
     };
 
+    const onValueChange = ( element: SettingsElement ) => {
+        dispatch( settingsStore ).updateSettingsValue( element );
+    };
+
     const saveSettings = () => {
+        wp.hooks.doAction( 'dokan_admin_settings_before_save_settings', allSettings );
+
+        console.log( 'allSettings', allSettings );
+
         setIsSaving( true );
         dispatch( settingsStore )
             .saveSettings( allSettings )
@@ -175,10 +183,8 @@ const SettingsPage = () => {
                 setIsSaving( false );
                 // TODO: Say Error.
             } );
-    };
 
-    const onValueChange = ( element: SettingsElement ) => {
-        dispatch( settingsStore ).updateSettingsValue( element );
+        wp.hooks.doAction( 'dokan_admin_settings_after_save_settings', allSettings );
     };
 
     // Get current page/tab information for heading
@@ -261,7 +267,7 @@ const SettingsPage = () => {
                                 />
                             ) }
                             <div
-                                className={ `flex flex-col bg-white rounded-lg ${ twMerge(
+                                className={ `flex flex-col gap-8 bg-white rounded-lg ${ twMerge(
                                     allElementsAreFields && ( pageInfo?.title || pageInfo?.description )
                                         ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
                                         : ''

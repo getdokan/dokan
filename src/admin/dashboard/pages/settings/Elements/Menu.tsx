@@ -45,56 +45,56 @@ const Menu = ({
     onMenuClick: (page: string) => void;
 }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    
+
     // Monitor search text from store
     const searchText = useSelect(
         (select) => select(settingsStore).getSearchText(),
         []
     );
-    
+
     // Track search session and manual navigation
     const [hasAutoSelectedForCurrentSearch, setHasAutoSelectedForCurrentSearch] = useState(false);
     const [previousSearchText, setPreviousSearchText] = useState('');
     const [userHasManuallyNavigated, setUserHasManuallyNavigated] = useState(false);
-    
+
     // Reset search session tracking when search is cleared or new search starts
     useEffect(() => {
         const isNewSearch = !previousSearchText.trim() && searchText.trim();
         const isSearchCleared = previousSearchText.trim() && !searchText.trim();
         const isCompletelyNewSearch = searchText.trim() && !searchText.startsWith(previousSearchText);
-        
+
         if (isNewSearch || isSearchCleared || isCompletelyNewSearch) {
             setHasAutoSelectedForCurrentSearch(false);
             setUserHasManuallyNavigated(false);
         }
-        
+
         setPreviousSearchText(searchText);
     }, [searchText, previousSearchText]);
-    
+
     // Find first visible menu and submenu when search is active
     const getFirstVisibleMenuAndSubmenu = useCallback(() => {
         if (!searchText.trim() || loading) {
             return { firstMenu: null, firstSubmenu: null };
         }
-        
-        const firstVisibleMenu = pages.find(menu => 
-            menu.display && 
-            menu.children && 
+
+        const firstVisibleMenu = pages.find(menu =>
+            menu.display &&
+            menu.children &&
             menu.children.some(child => child.display)
         );
-        
+
         if (!firstVisibleMenu) {
             return { firstMenu: null, firstSubmenu: null };
         }
-        
+
         const firstVisibleSubmenu = firstVisibleMenu.children?.find(child => child.display);
-        
+
         return {
             firstMenu: firstVisibleMenu,
             firstSubmenu: firstVisibleSubmenu || null
         };
     }, [pages, searchText, loading]);
-    
+
     // Auto-select first submenu only on initial search, not on every search text change
     useEffect(() => {
         if (searchText.trim() && !loading && !hasAutoSelectedForCurrentSearch && !userHasManuallyNavigated) {
@@ -115,7 +115,7 @@ const Menu = ({
         if (searchText.trim()) {
             setUserHasManuallyNavigated(true);
         }
-        
+
         let storageValue = pageId;
         if (parentId) {
             storageValue = `${parentId}.${pageId}`;

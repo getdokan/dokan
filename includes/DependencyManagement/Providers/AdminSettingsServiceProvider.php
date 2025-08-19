@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\Admin\Settings\Pages\GeneralPage;
+use WeDevs\Dokan\Admin\Settings\Pages\AppearancePage;
 use WeDevs\Dokan\Admin\Settings\Pages\VendorPage;
 use WeDevs\Dokan\Admin\Settings\Pages\TransactionPage;
 use WeDevs\Dokan\Admin\Settings\Settings;
@@ -20,6 +21,7 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
     protected $services = [
         Settings::class,
         GeneralPage::class,
+        AppearancePage::class,
         VendorPage::class,
         TransactionPage::class,
     ];
@@ -28,7 +30,21 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
      * Register the classes.
      */
 	public function register(): void {
-        foreach ( $this->services as $service ) {
+
+        /**
+         * Filter the admin settings services before registration.
+         *
+         * Allows plugins and themes to add, remove, or modify admin settings services.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $services Array of service class names to register.
+         *
+         * @return array Modified array of service class names.
+         */
+        $services = apply_filters( 'dokan_admin_settings_services', $this->services );
+
+        foreach ( $services as $service ) {
             $definition = $this->share_with_implements_tags( $service );
             $this->add_tags( $definition, $this->tags );
         }

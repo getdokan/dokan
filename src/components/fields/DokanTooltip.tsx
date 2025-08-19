@@ -1,13 +1,21 @@
-import { Tooltip } from '@getdokan/dokan-ui';
+import { useState } from '@wordpress/element';
+import InfoIcon from '../Icons/InfoIcon';
 import { Info } from 'lucide-react';
+import { Tooltip } from '@getdokan/dokan-ui';
 
 interface TooltipProps {
     message: string;
-    children?: React.ReactNode;
+    children?: JSX.Element | null;
 }
 
 const DokanTooltip = ( { message, children }: TooltipProps ) => {
-    return <Tooltip content={ message }>{ children || <Info /> }</Tooltip>;
+    return (
+        <Tooltip direction="top" content={ message }>
+            <span className="help-block">
+                { children ? children : <InfoIcon /> }
+            </span>
+        </Tooltip>
+    );
 };
 
 export default DokanTooltip;

@@ -1,6 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { Slot } from '@wordpress/components';
-import { kebabCase } from '@dokan/utilities';
+import { kebabCase } from '../../utilities';
 import { debounce } from '@wordpress/compose';
 import { Modal } from '@getdokan/dokan-ui';
 import { useCallback, useState } from '@wordpress/element';

@@ -19,7 +19,9 @@ import DokanSwitch from './DokanSwitch';
 import DokanTel from './DokanTel';
 import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
+import DokanRichText from './DokanRichText';
 import RadioBox from './RadioBox';
+import DokanRepeater from "./DokanRepeater";
 
 const FieldParser = ( {
     element,
@@ -29,11 +31,7 @@ const FieldParser = ( {
     switch ( element.variant ) {
         case 'text':
             return (
-                <DokanTextField
-                    key={ element.hook_key }
-                    element={ element }
-                    getSetting={ getSetting }
-                />
+                <DokanTextField key={ element.hook_key } element={ element } />
             );
 
         case 'select':
@@ -61,6 +59,19 @@ const FieldParser = ( {
         case 'textarea':
             return (
                 <DokanTextArea key={ element.hook_key } element={ element } />
+            );
+
+        case 'rich_text':
+            return applyFilters(
+                'dokan_admin_settings_rich_text_field_parser',
+                <DokanRichText
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />,
+                element,
+                getSetting,
+                onValueChange
             );
 
         case 'radio_capsule':
@@ -152,6 +163,20 @@ const FieldParser = ( {
                     onValueChange={ onValueChange }
                     getSetting={ getSetting }
                 />
+            );
+
+        case 'repeater':
+            return applyFilters(
+                'dokan_admin_settings_repeater_field_parser',
+                <DokanRepeater
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />,
+                element,
+                getSetting,
+                onValueChange
             );
 
         case 'checkbox':
