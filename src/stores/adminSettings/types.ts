@@ -31,6 +31,7 @@ export interface SettingsElement {
     dependencies: SettingsElementDependency[];
     options?: SettingsElementOption[];
     variant?: string;
+    image_url?: string;
     value?:
         | string
         | number

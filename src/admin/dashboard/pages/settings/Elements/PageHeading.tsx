@@ -1,6 +1,10 @@
 import { RawHTML } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
+import DocumentLink from '../../../../../components/Icons/DocumentLink';
+import { Tooltip } from '@getdokan/dokan-ui';
+import { Info } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
+import DokanTooltip from "../../../../../components/fields/DokanTooltip";
 import { FileSpreadsheet } from 'lucide-react';
 
 interface PageHeadingProps {
@@ -12,6 +16,7 @@ interface PageHeadingProps {
     descriptionClassName?: string;
     size?: 'small' | 'medium' | 'large';
     documentationLink?: string;
+    tooltip?: string;
 }
 
 const PageHeading = ( {
@@ -23,6 +28,7 @@ const PageHeading = ( {
     descriptionClassName = '',
     size = 'large',
     documentationLink = '',
+    tooltip = '',
 }: PageHeadingProps ): JSX.Element => {
     const sizeClasses = {
         small: 'text-xl',
@@ -39,8 +45,9 @@ const PageHeading = ( {
             className={ twMerge( 'mb-6 flex justify-between ', className ) }
         >
             <div className={ 'flex flex-col gap-2' }>
-                <h2 className={ headingClass }>
+                <h2 className={ twMerge( 'flex items-center gap-2.5', headingClass ) }>
                     <RawHTML>{ title }</RawHTML>
+                    { tooltip && <DokanTooltip message={ tooltip } /> }
                 </h2>
                 { description && (
                     <p className={ descriptionClass }>

@@ -15,7 +15,15 @@ export default function DokanSwitch( { element } ) {
     };
     return (
         <div className="grid grid-cols-4 justify-between items-center flex-wrap gap-2 p-5 w-full">
-            <div className="col-span-3">
+            <div className="col-span-3 gap-4 flex items-center">
+                { element.image_url && (
+                    <img
+                        src={ element.image_url }
+                        alt={ element?.title }
+                        className='max-w-20'
+                    />
+                ) }
+
                 <DokanFieldLabel
                     title={ element.title }
                     titleFontWeight="bold"
