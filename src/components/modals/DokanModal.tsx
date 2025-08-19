@@ -1,6 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { Slot } from '@wordpress/components';
-import { kebabCase } from '@dokan/utilities';
+import { kebabCase } from '../../utilities';
 import { debounce } from '@wordpress/compose';
 import { Modal } from '@getdokan/dokan-ui';
 import { useCallback, useState } from '@wordpress/element';
@@ -24,6 +24,7 @@ interface DokanModalProps {
     dialogFooter?: JSX.Element;
     loading?: boolean;
     confirmButtonVariant?: ButtonVariant;
+    hideCancelButton?: boolean;
 }
 
 const DokanModal = ( {
@@ -43,6 +44,7 @@ const DokanModal = ( {
     dialogContent,
     loading = false,
     confirmButtonVariant = 'primary',
+    hideCancelButton = false,
 }: DokanModalProps ) => {
     if ( ! namespace ) {
         throw new Error(
@@ -152,14 +154,16 @@ const DokanModal = ( {
                         <div
                             className={ `flex items-center justify-end gap-3` }
                         >
-                            <DokanButton
-                                onClick={ onClose }
-                                variant={ `secondary` }
-                                disabled={ isSubmitting || loading }
-                            >
-                                { cancelButtonText ||
-                                    __( 'Cancel', 'dokan-lite' ) }
-                            </DokanButton>
+                            { hideCancelButton || (
+                                <DokanButton
+                                    onClick={ onClose }
+                                    variant={ `secondary` }
+                                    disabled={ isSubmitting || loading }
+                                >
+                                    { cancelButtonText ||
+                                        __( 'Cancel', 'dokan-lite' ) }
+                                </DokanButton>
+                            ) }
                             <DokanButton
                                 onClick={ handleConfirm }
                                 variant={ confirmButtonVariant }

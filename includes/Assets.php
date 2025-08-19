@@ -1340,6 +1340,14 @@ class Assets {
                     'dummy_data'        => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
                     'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
                     'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
+                    'newSettingsUrl'    => add_query_arg(
+                        [
+                            'dokan_action'          => 'switch_dashboard_settings',
+                            'settings_legacy_nonce' => wp_create_nonce( 'settings_legacy_dashboard' ),
+                            'page'                  => 'dokan-dashboard#/settings',
+                        ],
+                        admin_url( 'admin.php' )
+                    ),
                 ],
                 'states'                            => WC()->countries->get_allowed_country_states(),
                 'countries'                         => WC()->countries->get_allowed_countries(),

@@ -102,6 +102,13 @@ abstract class SettingsElement {
     }
 
     /**
+     * Help text of the settings element.
+     *
+     * @var string $helpText Help text.
+     */
+    protected $tooltip = '';
+
+    /**
      * Set the subpage doc link.
      *
      * @param string $doc_link
@@ -195,6 +202,28 @@ abstract class SettingsElement {
 
 		return $this;
 	}
+
+    /**
+     * Get the Help Text of the Settings element.
+     *
+     * @return string
+     */
+    public function get_tooltip(): string {
+        return $this->tooltip;
+    }
+
+    /**
+     * Set the Help Text of the Settings element.
+     *
+     * @param string $tooltip Title.
+     *
+     * @return SettingsElement
+     */
+    public function set_tooltip( string $tooltip ): SettingsElement {
+        $this->tooltip = $tooltip;
+
+        return $this;
+    }
 
 	/**
 	 * Get the icon of the Settings element.
@@ -494,6 +523,7 @@ abstract class SettingsElement {
 			'type'           => $this->get_type(),
 			'title'          => $this->get_title(),
 			'icon'           => $this->get_icon(),
+            'tooltip'        => $this->get_tooltip(),
 			'display'        => true, // to manage element display action from dependencies.
 			'hook_key'       => $this->get_hook_key(),
 			'children'       => $children,

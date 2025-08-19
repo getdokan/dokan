@@ -9,7 +9,25 @@ import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import PageHeading from './Elements/PageHeading';
 import { twMerge } from 'tailwind-merge';
-// DEMO: Render all Dokan* field components from src/Fields with mock props
+
+const DashboardSwitchLink = () => {
+    // Get the switch URL from localized settings
+    const switchUrl = dokanAdminDashboardSettings?.legacy_settings_url || '#';
+
+    return (
+        <div className="legacy-dashboard-url text-sm font-medium pt-8 mt-8">
+            <div className="flex items-center gap-2 text-gray-600">
+                { __( 'If you want to go back to old settings panel,', 'dokan-lite' ) }{' '}
+                <a
+                    className="skip-color-module underline font-bold text-[#7047EB] hover:text-[#502BBF] transition-colors"
+                    href={ switchUrl }
+                >
+                    { __( 'Click Here', 'dokan-lite' ) }
+                </a>
+            </div>
+        </div>
+    );
+};
 
 const SettingsPage = () => {
     const dispatch = useDispatch();
@@ -54,8 +72,15 @@ const SettingsPage = () => {
 
     useEffect( () => {
         if ( ! loading && pages.length > 0 ) {
+            let selectedSettings = typeof localStorage !== 'undefined' ? localStorage.getItem( 'dokan_active_settings_tab' ) : '',
+                selectedPageName = selectedSettings ? selectedSettings.split( '.' )[1] : selectedPage;
+
             setSelectedPage(
-                selectedPage === '' ? pages[ 0 ].id : selectedPage
+                // @ts-ignore
+                wp.hooks.applyFilters(
+                    'dokan_admin_settings_active_page_id',
+                    selectedPageName ? selectedPageName : pages[ 0 ].id
+                )
             );
         }
     }, [ pages, loading ] );
@@ -99,7 +124,7 @@ const SettingsPage = () => {
         } else if ( ! pages?.length && tabs?.length && '' !== selectedTab ) {
             setElements(
                 tabs.find( ( child ) => child.id === selectedTab )?.children ??
-                    []
+                []
             );
         } else if (
             pages?.length &&
@@ -109,7 +134,7 @@ const SettingsPage = () => {
         ) {
             setElements(
                 tabs.find( ( child ) => child.id === selectedTab )?.children ??
-                    []
+                []
             );
         }
     }, [
@@ -138,7 +163,15 @@ const SettingsPage = () => {
         setSelectedTab( tab );
     };
 
+    const onValueChange = ( element: SettingsElement ) => {
+        dispatch( settingsStore ).updateSettingsValue( element );
+    };
+
     const saveSettings = () => {
+        wp.hooks.doAction( 'dokan_admin_settings_before_save_settings', allSettings );
+
+        console.log( 'allSettings', allSettings );
+
         setIsSaving( true );
         dispatch( settingsStore )
             .saveSettings( allSettings )
@@ -150,10 +183,8 @@ const SettingsPage = () => {
                 setIsSaving( false );
                 // TODO: Say Error.
             } );
-    };
 
-    const onValueChange = ( element: SettingsElement ) => {
-        dispatch( settingsStore ).updateSettingsValue( element );
+        wp.hooks.doAction( 'dokan_admin_settings_after_save_settings', allSettings );
     };
 
     // Get current page/tab information for heading
@@ -163,6 +194,10 @@ const SettingsPage = () => {
 
         if ( selectedPage && pages?.length > 0 ) {
             currentPage = pages.find( ( page ) => page.id === selectedPage );
+        }
+
+        if ( ! currentPage?.display ) {
+            return {};
         }
 
         if ( selectedTab && tabs?.length > 0 ) {
@@ -190,15 +225,18 @@ const SettingsPage = () => {
     };
 
     const pageInfo = getCurrentPageInfo();
-    // check all elements are field type
     const allElementsAreFields = elements.every(
         ( element ) => element.type === 'field'
     );
+
     return (
         <>
-            <div className="min-h-screen h-full ">
-                <main className="w-full pb-10 lg:py-5 lg:px-0 bg-white h-full shadow rounded-lg">
-                    <div className="lg:grid lg:grid-cols-12 lg:gap-x-5 divide-x h-full ">
+            <div className="min-h-screen h-full">
+                <h2 className={ `text-2xl text-[#25252D] font-bold my-6 lg:mb-8 lg:mt-10` }>
+                    { __( 'Settings', 'dokan-lite' ) }
+                </h2>
+                <main className="w-full lg:px-0 lg:bg-white h-full lg:shadow rounded-lg overflow-hidden">
+                    <div className="lg:grid lg:grid-cols-12 lg:divide-x h-full">
                         { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
                                 key="admin-settings-menu"
@@ -209,7 +247,7 @@ const SettingsPage = () => {
                             />
                         ) }
 
-                        <div className="space-y-6 p-8 lg:col-span-9">
+                        <div className="space-y-6 lg:p-7 lg:py-12 lg:col-span-9 pt-10">
                             { tabs && '' !== selectedTab && (
                                 <Tab
                                     key="admin-settings-tab"
@@ -229,8 +267,8 @@ const SettingsPage = () => {
                                 />
                             ) }
                             <div
-                                className={ `flex flex-col  ${ twMerge(
-                                    allElementsAreFields
+                                className={ `flex flex-col gap-8 bg-white rounded-lg ${ twMerge(
+                                    allElementsAreFields && ( pageInfo?.title || pageInfo?.description )
                                         ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
                                         : 'gap-6'
                                 ) }` }
@@ -250,27 +288,32 @@ const SettingsPage = () => {
                                     }
                                 ) }
                             </div>
+
+                            { needSaving && (
+                                <div className="sticky flex justify-end bottom-0 !mt-8 py-5">
+                                    <button
+                                        type="button"
+                                        disabled={ isSaving }
+                                        onClick={ saveSettings }
+                                        className="inline-flex shadow shadow-lg shadow-gray-800/30 items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    >
+                                        <SaveIcon
+                                            className="-ml-1 mr-3 h-5 w-5"
+                                            aria-hidden="true"
+                                        />
+                                        { isSaving
+                                            ? __( 'Saving..', 'dokan-lite' )
+                                            : __( 'Save', 'dokan-lite' ) }
+                                    </button>
+                                </div>
+                            ) }
                         </div>
                     </div>
-                    { needSaving && (
-                        <div className="sticky flex justify-end bottom-0 mt-5 p-5 pr-0">
-                            <button
-                                type="button"
-                                disabled={ isSaving }
-                                onClick={ saveSettings }
-                                className="inline-flex shadow shadow-lg shadow-gray-800/30 items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                                <SaveIcon
-                                    className="-ml-1 mr-3 h-5 w-5"
-                                    aria-hidden="true"
-                                />
-                                { isSaving
-                                    ? __( 'Saving..', 'dokan-lite' )
-                                    : __( 'Save', 'dokan-lite' ) }
-                            </button>
-                        </div>
-                    ) }
                 </main>
+
+                { dokanAdminDashboardSettings?.legacy_settings_url && (
+                    <DashboardSwitchLink />
+                ) }
             </div>
         </>
     );

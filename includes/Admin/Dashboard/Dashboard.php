@@ -34,6 +34,101 @@ class Dashboard implements Hookable {
         add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
         add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+        
+        // Add dashboard switching functionality
+        add_action( 'admin_menu', [ $this, 'clear_dokan_submenu_title' ], 20 );
+        add_action( 'admin_init', [ $this, 'handle_dashboard_redirect' ] );
+    }
+
+    /**
+     * Clear the Dokan submenu title.
+     *
+     * This method clears the title of the Dokan submenu to prevent it from displaying
+     * in the admin menu. It is useful for cases where you want to hide the submenu title
+     * but still keep the submenu item accessible.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function clear_dokan_submenu_title(): void {
+        global $submenu;
+
+        $legacy   = get_option( 'dokan_legacy_admin_settings', false );
+        $position = (int) $legacy;
+
+        if ( isset( $submenu['dokan'][ $position ? 21 : 23 ][0] ) ) {
+            $submenu['dokan'][ $position ? 21 : 23 ][0] = '';
+        }
+
+        if ( ! $legacy ) {
+            $submenu['dokan'][ $position ? 21 : 23 ][2] = 'admin.php?page=dokan-dashboard';
+        }
+    }
+
+    /**
+     * Handle dashboard redirect based on legacy dashboard preference.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function handle_dashboard_redirect(): void {
+        // Early return if not a dashboard switch request.
+        if ( ! isset( $_GET['dokan_action'] ) || 'switch_dashboard_settings' !== sanitize_key( wp_unslash( $_GET['dokan_action'] ) ) ) {
+            return;
+        }
+
+        // Early return if nonce verification fails.
+        if ( ! isset( $_GET['settings_legacy_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['settings_legacy_nonce'] ) ), 'settings_legacy_dashboard' ) ) {
+            return;
+        }
+
+        // Get the current state and toggle it.
+        $current_is_legacy = get_option( 'dokan_legacy_admin_settings', false );
+        $new_legacy_state  = ! $current_is_legacy;
+
+        // Update the option
+        update_option( 'dokan_legacy_admin_settings', $new_legacy_state );
+
+        // Build redirect URL and redirect.
+        $page_slug    = $new_legacy_state ? 'dokan' : 'dokan-dashboard';
+        $redirect_url = add_query_arg( [ 'page' => $page_slug ], admin_url( 'admin.php' ) );
+
+        // Add settings hash for the React dashboard
+        if ( ! $new_legacy_state ) {
+            $redirect_url .= '#/settings';
+        }
+
+        wp_safe_redirect( $redirect_url );
+        exit;
+    }
+
+    /**
+     * Check if the current dashboard should be legacy (Vue)
+     *
+     * @return bool
+     */
+    public static function is_legacy_dashboard(): bool {
+        return (bool) get_option( 'dokan_legacy_admin_dashboard', false );
+    }
+
+    /**
+     * Get dashboard switch URL
+     *
+     * @param bool $to_legacy Whether switching to legacy dashboard
+     * @return string
+     */
+    public function get_switch_url( bool $to_legacy = false ): string {
+        $target_page = $to_legacy ? 'dokan-settings' : 'dokan-dashboard';
+
+        return add_query_arg(
+            [
+                'dokan_legacy_nonce' => wp_create_nonce( 'dokan_admin_dashboard' ),
+                'dokan_action'       => 'switch_dashboard',
+            ],
+            admin_url( "admin.php?page={$target_page}" )
+        );
     }
 
     /**
@@ -204,8 +299,16 @@ class Dashboard implements Hookable {
         }
 
         $settings = [
-            'nonce'       => wp_create_nonce( 'dokan_admin_dashboard' ),
-            'header_info' => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
+            'nonce'               => wp_create_nonce( 'dokan_admin_dashboard' ),
+            'header_info'         => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
+            'legacy_settings_url' => add_query_arg(
+                [
+                    'dokan_action'          => 'switch_dashboard_settings',
+                    'settings_legacy_nonce' => wp_create_nonce( 'settings_legacy_dashboard' ),
+                    'page'                  => 'dokan#/settings',
+                ],
+                admin_url( 'admin.php' )
+            ),
         ];
 
         foreach ( $this->get_pages() as $page ) {
