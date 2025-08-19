@@ -20,18 +20,19 @@ export default function DokanSwitch( { element } ) {
                     <img
                         src={ element.image_url }
                         alt={ element?.title }
-                        className='max-w-20'
+                        className="max-w-20"
                     />
                 ) }
 
-            <div className="md:col-span-3 col-span-4 flex items-center gap-2">
-                <DokanFieldLabel
-                    title={ element.title }
-                    titleFontWeight="bold"
-                    helperText={ element.description }
-                    tooltip={ element.helper_text }
-                    icon={ element?.icon }
-                />
+                <div className="md:col-span-3 col-span-4 flex items-center gap-2">
+                    <DokanFieldLabel
+                        title={ element.title }
+                        titleFontWeight="bold"
+                        helperText={ element.description }
+                        tooltip={ element.helper_text }
+                        icon={ element?.icon }
+                    />
+                </div>
             </div>
             <div className="md:col-span-1 col-span-4 flex justify-end">
                 <BaseSwitch
