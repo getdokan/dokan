@@ -1,4 +1,8 @@
-import { DokanButton, CategoryBasedCommissionPure, FixedCommissionInput } from '@dokan/components';
+import {
+    DokanButton,
+    CategoryBasedCommissionPure,
+    FixedCommissionInput,
+} from '@dokan/components';
 import { __ } from '@wordpress/i18n';
 import {
     CheckCircle,
@@ -11,11 +15,12 @@ import {
 } from 'lucide-react';
 import {
     AsyncSearchableSelect,
-    Card, SearchableSelect,
+    Card,
+    SearchableSelect,
     SimpleCheckbox,
     SimpleInput,
-    ToggleSwitch
-} from "@getdokan/dokan-ui";
+    ToggleSwitch,
+} from '@getdokan/dokan-ui';
 import StoreImage from './StoreImage';
 import VendorFormSkeleton from '@dokan/admin/dashboard/pages/vendor-create-edit/VendorFormSkeleton';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
@@ -29,6 +34,7 @@ import wpMedia from '@dokan/admin/dashboard/pages/vendor-create-edit/WpMedia';
 import { Slot } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
 import { useEffect, useState } from '@wordpress/element';
+import DokanModal from '@dokan/components/modals/DokanModal';
 
 interface Props {
     vendor: Vendor;
@@ -47,6 +53,8 @@ export default function Form( {
         return select( store ).getCreateOrEditVendorErrors();
     }, [] );
     const [ categories, setCategories ] = useState( [] );
+    const [ commissionSubCategoryConfirm, setCommissionSubCategoryConfirm ] =
+        useState( false );
 
     const setData = async (
         key: string,
@@ -324,7 +332,13 @@ export default function Form( {
         return '';
     };
 
-    useEffect(() => {
+    const getResetSubCategory = () => {
+        return vendor && vendor.hasOwnProperty( 'reset_sub_category' )
+            ? vendor?.reset_sub_category
+            : true;
+    };
+
+    useEffect( () => {
         apiFetch( { path: 'dokan/v2/products/multistep-categories' } ).then(
             ( response: Record< string, unknown > ) => {
                 if ( response && typeof response === 'object' ) {
@@ -332,7 +346,7 @@ export default function Form( {
                 }
             }
         );
-    }, []);
+    }, [] );
 
     if ( ! vendor || Object.keys( vendor ).length === 0 ) {
         return <VendorFormSkeleton />;
@@ -1360,30 +1374,177 @@ export default function Form( {
                         <div className="p-6 flex flex-col gap-3">
                             <div>
                                 <SearchableSelect
-                                    label={__( 'Admin Commission type', 'dokan-lite' )}
+                                    label={ __(
+                                        'Admin Commission type',
+                                        'dokan-lite'
+                                    ) }
                                     placeholder={ __(
                                         'Select commission type',
                                         'dokan-lite'
                                     ) }
+                                    options={ [
+                                        {
+                                            label: __( 'Fixed', 'dokan-lite' ),
+                                            value: 'fixed',
+                                        },
+                                        {
+                                            label: __(
+                                                'Category Based',
+                                                'dokan-lite'
+                                            ),
+                                            value: 'category_based',
+                                        },
+                                    ] }
+                                    onChange={ ( data ) => {
+                                        setData(
+                                            'admin_commission_type',
+                                            data.value
+                                        );
+                                    } }
                                 />
                             </div>
-                            <CategoryBasedCommissionPure
-                                categories={categories}
-                                commissionValues={ [] }
-                                currency={'@'}
-                                onCommissionChange={(data) => {
-                                    console.log(data)
-                                }}
-                                resetSubCategoryValue={true}
-                            />
+                            { vendor?.admin_commission_type ===
+                                'category_based' && (
+                                <>
+                                    <div className="mb-3">
+                                        <ToggleSwitch
+                                            checked={ getResetSubCategory() }
+                                            onChange={ () => {
+                                                // setData(
+                                                //     'reset_sub_category',
+                                                //     value
+                                                // );
 
-                            <FixedCommissionInput
-                                values={{ admin_percentage: 10, additional_fee: 500 }}
-                                currency={'@'}
-                                onValueChange={(data) => {
-                                    console.log(data)
-                                }}
-                            />
+                                                setCommissionSubCategoryConfirm(
+                                                    true
+                                                );
+                                            } }
+                                            label={ __(
+                                                'Apply Parent Category Commission to All Subcategories',
+                                                'dokan-lite'
+                                            ) }
+                                            helpText={ __(
+                                                "When enabled, changing a parent category's commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories",
+                                                'dokan-lite'
+                                            ) }
+                                        />
+
+                                        <DokanModal
+                                            isOpen={
+                                                commissionSubCategoryConfirm
+                                            }
+                                            namespace="commission-sub-category-confirm"
+                                            onConfirm={ () => {
+                                                setData(
+                                                    'reset_sub_category',
+                                                    ! getResetSubCategory()
+                                                ).then( () => {
+                                                    setCommissionSubCategoryConfirm(
+                                                        false
+                                                    );
+                                                } );
+                                            } }
+                                            onClose={ () =>
+                                                setCommissionSubCategoryConfirm(
+                                                    false
+                                                )
+                                            }
+                                            confirmationTitle={
+                                                getResetSubCategory()
+                                                    ? __(
+                                                          'Disable Commission Inheritance Setting?',
+                                                          'dokan-lite'
+                                                      )
+                                                    : __(
+                                                          'Enable Commission Inheritance Setting?',
+                                                          'dokan-lite'
+                                                      )
+                                            }
+                                            confirmationDescription={
+                                                getResetSubCategory()
+                                                    ? __(
+                                                          'Subcategories will maintain their independent commission rates when parent category rates are changed.',
+                                                          'dokan-lite'
+                                                      )
+                                                    : __(
+                                                          'Parent category commission changes will automatically update all subcategories. Existing rates will remain unchanged until parent category is modified.',
+                                                          'dokan-lite'
+                                                      )
+                                            }
+                                            confirmButtonText={
+                                                getResetSubCategory()
+                                                    ? __(
+                                                          'Disable',
+                                                          'dokan-lite'
+                                                      )
+                                                    : __(
+                                                          'Enable',
+                                                          'dokan-lite'
+                                                      )
+                                            }
+                                            cancelButtonText={ __(
+                                                'Cancel',
+                                                'dokan-lite'
+                                            ) }
+                                        />
+                                    </div>
+                                    <div>
+                                        { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
+                                        <label
+                                            htmlFor=""
+                                            className="mb-2 inline-block cursor-pointer text-sm font-medium leading-[21px] text-gray-900"
+                                        >
+                                            { __(
+                                                'Admin Commission',
+                                                'dokan-lite'
+                                            ) }
+                                        </label>
+                                        <CategoryBasedCommissionPure
+                                            categories={ categories }
+                                            commissionValues={ [] }
+                                            currency={ '@' }
+                                            onCommissionChange={ ( data ) => {
+                                                console.log( data );
+                                            } }
+                                            checked={
+                                                vendor &&
+                                                vendor.hasOwnProperty(
+                                                    'reset_sub_category'
+                                                )
+                                                    ? vendor?.reset_sub_category
+                                                    : true
+                                            }
+                                        />
+                                    </div>
+                                </>
+                            ) }
+
+                            { vendor?.admin_commission_type === 'fixed' && (
+                                <div>
+                                    { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
+                                    <label
+                                        htmlFor=""
+                                        className="mb-2 inline-block cursor-pointer text-sm font-medium leading-[21px] text-gray-900"
+                                    >
+                                        { __(
+                                            'Admin Commission',
+                                            'dokan-lite'
+                                        ) }
+                                    </label>
+                                    <div className="-ml-4 -mt-4">
+                                        <FixedCommissionInput
+                                            values={ {
+                                                admin_percentage: 10,
+                                                additional_fee: 500,
+                                            } }
+                                            currency={ '@' }
+                                            onValueChange={ ( data ) => {
+                                                console.log( data );
+                                            } }
+                                        />
+                                    </div>
+                                </div>
+                            ) }
                         </div>
                     </Card>
                 </div>
