@@ -1,3 +1,6 @@
+### v4.0.5 ( Jul 24, 2025 ) ###
+- **fix:** Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.
+
 ### v4.0.4 ( Jul 17, 2025 ) ###
 
 - **update:** Admin Notice UI with Modern Design and Improved User Experience.
