@@ -15,7 +15,7 @@ const Section = ( {
     return (
         <section aria-labelledby="settings-section-heading" key={ element.id }>
             <div
-                className={ `flex flex-col bg-white rounded-lg divide-y border border-[#E9E9E9] rounded divide-gray-200` }
+                className={ `flex flex-col bg-white rounded-lg divide-y border border-[#E9E9E9] rounded divide-gray-200 overflow-hidden` }
             >
                 { element.title && (
                     <PageHeading
