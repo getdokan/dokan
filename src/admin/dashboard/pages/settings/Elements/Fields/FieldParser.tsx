@@ -139,7 +139,7 @@ const FieldParser = ( {
             );
         case 'base_field_label':
             return <DokanFieldLabel element={ element } />;
-
+        
         case 'html':
             return (
                 <DokanHtmlField

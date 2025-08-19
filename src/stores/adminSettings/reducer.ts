@@ -2,6 +2,7 @@ import SETTINGS_DEFAULT_STATE from './default-state';
 import settingsDependencyApplicator from '../../admin/dashboard/utils/settingsDependencyApplicator';
 import settingsDependencyParser from '../../admin/dashboard/utils/settingsDependencyParser';
 import settingsElementFinderReplacer from '../../admin/dashboard/utils/settingsElementFinderReplacer';
+import settingsSearchApplicator from '../../admin/dashboard/utils/settingsSearchApplicator';
 
 const reducer = ( state = SETTINGS_DEFAULT_STATE, action ) => {
     switch ( action.type ) {
@@ -16,6 +17,9 @@ const reducer = ( state = SETTINGS_DEFAULT_STATE, action ) => {
                         [ ...action.settings ],
                         settingsDependencyParser( [ ...action.settings ] )
                     ),
+                ],
+                originalSettings: [
+                    ...action.settings,
                 ],
             };
 
@@ -68,6 +72,36 @@ const reducer = ( state = SETTINGS_DEFAULT_STATE, action ) => {
                 ...state,
                 needSaving: action.needSaving,
             };
+
+        case 'SET_SEARCH_TEXT':
+            if ( ! action.searchText.trim() ) {
+                const restoredSettings = settingsDependencyApplicator(
+                    [ ...state.originalSettings ],
+                    [ ...state.dependencies ]
+                );
+                return {
+                    ...state,
+                    searchText: action.searchText,
+                    settings: restoredSettings,
+                };
+            }
+
+            const baseSettingsWithDependencies = settingsDependencyApplicator(
+                [ ...state.originalSettings ],
+                [ ...state.dependencies ]
+            );
+            
+            const searchFilteredSettings = settingsSearchApplicator(
+                baseSettingsWithDependencies,
+                action.searchText
+            );
+
+            return {
+                ...state,
+                searchText: action.searchText,
+                settings: searchFilteredSettings,
+            };
+
     }
 
     return state;
