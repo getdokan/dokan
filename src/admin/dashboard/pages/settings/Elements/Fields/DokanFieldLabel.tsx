@@ -12,12 +12,12 @@ const DokanFieldLabel = ( {
 
     return (
         <div className="p-5">
-        <DokanBaseFieldLabel
-            key={ element.hook_key }
-            icon={ element.icon || '' }
-            title={ element.title }
-            helperText={ element.description }
-        />
+            <DokanBaseFieldLabel
+                icon={ element.icon || '' }
+                title={ element.title }
+                helperText={ element.description }
+                tooltip={ element?.helper_text }
+            />
         </div>
     );
 };

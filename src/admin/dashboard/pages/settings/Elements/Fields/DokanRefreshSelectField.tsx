@@ -32,7 +32,23 @@ const DokanRefreshSelectField = ( {
         if ( element.onRefresh ) {
             element.onRefresh();
         }
-        setSelectedProfile( element.default ? element.default : '' );
+        // fetchSettings from the store
+        dispatch( settingsStore )
+            .fetchSettings()
+            .then( ( updatedSettings ) => {
+                // Update the selected profile with the new value
+                const updatedElement = updatedSettings.find(
+                    ( setting ) => setting.hook_key === element.hook_key
+                );
+                if ( updatedElement ) {
+                    setSelectedProfile( updatedElement.value || '' );
+                }
+            } )
+            .catch( () => {
+                // Optionally, you can handle the error here, e.g., show a notification
+                // or revert to the previous value.
+                setSelectedProfile( element.default || element.value || '' );
+            } );
     };
 
     const onValueChange = ( updatedElement ) => {
@@ -41,15 +57,18 @@ const DokanRefreshSelectField = ( {
     };
     return (
         <div className={ twMerge( 'w-full p-5 ', className ) }>
-            <div className="grid grid-cols-12">
+            <div className="grid grid-cols-12 gap-2">
                 <div className="col-span-12 md:col-span-6 ">
                     <DokanFieldLabel
                         title={ element?.title }
                         helperText={ element.description }
+                        tooltip={ element?.helper_text }
+                        icon={ element.icon || '' }
+                        titleFontWeight="light"
                     />
                 </div>
 
-                <div className="flex col-span-12 md:col-span-6 items-center justify-end gap-4">
+                <div className="flex col-span-12 md:col-span-6 items-center flex-wrap justify-end gap-4">
                     <DokanSelect
                         options={
                             element.options?.map( ( option ) => ( {
@@ -64,8 +83,10 @@ const DokanRefreshSelectField = ( {
                                 value: value as string,
                             } );
                         } }
+                        placeholder={ element.placeholder as string }
+                        disabled={ element.disabled }
                         value={ selectedProfile as string }
-                        containerClassName={ 'w-72' }
+                        containerClassName={ 'min-w-72 w-full' }
                     />
 
                     { /* Refresh Button */ }
