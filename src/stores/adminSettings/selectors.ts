@@ -46,5 +46,10 @@ const selectors = {
         const { needSaving } = state;
         return needSaving;
     },
+
+    getSearchText( state: SettingsState ) {
+        const { searchText } = state;
+        return searchText;
+    },
 };
 export default selectors;
