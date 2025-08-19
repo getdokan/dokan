@@ -3,10 +3,13 @@ import { SettingsProps } from '../../types';
 import CategoryBasedCommission from './Commission/CategoryBasedCommission';
 import CombineInput from './Commission/CombineInput';
 import CustomizeRadio from './CustomizeRadio';
+import DokanColorPicker from './DokanColorPicker';
+import DokanCopyButtonField from './DokanCopyButtonField';
 import DokanCurrency from './DokanCurrency';
 import DokanDoubleTextField from './DokanDoubleTextField';
 import DokanEmail from './DokanEmail';
 import DokanFieldLabel from './DokanFieldLabel';
+import DokanFileUploadField from './DokanFileUpload';
 import DokanHtmlField from './DokanHtmlField';
 import DokanInfoField from './DokanInfoField';
 import DokanMultiCheck from './DokanMultiCheck';
@@ -21,8 +24,6 @@ import DokanTel from './DokanTel';
 import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
 import RadioBox from './RadioBox';
-import DokanColorPicker from './DokanColorPicker';
-import DokanCopyButtonField from './DokanCopyButtonField';
 
 const FieldParser = ( {
     element,
@@ -158,6 +159,8 @@ const FieldParser = ( {
             return <DokanColorPicker element={ element } />;
         case 'copy_field':
             return <DokanCopyButtonField element={ element } />;
+        case 'file_upload':
+            return <DokanFileUploadField element={ element } />;
 
         case 'color':
         case 'date':

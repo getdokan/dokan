@@ -26,6 +26,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Text;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\CustomizeRadio;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\HtmlField;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\FileUpload;
 
 /**
  * Settings element Field.
@@ -82,6 +83,7 @@ class Field extends SettingsElement {
         'show_hide'        => ShowHide::class,
         'select_color_picker' => SelectColorPicker::class,
         'copy_field'          => CopyField::class,
+        'file_upload'         => FileUpload::class,
 	);
 
 	/**
