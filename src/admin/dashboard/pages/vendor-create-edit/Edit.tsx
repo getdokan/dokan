@@ -57,7 +57,7 @@ function Edit( props ) {
                 await setCreateOrEditVendorErrors( [] );
                 toast( {
                     type: 'success',
-                    title: __( 'Vendor Added Successfully.', 'dokan-lite' ),
+                    title: __( 'Vendor Updated Successfully.', 'dokan-lite' ),
                 } );
 
                 setSaving( false );
