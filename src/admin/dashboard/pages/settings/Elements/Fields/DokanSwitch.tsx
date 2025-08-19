@@ -24,14 +24,16 @@ export default function DokanSwitch( { element } ) {
                     />
                 ) }
 
+            <div className="md:col-span-3 col-span-4 flex items-center gap-2">
                 <DokanFieldLabel
                     title={ element.title }
                     titleFontWeight="bold"
                     helperText={ element.description }
-                    tooltip={ element.tooltip }
+                    tooltip={ element.helper_text }
+                    icon={ element?.icon }
                 />
             </div>
-            <div className="col-span-1 flex justify-end">
+            <div className="md:col-span-1 col-span-4 flex justify-end">
                 <BaseSwitch
                     checked={ element.value === element.enable_state?.value }
                     onChange={ ( checked ) =>

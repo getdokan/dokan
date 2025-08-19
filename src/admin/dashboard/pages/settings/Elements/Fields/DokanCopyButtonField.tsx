@@ -1,19 +1,30 @@
-import React from 'react';
 import { CopyButtonField } from '../../../../../../components/fields';
+import DokanFieldLabel from '../../../../../../components/fields/DokanFieldLabel';
 
 export default function DokanCopyButtonField( { element } ) {
     if ( ! element.display ) {
         return null;
     }
-
     return (
-        <CopyButtonField
-            value={ element.value }
-            label={ element.title }
-            tooltip={ element.tooltip }
-            disabled={ element.disabled }
-            helperText={ element.description }
-            placeholder={ element.placeholder }
-        />
+        <div className="grid grid-cols-6 p-4 gap-4 w-full">
+            <div className="md:col-span-2 col-span-6">
+                <DokanFieldLabel
+                    title={ element.title }
+                    helperText={ element.description }
+                    tooltip={ element.help_text }
+                    titleFontWeight="bold"
+                />
+            </div>
+            <div className="md:col-span-4 col-span-6">
+                <CopyButtonField
+                    value={ element.value }
+                    disabled={ element.disabled }
+                    placeholder={ element.placeholder }
+                    inputProps={ {
+                        readOnly: true,
+                    } }
+                />
+            </div>
+        </div>
     );
 }

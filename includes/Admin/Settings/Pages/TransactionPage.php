@@ -123,7 +123,7 @@ class TransactionPage extends AbstractPage {
 
         // Create commission subpage
         $commission_page = ElementFactory::sub_page( 'commission' )
-            ->set_title( esc_html( 'Commission', 'dokan-lite' ) );
+            ->set_title( esc_html__( 'Commission', 'dokan-lite' ) );
 
         // Create commission section
         $commission_section = ElementFactory::section( 'commission' );

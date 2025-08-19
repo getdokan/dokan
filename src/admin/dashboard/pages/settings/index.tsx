@@ -270,7 +270,7 @@ const SettingsPage = () => {
                                 className={ `flex flex-col gap-8 bg-white rounded-lg ${ twMerge(
                                     allElementsAreFields && ( pageInfo?.title || pageInfo?.description )
                                         ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
-                                        : ''
+                                        : 'gap-6'
                                 ) }` }
                             >
                                 { elements.map(

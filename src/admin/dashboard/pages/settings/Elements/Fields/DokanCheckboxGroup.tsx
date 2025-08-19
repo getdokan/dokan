@@ -17,8 +17,10 @@ export default function DokanCheckboxGroup( { element, className } ) {
         <div className={ twMerge( 'flex flex-col gap-2 w-full', className ) }>
             <DokanFieldLabel
                 title={ element.title }
-                titleFontWeight="light"
+                titleFontWeight="bold"
                 helperText={ element.description }
+                tooltip={ element.helper_text }
+                icon={ element?.icon }
             />
             <BaseCheckboxGroup
                 name={ element.id }

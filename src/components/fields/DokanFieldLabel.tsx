@@ -1,7 +1,7 @@
-import { twMerge } from 'tailwind-merge';
-import DokanTooltip from './DokanTooltip';
 import { RawHTML } from '@wordpress/element';
 import parse from 'html-react-parser';
+import { twMerge } from 'tailwind-merge';
+import DokanTooltip from './DokanTooltip';
 
 interface InputLabelProps {
     title: string;
@@ -29,7 +29,7 @@ const DokanBaseFieldLabel = ( {
     return (
         <div
             className={ twMerge(
-                `flex items-start gap-4 `,
+                `flex items-start gap-2 `,
                 wrapperClassNames
             ) }
         >
@@ -37,7 +37,7 @@ const DokanBaseFieldLabel = ( {
                 <div className="flex items-center ">{ parse( icon ) }</div>
             ) }
             <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-4">
                     <label
                         htmlFor={ htmlFor }
                         className={ twMerge(

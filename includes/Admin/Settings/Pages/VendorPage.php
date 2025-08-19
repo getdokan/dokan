@@ -108,6 +108,13 @@ class VendorPage extends AbstractPage {
                     ->set_default( 'physical' )
             )
             ->add(
+                ElementFactory::field( 'Info', 'info' )
+                                ->set_title( __( 'Product Type Info', 'dokan-lite' ) )
+                                ->set_description( __( 'If you select "Digital" product type, vendors will only be able to sell digital products. If you select "Physical", they can only sell physical products. "Both" allows selling both types.', 'dokan-lite' ) )
+                                ->set_show_icon( true )
+                                ->set_link_url( esc_url( 'https://wedevs.com/docs/dokan/vendor-settings/selling-product-type/' ) )
+            )
+            ->add(
                 ElementFactory::field( 'product_status', 'radio_capsule' )
                     ->set_title( __( 'Product Status', 'dokan-lite' ) )
                     ->set_description( __( 'The status of a product when a vendor creates or updates it.', 'dokan-lite' ) )

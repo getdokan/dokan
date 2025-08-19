@@ -26,7 +26,7 @@ const Section = ( {
                         titleClassName={ 'text-base font-semibold  ' }
                         descriptionClassName={ 'text-sm text-[#828282]' }
                         id={ `settings-section-heading-${ element.hook_key }` }
-                        documentationLink={ element.documentationLink }
+                        documentationLink={ element.doc_link }
                     />
                 ) }
                 { element.children.length === 0 && (
