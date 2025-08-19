@@ -241,12 +241,33 @@ class Customizer {
             ]
         );
 
+        $wp_customize->add_setting(
+            'dokan_appearance[hide_vendor_info][street_address]',
+            [
+                'default'              => '',
+                'type'                 => 'option',
+                'capability'           => $this->capability,
+                'sanitize_callback'    => [ $this, 'bool_to_string' ],
+                'sanitize_js_callback' => [ $this, 'empty_to_bool' ],
+            ]
+        );
+
         $wp_customize->add_control(
             'hide_vendor_address',
             [
                 'label'    => __( 'Hide store address', 'dokan-lite' ),
                 'section'  => 'dokan_store',
                 'settings' => 'dokan_appearance[hide_vendor_info][address]',
+                'type'     => 'checkbox',
+            ]
+        );
+
+        $wp_customize->add_control(
+            'hide_vendor_street_address',
+            [
+                'label'    => __( 'Hide street address', 'dokan-lite' ),
+                'section'  => 'dokan_store',
+                'settings' => 'dokan_appearance[hide_vendor_info][street_address]',
                 'type'     => 'checkbox',
             ]
         );

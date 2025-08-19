@@ -11,7 +11,8 @@ $today             = strtolower( $current_time->format( 'l' ) );
 
 $dokan_appearance = get_option( 'dokan_appearance' );
 $profile_layout   = empty( $dokan_appearance['store_header_template'] ) ? 'default' : $dokan_appearance['store_header_template'];
-$store_address    = dokan_get_seller_short_address( $store_user->get_id(), false );
+$show_street = dokan_is_vendor_info_hidden( 'street_address' );
+$store_address    = dokan_get_seller_short_address( $store_user->get_id(), $show_street, false );
 
 $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
 $store_open_notice        = isset( $store_info['dokan_store_open_notice'] ) && ! empty( $store_info['dokan_store_open_notice'] ) ? $store_info['dokan_store_open_notice'] : __( 'Store Open', 'dokan-lite' );
