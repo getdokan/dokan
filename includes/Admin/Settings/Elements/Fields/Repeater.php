@@ -131,6 +131,36 @@ class Repeater extends Field {
     }
 
     /**
+     * Get field value with filtering for empty entries.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_value() {
+        $value = parent::get_value();
+
+        if ( ! is_array( $value ) ) {
+            return $value;
+        }
+
+        // Filter out empty entries.
+        $filtered_data = array_filter(
+            $value,
+            function ( $item ) {
+                $id    = $this->sanitize_element( $item['id'] ?? '' );
+                $order = $this->sanitize_element( $item['order'] ?? '' );
+                $title = $this->sanitize_element( $item['title'] ?? '' );
+
+                return ! empty( $id ) && ! empty( $title ) && ( $order !== '' );
+            }
+        );
+
+        // Reset array keys to maintain proper indexing.
+        return array_values( $filtered_data );
+    }
+
+    /**
      * Data validation.
      *
      * @param mixed $data Data for validation.

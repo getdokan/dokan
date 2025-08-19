@@ -7,6 +7,8 @@ import {
 import Quill, { QuillOptions } from 'quill';
 import 'quill/dist/quill.snow.css';
 import './styles.scss';
+import { __ } from '@wordpress/i18n';
+import { sanitizeHTML } from '../../utilities';
 
 /**
  * Opens the WordPress media uploader to select an image or video.
@@ -26,9 +28,9 @@ const openWpMediaUploader = (
 
     // @ts-ignore
     const frame = wp.media( {
-        title: 'Select or Upload Media',
+        title: __( 'Select or Upload Media', 'dokan-lite' ),
         button: {
-            text: 'Use this media',
+            text: __( 'Use this media', 'dokan-lite' ),
         },
         library: {
             type, // 'image' or 'video'
@@ -103,7 +105,10 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
                 const altText = attachment.alt || attachment.title || '';
                 quill.clipboard.dangerouslyPasteHTML(
                     range.index,
-                    `<img src="${ url }" alt="${ altText }" />`,
+                    sanitizeHTML( `<img src="${ url }" alt="${ altText }" />`, {
+                        tags: [ 'img' ],
+                        attr: [ 'src', 'alt' ],
+                    } ),
                     'user'
                 );
                 quill.setSelection( range.index + 1, 'silent' );
@@ -120,7 +125,19 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
                 const range = quill.getSelection( true );
                 quill.clipboard.dangerouslyPasteHTML(
                     range.index,
-                    `<video class="ql-video" height="280" width="500" controls src="${ url }"></video>`,
+                    sanitizeHTML(
+                        `<video class="ql-video" height="280" width="500" controls src="${ url }"></video>`,
+                        {
+                            tags: [ 'video' ],
+                            attr: [
+                                'src',
+                                'height',
+                                'width',
+                                'controls',
+                                'class',
+                            ],
+                        }
+                    ),
                     'user'
                 );
                 quill.setSelection( range.index + 1, 'silent' );
@@ -171,7 +188,7 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
         quillInstanceRef.current = quill;
 
         if ( value ) {
-            quill.clipboard.dangerouslyPasteHTML( value );
+            quill.clipboard.dangerouslyPasteHTML( sanitizeHTML( value ) );
         }
 
         quill.on( 'text-change', ( delta, oldDelta, source ) => {
@@ -201,7 +218,7 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
         const quill = quillInstanceRef.current;
         if ( quill && value !== quill.root.innerHTML ) {
             const selection = quill.getSelection();
-            quill.clipboard.dangerouslyPasteHTML( value || '' );
+            quill.clipboard.dangerouslyPasteHTML( sanitizeHTML( value || '' ) );
             if ( selection ) {
                 quill.setSelection(
                     selection.index,
