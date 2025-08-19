@@ -3,6 +3,8 @@ import { customExpect } from '@utils/pwMatchers';
 import 'dotenv/config';
 const { CI, NON_HEADLESS, BASE_URL, SLOWMO, NO_SETUP, DOKAN_PRO } = process.env;
 
+console.log('base url', BASE_URL);
+
 export default defineConfig({
     /* test directory */
     testDir: 'tests/e2e',
@@ -81,7 +83,7 @@ export default defineConfig({
         /* Emulates 'prefers-colors-scheme' media feature, supported values are 'light', 'dark', 'no-preference' */
         // colorScheme: 'dark' ,
         /* Whether to run tests on headless or non-headless mode */
-        headless: !NON_HEADLESS,
+        headless: false,
         /* Whether to ignore HTTPS errors during navigation. */
         ignoreHTTPSErrors: true,
         /* Record trace only when retrying a test for the first time. */
@@ -127,7 +129,7 @@ export default defineConfig({
         {
             name: 'auth_setup',
             testMatch: ['_auth.setup.ts'],
-            dependencies: NO_SETUP ? [] : ['site_setup'],
+            dependencies: NO_SETUP === 'true' ? [] : ['site_setup'],
             // fullyParallel: true,
             retries: 1,
         },
@@ -136,7 +138,7 @@ export default defineConfig({
         {
             name: 'e2e_setup',
             testMatch: ['_env.setup.ts'],
-            dependencies: NO_SETUP ? [] : ['auth_setup'],
+            dependencies: NO_SETUP === 'true' ? [] : ['auth_setup'],
             fullyParallel: true,
             retries: 1,
         },
@@ -146,7 +148,7 @@ export default defineConfig({
             name: 'e2e_tests',
             testMatch: /.*\.spec\.ts/,
             /* whether not to run setup tests before running actual tests */
-            dependencies: NO_SETUP ? [] : ['e2e_setup'],
+            dependencies: NO_SETUP === 'true' ? [] : ['e2e_setup'],
             /* whether not to run teardown tests after running actual tests */
             // teardown: NO_SETUP ? undefined : 'coverage_report',
         },
