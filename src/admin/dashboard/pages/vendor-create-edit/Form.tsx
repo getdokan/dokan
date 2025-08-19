@@ -35,6 +35,7 @@ import { Slot } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
 import { useEffect, useState } from '@wordpress/element';
 import DokanModal from '@dokan/components/modals/DokanModal';
+import { applyFilters } from '@wordpress/hooks';
 
 interface Props {
     vendor: Vendor;
@@ -68,6 +69,25 @@ export default function Form( {
             ...updatableVendor,
             [ key ]: value,
         } );
+    };
+
+    // @ts-ignore
+    const commissionTypes: Array< Record< string, string > > = applyFilters(
+        'dokan_vendor_add_edit_commission_types',
+        [
+            {
+                label: __( 'Fixed', 'dokan-lite' ),
+                value: 'fixed',
+            },
+            {
+                label: __( 'Category Based', 'dokan-lite' ),
+                value: 'category_based',
+            },
+        ]
+    );
+
+    const getCommission = ( type ) => {
+        return commissionTypes.find( ( item ) => item.value === type );
     };
 
     const generatePassword = () => {
@@ -1382,22 +1402,16 @@ export default function Form( {
                                         'Select commission type',
                                         'dokan-lite'
                                     ) }
-                                    options={ [
-                                        {
-                                            label: __( 'Fixed', 'dokan-lite' ),
-                                            value: 'fixed',
-                                        },
-                                        {
-                                            label: __(
-                                                'Category Based',
-                                                'dokan-lite'
-                                            ),
-                                            value: 'category_based',
-                                        },
-                                    ] }
+                                    // @ts-ignore
+                                    value={ getCommission(
+                                        vendor?.admin_commission_type
+                                    ) }
+                                    // @ts-ignore
+                                    options={ commissionTypes }
                                     onChange={ ( data ) => {
                                         setData(
                                             'admin_commission_type',
+                                            // @ts-ignore
                                             data.value
                                         );
                                     } }
@@ -1410,11 +1424,6 @@ export default function Form( {
                                         <ToggleSwitch
                                             checked={ getResetSubCategory() }
                                             onChange={ () => {
-                                                // setData(
-                                                //     'reset_sub_category',
-                                                //     value
-                                                // );
-
                                                 setCommissionSubCategoryConfirm(
                                                     true
                                                 );
@@ -1500,20 +1509,25 @@ export default function Form( {
                                             ) }
                                         </label>
                                         <CategoryBasedCommissionPure
+                                            // @ts-ignore
                                             categories={ categories }
-                                            commissionValues={ [] }
-                                            currency={ '@' }
-                                            onCommissionChange={ ( data ) => {
-                                                console.log( data );
-                                            } }
-                                            checked={
-                                                vendor &&
-                                                vendor.hasOwnProperty(
-                                                    'reset_sub_category'
-                                                )
-                                                    ? vendor?.reset_sub_category
-                                                    : true
+                                            // @ts-ignore
+                                            commissionValues={
+                                                vendor?.admin_category_commission ||
+                                                []
                                             }
+                                            currency={
+                                                // @ts-ignore
+                                                window?.dokanAdminDashboard
+                                                    .currency
+                                            }
+                                            onCommissionChange={ ( data ) => {
+                                                setData(
+                                                    'admin_category_commission',
+                                                    data
+                                                );
+                                            } }
+                                            resetSubCategoryValue={ getResetSubCategory() }
                                         />
                                     </div>
                                 </>
@@ -1534,12 +1548,30 @@ export default function Form( {
                                     <div className="-ml-4 -mt-4">
                                         <FixedCommissionInput
                                             values={ {
-                                                admin_percentage: 10,
-                                                additional_fee: 500,
+                                                // @ts-ignore
+                                                admin_percentage:
+                                                    vendor?.admin_commission ||
+                                                    '',
+                                                // @ts-ignore
+                                                additional_fee:
+                                                    vendor?.admin_additional_fee ||
+                                                    '',
                                             } }
-                                            currency={ '@' }
+                                            currency={
+                                                // @ts-ignore
+                                                window?.dokanAdminDashboard
+                                                    .currency
+                                            }
                                             onValueChange={ ( data ) => {
-                                                console.log( data );
+                                                setCreateOrEditVendor( {
+                                                    ...vendor,
+                                                    // @ts-ignore
+                                                    admin_commission:
+                                                        data?.admin_percentage,
+                                                    // @ts-ignore
+                                                    admin_additional_fee:
+                                                        data?.additional_fee,
+                                                } );
                                             } }
                                         />
                                     </div>
@@ -1570,6 +1602,7 @@ export default function Form( {
                                 onChange={ ( e ) => {
                                     setData( 'show_email', e.target.checked );
                                 } }
+                                // @ts-ignore
                                 errors={ getError( 'show_email' ) }
                             />
                         </div>
