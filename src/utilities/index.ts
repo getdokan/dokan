@@ -3,3 +3,4 @@ export * from './Accounting';
 export * from '@woocommerce/date';
 export * from './hexToHls';
 export * from './Truncate';
+export * from './SanitizeHtml';
