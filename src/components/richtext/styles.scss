@@ -1,0 +1,25 @@
+.dokan-layout {
+    margin: 1rem 4rem;
+
+    .ql-container {
+        border-bottom-left-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
+        border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
+    }
+
+    /* Snow Theme */
+    .ql-snow.ql-toolbar {
+        display: block;
+        background: #F5F5F6;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+        border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
+    }
+
+    .ql-editor {
+        min-height: 18em;
+        &:focus-visible {
+            outline-color: var(--dokan-button-border-color, #7047EB) !important;
+        }
+    }
+}

@@ -2725,12 +2725,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "549cd3317ea2172fddeafd61df114018b547bd09"
+                "reference": "d0140c8aa97b744dd76318aac76eafe62099582b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/549cd3317ea2172fddeafd61df114018b547bd09",
-                "reference": "549cd3317ea2172fddeafd61df114018b547bd09",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/d0140c8aa97b744dd76318aac76eafe62099582b",
+                "reference": "d0140c8aa97b744dd76318aac76eafe62099582b",
                 "shasum": ""
             },
             "require": {
@@ -2784,7 +2784,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-07-17T08:00:26+00:00"
+            "time": "2025-07-24T06:01:07+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",
