@@ -3,10 +3,13 @@ import { SettingsProps } from '../../types';
 import CategoryBasedCommission from './Commission/CategoryBasedCommission';
 import CombineInput from './Commission/CombineInput';
 import CustomizeRadio from './CustomizeRadio';
+import DokanColorPicker from './DokanColorPicker';
+import DokanCopyButtonField from './DokanCopyButtonField';
 import DokanCurrency from './DokanCurrency';
 import DokanDoubleTextField from './DokanDoubleTextField';
 import DokanEmail from './DokanEmail';
 import DokanFieldLabel from './DokanFieldLabel';
+import DokanFileUploadField from './DokanFileUpload';
 import DokanHtmlField from './DokanHtmlField';
 import DokanInfoField from './DokanInfoField';
 import DokanMultiCheck from './DokanMultiCheck';
@@ -15,6 +18,7 @@ import DokanPassword from './DokanPassword';
 import DokanRadioCapsule from './DokanRadioCapsule';
 import DokanRefreshSelectField from './DokanRefreshSelectField';
 import DokanSelect from './DokanSelect';
+import DokanShowHideField from './DokanShowHideField';
 import DokanSwitch from './DokanSwitch';
 import DokanTel from './DokanTel';
 import DokanTextArea from './DokanTextArea';
@@ -154,7 +158,6 @@ const FieldParser = ( {
             );
         case 'base_field_label':
             return <DokanFieldLabel element={ element } />;
-        
         case 'html':
             return (
                 <DokanHtmlField
@@ -164,6 +167,14 @@ const FieldParser = ( {
                     getSetting={ getSetting }
                 />
             );
+        case 'show_hide':
+            return <DokanShowHideField element={ element } />;
+        case 'select_color_picker':
+            return <DokanColorPicker element={ element } />;
+        case 'copy_field':
+            return <DokanCopyButtonField element={ element } />;
+        case 'file_upload':
+            return <DokanFileUploadField element={ element } />;
 
         case 'repeater':
             return applyFilters(

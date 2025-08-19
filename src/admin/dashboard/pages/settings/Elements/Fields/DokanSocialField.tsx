@@ -10,11 +10,13 @@ const DokanSocialField = ( { element } ) => {
     }
 
     return (
-        <div className="flex justify-between gap-2 w-full">
+        <div className="flex justify-between flex-wrap gap-2 w-full">
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"
                 helperText={ element.description }
+                tooltip={ element.helper_text }
+                icon={ element?.icon }
             />
             <SocialButton
                 network={ element.network }

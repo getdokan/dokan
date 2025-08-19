@@ -48,7 +48,7 @@ export type SettingsElement = {
         label: string;
         value: string | number;
     };
-    documentationLink?: string;
+    doc_link?: string;
     css_class?: string;
     helper_text?: string;
 };

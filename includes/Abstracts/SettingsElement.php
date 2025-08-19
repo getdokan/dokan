@@ -85,6 +85,21 @@ abstract class SettingsElement {
 	 * @var string $dependency_key Dependency Key.
 	 */
 	public $dependency_key = '';
+    /**
+     * Page doc link.
+     *
+     * @var string|null $doc_link
+     */
+    protected ?string $doc_link = null;
+
+    /**
+     * Get the subpage doc link.
+     *
+     * @return string|null
+     */
+    public function get_doc_link(): ?string {
+        return $this->doc_link;
+    }
 
     /**
      * Help text of the settings element.
@@ -93,6 +108,17 @@ abstract class SettingsElement {
      */
     protected $tooltip = '';
 
+    /**
+     * Set the subpage doc link.
+     *
+     * @param string $doc_link
+     *  return SettingsElement
+     */
+    public function set_doc_link( string $doc_link ): SettingsElement {
+        $this->doc_link = $doc_link;
+
+        return $this;
+    }
 	/**
 	 * The constructor.
 	 *

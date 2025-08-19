@@ -7,6 +7,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\BaseFieldLabel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Checkbox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CategoryBasedCommission;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CombineInput;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\CopyField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Currency;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\DoubleTextField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\InfoField;
@@ -20,11 +21,14 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\RefreshSelectField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Repeater;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RichText;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Select;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\SelectColorPicker;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\ShowHide;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Text;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\CustomizeRadio;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\HtmlField;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\FileUpload;
 
 /**
  * Settings element Field.
@@ -80,6 +84,10 @@ class Field extends SettingsElement {
         'html'                      => HtmlField::class,
         'repeater'                  => Repeater::class,
         'rich_text'                 => RichText::class,
+        'show_hide'                 => ShowHide::class,
+        'select_color_picker'       => SelectColorPicker::class,
+        'copy_field'                => CopyField::class,
+        'file_upload'               => FileUpload::class,
 	);
 
 	/**

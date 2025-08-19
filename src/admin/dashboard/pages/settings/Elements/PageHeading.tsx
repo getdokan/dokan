@@ -1,10 +1,7 @@
 import { RawHTML } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
-import DocumentLink from '../../../../../components/Icons/DocumentLink';
-import { Tooltip } from '@getdokan/dokan-ui';
-import { Info } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
-import DokanTooltip from "../../../../../components/fields/DokanTooltip";
+import DokanTooltip from '../../../../../components/fields/DokanTooltip';
 import { FileSpreadsheet } from 'lucide-react';
 
 interface PageHeadingProps {

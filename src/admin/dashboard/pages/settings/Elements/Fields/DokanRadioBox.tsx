@@ -15,8 +15,10 @@ export default function DokanRadioBox( { element } ) {
         <div className="flex flex-col gap-2 w-full">
             <DokanFieldLabel
                 title={ element.title }
-                titleFontWeight="light"
+                titleFontWeight="bold"
                 helperText={ element.description }
+                tooltip={ element.helper_text }
+                icon={ element?.icon }
             />
             <div className="flex flex-wrap gap-4 mt-4">
                 { element.options?.map( ( option ) => {

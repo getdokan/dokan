@@ -1,4 +1,3 @@
-
 import {
     DokanCheckboxGroup,
     DokanFieldLabel,
@@ -19,8 +18,10 @@ export default function DokanMultiCheck( { element } ) {
         <div className="flex flex-col gap-2 p-5 w-full">
             <DokanFieldLabel
                 title={ element.title }
-                titleFontWeight="light"
+                titleFontWeight="bold"
                 helperText={ element.description }
+                tooltip={ element.helper_text }
+                icon={ element?.icon }
             />
             <DokanCheckboxGroup
                 options={
