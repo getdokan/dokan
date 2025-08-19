@@ -19,6 +19,7 @@ import DokanSwitch from './DokanSwitch';
 import DokanTel from './DokanTel';
 import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
+import DokanRichText from './DokanRichText';
 import RadioBox from './RadioBox';
 import DokanRepeater from "./DokanRepeater";
 
@@ -58,6 +59,19 @@ const FieldParser = ( {
         case 'textarea':
             return (
                 <DokanTextArea key={ element.hook_key } element={ element } />
+            );
+
+        case 'rich_text':
+            return applyFilters(
+                'dokan_admin_settings_rich_text_field_parser',
+                <DokanRichText
+                    element={ element }
+                    key={ element.hook_key }
+                    onValueChange={ onValueChange }
+                />,
+                element,
+                getSetting,
+                onValueChange
             );
 
         case 'radio_capsule':
