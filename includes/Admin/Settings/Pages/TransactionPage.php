@@ -182,6 +182,7 @@ class TransactionPage extends AbstractPage {
         $this
             ->set_title( esc_html__( 'Transaction', 'dokan-lite' ) )
             ->set_description( esc_html__( 'Configure transaction-related settings including commissions and fees.', 'dokan-lite' ) )
+            ->set_icon( 'ArrowRightLeft' )
             ->add( $commission_page );
     }
 
