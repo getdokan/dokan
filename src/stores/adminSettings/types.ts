@@ -51,8 +51,10 @@ export interface SettingsElement {
 
 export type SettingsState = {
     settings: SettingsElement[];
+    originalSettings: SettingsElement[];
     dependencies: SettingsElementDependency[];
     loading: boolean;
     saving: boolean;
     needSaving: boolean;
+    searchText: string;
 };
