@@ -319,9 +319,41 @@ Single Product Page.', 'dokan-lite'
                     ->set_default( 'off' )
             );
 
+        $wholesale = ElementFactory::sub_page(
+            'wholesale'
+        )
+            ->set_title( __( 'Wholesale', 'dokan-lite' ) )
+            ->set_description( __( 'You can configure wholesale settings for your store and allow vendors to operate on wholesale price and quantity.', 'dokan-lite' ) )
+            ->set_doc_link( 'https://wedevs.com/docs/dokan-lite/wholesale/' )
+            ->add(
+                ElementFactory::field( 'display_wholesale_pricing_to', 'radio_capsule' )
+                    ->set_title( __( 'Display Wholesale Pricing To', 'dokan-lite' ) )
+                    ->set_description( __( 'Define which user types can see discounted wholesale prices.', 'dokan-lite' ) )
+                    ->set_default( 'wholesale_customer' )
+                    ->add_option( __( 'Only Wholesale Customer', 'dokan-lite' ), 'wholesale_customer' )
+                    ->add_option( __( 'All Users', 'dokan-lite' ), 'all_users' )
+            )
+            ->add(
+                ElementFactory::field( 'wholesale_price_on_shop_archive', 'switch' )
+                    ->set_title( __( 'Wholesale Price on Shop Archive', 'dokan-lite' ) )
+                    ->set_description( __( 'Show in price column', 'dokan-lite' ) )
+                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                    ->set_default( 'off' )
+            )
+            ->add(
+                ElementFactory::field( 'need_approval_for_customer', 'switch' )
+                    ->set_title( __( 'Need Approval for Customer', 'dokan-lite' ) )
+                    ->set_description( __( 'Customer need admin approval for becoming a wholesale customer.', 'dokan-lite' ) )
+                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                    ->set_default( 'off' )
+            );
+
         $this->add( $product_advertisement )
             ->add( $printful_integration )
             ->add( $request_for_quote )
+            ->add( $wholesale )
             ->set_title( __( 'Product Settings', 'dokan-lite' ) )
             ->set_description( __( 'Configure product-related settings for your marketplace.', 'dokan-lite' ) )
             ->set_icon( 'dashicons dashicons-cart' );

@@ -1,9 +1,10 @@
+import { dispatch } from '@wordpress/data';
+import React from '@wordpress/element';
 import {
     DokanFieldLabel,
     DokanFileUpload,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanFileUploadField( { element } ) {
     if ( ! element.display ) {
@@ -16,7 +17,7 @@ export default function DokanFileUploadField( { element } ) {
     };
 
     return (
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-2 w-full p-5">
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"
@@ -28,6 +29,7 @@ export default function DokanFileUploadField( { element } ) {
                 onUrlImport={ ( url ) =>
                     onValueChange( { ...element, value: url } )
                 }
+                value={ element.value }
             />
         </div>
     );

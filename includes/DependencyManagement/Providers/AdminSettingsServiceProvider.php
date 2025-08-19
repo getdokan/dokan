@@ -6,6 +6,7 @@ use WeDevs\Dokan\Admin\Settings\Pages\GeneralPage;
 use WeDevs\Dokan\Admin\Settings\Pages\ProductPage;
 use WeDevs\Dokan\Admin\Settings\Pages\VendorPage;
 use WeDevs\Dokan\Admin\Settings\Pages\TransactionPage;
+use WeDevs\Dokan\Admin\Settings\Pages\AIAssistPage;
 use WeDevs\Dokan\Admin\Settings\Settings;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
@@ -24,6 +25,7 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
         ProductPage::class,
         VendorPage::class,
         TransactionPage::class,
+        AIAssistPage::class,
     ];
 
 	/**
