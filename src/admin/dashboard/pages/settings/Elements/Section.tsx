@@ -1,13 +1,9 @@
 import SettingsParser from './SettingsParser';
 import { SettingsProps } from '../types';
 import PageHeading from './PageHeading';
-import { __ } from "@wordpress/i18n";
+import { __ } from '@wordpress/i18n';
 
-const Section = ( {
-    element,
-    getSetting,
-    onValueChange,
-}: SettingsProps ): JSX.Element => {
+const Section = ( { element }: SettingsProps ): JSX.Element => {
     if ( ! element.display ) {
         return <></>;
     }
@@ -31,7 +27,10 @@ const Section = ( {
                 ) }
                 { element.children.length === 0 && (
                     <div className="p-4 text-gray-500">
-                        { __( 'No settings available in this section.', 'dokan-lite' ) }
+                        { __(
+                            'No settings available in this section.',
+                            'dokan-lite'
+                        ) }
                     </div>
                 ) }
                 { element.children.map( ( child ) => {
@@ -41,8 +40,6 @@ const Section = ( {
                             key={
                                 element.hook_key + '-' + child.id + '-parser'
                             }
-                            onValueChange={ onValueChange }
-                            getSetting={ getSetting }
                         />
                     );
                 } ) }

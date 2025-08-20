@@ -1,10 +1,16 @@
 import { ShowHideField } from '../../../../../../components/fields';
 import DokanFieldLabel from '../../../../../../components/fields/DokanFieldLabel';
+import { dispatch } from '@wordpress/data';
+import settingsStore from '../../../../../../stores/adminSettings';
 
 export default function DokanShowHideField( { element } ) {
     if ( ! element.display ) {
         return null;
     }
+    const onValueChange = ( updatedElement ) => {
+        // Dispatch the updated value to the settings store
+        dispatch( settingsStore ).updateSettingsValue( updatedElement );
+    };
 
     return (
         <div className="grid grid-cols-6 p-4 gap-4 w-full">
@@ -12,7 +18,7 @@ export default function DokanShowHideField( { element } ) {
                 <DokanFieldLabel
                     title={ element.title }
                     helperText={ element.description }
-                    tooltip={ element.help_text }
+                    tooltip={ element.helper_text }
                     titleFontWeight="bold"
                     imageUrl={ element?.image_url }
                 />
@@ -23,10 +29,7 @@ export default function DokanShowHideField( { element } ) {
                     disabled={ element.disabled }
                     placeholder={ element.placeholder }
                     onChange={ ( value ) =>
-                        element.onChange( {
-                            ...element,
-                            value,
-                        } )
+                        onValueChange( { ...element, value } )
                     }
                 />
             </div>

@@ -6,7 +6,7 @@ import EyeOffIcon from '../Icons/EyeOffIcon';
 
 interface ShowHideFieldProps {
     value: string;
-    label: string;
+    label?: string;
     tooltip?: React.ReactNode;
     disabled?: boolean;
     containerClassName?: string;

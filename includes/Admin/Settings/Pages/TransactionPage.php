@@ -133,8 +133,8 @@ class TransactionPage extends AbstractPage {
                 ElementFactory::field( 'commission_type', 'radio_capsule' )
                     ->set_title( esc_html__( 'Commission Type', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Select a commission type for your marketplace', 'dokan-lite' ) )
-                    ->add_option( esc_html__( 'Fixed', 'dokan-lite' ), 'fixed' )
-                    ->add_option( esc_html__( 'Category Based', 'dokan-lite' ), 'category_based' )
+                    ->add_option( esc_html__( 'Fixed', 'dokan-lite' ), 'fixed', 'Percent' )
+                    ->add_option( esc_html__( 'Category Based', 'dokan-lite' ), 'category_based', 'Box' )
                     ->set_default( $default_settings['commission_type'] )
                     ->set_value( $dokan_selling['commission_type'] ?? $default_settings['commission_type'] )
             )
@@ -142,8 +142,8 @@ class TransactionPage extends AbstractPage {
                 ElementFactory::field( 'admin_commission', 'combine_input' )
                     ->set_title( esc_html__( 'Admin Commission', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Amount you will get from sales in both percentage and fixed fee', 'dokan-lite' ) )
-                    ->add_dependency( 'commission.commission.commission_type', 'fixed', true, 'display', 'hide', '!=' )
-                    ->add_dependency( 'commission.commission.commission_type', 'fixed', true, 'display', 'show', '==' )
+                    ->add_dependency( 'commission.commission.commission_type', 'fixed', true, 'display', 'hide', '!==' )
+                    ->add_dependency( 'commission.commission.commission_type', 'fixed', true, 'display', 'show', '===' )
                     ->set_admin_percentage( $dokan_selling['admin_percentage'] ?? $default_settings['admin_percentage'] )
                     ->set_additional_fee( $dokan_selling['additional_fee'] ?? $default_settings['additional_fee'] )
                     ->set_value(
@@ -179,11 +179,175 @@ class TransactionPage extends AbstractPage {
         // Add the commission section to commission page
         $commission_page->add( $commission_section );
 
+        // Create fees subpage
+        $fees_page = ElementFactory::sub_page( 'fees' )
+            ->set_icon( 'FileSpreadsheet' )
+            ->set_title( __( 'Fees', 'dokan-lite' ) )
+            ->set_description( __( 'Configure how different types of fees are distributed between vendors and admin', 'dokan-lite' ) );
+
+        // Create fees section
+        $fees_section = ElementFactory::section( 'fees' )
+            ->add(
+                ElementFactory::field( 'shipping_fee', 'radio_capsule' )
+                    ->set_title( __( 'Shipping Fee', 'dokan-lite' ) )
+                    ->set_description( __( 'Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping method will not be included with shipping fees.', 'dokan-lite' ) )
+                    ->add_option( __( 'Vendor', 'dokan-lite' ), 'vendor', 'Users' )
+                    ->add_option( __( 'Admin', 'dokan-lite' ), 'admin', 'User' )
+                    ->set_default( 'vendor' )
+            )
+            ->add(
+                ElementFactory::field( 'product_tax_fee', 'radio_capsule' )
+                    ->set_title( __( 'Product Tax Fee', 'dokan-lite' ) )
+                    ->set_description( __( 'Who will be receiving the tax fees for products? Note that, shipping tax fees will not be included with product tax.', 'dokan-lite' ) )
+                    ->add_option( __( 'Vendor', 'dokan-lite' ), 'vendor', 'Users' )
+                    ->add_option( __( 'Admin', 'dokan-lite' ), 'admin', 'User' )
+                    ->set_default( 'vendor' )
+            )
+            ->add(
+                ElementFactory::field( 'shipping_tax_fee', 'radio_capsule' )
+                    ->set_title( __( 'Shipping Tax Fee', 'dokan-lite' ) )
+                    ->set_description( __( 'Who will be receiving the tax fees for shipping?', 'dokan-lite' ) )
+                    ->add_option( __( 'Vendor', 'dokan-lite' ), 'vendor', 'Users' )
+                    ->add_option( __( 'Admin', 'dokan-lite' ), 'admin', 'User' )
+                    ->set_default( 'vendor' )
+            );
+
+        // Add the fees section to fees page
+        $fees_page->add( $fees_section );
+
+        // Create withdraw subpage
+        $withdraw_page = ElementFactory::sub_page( 'withdraw' )
+            ->set_icon( 'FileSpreadsheet' )
+            ->set_title( __( 'Withdraw', 'dokan-lite' ) )
+            ->set_description( __( 'Set up available withdrawal methods and transaction conditions for vendors.', 'dokan-lite' ) )
+            ->set_doc_link( esc_url( 'https://wedevs.com/docs/dokan/vendor-settings/withdraw/' ) );
+
+        // Create withdraw section
+        $withdraw_section = ElementFactory::section( 'withdraw_methods_and_charges' )
+            ->add(
+                ElementFactory::field( 'withdraw_methods_and_charges', 'section_title' )
+                    ->set_title( __( 'Withdraw Methods and Charges', 'dokan-lite' ) )
+                    ->set_description( __( 'Select suitable withdraw methods and charges for vendors.', 'dokan-lite' ) )
+            )
+            ->add(
+                ElementFactory::field( 'paypal_withdraw', 'switch' )
+                    ->set_title( __( 'PayPal', 'dokan-lite' ) )
+                    ->set_description( __( 'Enable PayPal as a withdrawal method for vendors.', 'dokan-lite' ) )
+                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                    ->set_default( 'on' )
+            )
+            ->add(
+                ElementFactory::field( 'paypal_withdraw_charges', 'combine_input' )
+                    ->set_title( __( 'Withdraw charges', 'dokan-lite' ) )
+                    ->set_description( __( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ) )
+
+            )
+            ->add(
+                ElementFactory::field( 'skrill_withdraw', 'switch' )
+                    ->set_title( __( 'Skrill', 'dokan-lite' ) )
+                    ->set_description( __( 'Enable Skrill as a withdrawal method for vendors.', 'dokan-lite' ) )
+                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                    ->set_default( 'off' )
+            )
+            ->add(
+                ElementFactory::field( 'razorpay_withdraw', 'switch' )
+                    ->set_title( __( 'Razorpay', 'dokan-lite' ) )
+                    ->set_description( __( 'Enable Razorpay as a withdrawal method for vendors.', 'dokan-lite' ) )
+                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                    ->set_default( 'off' )
+            )
+            ->add(
+                ElementFactory::field( 'bank_transfer_withdraw', 'switch' )
+                    ->set_title( __( 'Bank Transfer', 'dokan-lite' ) )
+                    ->set_description( __( 'Enable Bank Transfer as a withdrawal method for vendors.', 'dokan-lite' ) )
+                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                    ->set_default( 'off' )
+            )
+            ->add(
+                ElementFactory::field( 'custom_withdraw', 'switch' )
+                    ->set_title( __( 'Custom', 'dokan-lite' ) )
+                    ->set_description( __( 'Enable Custom withdrawal method for vendors.', 'dokan-lite' ) )
+                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                    ->set_default( 'on' )
+            )
+            ->add(
+                ElementFactory::field( 'custom_method_name', 'text' )
+                    ->set_title( __( 'Custom Method Name', 'dokan-lite' ) )
+                    ->set_description( __( 'This will be the title of the custom withdraw method.', 'dokan-lite' ) )
+                    ->set_placeholder( __( 'Type something', 'dokan-lite' ) )
+            )
+            ->add(
+                ElementFactory::field( 'custom_method_type', 'text' )
+                    ->set_title( __( 'Custom Method Type', 'dokan-lite' ) )
+                    ->set_description( __( 'Custom Withdraw method type.', 'dokan-lite' ) )
+                    ->set_placeholder( __( 'e.g. Email or Phone Number', 'dokan-lite' ) )
+            )
+            ->add(
+                ElementFactory::field( 'custom_withdraw_charges', 'combine_input' )
+                    ->set_title( __( 'Withdraw charges', 'dokan-lite' ) )
+                    ->set_description( __( 'Set withdrawal charges for Custom method.', 'dokan-lite' ) )
+
+
+            )
+            ->add(
+                ElementFactory::field( 'minimum_withdraw_limit', 'number' )
+                    ->set_title( __( 'Minimum Withdraw Limit', 'dokan-lite' ) )
+                    ->set_description( __( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ) )
+                    ->set_postfix( __( '$', 'dokan-lite' ) )
+                    ->set_default( '50' )
+            )
+            ->add(
+                ElementFactory::field( 'cod_payments', 'radio_capsule' )
+                    ->set_title( __( 'COD Payments', 'dokan-lite' ) )
+                    ->set_description( __( 'If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.', 'dokan-lite' ) )
+                    ->add_option( __( 'Include', 'dokan-lite' ), 'include' )
+                    ->add_option( __( 'Exclude', 'dokan-lite' ), 'exclude' )
+                    ->set_default( 'include' )
+            )
+            ->add(
+                ElementFactory::field( 'withdraw_threshold', 'number' )
+                    ->set_title( __( 'Withdraw Threshold', 'dokan-lite' ) )
+                    ->set_description( __( 'Days to wait before users can withdraw from completed orders. Set to "0" to disable the waiting period.', 'dokan-lite' ) )
+                    ->set_postfix( __( 'Days', 'dokan-lite' ) )
+                    ->set_placeholder( __( 'e.g 2', 'dokan-lite' ) )
+                    ->set_default( '0' )
+            )
+            ->add(
+                ElementFactory::field( 'withdraw_option_visibility', 'switch' )
+                    ->set_title( __( 'Withdraw Option Visibility', 'dokan-lite' ) )
+                    ->set_description( __( 'withdraw option (when vendor is getting commission automatically)', 'dokan-lite' ) )
+                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                    ->set_default( 'off' )
+            )
+            ->add(
+                ElementFactory::field( 'manual_withdraw', 'checkbox' )
+                    ->set_title( __( 'Manual Withdraw', 'dokan-lite' ) )
+                    ->set_description( __( 'Allow manual withdrawal process for vendors.', 'dokan-lite' ) )
+                    ->set_default( 'on' )
+            )
+            ->add(
+                ElementFactory::field( 'auto_withdraw', 'checkbox' )
+                    ->set_title( __( 'Schedule Disbursement or Auto Withdraw Process for Vendors', 'dokan-lite' ) )
+                    ->set_description( __( 'Admin can make multiple schedules but vendor can choose anyone.', 'dokan-lite' ) )
+                    ->set_default( 'off' )
+            );
+
+        // Add withdraw section to withdraw page
+        $withdraw_page->add( $withdraw_section );
+
         $this
             ->set_title( esc_html__( 'Transaction', 'dokan-lite' ) )
             ->set_description( esc_html__( 'Configure transaction-related settings including commissions and fees.', 'dokan-lite' ) )
             ->set_icon( 'ArrowRightLeft' )
-            ->add( $commission_page );
+            ->add( $commission_page )
+            ->add( $fees_page )
+            ->add( $withdraw_page );
     }
 
     /**

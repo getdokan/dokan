@@ -29,6 +29,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Text;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\CustomizeRadio;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\HtmlField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\FileUpload;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\TextArea;
 
 /**
  * Settings element Field.
@@ -88,6 +89,7 @@ class Field extends SettingsElement {
         'select_color_picker'       => SelectColorPicker::class,
         'copy_field'                => CopyField::class,
         'file_upload'               => FileUpload::class,
+        'textarea' => TextArea::class,
 	);
 
 	/**

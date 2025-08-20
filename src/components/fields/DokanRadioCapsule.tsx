@@ -1,11 +1,12 @@
 import { twMerge } from 'tailwind-merge';
 import { useEffect, useRef, useState } from '@wordpress/element';
+import LucideIcon from '../Icons/LucideIcon';
 
 export interface DokanRadioCapsuleProps {
     options: Array< {
         value: string;
         title: string;
-        icon?: React.ReactNode;
+        icon?: string;
     } >;
     selected: string;
     onChange: ( value: string ) => void;
@@ -38,6 +39,18 @@ const DokanRadioCapsule = ( {
     const handleChange = ( value: string ) => {
         setSelectedValue( value );
         onChange( value );
+    };
+
+    // if icon is a string, then call lucide icon component
+    const renderIcon = ( icon: React.ReactNode | string ) => {
+        if ( typeof icon === 'string' ) {
+            // icon as Lucide icon component name
+            const IconComponent = ( window as any )[ icon ];
+            if ( IconComponent ) {
+                return <IconComponent className="w-4 h-4" />;
+            }
+        }
+        return icon;
     };
 
     const handleKeyDown = ( event: React.KeyboardEvent, index: number ) => {
@@ -120,12 +133,11 @@ const DokanRadioCapsule = ( {
                     onFocus={ () => handleFocus( index ) }
                 >
                     { option?.icon && (
-                        <span
-                            className="w-4 h-4 flex items-center justify-center"
-                            aria-hidden="true"
-                        >
-                            { option.icon }
-                        </span>
+                        <LucideIcon
+                            iconName={ option.icon }
+                            className={ 'w-4 h-4' }
+                            fallbackIcon={ 'Home' }
+                        />
                     ) }
                     { option?.title }
                 </button>

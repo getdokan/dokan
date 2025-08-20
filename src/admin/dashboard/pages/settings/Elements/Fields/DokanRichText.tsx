@@ -2,8 +2,10 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { DokanFieldLabel } from '../../../../../../components/fields';
 import RichText from '../../../../../../components/richtext/RichText';
+import { dispatch } from '@wordpress/data';
+import settingsStore from '../../../../../../stores/adminSettings';
 
-const DokanRichText = ( { element, onValueChange } ) => {
+const DokanRichText = ( { element } ) => {
     if ( ! element.display ) {
         return <></>;
     }
@@ -11,6 +13,10 @@ const DokanRichText = ( { element, onValueChange } ) => {
     const [ value, setValue ] = useState< string >(
         element?.value || element?.default || ''
     );
+    const onValueChange = ( updatedElement ) => {
+        // Dispatch the updated value to the settings store
+        dispatch( settingsStore ).updateSettingsValue( updatedElement );
+    };
 
     const handleChange = ( newValue: string ) => {
         setValue( newValue );

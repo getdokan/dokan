@@ -180,7 +180,7 @@ const CardRadioOption = ( {
             </div>
 
             { option.image && (
-                <div className="pt-4">
+                <div className="p-6">
                     <img
                         src={ option.image }
                         alt={ option.title }
