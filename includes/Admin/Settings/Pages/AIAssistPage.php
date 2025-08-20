@@ -232,8 +232,8 @@ class AIAssistPage extends AbstractPage {
 
         $this->add( $product_generation )
             ->add( $vendor_onboarding )
+            ->set_icon( 'Brain' )
             ->set_title( __( 'AI Assist', 'dokan-lite' ) )
-            ->set_description( __( 'Configure AI-powered features to enhance your marketplace experience.', 'dokan-lite' ) )
-            ->set_icon( 'dashicons dashicons-admin-generic' );
+            ->set_description( __( 'Configure AI-powered features to enhance your marketplace experience.', 'dokan-lite' ) );
     }
 }
