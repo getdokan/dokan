@@ -14,6 +14,7 @@ export default function DokanShowHideField( { element } ) {
                     helperText={ element.description }
                     tooltip={ element.help_text }
                     titleFontWeight="bold"
+                    imageUrl={ element?.image_url }
                 />
             </div>
             <div className="md:col-span-4 col-span-6">

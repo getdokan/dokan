@@ -1,9 +1,9 @@
+import { dispatch } from '@wordpress/data';
 import {
-    DokanFieldLabel,
     DokanRadioCapsule as BaseRadioCapsule,
+    DokanFieldLabel,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanRadioCapsule( { element } ) {
     if ( ! element.display ) {
@@ -21,7 +21,7 @@ export default function DokanRadioCapsule( { element } ) {
                 titleFontWeight="bold"
                 helperText={ element.description }
                 tooltip={ element.helper_text }
-                icon={ element?.icon }
+                imageUrl={ element?.image_url }
             />
             <BaseRadioCapsule
                 options={

@@ -23,7 +23,7 @@ export default function DokanFileUploadField( { element } ) {
                 titleFontWeight="bold"
                 helperText={ element.description }
                 tooltip={ element.helper_text }
-                icon={ element?.icon }
+                imageUrl={ element?.image_url }
             />
             <DokanFileUpload
                 onUrlImport={ ( url ) =>

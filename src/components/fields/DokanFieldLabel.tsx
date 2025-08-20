@@ -1,5 +1,4 @@
 import { RawHTML } from '@wordpress/element';
-import parse from 'html-react-parser';
 import { twMerge } from 'tailwind-merge';
 import DokanTooltip from './DokanTooltip';
 
@@ -13,6 +12,7 @@ interface InputLabelProps {
     htmlFor?: string;
     wrapperClassNames?: string;
     labelClassName?: string;
+    imageUrl?: string;
 }
 
 const DokanBaseFieldLabel = ( {
@@ -20,11 +20,11 @@ const DokanBaseFieldLabel = ( {
     titleFontWeight = 'bold',
     tooltip,
     suffix,
-    icon,
     helperText,
     htmlFor,
     wrapperClassNames,
     labelClassName = '',
+    imageUrl,
 }: InputLabelProps ) => {
     return (
         <div
@@ -33,8 +33,8 @@ const DokanBaseFieldLabel = ( {
                 wrapperClassNames
             ) }
         >
-            { icon && (
-                <div className="flex items-center ">{ parse( icon ) }</div>
+            { imageUrl && (
+                <img src={ imageUrl } alt={ title } className="max-w-20" />
             ) }
             <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-4">

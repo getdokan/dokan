@@ -1,11 +1,11 @@
+import { dispatch } from '@wordpress/data';
 import React from 'react';
+import { twMerge } from 'tailwind-merge';
 import {
     DokanCheckboxGroup as BaseCheckboxGroup,
     DokanFieldLabel,
 } from '../../../../../../components/fields';
-import { twMerge } from 'tailwind-merge';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanCheckboxGroup( { element, className } ) {
     const onValueChange = ( updatedElement ) => {
@@ -20,7 +20,7 @@ export default function DokanCheckboxGroup( { element, className } ) {
                 titleFontWeight="bold"
                 helperText={ element.description }
                 tooltip={ element.helper_text }
-                icon={ element?.icon }
+                imageUrl={ element?.image_url }
             />
             <BaseCheckboxGroup
                 name={ element.id }

@@ -1,5 +1,5 @@
-import { twMerge } from 'tailwind-merge';
 import parse from 'html-react-parser';
+import { twMerge } from 'tailwind-merge';
 import { SettingsElement, SettingsProps } from '../../types';
 
 interface DokanHtmlElement extends SettingsElement {
