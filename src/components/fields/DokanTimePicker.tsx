@@ -1,44 +1,43 @@
 import { TimePicker } from '@wordpress/components';
-import { useState } from '@wordpress/element';
+import { twMerge } from 'tailwind-merge';
+import {useState} from "@wordpress/element";
 
 interface DokanTimePickerProps {
-    currentTime?: Date;
-    onChange?: ( newTime: Date | null ) => void;
+    containerClassName?: string;
+    value?: { hours: number; minutes: number };
+    onChange?: ( value: { hours: number; minutes: number } ) => void;
     is12Hour?: boolean;
-    disabled?: boolean;
+    label?: string;
+    defaultValue?: { hours: number; minutes: number };
+    minutesProps?: any;
     className?: string;
 }
 
 const DokanTimePicker = ( {
-    currentTime,
+    containerClassName,
+    value,
     onChange,
     is12Hour = true,
-    disabled = false,
-    className = '',
+    label,
+    defaultValue = {
+        hours: new Date().getHours(),
+        minutes: new Date().getMinutes(),
+    },
+  ...props
 }: DokanTimePickerProps ) => {
-    // Use internal state if no external currentTime is provided
-    const [ internalTime, setInternalTime ] = useState< Date >( new Date() );
-    
-    // Determine which time value to use
-    const timeValue = currentTime !== undefined ? currentTime : internalTime;
-    
-    // Handle change events
-    const handleTimeChange = ( newTime: Date | null ) => {
-        if ( onChange ) {
-            onChange( newTime );
-        } else {
-            // If no external onChange is provided, update internal state
-            setInternalTime( newTime || new Date() );
-        }
-    };
-
     return (
-        <div className={ className }>
+        <div
+            className={ twMerge(
+                'inline-flex flex-col items-start gap-2',
+                containerClassName
+            ) }
+        >
             <TimePicker.TimeInput
-                currentTime={ timeValue }
-                onChange={ handleTimeChange }
+                value={ value || defaultValue }
+                onChange={ onChange }
                 is12Hour={ is12Hour }
-                disabled={ disabled }
+                label={ label }
+                { ...props }
             />
         </div>
     );

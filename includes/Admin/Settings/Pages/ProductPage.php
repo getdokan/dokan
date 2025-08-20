@@ -354,8 +354,8 @@ Single Product Page.', 'dokan-lite'
             ->add( $printful_integration )
             ->add( $request_for_quote )
             ->add( $wholesale )
+            ->set_icon( 'Box' )
             ->set_title( __( 'Product Settings', 'dokan-lite' ) )
-            ->set_description( __( 'Configure product-related settings for your marketplace.', 'dokan-lite' ) )
-            ->set_icon( 'dashicons dashicons-cart' );
+            ->set_description( __( 'Configure product-related settings for your marketplace.', 'dokan-lite' ) );
     }
 }

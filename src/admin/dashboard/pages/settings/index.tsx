@@ -181,8 +181,6 @@ const SettingsPage = () => {
             allSettings
         );
 
-        console.log( 'allSettings', allSettings );
-
         setIsSaving( true );
         dispatch( settingsStore )
             .saveSettings( allSettings )
