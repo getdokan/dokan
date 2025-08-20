@@ -44,9 +44,10 @@ class VendorNavMenuChecker {
     /**
      * Constructor.
      */
-
+    
     public function __construct() {
         add_filter( 'dokan_get_dashboard_nav', [ $this, 'convert_to_react_menu' ], 999 );
+        add_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5, 3 );
         add_filter( 'dokan_admin_notices', [ $this, 'display_notice' ] );
         add_action( 'dokan_status_after_describing_elements', [ $this, 'add_status_section' ] );
     }
@@ -85,6 +86,66 @@ class VendorNavMenuChecker {
                 return $item;
             }, $menu_items
         );
+    }
+
+    /**
+     * Rewrite URL to React route if applicable.
+     *
+     * @since 4.0.0
+     *
+     * @param string $url URL.
+     * @param string $name Name.
+     * @param bool $new_url New URL.
+     *
+     * @return string
+     */
+
+    public function maybe_rewrite_to_react_route( string $url, $name, $new_url ): string {
+        $name = (string) $name;
+        if ( $name === '' || $name === 'new' ) {
+            return $url;
+        }
+        if ( $new_url ) {
+            return $url;
+        }
+        if ( strpos( $url, '#' ) !== false ) {
+            return $url;
+        }
+
+        // static $in_progress = false;
+        // if ( $in_progress ) {
+        //     return $url;
+        // }
+
+        // $in_progress = true;
+
+        $removed_nav = remove_filter( 'dokan_get_dashboard_nav', [ $this, 'convert_to_react_menu' ], 999 );
+        $removed_url = remove_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5 );
+
+        try {
+            $top = strtok( trim( $name, '/' ), '/' );
+            $menus = dokan_get_dashboard_nav();
+            if ( empty( $menus[ $top ]['react_route'] ) ) {
+                return $url;
+            }
+
+            $route = $menus[ $top ]['react_route'];
+            if ( ! $this->is_dependency_resolved( $route ) ) {
+                return $url;
+            }
+
+            // Build react URL
+            $react_url = $this->get_url_for_route( $route );
+            return $react_url ?: $url;
+        } finally {
+            if ( $removed_nav ) {
+                add_filter( 'dokan_get_dashboard_nav', [ $this, 'convert_to_react_menu' ], 999 );
+            }
+            if ( $removed_url ) {
+                add_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5, 3 );
+            }
+            $in_progress = false;
+        }
     }
 
     /**
