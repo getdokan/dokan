@@ -74,7 +74,8 @@ export default defineConfig({
         /* Emulates 'prefers-colors-scheme' media feature, supported values are 'light', 'dark', 'no-preference' */
         // colorScheme: 'dark' ,
         /* Whether to run tests on headless or non-headless mode */
-        headless: !NON_HEADLESS,
+
+        headless: NON_HEADLESS !== 'false', // Because NON_HEADLESS is a string, we convert it to boolean
         /* Whether to ignore HTTPS errors during navigation. */
         ignoreHTTPSErrors: true,
         /* Record trace only when retrying a test for the first time. */
