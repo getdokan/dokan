@@ -1,9 +1,8 @@
 import { defineConfig, devices, expect } from '@playwright/test';
+import { parseBoolean } from '@utils/helpers';
 import { customExpect } from '@utils/pwMatchers';
 import 'dotenv/config';
 const { CI, NON_HEADLESS, BASE_URL, SLOWMO, NO_SETUP, DOKAN_PRO } = process.env;
-
-console.log('base url', BASE_URL);
 
 export default defineConfig({
     /* test directory */
@@ -41,16 +40,16 @@ export default defineConfig({
     /* Fail the build on CI if you accidentally left test-only in the source code. */
     // forbidOnly     : !!CI,
     /* The number of times to repeat each test, useful for debugging flaky tests. */
-    repeatEach: CI ? 0 : 0,
+    repeatEach: parseBoolean(CI) ? 0 : 0,
     /* The maximum number of retry attempts given to failed tests.  */
-    retries: CI ? 1 : 0,
+    retries: parseBoolean(CI) ? 1 : 0,
     /* Opt out of parallel tests on CI. */
-    workers: CI ? 4 : 4,
+    workers: parseBoolean(CI) ? 4 : 4,
     /* Whether to report slow test files. Pass null to disable this feature. */
     reportSlowTests: { max: 2, threshold: 25 },
     /* Configure reporters */
-    reporter: CI
-        ? [
+    reporter: parseBoolean(CI)
+        ? [ 
               //   ['github'],
               //   ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
               ['blob', { open: 'outputDir', outputDir: 'playwright-report/e2e/blob-report' }],
@@ -83,7 +82,7 @@ export default defineConfig({
         /* Emulates 'prefers-colors-scheme' media feature, supported values are 'light', 'dark', 'no-preference' */
         // colorScheme: 'dark' ,
         /* Whether to run tests on headless or non-headless mode */
-        headless: false,
+        headless: parseBoolean(NON_HEADLESS),
         /* Whether to ignore HTTPS errors during navigation. */
         ignoreHTTPSErrors: true,
         /* Record trace only when retrying a test for the first time. */
@@ -100,7 +99,7 @@ export default defineConfig({
             fullPage: true,
         },
         /* Record video only when retrying a test for the first time. */
-        video: DOKAN_PRO ? 'off' : 'on-first-retry', // to reduce artifacts size in CI for dokan-pro
+        video: parseBoolean(DOKAN_PRO) ? 'off' : 'on-first-retry', // to reduce artifacts size in CI for dokan-pro
         /* Size of viewport */
         // viewport: { width: 1420, height: 900 }, // default 1280x720
         /* whether to slow down test execution by provided seconds */
@@ -129,7 +128,7 @@ export default defineConfig({
         {
             name: 'auth_setup',
             testMatch: ['_auth.setup.ts'],
-            dependencies: NO_SETUP === 'true' ? [] : ['site_setup'],
+            dependencies: parseBoolean(NO_SETUP) ? [] : ['site_setup'],
             // fullyParallel: true,
             retries: 1,
         },
@@ -138,7 +137,7 @@ export default defineConfig({
         {
             name: 'e2e_setup',
             testMatch: ['_env.setup.ts'],
-            dependencies: NO_SETUP === 'true' ? [] : ['auth_setup'],
+            dependencies: parseBoolean(NO_SETUP) ? [] : ['auth_setup'],
             fullyParallel: true,
             retries: 1,
         },
@@ -148,7 +147,7 @@ export default defineConfig({
             name: 'e2e_tests',
             testMatch: /.*\.spec\.ts/,
             /* whether not to run setup tests before running actual tests */
-            dependencies: NO_SETUP === 'true' ? [] : ['e2e_setup'],
+            dependencies: parseBoolean(NO_SETUP) ? [] : ['e2e_setup'],
             /* whether not to run teardown tests after running actual tests */
             // teardown: NO_SETUP ? undefined : 'coverage_report',
         },
