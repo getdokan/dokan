@@ -1,8 +1,8 @@
+import { MaskedInput } from '@getdokan/dokan-ui';
+import { dispatch } from '@wordpress/data';
 import React from 'react';
 import { DokanFieldLabel } from '../../../../../../components/fields';
-import { MaskedInput } from '@getdokan/dokan-ui';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanCurrency( { element } ) {
     if ( ! element.display ) {
@@ -28,7 +28,7 @@ export default function DokanCurrency( { element } ) {
                 titleFontWeight="bold"
                 helperText={ element.description }
                 tooltip={ element.helper_text }
-                icon={ element?.icon }
+                imageUrl={ element?.image_url }
             />
             <MaskedInput
                 value={ element.value }

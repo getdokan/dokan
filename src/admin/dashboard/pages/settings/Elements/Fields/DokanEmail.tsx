@@ -1,10 +1,10 @@
+import { dispatch } from '@wordpress/data';
 import React from 'react';
 import {
     DokanFieldLabel,
     TextField,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanEmail( { element } ) {
     if ( ! element.display ) {
@@ -23,7 +23,7 @@ export default function DokanEmail( { element } ) {
                 titleFontWeight="bold"
                 helperText={ element.description }
                 tooltip={ element.helper_text }
-                icon={ element?.icon }
+                imageUrl={ element.image_url }
             />
             <TextField
                 value={ element.value }

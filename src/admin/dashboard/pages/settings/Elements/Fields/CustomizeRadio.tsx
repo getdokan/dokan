@@ -1,9 +1,9 @@
+import { dispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { SettingsProps } from '../../types';
-import { SettingsElementOption } from '../../../../../../stores/adminSettings/types';
 import { DokanFieldLabel } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
+import { SettingsElementOption } from '../../../../../../stores/adminSettings/types';
+import { SettingsProps } from '../../types';
 
 export interface RadioOption {
     value: string | number;
@@ -302,6 +302,7 @@ const CustomizeRadio = ( { element }: SettingsProps ) => {
                 title={ element.title || '' }
                 titleFontWeight="bold"
                 helperText={ element.description }
+                imageUrl={ element?.image_url }
             />
             <div className="mt-4">
                 <CustomizeRadioCore

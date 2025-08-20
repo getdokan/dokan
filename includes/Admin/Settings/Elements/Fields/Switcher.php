@@ -25,12 +25,6 @@ class Switcher extends Radio {
      */
     protected $states = array();
 
-    /**
-     * Image URL.
-     *
-     * @var string $image_url Image URL.
-     */
-    protected $image_url = '';
 
     /**
      * Get options.
@@ -58,31 +52,7 @@ class Switcher extends Radio {
         return $this;
     }
 
-    /**
-     * Get image url data.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return string
-     */
-    public function get_image_url(): string {
-        return $this->image_url;
-    }
 
-    /**
-     * Set image url data.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $url Getting image source url
-     *
-     * @return Switcher
-     */
-    public function set_image_url( string $url ): Switcher {
-        $this->image_url = $url;
-
-        return $this;
-    }
 
     /**
      * Get active value.

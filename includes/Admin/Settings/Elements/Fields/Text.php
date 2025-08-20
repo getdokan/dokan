@@ -65,6 +65,13 @@ class Text extends Field {
      * @var mixed $prefix
      */
     protected $prefix = '';
+
+    /**
+     * Image URL.
+     *
+     * @var string $image_url Image URL.
+     */
+    protected $image_url = '';
     /**
      * Constructor.
      *
@@ -172,6 +179,32 @@ class Text extends Field {
     }
 
     /**
+     * Get image url data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_image_url(): string {
+        return $this->image_url;
+    }
+
+    /**
+     * Set image url data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $url Getting image source url
+     *
+     * @return Text
+     */
+    public function set_image_url( string $url ): Text {
+        $this->image_url = $url;
+
+        return $this;
+    }
+
+    /**
      * Set readonly flag.
      *
      * @param bool $is_readonly Readonly flag.
@@ -276,7 +309,7 @@ class Text extends Field {
         $data['helper_text'] = $this->get_helper_text();
         $data['postfix'] = $this->get_postfix();
         $data['prefix'] = $this->get_prefix();
-
+        $data['image_url'] = $this->get_image_url();
         return $data;
     }
 

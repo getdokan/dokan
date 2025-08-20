@@ -1,9 +1,9 @@
+import { dispatch } from '@wordpress/data';
 import {
-    DokanFieldLabel,
     DokanTextArea as BasicTextArea,
+    DokanFieldLabel,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanTextArea( { element } ) {
     if ( ! element.display ) {
@@ -21,7 +21,7 @@ export default function DokanTextArea( { element } ) {
                 titleFontWeight="bold"
                 helperText={ element.description }
                 tooltip={ element.helper_text }
-                icon={ element?.icon }
+                imageUrl={ element?.image_url }
             />
             <BasicTextArea
                 value={ element.value }

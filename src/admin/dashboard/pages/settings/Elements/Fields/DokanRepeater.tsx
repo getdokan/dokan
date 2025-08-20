@@ -1,13 +1,13 @@
-import { useState, useEffect } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { X, Trash, Menu, Pencil, Check, Plus } from 'lucide-react';
+import { Check, Menu, Pencil, Plus, Trash, X } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import SortableList from '../../../../../../components/sortable-list'
 import { DokanFieldLabel } from '../../../../../../components/fields';
-import { SettingsProps } from '../../types';
-import TextField from "../../../../../../components/fields/TextField";
-import DokanModal from "../../../../../../components/modals/DokanModal";
+import TextField from '../../../../../../components/fields/TextField';
+import DokanModal from '../../../../../../components/modals/DokanModal';
+import SortableList from '../../../../../../components/sortable-list';
 import { snakeCase } from '../../../../../../utilities/ChangeCase';
+import { SettingsProps } from '../../types';
 
 interface RepeaterItemData {
     id: string;
@@ -15,7 +15,6 @@ interface RepeaterItemData {
     title: string;
     required?: boolean;
 }
-
 
 // Individual Repeater Item Component
 const RepeaterItem = ( {
@@ -45,13 +44,13 @@ const RepeaterItem = ( {
 
     const handleSave = () => {
         const trimmedValue = editValue.trim();
-        
+
         // Validate that the field is not empty
         if ( trimmedValue === '' ) {
             setHasValidationError( true );
             return;
         }
-        
+
         setHasValidationError( false );
         const updatedItem = {
             ...item,
@@ -93,12 +92,12 @@ const RepeaterItem = ( {
                                 setEditValue( val );
                                 setHasBeenModified( true );
                             } }
-                            inputClassName={
-                                twMerge(
-                                    "bg-white border-[#E9E9E9] rounded-[5px] h-10 px-4 text-[#25252D] text-sm border-[#7047eb]",
-                                    hasBeenModified && !editValue && 'border-red-500 hover:border-red-500',
-                                )
-                            }
+                            inputClassName={ twMerge(
+                                'bg-white border-[#E9E9E9] rounded-[5px] h-10 px-4 text-[#25252D] text-sm border-[#7047eb]',
+                                hasBeenModified &&
+                                    ! editValue &&
+                                    'border-red-500 hover:border-red-500'
+                            ) }
                         />
                     ) : (
                         <span className="text-sm font-medium text-[#25252D]">
@@ -124,23 +123,24 @@ const RepeaterItem = ( {
                                 className="action-icon-wrapper cancel-icon-wrapper p-1.5 border-none rounded hover:bg-gray-100 transition-colors"
                                 title={ __( 'Cancel', 'dokan-lite' ) }
                             >
-                                <X onClick={ handleCancel } size={ 16 } color="#828282" />
+                                <X
+                                    onClick={ handleCancel }
+                                    size={ 16 }
+                                    color="#828282"
+                                />
                             </button>
                         ) }
                         <button
                             onClick={ handleSave }
                             className={ twMerge(
-                                "action-icon-wrapper check-icon-wrapper p-1.5 border rounded transition-colors",
+                                'action-icon-wrapper check-icon-wrapper p-1.5 border rounded transition-colors',
                                 ! editValue.trim()
-                                    ? "border-gray-200 bg-gray-100 cursor-not-allowed opacity-50"
-                                    : "border-gray-300 hover:bg-gray-100",
+                                    ? 'border-gray-200 bg-gray-100 cursor-not-allowed opacity-50'
+                                    : 'border-gray-300 hover:bg-gray-100'
                             ) }
                             title={ __( 'Save', 'dokan-lite' ) }
                         >
-                            <Check
-                                size={ 16 }
-                                color={ '#828282' }
-                            />
+                            <Check size={ 16 } color={ '#828282' } />
                         </button>
                     </>
                 ) }
@@ -148,10 +148,8 @@ const RepeaterItem = ( {
                 <div
                     className={ twMerge(
                         'relative flex items-center gap-2',
-                        item.required &&
-                        'cursor-not-allowed opacity-50',
-                        ! item.required &&
-                        'cursor-grab active:cursor-grabbing',
+                        item.required && 'cursor-not-allowed opacity-50',
+                        ! item.required && 'cursor-grab active:cursor-grabbing',
                         ! item.required && 'drag-handle'
                     ) }
                     data-drag-handle="true"
@@ -185,29 +183,39 @@ const RepeaterItem = ( {
 };
 
 // Main DokanRepeater Component
-const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) => {
-    const [ items, setItems ] = useState< RepeaterItemData[] >( 
-        element?.value || element?.default || [] 
+const DokanRepeater = ( {
+    element,
+    onValueChange,
+    getSetting,
+}: SettingsProps ) => {
+    const [ items, setItems ] = useState< RepeaterItemData[] >(
+        element?.value || element?.default || []
     );
-    const [ newItemIds, setNewItemIds ] = useState< Set< string > >( new Set() );
-    const [ deleteConfirmItem, setDeleteConfirmItem ] = useState< string | null >( null );
+    const [ newItemIds, setNewItemIds ] = useState< Set< string > >(
+        new Set()
+    );
+    const [ deleteConfirmItem, setDeleteConfirmItem ] = useState<
+        string | null
+    >( null );
 
     // Update local state when element changes
     useEffect( () => {
         // Filter out items with empty titles (keep only items with content or required items)
-        const filteredItems = element.value?.filter( item =>
-            item.title.trim() !== '' || item.required
+        const filteredItems = element.value?.filter(
+            ( item ) => item.title.trim() !== '' || item.required
         );
 
         // Only update if there are items to remove
-        if ( element.value?.length && filteredItems.length !== element.value?.length ) {
+        if (
+            element.value?.length &&
+            filteredItems.length !== element.value?.length
+        ) {
             setItems( filteredItems );
             onValueChange( {
                 ...element,
                 value: filteredItems,
             } );
         }
-
     }, [] );
 
     if ( ! element.display ) {
@@ -228,27 +236,27 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
     // Handle individual item updates
     const handleItemUpdate = ( id: string, updatedItem: RepeaterItemData ) => {
         let finalUpdatedItem = updatedItem;
-        
+
         // If this is a new item with a title, generate snake_case ID
         if ( updatedItem.title.trim() !== '' && newItemIds.has( id ) ) {
             const newId = snakeCase( updatedItem.title );
             finalUpdatedItem = {
                 ...updatedItem,
-                id: newId
+                id: newId,
             };
-            
+
             // Remove from new items tracking
-            setNewItemIds( prev => {
+            setNewItemIds( ( prev ) => {
                 const newSet = new Set( prev );
                 newSet.delete( id );
                 return newSet;
             } );
         }
-        
-        const newItems = items.map( item =>
+
+        const newItems = items.map( ( item ) =>
             item.id === id ? finalUpdatedItem : item
         );
-        
+
         handleItemsChange( newItems );
     };
 
@@ -259,15 +267,15 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
 
     // Handle confirmed deletion
     const handleItemDelete = ( id: string ) => {
-        const newItems = items.filter( item => item.id !== id );
-        
+        const newItems = items.filter( ( item ) => item.id !== id );
+
         // Remove from new items tracking
-        setNewItemIds( prev => {
+        setNewItemIds( ( prev ) => {
             const newSet = new Set( prev );
             newSet.delete( id );
             return newSet;
         } );
-        
+
         handleItemsChange( newItems );
         setDeleteConfirmItem( null );
     };
@@ -280,28 +288,29 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
     // Handle drag and drop reordering
     const handleOrderUpdate = ( updatedItems: RepeaterItemData[] ) => {
         // Get current required items to maintain their positions
-        const requiredItems = sortedItems.filter( item => item.required );
-        
+        const requiredItems = sortedItems.filter( ( item ) => item.required );
+
         // Update order property for sortable items, accounting for required items' positions
         const reorderedItems = updatedItems.map( ( item, index ) => {
             // Calculate the correct order considering required items
             let newOrder = index;
-            requiredItems.forEach( reqItem => {
+            requiredItems.forEach( ( reqItem ) => {
                 if ( reqItem.order <= newOrder ) {
                     newOrder++;
                 }
-            });
-            
+            } );
+
             return {
                 ...item,
                 order: newOrder,
             };
         } );
-        
+
         // Combine required items with reordered sortable items
-        const finalItems = [ ...requiredItems, ...reorderedItems ]
-            .sort( ( a, b ) => a.order - b.order );
-        
+        const finalItems = [ ...requiredItems, ...reorderedItems ].sort(
+            ( a, b ) => a.order - b.order
+        );
+
         handleItemsChange( finalItems );
     };
 
@@ -309,13 +318,13 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
     const handleAddNew = () => {
         const newId = `item_${ Math.random().toString( 36 ).substr( 2, 9 ) }`;
         const newItem: RepeaterItemData = {
-            id       : newId,
-            order    : items.length,
-            title    : '',
+            id: newId,
+            order: items.length,
+            title: '',
         };
-        
+
         // Track this as a new item
-        setNewItemIds( prev => new Set( prev ).add( newId ) );
+        setNewItemIds( ( prev ) => new Set( prev ).add( newId ) );
         handleItemsChange( [ ...items, newItem ] );
     };
 
@@ -373,10 +382,10 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
 
     // Sort items by order
     const sortedItems = [ ...items ].sort( ( a, b ) => a.order - b.order );
-    
+
     // Separate required items from sortable items
-    const requiredItems = sortedItems.filter( item => item.required );
-    const sortableItems = sortedItems.filter( item => ! item.required );
+    const requiredItems = sortedItems.filter( ( item ) => item.required );
+    const sortableItems = sortedItems.filter( ( item ) => ! item.required );
 
     return (
         <>
@@ -386,10 +395,11 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
                     wrapperClassNames={ element.title ? 'p-4' : '' }
                     title={ element.title || '' }
                     helperText={ element.description }
+                    imageUrl={ element?.image_url }
                 />
 
                 { sortedItems.length > 0 ? (
-                    <div className='overflow-hidden'>
+                    <div className="overflow-hidden">
                         { /* Render required items outside sortable list */ }
                         { requiredItems.map( ( item ) => (
                             <div key={ item.id }>
@@ -402,7 +412,9 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
                             <SortableList
                                 wrapperElement=""
                                 items={ sortableItems }
-                                namespace={ `dokan-repeater-${ element.id || 'default' }` }
+                                namespace={ `dokan-repeater-${
+                                    element.id || 'default'
+                                }` }
                                 onChange={ handleOrderUpdate }
                                 renderItem={ renderItem }
                                 orderProperty="order"
@@ -418,13 +430,14 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
                 ) }
 
                 { /* Add New Item Section */ }
-                <div 
+                <div
                     onClick={ handleAddNew }
                     className="flex items-center gap-2 cursor-pointer text-[#7047eb] hover:text-[#5a3bc4] transition-colors p-5"
                 >
                     <Plus size={ 16 } />
                     <span className="text-sm font-medium">
-                        { element.new_title || __( 'Add New Item', 'dokan-lite' ) }
+                        { element.new_title ||
+                            __( 'Add New Item', 'dokan-lite' ) }
                     </span>
                 </div>
             </div>
@@ -438,8 +451,14 @@ const DokanRepeater = ( { element, onValueChange, getSetting }: SettingsProps ) 
                     namespace={ `delete-item-${ deleteConfirmItem }` }
                     onClose={ handleDeleteCancel }
                     dialogHeader={ __( 'Confirm Item Deletion', 'dokan-lite' ) }
-                    confirmationTitle={ __( 'Are you sure you want to delete this item?', 'dokan-lite' ) }
-                    confirmationDescription={ __( 'This action cannot be undone.', 'dokan-lite' ) }
+                    confirmationTitle={ __(
+                        'Are you sure you want to delete this item?',
+                        'dokan-lite'
+                    ) }
+                    confirmationDescription={ __(
+                        'This action cannot be undone.',
+                        'dokan-lite'
+                    ) }
                     confirmButtonText={ __( 'Delete', 'dokan-lite' ) }
                 />
             ) }

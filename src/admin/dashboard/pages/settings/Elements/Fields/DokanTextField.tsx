@@ -1,9 +1,9 @@
+import { dispatch } from '@wordpress/data';
 import {
     DokanFieldLabel,
     TextField,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanTextField( { element } ) {
     if ( ! element.display ) {
@@ -22,7 +22,7 @@ export default function DokanTextField( { element } ) {
                     titleFontWeight="bold"
                     helperText={ element.description }
                     tooltip={ element.helper_text }
-                    icon={ element?.icon }
+                    imageUrl={ element?.image_url }
                     wrapperClassNames={ 'md:max-w-[60%]' }
                 />
             </div>

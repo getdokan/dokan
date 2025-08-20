@@ -51,6 +51,7 @@ export type SettingsElement = {
     doc_link?: string;
     css_class?: string;
     helper_text?: string;
+    image_url?: string;
 };
 
 export interface SettingsProps {

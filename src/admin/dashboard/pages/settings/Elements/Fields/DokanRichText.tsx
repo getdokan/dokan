@@ -1,14 +1,16 @@
-import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import RichText from '../../../../../../components/richtext/RichText';
+import { __ } from '@wordpress/i18n';
 import { DokanFieldLabel } from '../../../../../../components/fields';
+import RichText from '../../../../../../components/richtext/RichText';
 
 const DokanRichText = ( { element, onValueChange } ) => {
     if ( ! element.display ) {
         return <></>;
     }
 
-    const [ value, setValue ] = useState< string >( element?.value || element?.default || '' );
+    const [ value, setValue ] = useState< string >(
+        element?.value || element?.default || ''
+    );
 
     const handleChange = ( newValue: string ) => {
         setValue( newValue );
@@ -25,6 +27,7 @@ const DokanRichText = ( { element, onValueChange } ) => {
                     title={ element.title || '' }
                     helperText={ element.description || '' }
                     wrapperClassNames={ element.title ? 'pb-2' : '' }
+                    imageUrl={ element?.image_url }
                 />
             </div>
 
@@ -32,7 +35,10 @@ const DokanRichText = ( { element, onValueChange } ) => {
                 value={ value }
                 onChange={ handleChange }
                 readOnly={ element.disabled || false }
-                placeholder={ element.placeholder || __( 'Enter your content...', 'dokan-lite' ) }
+                placeholder={
+                    element.placeholder ||
+                    __( 'Enter your content…', 'dokan-lite' )
+                }
             />
         </div>
     );

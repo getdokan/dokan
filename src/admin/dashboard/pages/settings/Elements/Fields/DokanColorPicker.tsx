@@ -1,6 +1,6 @@
+import { dispatch } from '@wordpress/data';
 import { DokanFieldLabel } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanColorPicker( { element } ) {
     if ( ! element.display ) {
@@ -17,7 +17,7 @@ export default function DokanColorPicker( { element } ) {
                 titleFontWeight="bold"
                 helperText={ element.description }
                 tooltip={ element.helper_text }
-                icon={ element?.icon }
+                imageUrl={ element?.image_url }
             />
             <div>Color Picker</div>
         </div>

@@ -1,14 +1,14 @@
-import { SettingsElement } from '../../types';
+import { dispatch } from '@wordpress/data';
+import { useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 import {
     DokanFieldLabel,
     DokanSelect,
 } from '../../../../../../components/fields';
-import { __ } from '@wordpress/i18n';
 import RefreshIcon from '../../../../../../components/Icons/RefreshIcon';
-import { useState } from '@wordpress/element';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
+import { SettingsElement } from '../../types';
 
 interface DokanRefreshSelectFieldProps extends SettingsElement {
     onRefresh?: () => void;
@@ -63,7 +63,7 @@ const DokanRefreshSelectField = ( {
                         title={ element?.title }
                         helperText={ element.description }
                         tooltip={ element?.helper_text }
-                        icon={ element.icon || '' }
+                        imageUrl={ element?.image_url }
                         titleFontWeight="light"
                     />
                 </div>

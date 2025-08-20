@@ -1,7 +1,7 @@
-import { SettingsProps } from '../../types';
-import DokanBaseFieldLabel from '../../../../../../components/fields/DokanFieldLabel';
-import { FileSpreadsheet } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
+import { FileSpreadsheet } from 'lucide-react';
+import DokanBaseFieldLabel from '../../../../../../components/fields/DokanFieldLabel';
+import { SettingsProps } from '../../types';
 
 const DokanFieldLabel = ( {
     element,
@@ -15,7 +15,7 @@ const DokanFieldLabel = ( {
     return (
         <div className="p-5 flex justify-between items-center">
             <DokanBaseFieldLabel
-                icon={ element.icon || '' }
+                imageUrl={ element.image_url }
                 title={ element.title }
                 helperText={ element.description }
                 tooltip={ element?.helper_text }
