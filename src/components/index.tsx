@@ -28,6 +28,7 @@ export { default as WpDatePicker } from './WpDatePicker';
 export { default as DokanTab } from './Tab';
 export { default as PageHeading } from '../admin/dashboard/pages/settings/Elements/PageHeading';
 export { default as RichText } from './richtext/RichText';
+export { default as LucideIcon } from './Icons/LucideIcon';
 
 // Commission Components
 export * from './commission';

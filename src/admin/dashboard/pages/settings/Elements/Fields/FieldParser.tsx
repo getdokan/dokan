@@ -25,13 +25,9 @@ import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
 import DokanRichText from './DokanRichText';
 import RadioBox from './RadioBox';
-import DokanRepeater from "./DokanRepeater";
+import DokanRepeater from './DokanRepeater';
 
-const FieldParser = ( {
-    element,
-    getSetting,
-    onValueChange,
-}: SettingsProps ) => {
+const FieldParser = ( { element }: SettingsProps ) => {
     switch ( element.variant ) {
         case 'text':
             return (
@@ -68,14 +64,7 @@ const FieldParser = ( {
         case 'rich_text':
             return applyFilters(
                 'dokan_admin_settings_rich_text_field_parser',
-                <DokanRichText
-                    element={ element }
-                    key={ element.hook_key }
-                    onValueChange={ onValueChange }
-                />,
-                element,
-                getSetting,
-                onValueChange
+                <DokanRichText element={ element } key={ element.hook_key } />
             );
 
         case 'radio_capsule':
@@ -87,23 +76,11 @@ const FieldParser = ( {
             );
 
         case 'radio_box':
-            return (
-                <RadioBox
-                    key={ element.hook_key }
-                    element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />
-            );
+            return <RadioBox key={ element.hook_key } element={ element } />;
 
         case 'customize_radio':
             return (
-                <CustomizeRadio
-                    key={ element.hook_key }
-                    element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />
+                <CustomizeRadio key={ element.hook_key } element={ element } />
             );
 
         case 'currency':
@@ -126,12 +103,7 @@ const FieldParser = ( {
 
         case 'combine_input':
             return (
-                <CombineInput
-                    key={ element.hook_key }
-                    element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />
+                <CombineInput key={ element.hook_key } element={ element } />
             );
         case 'refresh_select':
             return (
@@ -160,12 +132,7 @@ const FieldParser = ( {
             return <DokanFieldLabel element={ element } />;
         case 'html':
             return (
-                <DokanHtmlField
-                    key={ element.hook_key }
-                    element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />
+                <DokanHtmlField key={ element.hook_key } element={ element } />
             );
         case 'show_hide':
             return <DokanShowHideField element={ element } />;
@@ -179,15 +146,8 @@ const FieldParser = ( {
         case 'repeater':
             return applyFilters(
                 'dokan_admin_settings_repeater_field_parser',
-                <DokanRepeater
-                    key={ element.hook_key }
-                    element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />,
-                element,
-                getSetting,
-                onValueChange
+                <DokanRepeater key={ element.hook_key } element={ element } />,
+                element
             );
 
         case 'checkbox':
@@ -207,9 +167,7 @@ const FieldParser = ( {
             return applyFilters(
                 'dokan_admin_settings_default_field_parser',
                 <DokanInfoField key={ element.hook_key } element={ element } />,
-                element,
-                getSetting,
-                onValueChange
+                element
             );
     }
 };

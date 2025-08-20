@@ -2,8 +2,8 @@ import { SettingsElement } from '../../types';
 import { twMerge } from 'tailwind-merge';
 
 interface DokanInfoFieldProps extends SettingsElement {
-    linkText?: string;
-    linkUrl?: string;
+    link_text?: string;
+    link_url?: string;
     showIcon?: boolean;
 }
 
@@ -17,10 +17,10 @@ const DokanInfoField = ( {
     if ( ! element.display ) {
         return null;
     }
-
+    console.log( 'DokanInfoField', element );
     const handleLinkClick = () => {
-        if ( element?.linkUrl ) {
-            window.open( element?.linkUrl, '_blank', 'noopener,noreferrer' );
+        if ( element?.link_url ) {
+            window.open( element?.link_url, '_blank', 'noopener,noreferrer' );
         }
     };
 
@@ -40,13 +40,13 @@ const DokanInfoField = ( {
                     </div>
 
                     { /* Link with icon */ }
-                    { element?.title && (
+                    { element.link_text && (
                         <div className="flex items-end gap-[5px]">
                             <button
                                 onClick={ handleLinkClick }
                                 className="text-[#575757] text-xs underline underline-offset-1 hover:text-[#AB92F6] transition-colors"
                             >
-                                { element?.title }
+                                { element.link_text }
                             </button>
 
                             {
