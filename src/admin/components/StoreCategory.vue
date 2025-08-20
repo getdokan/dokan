@@ -17,7 +17,7 @@
         :searchable="true"
         :loading="isLoading"
         :internal-search="false"
-        @search-change="setStoreCategories"
+        @search-change="handleSearchChange"
     />
 </template>
 
@@ -49,7 +49,8 @@ export default {
             selectedCategories: [],
             isCategoryMultiple: false,
             isLoading: false,
-            initialSelectedCategories: []
+            initialSelectedCategories: [],
+            debounce: null,
         }
     },
 
@@ -77,6 +78,20 @@ export default {
     },
 
     methods: {
+        /**
+         * Debounces the search input to prevent excessive API calls.
+         *
+         * @param {string} query
+         */
+        handleSearchChange( query ) {
+            if ( this.debounce ) {
+                clearTimeout( this.debounce );
+            }
+            this.debounce = setTimeout( () => {
+                this.setStoreCategories( query );
+            }, 500 ); // 500ms delay
+        },
+
         setStoreCategories( value = '', include = [], initial = false ) {
             console.log(initial);
             if( dokan.store_category_type !== 'none' ) {
