@@ -17,7 +17,10 @@ const DashboardSwitchLink = () => {
     return (
         <div className="legacy-dashboard-url text-sm font-medium pt-8 mt-8">
             <div className="flex items-center gap-2 text-gray-600">
-                { __( 'If you want to go back to old settings panel,', 'dokan-lite' ) }{' '}
+                { __(
+                    'If you want to go back to old settings panel,',
+                    'dokan-lite'
+                ) }{ ' ' }
                 <a
                     className="skip-color-module underline font-bold text-[#7047EB] hover:text-[#502BBF] transition-colors"
                     href={ switchUrl }
@@ -72,8 +75,13 @@ const SettingsPage = () => {
 
     useEffect( () => {
         if ( ! loading && pages.length > 0 ) {
-            let selectedSettings = typeof localStorage !== 'undefined' ? localStorage.getItem( 'dokan_active_settings_tab' ) : '',
-                selectedPageName = selectedSettings ? selectedSettings.split( '.' )[1] : selectedPage;
+            const selectedSettings =
+                    typeof localStorage !== 'undefined'
+                        ? localStorage.getItem( 'dokan_active_settings_tab' )
+                        : '',
+                selectedPageName = selectedSettings
+                    ? selectedSettings.split( '.' )[ 1 ]
+                    : selectedPage;
 
             setSelectedPage(
                 // @ts-ignore
@@ -124,7 +132,7 @@ const SettingsPage = () => {
         } else if ( ! pages?.length && tabs?.length && '' !== selectedTab ) {
             setElements(
                 tabs.find( ( child ) => child.id === selectedTab )?.children ??
-                []
+                    []
             );
         } else if (
             pages?.length &&
@@ -134,7 +142,7 @@ const SettingsPage = () => {
         ) {
             setElements(
                 tabs.find( ( child ) => child.id === selectedTab )?.children ??
-                []
+                    []
             );
         }
     }, [
@@ -168,7 +176,10 @@ const SettingsPage = () => {
     };
 
     const saveSettings = () => {
-        wp.hooks.doAction( 'dokan_admin_settings_before_save_settings', allSettings );
+        wp.hooks.doAction(
+            'dokan_admin_settings_before_save_settings',
+            allSettings
+        );
 
         console.log( 'allSettings', allSettings );
 
@@ -184,7 +195,10 @@ const SettingsPage = () => {
                 // TODO: Say Error.
             } );
 
-        wp.hooks.doAction( 'dokan_admin_settings_after_save_settings', allSettings );
+        wp.hooks.doAction(
+            'dokan_admin_settings_after_save_settings',
+            allSettings
+        );
     };
 
     // Get current page/tab information for heading
@@ -232,7 +246,9 @@ const SettingsPage = () => {
     return (
         <>
             <div className="min-h-screen h-full">
-                <h2 className={ `text-2xl text-[#25252D] font-bold my-6 lg:mb-8 lg:mt-10` }>
+                <h2
+                    className={ `text-2xl text-[#25252D] font-bold my-6 lg:mb-8 lg:mt-10` }
+                >
                     { __( 'Settings', 'dokan-lite' ) }
                 </h2>
                 <main className="w-full lg:px-0 lg:bg-white h-full lg:shadow rounded-lg overflow-hidden">
@@ -267,8 +283,10 @@ const SettingsPage = () => {
                                 />
                             ) }
                             <div
-                                className={ `flex flex-col gap-8 bg-white rounded-lg ${ twMerge(
-                                    allElementsAreFields && ( pageInfo?.title || pageInfo?.description )
+                                className={ `flex flex-col bg-white rounded-lg ${ twMerge(
+                                    allElementsAreFields &&
+                                        ( pageInfo?.title ||
+                                            pageInfo?.description )
                                         ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
                                         : 'gap-6'
                                 ) }` }
