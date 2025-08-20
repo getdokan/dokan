@@ -3,6 +3,8 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
@@ -853,6 +855,13 @@ export class ApiUtils {
     // get all modules
     async getAllModules(params = {}, auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.get(endPoints.getAllModules, { params: params, headers: auth });
+        
+        // Save modules to local JSON file
+        fs.writeFileSync(
+            path.resolve(__dirname, '../playwright/modules.json'),
+            JSON.stringify(responseBody, null, 2)
+        );
+        
         return responseBody;
     }
 
@@ -863,21 +872,72 @@ export class ApiUtils {
         return allModuleIds;
     }
 
+    async getAllModulesFromLocalJson(): Promise<{ id: string; active: boolean }[]> {
+        try {
+            const allModules = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../playwright/modules.json'), 'utf8'));
+            return allModules;
+        } catch (error) {
+            // Return empty array if file doesn't exist or is invalid
+            return [];
+        }
+    }
+
+
+    // Check if a single module is active from local storage
+    async checkIsModuleActiveFromLocal(moduleId: string): Promise<boolean> {
+        const allModules = await this.getAllModulesFromLocalJson();
+        const module = allModules.find((module: { id: string; active: boolean }) => module.id === moduleId);
+        
+        return module?.active ?? false;
+    }
+
     // get activate modules
-    async activateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+    async activateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse | null, responseBody | null]> {
         if (!Array.isArray(moduleIds)) {
             moduleIds = [moduleIds];
         }
+        
+        // Check if all modules are already active from local storage
+        const activeChecks = await Promise.all(
+            moduleIds.map(moduleId => this.checkIsModuleActiveFromLocal(moduleId))
+        );
+        const isAllActive = activeChecks.every(isActive => isActive);
+
+        if (isAllActive) {
+            console.log(moduleIds.join(', ') + ' modules are already active');
+            return [null, null];
+        }
+
         const [response, responseBody] = await this.put(endPoints.activateModule, { data: { module: moduleIds }, headers: auth });
+        
+        // Refetch all modules to update local JSON file
+        await this.getAllModules({}, auth);
+
         return [response, responseBody];
     }
 
     // get deactivated modules
-    async deactivateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+    async deactivateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse | null, responseBody | null]> {
         if (!Array.isArray(moduleIds)) {
             moduleIds = [moduleIds];
         }
+        
+        // Check if all modules are already inactive from local storage
+        const activeChecks = await Promise.all(
+            moduleIds.map(moduleId => this.checkIsModuleActiveFromLocal(moduleId))
+        );
+        const isAllInactive = activeChecks.every(isActive => !isActive);
+
+        if (isAllInactive) {
+            console.log(moduleIds.join(', ') + ' modules are already deactivated');
+            return [null, null];
+        }
+
         const [response, responseBody] = await this.put(endPoints.deactivateModule, { data: { module: moduleIds }, headers: auth });
+        
+        // Refetch all modules to update local JSON file
+        await this.getAllModules({}, auth);
+        
         return [response, responseBody];
     }
 

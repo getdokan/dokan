@@ -82,23 +82,23 @@ export const data = {
         customer2AuthFile: 'playwright/.auth/customer2StorageState.json',
 
         adminAuth: {
-            storageState: 'playwright/.auth/adminStorageState.json',
+            storageState: require('path').resolve(__dirname, '../playwright/.auth/adminStorageState.json'),
         },
 
         vendorAuth: {
-            storageState: 'playwright/.auth/vendorStorageState.json',
+            storageState: require('path').resolve(__dirname, '../playwright/.auth/vendorStorageState.json'),
         },
 
         vendor2Auth: {
-            storageState: 'playwright/.auth/vendor2StorageState.json',
+            storageState: require('path').resolve(__dirname, '../playwright/.auth/vendor2StorageState.json'),
         },
 
         customerAuth: {
-            storageState: 'playwright/.auth/customerStorageState.json',
+            storageState: require('path').resolve(__dirname, '../playwright/.auth/customerStorageState.json'),
         },
 
         customer2Auth: {
-            storageState: 'playwright/.auth/customer2StorageState.json',
+            storageState: require('path').resolve(__dirname, '../playwright/.auth/customer2StorageState.json'),
         },
 
         noAuth: {
