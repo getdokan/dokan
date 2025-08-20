@@ -14,11 +14,17 @@
         v-model='selectedCategories'
         :showLabels="false"
         :multiple='isCategoryMultiple'
+        :searchable="true"
+        :loading="isLoading"
+        :internal-search="false"
+        @search-change="setStoreCategories"
     />
 </template>
 
 <script>
 import { Multiselect } from 'vue-multiselect';
+import apiFetch from "@wordpress/api-fetch";
+import { addQueryArgs } from "@wordpress/url";
 
 export default {
     name: 'StoreCategory',
@@ -41,7 +47,9 @@ export default {
         return {
             storeCategoryList: [],
             selectedCategories: [],
-            isCategoryMultiple: false
+            isCategoryMultiple: false,
+            isLoading: false,
+            initialSelectedCategories: []
         }
     },
 
@@ -59,23 +67,72 @@ export default {
     },
 
     created() {
-        this.setStoreCategories();
+        // include
+        const ids = this.categories.map( item => {
+            return item.id;
+        } );
+
+        this.setStoreCategories( '', ids, true );
         this.storeCategoryIds = this.categories;
     },
 
     methods: {
-        setStoreCategories() {
+        setStoreCategories( value = '', include = [], initial = false ) {
+            console.log(initial);
             if( dokan.store_category_type !== 'none' ) {
-                dokan.api.get('/store-categories?per_page=50', {})
-                    .then( ( response, status, xhr ) => {
+                this.isLoading = true
+
+                const params = { per_page: '50' };
+                if ( value ) {
+                    params.search = value;
+                }
+
+                // This will request categories including the selected categories.
+                if ( Array.isArray( include ) && include.length ) {
+                    params.include = include;
+                }
+
+                apiFetch( {
+                    path: addQueryArgs( '/dokan/v1/store-categories', params ),
+                    parse: false
+                } ).then( ( response ) => {
+                    // Get headers
+                    const categoryType = response.headers.get( 'X-WP-Store-Category-Type' );
+
+                    // Parse JSON data
+                    response.json().then( ( data ) => {
                         let storeCategoryIds = [];
-                        this.categories.map( ( value ) => { storeCategoryIds.push( value.id ) } );
-                        this.storeCategoryList = response;
-                        this.selectedCategories = this.storeCategoryList.filter( ( category ) => {
+                        this.categories.map( ( value ) => {
+                            storeCategoryIds.push( value.id )
+                        } );
+
+                        this.storeCategoryList = data;
+                        const tempSelectedCategories = this.storeCategoryList.filter( ( category ) => {
                             return storeCategoryIds.includes( category.id );
                         } );
-                        this.isCategoryMultiple = ( 'multiple' === xhr.getResponseHeader( 'X-WP-Store-Category-Type' ) );
+                        this.isCategoryMultiple = ( 'multiple' === categoryType );
+                        this.selectedCategories = tempSelectedCategories;
+                        this.isLoading = false
+
+                        if (initial) {
+                            // saving the initial selected categories for later usage.
+                            this.initialSelectedCategories = tempSelectedCategories;
+                        } else if ( ! initial && ! tempSelectedCategories.length ) {
+                            /**
+                             * Here when we search and request the categories and if the initial selected category does not
+                             * exist in the response categories then we are setting the initial selected categories as selected categories, else in the frontend the selected categories will show empty.
+                             *
+                             * And we're also adding the initial selected category in the category list if the initial selected category does not exist in the response categories.
+                             */
+                            this.selectedCategories = this.initialSelectedCategories;
+                            this.storeCategoryList = [ ...this.storeCategoryList, ...this.initialSelectedCategories ];
+                        }
                     } );
+                } ).catch( ( error ) => {
+                    console.error( 'Error fetching categories:', error );
+
+                    this.isLoading = false
+                } );
             }
         }
     }
