@@ -7,10 +7,7 @@ import { dbData } from '@utils/dbData';
 test.describe('Email verifications test', () => {
     let guest: EmailVerificationsPage;
     let gPage: Page;
-    const user: { username: string; password: string } = { 
-        username: data.user.username() + data.user.userDetails.emailDomain, 
-        password: data.customer.password || 'testPassword123' 
-    };
+    const user = { username: data.user.username() + data.user.userDetails.emailDomain, password: data.user.password };
 
     test.beforeAll(async ({ browser }) => {
         const guestContext = await browser.newContext(data.auth.noAuth);
@@ -25,11 +22,11 @@ test.describe('Email verifications test', () => {
         await gPage.close();
     });
 
-    test('user can see registration notice (2-step auth) while registering as customer', { tag: ['@pro', '@guest'] }, async () => {
+    test('user can see registration notice (2-step auth) while registering as customer', { tag: ['@pro', '@guest', '@serial'] }, async () => {
         await guest.register(user);
     });
 
-    test('user can see registration notice (2-step auth) while loggingIn', { tag: ['@pro', '@guest'] }, async () => {
+    test('user can see registration notice (2-step auth) while loggingIn', { tag: ['@pro', '@guest', '@serial'] }, async () => {
         await guest.login(user);
     });
 });
