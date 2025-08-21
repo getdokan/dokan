@@ -4,8 +4,6 @@ import { customExpect } from '@utils/pwMatchers';
 import 'dotenv/config';
 const { CI, NON_HEADLESS, BASE_URL, SLOWMO, NO_SETUP, DOKAN_PRO } = process.env;
 
-console.log('base url', BASE_URL);
-
 export default defineConfig({
     /* test directory */
     testDir: 'tests/e2e',
