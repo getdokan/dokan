@@ -2669,7 +2669,7 @@ export const selector = {
                 notWrightNow: '//a[contains(text(),"Not right now")]',
 
                 // Store
-                vendorStoreURL: '#custom_store_url',
+                vendorStoreURL: '#storename',
                 // shippingFeeRecipient: '#select2-shipping_fee_recipient-container',
                 // shippingFeeRecipientValues: '.select2-results ul li',
                 // taxFeeRecipient: '#select2-tax_fee_recipient-container',
