@@ -91,7 +91,7 @@ class VendorNavMenuChecker {
     /**
      * Rewrite URL to React route if applicable.
      *
-     * @since 4.0.0
+     * @since DOKAN_SINCE
      *
      * @param string $url URL.
      * @param string $name Name.
@@ -144,7 +144,6 @@ class VendorNavMenuChecker {
             if ( $removed_url ) {
                 add_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5, 3 );
             }
-            $in_progress = false;
         }
     }
 
