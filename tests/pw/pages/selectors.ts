@@ -3812,10 +3812,18 @@ export const selector = {
                 nextStep: '.dokan-alert.dokan-alert-info.dokan-panel-alert',
             },
 
-            // At a Glance
+            // At a Glance (Modern Analytics Dashboard)
             atAGlance: {
-                atAGlanceDiv: '.dashboard-widget.big-counter',
-
+                // Modern analytics dashboard - these selectors are updated for current dashboard
+                atAGlanceDiv: '.dokan-dashboard-content', // Main content area contains analytics
+                
+                // Modern dashboard doesn't use traditional widget structure
+                // Instead, it loads analytics content dynamically
+                modernAnalyticsContainer: '.dokan-dashboard-content',
+                analyticsPageIndicator: '[class*="analytics"]',
+                
+                // Legacy selectors (kept for backwards compatibility if traditional dashboard is restored)
+                legacyAtAGlanceDiv: '.dashboard-widget.big-counter',
                 netSalesTitle: '//div[normalize-space()="Net Sales"]',
                 earningTitle: '//div[normalize-space()="Earning"]',
                 pageviewTitle: '//div[normalize-space()="Pageview"]',
@@ -3827,16 +3835,27 @@ export const selector = {
                 orderValue: '//div[@class="title" and contains(text(), "Order")]/..//div[@class="count"]',
             },
 
-            // sells graph
+            // sells graph (Modern Analytics Dashboard)
             graph: {
-                graphDiv: '.dashboard-widget.sells-graph',
+                // Modern analytics dashboard uses different structure
+                modernGraphContainer: '.dokan-dashboard-content [class*="chart"]',
+                modernChartElements: '[class*="chart"]', // Any element containing "chart" in class
+                
+                // Legacy selectors (kept for backwards compatibility)
+                legacyGraphDiv: '.dashboard-widget.sells-graph',
+                graphDiv: '.dashboard-widget.sells-graph', // Kept for backwards compatibility
                 widgetTitle: '.sells-graph .widget-title',
                 chart: '.chart-container',
             },
 
-            // orders
+            // orders (Modern Analytics Dashboard)
             orders: {
-                ordersDiv: '.dashboard-widget.orders',
+                // Modern analytics dashboard structure
+                modernOrdersContainer: '.dokan-dashboard-content',
+                
+                // Legacy selectors (kept for backwards compatibility)
+                legacyOrdersDiv: '.dashboard-widget.orders',
+                ordersDiv: '.dashboard-widget.orders', // Kept for backwards compatibility
                 widgetTitle: '.orders .widget-title',
                 totalTitle: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Total"]',
                 completedTitle: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Completed"]',
@@ -3872,9 +3891,14 @@ export const selector = {
                 trashValue: '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Trash"]/..//span[@class="count"]',
             },
 
-            // products
+            // products (Modern Analytics Dashboard) 
             products: {
-                productsDiv: '.dashboard-widget.products',
+                // Modern analytics dashboard structure
+                modernProductsContainer: '.dokan-dashboard-content',
+                
+                // Legacy selectors (kept for backwards compatibility)
+                legacyProductsDiv: '.dashboard-widget.products',
+                productsDiv: '.dashboard-widget.products', // Kept for backwards compatibility
                 addNewProduct: '//a[contains(normalize-space(.), "Add new product")]',
                 widgetTitle: '.products .widget-title',
                 totalTitle: '//div[@class="dashboard-widget products"]//span[normalize-space()="Total"]',
