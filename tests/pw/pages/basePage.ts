@@ -1655,6 +1655,7 @@ export class BasePage {
 
     // assert element not to have count
     async notToHaveCount(selector: string, count: number) {
+        await this.waitForLoadState('domcontentloaded')
         await expect(this.page.locator(selector)).not.toHaveCount(count);
     }
 

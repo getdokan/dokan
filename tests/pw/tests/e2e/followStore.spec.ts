@@ -44,7 +44,6 @@ test.describe('Follow stores functionality test', () => {
     });
 
     // customer
-
     test('customer can view followed vendors menu page', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.customerFollowedVendorsRenderProperly();
     });

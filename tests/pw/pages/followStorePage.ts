@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import test, { Page } from '@playwright/test';
 import { CustomerPage } from '@pages/customerPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -12,12 +12,16 @@ export class FollowStorePage extends CustomerPage {
     // enable follow store module
     async enableFollowStoreModule() {
         // vendor dashboard menu
-        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.followers);
-
+        test.step('ADMIN: Go to vendor dashboard to enable follow store module', async () => {
+            await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+            await this.toBeVisible(selector.vendor.vDashboard.menus.primary.followers);
+        });
         // my account menu
-        await this.goto(data.subUrls.frontend.myAccount);
-        await this.toBeVisible(selector.customer.cMyAccount.menus.vendors);
+        test.step('CUSTOMER: Validate that the module is enabled and added to my account menu', async () => {
+            await this.goto(data.subUrls.frontend.myAccount);
+            await this.toBeVisible(selector.customer.cMyAccount.menus.vendors);
+        });
+
     }
 
     // disable follow store module
@@ -59,18 +63,19 @@ export class FollowStorePage extends CustomerPage {
     }
 
     // customer
-
     async customerFollowedVendorsRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.followingStores);
-
+        const url = data.subUrls.frontend.followingStores;
+        await this.goIfNotThere(url, 'domcontentloaded', true);
+        await this.notToHaveCount(selector.customer.cVendors.storeCard.storeCardDiv, 0);
         const noVendorsFound = await this.isVisible(selector.customer.cVendors.noVendorFound);
+        console.log('noVendorsFound: ', noVendorsFound);
         if (noVendorsFound) {
             await this.toContainText(selector.customer.cVendors.noVendorFound, 'No vendor found!');
+            console.log('No vendor followed');
             return;
         }
-
-        await this.notToHaveCount(selector.customer.cVendors.storeCard.storeCardDiv, 0);
     }
+    
 
     // customer view followed vendors
     async customerViewFollowedVendors(storeName: string) {
