@@ -11,10 +11,20 @@ import { arrowRight, chartBar } from '@wordpress/icons';
 /**
  * Internal dependencies
  */
-import DashboardCharts from './dashboard-charts';
-
+const LazyDashboardCharts = lazy( () =>
+    import( /* webpackChunkName: "dashboard-charts" */ './dashboard-charts' )
+);
 const LazyLeaderboards = lazy( () =>
     import( /* webpackChunkName: "leaderboards" */ './leaderboards' )
+);
+const LazyStorePerformance = lazy( () =>
+    import( /* webpackChunkName: "store-performance" */ './store-performance' )
+);
+
+const DashboardCharts = ( props ) => (
+    <Suspense fallback={ <Spinner /> }>
+        <LazyDashboardCharts { ...props } />
+    </Suspense>
 );
 
 const Leaderboards = ( props ) => (
@@ -23,7 +33,11 @@ const Leaderboards = ( props ) => (
     </Suspense>
 );
 
-import StorePerformance from './store-performance';
+const StorePerformance = ( props ) => (
+    <Suspense fallback={ <Spinner /> }>
+        <LazyStorePerformance { ...props } />
+    </Suspense>
+);
 
 const DEFAULT_SECTIONS_FILTER = 'woocommerce_dashboard_default_sections';
 

@@ -2,10 +2,10 @@
  * External dependencies
  */
 import { doAction } from '@wordpress/hooks';
-import { Suspense } from "@wordpress/element";
+import { Suspense, lazy } from "@wordpress/element";
 import { useRef, useEffect, useState } from "react";
 import { parse, stringify } from "qs";
-import { isEqual, last, omit } from "lodash";
+import { find, isEqual, last, omit } from "lodash";
 import {
   applyFilters,
   addAction,
@@ -29,7 +29,9 @@ import { Spinner } from "@woocommerce/components";
 import { getAdminSetting } from "reports/utils/admin-settings";
 import { NoMatch } from "./NoMatch";
 
-import Dashboard from '../dashboard';
+const Dashboard = lazy(() =>
+  import(/* webpackChunkName: "dashboard" */ "../dashboard")
+);
 // const Homescreen = lazy(() =>
 //   import(/* webpackChunkName: "homescreen" */ "../homescreen")
 // );
