@@ -152,38 +152,41 @@ class VendorPage extends AbstractPage {
                                                                                     ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
                                                                                     ->set_default( 'on' )
                                                                     )
-                                                                    ->add(
-                                                                        ElementFactory::field( 'facebook_enabled', 'switch' )
-                                                                                    ->set_title( __( 'Connect to Facebook', 'dokan-lite' ) )
-                                                                                    ->set_description(
-                                                                                        sprintf(
-                                                                                            __( 'Configure your Facebook API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
-                                                                                            'https://wedevs.com/docs/dokan-lite/facebook-login/'
-                                                                                        )
-                                                                                    )
-                                                                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/social-onboarding/facebook.svg' )
-                                                                                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                                                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                                                    ->set_default( 'off' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'show', '===' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
-                                                                    )
+
                                                                     ->add(
                                                                         ElementFactory::field_group( 'facebook_api_group' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.facebook_enabled', 'on', true, 'display', 'show', '===' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.facebook_enabled', 'on', true, 'display', 'hide', '!==' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
+                                                                            ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'show', '==' )
+                                                                            ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'off', true, 'display', 'hide', '==' )
+                                                                            ->add(
+                                                                                ElementFactory::field( 'facebook_enabled', 'switch' )
+                                                                                                ->set_title( __( 'Connect to Facebook', 'dokan-lite' ) )
+                                                                                                ->set_description(
+                                                                                                    sprintf(
+                                                                                                        __( 'Configure your Facebook API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
+                                                                                                        'https://wedevs.com/docs/dokan-lite/facebook-login/'
+                                                                                                    )
+                                                                                                )
+                                                                                                ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/social-onboarding/facebook.svg' )
+                                                                                                ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                                                                                                ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                                                                                                ->set_default( 'off' )
+                                                                            )
+                                                                            ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'facebook_app_id', 'show_hide' )
                                                                                                         ->set_title( __( 'Facebook App ID', 'dokan-lite' ) )
                                                                                                         ->set_description( __( 'Enter your Facebook App ID from Facebook Developer Console.', 'dokan-lite' ) )
                                                                                                         ->set_placeholder( __( 'Enter your Facebook App ID', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.facebook_api_group.facebook_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.facebook_api_group.facebook_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'facebook_app_secret', 'copy_field' )
                                                                                                         ->set_title( __( 'Facebook App Secret', 'dokan-lite' ) )
                                                                                                         ->set_description( __( 'Enter your Facebook App Secret from Facebook Developer Console.', 'dokan-lite' ) )
                                                                                                         ->set_placeholder( __( 'Enter your Facebook App Secret', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.facebook_api_group.facebook_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.facebook_api_group.facebook_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'facebook_redirect_url', 'copy_field' )
@@ -191,6 +194,8 @@ class VendorPage extends AbstractPage {
                                                                                                         ->set_description( __( 'The redirect URL for Facebook Login. Copy this URL and add it to your Facebook App settings.', 'dokan-lite' ) )
                                                                                                         ->set_placeholder( home_url( '/wp-admin/admin-ajax.php?action=dokan_facebook_callback' ) )
                                                                                                         ->set_default( home_url( '/wp-admin/admin-ajax.php?action=dokan_facebook_callback' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.facebook_api_group.facebook_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.facebook_api_group.facebook_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                                         ->set_readonly( true )
                                                                                     )
                                                                     )
