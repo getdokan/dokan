@@ -269,7 +269,6 @@ export const selector = {
                     faq: '//div[@class="list-item"]//a[normalize-space()="FAQ"]',
                     basicAndFundamental: '//div[@class="list-item"]//a[normalize-space()="Basic & Fundamental"]',
                     requestAFeature: '//div[@class="list-item"]//a[normalize-space()="Request a Feature"]',
-                    runSetupWizard: '//div[@class="list-item"]//a[normalize-space()="Run Setup Wizard"]',
                     importDummyData: '//div[@class="list-item"]//a[normalize-space()="Import dummy data"]',
                 },
 
