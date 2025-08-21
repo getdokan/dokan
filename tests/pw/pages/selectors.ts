@@ -7217,7 +7217,7 @@ export const selector = {
                 filterDiv: 'form.dokan-geolocation-location-filters',
                 searchProduct: 'input.dokan-form-control[placeholder="Search Products"]',
                 location: '.location-address input',
-                selectCategory: '#product_cat',
+                selectCategory: '#dokan-geo-product-categories-root',
                 radiusSlider: '.dokan-range-slider',
                 search: '.dokan-btn',
             },
