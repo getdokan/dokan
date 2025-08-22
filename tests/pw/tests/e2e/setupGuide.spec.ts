@@ -19,10 +19,10 @@ test('should redirect all the header items from the help menu', { tag: ['@lite',
     await adminDashboardPage.adminDashboardRenderProperly();
 
     // Note: Skip navigation to setup guide to keep help menu context
-    // const setupGuideBtn = page.locator('[data-test-id="admin-setup-guide-button"] button');
-    // if (await setupGuideBtn.isVisible()) {
-    //     await setupGuideBtn.click();
-    // }
+    const setupGuideBtn = page.locator('[data-test-id="admin-setup-guide-button"] button');
+    if (await setupGuideBtn.isVisible()) {
+        await setupGuideBtn.click();
+    }
 
     const menuItems = [
         {
