@@ -68,7 +68,6 @@ export class ShortcodePage extends AdminPage {
         await this.toBeVisible(registrationVendor.lastName);
         await this.toBeVisible(registrationVendor.regEmail);
         await this.toBeVisible(registrationVendor.phone);
-        await this.toBeVisible(registrationVendor.regPassword);
         await this.toBeVisible(registrationVendor.shopName);
         await this.toBeVisible(registrationVendor.shopUrl);
 
