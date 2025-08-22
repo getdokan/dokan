@@ -1181,6 +1181,7 @@ export const data = {
                 quoteDetails: (quotId: string) => `dashboard/requested-quotes/${quotId}`,
                 coupons: 'dashboard/coupons',
                 reports: 'dashboard/reports',
+                reports_new: 'dashboard/reports/?path=%2Fanalytics%2Fproducts',
                 statement: 'dashboard/reports/?chart=sales_statement',
                 deliveryTime: 'dashboard/delivery-time-dashboard',
                 reviews: 'dashboard/reviews',

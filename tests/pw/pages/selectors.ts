@@ -4703,7 +4703,7 @@ export const selector = {
 
         // Reports
         vReports: {
-            reportsText: '//h1[normalize-space()="Reports"]',
+            reportsText: '//h1[normalize-space()="Reports"] | //h1[normalize-space()="Analytics"] | //div[contains(@class, "reports")]//h1 | //div[contains(@class, "analytics")]//h1',
 
             // menus
             menus: {
@@ -4754,7 +4754,7 @@ export const selector = {
             },
 
             statement: {
-                exportStatements: '.dokan-right',
+                exportStatements: '.dokan-right, button:has-text("Export"), a:has-text("Export"), .export-button',
 
                 // table
                 table: {
@@ -7395,9 +7395,9 @@ export const selector = {
 
             // Report Abuse
             reportAbuse: {
-                reportAbuse: 'a.dokan-report-abuse-button',
+                reportAbuse: 'a.dokan-report-abuse-button, button.dokan-report-abuse-button, .report-abuse-button, a:has-text("Report"), button:has-text("Report")',
                 reportReasonByNumber: (reasonNumber: string) => `li:nth-child(${reasonNumber}) input`, // By Number
-                reportReasonByName: (reasonName: string) => `//input[@value='${reasonName}']/..`, // By Name
+                reportReasonByName: (reasonName: string) => `//input[@value='${reasonName}']/.. | //label[contains(text(), '${reasonName}')]/input/.. | //div[contains(text(), '${reasonName}')]/input/..`, // By Name
                 reportDescription: 'textarea[name="description"]',
                 reportSubmit: '#dokan-report-abuse-form-submit-btn',
                 reportSubmitSuccessMessage: '#swal2-html-container',
