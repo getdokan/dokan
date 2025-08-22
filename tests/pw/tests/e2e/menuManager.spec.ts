@@ -1,8 +1,10 @@
-import { test, Page } from '@playwright/test';
+import { test, Page, request } from '@playwright/test';
 import { MenuManagerPage } from '@pages/menuManagerPage';
+import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
+import { payloads } from '@utils/payloads';
 
 test.describe('Menu Manager test', () => {
     let admin: MenuManagerPage;
@@ -26,8 +28,24 @@ test.describe('Menu Manager test', () => {
     });
 
     test('admin can activate menu', { tag: ['@pro', '@admin'] }, async () => {
-        await updateMenuStatusByDB('user-subscription', 'false');
-        await admin.updateMenuStatus('User Subscriptions', 'activate', 'userSubscriptions');
+        const apiUtils = new ApiUtils(await request.newContext());
+        const activePlugins = await apiUtils.getAllPlugins({ status: 'active' }, payloads.adminAuth);
+
+        // Check if WooCommerce Subscriptions plugin is active
+        const wooSubscriptionsActive = activePlugins.some((plugin: any) => 
+            plugin.plugin === 'woocommerce-subscriptions/woocommerce-subscriptions'
+        );
+
+        if (wooSubscriptionsActive) {
+            await updateMenuStatusByDB('user-subscription', 'false');
+            await admin.updateMenuStatus('User Subscriptions', 'activate', 'userSubscriptions');
+        } else {
+            const skipReason = 'WooCommerce Subscriptions plugin is not active';
+            console.log(`Skipping test: ${skipReason}`);
+            test.skip(true, skipReason);
+        }
+
+        await apiUtils.dispose();
     });
 
     test('admin can rename menu', { tag: ['@pro', '@admin'] }, async () => {
