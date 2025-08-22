@@ -379,8 +379,8 @@ export class VendorVerificationsPage extends AdminPage {
         await this.toContainText(verificationsVendor.verificationRequestNote(methodName), note);
     }
 
-    // vendor view required verification request
-    async viewRequiredVerificationMethod(requiredMethod: string, nonRequiredMethod: string) {
+    // vendor can view verification methods in the setup wizard.
+    async viewVerificationMethods(requiredMethod: string, nonRequiredMethod: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
         await this.click(setupWizardVendor.letsGo);
         await this.completeAddressStep(data.vendorSetupWizard); // todo: why cant we skip this
@@ -388,7 +388,7 @@ export class VendorVerificationsPage extends AdminPage {
         await this.click(setupWizardVendor.skipTheStepPaymentSetup);
 
         await this.toBeVisible(verificationsVendor.verificationMethodDiv(requiredMethod));
-        await this.notToBeVisible(verificationsVendor.verificationMethodDiv(nonRequiredMethod));
+        await this.toBeVisible(verificationsVendor.verificationMethodDiv(nonRequiredMethod));
     }
 
     async completeAddressStep(setupWizardData: vendorSetupWizard) {
