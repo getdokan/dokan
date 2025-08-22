@@ -18,7 +18,7 @@ test.describe.skip('dokan visual test', () => {
         await aPage.close();
     });
 
-    test('dokan admin dashboard @visual', { tag: ['@pro', '@admin'] }, async () => {
+    test('dokan admin dashboard @visual', { tag: ['@pro', '@admin']  }, async () => {
         await admin.dokanMenu(data.subUrls.backend.dokan.dokan);
     });
 
