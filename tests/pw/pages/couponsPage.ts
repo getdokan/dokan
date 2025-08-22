@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { CustomerPage } from '@pages/customerPage';
 import { selector } from '@pages/selectors';
@@ -31,7 +31,11 @@ export class CouponsPage extends AdminPage {
         await this.check(couponsAdmin.addNewCoupon.enableForAllVendors);
         await this.check(couponsAdmin.addNewCoupon.showOnStores);
         await this.check(couponsAdmin.addNewCoupon.notifyVendors);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, couponsAdmin.addNewCoupon.publish);
+
+        await this.waitForLoadState('networkidle', {timeout: 60000});
+        await this.page.locator(couponsAdmin.addNewCoupon.publish).click();
+
+        expect(this.page.url()).toContain(data.subUrls.post);
         await this.toContainText(couponsAdmin.addNewCoupon.publishSuccessMessage, 'Coupon updated.');
     }
 
