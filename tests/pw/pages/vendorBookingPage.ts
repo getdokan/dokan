@@ -131,7 +131,6 @@ export class BookingPage extends VendorPage {
         if (noBookingsFound) {
             return;
         }
-        // todo: add more fields
     }
 
     // vendor manage booking render properly

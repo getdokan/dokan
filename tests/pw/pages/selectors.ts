@@ -5621,7 +5621,6 @@ export const selector = {
                 UpdateOrderStatus: '.dokan-btn-success',
                 cancelUpdateOrderStatus: 'dokan-btn-default',
             },
-
             // calendar
             calendar: {
                 calendarText: '//h1[normalize-space()="Calendar"]',
