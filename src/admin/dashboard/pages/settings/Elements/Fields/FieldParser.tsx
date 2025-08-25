@@ -18,14 +18,16 @@ import DokanPassword from './DokanPassword';
 import DokanRadioCapsule from './DokanRadioCapsule';
 import DokanRefreshSelectField from './DokanRefreshSelectField';
 import DokanSelect from './DokanSelect';
+import DokanSingleProductPreview from './DokanSingleProductPreview';
 import DokanShowHideField from './DokanShowHideField';
 import DokanSwitch from './DokanSwitch';
 import DokanTel from './DokanTel';
 import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
+import DokanVendorInfoPreview from './DokanVendorInfoPreview';
 import DokanRichText from './DokanRichText';
 import RadioBox from './RadioBox';
-import DokanRepeater from "./DokanRepeater";
+import DokanRepeater from './DokanRepeater';
 
 const FieldParser = ( {
     element,
@@ -156,6 +158,27 @@ const FieldParser = ( {
                     element={ element }
                 />
             );
+
+        case 'vendor_info_preview':
+            return (
+                <DokanVendorInfoPreview
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
+        case 'single_product_preview':
+            return (
+                <DokanSingleProductPreview
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                    getSetting={ getSetting }
+                />
+            );
+
         case 'base_field_label':
             return <DokanFieldLabel element={ element } />;
         case 'html':
