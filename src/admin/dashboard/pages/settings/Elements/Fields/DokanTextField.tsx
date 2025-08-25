@@ -15,30 +15,34 @@ export default function DokanTextField( { element } ) {
     };
 
     return (
-        <div className="flex flex-wrap gap-2 justify-between w-full p-4">
-            <div>
+        <div className="grid-cols-12 grid gap-2 justify-between w-full p-4">
+            <div className={ 'sm:col-span-8 col-span-12' }>
                 <DokanFieldLabel
                     title={ element.title }
                     titleFontWeight="bold"
                     helperText={ element.description }
                     tooltip={ element.helper_text }
                     imageUrl={ element?.image_url }
-                    wrapperClassNames={ 'md:max-w-[60%]' }
+                    wrapperClassNames={ 'w-full' }
                 />
             </div>
-            <TextField
-                value={ element.value }
-                onChange={ ( val ) =>
-                    onValueChange( { ...element, value: val } )
-                }
-                inputType="text"
-                placeholder={ element.placeholder }
-                disabled={ element.disabled }
-                prefix={ element.prefix }
-                postfix={ element.postfix }
-                inputClassName="bg-white border-[#E9E9E9] rounded-[5px] h-10 px-4 text-[#25252D] text-sm"
-                containerClassName={ 'max-w-[13rem]' }
-            />
+            <div className={ 'sm:col-span-4 col-span-12' }>
+                <TextField
+                    value={ element.value }
+                    onChange={ ( val ) =>
+                        onValueChange( { ...element, value: val } )
+                    }
+                    inputType="text"
+                    placeholder={ element.placeholder }
+                    disabled={ element.disabled }
+                    prefix={ element.prefix }
+                    postfix={ element.postfix }
+                    inputClassName="bg-white border-[#E9E9E9] rounded-[5px] h-10 px-4 text-[#25252D] text-sm"
+                    containerClassName={
+                        'max-w-full sm:!w-[14rem] sm:justify-self-end '
+                    }
+                />
+            </div>
         </div>
     );
 }

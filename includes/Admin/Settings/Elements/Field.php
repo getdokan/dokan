@@ -30,6 +30,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\CustomizeRadio;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\HtmlField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\FileUpload;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\TextArea;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\WithdrawSchedule;
 
 /**
  * Settings element Field.
@@ -89,7 +90,8 @@ class Field extends SettingsElement {
         'select_color_picker'       => SelectColorPicker::class,
         'copy_field'                => CopyField::class,
         'file_upload'               => FileUpload::class,
-        'textarea' => TextArea::class,
+        'textarea'          => TextArea::class,
+        'withdraw_schedule' => WithdrawSchedule::class,
 	);
 
 	/**
