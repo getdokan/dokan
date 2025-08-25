@@ -2,12 +2,12 @@
 Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
-Requires at least: 6.5
+Requires at least: 6.6
 Tested up to: 6.8.2
 WC requires at least: 8.5.0
-WC tested up to: 10.0.2
+WC tested up to: 10.0.4
 Requires PHP: 7.4
-Stable tag: 4.0.4
+Stable tag: 4.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -348,6 +348,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+= v4.0.5 ( Jul 24, 2025 ) =
+
+- **fix:** Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.
+
 = v4.0.4 ( Jul 17, 2025 ) =
 
 - **update:** Admin Notice UI with Modern Design and Improved User Experience.

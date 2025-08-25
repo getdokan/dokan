@@ -1,10 +1,10 @@
+import { dispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import {
     DokanFieldLabel,
     TextField,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanCombineInput( { element } ) {
     const [ value, setValue ] = useState( element.value );
@@ -21,8 +21,10 @@ export default function DokanCombineInput( { element } ) {
         <div className="flex flex-col gap-2 w-full">
             <DokanFieldLabel
                 title={ element.title || '' }
-                titleFontWeight="light"
+                titleFontWeight="bold"
                 helperText={ element.description }
+                tooltip={ element.helper_text }
+                imageUrl={ element?.image_url }
             />
             <div className="mt-2 flex gap-2">
                 <TextField

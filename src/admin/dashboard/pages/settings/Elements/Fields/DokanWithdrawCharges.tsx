@@ -1,9 +1,9 @@
+import { dispatch } from '@wordpress/data';
 import {
     DokanFieldLabel,
     TextField,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanWithdrawCharges( { element } ) {
     if ( ! element.display ) {
@@ -20,6 +20,7 @@ export default function DokanWithdrawCharges( { element } ) {
                 title={ element.title }
                 titleFontWeight="light"
                 helperText={ element.description }
+                imageUrl={ element?.image_url }
             />
             <TextField
                 value={ element.value }

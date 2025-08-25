@@ -18,7 +18,6 @@ interface TextFieldProps {
     password?: boolean;
     prefix?: React.ReactNode;
     postfix?: React.ReactNode;
-    label?: string;
     helperText?: string;
     required?: boolean;
     variant?: Partial< TextFieldVariant >;
@@ -35,6 +34,7 @@ interface TextFieldProps {
     inputType?: React.HTMLInputTypeAttribute;
     wrapperClassName?: string;
     status?: 'default' | 'error' | 'success' | 'warning' | 'info';
+    inputProps?: React.InputHTMLAttributes< HTMLInputElement >;
 }
 
 const TextField: React.FC< TextFieldProps > = ( {
@@ -46,11 +46,9 @@ const TextField: React.FC< TextFieldProps > = ( {
     error,
     prefix,
     postfix,
-    label,
     helperText,
     required = false,
     containerClassName = '',
-    wrapperClassName = '',
     inputClassName = '',
     maxLength,
     showCharCount = false,
@@ -58,7 +56,7 @@ const TextField: React.FC< TextFieldProps > = ( {
     onBlur,
     validation,
     actionsButtons,
-    status = 'default',
+    inputProps = {},
 } ) => {
     const [ validationError, setValidationError ] = useState< string | null >(
         null
@@ -78,41 +76,17 @@ const TextField: React.FC< TextFieldProps > = ( {
 
     const displayError = error || validationError;
 
-    // If there's an error, override the status
-    const fieldStatus = displayError ? 'error' : status;
-
     // Determine if counter should be shown
     const showCounter = showCharCount || !! maxLength;
-
-    // Get appropriate border color based on status
-    const getBorderColorClass = () => {
-        switch ( fieldStatus ) {
-            case 'error':
-                return 'border-dokan-danger hover:border-dokan-danger-hover';
-            case 'success':
-                return 'border-dokan-success hover:border-dokan-success-hover';
-            case 'warning':
-                return 'border-dokan-warning hover:border-dokan-warning-hover';
-            case 'info':
-                return 'border-dokan-info hover:border-dokan-info-hover';
-            default:
-                return 'border-[#E9E9E9] focus:border-dokan-btn hover:border-dokan-btn-hover';
-        }
-    };
 
     return (
         <div
             className={ twMerge(
-                `flex items-start  gap-4 h-10  w-full `,
+                `flex items-center flex-1  gap-4 h-10  w-full `,
                 containerClassName
             ) }
         >
-            <div
-                className={ twMerge(
-                    'flex flex-col flex-1 w-[18rem] ',
-                    wrapperClassName
-                ) }
-            >
+            <div className={ twMerge( 'flex-1' ) }>
                 <SimpleInput
                     value={ value }
                     onChange={ ( e ) => handleChange( e.target.value ) }
@@ -123,10 +97,8 @@ const TextField: React.FC< TextFieldProps > = ( {
                     required={ required }
                     disabled={ disabled }
                     errors={ displayError ? [ displayError ] : [] }
-                    label={ label }
                     className={ twMerge(
-                        'rounded  w-full',
-                        getBorderColorClass(),
+                        'rounded h-6 w-full flex-1 focus:!ring-0 focus:!outline-0',
                         disabled ? 'bg-[#F1F1F4] border-gray-200' : '',
                         inputClassName,
                         prefix ? 'rounded-l-none' : '',
@@ -134,9 +106,11 @@ const TextField: React.FC< TextFieldProps > = ( {
                     ) }
                     input={ {
                         type: inputType,
-                        placeholder,
                         maxLength,
+                        placeholder,
+                        ...inputProps,
                     } }
+                    placeholder={ placeholder }
                     addOnLeft={ prefix || null }
                     addOnRight={ postfix || null }
                 />

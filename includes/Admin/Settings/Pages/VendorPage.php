@@ -86,7 +86,8 @@ class VendorPage extends AbstractPage {
 
         // Store state sub-page
         $store_state_page = ElementFactory::sub_page( 'store_state' )
-                                            ->set_title( __( 'Store State', 'dokan-lite' ) )
+            ->set_icon( 'ShoppingBag' )
+            ->set_title( __( 'Store State', 'dokan-lite' ) )
             ->set_description( __( 'Configure store state settings.', 'dokan-lite' ) )
             ->set_doc_link( esc_url( 'https://wedevs.com/docs/dokan/vendor-settings/store-state/' ) );
 
@@ -105,6 +106,13 @@ class VendorPage extends AbstractPage {
                     ->add_option( 'digital', esc_html__( 'Digital', 'dokan-lite' ) )
                     ->add_option( 'both', esc_html__( 'Both', 'dokan-lite' ) )
                     ->set_default( 'physical' )
+            )
+            ->add(
+                ElementFactory::field( 'Info', 'info' )
+                                ->set_title( __( 'Product Type Info', 'dokan-lite' ) )
+                                ->set_description( __( 'If you select "Digital" product type, vendors will only be able to sell digital products. If you select "Physical", they can only sell physical products. "Both" allows selling both types.', 'dokan-lite' ) )
+                                ->set_show_icon( true )
+                                ->set_link_url( esc_url( 'https://wedevs.com/docs/dokan/vendor-settings/selling-product-type/' ) )
             )
             ->add(
                 ElementFactory::field( 'product_status', 'radio_capsule' )
@@ -234,6 +242,7 @@ class VendorPage extends AbstractPage {
         $this
             ->set_title( __( 'Vendor', 'dokan-lite' ) )
             ->set_description( __( 'Configure vendor-related settings and capabilities.', 'dokan-lite' ) )
+            ->set_icon( 'Users' )
             ->add( $vendor_capabilities_page )
             ->add( $store_state_page );
     }

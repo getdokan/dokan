@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from '@wordpress/element';
 import CategoryRow from './CategoryRow';
 import { Category, CommissionInputsProps } from './types';
 

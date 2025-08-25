@@ -7,7 +7,11 @@ interface TooltipProps {
 }
 
 const DokanTooltip = ( { message, children }: TooltipProps ) => {
-    return <Tooltip content={ message }>{ children || <Info /> }</Tooltip>;
+    return (
+        <Tooltip content={ message }>
+            { children || <Info size={ '1rem' } /> }
+        </Tooltip>
+    );
 };
 
 export default DokanTooltip;

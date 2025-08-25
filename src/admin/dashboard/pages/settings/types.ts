@@ -16,7 +16,9 @@ export type SettingsElement = {
     variant?: string;
     icon?: string;
     title?: string;
+    new_title?: string;
     description?: string;
+    tooltip?: string;
     value?:
         | string
         | number
@@ -46,8 +48,10 @@ export type SettingsElement = {
         label: string;
         value: string | number;
     };
-    documentationLink?: string;
+    doc_link?: string;
     css_class?: string;
+    helper_text?: string;
+    image_url?: string;
 };
 
 export interface SettingsProps {

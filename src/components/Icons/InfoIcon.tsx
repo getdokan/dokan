@@ -1,34 +1,23 @@
-const InfoIcon = () => {
+import { Info } from 'lucide-react';
+import { twMerge } from "tailwind-merge";
+
+const InfoIcon = (
+    {
+        className = '',
+        size = 16,
+        color = '#828282'
+    }: {
+        className?: string;
+        size?: number;
+        color?: string;
+    }
+) => {
     return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-        >
-            <path
-                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                stroke="#828282"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-            <path
-                d="M12 16V12"
-                stroke="#828282"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-            <path
-                d="M12 8H12.01"
-                stroke="#828282"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        </svg>
+        <Info
+            size={ size }
+            color={ color }
+            className={ twMerge( 'cursor-pointer', className ) }
+        />
     );
 };
 

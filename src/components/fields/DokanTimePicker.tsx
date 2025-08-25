@@ -1,15 +1,45 @@
 import { TimePicker } from '@wordpress/components';
-import { useState } from '@wordpress/element';
+import { twMerge } from 'tailwind-merge';
+import {useState} from "@wordpress/element";
 
-const DokanTimePicker = () => {
-    const [ time, setTime ] = useState< Date >( new Date() );
+interface DokanTimePickerProps {
+    containerClassName?: string;
+    value?: { hours: number; minutes: number };
+    onChange?: ( value: { hours: number; minutes: number } ) => void;
+    is12Hour?: boolean;
+    label?: string;
+    defaultValue?: { hours: number; minutes: number };
+    minutesProps?: any;
+    className?: string;
+}
 
+const DokanTimePicker = ( {
+    containerClassName,
+    value,
+    onChange,
+    is12Hour = true,
+    label,
+    defaultValue = {
+        hours: new Date().getHours(),
+        minutes: new Date().getMinutes(),
+    },
+  ...props
+}: DokanTimePickerProps ) => {
     return (
-        <TimePicker.TimeInput
-            currentTime={ time }
-            onChange={ ( newTime ) => setTime( newTime ) }
-            is12Hour
-        />
+        <div
+            className={ twMerge(
+                'inline-flex flex-col items-start gap-2',
+                containerClassName
+            ) }
+        >
+            <TimePicker.TimeInput
+                value={ value || defaultValue }
+                onChange={ onChange }
+                is12Hour={ is12Hour }
+                label={ label }
+                { ...props }
+            />
+        </div>
     );
 };
 

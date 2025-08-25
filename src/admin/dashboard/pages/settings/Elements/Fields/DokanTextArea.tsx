@@ -1,9 +1,9 @@
+import { dispatch } from '@wordpress/data';
 import {
-    DokanFieldLabel,
     DokanTextArea as BasicTextArea,
+    DokanFieldLabel,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanTextArea( { element } ) {
     if ( ! element.display ) {
@@ -18,8 +18,10 @@ export default function DokanTextArea( { element } ) {
         <div className="flex flex-col gap-2 w-full">
             <DokanFieldLabel
                 title={ element.title }
-                titleFontWeight="light"
+                titleFontWeight="bold"
                 helperText={ element.description }
+                tooltip={ element.helper_text }
+                imageUrl={ element?.image_url }
             />
             <BasicTextArea
                 value={ element.value }

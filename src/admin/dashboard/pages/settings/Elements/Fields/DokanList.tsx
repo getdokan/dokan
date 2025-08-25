@@ -1,6 +1,6 @@
+import { dispatch } from '@wordpress/data';
 import { DokanFieldLabel, List } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanListField( { element } ) {
     if ( ! element.display ) {
@@ -18,6 +18,7 @@ export default function DokanListField( { element } ) {
                 title={ element.title }
                 titleFontWeight="light"
                 helperText={ element.description }
+                imageUrl={ element?.image_url }
             />
             <List
                 items={ element.items || [] }

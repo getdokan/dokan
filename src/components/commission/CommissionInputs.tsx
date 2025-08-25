@@ -1,7 +1,6 @@
-import React from 'react';
 import { MaskedInput } from '@getdokan/dokan-ui';
-import Plus from '../../../../../../../components/Icons/Plus';
 import { CommissionInputsProps } from './types';
+import { Plus } from 'lucide-react';
 
 const CommissionInputs: React.FC< CommissionInputsProps > = ( {
     categoryId,

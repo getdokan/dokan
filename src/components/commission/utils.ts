@@ -3,7 +3,7 @@ import { Category, CommissionValues, SettingsElement } from './types';
 export const defaultCommission = { percentage: '0', flat: '2500' };
 
 // Selector functions
-const getSettingInChildren = (
+export const getSettingInChildren = (
     id: string,
     settings: SettingsElement[]
 ): SettingsElement | undefined => {
