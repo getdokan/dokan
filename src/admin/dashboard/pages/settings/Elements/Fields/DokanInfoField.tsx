@@ -1,5 +1,6 @@
 import { SettingsElement } from '../../types';
 import { twMerge } from 'tailwind-merge';
+import parse from 'html-react-parser';
 
 interface DokanInfoFieldProps extends SettingsElement {
     link_text?: string;
@@ -17,7 +18,6 @@ const DokanInfoField = ( {
     if ( ! element.display ) {
         return null;
     }
-    console.log( 'DokanInfoField', element );
     const handleLinkClick = () => {
         if ( element?.link_url ) {
             window.open( element?.link_url, '_blank', 'noopener,noreferrer' );
@@ -36,7 +36,9 @@ const DokanInfoField = ( {
                 <div className="flex items-center gap-2">
                     { /* Main text */ }
                     <div className="text-[#575757] text-sm leading-[1.4]">
-                        { element?.description || element?.title }
+                        { parse(
+                            element?.description || element?.title || ''
+                        ) }
                     </div>
 
                     { /* Link with icon */ }

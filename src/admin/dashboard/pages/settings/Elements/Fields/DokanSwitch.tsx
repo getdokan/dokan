@@ -1,7 +1,7 @@
 import { dispatch } from '@wordpress/data';
 import {
-    DokanSwitch as BaseSwitch,
     DokanFieldLabel,
+    DokanSwitch as BaseSwitch,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
 import { SettingsElement } from '../../../../../../stores/adminSettings/types';
@@ -26,7 +26,7 @@ export default function DokanSwitch( { element } ) {
                     />
                 </div>
             </div>
-            <div className="md:col-span-1 col-span-4 flex justify-end">
+            <div className="md:col-span-1  flex justify-end">
                 <BaseSwitch
                     checked={ element.value === element.enable_state?.value }
                     onChange={ ( checked ) =>
