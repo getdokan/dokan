@@ -1,10 +1,10 @@
-import {
-    DokanFieldLabel,
-    DokanSwitch as BaseSwitch,
-} from '../../../../../../components/fields';
-import { SettingsElement } from '../../../../../../stores/adminSettings/types';
-import settingsStore from '../../../../../../stores/adminSettings';
 import { dispatch } from '@wordpress/data';
+import {
+    DokanSwitch as BaseSwitch,
+    DokanFieldLabel,
+} from '../../../../../../components/fields';
+import settingsStore from '../../../../../../stores/adminSettings';
+import { SettingsElement } from '../../../../../../stores/adminSettings/types';
 
 export default function DokanSwitch( { element } ) {
     if ( ! element.display ) {
@@ -15,15 +15,18 @@ export default function DokanSwitch( { element } ) {
     };
     return (
         <div className="grid grid-cols-4 justify-between items-center flex-wrap gap-2 p-5 w-full">
-            <div className="col-span-3">
-                <DokanFieldLabel
-                    title={ element.title }
-                    titleFontWeight="bold"
-                    helperText={ element.description }
-                    tooltip={ element.tooltip }
-                />
+            <div className="col-span-3 gap-4 flex items-center">
+                <div className="md:col-span-3 col-span-4 flex items-center gap-2">
+                    <DokanFieldLabel
+                        title={ element.title }
+                        titleFontWeight="bold"
+                        helperText={ element.description }
+                        tooltip={ element.helper_text }
+                        imageUrl={ element.image_url }
+                    />
+                </div>
             </div>
-            <div className="col-span-1 flex justify-end">
+            <div className="md:col-span-1 col-span-4 flex justify-end">
                 <BaseSwitch
                     checked={ element.value === element.enable_state?.value }
                     onChange={ ( checked ) =>

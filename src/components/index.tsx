@@ -9,6 +9,7 @@ export {
     // @ts-ignore
 } from '@wordpress/dataviews/wp';
 
+export * from './fields';
 export { default as PriceHtml } from './PriceHtml';
 export { default as DateTimeHtml } from './DateTimeHtml';
 export { default as Filter } from './Filter';
@@ -26,3 +27,7 @@ export { default as DokanPriceInput } from './PriceInput';
 export { default as WpDatePicker } from './WpDatePicker';
 export { default as DokanTab } from './Tab';
 export { default as PageHeading } from '../admin/dashboard/pages/settings/Elements/PageHeading';
+export { default as RichText } from './richtext/RichText';
+
+// Commission Components
+export * from './commission';

@@ -1,5 +1,5 @@
-import { twMerge } from 'tailwind-merge';
 import parse from 'html-react-parser';
+import { twMerge } from 'tailwind-merge';
 import { SettingsElement, SettingsProps } from '../../types';
 
 interface DokanHtmlElement extends SettingsElement {
@@ -13,10 +13,7 @@ interface DokanHtmlFieldProps extends SettingsProps {
     element: DokanHtmlElement;
 }
 
-const DokanHtmlField: React.FC< DokanHtmlFieldProps > = ( {
-    element,
-    onValueChange,
-} ) => {
+const DokanHtmlField = ( { element, onValueChange }: DokanHtmlFieldProps ) => {
     if ( ! element.display ) {
         return null;
     }

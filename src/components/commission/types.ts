@@ -73,3 +73,55 @@ export interface CategoryRowProps {
     onToggle: ( id: string | number ) => void;
     commissionInputsProps: CommissionInputsProps;
 }
+
+export interface CategoryBasedCommissionProps {
+    // Core data
+    categories: { [ key: string ]: Category };
+    commissionValues: CommissionValues;
+
+    // Configuration
+    currency: {
+        symbol: string;
+        thousand: string;
+        decimal: string;
+        precision: number;
+    };
+    resetSubCategoryValue?: boolean;
+
+    // Callbacks
+    onCommissionChange: ( updatedCommission: CommissionValues ) => void;
+
+    // Display options
+    display?: boolean;
+    debounceDelay?: number;
+}
+
+export interface FixedCommissionInputValues {
+    admin_percentage: number;
+    additional_fee: number;
+}
+
+export interface CombineInputProps {
+    // Core data
+    values: FixedCommissionInputValues;
+
+    // Configuration
+    currency: {
+        symbol: string;
+        thousand: string;
+        decimal: string;
+        precision: number;
+    };
+
+    // Display content
+    title?: string;
+    description?: string;
+    hookKey?: string;
+
+    // Callbacks
+    onValueChange: ( updatedValues: FixedCommissionInputValues ) => void;
+
+    // Display options
+    display?: boolean;
+    debounceDelay?: number;
+}

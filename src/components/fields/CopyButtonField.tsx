@@ -1,13 +1,12 @@
 import { useState } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
 import TextField from './TextField';
-import DokanFieldLabel from './DokanFieldLabel';
 import CopyIcon from '../Icons/CopyIcon';
 import { __ } from '@wordpress/i18n';
 
 interface CopyButtonFieldProps {
     value: string;
-    label: string;
+    label?: string;
     tooltip?: React.ReactNode;
     disabled?: boolean;
     containerClassName?: string;
@@ -15,9 +14,11 @@ interface CopyButtonFieldProps {
     helperText?: string;
     placeholder?: string;
     actionClassName?: string;
+    onChange?: ( value: string ) => void;
+    inputProps?: React.InputHTMLAttributes< HTMLInputElement >;
 }
 
-const CopyButtonField: React.FC< CopyButtonFieldProps > = ( {
+const CopyButtonField = ( {
     value,
     label,
     tooltip,
@@ -27,7 +28,9 @@ const CopyButtonField: React.FC< CopyButtonFieldProps > = ( {
     helperText = '',
     placeholder = '',
     actionClassName = '',
-} ) => {
+    onChange,
+    inputProps = {},
+}: CopyButtonFieldProps ) => {
     const [ copied, setCopied ] = useState( false );
 
     // Handle copying to clipboard
@@ -53,39 +56,36 @@ const CopyButtonField: React.FC< CopyButtonFieldProps > = ( {
                 <span className="w-4 h-4 flex items-center justify-center">
                     <CopyIcon />
                 </span>
-                <span>{ __( 'Copy', 'dokan-lite' ) }</span>
+                <span>
+                    { copied
+                        ? __( 'Copied', 'dokan-lite' )
+                        : __( 'Copy', 'dokan-lite' ) }
+                </span>
             </button>
         );
     };
 
     return (
-        <div className={ twMerge( ' w-full', containerClassName ) }>
-            <div className="flex flex-wrap justify-between">
-                <div className="flex">
-                    <DokanFieldLabel
-                        title={ label }
-                        titleFontWeight="light"
-                        tooltip={ tooltip }
-                        className={ labelClassName }
-                    />
-                </div>
-                <div className="flex-1">
-                    <TextField
-                        value={ value }
-                        onChange={ () => {} } // Read-only field
-                        disabled={ disabled }
-                        required={ false }
-                        inputType="text"
-                        placeholder={ placeholder }
-                        helperText={ helperText }
-                        inputClassName={ twMerge(
-                            'bg-white w-[19rem] max-w-full',
-                            disabled ? 'bg-[#F1F1F4]' : ''
-                        ) }
-                        actionsButtons={ renderCopyButton() }
-                    />
-                </div>
-            </div>
+        <div className="w-full">
+            <TextField
+                value={ value }
+                onChange={ ( newValue ) => {
+                    if ( onChange ) {
+                        onChange( newValue );
+                    }
+                } }
+                disabled={ disabled }
+                required={ false }
+                inputType="text"
+                placeholder={ placeholder }
+                helperText={ helperText }
+                inputClassName={ twMerge(
+                    'bg-[#F1F1F4 ] h-full max-w-full',
+                    disabled ? 'bg-[#F1F1F4]' : ''
+                ) }
+                actionsButtons={ renderCopyButton() }
+                inputProps={ inputProps }
+            />
         </div>
     );
 };
