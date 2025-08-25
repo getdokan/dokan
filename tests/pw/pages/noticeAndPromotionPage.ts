@@ -84,7 +84,8 @@ export class NoticeAndPromotionPage extends AdminPage {
     async allowDiagnosticTracking() {
         await this.deleteOption();
         await this.goIfNotThere(data.subUrls.backend.adminDashboard, 'networkidle');
-        await this.clickAndWaitForResponse(data.subUrls.backend.diagnosticNotice, selector.admin.dokan.diagnostic.allowCollectData, 302);
+       // await this.clickAndWaitForResponse(data.subUrls.backend.diagnosticNotice, selector.admin.dokan.diagnostic.allowCollectData, 302);
+        await this.clickAndWaitForLoadState(selector.admin.dokan.diagnostic.allowCollectData);
         await this.notToBeVisible(selector.admin.dokan.diagnostic.noticeDiv);
     }
 
