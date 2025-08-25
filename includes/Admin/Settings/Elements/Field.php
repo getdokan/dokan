@@ -21,6 +21,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\RefreshSelectField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Repeater;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\RichText;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Select;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\SingleProductPreview;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\SelectColorPicker;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\ShowHide;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
@@ -28,6 +29,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Text;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\CustomizeRadio;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\HtmlField;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\VendorInfoPreview;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\FileUpload;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\TextArea;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\WithdrawSchedule;
@@ -90,6 +92,8 @@ class Field extends SettingsElement {
         'select_color_picker'       => SelectColorPicker::class,
         'copy_field'                => CopyField::class,
         'file_upload'               => FileUpload::class,
+        'vendor_info_preview'       => VendorInfoPreview::class,
+        'single_product_preview'    => SingleProductPreview::class
         'textarea'          => TextArea::class,
         'withdraw_schedule' => WithdrawSchedule::class,
 	);
