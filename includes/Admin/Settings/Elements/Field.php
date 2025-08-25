@@ -93,9 +93,9 @@ class Field extends SettingsElement {
         'copy_field'                => CopyField::class,
         'file_upload'               => FileUpload::class,
         'vendor_info_preview'       => VendorInfoPreview::class,
-        'single_product_preview'    => SingleProductPreview::class
-        'textarea'          => TextArea::class,
-        'withdraw_schedule' => WithdrawSchedule::class,
+        'single_product_preview' => SingleProductPreview::class,
+        'textarea'               => TextArea::class,
+        'withdraw_schedule'      => WithdrawSchedule::class,
 	);
 
 	/**

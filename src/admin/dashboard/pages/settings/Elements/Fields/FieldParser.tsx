@@ -29,7 +29,6 @@ import DokanRichText from './DokanRichText';
 import RadioBox from './RadioBox';
 import DokanRepeater from './DokanRepeater';
 import WithdrawSchedule from './WithdrawSchedule';
-import DokanRepeater from './DokanRepeater';
 
 const FieldParser = ( { element }: SettingsProps ) => {
     switch ( element.variant ) {
@@ -191,14 +190,11 @@ const FieldParser = ( { element }: SettingsProps ) => {
                 element
             );
 
-
         case 'vendor_info_preview':
             return (
                 <DokanVendorInfoPreview
                     key={ element.hook_key }
                     element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
@@ -207,8 +203,6 @@ const FieldParser = ( { element }: SettingsProps ) => {
                 <DokanSingleProductPreview
                     key={ element.hook_key }
                     element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
