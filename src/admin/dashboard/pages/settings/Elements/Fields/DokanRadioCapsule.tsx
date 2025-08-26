@@ -1,10 +1,9 @@
-
+import { dispatch } from '@wordpress/data';
 import {
-    DokanFieldLabel,
     DokanRadioCapsule as BaseRadioCapsule,
+    DokanFieldLabel,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanRadioCapsule( { element } ) {
     if ( ! element.display ) {
@@ -16,12 +15,13 @@ export default function DokanRadioCapsule( { element } ) {
     };
 
     return (
-        <div className="flex justify-between w-full p-5 ">
+        <div className="flex flex-wrap gap-4 justify-between w-full p-5 ">
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"
                 helperText={ element.description }
-                tooltip={ element.tooltip }
+                tooltip={ element.helper_text }
+                imageUrl={ element?.image_url }
             />
             <BaseRadioCapsule
                 options={

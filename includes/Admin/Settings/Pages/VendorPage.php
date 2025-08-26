@@ -86,8 +86,10 @@ class VendorPage extends AbstractPage {
 
         // Store state sub-page
         $store_state_page = ElementFactory::sub_page( 'store_state' )
-                                            ->set_title( __( 'Store State', 'dokan-lite' ) )
-                                            ->set_description( __( 'Configure store state settings.', 'dokan-lite' ) );
+            ->set_icon( 'ShoppingBag' )
+            ->set_title( __( 'Store State', 'dokan-lite' ) )
+            ->set_description( __( 'Configure store state settings.', 'dokan-lite' ) )
+            ->set_doc_link( esc_url( 'https://wedevs.com/docs/dokan/vendor-settings/store-state/' ) );
 
         // Create a single section for all vendor capabilities
         $vendor_capabilities_section = ElementFactory::section( 'vendor_capabilities' )
@@ -104,6 +106,13 @@ class VendorPage extends AbstractPage {
                     ->add_option( 'digital', esc_html__( 'Digital', 'dokan-lite' ) )
                     ->add_option( 'both', esc_html__( 'Both', 'dokan-lite' ) )
                     ->set_default( 'physical' )
+            )
+            ->add(
+                ElementFactory::field( 'Info', 'info' )
+                                ->set_title( __( 'Product Type Info', 'dokan-lite' ) )
+                                ->set_description( __( 'If you select "Digital" product type, vendors will only be able to sell digital products. If you select "Physical", they can only sell physical products. "Both" allows selling both types.', 'dokan-lite' ) )
+                                ->set_show_icon( true )
+                                ->set_link_url( esc_url( 'https://wedevs.com/docs/dokan/vendor-settings/selling-product-type/' ) )
             )
             ->add(
                 ElementFactory::field( 'product_status', 'radio_capsule' )
@@ -228,50 +237,12 @@ class VendorPage extends AbstractPage {
         // Store state sub-page
         $store_state_page->add(
             ElementFactory::section( 'vendor_state' )
-                            ->add(
-                                ElementFactory::field_group( 'vendor_state_settings' )
-                                            ->add(
-                                                ElementFactory::field( 'vendor_state_description', 'base_field_label' )
-                                                                ->set_title( __( 'Vendor State Description', 'dokan-lite' ) )
-                                                                ->set_description( __( 'Select the state for vendors and notify them when their state changes.', 'dokan-lite' ) )
-                                                                ->set_helper_text( __( 'This setting allows you to manage vendor states and notify them accordingly.', 'dokan-lite' ) )
-                                            )
-                                            ->add(
-                                                ElementFactory::field( 'vendor_state', 'refresh_select' )
-                                                                ->set_title( __( 'Vendor State', 'dokan-lite' ) )
-                                                                ->set_description( __( 'Select the state for vendors.', 'dokan-lite' ) )
-                                                                ->set_options(
-                                                                    [
-                                                                        [
-                                                                            'value' => 'active',
-                                                                            'title' => __( 'Active', 'dokan-lite' ),
-                                                                        ],
-                                                                        [
-                                                                            'value' => 'inactive',
-                                                                            'title' => __( 'Inactive', 'dokan-lite' ),
-                                                                        ],
-                                                                        [
-                                                                            'value' => 'pending',
-                                                                            'title' => __( 'Pending', 'dokan-lite' ),
-                                                                        ],
-                                                                    ]
-                                                                )
-                                                                ->set_default( 'active' )
-                                            )
-                            )
-                            ->add(
-                                ElementFactory::field( 'vendor_state_notification', 'switch' )
-                                            ->set_title( __( 'Vendor State Notification', 'dokan-lite' ) )
-                                            ->set_description( __( 'Notify vendors when their state changes.', 'dokan-lite' ) )
-                                            ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                            ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                            ->set_default( 'on' )
-                            )
         );
 
         $this
             ->set_title( __( 'Vendor', 'dokan-lite' ) )
             ->set_description( __( 'Configure vendor-related settings and capabilities.', 'dokan-lite' ) )
+            ->set_icon( 'Users' )
             ->add( $vendor_capabilities_page )
             ->add( $store_state_page );
     }

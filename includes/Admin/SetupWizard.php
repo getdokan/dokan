@@ -146,7 +146,16 @@ class SetupWizard {
             wp_enqueue_style( 'dokan-fontawesome' );
         }
 
-        wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', [ 'jquery' ], WC_VERSION, true );
+        $require_dompurify = version_compare( WC()->version, '10.0.2', '>' );
+
+        if ( $require_dompurify && ! wp_script_is( 'dompurify', 'registered' ) ) {
+            wp_register_script( 'dompurify', WC()->plugin_url() . '/assets/js/dompurify/purify' . $suffix . '.js', array(), WC()->version, false );
+        }
+
+        if ( ! wp_script_is( 'jquery-tiptip', 'registered' ) ) {
+            wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', $require_dompurify ? [ 'jquery', 'dompurify' ] : [ 'jquery' ], WC()->version, true );
+        }
+
         wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', [ 'jquery', 'wc-enhanced-select', 'jquery-blockui', 'wp-util', 'jquery-tiptip', 'dokan-util-helper' ], WC_VERSION, true );
 
         wp_localize_script(

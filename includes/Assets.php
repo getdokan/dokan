@@ -390,10 +390,6 @@ class Assets {
         $bootstrap_deps = [ 'dokan-vue-vendor', 'wp-i18n', 'wp-hooks' ];
 
         $scripts = [
-            'jquery-tiptip'             => [
-                'src'  => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
-                'deps' => [ 'jquery' ],
-            ],
             // Remove `dokan-i18n-jed` in next release.
             'dokan-i18n-jed' => [
                 'src'  => $asset_url . '/vendors/i18n/jed.js',
@@ -593,6 +589,22 @@ class Assets {
                 'version' => filemtime( $asset_path . 'js/react-hooks.js' ),
             ],
         ];
+
+        $require_dompurify = version_compare( WC()->version, '10.0.2', '>' );
+
+        if ( $require_dompurify && ! wp_script_is( 'dompurify', 'registered' ) ) {
+            $scripts['dompurify'] = [
+                'src'  => WC()->plugin_url() . '/assets/js/dompurify/purify' . $suffix . '.js',
+                'deps' => [],
+            ];
+        }
+
+        if ( ! wp_script_is( 'jquery-tiptip', 'registered' ) ) {
+            $scripts['jquery-tiptip'] = [
+                'src'  => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
+                'deps' => $require_dompurify ? [ 'jquery', 'dompurify' ] : [ 'jquery' ],
+            ];
+        }
 
         $components_asset_file = DOKAN_DIR . '/assets/js/components.asset.php';
         if ( file_exists( $components_asset_file ) ) {
@@ -1328,6 +1340,14 @@ class Assets {
                     'dummy_data'        => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
                     'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
                     'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
+                    'newSettingsUrl'    => add_query_arg(
+                        [
+                            'dokan_action'          => 'switch_dashboard_settings',
+                            'settings_legacy_nonce' => wp_create_nonce( 'settings_legacy_dashboard' ),
+                            'page'                  => 'dokan-dashboard#/settings',
+                        ],
+                        admin_url( 'admin.php' )
+                    ),
                 ],
                 'states'                            => WC()->countries->get_allowed_country_states(),
                 'countries'                         => WC()->countries->get_allowed_countries(),

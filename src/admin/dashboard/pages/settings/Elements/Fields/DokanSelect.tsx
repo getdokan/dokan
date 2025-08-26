@@ -1,9 +1,9 @@
+import { dispatch } from '@wordpress/data';
 import {
-    DokanFieldLabel,
     DokanSelect as BaseDokanSelect,
+    DokanFieldLabel,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanSelect( { element } ) {
     if ( ! element.display ) {
@@ -14,15 +14,17 @@ export default function DokanSelect( { element } ) {
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
     return (
-        <div className="flex justify-between w-full p-5">
+        <div className="flex justify-between gap-4 flex-wrap w-full p-5">
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"
                 helperText={ element.description }
-                wrapperClassNames={ 'flex-1' }
+                tooltip={ element.helper_text }
+                imageUrl={ element?.image_url }
             />
             <BaseDokanSelect
-                value={ element.value }
+                value={ element.value || element?.defaultValue || '' }
+                id={ element.id }
                 onChange={ ( val ) =>
                     onValueChange( { ...element, value: val } )
                 }
@@ -33,6 +35,7 @@ export default function DokanSelect( { element } ) {
                     } ) ) || []
                 }
                 disabled={ element.disabled }
+                containerClassName={ 'w-[14rem] max-w-full' }
             />
         </div>
     );

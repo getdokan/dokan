@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 
-const CommissionHeader: React.FC = () => {
+const CommissionHeader = () => {
     return (
         <div className=" h-16 flex items-center px-5">
             <div className="flex items-center">

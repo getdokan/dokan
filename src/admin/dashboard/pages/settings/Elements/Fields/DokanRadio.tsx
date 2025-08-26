@@ -1,9 +1,9 @@
+import { dispatch } from '@wordpress/data';
 import {
     DokanFieldLabel,
     DokanSimpleRadio,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
 
 export default function DokanRadio( { element } ) {
     if ( ! element.display ) {
@@ -17,8 +17,10 @@ export default function DokanRadio( { element } ) {
         <div className="flex flex-col gap-2 w-full">
             <DokanFieldLabel
                 title={ element.title }
-                titleFontWeight="light"
+                titleFontWeight="bold"
                 helperText={ element.description }
+                tooltip={ element.helper_text }
+                icon={ element?.icon }
             />
             <DokanSimpleRadio
                 name={ element.id }

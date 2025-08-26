@@ -25,6 +25,7 @@ class Switcher extends Radio {
      */
     protected $states = array();
 
+
     /**
      * Get options.
      *
@@ -51,6 +52,8 @@ class Switcher extends Radio {
         return $this;
     }
 
+
+
     /**
      * Get active value.
      *
@@ -74,7 +77,6 @@ class Switcher extends Radio {
      *
      * @return array
      */
-
     public function get_disable_state(): array {
         return $this->states['disable'];
     }
@@ -87,6 +89,7 @@ class Switcher extends Radio {
     public function populate(): array {
         $data                  = parent::populate();
         $data['default']       = $this->get_default();
+        $data['image_url']     = $this->get_image_url();
         $data['enable_state']  = $this->get_enable_state();
         $data['disable_state'] = $this->get_disable_state();
 

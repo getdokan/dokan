@@ -1,11 +1,11 @@
+import { dispatch } from '@wordpress/data';
+import { twMerge } from 'tailwind-merge';
 import {
     DokanFieldLabel,
     TextField,
 } from '../../../../../../components/fields';
-import { SettingsElement } from '../../types';
-import { twMerge } from 'tailwind-merge';
-import { dispatch } from '@wordpress/data';
 import settingsStore from '../../../../../../stores/adminSettings';
+import { SettingsElement } from '../../types';
 
 interface DokanDoubleInputElement extends SettingsElement {
     label: string;
@@ -45,9 +45,11 @@ const DokanDoubleInput = ( {
         >
             { /* Field label with tooltip */ }
             <DokanFieldLabel
-                title={ element.label }
+                title={ element.title }
                 titleFontWeight="bold"
-                tooltip={ element.tooltip }
+                helperText={ element.description }
+                tooltip={ element.helper_text }
+                imageUrl={ element?.image_url }
             />
             <div className="flex gap-4 ">
                 <TextField
