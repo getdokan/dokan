@@ -7,23 +7,26 @@ import {
 import settingsStore from '../../../../../../stores/adminSettings';
 import { SettingsElement } from '../../types';
 
-interface DokanDoubleTextFieldElement extends SettingsElement {
+interface DokanDoubleInputElement extends SettingsElement {
     label: string;
     tooltip?: React.ReactNode;
     firstLabel: string;
     firstValue: string | number;
+    firstValueType: string;
     secondLabel: string;
     secondValue: string | number;
+    secondValueType: string;
     className?: string;
     display?: boolean;
     firstPrefix?: string;
     secondPrefix?: string;
+    value?: { first: string | number; second: string | number };
 }
 
-const DokanDoubleTextField = ( {
+const DokanDoubleInput = ( {
     element,
 }: {
-    element: DokanDoubleTextFieldElement;
+    element: DokanDoubleInputElement;
 } ) => {
     if ( ! element.display ) {
         return null;
@@ -48,31 +51,39 @@ const DokanDoubleTextField = ( {
                 tooltip={ element.helper_text }
                 imageUrl={ element?.image_url }
             />
-            <div className="flex gap-6 ">
+            <div className="flex gap-4 ">
                 <TextField
                     value={ String( element.firstValue ) }
-                    onChange={ () =>
+                    onChange={ ( val ) =>
                         onValueChange( {
                             ...element,
-                            firstValue: element.firstValue,
+                            firstValue: val,
+                            value: {
+                                first: val,
+                                second: element.secondValue,
+                            },
                         } )
                     }
+                    inputType={ element.firstValueType }
                     label={ element.firstLabel }
-                    disabled
                     prefix={ element.firstPrefix }
-                    inputClassName="bg-white border-[#E9E9E9] rounded h-10 px-4 text-[#25252D] text-sm"
+                    inputClassName="bg-white border-[#E9E9E9]  rounded h-10 px-4 text-[#25252D] text-sm"
                 />
 
                 <TextField
                     value={ String( element.secondValue ) }
-                    onChange={ () =>
+                    onChange={ ( val ) =>
                         onValueChange( {
                             ...element,
-                            secondValue: element.secondValue,
+                            secondValue: val,
+                            value: {
+                                first: element.firstValue,
+                                second: val,
+                            },
                         } )
                     }
+                    inputType={ element.secondValueType }
                     label={ element.secondLabel }
-                    disabled
                     prefix={ element.secondPrefix }
                     inputClassName="bg-white border-[#E9E9E9] rounded h-10 px-4 text-[#25252D] text-sm"
                     containerClassName="w-full"
@@ -82,4 +93,4 @@ const DokanDoubleTextField = ( {
     );
 };
 
-export default DokanDoubleTextField;
+export default DokanDoubleInput;
