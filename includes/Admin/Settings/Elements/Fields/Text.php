@@ -46,6 +46,33 @@ class Text extends Field {
     protected $size = 20;
 
     /**
+     *  Helper text for the field.
+     *
+     * @var string $helper_text Helper text.
+     */
+    protected $helper_text = '';
+
+    /**
+     * Postfix.
+     *
+     * @var mixed $postfix
+     */
+    protected $postfix = '';
+
+    /**
+     * Input Type.
+     *
+     * @var mixed $prefix
+     */
+    protected $prefix = '';
+
+    /**
+     * Image URL.
+     *
+     * @var string $image_url Image URL.
+     */
+    protected $image_url = '';
+    /**
      * Constructor.
      *
      * @param string $id Input ID.
@@ -61,6 +88,50 @@ class Text extends Field {
      */
     public function get_default(): string {
         return $this->default;
+    }
+
+    /**
+     * Get Prefix.
+     *
+     * @return mixed
+     */
+    public function get_prefix() {
+        return $this->prefix;
+    }
+
+    /**
+     * Set Prefix.
+     *
+     * @param string $prefix Prefix.
+     *
+     * @return SettingsElement
+     */
+    public function set_prefix( string $prefix ): SettingsElement {
+        $this->prefix = $prefix;
+
+        return $this;
+    }
+
+    /**
+     * Get Postfix.
+     *
+     * @return mixed
+     */
+    public function get_postfix() {
+        return $this->postfix;
+    }
+
+    /**
+     * Set Postfix.
+     *
+     * @param string $postfix Postfix.
+     *
+     * @return SettingsElement
+     */
+    public function set_postfix( string $postfix ): SettingsElement {
+        $this->postfix = $postfix;
+
+        return $this;
     }
 
     /**
@@ -105,6 +176,32 @@ class Text extends Field {
      */
     public function is_readonly(): bool {
         return $this->is_readonly;
+    }
+
+    /**
+     * Get image url data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_image_url(): string {
+        return $this->image_url;
+    }
+
+    /**
+     * Set image url data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $url Getting image source url
+     *
+     * @return Text
+     */
+    public function set_image_url( string $url ): Text {
+        $this->image_url = $url;
+
+        return $this;
     }
 
     /**
@@ -165,6 +262,28 @@ class Text extends Field {
     }
 
     /**
+     * Get helper text.
+     *
+     * @return string
+     */
+    public function get_helper_text(): string {
+        return $this->helper_text;
+    }
+
+    /**
+     * Set helper text.
+     *
+     * @param string $helper_text Helper text.
+     *
+     * @return Text
+     */
+    public function set_helper_text( string $helper_text ): Text {
+        $this->helper_text = $helper_text;
+
+        return $this;
+    }
+
+    /**
      * Data validation.
      *
      * @param mixed $data Data for validation.
@@ -187,7 +306,10 @@ class Text extends Field {
         $data['readonly']    = $this->is_readonly();
         $data['disabled']    = $this->is_disabled();
         $data['size']        = $this->get_size();
-
+        $data['helper_text'] = $this->get_helper_text();
+        $data['postfix'] = $this->get_postfix();
+        $data['prefix'] = $this->get_prefix();
+        $data['image_url'] = $this->get_image_url();
         return $data;
     }
 

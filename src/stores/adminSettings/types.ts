@@ -31,6 +31,7 @@ export interface SettingsElement {
     dependencies: SettingsElementDependency[];
     options?: SettingsElementOption[];
     variant?: string;
+    image_url?: string;
     value?:
         | string
         | number
@@ -45,12 +46,15 @@ export interface SettingsElement {
         | Record< string, any >;
     css_class?: string;
     disabled?: boolean;
+    doc_link?: string;
 }
 
 export type SettingsState = {
     settings: SettingsElement[];
+    originalSettings: SettingsElement[];
     dependencies: SettingsElementDependency[];
     loading: boolean;
     saving: boolean;
     needSaving: boolean;
+    searchText: string;
 };

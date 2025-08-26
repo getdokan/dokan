@@ -25,6 +25,13 @@ class MultiCheck extends Field {
     protected $input_type = 'multicheck';
 
     /**
+     * Helper text.
+     *
+     * @var string $helper_text Helper text.
+     */
+    protected string $helper_text = '';
+
+    /**
      * Options.
      *
      * @var array $options Options.
@@ -40,6 +47,27 @@ class MultiCheck extends Field {
         $this->id = $id;
     }
 
+    /**
+     * Get helper text.
+     *
+     * @return string
+     */
+    public function get_helper_text(): string {
+        return $this->helper_text;
+    }
+
+    /**
+     * Set helper text.
+     *
+     * @param string $helper_text Helper text.
+     *
+     * @return MultiCheck
+     */
+    public function set_helper_text( string $helper_text ): MultiCheck {
+        $this->helper_text = $helper_text;
+
+        return $this;
+    }
     /**
      * Get options.
      *
@@ -122,6 +150,7 @@ class MultiCheck extends Field {
         $data['value']   = $this->get_value();
         $data['default'] = $this->get_default();
         $data['options'] = $this->get_options();
+        $data['helper_text'] = $this->get_helper_text();
 
         return $data;
     }

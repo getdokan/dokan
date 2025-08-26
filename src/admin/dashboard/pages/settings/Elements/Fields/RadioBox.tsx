@@ -1,8 +1,8 @@
+import { dispatch } from '@wordpress/data';
 import React, { useState } from '@wordpress/element';
-import { SettingsProps } from '../../types';
 import { DokanFieldLabel } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
+import { SettingsProps } from '../../types';
 
 const SelectorCard = ( {
     value,
@@ -126,6 +126,7 @@ const RadioBox = ( { element }: SettingsProps ) => {
                 title={ element.title || '' }
                 titleFontWeight="light"
                 helperText={ element.description }
+                imageUrl={ element?.image_url }
             />
             <div className="flex flex-wrap gap-4 mt-4">
                 { element?.options?.map( ( option ) => (

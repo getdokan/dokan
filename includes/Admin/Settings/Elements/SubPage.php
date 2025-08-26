@@ -16,7 +16,8 @@ class SubPage extends SettingsElement {
 	 */
 	protected $type = 'subpage';
 
-	/**
+   
+    /**
 	 * Data validation.
 	 *
 	 * @param mixed $data Data for validation.
@@ -37,6 +38,18 @@ class SubPage extends SettingsElement {
 	public function sanitize_element( $data ) {
 		return wp_unslash( $data );
 	}
+
+    /**
+     * Populate The subpage data.
+     *
+     * @return array
+     */
+    public function populate(): array {
+        $data             = parent::populate();
+        $data['doc_link'] = esc_url( $this->get_doc_link() );
+
+        return apply_filters( 'dokan_settings_subpage_data', $data, $this );
+    }
 
 
 	/**

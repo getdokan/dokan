@@ -1,17 +1,19 @@
-import { useRef } from '@wordpress/element';
-import Upload from '../Upload';
 import { Button, FormInput } from '@getdokan/dokan-ui';
+import { useRef } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
+import Upload from '../Upload';
 
 interface DokanFileUploadProps {
     onUrlImport?: ( url: string ) => void;
     className?: string;
     inputClassName?: string;
+    value?: string;
 }
 
 function DokanFileUpload( {
     onUrlImport,
     className = '',
+    value,
 }: DokanFileUploadProps ) {
     const urlInputRef = useRef< HTMLInputElement >( null );
 
@@ -32,6 +34,7 @@ function DokanFileUpload( {
                 type="text"
                 name="dokan-file-upload-url"
                 ref={ urlInputRef }
+                value={ value }
                 placeholder="No file selected"
                 readOnly
                 disabled={ true }

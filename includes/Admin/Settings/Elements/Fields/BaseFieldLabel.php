@@ -7,7 +7,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Field;
 /**
  * Base Field Label - A label field with advanced styling and content options.
  */
-class BaseFieldLabel extends Field {
+class BaseFieldLabel extends Text {
 
     /**
      * Input type for this field.
@@ -15,15 +15,6 @@ class BaseFieldLabel extends Field {
      * @var string $input_type Input type.
      */
     protected $input_type = 'base_field_label';
-
-
-    /**
-     * Tooltip text.
-     *
-     * @var string $tooltip Tooltip text.
-     */
-    protected $tooltip = '';
-
 
     /**
      * Icon content.
@@ -33,11 +24,11 @@ class BaseFieldLabel extends Field {
     protected $icon = '';
 
     /**
-     * Helper text.
+     * Description.
      *
-     * @var string $helper_text Helper text.
+     * @var string $description Description.
      */
-    protected $helper_text = '';
+    protected $description = '';
 
     /**
      * Suffix content.
@@ -46,7 +37,7 @@ class BaseFieldLabel extends Field {
      */
     protected $suffix = '';
 
-
+   
     /**
      * Constructor.
      *
@@ -63,8 +54,7 @@ class BaseFieldLabel extends Field {
      *
      * @return bool
      */
-    public function data_validation( $data )
-    : bool {
+    public function data_validation( $data ): bool {
         return true; // Labels don't require validation
     }
 
@@ -73,12 +63,12 @@ class BaseFieldLabel extends Field {
      *
      * @return array
      */
-    public function populate()
-    : array {
+    public function populate(): array {
         $data                = parent::populate();
         $data['suffix']      = $this->get_suffix();
         $data['icon']        = $this->get_icon();
-        $data['helper_text'] = $this->get_helper_text();
+        $data['description'] = $this->get_description();
+        $data['doc_link'] = $this->get_doc_link();
 
         return $data;
     }
@@ -88,8 +78,7 @@ class BaseFieldLabel extends Field {
      *
      * @return string
      */
-    public function get_suffix()
-    : string {
+    public function get_suffix(): string {
         return $this->suffix;
     }
 
@@ -100,8 +89,7 @@ class BaseFieldLabel extends Field {
      *
      * @return BaseFieldLabel
      */
-    public function set_suffix( string $suffix )
-    : BaseFieldLabel {
+    public function set_suffix( string $suffix ): BaseFieldLabel {
         $this->suffix = $suffix;
 
         return $this;
@@ -112,8 +100,7 @@ class BaseFieldLabel extends Field {
      *
      * @return string
      */
-    public function get_icon()
-    : string {
+    public function get_icon(): string {
         return $this->icon;
     }
 
@@ -124,33 +111,30 @@ class BaseFieldLabel extends Field {
      *
      * @return BaseFieldLabel
      */
-    public function set_icon( string $icon )
-    : BaseFieldLabel {
+    public function set_icon( string $icon ): BaseFieldLabel {
         $this->icon = $icon;
 
         return $this;
     }
 
     /**
-     * Get helper text.
+     * Get description.
      *
      * @return string
      */
-    public function get_helper_text()
-    : string {
-        return $this->helper_text;
+    public function get_description(): string {
+        return $this->description;
     }
 
     /**
-     * Set helper text.
+     * Set description.
      *
-     * @param string $helper_text Helper text.
+     * @param string $description Description.
      *
      * @return BaseFieldLabel
      */
-    public function set_helper_text( string $helper_text )
-    : BaseFieldLabel {
-        $this->helper_text = $helper_text;
+    public function set_description( string $description ): BaseFieldLabel {
+        $this->description = $description;
 
         return $this;
     }
@@ -163,8 +147,7 @@ class BaseFieldLabel extends Field {
      *
      * @return string
      */
-    public function escape_element( $data )
-    : string {
+    public function escape_element( $data ): string {
         return esc_html( $data );
     }
 }
