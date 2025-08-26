@@ -9,7 +9,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CategoryBasedCommissi
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Commission\CombineInput;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\CopyField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Currency;
-use WeDevs\Dokan\Admin\Settings\Elements\Fields\DoubleTextField;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\DoubleInput;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\InfoField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\MultiCheck;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Number;
@@ -82,7 +82,7 @@ class Field extends SettingsElement {
         'category_based_commission' => CategoryBasedCommission::class,
         'radio_capsule'             => RadioCapsule::class,
         'info'                      => InfoField::class,
-        'double_text'               => DoubleTextField::class,
+        'double_input'              => DoubleInput::class,
         'base_field_label'          => BaseFieldLabel::class,
         'customize_radio'           => CustomizeRadio::class,
         'html'                      => HtmlField::class,
