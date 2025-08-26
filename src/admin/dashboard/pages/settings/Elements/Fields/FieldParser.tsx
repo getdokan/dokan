@@ -180,13 +180,12 @@ const FieldParser = ( { element }: SettingsProps ) => {
                 element
             );
         case 'double_input':
-            return (
-                (
-                    <DokanDoubleInput
-                        key={ element.hook_key }
-                        element={ element }
-                    />
-                 ),
+            return applyFilters(
+                'dokan_admin_settings_double_input_field_parser',
+                <DokanDoubleInput
+                    key={ element.hook_key }
+                    element={ element }
+                />,
                 element
             );
 
