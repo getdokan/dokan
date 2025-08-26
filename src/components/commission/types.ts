@@ -19,11 +19,6 @@ export interface CommissionValues {
     };
 }
 
-export interface SettingsProps {
-    element: any;
-    onValueChange: ( value: any ) => void;
-}
-
 export interface SettingsElement {
     hook_key: string;
     children?: SettingsElement[];

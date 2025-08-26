@@ -7,9 +7,9 @@ import {
 import settingsStore from '../../../../../../stores/adminSettings';
 import { SettingsElement } from '../../types';
 
-interface DokanDoubleInputElement extends SettingsElement {
+export interface DokanDoubleInputElement extends SettingsElement {
     label: string;
-    tooltip?: React.ReactNode;
+    tooltip?: string;
     firstLabel: string;
     firstValue: string | number;
     firstValueType: string;

@@ -12,13 +12,12 @@ class TransactionPage extends AbstractPage {
      * @var string
      */
     protected $id = 'transaction';
-
     /**
      * The page priority.
      *
      * @var int
      */
-    protected int $priority = 300;
+    protected int $priority = 150;
 
     /**
      * Storage key for the page.

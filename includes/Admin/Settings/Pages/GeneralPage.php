@@ -186,7 +186,7 @@ class GeneralPage extends AbstractPage {
                                                                 'title'       => __( 'Classic Search', 'dokan-lite' ),
                                                                 'value'       => 'classic',
                                                                 'description' => __( 'Traditional search box with basic functionality', 'dokan-lite' ),
-                                                                'image'       => 'http://dokan-dev.test/wp-content/uploads/2025/07/Group-1000006638.png',
+                                                                'image' => DOKAN_PLUGIN_ASSEST . '/images/admin/classic-search.png',
                                                                 'preview'     => true,
                                                             ]
                                                         )
@@ -195,7 +195,7 @@ class GeneralPage extends AbstractPage {
                                                                 'title'       => __( 'Enhanced Search', 'dokan-lite' ),
                                                                 'value'       => 'enhanced',
                                                                 'description' => __( 'Advanced search with additional features', 'dokan-lite' ),
-                                                                'image'       => 'http://dokan-dev.test/wp-content/uploads/2025/08/Group-1000006639.png',
+                                                                'image' => DOKAN_PLUGIN_ASSEST . '/images/admin/enhanced-search.png',
                                                                 'preview'     => true,
                                                             ]
                                                         )

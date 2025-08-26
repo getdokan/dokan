@@ -15,6 +15,12 @@ class ProductPage extends AbstractPage {
     protected $id = 'product';
 
     /**
+     * The page priority.
+     *
+     * @var int
+     */
+    protected int $priority = 110;
+    /**
      * Storage key for the page.
      *
      * @since DOKAN_SINCE
@@ -355,7 +361,7 @@ Single Product Page.', 'dokan-lite'
             ->add( $request_for_quote )
             ->add( $wholesale )
             ->set_icon( 'Box' )
-            ->set_title( __( 'Product Settings', 'dokan-lite' ) )
+            ->set_title( __( 'Product', 'dokan-lite' ) )
             ->set_description( __( 'Configure product-related settings for your marketplace.', 'dokan-lite' ) );
     }
 }

@@ -5,8 +5,8 @@ import { SETTINGS_STORE } from '../../../../../../../stores/adminSettings';
 import {
     CategoryBasedCommissionProps,
     CategoryBasedCommissionPure,
-    SettingsProps,
 } from '../../../../../../../components';
+import { SettingsProps } from '../../../types';
 
 // Declare adminWithdrawData as a global variable
 declare const adminWithdrawData: {
