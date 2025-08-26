@@ -298,15 +298,23 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     }
 
     /*
-     * Get vendor net earning without subsidy.
-     * This method calculates the vendor's net earning without considering any subsidies provided by the admin.
-     * The deducted amount will add the vendor balance, vendor manual withdraw.
+     * Get the vendor's earning subtotal **excluding any admin subsidy**.
+     *
+     * This returns the vendor's earning as if the admin had not subsidized the order.
+     * If the admin's commission/earning is negative (i.e., admin subsidized the vendor),
+     * that subsidy amount is deducted from the vendor's earning to produce a subsidy-free subtotal.
+     * Otherwise, the vendor's earning is returned unchanged.
+     * The deducted amount will add the vendor balance, vendor can manually withdraw.
+     *
+     * Rule:
+     * - When admin_earning < 0, vendor_earning_subtotal = vendor_earning - abs(admin_earning)
+     * - When admin_earning >= 0, vendor_earning_subtotal = vendor_earning
      *
      * @since DOKAN_SINCE
      *
      * @return float|int
      */
-    public function get_vendor_earning_without_subsidy(): float {
+    public function get_vendor_earning_subtotal(): float {
 
         $admin_commission = $this->get_admin_commission();
 

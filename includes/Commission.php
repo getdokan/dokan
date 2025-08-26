@@ -246,7 +246,7 @@ class Commission {
     }
 
     /*
-     * Get vendor earning without subsidy.
+     * Get vendor earning sub-total
      *
      * @param int|WC_Order $order Order.
      *
@@ -254,7 +254,7 @@ class Commission {
      *
      * @return float|int
      */
-    public function get_earning_by_order_without_subsidy( $order ) {
+    public function get_vendor_earning_subtotal_by_order( $order ) {
         if ( is_numeric( $order ) ) {
             $order = wc_get_order( $order );
         }
@@ -274,7 +274,7 @@ class Commission {
         } catch ( \Exception $exception ) {
             return new WP_Error( 'commission_calculation_failed', __( 'Commission calculation failed', 'dokan-lite' ), [ 'status' => 500 ] );
         }
-        $earning = $order_commission->get_vendor_earning_without_subsidy();
+        $earning = $order_commission->get_vendor_earning_subtotal();
 
         /**
          * Vendor earning without subsidy for a given order.
@@ -282,7 +282,7 @@ class Commission {
          * @param float    $earning Calculated earning (without subsidy).
          * @param WC_Order $order   Order object.
          */
-        return apply_filters( 'dokan_get_earning_by_order_without_subsidy', $earning, $order );
+        return apply_filters( 'dokan_get_vendor_earning_subtotal_by_order', $earning, $order );
     }
 
     /**
