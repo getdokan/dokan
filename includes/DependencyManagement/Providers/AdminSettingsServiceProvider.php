@@ -8,6 +8,8 @@ use WeDevs\Dokan\Admin\Settings\Pages\AppearancePage;
 use WeDevs\Dokan\Admin\Settings\Pages\VendorPage;
 use WeDevs\Dokan\Admin\Settings\Pages\TransactionPage;
 use WeDevs\Dokan\Admin\Settings\Pages\AIAssistPage;
+use WeDevs\Dokan\Admin\Settings\Pages\ModerationPage;
+use WeDevs\Dokan\Admin\Settings\Pages\CompliancePage;
 use WeDevs\Dokan\Admin\Settings\Settings;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
@@ -28,6 +30,8 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
         VendorPage::class,
         TransactionPage::class,
         AIAssistPage::class,
+        ModerationPage::class,
+        CompliancePage::class,
     ];
 
 	/**

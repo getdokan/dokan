@@ -1,5 +1,4 @@
 import { dispatch } from '@wordpress/data';
-import React from 'react';
 import {
     DokanFieldLabel,
     TextField,

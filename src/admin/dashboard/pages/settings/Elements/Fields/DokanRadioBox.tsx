@@ -11,8 +11,9 @@ export default function DokanRadioBox( { element } ) {
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
     const selected = element.value || element?.default;
+
     return (
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-2 p-5 w-full">
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"
@@ -23,11 +24,17 @@ export default function DokanRadioBox( { element } ) {
             <div className="flex flex-wrap gap-4 mt-4">
                 { element.options?.map( ( option ) => {
                     const isSelected = selected === option.value;
+                    let strokeColor = '#E9E9E9';
+                    if ( isSelected ) {
+                        strokeColor = '#7047EB';
+                    } else if ( element.disabled ) {
+                        strokeColor = '#E9E9E9';
+                    }
                     return (
                         <button
                             key={ option.value }
                             type="button"
-                            className={ `relative border rounded-md p-3 flex flex-col gap-3 items-start w-36 transition-colors ${
+                            className={ ` border rounded-md p-3 flex flex-col gap-3 items-start w-40 transition-colors ${
                                 isSelected
                                     ? 'border-[#7047EB]'
                                     : 'border-[#E9E9E9] hover:border-gray-300'
@@ -40,53 +47,53 @@ export default function DokanRadioBox( { element } ) {
                             }
                         >
                             <div
-                                className={ `p-3 border rounded-lg flex items-center justify-center ${
-                                    isSelected
-                                        ? 'bg-[#F1EDFD] border-[#E5E0F2]'
-                                        : 'bg-[#F8F9F8] border-[#E9E9E9]'
-                                }` }
+                                className={ `flex items-center justify-between` }
                             >
-                                { option.icon }
+                                <div>
+                                    <img
+                                        src={ option.icon }
+                                        alt={ option.title }
+                                        className="max-w-20"
+                                    />
+                                </div>
+                                <div className="relative w-[18px] h-[18px]">
+                                    <svg
+                                        className="block w-full h-full"
+                                        fill="none"
+                                        preserveAspectRatio="none"
+                                        viewBox="0 0 18 18"
+                                    >
+                                        <circle
+                                            cx="9"
+                                            cy="9"
+                                            r="8.5"
+                                            stroke={ strokeColor }
+                                            strokeWidth="1"
+                                            fill="none"
+                                        />
+                                    </svg>
+                                    { isSelected && (
+                                        <div className="absolute inset-[22.222%]">
+                                            <svg
+                                                className="block w-full h-full"
+                                                fill="none"
+                                                preserveAspectRatio="none"
+                                                viewBox="0 0 10 10"
+                                            >
+                                                <circle
+                                                    cx="5"
+                                                    cy="5"
+                                                    fill="#7047EB"
+                                                    r="5"
+                                                />
+                                            </svg>
+                                        </div>
+                                    ) }
+                                </div>
                             </div>
                             <span className="text-sm font-semibold text-[#25252D]">
                                 { option.title || option.value }
                             </span>
-                            <div className="absolute top-1 right-1 text-purple-600">
-                                { isSelected ? (
-                                    <svg
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 16 16"
-                                        fill="none"
-                                    >
-                                        <circle
-                                            cx="8"
-                                            cy="8"
-                                            r="8"
-                                            fill="#7047EB"
-                                        />
-                                        <path
-                                            d="M6.5 10.5L4 8L4.5 7.5L6.5 9.5L11.5 4.5L12 5L6.5 10.5Z"
-                                            fill="white"
-                                        />
-                                    </svg>
-                                ) : (
-                                    <svg
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 16 16"
-                                        fill="none"
-                                    >
-                                        <circle
-                                            cx="8"
-                                            cy="8"
-                                            r="7.5"
-                                            stroke="#E9E9E9"
-                                            fill="white"
-                                        />
-                                    </svg>
-                                ) }
-                            </div>
                         </button>
                     );
                 } ) }

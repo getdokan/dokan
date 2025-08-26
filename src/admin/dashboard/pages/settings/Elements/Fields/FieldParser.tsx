@@ -6,7 +6,7 @@ import CustomizeRadio from './CustomizeRadio';
 import DokanColorPicker from './DokanColorPicker';
 import DokanCopyButtonField from './DokanCopyButtonField';
 import DokanCurrency from './DokanCurrency';
-import DokanDoubleInput from './DokanDoubleInput';
+import DokanDoubleInput, { DokanDoubleInputElement } from './DokanDoubleInput';
 import DokanEmail from './DokanEmail';
 import DokanFieldLabel from './DokanFieldLabel';
 import DokanFileUploadField from './DokanFileUpload';
@@ -26,9 +26,9 @@ import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
 import DokanVendorInfoPreview from './DokanVendorInfoPreview';
 import DokanRichText from './DokanRichText';
-import RadioBox from './RadioBox';
 import DokanRepeater from './DokanRepeater';
 import WithdrawSchedule from './WithdrawSchedule';
+import DokanRadioBox from './DokanRadioBox';
 
 const FieldParser = ( { element }: SettingsProps ) => {
     switch ( element.variant ) {
@@ -111,7 +111,7 @@ const FieldParser = ( { element }: SettingsProps ) => {
         case 'radio_box':
             return applyFilters(
                 'dokan_admin_settings_radio_box_field_parser',
-                <RadioBox key={ element.hook_key } element={ element } />,
+                <DokanRadioBox key={ element.hook_key } element={ element } />,
                 element
             );
 
@@ -184,7 +184,7 @@ const FieldParser = ( { element }: SettingsProps ) => {
                 'dokan_admin_settings_double_input_field_parser',
                 <DokanDoubleInput
                     key={ element.hook_key }
-                    element={ element }
+                    element={ element as DokanDoubleInputElement }
                 />,
                 element
             );
