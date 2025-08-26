@@ -158,68 +158,126 @@ vendor store page.', 'dokan-lite'
                                                         ->add_dependency( 'store.google_recaptcha.google_recaptcha_settings.recaptcha', 'off', true, 'display', 'hide', '===' )
                                                 )
                     )
-                    ->add(
-                        ElementFactory::section( 'store_template' )
-                                                ->add(
-                                                    ElementFactory::field( 'store_template', 'customize_radio' )
-                                                        ->set_title( esc_html__( 'Store Template', 'dokan-lite' ) )
-                                                        ->set_description( esc_html__( 'Select a template for vendor stores.', 'dokan-lite' ) )
-                                                        ->set_default( 'template-1' )
-                                                        ->add_enhanced_option(
-                                                            [
-                                                                'title'       => esc_html__( 'Template 1', 'dokan-lite' ),
-                                                                'value'       => 'template-1',
-                                                                'description' => esc_html__( 'A clean and modern template with a focus on product display.', 'dokan-lite' ),
-                                                                'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-one.svg',
-                                                            ]
-                                                        )
-                                                        ->add_enhanced_option(
-                                                            [
-                                                                'title'       => esc_html__( 'Template 2', 'dokan-lite' ),
-                                                                'value'       => 'template-2',
-                                                                'description' => esc_html__( 'A stylish template with emphasis on vendor branding.', 'dokan-lite' ),
-                                                                'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-one.svg',
-                                                            ]
-                                                        )
-                                                        ->add_enhanced_option(
-                                                            [
-                                                                'title'       => esc_html__( 'Template 3', 'dokan-lite' ),
-                                                                'value'       => 'template-3',
-                                                                'description' => esc_html__( 'A minimalistic template for a sleek shopping experience.', 'dokan-lite' ),
-                                                                'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-one.svg',
-                                                            ]
-                                                        )
-                                                        ->set_variant( 'template' )
+            )
+            ->add(
+                ElementFactory::section( 'store_template' )
+                              ->add(
+                                  ElementFactory::field( 'store_template', 'customize_radio' )
+                                                ->set_title( esc_html__( 'Store Template', 'dokan-lite' ) )
+                                                ->set_description( esc_html__( 'Select a template for vendor stores.', 'dokan-lite' ) )
+                                                ->set_default( 'template-1' )
+                                                ->add_enhanced_option(
+                                                    [
+                                                        'title'       => esc_html__( 'Template 1', 'dokan-lite' ),
+                                                        'value'       => 'template-1',
+                                                        'description' => esc_html__( 'A clean and modern template with a focus on product display.', 'dokan-lite' ),
+                                                        'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-one.svg',
+                                                    ]
                                                 )
-                                                ->add(
-                                                    ElementFactory::field( 'store_opening_time', 'switch' )
-                                                        ->set_title( esc_html__( 'Store Opening Closing Time Widget', 'dokan-lite' ) )
-                                                        ->set_description( esc_html__( 'Display business hours on vendor store pages for the customers.', 'dokan-lite' ) )
-                                                        ->set_enable_state(
-                                                            esc_html__( 'Enable', 'dokan-lite' ),
-                                                            'on'
-                                                        )
-                                                        ->set_disable_state(
-                                                            esc_html__( 'Disable', 'dokan-lite' ),
-                                                            'off'
-                                                        )
-                                                        ->set_default( 'off' )
+                                                ->add_enhanced_option(
+                                                    [
+                                                        'title'       => esc_html__( 'Template 2', 'dokan-lite' ),
+                                                        'value'       => 'template-2',
+                                                        'description' => esc_html__( 'A stylish template with emphasis on vendor branding.', 'dokan-lite' ),
+                                                        'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-one.svg',
+                                                    ]
                                                 )
-                                                ->add(
-                                                    ElementFactory::field( 'store_opening_time', 'switch' )
-                                                        ->set_title( esc_html__( 'Store Sidebar From Theme', 'dokan-lite' ) )
-                                                        ->set_description( esc_html__( 'Apply main theme\'s sidebar styling to vendor stores for a consistent look', 'dokan-lite' ) )
-                                                        ->set_enable_state(
-                                                            esc_html__( 'Enable', 'dokan-lite' ),
-                                                            'on'
-                                                        )
-                                                        ->set_disable_state(
-                                                            esc_html__( 'Disable', 'dokan-lite' ),
-                                                            'off'
-                                                        )
-                                                        ->set_default( 'off' )
+                                                ->add_enhanced_option(
+                                                    [
+                                                        'title'       => esc_html__( 'Template 3', 'dokan-lite' ),
+                                                        'value'       => 'template-3',
+                                                        'description' => esc_html__( 'A minimalistic template for a sleek shopping experience.', 'dokan-lite' ),
+                                                        'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-one.svg',
+                                                    ]
                                                 )
-                    )
+                                                ->set_variant( 'template' )
+                              )
+            )
+            ->add(
+                ElementFactory::section( 'store_banner_dimension_section' )
+                              ->add(
+                                  ElementFactory::field( 'store_banner_dimension', 'double_text' )
+                                                ->set_title( esc_html__( 'Store Banner Dimension', 'dokan-lite' ) )
+                                                ->set_first_prefix( esc_html__( 'Width', 'dokan-lite' ) )
+                                                ->set_second_prefix( esc_html__( 'Height', 'dokan-lite' ) )
+                                                ->set_value(
+                                                    [
+                                                        'first_value'  => 625,
+                                                        'second_value' => 300,
+                                                    ]
+                                                )
+                              )
+            )
+            ->add(
+                ElementFactory::section( 'store_clossing_time_widget_section' )
+                              ->add(
+                                  ElementFactory::field( 'store_clossing_time_widget', 'switch' )
+                                                ->set_title( esc_html__( 'Store SEO', 'dokan-lite' ) )
+                                                ->set_description( esc_html__( 'Enable SEO features for vendor stores to improve search engine visibility.', 'dokan-lite' ) )
+                                                ->set_enable_state(
+                                                    esc_html__( 'Enable', 'dokan-lite' ),
+                                                    'on'
+                                                )
+                                                ->set_disable_state(
+                                                    esc_html__( 'Disable', 'dokan-lite' ),
+                                                    'off'
+                                                )
+                                                ->set_default( 'on' )
+                              )
+            )
+            ->add(
+                ElementFactory::section( 'store_sidebar_section' )
+                              ->add(
+                                  ElementFactory::field( 'store_opening_time', 'switch' )
+                                                ->set_title( esc_html__( 'Store Sidebar From Theme', 'dokan-lite' ) )
+                                                ->set_description( esc_html__( 'Apply main theme\'s sidebar styling to vendor stores for a consistent look', 'dokan-lite' ) )
+                                                ->set_enable_state(
+                                                    esc_html__( 'Enable', 'dokan-lite' ),
+                                                    'on'
+                                                )
+                                                ->set_disable_state(
+                                                    esc_html__( 'Disable', 'dokan-lite' ),
+                                                    'off'
+                                                )
+                                                ->set_default( 'off' )
+                                                ->set_helper_text( esc_html__( 'Note: This option works only if the theme supports WooCommerce single product page sidebar.', 'dokan-lite' ) )
+                              )
+            )
+            ->add(
+                ElementFactory::section( 'vendor_info_visibility_section' )
+                              ->add(
+                                  ElementFactory::field( 'vendor_info_visibility', 'vendor_info_preview' )
+                                                ->set_title( esc_html__( 'Vendor Info Visibility', 'dokan-lite' ) )
+                                                ->set_description( esc_html__( 'Choose what vendor details to show customers in single store page.', 'dokan-lite' ) )
+                                                ->set_helper_text( esc_html__( 'Note: This option works only if the theme supports WooCommerce single product page sidebar.', 'dokan-lite' ) )
+                              )
+            )
+            ->add(
+                ElementFactory::section( 'dokan_font_section' )
+                              ->add(
+                                  ElementFactory::field( 'dokan_font', 'switch' )
+                                                ->set_title( esc_html__( 'Dokan font-awesome Functionality', 'dokan-lite' ) )
+                                                ->set_description( esc_html__( 'If disabled then Dokan font-awesome library won\'t be loaded in frontend.', 'dokan-lite' ) )
+                                                ->set_enable_state(
+                                                    esc_html__( 'Enable', 'dokan-lite' ),
+                                                    'on'
+                                                )
+                                                ->set_disable_state(
+                                                    esc_html__( 'Disable', 'dokan-lite' ),
+                                                    'off'
+                                                )
+                                                ->set_default( 'off' )
+                                                ->set_helper_text( esc_html__( 'Note: This option works only if the theme supports WooCommerce single product page sidebar.', 'dokan-lite' ) )
+                              )
+            )
+            ->add(
+                ElementFactory::section( 'single_product_preview_section' )
+                              ->add(
+                                  ElementFactory::field( 'single_product_preview', 'single_product_preview' )
+                                                ->set_title( esc_html__( 'Single Product Page Appearance ', 'dokan-lite' ) )
+                                                ->set_description( esc_html__( 'Choose which sections to show when customers view individual products.', 'dokan-lite' ) )
+                                                ->set_helper_text( esc_html__( 'Note: This option works only if the theme supports WooCommerce single product page sidebar.', 'dokan-lite' ) )
+                              )
             );
 
         // Add the section to the store page.

@@ -32,7 +32,7 @@ class DoubleTextField extends Text {
      *
      * @var string
      */
-    protected string $first_label = '';
+    protected string $first_prefix = '';
 
     /**
      * First value for the field.
@@ -46,7 +46,7 @@ class DoubleTextField extends Text {
      *
      * @var string
      */
-    protected string $second_label = '';
+    protected string $second_prefix = '';
 
     /**
      * Second value for the field.
@@ -70,12 +70,13 @@ class DoubleTextField extends Text {
      *
      * @since 4.0.3
      *
-     * @param string $label
+     * @param string $prefix
      *
      * @return self
      */
-    public function set_first_label( string $label ): self {
-        $this->first_label = $label;
+    public function set_first_prefix( string $prefix )
+    : self {
+        $this->first_prefix = $prefix;
 
         return $this;
     }
@@ -104,8 +105,9 @@ class DoubleTextField extends Text {
      *
      * @return self
      */
-    public function set_second_label( string $label ): self {
-        $this->second_label = $label;
+    public function set_second_prefix( string $prefix )
+    : self {
+        $this->second_prefix = $prefix;
 
         return $this;
     }
@@ -150,9 +152,9 @@ class DoubleTextField extends Text {
     public function populate(): array {
         $element                = parent::populate();
         $element['label']       = $this->label;
-        $element['firstLabel']  = $this->first_label;
+        $element['firstPrefix'] = $this->first_prefix;
         $element['firstValue']  = $this->first_value;
-        $element['secondLabel'] = $this->second_label;
+        $element['secondPrefix'] = $this->second_prefix;
         $element['secondValue'] = $this->second_value;
 
         return $element;

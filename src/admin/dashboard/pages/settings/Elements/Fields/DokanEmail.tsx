@@ -17,7 +17,7 @@ export default function DokanEmail( { element } ) {
     };
 
     return (
-        <div className="grid-cols-12 grid gap-2 justify-between w-full p-4">
+        <div className="grid-cols-12 grid gap-2  w-full p-4">
             <div className={ 'sm:col-span-8 col-span-12' }>
                 <DokanFieldLabel
                     title={ element.title }
