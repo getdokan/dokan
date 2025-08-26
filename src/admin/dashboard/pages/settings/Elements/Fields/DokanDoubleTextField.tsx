@@ -36,19 +36,20 @@ const DokanDoubleTextField = ( {
     return (
         <div
             className={ twMerge(
-                'flex justify-between p-5 items-center',
+                'grid-cols-12 grid  p-5 items-center',
                 element.className
             ) }
         >
-            { /* Field label with tooltip */ }
-            <DokanFieldLabel
-                title={ element.title }
-                titleFontWeight="bold"
-                helperText={ element.description }
-                tooltip={ element.helper_text }
-                imageUrl={ element?.image_url }
-            />
-            <div className="flex gap-6 ">
+            <div className={ 'sm:col-span-5 col-span-12' }>
+                <DokanFieldLabel
+                    title={ element.title }
+                    titleFontWeight="bold"
+                    helperText={ element.description }
+                    tooltip={ element.helper_text }
+                    imageUrl={ element?.image_url }
+                />
+            </div>
+            <div className="sm:col-span-7 col-span-12 gap-4 grid grid-cols-2 ">
                 <TextField
                     value={ String( element.firstValue ) }
                     onChange={ () =>
@@ -57,10 +58,7 @@ const DokanDoubleTextField = ( {
                             firstValue: element.firstValue,
                         } )
                     }
-                    label={ element.firstLabel }
-                    disabled
                     prefix={ element.firstPrefix }
-                    inputClassName="bg-white border-[#E9E9E9] rounded h-10 px-4 text-[#25252D] text-sm"
                 />
 
                 <TextField
@@ -68,14 +66,10 @@ const DokanDoubleTextField = ( {
                     onChange={ () =>
                         onValueChange( {
                             ...element,
-                            secondValue: element.secondValue,
+                            second_value: element.secondValue,
                         } )
                     }
-                    label={ element.secondLabel }
-                    disabled
                     prefix={ element.secondPrefix }
-                    inputClassName="bg-white border-[#E9E9E9] rounded h-10 px-4 text-[#25252D] text-sm"
-                    containerClassName="w-full"
                 />
             </div>
         </div>
