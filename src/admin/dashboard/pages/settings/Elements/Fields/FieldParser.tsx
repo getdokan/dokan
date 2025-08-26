@@ -6,7 +6,7 @@ import CustomizeRadio from './CustomizeRadio';
 import DokanColorPicker from './DokanColorPicker';
 import DokanCopyButtonField from './DokanCopyButtonField';
 import DokanCurrency from './DokanCurrency';
-import DokanDoubleTextField from './DokanDoubleTextField';
+import DokanDoubleInput from './DokanDoubleInput';
 import DokanEmail from './DokanEmail';
 import DokanFieldLabel from './DokanFieldLabel';
 import DokanFileUploadField from './DokanFileUpload';
@@ -179,14 +179,14 @@ const FieldParser = ( { element }: SettingsProps ) => {
                 <DokanTel key={ element.hook_key } element={ element } />,
                 element
             );
-
-        case 'double_text':
-            return applyFilters(
-                'dokan_admin_settings_double_text_field_parser',
-                <DokanDoubleTextField
-                    key={ element.hook_key }
-                    element={ element }
-                />,
+        case 'double_input':
+            return (
+                (
+                    <DokanDoubleInput
+                        key={ element.hook_key }
+                        element={ element }
+                    />
+                 ),
                 element
             );
 
