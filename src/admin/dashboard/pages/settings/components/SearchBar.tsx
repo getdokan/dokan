@@ -42,7 +42,7 @@ const SearchBar = (
     return (
         <div className={ twMerge( 'mb-6', className ) }>
             <div className="relative">
-                <div className="bg-white border border-[#e9e9e9] rounded-[5px] lg:h-9 h-fit flex items-center px-3 gap-3">
+                <div className="bg-white border border-[#e9e9e9] rounded-[5px] lg:h-9 h-fit flex items-center px-3 py-1 gap-3">
                     <LucideIcons.Search className="lg:!w-[18px] lg:!h-[18px] w-5 h-5 text-[#828282]" />
                     <input
                         type="text"

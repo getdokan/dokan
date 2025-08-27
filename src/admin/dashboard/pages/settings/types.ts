@@ -27,6 +27,12 @@ export type SettingsElement = {
         | boolean;
     default?: string;
     options?: Array< { title: string; value: string | number } >;
+    items?: Array< {
+        key: string;
+        title: string;
+        required?: boolean;
+        order?: number | string;
+    } >;
     readonly?: boolean;
     disabled?: boolean;
     placeholder?: string | number;
