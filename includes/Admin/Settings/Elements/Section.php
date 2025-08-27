@@ -38,6 +38,7 @@ class Section extends SettingsElement {
 
         return apply_filters( 'dokan_settings_section_data', $data, $this );
     }
+
 	/**
 	 * Sanitize data for storage.
 	 *
@@ -48,7 +49,6 @@ class Section extends SettingsElement {
 	public function sanitize_element( $data ) {
 		return wp_unslash( $data );
 	}
-
 
 	/**
 	 * Escape data for display.

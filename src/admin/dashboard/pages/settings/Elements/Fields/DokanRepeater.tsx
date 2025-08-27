@@ -33,7 +33,6 @@ const RepeaterItem = ( {
     const [ isEditing, setIsEditing ] = useState( isNewItem );
     const [ editValue, setEditValue ] = useState( item.title );
     const [ originalValue, setOriginalValue ] = useState( item.title );
-    const [ hasValidationError, setHasValidationError ] = useState( false );
     const [ hasBeenModified, setHasBeenModified ] = useState( false );
 
     const handleEdit = () => {
@@ -47,11 +46,9 @@ const RepeaterItem = ( {
 
         // Validate that the field is not empty
         if ( trimmedValue === '' ) {
-            setHasValidationError( true );
             return;
         }
 
-        setHasValidationError( false );
         const updatedItem = {
             ...item,
             title: trimmedValue,
@@ -189,7 +186,7 @@ const DokanRepeater = ( {
     getSetting,
 }: SettingsProps ) => {
     const [ items, setItems ] = useState< RepeaterItemData[] >(
-        element?.value || element?.default || []
+        element?.items || element?.default || []
     );
     const [ newItemIds, setNewItemIds ] = useState< Set< string > >(
         new Set()
