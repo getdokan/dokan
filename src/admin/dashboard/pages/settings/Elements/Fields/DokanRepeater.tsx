@@ -186,7 +186,7 @@ const DokanRepeater = ( {
     getSetting,
 }: SettingsProps ) => {
     const [ items, setItems ] = useState< RepeaterItemData[] >(
-        element?.items || element?.default || []
+        element?.value || element?.items || element?.default || []
     );
     const [ newItemIds, setNewItemIds ] = useState< Set< string > >(
         new Set()
