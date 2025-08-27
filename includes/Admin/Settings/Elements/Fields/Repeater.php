@@ -25,11 +25,11 @@ class Repeater extends Field {
     protected $input_type = 'repeater';
 
     /**
-     * Options.
+     * Items.
      *
-     * @var array $options Options.
+     * @var array $items Items.
      */
-    protected $options = array();
+    protected $items = array();
 
     /**
      * Create New Title.
@@ -48,29 +48,29 @@ class Repeater extends Field {
     }
 
     /**
-     * Get options.
+     * Get items.
      *
      * @return array
      */
-    public function get_options(): array {
-        return $this->options;
+    public function get_items(): array {
+        return $this->items;
     }
 
     /**
-     * Set options.
+     * Set items.
      *
-     * @param array $options Options.
+     * @param array $items Items.
      *
      * @return SettingsElement
      */
-    public function set_options( array $options ) {
-        $this->options = $options;
+    public function set_items( array $items ) {
+        $this->items = $items;
 
         return $this;
     }
 
     /**
-     * Get options.
+     * Get items.
      *
      * @return string
      */
@@ -92,17 +92,23 @@ class Repeater extends Field {
     }
 
     /**
-     * Add a repeater option.
+     * Add a repeater item.
      *
-     * @param string      $option option to Display.
-     * @param string|null $value value for the checkbox option. Default is null.
+     * @since DOKAN_SINCE
+     *
+     * @param string      $title    Title for the repeater item.
+     * @param string|null $key      Key/ID for the repeater item. Default is null.
+     * @param bool        $required Whether the item is required. Default is false.
+     * @param int|null    $order    Order for the repeater item. Default is null.
      *
      * @return Repeater
      */
-    public function add_option( string $option, string $value ) {
-        $this->options[] = [
-            'title' => $option,
-            'order' => $value,
+    public function add_item( string $title, ?string $key = null, bool $required = false, ?int $order = null ) {
+        $this->items[] = [
+            'id'       => sanitize_key( $key ),
+            'title'    => $title,
+            'order'    => $order !== null ? $order : count( $this->items ),
+            'required' => $required,
         ];
 
         return $this;
@@ -179,8 +185,8 @@ class Repeater extends Field {
     public function populate(): array {
         $data              = parent::populate();
         $data['value']     = $this->get_value();
+        $data['items']     = $this->get_items();
         $data['default']   = $this->get_default();
-        $data['options']   = $this->get_options();
         $data['new_title'] = $this->get_new_title();
 
         return $data;

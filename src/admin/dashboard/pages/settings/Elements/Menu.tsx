@@ -195,7 +195,7 @@ const Menu = ({
                                             <DisclosureButton
                                                 className={'group flex w-full items-center justify-between rounded-[3px] p-0 text-left text-[14px] font-medium transition-colors'}
                                             >
-                                                <div className="flex items-center gap-2">
+                                                <div className="flex items-center gap-2 text-[#575757]">
                                                     {getIcon(
                                                         item.icon ||
                                                         'Settings'
@@ -272,7 +272,7 @@ const Menu = ({
             <div className="lg:hidden">
                 <div className={ `flex gap-3` }>
                     <span
-                        className="p-2 rounded-md bg-white border border-gray-200 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
+                        className="p-2 flex items-center justify-center rounded-md bg-white border border-gray-200 cursor-pointer transition-transform duration-200 hover:scale-105 active:scale-95"
                         onClick={ () => setIsMobileMenuOpen( true ) }
                     >
                         <LucideIcons.Menu
@@ -286,7 +286,7 @@ const Menu = ({
             </div>
 
             { /* Your original desktop sidebar - unchanged */ }
-            <aside className="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3 hidden lg:!block">
+            <aside className="lg:col-span-3 hidden lg:!block">
                 <nav className="bg-white p-7 lg:py-12">
                     <SearchBar />
                     <MenuContent />
