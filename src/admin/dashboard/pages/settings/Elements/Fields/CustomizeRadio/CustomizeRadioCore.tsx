@@ -27,7 +27,6 @@ const CustomizeRadioCore: React.FC< CustomizeRadioProps > = ( {
     } else if ( radioVariant === 'radio_box' ) {
         baseClassName = 'flex flex-wrap gap-4';
     }
-
     return (
         <div className={ `${ baseClassName } ${ className }` }>
             { options.map( ( option ) => {

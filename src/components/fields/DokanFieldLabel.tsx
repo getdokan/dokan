@@ -61,9 +61,11 @@ const DokanBaseFieldLabel = ( {
                 </div>
                 { helperText && (
                     <div>
-                        <p className="text-sm font-light">
-                            <RawHTML>{ parse( helperText ) }</RawHTML>
-                        </p>
+                        { typeof helperText === 'string' ? (
+                            <p className="text-sm font-light">
+                                <RawHTML>{ parse( helperText ) }</RawHTML>
+                            </p>
+                        ) : null }
                     </div>
                 ) }
             </div>

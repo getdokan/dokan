@@ -1,5 +1,6 @@
 import RadioButton from './RadioButton';
 import { RadioOptionProps } from './types';
+import parse from 'html-react-parser';
 
 const CardRadioOption = ( {
     option,
@@ -34,11 +35,13 @@ const CardRadioOption = ( {
             <div className="flex items-center justify-between p-[14px] border-b border-[#D3D3D3]">
                 <div className="flex flex-col">
                     <span className="font-semibold text-[14px] text-[#25252D]">
-                        { option.title }
+                        { typeof option.title === 'string' &&
+                            parse( option.title ) }
                     </span>
                     { option.description && (
                         <span className="text-xs text-[#6B7280] mt-1">
-                            { option.description }
+                            { typeof option.description === 'string' &&
+                                parse( option.description ) }
                         </span>
                     ) }
                 </div>
