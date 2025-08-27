@@ -4,8 +4,6 @@ import { DokanFieldLabel } from '../../../../../../../components/fields';
 import settingsStore from '../../../../../../../stores/adminSettings';
 import { SettingsProps } from '../../../types';
 import CustomizeRadioCore from './CustomizeRadioCore';
-import { RadioOption } from './types';
-import parse from 'html-react-parser';
 
 const CustomizeRadio = ( { element }: SettingsProps ) => {
     const [ selected, setSelected ] = useState(
@@ -30,27 +28,18 @@ const CustomizeRadio = ( { element }: SettingsProps ) => {
     };
 
     // Transform element options to RadioOption format
-    const transformedOptions: RadioOption[] =
-        element?.options?.map( ( option: RadioOption ) => ( {
-            value: option.value,
-            title: parse( option.title ),
-            description: parse( option.description ),
-            icon: option.icon,
-            image: option.image,
-            preview: option.preview,
-        } ) ) || [];
 
     return (
         <div className="p-4">
             <DokanFieldLabel
                 title={ element.title || '' }
                 titleFontWeight="bold"
-                helperText={ element.description }
+                helperText={ element?.description || '' }
                 imageUrl={ element?.image_url }
             />
             <div className="mt-4">
                 <CustomizeRadioCore
-                    options={ transformedOptions }
+                    options={ element?.options }
                     selectedValue={ ( selected as string | number ) || '' }
                     onChange={ handleChange }
                     radioVariant={

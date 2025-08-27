@@ -1,5 +1,6 @@
 import RadioButton from './RadioButton';
 import { RadioOptionProps } from './types';
+import parse from 'html-react-parser';
 
 const SimpleRadioOption: React.FC< RadioOptionProps > = ( {
     option,
@@ -34,7 +35,8 @@ const SimpleRadioOption: React.FC< RadioOptionProps > = ( {
             <div className="flex items-start justify-between">
                 <div className="flex-1">
                     <h3 className="font-semibold text-[14px] text-[#25252D] leading-[1.3] mb-1">
-                        { option.title }
+                        { typeof option.title === 'string' &&
+                            parse( option.title ) }
                     </h3>
                     { option.description && (
                         <p className="font-normal text-[12px] text-[#788383] leading-[1.4]">

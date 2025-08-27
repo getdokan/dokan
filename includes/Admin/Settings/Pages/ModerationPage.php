@@ -414,7 +414,7 @@ class ModerationPage extends AbstractPage {
         // Set up the main moderation page
         $this
             ->set_title( esc_html__( 'Moderation', 'dokan-lite' ) )
-            ->set_icon( 'Shield' )
+            ->set_icon( 'settings-2' )
             ->set_description( esc_html__( 'Configure moderation settings, return policies, and customer request management.', 'dokan-lite' ) )
             ->add( $rma_page )
             ->add( $livechat_page )

@@ -1,5 +1,6 @@
 import React from '@wordpress/element';
 import { RadioOptionProps } from './types';
+import parse from 'html-react-parser';
 
 const RadioBoxOption = ( {
     option,
@@ -89,7 +90,7 @@ const RadioBoxOption = ( {
                 </div>
             </div>
             <span className="text-sm font-semibold text-[#25252D]">
-                { option.title || option.value }
+                { typeof option.title === 'string' && parse( option.title ) }
             </span>
             <input
                 type="radio"
