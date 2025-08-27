@@ -182,18 +182,14 @@ class ModerationPage extends AbstractPage {
 
         // Create Livechat settings section
         $livechat_section = ElementFactory::section( 'livechat_settings' )
-            ->set_title( esc_html__( 'Live Chat Settings', 'dokan-lite' ) )
-            ->set_description( esc_html__( 'Configure live chat integration and display settings.', 'dokan-lite' ) );
-
-        // Add Live Chat toggle
-        $livechat_section->add(
-            ElementFactory::field( 'livechat_enabled', 'switch' )
+            ->add(
+                ElementFactory::field( 'livechat_enabled', 'switch' )
                 ->set_title( esc_html__( 'Live Chat', 'dokan-lite' ) )
                 ->set_description( esc_html__( 'Enable live chat between vendor and customer', 'dokan-lite' ) )
                 ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                 ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
                 ->set_default( 'on' )
-        );
+            );
 
         // Add Chat Provider customize radio
         $livechat_section->add(
@@ -242,6 +238,9 @@ class ModerationPage extends AbstractPage {
                 ->set_title( esc_html__( 'App ID', 'dokan-lite' ) )
                 ->set_description( esc_html__( 'Insert App ID here', 'dokan-lite' ) )
                 ->set_placeholder( esc_html__( 'Enter your App ID', 'dokan-lite' ) )
+                // add dependency of talkjs provider
+                ->add_dependency( 'livechat.livechat_settings.livechat_provider', 'talkjs', true, 'display', 'show', '===' )
+                ->add_dependency( 'livechat.livechat_settings.livechat_provider', 'talkjs', true, 'display', 'hide', '!==' )
         );
 
         // Add App Secret field (show/hide with password)
@@ -250,6 +249,9 @@ class ModerationPage extends AbstractPage {
                 ->set_title( esc_html__( 'App Secret', 'dokan-lite' ) )
                 ->set_description( esc_html__( 'Insert App Secret', 'dokan-lite' ) )
                 ->set_placeholder( esc_html__( 'Enter your App Secret', 'dokan-lite' ) )
+                // add dependency of talkjs provider
+                ->add_dependency( 'livechat.livechat_settings.livechat_provider', 'talkjs', true, 'display', 'show', '===' )
+                ->add_dependency( 'livechat.livechat_settings.livechat_provider', 'talkjs', true, 'display', 'hide', '!==' )
         );
 
         // Add Chat Button on Vendor Page toggle
@@ -267,12 +269,13 @@ class ModerationPage extends AbstractPage {
             ElementFactory::field( 'livechat_product_page_button', 'customize_radio' )
                 ->set_title( esc_html__( 'Chat Button on Product Page', 'dokan-lite' ) )
                 ->set_description( esc_html__( 'Choose where to show the chat button on product pages.', 'dokan-lite' ) )
-                ->set_variant( 'radio_box' )
+                ->set_variant( 'template' )
                 ->add_enhanced_option(
                     [
                         'title'       => esc_html__( 'Above Product Tab', 'dokan-lite' ),
                         'value'       => 'above_tab',
                         'description' => esc_html__( 'Display chat button above the product tabs section', 'dokan-lite' ),
+                        'image' => DOKAN_PLUGIN_ASSEST . '/src/images/moderation/live-chat/chat-button-above.svg',
                     ]
                 )
                 ->add_enhanced_option(
@@ -280,7 +283,7 @@ class ModerationPage extends AbstractPage {
                         'title'       => esc_html__( 'Inside Product Tab', 'dokan-lite' ),
                         'value'       => 'inside_tab',
                         'description' => esc_html__( 'Show chat button within the product tabs content', 'dokan-lite' ),
-                        'icon'        => DOKAN_PLUGIN_ASSEST . '/src/images/moderation/live-chat/inside-tab-thumb.svg' ,
+                        'image' => DOKAN_PLUGIN_ASSEST . '/src/images/moderation/live-chat/chat-button-inside.svg',
                     ]
                 )
                 ->add_enhanced_option(
@@ -288,7 +291,7 @@ class ModerationPage extends AbstractPage {
                         'title'       => esc_html__( 'Don\'t Show', 'dokan-lite' ),
                         'value'       => 'dont_show',
                         'description' => esc_html__( 'Hide chat button on product pages completely', 'dokan-lite' ),
-                        'icon'        => DOKAN_PLUGIN_ASSEST . '/src/images/moderation/live-chat/dont-show-thumb.svg' ,
+                        'image' => DOKAN_PLUGIN_ASSEST . '/src/images/moderation/live-chat/chat-button-hide.svg',
                     ]
                 )
                 ->set_default( 'above_tab' )
@@ -329,7 +332,7 @@ class ModerationPage extends AbstractPage {
 
         // Add Display on Single Product Page radio
         $store_support_section->add(
-            ElementFactory::field( 'store_support_product_page', 'radio_box' )
+            ElementFactory::field( 'store_support_product_page', 'customize_radio' )
                 ->set_title( esc_html__( 'Display on Single Product Page', 'dokan-lite' ) )
                 ->set_description( esc_html__( 'Choose where to show the support button on individual product pages for customer support.', 'dokan-lite' ) )
                 ->add_option( esc_html__( 'Above Product Tab', 'dokan-lite' ), 'above_tab' )

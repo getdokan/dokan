@@ -1,44 +1,50 @@
 import { dispatch } from '@wordpress/data';
 import {
     DokanFieldLabel,
-    DokanSwitch as BaseSwitch,
+    DokanSwitch as BaseDokanSwitch,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
-import { SettingsElement } from '../../../../../../stores/adminSettings/types';
 
 export default function DokanSwitch( { element } ) {
     if ( ! element.display ) {
         return null;
     }
-    const onValueChange = ( updatedElement: SettingsElement ) => {
+
+    const onValueChange = ( updatedElement ) => {
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
+
+    const hasTitle = Boolean( element.title && element.title.length > 0 );
+
     return (
-        <div className="grid grid-cols-4 justify-between items-center flex-wrap gap-2 p-5 w-full">
-            <div className="col-span-3 gap-4 flex items-center">
-                <div className="md:col-span-3 col-span-4 flex items-center gap-2">
+        <div className="grid-cols-12 grid gap-2 justify-between w-full p-4">
+            { hasTitle && (
+                <div className={ 'sm:col-span-8 col-span-12' }>
                     <DokanFieldLabel
                         title={ element.title }
                         titleFontWeight="bold"
                         helperText={ element.description }
                         tooltip={ element.helper_text }
-                        imageUrl={ element.image_url }
+                        imageUrl={ element?.image_url }
+                        wrapperClassNames={ 'w-full' }
                     />
                 </div>
-            </div>
-            <div className="md:col-span-1  flex justify-end">
-                <BaseSwitch
-                    checked={ element.value === element.enable_state?.value }
-                    onChange={ ( checked ) =>
-                        onValueChange( {
-                            ...element,
-                            value: checked
-                                ? element.enable_state?.value
-                                : element.disable_state?.value,
-                        } )
+            ) }
+            <div
+                className={
+                    hasTitle
+                        ? 'sm:col-span-4 col-span-12 flex justify-end'
+                        : 'col-span-12'
+                }
+            >
+                <BaseDokanSwitch
+                    checked={ element.value || element?.defaultValue || false }
+                    id={ element.id }
+                    onChange={ ( val ) =>
+                        onValueChange( { ...element, value: val } )
                     }
-                    label={ element.label }
                     disabled={ element.disabled }
+                    label={ element.switchLabel }
                 />
             </div>
         </div>

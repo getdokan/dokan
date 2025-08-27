@@ -1,6 +1,7 @@
 import { RawHTML } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
 import DokanTooltip from './DokanTooltip';
+import parse from 'html-react-parser';
 
 interface InputLabelProps {
     title: string;
@@ -60,13 +61,9 @@ const DokanBaseFieldLabel = ( {
                 </div>
                 { helperText && (
                     <div>
-                        { typeof helperText === 'string' ? (
-                            <p className="text-sm font-light">
-                                <RawHTML>{ helperText }</RawHTML>
-                            </p>
-                        ) : (
-                            helperText
-                        ) }
+                        <p className="text-sm font-light">
+                            <RawHTML>{ parse( helperText ) }</RawHTML>
+                        </p>
                     </div>
                 ) }
             </div>

@@ -1,13 +1,14 @@
+import React from '@wordpress/element';
 import { RadioOptionProps } from './types';
 
-const RadioBoxOption: React.FC< RadioOptionProps > = ( {
+const RadioBoxOption = ( {
     option,
     isSelected,
     onSelect,
     disabled = false,
     name,
-} ) => {
-    const handleKeyDown = ( event: React.KeyboardEvent ) => {
+}: RadioOptionProps ) => {
+    const handleKeyDown = ( event ) => {
         if ( event.key === 'Enter' || event.key === ' ' ) {
             event.preventDefault();
             if ( ! disabled ) {
@@ -21,17 +22,18 @@ const RadioBoxOption: React.FC< RadioOptionProps > = ( {
         : 'border-[#E9E9E9] hover:border-gray-300';
     const disabledClass = disabled ? 'opacity-50 cursor-not-allowed' : '';
 
-    let strokeColor = '#E9E9E9';
+    // Determine radio button stroke color based on state
+    let radioStrokeColor = '#E9E9E9';
     if ( isSelected ) {
-        strokeColor = '#7047EB';
+        radioStrokeColor = '#7047EB';
     } else if ( disabled ) {
-        strokeColor = '#E9E9E9';
+        radioStrokeColor = '#D1D5DB';
     }
 
     return (
         <button
             type="button"
-            className={ `border rounded-md p-3 flex flex-col gap-3 items-start w-40 transition-colors ${ borderClass } ${ disabledClass }` }
+            className={ `border rounded-md p-2 flex flex-col justify-between gap-3 items-start h-[6rem] w-40 transition-colors ${ borderClass } ${ disabledClass }` }
             onClick={ ! disabled ? onSelect : undefined }
             onKeyDown={ handleKeyDown }
             disabled={ disabled }
@@ -66,34 +68,24 @@ const RadioBoxOption: React.FC< RadioOptionProps > = ( {
                         </div>
                     ) }
                 </div>
-                <div className="relative w-[18px] h-[18px]">
+                <div className="flex items-center justify-center w-[18px] h-[18px]">
                     <svg
-                        className="block w-full h-full"
-                        fill="none"
-                        preserveAspectRatio="none"
+                        className="w-full h-full"
                         viewBox="0 0 18 18"
+                        fill="none"
                     >
                         <circle
                             cx="9"
                             cy="9"
-                            r="8.5"
-                            stroke={ strokeColor }
+                            r="8"
+                            stroke={ radioStrokeColor }
                             strokeWidth="1"
                             fill="none"
                         />
+                        { isSelected && (
+                            <circle cx="9" cy="9" r="4" fill="#7047EB" />
+                        ) }
                     </svg>
-                    { isSelected && (
-                        <div className="absolute inset-[22.222%]">
-                            <svg
-                                className="block w-full h-full"
-                                fill="none"
-                                preserveAspectRatio="none"
-                                viewBox="0 0 10 10"
-                            >
-                                <circle cx="5" cy="5" fill="#7047EB" r="5" />
-                            </svg>
-                        </div>
-                    ) }
                 </div>
             </div>
             <span className="text-sm font-semibold text-[#25252D]">
