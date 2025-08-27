@@ -11,19 +11,25 @@ export default function DokanShowHideField( { element } ) {
         // Dispatch the updated value to the settings store
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
-
+    const hasTitle = Boolean( element.title && element.title.length > 0 );
     return (
         <div className="grid grid-cols-6 p-4 gap-4 w-full">
-            <div className="md:col-span-2 col-span-6">
-                <DokanFieldLabel
-                    title={ element.title }
-                    helperText={ element.description }
-                    tooltip={ element.helper_text }
-                    titleFontWeight="bold"
-                    imageUrl={ element?.image_url }
-                />
-            </div>
-            <div className="md:col-span-4 col-span-6">
+            { hasTitle && (
+                <div className="md:col-span-2 col-span-6">
+                    <DokanFieldLabel
+                        title={ element.title }
+                        helperText={ element.description }
+                        tooltip={ element.helper_text }
+                        titleFontWeight="bold"
+                        imageUrl={ element?.image_url }
+                    />
+                </div>
+            ) }
+            <div
+                className={
+                    hasTitle ? 'md:col-span-4 col-span-6' : 'col-span-6'
+                }
+            >
                 <ShowHideField
                     value={ element.value }
                     disabled={ element.disabled }

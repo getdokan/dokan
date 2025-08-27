@@ -5,6 +5,7 @@ import settingsStore from '../../../../../../../stores/adminSettings';
 import { SettingsProps } from '../../../types';
 import CustomizeRadioCore from './CustomizeRadioCore';
 import { RadioOption } from './types';
+import parse from 'html-react-parser';
 
 const CustomizeRadio = ( { element }: SettingsProps ) => {
     const [ selected, setSelected ] = useState(
@@ -32,23 +33,11 @@ const CustomizeRadio = ( { element }: SettingsProps ) => {
     const transformedOptions: RadioOption[] =
         element?.options?.map( ( option: RadioOption ) => ( {
             value: option.value,
-            title: option.title,
-            description: option.description,
-            icon: option.icon ? (
-                <div
-                    dangerouslySetInnerHTML={ {
-                        __html: option.icon as unknown as string,
-                    } }
-                />
-            ) : undefined,
+            title: parse( option.title ),
+            description: parse( option.description ),
+            icon: option.icon,
             image: option.image,
-            preview: option.preview ? (
-                <div
-                    dangerouslySetInnerHTML={ {
-                        __html: option.preview as unknown as string,
-                    } }
-                />
-            ) : undefined,
+            preview: option.preview,
         } ) ) || [];
 
     return (

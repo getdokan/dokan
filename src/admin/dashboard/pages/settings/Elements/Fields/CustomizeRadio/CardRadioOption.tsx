@@ -1,13 +1,13 @@
 import RadioButton from './RadioButton';
 import { RadioOptionProps } from './types';
 
-const CardRadioOption: React.FC< RadioOptionProps > = ( {
+const CardRadioOption = ( {
     option,
     isSelected,
     onSelect,
     disabled = false,
     name,
-} ) => {
+}: RadioOptionProps ) => {
     const handleKeyDown = ( event: React.KeyboardEvent ) => {
         if ( event.key === 'Enter' || event.key === ' ' ) {
             event.preventDefault();
@@ -32,9 +32,16 @@ const CardRadioOption: React.FC< RadioOptionProps > = ( {
             tabIndex={ 0 }
         >
             <div className="flex items-center justify-between p-[14px] border-b border-[#D3D3D3]">
-                <span className="font-semibold text-[14px] text-[#25252D]">
-                    { option.title }
-                </span>
+                <div className="flex flex-col">
+                    <span className="font-semibold text-[14px] text-[#25252D]">
+                        { option.title }
+                    </span>
+                    { option.description && (
+                        <span className="text-xs text-[#6B7280] mt-1">
+                            { option.description }
+                        </span>
+                    ) }
+                </div>
                 <RadioButton checked={ isSelected } disabled={ disabled } />
             </div>
 
