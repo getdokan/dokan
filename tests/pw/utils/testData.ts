@@ -2155,6 +2155,7 @@ export const data = {
     productAdvertisement: {
         advertisedProductStore: `${VENDOR}store`,
         advertisedProduct: 'p1_v1 (simple)',
+        advertisementStatusColor: 'rgb(255, 99, 71)', // tomato color, default fallback color for advertisements
 
         filter: {
             byStore: `${VENDOR}store`,
