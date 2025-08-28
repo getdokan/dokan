@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import ForbiddenIcon from '@dokan/layout/Icons/ForbiddenIcon';
+import ForbiddenIcon from '@src/layout/Icons/ForbiddenIcon';
 import { Slot } from '@wordpress/components';
 import { DokanButton } from '../components';
 

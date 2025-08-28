@@ -129,15 +129,16 @@ const requestToExternal = ( request ) => {
         return [ 'dokan', storeName + 'Store' ];
     }
 
+    if ( wc ) {
+        return wooRequestToExternal( request );
+    }
+
     if ( dokan ) {
         const packageName = dokan[ 1 ];
         const externalName =
             packageName === 'hooks' ? 'reactHooks' : packageName;
-        return [ 'dokan', externalName ];
-    }
 
-    if ( wc ) {
-        return wooRequestToExternal( request );
+        return [ 'dokan', externalName ];
     }
 
     // Add more custom mappings as needed.
