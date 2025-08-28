@@ -15,7 +15,7 @@ export interface DokanRadioCapsuleProps {
     name?: string; // For screen readers
 }
 
-const DokanRadioCapsule = ( {
+const DokanBaseRadioCapsule = ( {
     options = [],
     containerClassName = '',
     selected,
@@ -146,4 +146,4 @@ const DokanRadioCapsule = ( {
     );
 };
 
-export default DokanRadioCapsule;
+export default DokanBaseRadioCapsule;

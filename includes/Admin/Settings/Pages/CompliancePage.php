@@ -162,7 +162,7 @@ class CompliancePage extends AbstractPage {
                 ->add_option( esc_html__( 'Business Registration Number', 'dokan-lite' ), 'business_registration_number' )
                 ->add_option( esc_html__( 'Tax ID', 'dokan-lite' ), 'tax_id' )
                 ->add_option( esc_html__( 'EU Business Address', 'dokan-lite' ), 'eu_business_address' )
-                ->set_default( ['company_name'] )
+                ->set_default( [ 'company_name' ] )
         );
 
         // Create Customer Extra Fields section
@@ -177,7 +177,7 @@ class CompliancePage extends AbstractPage {
                 ->add_option( esc_html__( 'VAT Number', 'dokan-lite' ), 'customer_vat_number' )
                 ->add_option( esc_html__( 'Tax ID', 'dokan-lite' ), 'customer_tax_id' )
                 ->add_option( esc_html__( 'Bank IBAN', 'dokan-lite' ), 'bank_iban' )
-                ->set_default( ['bank_iban'] )
+                ->set_default( [ 'bank_iban' ] )
         );
 
         // Add Germanized Support toggle

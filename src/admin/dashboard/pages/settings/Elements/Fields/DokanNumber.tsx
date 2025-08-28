@@ -1,7 +1,7 @@
 import { dispatch } from '@wordpress/data';
 import {
+    DokanBaseTextField as BaseDokanNumber,
     DokanFieldLabel,
-    TextField as BaseDokanNumber,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
 
@@ -37,7 +37,6 @@ export default function DokanNumber( { element } ) {
             >
                 <BaseDokanNumber
                     value={ element.value || element?.defaultValue || '' }
-                    id={ element.id }
                     onChange={ ( val ) =>
                         onValueChange( { ...element, value: val } )
                     }

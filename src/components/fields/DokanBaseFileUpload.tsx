@@ -10,7 +10,7 @@ interface DokanFileUploadProps {
     value?: string;
 }
 
-function DokanFileUpload( {
+function DokanBaseFileUpload( {
     onUrlImport,
     className = '',
     value,
@@ -59,4 +59,4 @@ function DokanFileUpload( {
     );
 }
 
-export default DokanFileUpload;
+export default DokanBaseFileUpload;

@@ -186,7 +186,7 @@ class GeneralPage extends AbstractPage {
                                                                 'title'       => __( 'Classic Search', 'dokan-lite' ),
                                                                 'value'       => 'classic',
                                                                 'description' => __( 'Traditional search box with basic functionality', 'dokan-lite' ),
-                                                                'image' => DOKAN_PLUGIN_ASSEST . '/images/admin/classic-search.png',
+                                                                'image' => DOKAN_PLUGIN_ASSEST . '/src/images/General/suggestion-box.svg',
                                                                 'preview'     => true,
                                                             ]
                                                         )
@@ -195,7 +195,7 @@ class GeneralPage extends AbstractPage {
                                                                 'title'       => __( 'Enhanced Search', 'dokan-lite' ),
                                                                 'value'       => 'enhanced',
                                                                 'description' => __( 'Advanced search with additional features', 'dokan-lite' ),
-                                                                'image' => DOKAN_PLUGIN_ASSEST . '/images/admin/enhanced-search.png',
+                                                                'image' => DOKAN_PLUGIN_ASSEST . '/src/images/General/live-search-content.svg',
                                                                 'preview'     => true,
                                                             ]
                                                         )
@@ -304,10 +304,10 @@ class GeneralPage extends AbstractPage {
                                                         ->set_title( __( 'Map Placement Locations', 'dokan-lite' ) )
                                                 ->set_description( __( 'Choose where the store location map appears', 'dokan-lite' ) )
                                                 ->set_helper_text( __( 'Select the pages where you want to display the store location map.', 'dokan-lite' ) )
-                                                        ->add_option( 'store_listing', __( 'Store Listing', 'dokan-lite' ) )
-                                                        ->add_option( 'shop_page', __( 'Shop Page', 'dokan-lite' ) )
-                                                        ->add_option( 'single_product_location_tab', __( 'Location tab in single product page.', 'dokan-lite' ) )
-                                                        ->set_default( [ 'store_listing', 'shop_page' ] )
+                                                ->add_option( __( 'Store Listing', 'dokan-lite' ), 'store_listing' )
+                                                ->add_option( __( 'Shop Page', 'dokan-lite' ), 'shop_page' )
+                                                ->add_option( __( 'Location tab in single product page.', 'dokan-lite' ), 'single_product_location_tab' )
+                                                ->set_default( [ 'store_listing', 'shop_page' ] )
                             )
                     )
             );

@@ -1,7 +1,7 @@
 import { dispatch } from '@wordpress/data';
 import {
+    DokanBaseTextField as BaseDokanEmail,
     DokanFieldLabel,
-    TextField as BaseDokanEmail,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
 
@@ -37,7 +37,6 @@ export default function DokanEmail( { element } ) {
             >
                 <BaseDokanEmail
                     value={ element.value || element?.defaultValue || '' }
-                    id={ element.id }
                     onChange={ ( val ) =>
                         onValueChange( { ...element, value: val } )
                     }

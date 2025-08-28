@@ -1,7 +1,7 @@
 import { dispatch } from '@wordpress/data';
 import {
+    DokanBaseTextField,
     DokanFieldLabel,
-    TextField as BaseDokanTextField,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
 
@@ -35,15 +35,14 @@ export default function DokanTextField( { element } ) {
                     hasTitle ? 'sm:col-span-4 col-span-12' : 'col-span-12'
                 }
             >
-                <BaseDokanTextField
+                <DokanBaseTextField
                     value={ element.value || element?.defaultValue || '' }
-                    id={ element.id }
                     onChange={ ( val ) =>
                         onValueChange( { ...element, value: val } )
                     }
                     placeholder={ element.placeholder }
                     disabled={ element.disabled }
-                    type={ element.type || 'text' }
+                    inputType={ element.type || 'text' }
                 />
             </div>
         </div>

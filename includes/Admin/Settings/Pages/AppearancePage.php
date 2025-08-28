@@ -200,8 +200,8 @@ vendor store page.', 'dokan-lite'
                                                                     ->set_second_prefix( esc_html__( 'Height', 'dokan-lite' ) )
                                                                     ->set_value(
                                                                         [
-                                                                            'first_value'  => 625,
-                                                                            'second_value' => 300,
+                                                                            'first'  => 625,
+                                                                            'second' => 300,
                                                                         ]
                                                                     )
                                                 )

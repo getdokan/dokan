@@ -38,13 +38,17 @@ export default function DokanSwitch( { element } ) {
                 }
             >
                 <BaseDokanSwitch
-                    checked={ element.value || element?.defaultValue || false }
-                    id={ element.id }
-                    onChange={ ( val ) =>
-                        onValueChange( { ...element, value: val } )
+                    checked={ element.value === element.enable_state?.value }
+                    onChange={ ( checked ) =>
+                        onValueChange( {
+                            ...element,
+                            value: checked
+                                ? element.enable_state?.value
+                                : element.disable_state?.value,
+                        } )
                     }
+                    label={ element.label }
                     disabled={ element.disabled }
-                    label={ element.switchLabel }
                 />
             </div>
         </div>

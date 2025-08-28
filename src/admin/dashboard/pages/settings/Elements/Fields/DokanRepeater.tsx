@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { Check, Menu, Pencil, Plus, Trash, X } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import { DokanFieldLabel } from '../../../../../../components/fields';
-import TextField from '../../../../../../components/fields/TextField';
+import DokanBaseTextField from '../../../../../../components/fields/DokanBaseTextField';
 import DokanModal from '../../../../../../components/modals/DokanModal';
 import SortableList from '../../../../../../components/sortable-list';
 import { snakeCase } from '../../../../../../utilities/ChangeCase';
@@ -83,7 +83,7 @@ const RepeaterItem = ( {
             <div className="flex items-center flex-1 py-5">
                 <div className="flex-1">
                     { isEditing ? (
-                        <TextField
+                        <DokanBaseTextField
                             inputType="text"
                             value={ editValue }
                             containerClassName="w-fit"

@@ -148,54 +148,47 @@ class ProductPage extends AbstractPage {
             ->set_title( __( 'Size Guide', 'dokan-lite' ) )
             ->set_description( __( 'These settings control how the size guide will look on your Single Product Page.', 'dokan-lite' ) )
             ->set_doc_link( 'https://wedevs.com/docs/dokan-lite/printful-integration/' )
+            ->set_tooltip( __( 'These settings control how the size guide will look on your Single Product Page.', 'dokan-lite' ) )
             ->add(
                 ElementFactory::field( 'size_guide_popup_title', 'text' )
                     ->set_title( __( 'Size Guide Popup Title', 'dokan-lite' ) )
-                    ->set_description( __( 'Enter the title that will be displayed in the size guide popup.', 'dokan-lite' ) )
                     ->set_default( __( 'Size Guide', 'dokan-lite' ) )
                     ->set_placeholder( __( 'Type something', 'dokan-lite' ) )
             )
             ->add(
                 ElementFactory::field( 'size_guide_popup_text_color', 'select_color_picker' )
                     ->set_title( __( 'Size guide popup text color', 'dokan-lite' ) )
-                    ->set_description( __( 'Choose the text color for the size guide popup.', 'dokan-lite' ) )
                     ->set_default( '#25252d' )
             )
             ->add(
                 ElementFactory::field( 'size_guide_popup_background_color', 'select_color_picker' )
                     ->set_title( __( 'Size Guide Popup Background Color', 'dokan-lite' ) )
-                    ->set_description( __( 'Choose the background color for the size guide popup.', 'dokan-lite' ) )
                     ->set_default( '#ffffff' )
             )
             ->add(
                 ElementFactory::field( 'size_guide_tab_background_color', 'select_color_picker' )
                     ->set_title( __( 'Size Guide Tab Background Color', 'dokan-lite' ) )
-                    ->set_description( __( 'Choose the background color for inactive size guide tabs.', 'dokan-lite' ) )
                     ->set_default( '#ffffff' )
             )
             ->add(
                 ElementFactory::field( 'size_guide_active_tab_background_color', 'select_color_picker' )
                     ->set_title( __( 'Size Guide Active Tab Background Color', 'dokan-lite' ) )
-                    ->set_description( __( 'Choose the background color for the active size guide tab.', 'dokan-lite' ) )
                     ->set_default( '#7047eb' )
             )
             ->add(
                 ElementFactory::field( 'size_guide_button_text', 'text' )
                     ->set_title( __( 'Size Guide Button Text', 'dokan-lite' ) )
-                    ->set_description( __( 'Enter the text that will be displayed on the size guide button.', 'dokan-lite' ) )
                     ->set_default( __( 'Size Guide', 'dokan-lite' ) )
                     ->set_placeholder( __( 'Type something', 'dokan-lite' ) )
             )
             ->add(
                 ElementFactory::field( 'size_guide_button_text_color', 'select_color_picker' )
                     ->set_title( __( 'Size Guide Button Text Color', 'dokan-lite' ) )
-                    ->set_description( __( 'Choose the text color for the size guide button.', 'dokan-lite' ) )
                     ->set_default( '#ffffff' )
             )
             ->add(
                 ElementFactory::field( 'size_guide_measurement_unit', 'radio_capsule' )
                     ->set_title( __( 'Primary Measurement Unit', 'dokan-lite' ) )
-                    ->set_description( __( 'Select the primary measurement unit for the size guide.', 'dokan-lite' ) )
                     ->set_default( 'inches' )
                     ->add_option( __( 'Inches', 'dokan-lite' ), 'inches' )
                     ->add_option( __( 'Centimeter', 'dokan-lite' ), 'centimeter' )
@@ -211,8 +204,8 @@ class ProductPage extends AbstractPage {
                 ElementFactory::section( 'printful_api_settings' )
                     ->add(
                         ElementFactory::field_group( 'printful_api_settings_group' )
-                                      ->add(
-                                          ElementFactory::field( 'printful_enable', 'switch' )
+                            ->add(
+                                ElementFactory::field( 'printful_enable', 'switch' )
                                                 ->set_title( __( 'Printful App', 'dokan-lite' ) )
                                                 ->set_description(
                                                     __(
@@ -220,18 +213,19 @@ class ProductPage extends AbstractPage {
 Single Product Page.', 'dokan-lite'
                                                     )
                                                 )
+                                                ->set_image_url( DOKAN_PLUGIN_ASSEST . '/src/images/product/printful-thumb.svg' )
                                                 ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
                                                 ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
                                                 ->set_default( 'off' )
-                                      )
-                                      ->add(
-                                          ElementFactory::field( 'printful_app_name', 'info_field' )
+                            )
+                            ->add(
+                                ElementFactory::field( 'printful_app_name', 'info_field' )
                                                         ->set_title( __( 'App Name', 'dokan-lite' ) )
                                                         ->set_description( __( 'Your Printful app name.', 'dokan-lite' ) )
                                                         ->set_placeholder( __( 'Enter your app name', 'dokan-lite' ) )
                                                         ->add_dependency( 'printful_integration.printful_api_settings.printful_api_settings_group.printful_enable', 'on', true, 'display', 'show', '===' )
                                                         ->add_dependency( 'printful_integration.printful_api_settings.printful_api_settings_group.printful_enable', 'off', true, 'display', 'hide', '===' )
-                                      )
+                            )
                                 ->add(
                                     ElementFactory::field( 'printful_app_url', 'copy_field' )
                                                 ->set_title( __( 'App URL', 'dokan-lite' ) )
@@ -255,16 +249,16 @@ Single Product Page.', 'dokan-lite'
                                                 ->set_title( __( 'Client ID', 'dokan-lite' ) )
                                                 ->set_description( __( 'Your Printful app Client ID.', 'dokan-lite' ) )
                                                 ->set_placeholder( __( 'Enter your Client ID', 'dokan-lite' ) )
-                                                  ->add_dependency( 'printful_integration.printful_api_settings.printful_api_settings_group.printful_enable', 'on', true, 'display', 'show', '===' )
-                                                  ->add_dependency( 'printful_integration.printful_api_settings.printful_api_settings_group.printful_enable', 'off', true, 'display', 'hide', '===' )
+                                        ->add_dependency( 'printful_integration.printful_api_settings.printful_api_settings_group.printful_enable', 'on', true, 'display', 'show', '===' )
+                                        ->add_dependency( 'printful_integration.printful_api_settings.printful_api_settings_group.printful_enable', 'off', true, 'display', 'hide', '===' )
                                 )
                                 ->add(
                                     ElementFactory::field( 'printful_secret_key', 'show_hide' )
                                                 ->set_title( __( 'Secret Key', 'dokan-lite' ) )
                                                 ->set_description( __( 'Your Printful app Secret Key.', 'dokan-lite' ) )
                                                 ->set_placeholder( __( 'Enter your Secret Key', 'dokan-lite' ) )
-                                                  ->add_dependency( 'printful_integration.printful_api_settings.printful_api_settings_group.printful_enable', 'on', true, 'display', 'show', '===' )
-                                                  ->add_dependency( 'printful_integration.printful_api_settings.printful_api_settings_group.printful_enable', 'off', true, 'display', 'hide', '===' )
+                                        ->add_dependency( 'printful_integration.printful_api_settings.printful_api_settings_group.printful_enable', 'on', true, 'display', 'show', '===' )
+                                        ->add_dependency( 'printful_integration.printful_api_settings.printful_api_settings_group.printful_enable', 'off', true, 'display', 'hide', '===' )
                                 )
                     )
             )
