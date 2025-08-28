@@ -1,11 +1,18 @@
 import { addQueryArgs } from '@wordpress/url';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
-import { Button, TextControl, SelectControl } from '@wordpress/components';
+import { RawHTML, useEffect, useState } from '@wordpress/element';
+import { TextControl, SelectControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
+import { formatPrice } from '@dokan/utilities';
 
 // Import Dokan components
-import { DataViews, DokanTab, Filter } from '@dokan/components';
+import {
+    DokanButton,
+    DataViews,
+    DateTimeHtml,
+    DokanTab,
+    Filter,
+} from '@dokan/components';
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
@@ -22,6 +29,44 @@ const PAYMENT_METHODS = [
     { value: 'bank', label: __( 'Bank Transfer', 'dokan-lite' ) },
     { value: 'skrill', label: __( 'Skrill', 'dokan-lite' ) },
 ];
+
+const price = ( amount ) => <RawHTML>{ formatPrice( amount ) }</RawHTML>;
+
+const processDetails = ( data, method: string ) => {
+    // get method key details from data then return the values of the key from the data
+    const methodKey = Object.keys( data ).find(
+        ( key ) => key.toLowerCase() === method.toLowerCase()
+    );
+    if ( methodKey ) {
+        const methodObject = data[ methodKey ];
+        let details = '';
+
+        switch ( method ) {
+            case 'dokan_custom':
+                details = methodObject.value;
+                break;
+            case 'bank':
+                details = sprintf(
+                    'Account Name: %s, \nAccount Number: %s\nBank Name: %s\nRouting Number: %s\nSwift Code: %s\nIBAN: %s',
+                    methodObject.ac_name,
+                    methodObject.ac_number,
+                    methodObject.bank_name,
+                    methodObject.routing_number,
+                    methodObject.swift,
+                    methodObject.iban
+                );
+                break;
+            case 'dokan_paypal_marketplace':
+            case 'skrill':
+            case 'paypal':
+                details = methodObject.email;
+                break;
+        }
+
+        return details;
+    }
+    return __( '-', 'dokan-lite' );
+};
 
 const WithdrawPage = () => {
     const [ data, setData ] = useState( [] );
@@ -49,16 +94,13 @@ const WithdrawPage = () => {
                         <img
                             src={ item.user.gravatar }
                             alt={ item.user?.store_name || '' }
-                            className="w-8 h-8 rounded-xs"
+                            className="w-8 h-8 rounded-sm"
                         />
                     ) }
                     <div>
-                        <div className="font-medium text-gray-900">
+                        <div className="font-medium text-gray-600">
                             { item.user?.store_name ||
                                 __( 'N/A', 'dokan-lite' ) }
-                        </div>
-                        <div className="text-sm text-gray-500">
-                            { item.user?.email || '' }
                         </div>
                     </div>
                 </div>
@@ -69,11 +111,8 @@ const WithdrawPage = () => {
             label: __( 'Amount', 'dokan-lite' ),
             enableSorting: true,
             render: ( { item } ) => (
-                <div className="font-medium text-gray-900">
-                    { new Intl.NumberFormat( 'en-US', {
-                        style: 'currency',
-                        currency: 'USD',
-                    } ).format( item.amount ) }
+                <div className="font-medium text-gray-600">
+                    { price( item.amount ) }
                 </div>
             ),
         },
@@ -90,17 +129,19 @@ const WithdrawPage = () => {
                 const statusColors = {
                     pending: 'bg-yellow-100 text-yellow-800',
                     approved: 'bg-green-100 text-green-800',
-                    cancelled: 'bg-red-100 text-red-800',
                 };
                 return (
                     <span
-                        className={ `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        className={ `inline-flex items-center px-3.5 py-1.5 rounded-md text-xs font-medium ${
                             statusColors[ item.status ] ||
                             'bg-gray-100 text-gray-800'
                         }` }
                     >
-                        { item.status.charAt( 0 ).toUpperCase() +
-                            item.status.slice( 1 ) }
+                        {
+                            WITHDRAW_STATUSES.find(
+                                ( status ) => status.value === item.status
+                            )?.label
+                        }
                     </span>
                 );
             },
@@ -117,10 +158,7 @@ const WithdrawPage = () => {
             enableSorting: true,
             render: ( { item } ) => (
                 <div className="text-gray-900">
-                    { new Intl.NumberFormat( 'en-US', {
-                        style: 'currency',
-                        currency: 'USD',
-                    } ).format( item.charge || 0 ) }
+                    { price( item.charge || 0 ) }
                 </div>
             ),
         },
@@ -130,10 +168,7 @@ const WithdrawPage = () => {
             enableSorting: true,
             render: ( { item } ) => (
                 <div className="font-medium text-gray-900">
-                    { new Intl.NumberFormat( 'en-US', {
-                        style: 'currency',
-                        currency: 'USD',
-                    } ).format( item.receivable || item.amount ) }
+                    { price( item.receivable || item.amount ) }
                 </div>
             ),
         },
@@ -143,13 +178,7 @@ const WithdrawPage = () => {
             enableSorting: true,
             render: ( { item } ) => (
                 <div className="text-gray-900">
-                    { new Date( item.created ).toLocaleDateString( 'en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                    } ) }
+                    <DateTimeHtml.Date date={ item.created } />
                 </div>
             ),
         },
@@ -157,13 +186,9 @@ const WithdrawPage = () => {
             id: 'details',
             label: __( 'Details', 'dokan-lite' ),
             render: ( { item } ) => (
-                <Button
-                    variant="link"
-                    onClick={ () => console.log( 'View details:', item ) }
-                    className="text-blue-600 hover:text-blue-800"
-                >
-                    { __( 'View', 'dokan-lite' ) }
-                </Button>
+                <div className="text-sm text-gray-600 max-w-xs truncate">
+                    { processDetails( item.details, item.method ) }
+                </div>
             ),
         },
         {
@@ -171,7 +196,7 @@ const WithdrawPage = () => {
             label: __( 'Note', 'dokan-lite' ),
             render: ( { item } ) => (
                 <div className="text-sm text-gray-600 max-w-xs truncate">
-                    { item.note || __( 'No note', 'dokan-lite' ) }
+                    { item.note || __( '-', 'dokan-lite' ) }
                 </div>
             ),
         },
@@ -183,7 +208,7 @@ const WithdrawPage = () => {
             id: 'view',
             label: __( 'View', 'dokan-lite' ),
             icon: 'visibility',
-            isPrimary: true,
+            isPrimary: false,
             callback: ( withdraws ) => {
                 const withdraw = withdraws[ 0 ];
                 console.log( 'View withdraw:', withdraw );
@@ -194,8 +219,9 @@ const WithdrawPage = () => {
             id: 'approve',
             label: __( 'Approve', 'dokan-lite' ),
             icon: 'yes-alt',
-            isPrimary: true,
+            isPrimary: false,
             supportsBulk: true,
+            isEligible: ( item ) => item?.status === 'pending',
             RenderModal: ( { items, closeModal } ) => (
                 <div className="space-y-4">
                     <div>
@@ -213,10 +239,10 @@ const WithdrawPage = () => {
                         ) }
                     </div>
                     <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={ closeModal }>
+                        <DokanButton variant="secondary" onClick={ closeModal }>
                             { __( 'Cancel', 'dokan-lite' ) }
-                        </Button>
-                        <Button
+                        </DokanButton>
+                        <DokanButton
                             variant="primary"
                             onClick={ async () => {
                                 await handleBulkAction(
@@ -228,7 +254,7 @@ const WithdrawPage = () => {
                             className="bg-green-600 hover:bg-green-700"
                         >
                             { __( 'Approve', 'dokan-lite' ) }
-                        </Button>
+                        </DokanButton>
                     </div>
                 </div>
             ),
@@ -236,9 +262,10 @@ const WithdrawPage = () => {
         {
             id: 'cancel',
             label: __( 'Cancel', 'dokan-lite' ),
-            icon: 'no-alt',
-            isPrimary: true,
+            icon: 'no',
+            isPrimary: false,
             supportsBulk: true,
+            isEligible: ( item ) => item?.status === 'pending',
             RenderModal: ( { items, closeModal } ) => (
                 <div className="space-y-4">
                     <div>
@@ -256,10 +283,10 @@ const WithdrawPage = () => {
                         ) }
                     </div>
                     <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={ closeModal }>
+                        <DokanButton variant="secondary" onClick={ closeModal }>
                             { __( 'Cancel', 'dokan-lite' ) }
-                        </Button>
-                        <Button
+                        </DokanButton>
+                        <DokanButton
                             variant="primary"
                             onClick={ async () => {
                                 await handleBulkAction(
@@ -271,7 +298,7 @@ const WithdrawPage = () => {
                             className="bg-red-600 hover:bg-red-700"
                         >
                             { __( 'Cancel Withdrawal', 'dokan-lite' ) }
-                        </Button>
+                        </DokanButton>
                     </div>
                 </div>
             ),
@@ -303,10 +330,13 @@ const WithdrawPage = () => {
                             ) }
                         />
                         <div className="flex justify-end space-x-2">
-                            <Button variant="outline" onClick={ closeModal }>
+                            <DokanButton
+                                variant="secondary"
+                                onClick={ closeModal }
+                            >
                                 { __( 'Cancel', 'dokan-lite' ) }
-                            </Button>
-                            <Button
+                            </DokanButton>
+                            <DokanButton
                                 variant="primary"
                                 onClick={ async () => {
                                     await handleUpdateNote( item.id, note );
@@ -314,7 +344,7 @@ const WithdrawPage = () => {
                                 } }
                             >
                                 { __( 'Save Note', 'dokan-lite' ) }
-                            </Button>
+                            </DokanButton>
                         </div>
                     </div>
                 );
@@ -325,6 +355,7 @@ const WithdrawPage = () => {
             label: __( 'Delete', 'dokan-lite' ),
             icon: 'trash',
             supportsBulk: true,
+            isEligible: ( item ) => item?.status !== 'approved',
             RenderModal: ( { items, closeModal } ) => (
                 <div className="space-y-4">
                     <div>
@@ -342,10 +373,10 @@ const WithdrawPage = () => {
                         ) }
                     </div>
                     <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={ closeModal }>
+                        <DokanButton variant="secondary" onClick={ closeModal }>
                             { __( 'Cancel', 'dokan-lite' ) }
-                        </Button>
-                        <Button
+                        </DokanButton>
+                        <DokanButton
                             variant="primary"
                             onClick={ async () => {
                                 await handleBulkAction(
@@ -357,7 +388,7 @@ const WithdrawPage = () => {
                             className="bg-red-600 hover:bg-red-700"
                         >
                             { __( 'Delete', 'dokan-lite' ) }
-                        </Button>
+                        </DokanButton>
                     </div>
                 </div>
             ),
@@ -677,7 +708,6 @@ const WithdrawPage = () => {
 
             { /* Data Table */ }
             <DataViews
-                className="bg-white"
                 data={ data }
                 namespace="withdraw-data-view"
                 defaultLayouts={ defaultLayouts }

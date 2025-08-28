@@ -13,7 +13,7 @@
         "baseUrl": ".",
         "paths": {
             // Webpack aliases from webpack.config.js
-            "@dokan/*": ["./src/*"],
+            "@src/*": ["./src/*"],
             "frontend/*": ["./src/frontend/*"],
             "admin/*": ["./src/admin/*"],
             "reports/*": ["./src/vendor-dashboard/reports/*"]

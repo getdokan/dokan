@@ -43,8 +43,12 @@
     }
 
     table.dataviews-view-table {
+        border: 1px solid #E9E9E9;
         th {
             background-color: #f9fafb;
+            border-bottom: 1px solid #E9E9E9;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
         }
     }
 
