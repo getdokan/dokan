@@ -50,7 +50,11 @@ const DokanBaseFieldLabel = ( {
                             labelClassName
                         ) }
                     >
-                        <RawHTML> { title } </RawHTML>
+                        { typeof title === 'string' ? (
+                            <RawHTML> { parse( title ) } </RawHTML>
+                        ) : (
+                            title
+                        ) }
                     </label>
                     { tooltip && (
                         <span className="flex items-center">

@@ -208,7 +208,7 @@ class CompliancePage extends AbstractPage {
         // Set up the main compliance page
         $this
             ->set_title( esc_html__( 'Compliance', 'dokan-lite' ) )
-            ->set_icon( 'file' )
+            ->set_icon( 'Files' )
             ->set_description( esc_html__( 'Configure compliance settings, privacy policies, and legal requirements.', 'dokan-lite' ) )
             ->add( $privacy_page )
             ->add( $eu_compliance_page );

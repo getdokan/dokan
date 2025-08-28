@@ -17,7 +17,7 @@ export default function DokanTextArea( { element } ) {
     const hasTitle = Boolean( element.title && element.title.length > 0 );
 
     return (
-        <div className="grid-cols-12 grid gap-2 justify-between w-full p-4">
+        <div className="grid-cols-12 grid gap-4 justify-between w-full p-4">
             { hasTitle && (
                 <div className={ 'sm:col-span-8 col-span-12' }>
                     <DokanFieldLabel
@@ -30,20 +30,14 @@ export default function DokanTextArea( { element } ) {
                     />
                 </div>
             ) }
-            <div
-                className={
-                    hasTitle ? 'sm:col-span-4 col-span-12' : 'col-span-12'
-                }
-            >
+            <div className={ 'col-span-12' }>
                 <BaseDokanTextArea
                     value={ element.value || element?.defaultValue || '' }
-                    id={ element.id }
                     onChange={ ( val ) =>
                         onValueChange( { ...element, value: val } )
                     }
-                    placeholder={ element.placeholder }
                     disabled={ element.disabled }
-                    rows={ element.rows || 4 }
+                    input={ { placeholder: element.placeholder } }
                 />
             </div>
         </div>
