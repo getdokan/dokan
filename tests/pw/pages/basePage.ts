@@ -1096,7 +1096,7 @@ export class BasePage {
     async getLocatorIndex(parentSelector: string, childSelector: string): Promise<number> {
         // const parent = await this.getElementHandle(parentSelector);
         const parent = this.getElement(parentSelector);
-        const child = await this.getElementHandle(childSelector);
+        const child = await this.page.locator(childSelector).first().elementHandle();
         const index = await parent.evaluate((parent, child) => Array.from(parent.children).indexOf(child as HTMLElement), child);
         // console.log(index);
         return index;
