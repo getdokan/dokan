@@ -126,7 +126,7 @@ export const data = {
         },
         pluginList: {
             basicAuth: 'Basic-Auth-master/basic-auth',
-            dokanLite: 'dokan/dokan',
+            dokanLite: 'dokan-lite/dokan',
             dokanPro: 'dokan-pro/dokan-pro',
             woocommerce: 'woocommerce/woocommerce',
             woocommerceBookings: 'woocommerce-bookings/woocommerce-bookings',
