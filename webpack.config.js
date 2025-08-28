@@ -60,7 +60,7 @@ const updatedConfig = {
         extensions: [ '.json', '.js', '.jsx', '.ts', '.tsx' ],
         alias: {
             vue$: 'vue/dist/vue.esm.js',
-            '@dokan': path.resolve( './src/' ),
+            // '@dokan': path.resolve( './src/' ),
             frontend: path.resolve( './src/frontend/' ),
             admin: path.resolve( './src/admin/' ),
             reports: path.resolve(
@@ -80,9 +80,9 @@ const updatedConfig = {
         '@woocommerce/shared-hocs': [ 'wc', 'wcSharedHocs' ],
         '@woocommerce/price-format': [ 'wc', 'priceFormat' ],
         '@woocommerce/blocks-checkout': [ 'wc', 'blocksCheckout' ],
-        '@dokan/components': [ 'dokan', 'components' ],
-        '@dokan/utilities': [ 'dokan', 'utilities' ],
-        '@dokan/hooks': [ 'dokan', 'reactHooks' ],
+        // '@dokan/components': [ 'dokan', 'components' ],
+        // '@dokan/utilities': [ 'dokan', 'utilities' ],
+        // '@dokan/hooks': [ 'dokan', 'reactHooks' ],
     },
 
     plugins: [
