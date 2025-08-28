@@ -615,7 +615,7 @@ class Assets {
         if ( file_exists( $utilities_asset_file ) ) {
             $utilities_asset = require $utilities_asset_file;
 
-            // Register React components.
+            // Register React utilities.
             $scripts['dokan-utilities'] = [
                 'version' => $utilities_asset['version'],
                 'src'     => $asset_url . '/js/utilities.js',
@@ -627,7 +627,7 @@ class Assets {
         if ( file_exists( $hooks_asset_file ) ) {
             $hooks_asset = require $hooks_asset_file;
 
-            // Register React components.
+            // Register React hooks.
             $scripts['dokan-hooks'] = [
                 'version' => $hooks_asset['version'],
                 'src'     => $asset_url . '/js/react-hooks.js',
