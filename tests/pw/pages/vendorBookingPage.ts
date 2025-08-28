@@ -131,7 +131,6 @@ export class BookingPage extends VendorPage {
         if (noBookingsFound) {
             return;
         }
-        // todo: add more fields
     }
 
     // vendor manage booking render properly
@@ -221,7 +220,7 @@ export class BookingPage extends VendorPage {
     async viewBookingProduct(productName: string) {
         await this.searchBookingProduct(productName);
         await this.hover(bookingProductsVendor.productCell(productName));
-        await this.clickAndWaitForLoadState(bookingProductsVendor.view(productName));
+        await this.click(bookingProductsVendor.view(productName));
 
         // booking product elements are visible
         const { bookingCalendar, bookNow, getSupport, price, ...viewBooking } = bookingProductsVendor.viewBooking;
