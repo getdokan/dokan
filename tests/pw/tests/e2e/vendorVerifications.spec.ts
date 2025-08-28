@@ -178,9 +178,9 @@ test.describe('Verifications test', () => {
         await vendor.viewVerificationRequestNote(methodName, note);
     });
 
-    test('vendor can view only required verification method on setup wizard', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can view verification methods on setup wizard', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , nonRequiredMethodName] = await apiUtils.createVerificationMethod({ ...payloads.createVerificationMethod(), required: false }, payloads.adminAuth);
-        await vendor.viewRequiredVerificationMethod(methodName, nonRequiredMethodName);
+        await vendor.viewVerificationMethods(methodName, nonRequiredMethodName);
     });
 
     test('vendor can submit verification request on setup wizard', { tag: ['@pro', '@vendor'] }, async () => {
