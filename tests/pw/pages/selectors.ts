@@ -242,14 +242,22 @@ export const selector = {
                 sliderNext: '.slide-notice .next',
             },
 
+            // diagnostic: {
+            //     noticeDiv: '.dokan-lite-insights-data-we-collect',
+            //     allowCollectData: '.dokan-lite-insights-data-we-collect',
+            //     disallowCollectData: '.dokan-lite-insights-data-we-collect',
+            //     paragraph1: '.updated p',
+            //     paragraph2: '.updated p',
+            // },
             diagnostic: {
-                noticeDiv: '//a[@class="dokan-insights-data-we-collect"]/../..',
-                allowCollectData: '//a[@class="dokan-insights-data-we-collect"]/../..//a[normalize-space()="Allow"]',
-                disallowCollectData: '//a[@class="dokan-insights-data-we-collect"]/../..//a[normalize-space()="No thanks"]',
-                paragraph1: '(//a[@class="dokan-insights-data-we-collect"]/../..//p)[1]',
-                paragraph2: '//a[@class="dokan-insights-data-we-collect"]/../..//p[@class="description"]',
-            },
+                noticeDiv: '.updated .dokan-lite-insights-data-we-collect',
 
+                allowCollectData: '.updated .submit .button-primary',
+                disallowCollectData: '.updated .submit .button-secondary',
+
+                paragraph1: '.updated:has(.dokan-lite-insights-data-we-collect) p:first-of-type',
+                paragraph2: '.updated:has(.dokan-lite-insights-data-we-collect) p.description',
+            },
             //table loader
             loader: 'div.table-loader',
 
