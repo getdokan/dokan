@@ -404,6 +404,7 @@ vendor store page.', 'dokan-lite'
                                                                                     ->set_title( __( 'Connect to Google', 'dokan-lite' ) )
                                                                                     ->set_description(
                                                                                         sprintf(
+                                                                                        // translators: %s: Help link URL
                                                                                             __( 'Configure your Google API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
                                                                                             'https://wedevs.com/docs/dokan-lite/google-login/'
                                                                                         )
@@ -449,6 +450,7 @@ vendor store page.', 'dokan-lite'
                                                                                     ->set_title( __( 'Connect to LinkedIn', 'dokan-lite' ) )
                                                                                     ->set_description(
                                                                                         sprintf(
+                                                                                        // translators: %s: Help link URL
                                                                                             __( 'Configure your LinkedIn API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
                                                                                             'https://wedevs.com/docs/dokan-lite/linkedin-login/'
                                                                                         )
@@ -494,6 +496,7 @@ vendor store page.', 'dokan-lite'
                                                                                     ->set_title( __( 'Connect to Apple', 'dokan-lite' ) )
                                                                                     ->set_description(
                                                                                         sprintf(
+                                                                                        // translators: %s: Help link URL
                                                                                             __( 'Configure your Apple API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
                                                                                             'https://wedevs.com/docs/dokan-lite/apple-login/'
                                                                                         )
