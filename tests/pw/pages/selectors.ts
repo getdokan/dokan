@@ -216,7 +216,7 @@ export const selector = {
                 modules: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Modules"]',
                 proFeature: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="PRO Features"]',
                 tools: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Tools"]',
-                productQA: '//ul[contains(@class,"wp-submenu")]//a[contains(text(),"Product Q&A")]',
+                productQA: '//li[contains(@class,"toplevel_page_dokan")]//a[normalize-space(text())="Product Q&A"]',
                 verifications: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Verifications"]',
                 subscriptions: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Subscriptions"]',
                 advertising: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Advertising"]',
