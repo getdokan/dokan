@@ -1,18 +1,21 @@
 import { addQueryArgs } from '@wordpress/url';
 import { __, sprintf } from '@wordpress/i18n';
-import { RawHTML, useEffect, useState } from '@wordpress/element';
+import { RawHTML, useEffect, useState, useCallback } from '@wordpress/element';
 import { TextControl, SelectControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { formatPrice } from '@dokan/utilities';
+import { TextArea } from '@getdokan/dokan-ui';
 
 // Import Dokan components
 import {
     DokanButton,
     DataViews,
     DateTimeHtml,
+    DokanModal,
     DokanTab,
     Filter,
 } from '@dokan/components';
+import { Trash, MessageSquare } from 'lucide-react';
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
@@ -47,7 +50,10 @@ const processDetails = ( data, method: string ) => {
                 break;
             case 'bank':
                 details = sprintf(
-                    'Account Name: %s, \nAccount Number: %s\nBank Name: %s\nRouting Number: %s\nSwift Code: %s\nIBAN: %s',
+                    __(
+                        'Account Name: %s, \nAccount Number: %s\nBank Name: %s\nRouting Number: %s\nSwift Code: %s\nIBAN: %s',
+                        'dokan-lite'
+                    ),
                     methodObject.ac_name,
                     methodObject.ac_number,
                     methodObject.bank_name,
@@ -209,10 +215,8 @@ const WithdrawPage = () => {
             label: __( 'View', 'dokan-lite' ),
             icon: 'visibility',
             isPrimary: false,
-            callback: ( withdraws ) => {
-                const withdraw = withdraws[ 0 ];
-                console.log( 'View withdraw:', withdraw );
-                // Navigate to view page or show modal
+            callback: ( items ) => {
+                openModal( 'view', items );
             },
         },
         {
@@ -222,42 +226,9 @@ const WithdrawPage = () => {
             isPrimary: false,
             supportsBulk: true,
             isEligible: ( item ) => item?.status === 'pending',
-            RenderModal: ( { items, closeModal } ) => (
-                <div className="space-y-4">
-                    <div>
-                        { sprintf(
-                            items.length === 1
-                                ? __(
-                                      'Are you sure you want to approve this withdrawal?',
-                                      'dokan-lite'
-                                  )
-                                : __(
-                                      'Are you sure you want to approve these %d withdrawals?',
-                                      'dokan-lite'
-                                  ),
-                            items.length
-                        ) }
-                    </div>
-                    <div className="flex justify-end space-x-2">
-                        <DokanButton variant="secondary" onClick={ closeModal }>
-                            { __( 'Cancel', 'dokan-lite' ) }
-                        </DokanButton>
-                        <DokanButton
-                            variant="primary"
-                            onClick={ async () => {
-                                await handleBulkAction(
-                                    'approve',
-                                    items.map( ( item ) => item.id )
-                                );
-                                closeModal();
-                            } }
-                            className="bg-green-600 hover:bg-green-700"
-                        >
-                            { __( 'Approve', 'dokan-lite' ) }
-                        </DokanButton>
-                    </div>
-                </div>
-            ),
+            callback: ( items ) => {
+                openModal( 'approve', items );
+            },
         },
         {
             id: 'cancel',
@@ -266,88 +237,18 @@ const WithdrawPage = () => {
             isPrimary: false,
             supportsBulk: true,
             isEligible: ( item ) => item?.status === 'pending',
-            RenderModal: ( { items, closeModal } ) => (
-                <div className="space-y-4">
-                    <div>
-                        { sprintf(
-                            items.length === 1
-                                ? __(
-                                      'Are you sure you want to cancel this withdrawal?',
-                                      'dokan-lite'
-                                  )
-                                : __(
-                                      'Are you sure you want to cancel these %d withdrawals?',
-                                      'dokan-lite'
-                                  ),
-                            items.length
-                        ) }
-                    </div>
-                    <div className="flex justify-end space-x-2">
-                        <DokanButton variant="secondary" onClick={ closeModal }>
-                            { __( 'Cancel', 'dokan-lite' ) }
-                        </DokanButton>
-                        <DokanButton
-                            variant="primary"
-                            onClick={ async () => {
-                                await handleBulkAction(
-                                    'cancelled',
-                                    items.map( ( item ) => item.id )
-                                );
-                                closeModal();
-                            } }
-                            className="bg-red-600 hover:bg-red-700"
-                        >
-                            { __( 'Cancel Withdrawal', 'dokan-lite' ) }
-                        </DokanButton>
-                    </div>
-                </div>
-            ),
+            callback: ( items ) => {
+                openModal( 'cancel', items );
+            },
         },
         {
             id: 'add-note',
             label: __( 'Add Note', 'dokan-lite' ),
             icon: 'edit',
-            RenderModal: ( { items: [ item ], closeModal } ) => {
-                const [ note, setNote ] = useState( item.note || '' );
-                return (
-                    <div className="space-y-4">
-                        <div>
-                            { sprintf(
-                                __(
-                                    'Add note for withdrawal #%d',
-                                    'dokan-lite'
-                                ),
-                                item.id
-                            ) }
-                        </div>
-                        <TextControl
-                            label={ __( 'Note', 'dokan-lite' ) }
-                            value={ note }
-                            onChange={ setNote }
-                            help={ __(
-                                'Add a note for this withdrawal',
-                                'dokan-lite'
-                            ) }
-                        />
-                        <div className="flex justify-end space-x-2">
-                            <DokanButton
-                                variant="secondary"
-                                onClick={ closeModal }
-                            >
-                                { __( 'Cancel', 'dokan-lite' ) }
-                            </DokanButton>
-                            <DokanButton
-                                variant="primary"
-                                onClick={ async () => {
-                                    await handleUpdateNote( item.id, note );
-                                    closeModal();
-                                } }
-                            >
-                                { __( 'Save Note', 'dokan-lite' ) }
-                            </DokanButton>
-                        </div>
-                    </div>
-                );
+            isPrimary: false,
+            isEligible: ( item ) => item?.status !== 'approved',
+            callback: ( items ) => {
+                openModal( 'add-note', items );
             },
         },
         {
@@ -356,47 +257,58 @@ const WithdrawPage = () => {
             icon: 'trash',
             supportsBulk: true,
             isEligible: ( item ) => item?.status !== 'approved',
-            RenderModal: ( { items, closeModal } ) => (
-                <div className="space-y-4">
-                    <div>
-                        { sprintf(
-                            items.length === 1
-                                ? __(
-                                      'Are you sure you want to delete this withdrawal? This action cannot be undone.',
-                                      'dokan-lite'
-                                  )
-                                : __(
-                                      'Are you sure you want to delete these %d withdrawals? This action cannot be undone.',
-                                      'dokan-lite'
-                                  ),
-                            items.length
-                        ) }
-                    </div>
-                    <div className="flex justify-end space-x-2">
-                        <DokanButton variant="secondary" onClick={ closeModal }>
-                            { __( 'Cancel', 'dokan-lite' ) }
-                        </DokanButton>
-                        <DokanButton
-                            variant="primary"
-                            onClick={ async () => {
-                                await handleBulkAction(
-                                    'delete',
-                                    items.map( ( item ) => item.id )
-                                );
-                                closeModal();
-                            } }
-                            className="bg-red-600 hover:bg-red-700"
-                        >
-                            { __( 'Delete', 'dokan-lite' ) }
-                        </DokanButton>
-                    </div>
-                </div>
-            ),
+            callback: ( items ) => {
+                openModal( 'delete', items );
+            },
         },
     ];
 
     // Set for handling bulk selection
     const [ selection, setSelection ] = useState( [] );
+
+    // Modal state management
+    const [ modalState, setModalState ] = useState( {
+        isOpen: false,
+        type: '',
+        items: [],
+    } );
+
+    // Note state for add-note modal
+    const [ noteState, setNoteState ] = useState( '' );
+    const [ localNoteState, setLocalNoteState ] = useState( '' );
+
+    // Optimized handlers to prevent re-renders
+    const handleNoteChange = useCallback( ( event ) => {
+        setLocalNoteState( event.target.value );
+    }, [] );
+
+    const handleNoteBlur = useCallback( () => {
+        setNoteState( localNoteState );
+    }, [ localNoteState ] );
+
+    // Modal helper functions
+    const openModal = ( type, items ) => {
+        setModalState( {
+            isOpen: true,
+            type,
+            items,
+        } );
+
+        // Initialize note state for add-note modal
+        if ( type === 'add-note' && items.length > 0 ) {
+            const initialNote = items[ 0 ].note || '';
+            setNoteState( initialNote );
+            setLocalNoteState( initialNote );
+        }
+    };
+
+    const closeModal = () => {
+        setModalState( {
+            isOpen: false,
+            type: '',
+            items: [],
+        } );
+    };
 
     // Set data view default layout
     const defaultLayouts = {
@@ -724,6 +636,594 @@ const WithdrawPage = () => {
                 actions={ actions }
                 isLoading={ isLoading }
             />
+
+            { /* DokanModal for approve, cancel, delete actions */ }
+            { modalState.isOpen && modalState.type === 'approve' && (
+                <DokanModal
+                    isOpen={ modalState.isOpen }
+                    namespace={ `approve-withdrawal-${ modalState.items.length }` }
+                    onClose={ closeModal }
+                    onConfirm={ async () => {
+                        await handleBulkAction(
+                            'approve',
+                            modalState.items.map( ( item ) => item.id )
+                        );
+                        closeModal();
+                    } }
+                    dialogTitle={ __( 'Approve Withdrawal', 'dokan-lite' ) }
+                    confirmButtonText={ __( 'Approve', 'dokan-lite' ) }
+                    confirmationTitle={ __( 'Confirm Approval', 'dokan-lite' ) }
+                    confirmationDescription={
+                        modalState.items.length === 1
+                            ? __(
+                                  'Are you sure you want to approve this withdrawal?',
+                                  'dokan-lite'
+                              )
+                            : sprintf(
+                                  __(
+                                      'Are you sure you want to approve these %d withdrawals?',
+                                      'dokan-lite'
+                                  ),
+                                  modalState.items.length
+                              )
+                    }
+                    confirmButtonVariant="primary"
+                    dialogIcon={
+                        <div className="flex items-center justify-center flex-shrink-0 w-14 h-14 bg-green-50 border border-green-50 rounded-full">
+                            <svg
+                                className="w-6 h-6 text-green-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M5 13l4 4L19 7"
+                                />
+                            </svg>
+                        </div>
+                    }
+                />
+            ) }
+
+            { modalState.isOpen && modalState.type === 'cancel' && (
+                <DokanModal
+                    isOpen={ modalState.isOpen }
+                    namespace={ `cancel-withdrawal-${ modalState.items.length }` }
+                    onClose={ closeModal }
+                    onConfirm={ async () => {
+                        await handleBulkAction(
+                            'cancelled',
+                            modalState.items.map( ( item ) => item.id )
+                        );
+                        closeModal();
+                    } }
+                    dialogTitle={ __( 'Cancel Withdrawal', 'dokan-lite' ) }
+                    confirmButtonText={ __(
+                        'Cancel Withdrawal',
+                        'dokan-lite'
+                    ) }
+                    confirmationTitle={ __(
+                        'Confirm Cancellation',
+                        'dokan-lite'
+                    ) }
+                    confirmationDescription={
+                        modalState.items.length === 1
+                            ? __(
+                                  'Are you sure you want to cancel this withdrawal?',
+                                  'dokan-lite'
+                              )
+                            : sprintf(
+                                  __(
+                                      'Are you sure you want to cancel these %d withdrawals?',
+                                      'dokan-lite'
+                                  ),
+                                  modalState.items.length
+                              )
+                    }
+                    confirmButtonVariant="primary"
+                    dialogIcon={
+                        <div className="flex items-center justify-center flex-shrink-0 w-14 h-14 bg-orange-50 border border-orange-50 rounded-full">
+                            <svg
+                                className="w-6 h-6 text-orange-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </div>
+                    }
+                />
+            ) }
+
+            { modalState.isOpen && modalState.type === 'delete' && (
+                <DokanModal
+                    isOpen={ modalState.isOpen }
+                    namespace={ `delete-withdrawal-${ modalState.items.length }` }
+                    onClose={ closeModal }
+                    onConfirm={ async () => {
+                        await handleBulkAction(
+                            'delete',
+                            modalState.items.map( ( item ) => item.id )
+                        );
+                        closeModal();
+                    } }
+                    dialogTitle={ __( 'Delete Withdrawal', 'dokan-lite' ) }
+                    confirmButtonText={ __( 'Delete', 'dokan-lite' ) }
+                    confirmationTitle={ __( 'Confirm Deletion', 'dokan-lite' ) }
+                    confirmationDescription={
+                        modalState.items.length === 1
+                            ? __(
+                                  'Are you sure you want to delete this withdrawal? This action cannot be undone.',
+                                  'dokan-lite'
+                              )
+                            : sprintf(
+                                  __(
+                                      'Are you sure you want to delete these %d withdrawals? This action cannot be undone.',
+                                      'dokan-lite'
+                                  ),
+                                  modalState.items.length
+                              )
+                    }
+                    confirmButtonVariant="primary"
+                    dialogIcon={
+                        <div className="flex items-center justify-center flex-shrink-0 w-14 h-14 bg-red-50 border border-red-50 rounded-full">
+                            <Trash size={ 24 } className="text-red-600" />
+                        </div>
+                    }
+                />
+            ) }
+
+            { modalState.isOpen &&
+                modalState.type === 'add-note' &&
+                modalState.items.length > 0 && (
+                    <DokanModal
+                        className={ `w-96 max-w-full` }
+                        isOpen={ modalState.isOpen }
+                        namespace={ `add-note-withdrawal-${ modalState.items[ 0 ]?.id }` }
+                        onClose={ closeModal }
+                        onConfirm={ async () => {
+                            await handleUpdateNote(
+                                modalState.items[ 0 ]?.id,
+                                noteState
+                            );
+                            closeModal();
+                        } }
+                        dialogTitle={ __(
+                            'Add note for this withdraw',
+                            'dokan-lite'
+                        ) }
+                        confirmButtonText={ __( 'Add Note', 'dokan-lite' ) }
+                        dialogIcon={ <></> }
+                        dialogContent={
+                            <div className="sm:text-left flex-1">
+                                <div className="mt-2">
+                                    <TextArea
+                                        disabled={ isLoading }
+                                        className="min-h-48"
+                                        input={ {
+                                            id: 'dokan-withdraw-note-modal',
+                                            defaultValue: localNoteState,
+                                            onChange: handleNoteChange,
+                                            onBlur: handleNoteBlur,
+                                            placeholder: __(
+                                                'Write here',
+                                                'dokan-lite'
+                                            ),
+                                        } }
+                                    />
+                                </div>
+                            </div>
+                        }
+                    />
+                ) }
+
+            { modalState.isOpen &&
+                modalState.type === 'view' &&
+                modalState.items.length > 0 && (
+                    <DokanModal
+                        className={ `w-[520px] max-w-full` }
+                        isOpen={ modalState.isOpen }
+                        namespace={ `view-withdrawal-${ modalState.items[ 0 ]?.id }` }
+                        onClose={ closeModal }
+                        onConfirm={ closeModal }
+                        dialogTitle={ <></> }
+                        confirmButtonText={ __( 'Update', 'dokan-lite' ) }
+                        hideCancelButton={ false }
+                        cancelButtonText={ __( 'Cancel', 'dokan-lite' ) }
+                        dialogContent={
+                            <div className="p-0">
+                                { ( () => {
+                                    const item = modalState.items[ 0 ];
+                                    const statusColors = {
+                                        pending:
+                                            'bg-yellow-100 text-yellow-800',
+                                        approved: 'bg-green-100 text-green-800',
+                                        cancelled: 'bg-gray-100 text-gray-800',
+                                    };
+
+                                    return (
+                                        <div>
+                                            { /* Header with amount and store name */ }
+                                            <div className="mb-4">
+                                                <div className="text-2xl font-bold text-gray-900 mb-1">
+                                                    { price( item.amount ) }
+                                                </div>
+                                                <div className="text-sm text-gray-500 mb-3">
+                                                    From:{ ' ' }
+                                                    { item.user?.store_name ||
+                                                        __(
+                                                            'N/A',
+                                                            'dokan-lite'
+                                                        ) }
+                                                </div>
+                                            </div>
+
+                                            { /* Withdraw details section */ }
+                                            <div className="mb-6">
+                                                <h3 className="text-sm font-medium text-gray-900 mb-3">
+                                                    { __(
+                                                        'Withdraw details:',
+                                                        'dokan-lite'
+                                                    ) }
+                                                </h3>
+
+                                                <div className="space-y-3 text-sm">
+                                                    <div className="flex justify-between">
+                                                        <span className="text-gray-600">
+                                                            { __(
+                                                                'Status',
+                                                                'dokan-lite'
+                                                            ) }
+                                                        </span>
+                                                        <span
+                                                            className={ `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                                                statusColors[
+                                                                    item.status
+                                                                ] ||
+                                                                'bg-gray-100 text-gray-800'
+                                                            }` }
+                                                        >
+                                                            { item.status
+                                                                .charAt( 0 )
+                                                                .toUpperCase() +
+                                                                item.status.slice(
+                                                                    1
+                                                                ) }
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex justify-between">
+                                                        <span className="text-gray-600">
+                                                            { __(
+                                                                'Date received',
+                                                                'dokan-lite'
+                                                            ) }
+                                                        </span>
+                                                        <span className="text-gray-900">
+                                                            <DateTimeHtml.Date
+                                                                date={
+                                                                    item.created
+                                                                }
+                                                                format="j F Y, g.i a"
+                                                            />
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex justify-between">
+                                                        <span className="text-gray-600">
+                                                            { __(
+                                                                'Charge',
+                                                                'dokan-lite'
+                                                            ) }
+                                                        </span>
+                                                        <span className="text-gray-900">
+                                                            { price(
+                                                                item.charge || 0
+                                                            ) }
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex justify-between">
+                                                        <span className="text-gray-600">
+                                                            { __(
+                                                                'Payable',
+                                                                'dokan-lite'
+                                                            ) }
+                                                        </span>
+                                                        <span className="text-gray-900 font-medium">
+                                                            { price(
+                                                                item.receivable ||
+                                                                    item.amount
+                                                            ) }
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            { /* Payment method and Note section */ }
+                                            <div className="mb-6">
+                                                <h3 className="text-sm font-medium text-gray-900 mb-3">
+                                                    { __(
+                                                        'Payment method and Note:',
+                                                        'dokan-lite'
+                                                    ) }
+                                                </h3>
+
+                                                <RawHTML>
+                                                    { processDetails(
+                                                        item.details,
+                                                        item.method
+                                                    )
+                                                        .split( '\n' )
+                                                        .join( '<br />' ) }
+                                                </RawHTML>
+
+                                                { /*<div className="space-y-2 text-sm">*/ }
+                                                { /*    <div>*/ }
+                                                { /*        <span className="font-medium text-gray-900">*/ }
+                                                { /*            { item.method_title ||*/ }
+                                                { /*                item.method }*/ }
+                                                { /*        </span>*/ }
+                                                { /*    </div>*/ }
+                                                { /*    { item.details &&*/ }
+                                                { /*        Object.keys(*/ }
+                                                { /*            item.details*/ }
+                                                { /*        ).map(*/ }
+                                                { /*            ( methodKey ) => {*/ }
+                                                { /*                const methodData =*/ }
+                                                { /*                    item*/ }
+                                                { /*                        .details[*/ }
+                                                { /*                        methodKey*/ }
+                                                { /*                    ];*/ }
+                                                { /*                if (*/ }
+                                                { /*                    methodKey ===*/ }
+                                                { /*                        'paypal' &&*/ }
+                                                { /*                    methodData.email*/ }
+                                                { /*                ) {*/ }
+                                                { /*                    return (*/ }
+                                                { /*                        <div*/ }
+                                                { /*                            key={*/ }
+                                                { /*                                methodKey*/ }
+                                                { /*                            }*/ }
+                                                { /*                        >*/ }
+                                                { /*                            <div>*/ }
+                                                { /*                                { __(*/ }
+                                                { /*                                    'Account Name:',*/ }
+                                                { /*                                    'dokan-lite'*/ }
+                                                { /*                                ) }{ ' ' }*/ }
+                                                { /*                                {*/ }
+                                                { /*                                    methodData.email*/ }
+                                                { /*                                }*/ }
+                                                { /*                            </div>*/ }
+                                                { /*                            { methodData.charge !==*/ }
+                                                { /*                                undefined && (*/ }
+                                                { /*                                <>*/ }
+                                                { /*                                    <div>*/ }
+                                                { /*                                        { __(*/ }
+                                                { /*                                            'Charge:',*/ }
+                                                { /*                                            'dokan-lite'*/ }
+                                                { /*                                        ) }{ ' ' }*/ }
+                                                { /*                                        { price(*/ }
+                                                { /*                                            methodData.charge*/ }
+                                                { /*                                        ) }*/ }
+                                                { /*                                    </div>*/ }
+                                                { /*                                    <div>*/ }
+                                                { /*                                        { __(*/ }
+                                                { /*                                            'Receivable:',*/ }
+                                                { /*                                            'dokan-lite'*/ }
+                                                { /*                                        ) }{ ' ' }*/ }
+                                                { /*                                        { price(*/ }
+                                                { /*                                            methodData.receivable*/ }
+                                                { /*                                        ) }*/ }
+                                                { /*                                    </div>*/ }
+                                                { /*                                    { methodData.charge_data && (*/ }
+                                                { /*                                        <div>*/ }
+                                                { /*                                            { __(*/ }
+                                                { /*                                                'Charge Data:',*/ }
+                                                { /*                                                'dokan-lite'*/ }
+                                                { /*                                            ) }*/ }
+                                                { /*                                            {*/ }
+                                                { /*                                                methodData*/ }
+                                                { /*                                                    .charge_data*/ }
+                                                { /*                                                    .fixed*/ }
+                                                { /*                                            }*/ }
+
+                                                { /*                                            %*/ }
+                                                { /*                                            fixed,{ ' ' }*/ }
+                                                { /*                                            {*/ }
+                                                { /*                                                methodData*/ }
+                                                { /*                                                    .charge_data*/ }
+                                                { /*                                                    .percentage*/ }
+                                                { /*                                            }*/ }
+
+                                                { /*                                            %*/ }
+                                                { /*                                            percentage*/ }
+                                                { /*                                        </div>*/ }
+                                                { /*                                    ) }*/ }
+                                                { /*                                </>*/ }
+                                                { /*                            ) }*/ }
+                                                { /*                        </div>*/ }
+                                                { /*                    );*/ }
+                                                { /*                } else if (*/ }
+                                                { /*                    methodKey ===*/ }
+                                                { /*                    'bank'*/ }
+                                                { /*                ) {*/ }
+                                                { /*                    return (*/ }
+                                                { /*                        <div*/ }
+                                                { /*                            key={*/ }
+                                                { /*                                methodKey*/ }
+                                                { /*                            }*/ }
+                                                { /*                        >*/ }
+                                                { /*                            <div>*/ }
+                                                { /*                                { __(*/ }
+                                                { /*                                    'Account Name:',*/ }
+                                                { /*                                    'dokan-lite'*/ }
+                                                { /*                                ) }{ ' ' }*/ }
+                                                { /*                                {*/ }
+                                                { /*                                    methodData.ac_name*/ }
+                                                { /*                                }*/ }
+                                                { /*                            </div>*/ }
+                                                { /*                            <div>*/ }
+                                                { /*                                { __(*/ }
+                                                { /*                                    'Account Number:',*/ }
+                                                { /*                                    'dokan-lite'*/ }
+                                                { /*                                ) }{ ' ' }*/ }
+                                                { /*                                {*/ }
+                                                { /*                                    methodData.ac_number*/ }
+                                                { /*                                }*/ }
+                                                { /*                            </div>*/ }
+                                                { /*                            <div>*/ }
+                                                { /*                                { __(*/ }
+                                                { /*                                    'Bank Name:',*/ }
+                                                { /*                                    'dokan-lite'*/ }
+                                                { /*                                ) }{ ' ' }*/ }
+                                                { /*                                {*/ }
+                                                { /*                                    methodData.bank_name*/ }
+                                                { /*                                }*/ }
+                                                { /*                            </div>*/ }
+                                                { /*                            { methodData.iban && (*/ }
+                                                { /*                                <div>*/ }
+                                                { /*                                    { __(*/ }
+                                                { /*                                        'IBAN:',*/ }
+                                                { /*                                        'dokan-lite'*/ }
+                                                { /*                                    ) }{ ' ' }*/ }
+                                                { /*                                    {*/ }
+                                                { /*                                        methodData.iban*/ }
+                                                { /*                                    }*/ }
+                                                { /*                                </div>*/ }
+                                                { /*                            ) }*/ }
+                                                { /*                            { methodData.routing_number && (*/ }
+                                                { /*                                <div>*/ }
+                                                { /*                                    { __(*/ }
+                                                { /*                                        'Routing Number:',*/ }
+                                                { /*                                        'dokan-lite'*/ }
+                                                { /*                                    ) }{ ' ' }*/ }
+                                                { /*                                    {*/ }
+                                                { /*                                        methodData.routing_number*/ }
+                                                { /*                                    }*/ }
+                                                { /*                                </div>*/ }
+                                                { /*                            ) }*/ }
+                                                { /*                            { methodData.swift && (*/ }
+                                                { /*                                <div>*/ }
+                                                { /*                                    { __(*/ }
+                                                { /*                                        'Swift Code:',*/ }
+                                                { /*                                        'dokan-lite'*/ }
+                                                { /*                                    ) }{ ' ' }*/ }
+                                                { /*                                    {*/ }
+                                                { /*                                        methodData.swift*/ }
+                                                { /*                                    }*/ }
+                                                { /*                                </div>*/ }
+                                                { /*                            ) }*/ }
+                                                { /*                        </div>*/ }
+                                                { /*                    );*/ }
+                                                { /*                }*/ }
+                                                { /*                return null;*/ }
+                                                { /*            }*/ }
+                                                { /*        ) }*/ }
+                                                { /*</div>*/ }
+                                            </div>
+
+                                            { /* Note section */ }
+                                            { item.note && (
+                                                <div className="mb-6">
+                                                    <h3 className="text-sm font-medium text-gray-900 mb-2">
+                                                        { __(
+                                                            'Note',
+                                                            'dokan-lite'
+                                                        ) }
+                                                    </h3>
+                                                    <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-md">
+                                                        { item.note }
+                                                    </div>
+                                                </div>
+                                            ) }
+
+                                            { /* Actions section */ }
+                                            <div className="mb-4">
+                                                <h3 className="text-sm font-medium text-gray-900 mb-3">
+                                                    { __(
+                                                        'Actions:',
+                                                        'dokan-lite'
+                                                    ) }
+                                                </h3>
+                                                <div className="space-y-2">
+                                                    { item.status ===
+                                                        'pending' && (
+                                                        <>
+                                                            <div className="flex items-center">
+                                                                <input
+                                                                    type="radio"
+                                                                    id="cancel"
+                                                                    name="action"
+                                                                    className="mr-2"
+                                                                />
+                                                                <label
+                                                                    htmlFor="cancel"
+                                                                    className="text-sm text-gray-700"
+                                                                >
+                                                                    { __(
+                                                                        'Cancel',
+                                                                        'dokan-lite'
+                                                                    ) }
+                                                                </label>
+                                                            </div>
+                                                        </>
+                                                    ) }
+                                                    { item.status !==
+                                                        'approved' && (
+                                                        <div className="flex items-center">
+                                                            <input
+                                                                type="radio"
+                                                                id="delete"
+                                                                name="action"
+                                                                className="mr-2"
+                                                            />
+                                                            <label
+                                                                htmlFor="delete"
+                                                                className="text-sm text-gray-700"
+                                                            >
+                                                                { __(
+                                                                    'Delete',
+                                                                    'dokan-lite'
+                                                                ) }
+                                                            </label>
+                                                        </div>
+                                                    ) }
+                                                    { item.status ===
+                                                        'pending' && (
+                                                        <div className="flex items-center">
+                                                            <input
+                                                                type="radio"
+                                                                id="approve"
+                                                                name="action"
+                                                                className="mr-2"
+                                                            />
+                                                            <label
+                                                                htmlFor="approve"
+                                                                className="text-sm text-gray-700"
+                                                            >
+                                                                { __(
+                                                                    'Approve',
+                                                                    'dokan-lite'
+                                                                ) }
+                                                            </label>
+                                                        </div>
+                                                    ) }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                } )() }
+                            </div>
+                        }
+                    />
+                ) }
         </div>
     );
 };
