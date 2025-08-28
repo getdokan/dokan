@@ -1,15 +1,15 @@
-import { RawHTML } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
 import DokanTooltip from './DokanTooltip';
+import { RawHTML } from '@wordpress/element';
 import parse from 'html-react-parser';
 
 interface InputLabelProps {
     title: string;
     titleFontWeight?: 'light' | 'bold';
-    tooltip?: React.ReactNode | string;
-    suffix?: React.ReactNode;
-    icon?: React.ReactNode;
-    helperText?: React.ReactNode | string;
+    tooltip?: string;
+    suffix?: string;
+    icon?: string;
+    helperText?: string;
     htmlFor?: string;
     wrapperClassNames?: string;
     labelClassName?: string;
@@ -51,7 +51,7 @@ const DokanBaseFieldLabel = ( {
                         ) }
                     >
                         { typeof title === 'string' ? (
-                            <RawHTML> { parse( title ) } </RawHTML>
+                            <RawHTML>{ parse( title ) }</RawHTML>
                         ) : (
                             title
                         ) }

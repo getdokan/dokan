@@ -1,5 +1,8 @@
 import { dispatch } from '@wordpress/data';
-import { DokanFieldLabel } from '../../../../../../components/fields';
+import {
+    DokanBaseTextField,
+    DokanFieldLabel,
+} from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
 
 export default function DokanPassword( { element } ) {
@@ -32,13 +35,13 @@ export default function DokanPassword( { element } ) {
                     hasTitle ? 'sm:col-span-4 col-span-12' : 'col-span-12'
                 }
             >
-                <BaseDokanPassword
+                <DokanBaseTextField
                     value={ element.value || element?.defaultValue || '' }
-                    id={ element.id }
                     onChange={ ( val ) =>
                         onValueChange( { ...element, value: val } )
                     }
                     placeholder={ element.placeholder }
+                    inputType="password"
                     disabled={ element.disabled }
                 />
             </div>

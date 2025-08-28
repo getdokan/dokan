@@ -28,7 +28,6 @@ import DokanVendorInfoPreview from './DokanVendorInfoPreview';
 import DokanRichText from './DokanRichText';
 import DokanRepeater from './DokanRepeater';
 import WithdrawSchedule from './WithdrawSchedule';
-import DokanRadioBox from './DokanRadioBox';
 
 const FieldParser = ( { element }: SettingsProps ) => {
     switch ( element.variant ) {
@@ -107,14 +106,6 @@ const FieldParser = ( { element }: SettingsProps ) => {
                 />,
                 element
             );
-
-        case 'radio_box':
-            return applyFilters(
-                'dokan_admin_settings_radio_box_field_parser',
-                <DokanRadioBox key={ element.hook_key } element={ element } />,
-                element
-            );
-
         case 'customize_radio':
             return applyFilters(
                 'dokan_admin_settings_customize_radio_field_parser',

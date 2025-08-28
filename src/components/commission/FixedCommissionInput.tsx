@@ -160,7 +160,7 @@ const FixedCommissionInput = ( {
                         numeralDecimalMark: currency?.decimal ?? '.',
                         numeralDecimalScale: currency?.precision ?? 2,
                     } }
-                    className={ `w-24 h-10 rounded rounded-r-none focus:border-gray-300 focus:ring-0` }
+                    className={ `w-24 h-10 rounded !rounded-r-none focus:border-gray-300 focus:ring-0` }
                 />
 
                 <div className="text-gray-500 text-lg">
@@ -177,7 +177,7 @@ const FixedCommissionInput = ( {
                         numeralDecimalMark: currency?.decimal ?? '.',
                         numeralDecimalScale: currency?.precision ?? 2,
                     } }
-                    className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 border-l-0` }
+                    className={ `w-24 h-10 rounded !rounded-l-none focus:border-gray-300 focus:ring-0 !border-l-0` }
                 />
             </div>
         </div>

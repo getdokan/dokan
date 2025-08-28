@@ -1,7 +1,7 @@
 import { dispatch } from '@wordpress/data';
 import {
+    DokanBaseTextField,
     DokanFieldLabel,
-    TextField,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
 
@@ -22,7 +22,7 @@ export default function DokanWithdrawCharges( { element } ) {
                 helperText={ element.description }
                 imageUrl={ element?.image_url }
             />
-            <TextField
+            <DokanBaseTextField
                 value={ element.value }
                 onChange={ ( val ) =>
                     onValueChange( { ...element, value: val } )

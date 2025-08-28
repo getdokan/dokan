@@ -7,7 +7,7 @@ export interface DokanCheckboxGroupProps {
     className?: string;
     options: Array< {
         value: string | number;
-        label: string | React.ReactNode;
+        label: string;
         indeterminate?: boolean;
     } >;
     defaultValue?: Array< string | number >;
@@ -16,7 +16,7 @@ export interface DokanCheckboxGroupProps {
     wrapperClassName?: string;
 }
 
-const DokanCheckboxGroup = ( {
+const DokanBaseCheckboxGroup = ( {
     name,
     label,
     helpText,
@@ -43,4 +43,4 @@ const DokanCheckboxGroup = ( {
     );
 };
 
-export default DokanCheckboxGroup;
+export default DokanBaseCheckboxGroup;

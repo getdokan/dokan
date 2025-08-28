@@ -161,6 +161,7 @@ class VendorPage extends AbstractPage {
                                                                                                 ->set_title( __( 'Connect to Facebook', 'dokan-lite' ) )
                                                                                                 ->set_description(
                                                                                                     sprintf(
+                                                                                                    // translators: 1) Link to get help.
                                                                                                         __( 'Configure your Facebook API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
                                                                                                         'https://wedevs.com/docs/dokan-lite/facebook-login/'
                                                                                                     )
