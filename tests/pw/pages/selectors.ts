@@ -2665,11 +2665,15 @@ export const selector = {
 
             // Dokan Setup Wizard
             setupWizard: {
+                successHeading: '.success-heading',
                 letsGo: '.button-primary',
+                startJourney: '//button[contains(text(),"Start Journey")]',
+                exploreDashboard: '//a[contains(text(),"Explore Dashboard")]',
                 notWrightNow: '//a[contains(text(),"Not right now")]',
 
                 // Store
-                vendorStoreURL: '#custom_store_url',
+                vendorStoreURL: 'input[name="storename"]',
+                nextBtn: 'button:has-text("Next")',
                 // shippingFeeRecipient: '#select2-shipping_fee_recipient-container',
                 // shippingFeeRecipientValues: '.select2-results ul li',
                 // taxFeeRecipient: '#select2-tax_fee_recipient-container',
@@ -2686,7 +2690,8 @@ export const selector = {
                 // sellingProductTypes: '#select2-dokan_digital_product-container',
                 // Values: '.select2-results ul li',
                 continue: '//input[@value="Continue"]',
-                skipThisStep: '//a[contains(text(),"Skip this step")]',
+                skipThisStep: '//button[contains(text(),"Skip this step")]',
+
 
                 // Selling
                 newVendorEnableSelling: '//label[@for="new_seller_enable_selling" and @class="switch-label"]',
@@ -3057,18 +3062,22 @@ export const selector = {
                 firstRowOrderCommission: '(//tbody[@id="the-list"]//tr[not(@style="display: none;")])[1]//td[@class="admin_commission column-admin_commission"]',
 
                 commissionMetaBox: {
-                    metaBoxDiv: 'div#dokan_commission_box',
-                    commissionsText: '//h2[normalize-space()="Commissions"]',
+                    metaBoxDiv: '#dokan_commission_box',
+                    commissionsHeader: '#dokan_commission_box h2.hndle', // "Commissions" header
                     table: {
-                        itemColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Item"]',
-                        typeColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Type"]',
-                        rateColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Rate"]',
-                        qtyColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Qty"]',
-                        commissionColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Commission"]',
+                      itemColumn: '#dokan_commission_box th:has-text("Item")',
+                      typeColumn: '#dokan_commission_box th:has-text("Type")',
+                      rateColumn: '#dokan_commission_box th:has-text("Rate")',
+                      qtyColumn: '#dokan_commission_box th:has-text("Qty")',
+                      commissionColumn: '#dokan_commission_box th:has-text("Commission")',
                     },
-                    orderItemInfo: 'div#dokan_commission_box table.woocommerce_order_items',
-                    orderTotalInfo: 'div#dokan_commission_box div.wc-order-totals-items',
-                },
+                    orderItemsTable: '#dokan_commission_box table.dokan_order_items',
+                    orderLineItems: '#dokan_commission_box tbody#order_line_items tr.item',
+                    orderTotals: '#dokan_commission_box div.wc-order-totals-items table.wc-order-totals',
+                    netTotal: '#dokan_commission_box td.label:has-text("Net total:") + td + td.total',
+                    vendorEarning: '#dokan_commission_box td.label:has-text("Vendor earning:") + td + td.total',
+                    totalCommission: '#dokan_commission_box td.label:has-text("Total commission:") + td + td.total',
+                },                  
 
                 subOrdersMetaBox: {
                     metaBoxDiv: 'div#dokan_sub_or_related_orders',
@@ -5621,7 +5630,6 @@ export const selector = {
                 UpdateOrderStatus: '.dokan-btn-success',
                 cancelUpdateOrderStatus: 'dokan-btn-default',
             },
-
             // calendar
             calendar: {
                 calendarText: '//h1[normalize-space()="Calendar"]',
