@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivend
 Requires at least: 6.6
 Tested up to: 6.8.2
 WC requires at least: 8.5.0
-WC tested up to: 10.0.4
+WC tested up to: 10.1.2
 Requires PHP: 7.4
-Stable tag: 4.0.5
+Stable tag: 4.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -348,6 +348,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+= v4.0.6 ( Aug 29, 2025 ) =
+- **update:** Added translation support for dashboard analytics report scripts to improve internationalization (i18n).
+- **fix:** Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.
+- **fix:** Added async search in store category in vendor edit.
+- **fix:** Admin not receiving withdrawal request email notifications.
+
 = v4.0.5 ( Jul 24, 2025 ) =
 
 - **fix:** Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.

@@ -68,7 +68,7 @@ class Assets implements Hookable {
      * Get the chunks for analytics scripts, it generates the chunks based on the scripts that are used in the analytics section.
      * This is used to register the scripts for translations support
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.6
      *
      * @return array
      */
