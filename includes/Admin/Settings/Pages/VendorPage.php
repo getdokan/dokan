@@ -128,7 +128,6 @@ class VendorPage extends AbstractPage {
                                             ->add(
                                                 ElementFactory::field( 'vendor_setup_wizard_message', 'rich_text' )
                                                             ->set_title( __( 'Vendor Setup Wizard Message', 'dokan-lite' ) )
-                                                            ->set_description( __( 'Enter a welcome message for new vendors.', 'dokan-lite' ) )
                                                             ->set_placeholder( __( 'Enter your welcome message here...', 'dokan-lite' ) )
                                             );
         // Create vendor capabilities subpage with a single section
@@ -199,37 +198,40 @@ class VendorPage extends AbstractPage {
                                                                                                         ->set_readonly( true )
                                                                                     )
                                                                     )
-                                                                    ->add(
-                                                                        ElementFactory::field( 'x_enabled', 'switch' )
-                                                                                    ->set_title( __( 'Connect to X', 'dokan-lite' ) )
-                                                                                    ->set_description(
-                                                                                        sprintf(
-                                                                                            __( 'Configure your X API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
-                                                                                            'https://wedevs.com/docs/dokan-lite/x-twitter-login/'
-                                                                                        )
-                                                                                    )
-                                                                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/social-onboarding/x-twitter.svg' )
-                                                                                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                                                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                                                    ->set_default( 'off' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'show', '===' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
-                                                                    )
+
                                                                     ->add(
                                                                         ElementFactory::field_group( 'x_api_group' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.x_enabled', 'on', true, 'display', 'show', '===' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.x_enabled', 'on', true, 'display', 'hide', '!==' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
+                                                                            ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'show', '==' )
+                                                                            ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'off', true, 'display', 'hide', '==' )
+                                                                            ->add(
+                                                                                ElementFactory::field( 'x_enabled', 'switch' )
+                                                                                                ->set_title( __( 'Connect to X', 'dokan-lite' ) )
+                                                                                                ->set_description(
+                                                                                                    sprintf(
+                                                                                                    // translators: 1) Link to get help.
+                                                                                                        __( 'Configure your X API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
+                                                                                                        'https://wedevs.com/docs/dokan-lite/x-twitter-login/'
+                                                                                                    )
+                                                                                                )
+                                                                                                ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/social-onboarding/x-twitter.svg' )
+                                                                                                ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                                                                                                ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                                                                                                ->set_default( 'off' )
+                                                                            )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'x_api_key', 'show_hide' )
                                                                                                         ->set_description( __( 'Enter your X API Key from X Developer Console.', 'dokan-lite' ) )
                                                                                                         ->set_placeholder( __( 'Enter your X API Key', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.x_api_group.x_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.x_api_group.x_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'x_api_secret', 'copy_field' )
                                                                                                         ->set_title( __( 'X API Secret', 'dokan-lite' ) )
                                                                                                         ->set_description( __( 'Enter your X API Secret from X Developer Console.', 'dokan-lite' ) )
                                                                                                         ->set_placeholder( __( 'Enter your X API Secret', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.x_api_group.x_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.x_api_group.x_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'x_redirect_url', 'copy_field' )
@@ -238,45 +240,51 @@ class VendorPage extends AbstractPage {
                                                                                                         ->set_placeholder( home_url( '/wp-admin/admin-ajax.php?action=dokan_x_callback' ) )
                                                                                                         ->set_default( home_url( '/wp-admin/admin-ajax.php?action=dokan_x_callback' ) )
                                                                                                         ->set_readonly( true )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.x_api_group.x_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.x_api_group.x_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'google_key_content', 'textarea' )
                                                                                                         ->set_title( __( 'Apple Key Content', 'dokan-lite' ) )
-                                                                                                        ->set_placeholder( __( '-----BEGIN PRIVATE KEY-----\nYour private key content here\n-----END PRIVATE KEY-----', 'dokan-lite' ) )
+                                                                                            ->set_placeholder( __( 'Write here', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.x_api_group.x_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.x_api_group.x_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
-                                                                    )
-                                                                    ->add(
-                                                                        ElementFactory::field( 'google_enabled', 'switch' )
-                                                                                    ->set_title( __( 'Connect to Google', 'dokan-lite' ) )
-                                                                                    ->set_description(
-                                                                                        sprintf(
-                                                                                            __( 'Configure your Google API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
-                                                                                            'https://wedevs.com/docs/dokan-lite/google-login/'
-                                                                                        )
-                                                                                    )
-                                                                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/social-onboarding/google.svg' )
-                                                                                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                                                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                                                    ->set_default( 'off' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'show', '===' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
                                                                     )
                                                                     ->add(
                                                                         ElementFactory::field_group( 'google_api_group' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.google_enabled', 'on', true, 'display', 'show', '===' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.google_enabled', 'on', true, 'display', 'hide', '!==' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
-                                                                                    ->add(
-                                                                                        ElementFactory::field( 'google_client_id', 'show_hide' )
+                                                                                        ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'show', '===' )
+                                                                                        ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
+                                                                                        ->add(
+                                                                                            ElementFactory::field( 'google_enabled', 'switch' )
+                                                                                                        ->set_title( __( 'Connect to Google', 'dokan-lite' ) )
+                                                                                                        ->set_description(
+                                                                                                            sprintf(
+                                                                                                            // translators: 1) Link to get help.
+                                                                                                                __( 'Configure your Google API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
+                                                                                                                'https://wedevs.com/docs/dokan-lite/google-login/'
+                                                                                                            )
+                                                                                                        )
+                                                                                                        ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/social-onboarding/google.svg' )
+                                                                                                        ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                                                                                                        ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                                                                                                        ->set_default( 'off' )
+                                                                                        )
+                                                                                        ->add(
+                                                                                            ElementFactory::field( 'google_client_id', 'show_hide' )
                                                                                                         ->set_title( __( 'Google Client ID', 'dokan-lite' ) )
                                                                                                         ->set_description( __( 'Enter your Google Client ID from Google Cloud Console.', 'dokan-lite' ) )
                                                                                                         ->set_placeholder( __( 'Enter your Google Client ID', 'dokan-lite' ) )
-                                                                                    )
+                                                                                                        ->add_dependency( 'social_onboarding.social_onboarding.google_api_group.google_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                                        ->add_dependency( 'social_onboarding.social_onboarding.google_api_group.google_enabled', 'on', true, 'display', 'hide', '!==' )
+                                                                                        )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'google_client_secret', 'copy_field' )
                                                                                                         ->set_title( __( 'Google Client Secret', 'dokan-lite' ) )
                                                                                                         ->set_description( __( 'Enter your Google Client Secret from Google Cloud Console.', 'dokan-lite' ) )
                                                                                                         ->set_placeholder( __( 'Enter your Google Client Secret', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.google_api_group.google_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.google_api_group.google_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'google_redirect_url', 'copy_field' )
@@ -285,45 +293,51 @@ class VendorPage extends AbstractPage {
                                                                                                         ->set_placeholder( home_url( '/wp-admin/admin-ajax.php?action=dokan_google_callback' ) )
                                                                                                         ->set_default( home_url( '/wp-admin/admin-ajax.php?action=dokan_google_callback' ) )
                                                                                                         ->set_readonly( true )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.google_api_group.google_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.google_api_group.google_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'google_key_content', 'textarea' )
                                                                                                         ->set_title( __( 'Apple Key Content', 'dokan-lite' ) )
-                                                                                                        ->set_placeholder( __( '-----BEGIN PRIVATE KEY-----\nYour private key content here\n-----END PRIVATE KEY-----', 'dokan-lite' ) )
+                                                                                            ->set_placeholder( __( 'Write here', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.google_api_group.google_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.google_api_group.google_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
-                                                                    )
-                                                                    ->add(
-                                                                        ElementFactory::field( 'linkedin_enabled', 'switch' )
-                                                                                    ->set_title( __( 'Connect to LinkedIn', 'dokan-lite' ) )
-                                                                                    ->set_description(
-                                                                                        sprintf(
-                                                                                            __( 'Configure your LinkedIn API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
-                                                                                            'https://wedevs.com/docs/dokan-lite/linkedin-login/'
-                                                                                        )
-                                                                                    )
-                                                                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/social-onboarding/linkedin.svg' )
-                                                                                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                                                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                                                    ->set_default( 'off' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'show', '===' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
                                                                     )
                                                                     ->add(
                                                                         ElementFactory::field_group( 'linkedin_api_group' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.linkedin_enabled', 'on', true, 'display', 'show', '===' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.linkedin_enabled', 'on', true, 'display', 'hide', '!==' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
+                                                                                        ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'show', '===' )
+                                                                                        ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
+                                                                                        ->add(
+                                                                                            ElementFactory::field( 'linkedin_enabled', 'switch' )
+                                                                                                        ->set_title( __( 'Connect to LinkedIn', 'dokan-lite' ) )
+                                                                                                        ->set_description(
+                                                                                                            sprintf(
+                                                                                                            // translators: 1) Link to get help.
+                                                                                                                __( 'Configure your LinkedIn API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
+                                                                                                                'https://wedevs.com/docs/dokan-lite/linkedin-login/'
+                                                                                                            )
+                                                                                                        )
+                                                                                                        ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/social-onboarding/linkedin.svg' )
+                                                                                                        ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                                                                                                        ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                                                                                                        ->set_default( 'off' )
+                                                                                        )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'linkedin_client_id', 'show_hide' )
                                                                                                         ->set_title( __( 'LinkedIn Client ID', 'dokan-lite' ) )
                                                                                                         ->set_description( __( 'Enter your LinkedIn Client ID from LinkedIn Developer Console.', 'dokan-lite' ) )
                                                                                                         ->set_placeholder( __( 'Enter your LinkedIn Client ID', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'linkedin_client_secret', 'show_hide' )
                                                                                                         ->set_title( __( 'LinkedIn Client Secret', 'dokan-lite' ) )
                                                                                                         ->set_description( __( 'Enter your LinkedIn Client Secret from LinkedIn Developer Console.', 'dokan-lite' ) )
                                                                                                         ->set_placeholder( __( 'Enter your LinkedIn Client Secret', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'linkedin_redirect_url', 'copy_field' )
@@ -332,35 +346,36 @@ class VendorPage extends AbstractPage {
                                                                                                         ->set_placeholder( home_url( '/wp-admin/admin-ajax.php?action=dokan_linkedin_callback' ) )
                                                                                                         ->set_default( home_url( '/wp-admin/admin-ajax.php?action=dokan_linkedin_callback' ) )
                                                                                                         ->set_readonly( true )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'linked_key_content', 'textarea' )
                                                                                                         ->set_title( __( 'Apple Key Content', 'dokan-lite' ) )
                                                                                                         ->set_description( __( 'Paste your Apple private key content including BEGIN and END lines.', 'dokan-lite' ) )
-                                                                                                        ->set_placeholder( __( '-----BEGIN PRIVATE KEY-----\nYour private key content here\n-----END PRIVATE KEY-----', 'dokan-lite' ) )
+                                                                                            ->set_placeholder( __( 'Write here', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
-                                                                    )
-                                                                    ->add(
-                                                                        ElementFactory::field( 'apple_enabled', 'switch' )
-                                                                                    ->set_title( __( 'Connect to Apple', 'dokan-lite' ) )
-                                                                                    ->set_description(
-                                                                                        sprintf(
-                                                                                            __( 'Configure your Apple API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
-                                                                                            'https://wedevs.com/docs/dokan-lite/apple-login/'
-                                                                                        )
-                                                                                    )
-                                                                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/social-onboarding/apple.svg' )
-                                                                                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                                                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                                                    ->set_default( 'off' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'show', '===' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
                                                                     )
                                                                     ->add(
                                                                         ElementFactory::field_group( 'apple_api_group' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.apple_enabled', 'on', true, 'display', 'show', '===' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.apple_enabled', 'on', true, 'display', 'hide', '!==' )
-                                                                                    ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
+                                                                                        ->add(
+                                                                                            ElementFactory::field( 'apple_enabled', 'switch' )
+                                                                                                        ->set_title( __( 'Connect to Apple', 'dokan-lite' ) )
+                                                                                                        ->set_description(
+                                                                                                            sprintf(
+                                                                                                                __( 'Configure your Apple API settings. <a href="%s" target="_blank">Get Help</a>', 'dokan-lite' ),
+                                                                                                                'https://wedevs.com/docs/dokan-lite/apple-login/'
+                                                                                                            )
+                                                                                                        )
+                                                                                                        ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/social-onboarding/apple.svg' )
+                                                                                                        ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                                                                                                        ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                                                                                                        ->set_default( 'off' )
+                                                                                        )
+                                                                                        ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'show', '===' )
+                                                                                        ->add_dependency( 'social_onboarding.social_onboarding.social_login', 'on', true, 'display', 'hide', '!==' )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'apple_redirect_url', 'show_hide' )
                                                                                                         ->set_title( __( 'Redirect URL', 'dokan-lite' ) )
@@ -368,30 +383,40 @@ class VendorPage extends AbstractPage {
                                                                                                         ->set_placeholder( home_url( '/wp-admin/admin-ajax.php?action=dokan_apple_callback' ) )
                                                                                                         ->set_default( home_url( '/wp-admin/admin-ajax.php?action=dokan_apple_callback' ) )
                                                                                                         ->set_readonly( true )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.apple_api_group.apple_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.apple_api_group.apple_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'apple_service_id', 'copy_field' )
                                                                                                         ->set_title( __( 'Apple Service ID', 'dokan-lite' ) )
                                                                                                         ->set_description( __( 'Enter your Apple Service ID from Apple Developer Console.', 'dokan-lite' ) )
                                                                                                         ->set_placeholder( __( 'Enter your Apple Service ID', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.apple_api_group.apple_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.apple_api_group.apple_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'apple_team_id', 'show_hide' )
                                                                                                         ->set_title( __( 'Apple Team ID', 'dokan-lite' ) )
                                                                                                         ->set_description( __( 'Enter your Apple Team ID from Apple Developer Console.', 'dokan-lite' ) )
                                                                                                         ->set_placeholder( __( 'Enter your Apple Team ID', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.apple_api_group.apple_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.apple_api_group.apple_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'apple_key_id', 'show_hide' )
                                                                                                         ->set_title( __( 'Apple Key ID', 'dokan-lite' ) )
                                                                                                         ->set_description( __( 'Enter your Apple Key ID from Apple Developer Console.', 'dokan-lite' ) )
                                                                                                         ->set_placeholder( __( 'Enter your Apple Key ID', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.apple_api_group.apple_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.apple_api_group.apple_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                                     ->add(
                                                                                         ElementFactory::field( 'apple_key_content', 'textarea' )
                                                                                                         ->set_title( __( 'Apple Key Content', 'dokan-lite' ) )
                                                                                                         ->set_description( __( 'Paste your Apple private key content including BEGIN and END lines.', 'dokan-lite' ) )
-                                                                                                        ->set_placeholder( __( '-----BEGIN PRIVATE KEY-----\nYour private key content here\n-----END PRIVATE KEY-----', 'dokan-lite' ) )
+                                                                                            ->set_placeholder( __( 'Write here', 'dokan-lite' ) )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.apple_api_group.apple_enabled', 'on', true, 'display', 'show', '===' )
+                                                                                            ->add_dependency( 'social_onboarding.social_onboarding.apple_api_group.apple_enabled', 'on', true, 'display', 'hide', '!==' )
                                                                                     )
                                                                     )
                                                 );
