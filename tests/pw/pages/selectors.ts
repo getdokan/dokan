@@ -2904,11 +2904,11 @@ export const selector = {
                     setupCashOnDelivery: '//a[contains(text(),"Cash on delivery")]/../..//td[@class="action"]//a',
                     setupDokanWireCardConnect: '//a[contains(text(),"Dokan Wirecard Connect")]/../..//td[@class="action"]//a',
                     setupDokanPayPalAdaptivePayments: '//a[contains(text(),"Dokan PayPal Adaptive Payments")]/../..//td[@class="action"]//a',
-                    setupDokanPayPalMarketplace: '#dokan_paypal_marketplace',
-                    setupDokanStripeConnect: '#dokan-stripe-connect',
-                    setupDokanMangoPay: '#dokan_mangopay',
-                    setupDokanRazorpay: '#dokan_razorpay',
-                    setupDokanStripeExpress: '#dokan_stripe_express',
+                    setupDokanPayPalMarketplace: '//tr[@data-gateway_id="dokan_paypal_marketplace"]//td[@class="action"]//a',
+                    setupDokanStripeConnect: '//tr[@data-gateway_id="dokan-stripe-connect"]//td[@class="action"]//a',
+                    setupDokanMangoPay: '//tr[@data-gateway_id="dokan_mangopay"]//td[@class="action"]//a',
+                    setupDokanRazorpay: '//tr[@data-gateway_id="dokan_razorpay"]//td[@class="action"]//a',
+                    setupDokanStripeExpress: '//tr[@data-gateway_id="dokan_stripe_express"]//td[@class="action"]//a',
                     paymentMethodsSaveChanges: '.woocommerce-save-button',
 
                     // Stripe
