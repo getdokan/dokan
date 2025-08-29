@@ -14,26 +14,28 @@ export class PaymentsPage extends AdminPage {
         super(page);
     }
 
-    // payment methods
+    // Go to specific offline payment method settings
+    async goToWcPaymentSettings(path: string) {
+        await this.goIfNotThere(`${data.subUrls.backend.wc.paymentSettings}&path=%2Foffline%2F${path}&from=WCADMIN_PAYMENT_SETTINGS`);
+    }
 
-    async goToWcPaymentSettings() {
-        await this.goIfNotThere(data.subUrls.backend.wc.paymentSettings);
+    // navigate to offline payment method to enable
+    async togglePaymentMethod(method: string) {
+        await this.goToWcPaymentSettings(method);
+        await this.page.waitForLoadState('networkidle');
+        await this.checkBySetChecked('#inspector-checkbox-control-0');
+        await this.click("//button[normalize-space()='Save changes']");
     }
 
     // admin setup basic payment methods
     async setupBasicPaymentMethods(payment: payment) {
-        await this.goToWcPaymentSettings();
-
-        // bank transfer
-        await this.enablePaymentMethod(paymentSettingsAdmin.enableDirectBankTransfer);
-        // payments
-        await this.enablePaymentMethod(paymentSettingsAdmin.enableCheckPayments);
-        // cash on delivery
-        await this.enablePaymentMethod(paymentSettingsAdmin.enableCashOnDelivery);
-
-        await this.removeAttribute(paymentSettingsAdmin.paymentMethodsSaveChanges, 'disabled');
-        await this.clickAndWaitForResponse(data.subUrls.api.wc.paymentGateways, paymentSettingsAdmin.paymentMethodsSaveChanges);
-        await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
+        // enable cheque payment method
+        await this.togglePaymentMethod('cheque');
+        // enable cash on delivery payment method
+        await this.togglePaymentMethod('cod');
+        // enable bank transfer payment method
+        await this.togglePaymentMethod('bacs');
+        
     }
 
     // enable MangoPay module
