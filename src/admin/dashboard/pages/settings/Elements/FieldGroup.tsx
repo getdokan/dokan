@@ -12,17 +12,20 @@ const FieldGroup = ( {
 
     return (
         <div className="flex flex-col  w-full">
-            <div>
-                <p
-                    id={ element.hook_key }
-                    className="block text-sm font-medium text-gray-700"
-                >
-                    { element.title }
-                </p>
-                <p className="mt-1 text-sm text-gray-500">
-                    { element.description }
-                </p>
-            </div>
+            { element?.title ||
+                ( element?.description && (
+                    <div className={ 'p-4' }>
+                        <p
+                            id={ element.hook_key }
+                            className="block text-sm font-medium text-gray-700"
+                        >
+                            { element.title }
+                        </p>
+                        <p className="mt-1 text-sm text-gray-500">
+                            { element.description }
+                        </p>
+                    </div>
+                ) ) }
 
             <div className="w-full ">
                 { element.children.map( ( child ) => {

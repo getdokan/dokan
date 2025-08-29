@@ -31,6 +31,8 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\CustomizeRadio;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\HtmlField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\VendorInfoPreview;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\FileUpload;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\TextArea;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\WithdrawSchedule;
 
 /**
  * Settings element Field.
@@ -91,7 +93,9 @@ class Field extends SettingsElement {
         'copy_field'                => CopyField::class,
         'file_upload'               => FileUpload::class,
         'vendor_info_preview'       => VendorInfoPreview::class,
-        'single_product_preview'    => SingleProductPreview::class
+        'single_product_preview' => SingleProductPreview::class,
+        'textarea'               => TextArea::class,
+        'withdraw_schedule'      => WithdrawSchedule::class,
 	);
 
 	/**

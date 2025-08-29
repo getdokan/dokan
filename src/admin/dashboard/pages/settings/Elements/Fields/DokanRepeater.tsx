@@ -3,11 +3,13 @@ import { __ } from '@wordpress/i18n';
 import { Check, Menu, Pencil, Plus, Trash, X } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import { DokanFieldLabel } from '../../../../../../components/fields';
-import TextField from '../../../../../../components/fields/TextField';
+import DokanBaseTextField from '../../../../../../components/fields/DokanBaseTextField';
 import DokanModal from '../../../../../../components/modals/DokanModal';
 import SortableList from '../../../../../../components/sortable-list';
 import { snakeCase } from '../../../../../../utilities/ChangeCase';
 import { SettingsProps } from '../../types';
+import { dispatch } from '@wordpress/data';
+import settingsStore from '../../../../../../stores/adminSettings';
 
 interface RepeaterItemData {
     id: string;
@@ -81,7 +83,7 @@ const RepeaterItem = ( {
             <div className="flex items-center flex-1 py-5">
                 <div className="flex-1">
                     { isEditing ? (
-                        <TextField
+                        <DokanBaseTextField
                             inputType="text"
                             value={ editValue }
                             containerClassName="w-fit"
@@ -180,11 +182,7 @@ const RepeaterItem = ( {
 };
 
 // Main DokanRepeater Component
-const DokanRepeater = ( {
-    element,
-    onValueChange,
-    getSetting,
-}: SettingsProps ) => {
+const DokanRepeater = ( { element }: SettingsProps ) => {
     const [ items, setItems ] = useState< RepeaterItemData[] >(
         element?.value || element?.items || element?.default || []
     );
@@ -383,7 +381,13 @@ const DokanRepeater = ( {
     // Separate required items from sortable items
     const requiredItems = sortedItems.filter( ( item ) => item.required );
     const sortableItems = sortedItems.filter( ( item ) => ! item.required );
-
+    if ( ! element.display ) {
+        return null;
+    }
+    const onValueChange = ( updatedElement ) => {
+        // Dispatch the updated value to the settings store
+        dispatch( settingsStore ).updateSettingsValue( updatedElement );
+    };
     return (
         <>
             <div className="dokan-repeater-field w-full">

@@ -1,9 +1,10 @@
 import { SettingsElement } from '../../types';
 import { twMerge } from 'tailwind-merge';
+import parse from 'html-react-parser';
 
 interface DokanInfoFieldProps extends SettingsElement {
-    linkText?: string;
-    linkUrl?: string;
+    link_text?: string;
+    link_url?: string;
     showIcon?: boolean;
 }
 
@@ -17,10 +18,9 @@ const DokanInfoField = ( {
     if ( ! element.display ) {
         return null;
     }
-
     const handleLinkClick = () => {
-        if ( element?.linkUrl ) {
-            window.open( element?.linkUrl, '_blank', 'noopener,noreferrer' );
+        if ( element?.link_url ) {
+            window.open( element?.link_url, '_blank', 'noopener,noreferrer' );
         }
     };
 
@@ -36,17 +36,19 @@ const DokanInfoField = ( {
                 <div className="flex items-center gap-2">
                     { /* Main text */ }
                     <div className="text-[#575757] text-sm leading-[1.4]">
-                        { element?.description || element?.title }
+                        { parse(
+                            element?.description || element?.title || ''
+                        ) }
                     </div>
 
                     { /* Link with icon */ }
-                    { element?.title && (
+                    { element.link_text && (
                         <div className="flex items-end gap-[5px]">
                             <button
                                 onClick={ handleLinkClick }
                                 className="text-[#575757] text-xs underline underline-offset-1 hover:text-[#AB92F6] transition-colors"
                             >
-                                { element?.title }
+                                { element.link_text }
                             </button>
 
                             {

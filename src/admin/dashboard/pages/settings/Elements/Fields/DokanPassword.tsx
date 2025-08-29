@@ -1,7 +1,7 @@
 import { dispatch } from '@wordpress/data';
 import {
+    DokanBaseTextField,
     DokanFieldLabel,
-    TextField,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
 
@@ -11,31 +11,40 @@ export default function DokanPassword( { element } ) {
     }
 
     const onValueChange = ( updatedElement ) => {
-        // Dispatch the updated value to the settings store
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
 
+    const hasTitle = Boolean( element.title && element.title.length > 0 );
+
     return (
-        <div className="flex  gap-2 w-full">
-            <DokanFieldLabel
-                title={ element.title }
-                titleFontWeight="bold"
-                helperText={ element.description }
-                tooltip={ element.helper_text }
-                imageUrl={ element?.image_url }
-                wrapperClassNames={ 'md:max-w-[60%]' }
-            />
-            <TextField
-                value={ element.value }
-                onChange={ ( val ) =>
-                    onValueChange( { ...element, value: val } )
+        <div className="grid-cols-12 grid gap-2 justify-between w-full p-4">
+            { hasTitle && (
+                <div className={ 'sm:col-span-8 col-span-12' }>
+                    <DokanFieldLabel
+                        title={ element.title }
+                        titleFontWeight="bold"
+                        helperText={ element.description }
+                        tooltip={ element.helper_text }
+                        imageUrl={ element?.image_url }
+                        wrapperClassNames={ 'w-full' }
+                    />
+                </div>
+            ) }
+            <div
+                className={
+                    hasTitle ? 'sm:col-span-4 col-span-12' : 'col-span-12'
                 }
-                inputType="password"
-                placeholder={ element.placeholder }
-                disabled={ element.disabled }
-                helperText={ element.description }
-                inputClassName="bg-white border-[#E9E9E9] rounded-[5px] h-10 px-4 text-[#25252D] text-sm"
-            />
+            >
+                <DokanBaseTextField
+                    value={ element.value || element?.defaultValue || '' }
+                    onChange={ ( val ) =>
+                        onValueChange( { ...element, value: val } )
+                    }
+                    placeholder={ element.placeholder }
+                    inputType="password"
+                    disabled={ element.disabled }
+                />
+            </div>
         </div>
     );
 }

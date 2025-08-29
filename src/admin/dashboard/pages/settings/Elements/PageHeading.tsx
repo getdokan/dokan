@@ -41,8 +41,13 @@ const PageHeading = ( {
             id={ id }
             className={ twMerge( 'mb-6 flex justify-between ', className ) }
         >
-            <div className={ 'flex flex-col gap-2' }>
-                <h2 className={ twMerge( 'flex items-center gap-2.5', headingClass ) }>
+            <div className={ 'flex flex-col gap-4' }>
+                <h2
+                    className={ twMerge(
+                        'flex items-center gap-2.5',
+                        headingClass
+                    ) }
+                >
                     <RawHTML>{ title }</RawHTML>
                     { tooltip && <DokanTooltip message={ tooltip } /> }
                 </h2>

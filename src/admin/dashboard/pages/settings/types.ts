@@ -62,6 +62,4 @@ export type SettingsElement = {
 
 export interface SettingsProps {
     element: SettingsElement;
-    onValueChange: ( element: SettingsElement ) => void;
-    getSetting: ( id: string ) => SettingsElement | undefined;
 }

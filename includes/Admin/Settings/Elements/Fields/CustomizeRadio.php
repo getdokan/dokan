@@ -21,7 +21,7 @@ class CustomizeRadio extends Radio {
     /**
      * Variant type for the radio display.
      *
-     * @var string $variant Variant type (simple, card, template).
+     * @var string $variant Variant type (simple, card,box,template).
      */
     protected $variant = 'simple';
 
@@ -65,7 +65,7 @@ class CustomizeRadio extends Radio {
     /**
      * Set variant.
      *
-     * @param string $variant Variant type (simple, card, template).
+     * @param string $variant Variant type (simple, card, template, radio_box).
      *
      * @return CustomizeRadio
      */

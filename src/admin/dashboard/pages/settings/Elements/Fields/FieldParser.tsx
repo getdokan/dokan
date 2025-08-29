@@ -6,7 +6,7 @@ import CustomizeRadio from './CustomizeRadio';
 import DokanColorPicker from './DokanColorPicker';
 import DokanCopyButtonField from './DokanCopyButtonField';
 import DokanCurrency from './DokanCurrency';
-import DokanDoubleInput from './DokanDoubleInput';
+import DokanDoubleInput, { DokanDoubleInputElement } from './DokanDoubleInput';
 import DokanEmail from './DokanEmail';
 import DokanFieldLabel from './DokanFieldLabel';
 import DokanFileUploadField from './DokanFileUpload';
@@ -26,137 +26,158 @@ import DokanTextArea from './DokanTextArea';
 import DokanTextField from './DokanTextField';
 import DokanVendorInfoPreview from './DokanVendorInfoPreview';
 import DokanRichText from './DokanRichText';
-import RadioBox from './RadioBox';
 import DokanRepeater from './DokanRepeater';
+import WithdrawSchedule from './WithdrawSchedule';
 
-const FieldParser = ( {
-    element,
-    getSetting,
-    onValueChange,
-}: SettingsProps ) => {
+const FieldParser = ( { element }: SettingsProps ) => {
     switch ( element.variant ) {
         case 'text':
-            return (
-                <DokanTextField key={ element.hook_key } element={ element } />
+            return applyFilters(
+                'dokan_admin_settings_text_field_parser',
+                <DokanTextField key={ element.hook_key } element={ element } />,
+                element
             );
 
         case 'select':
-            return <DokanSelect key={ element.hook_key } element={ element } />;
+            return applyFilters(
+                'dokan_admin_settings_select_field_parser',
+                <DokanSelect key={ element.hook_key } element={ element } />,
+                element
+            );
 
         case 'switch':
-            return <DokanSwitch key={ element.hook_key } element={ element } />;
+            return applyFilters(
+                'dokan_admin_settings_switch_field_parser',
+                <DokanSwitch key={ element.hook_key } element={ element } />,
+                element
+            );
 
         case 'password':
-            return (
-                <DokanPassword key={ element.hook_key } element={ element } />
+            return applyFilters(
+                'dokan_admin_settings_password_field_parser',
+                <DokanPassword key={ element.hook_key } element={ element } />,
+                element
             );
 
         case 'email':
-            return <DokanEmail key={ element.hook_key } element={ element } />;
+            return applyFilters(
+                'dokan_admin_settings_email_field_parser',
+                <DokanEmail key={ element.hook_key } element={ element } />,
+                element
+            );
 
         case 'number':
-            return <DokanNumber key={ element.hook_key } element={ element } />;
+            return applyFilters(
+                'dokan_admin_settings_number_field_parser',
+                <DokanNumber key={ element.hook_key } element={ element } />,
+                element
+            );
 
         case 'checkbox_group':
-            return (
-                <DokanMultiCheck key={ element.hook_key } element={ element } />
+            return applyFilters(
+                'dokan_admin_settings_checkbox_group_field_parser',
+                <DokanMultiCheck
+                    key={ element.hook_key }
+                    element={ element }
+                />,
+                element
             );
 
         case 'textarea':
-            return (
-                <DokanTextArea key={ element.hook_key } element={ element } />
+            return applyFilters(
+                'dokan_admin_settings_textarea_field_parser',
+                <DokanTextArea key={ element.hook_key } element={ element } />,
+                element
             );
 
         case 'rich_text':
             return applyFilters(
                 'dokan_admin_settings_rich_text_field_parser',
-                <DokanRichText
-                    element={ element }
-                    key={ element.hook_key }
-                    onValueChange={ onValueChange }
-                />,
-                element,
-                getSetting,
-                onValueChange
+                <DokanRichText element={ element } key={ element.hook_key } />,
+                element
             );
 
         case 'radio_capsule':
-            return (
+            return applyFilters(
+                'dokan_admin_settings_radio_capsule_field_parser',
                 <DokanRadioCapsule
                     key={ element.hook_key }
                     element={ element }
-                />
+                />,
+                element
             );
-
-        case 'radio_box':
-            return (
-                <RadioBox
-                    key={ element.hook_key }
-                    element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />
-            );
-
         case 'customize_radio':
-            return (
-                <CustomizeRadio
-                    key={ element.hook_key }
-                    element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />
+            return applyFilters(
+                'dokan_admin_settings_customize_radio_field_parser',
+                <CustomizeRadio key={ element.hook_key } element={ element } />,
+                element
             );
 
         case 'currency':
-            return (
-                <DokanCurrency key={ element.hook_key } element={ element } />
+            return applyFilters(
+                'dokan_admin_settings_currency_field_parser',
+                <DokanCurrency key={ element.hook_key } element={ element } />,
+                element
             );
 
         case 'multicheck':
-            return (
-                <DokanMultiCheck key={ element.hook_key } element={ element } />
+            return applyFilters(
+                'dokan_admin_settings_multicheck_field_parser',
+                <DokanMultiCheck
+                    key={ element.hook_key }
+                    element={ element }
+                />,
+                element
             );
 
         case 'category_based_commission':
-            return (
+            return applyFilters(
+                'dokan_admin_settings_category_based_commission_field_parser',
                 <CategoryBasedCommission
                     key={ element.hook_key }
                     element={ element }
-                />
+                />,
+                element
             );
 
         case 'combine_input':
-            return (
-                <CombineInput
-                    key={ element.hook_key }
-                    element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />
+            return applyFilters(
+                'dokan_admin_settings_combine_input_field_parser',
+                <CombineInput key={ element.hook_key } element={ element } />,
+                element
             );
+
         case 'refresh_select':
-            return (
+            return applyFilters(
+                'dokan_admin_settings_refresh_select_field_parser',
                 <DokanRefreshSelectField
                     key={ element.hook_key }
                     element={ element }
-                />
+                />,
+                element
             );
 
         case 'info':
-            return (
-                <DokanInfoField key={ element.hook_key } element={ element } />
+            return applyFilters(
+                'dokan_admin_settings_info_field_parser',
+                <DokanInfoField key={ element.hook_key } element={ element } />,
+                element
             );
 
         case 'tel':
-            return <DokanTel key={ element.hook_key } element={ element } />;
-
+            return applyFilters(
+                'dokan_admin_settings_tel_field_parser',
+                <DokanTel key={ element.hook_key } element={ element } />,
+                element
+            );
         case 'double_input':
-            return (
+            return applyFilters(
+                'dokan_admin_settings_double_input_field_parser',
                 <DokanDoubleInput
                     key={ element.hook_key }
-                    element={ element }
-                />
+                    element={ element as DokanDoubleInputElement }
+                />,
+                element
             );
 
         case 'vendor_info_preview':
@@ -164,8 +185,6 @@ const FieldParser = ( {
                 <DokanVendorInfoPreview
                     key={ element.hook_key }
                     element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
@@ -174,43 +193,66 @@ const FieldParser = ( {
                 <DokanSingleProductPreview
                     key={ element.hook_key }
                     element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />
             );
 
         case 'base_field_label':
-            return <DokanFieldLabel element={ element } />;
-        case 'html':
-            return (
-                <DokanHtmlField
-                    key={ element.hook_key }
-                    element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
-                />
+            return applyFilters(
+                'dokan_admin_settings_base_field_label_parser',
+                <DokanFieldLabel element={ element } />,
+                element
             );
+
+        case 'html':
+            return applyFilters(
+                'dokan_admin_settings_html_field_parser',
+                <DokanHtmlField key={ element.hook_key } element={ element } />,
+                element
+            );
+
         case 'show_hide':
-            return <DokanShowHideField element={ element } />;
+            return applyFilters(
+                'dokan_admin_settings_show_hide_field_parser',
+                <DokanShowHideField element={ element } />,
+                element
+            );
+
         case 'select_color_picker':
-            return <DokanColorPicker element={ element } />;
+            return applyFilters(
+                'dokan_admin_settings_select_color_picker_field_parser',
+                <DokanColorPicker element={ element } />,
+                element
+            );
+
         case 'copy_field':
-            return <DokanCopyButtonField element={ element } />;
+            return applyFilters(
+                'dokan_admin_settings_copy_field_parser',
+                <DokanCopyButtonField element={ element } />,
+                element
+            );
+
         case 'file_upload':
-            return <DokanFileUploadField element={ element } />;
+            return applyFilters(
+                'dokan_admin_settings_file_upload_field_parser',
+                <DokanFileUploadField element={ element } />,
+                element
+            );
 
         case 'repeater':
             return applyFilters(
                 'dokan_admin_settings_repeater_field_parser',
-                <DokanRepeater
+                <DokanRepeater key={ element.hook_key } element={ element } />,
+                element
+            );
+
+        case 'withdraw_schedule':
+            return applyFilters(
+                'dokan_admin_settings_withdraw_schedule_field_parser',
+                <WithdrawSchedule
                     key={ element.hook_key }
                     element={ element }
-                    onValueChange={ onValueChange }
-                    getSetting={ getSetting }
                 />,
-                element,
-                getSetting,
-                onValueChange
+                element
             );
 
         case 'checkbox':
@@ -230,9 +272,7 @@ const FieldParser = ( {
             return applyFilters(
                 'dokan_admin_settings_default_field_parser',
                 <DokanInfoField key={ element.hook_key } element={ element } />,
-                element,
-                getSetting,
-                onValueChange
+                element
             );
     }
 };

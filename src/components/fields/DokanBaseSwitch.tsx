@@ -24,8 +24,10 @@ const DokanBaseSwitch = ( {
     disabled = false,
     label,
     color = 'primary',
+    defaultChecked,
     ...others
 }: DokanBaseSwitchProps ) => {
+    console.log( 'element defaultChecked', defaultChecked );
     return (
         <div
             className={ twMerge(
@@ -40,6 +42,7 @@ const DokanBaseSwitch = ( {
                 disabled={ disabled }
                 color={ color }
                 label={ label }
+                defaultChecked={ defaultChecked }
                 { ...others }
             />
         </div>

@@ -1,6 +1,6 @@
 import { useState } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
-import TextField from './TextField';
+import DokanBaseTextField from './DokanBaseTextField';
 import CopyIcon from '../Icons/CopyIcon';
 import { __ } from '@wordpress/i18n';
 
@@ -67,7 +67,7 @@ const CopyButtonField = ( {
 
     return (
         <div className="w-full">
-            <TextField
+            <DokanBaseTextField
                 value={ value }
                 onChange={ ( newValue ) => {
                     if ( onChange ) {

@@ -17,7 +17,7 @@ const VendorPreviewImage: React.FC< VendorPreviewImageProps > = ( {
     showAddress,
 } ) => {
     return (
-        <div className="bg-[#efeaff] rounded p-2 w-[156px] h-[10rem] flex flex-col relative overflow-hidden">
+        <div className="bg-[#efeaff] rounded p-2 w-[156px] h-[11rem] flex flex-col relative overflow-hidden">
             { /* Store Icon and Name - Centered at top */ }
             <div className="flex flex-col items-center mb-4 mt-1">
                 <div className="w-8 h-8 bg-[#7047eb] rounded-full flex items-center justify-center mb-2 relative">
