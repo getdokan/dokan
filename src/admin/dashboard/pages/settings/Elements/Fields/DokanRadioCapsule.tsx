@@ -1,7 +1,7 @@
 import { dispatch } from '@wordpress/data';
 import {
-    DokanRadioCapsule as BaseRadioCapsule,
     DokanFieldLabel,
+    DokanRadioCapsule as BaseRadioCapsule,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
 
@@ -28,9 +28,10 @@ export default function DokanRadioCapsule( { element } ) {
                     element.options?.map( ( option ) => ( {
                         value: option.value,
                         title: option.title,
+                        icon: option.icon,
                     } ) ) || []
                 }
-                selected={ element.value || element?.default || '' }
+                selected={ element.value || element.default }
                 onChange={ ( val ) =>
                     onValueChange( { ...element, value: val } )
                 }

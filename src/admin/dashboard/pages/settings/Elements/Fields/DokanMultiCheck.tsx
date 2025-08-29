@@ -15,7 +15,7 @@ export default function DokanMultiCheck( { element } ) {
     };
 
     return (
-        <div className="flex flex-col gap-2 p-5 w-full">
+        <div className="flex flex-col gap-4 p-4 w-full">
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"

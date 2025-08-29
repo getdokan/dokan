@@ -35,9 +35,11 @@ interface TextFieldProps {
     wrapperClassName?: string;
     status?: 'default' | 'error' | 'success' | 'warning' | 'info';
     inputProps?: React.InputHTMLAttributes< HTMLInputElement >;
+
+    [ key: string ]: any;
 }
 
-const TextField: React.FC< TextFieldProps > = ( {
+const DokanBaseTextField = ( {
     value,
     inputType = 'text',
     onChange,
@@ -57,7 +59,8 @@ const TextField: React.FC< TextFieldProps > = ( {
     validation,
     actionsButtons,
     inputProps = {},
-} ) => {
+    ...otherProps
+}: TextFieldProps ) => {
     const [ validationError, setValidationError ] = useState< string | null >(
         null
     );
@@ -110,9 +113,9 @@ const TextField: React.FC< TextFieldProps > = ( {
                         placeholder,
                         ...inputProps,
                     } }
-                    placeholder={ placeholder }
                     addOnLeft={ prefix || null }
                     addOnRight={ postfix || null }
+                    { ...otherProps }
                 />
             </div>
             { actionsButtons && (
@@ -124,4 +127,4 @@ const TextField: React.FC< TextFieldProps > = ( {
     );
 };
 
-export default TextField;
+export default DokanBaseTextField;

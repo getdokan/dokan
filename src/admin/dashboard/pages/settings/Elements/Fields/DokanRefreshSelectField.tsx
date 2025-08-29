@@ -37,6 +37,9 @@ const DokanRefreshSelectField = ( {
             .fetchSettings()
             .then( ( updatedSettings ) => {
                 // Update the selected profile with the new value
+                if ( ! Array.isArray( updatedSettings ) ) {
+                    return;
+                }
                 const updatedElement = updatedSettings.find(
                     ( setting ) => setting.hook_key === element.hook_key
                 );

@@ -1,6 +1,8 @@
 import parse from 'html-react-parser';
 import { twMerge } from 'tailwind-merge';
 import { SettingsElement, SettingsProps } from '../../types';
+import { dispatch } from '@wordpress/data';
+import settingsStore from '../../../../../../stores/adminSettings';
 
 interface DokanHtmlElement extends SettingsElement {
     html_content?: string;
@@ -13,11 +15,14 @@ interface DokanHtmlFieldProps extends SettingsProps {
     element: DokanHtmlElement;
 }
 
-const DokanHtmlField = ( { element, onValueChange }: DokanHtmlFieldProps ) => {
+const DokanHtmlField = ( { element }: DokanHtmlFieldProps ) => {
     if ( ! element.display ) {
         return null;
     }
-
+    const onValueChange = ( updatedElement ) => {
+        // Dispatch the updated value to the settings store
+        dispatch( settingsStore ).updateSettingsValue( updatedElement );
+    };
     // Process HTML content based on settings
     const processHtmlContent = ( content: string ): string => {
         if ( ! content ) {

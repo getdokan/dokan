@@ -538,7 +538,7 @@ class DoubleInput extends Field {
      * @return bool
      */
     public function data_validation( $data ): bool {
-        if ( ! isset( $data ) || ! is_array( $data ) ) {
+        if ( ! isset( $data ) ) {
             return false;
         }
 

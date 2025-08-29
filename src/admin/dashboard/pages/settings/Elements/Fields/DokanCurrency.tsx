@@ -1,6 +1,5 @@
 import { MaskedInput } from '@getdokan/dokan-ui';
 import { dispatch } from '@wordpress/data';
-import React from 'react';
 import { DokanFieldLabel } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
 

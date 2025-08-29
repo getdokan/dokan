@@ -1,15 +1,15 @@
 import { dispatch } from '@wordpress/data';
 import { twMerge } from 'tailwind-merge';
 import {
+    DokanBaseTextField,
     DokanFieldLabel,
-    TextField,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
 import { SettingsElement } from '../../types';
 
-interface DokanDoubleInputElement extends SettingsElement {
+export interface DokanDoubleInputElement extends SettingsElement {
     label: string;
-    tooltip?: React.ReactNode;
+    tooltip?: string;
     firstLabel: string;
     firstValue: string | number;
     firstValueType: string;
@@ -52,7 +52,7 @@ const DokanDoubleInput = ( {
                 imageUrl={ element?.image_url }
             />
             <div className="flex gap-4 ">
-                <TextField
+                <DokanBaseTextField
                     value={ String( element.firstValue ) }
                     onChange={ ( val ) =>
                         onValueChange( {
@@ -65,12 +65,11 @@ const DokanDoubleInput = ( {
                         } )
                     }
                     inputType={ element.firstValueType }
-                    label={ element.firstLabel }
                     prefix={ element.firstPrefix }
                     inputClassName="bg-white border-[#E9E9E9]  rounded h-10 px-4 text-[#25252D] text-sm"
                 />
 
-                <TextField
+                <DokanBaseTextField
                     value={ String( element.secondValue ) }
                     onChange={ ( val ) =>
                         onValueChange( {
@@ -83,7 +82,6 @@ const DokanDoubleInput = ( {
                         } )
                     }
                     inputType={ element.secondValueType }
-                    label={ element.secondLabel }
                     prefix={ element.secondPrefix }
                     inputClassName="bg-white border-[#E9E9E9] rounded h-10 px-4 text-[#25252D] text-sm"
                     containerClassName="w-full"

@@ -1,12 +1,12 @@
 import { useState } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
-import TextField from './TextField';
+import DokanBaseTextField from './DokanBaseTextField';
 import EyeIcon from '../Icons/EyeIcon';
 import EyeOffIcon from '../Icons/EyeOffIcon';
 
 interface ShowHideFieldProps {
     value: string;
-    label: string;
+    label?: string;
     tooltip?: React.ReactNode;
     disabled?: boolean;
     containerClassName?: string;
@@ -19,7 +19,7 @@ interface ShowHideFieldProps {
     onChange?: ( value: string ) => void;
 }
 
-const ShowHideField: React.FC< ShowHideFieldProps > = ( {
+const ShowHideField = ( {
     value,
     disabled = false,
     helperText = '',
@@ -28,7 +28,7 @@ const ShowHideField: React.FC< ShowHideFieldProps > = ( {
     handleDisplayValue,
     displayValue,
     onChange = () => {},
-} ) => {
+}: ShowHideFieldProps ) => {
     const [ showValue, setShowValue ] = useState( displayValue || false );
 
     // Toggle visibility of the value
@@ -61,7 +61,7 @@ const ShowHideField: React.FC< ShowHideFieldProps > = ( {
 
     return (
         <div className={ 'w-full' }>
-            <TextField
+            <DokanBaseTextField
                 value={ value }
                 onChange={ ( val ) => {
                     onChange( val );

@@ -16,6 +16,7 @@ export default function DokanColorPicker( { element } ) {
         return null;
     }
 
+    const hasTitle = Boolean( element.title && element.title.length > 0 );
     const handleColorChange = ( newColor ) => {
         setColor( newColor );
 
@@ -37,15 +38,19 @@ export default function DokanColorPicker( { element } ) {
     };
 
     return (
-        <div className="flex justify-between gap-4 flex-wrap w-full p-5">
-            <DokanFieldLabel
-                title={ element.title }
-                titleFontWeight="bold"
-                helperText={ element.description }
-                tooltip={ element.helper_text }
-                imageUrl={ element?.image_url }
-            />
-
+        <div className="grid-cols-12 grid gap-2 justify-between w-full p-4">
+            { hasTitle && (
+                <div className={ 'sm:col-span-8 col-span-12' }>
+                    <DokanFieldLabel
+                        title={ element.title }
+                        titleFontWeight="bold"
+                        helperText={ element.description }
+                        tooltip={ element.helper_text }
+                        imageUrl={ element?.image_url }
+                        wrapperClassNames={ 'w-full' }
+                    />
+                </div>
+            ) }
             <div
                 className="dokan-color-picker-container"
                 style={ { position: 'relative' } }
