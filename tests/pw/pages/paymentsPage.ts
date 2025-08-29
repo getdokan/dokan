@@ -19,11 +19,11 @@ export class PaymentsPage extends AdminPage {
         await this.goIfNotThere(`${data.subUrls.backend.wc.paymentSettings}&path=%2Foffline%2F${path}&from=WCADMIN_PAYMENT_SETTINGS`);
     }
 
-    // navigate to offline payment method to enable
+    // navigate to offline payment method and toggle enable/disable
     async togglePaymentMethod(method: string) {
         await this.goToWcPaymentSettings(method);
         await this.page.waitForLoadState('networkidle');
-        await this.checkBySetChecked('#inspector-checkbox-control-0');
+        await this.click('#inspector-checkbox-control-0');
         await this.click("//button[normalize-space()='Save changes']");
     }
 
