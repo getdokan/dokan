@@ -282,6 +282,14 @@ const WithdrawPage = () => {
                 openModal( 'delete', items );
             },
         },
+        {
+            id: 'paypal',
+            label: __( 'Download PayPal mass payment file', 'dokan-lite' ),
+            icon: 'download',
+            isPrimary: false,
+            supportsBulk: true,
+            callback: async ( items: any[] ) => {},
+        },
     ];
 
     // Set for handling bulk selection
