@@ -6,7 +6,7 @@ class VendorUtil {
     /**
      * Get the vendor default store banner URL.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.6
      *
      * @return void
      */
@@ -23,7 +23,7 @@ class VendorUtil {
          * Allows overriding of the default store banner URL via external plugins or themes.
          * This is particularly useful if there is a need to dynamically change the banner based on specific conditions or configurations.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.6
          */
         return apply_filters( 'dokan_get_vendor_default_banner_url', $banner_url );
     }
@@ -31,7 +31,7 @@ class VendorUtil {
     /**
      * Get the vendor default store avatar URL.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.6
      *
      * @return string
      */
@@ -48,7 +48,7 @@ class VendorUtil {
          * Allows overriding of the default store avatar URL via external plugins or themes.
          * This is particularly useful if there is a need to dynamically change the avatar based on specific conditions or configurations.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.6
          */
         return apply_filters( 'dokan_get_vendor_default_avatar_url', $avatar_url );
     }

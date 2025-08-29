@@ -450,7 +450,7 @@ class Vendor {
      * This method first checks if a specific banner ID is set for the store and retrieves it. If not set,
      * it falls back to the default store banner defined in the Dokan settings.
      *
-     * @since DOKAN_SINCE Applied default banner image.
+     * @since 4.0.6 Applied default banner image.
      *
      * @return string
      */
@@ -469,7 +469,7 @@ class Vendor {
          * Allows overriding of the store banner URL via external plugins or themes.
          * This is particularly useful if there is a need to dynamically change the banner based on specific conditions or configurations.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.6
          *
          * @param string $banner_url The URL of the default banner.
          * @param Vendor $this       Instance of the current class.
@@ -494,7 +494,7 @@ class Vendor {
      * Get the shop profile icon.
      *
      * @since 2.8
-     * @since DOKAN_SINCE Applied default vendor profile image.
+     * @since 4.0.6 Applied default vendor profile image.
      *
      * @return string
      */
@@ -515,7 +515,7 @@ class Vendor {
          * Allows overriding of the store avatar URL via external plugins or themes.
          * This is particularly useful if there is a need to dynamically change the avatar based on specific conditions or configurations.
          *
-         * @since DOKAN_SINCE
+         * @since 4.0.6
          *
          * @param string $avatar_url The URL of the default avatar.
          * @param Vendor $this       Instance of the current class.
