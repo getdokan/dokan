@@ -34,7 +34,7 @@ class ProductControllerV2 extends ProductController {
     public function __construct() {
         parent::__construct();
 
-        add_filter( 'dokan_product_listing_exclude_product_type', [ $this, 'reset_exclude_product_type' ], 99, 2 );
+        add_filter( 'dokan_rest_product_listing_exclude_type', [ $this, 'reset_exclude_product_type' ], 99, 2 );
     }
 
     /**
@@ -258,7 +258,7 @@ class ProductControllerV2 extends ProductController {
                     array(
                         'taxonomy' => 'product_type',
                         'field'    => 'slug',
-                        'terms'    => apply_filters( 'dokan_product_listing_exclude_product_type', array(), $request ),
+                        'terms'    => apply_filters( 'dokan_rest_product_listing_exclude_type', array(), $request ),
                         'operator' => 'NOT IN',
                     ),
                 ),
