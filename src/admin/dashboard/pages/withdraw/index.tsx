@@ -5,6 +5,7 @@ import { TextControl, SelectControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { formatPrice, truncate } from '@dokan/utilities';
 import { TextArea, Tooltip, SimpleRadio } from '@getdokan/dokan-ui';
+import * as LucideIcons from 'lucide-react';
 
 // Import Dokan components
 import {
@@ -15,7 +16,18 @@ import {
     DokanTab,
     Filter,
 } from '@dokan/components';
-import { Trash, MessageSquare, Funnel, ArrowDown } from 'lucide-react';
+
+import {
+    Trash,
+    MessageSquare,
+    Funnel,
+    ArrowDown,
+    Eye,
+    Check,
+    XCircle,
+    Download,
+} from 'lucide-react';
+import { twMerge } from 'tailwind-merge';
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
@@ -225,12 +237,38 @@ const WithdrawPage = () => {
         },
     ];
 
+    const getActionLabel = ( iconName, label ) => {
+        if ( ! ( iconName && label ) ) {
+            return <></>;
+        }
+
+        const Icon = LucideIcons[ iconName ];
+        return (
+            <div className="dokan-layout">
+                <span className="inline-flex items-center gap-2.5">
+                    <Icon size={ 16 } className="!fill-none" />
+                    { label }
+                </span>
+            </div>
+        );
+    };
+
     // Define actions for table rows
     const actions = [
         {
             id: 'view',
-            label: __( 'View', 'dokan-lite' ),
-            icon: 'visibility',
+            label: () => getActionLabel( 'Eye', __( 'View', 'dokan-lite' ) ),
+            icon: () => {
+                return (
+                    <span
+                        className={
+                            'px-3 py-2 inline-flex items-center rounded-md text-sm font-medium border border-[#E9E9E9]'
+                        }
+                    >
+                        { __( 'View', 'dokan-lite' ) }
+                    </span>
+                );
+            },
             isPrimary: false,
             callback: ( items ) => {
                 openModal( 'view', items );
@@ -238,8 +276,19 @@ const WithdrawPage = () => {
         },
         {
             id: 'approved',
-            label: __( 'Approve', 'dokan-lite' ),
-            icon: 'yes-alt',
+            label: () =>
+                getActionLabel( 'Check', __( 'Approve', 'dokan-lite' ) ),
+            icon: () => {
+                return (
+                    <span
+                        className={
+                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
+                        }
+                    >
+                        { __( 'Approve', 'dokan-lite' ) }
+                    </span>
+                );
+            },
             isPrimary: false,
             supportsBulk: true,
             isEligible: ( item ) => item?.status === 'pending',
@@ -249,11 +298,18 @@ const WithdrawPage = () => {
         },
         {
             id: 'cancelled',
-            label: () => {
-                return <Funnel size={ 18 } />;
-            },
+            label: () =>
+                getActionLabel( 'XCircle', __( 'Cancel', 'dokan-lite' ) ),
             icon: () => {
-                return <span>{ __( 'Cancel', 'dokan-lite' ) }</span>;
+                return (
+                    <span
+                        className={
+                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
+                        }
+                    >
+                        { __( 'Cancel', 'dokan-lite' ) }
+                    </span>
+                );
             },
             isPrimary: false,
             supportsBulk: true,
@@ -264,8 +320,22 @@ const WithdrawPage = () => {
         },
         {
             id: 'add-note',
-            label: __( 'Add Note', 'dokan-lite' ),
-            icon: 'edit',
+            label: () =>
+                getActionLabel(
+                    'MessageSquare',
+                    __( 'Add Note', 'dokan-lite' )
+                ),
+            icon: () => {
+                return (
+                    <span
+                        className={
+                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
+                        }
+                    >
+                        { __( 'Add Note', 'dokan-lite' ) }
+                    </span>
+                );
+            },
             isPrimary: false,
             isEligible: ( item ) => item?.status !== 'approved',
             callback: ( items ) => {
@@ -274,8 +344,19 @@ const WithdrawPage = () => {
         },
         {
             id: 'delete',
-            label: __( 'Delete', 'dokan-lite' ),
-            icon: 'trash',
+            label: () =>
+                getActionLabel( 'Trash', __( 'Delete', 'dokan-lite' ) ),
+            icon: () => {
+                return (
+                    <span
+                        className={
+                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
+                        }
+                    >
+                        { __( 'Delete', 'dokan-lite' ) }
+                    </span>
+                );
+            },
             supportsBulk: true,
             isEligible: ( item ) => item?.status !== 'approved',
             callback: ( items ) => {
@@ -284,10 +365,28 @@ const WithdrawPage = () => {
         },
         {
             id: 'paypal',
-            label: __( 'Download PayPal mass payment file', 'dokan-lite' ),
-            icon: 'download',
+            label: () =>
+                getActionLabel(
+                    'Download',
+                    __( 'Download PayPal mass payment file', 'dokan-lite' )
+                ),
+            icon: () => {
+                return (
+                    <span
+                        className={
+                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
+                        }
+                    >
+                        { __(
+                            'Download PayPal mass payment file',
+                            'dokan-lite'
+                        ) }
+                    </span>
+                );
+            },
             isPrimary: false,
             supportsBulk: true,
+            isEligible: ( item ) => 'paypal' === item?.method,
             callback: async ( items: any[] ) => {},
         },
     ];
@@ -617,7 +716,7 @@ const WithdrawPage = () => {
                 <div className="flex items-center gap-2">
                     <button
                         type="button"
-                        className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+                        className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white"
                         onClick={ async () => {
                             try {
                                 // Minimal placeholder; backend export flow may vary.
@@ -644,7 +743,12 @@ const WithdrawPage = () => {
                     </button>
                     <button
                         type="button"
-                        className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+                        className={ twMerge(
+                            'inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm hover:bg-[#7047EB] hover:text-white',
+                            showFilters
+                                ? 'bg-[#7047EB] text-white'
+                                : 'text-[#575757] bg-white'
+                        ) }
                         onClick={ () => setShowFilters( ( v ) => ! v ) }
                     >
                         <Funnel size={ 16 } />
