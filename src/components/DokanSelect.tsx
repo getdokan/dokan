@@ -131,7 +131,8 @@ export default function DokanSelect<
     } as const;
 
     // Compose components: optionally remove or replace IndicatorSeparator and DropdownIndicator
-    const composedComponents: any = { ...( props.components as any ), Control };
+    // Start with our internal defaults; consumer components will be spread last to take precedence
+    const composedComponents: any = { Control };
     if ( hideIndicator ) {
         composedComponents.IndicatorSeparator = () => null;
         composedComponents.DropdownIndicator = () => null;
@@ -177,8 +178,13 @@ export default function DokanSelect<
     return (
         <Select
             { ...( props as any ) }
-            styles={ { ...( props.styles as any ), ...styles } }
-            components={ composedComponents }
+            // Consumer styles take precedence over Dokan defaults
+            styles={ { ...styles, ...( ( props.styles as any ) || {} ) } }
+            // Consumer components take precedence; spread them last
+            components={ {
+                ...composedComponents,
+                ...( ( props.components as any ) || {} ),
+            } }
         />
     );
 }
