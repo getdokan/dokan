@@ -95,7 +95,7 @@ export default function DokanSelect<
         } ),
         indicatorSeparator: ( base: any ) => ( {
             ...base,
-            display: isMulti ? 'block' : 'none',
+            display: isMulti || props.isClearable ? 'block' : 'none',
         } ),
         menu: ( base: any ) => ( {
             ...base,
