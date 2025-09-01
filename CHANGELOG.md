@@ -1,3 +1,6 @@
+### v4.0.7 ( Sep 01, 2025 ) ###
+- **fix:** Restrict user password update to only the vendor user themselves.
+
 ### v4.0.6 ( Aug 29, 2025 ) ###
 - **update:** Added translation support for dashboard analytics report scripts to improve internationalization (i18n).
 - **fix:** Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.
