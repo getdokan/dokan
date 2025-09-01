@@ -1,5 +1,5 @@
 ### v4.0.7 ( Sep 01, 2025 ) ###
-- **fix:** Restrict user password update to only the vendor user themselves.
+- **fix:** Enhanced security controls for vendor account credentials management.
 
 ### v4.0.6 ( Aug 29, 2025 ) ###
 - **update:** Added translation support for dashboard analytics report scripts to improve internationalization (i18n).

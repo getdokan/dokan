@@ -9,7 +9,7 @@ $changelog = [
         'changes'  => [
             'Fix'  => [
                 [
-                    'title'       => 'Restrict user password update to only the vendor user themselves.',
+                    'title'       => 'Enhanced security controls for vendor account credentials management.',
                     'description' => '',
                 ],
             ],
