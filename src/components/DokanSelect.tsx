@@ -89,7 +89,10 @@ export default function DokanSelect<
             marginBottom: 1,
         } ),
         valueContainer: ( base: any ) => ( { ...base, paddingLeft: 4 } ),
-        indicatorsContainer: ( base: any ) => ( { ...base } ),
+        indicatorsContainer: ( base: any ) => ( {
+            ...base,
+            cursor: 'pointer',
+        } ),
         indicatorSeparator: ( base: any ) => ( {
             ...base,
             display: isMulti ? 'block' : 'none',
@@ -106,6 +109,7 @@ export default function DokanSelect<
             ...base,
             paddingTop: 8,
             paddingBottom: 8,
+            cursor: 'default',
         } ),
         option: ( base: any, state: any ) => {
             let bg = 'transparent';
@@ -120,6 +124,7 @@ export default function DokanSelect<
                 paddingBottom: 10,
                 color: state.isSelected ? purple : gray700,
                 backgroundColor: bg,
+                cursor: 'pointer',
                 '&:active': { backgroundColor: 'rgba(124,58,237,0.12)' },
             };
         },
