@@ -269,4 +269,9 @@
     .dokan-alert-danger {
         @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger-secondary ring-dokan-danger #{!important};
     }
+
+    input[id^='react-select'][id$='-input']:focus {
+        box-shadow: none !important;
+        outline: none !important;
+    }
 }
