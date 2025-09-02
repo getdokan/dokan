@@ -16,6 +16,7 @@ export interface CustomizeRadioProps {
     className?: string;
     disabled?: boolean;
     radioVariant?: 'simple' | 'card' | 'template' | 'radio_box';
+    divider?: boolean;
 }
 
 export interface RadioOptionProps {
@@ -24,6 +25,7 @@ export interface RadioOptionProps {
     onSelect: () => void;
     disabled?: boolean;
     name?: string;
+    divider?: boolean;
 }
 
 export interface RadioButtonProps {

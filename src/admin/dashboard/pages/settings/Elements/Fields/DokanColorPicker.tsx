@@ -51,10 +51,7 @@ export default function DokanColorPicker( { element } ) {
                     />
                 </div>
             ) }
-            <div
-                className="dokan-color-picker-container"
-                style={ { position: 'relative' } }
-            >
+            <div className="dokan-color-picker-container sm:col-span-4 col-span-12 flex items-center justify-end">
                 <button
                     ref={ buttonRef }
                     onClick={ toggleColorPicker }
@@ -79,7 +76,7 @@ export default function DokanColorPicker( { element } ) {
                             }
                         } }
                     >
-                        <div style={ { padding: '16px' } }>
+                        <div className="p-4">
                             <ColorPicker
                                 color={ color }
                                 onChange={ handleColorChange }

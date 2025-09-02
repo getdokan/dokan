@@ -16,3 +16,4 @@ export { default as DokanTextArea } from './DokanBaseTextArea';
 export { default as DokanSimpleRadio } from './DokanSimpleRadio';
 export { default as DokanTimePicker } from './DokanTimePicker';
 export { default as DokanTooltip } from './DokanTooltip';
+export { default as CustomizeRadio } from '../../../src/admin/dashboard/pages/settings/Elements/Fields/CustomizeRadio';

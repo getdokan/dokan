@@ -1,6 +1,7 @@
 import RadioButton from './RadioButton';
 import { RadioOptionProps } from './types';
 import parse from 'html-react-parser';
+import { twMerge } from 'tailwind-merge';
 
 const CardRadioOption = ( {
     option,
@@ -8,6 +9,7 @@ const CardRadioOption = ( {
     onSelect,
     disabled = false,
     name,
+    divider = true,
 }: RadioOptionProps ) => {
     const handleKeyDown = ( event: React.KeyboardEvent ) => {
         if ( event.key === 'Enter' || event.key === ' ' ) {
@@ -32,7 +34,13 @@ const CardRadioOption = ( {
             aria-checked={ isSelected }
             tabIndex={ 0 }
         >
-            <div className="flex items-center justify-between p-[14px] border-b border-[#D3D3D3]">
+            <div
+                className={ twMerge(
+                    'flex items-center gap-2.5 p-[14px]',
+                    divider && 'border-b border-[#E9E9E9] justify-between',
+                    ! divider && 'flex-row-reverse justify-end'
+                ) }
+            >
                 <div className="flex flex-col">
                     <span className="font-semibold text-[14px] text-[#25252D]">
                         { typeof option.title === 'string' &&
@@ -49,7 +57,7 @@ const CardRadioOption = ( {
             </div>
 
             { option.image && (
-                <div className="p-6">
+                <div className={ twMerge( 'p-4', ! divider && 'pt-0' ) }>
                     <img
                         src={ option.image }
                         alt={ option.title }
