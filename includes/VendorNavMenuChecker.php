@@ -113,38 +113,31 @@ class VendorNavMenuChecker {
         }
 
         // Prevent infinite loop
-        $removed_nav = remove_filter( 'dokan_get_dashboard_nav', [ $this, 'convert_to_react_menu' ], 999 );
         $removed_url = remove_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5 );
-
-        try {
-            $top = strtok( trim( $name, '/' ), '/' );
-            if ( empty( $top ) ) {
-                return $url;
-            }
-
             // Check if the top level menu exists and has a react route
-            $menus = dokan_get_dashboard_nav();
-            if ( ! isset( $menus[ $top ] ) || ! is_array( $menus[ $top ] ) || empty( $menus[ $top ]['react_route'] ) ) {
-                return $url;
-            }
+        $menus = dokan_get_dashboard_nav();
 
-            // Check if the dependency is resolved
-            $route = $menus[ $top ]['react_route'];
-            if ( ! $this->is_dependency_resolved( $route ) ) {
-                return $url;
-            }
+		foreach ( $menus as $menu ) {
+			$react_route = $menu['react_route'] ?? '';
+			if ( $react_route === $name ) {
+				return $menu['url'];
+			}
 
-            // Build react URL
-            $react_url = $this->get_url_for_route( $route );
-            return $react_url ? $react_url : $url;
-        } finally {
-            if ( $removed_nav ) {
-                add_filter( 'dokan_get_dashboard_nav', [ $this, 'convert_to_react_menu' ], 999 );
-            }
-            if ( $removed_url ) {
-                add_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5, 3 );
-            }
-        }
+			if ( isset( $menu['submenu'] ) && is_array( $menu['submenu'] ) ) {
+				foreach ( $menu['submenu'] as $submenu ) {
+					$react_route = $submenu['react_route'] ?? '';
+					if ( $react_route === $name ) {
+						return $submenu['url'];
+					}
+				}
+			}
+		}
+
+		if ( $removed_url ) {
+			add_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5, 3 );
+		}
+
+        return $url;
     }
 
     /**

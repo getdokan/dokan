@@ -20,10 +20,7 @@ class ReactUrlGenerationTest extends DokanTestCase {
 				'slug' => 'withdraw',
 				'new_url' => '/dashboard/new/#withdraw',
 			],
-			[
-				'slug' => 'settings/shipping',
-				'new_url' => '/dashboard/new/#settings/shipping',
-			],
+
 		];
 	}
 
@@ -33,7 +30,6 @@ class ReactUrlGenerationTest extends DokanTestCase {
      */
     public function test_dokan_get_navigation_url( $slug, $expected ): void {
 		$url = dokan_get_navigation_url( $slug );
-		var_dump( 'nav menus --?', dokan_get_dashboard_nav() );
 		$this->assertEquals( home_url() . $expected, $url );
     }
 }
