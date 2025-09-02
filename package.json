@@ -9,6 +9,7 @@
     "start": "wp-scripts start --progress",
     "start:hot": "wp-scripts start --progress --hot",
     "build": "wp-scripts build --progress --webpack-copy-php",
+    "build:types": "tsc --emitDeclarationOnly",
     "packages-update": "wp-scripts packages-update",
     "version": "node bin/version-replace",
     "makepot": "wp i18n make-pot --domain='dokan-lite' --include='assets/js,includes,lib,templates,dokan.php,dokan-class.php' . --headers='{\"Report-Msgid-Bugs-To\":\"https://dokan.co/contact/\"}' --file-comment=\"Copyright (c) $(date +'%Y') Dokan Inc. All Rights Reserved.\" languages/dokan-lite.pot",
