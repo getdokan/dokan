@@ -112,30 +112,29 @@ class VendorNavMenuChecker {
             return $url;
         }
 
-        // Prevent infinite loop
-        $removed_url = remove_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5 );
+        remove_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5 );
             // Check if the top level menu exists and has a react route
         $menus = dokan_get_dashboard_nav();
 
 		foreach ( $menus as $menu ) {
 			$react_route = $menu['react_route'] ?? '';
 			if ( $react_route === $name ) {
-				return $menu['url'];
+				var_dump( 'Checking nav menu for ', $menu );
+
+				$url = $menu['url'];
 			}
 
 			if ( isset( $menu['submenu'] ) && is_array( $menu['submenu'] ) ) {
 				foreach ( $menu['submenu'] as $submenu ) {
 					$react_route = $submenu['react_route'] ?? '';
 					if ( $react_route === $name ) {
-						return $submenu['url'];
+						$url = $submenu['url'];
 					}
 				}
 			}
 		}
 
-		if ( $removed_url ) {
-			add_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5, 3 );
-		}
+		add_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5, 3 );
 
         return $url;
     }
