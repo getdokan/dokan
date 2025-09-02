@@ -120,16 +120,25 @@ const wooRequestToHandle = ( request ) => {
  * @return {string[]} External name for the package.
  */
 const requestToExternal = ( request ) => {
-    const dokan = request.match( /^@dokan\/stores\/(.+)$/ );
+    const dokanStores = request.match( /^@dokan\/stores\/(.+)$/ );
     const wc = request.match( /^@woocommerce\/(.+)$/ );
+    const dokan = request.match( /^@dokan\/([^/]+)$/ );
 
-    if ( dokan ) {
-        const storeName = camelCaseDash( dokan[ 1 ] );
+    if ( dokanStores ) {
+        const storeName = camelCaseDash( dokanStores[ 1 ] );
         return [ 'dokan', storeName + 'Store' ];
     }
 
     if ( wc ) {
         return wooRequestToExternal( request );
+    }
+
+    if ( dokan ) {
+        const packageName = dokan[ 1 ];
+        const externalName =
+            packageName === 'hooks' ? 'reactHooks' : packageName;
+
+        return [ 'dokan', externalName ];
     }
 
     // Add more custom mappings as needed.
@@ -145,11 +154,19 @@ const requestToExternal = ( request ) => {
 const requestToHandle = ( request ) => {
     const dokan = request.match( /^@dokan\/stores\/(.+)$/ );
     const wc = request.match( /^@woocommerce\/(.+)$/ );
+    const dokanOthers = request.match( /^@dokan\/([^/]+)$/ );
 
     if ( dokan ) {
         // Convert the store name to camelCase and append 'Store'.
         const storeName = kebabCase( dokan[ 1 ] );
         return `dokan-stores-${ storeName }`;
+    }
+
+    if ( dokanOthers ) {
+        const packageName = dokanOthers[ 1 ];
+        const handleName =
+            packageName === 'components' ? 'react-components' : packageName;
+        return `dokan-${ handleName }`;
     }
 
     if ( wc ) {
