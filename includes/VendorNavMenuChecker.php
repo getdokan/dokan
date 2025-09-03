@@ -119,8 +119,6 @@ class VendorNavMenuChecker {
 		foreach ( $menus as $menu ) {
 			$react_route = $menu['react_route'] ?? '';
 			if ( $react_route === $name ) {
-				var_dump( 'Checking nav menu for ', $menu );
-
 				$url = $menu['url'];
 			}
 
