@@ -274,4 +274,16 @@
         box-shadow: none !important;
         outline: none !important;
     }
+
+    // class with dokan-react-search-input tag input all sibling span background tranparent.
+    .dokan-react-search-input {
+        border-radius: 0 !important;
+        background: white !important;
+        box-shadow: none !important;
+    }
+    /* Target both addon spans around the input (before and after) */
+    .dokan-react-search-input ~ span,
+    span:has(+ .dokan-react-search-input) {
+        background: white !important;
+    }
 }
