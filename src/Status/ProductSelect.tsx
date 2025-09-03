@@ -11,10 +11,7 @@ interface ProductOption {
 function ProductSelect() {
     const [ value, setValue ] = useState< ProductOption | null >( null );
 
-    // Controlled data state held here
-    const [ options, setOptions ] = useState< ProductOption[] >( [] );
-    const [ isLoading, setIsLoading ] = useState( false );
-    const [ hasMore, setHasMore ] = useState( true );
+    // No longer need to control options/loading/hasMore from consumer
 
     return (
         <div style={ { padding: 16, maxWidth: 360 } }>
@@ -25,16 +22,6 @@ function ProductSelect() {
                 placeholder="Search products..."
                 isClearable
                 leftIcon={ <Package size={ 16 } /> }
-                // Controlled options/state supplied by consumer; loading still handled inside ProductAsyncSelect
-                options={ options }
-                isLoading={ isLoading }
-                hasMore={ hasMore }
-                onOptionsChange={ ( list ) => setOptions( list ) }
-                onAppendOptions={ ( more ) =>
-                    setOptions( ( prev ) => [ ...prev, ...more ] )
-                }
-                onLoadingChange={ ( l ) => setIsLoading( l ) }
-                onHasMoreChange={ ( hm ) => setHasMore( hm ) }
                 defaultOptions
             />
 
