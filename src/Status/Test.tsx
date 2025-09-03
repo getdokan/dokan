@@ -6,7 +6,7 @@ import {
     SimpleInput,
     ReactSelect,
 } from '@getdokan/dokan-ui';
-import { DokanSelect, DokanAsyncSelect, WpDateTimePicker, OrderAsyncSelect, CouponAsyncSelect } from '../components';
+import { DokanAsyncSelect, WpDateTimePicker, OrderAsyncSelect, CouponAsyncSelect } from '../components';
 import SearchInput from '../components/SearchInput';
 import { twMerge } from "tailwind-merge";
 import VendorSelect from "./VendorSelect";
@@ -109,29 +109,6 @@ function Test() {
     return (
         <div className="flex flex-col gap-2 w-full h-screen p-6">
             <div style={ { width: 280 } }>
-                <h3>my component</h3>
-                <DokanSelect
-                    options={ options }
-                    value={ value }
-                    onChange={ ( v: any ) => setValue( v ) }
-                    placeholder="Select vendor"
-                    leftIcon={ <Home size={ 16 } /> }
-                    isClearable
-                    components={ { Control } }
-                />
-            </div>
-
-            {/*<div style={ { width: 280 } }>*/}
-            {/*    <DokanSelect*/}
-            {/*        options={ options }*/}
-            {/*        value={ value }*/}
-            {/*        onChange={ ( v: any ) => setValue( v ) }*/}
-            {/*        placeholder="Select vendor"*/}
-            {/*        isLoading={ true }*/}
-            {/*    />*/}
-            {/*</div>*/}
-
-            <div style={ { width: 280 } }>
                 <h3>Dokan ui</h3>
                 <DokanAsyncSelect
                     options={ options }
@@ -172,18 +149,6 @@ function Test() {
             {/*            icon={ () => <Home size={ 16 } /> }*/}
             {/*        />*/}
             {/*    </div>*/}
-            {/*</div>*/}
-
-            {/*<div style={ { width: 280 } }>*/}
-            {/*    <DokanSelect*/}
-            {/*        options={ options }*/}
-            {/*        value={ value }*/}
-            {/*        onChange={ ( v: any ) => setValue( v ) }*/}
-            {/*        placeholder="Select vendor"*/}
-            {/*        leftIcon={ <Home size={ 16 } /> }*/}
-            {/*        isMulti={ true }*/}
-            {/*        isLoading={ true }*/}
-            {/*    />*/}
             {/*</div>*/}
 
             <div style={ { width: 280 } }>
