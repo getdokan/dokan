@@ -1,6 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
-import DokanAsyncSelect from './DokanAsyncSelect';
+import AsyncSelect from './AsyncSelect';
 
 export interface OrderOption {
     value: number;
@@ -61,7 +61,7 @@ function OrderAsyncSelect( props: OrderAsyncSelectProps ) {
     };
 
     return (
-        <DokanAsyncSelect
+        <AsyncSelect
             cacheOptions
             defaultOptions
             loadOptions={ userLoadOptions || loadOrders }

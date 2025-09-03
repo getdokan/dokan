@@ -1,6 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
-import DokanAsyncSelect from './DokanAsyncSelect';
+import AsyncSelect from './AsyncSelect';
 
 export interface CouponOption {
     value: number;
@@ -68,7 +68,7 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
     };
 
     return (
-        <DokanAsyncSelect
+        <AsyncSelect
             cacheOptions
             defaultOptions
             loadOptions={ userLoadOptions || loadCoupons }

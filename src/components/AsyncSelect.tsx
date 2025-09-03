@@ -1,6 +1,6 @@
 import { AsyncSearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
 
-function DokanAsyncSelect( props ) {
+function AsyncSelect(props ) {
     const Control = ( controlProps: any ) => {
         const { children, selectProps } = controlProps;
         const { components } = ReactSelect;
@@ -87,4 +87,4 @@ function DokanAsyncSelect( props ) {
     );
 }
 
-export default DokanAsyncSelect;
+export default AsyncSelect;
