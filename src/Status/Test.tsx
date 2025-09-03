@@ -1,12 +1,9 @@
 import { useState } from '@wordpress/element';
 import { BadgeDollarSign, Home, Search, Package } from 'lucide-react';
+import { SimpleInput, ReactSelect } from '@getdokan/dokan-ui';
 import {
-    SearchableSelect,
-    SimpleInput,
-    ReactSelect,
-} from '@getdokan/dokan-ui';
-import {
-    DokanAsyncSelect,
+    AsyncSelect,
+    Select,
     WpDateTimePicker,
     OrderAsyncSelect,
     CouponAsyncSelect,
@@ -126,22 +123,17 @@ function Test() {
     } as const;
 
     return (
-        <div className="flex flex-col gap-2 w-full h-screen p-6">
-            <div style={ { width: 280 } }>
-                <h3>Dokan ui</h3>
-                <DokanAsyncSelect
+        <div>
+            <div className="flex flex-row gap-2">
+                <AsyncSelect
                     options={ options }
                     value={ value }
                     onChange={ ( v: any ) => setValue( v ) }
                     placeholder="Select vendor"
-                    isLoading={ true }
                     leftIcon={ <Home size={ 16 } /> }
                 />
-            </div>
 
-            <div style={ { width: 280 } }>
-                <h3>Dokan ui</h3>
-                <SearchableSelect
+                <Select
                     options={ options }
                     value={ value }
                     onChange={ ( v: any ) => setValue( v ) }
@@ -149,29 +141,7 @@ function Test() {
                     isLoading={ true }
                     components={ { Control } }
                 />
-            </div>
 
-            { /*<div style={ { width: 280 } }>*/ }
-            { /*    <div className="bg-white">*/ }
-            { /*        <SimpleInput*/ }
-            { /*            value={ data1 }*/ }
-            { /*            input={ {*/ }
-            { /*                id: 'withdraw-charge',*/ }
-            { /*                name: 'withdraw-charge',*/ }
-            { /*                type: 'text',*/ }
-            { /*                placeholder: 'Write',*/ }
-            { /*                disabled: false,*/ }
-            { /*            } }*/ }
-            { /*            onChange={ ( e ) => {*/ }
-            { /*                setData1( e.target.value );*/ }
-            { /*            } }*/ }
-            { /*            icon={ () => <Home size={ 16 } /> }*/ }
-            { /*        />*/ }
-            { /*    </div>*/ }
-            { /*</div>*/ }
-
-            <div style={ { width: 280 } }>
-                <h3>dokan ui</h3>
                 <SimpleInput
                     value={ data1 }
                     input={ {
@@ -185,27 +155,7 @@ function Test() {
                         setData1( e.target.value );
                     } }
                 />
-            </div>
 
-            <div style={ { width: 280 } }>
-                <h3>dokan ui</h3>
-                <SimpleInput
-                    value={ data1 }
-                    input={ {
-                        id: 'withdraw-charge',
-                        name: 'withdraw-charge',
-                        type: 'text',
-                        placeholder: 'Write',
-                        disabled: false,
-                    } }
-                    onChange={ ( e ) => {
-                        setData1( e.target.value );
-                    } }
-                />
-            </div>
-
-            <div style={ { width: 280 } }>
-                <h3>SearchInput</h3>
                 <SearchInput
                     value={ data1 }
                     onChange={ ( val: string ) => setData1( val ) }
@@ -213,71 +163,39 @@ function Test() {
                         id: 'sea',
                         name: 'sea',
                         type: 'text',
-                        placeholder: 'Search vendors',
+                        placeholder: 'vendors',
                         disabled: false,
                     } }
                     leftIcon={ <Search size={ 16 } /> }
                 />
-                <div className="text-xs mt-2">Current: { data1 }</div>
-            </div>
 
-            <div style={ { padding: 16, maxWidth: 360 } }>
-                <h2>Product search</h2>
                 <ProductAsyncSelect
                     value={ products }
                     onChange={ ( v: any ) => setProducts( v ) }
-                    placeholder="Search products..."
+                    placeholder="products"
                     isClearable
                     leftIcon={ <Package size={ 16 } /> }
                     defaultOptions
                 />
 
-                { products ? (
-                    <div
-                        style={ { marginTop: 12, fontSize: 12, color: '#555' } }
-                    >
-                        Selected: { products.label } (ID: { products.value })
-                    </div>
-                ) : null }
-            </div>
-
-            <div style={ { padding: 16, maxWidth: 360 } }>
-                <h2>Vendor search</h2>
                 <VendorAsyncSelect
                     value={ vendorsData }
                     onChange={ ( v: any ) => setVendorsData( v ) }
-                    placeholder="Search vendors..."
+                    placeholder="vendors"
                     isClearable
                     leftIcon={ <Home size={ 16 } /> }
                 />
 
-                { vendorsData ? (
-                    <div
-                        style={ { marginTop: 12, fontSize: 12, color: '#555' } }
-                    >
-                        Selected: { vendorsData.label } (ID:{ ' ' }
-                        { vendorsData.value })
-                    </div>
-                ) : null }
-            </div>
-
-            <div style={ { width: 500 } }>
-                <h3>Order select</h3>
                 <OrderAsyncSelect
                     value={ orderValue }
                     onChange={ ( opt: any ) => setOrderValue( opt ) }
                     placeholder="Select order"
                     isClearable
+                    leftIcon={ <BadgeDollarSign size={ 16 } /> }
                 />
-                <pre className="text-xs mt-2">
-                    { JSON.stringify( orderValue, null, 2 ) }
-                </pre>
-            </div>
 
-            <div style={ { width: 500 } }>
-                <h3>Coupon select</h3>
                 <CouponAsyncSelect
-                    placeholder="Select coupon"
+                    placeholder="coupon"
                     isClearable
                     onChange={ ( opt: any ) =>
                         console.log( 'coupon selected', opt )
@@ -287,9 +205,6 @@ function Test() {
             </div>
 
             <div style={ { width: 320 } }>
-                <h3>DateTime picker</h3>
-                { /* WordPress DateTimePicker wrapped by Dokan */ }
-                { /* It expects a string value (ISO-like) in many WP versions; default to empty when cleared */ }
                 <WpDateTimePicker
                     currentDate={ data1 }
                     onChange={ ( val: any ) => setData1( val as string ) }

@@ -33,6 +33,7 @@ export { default as ProductAsyncSelect } from './ProductAsyncSelect';
 export { default as OrderAsyncSelect } from './OrderAsyncSelect';
 export { default as CouponAsyncSelect } from './CouponAsyncSelect';
 export { default as SearchInput } from './SearchInput';
+export { default as Select } from './Select';
 
 // Commission Components
 export * from './commission';

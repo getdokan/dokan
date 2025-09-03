@@ -1,6 +1,6 @@
-import { AsyncSearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
+import { SearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
 
-function AsyncSelect( props ) {
+function Select( props: any ) {
     const Control = ( controlProps: any ) => {
         const { children, selectProps } = controlProps;
         const { components } = ReactSelect;
@@ -64,6 +64,8 @@ function AsyncSelect( props ) {
             ...base,
             cursor: 'pointer',
         } ),
+        container: ( base: any ) => ( { ...base, outline: 'none' } ),
+        menu: ( base: any ) => ( { ...base, zIndex: 50 } ),
         menuList: ( base: any ) => ( {
             ...base,
             cursor: 'default',
@@ -77,7 +79,7 @@ function AsyncSelect( props ) {
     } as const;
 
     return (
-        <AsyncSearchableSelect
+        <SearchableSelect
             // @ts-ignore
             components={ {
                 Control,
@@ -95,4 +97,4 @@ function AsyncSelect( props ) {
     );
 }
 
-export default AsyncSelect;
+export default Select;
