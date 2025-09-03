@@ -1,7 +1,6 @@
 import { useState } from '@wordpress/element';
 import { BadgeDollarSign, Home, Search, Package } from 'lucide-react';
 import {
-    AsyncSearchableSelect,
     SearchableSelect,
     SimpleInput,
     ReactSelect,
@@ -15,9 +14,6 @@ import {
     VendorAsyncSelect,
 } from '../components';
 import SearchInput from '../components/SearchInput';
-import { twMerge } from 'tailwind-merge';
-import VendorSelect from './VendorSelect';
-import ProductSelect from './ProductSelect';
 import WcDateRangePicker from '../components/WcDateRangePicker';
 
 const options = [
