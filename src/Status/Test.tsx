@@ -1,17 +1,24 @@
 import { useState } from '@wordpress/element';
-import { BadgeDollarSign, Home, Search } from "lucide-react";
+import { BadgeDollarSign, Home, Search, Package } from 'lucide-react';
 import {
     AsyncSearchableSelect,
     SearchableSelect,
     SimpleInput,
     ReactSelect,
 } from '@getdokan/dokan-ui';
-import { DokanAsyncSelect, WpDateTimePicker, OrderAsyncSelect, CouponAsyncSelect } from '../components';
+import {
+    DokanAsyncSelect,
+    WpDateTimePicker,
+    OrderAsyncSelect,
+    CouponAsyncSelect,
+    ProductAsyncSelect,
+    VendorAsyncSelect,
+} from '../components';
 import SearchInput from '../components/SearchInput';
-import { twMerge } from "tailwind-merge";
-import VendorSelect from "./VendorSelect";
-import ProductSelect from "./ProductSelect";
-import WcDateRangePicker from "../components/WcDateRangePicker";
+import { twMerge } from 'tailwind-merge';
+import VendorSelect from './VendorSelect';
+import ProductSelect from './ProductSelect';
+import WcDateRangePicker from '../components/WcDateRangePicker';
 
 const options = [
     { value: 'all', label: 'All Vendor' },
@@ -21,10 +28,22 @@ const options = [
     { value: 'craft-zone', label: 'Craft Zone' },
 ];
 
+interface StoreOption {
+    value: number;
+    label: string;
+    raw?: any;
+}
+
+interface ProductOption {
+    value: number;
+    label: string;
+    raw?: any;
+}
+
 function Test() {
     const [ value, setValue ] = useState( options[ 1 ] );
     const [ data1, setData1 ] = useState( '' );
-    const [ orderValue, setOrderValue ] = useState<any>( null );
+    const [ orderValue, setOrderValue ] = useState< any >( null );
     const { components } = ReactSelect;
 
     const [ after, setAfter ] = useState( '' );
@@ -32,6 +51,10 @@ function Test() {
     const [ before, setBefore ] = useState( '' );
     const [ beforeText, setBeforeText ] = useState( '' );
     const [ focusInput, setFocusInput ] = useState( 'startDate' );
+    const [ products, setProducts ] = useState< ProductOption | null >( null );
+    const [ vendorsData, setVendorsData ] = useState< StoreOption | null >(
+        null
+    );
 
     const Control = ( props: any ) => {
         const { children, selectProps } = props;
@@ -132,24 +155,24 @@ function Test() {
                 />
             </div>
 
-            {/*<div style={ { width: 280 } }>*/}
-            {/*    <div className="bg-white">*/}
-            {/*        <SimpleInput*/}
-            {/*            value={ data1 }*/}
-            {/*            input={ {*/}
-            {/*                id: 'withdraw-charge',*/}
-            {/*                name: 'withdraw-charge',*/}
-            {/*                type: 'text',*/}
-            {/*                placeholder: 'Write',*/}
-            {/*                disabled: false,*/}
-            {/*            } }*/}
-            {/*            onChange={ ( e ) => {*/}
-            {/*                setData1( e.target.value );*/}
-            {/*            } }*/}
-            {/*            icon={ () => <Home size={ 16 } /> }*/}
-            {/*        />*/}
-            {/*    </div>*/}
-            {/*</div>*/}
+            { /*<div style={ { width: 280 } }>*/ }
+            { /*    <div className="bg-white">*/ }
+            { /*        <SimpleInput*/ }
+            { /*            value={ data1 }*/ }
+            { /*            input={ {*/ }
+            { /*                id: 'withdraw-charge',*/ }
+            { /*                name: 'withdraw-charge',*/ }
+            { /*                type: 'text',*/ }
+            { /*                placeholder: 'Write',*/ }
+            { /*                disabled: false,*/ }
+            { /*            } }*/ }
+            { /*            onChange={ ( e ) => {*/ }
+            { /*                setData1( e.target.value );*/ }
+            { /*            } }*/ }
+            { /*            icon={ () => <Home size={ 16 } /> }*/ }
+            { /*        />*/ }
+            { /*    </div>*/ }
+            { /*</div>*/ }
 
             <div style={ { width: 280 } }>
                 <h3>dokan ui</h3>
@@ -202,23 +225,57 @@ function Test() {
                 <div className="text-xs mt-2">Current: { data1 }</div>
             </div>
 
-            <div style={ { width: 500 } }>
-                <VendorSelect />
+            <div style={ { padding: 16, maxWidth: 360 } }>
+                <h2>Product search</h2>
+                <ProductAsyncSelect
+                    value={ products }
+                    onChange={ ( v: any ) => setProducts( v ) }
+                    placeholder="Search products..."
+                    isClearable
+                    leftIcon={ <Package size={ 16 } /> }
+                    defaultOptions
+                />
+
+                { products ? (
+                    <div
+                        style={ { marginTop: 12, fontSize: 12, color: '#555' } }
+                    >
+                        Selected: { products.label } (ID: { products.value })
+                    </div>
+                ) : null }
             </div>
 
-            <div style={ { width: 500 } }>
-                <ProductSelect />
+            <div style={ { padding: 16, maxWidth: 360 } }>
+                <h2>Vendor search</h2>
+                <VendorAsyncSelect
+                    value={ vendorsData }
+                    onChange={ ( v: any ) => setVendorsData( v ) }
+                    placeholder="Search vendors..."
+                    isClearable
+                    leftIcon={ <Home size={ 16 } /> }
+                />
+
+                { vendorsData ? (
+                    <div
+                        style={ { marginTop: 12, fontSize: 12, color: '#555' } }
+                    >
+                        Selected: { vendorsData.label } (ID:{ ' ' }
+                        { vendorsData.value })
+                    </div>
+                ) : null }
             </div>
 
             <div style={ { width: 500 } }>
                 <h3>Order select</h3>
                 <OrderAsyncSelect
                     value={ orderValue }
-                    onChange={ (opt: any) => setOrderValue( opt ) }
+                    onChange={ ( opt: any ) => setOrderValue( opt ) }
                     placeholder="Select order"
                     isClearable
                 />
-                <pre className="text-xs mt-2">{ JSON.stringify( orderValue, null, 2 ) }</pre>
+                <pre className="text-xs mt-2">
+                    { JSON.stringify( orderValue, null, 2 ) }
+                </pre>
             </div>
 
             <div style={ { width: 500 } }>
@@ -226,18 +283,20 @@ function Test() {
                 <CouponAsyncSelect
                     placeholder="Select coupon"
                     isClearable
-                    onChange={ (opt: any) => console.log('coupon selected', opt) }
-                    leftIcon={<BadgeDollarSign size={16} />}
+                    onChange={ ( opt: any ) =>
+                        console.log( 'coupon selected', opt )
+                    }
+                    leftIcon={ <BadgeDollarSign size={ 16 } /> }
                 />
             </div>
 
             <div style={ { width: 320 } }>
                 <h3>DateTime picker</h3>
-                {/* WordPress DateTimePicker wrapped by Dokan */}
+                { /* WordPress DateTimePicker wrapped by Dokan */ }
                 { /* It expects a string value (ISO-like) in many WP versions; default to empty when cleared */ }
                 <WpDateTimePicker
                     currentDate={ data1 }
-                    onChange={ (val: any) => setData1( val as string ) }
+                    onChange={ ( val: any ) => setData1( val as string ) }
                 >
                     <input
                         type="text"
@@ -309,8 +368,6 @@ function Test() {
                     />
                 </WcDateRangePicker>
             </div>
-
-
         </div>
     );
 }
