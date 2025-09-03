@@ -31,6 +31,7 @@ export { default as DokanSelect } from './DokanSelect';
 export { default as DokanAsyncSelect } from './DokanAsyncSelect';
 export { default as VendorAsyncSelect } from './VendorAsyncSelect';
 export { default as ProductAsyncSelect } from './ProductAsyncSelect';
+export { default as OrderAsyncSelect } from './OrderAsyncSelect';
 
 // Commission Components
 export * from './commission';
