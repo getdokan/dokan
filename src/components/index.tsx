@@ -27,7 +27,6 @@ export { default as WpDatePicker } from './WpDatePicker';
 export { default as WpDateTimePicker } from './WpDateTimePicker';
 export { default as DokanTab } from './Tab';
 export { default as RichText } from './richtext/RichText';
-export { default as DokanSelect } from './DokanSelect';
 export { default as DokanAsyncSelect } from './DokanAsyncSelect';
 export { default as VendorAsyncSelect } from './VendorAsyncSelect';
 export { default as ProductAsyncSelect } from './ProductAsyncSelect';
