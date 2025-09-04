@@ -1,6 +1,6 @@
 import { useState } from '@wordpress/element';
-import { BadgeDollarSign, Home, Search, Package } from 'lucide-react';
-import { SimpleInput, ReactSelect } from '@getdokan/dokan-ui';
+import { BadgeDollarSign, Home, Search, Package, Flame } from "lucide-react";
+import { SimpleInput } from '@getdokan/dokan-ui';
 import {
     AsyncSelect,
     Select,
@@ -37,7 +37,6 @@ function Test() {
     const [ value, setValue ] = useState( options[ 1 ] );
     const [ data1, setData1 ] = useState( '' );
     const [ orderValue, setOrderValue ] = useState< any >( null );
-    const { components } = ReactSelect;
 
     const [ after, setAfter ] = useState( '' );
     const [ afterText, setAfterText ] = useState( '' );
@@ -48,79 +47,6 @@ function Test() {
     const [ vendorsData, setVendorsData ] = useState< StoreOption | null >(
         null
     );
-
-    const Control = ( props: any ) => {
-        const { children, selectProps } = props;
-        return (
-            <components.Control { ...props }>
-                <span
-                    style={ {
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginLeft: 8,
-                        color: 'red',
-                    } }
-                >
-                    🔥
-                </span>
-
-                <div
-                    style={ {
-                        marginLeft: selectProps.leftIcon ? 6 : 0,
-                        flex: 1,
-                        display: 'flex',
-                    } }
-                >
-                    { children }
-                </div>
-            </components.Control>
-        );
-    };
-
-    const styles = {
-        control: ( base: any, state: any ) => ( {
-            ...base,
-            borderRadius: '0.40rem',
-            minHeight: '2.5rem',
-            boxShadow: 'none',
-            marginTop: -1,
-        } ),
-        placeholder: ( base: any ) => ( {
-            ...base,
-            fontSize: 14,
-            lineHeight: '22px',
-        } ),
-        singleValue: ( base: any ) => ( {
-            ...base,
-            fontSize: 14,
-            lineHeight: '22px',
-        } ),
-        input: ( base: any ) => ( {
-            ...base,
-            fontSize: 14,
-            lineHeight: '22px',
-            marginTop: 1,
-            marginBottom: 1,
-        } ),
-        valueContainer: ( base: any ) => ( { ...base, paddingLeft: 4 } ),
-        indicatorsContainer: ( base: any ) => ( {
-            ...base,
-            cursor: 'pointer',
-        } ),
-        menuList: ( base: any ) => ( {
-            ...base,
-            cursor: 'default',
-        } ),
-        option: ( base: any, state: any ) => {
-            return {
-                ...base,
-                paddingTop: 10,
-                paddingBottom: 10,
-                cursor: 'pointer',
-                '&:active': { backgroundColor: 'rgba(124,58,237,0.12)' },
-            };
-        },
-    } as const;
 
     return (
         <div>
@@ -139,7 +65,7 @@ function Test() {
                     onChange={ ( v: any ) => setValue( v ) }
                     placeholder="Select vendor"
                     isLoading={ true }
-                    components={ { Control } }
+                    leftIcon={ <Flame size={ 16 } /> }
                 />
 
                 <SimpleInput

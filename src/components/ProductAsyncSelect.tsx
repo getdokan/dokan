@@ -1,7 +1,7 @@
 import { useCallback } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
-import AsyncSelect from './AsyncSelect';
+import AsyncSelect, { type BaseSelectProps } from './AsyncSelect';
 
 export interface ProductOption {
     value: number;
@@ -9,7 +9,8 @@ export interface ProductOption {
     raw?: any;
 }
 
-export interface ProductAsyncSelectProps extends Record< string, any > {
+export interface ProductAsyncSelectProps
+    extends BaseSelectProps< ProductOption > {
     endpoint?: string; // REST path
     perPage?: number;
     mapOption?: ( product: any ) => ProductOption;

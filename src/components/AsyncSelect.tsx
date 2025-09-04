@@ -1,8 +1,31 @@
 import { AsyncSearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
+import type { ComponentProps } from 'react';
 
-function AsyncSelect( props ) {
+export type DefaultOption = {
+    value: string | number;
+    label: string;
+    [ key: string ]: unknown;
+};
+
+export interface BaseSelectProps< Option = DefaultOption >
+    extends Omit<
+        ComponentProps< typeof AsyncSearchableSelect< Option > >,
+        'components'
+    > {
+    leftIcon?: React.ReactNode;
+    components?: ComponentProps<
+        typeof AsyncSearchableSelect< Option >
+    >[ 'components' ];
+}
+
+function AsyncSelect< Option = DefaultOption >(
+    props: BaseSelectProps< Option >
+) {
     const Control = ( controlProps: any ) => {
-        const { children, selectProps } = controlProps;
+        const { children, selectProps } = controlProps as {
+            children: React.ReactNode;
+            selectProps: { leftIcon?: React.ReactNode };
+        };
         const { components } = ReactSelect;
         return (
             <components.Control { ...controlProps }>

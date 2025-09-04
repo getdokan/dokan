@@ -1,8 +1,29 @@
 import { SearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
+import type { ComponentProps } from 'react';
 
-function Select( props: any ) {
+export type DefaultOption = {
+    value: string | number;
+    label: string;
+    [ key: string ]: unknown;
+};
+
+export interface SelectProps< Option = DefaultOption >
+    extends Omit<
+        ComponentProps< typeof SearchableSelect< Option > >,
+        'components'
+    > {
+    leftIcon?: React.ReactNode;
+    components?: ComponentProps<
+        typeof SearchableSelect< Option >
+    >[ 'components' ];
+}
+
+function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
     const Control = ( controlProps: any ) => {
-        const { children, selectProps } = controlProps;
+        const { children, selectProps } = controlProps as {
+            children: React.ReactNode;
+            selectProps: { leftIcon?: React.ReactNode };
+        };
         const { components } = ReactSelect;
         return (
             <components.Control { ...controlProps }>
@@ -83,7 +104,6 @@ function Select( props: any ) {
             // @ts-ignore
             components={ {
                 Control,
-                // @ts-ignore
                 ...( props?.components ? props.components : {} ),
             } }
             styles={ styles }

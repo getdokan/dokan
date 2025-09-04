@@ -1,6 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
-import AsyncSelect from './AsyncSelect';
+import AsyncSelect, { type BaseSelectProps } from './AsyncSelect';
 
 export interface OrderOption {
     value: number;
@@ -8,7 +8,7 @@ export interface OrderOption {
     raw?: any;
 }
 
-export interface OrderAsyncSelectProps extends Record< string, any > {
+export interface OrderAsyncSelectProps extends BaseSelectProps< OrderOption > {
     endpoint?: string; // REST path
     perPage?: number;
     mapOption?: ( order: any ) => OrderOption;

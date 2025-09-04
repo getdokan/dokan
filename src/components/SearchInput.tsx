@@ -4,12 +4,15 @@ import { SimpleInput } from '@getdokan/dokan-ui';
 import { Search, X } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 
-interface SearchInputProps {
+import type { ComponentProps, ReactNode } from 'react';
+
+interface SearchInputProps
+    extends Omit< ComponentProps< typeof SimpleInput >, 'onChange' | 'value' > {
     value?: string;
     onChange?: ( val: string ) => void;
     delay?: number;
-    input?: any;
-    leftIcon?: any; // customizable left icon
+    input?: ComponentProps< typeof SimpleInput >[ 'input' ];
+    leftIcon?: ReactNode; // customizable left icon
     clearable?: boolean; // show clear button when has value
 }
 
@@ -32,7 +35,7 @@ const SearchInput = ( {
         setInternalValue( externalValue );
     }, [ externalValue ] );
 
-    const handleChange = ( event: any ) => {
+    const handleChange = ( event: React.ChangeEvent< HTMLInputElement > ) => {
         const newValue = event.target.value;
         setInternalValue( newValue );
         if ( debouncedOnChange ) {
