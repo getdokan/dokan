@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.0.7',
+        'released' => '2025-09-01',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Enhanced security controls for vendor account credentials management.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.6',
         'released' => '2025-08-29',
         'changes'  => [
