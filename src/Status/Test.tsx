@@ -110,6 +110,7 @@ function Test() {
                     placeholder="vendors"
                     isClearable
                     leftIcon={ <Home size={ 16 } /> }
+                    isMulti={ true }
                 />
 
                 <OrderAsyncSelect
