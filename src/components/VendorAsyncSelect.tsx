@@ -100,6 +100,8 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
         extraQueryKey: string;
     } >();
 
+    const skipMergeDueToDepsRef = useRef< boolean >( false );
+
     // Prefetch and refetch on dependency changes
     useEffect( () => {
         const extraQueryKey = JSON.stringify( extraQuery ?? {} );
@@ -112,6 +114,9 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
                 prev.extraQueryKey !== extraQueryKey );
 
         const shouldFetch = ( prefetch && ! prev ) || depsChanged;
+        if ( depsChanged ) {
+            skipMergeDueToDepsRef.current = true;
+        }
         if ( ! shouldFetch ) {
             // Initialize ref even if not fetching yet
             if ( ! prev ) {
@@ -242,12 +247,17 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
             loadOptions={ async ( inputValue: string ) => {
                 const results = await loader( inputValue );
                 if ( prefetch && Array.isArray( prefetchedOptions ) ) {
-                    setPrefetchedOptions( ( prev ) =>
-                        mergeUnique(
-                            prev || [],
-                            Array.isArray( results ) ? results : []
-                        )
-                    );
+                    if ( ! skipMergeDueToDepsRef.current ) {
+                        setPrefetchedOptions( ( prev ) =>
+                            mergeUnique(
+                                prev || [],
+                                Array.isArray( results ) ? results : []
+                            )
+                        );
+                    }
+                }
+                if ( inputValue && inputValue.trim() !== '' ) {
+                    skipMergeDueToDepsRef.current = false;
                 }
                 return results;
             } }

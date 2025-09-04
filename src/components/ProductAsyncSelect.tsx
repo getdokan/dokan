@@ -100,6 +100,10 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
         extraQueryKey: string;
     } >();
 
+    // When a refetch happens due to dependency change, skip merging newly searched
+    // results into prefetchedOptions until the user types a non-empty term.
+    const skipMergeDueToDepsRef = useRef< boolean >( false );
+
     // Prefetch and refetch on dependency changes
     useEffect( () => {
         const extraQueryKey = JSON.stringify( extraQuery ?? {} );
@@ -112,6 +116,10 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
                 prev.extraQueryKey !== extraQueryKey );
 
         const shouldFetch = ( prefetch && ! prev ) || depsChanged;
+        if ( depsChanged ) {
+            // make sure we don't merge the very next search results into prefetchedOptions
+            skipMergeDueToDepsRef.current = true;
+        }
         if ( ! shouldFetch ) {
             // Initialize ref even if not fetching yet
             if ( ! prev ) {
@@ -244,12 +252,18 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
             loadOptions={ async ( inputValue: string ) => {
                 const results = await loader( inputValue );
                 if ( prefetch && Array.isArray( prefetchedOptions ) ) {
-                    setPrefetchedOptions( ( prev ) =>
-                        mergeUnique(
-                            prev || [],
-                            Array.isArray( results ) ? results : []
-                        )
-                    );
+                    if ( ! skipMergeDueToDepsRef.current ) {
+                        setPrefetchedOptions( ( prev ) =>
+                            mergeUnique(
+                                prev || [],
+                                Array.isArray( results ) ? results : []
+                            )
+                        );
+                    }
+                }
+                // once user types a non-empty query, allow merging again
+                if ( inputValue && inputValue.trim() !== '' ) {
+                    skipMergeDueToDepsRef.current = false;
                 }
                 return results;
             } }
