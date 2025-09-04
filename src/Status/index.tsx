@@ -2,7 +2,6 @@ import domReady from '@wordpress/dom-ready';
 import Status from './Status';
 import './status.scss';
 import { DokanAdminRoute } from '../admin/dashboard/components/Dashboard';
-import Test from "./Test";
 
 domReady( () => {
     // @ts-ignore
@@ -12,7 +11,7 @@ domReady( () => {
         ( routes: Array< DokanAdminRoute > ) => {
             routes.push( {
                 id: 'dokan-status',
-                element: <Test />,
+                element: <Status />,
                 path: '/status',
             } satisfies DokanAdminRoute );
 
