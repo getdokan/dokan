@@ -10,6 +10,9 @@ const defaultState = {
         orderby: 'registered',
         order: 'desc',
     },
+    vendorStats: {},
+    topProducts: {},
+    loadingTopProducts: {},
 };
 
 export default defaultState;
