@@ -1,6 +1,6 @@
 import { Category, CommissionValues, SettingsElement } from './types';
 
-export const defaultCommission = { percentage: '0', flat: '2500' };
+export const defaultCommission = { percentage: '0', flat: '0' };
 
 // Selector functions
 export const getSettingInChildren = (
