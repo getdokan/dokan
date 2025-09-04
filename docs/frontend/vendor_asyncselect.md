@@ -43,6 +43,8 @@ const Example = () => {
 ## Features
 
 - Async search over vendors/stores
+- Optional prefetch of options before opening the menu; will also refetch when `endpoint`, `perPage`, `buildQuery`, or `extraQuery` change
+- When refetched, if current `value` is not present in the new dataset it can automatically clear via `onChange(null)`
 - Configurable endpoint, query, and mapping
 - Works in single or multi-select mode
 
@@ -56,6 +58,8 @@ const Example = () => {
 | `extraQuery` | `Record<string, any>` | No | `{}` | Additional query args. |
 | `buildQuery` | `(term:string)=>Record<string, any>` | No | - | Override query builder. |
 | `loadOptions` | `(term:string)=>Promise<Option[]>` | No | - | Override loader entirely. |
+| `prefetch` | `boolean` | No | `false` | If true, fetch vendors immediately (and on dependency changes) instead of waiting for menu open. |
+| `strictPrefetchValidation` | `boolean` | No | `false` | If true, when `prefetch` runs and the current `value` is not found in the prefetched/refetched list, `onChange(null)` is triggered. |
 | `...rest` | `any` | No | - | Any `AsyncSelect` prop (e.g. `isMulti`, `leftIcon`). |
 
 ## Usage Examples
@@ -77,5 +81,18 @@ const Example = () => {
 ```jsx
 <VendorAsyncSelect
   buildQuery={(term) => ({ search: term, per_page: 50, status: 'approved' })}
+/>
+```
+
+### 4. Prefetch and strict validation
+
+```jsx
+// Will fetch once on mount and when dependency props change.
+// If the current value isn't found in the prefetched data, it will clear it.
+<VendorAsyncSelect
+  prefetch
+  strictPrefetchValidation
+  value={ vendor }
+  onChange={ setVendor }
 />
 ```

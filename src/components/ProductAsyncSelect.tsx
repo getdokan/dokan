@@ -1,4 +1,4 @@
-import { useCallback } from '@wordpress/element';
+import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import AsyncSelect, { type BaseSelectProps } from './AsyncSelect';
@@ -17,6 +17,8 @@ export interface ProductAsyncSelectProps
     extraQuery?: Record< string, any >;
     buildQuery?: ( term: string ) => Record< string, any >;
     loadOptions?: ( inputValue: string ) => Promise< ProductOption[] >; // allow override
+    prefetch?: boolean; // fetch options on mount or when dependencies change, not only on menu open
+    strictPrefetchValidation?: boolean; // if true and prefetch runs, and current value not found, trigger onChange(null)
 }
 
 const defaultMap = ( product: any ): ProductOption => ( {
@@ -33,6 +35,8 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
         extraQuery = {},
         buildQuery,
         loadOptions: userLoadOptions,
+        prefetch = false,
+        strictPrefetchValidation = false,
         ...rest
     } = props;
 
@@ -63,11 +67,121 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
         [ buildQuery, perPage, extraQuery, endpoint, mapOption ]
     );
 
+    const loader = userLoadOptions || loadProducts;
+
+    const [ prefetchedOptions, setPrefetchedOptions ] = useState<
+        ProductOption[] | null
+    >( null );
+
+    const prevDepsRef = useRef< {
+        endpoint: string;
+        perPage: number;
+        buildQuery?: ProductAsyncSelectProps[ 'buildQuery' ];
+        extraQueryKey: string;
+    } >();
+
+    // Prefetch and refetch on dependency changes
+    useEffect( () => {
+        const extraQueryKey = JSON.stringify( extraQuery ?? {} );
+        const prev = prevDepsRef.current;
+        const depsChanged =
+            !! prev &&
+            ( prev.endpoint !== endpoint ||
+                prev.perPage !== perPage ||
+                prev.buildQuery !== buildQuery ||
+                prev.extraQueryKey !== extraQueryKey );
+
+        const shouldFetch = prefetch || depsChanged;
+        if ( ! shouldFetch ) {
+            // Initialize ref even if not fetching yet
+            if ( ! prev ) {
+                prevDepsRef.current = {
+                    endpoint,
+                    perPage,
+                    buildQuery,
+                    extraQueryKey,
+                };
+            }
+            return;
+        }
+
+        let cancelled = false;
+        ( async () => {
+            const options = await loader( '' );
+            if ( cancelled ) {
+                return;
+            }
+            setPrefetchedOptions( options );
+
+            // Validation logic when refetching due to dependency changes
+            const value = ( rest as any )?.value as
+                | ProductOption
+                | ProductOption[]
+                | null
+                | undefined;
+            const onChange = ( rest as any )?.onChange as
+                | ( ( value: any ) => void )
+                | undefined;
+
+            const existsIn = ( v: ProductOption, opts: ProductOption[] ) => {
+                return opts.some(
+                    ( o ) => String( o.value ) === String( v.value )
+                );
+            };
+
+            const shouldNullOnPrefetch = prefetch && strictPrefetchValidation;
+
+            const runNullCheck =
+                ( depsChanged && !! value ) ||
+                ( shouldNullOnPrefetch && !! value );
+
+            if ( runNullCheck && onChange ) {
+                if ( Array.isArray( value ) ) {
+                    const allExist = value.every( ( v ) =>
+                        existsIn( v, options )
+                    );
+                    if ( ! allExist ) {
+                        onChange( null as any );
+                    }
+                } else if (
+                    value &&
+                    ! existsIn( value as ProductOption, options )
+                ) {
+                    onChange( null as any );
+                }
+            }
+
+            // update previous deps snapshot
+            prevDepsRef.current = {
+                endpoint,
+                perPage,
+                buildQuery,
+                extraQueryKey,
+            };
+        } )();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [
+        endpoint,
+        perPage,
+        buildQuery,
+        extraQuery,
+        prefetch,
+        strictPrefetchValidation,
+        loader,
+        rest,
+    ] );
+
+    const defaultOptionsProp: any =
+        prefetch && prefetchedOptions ? prefetchedOptions : true;
+
     return (
         <AsyncSelect
             cacheOptions
-            defaultOptions
-            loadOptions={ userLoadOptions || loadProducts }
+            defaultOptions={ defaultOptionsProp }
+            loadOptions={ loader }
             { ...rest }
         />
     );

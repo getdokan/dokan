@@ -43,6 +43,8 @@ const Example = () => {
 ## Features
 
 - Async search over products with caching and default options
+- Optional prefetch of options before opening the menu; will also refetch when `endpoint`, `perPage`, `buildQuery`, or `extraQuery` change
+- When refetched, if current `value` is not present in the new dataset it can automatically clear via `onChange(null)`
 - Customizable REST endpoint, query, and option mapping
 - Pass-through props to underlying `AsyncSelect`
 
@@ -56,6 +58,8 @@ const Example = () => {
 | `extraQuery` | `Record<string, any>` | No | `{}` | Additional query params merged in each request. |
 | `buildQuery` | `(term: string) => Record<string, any>` | No | - | Build query for a given search term. Overrides default. |
 | `loadOptions` | `(inputValue: string) => Promise<Option[]>` | No | - | Provide your own loader to completely override API fetching. |
+| `prefetch` | `boolean` | No | `false` | If true, fetch products immediately (and on dependency changes) instead of waiting for menu open. |
+| `strictPrefetchValidation` | `boolean` | No | `false` | If true, when `prefetch` runs and the current `value` is not found in the prefetched/refetched list, `onChange(null)` is triggered. |
 | `...rest` | `any` | No | - | Any `AsyncSelect` prop (e.g., `isClearable`, `leftIcon`, etc.). |
 
 ## Usage Examples
@@ -80,5 +84,18 @@ const Example = () => {
 <ProductAsyncSelect
   buildQuery={ (term) => ({ search: term, status: 'publish', per_page: 50 }) }
   extraQuery={{ vendor_id: 10 }}
+/>
+```
+
+### 4. Prefetch and strict validation
+
+```jsx
+// Will fetch once on mount and when dependency props change.
+// If the current value isn't found in the prefetched data, it will clear it.
+<ProductAsyncSelect
+  prefetch
+  strictPrefetchValidation
+  value={ product }
+  onChange={ setProduct }
 />
 ```
