@@ -63,6 +63,24 @@ const actions = {
             loading,
         };
     },
+    setCreateOrEditVendor( vendor: Vendor ) {
+        return {
+            type: 'SET_CREATE_OR_EDIT_VENDOR',
+            vendor,
+        };
+    },
+    setCreateOrEditVendorLoading( loading: boolean ) {
+        return {
+            type: 'SET_CREATE_OR_EDIT_VENDOR_LOADING',
+            loading,
+        };
+    },
+    setCreateOrEditVendorErrors( errors: String[] ) {
+        return {
+            type: 'SET_CREATE_OR_EDIT_VENDOR_ERRORS',
+            errors,
+        };
+    },
 };
 
 export default actions;

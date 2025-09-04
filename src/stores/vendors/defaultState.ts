@@ -13,6 +13,9 @@ const defaultState = {
     vendorStats: {},
     topProducts: {},
     loadingTopProducts: {},
+    createOrEditVendorLoading: false,
+    createOrEditVendor: {},
+    createOrEditVendorErrors: [],
 };
 
 export default defaultState;
