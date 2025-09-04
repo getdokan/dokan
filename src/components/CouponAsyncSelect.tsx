@@ -80,6 +80,26 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
         CouponOption[] | null
     >( null );
 
+    const existsIn = ( v: CouponOption, opts: CouponOption[] ) =>
+        opts.some( ( o ) => String( o.value ) === String( v.value ) );
+
+    const mergeUnique = (
+        base: CouponOption[],
+        incoming: CouponOption[]
+    ): CouponOption[] => {
+        if ( ! Array.isArray( base ) ) {
+            return Array.isArray( incoming ) ? [ ...incoming ] : [];
+        }
+        if ( ! Array.isArray( incoming ) || incoming.length === 0 ) {
+            return base;
+        }
+        const seen = new Set( base.map( ( o ) => String( o.value ) ) );
+        const additions = incoming.filter(
+            ( o ) => ! seen.has( String( o.value ) )
+        );
+        return additions.length ? [ ...base, ...additions ] : base;
+    };
+
     const prevDepsRef = useRef< {
         endpoint: string;
         perPage: number;
@@ -129,13 +149,6 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
             const onChange = ( rest as any )?.onChange as
                 | ( ( value: any ) => void )
                 | undefined;
-
-            const existsIn = ( v: CouponOption, opts: CouponOption[] ) => {
-                return opts.some(
-                    ( o ) => String( o.value ) === String( v.value )
-                );
-            };
-
             const shouldNullOnPrefetch = prefetch && strictPrefetchValidation;
 
             const runNullCheck =
@@ -182,6 +195,45 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
     const defaultOptionsProp: any =
         prefetch && prefetchedOptions ? prefetchedOptions : false;
 
+    // Ensure controlled value(s) exist in prefetchedOptions (when prefetch is enabled)
+    useEffect( () => {
+        if ( ! prefetch ) {
+            return;
+        }
+        const current = ( rest as any )?.value as
+            | CouponOption
+            | CouponOption[]
+            | null
+            | undefined;
+        if ( ! current ) {
+            return;
+        }
+        setPrefetchedOptions( ( prev ) => {
+            const base = prev || [];
+            if ( Array.isArray( current ) ) {
+                const missing = current.filter( ( v ) => {
+                    return (
+                        v &&
+                        typeof v.value !== 'undefined' &&
+                        typeof v.label === 'string' &&
+                        ! existsIn( v, base )
+                    );
+                } );
+                return missing.length ? [ ...base, ...missing ] : base;
+            }
+            const v = current as CouponOption;
+            if (
+                v &&
+                typeof v.value !== 'undefined' &&
+                typeof v.label === 'string' &&
+                ! existsIn( v, base )
+            ) {
+                return [ ...base, v ];
+            }
+            return base;
+        } );
+    }, [ prefetch, rest ] );
+
     const depsSignature = JSON.stringify( {
         endpoint,
         perPage,
@@ -194,7 +246,18 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
             key={ depsSignature }
             cacheOptions
             defaultOptions={ defaultOptionsProp }
-            loadOptions={ ( inputValue: string ) => loader( inputValue ) }
+            loadOptions={ async ( inputValue: string ) => {
+                const results = await loader( inputValue );
+                if ( prefetch && Array.isArray( prefetchedOptions ) ) {
+                    setPrefetchedOptions( ( prev ) =>
+                        mergeUnique(
+                            prev || [],
+                            Array.isArray( results ) ? results : []
+                        )
+                    );
+                }
+                return results;
+            } }
             instanceId={ `coupon-async-${ depsSignature }` }
             { ...rest }
         />

@@ -72,6 +72,26 @@ function OrderAsyncSelect( props: OrderAsyncSelectProps ) {
         OrderOption[] | null
     >( null );
 
+    const existsIn = ( v: OrderOption, opts: OrderOption[] ) =>
+        opts.some( ( o ) => String( o.value ) === String( v.value ) );
+
+    const mergeUnique = (
+        base: OrderOption[],
+        incoming: OrderOption[]
+    ): OrderOption[] => {
+        if ( ! Array.isArray( base ) ) {
+            return Array.isArray( incoming ) ? [ ...incoming ] : [];
+        }
+        if ( ! Array.isArray( incoming ) || incoming.length === 0 ) {
+            return base;
+        }
+        const seen = new Set( base.map( ( o ) => String( o.value ) ) );
+        const additions = incoming.filter(
+            ( o ) => ! seen.has( String( o.value ) )
+        );
+        return additions.length ? [ ...base, ...additions ] : base;
+    };
+
     const prevDepsRef = useRef< {
         endpoint: string;
         perPage: number;
@@ -121,13 +141,6 @@ function OrderAsyncSelect( props: OrderAsyncSelectProps ) {
             const onChange = ( rest as any )?.onChange as
                 | ( ( value: any ) => void )
                 | undefined;
-
-            const existsIn = ( v: OrderOption, opts: OrderOption[] ) => {
-                return opts.some(
-                    ( o ) => String( o.value ) === String( v.value )
-                );
-            };
-
             const shouldNullOnPrefetch = prefetch && strictPrefetchValidation;
 
             const runNullCheck =
@@ -174,19 +187,69 @@ function OrderAsyncSelect( props: OrderAsyncSelectProps ) {
     const defaultOptionsProp: any =
         prefetch && prefetchedOptions ? prefetchedOptions : false;
 
-    const depsSignature = JSON.stringify({
+    // Ensure controlled value(s) exist in prefetchedOptions (when prefetch is enabled)
+    useEffect( () => {
+        if ( ! prefetch ) {
+            return;
+        }
+        const current = ( rest as any )?.value as
+            | OrderOption
+            | OrderOption[]
+            | null
+            | undefined;
+        if ( ! current ) {
+            return;
+        }
+        setPrefetchedOptions( ( prev ) => {
+            const base = prev || [];
+            if ( Array.isArray( current ) ) {
+                const missing = current.filter( ( v ) => {
+                    return (
+                        v &&
+                        typeof v.value !== 'undefined' &&
+                        typeof v.label === 'string' &&
+                        ! existsIn( v, base )
+                    );
+                } );
+                return missing.length ? [ ...base, ...missing ] : base;
+            }
+            const v = current as OrderOption;
+            if (
+                v &&
+                typeof v.value !== 'undefined' &&
+                typeof v.label === 'string' &&
+                ! existsIn( v, base )
+            ) {
+                return [ ...base, v ];
+            }
+            return base;
+        } );
+    }, [ prefetch, rest ] );
+
+    const depsSignature = JSON.stringify( {
         endpoint,
         perPage,
-        buildQuery: !!buildQuery,
+        buildQuery: !! buildQuery,
         extraQuery,
-    });
+    } );
 
     return (
         <AsyncSelect
             key={ depsSignature }
             cacheOptions
             defaultOptions={ defaultOptionsProp }
-            loadOptions={ ( inputValue: string ) => loader( inputValue ) }
+            loadOptions={ async ( inputValue: string ) => {
+                const results = await loader( inputValue );
+                if ( prefetch && Array.isArray( prefetchedOptions ) ) {
+                    setPrefetchedOptions( ( prev ) =>
+                        mergeUnique(
+                            prev || [],
+                            Array.isArray( results ) ? results : []
+                        )
+                    );
+                }
+                return results;
+            } }
             instanceId={ `order-async-${ depsSignature }` }
             { ...rest }
         />

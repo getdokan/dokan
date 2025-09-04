@@ -73,6 +73,26 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
         ProductOption[] | null
     >( null );
 
+    const existsIn = ( v: ProductOption, opts: ProductOption[] ) =>
+        opts.some( ( o ) => String( o.value ) === String( v.value ) );
+
+    const mergeUnique = (
+        base: ProductOption[],
+        incoming: ProductOption[]
+    ): ProductOption[] => {
+        if ( ! Array.isArray( base ) ) {
+            return Array.isArray( incoming ) ? [ ...incoming ] : [];
+        }
+        if ( ! Array.isArray( incoming ) || incoming.length === 0 ) {
+            return base;
+        }
+        const seen = new Set( base.map( ( o ) => String( o.value ) ) );
+        const additions = incoming.filter(
+            ( o ) => ! seen.has( String( o.value ) )
+        );
+        return additions.length ? [ ...base, ...additions ] : base;
+    };
+
     const prevDepsRef = useRef< {
         endpoint: string;
         perPage: number;
@@ -122,13 +142,6 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
             const onChange = ( rest as any )?.onChange as
                 | ( ( value: any ) => void )
                 | undefined;
-
-            const existsIn = ( v: ProductOption, opts: ProductOption[] ) => {
-                return opts.some(
-                    ( o ) => String( o.value ) === String( v.value )
-                );
-            };
-
             const shouldNullOnPrefetch = prefetch && strictPrefetchValidation;
 
             const runNullCheck =
@@ -175,6 +188,45 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
     const defaultOptionsProp: any =
         prefetch && prefetchedOptions ? prefetchedOptions : false;
 
+    // Ensure controlled value(s) exist in prefetchedOptions (when prefetch is enabled)
+    useEffect( () => {
+        if ( ! prefetch ) {
+            return;
+        }
+        const current = ( rest as any )?.value as
+            | ProductOption
+            | ProductOption[]
+            | null
+            | undefined;
+        if ( ! current ) {
+            return;
+        }
+        setPrefetchedOptions( ( prev ) => {
+            const base = prev || [];
+            if ( Array.isArray( current ) ) {
+                const missing = current.filter( ( v ) => {
+                    return (
+                        v &&
+                        typeof v.value !== 'undefined' &&
+                        typeof v.label === 'string' &&
+                        ! existsIn( v, base )
+                    );
+                } );
+                return missing.length ? [ ...base, ...missing ] : base;
+            }
+            const v = current as ProductOption;
+            if (
+                v &&
+                typeof v.value !== 'undefined' &&
+                typeof v.label === 'string' &&
+                ! existsIn( v, base )
+            ) {
+                return [ ...base, v ];
+            }
+            return base;
+        } );
+    }, [ prefetch, rest ] );
+
     // Build a signature so react-select's internal async cache resets when deps change
     const depsSignature = JSON.stringify( {
         endpoint,
@@ -189,7 +241,18 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
             key={ depsSignature }
             cacheOptions
             defaultOptions={ defaultOptionsProp }
-            loadOptions={ ( inputValue: string ) => loader( inputValue ) }
+            loadOptions={ async ( inputValue: string ) => {
+                const results = await loader( inputValue );
+                if ( prefetch && Array.isArray( prefetchedOptions ) ) {
+                    setPrefetchedOptions( ( prev ) =>
+                        mergeUnique(
+                            prev || [],
+                            Array.isArray( results ) ? results : []
+                        )
+                    );
+                }
+                return results;
+            } }
             // pass an instanceId too for good measure
             instanceId={ `product-async-${ depsSignature }` }
             { ...rest }
