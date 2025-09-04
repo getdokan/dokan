@@ -3,6 +3,8 @@ import { __ } from '@wordpress/i18n';
 import { DokanButton } from './index';
 import { Popover, DateTimePicker } from '@wordpress/components';
 import { twMerge } from 'tailwind-merge';
+import { SimpleInput } from '@getdokan/dokan-ui';
+import { dateI18n, getSettings } from '@wordpress/date';
 
 interface Props {
     children?: React.ReactNode | JSX.Element;
@@ -12,6 +14,8 @@ interface Props {
     popoverBodyClassName?: string;
     onClear?: () => void;
     onOk?: () => void;
+    inputId?: string;
+    inputName?: string;
     // Allow any additional DateTimePicker props to pass through
     [ key: string ]: any;
 }
@@ -40,7 +44,31 @@ const WpDateTimePicker = ( props: Props ) => {
                 // @ts-ignore
                 ref={ setPopoverAnchor }
             >
-                { props.children ?? '' }
+                { props.children ?? (
+                    <SimpleInput
+                        onChange={ () => {} }
+                        value={
+                            props?.currentDate
+                                ? dateI18n(
+                                      getSettings().formats.date,
+                                      props?.currentDate,
+                                      getSettings().timezone.string
+                                  )
+                                : ''
+                        }
+                        input={ {
+                            id:
+                                props?.inputId ??
+                                'dokan-date-time-picker-input',
+                            name:
+                                props?.inputName ??
+                                'dokan_date_time_picker_input',
+                            type: 'text',
+                            autoComplete: 'off',
+                            placeholder: __( 'Enter Date', 'dokan-lite' ),
+                        } }
+                    />
+                ) }
             </div>
 
             { isVisible && (
