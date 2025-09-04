@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin;
 
+use WeDevs\Dokan\Utilities\VendorUtil;
+
 /**
  * User profile related tasks for wp-admin
  *
@@ -61,11 +63,12 @@ class UserProfile {
             return;
         }
 
-        $selling               = get_user_meta( $user->ID, 'dokan_enable_selling', true );
-        $publishing            = get_user_meta( $user->ID, 'dokan_publishing', true );
-        $store_settings        = dokan_get_store_info( $user->ID );
-        $banner                = ! empty( $store_settings['banner'] ) ? absint( $store_settings['banner'] ) : 0;
-        $feature_seller        = get_user_meta( $user->ID, 'dokan_feature_seller', true );
+        $selling        = get_user_meta( $user->ID, 'dokan_enable_selling', true );
+        $publishing     = get_user_meta( $user->ID, 'dokan_publishing', true );
+        $store_settings = dokan_get_store_info( $user->ID );
+        $banner         = ! empty( $store_settings['banner'] ) ? absint( $store_settings['banner'] ) : 0;
+        $banner_url     = $banner ? wp_get_attachment_url( $banner ) : VendorUtil::get_vendor_default_banner_url();
+        $feature_seller = get_user_meta( $user->ID, 'dokan_feature_seller', true );
 
         $social_fields = dokan_get_social_profile_fields();
 
@@ -109,7 +112,6 @@ class UserProfile {
                     <td>
                         <div class="dokan-banner">
                             <div class="image-wrap<?php echo esc_attr( $banner ) ? '' : ' dokan-hide'; ?>">
-                                <?php $banner_url = $banner ? wp_get_attachment_url( $banner ) : ''; ?>
                                 <input type="hidden" class="dokan-file-field" value="<?php echo esc_attr( $banner ); ?>" name="dokan_banner">
                                 <img class="dokan-banner-img" src="<?php echo esc_url( $banner_url ); ?>">
 
@@ -354,12 +356,12 @@ class UserProfile {
         .button-area { padding-top: 100px; }
         .dokan-banner {
             border: 4px dashed #d8d8d8;
-            height: 255px;
+            height: 300px;
             margin: 0;
             overflow: hidden;
             position: relative;
             text-align: center;
-            max-width: 700px;
+            max-width: 625px;
         }
         .dokan-banner img { max-width:100%; }
         .dokan-banner .dokan-remove-banner-image {
