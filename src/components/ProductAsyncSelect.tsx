@@ -91,7 +91,7 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
                 prev.buildQuery !== buildQuery ||
                 prev.extraQueryKey !== extraQueryKey );
 
-        const shouldFetch = prefetch || depsChanged;
+        const shouldFetch = ( prefetch && ! prev ) || depsChanged;
         if ( ! shouldFetch ) {
             // Initialize ref even if not fetching yet
             if ( ! prev ) {
@@ -170,18 +170,28 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
         extraQuery,
         prefetch,
         strictPrefetchValidation,
-        loader,
-        rest,
     ] );
 
     const defaultOptionsProp: any =
-        prefetch && prefetchedOptions ? prefetchedOptions : true;
+        prefetch && prefetchedOptions ? prefetchedOptions : false;
+
+    // Build a signature so react-select's internal async cache resets when deps change
+    const depsSignature = JSON.stringify( {
+        endpoint,
+        perPage,
+        buildQuery: !! buildQuery,
+        extraQuery,
+    } );
 
     return (
         <AsyncSelect
+            // give the component a changing key so it remounts when deps change
+            key={ depsSignature }
             cacheOptions
             defaultOptions={ defaultOptionsProp }
-            loadOptions={ loader }
+            loadOptions={ ( inputValue: string ) => loader( inputValue ) }
+            // pass an instanceId too for good measure
+            instanceId={ `product-async-${ depsSignature }` }
             { ...rest }
         />
     );

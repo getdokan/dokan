@@ -98,7 +98,7 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
                 prev.buildQuery !== buildQuery ||
                 prev.extraQueryKey !== extraQueryKey );
 
-        const shouldFetch = prefetch || depsChanged;
+        const shouldFetch = ( prefetch && ! prev ) || depsChanged;
         if ( ! shouldFetch ) {
             // Initialize ref even if not fetching yet
             if ( ! prev ) {
@@ -177,18 +177,25 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
         extraQuery,
         prefetch,
         strictPrefetchValidation,
-        loader,
-        rest,
     ] );
 
     const defaultOptionsProp: any =
-        prefetch && prefetchedOptions ? prefetchedOptions : true;
+        prefetch && prefetchedOptions ? prefetchedOptions : false;
+
+    const depsSignature = JSON.stringify( {
+        endpoint,
+        perPage,
+        buildQuery: !! buildQuery,
+        extraQuery,
+    } );
 
     return (
         <AsyncSelect
+            key={ depsSignature }
             cacheOptions
             defaultOptions={ defaultOptionsProp }
-            loadOptions={ loader }
+            loadOptions={ ( inputValue: string ) => loader( inputValue ) }
+            instanceId={ `coupon-async-${ depsSignature }` }
             { ...rest }
         />
     );
