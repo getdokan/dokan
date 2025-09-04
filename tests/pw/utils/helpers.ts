@@ -453,7 +453,15 @@ export const helpers = {
     // execute wp cli command
     async exeCommandWpcli(command: string, directoryPath = process.cwd()) {
         process.chdir(directoryPath);
-        command = CI ? `npm run wp-env run tests-cli  ${command}` : `cd ${SITE_PATH} && ${command}`;
+        // Prefer local wp-cli when SITE_PATH is provided; otherwise fallback to docker when CI=true
+        if (SITE_PATH && SITE_PATH.length > 0) {
+            command = `cd ${SITE_PATH} && ${command}`;
+        } else if (CI) {
+            command = `npm run wp-env run tests-cli  ${command}`;
+        } else {
+            // As a last resort, try running in current directory
+            command = command;
+        }
         // console.log(`Executing command: ${command}`);
         await this.exeCommand(command);
     },

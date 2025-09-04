@@ -48,12 +48,21 @@ export const dbUtils = {
     async getUserMeta(userId: string, metaKey: string): Promise<any> {
         const querySelect = `SELECT meta_value FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key = ?;`;
         const res = await dbUtils.dbQuery(querySelect, [userId, metaKey]);
-        const userMeta = unserialize(res[0].meta_value, {
-            WP_Term: function () {
-                return {};
-            },
-        }); // todo: added to handle WP_Term error, test if it works for further cases
-        return userMeta;
+
+        // handle empty result
+        if (!res || res.length === 0 || !res[0] || res[0].meta_value === undefined) {
+            return null;
+        }
+
+        const rawValue = res[0].meta_value as string;
+        // return deserialized value if serialized; otherwise return raw value
+        return isSerialized(rawValue)
+            ? unserialize(rawValue, {
+                  WP_Term: function () {
+                      return {};
+                  },
+              })
+            : rawValue;
     },
 
     // set user meta
@@ -68,7 +77,7 @@ export const dbUtils = {
     // update user meta
     async updateUserMeta(userId: string, metaKey: string, updatedMetaValue: any, serializeData: boolean = true): Promise<[object, object]> {
         const currentMetaValue = await this.getUserMeta(userId, metaKey);
-        const newMetaValue = typeof updatedMetaValue === 'object' ? helpers.deepMergeObjects(currentMetaValue, updatedMetaValue) : updatedMetaValue;
+        const newMetaValue = typeof updatedMetaValue === 'object' && currentMetaValue ? helpers.deepMergeObjects(currentMetaValue, updatedMetaValue) : updatedMetaValue;
         await this.setUserMeta(userId, metaKey, newMetaValue, serializeData);
         return [currentMetaValue, newMetaValue];
     },
@@ -77,8 +86,21 @@ export const dbUtils = {
     async getOptionValue(optionName: string): Promise<any> {
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = ?;`;
         const res = await dbUtils.dbQuery(query, [optionName]);
-        const optionValue = unserialize(res[0].option_value);
-        return optionValue;
+
+        // when option row does not exist yet, return empty object to allow deep merge
+        if (!res || res.length === 0 || !res[0] || res[0].option_value === undefined) {
+            return {};
+        }
+
+        const rawValue = res[0].option_value as string;
+        // some options are plain strings (e.g., 'yes'/'no'); only unserialize serialized values
+        return isSerialized(rawValue)
+            ? unserialize(rawValue, {
+                  WP_Term: function () {
+                      return {};
+                  },
+              })
+            : rawValue;
     },
 
     // set option value
