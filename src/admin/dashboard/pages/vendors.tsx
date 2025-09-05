@@ -30,6 +30,9 @@ const VendorsPage = ( props ) => {
 
     const [ status, setStatus ] = useState< string >( 'all' );
 
+    // Keep track of current selection in DataViews so we can clear it after bulk actions
+    const [ selection, setSelection ] = useState<string[]>( [] );
+
     const [ data, setData ] = useState< Vendor[] >( [] );
     const [ isLoading, setIsLoading ] = useState< boolean >( false );
     const [ totalItems, setTotalItems ] = useState< number >( 0 );
@@ -556,6 +559,10 @@ const VendorsPage = ( props ) => {
                                         }
                                         await fetchVendors();
                                         await refreshCounts();
+                                        // Clear selection after bulk actions
+                                        if ( confirmState.mode === 'bulk' ) {
+                                            setSelection( [] );
+                                        }
                                     } finally {
                                         setIsConfirmLoading( false );
                                     }
@@ -572,6 +579,8 @@ const VendorsPage = ( props ) => {
                     getItemId={ ( item: Vendor ) => item.id }
                     onChangeView={ handleChangeView }
                     search={ false }
+                    selection={ selection }
+                    onChangeSelection={ ( ids: string[] ) => setSelection( ids ) }
                     actions={
                         [
                             {
