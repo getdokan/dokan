@@ -21,7 +21,7 @@ interface Props {
 }
 
 // A lightweight wrapper around WordPress DateTimePicker, using WordPress Popover like WcDateRangePicker
-const WpDateTimePicker = ( props: Props ) => {
+const DateTimePicker = ( props: Props ) => {
     const [ popoverAnchor, setPopoverAnchor ] = useState< any >();
     const [ isVisible, setIsVisible ] = useState( false );
 
@@ -131,4 +131,4 @@ const WpDateTimePicker = ( props: Props ) => {
     );
 };
 
-export default WpDateTimePicker;
+export default DateTimePicker;

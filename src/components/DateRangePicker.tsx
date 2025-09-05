@@ -22,7 +22,7 @@ interface Props extends DatePickerProps {
     inputName?: string;
 }
 
-const WcDateRangePicker = ( props: Props ) => {
+const DateRangePicker = ( props: Props ) => {
     const [ popoverAnchor, setPopoverAnchor ] = useState();
     const [ isVisible, setIsVisible ] = useState( false );
 
@@ -131,4 +131,4 @@ const WcDateRangePicker = ( props: Props ) => {
     );
 };
 
-export default WcDateRangePicker;
+export default DateRangePicker;

@@ -4,11 +4,11 @@ You can explore the WooCommerce DateRange storybook and related components here:
 
 You can also explore the WooCommerce components source here: https://github.com/woocommerce/woocommerce/tree/trunk/packages/js/components/src/calendar
 
-In Dokan, the date range picker component is named `WcDateRangePicker`.
+In Dokan, the date range picker component is named `DateRangePicker` (previously `WcDateRangePicker`).
 
-WcDateRangePicker renders its children as the clickable trigger. When you click the child element, a Popover opens containing the WooCommerce DateRange. All props supported by DateRange are passed through via props spread.
+DateRangePicker renders its children as the clickable trigger. When you click the child element, a Popover opens containing the WooCommerce DateRange. All props supported by DateRange are passed through via props spread.
 
-Additional convenience props provided by WcDateRangePicker:
+Additional convenience props provided by DateRangePicker:
 - wrapperClassName: class applied to the outer wrapper div
 - pickerToggleClassName: class applied to the clickable trigger wrapper (around children)
 - wpPopoverClassName: class merged into the WordPress Popover container
@@ -18,7 +18,7 @@ Additional convenience props provided by WcDateRangePicker:
 
 ### Usage example
 ```jsx
-import WcDateRangePicker from '../../../../src/components/WcDateRangePicker';
+import DateRangePicker from '../../../../src/components/DateRangePicker';
 import { useState } from '@wordpress/element';
 
 function SimpleDateRange() {
@@ -30,7 +30,7 @@ function SimpleDateRange() {
 
     return (
         <div>
-            <WcDateRangePicker
+            <DateRangePicker
                 after={ after }
                 afterText={ afterText }
                 before={ before }
@@ -86,7 +86,7 @@ function SimpleDateRange() {
                     placeholder="Select date range"
                     readOnly
                 />
-            </WcDateRangePicker>
+            </DateRangePicker>
         </div>
     );
 }
