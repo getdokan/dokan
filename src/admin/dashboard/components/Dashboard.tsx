@@ -5,6 +5,7 @@ import ModulePage from '../pages/modules';
 import { useMutationObserver } from '../../../hooks';
 import SetupGuide from '../pages/setup-guide';
 import NotFound from '../../../layout/404';
+import VendorsPage from '../pages/vendors';
 
 export type DokanAdminRoute = {
     id: string;
@@ -24,6 +25,11 @@ const getAdminRoutes = () => {
             id: 'pro-modules',
             element: <ModulePage />,
             path: '/pro-modules',
+        },
+        {
+            id: 'vendors',
+            element: <VendorsPage />,
+            path: '/vendors',
         },
     ];
 

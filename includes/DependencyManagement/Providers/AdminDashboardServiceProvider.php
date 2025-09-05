@@ -6,6 +6,7 @@ use WeDevs\Dokan\Admin\Dashboard\Dashboard;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Modules;
 use WeDevs\Dokan\Admin\Dashboard\Pages\SetupGuide;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Status;
+use WeDevs\Dokan\Admin\Dashboard\Pages\Vendors;
 use WeDevs\Dokan\Admin\OnboardingSetup\AdminSetupGuide;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
@@ -15,10 +16,11 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
      */
     protected $tags = [ 'admin-dashboard-service' ];
 
-	protected $services = [
+ protected $services = [
         Dashboard::class,
         Modules::class,
         Status::class,
+        Vendors::class,
 	];
 
 	/**
