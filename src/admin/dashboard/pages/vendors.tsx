@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import { DataViews, DokanTab, Filter, DokanLink } from '@dokan/components';
+import DokanModal from '../../../components/modals/DokanModal';
 import { Vendor } from '../../../definitions/dokan-vendor';
 import { DateTimeHtml, DokanBadge } from '../../../components';
 import * as LucideIcons from 'lucide-react';
@@ -37,6 +38,22 @@ const VendorsPage = ( props ) => {
         approved: 0,
         pending: 0,
     } );
+
+    // Confirmation modal state for single and bulk actions
+    const [ confirmState, setConfirmState ] = useState<
+        | null
+        | {
+              mode: 'single';
+              action: 'approve' | 'disable';
+              vendor: Vendor;
+          }
+        | {
+              mode: 'bulk';
+              action: 'approve' | 'disable';
+              vendorIds: number[];
+          }
+    >( null );
+    const [ isConfirmLoading, setIsConfirmLoading ] = useState( false );
 
     const fetchVendors = async (
         args?: Partial< {
@@ -109,7 +126,7 @@ const VendorsPage = ( props ) => {
             const results = await Promise.all( promises );
             const map: Record< string, number > = {};
             results.forEach( ( r ) => ( map[ r.s ] = r.total ) );
-            if ( map.all == null ) {
+            if ( map.all === null || map.all === undefined ) {
                 map.all = 0;
             }
             setCounts( map );
@@ -311,10 +328,14 @@ const VendorsPage = ( props ) => {
     const VendorFilterField = () => {
         return (
             <div className="flex items-center gap-2">
-                <label className="text-sm text-gray-700">
+                <label
+                    className="text-sm text-gray-700"
+                    htmlFor="vendor-filter-input"
+                >
                     { __( 'Vendor', 'dokan-lite' ) }
                 </label>
                 <input
+                    id="vendor-filter-input"
                     type="text"
                     className="dokan-input px-3 py-1.5 border rounded w-60"
                     placeholder={ __( 'Search vendor…', 'dokan-lite' ) }
@@ -333,10 +354,14 @@ const VendorsPage = ( props ) => {
     const DateFilterField = () => {
         return (
             <div className="flex items-center gap-2">
-                <label className="text-sm text-gray-700">
+                <label
+                    className="text-sm text-gray-700"
+                    htmlFor="date-from-input"
+                >
                     { __( 'Date', 'dokan-lite' ) }
                 </label>
                 <input
+                    id="date-from-input"
                     type="date"
                     className="dokan-input px-3 py-1.5 border rounded"
                     value={ filterArgs.date_from || '' }
@@ -361,6 +386,72 @@ const VendorsPage = ( props ) => {
                 />
             </div>
         );
+    };
+
+    // Helpers for confirmation
+    const extractIdsFromArgs = ( args: any ): number[] => {
+        if ( Array.isArray( args ) ) {
+            return ( args as Vendor[] ).map( ( v ) => v.id );
+        }
+        if ( args?.items ) {
+            return ( args.items as Vendor[] ).map( ( v ) => v.id );
+        }
+        if ( args?.item ) {
+            return [ ( args.item as Vendor ).id ];
+        }
+        return [];
+    };
+    const extractSingleFromArgs = ( args: any ): Vendor | null => {
+        if ( args?.item ) {
+            return args.item as Vendor;
+        }
+        if ( Array.isArray( args ) && args.length ) {
+            return args[ 0 ] as Vendor;
+        }
+        return null;
+    };
+    const openConfirmFor = ( action: 'approve' | 'disable', args: any ) => {
+        const ids = extractIdsFromArgs( args );
+        if ( ids.length > 1 ) {
+            setConfirmState( { mode: 'bulk', action, vendorIds: ids } );
+            return;
+        }
+        const v = extractSingleFromArgs( args );
+        if ( v ) {
+            setConfirmState( { mode: 'single', action, vendor: v } );
+        }
+    };
+    const getConfirmConfig = ( state: NonNullable< typeof confirmState > ) => {
+        const isApprove = state.action === 'approve';
+        const isBulk = state.mode === 'bulk';
+        return {
+            title: isApprove
+                ? __( 'Approve Vendor', 'dokan-lite' )
+                : __( 'Disable Vendor', 'dokan-lite' ),
+            description: isBulk
+                ? isApprove
+                    ? __(
+                          'Are you sure you want to approve the selected vendors?',
+                          'dokan-lite'
+                      )
+                    : __(
+                          'Are you sure you want to disable the selected vendors from selling?',
+                          'dokan-lite'
+                      )
+                : isApprove
+                ? __(
+                      'Are you sure you want to approve this vendor?',
+                      'dokan-lite'
+                  )
+                : __(
+                      'Are you sure you want to disable this vendor from selling?',
+                      'dokan-lite'
+                  ),
+            confirmText: isApprove
+                ? __( 'Yes, Approve', 'dokan-lite' )
+                : __( 'Yes, Disable', 'dokan-lite' ),
+            variant: isApprove ? 'primary' : ( 'danger' as const ),
+        };
     };
 
     const getActionLabel = ( iconName, label ) => {
@@ -411,6 +502,68 @@ const VendorsPage = ( props ) => {
 
             { /* Table */ }
             <div className="mt-4">
+                { /* Confirmation Modal */ }
+                { confirmState &&
+                    ( () => {
+                        const cfg = getConfirmConfig( confirmState );
+                        return (
+                            <DokanModal
+                                isOpen={ !! confirmState }
+                                onClose={ () => setConfirmState( null ) }
+                                namespace="dokan-admin-vendors-confirm"
+                                dialogTitle={ __(
+                                    'Confirmation',
+                                    'dokan-lite'
+                                ) }
+                                confirmationTitle={ cfg.title }
+                                confirmationDescription={ cfg.description }
+                                confirmButtonText={ cfg.confirmText }
+                                confirmButtonVariant={ cfg.variant }
+                                loading={ isConfirmLoading }
+                                onConfirm={ async () => {
+                                    setIsConfirmLoading( true );
+                                    try {
+                                        if ( confirmState.mode === 'single' ) {
+                                            await apiFetch( {
+                                                path: `/dokan/v1/stores/${ confirmState.vendor.id }/status`,
+                                                method: 'PUT',
+                                                data: {
+                                                    status:
+                                                        confirmState.action ===
+                                                        'approve'
+                                                            ? 'active'
+                                                            : 'inactive',
+                                                },
+                                            } as any );
+                                        } else {
+                                            const ids = confirmState.vendorIds;
+                                            if (
+                                                confirmState.action ===
+                                                'approve'
+                                            ) {
+                                                await apiFetch( {
+                                                    path: `/dokan/v1/stores/batch`,
+                                                    method: 'POST',
+                                                    data: { approved: ids },
+                                                } as any );
+                                            } else {
+                                                await apiFetch( {
+                                                    path: `/dokan/v1/stores/batch`,
+                                                    method: 'POST',
+                                                    data: { pending: ids },
+                                                } as any );
+                                            }
+                                        }
+                                        await fetchVendors();
+                                        await refreshCounts();
+                                    } finally {
+                                        setIsConfirmLoading( false );
+                                    }
+                                } }
+                            />
+                        );
+                    } )() }
+
                 <DataViews
                     data={ data }
                     namespace="dokan-admin-vendors-table"
@@ -538,16 +691,8 @@ const VendorsPage = ( props ) => {
                                 supportsBulk: true,
                                 isPrimary: false,
                                 isEligible: ( item: Vendor ) => !! item.enabled,
-                                callback: ( { item }: { item: Vendor } ) => {
-                                    window.location.href = addQueryArgs(
-                                        'admin.php',
-                                        {
-                                            page: 'dokan',
-                                            module: 'vendors',
-                                            action: 'disable-selling',
-                                            vendor_id: item.id,
-                                        }
-                                    );
+                                callback: ( args: any ) => {
+                                    openConfirmFor( 'disable', args );
                                 },
                             },
                             // Show Approve Vendor when enabled is false
@@ -575,16 +720,8 @@ const VendorsPage = ( props ) => {
                                 supportsBulk: true,
                                 isPrimary: false,
                                 isEligible: ( item: Vendor ) => ! item.enabled,
-                                callback: ( { item }: { item: Vendor } ) => {
-                                    window.location.href = addQueryArgs(
-                                        'admin.php',
-                                        {
-                                            page: 'dokan',
-                                            module: 'vendors',
-                                            action: 'approve-vendor',
-                                            vendor_id: item.id,
-                                        }
-                                    );
+                                callback: ( args: any ) => {
+                                    openConfirmFor( 'approve', args );
                                 },
                             },
                         ] as any
