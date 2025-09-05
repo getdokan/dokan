@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import AsyncSelect, { type BaseSelectProps } from './AsyncSelect';
+import { __, sprintf } from '@wordpress/i18n';
 
 export interface ProductOption {
     value: number;
@@ -23,7 +24,10 @@ export interface ProductAsyncSelectProps
 
 const defaultMap = ( product: any ): ProductOption => ( {
     value: product.id,
-    label: product.name || `Product #${ product?.id }`,
+    label:
+        product.name ||
+        // eslint-disable-next-line @wordpress/i18n-translator-comments
+        sprintf( __( 'Product #%s', 'dokan' ), String( product?.id ?? '' ) ),
     raw: product,
 } );
 

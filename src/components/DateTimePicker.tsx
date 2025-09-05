@@ -1,7 +1,10 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { DokanButton } from './index';
-import { Popover, DateTimePicker } from '@wordpress/components';
+import {
+    Popover,
+    DateTimePicker as WpDateTimePicker,
+} from '@wordpress/components';
 import { twMerge } from 'tailwind-merge';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { dateI18n, getSettings } from '@wordpress/date';
@@ -37,12 +40,13 @@ const DateTimePicker = ( props: Props ) => {
 
     return (
         <div className={ props?.wrapperClassName ?? '' }>
-            { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */ }
+            { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/interactive-supports-focus */ }
             <div
                 className={ props?.pickerToggleClassName ?? '' }
                 onClick={ () => setIsVisible( ! isVisible ) }
                 // @ts-ignore
                 ref={ setPopoverAnchor }
+                role="button"
             >
                 { props.children ?? (
                     <SimpleInput
@@ -93,7 +97,7 @@ const DateTimePicker = ( props: Props ) => {
                             props?.popoverBodyClassName ?? ''
                         ) }
                     >
-                        <DateTimePicker { ...updatedProps } />
+                        <WpDateTimePicker { ...updatedProps } />
                         <div className="mt-2 flex flex-row gap-2">
                             <DokanButton
                                 size="sm"

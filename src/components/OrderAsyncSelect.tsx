@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import AsyncSelect, { type BaseSelectProps } from './AsyncSelect';
+import { __, sprintf } from "@wordpress/i18n";
 
 export interface OrderOption {
     value: number;
@@ -22,7 +23,8 @@ export interface OrderAsyncSelectProps extends BaseSelectProps< OrderOption > {
 
 const defaultMap = ( order: any ): OrderOption => ( {
     value: order.id,
-    label: order.number ? `Order #${ order.number }` : `Order #${ order?.id }`,
+    // eslint-disable-next-line @wordpress/i18n-translator-comments
+    label: sprintf( __( 'Order #%s', 'dokan-lite' ), String( order?.id ) ),
     raw: order,
 } );
 

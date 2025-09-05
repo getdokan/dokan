@@ -28,19 +28,19 @@ const SearchInput = ( {
     const [ internalValue, setInternalValue ] = useState( externalValue );
 
     // Create debounced function using WordPress compose
-    const debouncedOnChange = useDebounce( onChange, delay );
+    const debouncedOnChange = useDebounce( ( val: string ) => {
+        onChange?.( val );
+    }, delay );
 
     // Update internal value when external value changes
     useEffect( () => {
         setInternalValue( externalValue );
     }, [ externalValue ] );
 
-    const handleChange = ( event: React.ChangeEvent< HTMLInputElement > ) => {
+    const handleChange = ( event ) => {
         const newValue = event.target.value;
         setInternalValue( newValue );
-        if ( debouncedOnChange ) {
-            debouncedOnChange( newValue );
-        }
+        debouncedOnChange( newValue );
     };
 
     const handleClear = () => {

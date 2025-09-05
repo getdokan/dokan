@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import AsyncSelect, { type BaseSelectProps } from './AsyncSelect';
+import { __, sprintf } from '@wordpress/i18n';
 
 export interface CouponOption {
     value: number;
@@ -27,14 +28,13 @@ const defaultMap = ( coupon: any ): CouponOption => ( {
         coupon.code ||
         coupon.post_title ||
         coupon.name ||
-        `Coupon #${ coupon?.id }`,
+        // eslint-disable-next-line @wordpress/i18n-translator-comments
+        sprintf( __( 'Coupon #%s', 'dokan-lite' ), String( coupon?.id ) ),
     raw: coupon,
 } );
 
 function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
     const {
-        // WooCommerce core coupons endpoint is /wc/v3/coupons when authenticated.
-        // Dokan may proxy or have its own; allow override via props. Provide a sensible default.
         endpoint = '/dokan/v1/coupons',
         perPage = 20,
         mapOption = defaultMap,

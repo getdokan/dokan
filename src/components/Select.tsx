@@ -1,5 +1,6 @@
 import { SearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
 import type { ComponentProps } from 'react';
+import { twMerge } from "tailwind-merge";
 
 export type DefaultOption = {
     value: string | number;
@@ -28,22 +29,15 @@ function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
         return (
             <components.Control { ...controlProps }>
                 { selectProps.leftIcon ? (
-                    <span
-                        style={ {
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginLeft: 15,
-                        } }
-                    >
+                    <span className="!flex !items-center !ml-[15px]">
                         { selectProps.leftIcon }
                     </span>
                 ) : null }
                 <div
-                    style={ {
-                        marginLeft: selectProps.leftIcon ? 6 : 0,
-                        flex: 1,
-                        display: 'flex',
-                    } }
+                    className={ twMerge(
+                        'flex flex-1',
+                        selectProps.leftIcon ? 'ml-1.5' : 'ml-0'
+                    ) }
                 >
                     { children }
                 </div>
@@ -52,7 +46,7 @@ function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
     };
 
     const styles = {
-        control: ( base: any, state: any ) => ( {
+        control: ( base: any ) => ( {
             ...base,
             borderRadius: '0.40rem',
             minHeight: '2.5rem',
@@ -61,7 +55,7 @@ function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
             outline: 'none',
             ':focus': { outline: 'none' },
             ':focus-within': { outline: 'none' },
-            borderColor: state.isFocused ? base.borderColor : base.borderColor,
+            borderColor: base.borderColor,
         } ),
         placeholder: ( base: any ) => ( {
             ...base,
@@ -91,10 +85,10 @@ function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
             ...base,
             cursor: 'default',
         } ),
-        option: ( base: any ) => {
+        option: ( base: any, state: any ) => {
             return {
                 ...base,
-                cursor: 'pointer',
+                cursor: state.isDisabled ? 'not-allowed' : 'pointer',
             };
         },
     } as const;
