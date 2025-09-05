@@ -6,6 +6,7 @@ import { DataViews, DokanTab, Filter, DokanLink } from '@dokan/components';
 import { Vendor } from '../../../definitions/dokan-vendor';
 import { DateTimeHtml, DokanBadge } from '../../../components';
 import * as LucideIcons from 'lucide-react';
+import { twMerge } from 'tailwind-merge';
 
 const defaultLayouts = {
     table: {},
@@ -267,17 +268,19 @@ const VendorsPage = ( props ) => {
                 label: __( 'Status', 'dokan-lite' ),
                 enableSorting: false,
                 render: ( { item }: { item: Vendor } ) => {
-                    const enabled = item?.enabled || false;
                     return (
-                        <DokanBadge
-                            variant={ enabled ? 'success' : 'secondary' }
-                            label={
-                                enabled
-                                    ? __( 'Enabled', 'dokan-lite' )
-                                    : __( 'Disabled', 'dokan-lite' )
-                            }
-                            className="!text-gray-900"
-                        />
+                        <span
+                            className={ twMerge(
+                                'inline-flex items-center px-3.5 py-1.5 rounded-md text-xs font-medium',
+                                item?.enabled
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-neutral-100 text-neutral-800'
+                            ) }
+                        >
+                            { item?.enabled
+                                ? __( 'Enabled', 'dokan-lite' )
+                                : __( 'Disabled', 'dokan-lite' ) }
+                        </span>
                     );
                 },
             },
@@ -438,16 +441,13 @@ const VendorsPage = ( props ) => {
                                 },
                                 isPrimary: false,
                                 supportsBulk: false,
-                                callback: ( { item }: { item: Vendor } ) => {
-                                    window.location.href = addQueryArgs(
-                                        'admin.php',
-                                        {
-                                            page: 'dokan',
-                                            module: 'vendors',
-                                            action: 'edit',
-                                            vendor_id: item.id,
-                                        }
-                                    );
+                                callback: ( item ) => {
+                                    const vendor: Vendor = item[ 0 ] as Vendor;
+                                    if ( vendor?.id ) {
+                                        navigate(
+                                            `/vendors/edit/${ vendor.id }`
+                                        );
+                                    }
                                 },
                             },
                             {
@@ -473,14 +473,13 @@ const VendorsPage = ( props ) => {
                                 },
                                 supportsBulk: false,
                                 isPrimary: false,
-                                callback: ( { item }: { item: Vendor } ) => {
-                                    window.location.href = addQueryArgs(
-                                        'edit.php',
-                                        {
-                                            post_type: 'product',
-                                            dokan_vendor_id: item.id,
-                                        }
-                                    );
+                                callback: ( item ) => {
+                                    const vendor: Vendor = item[ 0 ] as Vendor;
+                                    window.location.href =
+                                        // @ts-ignore
+                                        dokanAdminDashboard.urls.adminRoot +
+                                        'edit.php?post_type=product&author=' +
+                                        vendor?.id;
                                 },
                             },
                             {
@@ -503,14 +502,14 @@ const VendorsPage = ( props ) => {
                                 },
                                 isPrimary: false,
                                 supportsBulk: false,
-                                callback: ( { item }: { item: Vendor } ) => {
-                                    window.location.href = addQueryArgs(
-                                        'edit.php',
-                                        {
-                                            post_type: 'shop_order',
-                                            dokan_vendor_id: item.id,
-                                        }
-                                    );
+                                callback: ( item ) => {
+                                    const vendor: Vendor = item[ 0 ] as Vendor;
+                                    window.location.href =
+                                        // @ts-ignore
+                                        dokanAdminDashboard.urls
+                                            .adminOrderListUrl +
+                                        '&vendor_id=' +
+                                        vendor?.id;
                                 },
                             },
                             // Show Disable Selling when enabled is true
