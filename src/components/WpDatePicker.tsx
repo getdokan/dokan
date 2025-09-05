@@ -9,6 +9,8 @@ import { useOnClickOutside } from 'usehooks-ts';
 import { DatePicker } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { DokanButton } from './index';
+import { SimpleInput } from '@getdokan/dokan-ui';
+import { dateI18n, getSettings } from '@wordpress/date';
 
 const WpDatePicker = ( props ) => {
     const [ isOpen, setIsOpen ] = useState< boolean >( false );
@@ -32,7 +34,27 @@ const WpDatePicker = ( props ) => {
                 className="shadow-none rounded w-full"
                 onClick={ () => setIsOpen( ! isOpen ) }
             >
-                { props.children ?? '' }
+                { props.children ?? (
+                    <SimpleInput
+                        onChange={ () => {} }
+                        value={
+                            props?.currentDate
+                                ? dateI18n(
+                                      getSettings().formats.date,
+                                      props?.currentDate,
+                                      getSettings().timezone.string
+                                  )
+                                : ''
+                        }
+                        input={ {
+                            id: props?.inputId ?? 'dokan-date-picker-input',
+                            name: props?.inputName ?? 'dokan_date_picker_input',
+                            type: 'text',
+                            autoComplete: 'off',
+                            placeholder: __( 'Enter Date', 'dokan-lite' ),
+                        } }
+                    />
+                ) }
             </PopoverButton>
             <Transition
                 show={ isOpen }
