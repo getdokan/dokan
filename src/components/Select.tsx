@@ -1,6 +1,8 @@
 import { SearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
-import type { ComponentProps } from 'react';
-import { twMerge } from "tailwind-merge";
+import { twMerge } from 'tailwind-merge';
+
+// Local utility to extract props type of a component without relying on React/WordPress types
+type PropsOf< T > = T extends ( props: infer P ) => any ? P : never;
 
 export type DefaultOption = {
     value: string | number;
@@ -9,14 +11,9 @@ export type DefaultOption = {
 };
 
 export interface SelectProps< Option = DefaultOption >
-    extends Omit<
-        ComponentProps< typeof SearchableSelect< Option > >,
-        'components'
-    > {
+    extends Omit< PropsOf< typeof SearchableSelect< Option > >, 'components' > {
     leftIcon?: React.ReactNode;
-    components?: ComponentProps<
-        typeof SearchableSelect< Option >
-    >[ 'components' ];
+    components?: PropsOf< typeof SearchableSelect< Option > >[ 'components' ];
 }
 
 function Select< Option = DefaultOption >( props: SelectProps< Option > ) {

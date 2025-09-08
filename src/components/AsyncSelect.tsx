@@ -1,6 +1,8 @@
 import { AsyncSearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
-import type { ComponentProps } from 'react';
 import { twMerge } from 'tailwind-merge';
+
+// Local utility to extract props type of a component without relying on React/WordPress types
+type PropsOf< T > = T extends ( props: infer P ) => any ? P : never;
 
 export type DefaultOption = {
     value: string | number;
@@ -10,11 +12,18 @@ export type DefaultOption = {
 
 export interface BaseSelectProps< Option = DefaultOption >
     extends Omit<
-        ComponentProps< typeof AsyncSearchableSelect< Option > >,
+        PropsOf< typeof AsyncSearchableSelect< Option > >,
         'components'
     > {
-    leftIcon?: React.ReactNode;
-    components?: ComponentProps<
+    /**
+     * Icon element to render inside the control.
+     */
+    icon?: React.ReactNode;
+    /**
+     * Position of the icon within the control. Defaults to 'left'.
+     */
+    iconPosition?: 'left' | 'right';
+    components?: PropsOf<
         typeof AsyncSearchableSelect< Option >
     >[ 'components' ];
 }
@@ -25,24 +34,37 @@ function AsyncSelect< Option = DefaultOption >(
     const Control = ( controlProps: any ) => {
         const { children, selectProps } = controlProps as {
             children: React.ReactNode;
-            selectProps: { leftIcon?: React.ReactNode };
+            selectProps: {
+                icon?: React.ReactNode;
+                iconPosition?: 'left' | 'right';
+            };
         };
         const { components } = ReactSelect;
+
+        const icon = selectProps.icon;
+        const iconPosition = selectProps.iconPosition ?? 'left';
+
         return (
             <components.Control { ...controlProps }>
-                { selectProps.leftIcon ? (
+                { icon && iconPosition === 'left' ? (
                     <span className="!flex !items-center !ml-[15px]">
-                        { selectProps.leftIcon }
+                        { icon }
                     </span>
                 ) : null }
                 <div
                     className={ twMerge(
                         'flex flex-1',
-                        selectProps.leftIcon ? 'ml-1.5' : 'ml-0'
+                        icon && iconPosition === 'left' ? 'ml-1.5' : 'ml-0',
+                        icon && iconPosition === 'right' ? 'mr-1.5' : 'mr-0'
                     ) }
                 >
                     { children }
                 </div>
+                { icon && iconPosition === 'right' ? (
+                    <span className="!flex !items-center !mr-[15px]">
+                        { icon }
+                    </span>
+                ) : null }
             </components.Control>
         );
     };

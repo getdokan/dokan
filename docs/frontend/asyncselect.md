@@ -7,7 +7,7 @@
 - [Props API](#props-api)
 - [Usage Examples](#usage-examples)
   - [1. Basic Async Loading](#1-basic-async-loading)
-  - [2. With Left Icon](#2-with-left-icon)
+  - [2. With Icon (left/right)](#2-with-icon-leftright)
   - [3. Custom Components](#3-custom-components)
 
 ## Introduction
@@ -25,8 +25,9 @@ import { AsyncSelect } from '@dokan/components';
 
 const loadVendors = async (inputValue) => {
   // return array of { value, label }
-  const res = await fetch(`/wp-json/dokan/v1/stores?search=${encodeURIComponent(inputValue)}`);
-  const data = await res.json();
+  const data = await apiFetch( { 
+    path: `/wp-json/dokan/v1/stores?search=${encodeURIComponent(inputValue)}`,
+  } );
   return Array.isArray(data) ? data.map( s => ({ value: s.id, label: s.store_name || s.name }) ) : [];
 };
 
@@ -41,7 +42,7 @@ const loadVendors = async (inputValue) => {
 ## Features
 
 - Async loading with caching and default options support
-- Left icon support via `leftIcon`
+- Icon support via `icon` with configurable `iconPosition` (left or right)
 - React-select styling tuned for Dokan UI
 - Full pass-through of underlying async select props
 
@@ -57,7 +58,9 @@ const loadVendors = async (inputValue) => {
 | `isClearable` | `boolean` | No | `false` | Allow clearing the selection. |
 | `isMulti` | `boolean` | No | `false` | Enable multi-select. |
 | `placeholder` | `string` | No | `''` | Placeholder text. |
-| `leftIcon` | `ReactNode` | No | - | Icon area inside the control. |
+| `icon` | `ReactNode` | No | - | Icon element rendered inside the control. |
+| `iconPosition` | `'left' | 'right'` | No | `'left'` | Where to render the icon. |
+| `leftIcon` | `ReactNode` | No | - | Deprecated. Use `icon` instead. |
 | `classNamePrefix` | `string` | No | `'react-select'` | Class prefix for react-select. |
 | `blurInputOnSelect` | `boolean` | No | `true` | Passed through. |
 | `closeMenuOnSelect` | `boolean` | No | `true` | Passed through. |
@@ -73,7 +76,7 @@ const loadVendors = async (inputValue) => {
 <AsyncSelect cacheOptions defaultOptions loadOptions={ loadVendors } />
 ```
 
-### 2. With Left Icon
+### 2. With Icon (left/right)
 
 ```jsx
 import { Home } from 'lucide-react';
@@ -82,7 +85,17 @@ import { Home } from 'lucide-react';
   cacheOptions
   defaultOptions
   loadOptions={ loadVendors }
-  leftIcon={ <Home size={16} /> }
+  icon={ <Home size={16} /> }
+  iconPosition="left"
+/>
+
+// Right positioned icon
+<AsyncSelect
+  cacheOptions
+  defaultOptions
+  loadOptions={ loadVendors }
+  icon={ <Home size={16} /> }
+  iconPosition="right"
 />
 ```
 

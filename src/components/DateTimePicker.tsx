@@ -85,10 +85,10 @@ const DateTimePicker = ( props: Props ) => {
                         'dokan-layout'
                     ) }
                     onClose={ () => {
-                        setIsVisible( ! isVisible );
+                        setIsVisible( false );
                     } }
                     onFocusOutside={ () => {
-                        setIsVisible( ! isVisible );
+                        setIsVisible( false );
                     } }
                 >
                     <div

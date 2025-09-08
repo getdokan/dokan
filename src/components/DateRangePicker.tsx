@@ -2,15 +2,15 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { DokanButton } from './index';
 import { Popover } from '@wordpress/components';
-import { DatePickerProps } from '@wordpress/components/build-types/date-time/types';
 import { twMerge } from 'tailwind-merge';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { dateI18n, getSettings } from '@wordpress/date';
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import { DateRange } from '@woocommerce/components';
+import { useInstanceId } from '@wordpress/compose';
 
-interface Props extends DatePickerProps {
+interface Props {
     children?: React.ReactNode | JSX.Element;
     wrapperClassName?: string;
     pickerToggleClassName?: string;
@@ -20,11 +20,17 @@ interface Props extends DatePickerProps {
     onOk?: () => void;
     inputId?: string;
     inputName?: string;
+
+    [ key: string ]: unknown;
 }
 
 const DateRangePicker = ( props: Props ) => {
     const [ popoverAnchor, setPopoverAnchor ] = useState();
     const [ isVisible, setIsVisible ] = useState( false );
+    const instanceId = useInstanceId(
+        DateRangePicker,
+        'dokan-date-range-picker-input'
+    );
 
     return (
         <div className={ props?.wrapperClassName ?? '' }>
@@ -34,6 +40,16 @@ const DateRangePicker = ( props: Props ) => {
                 onClick={ () => {
                     setIsVisible( ! isVisible );
                 } }
+                onKeyDown={ ( e ) => {
+                    if ( e.key === 'Enter' || e.key === ' ' ) {
+                        e.preventDefault();
+                        setIsVisible( ( v ) => ! v );
+                    }
+                } }
+                role="button"
+                tabIndex={ 0 }
+                aria-haspopup="dialog"
+                aria-expanded={ isVisible }
                 // @ts-ignore
                 ref={ setPopoverAnchor }
             >
@@ -60,9 +76,7 @@ const DateRangePicker = ( props: Props ) => {
                             return '';
                         } )() }
                         input={ {
-                            id:
-                                props?.inputId ??
-                                'dokan-date-range-picker-input',
+                            id: props?.inputId ?? instanceId,
                             name:
                                 props?.inputName ??
                                 'dokan_date_range_picker_input',
@@ -83,6 +97,7 @@ const DateRangePicker = ( props: Props ) => {
                         props?.wpPopoverClassName ?? '',
                         'dokan-layout'
                     ) }
+                    onClose={ () => setIsVisible( false ) }
                 >
                     <div
                         className={ twMerge(
@@ -95,7 +110,7 @@ const DateRangePicker = ( props: Props ) => {
                             <DokanButton
                                 size="sm"
                                 onClick={ () => {
-                                    setIsVisible( ! isVisible );
+                                    setIsVisible( false );
                                     if ( props?.onClear ) {
                                         props.onClear();
                                     } else if ( ( props as any )?.onUpdate ) {
@@ -115,7 +130,7 @@ const DateRangePicker = ( props: Props ) => {
                             <DokanButton
                                 size="sm"
                                 onClick={ () => {
-                                    setIsVisible( ! isVisible );
+                                    setIsVisible( false );
                                     if ( props?.onOk ) {
                                         props.onOk();
                                     }

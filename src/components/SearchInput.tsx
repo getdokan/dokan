@@ -3,16 +3,18 @@ import { useDebounce } from '@wordpress/compose';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { Search, X } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
+import { SimpleInputProps } from '@getdokan/dokan-ui/dist/components/SimpleInput';
 
-import type { ComponentProps, ReactNode } from 'react';
+// Local utility to extract props type of a component without relying on React/WordPress types
+type PropsOf< T > = T extends ( props: infer P ) => any ? P : never;
 
 interface SearchInputProps
-    extends Omit< ComponentProps< typeof SimpleInput >, 'onChange' | 'value' > {
+    extends Omit< PropsOf< typeof SimpleInput >, 'onChange' | 'value' > {
     value?: string;
     onChange?: ( val: string ) => void;
     delay?: number;
-    input?: ComponentProps< typeof SimpleInput >[ 'input' ];
-    leftIcon?: ReactNode; // customizable left icon
+    input?: SimpleInputProps[ 'input' ];
+    leftIcon?: React.ReactNode; // customizable left icon
     clearable?: boolean; // show clear button when has value
 }
 
@@ -45,9 +47,8 @@ const SearchInput = ( {
 
     const handleClear = () => {
         setInternalValue( '' );
-        if ( onChange ) {
-            onChange( '' );
-        }
+        debouncedOnChange.cancel();
+        onChange?.( '' );
     };
 
     return (
