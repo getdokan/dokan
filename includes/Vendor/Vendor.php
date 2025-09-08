@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Vendor;
 use Automattic\WooCommerce\Utilities\NumberUtil;
 use WC_Order;
 use WeDevs\Dokan\Cache;
-use WeDevs\Dokan\Commission\Model\Setting;
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WP_Error;
 use WP_User;
 
@@ -445,14 +445,36 @@ class Vendor {
     }
 
     /**
-     * Get the shop banner
+     * Get the store banner URL.
+     *
+     * This method first checks if a specific banner ID is set for the store and retrieves it. If not set,
+     * it falls back to the default store banner defined in the Dokan settings.
+     *
+     * @since 4.0.6 Applied default banner image.
      *
      * @return string
      */
-    public function get_banner() {
-        $banner_id = $this->get_banner_id();
+    public function get_banner(): string {
+        // Check if a specific banner ID is set and return its URL.
+        if ( $this->get_banner_id() ) {
+            return wp_get_attachment_url( $this->get_banner_id() );
+        }
 
-        return $banner_id ? wp_get_attachment_url( $banner_id ) : '';
+        // Retrieve the default banner URL from settings, with fallback of the plugin's default banner.
+        $banner_url = VendorUtil::get_vendor_default_banner_url();
+
+        /**
+         * Filters for the store banner URL.
+         *
+         * Allows overriding of the store banner URL via external plugins or themes.
+         * This is particularly useful if there is a need to dynamically change the banner based on specific conditions or configurations.
+         *
+         * @since 4.0.6
+         *
+         * @param string $banner_url The URL of the default banner.
+         * @param Vendor $this       Instance of the current class.
+         */
+        return apply_filters( 'dokan_get_banner_url', $banner_url, $this );
     }
 
     /**
@@ -469,20 +491,36 @@ class Vendor {
     }
 
     /**
-     * Get the shop profile icon
+     * Get the shop profile icon.
      *
      * @since 2.8
+     * @since 4.0.6 Applied default vendor profile image.
      *
      * @return string
      */
     public function get_avatar() {
         $avatar_id = $this->get_avatar_id();
 
-        if ( ! $avatar_id && ! empty( $this->data->user_email ) ) {
-            return get_avatar_url( $this->data->user_email, 96 );
+        // Check if a specific avatar ID is set and return its URL.
+        if ( $avatar_id ) {
+            return wp_get_attachment_url( $avatar_id );
         }
 
-        return wp_get_attachment_url( $avatar_id );
+        // Retrieve the default avatar URL from settings, with fallback of the plugin's default avatar.
+        $avatar_url = VendorUtil::get_vendor_default_avatar_url();
+
+        /**
+         * Filters for the store avatar URL.
+         *
+         * Allows overriding of the store avatar URL via external plugins or themes.
+         * This is particularly useful if there is a need to dynamically change the avatar based on specific conditions or configurations.
+         *
+         * @since 4.0.6
+         *
+         * @param string $avatar_url The URL of the default avatar.
+         * @param Vendor $this       Instance of the current class.
+         */
+        return apply_filters( 'dokan_get_avatar_url', $avatar_url, $this );
     }
 
     /**
