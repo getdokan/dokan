@@ -97,7 +97,6 @@ const DateRangePicker = ( props: Props ) => {
                         props?.wpPopoverClassName ?? '',
                         'dokan-layout'
                     ) }
-                    onClose={ () => setIsVisible( false ) }
                 >
                     <div
                         className={ twMerge(
