@@ -152,7 +152,7 @@ class Field extends SettingsElement {
 	 */
 	private function input_map( string $id, string $input_type ): SettingsElement {
         $field_map = apply_filters(
-            'dokan_admin_setup_guide_field_map',
+            'dokan_admin_settings_field_map',
             $this->field_map,
             $id,
             $input_type
@@ -169,7 +169,7 @@ class Field extends SettingsElement {
          * @param string $input_type
          * @param string $class_name
          */
-        $class_name = apply_filters( 'dokan_admin_setup_guide_field_mapper', $class_name, $id, $input_type );
+        $class_name = apply_filters( 'dokan_admin_settings_field_mapper', $class_name, $id, $input_type );
 
 		try {
 			$reflection_class_name = new \ReflectionClass( $class_name );
