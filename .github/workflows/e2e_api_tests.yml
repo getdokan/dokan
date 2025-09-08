@@ -80,8 +80,6 @@ jobs:
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
-              with:
-                  path: dokan-lite
 
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
@@ -222,8 +220,6 @@ jobs:
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
-              with:
-                   path: dokan-lite
 
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
