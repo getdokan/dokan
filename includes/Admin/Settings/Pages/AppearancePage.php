@@ -279,13 +279,6 @@ vendor store page.', 'dokan-lite'
                                 )
             )
             ->add(
-                ElementFactory::sub_page( 'color_customizer' )
-                                ->set_title( esc_html__( 'Color Customizer', 'dokan-lite' ) )
-                                ->set_description(
-                                    esc_html__( 'Customize the color scheme of your vendor dashboard to match your brand identity.', 'dokan-lite' )
-                                )
-            )
-            ->add(
                 ElementFactory::sub_page( 'storefont_social_onboarding' )
                                 ->set_title( esc_html__( 'Storefont Social', 'dokan-lite' ) )
                                 ->set_description(
