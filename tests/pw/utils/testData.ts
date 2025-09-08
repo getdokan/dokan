@@ -126,7 +126,7 @@ export const data = {
         },
         pluginList: {
             basicAuth: 'Basic-Auth-master/basic-auth',
-            dokanLite: 'dokan/dokan',
+            dokanLite: 'dokan-lite/dokan',
             dokanPro: 'dokan-pro/dokan-pro',
             woocommerce: 'woocommerce/woocommerce',
             woocommerceBookings: 'woocommerce-bookings/woocommerce-bookings',
@@ -2156,6 +2156,7 @@ export const data = {
     productAdvertisement: {
         advertisedProductStore: `${VENDOR}store`,
         advertisedProduct: 'p1_v1 (simple)',
+        advertisementStatusColor: 'rgb(255, 99, 71)', // tomato color, default fallback color for advertisements
 
         filter: {
             byStore: `${VENDOR}store`,

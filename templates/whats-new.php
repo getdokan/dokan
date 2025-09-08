@@ -4,6 +4,118 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.0.6',
+        'released' => '2025-08-29',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added translation support for dashboard analytics report scripts to improve internationalization (i18n)',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added async search in store category in vendor edit.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin not receiving withdrawal request email notifications.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.5',
+        'released' => '2025-07-25',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.4',
+        'released' => '2025-07-17',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Admin Notice UI with Modern Design and Improved User Experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enhanced Product Brand Integration with Dedicated Template and Manager Methods.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enhanced product featured image selection with cropping functionality in the product editor.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Vendor/store names with special characters (e.g., apostrophes) now display correctly in the vendor dropdown on the admin product edit screen.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Display correct earning in vendor dashboard product add/edit page for different category.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improved how product inventory information is retrieved, ensuring more accurate and consistent display of stock values.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolve an issue for "sold individually" option does not save on create or update a product.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.3',
+        'released' => '2025-07-02',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Add gradient background style for fa-threads social icon.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where array access warnings in vendor balance calculation were being triggered.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where incorrect timestamp on sale price schedule hampering product sales schedule added from vendor dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where stock quantity always shows 0 in vendor dashboard product edit screen.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improved the format of payment methods in the withdrawal settings to ensure they are consistently returned as a zero-based indexed list in the REST API response.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.2',
         'released' => '2025-06-03',
         'changes'  => [

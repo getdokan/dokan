@@ -1,7 +1,7 @@
-import { DokanRoute } from '@dokan/layout';
+import { DokanRoute } from '@src/layout';
 import { __ } from '@wordpress/i18n';
-import Withdraw from '@dokan/dashboard/withdraw';
-import WithdrawRequests from '@dokan/dashboard/withdraw/WithdrawRequests';
+import Withdraw from '@src/dashboard/withdraw';
+import WithdrawRequests from '@src/dashboard/withdraw/WithdrawRequests';
 
 export default [
     {
