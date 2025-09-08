@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import AsyncSelect, { type BaseSelectProps } from './AsyncSelect';
-import { __, sprintf } from "@wordpress/i18n";
+import { __, sprintf } from '@wordpress/i18n';
 
 export interface OrderOption {
     value: number;
@@ -18,7 +18,7 @@ export interface OrderAsyncSelectProps extends BaseSelectProps< OrderOption > {
     buildQuery?: ( term: string ) => Record< string, any >;
     loadOptions?: ( inputValue: string ) => Promise< OrderOption[] >; // allow override
     prefetch?: boolean; // fetch options on mount or when dependencies change, not only on menu open
-    strictPrefetchValidation?: boolean; // if true and prefetch runs, and current value not found, trigger onChange(null)
+    shouldNullOnPrefetch?: boolean; // if true and prefetch runs, and current value not found, trigger onChange(null)
 }
 
 const defaultMap = ( order: any ): OrderOption => ( {
@@ -37,7 +37,7 @@ function OrderAsyncSelect( props: OrderAsyncSelectProps ) {
         buildQuery,
         loadOptions: userLoadOptions,
         prefetch = false,
-        strictPrefetchValidation = false,
+        shouldNullOnPrefetch = false,
         ...rest
     } = props;
 
@@ -71,8 +71,8 @@ function OrderAsyncSelect( props: OrderAsyncSelectProps ) {
     const loader = userLoadOptions || loadOrders;
 
     const [ prefetchedOptions, setPrefetchedOptions ] = useState<
-        OrderOption[] | null
-    >( null );
+        OrderOption[] | []
+    >( [] );
 
     const existsIn = ( v: OrderOption, opts: OrderOption[] ) =>
         opts.some( ( o ) => String( o.value ) === String( v.value ) );
@@ -148,11 +148,10 @@ function OrderAsyncSelect( props: OrderAsyncSelectProps ) {
             const onChange = ( rest as any )?.onChange as
                 | ( ( value: any ) => void )
                 | undefined;
-            const shouldNullOnPrefetch = prefetch && strictPrefetchValidation;
 
             const runNullCheck =
                 ( depsChanged && !! value ) ||
-                ( shouldNullOnPrefetch && !! value );
+                ( shouldNullOnPrefetch && prefetch && !! value );
 
             if ( runNullCheck && onChange ) {
                 if ( Array.isArray( value ) ) {
@@ -188,17 +187,13 @@ function OrderAsyncSelect( props: OrderAsyncSelectProps ) {
         buildQuery,
         extraQuery,
         prefetch,
-        strictPrefetchValidation,
+        shouldNullOnPrefetch,
     ] );
 
-    const defaultOptionsProp: any =
-        prefetch && prefetchedOptions ? prefetchedOptions : false;
+    const defaultOptionsProp: any = prefetchedOptions;
 
-    // Ensure controlled value(s) exist in prefetchedOptions (when prefetch is enabled)
+    // Ensure controlled value(s) exist in prefetchedOptions
     useEffect( () => {
-        if ( ! prefetch ) {
-            return;
-        }
         const current = ( rest as any )?.value as
             | OrderOption
             | OrderOption[]
@@ -247,7 +242,7 @@ function OrderAsyncSelect( props: OrderAsyncSelectProps ) {
             defaultOptions={ defaultOptionsProp }
             loadOptions={ async ( inputValue: string ) => {
                 const results = await loader( inputValue );
-                if ( prefetch && Array.isArray( prefetchedOptions ) ) {
+                if ( Array.isArray( prefetchedOptions ) ) {
                     if ( ! skipMergeDueToDepsRef.current ) {
                         setPrefetchedOptions( ( prev ) =>
                             mergeUnique(
