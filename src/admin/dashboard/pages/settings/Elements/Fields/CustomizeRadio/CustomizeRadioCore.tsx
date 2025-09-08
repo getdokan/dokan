@@ -11,6 +11,7 @@ const CustomizeRadioCore: React.FC< CustomizeRadioProps > = ( {
     name = 'customize-radio',
     className = '',
     disabled = false,
+    divider = true,
 } ) => {
     const handleSelect = ( value: string | number ) => {
         if ( ! disabled ) {
@@ -54,6 +55,7 @@ const CustomizeRadioCore: React.FC< CustomizeRadioProps > = ( {
                             onSelect={ () => handleSelect( option.value ) }
                             disabled={ disabled }
                             name={ name }
+                            divider={ divider }
                         />
                     );
                 }

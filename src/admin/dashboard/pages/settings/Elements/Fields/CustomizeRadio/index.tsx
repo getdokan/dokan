@@ -4,6 +4,7 @@ import { DokanFieldLabel } from '../../../../../../../components/fields';
 import settingsStore from '../../../../../../../stores/adminSettings';
 import { SettingsProps } from '../../../types';
 import CustomizeRadioCore from './CustomizeRadioCore';
+import { twMerge } from 'tailwind-merge';
 
 const CustomizeRadio = ( { element }: SettingsProps ) => {
     const [ selected, setSelected ] = useState(
@@ -21,6 +22,12 @@ const CustomizeRadio = ( { element }: SettingsProps ) => {
 
     const handleChange = ( newValue: string | number ) => {
         setSelected( newValue );
+
+        // Call external onChange if provided
+        if ( element?.onChange ) {
+            element.onChange( newValue );
+        }
+
         onValueChange( {
             ...element,
             value: newValue,
@@ -30,30 +37,34 @@ const CustomizeRadio = ( { element }: SettingsProps ) => {
     // Transform element options to RadioOption format
 
     return (
-        <div className="p-4">
+        <div
+            className={ twMerge(
+                'p-4 space-y-4',
+                element?.wrapper_class || ''
+            ) }
+        >
             <DokanFieldLabel
                 title={ element.title || '' }
                 titleFontWeight="bold"
                 helperText={ element?.description || '' }
                 imageUrl={ element?.image_url }
             />
-            <div className="mt-4">
-                <CustomizeRadioCore
-                    options={ element?.options }
-                    selectedValue={ ( selected as string | number ) || '' }
-                    onChange={ handleChange }
-                    radioVariant={
-                        ( element?.radio_variant as
-                            | 'simple'
-                            | 'card'
-                            | 'template'
-                            | 'radio_box' ) || 'simple'
-                    }
-                    name={ element?.id }
-                    className={ element?.css_class || '' }
-                    disabled={ element?.disabled || false }
-                />
-            </div>
+            <CustomizeRadioCore
+                options={ element?.options }
+                selectedValue={ ( selected as string | number ) || '' }
+                onChange={ handleChange }
+                radioVariant={
+                    ( element?.radio_variant as
+                        | 'simple'
+                        | 'card'
+                        | 'template'
+                        | 'radio_box' ) || 'simple'
+                }
+                name={ element?.id }
+                className={ element?.css_class || '' }
+                disabled={ element?.disabled || false }
+                divider={ element?.divider }
+            />
         </div>
     );
 };
