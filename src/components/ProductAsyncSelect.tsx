@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import AsyncSelect, { type BaseSelectProps } from './AsyncSelect';
+import { __, sprintf } from '@wordpress/i18n';
 
 export interface ProductOption {
     value: number;
@@ -18,25 +19,28 @@ export interface ProductAsyncSelectProps
     buildQuery?: ( term: string ) => Record< string, any >;
     loadOptions?: ( inputValue: string ) => Promise< ProductOption[] >; // allow override
     prefetch?: boolean; // fetch options on mount or when dependencies change, not only on menu open
-    strictPrefetchValidation?: boolean; // if true and prefetch runs, and current value not found, trigger onChange(null)
+    shouldNullOnPrefetch?: boolean; // if true and prefetch runs, and current value not found, trigger onChange(null)
 }
 
 const defaultMap = ( product: any ): ProductOption => ( {
     value: product.id,
-    label: product.name || `Product #${ product?.id }`,
+    label:
+        product.name ||
+        // eslint-disable-next-line @wordpress/i18n-translator-comments
+        sprintf( __( 'Product #%s', 'dokan' ), String( product?.id ?? '' ) ),
     raw: product,
 } );
 
 function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
     const {
-        endpoint = '/dokan/v2/products',
+        endpoint = '/dokan/v1/products',
         perPage = 20,
         mapOption = defaultMap,
         extraQuery = {},
         buildQuery,
         loadOptions: userLoadOptions,
         prefetch = false,
-        strictPrefetchValidation = false,
+        shouldNullOnPrefetch = false,
         ...rest
     } = props;
 
@@ -70,8 +74,8 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
     const loader = userLoadOptions || loadProducts;
 
     const [ prefetchedOptions, setPrefetchedOptions ] = useState<
-        ProductOption[] | null
-    >( null );
+        ProductOption[] | []
+    >( [] );
 
     const existsIn = ( v: ProductOption, opts: ProductOption[] ) =>
         opts.some( ( o ) => String( o.value ) === String( v.value ) );
@@ -98,6 +102,7 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
         perPage: number;
         buildQuery?: ProductAsyncSelectProps[ 'buildQuery' ];
         extraQueryKey: string;
+        userLoadOptions?: ProductAsyncSelectProps[ 'loadOptions' ];
     } >();
 
     // When a refetch happens due to dependency change, skip merging newly searched
@@ -113,7 +118,8 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
             ( prev.endpoint !== endpoint ||
                 prev.perPage !== perPage ||
                 prev.buildQuery !== buildQuery ||
-                prev.extraQueryKey !== extraQueryKey );
+                prev.extraQueryKey !== extraQueryKey ||
+                prev.userLoadOptions !== userLoadOptions );
 
         const shouldFetch = ( prefetch && ! prev ) || depsChanged;
         if ( depsChanged ) {
@@ -128,6 +134,7 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
                     perPage,
                     buildQuery,
                     extraQueryKey,
+                    userLoadOptions,
                 };
             }
             return;
@@ -150,11 +157,10 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
             const onChange = ( rest as any )?.onChange as
                 | ( ( value: any ) => void )
                 | undefined;
-            const shouldNullOnPrefetch = prefetch && strictPrefetchValidation;
 
             const runNullCheck =
                 ( depsChanged && !! value ) ||
-                ( shouldNullOnPrefetch && !! value );
+                ( shouldNullOnPrefetch && prefetch && !! value );
 
             if ( runNullCheck && onChange ) {
                 if ( Array.isArray( value ) ) {
@@ -178,6 +184,7 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
                 perPage,
                 buildQuery,
                 extraQueryKey,
+                userLoadOptions,
             };
         } )();
 
@@ -190,17 +197,15 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
         buildQuery,
         extraQuery,
         prefetch,
-        strictPrefetchValidation,
+        userLoadOptions,
+        shouldNullOnPrefetch,
     ] );
 
-    const defaultOptionsProp: any =
-        prefetch && prefetchedOptions ? prefetchedOptions : false;
+    // vendor-style: always pass an array for defaultOptions (empty array when none)
+    const defaultOptionsProp: any = prefetchedOptions;
 
-    // Ensure controlled value(s) exist in prefetchedOptions (when prefetch is enabled)
+    // Ensure controlled value(s) exist in prefetchedOptions
     useEffect( () => {
-        if ( ! prefetch ) {
-            return;
-        }
         const current = ( rest as any )?.value as
             | ProductOption
             | ProductOption[]
@@ -243,6 +248,14 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
         extraQuery,
     } );
 
+    // Preserve potential user-supplied onMenuOpen
+    const userOnMenuOpen = ( rest as any )?.onMenuOpen as
+        | ( ( ...args: any[] ) => void )
+        | undefined;
+
+    // Track if we've already attempted a load on first menu open to avoid duplicate calls
+    const hasLoadedOnOpenRef = useRef< boolean >( false );
+
     return (
         <AsyncSelect
             // give the component a changing key so it remounts when deps change
@@ -251,7 +264,7 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
             defaultOptions={ defaultOptionsProp }
             loadOptions={ async ( inputValue: string ) => {
                 const results = await loader( inputValue );
-                if ( prefetch && Array.isArray( prefetchedOptions ) ) {
+                if ( Array.isArray( prefetchedOptions ) ) {
                     if ( ! skipMergeDueToDepsRef.current ) {
                         setPrefetchedOptions( ( prev ) =>
                             mergeUnique(
@@ -270,6 +283,26 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
             // pass an instanceId too for good measure
             instanceId={ `product-async-${ depsSignature }` }
             { ...rest }
+            onMenuOpen={ async () => {
+                try {
+                    if (
+                        ! prefetch &&
+                        ! hasLoadedOnOpenRef.current &&
+                        ( ! Array.isArray( prefetchedOptions ) ||
+                            prefetchedOptions.length === 0 )
+                    ) {
+                        hasLoadedOnOpenRef.current = true;
+                        const options = await loader( '' );
+                        setPrefetchedOptions(
+                            Array.isArray( options ) ? options : []
+                        );
+                    }
+                } finally {
+                    if ( typeof userOnMenuOpen === 'function' ) {
+                        userOnMenuOpen();
+                    }
+                }
+            } }
         />
     );
 }

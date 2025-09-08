@@ -11,8 +11,10 @@ import { __ } from '@wordpress/i18n';
 import { DokanButton } from './index';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { dateI18n, getSettings } from '@wordpress/date';
+import { useInstanceId } from '@wordpress/compose';
 
 const WpDatePicker = ( props ) => {
+    const instanceId = useInstanceId( WpDatePicker, 'dokan-date-picker-input' );
     const [ isOpen, setIsOpen ] = useState< boolean >( false );
     const ref = useRef( null );
     useOnClickOutside( ref, () => setIsOpen( ! isOpen ) );
@@ -47,11 +49,15 @@ const WpDatePicker = ( props ) => {
                                 : ''
                         }
                         input={ {
-                            id: props?.inputId ?? 'dokan-date-picker-input',
+                            id: props?.inputId ?? instanceId,
                             name: props?.inputName ?? 'dokan_date_picker_input',
                             type: 'text',
+                            readOnly: true,
                             autoComplete: 'off',
-                            placeholder: __( 'Enter Date', 'dokan-lite' ),
+                            placeholder: __( 'Select date', 'dokan-lite' ),
+                            'aria-label':
+                                props?.ariaLabel ??
+                                __( 'Select date', 'dokan-lite' ),
                         } }
                     />
                 ) }

@@ -1,5 +1,8 @@
 import { AsyncSearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
-import type { ComponentProps } from 'react';
+import { twMerge } from 'tailwind-merge';
+
+// Local utility to extract props type of a component without relying on React/WordPress types
+type PropsOf< T > = T extends ( props: infer P ) => any ? P : never;
 
 export type DefaultOption = {
     value: string | number;
@@ -9,11 +12,18 @@ export type DefaultOption = {
 
 export interface BaseSelectProps< Option = DefaultOption >
     extends Omit<
-        ComponentProps< typeof AsyncSearchableSelect< Option > >,
+        PropsOf< typeof AsyncSearchableSelect< Option > >,
         'components'
     > {
-    leftIcon?: React.ReactNode;
-    components?: ComponentProps<
+    /**
+     * Icon element to render inside the control.
+     */
+    icon?: React.ReactNode;
+    /**
+     * Position of the icon within the control. Defaults to 'left'.
+     */
+    iconPosition?: 'left' | 'right';
+    components?: PropsOf<
         typeof AsyncSearchableSelect< Option >
     >[ 'components' ];
 }
@@ -24,37 +34,43 @@ function AsyncSelect< Option = DefaultOption >(
     const Control = ( controlProps: any ) => {
         const { children, selectProps } = controlProps as {
             children: React.ReactNode;
-            selectProps: { leftIcon?: React.ReactNode };
+            selectProps: {
+                icon?: React.ReactNode;
+                iconPosition?: 'left' | 'right';
+            };
         };
         const { components } = ReactSelect;
+
+        const icon = selectProps.icon;
+        const iconPosition = selectProps.iconPosition ?? 'left';
+
         return (
             <components.Control { ...controlProps }>
-                { selectProps.leftIcon ? (
-                    <span
-                        style={ {
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginLeft: 15,
-                        } }
-                    >
-                        { selectProps.leftIcon }
+                { icon && iconPosition === 'left' ? (
+                    <span className="!flex !items-center !ml-[15px]">
+                        { icon }
                     </span>
                 ) : null }
                 <div
-                    style={ {
-                        marginLeft: selectProps.leftIcon ? 6 : 0,
-                        flex: 1,
-                        display: 'flex',
-                    } }
+                    className={ twMerge(
+                        'flex flex-1',
+                        icon && iconPosition === 'left' ? 'ml-1.5' : 'ml-0',
+                        icon && iconPosition === 'right' ? 'mr-1.5' : 'mr-0'
+                    ) }
                 >
                     { children }
                 </div>
+                { icon && iconPosition === 'right' ? (
+                    <span className="!flex !items-center !mr-[15px]">
+                        { icon }
+                    </span>
+                ) : null }
             </components.Control>
         );
     };
 
     const styles = {
-        control: ( base: any, state: any ) => ( {
+        control: ( base: any ) => ( {
             ...base,
             borderRadius: '0.40rem',
             minHeight: '2.5rem',
@@ -63,7 +79,7 @@ function AsyncSelect< Option = DefaultOption >(
             outline: 'none',
             ':focus': { outline: 'none' },
             ':focus-within': { outline: 'none' },
-            borderColor: state.isFocused ? base.borderColor : base.borderColor,
+            borderColor: base.borderColor,
         } ),
         placeholder: ( base: any ) => ( {
             ...base,
@@ -91,10 +107,10 @@ function AsyncSelect< Option = DefaultOption >(
             ...base,
             cursor: 'default',
         } ),
-        option: ( base: any ) => {
+        option: ( base: any, state: any ) => {
             return {
                 ...base,
-                cursor: 'pointer',
+                cursor: state.isDisabled ? 'not-allowed' : 'pointer',
             };
         },
     } as const;

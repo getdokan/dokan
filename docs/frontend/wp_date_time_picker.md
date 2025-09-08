@@ -1,4 +1,4 @@
-# WpDateTimePicker Component
+# DateTimePicker Component
 
 - [Introduction](#introduction)
 - [Component Dependency](#component-dependency)
@@ -12,7 +12,7 @@
 
 ## Introduction
 
-`WpDateTimePicker` is a lightweight wrapper around the WordPress `DateTimePicker` component presented inside a WordPress `Popover`. It follows similar UX to the `WcDateRangePicker` but for a single date/time value.
+`DateTimePicker` is a lightweight wrapper around the WordPress `DateTimePicker` component presented inside a WordPress `Popover`. It follows similar UX to the `DateRangePicker` but for a single date/time value.
 
 The component optionally renders a built-in `SimpleInput` as the trigger that displays the currently selected date in the site's localized format.
 
@@ -26,14 +26,14 @@ The component optionally renders a built-in `SimpleInput` as the trigger that di
 
 ```jsx
 import { useState } from '@wordpress/element';
-import { WpDateTimePicker } from '@dokan/components';
+import { DateTimePicker } from '@dokan/components';
 
 const Example = () => {
   const [date, setDate] = useState('');
 
   return (
     <div style={{ width: 320 }}>
-      <WpDateTimePicker
+      <DateTimePicker
         currentDate={ date }
         onChange={ (val) => setDate(val) }
       />
@@ -52,41 +52,41 @@ const Example = () => {
 
 ## Props API
 
-| Prop | Type | Required | Default | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `currentDate` | `string|Date|null` | No | `''` | Current date/time value passed to WP `DateTimePicker` as `currentDate`. |
+| Prop | Type                | Required | Default | Description |
+| :--- |:--------------------| :--- | :--- | :--- |
+| `currentDate` | `string/Date/null`  | No | `''` | Current date/time value passed to WP `DateTimePicker` as `currentDate`. |
 | `onChange` | `(value:any)=>void` | Yes | - | Called when a date is selected; also closes popover. |
-| `onClear` | `() => void` | No | Clears value | Called when Clear is pressed. If not provided, empties the value. |
-| `onOk` | `() => void` | No | - | Called when Ok is pressed; also closes popover. |
-| `children` | `ReactNode` | No | - | Custom trigger content. If omitted, a `SimpleInput` is rendered. |
-| `wrapperClassName` | `string` | No | `''` | Class for outer wrapper. |
-| `pickerToggleClassName` | `string` | No | `''` | Class for the trigger element. |
-| `wpPopoverClassName` | `string` | No | `''` | Additional popover class. Merged with `dokan-layout`. |
-| `popoverBodyClassName` | `string` | No | `''` | Class for the popover body container. |
-| `inputId` | `string` | No | `'dokan-date-time-picker-input'` | Id for default input trigger. |
-| `inputName` | `string` | No | `'dokan_date_time_picker_input'` | Name for default input trigger. |
-| `...rest` | `any` | No | - | Any other props are forwarded to `DateTimePicker`. |
+| `onClear` | `() => void`        | No | Clears value | Called when Clear is pressed. If not provided, empties the value. |
+| `onOk` | `() => void`        | No | - | Called when Ok is pressed; also closes popover. |
+| `children` | `ReactNode`         | No | - | Custom trigger content. If omitted, a `SimpleInput` is rendered. |
+| `wrapperClassName` | `string`            | No | `''` | Class for outer wrapper. |
+| `pickerToggleClassName` | `string`            | No | `''` | Class for the trigger element. |
+| `wpPopoverClassName` | `string`            | No | `''` | Additional popover class. Merged with `dokan-layout`. |
+| `popoverBodyClassName` | `string`            | No | `''` | Class for the popover body container. |
+| `inputId` | `string`            | No | `'dokan-date-time-picker-input'` | Id for default input trigger. |
+| `inputName` | `string`            | No | `'dokan_date_time_picker_input'` | Name for default input trigger. |
+| `...rest` | `any`               | No | - | Any other props are forwarded to `DateTimePicker`. |
 
 ## Usage Examples
 
 ### 1. Basic Usage
 
 ```jsx
-<WpDateTimePicker currentDate={date} onChange={setDate} />
+<DateTimePicker currentDate={date} onChange={setDate} />
 ```
 
 ### 2. Custom Trigger Content
 
 ```jsx
-<WpDateTimePicker currentDate={date} onChange={setDate}>
+<DateTimePicker currentDate={date} onChange={setDate}>
   <button type="button" className="button">Pick Date</button>
-</WpDateTimePicker>
+</DateTimePicker>
 ```
 
 ### 3. Handling Clear and Ok
 
 ```jsx
-<WpDateTimePicker
+<DateTimePicker
   currentDate={date}
   onChange={setDate}
   onClear={() => setDate('')}

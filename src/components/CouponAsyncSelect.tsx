@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import AsyncSelect, { type BaseSelectProps } from './AsyncSelect';
+import { __, sprintf } from '@wordpress/i18n';
 
 export interface CouponOption {
     value: number;
@@ -18,7 +19,7 @@ export interface CouponAsyncSelectProps
     buildQuery?: ( term: string ) => Record< string, any >;
     loadOptions?: ( inputValue: string ) => Promise< CouponOption[] >; // allow override
     prefetch?: boolean; // fetch options on mount or when dependencies change, not only on menu open
-    strictPrefetchValidation?: boolean; // if true and prefetch runs, and current value not found, trigger onChange(null)
+    shouldNullOnPrefetch?: boolean; // if true and prefetch runs, and current value not found, trigger onChange(null)
 }
 
 const defaultMap = ( coupon: any ): CouponOption => ( {
@@ -27,14 +28,13 @@ const defaultMap = ( coupon: any ): CouponOption => ( {
         coupon.code ||
         coupon.post_title ||
         coupon.name ||
-        `Coupon #${ coupon?.id }`,
+        // eslint-disable-next-line @wordpress/i18n-translator-comments
+        sprintf( __( 'Coupon #%s', 'dokan-lite' ), String( coupon?.id ) ),
     raw: coupon,
 } );
 
 function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
     const {
-        // WooCommerce core coupons endpoint is /wc/v3/coupons when authenticated.
-        // Dokan may proxy or have its own; allow override via props. Provide a sensible default.
         endpoint = '/dokan/v1/coupons',
         perPage = 20,
         mapOption = defaultMap,
@@ -42,7 +42,7 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
         buildQuery,
         loadOptions: userLoadOptions,
         prefetch = false,
-        strictPrefetchValidation = false,
+        shouldNullOnPrefetch = false,
         ...rest
     } = props;
 
@@ -77,8 +77,8 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
     const loader = userLoadOptions || loadCoupons;
 
     const [ prefetchedOptions, setPrefetchedOptions ] = useState<
-        CouponOption[] | null
-    >( null );
+        CouponOption[] | []
+    >( [] );
 
     const existsIn = ( v: CouponOption, opts: CouponOption[] ) =>
         opts.some( ( o ) => String( o.value ) === String( v.value ) );
@@ -154,11 +154,10 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
             const onChange = ( rest as any )?.onChange as
                 | ( ( value: any ) => void )
                 | undefined;
-            const shouldNullOnPrefetch = prefetch && strictPrefetchValidation;
 
             const runNullCheck =
                 ( depsChanged && !! value ) ||
-                ( shouldNullOnPrefetch && !! value );
+                ( shouldNullOnPrefetch && prefetch && !! value );
 
             if ( runNullCheck && onChange ) {
                 if ( Array.isArray( value ) ) {
@@ -194,17 +193,13 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
         buildQuery,
         extraQuery,
         prefetch,
-        strictPrefetchValidation,
+        shouldNullOnPrefetch,
     ] );
 
-    const defaultOptionsProp: any =
-        prefetch && prefetchedOptions ? prefetchedOptions : false;
+    const defaultOptionsProp: any = prefetchedOptions;
 
-    // Ensure controlled value(s) exist in prefetchedOptions (when prefetch is enabled)
+    // Ensure controlled value(s) exist in prefetchedOptions
     useEffect( () => {
-        if ( ! prefetch ) {
-            return;
-        }
         const current = ( rest as any )?.value as
             | CouponOption
             | CouponOption[]
@@ -246,6 +241,14 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
         extraQuery,
     } );
 
+    // Preserve potential user-supplied onMenuOpen
+    const userOnMenuOpen = ( rest as any )?.onMenuOpen as
+        | ( ( ...args: any[] ) => void )
+        | undefined;
+
+    // Track if we've already attempted a load on first menu open to avoid duplicate calls
+    const hasLoadedOnOpenRef = useRef< boolean >( false );
+
     return (
         <AsyncSelect
             key={ depsSignature }
@@ -253,7 +256,7 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
             defaultOptions={ defaultOptionsProp }
             loadOptions={ async ( inputValue: string ) => {
                 const results = await loader( inputValue );
-                if ( prefetch && Array.isArray( prefetchedOptions ) ) {
+                if ( Array.isArray( prefetchedOptions ) ) {
                     if ( ! skipMergeDueToDepsRef.current ) {
                         setPrefetchedOptions( ( prev ) =>
                             mergeUnique(
@@ -270,6 +273,26 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
             } }
             instanceId={ `coupon-async-${ depsSignature }` }
             { ...rest }
+            onMenuOpen={ async () => {
+                try {
+                    if (
+                        ! prefetch &&
+                        ! hasLoadedOnOpenRef.current &&
+                        ( ! Array.isArray( prefetchedOptions ) ||
+                            prefetchedOptions.length === 0 )
+                    ) {
+                        hasLoadedOnOpenRef.current = true;
+                        const options = await loader( '' );
+                        setPrefetchedOptions(
+                            Array.isArray( options ) ? options : []
+                        );
+                    }
+                } finally {
+                    if ( typeof userOnMenuOpen === 'function' ) {
+                        userOnMenuOpen();
+                    }
+                }
+            } }
         />
     );
 }

@@ -1,18 +1,20 @@
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useCallback } from '@wordpress/element';
 import { useDebounce } from '@wordpress/compose';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { Search, X } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
+import { SimpleInputProps } from '@getdokan/dokan-ui/dist/components/SimpleInput';
 
-import type { ComponentProps, ReactNode } from 'react';
+// Local utility to extract props type of a component without relying on React/WordPress types
+type PropsOf< T > = T extends ( props: infer P ) => any ? P : never;
 
 interface SearchInputProps
-    extends Omit< ComponentProps< typeof SimpleInput >, 'onChange' | 'value' > {
+    extends Omit< PropsOf< typeof SimpleInput >, 'onChange' | 'value' > {
     value?: string;
     onChange?: ( val: string ) => void;
     delay?: number;
-    input?: ComponentProps< typeof SimpleInput >[ 'input' ];
-    leftIcon?: ReactNode; // customizable left icon
+    input?: SimpleInputProps[ 'input' ];
+    leftIcon?: React.ReactNode; // customizable left icon
     clearable?: boolean; // show clear button when has value
 }
 
@@ -28,26 +30,38 @@ const SearchInput = ( {
     const [ internalValue, setInternalValue ] = useState( externalValue );
 
     // Create debounced function using WordPress compose
-    const debouncedOnChange = useDebounce( onChange, delay );
+    // Wrap the handler in useCallback so useDebounce isn't recreated every render
+    const stableOnChange = useCallback(
+        ( val: string ) => {
+            onChange?.( val );
+        },
+        [ onChange ]
+    );
+
+    const debouncedOnChange = useDebounce( stableOnChange, delay );
 
     // Update internal value when external value changes
     useEffect( () => {
         setInternalValue( externalValue );
     }, [ externalValue ] );
 
-    const handleChange = ( event: React.ChangeEvent< HTMLInputElement > ) => {
+    // Cancel any pending debounced calls on unmount or when debounce fn changes
+    useEffect( () => {
+        return () => {
+            debouncedOnChange.cancel?.();
+        };
+    }, [ debouncedOnChange ] );
+
+    const handleChange = ( event ) => {
         const newValue = event.target.value;
         setInternalValue( newValue );
-        if ( debouncedOnChange ) {
-            debouncedOnChange( newValue );
-        }
+        debouncedOnChange( newValue );
     };
 
     const handleClear = () => {
         setInternalValue( '' );
-        if ( onChange ) {
-            onChange( '' );
-        }
+        debouncedOnChange.cancel();
+        onChange?.( '' );
     };
 
     return (

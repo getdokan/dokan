@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import AsyncSelect, { type BaseSelectProps } from './AsyncSelect';
+import { __, sprintf } from '@wordpress/i18n';
 
 export interface VendorOption {
     value: number;
@@ -18,12 +19,16 @@ export interface VendorAsyncSelectProps
     buildQuery?: ( term: string ) => Record< string, any >;
     loadOptions?: ( inputValue: string ) => Promise< VendorOption[] >; // allow override
     prefetch?: boolean; // fetch options on mount or when dependencies change, not only on menu open
-    strictPrefetchValidation?: boolean; // if true and prefetch runs, and current value not found, trigger onChange(null)
+    shouldNullOnPrefetch?: boolean; // if true and prefetch runs, and current value not found, trigger onChange(null)
 }
 
 const defaultMap = ( store: any ): VendorOption => ( {
     value: store.id,
-    label: store.store_name || store.name || `Store #${ store?.id }`,
+    label:
+        store.store_name ||
+        store.name ||
+        // eslint-disable-next-line @wordpress/i18n-translator-comments
+        sprintf( __( 'Order #%s', 'dokan-lite' ), String( store?.id ) ),
     raw: store,
 } );
 
@@ -36,7 +41,7 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
         buildQuery,
         loadOptions: userLoadOptions,
         prefetch = false,
-        strictPrefetchValidation = false,
+        shouldNullOnPrefetch = false,
         ...rest
     } = props;
 
@@ -70,8 +75,8 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
     const loader = userLoadOptions || loadVendors;
 
     const [ prefetchedOptions, setPrefetchedOptions ] = useState<
-        VendorOption[] | null
-    >( null );
+        VendorOption[] | []
+    >( [] );
 
     const existsIn = ( v: VendorOption, opts: VendorOption[] ) =>
         opts.some( ( o ) => String( o.value ) === String( v.value ) );
@@ -101,6 +106,9 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
     } >();
 
     const skipMergeDueToDepsRef = useRef< boolean >( false );
+
+    // Track if we've already attempted a load on first menu open to avoid duplicate calls
+    const hasLoadedOnOpenRef = useRef< boolean >( false );
 
     // Prefetch and refetch on dependency changes
     useEffect( () => {
@@ -147,11 +155,10 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
             const onChange = ( rest as any )?.onChange as
                 | ( ( value: any ) => void )
                 | undefined;
-            const shouldNullOnPrefetch = prefetch && strictPrefetchValidation;
 
             const runNullCheck =
                 ( depsChanged && !! value ) ||
-                ( shouldNullOnPrefetch && !! value );
+                ( shouldNullOnPrefetch && prefetch && !! value );
 
             if ( runNullCheck && onChange ) {
                 if ( Array.isArray( value ) ) {
@@ -187,17 +194,11 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
         buildQuery,
         extraQuery,
         prefetch,
-        strictPrefetchValidation,
+        shouldNullOnPrefetch,
     ] );
-
-    const defaultOptionsProp: any =
-        prefetch && prefetchedOptions ? prefetchedOptions : false;
 
     // Ensure controlled value(s) exist in prefetchedOptions (when prefetch is enabled)
     useEffect( () => {
-        if ( ! prefetch ) {
-            return;
-        }
         const current = ( rest as any )?.value as
             | VendorOption
             | VendorOption[]
@@ -239,14 +240,19 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
         extraQuery,
     } );
 
+    // Preserve potential user-supplied onMenuOpen
+    const userOnMenuOpen = ( rest as any )?.onMenuOpen as
+        | ( ( ...args: any[] ) => void )
+        | undefined;
+
     return (
         <AsyncSelect
             key={ depsSignature }
             cacheOptions
-            defaultOptions={ defaultOptionsProp }
+            defaultOptions={ prefetchedOptions }
             loadOptions={ async ( inputValue: string ) => {
                 const results = await loader( inputValue );
-                if ( prefetch && Array.isArray( prefetchedOptions ) ) {
+                if ( Array.isArray( prefetchedOptions ) ) {
                     if ( ! skipMergeDueToDepsRef.current ) {
                         setPrefetchedOptions( ( prev ) =>
                             mergeUnique(
@@ -263,6 +269,26 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
             } }
             instanceId={ `vendor-async-${ depsSignature }` }
             { ...rest }
+            onMenuOpen={ async () => {
+                try {
+                    if (
+                        ! prefetch &&
+                        ! hasLoadedOnOpenRef.current &&
+                        ( ! Array.isArray( prefetchedOptions ) ||
+                            prefetchedOptions.length === 0 )
+                    ) {
+                        hasLoadedOnOpenRef.current = true;
+                        const options = await loader( '' );
+                        setPrefetchedOptions(
+                            Array.isArray( options ) ? options : []
+                        );
+                    }
+                } finally {
+                    if ( typeof userOnMenuOpen === 'function' ) {
+                        userOnMenuOpen();
+                    }
+                }
+            } }
         />
     );
 }
