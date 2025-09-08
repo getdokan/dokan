@@ -5,9 +5,10 @@ import { addQueryArgs } from '@wordpress/url';
 import { DataViews, DokanTab, Filter, DokanLink } from '@dokan/components';
 import DokanModal from '../../../components/modals/DokanModal';
 import { Vendor } from '../../../definitions/dokan-vendor';
-import { DateTimeHtml, DokanBadge } from '../../../components';
+import { DateTimeHtml, DokanButton } from '../../../components';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
+import { Funnel } from 'lucide-react';
 
 const defaultLayouts = {
     table: {},
@@ -18,6 +19,7 @@ const defaultLayouts = {
 
 const VendorsPage = ( props ) => {
     const { navigate } = props;
+    const [ showFilters, setShowFilters ] = useState( false );
     const [ view, setView ] = useState< any >( {
         perPage: 10,
         page: 1,
@@ -31,7 +33,7 @@ const VendorsPage = ( props ) => {
     const [ status, setStatus ] = useState< string >( 'all' );
 
     // Keep track of current selection in DataViews so we can clear it after bulk actions
-    const [ selection, setSelection ] = useState<string[]>( [] );
+    const [ selection, setSelection ] = useState< string[] >( [] );
 
     const [ data, setData ] = useState< Vendor[] >( [] );
     const [ isLoading, setIsLoading ] = useState< boolean >( false );
@@ -475,21 +477,38 @@ const VendorsPage = ( props ) => {
 
     return (
         <div className="dokan-layout dokan-admin-vendors p-6">
-            { /* Status Tabs (filter only) */ }
-            <DokanTab
-                namespace="dokan-admin-vendors-status"
-                tabs={ tabs }
-                variant="primary"
-                onSelect={ ( tabName: string ) => {
-                    setStatus( tabName );
-                    // also refresh current page with new status
-                    fetchVendors( { status: tabName, page: 1 } );
-                    setView( ( prev: any ) => ( { ...prev, page: 1 } ) );
-                } }
-            />
+            <div className="mb-6 flex items-center justify-between gap-3">
+                { /* Status Tabs (filter only) */ }
+                <DokanTab
+                    namespace="dokan-admin-vendors-status"
+                    tabs={ tabs }
+                    variant="primary"
+                    onSelect={ ( tabName: string ) => {
+                        setStatus( tabName );
+                        // also refresh current page with new status
+                        fetchVendors( { status: tabName, page: 1 } );
+                        setView( ( prev: any ) => ( { ...prev, page: 1 } ) );
+                    } }
+                />
+                <div className="flex items-center gap-2">
+                    <DokanButton
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={ () => setShowFilters( ( v ) => ! v ) }
+                    >
+                        <Funnel size={ 16 } />
+                        { __( 'Filter', 'dokan-lite' ) }
+                    </DokanButton>
+                </div>
+            </div>
 
             { /* Filters */ }
-            <div className="mt-4">
+            <div
+                className={ `mb-6 dokan-dashboard-filters ${
+                    showFilters ? '' : 'hidden'
+                }` }
+            >
                 <Filter
                     fields={ [
                         <VendorFilterField key="vendor_filter" />,
@@ -580,7 +599,9 @@ const VendorsPage = ( props ) => {
                     onChangeView={ handleChangeView }
                     search={ false }
                     selection={ selection }
-                    onChangeSelection={ ( ids: string[] ) => setSelection( ids ) }
+                    onChangeSelection={ ( ids: string[] ) =>
+                        setSelection( ids )
+                    }
                     actions={
                         [
                             {
