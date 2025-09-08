@@ -80,6 +80,8 @@ jobs:
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
+              with:
+                  path: dokan-lite
 
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
@@ -220,6 +222,8 @@ jobs:
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
+              with:
+                   path: dokan-lite
 
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
@@ -231,6 +235,7 @@ jobs:
             # Composer install and build (Dokan-lite)
             - name: Composer install and build (Dokan-lite)
               run: |
+                  composer i || composer update
                   composer i --no-dev -o || composer update --no-dev -o
 
             # Npm install and build (Dokan-lite)
