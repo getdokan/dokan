@@ -1,4 +1,4 @@
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useCallback } from '@wordpress/element';
 import { useDebounce } from '@wordpress/compose';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { Search, X } from 'lucide-react';
@@ -30,14 +30,27 @@ const SearchInput = ( {
     const [ internalValue, setInternalValue ] = useState( externalValue );
 
     // Create debounced function using WordPress compose
-    const debouncedOnChange = useDebounce( ( val: string ) => {
-        onChange?.( val );
-    }, delay );
+    // Wrap the handler in useCallback so useDebounce isn't recreated every render
+    const stableOnChange = useCallback(
+        ( val: string ) => {
+            onChange?.( val );
+        },
+        [ onChange ]
+    );
+
+    const debouncedOnChange = useDebounce( stableOnChange, delay );
 
     // Update internal value when external value changes
     useEffect( () => {
         setInternalValue( externalValue );
     }, [ externalValue ] );
+
+    // Cancel any pending debounced calls on unmount or when debounce fn changes
+    useEffect( () => {
+        return () => {
+            debouncedOnChange.cancel?.();
+        };
+    }, [ debouncedOnChange ] );
 
     const handleChange = ( event ) => {
         const newValue = event.target.value;
