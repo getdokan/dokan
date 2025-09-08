@@ -248,6 +248,14 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
         extraQuery,
     } );
 
+    // Preserve potential user-supplied onMenuOpen
+    const userOnMenuOpen = ( rest as any )?.onMenuOpen as
+        | ( ( ...args: any[] ) => void )
+        | undefined;
+
+    // Track if we've already attempted a load on first menu open to avoid duplicate calls
+    const hasLoadedOnOpenRef = useRef< boolean >( false );
+
     return (
         <AsyncSelect
             // give the component a changing key so it remounts when deps change
@@ -275,6 +283,26 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
             // pass an instanceId too for good measure
             instanceId={ `product-async-${ depsSignature }` }
             { ...rest }
+            onMenuOpen={ async () => {
+                try {
+                    if (
+                        ! prefetch &&
+                        ! hasLoadedOnOpenRef.current &&
+                        ( ! Array.isArray( prefetchedOptions ) ||
+                            prefetchedOptions.length === 0 )
+                    ) {
+                        hasLoadedOnOpenRef.current = true;
+                        const options = await loader( '' );
+                        setPrefetchedOptions(
+                            Array.isArray( options ) ? options : []
+                        );
+                    }
+                } finally {
+                    if ( typeof userOnMenuOpen === 'function' ) {
+                        userOnMenuOpen();
+                    }
+                }
+            } }
         />
     );
 }

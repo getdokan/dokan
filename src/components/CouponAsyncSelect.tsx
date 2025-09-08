@@ -241,6 +241,14 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
         extraQuery,
     } );
 
+    // Preserve potential user-supplied onMenuOpen
+    const userOnMenuOpen = ( rest as any )?.onMenuOpen as
+        | ( ( ...args: any[] ) => void )
+        | undefined;
+
+    // Track if we've already attempted a load on first menu open to avoid duplicate calls
+    const hasLoadedOnOpenRef = useRef< boolean >( false );
+
     return (
         <AsyncSelect
             key={ depsSignature }
@@ -265,6 +273,26 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
             } }
             instanceId={ `coupon-async-${ depsSignature }` }
             { ...rest }
+            onMenuOpen={ async () => {
+                try {
+                    if (
+                        ! prefetch &&
+                        ! hasLoadedOnOpenRef.current &&
+                        ( ! Array.isArray( prefetchedOptions ) ||
+                            prefetchedOptions.length === 0 )
+                    ) {
+                        hasLoadedOnOpenRef.current = true;
+                        const options = await loader( '' );
+                        setPrefetchedOptions(
+                            Array.isArray( options ) ? options : []
+                        );
+                    }
+                } finally {
+                    if ( typeof userOnMenuOpen === 'function' ) {
+                        userOnMenuOpen();
+                    }
+                }
+            } }
         />
     );
 }

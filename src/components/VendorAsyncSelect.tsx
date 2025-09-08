@@ -107,6 +107,9 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
 
     const skipMergeDueToDepsRef = useRef< boolean >( false );
 
+    // Track if we've already attempted a load on first menu open to avoid duplicate calls
+    const hasLoadedOnOpenRef = useRef< boolean >( false );
+
     // Prefetch and refetch on dependency changes
     useEffect( () => {
         const extraQueryKey = JSON.stringify( extraQuery ?? {} );
@@ -237,6 +240,11 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
         extraQuery,
     } );
 
+    // Preserve potential user-supplied onMenuOpen
+    const userOnMenuOpen = ( rest as any )?.onMenuOpen as
+        | ( ( ...args: any[] ) => void )
+        | undefined;
+
     return (
         <AsyncSelect
             key={ depsSignature }
@@ -261,6 +269,26 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
             } }
             instanceId={ `vendor-async-${ depsSignature }` }
             { ...rest }
+            onMenuOpen={ async () => {
+                try {
+                    if (
+                        ! prefetch &&
+                        ! hasLoadedOnOpenRef.current &&
+                        ( ! Array.isArray( prefetchedOptions ) ||
+                            prefetchedOptions.length === 0 )
+                    ) {
+                        hasLoadedOnOpenRef.current = true;
+                        const options = await loader( '' );
+                        setPrefetchedOptions(
+                            Array.isArray( options ) ? options : []
+                        );
+                    }
+                } finally {
+                    if ( typeof userOnMenuOpen === 'function' ) {
+                        userOnMenuOpen();
+                    }
+                }
+            } }
         />
     );
 }
