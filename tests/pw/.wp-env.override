@@ -13,6 +13,6 @@
         }
     }
     "mappings": {
-        "wp-content/plugins/dokan-lite": "."
+        "wp-content/plugins/dokan-lite": "../../"
     }
 }
