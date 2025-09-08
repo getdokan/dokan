@@ -102,6 +102,7 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
         perPage: number;
         buildQuery?: ProductAsyncSelectProps[ 'buildQuery' ];
         extraQueryKey: string;
+        userLoadOptions?: ProductAsyncSelectProps[ 'loadOptions' ];
     } >();
 
     // When a refetch happens due to dependency change, skip merging newly searched
@@ -117,7 +118,8 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
             ( prev.endpoint !== endpoint ||
                 prev.perPage !== perPage ||
                 prev.buildQuery !== buildQuery ||
-                prev.extraQueryKey !== extraQueryKey );
+                prev.extraQueryKey !== extraQueryKey ||
+                prev.userLoadOptions !== userLoadOptions );
 
         const shouldFetch = ( prefetch && ! prev ) || depsChanged;
         if ( depsChanged ) {
@@ -132,6 +134,7 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
                     perPage,
                     buildQuery,
                     extraQueryKey,
+                    userLoadOptions,
                 };
             }
             return;
@@ -182,6 +185,7 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
                 perPage,
                 buildQuery,
                 extraQueryKey,
+                userLoadOptions,
             };
         } )();
 
@@ -195,6 +199,7 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
         extraQuery,
         prefetch,
         strictPrefetchValidation,
+        userLoadOptions,
     ] );
 
     const defaultOptionsProp: any =

@@ -55,15 +55,15 @@ const Example = () => {
 
 ## Props API
 
-| Prop | Type | Required | Default | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `value` | `string` | No | `''` | Current search text (controlled). The component mirrors this into its internal state. |
-| `onChange` | `(val: string) => void` | No | - | Called (debounced) when the user types or when cleared. |
-| `delay` | `number` | No | `300` | Debounce delay in milliseconds for `onChange`. |
+| Prop | Type                                          | Required | Default | Description |
+| :--- |:----------------------------------------------| :--- | :--- | :--- |
+| `value` | `string`                                      | No | `''` | Current search text (controlled). The component mirrors this into its internal state. |
+| `onChange` | `(val: string) => void`                       | No | - | Called (debounced) when the user types or when cleared. |
+| `delay` | `number`                                      | No | `300` | Debounce delay in milliseconds for `onChange`. |
 | `input` | `ComponentProps<typeof SimpleInput>['input']` | No | - | Props for the inner HTML input (id, name, type, placeholder, etc.). Defaults placeholder to `__('Search', 'dokan-lite')`. |
-| `leftIcon` | `ReactNode` | No | `<Search size={16} />` | Custom icon rendered inside the left side of the field. |
-| `clearable` | `boolean` | No | `true` | If true and there is a value, shows a clear (X) button. |
-| `...props` | `Omit<ComponentProps<typeof SimpleInput>, 'onChange' | 'value'>` | No | - | Any other `SimpleInput` props are forwarded. |
+| `leftIcon` | `ReactNode`                                   | No | `<Search size={16} />` | Custom icon rendered inside the left side of the field. |
+| `clearable` | `boolean`                                     | No | `true` | If true and there is a value, shows a clear (X) button. |
+| `...props` | `any`                                         | No | - | Any other `SimpleInput` props are forwarded. |
 
 ## Usage Examples
 

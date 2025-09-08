@@ -52,20 +52,20 @@ const Example = () => {
 
 ## Props API
 
-| Prop | Type | Required | Default | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `currentDate` | `string|Date|null` | No | `''` | Current date/time value passed to WP `DateTimePicker` as `currentDate`. |
+| Prop | Type                | Required | Default | Description |
+| :--- |:--------------------| :--- | :--- | :--- |
+| `currentDate` | `string/Date/null`  | No | `''` | Current date/time value passed to WP `DateTimePicker` as `currentDate`. |
 | `onChange` | `(value:any)=>void` | Yes | - | Called when a date is selected; also closes popover. |
-| `onClear` | `() => void` | No | Clears value | Called when Clear is pressed. If not provided, empties the value. |
-| `onOk` | `() => void` | No | - | Called when Ok is pressed; also closes popover. |
-| `children` | `ReactNode` | No | - | Custom trigger content. If omitted, a `SimpleInput` is rendered. |
-| `wrapperClassName` | `string` | No | `''` | Class for outer wrapper. |
-| `pickerToggleClassName` | `string` | No | `''` | Class for the trigger element. |
-| `wpPopoverClassName` | `string` | No | `''` | Additional popover class. Merged with `dokan-layout`. |
-| `popoverBodyClassName` | `string` | No | `''` | Class for the popover body container. |
-| `inputId` | `string` | No | `'dokan-date-time-picker-input'` | Id for default input trigger. |
-| `inputName` | `string` | No | `'dokan_date_time_picker_input'` | Name for default input trigger. |
-| `...rest` | `any` | No | - | Any other props are forwarded to `DateTimePicker`. |
+| `onClear` | `() => void`        | No | Clears value | Called when Clear is pressed. If not provided, empties the value. |
+| `onOk` | `() => void`        | No | - | Called when Ok is pressed; also closes popover. |
+| `children` | `ReactNode`         | No | - | Custom trigger content. If omitted, a `SimpleInput` is rendered. |
+| `wrapperClassName` | `string`            | No | `''` | Class for outer wrapper. |
+| `pickerToggleClassName` | `string`            | No | `''` | Class for the trigger element. |
+| `wpPopoverClassName` | `string`            | No | `''` | Additional popover class. Merged with `dokan-layout`. |
+| `popoverBodyClassName` | `string`            | No | `''` | Class for the popover body container. |
+| `inputId` | `string`            | No | `'dokan-date-time-picker-input'` | Id for default input trigger. |
+| `inputName` | `string`            | No | `'dokan_date_time_picker_input'` | Name for default input trigger. |
+| `...rest` | `any`               | No | - | Any other props are forwarded to `DateTimePicker`. |
 
 ## Usage Examples
 
