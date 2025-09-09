@@ -51,7 +51,9 @@
     <rule ref="WordPress.WP.I18n">
         <properties>
             <!-- Value: replace the text domain used. -->
-            <property name="text_domain" type="array" value="dokan-lite"/>
+            <property name="text_domain" type="array" >
+                <element value="dokan-lite"/>
+            </property>
         </properties>
     </rule>
     <rule ref="WordPress.WhiteSpace.ControlStructureSpacing">
