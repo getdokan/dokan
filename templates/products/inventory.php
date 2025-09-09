@@ -80,10 +80,7 @@
         <?php endif; ?>
 
         <div class="dokan-form-group hide_if_grouped hide_if_external">
-            <label class="" for="_sold_individually">
-                <input name="_sold_individually" id="_sold_individually" value="yes" type="checkbox" <?php checked( $_sold_individually, 'yes' ); ?>>
-                <?php esc_html_e( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ); ?>
-            </label>
+            <?php dokan_post_input_box( $post_id, '_sold_individually', array( 'label' => __( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ) ), 'checkbox' ); ?>
         </div>
 
         <?php if ( $post_id ) : ?>

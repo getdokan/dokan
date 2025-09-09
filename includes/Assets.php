@@ -390,10 +390,6 @@ class Assets {
         $bootstrap_deps = [ 'dokan-vue-vendor', 'wp-i18n', 'wp-hooks' ];
 
         $scripts = [
-            'jquery-tiptip'             => [
-                'src'  => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
-                'deps' => [ 'jquery' ],
-            ],
             // Remove `dokan-i18n-jed` in next release.
             'dokan-i18n-jed' => [
                 'src'  => $asset_url . '/vendors/i18n/jed.js',
@@ -582,17 +578,23 @@ class Assets {
                 'deps'    => array_merge( $frontend_shipping_asset['dependencies'], [ 'wp-core-data', 'dokan-react-components' ] ),
                 'version' => $frontend_shipping_asset['version'],
             ],
-            'dokan-utilities'           => [
-                'deps'    => [],
-                'src'     => $asset_url . '/js/utilities.js',
-                'version' => filemtime( $asset_path . 'js/utilities.js' ),
-            ],
-            'dokan-hooks'               => [
-                'deps'    => [],
-                'src'     => $asset_url . '/js/react-hooks.js',
-                'version' => filemtime( $asset_path . 'js/react-hooks.js' ),
-            ],
         ];
+
+        $require_dompurify = version_compare( WC()->version, '10.0.2', '>' );
+
+        if ( $require_dompurify && ! wp_script_is( 'dompurify', 'registered' ) ) {
+            $scripts['dompurify'] = [
+                'src'  => WC()->plugin_url() . '/assets/js/dompurify/purify' . $suffix . '.js',
+                'deps' => [],
+            ];
+        }
+
+        if ( ! wp_script_is( 'jquery-tiptip', 'registered' ) ) {
+            $scripts['jquery-tiptip'] = [
+                'src'  => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
+                'deps' => $require_dompurify ? [ 'jquery', 'dompurify' ] : [ 'jquery' ],
+            ];
+        }
 
         $components_asset_file = DOKAN_DIR . '/assets/js/components.asset.php';
         if ( file_exists( $components_asset_file ) ) {
@@ -606,6 +608,30 @@ class Assets {
                     $components_asset['dependencies'],
                     [ 'dokan-utilities', 'dokan-hooks' ]
                 ),
+            ];
+        }
+
+        $utilities_asset_file = DOKAN_DIR . '/assets/js/utilities.asset.php';
+        if ( file_exists( $utilities_asset_file ) ) {
+            $utilities_asset = require $utilities_asset_file;
+
+            // Register React utilities.
+            $scripts['dokan-utilities'] = [
+                'version' => $utilities_asset['version'],
+                'src'     => $asset_url . '/js/utilities.js',
+                'deps'    => $utilities_asset['dependencies'],
+            ];
+        }
+
+        $hooks_asset_file = DOKAN_DIR . '/assets/js/react-hooks.asset.php';
+        if ( file_exists( $hooks_asset_file ) ) {
+            $hooks_asset = require $hooks_asset_file;
+
+            // Register React hooks.
+            $scripts['dokan-hooks'] = [
+                'version' => $hooks_asset['version'],
+                'src'     => $asset_url . '/js/react-hooks.js',
+                'deps'    => $hooks_asset['dependencies'],
             ];
         }
 

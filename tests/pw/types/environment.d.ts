@@ -23,7 +23,7 @@ declare global {
             ATTRIBUTE_ID: string;
             TAG_ID: string;
             LOCAL: boolean;
-            CI: boolean;
+            CI: string;
             GMAP: string;
             MAPBOX: string;
             LICENSE_KEY: string;
@@ -49,7 +49,7 @@ declare global {
             TEST_MERCHANT_ID_PAYPAL_MARKETPLACE: string;
             TEST_CLIENT_ID_PAYPAL_MARKETPLACE: string;
             TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE: string;
-            DOKAN_PRO: boolean;
+            DOKAN_PRO: string;
             SITE_LANGUAGE: string;
             SITE_TITLE: string;
             SITE_PATH: string;

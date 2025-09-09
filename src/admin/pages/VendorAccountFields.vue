@@ -10,7 +10,7 @@
                     <p class="picture-header mb-4">{{ __( 'Vendor Picture', 'dokan-lite' ) }}</p>
 
                     <div class="profile-image">
-                        <upload-image @uploadedImage="uploadGravatar" :croppingWidth="150" :croppingHeight="150" />
+                        <upload-image @uploadedImage="uploadGravatar" :croppingWidth="384" :croppingHeight="384" />
                     </div>
 
                     <p class="picture-footer mt-4"
@@ -20,7 +20,13 @@
 
                 <div class='!pt-0 !flex !flex-col !justify-center !items-center' :class="['picture banner', {'has-banner': vendorInfo.banner_id}]">
                     <div class="banner-image">
-                        <upload-image @uploadedImage="uploadBanner" :showButton="showButton" :buttonLabel="__( 'Upload Banner', 'dokan-lite' )" />
+                        <upload-image
+                            :showButton="showButton"
+                            @uploadedImage="uploadBanner"
+                            :croppingWidth="parseInt( storeBannerWidth )"
+                            :croppingHeight="parseInt( storeBannerHeight )"
+                            :buttonLabel="__( 'Upload Banner', 'dokan-lite' )"
+                        />
                     </div>
 
                     <p v-if="showButton" class="picture-footer">{{ getUploadBannerText() }}</p>
@@ -187,6 +193,8 @@ export default {
             storeAvailabilityText: '',
             userNameAvailabilityText: '',
             emailAvailabilityText: '',
+            storeBannerWidth: dokan.store_banner_dimension.width || 625,
+            storeBannerHeight: dokan.store_banner_dimension.height || 300,
             getAccountFields: dokan.hooks.applyFilters( 'getVendorAccountFields', [] ),
         }
     },
@@ -382,8 +390,8 @@ export default {
         },
 
         getUploadBannerText() {
-            let width  = dokan.store_banner_dimension.width;
-            let height = dokan.store_banner_dimension.height;
+            let width  = this.storeBannerWidth;
+            let height = this.storeBannerHeight;
 
             return this.__( `Upload banner for your store. Banner size is (${width}x${height}) pixels.`, 'dokan-lite' );
         },
