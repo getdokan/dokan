@@ -7,7 +7,7 @@ import ProductCard, {
 } from '../components/ProductCard';
 import SectionHeading from '../components/SectionHeading';
 import { Slot } from '@wordpress/components';
-import TopProductSkeleton from '@dokan/admin/dashboard/pages/vendors-single/Skeletons/TopProductSkeleton';
+import TopProductSkeleton from '../Skeletons/TopProductSkeleton';
 import NoInformation from './../../../../../../src/components/NoInformation';
 import { Box } from 'lucide-react';
 

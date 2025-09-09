@@ -1,6 +1,6 @@
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
-import FormModal from '@dokan/admin/dashboard/pages/vendors-single/InformationTabs/Withdraw/FormModal';
+import FormModal from '../FormModal';
 import { useEffect, useState } from "@wordpress/element";
 
 function PayPal({ isOpen, setIsOpen, connected, data, loading, saveData } ) {

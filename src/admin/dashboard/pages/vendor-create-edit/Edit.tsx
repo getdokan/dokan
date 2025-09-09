@@ -13,7 +13,7 @@ import { Vendor } from '@dokan/definitions/dokan-vendors';
 import {
     requestEditVendor,
     validateForm,
-} from '@dokan/admin/dashboard/pages/vendor-create-edit/Utils';
+} from '@src/admin/dashboard/pages/vendor-create-edit/Utils';
 
 function Edit( props ) {
     const { params } = props;

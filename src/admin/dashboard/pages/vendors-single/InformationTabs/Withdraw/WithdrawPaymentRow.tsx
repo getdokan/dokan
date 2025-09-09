@@ -1,17 +1,17 @@
 import { __ } from '@wordpress/i18n';
 import { ToggleSwitch } from '@getdokan/dokan-ui';
-import Paypal from '@dokan/admin/dashboard/icons/payments/Paypal';
-import DPaypal from '@dokan/admin/dashboard/icons/payments/DPaypal';
-import Stripe from '@dokan/admin/dashboard/icons/payments/Stripe';
-import DStripe from '@dokan/admin/dashboard/icons/payments/DStripe';
-import Bank from '@dokan/admin/dashboard/icons/payments/Bank';
-import Skrill from '@dokan/admin/dashboard/icons/payments/Skrill';
-import Razorpay from '@dokan/admin/dashboard/icons/payments/Razorpay';
-import MangopayNew from '@dokan/admin/dashboard/icons/payments/MangopayNew';
-import Custom from '@dokan/admin/dashboard/icons/payments/Custom';
+import Paypal from '@src/admin/dashboard/icons/payments/Paypal';
+import DPaypal from '@src/admin/dashboard/icons/payments/DPaypal';
+import Stripe from '@src/admin/dashboard/icons/payments/Stripe';
+import DStripe from '@src/admin/dashboard/icons/payments/DStripe';
+import Bank from '@src/admin/dashboard/icons/payments/Bank';
+import Skrill from '@src/admin/dashboard/icons/payments/Skrill';
+import Razorpay from '@src/admin/dashboard/icons/payments/Razorpay';
+import MangopayNew from '@src/admin/dashboard/icons/payments/MangopayNew';
+import Custom from '@src/admin/dashboard/icons/payments/Custom';
 import { useState } from '@wordpress/element';
-import MethodAction from '@dokan/admin/dashboard/pages/vendors-single/InformationTabs/Withdraw/MethodAction';
-import { Vendor } from '@dokan/definitions/dokan-vendors';
+import MethodAction from '@src/admin/dashboard/pages/vendors-single/InformationTabs/Withdraw/MethodAction';
+import { Vendor } from '@src/definitions/dokan-vendors';
 
 function WithdrawPaymentRow( {
     method,

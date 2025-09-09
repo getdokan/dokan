@@ -1,7 +1,7 @@
 import { SimpleInput, SimpleRadio, TextArea } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
-import FormModal from '@dokan/admin/dashboard/pages/vendors-single/InformationTabs/Withdraw/FormModal';
+import FormModal from '../FormModal';
 import { useEffect, useState } from '@wordpress/element';
 
 interface Props {

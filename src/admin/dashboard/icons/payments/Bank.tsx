@@ -1,4 +1,4 @@
-import IconWrapper from '@dokan/admin/dashboard/icons/payments/IconWrapper';
+import IconWrapper from './IconWrapper';
 
 function Bank() {
     return (

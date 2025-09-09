@@ -2,6 +2,7 @@ import {
     DokanButton,
     CategoryBasedCommissionPure,
     FixedCommissionInput,
+    DokanModal,
 } from '@dokan/components';
 import { __ } from '@wordpress/i18n';
 import {
@@ -22,19 +23,18 @@ import {
     ToggleSwitch,
 } from '@getdokan/dokan-ui';
 import StoreImage from './StoreImage';
-import VendorFormSkeleton from '@dokan/admin/dashboard/pages/vendor-create-edit/VendorFormSkeleton';
+import VendorFormSkeleton from './VendorFormSkeleton';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
 import { useDispatch, useSelect } from '@wordpress/data';
 import store from '@dokan/stores/vendors';
 import apiFetch from '@wordpress/api-fetch';
 import { twMerge } from 'tailwind-merge';
-import DebouncedInput from '@dokan/admin/dashboard/pages/vendor-create-edit/DebouncedInput';
+import DebouncedInput from './DebouncedInput';
 import { addQueryArgs } from '@wordpress/url';
-import wpMedia from '@dokan/admin/dashboard/pages/vendor-create-edit/WpMedia';
+import wpMedia from './WpMedia';
 import { Slot } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
 import { useEffect, useState } from '@wordpress/element';
-import DokanModal from '@dokan/components/modals/DokanModal';
 import { applyFilters } from '@wordpress/hooks';
 
 interface Props {

@@ -11,7 +11,7 @@ import { Vendor } from '@dokan/definitions/dokan-vendors';
 import {
     requestCreateVendor,
     validateForm,
-} from '@dokan/admin/dashboard/pages/vendor-create-edit/Utils';
+} from '@src/admin/dashboard/pages/vendor-create-edit/Utils';
 
 function Create( props: any ) {
     const [ saving, setSaving ] = useState( false );

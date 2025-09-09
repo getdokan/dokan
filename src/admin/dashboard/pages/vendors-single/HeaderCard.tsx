@@ -1,8 +1,8 @@
 import { Card } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
-import Rating from '@dokan/admin/dashboard/pages/vendors-single/Rating';
-import StoreCategories from '@dokan/admin/dashboard/pages/vendors-single/StoreCategories';
+import Rating from './Rating';
+import StoreCategories from './StoreCategories';
 import { DokanBadge } from '../../../../components';
 
 export interface HeaderCardProps {

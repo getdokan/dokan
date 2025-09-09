@@ -3,11 +3,10 @@ import { useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { Card } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
-import WithdrawTabSkeleton from '@dokan/admin/dashboard/pages/vendors-single/InformationTabs/WithdrawTabSkeleton';
-import Badge from '@dokan/components/Badge';
-import WithdrawPaymentRow from '@dokan/admin/dashboard/pages/vendors-single/InformationTabs/Withdraw/WithdrawPaymentRow';
+import WithdrawTabSkeleton from './WithdrawTabSkeleton';
+import { DokanBadge, DokanAlert } from '@dokan/components';
+import WithdrawPaymentRow from './Withdraw/WithdrawPaymentRow';
 import { addQueryArgs } from '@wordpress/url';
-import Alert from "@dokan/components/Alert";
 
 interface WithdrawTabProps {
     vendor: Vendor;
@@ -60,7 +59,7 @@ const WithdrawTab = ( { vendor }: WithdrawTabProps ) => {
                 : __( 'No disconnected payment methods found' );
             return (
                 <div>
-                    <Alert label={ message } variant="info"/>
+                    <DokanAlert label={ message } variant="info" />
                 </div>
             );
         }
@@ -106,7 +105,7 @@ const WithdrawTab = ( { vendor }: WithdrawTabProps ) => {
         <Card className="bg-white shadow p-6">
             <div>
                 <div className="mb-2">
-                    <Badge
+                    <DokanBadge
                         label={ __( 'Connected', 'dokan-lite' ) }
                         variant="success"
                     />
@@ -115,7 +114,7 @@ const WithdrawTab = ( { vendor }: WithdrawTabProps ) => {
             </div>
             <div className="mt-6">
                 <div className="mb-2">
-                    <Badge
+                    <DokanBadge
                         label={ __( 'Not Connected', 'dokan-lite' ) }
                         variant="secondary"
                         className="text-neutral-700 border-neutral-700"
