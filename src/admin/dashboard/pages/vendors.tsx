@@ -181,141 +181,170 @@ const VendorsPage = ( props ) => {
     );
 
     // Fields for DataViews
-    const fields = useMemo(
-        () => [
-            {
-                id: 'vendor',
-                label: __( 'Store', 'dokan-lite' ),
-                enableSorting: false,
-                render: ( { item }: { item: Vendor } ) => {
-                    const name = item?.store_name || '';
-                    const avatar = item?.gravatar || '';
-                    return (
-                        <div className="flex items-center gap-3">
-                            { avatar ? (
+    const loadingClass = twMerge(
+        '!bg-neutral-200 !rounded !animate-pulse !text-transparent'
+    );
+    const fields = [
+        {
+            id: 'vendor',
+            label: __( 'Store', 'dokan-lite' ),
+            enableSorting: false,
+            render: ( { item }: { item: Vendor } ) => {
+                const name = item?.store_name || '';
+                const avatar = item?.gravatar || '';
+                return (
+                    <div
+                        className='flex items-center gap-3'
+                    >
+                        { avatar ? (
+                            <div
+                                className={ twMerge(
+                                    'w-10 h-10 rounded object-cover',
+                                    isLoading ? `${ loadingClass }` : ''
+                                ) }
+                            >
                                 <img
                                     src={ avatar }
                                     alt={ name || 'Store avatar' }
-                                    className="w-10 h-10 rounded border object-cover"
+                                    className={ twMerge(
+                                        'w-10 h-10 rounded border object-cover',
+                                        isLoading ? 'opacity-0' : 'opacity-100'
+                                    ) }
                                 />
-                            ) : (
-                                <div
-                                    className="w-8 h-8 rounded bg-gray-100"
-                                    aria-hidden="true"
-                                ></div>
-                            ) }
-                            <span className="flex flex-col">
-                                <DokanLink
-                                    as="div"
-                                    onClick={ () => {
-                                        navigate(
-                                            `/vendors/edit/${ item.id }`
-                                        );
-                                    } }
-                                    className="font-bold cursor-pointer"
-                                >
-                                    <span className="text-sm font-medium text-gray-900">
-                                        { name }
-                                    </span>
-                                </DokanLink>
-                            </span>
-                        </div>
-                    );
-                },
-            },
-            {
-                id: 'email',
-                label: __( 'Email', 'dokan-lite' ),
-                enableSorting: false,
-                render: ( { item }: { item: Vendor } ) => {
-                    const email = item?.email || '';
-                    return (
-                        <div className="flex items-center gap-3">
-                            <span className="flex flex-col">
-                                { email ? (
-                                    <DokanLink
-                                        href={ `mailto:${ email }` }
-                                        rel="noreferrer"
-                                        target="_blank"
-                                    >
-                                        { email }
-                                    </DokanLink>
-                                ) : (
-                                    <span className="text-gray-400">—</span>
-                                ) }
-                            </span>
-                        </div>
-                    );
-                },
-            },
-            {
-                id: 'phone',
-                label: __( 'Phone', 'dokan-lite' ),
-                enableSorting: false,
-                render: ( { item }: { item: Vendor } ) => {
-                    const phone = item?.phone || '';
-                    return (
-                        <div className="flex items-center gap-3">
-                            <span className="flex flex-col">
-                                { phone ? (
-                                    <span className="text-xs text-gray-500">
-                                        { phone }
-                                    </span>
-                                ) : (
-                                    <span className="text-gray-400">—</span>
-                                ) }
-                            </span>
-                        </div>
-                    );
-                },
-            },
-            {
-                id: 'registered',
-                label: __( 'Registered', 'dokan-lite' ),
-                enableSorting: false,
-                render: ( { item }: { item: Vendor } ) => {
-                    const registered = item?.registered || '';
-                    return (
-                        <div className="flex items-center gap-3">
-                            <div className="flex flex-col">
-                                { registered ? (
-                                    <div className="text-xs text-gray-500">
-                                        <DateTimeHtml.Date
-                                            date={ registered }
-                                        />
-                                    </div>
-                                ) : (
-                                    <span className="text-gray-400">—</span>
-                                ) }
                             </div>
-                        </div>
-                    );
-                },
-            },
-            {
-                id: 'status',
-                label: __( 'Status', 'dokan-lite' ),
-                enableSorting: false,
-                render: ( { item }: { item: Vendor } ) => {
-                    return (
+                        ) : (
+                            <div
+                                className="w-8 h-8 rounded bg-gray-100"
+                                aria-hidden="true"
+                            ></div>
+                        ) }
                         <span
-                            className={ twMerge(
-                                'inline-flex items-center px-3.5 py-1.5 rounded-md text-xs font-medium',
-                                item?.enabled
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-neutral-100 text-neutral-800'
-                            ) }
+                            className='flex flex-col'
                         >
-                            { item?.enabled
-                                ? __( 'Enabled', 'dokan-lite' )
-                                : __( 'Disabled', 'dokan-lite' ) }
+                            <DokanLink
+                                as="div"
+                                onClick={ () => {
+                                    navigate( `/vendors/edit/${ item.id }` );
+                                } }
+                                className="font-bold cursor-pointer"
+                            >
+                                <span
+                                    className={ twMerge(
+                                        'text-sm font-medium text-gray-900',
+                                        isLoading ? loadingClass : ''
+                                    ) }
+                                >
+                                    { name }
+                                </span>
+                            </DokanLink>
                         </span>
-                    );
-                },
+                    </div>
+                );
             },
-        ],
-        []
-    );
+        },
+        {
+            id: 'email',
+            label: __( 'Email', 'dokan-lite' ),
+            enableSorting: false,
+            render: ( { item }: { item: Vendor } ) => {
+                const email = item?.email || '';
+                return (
+                    <div className="flex items-center gap-3">
+                        <span className="flex flex-col">
+                            { email ? (
+                                <DokanLink
+                                    href={ `mailto:${ email }` }
+                                    rel="noreferrer"
+                                    target="_blank"
+                                    className={ twMerge(
+                                        isLoading ? `${ loadingClass }` : ''
+                                    ) }
+                                >
+                                    { email }
+                                </DokanLink>
+                            ) : (
+                                <span className="text-gray-400">—</span>
+                            ) }
+                        </span>
+                    </div>
+                );
+            },
+        },
+        {
+            id: 'phone',
+            label: __( 'Phone', 'dokan-lite' ),
+            enableSorting: false,
+            render: ( { item }: { item: Vendor } ) => {
+                const phone = item?.phone || '';
+                return (
+                    <div className="flex items-center gap-3">
+                        <span className="flex flex-col">
+                            { phone ? (
+                                <span
+                                    className={ twMerge(
+                                        'text-xs text-gray-500',
+                                        isLoading ? loadingClass : ''
+                                    ) }
+                                >
+                                    { phone }
+                                </span>
+                            ) : (
+                                <span className="text-gray-400">—</span>
+                            ) }
+                        </span>
+                    </div>
+                );
+            },
+        },
+        {
+            id: 'registered',
+            label: __( 'Registered', 'dokan-lite' ),
+            enableSorting: false,
+            render: ( { item }: { item: Vendor } ) => {
+                const registered = item?.registered || '';
+                return (
+                    <div className="flex items-center gap-3">
+                        <div className="flex flex-col">
+                            { registered ? (
+                                <div
+                                    className={ twMerge(
+                                        'text-xs text-gray-500',
+                                        isLoading ? loadingClass : ''
+                                    ) }
+                                >
+                                    <DateTimeHtml.Date date={ registered } />
+                                </div>
+                            ) : (
+                                <span className="text-gray-400">—</span>
+                            ) }
+                        </div>
+                    </div>
+                );
+            },
+        },
+        {
+            id: 'status',
+            label: __( 'Status', 'dokan-lite' ),
+            enableSorting: false,
+            render: ( { item }: { item: Vendor } ) => {
+                return (
+                    <span
+                        className={ twMerge(
+                            'inline-flex items-center px-3.5 py-1.5 rounded-md text-xs font-medium',
+                            item?.enabled
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-neutral-100 text-neutral-800',
+                            isLoading ? loadingClass : ''
+                        ) }
+                    >
+                        { item?.enabled
+                            ? __( 'Enabled', 'dokan-lite' )
+                            : __( 'Disabled', 'dokan-lite' ) }
+                    </span>
+                );
+            },
+        },
+    ];
 
     // Filters: Vendor search and date range
     const [ filterArgs, setFilterArgs ] = useState< Record< string, any > >(
