@@ -3,6 +3,7 @@ import { createHashRouter, RouterProvider } from 'react-router-dom';
 import Layout from './Layout';
 import ModulePage from '../pages/modules';
 import SetupGuide from '../pages/setup-guide';
+import NotFound from '../../../layout/404';
 
 export type DokanAdminRoute = {
     id: string;
@@ -33,7 +34,9 @@ const getAdminRoutes = () => {
 
     routes.push( {
         id: 'dokan-404',
-        element: <h3>404</h3>,
+        element: (
+            <NotFound className="h-screen" backToDashboardUrl="?page=dokan" />
+        ),
         path: '*',
     } );
 

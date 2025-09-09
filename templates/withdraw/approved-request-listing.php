@@ -11,7 +11,7 @@
 ?>
 
 <table class="dokan-table dokan-table-striped">
-    <thead>
+    <thead class="dokan-show-thead">
     <tr>
         <th><?php esc_html_e( 'Amount', 'dokan-lite' ); ?></th>
         <th><?php esc_html_e( 'Method', 'dokan-lite' ); ?></th>

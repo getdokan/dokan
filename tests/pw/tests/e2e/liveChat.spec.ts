@@ -1,4 +1,4 @@
-import { test, Page, request } from '@playwright/test';
+import { Page, request, test } from '@playwright/test';
 import { LiveChatPage } from '@pages/liveChatPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
@@ -10,6 +10,10 @@ import { helpers } from '@utils/helpers';
 const { VENDOR_ID } = process.env;
 
 test.describe('Live chat test', () => {
+    if (!process.env.TALKJS_APP_ID || !process.env.TALKJS_APP_SECRET) {
+        test.skip(true, 'Live chat credentials not found');
+    }
+
     let admin: LiveChatPage;
     let vendor: LiveChatPage;
     let customer: LiveChatPage;
