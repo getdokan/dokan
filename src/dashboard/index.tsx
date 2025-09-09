@@ -7,7 +7,7 @@ import './tailwind.scss';
 import { useMutationObserver } from '../hooks';
 import { useSelect } from '@wordpress/data';
 import coreStore from '@dokan/stores/core';
-import Skeleton from '@dokan/layout/Skeleton';
+import Skeleton from '@src/layout/Skeleton';
 import { generateColorVariants } from '@dokan/utilities';
 
 const App = () => {
