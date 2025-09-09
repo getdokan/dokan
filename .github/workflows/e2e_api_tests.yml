@@ -49,7 +49,7 @@ env:
     MAPBOX: ${{secrets.MAPBOX}}
     BASE_URL: http://localhost:9999
     CI: true
-    NON_HEADLESS: false
+    HEADLESS: true
     FORCE_COLOR: 1
     DB_HOST_NAME: localhost
     DB_USER_NAME: root
