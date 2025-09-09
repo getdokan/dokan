@@ -27,6 +27,7 @@ interface DokanModalProps {
     dialogHeader?: JSX.Element | false;
     dialogContent?: JSX.Element;
     dialogFooter?: JSX.Element | false;
+    dialogFooterContent?: JSX.Element | false;
     loading?: boolean;
     confirmButtonVariant?: ButtonVariant;
     hideCancelButton?: boolean;
@@ -49,6 +50,7 @@ const DokanModal = ( {
     dialogIcon,
     dialogHeader,
     dialogFooter,
+    dialogFooterContent,
     dialogContent,
     loading = false,
     confirmButtonVariant = 'primary',
@@ -191,29 +193,36 @@ const DokanModal = ( {
                     ? null
                     : dialogFooter || (
                           <Modal.Footer className="border-t">
-                              <div
-                                  className={ `flex items-center justify-end gap-3` }
-                              >
-                                  { hideCancelButton || (
+                              { dialogFooterContent || (
+                                  <div
+                                      className={ `flex items-center justify-end gap-3` }
+                                  >
+                                      { hideCancelButton || (
+                                          <DokanButton
+                                              onClick={ onClose }
+                                              variant={ `secondary` }
+                                              disabled={
+                                                  isSubmitting || loading
+                                              }
+                                          >
+                                              { cancelButtonText ||
+                                                  __( 'Cancel', 'dokan-lite' ) }
+                                          </DokanButton>
+                                      ) }
                                       <DokanButton
-                                          onClick={ onClose }
-                                          variant={ `secondary` }
+                                          onClick={ handleConfirm }
+                                          variant={ confirmButtonVariant }
+                                          loading={ isSubmitting || loading }
                                           disabled={ isSubmitting || loading }
                                       >
-                                          { cancelButtonText ||
-                                              __( 'Cancel', 'dokan-lite' ) }
+                                          { confirmButtonText ||
+                                              __(
+                                                  'Yes, Delete',
+                                                  'dokan-lite'
+                                              ) }
                                       </DokanButton>
-                                  ) }
-                                  <DokanButton
-                                      onClick={ handleConfirm }
-                                      variant={ confirmButtonVariant }
-                                      loading={ isSubmitting || loading }
-                                      disabled={ isSubmitting || loading }
-                                  >
-                                      { confirmButtonText ||
-                                          __( 'Yes, Delete', 'dokan-lite' ) }
-                                  </DokanButton>
-                              </div>
+                                  </div>
+                              ) }
                           </Modal.Footer>
                       ) }
             </div>
