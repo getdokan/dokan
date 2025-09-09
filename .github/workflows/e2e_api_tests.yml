@@ -6,10 +6,10 @@ on:
         - cron: 0 2 * * *
     # workflow will trigger on pull request
     pull_request:
-        branches: [develop, release/v4.0]
+        branches: [develop]
     # workflow will trigger on push to develop branch
     push:
-        branches: [develop, release/v4.0]
+        branches: [develop]
 
     # workflow can be manually triggered
     workflow_dispatch:
@@ -91,6 +91,7 @@ jobs:
             # Composer install and build (Dokan-lite)
             - name: Composer install and build (Dokan-lite)
               run: |
+                  composer i || composer update
                   composer i --no-dev -o || composer update --no-dev -o
 
             # Npm install and build (Dokan-lite)
