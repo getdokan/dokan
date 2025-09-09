@@ -5,10 +5,16 @@ import { addQueryArgs } from '@wordpress/url';
 import { DataViews, DokanTab, Filter, DokanLink } from '@dokan/components';
 import DokanModal from '../../../components/modals/DokanModal';
 import { Vendor } from '../../../definitions/dokan-vendor';
-import { DateTimeHtml, DokanButton } from '../../../components';
+import {
+    DateTimeHtml,
+    DokanButton,
+    SearchInput,
+    Select,
+    SellerBadgeSelect,
+} from '../../../components';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import { Funnel } from 'lucide-react';
+import { Crown, Funnel, Plus, Search, Trophy } from 'lucide-react';
 
 const defaultLayouts = {
     table: {},
@@ -31,6 +37,7 @@ const VendorsPage = ( props ) => {
     } );
 
     const [ status, setStatus ] = useState< string >( 'all' );
+    const [ sellerbadge, setSellerbadge ] = useState();
 
     // Keep track of current selection in DataViews so we can clear it after bulk actions
     const [ selection, setSelection ] = useState< string[] >( [] );
@@ -330,66 +337,37 @@ const VendorsPage = ( props ) => {
         setView( ( prev: any ) => ( { ...prev, search: '', page: 1 } ) );
     };
 
-    const VendorFilterField = () => {
+    const SellerBadgeFilterField = () => {
         return (
-            <div className="flex items-center gap-2">
-                <label
-                    className="text-sm text-gray-700"
-                    htmlFor="vendor-filter-input"
-                >
-                    { __( 'Vendor', 'dokan-lite' ) }
-                </label>
-                <input
-                    id="vendor-filter-input"
-                    type="text"
-                    className="dokan-input px-3 py-1.5 border rounded w-60"
-                    placeholder={ __( 'Search vendor…', 'dokan-lite' ) }
-                    value={ filterArgs.vendor || '' }
-                    onChange={ ( e ) =>
-                        setFilterArgs( ( p ) => ( {
-                            ...p,
-                            vendor: e.target.value,
-                        } ) )
-                    }
-                />
-            </div>
+            <SellerBadgeSelect
+                value={ sellerbadge }
+                onChange={ setSellerbadge }
+                leftIcon={ <Trophy size="16" className="text-gray-500" /> }
+                placeholder={ __( 'Search by Badge', 'dokan-lite' ) }
+                menuPortalTarget={ document.querySelector( 'body' ) }
+                isClearable
+            />
         );
     };
 
-    const DateFilterField = () => {
+    const SubscriptionFilterField = () => {
         return (
-            <div className="flex items-center gap-2">
-                <label
-                    className="text-sm text-gray-700"
-                    htmlFor="date-from-input"
-                >
-                    { __( 'Date', 'dokan-lite' ) }
-                </label>
-                <input
-                    id="date-from-input"
-                    type="date"
-                    className="dokan-input px-3 py-1.5 border rounded"
-                    value={ filterArgs.date_from || '' }
-                    onChange={ ( e ) =>
-                        setFilterArgs( ( p ) => ( {
-                            ...p,
-                            date_from: e.target.value,
-                        } ) )
-                    }
-                />
-                <span className="text-gray-500">—</span>
-                <input
-                    type="date"
-                    className="dokan-input px-3 py-1.5 border rounded"
-                    value={ filterArgs.date_to || '' }
-                    onChange={ ( e ) =>
-                        setFilterArgs( ( p ) => ( {
-                            ...p,
-                            date_to: e.target.value,
-                        } ) )
-                    }
-                />
-            </div>
+            <Select
+                options={ [
+                    {
+                        label: __( 'Subscribed', 'dokan-lite' ),
+                        value: 'yes',
+                    },
+                    {
+                        label: __( 'Non-subscribed', 'dokan-lite' ),
+                        value: 'no',
+                    },
+                ] }
+                leftIcon={ <Crown size="16" className="text-gray-500" /> }
+                placeholder={ __( 'Search by Subscription', 'dokan-lite' ) }
+                menuPortalTarget={ document.querySelector( 'body' ) }
+                isClearable
+            />
         );
     };
 
@@ -476,8 +454,23 @@ const VendorsPage = ( props ) => {
     };
 
     return (
-        <div className="dokan-layout dokan-admin-vendors p-6">
-            <div className="mb-6 flex items-center justify-between gap-3">
+        <div className="dokan-layout dokan-admin-vendors">
+            <div className="mb-3 flex items-center justify-between">
+                <h1 className="wp-heading-inline">
+                    { __( 'Vendors', 'dokan-lite' ) }
+                </h1>
+                <div className="flex items-center gap-2">
+                    <DokanButton
+                        type="button"
+                        variant="primary"
+                        onClick={ () => navigate( '/vendors/add' ) }
+                    >
+                        <Plus size={ 16 } />
+                        { __( 'Add New Vendor', 'dokan-lite' ) }
+                    </DokanButton>
+                </div>
+            </div>
+            <div className="mb-3 flex items-center justify-between gap-3">
                 { /* Status Tabs (filter only) */ }
                 <DokanTab
                     namespace="dokan-admin-vendors-status"
@@ -491,10 +484,10 @@ const VendorsPage = ( props ) => {
                     } }
                 />
                 <div className="flex items-center gap-2">
+                    <SearchInput />
                     <DokanButton
                         type="button"
                         variant="secondary"
-                        size="sm"
                         onClick={ () => setShowFilters( ( v ) => ! v ) }
                     >
                         <Funnel size={ 16 } />
@@ -505,14 +498,14 @@ const VendorsPage = ( props ) => {
 
             { /* Filters */ }
             <div
-                className={ `mb-6 dokan-dashboard-filters ${
+                className={ `dokan-dashboard-filters ${
                     showFilters ? '' : 'hidden'
                 }` }
             >
                 <Filter
                     fields={ [
-                        <VendorFilterField key="vendor_filter" />,
-                        <DateFilterField key="date_filter" />,
+                        <SellerBadgeFilterField key="seller_badge_filter" />,
+                        <SubscriptionFilterField key="subscription_filter" />,
                     ] }
                     onFilter={ onFilter }
                     onReset={ onReset }
@@ -523,7 +516,7 @@ const VendorsPage = ( props ) => {
             </div>
 
             { /* Table */ }
-            <div className="mt-4">
+            <div>
                 { /* Confirmation Modal */ }
                 { confirmState &&
                     ( () => {
