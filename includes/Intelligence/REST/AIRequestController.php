@@ -93,7 +93,16 @@ class AIRequestController extends DokanBaseVendorController {
             $model        = $provider->get_model( $model_id );
             $prompt       = PromptUtils::prepare_prompt( $args['field'], $prompt );
             $process_call = 'process_' . sanitize_key( $type );
-            $response     = $model->{$process_call}( $prompt, $args );
+
+            if ( ! method_exists( $model, $process_call ) ) {
+                throw new Exception(
+                    // translators: %s: type of generation.
+                    sprintf( esc_html__( 'Model does not support %s generation.', 'dokan-lite' ), $type ),
+                    400
+                );
+			}
+
+            $response = $model->{$process_call}( $prompt, $args );
 
             return rest_ensure_response( $response );
         } catch ( Exception $e ) {

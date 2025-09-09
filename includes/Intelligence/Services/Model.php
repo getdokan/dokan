@@ -157,7 +157,7 @@ abstract class Model implements Hookable, AIModelInterface {
      *
      * @return bool
      */
-    protected function is_valid_api_kay(): bool {
+    protected function is_valid_api_key(): bool {
         if ( empty( $this->get_api_key() ) ) {
             return false;
         }
@@ -174,7 +174,7 @@ abstract class Model implements Hookable, AIModelInterface {
      * @throws Exception
      */
     protected function request( string $prompt, array $args = [] ): array {
-        if ( ! $this->is_valid_api_kay() ) {
+        if ( ! $this->is_valid_api_key() ) {
             throw new Exception( esc_html__( 'API key is not configured', 'dokan-lite' ) );
         }
         // Make the request

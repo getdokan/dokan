@@ -66,6 +66,8 @@ interface AIProviderInterface {
     /**
      * Check if the provider supports type-based models.
      *
+     * @param string $type The type of model to check (e.g., 'text', 'image').
+     *
      * @return bool True if text models are supported, false otherwise.
      */
     public function has_model( string $type ): bool;
