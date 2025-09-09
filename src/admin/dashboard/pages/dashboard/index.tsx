@@ -4,19 +4,12 @@ import TodoSection from './sections/TodoSection';
 import AnalyticsSection from './sections/AnalyticsSection';
 import SalesChartSection from './sections/SalesChartSection';
 import MonthlyOverviewSection from './sections/MonthlyOverviewSection';
-import CustomerMetricsSection from './sections/CustomerMetricsSection';
+import VendorMetricsSection from './sections/VendorMetricsSection';
 import AllTimeStatsSection from './sections/AllTimeStatsSection';
 import TopPerformingVendorsSection from './sections/TopPerformingVendorsSection';
 import MostReviewedProductsSection from './sections/MostReviewedProductsSection';
 import MostReportedVendorsSection from './sections/MostReportedVendorsSection';
-import Section from './Elements/Section';
-import MiniCard from './Elements/MiniCard';
 import AdminNotices from './components/AdminNotices';
-import { Coins, BadgeDollarSign, User } from 'lucide-react';
-import { DokanButton } from '../../../../components';
-import Card from './Elements/Card';
-import MonthPicker from './Elements/MonthPicker';
-import { useState } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 
 function Dashboard() {
@@ -55,8 +48,10 @@ function Dashboard() {
             { /* Render sales chart section. */ }
             <SalesChartSection />
 
-            { /* Render the customer metrics section. */ }
-            <CustomerMetricsSection />
+            { /* Render the vendor metrics section. */ }
+            { dokanAdminDashboardSettings?.header_info?.is_pro_exists && (
+                <VendorMetricsSection />
+            ) }
 
             { /* Render the all-time stats section. */ }
             <AllTimeStatsSection />

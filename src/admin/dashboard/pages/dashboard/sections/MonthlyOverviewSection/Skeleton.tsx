@@ -6,7 +6,7 @@ interface MonthlyOverviewSkeletonProps {
 }
 
 const MonthlyOverviewSkeleton = ( {
-    count = 8,
+    count = 12,
 }: MonthlyOverviewSkeletonProps ) => {
     return (
         <Section title={ __( 'Monthly Overview', 'dokan-lite' ) }>

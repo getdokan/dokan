@@ -268,29 +268,6 @@ class AdminDashboardStatsControllerTest extends DokanTestCase {
     }
 
     /**
-     * Test get_customer_metrics_data endpoint
-     * @test
-     * @return void
-     */
-    public function test_get_customer_metrics_data() {
-        wp_set_current_user( $this->admin_id );
-
-        // Test with default date
-        $request = new WP_REST_Request( 'GET', "/{$this->namespace}/{$this->rest_base}/customer-metrics" );
-        $controller = new AdminDashboardStatsController();
-        $response = $controller->get_customer_metrics_data( $request );
-
-        $this->assertEquals( 200, $response->get_status() );
-        $data = $response->get_data();
-        $this->assertIsArray( $data );
-
-        // Test with specific date
-        $request->set_param( 'date', '2024-01' );
-        $response = $controller->get_customer_metrics_data( $request );
-        $this->assertEquals( 200, $response->get_status() );
-    }
-
-    /**
      * Test get_all_time_stats_data endpoint
      * @test
      * @return void

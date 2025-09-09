@@ -2,7 +2,7 @@ import apiFetch from '@wordpress/api-fetch';
 import {
     TodoData,
     MonthlyOverviewData,
-    CustomerMetricsData,
+    VendorMetricsData,
     AllTimeStatsData,
     SalesChartData,
     AnalyticsData,
@@ -38,13 +38,13 @@ export const fetchMonthlyOverview = async (
     } );
 };
 
-// Customer Metrics API
-export const fetchCustomerMetrics = async (
+// Vendor Metrics API
+export const fetchVendorMetrics = async (
     date?: string
-): Promise< CustomerMetricsData > => {
+): Promise< VendorMetricsData > => {
     const params = date ? `?date=${ date }` : '';
-    return await apiFetch< CustomerMetricsData >( {
-        path: `${ API_BASE }/customer-metrics${ params }`,
+    return await apiFetch< VendorMetricsData >( {
+        path: `${ API_BASE }/vendor-metrics${ params }`,
         method: 'GET',
     } );
 };
@@ -80,13 +80,15 @@ export const fetchAnalytics = async (): Promise< AnalyticsData > => {
 };
 
 // Top Performing Vendors API
-export const fetchTopPerformingVendors =
-    async (): Promise< TopPerformingVendorsData > => {
-        return await apiFetch< TopPerformingVendorsData >( {
-            path: `${ API_BASE }/top-performing-vendors`,
-            method: 'GET',
-        } );
-    };
+export const fetchTopPerformingVendors = async (
+    date?: string
+): Promise< TopPerformingVendorsData > => {
+    const params = date ? `?date=${ date }` : '';
+    return await apiFetch< TopPerformingVendorsData >( {
+        path: `${ API_BASE }/top-performing-vendors${ params }`,
+        method: 'GET',
+    } );
+};
 
 // Most Reviewed Products API
 export const fetchMostReviewedProducts =

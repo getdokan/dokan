@@ -1,15 +1,13 @@
 import { __ } from '@wordpress/i18n';
 import Section from '../../Elements/Section';
 
-interface CustomerMetricsSkeletonProps {
+interface VendorMetricsSkeletonProps {
     count?: number;
 }
 
-const CustomerMetricsSkeleton = ( {
-    count = 1,
-}: CustomerMetricsSkeletonProps ) => {
+const VendorMetricsSkeleton = ( { count = 4 }: VendorMetricsSkeletonProps ) => {
     return (
-        <Section title={ __( 'Customer Metrics', 'dokan-lite' ) }>
+        <Section title={ __( 'Vendor Metrics', 'dokan-lite' ) }>
             <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 { Array.from( { length: count } ).map( ( _, i ) => (
                     <div
@@ -35,4 +33,4 @@ const CustomerMetricsSkeleton = ( {
     );
 };
 
-export default CustomerMetricsSkeleton;
+export default VendorMetricsSkeleton;

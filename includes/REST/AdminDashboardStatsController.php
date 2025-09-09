@@ -74,17 +74,6 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
             ]
         );
 
-        // Add a new endpoint for a customer_metrics section
-        register_rest_route(
-            $this->namespace, '/' . $this->rest_base . '/customer-metrics', [
-                [
-                    'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_customer_metrics_data' ],
-                    'permission_callback' => [ $this, 'check_permission' ],
-                ],
-            ]
-        );
-
         // Add a new endpoint for an all_time_stats section
         register_rest_route(
             $this->namespace, '/' . $this->rest_base . '/all-time-stats', [
@@ -113,6 +102,17 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_most_reviewed_products_data' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
+                ],
+            ]
+        );
+
+        // Add a new endpoint for a vendor metrics section
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/vendor-metrics', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_vendor_metrics_data' ],
                     'permission_callback' => [ $this, 'check_permission' ],
                 ],
             ]
@@ -220,23 +220,6 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
         return rest_ensure_response( $this->get_sales_chart( $date ) );
     }
 
-    /**
-     * Get customer_metrics data
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param WP_REST_Request $request
-     *
-     * @return WP_REST_Response
-     */
-    public function get_customer_metrics_data( $request ) {
-        // Get the selected month and year from the request
-        $date = $request->get_param( 'date' )
-            ? sanitize_text_field( $request->get_param( 'date' ) )
-            : dokan_current_datetime()->format( 'Y-m' );
-
-        return rest_ensure_response( $this->get_customer_metrics( $date ) );
-    }
 
     /**
      * Get all_time_stats data
@@ -254,10 +237,17 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
      *
      * @since DOKAN_SINCE
      *
+     * @param WP_REST_Request $request
+     *
      * @return WP_REST_Response
      */
-    public function get_top_performing_vendors_data() {
-        return rest_ensure_response( $this->get_top_performing_vendors() );
+    public function get_top_performing_vendors_data( $request ) {
+        // Get the selected month and year from the request
+        $date = $request->get_param( 'date' )
+            ? sanitize_text_field( $request->get_param( 'date' ) )
+            : dokan_current_datetime()->format( 'Y-m' );
+
+        return rest_ensure_response( $this->get_top_performing_vendors( $date ) );
     }
 
     /**
@@ -269,6 +259,24 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
      */
     public function get_most_reviewed_products_data() {
         return rest_ensure_response( $this->get_most_reviewed_products() );
+    }
+
+    /**
+     * Get vendor_metrics data
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_REST_Response
+     */
+    public function get_vendor_metrics_data( $request ) {
+        // Get the selected month and year from the request
+        $date = $request->get_param( 'date' )
+            ? sanitize_text_field( $request->get_param( 'date' ) )
+            : dokan_current_datetime()->format( 'Y-m' );
+
+        return rest_ensure_response( $this->get_vendor_metrics( $date ) );
     }
 
     /**
@@ -324,11 +332,14 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
      *
      * @since DOKAN_SINCE
      *
+     * @param string $date The date for which to get the vendor data (optional).
+     *
      * @return array
      */
-    public function get_top_performing_vendors() {
-        $result  = [];
-        $vendors = AdminDashboardStats::get_top_performing_vendors();
+    public function get_top_performing_vendors( $date = '' ) {
+        $result     = [];
+        $date_range = $this->parse_date_range( $date );
+        $vendors    = AdminDashboardStats::get_top_performing_vendors( $date_range['current_month_start'], $date_range['current_month_end'], 5 );
 
         // If vendors found, then populate the result array
         if ( ! empty( $vendors ) ) {
@@ -351,7 +362,8 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
 
         return apply_filters(
             'dokan_rest_admin_dashboard_top_performing_vendors_data',
-            $result
+            $result,
+            $date
         );
     }
 
@@ -525,7 +537,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     }
 
     /**
-     * Get customer metrics data
+     * Get vendor metrics data
      *
      * @since DOKAN_SINCE
      *
@@ -533,17 +545,17 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
      *
      * @return array
      */
-    public function get_customer_metrics( string $date = '' ): array {
+    public function get_vendor_metrics( string $date = '' ): array {
         // Date range for the current month.
-        $date_range       = $this->parse_date_range( $date );
-        $monthly_overview = AdminDashboardStats::get_customer_metrics(
+        $date_range     = $this->parse_date_range( $date );
+        $vendor_metrics = AdminDashboardStats::get_vendor_metrics(
             $date_range['current_month_start'],
             $date_range['current_month_end']
         );
 
         return apply_filters(
-            'dokan_rest_admin_dashboard_customer_metrics_data',
-            $monthly_overview,
+            'dokan_rest_admin_dashboard_vendor_metrics_data',
+            $vendor_metrics,
             $date_range
         );
     }

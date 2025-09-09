@@ -33,20 +33,6 @@ class AdminDashboardStats extends BaseModel {
     }
 
     /**
-     * Get customer metrics data.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $start_date Start date in Y-m-d format.
-     * @param string $end_date   End date in Y-m-d format.
-     *
-     * @return array Customer metrics data.
-     */
-    public static function get_customer_metrics( string $start_date, string $end_date ): array {
-        return ( new static() )->get_data_store()->get_customer_metrics( $start_date, $end_date );
-    }
-
-    /**
      * Get new customers' data.
      *
      * @since DOKAN_SINCE
@@ -116,11 +102,27 @@ class AdminDashboardStats extends BaseModel {
      *
      * @since DOKAN_SINCE
      *
-     * @param int $limit Number of vendors to retrieve. Default 5.
+     * @param string $start_date Start date in Y-m-d format. Optional.
+     * @param string $end_date   End date in Y-m-d format. Optional.
+     * @param int    $limit Number of vendors to retrieve. Default 5.
      *
      * @return array Array of vendor data with sales metrics.
      */
-    public static function get_top_performing_vendors( int $limit = 5 ): array {
-        return ( new static() )->get_data_store()->get_top_performing_vendors( $limit );
+    public static function get_top_performing_vendors( string $start_date, string $end_date, int $limit = 5 ): array {
+        return ( new static() )->get_data_store()->get_top_performing_vendors( $start_date, $end_date, $limit );
+    }
+
+    /**
+     * Get vendor metrics data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $start_date Start date in Y-m-d format.
+     * @param string $end_date   End date in Y-m-d format.
+     *
+     * @return array Vendor metrics data.
+     */
+    public static function get_vendor_metrics( string $start_date, string $end_date ): array {
+        return ( new static() )->get_data_store()->get_vendor_metrics( $start_date, $end_date );
     }
 }

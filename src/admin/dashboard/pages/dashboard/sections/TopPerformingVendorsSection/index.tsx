@@ -1,19 +1,38 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import Section from '../../Elements/Section';
+import MonthPicker from '../../Elements/MonthPicker';
 import { DataViews } from '../../../../../../components';
 import { useDashboardApiData } from '../../hooks/useDashboardApiData';
-import { fetchTopPerformingVendors } from '../../utils/api';
-import { TopPerformingVendorsData } from '../../types';
+import { fetchTopPerformingVendors, formatDateForApi } from '../../utils/api';
+import { TopPerformingVendorsData, MonthPickerValue } from '../../types';
 import TopPerformingVendorsSkeleton from './Skeleton';
 import PriceHtml from '../../../../../../components/PriceHtml';
 import { applyFilters } from '@wordpress/hooks';
 
 const TopPerformingVendorsSection = () => {
-    const { data, loading, error } =
+    const [ monthData, setMonthData ] = useState< MonthPickerValue >( {
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
+    } );
+
+    const { data, loading, error, refetch } =
         useDashboardApiData< TopPerformingVendorsData >( {
             fetchFunction: fetchTopPerformingVendors,
         } );
+
+    const handleMonthChange = ( value: { month: number; year: number } ) => {
+        const newMonthData = {
+            month: value.month.toString(),
+            year: value.year.toString(),
+        };
+        setMonthData( newMonthData );
+
+        if ( value.month && value.year ) {
+            const dateString = formatDateForApi( value.month, value.year );
+            refetch( dateString );
+        }
+    };
 
     // If the data is empty, fill with default values.
     const emptyString = applyFilters(
@@ -81,13 +100,13 @@ const TopPerformingVendorsSection = () => {
             render: ( { item } ) => {
                 return (
                     <div className={ `w-full text-right px-2 text-gray-900` }>
-                        {
-                            ( item.total_earning !== emptyString )
-                                ? <PriceHtml price={ `${ item.total_earning }` } />
-                                : emptyString
-                        }
+                        { item.total_earning !== emptyString ? (
+                            <PriceHtml price={ `${ item.total_earning }` } />
+                        ) : (
+                            emptyString
+                        ) }
                     </div>
-                )
+                );
             },
         },
         {
@@ -106,11 +125,11 @@ const TopPerformingVendorsSection = () => {
             enableSorting: false,
             render: ( { item } ) => (
                 <div className={ `w-full text-right px-2 text-gray-900` }>
-                    {
-                        ( item.total_commission !== emptyString )
-                            ? <PriceHtml price={ `${ item.total_commission }` } />
-                            : emptyString
-                    }
+                    { item.total_commission !== emptyString ? (
+                        <PriceHtml price={ `${ item.total_commission }` } />
+                    ) : (
+                        emptyString
+                    ) }
                 </div>
             ),
         },
@@ -146,7 +165,17 @@ const TopPerformingVendorsSection = () => {
     return (
         <Section
             title={ __( 'Top Performing Vendors', 'dokan-lite' ) }
-            tooltip="Top performing vendors of the marketplace, updates daily at 00:01"
+            tooltip={ __(
+                'Top performing vendors of the marketplace',
+                'dokan-lite'
+            ) }
+            sectionHeader={
+                <MonthPicker
+                    value={ monthData }
+                    comparisonPosition="left"
+                    onChange={ handleMonthChange }
+                />
+            }
         >
             <div className="top-vendors-table relative overflow-x-auto shadow-md sm:rounded-lg bg-white">
                 <DataViews

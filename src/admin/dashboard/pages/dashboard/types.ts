@@ -52,26 +52,27 @@ export interface MonthlyOverviewItem {
 export interface MonthlyOverviewData {
     new_products: MonthlyOverviewItem;
     active_vendors: MonthlyOverviewItem;
+    new_vendor_registration: MonthlyOverviewItem;
     new_customers: MonthlyOverviewItem;
     order_cancellation_rate: MonthlyOverviewItem;
+    recurring_customers: MonthlyOverviewItem;
     abuse_reports: MonthlyOverviewItem;
     refund: MonthlyOverviewItem;
     support_tickets: MonthlyOverviewItem;
     reviews: MonthlyOverviewItem;
 }
 
-// Customer Metrics Types
-export interface CustomerMetricsItem {
+// Vendor Metrics Types
+export interface VendorMetricsItem {
     icon: string;
-    current: number;
-    previous: number;
+    count: number;
     title: string;
     tooltip: string;
     position: number;
 }
 
-export interface CustomerMetricsData {
-    recurring_customers: CustomerMetricsItem;
+export interface VendorMetricsData {
+    [ key: string ]: VendorMetricsItem;
 }
 
 export interface AllTimeStatsItem {

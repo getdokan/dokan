@@ -85,17 +85,17 @@ class AdminDashboardStatsStore extends BaseDataStore {
         return 'ID';
     }
 
+
     /**
-     * Get customer metrics data for recurring customers.
+     * Get recurring customers data for current and previous periods using wc_order_stats.
      *
      * @since DOKAN_SINCE
      *
-     * @param string $start_date Start date in Y-m-d format.
-     * @param string $end_date   End date in Y-m-d format.
+     * @param array $date_range Array containing date range information.
      *
-     * @return array Customer metrics data.
+     * @return array Recurring customers data.
      */
-    public function get_customer_metrics( string $start_date, string $end_date ): array {
+    public function get_recurring_customers_data( array $date_range ): array {
         global $wpdb;
 
         // Get the order statuses to exclude from the report.
@@ -103,25 +103,48 @@ class AdminDashboardStatsStore extends BaseDataStore {
 
         $this->clear_all_clauses();
         // phpcs:disable
-        $this->add_sql_clause( 'select', 'COUNT(DISTINCT pm.meta_value) as recurring_customers' );
-        $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() . ' p1' );
-        $this->add_sql_clause( 'join', "JOIN {$wpdb->postmeta} pm ON p1.ID = pm.post_id AND pm.meta_key = '_customer_user' AND pm.meta_value > 0" );
-        $this->add_sql_clause( 'where', " AND p1.post_type = 'shop_order'" );
-        $this->add_sql_clause( 'where', " AND p1.post_status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
-        $this->add_sql_clause( 'where', $wpdb->prepare( ' AND DATE(p1.post_date) BETWEEN %s AND %s', $start_date, $end_date ) );
-
+        $this->add_sql_clause(
+            'select',
+            $wpdb->prepare(
+                'COUNT(DISTINCT CASE WHEN DATE(os1.date_created) BETWEEN %s AND %s THEN os1.customer_id END) as current_count,',
+                $date_range['current_month_start'],
+                $date_range['current_month_end']
+            )
+        );
+        $this->add_sql_clause(
+            'select',
+            $wpdb->prepare(
+                'COUNT(DISTINCT CASE WHEN DATE(os1.date_created) BETWEEN %s AND %s THEN os1.customer_id END) as previous_count',
+                $date_range['previous_month_start'],
+                $date_range['previous_month_end']
+            )
+        );
+        $this->add_sql_clause( 'from', "{$wpdb->prefix}wc_order_stats os1" );
+        $this->add_sql_clause( 'where', " AND os1.status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
+        $this->add_sql_clause( 'where', " AND os1.customer_id > 0" );
         $this->add_sql_clause(
             'where',
             $wpdb->prepare(
-                "AND pm.meta_value IN (
-                    SELECT DISTINCT pm2.meta_value
-                    FROM {$wpdb->posts} p2
-                    JOIN {$wpdb->postmeta} pm2 ON p2.ID = pm2.post_id AND pm2.meta_key = '_customer_user' AND pm2.meta_value > 0
-                    WHERE p2.post_type = 'shop_order'
-                    AND p2.post_status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )
-                    AND DATE(p2.post_date) < %s
-                )",
-                $end_date
+                ' AND ((DATE(os1.date_created) BETWEEN %s AND %s) OR (DATE(os1.date_created) BETWEEN %s AND %s))',
+                $date_range['current_month_start'],
+                $date_range['current_month_end'],
+                $date_range['previous_month_start'],
+                $date_range['previous_month_end']
+            )
+        );
+
+        // Only include customers who had orders the comparison periods ago
+        $this->add_sql_clause(
+            'where',
+            $wpdb->prepare(
+                "AND os1.customer_id IN (
+                SELECT DISTINCT customer_id
+                FROM {$wpdb->prefix}wc_order_stats os2
+                WHERE os2.status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )
+                AND os2.customer_id > 0
+                AND DATE(os2.date_created) < %s
+            )",
+                $date_range['previous_month_start']
             )
         );
 
@@ -130,18 +153,16 @@ class AdminDashboardStatsStore extends BaseDataStore {
         // phpcs:enable
 
         return apply_filters(
-            'dokan_admin_dashboard_customer_metrics',
+            'dokan_admin_dashboard_recurring_customers_data',
             [
-                'recurring_customers' => [
-                    'icon'     => 'FileUser',
-                    'count'    => (int) ( $result['recurring_customers'] ?? 0 ),
-                    'title'    => esc_html__( 'Recurring Customers', 'dokan-lite' ),
-                    'tooltip'  => esc_html__( 'Customers who returned and purchased again in the time period', 'dokan-lite' ),
-                    'position' => 1,
-                ],
+                'icon'     => 'FileUser',
+                'current'  => (int) ( $result['current_count'] ?? 0 ),
+                'previous' => (int) ( $result['previous_count'] ?? 0 ),
+                'title'    => esc_html__( 'Recurring Customers', 'dokan-lite' ),
+                'tooltip'  => esc_html__( 'Customers who returned and purchased again in the time period', 'dokan-lite' ),
+                'position' => 5,
             ],
-            $start_date,
-            $end_date
+            $date_range
         );
     }
 
@@ -191,7 +212,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
                 'previous' => (int) ( $result['previous_count'] ?? 0 ),
                 'title'    => esc_html__( 'New Customers', 'dokan-lite' ),
                 'tooltip'  => esc_html__( 'Total new customers registered in the time period', 'dokan-lite' ),
-                'position' => 3,
+                'position' => 4,
             ],
             $date_range
         );
@@ -357,6 +378,58 @@ class AdminDashboardStatsStore extends BaseDataStore {
     }
 
     /**
+     * Get new vendor registration data for current and previous periods.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $date_range Array containing date range information.
+     *
+     * @return array New vendor registration data.
+     */
+    public function get_new_vendor_registration_data( array $date_range ): array {
+        global $wpdb;
+
+        $this->clear_all_clauses();
+        $this->add_sql_clause(
+            'select',
+            $wpdb->prepare(
+                'SUM(CASE WHEN u.user_registered BETWEEN %s AND %s THEN 1 ELSE 0 END) as current_count,',
+                $date_range['current_month_start'] . ' 00:00:00',
+                $date_range['current_month_end'] . ' 23:59:59'
+            )
+        );
+        $this->add_sql_clause(
+            'select',
+            $wpdb->prepare(
+                'SUM(CASE WHEN u.user_registered BETWEEN %s AND %s THEN 1 ELSE 0 END) as previous_count',
+                $date_range['previous_month_start'] . ' 00:00:00',
+                $date_range['previous_month_end'] . ' 23:59:59'
+            )
+        );
+        $this->add_sql_clause( 'from', "{$wpdb->users} u" );
+        $this->add_sql_clause( 'join', "JOIN {$wpdb->usermeta} um ON u.ID = um.user_id" );
+        $this->add_sql_clause( 'where', $wpdb->prepare( ' AND u.user_registered BETWEEN %s AND %s', $date_range['previous_month_start'] . ' 00:00:00', $date_range['current_month_end'] . ' 23:59:59' ) );
+        $this->add_sql_clause( 'where', $wpdb->prepare( ' AND um.meta_key = %s', $wpdb->prefix . 'capabilities' ) );
+        $this->add_sql_clause( 'where', $wpdb->prepare( ' AND um.meta_value LIKE %s', '%seller%' ) );
+
+        $query_statement = $this->get_query_statement();
+        $result          = $wpdb->get_row( $query_statement, ARRAY_A ); // phpcs:ignore
+
+        return apply_filters(
+            'dokan_admin_dashboard_new_vendor_registration_data',
+            [
+                'icon'     => 'UserRoundPlus',
+                'current'  => (int) ( $result['current_count'] ?? 0 ),
+                'previous' => (int) ( $result['previous_count'] ?? 0 ),
+                'title'    => esc_html__( 'New Vendor Registration', 'dokan-lite' ),
+                'tooltip'  => esc_html__( 'Total vendors who got registered in the time period', 'dokan-lite' ),
+                'position' => 3,
+            ],
+            $date_range
+        );
+    }
+
+    /**
      * Get monthly overview data including new customers and order stats.
      *
      * @since DOKAN_SINCE
@@ -369,10 +442,12 @@ class AdminDashboardStatsStore extends BaseDataStore {
         return apply_filters(
             'dokan_admin_dashboard_monthly_overview',
             [
-                'new_products'            => $this->get_new_products_data( $date_range ),
-                'active_vendors'          => $this->get_active_vendors_data( $date_range ),
-                'new_customers'           => $this->get_new_customers_data( $date_range ),
-                'order_cancellation_rate' => $this->get_order_cancellation_rate_data( $date_range ),
+                'new_products'               => $this->get_new_products_data( $date_range ),
+                'active_vendors'             => $this->get_active_vendors_data( $date_range ),
+                'new_vendor_registration'    => $this->get_new_vendor_registration_data( $date_range ),
+                'new_customers'              => $this->get_new_customers_data( $date_range ),
+                'order_cancellation_rate'    => $this->get_order_cancellation_rate_data( $date_range ),
+                'recurring_customers'        => $this->get_recurring_customers_data( $date_range ),
             ],
             $date_range
         );
@@ -383,13 +458,34 @@ class AdminDashboardStatsStore extends BaseDataStore {
      *
      * @since DOKAN_SINCE
      *
+     * @param string $start_date Start date in Y-m-d format. Optional.
+     * @param string $end_date   End date in Y-m-d format. Optional.
      * @param int $limit Number of vendors to retrieve. Default 5.
      *
      * @return array Array of vendor data with sales metrics.
      */
-    public function get_top_performing_vendors( int $limit = 5 ): array {
+    public function get_top_performing_vendors( string $start_date, string $end_date, int $limit = 5 ): array {
         // Use VendorOrderStatsStore for dokan_order_stats queries
-        return $this->vendor_order_stats_store->get_top_performing_vendors( $limit );
+        return $this->vendor_order_stats_store->get_top_performing_vendors( $start_date, $end_date, $limit );
+    }
+
+    /**
+     * Get vendor metrics data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $start_date Start date in Y-m-d format.
+     * @param string $end_date   End date in Y-m-d format.
+     *
+     * @return array Vendor metrics data.
+     */
+    public function get_vendor_metrics( string $start_date, string $end_date ): array {
+        return apply_filters(
+            'dokan_rest_admin_dashboard_vendor_metrics_data',
+            [],
+            $start_date,
+            $end_date
+        );
     }
 
     /**
