@@ -149,6 +149,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
                 // translators: 1: Refund item ID, 2: Error message
                 dokan_log(
                     sprintf(
+                        // translators: 1: Refund item ID, 2: Error message
                         __( 'Refund item ID %1$s error: %2$s', 'dokan-lite' ), $order_item_id,
                         $exception->getMessage()
                     ), 'error'
@@ -536,7 +537,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      */
     protected function get_vendor_order_fees(): float {
         if ( self::SELLER === $this->get_order_fee_recipient() ) {
-            return $this->order->get_total_fees();
+            return $this->order->get_total_fees() - $this->get_order_fee_refunded();
         }
 
         return 0.0;
@@ -550,12 +551,13 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return string
      */
     protected function get_order_fee_recipient(): string {
+        $recipient = self::ADMIN;
         // check order is a manual order then fee recipient is seller.
         if ( 'vendor' === $this->order->get_meta( '_wc_order_attribution_source_type', true ) ) {
-            return self::SELLER;
+            $recipient = self::SELLER;
         }
 
-        return self::ADMIN;
+        return apply_filters( 'dokan_order_commission_order_fee_recipient', $recipient, $this->order, $this );
     }
 
     /**
@@ -573,7 +575,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
 
         if ( ! empty( $fee_items ) ) {
             foreach ( $fee_items as $item_id => $item ) {
-                $refunded_amount = $this->order->get_total_refunded_for_item( $item_id, 'fee' );
+                $refunded_amount      = $this->order->get_total_refunded_for_item( $item_id, 'fee' );
                 $total_refunded_fees += (float) $refunded_amount;
             }
         }
