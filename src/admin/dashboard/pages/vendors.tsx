@@ -193,9 +193,7 @@ const VendorsPage = ( props ) => {
                 const name = item?.store_name || '';
                 const avatar = item?.gravatar || '';
                 return (
-                    <div
-                        className='flex items-center gap-3'
-                    >
+                    <div className="flex items-center gap-3">
                         { avatar ? (
                             <div
                                 className={ twMerge(
@@ -218,9 +216,7 @@ const VendorsPage = ( props ) => {
                                 aria-hidden="true"
                             ></div>
                         ) }
-                        <span
-                            className='flex flex-col'
-                        >
+                        <span className="flex flex-col">
                             <DokanLink
                                 as="div"
                                 onClick={ () => {
@@ -512,7 +508,7 @@ const VendorsPage = ( props ) => {
                         setView( ( prev: any ) => ( { ...prev, page: 1 } ) );
                     } }
                 />
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                     <SearchInput />
                     <DokanButton
                         type="button"
