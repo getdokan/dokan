@@ -299,10 +299,6 @@ class Dashboard implements Hookable {
             $version          = $dashboard_script['version'] ?? '';
             $data             = [ 'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price() ];
 
-            if ( ! in_array( 'dokan-react-components', $dependencies, true ) ) {
-                $dependencies[] = 'dokan-react-components';
-            }
-
             wp_register_script(
                 $this->script_key,
                 DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-dashboard.js',
@@ -314,7 +310,7 @@ class Dashboard implements Hookable {
             wp_register_style(
                 $this->script_key,
                 DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-dashboard.css',
-                [ 'dokan-react-components' ],
+                [ 'dokan-react-components', 'wc-components' ],
                 $version
             );
 

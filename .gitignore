@@ -11,6 +11,8 @@ secret.json
 debug.log
 package-lock.json
 config.json
+/lib/packages/
+/lib/classes/
 
 # Composer
 /vendor/

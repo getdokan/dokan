@@ -11,9 +11,6 @@ test.describe('Diagnostic notice test', () => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new NoticeAndPromotionPage(aPage);
-
-        // delete previous settings if exists
-        await dbUtils.deleteOptionRow(['dokan_tracking_notice', 'dokan_allow_tracking']);
     });
 
     test.afterAll(async () => {

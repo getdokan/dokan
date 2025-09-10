@@ -17,6 +17,9 @@
 
 #dokan-admin-dashboard {
     .dokan-dashboard-datatable {
+        z-index: 0;
+        position: relative;
+
         .dataviews-wrapper {
             .dataviews__view-actions {
                 display: none;

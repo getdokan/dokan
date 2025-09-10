@@ -1,12 +1,16 @@
 import { addQueryArgs } from '@wordpress/url';
 import { __, sprintf } from '@wordpress/i18n';
 import { RawHTML, useEffect, useState, useCallback } from '@wordpress/element';
-import { TextControl, SelectControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { formatPrice, truncate } from '@dokan/utilities';
-import { TextArea, Tooltip, SimpleRadio } from '@getdokan/dokan-ui';
+import {
+    TextArea,
+    Tooltip,
+    SimpleRadio,
+    SimpleInput,
+} from '@getdokan/dokan-ui';
 import * as LucideIcons from 'lucide-react';
-
+import { dateI18n, getSettings } from '@wordpress/date';
 // Import Dokan components
 import {
     DokanButton,
@@ -15,6 +19,8 @@ import {
     DokanModal,
     DokanTab,
     Filter,
+    VendorAsyncSelect,
+    DateRangePicker,
 } from '@dokan/components';
 
 import {
@@ -26,6 +32,8 @@ import {
     Check,
     XCircle,
     Download,
+    Home,
+    Calendar,
 } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
@@ -86,6 +94,12 @@ const processDetails = ( data, method: string ) => {
     return __( '-', 'dokan-lite' );
 };
 
+type VendorSelect = {
+    label: string;
+    value: string;
+    raw: unknown;
+};
+
 const WithdrawPage = () => {
     const [ data, setData ] = useState( [] );
     const [ isLoading, setIsLoading ] = useState( true );
@@ -99,6 +113,14 @@ const WithdrawPage = () => {
     const [ filterArgs, setFilterArgs ] = useState( {} );
     const [ activeStatus, setActiveStatus ] = useState( 'all' );
     const [ showFilters, setShowFilters ] = useState( false );
+    const [ vendorFilter, setVendorFilter ] = useState< VendorSelect | null >(
+        null
+    );
+    const [ after, setAfter ] = useState( '' );
+    const [ afterText, setAfterText ] = useState( '' );
+    const [ before, setBefore ] = useState( '' );
+    const [ beforeText, setBeforeText ] = useState( '' );
+    const [ focusInput, setFocusInput ] = useState( 'startDate' );
 
     // Define fields for the table columns
     const fields = [
@@ -236,6 +258,15 @@ const WithdrawPage = () => {
             },
         },
     ];
+
+    const displayDateRange = ( startDate, endDate ) => {
+        return sprintf(
+            // translators: %s: start date, %s: end date.
+            __( '%s - %s', 'dokan-lite' ),
+            dateI18n( getSettings().formats.date, startDate ),
+            dateI18n( getSettings().formats.date, endDate )
+        );
+    };
 
     const getActionLabel = ( iconName, label ) => {
         if ( ! ( iconName && label ) ) {
@@ -611,13 +642,24 @@ const WithdrawPage = () => {
             ...prevView,
             page: 1, // Reset to first page when applying filters
         } ) );
-        fetchWithdraws();
+
+        // fetchWithdraws();
     };
 
     // Clear filters
     const clearFilter = () => {
+        setVendorFilter( null );
+        setAfter( '' );
+        setAfterText( '' );
+        setBefore( '' );
+        setBeforeText( '' );
         setFilterArgs( {} );
-        fetchWithdraws();
+
+        setView( ( prevView ) => ( {
+            ...prevView,
+            page: 1, // Reset to first page when applying filters
+        } ) );
+        // fetchWithdraws();
     };
 
     // Fetch withdraws when view changes
@@ -625,85 +667,11 @@ const WithdrawPage = () => {
         fetchWithdraws();
     }, [ view ] );
 
-    // Custom filter fields
-    const VendorFilter = ( { filterArgs, setFilterArgs } ) => {
-        return (
-            <TextControl
-                label={ __( 'Vendor', 'dokan-lite' ) }
-                placeholder={ __(
-                    'Search by vendor name or email',
-                    'dokan-lite'
-                ) }
-                value={ filterArgs.vendor || '' }
-                onChange={ ( value ) =>
-                    setFilterArgs( {
-                        ...filterArgs,
-                        vendor: value,
-                    } )
-                }
-                className="min-w-48"
-            />
-        );
-    };
-
-    const DateFilter = ( { filterArgs, setFilterArgs } ) => {
-        return (
-            <div className="flex space-x-2">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        { __( 'From Date', 'dokan-lite' ) }
-                    </label>
-                    <input
-                        type="date"
-                        value={ filterArgs.date_from || '' }
-                        onChange={ ( e ) =>
-                            setFilterArgs( {
-                                ...filterArgs,
-                                date_from: e.target.value,
-                            } )
-                        }
-                        className="border border-gray-300 rounded-md px-3 py-2"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        { __( 'To Date', 'dokan-lite' ) }
-                    </label>
-                    <input
-                        type="date"
-                        value={ filterArgs.date_to || '' }
-                        onChange={ ( e ) =>
-                            setFilterArgs( {
-                                ...filterArgs,
-                                date_to: e.target.value,
-                            } )
-                        }
-                        className="border border-gray-300 rounded-md px-3 py-2"
-                    />
-                </div>
-            </div>
-        );
-    };
-
-    const MethodFilter = ( { filterArgs, setFilterArgs } ) => {
-        return (
-            <SelectControl
-                label={ __( 'Payment Method', 'dokan-lite' ) }
-                value={ filterArgs.method || '' }
-                options={ PAYMENT_METHODS }
-                onChange={ ( value ) =>
-                    setFilterArgs( {
-                        ...filterArgs,
-                        method: value,
-                    } )
-                }
-                className="min-w-48"
-            />
-        );
-    };
-
     return (
         <div className="withdraw-admin-page">
+            <h2 className="text-2xl leading-3 text-gray-900 font-bold mb-6">
+                { __( 'Withdraw', 'dokan-lite' ) }
+            </h2>
             { /* Status Tabs + Actions Row */ }
             <div className="mb-6 flex items-center justify-between gap-3">
                 <DokanTab
@@ -765,26 +733,110 @@ const WithdrawPage = () => {
             >
                 <Filter
                     fields={ [
-                        <VendorFilter
-                            key="vendor_filter"
-                            filterArgs={ filterArgs }
-                            setFilterArgs={ setFilterArgs }
+                        <VendorAsyncSelect
+                            icon={ <Home size={ 16 } /> }
+                            key="vendor-select"
+                            value={ vendorFilter }
+                            onChange={ (
+                                selectedVendorObj: null | {
+                                    value: string;
+                                    label: string;
+                                }
+                            ) => {
+                                const args = { ...filterArgs };
+
+                                delete args.user_id;
+
+                                if ( selectedVendorObj ) {
+                                    args.user_id = selectedVendorObj.value;
+                                }
+                                setFilterArgs( args );
+                                setVendorFilter( selectedVendorObj );
+                            } }
+                            placeholder={ __( 'Select Vendor', 'dokan-lite' ) }
+                            isClearable={ true }
                         />,
-                        <DateFilter
-                            key="date_filter"
-                            filterArgs={ filterArgs }
-                            setFilterArgs={ setFilterArgs }
-                        />,
-                        <MethodFilter
-                            key="method_filter"
-                            filterArgs={ filterArgs }
-                            setFilterArgs={ setFilterArgs }
-                        />,
+                        <DateRangePicker
+                            after={ after }
+                            afterText={ afterText }
+                            before={ before }
+                            beforeText={ beforeText }
+                            onUpdate={ ( update ) => {
+                                if ( update.after ) {
+                                    setAfter( update.after );
+                                }
+
+                                if ( update.afterText ) {
+                                    setAfterText( update.afterText );
+                                }
+
+                                if ( update.before ) {
+                                    setBefore( update.before );
+                                }
+
+                                if ( update.beforeText ) {
+                                    setBeforeText( update.beforeText );
+                                }
+
+                                if ( update.focusedInput ) {
+                                    setFocusInput( update.focusedInput );
+
+                                    if (
+                                        update.focusedInput === 'endDate' &&
+                                        after
+                                    ) {
+                                        setBefore( '' );
+                                        setBeforeText( '' );
+                                    }
+                                }
+                            } }
+                            shortDateFormat="MM/DD/YYYY"
+                            focusedInput={ focusInput }
+                            isInvalidDate={ () => false }
+                            wrapperClassName="w-full"
+                            pickerToggleClassName="block"
+                            wpPopoverClassName="dokan-layout"
+                            popoverBodyClassName="p-4 w-auto text-sm/6"
+                            onClear={ () => {
+                                setAfter( '' );
+                                setAfterText( '' );
+                                setBefore( '' );
+                                setBeforeText( '' );
+                                const args = { ...filterArgs };
+                                delete args.start_date;
+                                delete args.end_date;
+                                setFilterArgs( args );
+                            } }
+                            onOk={ () => {
+                                setFilterArgs( {
+                                    ...filterArgs,
+                                    start_date: after,
+                                    end_date: before,
+                                } );
+                            } }
+                        >
+                            <SimpleInput
+                                addOnLeft={ <Calendar size="16" /> }
+                                className="border rounded px-3 py-1.5 w-full bg-white"
+                                onChange={ () => {} }
+                                input={ {
+                                    type: 'text',
+                                    value:
+                                        ! after || ! before
+                                            ? ''
+                                            : displayDateRange( after, before ),
+                                    placeholder: 'Select date range',
+                                    readOnly: true,
+                                } }
+                            />
+                        </DateRangePicker>,
                     ] }
-                    onFilter={ handleFilter }
-                    onReset={ clearFilter }
+                    onFilter={ () => handleFilter() }
+                    onReset={ () => clearFilter() }
                     showFilter={ true }
                     showReset={ true }
+                    resetBtnClassName="dokan-btn-tertiary"
+                    filterBtnClassName="dokan-btn-success"
                     namespace="withdraw_filters"
                 />
             </div>
