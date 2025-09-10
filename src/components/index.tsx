@@ -35,7 +35,6 @@ export { default as CouponAsyncSelect } from './CouponAsyncSelect';
 export { default as SearchInput } from './SearchInput';
 export { default as Select } from './Select';
 export { default as DateRangePicker } from './DateRangePicker';
-export { default as SellerBadgeSelect } from './SellerBadgeSelect';
 
 // Commission Components
 export * from './commission';

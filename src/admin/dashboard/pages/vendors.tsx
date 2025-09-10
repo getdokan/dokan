@@ -2,19 +2,19 @@ import { useEffect, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
-import { DataViews, DokanTab, Filter, DokanLink } from '@dokan/components';
-import DokanModal from '../../../components/modals/DokanModal';
-import { Vendor } from '../../../definitions/dokan-vendor';
 import {
+    DataViews,
+    DokanTab,
+    Filter,
+    DokanLink,
     DateTimeHtml,
     DokanButton,
     SearchInput,
-    Select,
-    SellerBadgeSelect,
-} from '../../../components';
+} from '@dokan/components';
+import DokanModal from '../../../components/modals/DokanModal';
+import { Vendor } from '../../../definitions/dokan-vendor';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import { Crown, Funnel, Plus, Search, Trophy } from 'lucide-react';
 
 const defaultLayouts = {
     table: {},
@@ -24,20 +24,66 @@ const defaultLayouts = {
 };
 
 const VendorsPage = ( props ) => {
-    const { navigate } = props;
+    const { navigate, params, location, useSearchParams } = props;
+    const [ searchParams, setSearchParams ] = useSearchParams();
     const [ showFilters, setShowFilters ] = useState( false );
     const [ view, setView ] = useState< any >( {
         perPage: 10,
         page: 1,
-        search: '',
         type: 'table',
         titleField: 'vendor',
         layout: { ...defaultLayouts },
         fields: [ 'email', 'phone', 'registered', 'status' ],
     } );
-
+    const [ search, setSearch ] = useState( '' );
     const [ status, setStatus ] = useState< string >( 'all' );
-    const [ sellerbadge, setSellerbadge ] = useState();
+
+    // Allow PRO to inject filter fields via wp.hooks.applyFilters
+    const getFilterFields = () => {
+        // returns array of React nodes
+        const fields: any[] = [];
+        try {
+            // Use a stable filter id to let pro register fields
+            // @ts-ignore
+            const injected = wp.hooks.applyFilters(
+                'dokan_admin_vendors_filters',
+                fields
+            );
+            if ( Array.isArray( injected ) ) {
+                return injected;
+            }
+        } catch ( _e ) {
+            // fail silently
+        }
+        return fields; // lite default: empty
+    };
+
+    // Build query just before request; allow PRO to mutate too
+    const buildQuery = ( base: Record< string, any > ) => {
+        const query: Record< string, any > = { ...base };
+
+        if ( query?.noBuildQuery ) {
+            return query;
+        }
+
+        try {
+            // Let PRO mutate query via wp.hooks filter
+            // @ts-ignore
+            const mutated = wp.hooks.applyFilters(
+                'dokan_admin_vendors_before_request',
+                query,
+                searchParams,
+                setSearchParams
+            );
+            if ( mutated && typeof mutated === 'object' ) {
+                Object.assign( query, mutated );
+            }
+        } catch ( _e ) {
+            // ignore
+        }
+
+        return query;
+    };
 
     // Keep track of current selection in DataViews so we can clear it after bulk actions
     const [ selection, setSelection ] = useState< string[] >( [] );
@@ -71,8 +117,8 @@ const VendorsPage = ( props ) => {
         args?: Partial< {
             page: number;
             perPage: number;
-            search: string;
             status: string;
+            noBuildQuery?: boolean;
         } >
     ) => {
         setIsLoading( true );
@@ -80,19 +126,22 @@ const VendorsPage = ( props ) => {
             const query: Record< string, any > = {
                 per_page: args?.perPage ?? view.perPage,
                 page: args?.page ?? view.page,
+                noBuildQuery: args?.noBuildQuery ?? false,
+                ...( search && { search } ),
             };
 
             const currentStatus = args?.status ?? status;
             if ( currentStatus && currentStatus !== 'all' ) {
                 query.status = currentStatus;
             }
-            if ( args?.search ?? view.search ) {
-                query.search = args?.search ?? view.search;
-            }
 
             // Use parse: false to read headers
+            // Allow last-minute enrichment of query (badge_id, subscription, pro hooks)
+            const finalQuery = buildQuery( query );
+
+            delete finalQuery.noBuildQuery;
             const response: Response = await apiFetch( {
-                path: addQueryArgs( '/dokan/v1/stores', query ),
+                path: addQueryArgs( '/dokan/v1/stores', finalQuery ),
                 parse: false,
             } as any );
 
@@ -101,9 +150,26 @@ const VendorsPage = ( props ) => {
                 response.headers.get( 'X-WP-Total' ) || '0',
                 10
             );
+            const all = parseInt(
+                response.headers.get( 'X-Status-All' ) || '0',
+                10
+            );
+            const approved = parseInt(
+                response.headers.get( 'X-Status-Approved' ) || '0',
+                10
+            );
+            const pending = parseInt(
+                response.headers.get( 'X-Status-Pending' ) || '0',
+                10
+            );
 
             setData( body );
             setTotalItems( total );
+            setCounts( {
+                all,
+                approved,
+                pending,
+            } );
         } catch ( e ) {
             // eslint-disable-next-line no-console
             console.error( 'Failed to fetch vendors', e );
@@ -114,45 +180,20 @@ const VendorsPage = ( props ) => {
         }
     };
 
-    const refreshCounts = async () => {
-        try {
-            // fetch counts for each status quickly (1 per status, we only need header total)
-            const statuses = [ 'all', 'approved', 'pending' ];
-            const promises = statuses.map( async ( s ) => {
-                const response: Response = await apiFetch( {
-                    path: addQueryArgs( '/dokan/v1/stores', {
-                        per_page: 1,
-                        page: 1,
-                        ...( s !== 'all' ? { status: s } : {} ),
-                    } ),
-                    parse: false,
-                } as any );
-                return {
-                    s,
-                    total: parseInt(
-                        response.headers.get( 'X-WP-Total' ) || '0',
-                        10
-                    ),
-                };
-            } );
-            const results = await Promise.all( promises );
-            const map: Record< string, number > = {};
-            results.forEach( ( r ) => ( map[ r.s ] = r.total ) );
-            if ( map.all === null || map.all === undefined ) {
-                map.all = 0;
-            }
-            setCounts( map );
-        } catch ( e ) {
-            // eslint-disable-next-line no-console
-            console.error( 'Failed to load counts', e );
-        }
-    };
-
     useEffect( () => {
         fetchVendors();
-        refreshCounts();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ status, view.page, view.perPage, view.search ] );
+    }, [ status, view.page, view.perPage, search ] );
+
+    useEffect( () => {
+        // @ts-ignore
+        const shouldOpenFilter = wp.hooks.applyFilters(
+            'dokan_vendors_show_filters',
+            false,
+            searchParams
+        );
+        setShowFilters( shouldOpenFilter );
+    }, [] );
 
     const handleChangeView = ( newView: any ) => {
         setView( ( prev: any ) => ( { ...prev, ...newView } ) );
@@ -342,58 +383,28 @@ const VendorsPage = ( props ) => {
         },
     ];
 
-    // Filters: Vendor search and date range
-    const [ filterArgs, setFilterArgs ] = useState< Record< string, any > >(
-        {}
-    );
-
     const onFilter = () => {
         const next = { ...view };
-        if ( filterArgs.vendor ) {
-            next.search = filterArgs.vendor;
-        }
-        // Date filter is UI only; StoreController doesn't support date query by default
+
+        // Reset to first page and refresh list
         next.page = 1;
         setView( next );
+        fetchVendors( {
+            page: 1,
+            perPage: next.perPage,
+            status,
+        } );
     };
 
     const onReset = () => {
-        setFilterArgs( {} );
-        setView( ( prev: any ) => ( { ...prev, search: '', page: 1 } ) );
-    };
-
-    const SellerBadgeFilterField = () => {
-        return (
-            <SellerBadgeSelect
-                value={ sellerbadge }
-                onChange={ setSellerbadge }
-                leftIcon={ <Trophy size="16" className="text-gray-500" /> }
-                placeholder={ __( 'Search by Badge', 'dokan-lite' ) }
-                menuPortalTarget={ document.querySelector( 'body' ) }
-                isClearable
-            />
-        );
-    };
-
-    const SubscriptionFilterField = () => {
-        return (
-            <Select
-                options={ [
-                    {
-                        label: __( 'Subscribed', 'dokan-lite' ),
-                        value: 'yes',
-                    },
-                    {
-                        label: __( 'Non-subscribed', 'dokan-lite' ),
-                        value: 'no',
-                    },
-                ] }
-                leftIcon={ <Crown size="16" className="text-gray-500" /> }
-                placeholder={ __( 'Search by Subscription', 'dokan-lite' ) }
-                menuPortalTarget={ document.querySelector( 'body' ) }
-                isClearable
-            />
-        );
+        setView( ( prev: any ) => ( { ...prev, page: 1 } ) );
+        //@ts-ignore
+        wp.hooks.doAction( 'dokan_vendors_reset_filters_before_fetch' );
+        fetchVendors( {
+            page: 1,
+            perPage: view.perPage,
+            noBuildQuery: true,
+        } );
     };
 
     // Helpers for confirmation
@@ -436,6 +447,8 @@ const VendorsPage = ( props ) => {
             title: isApprove
                 ? __( 'Approve Vendor', 'dokan-lite' )
                 : __( 'Disable Vendor', 'dokan-lite' ),
+            // @ts-ignore
+            // eslint-disable-next-line no-nested-ternary
             description: isBulk
                 ? isApprove
                     ? __(
@@ -490,7 +503,7 @@ const VendorsPage = ( props ) => {
                         variant="primary"
                         onClick={ () => navigate( '/vendors/add' ) }
                     >
-                        <Plus size={ 16 } />
+                        <LucideIcons.Plus size={ 16 } />
                         { __( 'Add New Vendor', 'dokan-lite' ) }
                     </DokanButton>
                 </div>
@@ -509,15 +522,17 @@ const VendorsPage = ( props ) => {
                     } }
                 />
                 <div className="flex items-center gap-3">
-                    <SearchInput />
-                    <DokanButton
-                        type="button"
-                        variant="secondary"
-                        onClick={ () => setShowFilters( ( v ) => ! v ) }
-                    >
-                        <Funnel size={ 16 } />
-                        { __( 'Filter', 'dokan-lite' ) }
-                    </DokanButton>
+                    <SearchInput value={ search } onChange={ setSearch } />
+                    { getFilterFields().length > 0 && (
+                        <DokanButton
+                            type="button"
+                            variant="secondary"
+                            onClick={ () => setShowFilters( ( v ) => ! v ) }
+                        >
+                            <LucideIcons.Funnel size={ 16 } />
+                            { __( 'Filter', 'dokan-lite' ) }
+                        </DokanButton>
+                    ) }
                 </div>
             </div>
 
@@ -528,14 +543,20 @@ const VendorsPage = ( props ) => {
                 }` }
             >
                 <Filter
-                    fields={ [
-                        <SellerBadgeFilterField key="seller_badge_filter" />,
-                        <SubscriptionFilterField key="subscription_filter" />,
-                    ] }
-                    onFilter={ onFilter }
-                    onReset={ onReset }
-                    showFilter={ true }
-                    showReset={ true }
+                    fields={ getFilterFields().map( ( Component, index ) => (
+                        <Component
+                            key={ index }
+                            onFilter={ onFilter }
+                            onReset={ onReset }
+                            params={ params }
+                            navigate={ navigate }
+                            location={ location }
+                            searchParams={ searchParams }
+                            setSearchParams={ setSearchParams }
+                        />
+                    ) ) }
+                    showFilter={ false }
+                    showReset={ false }
                     namespace="dokan-admin-vendors-filter"
                 />
             </div>
@@ -558,6 +579,7 @@ const VendorsPage = ( props ) => {
                                 confirmationTitle={ cfg.title }
                                 confirmationDescription={ cfg.description }
                                 confirmButtonText={ cfg.confirmText }
+                                // @ts-ignore
                                 confirmButtonVariant={ cfg.variant }
                                 loading={ isConfirmLoading }
                                 onConfirm={ async () => {
@@ -595,7 +617,6 @@ const VendorsPage = ( props ) => {
                                             }
                                         }
                                         await fetchVendors();
-                                        await refreshCounts();
                                         // Clear selection after bulk actions
                                         if ( confirmState.mode === 'bulk' ) {
                                             setSelection( [] );
