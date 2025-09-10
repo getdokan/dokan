@@ -1,5 +1,6 @@
+import Tooltip from '../../components/DokanTooltip';
 import { useEffect, useState } from '@wordpress/element';
-import { Modal, SimpleInput, TextArea, Tooltip } from '@getdokan/dokan-ui';
+import { Modal, SimpleInput, TextArea } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
