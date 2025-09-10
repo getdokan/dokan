@@ -16,6 +16,7 @@ interface DokanModalProps {
     modalProps?: Partial< ModalProps >;
     modalClassName?: string;
     modalBodyClassName?: string;
+    modalFooterClassName?: string;
     onClose: () => void;
     dialogTitle?: string;
     onConfirm: () => void;
@@ -40,6 +41,7 @@ const DokanModal = ( {
     modalProps = {},
     modalClassName,
     modalBodyClassName,
+    modalFooterClassName,
     onConfirm,
     namespace,
     dialogTitle,
@@ -192,7 +194,12 @@ const DokanModal = ( {
                 { dialogFooter === false
                     ? null
                     : dialogFooter || (
-                          <Modal.Footer className="border-t">
+                          <Modal.Footer
+                              className={ twMerge(
+                                  'border-t flex items-center justify-end gap-3',
+                                  modalFooterClassName
+                              ) }
+                          >
                               { dialogFooterContent || (
                                   <div
                                       className={ `flex items-center justify-end gap-3` }
