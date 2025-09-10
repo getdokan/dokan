@@ -18,6 +18,7 @@
 10. **Forbidden** - Unified 403 component for unauthorized route
 11. **MediaUploader** - File upload component
 12. **DokanPriceInput** - Specialized input component for price entry with formatting
+13. **DokanTooltip** - Unified tooltip component for displaying contextual information
 
 ## Important Dependencies
 
@@ -861,3 +862,27 @@ wp.hooks.addFilter(
     }
 );
 ```
+
+
+## DokanTooltip Component
+
+`Dokan` provides a unified tooltip component for displaying contextual information and help text. The component is built on top of the `Tooltip` component from `@getdokan/dokan-ui` and provides consistent styling across the application.
+
+### Usage Example
+
+```jsx
+import { __ } from '@wordpress/i18n';
+import { DokanTooltip } from '@dokan/components';
+
+const TooltipExample = () => {
+  return (
+    <div className="space-y-4">
+      <DokanTooltip content={ __( "This is a helpful tooltip", 'dokan-lite' ) }>
+        <button>{ __( 'Hover me', 'dokan-lite' ) }</button>
+      </DokanTooltip>
+    </div>
+  );
+};
+```
+
+The DokanTooltip component enhances the user experience by providing contextual information without cluttering the interface, making it ideal for help text, labels for icon buttons, and additional details about UI elements.
