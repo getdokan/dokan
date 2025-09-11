@@ -1,20 +1,18 @@
+import './tailwind.scss';
 import { __ } from '@wordpress/i18n';
-import Section from './Elements/Section';
-import MiniCard from './Elements/MiniCard';
+import TodoSection from './sections/TodoSection';
+import AnalyticsSection from './sections/AnalyticsSection';
+import SalesChartSection from './sections/SalesChartSection';
+import MonthlyOverviewSection from './sections/MonthlyOverviewSection';
+import VendorMetricsSection from './sections/VendorMetricsSection';
+import AllTimeStatsSection from './sections/AllTimeStatsSection';
+import TopPerformingVendorsSection from './sections/TopPerformingVendorsSection';
+import MostReviewedProductsSection from './sections/MostReviewedProductsSection';
+import MostReportedVendorsSection from './sections/MostReportedVendorsSection';
 import AdminNotices from './components/AdminNotices';
-import { Coins, BadgeDollarSign, User } from 'lucide-react';
-import { DokanButton } from '../../../../components';
-import Card from './Elements/Card';
-import MonthPicker from './Elements/MonthPicker';
-import { useState } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 
 function Dashboard() {
-    const [ monthData, setMonthData ] = useState( {
-        month: '',
-        year: '',
-    } );
-
     const noticeScopes = applyFilters( 'dokan_admin_dashboard_notices_scopes', [
         { scope: 'global', endpoint: 'admin' },
         { scope: '', endpoint: 'admin' },
@@ -38,126 +36,38 @@ function Dashboard() {
                 />
             ) ) }
 
-            <Section title={ __( 'To-Do', 'dokan-lite' ) }>
-                <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <MiniCard
-                        icon={ <User /> }
-                        text={ 'Vendor Approvals' }
-                        count={ 20 }
-                    />
-                    <MiniCard
-                        icon={ <User /> }
-                        text={ 'Vendor Approvals' }
-                        count={ 20 }
-                        countType="secondary"
-                    />
-                    <MiniCard
-                        icon={ <User /> }
-                        text={ 'Vendor Approvals' }
-                        count={ 20 }
-                    />
-                    <MiniCard
-                        icon={ <User /> }
-                        text={ 'Vendor Approvals' }
-                        count={ 20 }
-                    />
-                    <MiniCard
-                        icon={ <User /> }
-                        text={ 'Vendor Approvals' }
-                        count={ 20 }
-                        countType="secondary"
-                    />
-                    <MiniCard
-                        icon={ <User /> }
-                        text={ 'Vendor Approvals' }
-                        count={ 20 }
-                    />
-                </div>
-            </Section>
+            { /* Render todo section. */ }
+            <TodoSection />
 
-            <Section title={ __( 'Analytics', 'dokan-lite' ) }>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <MiniCard
-                        icon={ <Coins /> }
-                        iconType="secondary"
-                        text={ 'Sales Overview' }
-                        countType="component"
-                        countComponent={
-                            <DokanButton>View Report</DokanButton>
-                        }
-                    />
-                    <MiniCard
-                        icon={ <BadgeDollarSign /> }
-                        iconType="secondary"
-                        text={ 'Revenue Insight' }
-                        countType="component"
-                        countComponent={
-                            <DokanButton>View Report</DokanButton>
-                        }
-                    />
-                </div>
-            </Section>
+            { /* Render analytics section. */ }
+            <AnalyticsSection />
 
-            <Section
-                title={ __( 'Month Overview', 'dokan-lite' ) }
-                sectionHeader={
-                    <MonthPicker
-                        value={ monthData }
-                        minDate={ { month: 2, year: 2025 } }
-                        maxDate={ { month: 8, year: 2025 } }
-                        onChange={ ( value ) => {
-                            setMonthData( value );
-                        } }
-                    />
-                }
-                tooltip={ 'This is a simple tooltip' }
-            >
-                <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <Card
-                        icon={ <User /> }
-                        text="New Products"
-                        content="$120"
-                        count={ 2.7 }
-                        tooltip={ 'This is a simple tooltip' }
-                    />
-                    <Card
-                        icon={ <User /> }
-                        text="Active vendors"
-                        content="4"
-                        count={ 2.7 }
-                        countDirection="down"
-                        tooltip={ 'This is a simple tooltip' }
-                    />
-                    <Card
-                        icon={ <User /> }
-                        text="New Customers"
-                        content="$120"
-                        count={ 2.7 }
-                        tooltip={ 'This is a simple tooltip' }
-                    />
-                    <Card
-                        icon={ <User /> }
-                        text="Supprt Tickets"
-                        content="$120"
-                        count={ 2.7 }
-                        tooltip={ 'This is a simple tooltip' }
-                    />
-                    <Card
-                        icon={ <User /> }
-                        text="Refunds"
-                        content="$120"
-                        count={ 2.7 }
-                        countDirection="down"
-                        tooltip={ 'This is a simple tooltip' }
-                    />
-                    <Card
-                        icon={ <User /> }
-                        text="Reviews"
-                        content="$120"
-                        count={ 2.7 }
-                    />
-                </div>
-            </Section>
+            { /* Render a monthly overview section. */ }
+            <MonthlyOverviewSection />
+
+            { /* Render sales chart section. */ }
+            <SalesChartSection />
+
+            { /* Render the vendor metrics section. */ }
+            { dokanAdminDashboardSettings?.header_info?.is_pro_exists && (
+                <VendorMetricsSection />
+            ) }
+
+            { /* Render the all-time stats section. */ }
+            <AllTimeStatsSection />
+
+            { /* Render top performing vendors section. */ }
+            <TopPerformingVendorsSection />
+
+            <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
+                { /* Render the most reviewed products section. */ }
+                <MostReviewedProductsSection />
+
+                { /* Render the most reported vendors section. */ }
+                { dokanAdminDashboardSettings?.show_most_reported_vendors && (
+                    <MostReportedVendorsSection />
+                ) }
+            </div>
 
             <div className={ `legacy-dashboard-url text-sm font-medium pt-8` }>
                 { __(

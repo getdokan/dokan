@@ -100,20 +100,25 @@ class VendorOrderStatsStore extends BaseDataStore {
      *
      * @since DOKAN_SINCE
      *
-     * @param int $limit Number of vendors to retrieve. Default 5.
+     * @param string $start_date Start date in Y-m-d format. Optional.
+     * @param string $end_date   End date in Y-m-d format. Optional.
+     * @param int $limit         Number of vendors to retrieve. Default 5.
      *
      * @return array Array of vendor data with sales metrics.
      */
-    public function get_top_performing_vendors( int $limit = 5 ): array {
+    public function get_top_performing_vendors( string $start_date, string $end_date, int $limit = 5 ): array {
         global $wpdb;
 
         $this->clear_all_clauses();
-        $this->add_sql_clause( 'select', 'vendor_id,' );
-        $this->add_sql_clause( 'select', 'COUNT(order_id) as total_orders,' );
-        $this->add_sql_clause( 'select', 'SUM(vendor_earning) as total_earning,' );
-        $this->add_sql_clause( 'select', 'SUM(admin_commission) as total_commission' );
-        $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() );
-        $this->add_sql_clause( 'group_by', 'vendor_id' );
+        $this->add_sql_clause( 'select', 'dos.vendor_id,' );
+        $this->add_sql_clause( 'select', 'COUNT(dos.order_id) as total_orders,' );
+        $this->add_sql_clause( 'select', 'SUM(dos.vendor_earning) as total_earning,' );
+        $this->add_sql_clause( 'select', 'SUM(dos.admin_commission) as total_commission' );
+        $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() . ' dos' );
+        $this->add_sql_clause( 'join', "JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
+        $this->add_sql_clause( 'where', $wpdb->prepare( ' AND DATE(wos.date_created) BETWEEN %s AND %s', $start_date, $end_date ) );
+        
+        $this->add_sql_clause( 'group_by', 'dos.vendor_id' );
         $this->add_sql_clause( 'order_by', 'total_earning DESC' );
         $this->add_sql_clause( 'limit', 'LIMIT ' . $limit );
 
