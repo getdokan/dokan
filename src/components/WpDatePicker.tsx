@@ -1,20 +1,26 @@
 import { useState } from '@wordpress/element';
 import { DatePicker } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { DokanButton } from './index';
-import Popover from '@dokan/components/Popover';
+import { DokanButton, Popover } from './index';
+import { SimpleInput } from '@getdokan/dokan-ui';
 import { DatePickerProps } from '@wordpress/components/build-types/date-time/types';
 import { twMerge } from 'tailwind-merge';
+import { dateI18n, getSettings } from '@wordpress/date';
+import { useInstanceId } from '@wordpress/compose';
 
 interface Props extends DatePickerProps {
-    children?: React.ReactNode | JSX.Element;
+    children?: JSX.Element;
     wrapperClassName?: string;
     pickerToggleClassName?: string;
     wpPopoverClassName?: string;
     popoverBodyClassName?: string;
+    inputId?: string;
+    inputName?: string;
+    ariaLabel?: string;
 }
 
 const WpDatePicker = ( props: Props ) => {
+    const instanceId = useInstanceId( WpDatePicker, 'dokan-date-picker-input' );
     const [ popoverAnchor, setPopoverAnchor ] = useState();
     const [ isVisible, setIsVisible ] = useState( false );
 
@@ -40,12 +46,35 @@ const WpDatePicker = ( props: Props ) => {
                 // @ts-ignore
                 ref={ setPopoverAnchor }
             >
-                { props.children ?? '' }
+                { props.children ?? (
+                    <SimpleInput
+                        onChange={ () => {} }
+                        value={
+                            props?.currentDate
+                                ? dateI18n(
+                                    getSettings().formats.date,
+                                    props?.currentDate as string,
+                                    getSettings().timezone.string
+                                )
+                                : ''
+                        }
+                        input={ {
+                            id: props?.inputId ?? instanceId,
+                            name: props?.inputName ?? 'dokan_date_picker_input',
+                            type: 'text',
+                            readOnly: true,
+                            autoComplete: 'off',
+                            placeholder: __( 'Select date', 'dokan-lite' ),
+                            'aria-label':
+                                props?.ariaLabel ??
+                                __( 'Select date', 'dokan-lite' ),
+                        } }
+                    />
+                ) }
             </div>
 
             { isVisible && (
                 <Popover
-                    animate
                     anchor={ popoverAnchor }
                     focusOnMount={ true }
                     onClose={ () => {

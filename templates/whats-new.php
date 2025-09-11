@@ -4,6 +4,56 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.0.7',
+        'released' => '2025-09-01',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Enhanced security controls for vendor account credentials management.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.6',
+        'released' => '2025-08-29',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added translation support for dashboard analytics report scripts to improve internationalization (i18n)',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added async search in store category in vendor edit.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin not receiving withdrawal request email notifications.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.5',
+        'released' => '2025-07-25',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.4',
         'released' => '2025-07-17',
         'changes'  => [
