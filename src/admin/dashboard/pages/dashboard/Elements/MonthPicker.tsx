@@ -181,10 +181,10 @@ function MonthPicker( {
 
         return (
             <div className="text-sm text-gray-600">
-                <div className="flex flex-col text-xs">
-                    <div className={ `ml-4 font-semibold` }>
+                <div className="flex flex-col text-xs text-right text-[#9A9A9A]">
+                    <div className={ `font-semibold` }>
                         <span>{ __( 'Month to Date', 'dokan-lite' ) }</span>{ ' ' }
-                        <span className="text-gray-500">
+                        <span>
                             ({ currentPeriod })
                         </span>
                     </div>
@@ -192,7 +192,7 @@ function MonthPicker( {
                         <span>
                             { __( 'vs Previous Period', 'dokan-lite' ) }
                         </span>{ ' ' }
-                        <span className="text-gray-500">
+                        <span>
                             ({ previousPeriod })
                         </span>
                     </div>
