@@ -21,6 +21,7 @@ import {
     Filter,
     VendorAsyncSelect,
     DateRangePicker,
+    AsyncSelect,
 } from '@dokan/components';
 
 import {
@@ -34,6 +35,7 @@ import {
     Download,
     Home,
     Calendar,
+    CreditCard,
 } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
@@ -121,6 +123,11 @@ const WithdrawPage = () => {
     const [ before, setBefore ] = useState( '' );
     const [ beforeText, setBeforeText ] = useState( '' );
     const [ focusInput, setFocusInput ] = useState( 'startDate' );
+
+    const [ paymentMethod, setPaymentMethod ] = useState< {
+        value: string | number;
+        label: string;
+    } | null >( null );
 
     // Define fields for the table columns
     const fields = [
@@ -642,8 +649,6 @@ const WithdrawPage = () => {
             ...prevView,
             page: 1, // Reset to first page when applying filters
         } ) );
-
-        // fetchWithdraws();
     };
 
     // Clear filters
@@ -653,13 +658,27 @@ const WithdrawPage = () => {
         setAfterText( '' );
         setBefore( '' );
         setBeforeText( '' );
+        setPaymentMethod( null );
         setFilterArgs( {} );
 
         setView( ( prevView ) => ( {
             ...prevView,
             page: 1, // Reset to first page when applying filters
         } ) );
-        // fetchWithdraws();
+    };
+
+    const loadPaymentMethods = async ( inputValue ) => {
+        // return array of { value, label }
+        const data = await apiFetch( {
+            path: `/dokan/v2/withdraw/payment_methods`,
+        } );
+
+        return Array.isArray( data )
+            ? data.map( ( method ) => ( {
+                  value: method.id,
+                  label: method.title,
+              } ) )
+            : [];
     };
 
     // Fetch withdraws when view changes
@@ -754,9 +773,32 @@ const WithdrawPage = () => {
                                 setVendorFilter( selectedVendorObj );
                             } }
                             placeholder={ __( 'Select Vendor', 'dokan-lite' ) }
-                            isClearable={ true }
+                            isClearable
+                            prefetch
+                            defaultOptions
+                            cacheOptions
+                        />,
+                        <AsyncSelect
+                            key="payment-method-select"
+                            icon={ <CreditCard size={ 16 } /> }
+                            loadOptions={ loadPaymentMethods }
+                            cacheOptions
+                            defaultOptions
+                            isClearable
+                            onChange={ ( method ) => {
+                                const args = { ...filterArgs };
+                                delete args.payment_method;
+
+                                if ( method ) {
+                                    args.payment_method = method.value;
+                                }
+                                setPaymentMethod( method );
+                                setFilterArgs( args );
+                            } }
+                            placeholder="Payment Method"
                         />,
                         <DateRangePicker
+                            key="date-range-select"
                             after={ after }
                             afterText={ afterText }
                             before={ before }
@@ -825,7 +867,7 @@ const WithdrawPage = () => {
                                         ! after || ! before
                                             ? ''
                                             : displayDateRange( after, before ),
-                                    placeholder: 'Select date range',
+                                    placeholder: 'Date',
                                     readOnly: true,
                                 } }
                             />
@@ -836,7 +878,7 @@ const WithdrawPage = () => {
                     showFilter={ true }
                     showReset={ true }
                     resetBtnClassName="dokan-btn-tertiary"
-                    filterBtnClassName="dokan-btn-success"
+                    filterBtnClassName="dokan-btn-secondary"
                     namespace="withdraw_filters"
                 />
             </div>
