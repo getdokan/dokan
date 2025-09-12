@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-12T05:21:34+00:00\n"
+"POT-Creation-Date: 2025-09-12T13:15:12+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -2677,7 +2677,7 @@ msgid "Apply"
 msgstr ""
 
 #: includes/Assets.php:904
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/vue-admin.js:2
 msgid "Clear"
 msgstr ""
@@ -2778,7 +2778,8 @@ msgstr ""
 #: templates/withdraw/pending-request-listing.php:19
 #: templates/withdraw/pending-request-listing.php:39
 #: templates/withdraw/pending-request-listing.php:63
-#: assets/js/components.js:172
+#: assets/js/components.js:179
+#: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-admin-notice.js:2
 #: assets/js/dokan-intelligence.js:172
 #: assets/js/dokan-promo-notice.js:2
@@ -3240,7 +3241,7 @@ msgid "Combine"
 msgstr ""
 
 #: includes/Commission.php:538
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
@@ -3249,7 +3250,7 @@ msgid "Percentage"
 msgstr ""
 
 #: includes/Commission.php:539
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
@@ -4166,7 +4167,7 @@ msgstr ""
 #: includes/functions-dashboard-navigation.php:302
 #: templates/settings/header.php:14
 #: templates/store-lists-loop.php:104
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/vue-admin.js:2
 msgid "Visit Store"
 msgstr ""
@@ -5500,7 +5501,7 @@ msgstr ""
 #: includes/Product/functions.php:363
 #: includes/Product/Hooks.php:201
 #: templates/products/listing-filter.php:110
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dashboard-charts.js:1
 msgid "Search"
 msgstr ""
@@ -9956,13 +9957,13 @@ msgstr ""
 #: templates/products/listing-filter.php:101
 #: templates/reverse-withdrawal/filters.php:15
 #: templates/store-lists-filter.php:43
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 msgid "Filter"
 msgstr ""
 
 #: templates/orders/date-export.php:28
 #: templates/products/listing-filter.php:102
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 msgid "Reset"
 msgstr ""
 
@@ -10235,7 +10236,7 @@ msgid "Enable/Disable Catalog Mode for this product"
 msgstr ""
 
 #: templates/products/dokan-category-header-ui.php:23
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
@@ -10959,7 +10960,7 @@ msgstr ""
 #: templates/withdraw/pending-request-listing-dashboard.php:19
 #: templates/withdraw/pending-request-listing.php:16
 #: templates/withdraw/pending-request-listing.php:60
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dashboard-charts.js:1
 #: assets/js/frontend.js:172
 #: assets/js/vue-admin.js:2
@@ -11091,99 +11092,107 @@ msgstr ""
 msgid "Make Default"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-intelligence.js:172
 #: assets/js/frontend.js:172
 msgid "%1$s at %2$s"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
+#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-intelligence.js:172
 msgid "Confirmation Dialog"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
+#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-intelligence.js:172
 msgid "Delete Confirmation"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
+#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-intelligence.js:172
 msgid "Are you sure you want to proceed with this %1$sdeletion%2$s?"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
+#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-intelligence.js:172
 msgid "Yes, Delete"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 msgid "No options"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-intelligence.js:172
 #: assets/js/frontend.js:172
 msgid "Select or Upload Media"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/vendor-dashboard/reports/index.js:172
 msgid "Oh no! Something went wrong…"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/vendor-dashboard/reports/index.js:172
 msgid "Kindly refresh the page to load data or try again."
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dokan-admin-onboard.js:172
 #: assets/js/vendor-dashboard/reports/index.js:172
 msgid "Try Again"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/frontend.js:172
 #: assets/js/vue-admin.js:2
 msgid "Enter amount"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 msgid "Select date"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 msgid "Enter Date"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 msgid "Ok"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-intelligence.js:172
 #: assets/js/frontend.js:172
 msgid "Use this media"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 msgid "Order #%s"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 msgid "Coupon #%s"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 msgid "All Category"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dokan-admin-dashboard.js:172
 msgid "#%s"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
@@ -11191,7 +11200,7 @@ msgstr ""
 msgid "All Categories"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
@@ -11199,7 +11208,7 @@ msgstr ""
 msgid "%"
 msgstr ""
 
-#: assets/js/components.js:172
+#: assets/js/components.js:179
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
@@ -12336,6 +12345,14 @@ msgid "All are up-to-date."
 msgstr ""
 
 #: assets/js/frontend.js:172
+msgid "Withdraw request created."
+msgstr ""
+
+#: assets/js/frontend.js:172
+msgid "Failed to create withdraw."
+msgstr ""
+
+#: assets/js/frontend.js:172
 msgid "Withdraw method"
 msgstr ""
 
@@ -12353,14 +12370,6 @@ msgstr ""
 
 #: assets/js/frontend.js:172
 msgid "Please set up your %1$spayment methods%2$s first."
-msgstr ""
-
-#: assets/js/frontend.js:172
-msgid "Withdraw request created."
-msgstr ""
-
-#: assets/js/frontend.js:172
-msgid "Failed to create withdraw."
 msgstr ""
 
 #: assets/js/frontend.js:172
