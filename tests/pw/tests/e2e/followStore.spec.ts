@@ -8,7 +8,7 @@ import { dbUtils } from '@utils/dbUtils';
 const { CUSTOMER_ID, VENDOR_ID, VENDOR2_ID } = process.env;
 
 
-// This test suite covers the functionality of the Follow Store module in Dokan.
+// This test suite covers the functionality of the Follow Store module in Dokan...
 // It includes tests for both customer and vendor roles, as well as admin actions to enable/disable the module.
 // The tests ensure that the follow/unfollow functionality works correctly across different pages and scenarios.
 // The suite also verifies that the UI elements render properly and that the expected data is displayed.
