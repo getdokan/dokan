@@ -26,6 +26,7 @@ export { default as DokanPriceInput } from './PriceInput';
 export { default as WpDatePicker } from './WpDatePicker';
 export { default as DateTimePicker } from './DateTimePicker';
 export { default as DokanTab } from './Tab';
+export { default as Popover } from './Popover';
 export { default as RichText } from './richtext/RichText';
 export { default as AsyncSelect } from './AsyncSelect';
 export { default as VendorAsyncSelect } from './VendorAsyncSelect';
@@ -35,6 +36,7 @@ export { default as CouponAsyncSelect } from './CouponAsyncSelect';
 export { default as SearchInput } from './SearchInput';
 export { default as Select } from './Select';
 export { default as DateRangePicker } from './DateRangePicker';
+export { default as DokanTooltip } from './DokanTooltip';
 
 // Commission Components
 export * from './commission';
