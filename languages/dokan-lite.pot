@@ -1,14 +1,14 @@
 # Copyright (c) 2025 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 4.0.7\n"
+"Project-Id-Version: Dokan 4.0.8\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-01T11:41:04+00:00\n"
+"POT-Creation-Date: 2025-09-12T05:21:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -666,8 +666,8 @@ msgstr ""
 #: includes/Order/Admin/Hooks.php:97
 #: includes/Order/Admin/Hooks.php:403
 #: includes/wc-template.php:21
-#: includes/wc-template.php:174
-#: includes/wc-template.php:339
+#: includes/wc-template.php:166
+#: includes/wc-template.php:336
 #: templates/my-orders.php:29
 #: templates/orders/sub-order-related-order-meta-box-html.php:41
 #: assets/js/vue-admin.js:2
@@ -707,6 +707,10 @@ msgstr ""
 
 #: includes/Admin/Menu.php:72
 msgid "<span style=\"color:#f18500\">Help</span>"
+msgstr ""
+
+#: includes/Admin/Menu.php:85
+msgid "Chat with us"
 msgstr ""
 
 #. translators: %s permalink settings url
@@ -5496,6 +5500,7 @@ msgstr ""
 #: includes/Product/functions.php:363
 #: includes/Product/Hooks.php:201
 #: templates/products/listing-filter.php:110
+#: assets/js/components.js:172
 #: assets/js/dashboard-charts.js:1
 msgid "Search"
 msgstr ""
@@ -8562,52 +8567,52 @@ msgstr ""
 msgid "Store is closed"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:254
+#: includes/VendorNavMenuChecker.php:304
 msgid "Some of Dokan Templates or functionalities are overridden which limit new features."
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:255
+#: includes/VendorNavMenuChecker.php:305
 msgid "Some of the Dokan templates or routes are overridden, which can prevent new features and intended functionalities from working correctly."
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:259
+#: includes/VendorNavMenuChecker.php:309
 msgid "Learn More"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:287
-#: includes/VendorNavMenuChecker.php:314
+#: includes/VendorNavMenuChecker.php:337
+#: includes/VendorNavMenuChecker.php:364
 msgid "Overridden Template Table"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:290
+#: includes/VendorNavMenuChecker.php:340
 msgid "Template"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:305
+#: includes/VendorNavMenuChecker.php:355
 msgid "Please Remove the above file to enable new features."
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:317
+#: includes/VendorNavMenuChecker.php:367
 msgid "Route"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:318
+#: includes/VendorNavMenuChecker.php:368
 msgid "Override Status"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:336
+#: includes/VendorNavMenuChecker.php:386
 msgid "Forcefully enabled new feature."
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:336
+#: includes/VendorNavMenuChecker.php:386
 msgid "Forcefully disabled new feature."
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:344
+#: includes/VendorNavMenuChecker.php:394
 msgid "Overridden Templates or Routes"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:345
+#: includes/VendorNavMenuChecker.php:395
 msgid "The listed templates or vendor dashboard routes are currently overridden, which are preventing enabling new features."
 msgstr ""
 
@@ -8687,12 +8692,12 @@ msgstr ""
 msgid "Reviews cannot be posted for products that you own."
 msgstr ""
 
-#: includes/wc-template.php:181
+#: includes/wc-template.php:175
 #: templates/products/dokan-products-edit-bulk-commission.php:20
 msgid "— No change —"
 msgstr ""
 
-#: includes/wc-template.php:308
+#: includes/wc-template.php:305
 msgid "Go to Vendor Dashboard"
 msgstr ""
 
@@ -9455,7 +9460,6 @@ msgstr ""
 msgid "Your product %s"
 msgstr ""
 
-#. translators: 1) product title
 #: templates/emails/plain/product-published.php:25
 msgid " has been approved by one of our admin, congrats!"
 msgstr ""
@@ -11144,10 +11148,30 @@ msgid "Enter amount"
 msgstr ""
 
 #: assets/js/components.js:172
+msgid "Select date"
+msgstr ""
+
+#: assets/js/components.js:172
+msgid "Enter Date"
+msgstr ""
+
+#: assets/js/components.js:172
+msgid "Ok"
+msgstr ""
+
+#: assets/js/components.js:172
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-intelligence.js:172
 #: assets/js/frontend.js:172
 msgid "Use this media"
+msgstr ""
+
+#: assets/js/components.js:172
+msgid "Order #%s"
+msgstr ""
+
+#: assets/js/components.js:172
+msgid "Coupon #%s"
 msgstr ""
 
 #: assets/js/components.js:172
