@@ -785,6 +785,7 @@ const WithdrawPage = () => {
                             cacheOptions
                             defaultOptions
                             isClearable
+                            value={ paymentMethod }
                             onChange={ ( method ) => {
                                 const args = { ...filterArgs };
                                 delete args.payment_method;
