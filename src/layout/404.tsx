@@ -1,4 +1,4 @@
-import NotFoundIcon from '@dokan/layout/Icons/NotFoundIcon';
+import NotFoundIcon from '@src/layout/Icons/NotFoundIcon';
 import { __ } from '@wordpress/i18n';
 import { DokanButton } from '../components/Button';
 import { Slot } from '@wordpress/components';

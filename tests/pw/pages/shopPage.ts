@@ -2,9 +2,7 @@ import { Page } from '@playwright/test';
 import { CustomerPage } from '@pages/customerPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
-
 const { DOKAN_PRO } = process.env;
-
 // selectors
 const shopCustomer = selector.customer.cShop;
 
