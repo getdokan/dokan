@@ -1,0 +1,147 @@
+import docIcon from '../assets/docsIcon.png'; // Use your provided icon images
+import brushIcon from '../assets/PaintIcon.png';
+import gearIcon from '../assets/settingsIcon.png';
+import moduleBanner from '../assets/modules-banner.png';
+import moduleBannerMobile from '../assets/modules-banner-mobile.png';
+import moduleBannerTablet from '../assets/modules-banner-tablet.png';
+import { Settings, PaintbrushVertical, File } from 'lucide-react';
+
+function WhySettle() {
+    const features = [
+        {
+            icon: Settings,
+            title: 'Extensive Plugin Support',
+            description:
+                'Enhance your marketplace with hundreds of WordPress plugins designed for scalability.',
+        },
+        {
+            icon: PaintbrushVertical,
+            title: 'Hundreds of Themes Compatibility',
+            description: 'Dokan supports all WooCommerce-compatible themes.',
+        },
+        {
+            icon: File,
+            title: 'White Label Documentation',
+            description:
+                'Get marketplace-specific docs crafted by the Dokan team to fit your business needs.',
+        },
+    ];
+
+    return (
+        <div className="mt-8 md:mt-16">
+            <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">
+                Why Settle? Get More with Dokan PRO!
+            </h2>
+
+            { /* Modules Banner with Responsive Images */ }
+            <div className="relative rounded overflow-hidden mb-6 md:mb-10">
+                { /* Mobile Image - visible on mobile only */ }
+                <img
+                    src={ moduleBannerMobile }
+                    alt="42+ Modules"
+                    className="w-full h-auto object-contain block md:hidden"
+                    draggable={ false }
+                />
+
+                { /* Tablet Image - visible on tablet only */ }
+                <img
+                    src={ moduleBannerTablet }
+                    alt="42+ Modules"
+                    className="w-full h-auto object-contain hidden md:block lg:hidden"
+                    draggable={ false }
+                />
+
+                { /* Desktop Image - visible on desktop only */ }
+                <img
+                    src={ moduleBanner }
+                    alt="42+ Modules"
+                    className="w-full h-auto object-contain hidden lg:block"
+                    draggable={ false }
+                />
+
+                { /* Mobile Text Overlay - positioned at top */ }
+                <div className="absolute top-0 left-0 right-0 px-4 py-4 md:hidden">
+                    <h3
+                        className="text-white mb-2 font-bold"
+                        style={ {
+                            fontSize: '18px',
+                            lineHeight: '130%',
+                            letterSpacing: '0%',
+                        } }
+                    >
+                        42+ Modules
+                    </h3>
+                    <p
+                        className="text-white max-w-xs"
+                        style={ {
+                            fontSize: '12px',
+                            lineHeight: '140%',
+                            letterSpacing: '0%',
+                            fontWeight: '400',
+                        } }
+                    >
+                        Access an extensive range of modules designed to enhance
+                        both admin and vendor experiences.
+                    </p>
+                </div>
+
+                { /* Tablet and Desktop Text Overlay - centered */ }
+                <div className="absolute inset-0 hidden md:flex flex-col justify-center px-8 py-8">
+                    { /* Tablet Text Layout with Custom Line Breaks */ }
+                    <div className="block lg:hidden">
+                        <h3 className="text-3xl font-bold text-white mb-2">
+                            42+ Modules
+                        </h3>
+                        <p className="text-white text-base max-w-xs">
+                            Access an extensive range of modules
+                            <br />
+                            designed to enhance both admin and
+                            <br />
+                            vendor experiences.
+                        </p>
+                    </div>
+
+                    { /* Desktop Text Layout - Original Styles */ }
+                    <div className="hidden lg:block">
+                        <h3 className="text-3xl font-bold text-white mb-2">
+                            42+ Modules
+                        </h3>
+                        <p className="text-white text-base max-w-xs">
+                            Access an extensive range of modules designed to
+                            enhance both admin and vendor experiences.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            { /* Feature Cards */ }
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                { features.map( ( feature, idx ) => (
+                    <div key={ idx } className="flex items-start space-x-4">
+                        <div className="w-12 h-12 flex items-center justify-center bg-[#F7F5FF] rounded border-neutral-200 text-dokan-primary flex-shrink-0">
+                            <feature.icon size={ 16 } />
+                        </div>
+                        <div>
+                            <h4
+                                className="mb-2"
+                                style={ {
+                                    fontWeight: 700,
+                                    fontSize: '18px',
+                                    lineHeight: '130%',
+                                    letterSpacing: '0%',
+                                } }
+                            >
+                                { feature.title }
+                            </h4>
+                            <p className="text-gray-600 text-sm">
+                                { feature.description }
+                            </p>
+                        </div>
+                    </div>
+                ) ) }
+            </div>
+        </div>
+    );
+}
+
+export default WhySettle;
