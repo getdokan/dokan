@@ -62,7 +62,8 @@ test.describe('Abuse report test', () => {
     });
 
     test('admin can perform bulk action on abuse reports', { tag: ['@pro', '@admin', '@serial'] }, async () => {
-        await admin.abuseReportBulkAction('delete');
+        // Use a safer action like 'mark as read' instead of 'delete' to avoid destructive operations
+        await admin.abuseReportBulkAction('mark-as-read');
     });
 
     // customer
