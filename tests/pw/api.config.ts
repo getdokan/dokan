@@ -60,7 +60,7 @@ export default defineConfig({
 
     use: {
         /* Base URL */
-        baseURL: BASE_URL ?? 'http://localhost:9999',
+        baseURL: BASE_URL ?? 'https://dokan-atutomation.test',
         /* Whether to ignore HTTPS errors during navigation. */
         ignoreHTTPSErrors: true,
         /* api request headers */

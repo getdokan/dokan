@@ -48,6 +48,12 @@ export const dbUtils = {
     async getUserMeta(userId: string, metaKey: string): Promise<any> {
         const querySelect = `SELECT meta_value FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key = ?;`;
         const res = await dbUtils.dbQuery(querySelect, [userId, metaKey]);
+        
+        // Check if result exists before accessing
+        if (!res || res.length === 0 || !res[0]) {
+            return null;
+        }
+        
         const userMeta = unserialize(res[0].meta_value, {
             WP_Term: function () {
                 return {};
@@ -89,7 +95,7 @@ export const dbUtils = {
     // update user meta
     async updateUserMeta(userId: string, metaKey: string, updatedMetaValue: any, serializeData: boolean = true): Promise<[object, object]> {
         const currentMetaValue = await this.getUserMeta(userId, metaKey);
-        const newMetaValue = typeof updatedMetaValue === 'object' ? helpers.deepMergeObjects(currentMetaValue, updatedMetaValue) : updatedMetaValue;
+        const newMetaValue = typeof updatedMetaValue === 'object' && currentMetaValue ? helpers.deepMergeObjects(currentMetaValue, updatedMetaValue) : updatedMetaValue;
         await this.setUserMeta(userId, metaKey, newMetaValue, serializeData);
         return [currentMetaValue, newMetaValue];
     },

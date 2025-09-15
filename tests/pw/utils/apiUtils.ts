@@ -130,7 +130,7 @@ export class ApiUtils {
         let hasMoreItems = true;
         while (hasMoreItems) {
             const [, responseBodyChunk] = await this.get(endPoint, { params: { ...params, per_page: 100, page: page }, headers: auth });
-            if (responseBodyChunk.length === 0 || (maxPageLimit !== -1 && page >= maxPageLimit)) {
+            if (!Array.isArray(responseBodyChunk) || responseBodyChunk.length === 0 || (maxPageLimit !== -1 && page >= maxPageLimit)) {
                 hasMoreItems = false;
             } else {
                 responseBody = responseBody.concat(responseBodyChunk);
@@ -1068,12 +1068,12 @@ export class ApiUtils {
     }
 
     // update batch announcements
-    async updateBatchAnnouncements(action: string, allIds: string[], auth?: auth): Promise<responseBody> {
+    async updateBatchAnnouncements(action: string, allIds: string[], auth?: auth): Promise<[APIResponse, responseBody]> {
         if (!allIds?.length) {
-            allIds = (await this.getAllAnnouncements(auth)).map((a: { id: unknown }) => a.id);
+            allIds = (await this.getAllAnnouncements(auth)).map((a: { id: unknown }) => String(a.id));
         }
-        const [, responseBody] = await this.put(endPoints.updateBatchAnnouncements, { data: { [action]: allIds }, headers: auth });
-        return responseBody;
+        const [response, responseBody] = await this.put(endPoints.updateBatchAnnouncements, { data: { [action]: allIds }, headers: auth });
+        return [response, responseBody];
     }
 
     // delete all announcements
