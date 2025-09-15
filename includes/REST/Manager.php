@@ -32,6 +32,9 @@ class Manager {
         // Send email to admin on adding a new product
         add_action( 'dokan_rest_insert_product_object', array( $this, 'on_dokan_rest_insert_product' ), 10, 3 );
         add_filter( 'dokan_vendor_to_array', [ $this, 'filter_payment_response' ] );
+
+        // Register withdraw export controller with WooCommerce export system
+        add_filter( 'woocommerce_export_report_controller_map', [ $this, 'register_export_controllers' ] );
     }
 
     /**
@@ -171,6 +174,20 @@ class Manager {
     }
 
     /**
+     * Register export controllers with WooCommerce export system
+     *
+     * @param array $controller_map Existing controller map
+     * @return array Modified controller map
+     *
+     * @since 3.9.0
+     */
+    public function register_export_controllers( $controller_map ) {
+        $controller_map['withdraws'] = '\WeDevs\Dokan\REST\WithdrawExportController';
+
+        return $controller_map;
+    }
+
+    /**
      * Generate Rest API class map
      *
      * @since 3.5.1
@@ -210,6 +227,7 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/OrderControllerV3.php'               => '\WeDevs\Dokan\REST\OrderControllerV3',
                 DOKAN_DIR . '/includes/REST/AdminOnboardingController.php'       => '\WeDevs\Dokan\REST\AdminOnboardingController',
                 DOKAN_DIR . '/includes/REST/VendorProductCategoriesController.php'  => '\WeDevs\Dokan\REST\VendorProductCategoriesController',
+                DOKAN_DIR . '/includes/REST/ExportController.php'                => '\WeDevs\Dokan\REST\ExportController',
             )
         );
     }
