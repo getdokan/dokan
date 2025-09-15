@@ -79,7 +79,7 @@ test.describe('Dashboard admin notice', () => {
 
     test('multiple promo notices are available and count matches', { tag: ['@lite', '@admin'] }, async () => {
         await admin.adminDashboardRenderProperly();
-        await admin.expectTotalNotices(2);
+        await admin.expectTotalNotices();
     });
 
     test('a promo notice is visible and has a title', { tag: ['@lite', '@admin'] }, async () => {

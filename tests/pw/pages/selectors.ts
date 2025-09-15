@@ -281,7 +281,7 @@ export const selector = {
                 },
 
                 // Dashboard Text
-                dashboardText: '.dokan-dashboard h1',
+                dashboardText: "//h1[normalize-space()='Dashboard']",
 
                 // At a Glance
                 atAGlance: {

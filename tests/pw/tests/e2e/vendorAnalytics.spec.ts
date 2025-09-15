@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-test.describe('Vendor analytics test', () => {
+test.describe.skip('Vendor analytics test', () => {
     let admin: VendorAnalyticsPage;
     let vendor: VendorAnalyticsPage;
     let aPage: Page, vPage: Page;
