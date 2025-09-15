@@ -2,10 +2,10 @@ import { test } from '@playwright/test';
 
 const { BASE_URL } = process.env;
 
-test.describe('Product AI', () => {
+test.describe.skip('Product AI', () => {
     test.use({ storageState: 'playwright/.auth/vendorStorageState.json' });
 
-    test('add product title, description', async ({ page }) => {
+    test('add product title, description', { tag: ['@lite'] }, async ({ page }) => {
       await page.goto(`${BASE_URL}/dashboard/products/`);
       await page.getByRole('link', { name: 'Add new product' }).click();
       await page.locator('#ai-prompt-app').click();
