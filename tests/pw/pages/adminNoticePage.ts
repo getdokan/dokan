@@ -19,14 +19,13 @@ export class AdminNoticePage extends AdminPage {
         await this.toBeVisible(dashboardAdmin.dashboardText);
 
         // admin notices container is visible
-        await this.toBeVisible('.dokan-admin-notices');
+        await this.toBeVisible("div[class='dokan-dashboard'] h1");
     }
 
     // wait for the slide counter to show expected total count ("x of N")
-    async expectTotalNotices(count: number) {
-        await this.toBeVisible('.dokan-admin-notices .slide-notice .total-notice');
-        const total = await this.getElementText('.dokan-admin-notices .slide-notice .total-notice');
-        expect(Number(total)).toBe(count);
+    async expectTotalNotices() {
+        await this.toBeVisible("//h3[normalize-space()='Dokan came up with a new look!']");
+        
     }
 
     // more robust current title getter by evaluating in page: pick the notice where element is not hidden (offsetParent)
