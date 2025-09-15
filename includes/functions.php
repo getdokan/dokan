@@ -4105,7 +4105,7 @@ function dokan_get_additional_product_sections() {
  * @return bool
  */
 function dokan_string_to_bool( $value ) {
-    return is_bool( $value ) ? $value : ( in_array( strtolower( $value ), [ 'yes', 1, '1', 'true', 'on' ], true ) );
+    return is_bool( $value ) ? $value : ( in_array( strtolower( $value ?? '' ), [ 'yes', 1, '1', 'true', 'on' ], true ) );
 }
 
 /**

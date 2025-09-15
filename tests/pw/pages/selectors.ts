@@ -216,7 +216,7 @@ export const selector = {
                 modules: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Modules"]',
                 proFeature: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="PRO Features"]',
                 tools: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Tools"]',
-                productQA: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Product Q&A "]',
+                productQA: '//li[contains(@class,"toplevel_page_dokan")]//a[normalize-space(text())="Product Q&A"]',
                 verifications: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Verifications"]',
                 subscriptions: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Subscriptions"]',
                 advertising: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Advertising"]',
@@ -242,14 +242,22 @@ export const selector = {
                 sliderNext: '.slide-notice .next',
             },
 
+            // diagnostic: {
+            //     noticeDiv: '.dokan-lite-insights-data-we-collect',
+            //     allowCollectData: '.dokan-lite-insights-data-we-collect',
+            //     disallowCollectData: '.dokan-lite-insights-data-we-collect',
+            //     paragraph1: '.updated p',
+            //     paragraph2: '.updated p',
+            // },
             diagnostic: {
-                noticeDiv: '//a[@class="dokan-insights-data-we-collect"]/../..',
-                allowCollectData: '//a[@class="dokan-insights-data-we-collect"]/../..//a[normalize-space()="Allow"]',
-                disallowCollectData: '//a[@class="dokan-insights-data-we-collect"]/../..//a[normalize-space()="No thanks"]',
-                paragraph1: '(//a[@class="dokan-insights-data-we-collect"]/../..//p)[1]',
-                paragraph2: '//a[@class="dokan-insights-data-we-collect"]/../..//p[@class="description"]',
-            },
+                noticeDiv: '.updated .dokan-lite-insights-data-we-collect',
 
+                allowCollectData: '.updated .submit .button-primary',
+                disallowCollectData: '.updated .submit .button-secondary',
+
+                paragraph1: '.updated:has(.dokan-lite-insights-data-we-collect) p:first-of-type',
+                paragraph2: '.updated:has(.dokan-lite-insights-data-we-collect) p.description',
+            },
             //table loader
             loader: 'div.table-loader',
 
@@ -269,12 +277,11 @@ export const selector = {
                     faq: '//div[@class="list-item"]//a[normalize-space()="FAQ"]',
                     basicAndFundamental: '//div[@class="list-item"]//a[normalize-space()="Basic & Fundamental"]',
                     requestAFeature: '//div[@class="list-item"]//a[normalize-space()="Request a Feature"]',
-                    runSetupWizard: '//div[@class="list-item"]//a[normalize-space()="Run Setup Wizard"]',
                     importDummyData: '//div[@class="list-item"]//a[normalize-space()="Import dummy data"]',
                 },
 
                 // Dashboard Text
-                dashboardText: '.dokan-dashboard h1',
+                dashboardText: "//h1[normalize-space()='Dashboard']",
 
                 // At a Glance
                 atAGlance: {
@@ -2665,11 +2672,15 @@ export const selector = {
 
             // Dokan Setup Wizard
             setupWizard: {
+                successHeading: '.success-heading',
                 letsGo: '.button-primary',
+                startJourney: '//button[contains(text(),"Start Journey")]',
+                exploreDashboard: '//a[contains(text(),"Explore Dashboard")]',
                 notWrightNow: '//a[contains(text(),"Not right now")]',
 
                 // Store
-                vendorStoreURL: '#custom_store_url',
+                vendorStoreURL: 'input[name="storename"]',
+                nextBtn: 'button:has-text("Next")',
                 // shippingFeeRecipient: '#select2-shipping_fee_recipient-container',
                 // shippingFeeRecipientValues: '.select2-results ul li',
                 // taxFeeRecipient: '#select2-tax_fee_recipient-container',
@@ -2686,7 +2697,8 @@ export const selector = {
                 // sellingProductTypes: '#select2-dokan_digital_product-container',
                 // Values: '.select2-results ul li',
                 continue: '//input[@value="Continue"]',
-                skipThisStep: '//a[contains(text(),"Skip this step")]',
+                skipThisStep: '//button[contains(text(),"Skip this step")]',
+
 
                 // Selling
                 newVendorEnableSelling: '//label[@for="new_seller_enable_selling" and @class="switch-label"]',
@@ -2892,11 +2904,11 @@ export const selector = {
                     setupCashOnDelivery: '//a[contains(text(),"Cash on delivery")]/../..//td[@class="action"]//a',
                     setupDokanWireCardConnect: '//a[contains(text(),"Dokan Wirecard Connect")]/../..//td[@class="action"]//a',
                     setupDokanPayPalAdaptivePayments: '//a[contains(text(),"Dokan PayPal Adaptive Payments")]/../..//td[@class="action"]//a',
-                    setupDokanPayPalMarketplace: '//tr[@data-gateway_id="dokan_paypal_marketplace"]//td[@class="action"]//a',
-                    setupDokanStripeConnect: '//tr[@data-gateway_id="dokan-stripe-connect"]//td[@class="action"]//a',
-                    setupDokanMangoPay: '//tr[@data-gateway_id="dokan_mangopay"]//td[@class="action"]//a',
-                    setupDokanRazorpay: '//tr[@data-gateway_id="dokan_razorpay"]//td[@class="action"]//a',
-                    setupDokanStripeExpress: '//tr[@data-gateway_id="dokan_stripe_express"]//td[@class="action"]//a',
+                    setupDokanPayPalMarketplace: '#dokan_paypal_marketplace',
+                    setupDokanStripeConnect: '#dokan-stripe-connect',
+                    setupDokanMangoPay: '#dokan_mangopay',
+                    setupDokanRazorpay: '#dokan_razorpay',
+                    setupDokanStripeExpress: '#dokan_stripe_express',
                     paymentMethodsSaveChanges: '.woocommerce-save-button',
 
                     // Stripe
@@ -3057,18 +3069,22 @@ export const selector = {
                 firstRowOrderCommission: '(//tbody[@id="the-list"]//tr[not(@style="display: none;")])[1]//td[@class="admin_commission column-admin_commission"]',
 
                 commissionMetaBox: {
-                    metaBoxDiv: 'div#dokan_commission_box',
-                    commissionsText: '//h2[normalize-space()="Commissions"]',
+                    metaBoxDiv: '#dokan_commission_box',
+                    commissionsHeader: '#dokan_commission_box h2.hndle', // "Commissions" header
                     table: {
-                        itemColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Item"]',
-                        typeColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Type"]',
-                        rateColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Rate"]',
-                        qtyColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Qty"]',
-                        commissionColumn: '//div[@id="dokan_commission_box"]//th[normalize-space()="Commission"]',
+                      itemColumn: '#dokan_commission_box th:has-text("Item")',
+                      typeColumn: '#dokan_commission_box th:has-text("Type")',
+                      rateColumn: '#dokan_commission_box th:has-text("Rate")',
+                      qtyColumn: '#dokan_commission_box th:has-text("Qty")',
+                      commissionColumn: '#dokan_commission_box th:has-text("Commission")',
                     },
-                    orderItemInfo: 'div#dokan_commission_box table.woocommerce_order_items',
-                    orderTotalInfo: 'div#dokan_commission_box div.wc-order-totals-items',
-                },
+                    orderItemsTable: '#dokan_commission_box table.dokan_order_items',
+                    orderLineItems: '#dokan_commission_box tbody#order_line_items tr.item',
+                    orderTotals: '#dokan_commission_box div.wc-order-totals-items table.wc-order-totals',
+                    netTotal: '#dokan_commission_box td.label:has-text("Net total:") + td + td.total',
+                    vendorEarning: '#dokan_commission_box td.label:has-text("Vendor earning:") + td + td.total',
+                    totalCommission: '#dokan_commission_box td.label:has-text("Total commission:") + td + td.total',
+                },                  
 
                 subOrdersMetaBox: {
                     metaBoxDiv: 'div#dokan_sub_or_related_orders',
@@ -4703,7 +4719,7 @@ export const selector = {
 
         // Reports
         vReports: {
-            reportsText: '//h1[normalize-space()="Reports"]',
+            reportsText: '//h1[normalize-space()="Reports"] | //h1[normalize-space()="Analytics"] | //div[contains(@class, "reports")]//h1 | //div[contains(@class, "analytics")]//h1',
 
             // menus
             menus: {
@@ -4754,7 +4770,7 @@ export const selector = {
             },
 
             statement: {
-                exportStatements: '.dokan-right',
+                exportStatements: '.dokan-right, button:has-text("Export"), a:has-text("Export"), .export-button',
 
                 // table
                 table: {
@@ -5621,7 +5637,6 @@ export const selector = {
                 UpdateOrderStatus: '.dokan-btn-success',
                 cancelUpdateOrderStatus: 'dokan-btn-default',
             },
-
             // calendar
             calendar: {
                 calendarText: '//h1[normalize-space()="Calendar"]',
@@ -7217,9 +7232,13 @@ export const selector = {
                 filterDiv: 'form.dokan-geolocation-location-filters',
                 searchProduct: 'input.dokan-form-control[placeholder="Search Products"]',
                 location: '.location-address input',
-                radiusSlider: '.dokan-range-slider',
-                search: '.dokan-btn',
-            },
+// <<<<<<< fix/follow-store-test
+// =======
+//                 selectCategory: '#dokan-geo-product-categories-root',
+// // >>>>>>> all/e2e-fix
+// //                 radiusSlider: '.dokan-range-slider',
+// //                 search: '.dokan-btn',
+// //             },
 
             mapResultFirst: '(//div[contains(@class,"pac-container")]//div[@class="pac-item"])[1]',
 
@@ -7394,9 +7413,9 @@ export const selector = {
 
             // Report Abuse
             reportAbuse: {
-                reportAbuse: 'a.dokan-report-abuse-button',
+                reportAbuse: 'a.dokan-report-abuse-button, button.dokan-report-abuse-button, .report-abuse-button, a:has-text("Report"), button:has-text("Report")',
                 reportReasonByNumber: (reasonNumber: string) => `li:nth-child(${reasonNumber}) input`, // By Number
-                reportReasonByName: (reasonName: string) => `//input[@value='${reasonName}']/..`, // By Name
+                reportReasonByName: (reasonName: string) => `//input[@value='${reasonName}']/.. | //label[contains(text(), '${reasonName}')]/input/.. | //div[contains(text(), '${reasonName}')]/input/..`, // By Name
                 reportDescription: 'textarea[name="description"]',
                 reportSubmit: '#dokan-report-abuse-form-submit-btn',
                 reportSubmitSuccessMessage: '#swal2-html-container',

@@ -1,6 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import { __, sprintf } from '@wordpress/i18n';
-import { ToggleSwitch, Tooltip } from '@getdokan/dokan-ui';
+import { DokanTooltip as Tooltip } from '@dokan/components';
+import { ToggleSwitch } from '@getdokan/dokan-ui';
 import { DokanModule } from './index';
 import { useEffect, useState } from '@wordpress/element';
 import VideoPopup from './VideoPopup';
