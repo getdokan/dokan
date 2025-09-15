@@ -7232,10 +7232,13 @@ export const selector = {
                 filterDiv: 'form.dokan-geolocation-location-filters',
                 searchProduct: 'input.dokan-form-control[placeholder="Search Products"]',
                 location: '.location-address input',
-                selectCategory: '#dokan-geo-product-categories-root',
-                radiusSlider: '.dokan-range-slider',
-                search: '.dokan-btn',
-            },
+// <<<<<<< fix/follow-store-test
+// =======
+//                 selectCategory: '#dokan-geo-product-categories-root',
+// // >>>>>>> all/e2e-fix
+// //                 radiusSlider: '.dokan-range-slider',
+// //                 search: '.dokan-btn',
+// //             },
 
             mapResultFirst: '(//div[contains(@class,"pac-container")]//div[@class="pac-item"])[1]',
 
@@ -7934,7 +7937,7 @@ export const selector = {
             cartItem: (productName: string) => `//tr[@class='wc-block-cart-items__row']//a[@class= 'wc-block-components-product-name' and contains(text(),'${productName}')]`,
             removeItem: (productName: string) => `//a[contains(text(),'${productName}')]/..//button[@class='wc-block-cart-item__remove-link']`,
             quantity: (productName: string) => `//a[contains(text(),'${productName}')]/..//input[@class='wc-block-components-quantity-selector__input']`,
-            addCoupon: '//div[text()="Add a coupon"]',
+            addCoupon: '//div[text()="Add coupons"]',
             couponCode: 'form#wc-block-components-totals-coupon__form input',
             applyCoupon: 'form#wc-block-components-totals-coupon__form  button',
             removeCoupon: (couponCode: string) => `//span[contains(text(), '${couponCode.toLowerCase()}')]/..//button`,
