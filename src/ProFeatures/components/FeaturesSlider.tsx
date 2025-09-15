@@ -128,7 +128,7 @@ function FeaturesSlider() {
                     <button
                         onClick={ () => handleScrollClick( 'left' ) }
                         disabled={ ! canScrollLeft || isScrolling }
-                        className={ `w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${
+                        className={ `w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 ${
                             canScrollLeft && ! isScrolling
                                 ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
                                 : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
@@ -142,7 +142,7 @@ function FeaturesSlider() {
                     <button
                         onClick={ () => handleScrollClick( 'right' ) }
                         disabled={ ! canScrollRight || isScrolling }
-                        className={ `w-10 h-10 flex items-center justify-center rounded-full border-2 transition-all duration-200 ${
+                        className={ `w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 ${
                             canScrollRight && ! isScrolling
                                 ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
                                 : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
