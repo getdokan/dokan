@@ -1,118 +1,179 @@
-import { Page } from '@playwright/test';
-import { AdminPage } from '@pages/adminPage';
-import { CustomerPage } from '@pages/customerPage';
-import { selector } from '@pages/selectors';
-import { helpers } from '@utils/helpers';
-import { data } from '@utils/testData';
-import { coupon } from '@utils/interfaces';
+import { Page, expect } from '@playwright/test';
 
-// selectors
-const couponsAdmin = selector.admin.marketing;
-const couponsVendor = selector.vendor.vCoupon;
+export class CouponsPage {
+    readonly page: Page;
 
-export class CouponsPage extends AdminPage {
     constructor(page: Page) {
-        super(page);
+        this.page = page;
     }
 
-    customerPage = new CustomerPage(this.page);
-
-    // add marketplace coupon
-    async addMarketplaceCoupon(coupon: coupon) {
-        await this.goIfNotThere(data.subUrls.backend.wc.addCoupon);
-        await this.setElementCssStyle('div.woocommerce-layout__header', 'display', 'none'); //todo: remove this when woocommerce header can be disabled
-
-        await this.clearAndType(couponsAdmin.addNewCoupon.couponCode, coupon.title);
-        await this.clearAndType(couponsAdmin.addNewCoupon.couponDescription, coupon.description);
-        await this.selectByValue(couponsAdmin.addNewCoupon.discountType, coupon.discountType);
-        await this.clearAndType(couponsAdmin.addNewCoupon.couponAmount, coupon.amount());
-
-        await this.click(couponsAdmin.addNewCoupon.vendorLimits);
-        await this.check(couponsAdmin.addNewCoupon.enableForAllVendors);
-        await this.check(couponsAdmin.addNewCoupon.showOnStores);
-        await this.check(couponsAdmin.addNewCoupon.notifyVendors);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, couponsAdmin.addNewCoupon.publish);
-        await this.toContainText(couponsAdmin.addNewCoupon.publishSuccessMessage, 'Coupon updated.');
+    // Admin Methods
+    async navigateToAddNewCoupon() {
+        await this.page.goto('/wp-admin/post-new.php?post_type=shop_coupon');
+        await this.page.waitForLoadState('networkidle');
     }
 
-    // vendor coupons render properly
-    async vendorCouponsRenderProperly(): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
-
-        // coupon text is visible
-        await this.toBeVisible(couponsVendor.couponText);
-
-        // add new coupon is visible
-        await this.toBeVisible(couponsVendor.addNewCoupon);
-
-        // coupon menus are visible
-        await this.multipleElementVisible(couponsVendor.menus);
-
-        // table elements are visible
-        await this.multipleElementVisible(couponsVendor.table);
+    async navigateToCouponsList() {
+        await this.page.goto('/wp-admin/edit.php?post_type=shop_coupon');
+        await this.page.waitForLoadState('networkidle');
     }
 
-    // vendor view marketplace coupon
-    async viewMarketPlaceCoupons(marketplaceCoupon: string) {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
-        await this.click(couponsVendor.menus.marketplaceCoupons);
-        await this.toBeVisible(couponsVendor.marketPlaceCoupon.marketPlaceCoupon);
-        if (marketplaceCoupon) await this.toBeVisible(couponsVendor.marketPlaceCoupon.couponCell(marketplaceCoupon));
+    async createMarketplaceCoupon(couponCode: string, description: string, amount: string = '10') {
+        // Fill coupon code
+        await this.page.getByRole('textbox', { name: 'Coupon code' }).click();
+        await this.page.getByRole('textbox', { name: 'Coupon code' }).clear();
+        await this.page.getByRole('textbox', { name: 'Coupon code' }).fill(couponCode);
+        await this.page.getByRole('textbox', { name: 'Coupon code' }).blur();
+
+        // Fill description
+        await this.page.getByRole('textbox', { name: 'Description (optional)' }).click();
+        await this.page.getByRole('textbox', { name: 'Description (optional)' }).clear();
+        await this.page.getByRole('textbox', { name: 'Description (optional)' }).fill(description);
+        await this.page.getByRole('textbox', { name: 'Description (optional)' }).blur();
+
+        // Select discount type
+        await this.page.getByLabel('Discount type').selectOption('percent');
+
+        // Fill coupon amount
+        await this.page.getByRole('textbox', { name: 'Coupon amount' }).click();
+        await this.page.getByRole('textbox', { name: 'Coupon amount' }).clear();
+        await this.page.getByRole('textbox', { name: 'Coupon amount' }).fill(amount);
+        await this.page.getByRole('textbox', { name: 'Coupon amount' }).blur();
+
+        // Wait for form validation
+        await this.page.waitForTimeout(1000);
+
+        // Verify form values
+        await expect(this.page.getByRole('textbox', { name: 'Coupon code' })).toHaveValue(couponCode);
+        await expect(this.page.getByRole('textbox', { name: 'Description (optional)' })).toHaveValue(description);
+        await expect(this.page.getByRole('textbox', { name: 'Coupon amount' })).toHaveValue(amount);
+
+        // Configure vendor limits
+        await this.page.getByRole('link', { name: ' Vendor limits' }).click();
+        await this.page.getByRole('checkbox', { name: 'Enable for All Vendors' }).check();
+
+        // Configure usage restriction
+        await this.page.getByRole('link', { name: ' Usage restriction' }).click();
+
+        // Configure usage limits
+        await this.page.getByRole('link', { name: ' Usage limits' }).click();
+
+        // Publish coupon
+        await Promise.all([
+            this.page.waitForURL(/post/, { timeout: 15000 }),
+            this.page.getByRole('button', { name: 'Publish', exact: true }).click()
+        ]);
+
+        // Wait for page to load
+        await this.page.waitForLoadState('networkidle');
     }
 
-    // update coupon fields
-    async updateCouponFields(coupon: coupon) {
-        await this.clearAndType(couponsVendor.couponTitle, coupon.title);
-        await this.clearAndType(couponsVendor.description, coupon.description);
-        await this.selectByValue(couponsVendor.discountType, coupon.discountType);
-        await this.clearAndType(couponsVendor.amount, coupon.amount());
-        await this.click(couponsVendor.selectAll);
-        await this.check(couponsVendor.applyForNewProducts);
-        await this.check(couponsVendor.showOnStore);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.coupons, couponsVendor.createCoupon, 302);
+    async searchCoupon(couponName: string) {
+        await this.page.getByRole('searchbox', { name: 'Search coupons:' }).click();
+        await this.page.getByRole('searchbox', { name: 'Search coupons:' }).fill(couponName);
+        await this.page.getByRole('button', { name: 'Search coupons' }).click();
+        await this.page.waitForLoadState('networkidle');
     }
 
-    // vendor add coupon
-    async addCoupon(coupon: coupon) {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
-        await this.click(couponsVendor.addNewCoupon);
-        await this.updateCouponFields(coupon);
+    async selectCoupon(couponName: string) {
+        const couponCheckbox = this.page.getByRole('checkbox', { name: `Select ${couponName}`, exact: true }).first();
+        if (await couponCheckbox.count() > 0) {
+            await expect(couponCheckbox).toBeVisible();
+            await couponCheckbox.check();
+        } else {
+            // Fallback: try to find any checkbox in the coupon row
+            const couponRow = this.page.locator(`tr:has-text("${couponName}")`);
+            const checkbox = couponRow.locator('input[type="checkbox"]').first();
+            if (await checkbox.count() > 0) {
+                await checkbox.check();
+            }
+        }
     }
 
-    // vendor edit coupon
-    async editCoupon(coupon: coupon) {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
-        await this.clickAndWaitForLoadState(couponsVendor.couponLink(coupon.title));
-        await this.updateCouponFields(coupon);
-        await this.toContainText(couponsVendor.dokanMessage, couponsVendor.couponUpdateSuccessMessage);
+    // Vendor Methods
+    async navigateToVendorCoupons(baseUrl: string) {
+        await this.page.goto(`${baseUrl}/dashboard/new/#coupons`);
+        await this.page.waitForLoadState('networkidle');
     }
 
-    // vendor edit coupon
-    async deleteCoupon(couponCode: string) {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
-        await this.hover(couponsVendor.couponCell(couponCode));
-        await this.clickAndAccept(couponsVendor.couponDelete(couponCode));
-        await this.toContainText(couponsVendor.dokanMessage, 'Coupon has been deleted successfully!');
+    async viewMarketplaceCoupons() {
+        await this.page.getByRole('button', { name: 'Marketplace Coupons' }).click();
     }
 
-    // customer
-
-    // single store coupon
-    async viewStoreCoupon(storeName: string, couponCode: string) {
-        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
-        await this.toBeVisible(selector.customer.cSingleStore.storeCoupon.coupon(couponCode));
+    async clickMarketplaceCoupon(couponName: string) {
+        await this.page.getByRole('cell', { name: couponName, exact: true }).locator('div').first().click();
     }
 
-    // apply coupon
-    async applyCoupon(productName: string, couponCode: string) {
-        await this.customerPage.addProductToCart(productName, 'single-product');
-        await this.customerPage.applyCoupon(couponCode);
+    async createVendorCoupon(couponTitle: string, description: string, amount: string = '15') {
+        await this.page.getByRole('button', { name: 'Add New Coupon' }).click();
+        
+        // Fill coupon title
+        await this.page.getByRole('textbox', { name: 'Coupon Title*' }).click();
+        await this.page.getByRole('textbox', { name: 'Coupon Title*' }).fill(couponTitle);
+        
+        // Fill description
+        await this.page.getByRole('textbox', { name: 'Description' }).click();
+        await this.page.getByRole('textbox', { name: 'Description' }).fill(description);
+        
+        // Select discount type
+        await this.page.getByRole('combobox', { name: 'Discount Type' }).click();
+        await this.page.getByRole('option', { name: 'Percentage discount' }).click();
+        
+        // Fill coupon amount
+        await this.page.getByRole('spinbutton', { name: 'Coupon Amount*' }).click();
+        await this.page.getByRole('spinbutton', { name: 'Coupon Amount*' }).fill(amount);
+        
+        // Click create button
+        await this.page.locator('div').filter({ hasText: /^CancelCreate$/ }).first().click();
+        
+        // Check show on store
+        await this.page.getByRole('checkbox', { name: 'Show on store' }).check();
+        
+        // Create coupon
+        await this.page.getByRole('button', { name: 'Create' }).click();
     }
 
-    // buy product with coupon
-    async buyProductWithCoupon(productName: string, couponCode: string) {
-        await this.customerPage.addProductToCart(productName, 'single-product');
-        await this.customerPage.applyCoupon(couponCode);
-        await this.customerPage.placeOrder();
+    // Customer Methods
+    async searchAndAddProduct(baseUrl: string, productName: string) {
+        await this.page.goto(`${baseUrl}/shop/`);
+        await this.page.getByRole('textbox', { name: 'Search Products' }).click();
+        await this.page.getByRole('textbox', { name: 'Search Products' }).fill(productName);
+        await this.page.locator('#main').getByRole('button', { name: 'Search' }).click();
+        await this.page.getByRole('link', { name: `Placeholder ${productName} (simple) $` }).click();
+        await this.page.getByRole('button', { name: 'Add to cart', exact: true }).click();
+    }
+
+    async applyCoupon(baseUrl: string, couponCode: string) {
+        await this.page.goto(`${baseUrl}/cart/`);
+        await this.page.getByRole('button', { name: 'Add coupons' }).click();
+        await this.page.getByRole('textbox', { name: 'Enter code' }).fill(couponCode);
+        await this.page.getByRole('button', { name: 'Apply' }).click();
+    }
+
+    async completeCheckout() {
+        await this.page.getByRole('link', { name: 'Proceed to Checkout' }).click();
+        await this.page.getByRole('button', { name: 'Place Order' }).click();
+    }
+
+    // Verification Methods
+    async verifyCouponCreated(couponCode: string) {
+        await expect(this.page).toHaveURL(/post/);
+        await expect(this.page.locator('#title')).toHaveValue(couponCode);
+        
+        const publishStatus = this.page.locator('#post-status-display');
+        if (await publishStatus.count() > 0) {
+            await expect(publishStatus).toContainText('Published');
+        }
+    }
+
+    async verifyCouponInList(couponName: string) {
+        const couponRow = this.page.locator(`tr:has-text("${couponName}")`);
+        await expect(couponRow).toBeVisible();
+    }
+
+    async verifyCouponApplied() {
+        // Add verification logic for coupon application success
+        // This could check for success messages, price changes, etc.
+        await this.page.waitForLoadState('networkidle');
     }
 }

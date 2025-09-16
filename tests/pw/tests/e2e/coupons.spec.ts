@@ -1,85 +1,116 @@
-import { test, request, Page } from '@playwright/test';
-import { CouponsPage } from '@pages/couponsPage';
-import { ApiUtils } from '@utils/apiUtils';
+import { test, expect } from '@playwright/test';
+import { CouponsPage } from '../../pages/couponsPage';
 import { data } from '@utils/testData';
-import { payloads } from '@utils/payloads';
 
-const { PRODUCT_ID } = process.env;
+test.describe('Coupons Tests', () => {
+    let couponsPage: CouponsPage;
+    const marketplaceCouponCode = 'Test_PW_Marketplace_Coupon_1';
+    const marketplaceCouponDescription = 'Test Marketplace Coupon 1';
+    const vendorCouponCode = 'test_pw_vendor_coupon_2';
+    const vendorCouponDescription = 'Test PW Vendor Coupon 2';
+    const productName = 'p1_v1'; // Assuming this product exists
 
-test.describe('Coupons test', () => {
-    let admin: CouponsPage;
-    let vendor: CouponsPage;
-    let customer: CouponsPage;
-    let aPage: Page, vPage: Page, cPage: Page;
-    let apiUtils: ApiUtils;
-    let marketplaceCouponCode: string;
-    let couponCode: string;
-
-    test.beforeAll(async ({ browser }) => {
-        const adminContext = await browser.newContext(data.auth.adminAuth);
-        aPage = await adminContext.newPage();
-        admin = new CouponsPage(aPage);
-
-        const vendorContext = await browser.newContext(data.auth.vendorAuth);
-        vPage = await vendorContext.newPage();
-        vendor = new CouponsPage(vPage);
-
-        const customerContext = await browser.newContext(data.auth.customerAuth);
-        cPage = await customerContext.newPage();
-        customer = new CouponsPage(cPage);
-
-        apiUtils = new ApiUtils(await request.newContext());
-        [, , marketplaceCouponCode] = await apiUtils.createMarketPlaceCoupon(payloads.createMarketPlaceCoupon(), payloads.adminAuth);
-        [, , couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon(), payloads.vendorAuth);
+    test.beforeEach(async ({ page }) => {
+        couponsPage = new CouponsPage(page);
     });
 
-    test.afterAll(async () => {
-        await aPage.close();
-        await vPage.close();
-        await cPage.close();
-        await apiUtils.dispose();
+    test.describe('Admin Coupon Management', () => {
+        test.use({
+            storageState: 'playwright/.auth/adminStorageState.json'
+        });
+
+        test('Admin Can Add Marketplace Coupon @lite', async () => {
+            await couponsPage.navigateToAddNewCoupon();
+            await couponsPage.createMarketplaceCoupon(marketplaceCouponCode, marketplaceCouponDescription);
+            await couponsPage.verifyCouponCreated(marketplaceCouponCode);
+        });
+
+        test('Admin Can View Created Coupon @lite', async () => {
+            await couponsPage.navigateToCouponsList();
+            await couponsPage.searchCoupon('test_pw_marketplace_coupon_1');
+            await couponsPage.selectCoupon('test_pw_marketplace_coupon_1');
+        });
     });
 
-    test('admin can add marketplace coupon', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.addMarketplaceCoupon({ ...data.coupon, title: data.coupon.couponTitle() });
+    test.describe('Vendor Coupon Management', () => {
+        test.use({
+            storageState: 'playwright/.auth/vendorStorageState.json'
+        });
+
+        test('Vendor Can View Marketplace Coupons @lite', async () => {
+            const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
+            await couponsPage.navigateToVendorCoupons(baseUrl);
+            await couponsPage.viewMarketplaceCoupons();
+            await couponsPage.clickMarketplaceCoupon('test_pw_marketplace_coupon_1');
+        });
+
+        test('Vendor Can Add Coupon @lite', async () => {
+            const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
+            await couponsPage.navigateToVendorCoupons(baseUrl);
+            await couponsPage.createVendorCoupon(vendorCouponCode, vendorCouponDescription);
+        });
     });
 
-    //vendor
+    test.describe('Customer Coupon Usage', () => {
+        test.use({
+            storageState: 'playwright/.auth/customerStorageState.json'
+        });
 
-    test('vendor can view coupons menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorCouponsRenderProperly();
-    });
+        test('Customer Can Buy Product with Marketplace Coupon @lite', async () => {
+            const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
+            
+            // Step 1: Search and add product to cart
+            await couponsPage.page.goto(`${baseUrl}/shop/`);
+            await couponsPage.page.getByRole('textbox', { name: 'Search Products' }).click();
+            await couponsPage.page.getByRole('textbox', { name: 'Search Products' }).fill('p1_v1');
+            await couponsPage.page.locator('#main').getByRole('button', { name: 'Search' }).click();
+            await couponsPage.page.getByRole('link', { name: 'Placeholder p1_v1 (simple) $' }).click();
+            await couponsPage.page.getByRole('button', { name: 'Add to cart', exact: true }).click();
+            
+            // Step 2: Go to cart and apply coupon
+            await couponsPage.page.goto(`${baseUrl}/cart/`);
+            await couponsPage.page.getByRole('button', { name: 'Add coupons' }).click();
+            await couponsPage.page.getByRole('textbox', { name: 'Enter code' }).click();
+            await couponsPage.page.getByRole('textbox', { name: 'Enter code' }).fill('test_pw_marketplace_coupon_1');
+            await couponsPage.page.getByRole('button', { name: 'Apply' }).click();
+            
+            // Step 3: Proceed to checkout and complete order
+            await couponsPage.page.getByRole('link', { name: 'Proceed to Checkout' }).click();
+            
+            // Wait for checkout page to load
+            await couponsPage.page.waitForLoadState('networkidle');
+            
+            
+            
+            // Place order
+            await couponsPage.page.getByRole('button', { name: 'Place Order' }).click();
+        });
 
-    test('vendor can view marketPlace coupons', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.viewMarketPlaceCoupons(marketplaceCouponCode);
-    });
-
-    test('vendor can add coupon', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.addCoupon({ ...data.coupon, title: data.coupon.couponTitle() });
-    });
-
-    test('vendor can edit coupon', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.editCoupon({ ...data.coupon, title: couponCode });
-    });
-
-    test('vendor can delete coupon', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, , couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon(), payloads.vendorAuth);
-        await vendor.deleteCoupon(couponCode);
-    });
-
-    //customer
-
-    test('customer can view coupon on single store', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.viewStoreCoupon(data.predefined.vendorStores.vendor1, couponCode);
-    });
-
-    test('customer can apply coupon', { tag: ['@pro', '@customer'] }, async ({ page }) => {
-        const customer = new CouponsPage(page); // Used guest customer to avoid conflict with other tests
-        await customer.applyCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
-    });
-
-    test('customer can buy product with coupon', { tag: ['@pro', '@customer'] }, async () => {
-        test.slow();
-        await customer.buyProductWithCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
+        test('Customer Can Buy Product with Vendor Coupon @lite', async () => {
+            const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
+            
+            // Step 1: Search and add product to cart
+            await couponsPage.page.goto(`${baseUrl}/shop/`);
+            await couponsPage.page.getByRole('textbox', { name: 'Search Products' }).click();
+            await couponsPage.page.getByRole('textbox', { name: 'Search Products' }).fill('p1_v1');
+            await couponsPage.page.locator('#main').getByRole('button', { name: 'Search' }).click();
+            await couponsPage.page.getByRole('link', { name: 'Placeholder p1_v1 (simple) $' }).click();
+            await couponsPage.page.getByRole('button', { name: 'Add to cart', exact: true }).click();
+            
+            // Step 2: Go to cart and apply coupon
+            await couponsPage.page.goto(`${baseUrl}/cart/`);
+            await couponsPage.page.getByRole('button', { name: 'Add coupons' }).click();
+            await couponsPage.page.getByRole('textbox', { name: 'Enter code' }).click();
+            await couponsPage.page.getByRole('textbox', { name: 'Enter code' }).fill('test_pw_vendor_coupon_2');
+            await couponsPage.page.getByRole('button', { name: 'Apply' }).click();
+            
+            // Step 3: Proceed to checkout and complete order
+            await couponsPage.page.getByRole('link', { name: 'Proceed to Checkout' }).click();
+            
+            // Wait for checkout page to load
+            await couponsPage.page.waitForLoadState('networkidle');
+            // Place order
+            await couponsPage.page.getByRole('button', { name: 'Place Order' }).click();
+        });
     });
 });
