@@ -76,7 +76,7 @@ function HeroBanner() {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <button className="px-4 py-2 bg-yellow-400 text-black font-semibold rounded shadow hover:bg-yellow-300 transition flex items-center gap-2 text-base">
+                        <button className="px-4 py-2 bg-[#FFBC00] text-black font-semibold rounded shadow hover:bg-yellow-300 transition flex items-center gap-2 text-base">
                             { __( 'Upgrade to Pro', 'dokan-lite' ) }
                             <Crown className="inline-block w-5 h-5 ml-1" />
                         </button>

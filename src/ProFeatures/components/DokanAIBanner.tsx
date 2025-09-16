@@ -33,36 +33,10 @@ function DokanAIBanner() {
             <div className="absolute inset-0 md:flex md:items-center md:pl-10 md:pr-4">
                 { /* Mobile Text Layout */ }
                 <div className="block md:hidden">
-                    <h2
-                        className="text-white font-bold absolute"
-                        style={ {
-                            width: '426px',
-                            height: '23px',
-                            top: '20px',
-                            left: '20px',
-                            fontSize: '18px',
-                            fontWeight: '700',
-                            lineHeight: '130%',
-                            letterSpacing: '0%',
-                            opacity: 1,
-                        } }
-                    >
+                    <h2 className="text-white absolute w-[426px] h-[23px] top-[20px] left-[20px] text-[18px] font-bold leading-[130%] tracking-[0%] opacity-100">
                         Dokan AI
                     </h2>
-                    <p
-                        className="text-white absolute"
-                        style={ {
-                            width: '307px',
-                            height: '48px',
-                            top: '47px',
-                            left: '20px',
-                            fontSize: '12px',
-                            fontWeight: '400',
-                            lineHeight: '140%',
-                            letterSpacing: '0%',
-                            opacity: 0.9,
-                        } }
-                    >
+                    <p className="absolute text-white w-[307px] h-[48px] top-[47px] left-[20px] text-[12px] font-normal leading-[140%] tracking-[0%] opacity-90">
                         Generate product titles, descriptions, and images
                         instantly with Dokan AI, powered by OpenAI and Gemini.
                         Save time, look sharp, and sell smarter.

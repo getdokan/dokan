@@ -299,16 +299,7 @@ function DokanMarketplaceUI() {
 
             { /* Title */ }
             <div className="text-center mb-4">
-                <h2
-                    className="inline-block"
-                    style={ {
-                        fontWeight: 700,
-                        fontSize: '24px',
-                        lineHeight: '130%',
-                        letterSpacing: '0%',
-                        textAlign: 'center',
-                    } }
-                >
+                <h2 className="font-bold text-[24px] leading-[130%] tracking-[0%] text-center inline-block">
                     { activeTab === 'Marketplace'
                         ? 'Dokan Powered Marketplace Across the Globe'
                         : 'Great People, Great Minds Choose Dokan' }
@@ -350,12 +341,7 @@ function DokanMarketplaceUI() {
                 </div>
                 <div
                     ref={ scrollRef }
-                    className="overflow-x-auto flex gap-6 scrollbar-hide"
-                    style={ {
-                        scrollBehavior: 'auto', // Removed 'smooth' to prevent conflicts
-                        WebkitOverflowScrolling: 'touch',
-                        msOverflowStyle: '-ms-autohiding-scrollbar',
-                    } }
+                    className="overflow-x-auto flex gap-6 scrollbar-hide scroll-auto touch-pan-x"
                     onScroll={ checkScrollability } // Add scroll event listener
                 >
                     { data.map( ( item, index ) => (
@@ -366,9 +352,7 @@ function DokanMarketplaceUI() {
                             { activeTab === 'Marketplace' ? (
                                 <MarketplaceCard item={ item } />
                             ) : (
-                                <div
-                                    className="bg-white rounded-xl border border-gray-100 p-4 flex flex-col justify-between w-full md:w-[220px] h-[214px] opacity-100"
-                                >
+                                <div className="bg-white rounded-xl border border-gray-100 p-4 flex flex-col justify-between w-full md:w-[220px] h-[214px] opacity-100">
                                     <div className="space-y-3">
                                         <div className="flex items-center gap-3">
                                             <img

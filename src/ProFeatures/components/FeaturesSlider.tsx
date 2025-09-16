@@ -114,14 +114,7 @@ function FeaturesSlider() {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h3
-                    style={ {
-                        fontWeight: 700,
-                        fontSize: '24px',
-                        lineHeight: '130%',
-                        letterSpacing: '0%',
-                    } }
-                >
+                <h3 className="font-bold text-2xl leading-[130%] tracking-normal">
                     Curated Features for Your Thriving Marketplace
                 </h3>
                 <div className="flex space-x-2">
@@ -159,7 +152,6 @@ function FeaturesSlider() {
             <div
                 ref={ scrollRef }
                 className="flex overflow-x-auto space-x-6 scrollbar-hide"
-                style={ { WebkitOverflowScrolling: 'touch' } }
             >
                 { features.map( ( feature, index ) => (
                     <FeatureCard key={ index } { ...feature } />

@@ -65,29 +65,14 @@ function PricingSection() {
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
                         { __( 'The Packages We Provide', 'dokan-lite' ) }
                     </h2>
-                    <p
-                        className="text-gray-600 mb-6"
-                        style={ {
-                            fontWeight: 400,
-                            fontSize: '16px',
-                            lineHeight: '140%',
-                            letterSpacing: '0%',
-                            textAlign: 'center',
-                        } }
-                    >
+                    <p className="text-gray-600 mb-6 font-normal text-[16px] leading-[140%] tracking-[0%] text-center">
                         { __(
                             'Get 20% instant off in all packages with coupon code',
                             'dokan-lite'
                         ) }
                         &nbsp;
                         <span
-                            style={ {
-                                fontWeight: 600,
-                                fontSize: '16px',
-                                lineHeight: '140%',
-                                letterSpacing: '0%',
-                                textAlign: 'center',
-                            } }
+className="font-semibold text-[16px] leading-[140%] tracking-[0%] text-center"
                         >
                             LITEUPGRADE20
                         </span>

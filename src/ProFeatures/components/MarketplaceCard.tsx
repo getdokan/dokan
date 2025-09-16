@@ -31,15 +31,9 @@ function MarketplaceCard( { item }: { item: Marketplace } ) {
                     { item.name }
                 </a>
 
-                <span
-                    className="inline-flex items-center px-3 py-1 rounded-full text-xs"
-                    style={ {
-                        backgroundColor: 'rgba(124, 58, 237, 0.1)',
-                        color: '#7047EB',
-                    } }
-                >
-                        { item.country } { item.flag }
-                    </span>
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-[rgba(124,58,237,0.1)] text-[#7047EB]">
+                    { item.country } { item.flag }
+                </span>
             </div>
         </div>
     );

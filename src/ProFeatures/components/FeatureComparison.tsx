@@ -103,12 +103,7 @@ const FeatureComparison = () => {
                     <div className="w-full md:w-auto md:min-w-[300px]">
                         <div
                             ref={ categoriesRef }
-                            className="flex md:block overflow-x-auto whitespace-nowrap scrollbar-hide touch-pan-x mb-8 md:mb-0"
-                            style={ {
-                                scrollSnapType: 'x mandatory',
-                                WebkitOverflowScrolling: 'touch',
-                                msOverflowStyle: '-ms-autohiding-scrollbar',
-                            } }
+                            className="flex md:block overflow-x-auto whitespace-nowrap scrollbar-hide touch-pan-x mb-8 md:mb-0 scroll-snap-x scroll-snap-mandatory"
                         >
                             { categories.map( ( category ) => (
                                 <button
@@ -130,19 +125,13 @@ const FeatureComparison = () => {
                     scroll-snap-align-start
                     transition-all duration-200
                     flex-shrink-0
+                    font-bold text-[15px] leading-[130%] tracking-[0%]
                     ${
                         category.key === activeCategory
                             ? 'bg-black text-white shadow-md'
                             : 'bg-gray-50 text-gray-800 hover:bg-gray-100'
                     }
                   ` }
-                                    style={ {
-                                        fontFamily: 'Inter, sans-serif',
-                                        fontSize: '15px',
-                                        fontWeight: 700,
-                                        lineHeight: '130%',
-                                        letterSpacing: '0%',
-                                    } }
                                 >
                                     { category.title }
                                 </button>
@@ -155,28 +144,12 @@ const FeatureComparison = () => {
                         <div className="min-w-full">
                             { /* Header */ }
                             <div className="flex flex-row">
-                                <div
-                                    className="pl-0 md:pl-4 px-4 py-3 pt-0 text-gray-900 w-[70%] text-start"
-                                    style={ {
-                                        fontWeight: 700,
-                                        fontSize: '15px',
-                                        lineHeight: '130%',
-                                        letterSpacing: '0%',
-                                    } }
-                                >
+                                <div className="pl-0 md:pl-4 px-4 py-3 pt-0 text-gray-900 w-[70%] text-start font-bold text-[15px] leading-[130%] tracking-[0%]">
                                     <div className="w-20">
                                         { __( 'Features', 'dokan-lite' ) }
                                     </div>
                                 </div>
-                                <div
-                                    className="py-3 pt-0 text-gray-900 text-center w-[30%] flex justify-end gap-2"
-                                    style={ {
-                                        fontWeight: 700,
-                                        fontSize: '15px',
-                                        lineHeight: '130%',
-                                        letterSpacing: '0%',
-                                    } }
-                                >
+                                <div className="py-3 pt-0 text-gray-900 text-center w-[30%] flex justify-end gap-2 font-bold text-[15px] leading-[130%] tracking-[0%]">
                                     <div className="w-20">
                                         { __( 'Lite', 'dokan-lite' ) }
                                     </div>
@@ -192,22 +165,7 @@ const FeatureComparison = () => {
                                     key={ index }
                                     className="flex flex-row justify-between"
                                 >
-                                    <div
-                                        className="pl-0 md:pl-4 px-4 py-3 text-gray-700 w-[70%]"
-                                        style={ {
-                                            fontFamily: 'Inter, sans-serif',
-                                            fontSize: '12px',
-                                            fontWeight: 500,
-                                            lineHeight: '16px',
-                                            letterSpacing: '0%',
-                                            '@media (min-width: 768px)': {
-                                                fontSize: '16px',
-                                                fontWeight: 400,
-                                                lineHeight: '140%',
-                                                letterSpacing: '0%',
-                                            },
-                                        } }
-                                    >
+                                    <div className="pl-0 md:pl-4 px-4 py-3 text-gray-700 w-[70%] text-[12px] font-medium leading-4 tracking-[0%] md:text-[16px] md:font-normal md:leading-[140%]">
                                         { feature }
                                     </div>
                                     <div className="flex justify-end items-center w-[30%] gap-2">

@@ -61,25 +61,10 @@ function WhySettle() {
 
                 { /* Mobile Text Overlay - positioned at top */ }
                 <div className="absolute top-0 left-0 right-0 px-4 py-4 md:hidden">
-                    <h3
-                        className="text-white mb-2 font-bold"
-                        style={ {
-                            fontSize: '18px',
-                            lineHeight: '130%',
-                            letterSpacing: '0%',
-                        } }
-                    >
+                    <h3 className="text-white mb-2 font-bold text-[18px] leading-[130%] tracking-[0%]">
                         42+ Modules
                     </h3>
-                    <p
-                        className="text-white max-w-xs"
-                        style={ {
-                            fontSize: '12px',
-                            lineHeight: '140%',
-                            letterSpacing: '0%',
-                            fontWeight: '400',
-                        } }
-                    >
+                    <p className="text-white max-w-xs text-[12px] leading-[140%] tracking-[0%] font-normal">
                         Access an extensive range of modules designed to enhance
                         both admin and vendor experiences.
                     </p>
@@ -122,15 +107,7 @@ function WhySettle() {
                             <feature.icon size={ 16 } />
                         </div>
                         <div>
-                            <h4
-                                className="mb-2"
-                                style={ {
-                                    fontWeight: 700,
-                                    fontSize: '18px',
-                                    lineHeight: '130%',
-                                    letterSpacing: '0%',
-                                } }
-                            >
+                            <h4 className="mb-2 font-bold text-[18px] leading-[130%] tracking-[0%]">
                                 { feature.title }
                             </h4>
                             <p className="text-gray-600 text-sm">

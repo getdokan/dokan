@@ -5,7 +5,6 @@ function GuaranteeSection() {
     return (
         <div
             className="w-full max-w-7xl mx-auto"
-            style={ { fontFamily: 'Inter, sans-serif' } }
         >
             { /* What Makes Dokan Stand Out */ }
             <div>
