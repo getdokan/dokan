@@ -2,9 +2,9 @@ import DokanLogo from '../DokanLogo';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@getdokan/dokan-ui';
 import { useEffect, useState } from '@wordpress/element';
-import BackButton from '@dokan/admin/onboard/components/BackButton';
-import NextButton from '@dokan/admin/onboard/components/NextButton';
-import SinglePlugin from '@dokan/admin/onboard/components/SinglePlugin';
+import BackButton from '@src/admin/onboard/components/BackButton';
+import NextButton from '@src/admin/onboard/components/NextButton';
+import SinglePlugin from '@src/admin/onboard/components/SinglePlugin';
 
 const AddonsScreen = ( {
     onNext,

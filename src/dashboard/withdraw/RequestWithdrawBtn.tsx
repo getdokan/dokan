@@ -1,13 +1,17 @@
 import { __, sprintf } from '@wordpress/i18n';
 import {
-    Modal,
     SimpleAlert,
     SimpleInput,
     SearchableSelect,
     useToast,
 } from '@getdokan/dokan-ui';
 import { Fill } from '@wordpress/components';
-import { DokanButton, DokanAlert, DokanPriceInput } from '@dokan/components';
+import {
+    DokanButton,
+    DokanAlert,
+    DokanPriceInput,
+    DokanModal,
+} from '@dokan/components';
 import { RawHTML, useEffect, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
 import '../../definitions/window-types';
@@ -18,7 +22,7 @@ import { UseWithdrawSettingsReturn } from './Hooks/useWithdrawSettings';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
 import { formatPrice, unformatNumber } from '@dokan/utilities';
 import { UseBalanceReturn } from './Hooks/useBalance';
-import { useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 function RequestWithdrawBtn( {
     settings,
@@ -177,7 +181,7 @@ function RequestWithdrawBtn( {
                         <div className="mt-3">
                             <DokanPriceInput
                                 namespace="withdraw-request"
-                                label={ __( 'Withdraw amount', 'dokan' ) }
+                                label={ __( 'Withdraw amount', 'dokan-lite' ) }
                                 value={ withdrawAmount }
                                 onChange={ (
                                     formatedValue,
@@ -191,7 +195,10 @@ function RequestWithdrawBtn( {
                                 input={ {
                                     id: 'withdraw-amount',
                                     name: 'withdraw-amount',
-                                    placeholder: __( 'Enter amount', 'dokan' ),
+                                    placeholder: __(
+                                        'Enter amount',
+                                        'dokan-lite'
+                                    ),
                                 } }
                             />
                         </div>
@@ -270,7 +277,7 @@ function RequestWithdrawBtn( {
         }
     }, [ settings ] );
 
-    const ModalContect = () => {
+    const ModalContent = () => {
         if ( hasWithdrawRequests ) {
             return (
                 <SimpleAlert
@@ -297,6 +304,33 @@ function RequestWithdrawBtn( {
         return <WithdrawRequestForm />;
     };
 
+    const ModalFooter = () => {
+        return (
+            <div className="flex flex-row gap-3 justify-end">
+                <DokanButton
+                    onClick={ () => setIsOpen( false ) }
+                    variant="secondary"
+                >
+                    { __( 'Close', 'dokan-lite' ) }
+                </DokanButton>
+
+                { ! hasWithdrawRequests &&
+                    hasSuffcientBalance &&
+                    hasPaymentMethods && (
+                        <DokanButton
+                            onClick={ handleCreateWithdraw }
+                            disabled={ isLoading || withdrawHook?.isLoading }
+                            loading={ withdrawHook?.isLoading }
+                        >
+                            { withdrawHook?.isLoading
+                                ? __( 'Creating…', 'dokan-lite' )
+                                : __( 'Submit request', 'dokan-lite' ) }
+                        </DokanButton>
+                    ) }
+            </div>
+        );
+    };
+
     const RequestWithdraw = () => {
         return (
             <DokanButton onClick={ () => setIsOpen( true ) }>
@@ -315,45 +349,21 @@ function RequestWithdrawBtn( {
                 </Fill>
             ) }
 
-            <Modal
-                className="max-w-2xl dokan-withdraw-style-reset dokan-layout"
+            <DokanModal
                 isOpen={ isOpen }
+                namespace="withdraw-request"
                 onClose={ () => setIsOpen( false ) }
-                showXButton={ false }
-            >
-                <Modal.Title className="border-b">
-                    { __( 'Send Withdraw Request', 'dokan-lite' ) }
-                </Modal.Title>
-                <Modal.Content className="">
-                    <ModalContect />
-                </Modal.Content>
-                <Modal.Footer className="border-t">
-                    <div className="flex flex-row gap-3 justify-end">
-                        <DokanButton
-                            onClick={ () => setIsOpen( false ) }
-                            variant="secondary"
-                        >
-                            { __( 'Close', 'dokan-lite' ) }
-                        </DokanButton>
-
-                        { ! hasWithdrawRequests &&
-                            hasSuffcientBalance &&
-                            hasPaymentMethods && (
-                                <DokanButton
-                                    onClick={ handleCreateWithdraw }
-                                    disabled={
-                                        isLoading || withdrawHook?.isLoading
-                                    }
-                                    loading={ withdrawHook?.isLoading }
-                                >
-                                    { withdrawHook?.isLoading
-                                        ? __( 'Creating…', 'dokan-lite' )
-                                        : __( 'Submit request', 'dokan-lite' ) }
-                                </DokanButton>
-                            ) }
-                    </div>
-                </Modal.Footer>
-            </Modal>
+                onConfirm={ handleCreateWithdraw }
+                dialogTitle={ __( 'Send Withdraw Request', 'dokan-lite' ) }
+                dialogContent={ <ModalContent /> }
+                dialogFooterContent={ <ModalFooter /> }
+                className="min-w-[600px] dokan-withdraw-style-reset"
+                modalClassName="dokan-layout"
+                hideCancelButton={ true }
+                confirmButtonText={ __( 'Submit request', 'dokan-lite' ) }
+                loading={ isLoading || withdrawHook?.isLoading }
+                // modalBodyClassName={ 'max-w-[600px]' }
+            />
         </>
     );
 }

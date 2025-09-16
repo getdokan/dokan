@@ -18,6 +18,7 @@ The model class should extend the [\WeDevs\Dokan\Models\BaseModel](../includes/M
 #### Properties
 - `protected $object_type`: The type of object, such as `product`.
 - `protected $data`: Holds the default data for the object.
+- `protected $cache_group` (optional): Cache group name used for grouping related cache entries. When set, Dokan will automatically invalidate this group after create/update/delete via the BaseModel. See the Caching section below.
 
 #### Methods
 - The `protected $data_store` property is initialized in the constructor.
@@ -182,3 +183,69 @@ Pls check the example [get_particulars](../includes/Models/VendorBalance.php#L16
 We could do the same thing by overriding the following methods in Data Store.
 - `protected function map_model_to_db_data( BaseModel &$model ): array`: Prepare data for saving a BaseModel to the database.
 - `map_db_raw_to_model_data`: Maps database raw data to model data.
+
+
+## Caching
+
+### Overview
+Dokan provides a simple caching mechanism to speed up read-heavy operations in your Models and Data Stores. Caching is grouped using a cache group string so that related entries can be invalidated together when underlying data changes.
+
+- Use `\WeDevs\Dokan\Cache::get( $key, $group )` to get cache of expensive reads.
+- Use `\WeDevs\Dokan\Cache::set( $key, $value, $group )` to cache expensive reads.
+- Use `\WeDevs\Dokan\Cache::invalidate_group( $group )` to clear all cached entries in a group.
+- The BaseModel automatically invalidates the model’s cache group after `create`, `update`, and `delete` operations when a `$cache_group` is defined.
+
+### Defining a Cache Group on a Model
+To enable automatic cache invalidation, define a `$cache_group` property on your Model:
+
+```php
+class Department extends \WeDevs\Dokan\Models\BaseModel {
+    protected $object_type = 'department';
+
+    protected $cache_group = 'dokan/department'; // all Department-related cache entries will use this group
+
+    protected $data = array(
+        'name' => '',
+        'date_created' => null,
+        'date_updated' => null,
+    );
+
+    public function __construct( int $item_id = 0 ) {
+        parent::__construct( $item_id );
+        $this->data_store = new \WeDevs\Dokan\Models\DataStore\DepartmentStore();
+
+        if ( $this->get_id() > 0 ) {
+            $this->data = $this->data_store->read( $this );
+        }
+    }
+}
+```
+
+With `$cache_group` set, the parent `BaseModel` will automatically clear this group after:
+- `$model->save()` (both create and update)
+- `$model->delete()`
+- `Department::delete_by( $criteria )`
+
+Notes:
+- Choose a descriptive cache group (e.g., `dokan/department`) so you can invalidate all related cache easily.
+- Cache key should uniquely represent the result (e.g., include IDs, filters, pagination).
+- Prefer short TTLs for dynamic data; longer TTLs for relatively static data.
+
+### Cache Clearing
+BaseModel already clears the model’s cache group after writes:
+- After save (create/update): handled in `BaseModel::save()`.
+- After delete: handled in `BaseModel::delete()`.
+- After bulk/criteria delete: handled in `BaseModel::delete_by()`.
+
+Manual clearing:
+```php
+$department = new Department( $id );
+$department->clear_cache_group(); // clears everything in the model's cache group immediately
+```
+
+Direct clearing without a model instance:
+```php
+\WeDevs\Dokan\Cache::invalidate_group( 'dokan/department' );
+```
+
+This ensures cached reads from your Data Store stay consistent after any write operation.

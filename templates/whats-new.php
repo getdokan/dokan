@@ -4,6 +4,68 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.0.8',
+        'released' => '2025-09-12',
+        'changes'  => [
+            'New Feature'  => [
+                [
+                    'title'       => 'Added "Chat with us" admin submenu for providing direct access to support chat functionality.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Modernize vendor selection with searchable dropdown for better performance.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Prevent potential errors on additional product sections.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.7',
+        'released' => '2025-09-01',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Enhanced security controls for vendor account credentials management.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.6',
+        'released' => '2025-08-29',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added translation support for dashboard analytics report scripts to improve internationalization (i18n)',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added async search in store category in vendor edit.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin not receiving withdrawal request email notifications.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.5',
         'released' => '2025-07-25',
         'changes'  => [

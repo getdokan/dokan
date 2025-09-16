@@ -1,4 +1,4 @@
-import InternalErrorIcon from '@dokan/layout/Icons/InternalErrorIcon';
+import InternalErrorIcon from '@src/layout/Icons/InternalErrorIcon';
 import { __ } from '@wordpress/i18n';
 import { DokanButton } from '../components/Button';
 import { Slot } from '@wordpress/components';
