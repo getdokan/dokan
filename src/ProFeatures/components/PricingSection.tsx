@@ -1,5 +1,6 @@
-import { useState } from "@wordpress/element";
-import { Check } from "lucide-react";
+import { useState } from '@wordpress/element';
+import { Check } from 'lucide-react';
+import { __ } from '@wordpress/i18n';
 
 function PricingSection() {
     const [ isAnnual, setIsAnnual ] = useState( true );
@@ -62,7 +63,7 @@ function PricingSection() {
                 { /* Header */ }
                 <div className="text-center pt-8 pb-6 px-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-                        The Packages We Provide
+                        { __( 'The Packages We Provide', 'dokan-lite' ) }
                     </h2>
                     <p
                         className="text-gray-600 mb-6"
@@ -74,7 +75,11 @@ function PricingSection() {
                             textAlign: 'center',
                         } }
                     >
-                        Get 20% instant off in all packages with coupon code{ ' ' }
+                        { __(
+                            'Get 20% instant off in all packages with coupon code',
+                            'dokan-lite'
+                        ) }
+                        &nbsp;
                         <span
                             style={ {
                                 fontWeight: 600,
@@ -90,37 +95,73 @@ function PricingSection() {
 
                     { /* Toggle Switch */ }
                     <div className="flex items-center justify-center mb-8">
-                        <div className="flex bg-gray-100 rounded-lg p-1">
+                        <div className="flex bg-white rounded border">
                             <button
                                 onClick={ () => setIsAnnual( true ) }
-                                className={ `px-6 py-2 rounded text-sm font-medium transition-all ${
+                                className={ `px-6 py-2 text-sm font-medium transition-all ${
                                     isAnnual
-                                        ? 'bg-[#7047EB] text-white shadow-sm'
+                                        ? 'bg-[#7047EB] text-white rounded-l'
                                         : 'text-gray-600 hover:text-gray-900'
                                 }` }
                             >
-                                Annual
+                                { __( 'Annual', 'dokan-lite' ) }
                             </button>
                             <button
                                 onClick={ () => setIsAnnual( false ) }
-                                className={ `px-6 py-2 rounded text-sm font-medium transition-all ${
+                                className={ `px-6 py-2 text-sm font-medium transition-all ${
                                     ! isAnnual
-                                        ? 'bg-[#7047EB] text-white shadow-sm'
+                                        ? 'bg-[#7047EB] text-white rounded-r'
                                         : 'text-gray-600 hover:text-gray-900'
                                 }` }
                             >
-                                Lifetime
+                                { __( 'Lifetime', 'dokan-lite' ) }
+                                <span className="transition-all duration-300 relative">
+                                    <span className="absolute ml-[5px] md:ml-[30px] mt-[-25px]">
+                                        <span>
+                                            <svg
+                                                width="88"
+                                                height="43"
+                                                viewBox="0 0 88 43"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    clipRule="evenodd"
+                                                    d="M26.6855 1C15.3637 1 6.18553 10.1782 6.18553 21.5C6.18553 23.2901 6.41496 25.0265 6.84602 26.6816L1.30349 33.6406C0.533137 34.6078 1.33094 36.0211 2.55709 35.8614L11.0468 34.7551C14.8071 39.1872 20.4179 42 26.6855 42H66.6855C78.0074 42 87.1855 32.8218 87.1855 21.5C87.1855 10.1782 78.0074 1 66.6855 1H26.6855Z"
+                                                    fill={
+                                                        isAnnual
+                                                            ? '#F8F8F8'
+                                                            : '#EFEAFF'
+                                                    }
+                                                />
+                                                <path
+                                                    d="M6.84602 26.6816L7.23713 26.9931L7.3929 26.7975L7.32988 26.5556L6.84602 26.6816ZM1.30349 33.6406L1.6946 33.9521L1.30349 33.6406ZM2.55709 35.8614L2.6217 36.3572H2.6217L2.55709 35.8614ZM11.0468 34.7551L11.4281 34.4317L11.2521 34.2242L10.9822 34.2593L11.0468 34.7551ZM6.18553 21.5H6.68553C6.68553 10.4543 15.6398 1.5 26.6855 1.5V1V0.5C15.0876 0.5 5.68553 9.90202 5.68553 21.5H6.18553ZM6.84602 26.6816L7.32988 26.5556C6.90945 24.9413 6.68553 23.2472 6.68553 21.5H6.18553H5.68553C5.68553 23.3329 5.92048 25.1117 6.36217 26.8076L6.84602 26.6816ZM1.30349 33.6406L1.6946 33.9521L7.23713 26.9931L6.84602 26.6816L6.45491 26.3701L0.912383 33.3291L1.30349 33.6406ZM2.55709 35.8614L2.49249 35.3656C1.71207 35.4672 1.20429 34.5677 1.6946 33.9521L1.30349 33.6406L0.912383 33.3291C-0.138014 34.6479 0.949813 36.575 2.6217 36.3572L2.55709 35.8614ZM11.0468 34.7551L10.9822 34.2593L2.49249 35.3656L2.55709 35.8614L2.6217 36.3572L11.1114 35.2509L11.0468 34.7551ZM26.6855 42V41.5C20.5709 41.5 15.0975 38.7566 11.4281 34.4317L11.0468 34.7551L10.6656 35.0786C14.5168 39.6179 20.2649 42.5 26.6855 42.5V42ZM66.6855 42V41.5H26.6855V42V42.5H66.6855V42ZM87.1855 21.5H86.6855C86.6855 32.5457 77.7312 41.5 66.6855 41.5V42V42.5C78.2835 42.5 87.6855 33.098 87.6855 21.5H87.1855ZM66.6855 1V1.5C77.7312 1.5 86.6855 10.4543 86.6855 21.5H87.1855H87.6855C87.6855 9.90202 78.2835 0.5 66.6855 0.5V1ZM26.6855 1V1.5H66.6855V1V0.5H26.6855V1Z"
+                                                    fill={
+                                                        isAnnual
+                                                            ? '#E5E7EB'
+                                                            : '#AB92F6'
+                                                    }
+                                                />
+                                            </svg>
+
+                                            <span
+                                                className={ `absolute top-[17%] left-[10%] text-[12px] leading-[15px] ${
+                                                    isAnnual
+                                                        ? 'text-gray-400'
+                                                        : 'text-[#7047EB]'
+                                                }` }
+                                            >
+                                                { __(
+                                                    'Save More 20%',
+                                                    'dokan-lite'
+                                                ) }
+                                            </span>
+                                        </span>
+                                    </span>
+                                </span>
                             </button>
                         </div>
-                        <span
-                            className={ `ml-4 text-sm px-3 py-1 rounded-full transition-all duration-300 ${
-                                ! isAnnual
-                                    ? 'text-[#7047EB] bg-[#f3efff] opacity-100'
-                                    : 'text-[#7047EB] bg-[#f3efff] opacity-60'
-                            }` }
-                        >
-                            Save More 20%
-                        </span>
                     </div>
                 </div>
 
