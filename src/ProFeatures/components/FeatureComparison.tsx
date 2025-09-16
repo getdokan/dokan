@@ -103,7 +103,7 @@ const FeatureComparison = () => {
                     <div className="w-full md:w-auto md:min-w-[300px]">
                         <div
                             ref={ categoriesRef }
-                            className="flex md:block overflow-x-auto whitespace-nowrap scrollbar-hide touch-pan-x"
+                            className="flex md:block overflow-x-auto whitespace-nowrap scrollbar-hide touch-pan-x mb-8 md:mb-0"
                             style={ {
                                 scrollSnapType: 'x mandatory',
                                 WebkitOverflowScrolling: 'touch',
@@ -156,7 +156,7 @@ const FeatureComparison = () => {
                             { /* Header */ }
                             <div className="flex flex-row">
                                 <div
-                                    className="px-4 py-3 pt-0 text-gray-900 w-[70%] text-start"
+                                    className="pl-0 md:pl-4 px-4 py-3 pt-0 text-gray-900 w-[70%] text-start"
                                     style={ {
                                         fontWeight: 700,
                                         fontSize: '15px',
@@ -193,7 +193,7 @@ const FeatureComparison = () => {
                                     className="flex flex-row justify-between"
                                 >
                                     <div
-                                        className="px-4 py-3 text-gray-700 w-[70%]"
+                                        className="pl-0 md:pl-4 px-4 py-3 text-gray-700 w-[70%]"
                                         style={ {
                                             fontFamily: 'Inter, sans-serif',
                                             fontSize: '12px',

@@ -318,11 +318,11 @@ function DokanMarketplaceUI() {
             { /* Cards Container */ }
             <div className="relative">
                 { /* Scroll Buttons */ }
-                <div className="flex absolute md:relative z-10 justify-between md:justify-end w-full h-full md:h-auto items-center md:gap-2 mb-8 mt-0 md:-mt-12">
+                <div className="flex absolute md:relative z-10 justify-between md:justify-end w-full h-2/4 md:h-auto items-end md:items-center md:gap-2 mb-8 mt-5 md:-mt-12">
                     <button
                         onClick={ () => handleScrollClick( 'left' ) }
                         disabled={ ! canScrollLeft || isScrolling }
-                        className={ `w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 ml-[-10px] md:ml-0 shadow-[0_4px_20px_0px_#00000029] md:shadow-none ${
+                        className={ `w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 shadow-[0_4px_20px_0px_#00000029] md:shadow-none ${
                             canScrollLeft && ! isScrolling
                                 ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
                                 : 'border-gray-300 bg-white text-gray-400 cursor-not-allowed'
@@ -336,7 +336,7 @@ function DokanMarketplaceUI() {
                     <button
                         onClick={ () => handleScrollClick( 'right' ) }
                         disabled={ ! canScrollRight || isScrolling }
-                        className={ `w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 mr-[-10px] md:mr-0 shadow-[0_4px_20px_0px_#00000029] md:shadow-none ${
+                        className={ `w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 shadow-[0_4px_20px_0px_#00000029] md:shadow-none ${
                             canScrollRight && ! isScrolling
                                 ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
                                 : 'border-gray-300 bg-white text-gray-400 cursor-not-allowed'
