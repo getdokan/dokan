@@ -2,7 +2,6 @@ import { withRouter } from '../../../routing';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import Layout from './Layout';
 import ModulePage from '../pages/modules';
-import { useMutationObserver } from '../../../hooks';
 import SetupGuide from '../pages/setup-guide';
 import NotFound from '../../../layout/404';
 import SettingsPage from '../pages/settings';
@@ -67,31 +66,6 @@ const Dashboard = () => {
     } );
 
     const router = createHashRouter( mapedRoutes );
-
-    useMutationObserver(
-        document.body,
-        ( mutations ) => {
-            for ( const mutation of mutations ) {
-                if ( mutation.type !== 'childList' ) {
-                    continue;
-                }
-                // @ts-ignore
-                for ( const node of mutation.addedNodes ) {
-                    if ( node.id === 'headlessui-portal-root' ) {
-                        node.classList.add( 'dokan-layout' );
-                        node.style.display = 'block';
-                    }
-
-                    if (
-                        node.hasAttribute( 'data-radix-popper-content-wrapper' )
-                    ) {
-                        node.classList.add( 'dokan-layout' );
-                    }
-                }
-            }
-        },
-        { childList: true }
-    );
 
     return (
         <>

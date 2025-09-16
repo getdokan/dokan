@@ -40,7 +40,7 @@ class VendorWithdrawRequest extends WC_Email {
         ];
 
         // Triggers for this email
-        add_action( 'dokan_after_withdraw_request', array( $this, 'trigger' ), 30, 4 );
+        add_action( 'dokan_withdraw_created', array( $this, 'trigger' ), 30, 1 );
 
         // Call parent constructor
         parent::__construct();
@@ -77,7 +77,11 @@ class VendorWithdrawRequest extends WC_Email {
      * @param string $method  Withdrawal method.
      * @param int    $id      Withdrawal id,
      */
-    public function trigger( $user_id, $amount, $method, $id ) {
+    public function trigger( $withdraw ) {
+        $user_id = $withdraw->get_user_id();
+        $amount  = $withdraw->get_amount();
+        $method  = $withdraw->get_method();
+        $id      = $withdraw->get_id();
         $seller = new Vendor( $user_id );
 
         if ( ! $this->is_enabled() || ! $this->get_recipient() ) {

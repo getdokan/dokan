@@ -47,6 +47,7 @@ class VendorNavMenuChecker {
 
     public function __construct() {
         add_filter( 'dokan_get_dashboard_nav', [ $this, 'convert_to_react_menu' ], 999 );
+        add_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5, 3 );
         add_filter( 'dokan_admin_notices', [ $this, 'display_notice' ] );
         add_action( 'dokan_status_after_describing_elements', [ $this, 'add_status_section' ] );
     }
@@ -85,6 +86,55 @@ class VendorNavMenuChecker {
                 return $item;
             }, $menu_items
         );
+    }
+
+    /**
+     * Rewrite URL to React route if applicable.
+     *
+     * @since 4.0.8
+     *
+     * @param string $url URL.
+     * @param string $name Name.
+     * @param bool $new_url New URL.
+     *
+     * @return string
+     */
+
+    public function maybe_rewrite_to_react_route( string $url, $name, $new_url ): string {
+        $name = (string) $name;
+        if ( $name === '' || $name === 'new' ) {
+            return $url;
+        }
+        if ( $new_url ) {
+            return $url;
+        }
+        if ( strpos( $url, '#' ) !== false ) {
+            return $url;
+        }
+
+        remove_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5 );
+            // Check if the top level menu exists and has a react route
+        $menus = dokan_get_dashboard_nav();
+
+		foreach ( $menus as $menu ) {
+			$react_route = $menu['react_route'] ?? '';
+			if ( $react_route === $name ) {
+				$url = $menu['url'];
+			}
+
+			if ( isset( $menu['submenu'] ) && is_array( $menu['submenu'] ) ) {
+				foreach ( $menu['submenu'] as $submenu ) {
+					$react_route = $submenu['react_route'] ?? '';
+					if ( $react_route === $name ) {
+						$url = $submenu['url'];
+					}
+				}
+			}
+		}
+
+		add_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5, 3 );
+
+        return $url;
     }
 
     /**
