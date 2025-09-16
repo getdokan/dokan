@@ -425,7 +425,9 @@ const WithdrawPage = () => {
             isPrimary: false,
             supportsBulk: true,
             isEligible: ( item ) => 'paypal' === item?.method,
-            callback: async ( items: any[] ) => {},
+            callback: async ( items: any[] ) => {
+                await handleBulkAction( 'paypal', items );
+            },
         },
     ];
 
@@ -523,7 +525,7 @@ const WithdrawPage = () => {
         setIsLoading( true );
         try {
             const queryArgs = {
-                per_page: view?.perPage ?? 10,
+                per_page: view?.perPage ?? 20,
                 page: view?.page ?? 1,
                 search: view?.search ?? '',
                 status: view?.status === 'all' ? '' : view?.status,
@@ -592,6 +594,94 @@ const WithdrawPage = () => {
         }
     };
 
+    // Handle export withdraws
+    const handleExportWithdraws = async ( ids ) => {
+        try {
+            // Show loading state
+            console.log( 'Starting withdraw export for IDs:', ids );
+
+            // Step 1: Initiate the export
+            const exportResponse = await apiFetch( {
+                path: '/dokan/v1/reports/withdraws/export',
+                method: 'POST',
+                data: {
+                    report_args: {
+                        include: ids, // Filter to only export selected withdraws
+                    },
+                    email: false, // Don't send email, just download directly
+                },
+            } );
+
+            if ( exportResponse.export_id ) {
+                console.log(
+                    'Export initiated with ID:',
+                    exportResponse.export_id
+                );
+
+                // Step 2: Poll for export status
+                await pollExportStatus( exportResponse.export_id );
+            } else {
+                throw new Error( 'Failed to initiate export' );
+            }
+        } catch ( error ) {
+            console.error( 'Error exporting withdraws:', error );
+            alert(
+                __(
+                    'Failed to export withdraws. Please try again.',
+                    'dokan-lite'
+                )
+            );
+        }
+    };
+
+    // Poll export status and download when ready
+    const pollExportStatus = async ( exportId ) => {
+        const maxAttempts = 60; // Maximum 5 minutes (60 * 5 seconds)
+        let attempts = 0;
+
+        const checkStatus = async () => {
+            try {
+                const statusResponse = await apiFetch( {
+                    path: `/dokan/v1/reports/withdraws/export/${ exportId }/status`,
+                    method: 'GET',
+                } );
+
+                console.log( 'Export status:', statusResponse );
+
+                if ( statusResponse.percent_complete === 100 ) {
+                    // Export is complete, download the file
+                    if ( statusResponse.download_url ) {
+                        // Create a temporary link to download the file
+                        const link = document.createElement( 'a' );
+                        link.href = statusResponse.download_url;
+                        link.download = ''; // Let the browser determine the filename
+                        document.body.appendChild( link );
+                        link.click();
+                        document.body.removeChild( link );
+
+                        console.log( 'Export completed and downloaded' );
+                    } else {
+                        throw new Error( 'Download URL not available' );
+                    }
+                } else {
+                    // Still processing, check again
+                    attempts++;
+                    if ( attempts < maxAttempts ) {
+                        setTimeout( checkStatus, 5000 ); // Check again in 5 seconds
+                    } else {
+                        throw new Error( 'Export timeout - please try again' );
+                    }
+                }
+            } catch ( error ) {
+                console.error( 'Error checking export status:', error );
+                alert( __( 'Export failed. Please try again.', 'dokan-lite' ) );
+            }
+        };
+
+        // Start status checking
+        checkStatus();
+    };
+
     // Handle bulk actions
     const handleBulkAction = async ( action, ids ) => {
         try {
@@ -600,6 +690,11 @@ const WithdrawPage = () => {
                 updateData.status = action;
             } else if ( action === 'cancelled' ) {
                 updateData.status = action;
+            }
+
+            if ( 'paypal' === action ) {
+                await handleExportWithdraws( ids );
+                return;
             }
 
             if ( action === 'delete' ) {

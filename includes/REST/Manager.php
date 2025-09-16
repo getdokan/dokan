@@ -35,6 +35,9 @@ class Manager {
 
         // Register withdraw export controller with WooCommerce export system
         add_filter( 'woocommerce_export_report_controller_map', [ $this, 'register_export_controllers' ] );
+
+        // Register withdraw data endpoint for export
+        add_filter( 'woocommerce_export_report_data_endpoint', [ $this, 'register_data_endpoint' ], 10, 2 );
     }
 
     /**
@@ -176,15 +179,39 @@ class Manager {
     /**
      * Register export controllers with WooCommerce export system
      *
-     * @param array $controller_map Existing controller map
-     * @return array Modified controller map
+     * @since DOKAN_SINCE
      *
-     * @since 3.9.0
+     * @param array $controller_map Existing controller map
+     *
+     * @return array Modified controller map
      */
-    public function register_export_controllers( $controller_map ) {
+    public function register_export_controllers( array $controller_map ): array {
+        // Ensure the WithdrawExportController class is loaded for background processing
+        if ( ! class_exists( '\WeDevs\Dokan\REST\WithdrawExportController' ) ) {
+            require_once DOKAN_DIR . '/includes/REST/WithdrawExportController.php';
+        }
+
         $controller_map['withdraws'] = '\WeDevs\Dokan\REST\WithdrawExportController';
 
         return $controller_map;
+    }
+
+    /**
+     * Register withdraw data endpoint for export
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param  string  $endpoint The report's data endpoint
+     * @param  string  $type The report's type
+     *
+     * @return string The report's endpoint
+     */
+    public function register_data_endpoint( string $endpoint, string $type ): string {
+        if ( 'withdraws' === $type ) {
+            return 'dokan/v1/reports/withdraws';
+        }
+
+        return $endpoint;
     }
 
     /**
@@ -228,6 +255,7 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/AdminOnboardingController.php'       => '\WeDevs\Dokan\REST\AdminOnboardingController',
                 DOKAN_DIR . '/includes/REST/VendorProductCategoriesController.php'  => '\WeDevs\Dokan\REST\VendorProductCategoriesController',
                 DOKAN_DIR . '/includes/REST/ExportController.php'                => '\WeDevs\Dokan\REST\ExportController',
+                DOKAN_DIR . '/includes/REST/WithdrawExportController.php'        => '\WeDevs\Dokan\REST\WithdrawExportController',
             )
         );
     }

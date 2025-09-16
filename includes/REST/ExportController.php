@@ -17,13 +17,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since DOKAN_SINCE
  */
 class ExportController extends Controller {
-
+	protected $namespace = 'dokan/v1';
     /**
      * Route base.
      *
      * @var string
      */
-    protected $rest_base = 'dokan/v1/reports/(?P<type>[a-z]+)/export';
+    protected $rest_base = '/reports/(?P<type>[a-z]+)/export';
 
     /**
      * Register routes.
@@ -71,15 +71,5 @@ class ExportController extends Controller {
         }
 
         return true;
-    }
-
-    /**
-     * Set the namespace for Dokan API
-     *
-     * @since DOKAN_SINCE
-     */
-    public function __construct() {
-        $this->namespace = 'dokan/v1';
-        parent::__construct();
     }
 }

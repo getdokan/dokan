@@ -20,12 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WithdrawExportController extends GenericController implements ExportableInterface {
 
+    protected $namespace = 'dokan/v1';
     /**
      * Route base.
      *
      * @var string
      */
-    protected $rest_base = 'dokan/v1/reports/withdraws';
+    protected $rest_base = '/reports/withdraws';
 
     /**
      * Get the column names for export.
@@ -101,7 +102,7 @@ class WithdrawExportController extends GenericController implements ExportableIn
         }
 
         // Set pagination
-        $args['limit'] = $request['per_page'] ?? 25;
+        $args['limit'] = $request['per_page'] ?? 20;
         $args['offset'] = ( ( $request['page'] ?? 1 ) - 1 ) * $args['limit'];
 
         // Get withdraws
