@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
         // Project options
-        "lib": ["ESNext", "DOM"],
+        "lib": [ "ESNext", "DOM" ],
         "target": "ESNext",
         "module": "ESNext",
-        "allowJs": true,
+        "allowJs": false,
         "checkJs": false,
         "jsx": "react-jsx",
 
@@ -13,10 +13,11 @@
         "baseUrl": ".",
         "paths": {
             // Webpack aliases from webpack.config.js
-            "@src/*": ["./src/*"],
-            "frontend/*": ["./src/frontend/*"],
-            "admin/*": ["./src/admin/*"],
-            "reports/*": ["./src/vendor-dashboard/reports/*"]
+            "@src/*": [ "./src/*" ],
+            "@dokan/*": [ "./src/*" ],
+            "frontend/*": [ "./src/frontend/*" ],
+            "admin/*": [ "./src/admin/*" ],
+            "reports/*": [ "./src/vendor-dashboard/reports/*" ]
         },
         "resolveJsonModule": true,
         "esModuleInterop": true,
@@ -40,31 +41,26 @@
         "noUnusedParameters": false,
 
         // Build options
-        "declaration": false,
-        "sourceMap": true,
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "outDir": "types",
+        "sourceMap": false,
         "removeComments": true,
         "skipLibCheck": true,
-
-        // Extensions
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
     },
-    "include": [
-        "src/**/*",
-        "types/**/*"
-    ],
+    "include": [ "src/**/*" ],
     "exclude": [
         "node_modules",
         "assets",
         "vendor",
         "tests",
         "lib",
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx",
+        "src/**/*.spec.ts",
+        "src/**/*.spec.tsx",
         "**/*.min.js"
     ],
-    "typeRoots": [
-        "node_modules/@types",
-        "types"
-    ],
-    "types": [
-        "node"
-    ]
+    "typeRoots": [ "node_modules/@types", "types" ],
+    "types": [ "node" ]
 }
