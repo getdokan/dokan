@@ -91,7 +91,7 @@ const FeatureComparison = () => {
                     href="https://dokan.co/wordpress/features/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-medium text-purple-600 px-4 py-2 rounded-md hover:bg-purple-50 transition border border-purple-200"
+                    className="text-sm font-medium text-dokan-primary px-4 py-2 rounded-md transition border hover:text-dokan-primary border-dokan-primary text-center"
                 >
                     { __( 'Explore All Features', 'dokan-lite' ) }
                 </a>
@@ -164,10 +164,12 @@ const FeatureComparison = () => {
                                         letterSpacing: '0%',
                                     } }
                                 >
-                                    Features
+                                    <div className="w-20">
+                                        {__( 'Features', 'dokan-lite' )}
+                                    </div>
                                 </div>
                                 <div
-                                    className="px-4 py-3 text-gray-900 text-center w-[15%]"
+                                    className="py-3 text-gray-900 text-center w-[30%] flex justify-end gap-2"
                                     style={ {
                                         fontWeight: 700,
                                         fontSize: '15px',
@@ -175,18 +177,12 @@ const FeatureComparison = () => {
                                         letterSpacing: '0%',
                                     } }
                                 >
-                                    Lite
-                                </div>
-                                <div
-                                    className="px-4 py-3 text-gray-900 text-center w-[15%]"
-                                    style={ {
-                                        fontWeight: 700,
-                                        fontSize: '15px',
-                                        lineHeight: '130%',
-                                        letterSpacing: '0%',
-                                    } }
-                                >
-                                    Pro
+                                    <div className="w-20">
+                                        {__( 'Lite', 'dokan-lite' )}
+                                    </div>
+                                    <div className="w-20">
+                                        {__( 'Pro', 'dokan-lite' )}
+                                    </div>
                                 </div>
                             </div>
 
@@ -211,33 +207,31 @@ const FeatureComparison = () => {
                                     >
                                         { feature }
                                     </div>
-                                    <div className="flex justify-center items-center w-[15%]">
+                                    <div className="flex justify-end items-center w-[30%] gap-2">
                                         { lite[ index ] ? (
-                                            <div className="flex items-center justify-center bg-[#F0EBFF] h-full w-full">
+                                            <div className={ `flex items-center justify-center bg-[#F0EBFF] h-full w-20 ${ index === 0 ? 'rounded-t-xl' : 'rounded-t-none' } ${ features.length === index + 1 ? 'rounded-b-xl' : 'rounded-b-none' }` }>
                                                 <Check
-                                                    className="text-white bg-purple-600 rounded-full"
+                                                    className="text-white bg-dokan-btn rounded-full"
                                                     size={ 16 }
                                                 />
                                             </div>
                                         ) : (
-                                            <div className="flex items-center justify-center bg-[#F0EBFF] h-full w-full">
+                                            <div className={ `flex items-center justify-center bg-[#F0EBFF] h-full w-20 ${ index === 0 ? 'rounded-t-xl' : 'rounded-t-none' } ${ features.length === index + 1 ? 'rounded-b-xl' : 'rounded-b-none' }` }>
                                                 <Check
                                                     className="text-gray-400 bg-gray-200 rounded-full"
                                                     size={ 16 }
                                                 />
                                             </div>
                                         ) }
-                                    </div>
-                                    <div className="ml-2 flex justify-center items-center w-[15%]">
                                         { pro[ index ] ? (
-                                            <div className="flex items-center justify-center bg-[#F0EBFF] h-full w-full">
+                                            <div className={ `flex items-center justify-center bg-[#F0EBFF] h-full w-20 ${ index === 0 ? 'rounded-t-xl' : 'rounded-t-none' } ${ features.length === index + 1 ? 'rounded-b-xl' : 'rounded-b-none' }` }>
                                                 <Check
-                                                    className="text-white bg-purple-600 rounded-full"
+                                                    className="text-white bg-dokan-btn rounded-full"
                                                     size={ 16 }
                                                 />
                                             </div>
                                         ) : (
-                                            <div className="flex items-center justify-center bg-[#F0EBFF] h-full w-full">
+                                            <div className={ `flex items-center justify-center bg-[#F0EBFF] h-full w-20 ${ index === 0 ? 'rounded-t-xl' : 'rounded-t-none' } ${ features.length === index + 1 ? 'rounded-b-xl' : 'rounded-b-none' }` }>
                                                 <Check
                                                     className="text-gray-400 bg-gray-200 rounded-full"
                                                     size={ 16 }

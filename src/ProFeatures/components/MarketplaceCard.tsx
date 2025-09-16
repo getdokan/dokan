@@ -26,7 +26,7 @@ function MarketplaceCard( { item }: { item: Marketplace } ) {
                     href={ item.siteLink }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[14px] font-medium text-gray-900 hover:text-purple-600 transition-colors line-clamp-2"
+                    className="text-[14px] font-medium text-gray-900 hover:text-dokan-primary transition-colors line-clamp-2"
                 >
                     { item.name }
                 </a>
