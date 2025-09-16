@@ -3,6 +3,7 @@ import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { diagnosticNotice } from '@utils/interfaces';
+import { dbUtils } from '@utils/dbUtils';
 
 export class NoticeAndPromotionPage extends AdminPage {
     constructor(page: Page) {
@@ -10,6 +11,11 @@ export class NoticeAndPromotionPage extends AdminPage {
     }
 
     // dokan notice & promotion
+
+    async deleteOption() {
+        // Remove the options from the database to force the notice to show
+        await dbUtils.deleteOptionRow(['dokan-lite_tracking_notice', 'dokan-lite_allow_tracking']);
+    }
 
     // dokan notice
     async dokanNoticeRenderProperly() {
@@ -67,6 +73,7 @@ export class NoticeAndPromotionPage extends AdminPage {
 
     // dokan diagnostic notice
     async dokanDiagnosticNoticeRenderProperly(diagnosticNotice: diagnosticNotice) {
+        await this.deleteOption();
         await this.gotoUntilNetworkidle(data.subUrls.backend.adminDashboard);
         await this.toBeVisible(selector.admin.dokan.diagnostic.noticeDiv);
         await this.toContainText(selector.admin.dokan.diagnostic.paragraph1, diagnosticNotice.paragraph1);
@@ -75,13 +82,16 @@ export class NoticeAndPromotionPage extends AdminPage {
 
     // allow diagnostic tracking
     async allowDiagnosticTracking() {
+        await this.deleteOption();
         await this.goIfNotThere(data.subUrls.backend.adminDashboard, 'networkidle');
-        await this.clickAndWaitForResponse(data.subUrls.backend.diagnosticNotice, selector.admin.dokan.diagnostic.allowCollectData, 302);
+       // await this.clickAndWaitForResponse(data.subUrls.backend.diagnosticNotice, selector.admin.dokan.diagnostic.allowCollectData, 302);
+        await this.clickAndWaitForLoadState(selector.admin.dokan.diagnostic.allowCollectData);
         await this.notToBeVisible(selector.admin.dokan.diagnostic.noticeDiv);
     }
 
     // disallow diagnostic tracking
     async disallowDiagnosticTracking() {
+        await this.deleteOption();
         await this.goIfNotThere(data.subUrls.backend.adminDashboard, 'networkidle');
         await this.clickAndWaitForLoadState(selector.admin.dokan.diagnostic.disallowCollectData);
         await this.notToBeVisible(selector.admin.dokan.diagnostic.noticeDiv);

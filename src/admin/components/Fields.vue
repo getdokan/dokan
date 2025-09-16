@@ -271,6 +271,27 @@
             </div>
         </template>
 
+        <template v-if="'croppable_image' === fieldData.type">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <fieldset>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
+                    <div class="field add_files">
+                        <label :style="{ maxWidth: fieldData.render_width + 'px' }" :for="sectionId + '[' + fieldData.name + ']'">
+                            <UploadImage
+                                :croppingWidth="parseInt( croppingWidth )"
+                                :croppingHeight="parseInt( croppingHeight )"
+                                :src="fieldValue[fieldData.name]"
+                                @uploadedImage="uploadedImage"
+                                :showButton="false" />
+                        </label>
+                    </div>
+                </fieldset>
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
+            </div>
+        </template>
+
         <template v-if="'color' === fieldData.type">
             <div :ref="fieldData.name" class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
@@ -513,6 +534,8 @@
     import CombineInput from "admin/components/CombineInput.vue";
     import CategoryBasedCommission from "admin/components/Commission/CategoryBasedCommission.vue";
     import DokanRadioGroup from "admin/components/DokanRadioGroup.vue";
+    import UploadImage from "admin/components/UploadImage.vue";
+
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -522,6 +545,7 @@
         name: 'Fields',
 
         components: {
+            UploadImage,
             CategoryBasedCommission,
             CombineInput,
             DokanRadioGroup,
@@ -545,6 +569,8 @@
                 checked               : this.isChecked(),
                 socialChecked         : this.isSocialChecked(),
                 expandSocials         : false,
+                croppingWidth         : this.fieldData.cropping_width,
+                croppingHeight        : this.fieldData.cropping_height,
                 repeatableItem        : {},
                 repeatableTime        : [],
                 singleColorPicker     : { default: this.fieldData.default, label: '', show_pallete: false },
@@ -552,6 +578,7 @@
                 customFieldComponents : dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
                 commissionFieldComponents : dokan.hooks.applyFilters( 'getDokanCommissionFieldComponents', [] ),
                 multiCheckValues      : {},
+                dokanProExists        : dokan.hasPro,
             }
         },
 
@@ -569,6 +596,24 @@
                     this.checked = value;
                 }
             });
+
+            this.$root.$on( 'dokanRestoreDefault', ( fieldData ) => {
+                if ( this.fieldValue[ fieldData.name ] !== fieldData.default ) {
+                    this.fieldValue[ fieldData.name ] = fieldData.default
+                }
+            });
+        },
+        
+        watch: {
+            fieldValue: {
+                handler( newValue ) {
+                    if ( this.id === 'default_store_banner' ) {
+                        this.croppingWidth = newValue.store_banner_width;
+                        this.croppingHeight = newValue.store_banner_height;
+                    }
+                },
+                deep: true,
+            }
         },
 
         computed: {
@@ -732,6 +777,10 @@
                   name,
                   fieldData.is_lite ?? false
                 );
+            },
+            
+            uploadedImage( image ) {
+                this.fieldValue[ this.id ] = this.validateInputData( this.id, image.src, this.fieldValue[ this.id ], this.fieldData );
             },
 
             inputValueHandler( name, newValue, oldValue ) {
@@ -1131,6 +1180,10 @@
                             box-shadow: 0 0 0 1px transparent;
                         }
                     }
+                }
+
+                .field_default {
+                    margin: 0;
                 }
             }
 

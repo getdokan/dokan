@@ -4,7 +4,6 @@
             "plugins": [
                 "WP-API/Basic-Auth",
                 "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
-                "../../",
                 "../../../../",
                 "../../../../woo-plugins/tests/plugins/woocommerce-bookings",
                 "../../../../woo-plugins/tests/plugins/woocommerce-product-addons",
@@ -12,5 +11,8 @@
                 "../../../../woo-plugins/tests/plugins/woocommerce-subscriptions"
             ]
         }
+    }
+    "mappings": {
+        "wp-content/plugins/dokan-lite": "../../"
     }
 }

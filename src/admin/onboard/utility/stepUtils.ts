@@ -1,4 +1,4 @@
-import { OnboardingStep } from '@dokan/admin/onboard/types';
+import { OnboardingStep } from '@src/admin/onboard/types';
 
 /**
  * Gets the appropriate step sequence based on whether plugins are available

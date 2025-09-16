@@ -135,7 +135,7 @@ export class VendorReturnRequestPage extends VendorPage {
     // vendor send rma refund
     async vendorRmaRefund(orderNumber: string, productName: string, status: string) {
         // await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest); // todo: resolve this
-        await this.goto(data.subUrls.frontend.vDashboard.returnRequest);
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, returnRequestVendor.view(orderNumber));
         const sendRefundIsVisible = await this.isVisible(returnRequestVendor.returnRequestDetails.status.sendRefund);
         if (!sendRefundIsVisible) {

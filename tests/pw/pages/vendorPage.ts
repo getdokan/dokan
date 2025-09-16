@@ -1,11 +1,11 @@
-import { Page, expect } from '@playwright/test';
 import { BasePage } from '@pages/basePage';
-import { LoginPage } from '@pages/loginPage';
 import { CustomerPage } from '@pages/customerPage';
+import { LoginPage } from '@pages/loginPage';
 import { selector } from '@pages/selectors';
-import { data } from '@utils/testData';
+import { expect, Page } from '@playwright/test';
 import { helpers } from '@utils/helpers';
 import { vendor, vendorSetupWizard } from '@utils/interfaces';
+import { data } from '@utils/testData';
 
 const { DOKAN_PRO } = process.env;
 
@@ -370,7 +370,8 @@ export class VendorPage extends BasePage {
                 await page.searchAuctionProduct(productName);
             }
         }
-        await this.toHaveColor(productsVendor.advertisementStatus(productName), 'rgb(240, 80, 37)'); //todo: grab it from test data, it could be any color
+        // Use the correct tomato color RGB value that matches the default fallback
+        await this.toHaveColor(productsVendor.advertisementStatus(productName), data.productAdvertisement.advertisementStatusColor);
         if (!testPage) {
             await this.goToProductEdit(productName);
         } else {

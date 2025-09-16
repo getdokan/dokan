@@ -578,16 +578,6 @@ class Assets {
                 'deps'    => array_merge( $frontend_shipping_asset['dependencies'], [ 'wp-core-data', 'dokan-react-components' ] ),
                 'version' => $frontend_shipping_asset['version'],
             ],
-            'dokan-utilities'           => [
-                'deps'    => [],
-                'src'     => $asset_url . '/js/utilities.js',
-                'version' => filemtime( $asset_path . 'js/utilities.js' ),
-            ],
-            'dokan-hooks'               => [
-                'deps'    => [],
-                'src'     => $asset_url . '/js/react-hooks.js',
-                'version' => filemtime( $asset_path . 'js/react-hooks.js' ),
-            ],
         ];
 
         $require_dompurify = version_compare( WC()->version, '10.0.2', '>' );
@@ -618,6 +608,30 @@ class Assets {
                     $components_asset['dependencies'],
                     [ 'dokan-utilities', 'dokan-hooks' ]
                 ),
+            ];
+        }
+
+        $utilities_asset_file = DOKAN_DIR . '/assets/js/utilities.asset.php';
+        if ( file_exists( $utilities_asset_file ) ) {
+            $utilities_asset = require $utilities_asset_file;
+
+            // Register React utilities.
+            $scripts['dokan-utilities'] = [
+                'version' => $utilities_asset['version'],
+                'src'     => $asset_url . '/js/utilities.js',
+                'deps'    => $utilities_asset['dependencies'],
+            ];
+        }
+
+        $hooks_asset_file = DOKAN_DIR . '/assets/js/react-hooks.asset.php';
+        if ( file_exists( $hooks_asset_file ) ) {
+            $hooks_asset = require $hooks_asset_file;
+
+            // Register React hooks.
+            $scripts['dokan-hooks'] = [
+                'version' => $hooks_asset['version'],
+                'src'     => $asset_url . '/js/react-hooks.js',
+                'deps'    => $hooks_asset['dependencies'],
             ];
         }
 

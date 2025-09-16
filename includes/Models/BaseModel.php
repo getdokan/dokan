@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Models;
 
 use WC_Data;
+use WC_Data_Store_WP;
 
 abstract class BaseModel extends WC_Data {
 	/**
@@ -11,7 +12,6 @@ abstract class BaseModel extends WC_Data {
 	 * @return int
 	 */
 	public function save() {
-		// wc_get_product()
 		if ( ! $this->data_store ) {
 			return $this->get_id();
 		}
@@ -29,6 +29,9 @@ abstract class BaseModel extends WC_Data {
 		} else {
 			$this->data_store->create( $this );
 		}
+
+        // Clear cache group after saving.
+        $this->clear_cache_group();
 
 		/**
 		 * Trigger action after saving to the DB.
@@ -66,6 +69,8 @@ abstract class BaseModel extends WC_Data {
 		if ( $this->data_store ) {
 			$this->data_store->delete( $this, array( 'force_delete' => $force_delete ) );
 			$this->set_id( 0 );
+
+            $this->clear_cache_group();
 			return true;
 		}
 
@@ -80,7 +85,13 @@ abstract class BaseModel extends WC_Data {
 	 */
 	public static function delete_by( array $data ) {
 		$object = new static();
-		return $object->data_store->delete_by( $data );
+		$deleted = $object->data_store->delete_by( $data );
+
+        if ( $deleted ) {
+            // Clear cache group after deleting.
+            $object->clear_cache_group();
+        }
+        return $deleted;
 	}
 
 	/**
@@ -101,4 +112,17 @@ abstract class BaseModel extends WC_Data {
 	public function get_meta_data() {
 		return apply_filters( $this->get_hook_prefix() . 'meta_data', array() );
 	}
+
+    /**
+     * Clear the cache group for this model.
+     *
+     * @return void
+     */
+    public function clear_cache_group() {
+        if ( ! $this->cache_group ) {
+            return;
+        }
+
+        \WeDevs\Dokan\Cache::invalidate_group( $this->cache_group );
+    }
 }

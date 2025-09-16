@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import { snakeCase, kebabCase } from '../utilities';
-import DokanButton from "@dokan/components/Button";
+import DokanButton from './Button';
 
 interface FilterProps {
     /** Namespace for the filter, used to generate unique IDs */

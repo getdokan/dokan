@@ -4,10 +4,9 @@ import Layout from '../layout';
 import getRoutes, { withRouter } from '../routing';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import './tailwind.scss';
-import { useMutationObserver } from '../hooks';
 import { useSelect } from '@wordpress/data';
 import coreStore from '@dokan/stores/core';
-import Skeleton from '@dokan/layout/Skeleton';
+import Skeleton from '@src/layout/Skeleton';
 import { generateColorVariants } from '@dokan/utilities';
 
 const App = () => {
@@ -42,31 +41,6 @@ const App = () => {
     } );
 
     const router = createHashRouter( mapedRoutes );
-
-    useMutationObserver(
-        document.body,
-        ( mutations ) => {
-            for ( const mutation of mutations ) {
-                if ( mutation.type !== 'childList' ) {
-                    continue;
-                }
-                // @ts-ignore
-                for ( const node of mutation.addedNodes ) {
-                    if ( node.id === 'headlessui-portal-root' ) {
-                        node.classList.add( 'dokan-layout' );
-                        node.style.display = 'block';
-                    }
-
-                    if (
-                        node.hasAttribute( 'data-radix-popper-content-wrapper' )
-                    ) {
-                        node.classList.add( 'dokan-layout' );
-                    }
-                }
-            }
-        },
-        { childList: true }
-    );
 
     if ( ! loading || loading?.status !== 'finished' ) {
         return <Skeleton />;

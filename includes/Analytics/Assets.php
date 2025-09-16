@@ -64,6 +64,23 @@ class Assets implements Hookable {
         return false;
     }
 
+    /*
+     * Get the chunks for analytics scripts, it generates the chunks based on the scripts that are used in the analytics section.
+     * This is used to register the scripts for translations support
+     *
+     * @since 4.0.6
+     *
+     * @return array
+     */
+    public function get_analytics_chunks() {
+        return [
+            'dokan_analytics_customizable-dashboard' => 'customizable-dashboard',
+            'dokan_analytics_dashboard' => 'dashboard',
+            'dokan_analytics_store-performance' => 'store-performance',
+            'dokan_analytics_dashboard-charts' => 'dashboard-charts',
+        ];
+    }
+
     /**
      * Register scripts.
      *
@@ -80,10 +97,22 @@ class Assets implements Hookable {
         $version          = $asset['version'] ?? '';
         $dependencies[]   = $component_handle;
 
+        $chunks = $this->get_analytics_chunks();
+        foreach ( $chunks as $chunk_handle => $chunk ) {
+            wp_register_script(
+                $chunk_handle,
+                DOKAN_PLUGIN_ASSEST . '/js/' . $chunk . '.js',
+                $dependencies,
+                $version,
+                true
+            );
+            wp_set_script_translations( $chunk_handle, 'dokan-lite' );
+        }
+
 		wp_register_script(
             'vendor_analytics_script',
             $frontend_script,
-            $dependencies,
+            array_merge( $dependencies, array_keys( $chunks ) ),
             $version,
             true
         );
@@ -121,6 +150,7 @@ class Assets implements Hookable {
 
         wp_enqueue_script( 'vendor_analytics_script' );
         wp_enqueue_style( 'vendor_analytics_style' );
+        wp_set_script_translations( 'vendor_analytics_script', 'dokan-lite' );
 
 		wp_add_inline_script(
             'vendor_analytics_script', 'var vendorAnalyticsDokanConfig = ' . wp_json_encode(

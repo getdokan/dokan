@@ -1,7 +1,7 @@
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
 import { __, sprintf } from '@wordpress/i18n';
-import { RawHTML } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
+import { Popover } from '@dokan/components';
 
 interface CategorySelectorProps {
     categories: Record< string, number >;
@@ -26,9 +26,20 @@ const CategorySelector = ( {
         } )
     );
 
+    const [ popoverAnchor, setPopoverAnchor ] = useState();
+    const [ isVisible, setIsVisible ] = useState( false );
+
     return (
-        <Popover className="relative">
-            <PopoverButton className="inline-flex items-center gap-x-1 text-sm/6 text-gray-900">
+        <div>
+            { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */ }
+            <div
+                className="inline-flex items-center gap-x-1 text-sm/6 text-gray-900"
+                onClick={ () => {
+                    setIsVisible( ! isVisible );
+                } }
+                // @ts-ignore
+                ref={ setPopoverAnchor }
+            >
                 <p className="text-sm text-gray-500 cursor-pointer flex items-center gap-x-1">
                     <RawHTML>
                         { sprintf(
@@ -51,23 +62,32 @@ const CategorySelector = ( {
                         />
                     </svg>
                 </p>
-            </PopoverButton>
+            </div>
 
-            <PopoverPanel
-                transition
-                anchor="bottom start"
-                className="z-10 mt-5 flex px-4 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
-            >
-                <div className="w-64 shrink rounded bg-white p-4 text-sm/6 font-semibold text-gray-900 shadow-lg ring-1 ring-gray-900/5">
-                    <SimpleCheckboxGroup
-                        label={ __( 'All Categories', 'dokan-lite' ) }
-                        onChange={ ( changed ) => onChange( changed ) }
-                        options={ options }
-                        defaultValue={ selectedCategories }
-                    />
-                </div>
-            </PopoverPanel>
-        </Popover>
+            { isVisible && (
+                <Popover
+                    animate
+                    anchor={ popoverAnchor }
+                    focusOnMount={ true }
+                    onClose={ () => {
+                        setIsVisible( ! isVisible );
+                    } }
+                    onFocusOutside={ () => {
+                        setIsVisible( ! isVisible );
+                    } }
+                    className="dokan-layout dokan-lite-module-select-category-popover"
+                >
+                    <div className="w-64 shrink rounded bg-white p-4 text-sm/6 font-semibold text-gray-900 shadow-lg ring-1 ring-gray-900/5">
+                        <SimpleCheckboxGroup
+                            label={ __( 'All Categories', 'dokan-lite' ) }
+                            onChange={ ( changed ) => onChange( changed ) }
+                            options={ options }
+                            defaultValue={ selectedCategories }
+                        />
+                    </div>
+                </Popover>
+            ) }
+        </div>
     );
 };
 
