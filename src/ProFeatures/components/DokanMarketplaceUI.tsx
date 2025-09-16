@@ -276,7 +276,7 @@ function DokanMarketplaceUI() {
     const data = activeTab === 'Marketplace' ? marketplaces : testimonials;
 
     return (
-        <section className="w-full px-4 md:px-6 py-8">
+        <div>
             { /* Tabs */ }
             <div className="flex justify-center items-center gap-8 mb-6">
                 { tabs.map( ( tab ) => (
@@ -315,11 +315,10 @@ function DokanMarketplaceUI() {
                 </h2>
             </div>
 
-            { /* Scroll Buttons */ }
-
             { /* Cards Container */ }
             <div className="relative">
-                <div className="flex absolute md:relative z-10 justify-between md:justify-end w-full h-full md:h-auto items-center md:gap-2 mb-6">
+                { /* Scroll Buttons */ }
+                <div className="flex absolute md:relative z-10 justify-between md:justify-end w-full h-full md:h-auto items-center md:gap-2 mb-8 mt-0 md:-mt-12">
                     <button
                         onClick={ () => handleScrollClick( 'left' ) }
                         disabled={ ! canScrollLeft || isScrolling }
@@ -351,7 +350,7 @@ function DokanMarketplaceUI() {
                 </div>
                 <div
                     ref={ scrollRef }
-                    className="overflow-x-auto flex gap-6 px-0 md:px-6 pb-2 scrollbar-hide"
+                    className="overflow-x-auto flex gap-6 scrollbar-hide"
                     style={ {
                         scrollBehavior: 'auto', // Removed 'smooth' to prevent conflicts
                         WebkitOverflowScrolling: 'touch',
@@ -408,7 +407,7 @@ function DokanMarketplaceUI() {
                     ) ) }
                 </div>
             </div>
-        </section>
+        </div>
     );
 }
 export default DokanMarketplaceUI;

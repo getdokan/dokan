@@ -61,7 +61,7 @@ function PricingSection() {
         <div className="w-full rounded">
             <div className="max-w-7xl mx-auto">
                 { /* Header */ }
-                <div className="text-center pt-8 pb-6 px-4">
+                <div className="text-center">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
                         { __( 'The Packages We Provide', 'dokan-lite' ) }
                     </h2>
@@ -166,7 +166,7 @@ function PricingSection() {
                 </div>
 
                 { /* Pricing Cards - Completely rewritten layout */ }
-                <div className="pb-12">
+                <div>
                     { /* Mobile: 1 column */ }
                     <div className="block md:hidden px-6">
                         <div className="space-y-6">

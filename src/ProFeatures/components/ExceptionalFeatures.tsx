@@ -60,7 +60,7 @@ function ExceptionalFeatures() {
     ];
 
     return (
-        <div className="mt-12">
+        <div>
             <h3 className="text-2xl font-bold mb-8">
                 { __( 'What Makes Pro Exceptional', 'dokan-lite' ) }
             </h3>

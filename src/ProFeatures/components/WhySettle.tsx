@@ -28,13 +28,13 @@ function WhySettle() {
     ];
 
     return (
-        <div className="mt-8 md:mt-16">
+        <div>
             <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">
                 Why Settle? Get More with Dokan PRO!
             </h2>
 
             { /* Modules Banner with Responsive Images */ }
-            <div className="relative rounded overflow-hidden mb-6 md:mb-10">
+            <div className="relative rounded overflow-hidden mb-8">
                 { /* Mobile Image - visible on mobile only */ }
                 <img
                     src={ moduleBannerMobile }

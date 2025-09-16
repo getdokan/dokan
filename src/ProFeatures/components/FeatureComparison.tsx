@@ -82,7 +82,7 @@ const FeatureComparison = () => {
     const { features, lite, pro } = featureData[ activeCategory ];
 
     return (
-        <section className="w-full mx-auto py-8">
+        <div>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-8">
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                     { __( 'Dokan Lite vs Dokan Pro', 'dokan-lite' ) }
@@ -100,7 +100,7 @@ const FeatureComparison = () => {
             <div className="relative">
                 <div className="flex flex-col md:flex-row rounded overflow-hidden">
                     { /* Categories Section with Touch Sliding */ }
-                    <div className="w-full md:w-auto md:min-w-[300px] p-2 md:p-4">
+                    <div className="w-full md:w-auto md:min-w-[300px]">
                         <div
                             ref={ categoriesRef }
                             className="flex md:block overflow-x-auto whitespace-nowrap scrollbar-hide touch-pan-x"
@@ -156,7 +156,7 @@ const FeatureComparison = () => {
                             { /* Header */ }
                             <div className="flex flex-row">
                                 <div
-                                    className="px-4 py-3 text-gray-900 w-[70%] text-start"
+                                    className="px-4 py-3 pt-0 text-gray-900 w-[70%] text-start"
                                     style={ {
                                         fontWeight: 700,
                                         fontSize: '15px',
@@ -165,11 +165,11 @@ const FeatureComparison = () => {
                                     } }
                                 >
                                     <div className="w-20">
-                                        {__( 'Features', 'dokan-lite' )}
+                                        { __( 'Features', 'dokan-lite' ) }
                                     </div>
                                 </div>
                                 <div
-                                    className="py-3 text-gray-900 text-center w-[30%] flex justify-end gap-2"
+                                    className="py-3 pt-0 text-gray-900 text-center w-[30%] flex justify-end gap-2"
                                     style={ {
                                         fontWeight: 700,
                                         fontSize: '15px',
@@ -178,17 +178,20 @@ const FeatureComparison = () => {
                                     } }
                                 >
                                     <div className="w-20">
-                                        {__( 'Lite', 'dokan-lite' )}
+                                        { __( 'Lite', 'dokan-lite' ) }
                                     </div>
                                     <div className="w-20">
-                                        {__( 'Pro', 'dokan-lite' )}
+                                        { __( 'Pro', 'dokan-lite' ) }
                                     </div>
                                 </div>
                             </div>
 
                             { /* Feature Rows */ }
                             { features.map( ( feature, index ) => (
-                                <div key={ index } className="flex flex-row justify-between">
+                                <div
+                                    key={ index }
+                                    className="flex flex-row justify-between"
+                                >
                                     <div
                                         className="px-4 py-3 text-gray-700 w-[70%]"
                                         style={ {
@@ -209,14 +212,36 @@ const FeatureComparison = () => {
                                     </div>
                                     <div className="flex justify-end items-center w-[30%] gap-2">
                                         { lite[ index ] ? (
-                                            <div className={ `flex items-center justify-center bg-[#F0EBFF] h-full w-20 ${ index === 0 ? 'rounded-t-xl' : 'rounded-t-none' } ${ features.length === index + 1 ? 'rounded-b-xl' : 'rounded-b-none' }` }>
+                                            <div
+                                                className={ `flex items-center justify-center bg-[#F0EBFF] h-full w-20 ${
+                                                    index === 0
+                                                        ? 'rounded-t-xl'
+                                                        : 'rounded-t-none'
+                                                } ${
+                                                    features.length ===
+                                                    index + 1
+                                                        ? 'rounded-b-xl'
+                                                        : 'rounded-b-none'
+                                                }` }
+                                            >
                                                 <Check
                                                     className="text-white bg-dokan-btn rounded-full"
                                                     size={ 16 }
                                                 />
                                             </div>
                                         ) : (
-                                            <div className={ `flex items-center justify-center bg-[#F0EBFF] h-full w-20 ${ index === 0 ? 'rounded-t-xl' : 'rounded-t-none' } ${ features.length === index + 1 ? 'rounded-b-xl' : 'rounded-b-none' }` }>
+                                            <div
+                                                className={ `flex items-center justify-center bg-[#F0EBFF] h-full w-20 ${
+                                                    index === 0
+                                                        ? 'rounded-t-xl'
+                                                        : 'rounded-t-none'
+                                                } ${
+                                                    features.length ===
+                                                    index + 1
+                                                        ? 'rounded-b-xl'
+                                                        : 'rounded-b-none'
+                                                }` }
+                                            >
                                                 <Check
                                                     className="text-gray-400 bg-gray-200 rounded-full"
                                                     size={ 16 }
@@ -224,14 +249,36 @@ const FeatureComparison = () => {
                                             </div>
                                         ) }
                                         { pro[ index ] ? (
-                                            <div className={ `flex items-center justify-center bg-[#F0EBFF] h-full w-20 ${ index === 0 ? 'rounded-t-xl' : 'rounded-t-none' } ${ features.length === index + 1 ? 'rounded-b-xl' : 'rounded-b-none' }` }>
+                                            <div
+                                                className={ `flex items-center justify-center bg-[#F0EBFF] h-full w-20 ${
+                                                    index === 0
+                                                        ? 'rounded-t-xl'
+                                                        : 'rounded-t-none'
+                                                } ${
+                                                    features.length ===
+                                                    index + 1
+                                                        ? 'rounded-b-xl'
+                                                        : 'rounded-b-none'
+                                                }` }
+                                            >
                                                 <Check
                                                     className="text-white bg-dokan-btn rounded-full"
                                                     size={ 16 }
                                                 />
                                             </div>
                                         ) : (
-                                            <div className={ `flex items-center justify-center bg-[#F0EBFF] h-full w-20 ${ index === 0 ? 'rounded-t-xl' : 'rounded-t-none' } ${ features.length === index + 1 ? 'rounded-b-xl' : 'rounded-b-none' }` }>
+                                            <div
+                                                className={ `flex items-center justify-center bg-[#F0EBFF] h-full w-20 ${
+                                                    index === 0
+                                                        ? 'rounded-t-xl'
+                                                        : 'rounded-t-none'
+                                                } ${
+                                                    features.length ===
+                                                    index + 1
+                                                        ? 'rounded-b-xl'
+                                                        : 'rounded-b-none'
+                                                }` }
+                                            >
                                                 <Check
                                                     className="text-gray-400 bg-gray-200 rounded-full"
                                                     size={ 16 }
@@ -245,7 +292,7 @@ const FeatureComparison = () => {
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     );
 };
 

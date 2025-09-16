@@ -113,7 +113,7 @@ function FeaturesSlider() {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex justify-between items-center mb-6">
                 <h3
                     style={ {
                         fontWeight: 700,
@@ -158,7 +158,7 @@ function FeaturesSlider() {
 
             <div
                 ref={ scrollRef }
-                className="flex overflow-x-auto space-x-6 pb-4 scrollbar-hide"
+                className="flex overflow-x-auto space-x-6 scrollbar-hide"
                 style={ { WebkitOverflowScrolling: 'touch' } }
             >
                 { features.map( ( feature, index ) => (

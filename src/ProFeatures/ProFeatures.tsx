@@ -13,7 +13,7 @@ import ScaleMarketplaceBanner from './components/ScaleMarketplaceBanner';
 function ProFeatures() {
     return (
         <div
-            className="space-y-6"
+            className="flex flex-col gap-16"
             style={ {
                 touchAction: 'pan-x pan-y',
                 WebkitTouchCallout: 'none',
@@ -29,42 +29,28 @@ function ProFeatures() {
             <FeaturesSlider />
 
             { /* Exceptional Features */ }
-            <div>
-                <ExceptionalFeatures />
-            </div>
+            <ExceptionalFeatures />
 
             { /* Why Settle Section */ }
-            <div>
-                <WhySettle />
-            </div>
+            <WhySettle />
 
             { /* Dokan AI Banner */ }
-            <div>
-                <DokanAIBanner />
-            </div>
+            <DokanAIBanner />
 
             { /* Dokan lite vs pro */ }
-            <div>
-                <FeatureComparison />
-            </div>
+            <FeatureComparison />
 
             { /* marketplace and testimonial section */ }
             <DokanMarketplaceUI />
 
             { /* Pricing Section */ }
-            <div>
-                <PricingSection />
-            </div>
+            <PricingSection />
 
             { /* Guarantee Section */ }
-            <div>
-                <GuaranteeSection />
-            </div>
+            <GuaranteeSection />
 
             { /* Scale Marketplace Banner */ }
-            <div>
-                <ScaleMarketplaceBanner />
-            </div>
+            <ScaleMarketplaceBanner />
         </div>
     );
 }

@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 function GuaranteeSection() {
     return (
         <div
-            className="w-full max-w-7xl mx-auto pt-10 pb-10"
+            className="w-full max-w-7xl mx-auto"
             style={ { fontFamily: 'Inter, sans-serif' } }
         >
             { /* What Makes Dokan Stand Out */ }
