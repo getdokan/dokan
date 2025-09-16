@@ -1,6 +1,7 @@
 import dokanAiBanner from '../assets/DokanAi.png';
 import dokanAiBannerMobile from '../assets/DokanAiMobile.png';
 import dokanAiBannerTablet from '../assets/DokanAiTablet.png';
+import { __ } from "@wordpress/i18n";
 
 function DokanAIBanner() {
     return (
@@ -37,9 +38,7 @@ function DokanAIBanner() {
                         Dokan AI
                     </h2>
                     <p className="absolute text-white w-[307px] h-[48px] top-[47px] left-[20px] text-[12px] font-normal leading-[140%] tracking-[0%] opacity-90">
-                        Generate product titles, descriptions, and images
-                        instantly with Dokan AI, powered by OpenAI and Gemini.
-                        Save time, look sharp, and sell smarter.
+                        {__( 'Generate product titles, descriptions, and images instantly with Dokan AI, powered by OpenAI and Gemini. Save time, look sharp, and sell smarter.', 'dokan-lite' )}
                     </p>
                 </div>
 
@@ -49,9 +48,7 @@ function DokanAIBanner() {
                         Dokan AI
                     </h2>
                     <p className="text-base leading-relaxed opacity-90">
-                        Generate product titles, descriptions, and images
-                        instantly with Dokan AI, powered by OpenAI and Gemini.
-                        Save time, look sharp, and sell smarter.
+                        {__( 'Generate product titles, descriptions, and images instantly with Dokan AI, powered by OpenAI and Gemini. Save time, look sharp, and sell smarter.', 'dokan-lite' )}
                     </p>
                 </div>
             </div>

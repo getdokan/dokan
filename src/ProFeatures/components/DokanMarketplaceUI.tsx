@@ -22,6 +22,7 @@ import capterraLogo from '../assets/capterraLogo.png';
 import wordpressLogo from '../assets/wordpressLogo.png';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MarketplaceCard from './MarketplaceCard';
+import { __ } from '@wordpress/i18n';
 
 function DokanMarketplaceUI() {
     const [ activeTab, setActiveTab ] = useState( 'Marketplace' );
@@ -301,8 +302,14 @@ function DokanMarketplaceUI() {
             <div className="text-center mb-4">
                 <h2 className="font-bold text-[24px] leading-[130%] tracking-[0%] text-center inline-block">
                     { activeTab === 'Marketplace'
-                        ? 'Dokan Powered Marketplace Across the Globe'
-                        : 'Great People, Great Minds Choose Dokan' }
+                        ? __(
+                              'Dokan Powered Marketplace Across the Globe',
+                              'dokan-lite'
+                          )
+                        : __(
+                              'Great People, Great Minds Choose Dokan',
+                              'dokan-lite'
+                          ) }
                 </h2>
             </div>
 
