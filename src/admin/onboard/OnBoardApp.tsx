@@ -17,7 +17,7 @@ import {
     formatPlugins,
     getOnboardingData,
     postOnboardingData,
-} from '@dokan/admin/onboard/utility/api';
+} from '@src/admin/onboard/utility/api';
 
 const OnboardingApp = () => {
     // Current step state

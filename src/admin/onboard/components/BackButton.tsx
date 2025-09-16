@@ -1,5 +1,5 @@
 import { Button } from '@getdokan/dokan-ui';
-import BackIcon from '@dokan/admin/onboard/icons/BackIcon';
+import BackIcon from '@src/admin/onboard/icons/BackIcon';
 import { __ } from '@wordpress/i18n';
 
 const BackButton = ( { onBack }: { onBack: () => void } ) => {

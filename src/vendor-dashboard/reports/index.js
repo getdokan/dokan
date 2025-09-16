@@ -32,10 +32,10 @@ domReady( () => {
 
         let HydratedPageLayout = withSettingsHydration(
             settingsGroup,
-            window.wcSettings.admin
+            window.wcSettings?.admin
         )( PageLayout );
-        const preloadSettings = window.wcSettings.admin
-            ? window.wcSettings.admin.preloadSettings
+        const preloadSettings = window.wcSettings?.admin
+            ? window.wcSettings?.admin.preloadSettings
             : false;
         const hydrateSettings = preloadSettings && preloadSettings.general;
 

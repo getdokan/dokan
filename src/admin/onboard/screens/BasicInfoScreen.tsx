@@ -3,7 +3,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { SimpleCheckbox, SimpleInput } from '@getdokan/dokan-ui';
 import DokanLogo from '../DokanLogo';
 import WarningIcon from '../icons/WarningIcon';
-import NextButton from '@dokan/admin/onboard/components/NextButton';
+import NextButton from '@src/admin/onboard/components/NextButton';
 import { applyFilters } from '@wordpress/hooks';
 import slugify from 'slugify';
 import { debounce } from '@wordpress/compose';

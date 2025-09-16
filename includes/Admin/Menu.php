@@ -73,6 +73,21 @@ class Menu {
             $submenu[ $slug ][] = [ __( 'Settings', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/settings' ];
         }
 
+        // Add a chat with us link if Dokan Pro is not installed.
+        if ( ! dokan()->is_pro_exists() ) {
+            $chat_svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" class="dokan-chat-with-us-icon" viewBox="0 0 24 24">
+                <path d="M15 3h6v6"/>
+                <path d="M10 14 21 3"/>
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            </svg>';
+
+            $submenu[ $slug ][] = [
+                esc_html__( 'Chat with us', 'dokan-lite' ) . $chat_svg_icon,
+                $capability,
+                'https://dokan.co/wordpress/?utm_campaign=Chat-With-Us&utm_medium=Dokan-Lite&utm_source=Chat_Button&chat=open'
+            ];
+        }
+
         // phpcs:enable
 
         add_action( $dashboard, [ $this, 'dashboard_script' ] );

@@ -863,22 +863,35 @@ export class ApiUtils {
         return allModuleIds;
     }
 
-    // get activate modules
+    // get activate modules, includes, error handleing and logging
     async activateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse, responseBody]> {
-        if (!Array.isArray(moduleIds)) {
-            moduleIds = [moduleIds];
-        }
-        const [response, responseBody] = await this.put(endPoints.activateModule, { data: { module: moduleIds }, headers: auth });
+        const modules = (Array.isArray(moduleIds) ? moduleIds : [moduleIds]).filter(m => m?.trim());
+        if (!modules.length) throw new Error('No valid module IDs provided');
+        const [response, responseBody] = await this.put(endPoints.activateModule, {
+            data: { module: modules },
+            headers: auth ?? {},
+        });
+        if (!response.ok()) console.error(`Activate failed: ${response.status()}`, responseBody);
         return [response, responseBody];
     }
 
-    // get deactivated modules
+    // get deactivated modules, includes, error handleing and logging
     async deactivateModules(moduleIds: string | string[], auth?: auth): Promise<[APIResponse, responseBody]> {
-        if (!Array.isArray(moduleIds)) {
-            moduleIds = [moduleIds];
+        const modules = (Array.isArray(moduleIds) ? moduleIds : [moduleIds]).filter(m => m?.trim());
+        if (!modules.length) throw new Error('No valid module IDs provided');
+
+        try {
+            const [response, responseBody] = await this.put(endPoints.deactivateModule, {
+                data: { module: modules },
+                headers: auth ?? {},
+            });
+            if (!response.ok()) console.error(`Deactivate failed: ${response.status()}`, responseBody);
+            console.debug('Deactivated modules:', modules);
+            return [response, responseBody];
+        } catch (err) {
+            console.error('Error deactivating modules:', err);
+            throw err;
         }
-        const [response, responseBody] = await this.put(endPoints.deactivateModule, { data: { module: moduleIds }, headers: auth });
-        return [response, responseBody];
     }
 
     /**

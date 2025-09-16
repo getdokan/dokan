@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Dashboard\Templates;
 
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WP_Error;
 
 /**
@@ -161,13 +162,17 @@ class Settings {
      * @return void
      */
     public function load_store_content() {
-        $currentuser  = dokan_get_current_user_id();
-        $profile_info = dokan_get_store_info( dokan_get_current_user_id() );
+        $current_user   = dokan_get_current_user_id();
+        $profile_info   = dokan_get_store_info( $current_user );
+        $default_banner = VendorUtil::get_vendor_default_banner_url();
+        $default_avatar = VendorUtil::get_vendor_default_avatar_url();
 
         dokan_get_template_part(
             'settings/store-form', '', [
-                'current_user' => $currentuser,
-                'profile_info' => $profile_info,
+                'current_user'       => $current_user,
+                'profile_info'       => $profile_info,
+                'default_banner_url' => $default_banner,
+                'default_avatar_url' => $default_avatar,
             ]
         );
     }

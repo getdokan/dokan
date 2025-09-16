@@ -37,7 +37,7 @@ add_filter( 'woocommerce_get_item_data', 'dokan_product_seller_info', 10, 2 );
 function dokan_seller_product_tab( $tabs ) {
     if ( is_enabled_vendor_info_product_tab() ) {
         $tabs['seller'] = [
-            'title' => __('Vendor Info', 'dokan-lite'),
+            'title' => __( 'Vendor Info', 'dokan-lite' ),
             'priority' => 90,
             'callback' => 'dokan_product_seller_tab',
         ];
@@ -155,18 +155,10 @@ add_filter( 'woocommerce_register_post_type_product', 'dokan_manage_capability_f
  *
  * @return void
  */
-function dokan_author_field_quick_edit() {
+function dokan_author_field_quick_edit( $scope = null ) {
     if ( ! current_user_can( 'manage_woocommerce' ) ) {
         return;
     }
-
-    $admin_user = get_user_by( 'id', get_current_user_id() );
-    $vendors    = dokan()->vendor->all(
-        [
-            'number'   => - 1,
-            'role__in' => [ 'seller' ],
-        ]
-    );
     ?>
     <div class="dokan-product-author-field inline-edit-group">
         <label class="alignleft">
@@ -174,16 +166,13 @@ function dokan_author_field_quick_edit() {
                 <?php esc_html_e( 'Vendor', 'dokan-lite' ); ?>
             </span>
             <span class="input-text-wrap">
-                <select name="dokan_product_author_override" id="dokan_product_author_override">
-                    <?php if ( empty( $vendors ) ) : ?>
-                        <option value="<?php echo esc_attr( $admin_user->ID ); ?>"><?php echo esc_html( $admin_user->display_name ); ?></option>
-                    <?php else : ?>
-                        <option value=""><?php esc_html_e( '— No change —', 'dokan-lite' ); ?></option>
-                        <option value="<?php echo esc_attr( $admin_user->ID ); ?>"><?php echo esc_html( $admin_user->display_name ); ?></option>
-                        <?php foreach ( $vendors as $key => $vendor ) : ?>
-                            <option value="<?php echo esc_attr( $vendor->get_id() ); ?>"><?php echo ! empty( $vendor->get_shop_name() ) ? esc_html( $vendor->get_shop_name() ) : esc_html( $vendor->get_name() ); ?></option>
-                        <?php endforeach ?>
-                    <?php endif ?>
+                <select
+                    name="dokan_product_author_override"
+                    class="dokan_product_author_override<?php echo esc_attr( $scope ); ?>"
+                    data-action="dokan_product_search_author"
+                    data-close_on_select="true"
+                    style="width: 20rem !important;">
+                    <option value=""><?php esc_html_e( '— No change —', 'dokan-lite' ); ?></option>
                 </select>
             </span>
         </label>
@@ -191,24 +180,32 @@ function dokan_author_field_quick_edit() {
 
     <script>
         ;(function($){
-            $('#the-list').on('click', '.editinline', function(){
-                var post_id = $(this).closest('tr').attr('id');
-
-                post_id = post_id.replace("post-", "");
-
-                var $vendor_id_inline_data = $('#dokan_vendor_id_inline_' + post_id).find('#dokan_vendor_id').text(),
-                    $wc_inline_data = $('#woocommerce_inline_' + post_id );
-
-                $( 'select[name="dokan_product_author_override"] option', '.inline-edit-row' ).attr( 'selected', false ).trigger( 'change' );
-                $( 'select[name="dokan_product_author_override"] option[value="' + $vendor_id_inline_data + '"]' ).attr( 'selected', 'selected' ).trigger( 'change' );
+            $('#the-list').off('click.editinline').on('click.editinline', '.editinline', function(){
+                const post_id = $(this).closest('tr').attr('id').replace( 'post-', '' );
+                const selector = `.inline-edit-row#edit-${post_id}`;
+                // use setTimeout to ensure the inline edit form is ready
+                setTimeout(function() {
+                    const element = $(selector).find('.dokan_product_author_override_quick');
+                    if( ! $(element).hasClass('select2-hidden-accessible')) {
+                        window.DokanAdminProduct.searchVendors(element);
+                    }
+                }, 100)
             });
         })(jQuery);
     </script>
     <?php
 }
 
-add_action( 'woocommerce_product_quick_edit_end', 'dokan_author_field_quick_edit' );
-add_action( 'woocommerce_product_bulk_edit_end', 'dokan_author_field_quick_edit' );
+add_action(
+    'woocommerce_product_quick_edit_end', function () {
+		dokan_author_field_quick_edit( '_quick' );
+	}
+);
+add_action(
+    'woocommerce_product_bulk_edit_end', function () {
+		dokan_author_field_quick_edit();
+	}
+);
 
 /**
  * Assign value for quick edit data

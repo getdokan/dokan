@@ -314,8 +314,32 @@
 
 // wp dokan logo styles
 
-#adminmenu #toplevel_page_dokan .wp-menu-image.svg {
-    background-size: 17px;
+#adminmenu #toplevel_page_dokan {
+    .wp-menu-image.svg {
+        background-size: 17px;
+    }
+
+    .dokan-chat-with-us-icon {
+        fill: none;
+        width: 16px;
+        height: 16px;
+        stroke-width: 2;
+        margin-left: 5px;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        vertical-align: text-bottom;
+    }
+}
+
+#adminmenu {
+    #toplevel_page_dokan {
+        .wp-submenu {
+            a:empty {
+                display: none;
+            }
+        }
+    }
 }
 
 #adminmenu {

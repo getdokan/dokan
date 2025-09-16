@@ -57,12 +57,12 @@ abstract class BaseServiceProvider extends AbstractServiceProvider {
 	 *
 	 * @param string     $id       Entry ID (typically a class or interface name).
 	 * @param mixed|null $concrete Concrete entity to register under that ID, null for automatic creation.
-	 * @param bool|null  $shared   Whether to register the class as shared (`get` always returns the same instance)
+	 * @param bool       $shared   Whether to register the class as shared (`get` always returns the same instance)
 	 *                             or not.
 	 *
 	 * @return DefinitionInterface
 	 */
-	protected function add_with_implements_tags( string $id, $concrete = null, bool $shared = null ): DefinitionInterface {
+	protected function add_with_implements_tags( string $id, $concrete = null, bool $shared = false ): DefinitionInterface {
 		$definition = $this->getContainer()->add( $id, $concrete )->setShared( $shared );
 
 		foreach ( class_implements( $id ) as $interface ) {

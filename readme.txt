@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivend
 Requires at least: 6.6
 Tested up to: 6.8.2
 WC requires at least: 8.5.0
-WC tested up to: 10.0.4
+WC tested up to: 10.1.2
 Requires PHP: 7.4
-Stable tag: 4.0.5
+Stable tag: 4.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -348,6 +348,20 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+= v4.0.8 ( Sep 12, 2025 ) =
+- **new:** Added "Chat with us" admin submenu for providing direct access to support chat functionality.
+- **enhance:** Modernize vendor selection with searchable dropdown for better performance.
+- **fix:** Prevent potential errors on additional product sections.
+
+= v4.0.7 ( Sep 01, 2025 ) =
+- **fix:** Enhanced security controls for vendor account credentials management.
+
+= v4.0.6 ( Aug 29, 2025 ) =
+- **update:** Added translation support for dashboard analytics report scripts to improve internationalization (i18n).
+- **fix:** Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.
+- **fix:** Added async search in store category in vendor edit.
+- **fix:** Admin not receiving withdrawal request email notifications.
+
 = v4.0.5 ( Jul 24, 2025 ) =
 
 - **fix:** Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.
@@ -363,29 +377,6 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Improved how product inventory information is retrieved, ensuring more accurate and consistent display of stock values.
 - **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
 - **fix:** Resolve an issue for "sold individually" option does not save on create or update a product.
-
-= v4.0.3 ( Jul 02, 2025 ) =
-
-- **fix:** Add gradient background style for fa-threads social icon.
-- **fix** Resolved an issue where array access warnings in vendor balance calculation were being triggered.
-- **fix** Resolved an issue where incorrect timestamp on sale price schedule hampering product sales schedule added from vendor dashboard.
-- **fix** Resolved an issue where stock quantity always shows 0 in vendor dashboard product edit screen.
-- **fix** Improved the format of payment methods in the withdrawal settings to ensure they are consistently returned as a zero-based indexed list in the REST API response.
-
-= v4.0.2 ( Jun 03, 2025 ) =
-
-- **fix:** Resolved an issue where the single store page header style was broken on multiple themes.
-- **fix:** Added proper type checking for product and author objects in the product tab template to prevent potential errors when invalid data is passed.
-- **fix:** Skip cart validation for reverse withdrawal in Stripe Express.
-- **fix:** Fix admin dashboard order details page items meta-box content and commission meta-box content  not showing properly.
-- **fix:** Fixed analytics view permissions to access analytics data for users. Thanks to @oliviertassinari for the contribution.
-- **fix:** Adjust the admin commission and order total to exclude partial refund for display where needed.
-- **fix:** Clarify output language in AI response based on the input language.
-
-= v4.0.1 ( May 08, 2025 ) =
-
-- **update**: Replaced the WordPress.org banner image with a new version for improved branding.
-- **fix:** Added number value data type casting in order commission.
 
 [CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
 
