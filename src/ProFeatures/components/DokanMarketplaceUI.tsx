@@ -20,8 +20,8 @@ import g2Logo from '../assets/g2Logo.png';
 import trustpilotLogo from '../assets/trustpilotLogo.png';
 import capterraLogo from '../assets/capterraLogo.png';
 import wordpressLogo from '../assets/wordpressLogo.png';
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import MarketplaceCard from "./MarketplaceCard";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import MarketplaceCard from './MarketplaceCard';
 
 function DokanMarketplaceUI() {
     const [ activeTab, setActiveTab ] = useState( 'Marketplace' );
@@ -184,7 +184,13 @@ function DokanMarketplaceUI() {
 
         setIsScrolling( true );
         // Calculate card width based on active tab
-        const cardWidth = activeTab === 'Marketplace' ? 274.51 + 24 : 220 + 24; // Card width + gap (24px from gap-6)
+        let cardWidth = activeTab === 'Marketplace' ? 274.51 + 24 : 220 + 24; // Card width + gap (24px from gap-6)
+
+        const currentScreenWidth = window.innerWidth;
+        if ( currentScreenWidth < 768 ) {
+            cardWidth = scrollRef.current.offsetWidth + 24;
+        }
+
         const scrollAmount = direction === 'right' ? cardWidth : -cardWidth;
 
         // Custom smooth scrolling animation
@@ -310,15 +316,17 @@ function DokanMarketplaceUI() {
             </div>
 
             { /* Scroll Buttons */ }
-            <div className="flex md:justify-end mb-6">
-                <div className="flex space-x-2 mx-auto md:mx-0">
+
+            { /* Cards Container */ }
+            <div className="relative">
+                <div className="flex absolute md:relative z-10 justify-between md:justify-end w-full h-full md:h-auto items-center md:gap-2 mb-6">
                     <button
                         onClick={ () => handleScrollClick( 'left' ) }
                         disabled={ ! canScrollLeft || isScrolling }
-                        className={ `w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 ${
+                        className={ `w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 ml-[-10px] md:ml-0 shadow-[0_4px_20px_0px_#00000029] md:shadow-none ${
                             canScrollLeft && ! isScrolling
                                 ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
-                                : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
+                                : 'border-gray-300 bg-white text-gray-400 cursor-not-allowed'
                         }` }
                         aria-label="Scroll left"
                     >
@@ -329,10 +337,10 @@ function DokanMarketplaceUI() {
                     <button
                         onClick={ () => handleScrollClick( 'right' ) }
                         disabled={ ! canScrollRight || isScrolling }
-                        className={ `w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 ${
+                        className={ `w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-200 mr-[-10px] md:mr-0 shadow-[0_4px_20px_0px_#00000029] md:shadow-none ${
                             canScrollRight && ! isScrolling
                                 ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
-                                : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
+                                : 'border-gray-300 bg-white text-gray-400 cursor-not-allowed'
                         }` }
                         aria-label="Scroll right"
                     >
@@ -341,13 +349,9 @@ function DokanMarketplaceUI() {
                         </span>
                     </button>
                 </div>
-            </div>
-
-            { /* Cards Container */ }
-            <div className="relative">
                 <div
                     ref={ scrollRef }
-                    className="overflow-x-auto flex gap-6 px-6 pb-2 scrollbar-hide"
+                    className="overflow-x-auto flex gap-6 px-0 md:px-6 pb-2 scrollbar-hide"
                     style={ {
                         scrollBehavior: 'auto', // Removed 'smooth' to prevent conflicts
                         WebkitOverflowScrolling: 'touch',
@@ -358,19 +362,13 @@ function DokanMarketplaceUI() {
                     { data.map( ( item, index ) => (
                         <div
                             key={ `${ activeTab }-${ index }` }
-                            className="flex-shrink-0" // Changed from snap-start shrink-0
+                            className="flex-shrink-0 w-full md:w-auto" // Changed from snap-start shrink-0
                         >
                             { activeTab === 'Marketplace' ? (
                                 <MarketplaceCard item={ item } />
                             ) : (
                                 <div
-                                    className="bg-white rounded-xl border border-gray-100 p-4 flex flex-col justify-between"
-                                    style={ {
-                                        width: '220px',
-                                        height: '214px',
-                                        opacity: 1,
-                                        transform: 'rotate(0deg)',
-                                    } }
+                                    className="bg-white rounded-xl border border-gray-100 p-4 flex flex-col justify-between w-full md:w-[220px] h-[214px] opacity-100"
                                 >
                                     <div className="space-y-3">
                                         <div className="flex items-center gap-3">
