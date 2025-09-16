@@ -71,9 +71,7 @@ function PricingSection() {
                             'dokan-lite'
                         ) }
                         &nbsp;
-                        <span
-className="font-semibold text-[16px] leading-[140%] tracking-[0%] text-center"
-                        >
+                        <span className="font-semibold text-[16px] leading-[140%] tracking-[0%] text-center">
                             LITEUPGRADE20
                         </span>
                     </p>
@@ -162,14 +160,28 @@ className="font-semibold text-[16px] leading-[140%] tracking-[0%] text-center"
                                             plan.isPopular
                                                 ? 'border-2 border-[#7047EB] shadow-lg'
                                                 : 'border border-gray-200'
-                                        } rounded bg-white` }
-                                        style={ {
-                                            background:
-                                                plan.name === 'Starter' ||
-                                                plan.name === 'Business'
-                                                    ? 'linear-gradient(214.33deg, rgba(234, 248, 255, 0.7) 3.79%, #FFFFFF 60.72%)'
-                                                    : 'linear-gradient(214.33deg, rgba(255, 250, 239, 0.7) 3.79%, #FFFFFF 60.72%)',
-                                        } }
+                                        } rounded bg-white
+                                        ${
+                                            index === 0
+                                                ? 'bg-[linear-gradient(214.33deg,rgba(239,241,255,0.7)_3.79%,#FFFFFF_60.72%)]'
+                                                : ''
+                                        }
+                                        ${
+                                            index === 1
+                                                ? 'bg-[linear-gradient(214.33deg,rgba(255,250,239,0.7)_3.79%,#FFFFFF_60.72%)]'
+                                                : ''
+                                        }
+                                        ${
+                                            index === 2
+                                                ? 'bg-[linear-gradient(214.33deg,rgba(234,248,255,0.7)_3.79%,#FFFFFF_60.72%)]'
+                                                : ''
+                                        }
+                                        ${
+                                            index === 3
+                                                ? 'bg-[linear-gradient(214.33deg,rgba(255,238,249,0.7)_3.79%,#FFFFFF_60.72%)]'
+                                                : ''
+                                        }
+                                        ` }
                                     >
                                         <div className="p-4">
                                             { /* Package Header */ }
@@ -250,14 +262,28 @@ className="font-semibold text-[16px] leading-[140%] tracking-[0%] text-center"
                                                 plan.isPopular
                                                     ? 'border-2 border-[#7047EB] shadow-lg'
                                                     : 'border border-gray-200'
-                                            } rounded bg-white` }
-                                            style={ {
-                                                background:
-                                                    plan.name === 'Starter' ||
-                                                    plan.name === 'Business'
-                                                        ? 'linear-gradient(214.33deg, rgba(234, 248, 255, 0.7) 3.79%, #FFFFFF 60.72%)'
-                                                        : 'linear-gradient(214.33deg, rgba(255, 250, 239, 0.7) 3.79%, #FFFFFF 60.72%)',
-                                            } }
+                                            } rounded bg-white
+                                        ${
+                                            index === 0
+                                                ? 'bg-[linear-gradient(214.33deg,rgba(239,241,255,0.7)_3.79%,#FFFFFF_60.72%)]'
+                                                : ''
+                                        }
+                                        ${
+                                            index === 1
+                                                ? 'bg-[linear-gradient(214.33deg,rgba(255,250,239,0.7)_3.79%,#FFFFFF_60.72%)]'
+                                                : ''
+                                        }
+                                        ${
+                                            index === 2
+                                                ? 'bg-[linear-gradient(214.33deg,rgba(234,248,255,0.7)_3.79%,#FFFFFF_60.72%)]'
+                                                : ''
+                                        }
+                                        ${
+                                            index === 3
+                                                ? 'bg-[linear-gradient(214.33deg,rgba(255,238,249,0.7)_3.79%,#FFFFFF_60.72%)]'
+                                                : ''
+                                        }
+                                        ` }
                                         >
                                             <div className="p-4 h-full flex flex-col">
                                                 { /* Package Header */ }
@@ -337,14 +363,28 @@ className="font-semibold text-[16px] leading-[140%] tracking-[0%] text-center"
                                             plan.isPopular
                                                 ? 'border-2 border-[#7047EB] shadow-lg'
                                                 : 'border border-gray-200'
-                                        } rounded bg-white` }
-                                        style={ {
-                                            background:
-                                                plan.name === 'Starter' ||
-                                                plan.name === 'Business'
-                                                    ? 'linear-gradient(214.33deg, rgba(234, 248, 255, 0.7) 3.79%, #FFFFFF 60.72%)'
-                                                    : 'linear-gradient(214.33deg, rgba(255, 250, 239, 0.7) 3.79%, #FFFFFF 60.72%)',
-                                        } }
+                                        } rounded bg-white
+                                        ${
+                                            index === 0
+                                                ? 'bg-[linear-gradient(214.33deg,rgba(239,241,255,0.7)_3.79%,#FFFFFF_60.72%)]'
+                                                : ''
+                                        }
+                                        ${
+                                            index === 1
+                                                ? 'bg-[linear-gradient(214.33deg,rgba(255,250,239,0.7)_3.79%,#FFFFFF_60.72%)]'
+                                                : ''
+                                        }
+                                        ${
+                                            index === 2
+                                                ? 'bg-[linear-gradient(214.33deg,rgba(234,248,255,0.7)_3.79%,#FFFFFF_60.72%)]'
+                                                : ''
+                                        }
+                                        ${
+                                            index === 3
+                                                ? 'bg-[linear-gradient(214.33deg,rgba(255,238,249,0.7)_3.79%,#FFFFFF_60.72%)]'
+                                                : ''
+                                        }
+                                        ` }
                                     >
                                         <div className="p-4 h-full flex flex-col">
                                             { /* Package Header */ }
