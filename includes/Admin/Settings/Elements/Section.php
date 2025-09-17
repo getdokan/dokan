@@ -27,6 +27,18 @@ class Section extends SettingsElement {
 		return is_array( $data );
 	}
 
+    /**
+     * Populate The subpage data.
+     *
+     * @return array
+     */
+    public function populate(): array {
+        $data             = parent::populate();
+        $data['doc_link'] = esc_url( $this->get_doc_link() );
+
+        return apply_filters( 'dokan_settings_section_data', $data, $this );
+    }
+
 	/**
 	 * Sanitize data for storage.
 	 *
@@ -37,7 +49,6 @@ class Section extends SettingsElement {
 	public function sanitize_element( $data ) {
 		return wp_unslash( $data );
 	}
-
 
 	/**
 	 * Escape data for display.

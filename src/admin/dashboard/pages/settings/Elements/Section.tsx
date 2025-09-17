@@ -1,57 +1,48 @@
-import { SettingsProps } from '../StepSettings';
 import SettingsParser from './SettingsParser';
-import { RawHTML } from '@wordpress/element';
+import { SettingsProps } from '../types';
+import PageHeading from './PageHeading';
+import { __ } from '@wordpress/i18n';
 
-const Section = ( {
-    element,
-    getSetting,
-    onValueChange,
-}: SettingsProps ): JSX.Element => {
+const Section = ( { element }: SettingsProps ): JSX.Element => {
     if ( ! element.display ) {
         return <></>;
     }
 
-    const isAllChildrenFields = element?.children?.every( ( child ) => {
-        return child?.type === 'field';
-    } );
-
     return (
         <section aria-labelledby="settings-section-heading" key={ element.id }>
-            <div className="bg-white sm:rounded-md">
-                <div className={ `mb-8` }>
-                    <h2
-                        id={ element.hook_key }
-                        className="text-3xl font-bold text-gray-900 leading-5"
-                    >
-                        <RawHTML>{ element.title }</RawHTML>
-                    </h2>
-                    <p className="mt-1 text-sm text-gray-500 leading-5">
-                        <RawHTML>{ element.description }</RawHTML>
-                    </p>
-                </div>
-                <div
-                    className={ `flex flex-col ${
-                        isAllChildrenFields
-                            ? 'divide-y border border-[#E9E9E9] mb-8 divide-gray-200'
-                            : ''
-                    }` }
-                >
-                    { element.children.map( ( child ) => {
-                        return (
-                            <SettingsParser
-                                element={ child }
-                                key={
-                                    element.hook_key +
-                                    '-' +
-                                    child.id +
-                                    '-parser'
-                                }
-                                onValueChange={ onValueChange }
-                                getSetting={ getSetting }
-                            />
-                        );
-                    } ) }
-                </div>
+            <div
+                className={ `flex flex-col bg-white rounded-lg divide-y border border-[#E9E9E9] rounded divide-gray-200 overflow-hidden` }
+            >
+                { element.title && (
+                    <PageHeading
+                        title={ element.title }
+                        description={ element.description }
+                        tooltip={ element?.tooltip || '' }
+                        className={ 'p-5 mb-0 gap-2 ' }
+                        titleClassName={ 'text-base font-semibold  ' }
+                        descriptionClassName={ 'text-sm text-[#828282]' }
+                        id={ `settings-section-heading-${ element.hook_key }` }
+                        documentationLink={ element.doc_link }
+                    />
+                ) }
+                { element.children.length === 0 && (
+                    <div className="p-4 text-gray-500">
+                        { __(
+                            'No settings available in this section.',
+                            'dokan-lite'
+                        ) }
+                    </div>
+                ) }
+                { element.children.map( ( child ) => {
+                    return (
+                        <SettingsParser
+                            element={ child }
+                            key={
+                                element.hook_key + '-' + child.id + '-parser'
+                            }
+                        />
+                    );
+                } ) }
             </div>
         </section>
     );

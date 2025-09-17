@@ -5,6 +5,8 @@ namespace WeDevs\Dokan\Admin\Settings\Elements;
 use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Checkbox;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Currency;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\DoubleTextField;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\InfoField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\MultiCheck;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Password;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Radio;
@@ -14,6 +16,8 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Switcher;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Tel;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Text;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Number;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\HtmlField;
+use WeDevs\Dokan\Admin\Settings\Elements\FieldGroup;
 
 class ElementFactory {
     /**
@@ -66,11 +70,22 @@ class ElementFactory {
      * @param string $id ID.
      * @param string $type Field Type.
      *
-     * @return Text|Number|Checkbox|Radio|Select|Tel|Password|RadioBox|Switcher|MultiCheck|Currency
+     * @return Text|Number|Checkbox|Radio|Select|Tel|Password|RadioBox|Switcher|MultiCheck|Currency|InfoField|DoubleTextField|HtmlField
      */
     public static function field( string $id, string $type = 'text' ): SettingsElement {
         $field = new Field( $id, $type );
 
         return $field->get_input();
+    }
+
+    /**
+     * Get a new FieldGroup object.
+     *
+     * @param string $id ID.
+     *
+     * @return FieldGroup
+     */
+    public static function field_group( string $id ): FieldGroup {
+        return new FieldGroup( $id );
     }
 }

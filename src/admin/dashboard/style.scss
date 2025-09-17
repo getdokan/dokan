@@ -17,3 +17,14 @@
  .dokan-lite-module-select-category-popover {
      @apply top-5 !important;
  }
+
+#dokan-tab-settings,
+#dokan-tab-menu_manager {
+    .components-tab-panel__tabs {
+        border-bottom: none;
+    }
+
+    .components-tab-panel__tabs-item {
+        border-bottom-width: 3px !important;
+    }
+}

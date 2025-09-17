@@ -48,7 +48,11 @@ const applyEffectToElement = (
         if ( 'display' === effect.attribute ) {
             element.display = effect.effect !== 'hide';
         } else if ( 'value' === effect.attribute ) {
-            element.value = effect.value;
+            if ( effect.effect ) {
+                element.value = effect.effect;
+            } else {
+                element.value = effect.value;
+            }
         } else if ( 'disabled' === effect.attribute ) {
             element.disabled = effect.effect === 'yes';
         } else if ( 'readonly' === effect.attribute ) {
