@@ -17,51 +17,51 @@ const FeatureComparison = () => {
     const featureData: Record< string, FeatureData > = {
         vendor: {
             features: [
-                'Frontend Dashboard for Vendors',
-                'Frontend Simple Product',
-                'Frontend Variable Products',
-                'Individual Vendor Stores',
-                'Product Bulk Edit',
-                'Single Product Multivendor',
-                'WC Booking Integration',
-                'WC Auction Integration',
-                'Wholesale',
+                __( 'Frontend Dashboard for Vendors', 'dokan-lite' ),
+                __( 'Frontend Simple Product', 'dokan-lite' ),
+                __( 'Frontend Variable Products', 'dokan-lite' ),
+                __( 'Individual Vendor Stores', 'dokan-lite' ),
+                __( 'Product Bulk Edit', 'dokan-lite' ),
+                __( 'Single Product Multivendor', 'dokan-lite' ),
+                __( 'WC Booking Integration', 'dokan-lite' ),
+                __( 'WC Auction Integration', 'dokan-lite' ),
+                __( 'Wholesale', 'dokan-lite' ),
             ],
             lite: [ true, true, true, true, false, false, false, false, false ],
             pro: [ true, true, true, true, true, true, true, true, true ],
         },
         payment: {
             features: [
-                'Payment Gateway Integration',
-                'Commission Management',
-                'Automated Withdrawals',
+                __( 'Payment Gateway Integration', 'dokan-lite' ),
+                __( 'Commission Management', 'dokan-lite' ),
+                __( 'Automated Withdrawals', 'dokan-lite' ),
             ],
             lite: [ true, true, false ],
             pro: [ true, true, true ],
         },
         sales: {
             features: [
-                'Order Tracking',
-                'Customer Support Ticket System',
-                'Refund Management',
+                __( 'Order Tracking', 'dokan-lite' ),
+                __( 'Customer Support Ticket System', 'dokan-lite' ),
+                __( 'Refund Management', 'dokan-lite' ),
             ],
             lite: [ true, true, false ],
             pro: [ true, true, true ],
         },
         marketing: {
             features: [
-                'SEO Tools',
-                'Marketing Campaigns',
-                'Compliance Reports',
+                __( 'SEO Tools', 'dokan-lite' ),
+                __( 'Marketing Campaigns', 'dokan-lite' ),
+                __( 'Compliance Reports', 'dokan-lite' ),
             ],
             lite: [ true, false, false ],
             pro: [ true, true, true ],
         },
         migration: {
             features: [
-                'Data Migration',
-                'API Integration',
-                'Technical Support',
+                __( 'Data Migration', 'dokan-lite' ),
+                __( 'API Integration', 'dokan-lite' ),
+                __( 'Technical Support', 'dokan-lite' ),
             ],
             lite: [ true, true, true ],
             pro: [ true, true, true ],
@@ -69,11 +69,26 @@ const FeatureComparison = () => {
     };
 
     const categories: Category[] = [
-        { title: 'Vendor & Product Management', key: 'vendor' },
-        { title: 'Payment & Commission Systems', key: 'payment' },
-        { title: 'Sales, Orders & Customer Support', key: 'sales' },
-        { title: 'Marketing, SEO & Compliance', key: 'marketing' },
-        { title: 'Migration, Integration & Support', key: 'migration' },
+        {
+            title: __( 'Vendor & Product Management', 'dokan-lite' ),
+            key: 'vendor',
+        },
+        {
+            title: __( 'Payment & Commission Systems', 'dokan-lite' ),
+            key: 'payment',
+        },
+        {
+            title: __( 'Sales, Orders & Customer Support', 'dokan-lite' ),
+            key: 'sales',
+        },
+        {
+            title: __( 'Marketing, SEO & Compliance', 'dokan-lite' ),
+            key: 'marketing',
+        },
+        {
+            title: __( 'Migration, Integration & Support', 'dokan-lite' ),
+            key: 'migration',
+        },
     ];
 
     const categoriesRef = useRef< HTMLDivElement >( null );

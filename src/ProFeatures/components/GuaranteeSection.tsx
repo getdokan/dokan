@@ -3,9 +3,7 @@ import { __ } from '@wordpress/i18n';
 
 function GuaranteeSection() {
     return (
-        <div
-            className="w-full max-w-7xl mx-auto"
-        >
+        <div className="w-full max-w-7xl mx-auto">
             { /* What Makes Dokan Stand Out */ }
             <div>
                 <h3 className="text-[24px] font-bold mb-8 text-gray-900">

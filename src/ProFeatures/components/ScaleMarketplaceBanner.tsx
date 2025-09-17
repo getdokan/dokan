@@ -13,12 +13,17 @@ function ScaleMarketplaceBanner() {
                 <div className="p-5">
                     <div className="flex flex-col">
                         <h2 className="flex text-white justify-center items-center text-center w-[298px] h-[62px] text-[24px] font-bold leading-[130%] tracking-[0%] opacity-100">
-                            Ready to Scale Your Marketplace?
+                            { __(
+                                'Ready to Scale Your Marketplace?',
+                                'dokan-lite'
+                            ) }
                         </h2>
 
                         <p className="flex text-white/90 mt-3 justify-center items-center text-center w-[298px] h-[30px] text-[12px] font-normal leading-[130%] tracking-[0%] opacity-100">
-                            With all the advanced features you get it's hard to
-                            resist buying Dokan Pro.
+                            { __(
+                                "With all the advanced features you get it's hard to resist buying Dokan Pro.",
+                                'dokan-lite'
+                            ) }
                         </p>
                     </div>
 
@@ -29,7 +34,9 @@ function ScaleMarketplaceBanner() {
                         className="block mt-8"
                     >
                         <button className="bg-[#FFBC00] text-black font-semibold hover:bg-yellow-300 transition flex items-center justify-center w-[311px] h-[36px] rounded-[5px] px-[18px] py-[8px] gap-[6px] opacity-100">
-                            <span>Upgrade to Pro</span>
+                            <span>
+                                { __( 'Upgrade to Pro', 'dokan-lite' ) }
+                            </span>
                             <Crown className="w-5 h-5" />
                         </button>
                     </a>

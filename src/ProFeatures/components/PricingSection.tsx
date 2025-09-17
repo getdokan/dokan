@@ -11,10 +11,10 @@ function PricingSection() {
             annualPrice: '$149',
             lifetimePrice: '$745',
             features: [
-                'Essential Features',
-                '3 Premium Modules',
-                '1 Site License',
-                'Ticket Based Support',
+                __( 'Essential Features', 'dokna-lite' ),
+                __( '3 Premium Modules', 'dokna-lite' ),
+                __( '1 Site License', 'dokna-lite' ),
+                __( 'Ticket Based Support', 'dokna-lite' ),
             ],
             isPopular: false,
         },
@@ -23,10 +23,10 @@ function PricingSection() {
             annualPrice: '$249',
             lifetimePrice: '$1245',
             features: [
-                'Everything in Starter',
-                '23 Premium Modules',
-                '3 Sites Licenses',
-                'Ticket Based Support',
+                __( 'Everything in Starter', 'dokan-lite' ),
+                __( '23 Premium Modules', 'dokan-lite' ),
+                __( '3 Sites Licenses', 'dokan-lite' ),
+                __( 'Ticket Based Support', 'dokan-lite' ),
             ],
             isPopular: false,
         },
@@ -35,10 +35,10 @@ function PricingSection() {
             annualPrice: '$499',
             lifetimePrice: '$2495',
             features: [
-                'Everything in Professional',
-                '39 Premium Modules',
-                '5 Sites Licenses',
-                'Ticket Based Support',
+                __( 'Everything in Professional', 'dokan-lite' ),
+                __( '39 Premium Modules', 'dokan-lite' ),
+                __( '5 Sites Licenses', 'dokan-lite' ),
+                __( 'Ticket Based Support', 'dokan-lite' ),
             ],
             isPopular: true,
         },
@@ -47,11 +47,14 @@ function PricingSection() {
             annualPrice: '$999',
             lifetimePrice: '$4995',
             features: [
-                'Everything in Business',
-                '39 Premium Modules',
-                '10 Sites Licenses',
-                'Priority Support',
-                '2 Hours of Theme Compatibility & Installation',
+                __( 'Everything in Business', 'dokan-lite' ),
+                __( '39 Premium Modules', 'dokan-lite' ),
+                __( '10 Sites Licenses', 'dokan-lite' ),
+                __( 'Priority Support', 'dokan-lite' ),
+                __(
+                    '2 Hours of Theme Compatibility & Installation',
+                    'dokan-lite'
+                ),
             ],
             isPopular: false,
         },
@@ -192,7 +195,10 @@ function PricingSection() {
                                                     </h3>
                                                     { plan.isPopular && (
                                                         <span className="bg-[#EFEAFF] text-[#7047EB] px-2 py-1 rounded-full text-xs font-medium">
-                                                            Popular
+                                                            { __(
+                                                                'Popular',
+                                                                'dokan-lite'
+                                                            ) }
                                                         </span>
                                                     ) }
                                                 </div>
@@ -238,7 +244,10 @@ function PricingSection() {
                                                 className="block mt-8"
                                             >
                                                 <button className="w-full bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
-                                                    Buy Now
+                                                    { __(
+                                                        'Buy Now',
+                                                        'dokan-lite'
+                                                    ) }
                                                 </button>
                                             </a>
                                         </div>
@@ -294,7 +303,10 @@ function PricingSection() {
                                                         </h3>
                                                         { plan.isPopular && (
                                                             <span className="bg-[#EFEAFF] text-[#7047EB] px-2 py-1 rounded-full text-xs font-medium">
-                                                                Popular
+                                                                { __(
+                                                                    'Popular',
+                                                                    'dokan-lite'
+                                                                ) }
                                                             </span>
                                                         ) }
                                                     </div>
@@ -342,7 +354,10 @@ function PricingSection() {
                                                     className="block mt-8"
                                                 >
                                                     <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
-                                                        Buy Now
+                                                        { __(
+                                                            'Buy Now',
+                                                            'dokan-lite'
+                                                        ) }
                                                     </button>
                                                 </a>
                                             </div>
@@ -441,7 +456,10 @@ function PricingSection() {
                                                 className="block mt-8"
                                             >
                                                 <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
-                                                    Buy Now
+                                                    { __(
+                                                        'Buy Now',
+                                                        'dokan-lite'
+                                                    ) }
                                                 </button>
                                             </a>
                                         </div>

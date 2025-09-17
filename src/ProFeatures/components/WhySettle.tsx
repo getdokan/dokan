@@ -2,32 +2,41 @@ import moduleBanner from '../assets/modules-banner.png';
 import moduleBannerMobile from '../assets/modules-banner-mobile.png';
 import moduleBannerTablet from '../assets/modules-banner-tablet.png';
 import { Settings, PaintbrushVertical, File } from 'lucide-react';
+import { __, sprintf } from '@wordpress/i18n';
+import { RawHTML } from '@wordpress/element';
 
 function WhySettle() {
     const features = [
         {
             icon: Settings,
-            title: 'Extensive Plugin Support',
-            description:
+            title: __( 'Extensive Plugin Support', 'dokan-lite' ),
+            description: __(
                 'Enhance your marketplace with hundreds of WordPress plugins designed for scalability.',
+                'dokan-lite'
+            ),
         },
         {
             icon: PaintbrushVertical,
-            title: 'Hundreds of Themes Compatibility',
-            description: 'Dokan supports all WooCommerce-compatible themes.',
+            title: __( 'Hundreds of Themes Compatibility', 'dokan-lite' ),
+            description: __(
+                'Dokan supports all WooCommerce-compatible themes.',
+                'dokan-lite'
+            ),
         },
         {
             icon: File,
-            title: 'White Label Documentation',
-            description:
+            title: __( 'White Label Documentation', 'dokan-lite' ),
+            description: __(
                 'Get marketplace-specific docs crafted by the Dokan team to fit your business needs.',
+                'dokan-lite'
+            ),
         },
     ];
 
     return (
         <div>
             <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">
-                Why Settle? Get More with Dokan PRO!
+                { __( 'Why Settle? Get More with Dokan PRO!', 'dokan-lite' ) }
             </h2>
 
             { /* Modules Banner with Responsive Images */ }
@@ -59,11 +68,13 @@ function WhySettle() {
                 { /* Mobile Text Overlay - positioned at top */ }
                 <div className="absolute top-0 left-0 right-0 px-4 py-4 md:hidden">
                     <h3 className="text-white mb-2 font-bold text-[18px] leading-[130%] tracking-[0%]">
-                        42+ Modules
+                        { __( '42+ Modules', 'dokan-lite' ) }
                     </h3>
                     <p className="text-white max-w-xs text-[12px] leading-[140%] tracking-[0%] font-normal">
-                        Access an extensive range of modules designed to enhance
-                        both admin and vendor experiences.
+                        { __(
+                            'Access an extensive range of modules designed to enhance both admin and vendor experiences.',
+                            'dokan-lite'
+                        ) }
                     </p>
                 </div>
 
@@ -72,26 +83,34 @@ function WhySettle() {
                     { /* Tablet Text Layout with Custom Line Breaks */ }
                     <div className="block lg:hidden">
                         <h3 className="text-3xl font-bold text-white mb-2">
-                            42+ Modules
+                            { __( '42+ Modules', 'dokan-lite' ) }
                         </h3>
-                        <p className="text-white text-base max-w-xs">
-                            Access an extensive range of modules
-                            <br />
-                            designed to enhance both admin and
-                            <br />
-                            vendor experiences.
-                        </p>
+                        <div className="text-white text-base max-w-xs">
+                            <RawHTML>
+                                { sprintf(
+                                    // eslint-disable-next-line @wordpress/i18n-translator-comments
+                                    __(
+                                        'Access an extensive range of modules %1$s designed to enhance both admin and %2$s vendor experiences.',
+                                        'dokan-lite'
+                                    ),
+                                    '<br />',
+                                    '<br />'
+                                ) }
+                            </RawHTML>
+                        </div>
                     </div>
 
                     { /* Desktop Text Layout - Original Styles */ }
                     <div className="hidden lg:block">
                         <h3 className="text-3xl font-bold text-white mb-2">
-                            42+ Modules
+                            { __( '42+ Modules', 'dokan-lite' ) }
                         </h3>
-                        <p className="text-white text-base max-w-xs">
-                            Access an extensive range of modules designed to
-                            enhance both admin and vendor experiences.
-                        </p>
+                        <div className="text-white text-base max-w-xs">
+                            { __(
+                                'Access an extensive range of modules designed to enhance both admin and vendor experiences.',
+                                'dokan-lite'
+                            ) }
+                        </div>
                     </div>
                 </div>
             </div>

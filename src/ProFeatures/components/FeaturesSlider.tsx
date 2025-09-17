@@ -7,43 +7,56 @@ import smartImg from '../assets/smart.png';
 import storeImg from '../assets/store.png';
 import brandingImg from '../assets/branding.png';
 import supportImg from '../assets/support.png';
+import { __ } from '@wordpress/i18n';
 
 function FeaturesSlider() {
     const features = [
         {
-            title: 'Effortless Shipping Management',
-            description:
+            title: __( 'Effortless Shipping Management', 'dokan-lite' ),
+            description: __(
                 'Let vendors set flexible shipping rates by distance, weight, price, or items.',
+                'dokan-lite'
+            ),
             image: shippingImg,
         },
         {
-            title: 'Popular Payment Gateways',
-            description:
+            title: __( 'Popular Payment Gateways', 'dokan-lite' ),
+            description: __(
                 'Accept payments with popular gateways like PayPal, Stripe, Mangopay, Razorpay, and more.',
+                'dokan-lite'
+            ),
             image: paymentImg,
         },
         {
-            title: 'Smart Product Management',
-            description:
+            title: __( 'Smart Product Management', 'dokan-lite' ),
+            description: __(
                 'Give vendors bulk edit tools, featured ads, and addons for smarter selling.',
+                'dokan-lite'
+            ),
             image: smartImg,
         },
         {
-            title: 'Advanced Store Management',
-            description:
+            title: __( 'Advanced Store Management', 'dokan-lite' ),
+            description: __(
                 'Increase engagement with store follows and builtin ticket based support.',
+                'dokan-lite'
+            ),
             image: storeImg,
         },
         {
-            title: 'Customizable Branding',
-            description:
+            title: __( 'Customizable Branding', 'dokan-lite' ),
+            description: __(
                 'Customize vendor dashboards with unique colors and seamless theme support.',
+                'dokan-lite'
+            ),
             image: brandingImg,
         },
         {
-            title: '24/7 Super Fast Premium Support',
-            description:
+            title: __( '24/7 Super Fast Premium Support', 'dokan-lite' ),
+            description: __(
                 'Enjoy 24/7 premium support from experts to keep your marketplace running smooth.',
+                'dokan-lite'
+            ),
             image: supportImg,
         },
     ];
