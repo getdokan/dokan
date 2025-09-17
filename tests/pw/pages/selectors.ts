@@ -7232,13 +7232,11 @@ export const selector = {
                 filterDiv: 'form.dokan-geolocation-location-filters',
                 searchProduct: 'input.dokan-form-control[placeholder="Search Products"]',
                 location: '.location-address input',
-// <<<<<<< fix/follow-store-test
-// =======
-//                 selectCategory: '#dokan-geo-product-categories-root',
-// // >>>>>>> all/e2e-fix
-// //                 radiusSlider: '.dokan-range-slider',
-// //                 search: '.dokan-btn',
-// //             },
+
+                selectCategory: '#dokan-geo-product-categories-root',
+                radiusSlider: '.dokan-range-slider',
+                search: '.dokan-btn',
+            },
 
             mapResultFirst: '(//div[contains(@class,"pac-container")]//div[@class="pac-item"])[1]',
 
