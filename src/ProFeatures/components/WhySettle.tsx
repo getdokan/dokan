@@ -1,6 +1,3 @@
-import docIcon from '../assets/docsIcon.png'; // Use your provided icon images
-import brushIcon from '../assets/PaintIcon.png';
-import gearIcon from '../assets/settingsIcon.png';
 import moduleBanner from '../assets/modules-banner.png';
 import moduleBannerMobile from '../assets/modules-banner-mobile.png';
 import moduleBannerTablet from '../assets/modules-banner-tablet.png';

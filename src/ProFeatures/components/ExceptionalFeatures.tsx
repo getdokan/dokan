@@ -1,9 +1,3 @@
-import fcmImg from '../assets/FCM.png';
-import aerImg from '../assets/AER.png';
-import awdImg from '../assets/AWD.png';
-import fcsImg from '../assets/FCS.png';
-import iaImg from '../assets/IA.png';
-import rrwImg from '../assets/RRW.png';
 import { __ } from '@wordpress/i18n';
 import { ChartPie, CreditCard, Megaphone, Pen, Percent, TicketPercent } from "lucide-react";
 
