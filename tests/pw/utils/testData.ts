@@ -44,7 +44,49 @@ const {
     TEST_MERCHANT_ID_PAYPAL_MARKETPLACE,
     TEST_CLIENT_ID_PAYPAL_MARKETPLACE,
     TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE,
-} = process.env;
+} = process.env as {
+    ADMIN: string;
+    ADMIN_PASSWORD: string;
+    VENDOR: string;
+    VENDOR2: string;
+    CUSTOMER: string;
+    CUSTOMER2: string;
+    USER_PASSWORD: string;
+    SITE_PATH: string;
+    BASE_URL: string;
+    SITE_LANGUAGE: string;
+    SITE_TITLE: string;
+    ADMIN_EMAIL: string;
+    DB_HOST_NAME: string;
+    DATABASE: string;
+    DB_USER_NAME: string;
+    DB_USER_PASSWORD: string;
+    DB_PREFIX: string;
+    GMAP: string;
+    MAPBOX: string;
+    LICENSE_KEY: string;
+    CATEGORY_ID: string;
+    VONAGE_API_KEY: string;
+    VONAGE_API_SECRET: string;
+    FB_APP_ID: string;
+    FB_APP_SECRET: string;
+    TALKJS_APP_ID: string;
+    TALKJS_APP_SECRET: string;
+    PRINTFUL_APP_ID: string;
+    PRINTFUL_APP_SECRET: string;
+    TEST_PUBLISH_KEY_STRIPE: string;
+    TEST_SECRET_KEY_STRIPE: string;
+    CLIENT_ID_STRIPE: string;
+    SANDBOX_CLIENT_ID_MANGOPAY: string;
+    SANDBOX_API_KEY_MANGOPAY: string;
+    TEST_KEY_ID_RAZORPAY: string;
+    TEST_KEY_SECRET_RAZORPAY: string;
+    TEST_PUBLISH_KEY_STRIPE_EXPRESS: string;
+    TEST_SECRET_KEY_STRIPE_EXPRESS: string;
+    TEST_MERCHANT_ID_PAYPAL_MARKETPLACE: string;
+    TEST_CLIENT_ID_PAYPAL_MARKETPLACE: string;
+    TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE: string;
+};
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
