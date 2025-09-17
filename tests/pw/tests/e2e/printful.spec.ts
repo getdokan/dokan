@@ -3,7 +3,7 @@ import { PrintfulPage } from '@pages/printfulPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
-
+// skipping the test because the printful account needs individual setup and client Key and Secret Key
 test.describe.skip('Printful module functionality test', () => {
     let admin: PrintfulPage;
     let vendor: PrintfulPage;
