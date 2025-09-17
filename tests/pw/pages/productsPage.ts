@@ -614,7 +614,7 @@ export class ProductsPage extends AdminPage {
 
     // get product edit nonce
     async getProductEditNonce(): Promise<string> {
-        await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.dashboard);
+        await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.products);
         const url = await this.getAttributeValue(selector.vendor.vDashboard.products.addNewProduct, 'href');
         const nonce = url?.match(/_dokan_edit_product_nonce=([\w\d]+)/)?.[1];
         if (!nonce) throw new Error('Nonce not found');
