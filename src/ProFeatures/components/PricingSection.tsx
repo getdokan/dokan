@@ -4,12 +4,15 @@ import { __ } from '@wordpress/i18n';
 
 function PricingSection() {
     const [ isAnnual, setIsAnnual ] = useState( true );
+    const buyNowUrl =
+        'https://dokan.co/wordpress/pricing/?utm_campaign=liteupgrade&utm_medium=WPDashboard&utm_source=plugin';
 
     const pricingPlans = [
         {
             name: 'Starter',
             annualPrice: '$149',
             lifetimePrice: '$745',
+            lifetimePriceDiscount: '$594.51',
             features: [
                 __( 'Essential Features', 'dokna-lite' ),
                 __( '3 Premium Modules', 'dokna-lite' ),
@@ -22,6 +25,7 @@ function PricingSection() {
             name: 'Professional',
             annualPrice: '$249',
             lifetimePrice: '$1245',
+            lifetimePriceDiscount: '$986.04',
             features: [
                 __( 'Everything in Starter', 'dokan-lite' ),
                 __( '23 Premium Modules', 'dokan-lite' ),
@@ -34,6 +38,7 @@ function PricingSection() {
             name: 'Business',
             annualPrice: '$499',
             lifetimePrice: '$2495',
+            lifetimePriceDiscount: '$1,993.50',
             features: [
                 __( 'Everything in Professional', 'dokan-lite' ),
                 __( '39 Premium Modules', 'dokan-lite' ),
@@ -46,6 +51,7 @@ function PricingSection() {
             name: 'Enterprise',
             annualPrice: '$999',
             lifetimePrice: '$4995',
+            lifetimePriceDiscount: '$3,956.04',
             features: [
                 __( 'Everything in Business', 'dokan-lite' ),
                 __( '39 Premium Modules', 'dokan-lite' ),
@@ -59,6 +65,87 @@ function PricingSection() {
             isPopular: false,
         },
     ];
+
+    const BuyNowButton = () => {
+        return (
+            <a
+                href={ buyNowUrl }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block mt-8"
+            >
+                <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
+                    { __( 'Buy Now', 'dokan-lite' ) }
+                </button>
+            </a>
+        );
+    };
+
+    const Pack = ( plan ) => {
+        return (
+            <div className="p-4 h-full flex flex-col">
+                { /* Package Header */ }
+                <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                            { plan.name }
+                        </h3>
+                        { plan.isPopular && (
+                            <span className="bg-[#EFEAFF] text-[#7047EB] px-2 py-1 rounded-full text-xs font-medium">
+                                { __( 'Popular', 'dokan-lite' ) }
+                            </span>
+                        ) }
+                    </div>
+                    <div>
+                        { isAnnual && plan.annualPrice && (
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-2xl font-bold text-gray-900">
+                                    { plan.annualPrice }
+                                </span>
+                                <span className="text-sm text-gray-500">
+                                    { __( 'Annually', 'dokan-lite' ) }
+                                </span>
+                            </div>
+                        ) }
+
+                        { ! isAnnual && plan.lifetimePrice && (
+                            <div className="flex flex-col">
+                                <span className="text-lg font-bold text-gray-500 line-through">
+                                    { plan.lifetimePrice }
+                                </span>
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-2xl font-bold text-gray-900">
+                                        { plan.lifetimePriceDiscount }
+                                    </span>
+                                    <span className="text-sm text-gray-500">
+                                        { __( 'Lifetime', 'dokan-lite' ) }
+                                    </span>
+                                </div>
+                            </div>
+                        ) }
+                    </div>
+                </div>
+
+                { /* Features List */ }
+                <div className="flex-grow space-y-3">
+                    { plan.features.map( ( feature, featureIndex ) => (
+                        <div
+                            key={ featureIndex }
+                            className="flex items-start gap-2"
+                        >
+                            <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
+                            <span className="text-xs text-gray-700 leading-tight">
+                                { feature }
+                            </span>
+                        </div>
+                    ) ) }
+                </div>
+
+                { /* Buy Now Button */ }
+                <BuyNowButton />
+            </div>
+        );
+    };
 
     return (
         <div className="w-full rounded">
@@ -151,226 +238,9 @@ function PricingSection() {
                     </div>
                 </div>
 
-                { /* Pricing Cards - Completely rewritten layout */ }
                 <div>
-                    { /* Mobile: 1 column */ }
-                    <div className="block md:hidden px-6">
-                        <div className="space-y-6">
-                            { pricingPlans.map( ( plan, index ) => (
-                                <div key={ index } className="max-w-sm mx-auto">
-                                    <div
-                                        className={ `${
-                                            plan.isPopular
-                                                ? 'border-2 border-[#7047EB] shadow-lg'
-                                                : 'border border-gray-200'
-                                        } rounded bg-white
-                                        ${
-                                            index === 0
-                                                ? 'bg-[linear-gradient(214.33deg,rgba(239,241,255,0.7)_3.79%,#FFFFFF_60.72%)]'
-                                                : ''
-                                        }
-                                        ${
-                                            index === 1
-                                                ? 'bg-[linear-gradient(214.33deg,rgba(255,250,239,0.7)_3.79%,#FFFFFF_60.72%)]'
-                                                : ''
-                                        }
-                                        ${
-                                            index === 2
-                                                ? 'bg-[linear-gradient(214.33deg,rgba(234,248,255,0.7)_3.79%,#FFFFFF_60.72%)]'
-                                                : ''
-                                        }
-                                        ${
-                                            index === 3
-                                                ? 'bg-[linear-gradient(214.33deg,rgba(255,238,249,0.7)_3.79%,#FFFFFF_60.72%)]'
-                                                : ''
-                                        }
-                                        ` }
-                                    >
-                                        <div className="p-4">
-                                            { /* Package Header */ }
-                                            <div className="mb-4">
-                                                <div className="flex items-center justify-between mb-2">
-                                                    <h3 className="text-lg font-semibold text-gray-900">
-                                                        { plan.name }
-                                                    </h3>
-                                                    { plan.isPopular && (
-                                                        <span className="bg-[#EFEAFF] text-[#7047EB] px-2 py-1 rounded-full text-xs font-medium">
-                                                            { __(
-                                                                'Popular',
-                                                                'dokan-lite'
-                                                            ) }
-                                                        </span>
-                                                    ) }
-                                                </div>
-                                                <div className="flex items-baseline gap-2">
-                                                    <span className="text-2xl font-bold text-gray-900">
-                                                        { isAnnual
-                                                            ? plan.annualPrice
-                                                            : plan.lifetimePrice }
-                                                    </span>
-                                                    <span className="text-sm text-gray-500">
-                                                        { isAnnual
-                                                            ? 'Annually'
-                                                            : 'Lifetime' }
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            { /* Features List */ }
-                                            <div className="space-y-3 mb-4">
-                                                { plan.features.map(
-                                                    (
-                                                        feature,
-                                                        featureIndex
-                                                    ) => (
-                                                        <div
-                                                            key={ featureIndex }
-                                                            className="flex items-start gap-2"
-                                                        >
-                                                            <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
-                                                            <span className="text-xs text-gray-700 leading-tight">
-                                                                { feature }
-                                                            </span>
-                                                        </div>
-                                                    )
-                                                ) }
-                                            </div>
-
-                                            { /* Buy Now Button */ }
-                                            <a
-                                                href="https://dokan.co/wordpress/pricing/"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="block mt-8"
-                                            >
-                                                <button className="w-full bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
-                                                    { __(
-                                                        'Buy Now',
-                                                        'dokan-lite'
-                                                    ) }
-                                                </button>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) ) }
-                        </div>
-                    </div>
-
-                    { /* Tablet: 2 columns, 2 rows (2x2 grid), 332x313 cards */ }
-                    <div className="hidden md:block lg:hidden">
-                        <div className="max-w-4xl mx-auto px-4">
-                            <div className="grid grid-cols-2 gap-4 justify-items-center">
-                                { pricingPlans.map( ( plan, index ) => (
-                                    <div
-                                        key={ index }
-                                        className="w-[320px] h-[313px]"
-                                    >
-                                        <div
-                                            className={ `w-full h-full ${
-                                                plan.isPopular
-                                                    ? 'border-2 border-[#7047EB] shadow-lg'
-                                                    : 'border border-gray-200'
-                                            } rounded bg-white
-                                        ${
-                                            index === 0
-                                                ? 'bg-[linear-gradient(214.33deg,rgba(239,241,255,0.7)_3.79%,#FFFFFF_60.72%)]'
-                                                : ''
-                                        }
-                                        ${
-                                            index === 1
-                                                ? 'bg-[linear-gradient(214.33deg,rgba(255,250,239,0.7)_3.79%,#FFFFFF_60.72%)]'
-                                                : ''
-                                        }
-                                        ${
-                                            index === 2
-                                                ? 'bg-[linear-gradient(214.33deg,rgba(234,248,255,0.7)_3.79%,#FFFFFF_60.72%)]'
-                                                : ''
-                                        }
-                                        ${
-                                            index === 3
-                                                ? 'bg-[linear-gradient(214.33deg,rgba(255,238,249,0.7)_3.79%,#FFFFFF_60.72%)]'
-                                                : ''
-                                        }
-                                        ` }
-                                        >
-                                            <div className="p-4 h-full flex flex-col">
-                                                { /* Package Header */ }
-                                                <div className="mb-4">
-                                                    <div className="flex items-center justify-between mb-2">
-                                                        <h3 className="text-lg font-semibold text-gray-900">
-                                                            { plan.name }
-                                                        </h3>
-                                                        { plan.isPopular && (
-                                                            <span className="bg-[#EFEAFF] text-[#7047EB] px-2 py-1 rounded-full text-xs font-medium">
-                                                                { __(
-                                                                    'Popular',
-                                                                    'dokan-lite'
-                                                                ) }
-                                                            </span>
-                                                        ) }
-                                                    </div>
-                                                    <div className="flex items-baseline gap-2">
-                                                        <span className="text-2xl font-bold text-gray-900">
-                                                            { isAnnual
-                                                                ? plan.annualPrice
-                                                                : plan.lifetimePrice }
-                                                        </span>
-                                                        <span className="text-sm text-gray-500">
-                                                            { isAnnual
-                                                                ? 'Annually'
-                                                                : 'Lifetime' }
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                { /* Features List */ }
-                                                <div className="flex-grow space-y-3">
-                                                    { plan.features.map(
-                                                        (
-                                                            feature,
-                                                            featureIndex
-                                                        ) => (
-                                                            <div
-                                                                key={
-                                                                    featureIndex
-                                                                }
-                                                                className="flex items-start gap-2"
-                                                            >
-                                                                <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
-                                                                <span className="text-xs text-gray-700 leading-tight">
-                                                                    { feature }
-                                                                </span>
-                                                            </div>
-                                                        )
-                                                    ) }
-                                                </div>
-
-                                                { /* Buy Now Button */ }
-                                                <a
-                                                    href="https://dokan.co/wordpress/pricing/"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="block mt-8"
-                                                >
-                                                    <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
-                                                        { __(
-                                                            'Buy Now',
-                                                            'dokan-lite'
-                                                        ) }
-                                                    </button>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) ) }
-                            </div>
-                        </div>
-                    </div>
-
-                    { /* Desktop: 4 columns */ }
-                    <div className="hidden lg:block px-8">
-                        <div className="grid grid-cols-4 gap-6 max-w-6xl mx-auto">
+                    <div className="px-0 lg:px-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                             { pricingPlans.map( ( plan, index ) => (
                                 <div key={ index }>
                                     <div
@@ -401,68 +271,7 @@ function PricingSection() {
                                         }
                                         ` }
                                     >
-                                        <div className="p-4 h-full flex flex-col">
-                                            { /* Package Header */ }
-                                            <div className="mb-4">
-                                                <div className="flex items-center justify-between mb-2">
-                                                    <h3 className="text-lg font-semibold text-gray-900">
-                                                        { plan.name }
-                                                    </h3>
-                                                    { plan.isPopular && (
-                                                        <span className="bg-[#EFEAFF] text-[#7047EB] px-2 py-1 rounded-full text-xs font-medium">
-                                                            Popular
-                                                        </span>
-                                                    ) }
-                                                </div>
-                                                <div className="flex items-baseline gap-2">
-                                                    <span className="text-2xl font-bold text-gray-900">
-                                                        { isAnnual
-                                                            ? plan.annualPrice
-                                                            : plan.lifetimePrice }
-                                                    </span>
-                                                    <span className="text-sm text-gray-500">
-                                                        { isAnnual
-                                                            ? 'Annually'
-                                                            : 'Lifetime' }
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            { /* Features List */ }
-                                            <div className="flex-grow space-y-3">
-                                                { plan.features.map(
-                                                    (
-                                                        feature,
-                                                        featureIndex
-                                                    ) => (
-                                                        <div
-                                                            key={ featureIndex }
-                                                            className="flex items-start gap-2"
-                                                        >
-                                                            <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
-                                                            <span className="text-xs text-gray-700 leading-tight">
-                                                                { feature }
-                                                            </span>
-                                                        </div>
-                                                    )
-                                                ) }
-                                            </div>
-
-                                            { /* Buy Now Button */ }
-                                            <a
-                                                href="https://dokan.co/wordpress/pricing/"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="block mt-8"
-                                            >
-                                                <button className="w-full mt-4 bg-[#7047EB] text-white hover:bg-[#5d39c4] transition-colors rounded h-[35px] text-xs font-semibold">
-                                                    { __(
-                                                        'Buy Now',
-                                                        'dokan-lite'
-                                                    ) }
-                                                </button>
-                                            </a>
-                                        </div>
+                                        { Pack( plan ) }
                                     </div>
                                 </div>
                             ) ) }

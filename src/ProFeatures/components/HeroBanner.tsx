@@ -74,7 +74,7 @@ function HeroBanner() {
                 { /* Button and text remain horizontal on both mobile and desktop */ }
                 <div className="flex items-center gap-4">
                     <a
-                        href="https://dokan.co/wordpress/upgrade-to-pro/"
+                        href="https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite"
                         target="_blank"
                         rel="noopener noreferrer"
                     >

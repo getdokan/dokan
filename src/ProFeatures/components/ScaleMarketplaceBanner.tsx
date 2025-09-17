@@ -27,7 +27,7 @@ function ScaleMarketplaceBanner() {
                     </div>
 
                     <a
-                        href="https://dokan.co/wordpress/upgrade-to-pro/"
+                        href="https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="block mt-8"
@@ -64,7 +64,7 @@ function ScaleMarketplaceBanner() {
 
                 <div className="z-10">
                     <a
-                        href="https://dokan.co/wordpress/upgrade-to-pro/"
+                        href="https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
