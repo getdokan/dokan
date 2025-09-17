@@ -44,11 +44,11 @@ function ScaleMarketplaceBanner() {
 
             { /* Desktop Banner */ }
             <div
-                className="hidden md:flex relative min-h-[200px] rounded overflow-hidden items-center justify-between px-8 py-10 bg-cover bg-center bg-no-repeat w-full"
+                className="hidden md:flex md:flex-col lg:flex-row justify-between gap-0 md:gap-4 lg:gap-0 relative min-h-[200px] rounded overflow-hidden items-center px-8 py-10 bg-cover bg-center bg-no-repeat w-full"
                 style={ { backgroundImage: `url(${ scaleImg })` } }
             >
                 <div className="flex flex-col justify-center z-10 max-w-2xl">
-                    <h2 className="text-3xl font-bold mb-4 leading-tight text-white drop-shadow-lg">
+                    <h2 className="text-3xl font-bold mb-4 leading-tight text-white drop-shadow-lg text-center lg:text-left">
                         { __(
                             'Ready to Scale Your Marketplace?',
                             'dokan-lite'
