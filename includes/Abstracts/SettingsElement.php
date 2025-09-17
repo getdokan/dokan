@@ -85,7 +85,40 @@ abstract class SettingsElement {
 	 * @var string $dependency_key Dependency Key.
 	 */
 	public $dependency_key = '';
+    /**
+     * Page doc link.
+     *
+     * @var string|null $doc_link
+     */
+    protected ?string $doc_link = null;
 
+    /**
+     * Get the subpage doc link.
+     *
+     * @return string|null
+     */
+    public function get_doc_link(): ?string {
+        return $this->doc_link;
+    }
+
+    /**
+     * Help text of the settings element.
+     *
+     * @var string $helpText Help text.
+     */
+    protected $tooltip = '';
+
+    /**
+     * Set the subpage doc link.
+     *
+     * @param string $doc_link
+     *  return SettingsElement
+     */
+    public function set_doc_link( string $doc_link ): SettingsElement {
+        $this->doc_link = $doc_link;
+
+        return $this;
+    }
 	/**
 	 * The constructor.
 	 *
@@ -169,6 +202,28 @@ abstract class SettingsElement {
 
 		return $this;
 	}
+
+    /**
+     * Get the Help Text of the Settings element.
+     *
+     * @return string
+     */
+    public function get_tooltip(): string {
+        return $this->tooltip;
+    }
+
+    /**
+     * Set the Help Text of the Settings element.
+     *
+     * @param string $tooltip Title.
+     *
+     * @return SettingsElement
+     */
+    public function set_tooltip( string $tooltip ): SettingsElement {
+        $this->tooltip = $tooltip;
+
+        return $this;
+    }
 
 	/**
 	 * Get the icon of the Settings element.
@@ -303,7 +358,6 @@ abstract class SettingsElement {
          * @param SettingsElement $this
          */
 		$filtered_children = apply_filters( $this->get_hook_key() . '_children', $this->children, $this ); // phpcs:ignore.
-
 		foreach ( $filtered_children as $child ) {
 			$child->set_hook_key( $this->get_hook_key() . '_' . $child->get_id() );
 			$child->set_dependency_key( trim( $this->get_dependency_key() . '.' . $child->get_id(), '. ' ) );
@@ -469,6 +523,7 @@ abstract class SettingsElement {
 			'type'           => $this->get_type(),
 			'title'          => $this->get_title(),
 			'icon'           => $this->get_icon(),
+            'tooltip'        => $this->get_tooltip(),
 			'display'        => true, // to manage element display action from dependencies.
 			'hook_key'       => $this->get_hook_key(),
 			'children'       => $children,

@@ -7,6 +7,30 @@ import { SettingsElement } from '../../../../stores/adminSettings/types';
 import Menu from './Elements/Menu';
 import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
+import PageHeading from './Elements/PageHeading';
+import { twMerge } from 'tailwind-merge';
+
+const DashboardSwitchLink = () => {
+    // Get the switch URL from localized settings
+    const switchUrl = dokanAdminDashboardSettings?.legacy_settings_url || '#';
+
+    return (
+        <div className="legacy-dashboard-url text-sm font-medium pt-8 mt-8">
+            <div className="flex items-center gap-2 text-gray-600">
+                { __(
+                    'If you want to go back to old settings panel,',
+                    'dokan-lite'
+                ) }{ ' ' }
+                <a
+                    className="skip-color-module underline font-bold text-[#7047EB] hover:text-[#502BBF] transition-colors"
+                    href={ switchUrl }
+                >
+                    { __( 'Click Here', 'dokan-lite' ) }
+                </a>
+            </div>
+        </div>
+    );
+};
 
 const SettingsPage = () => {
     const dispatch = useDispatch();
@@ -51,8 +75,20 @@ const SettingsPage = () => {
 
     useEffect( () => {
         if ( ! loading && pages.length > 0 ) {
+            const selectedSettings =
+                    typeof localStorage !== 'undefined'
+                        ? localStorage.getItem( 'dokan_active_settings_tab' )
+                        : '',
+                selectedPageName = selectedSettings
+                    ? selectedSettings.split( '.' )[ 1 ]
+                    : selectedPage;
+
             setSelectedPage(
-                selectedPage === '' ? pages[ 0 ].id : selectedPage
+                // @ts-ignore
+                wp.hooks.applyFilters(
+                    'dokan_admin_settings_active_page_id',
+                    selectedPageName ? selectedPageName : pages[ 0 ].id
+                )
             );
         }
     }, [ pages, loading ] );
@@ -135,7 +171,16 @@ const SettingsPage = () => {
         setSelectedTab( tab );
     };
 
+    const onValueChange = ( element: SettingsElement ) => {
+        dispatch( settingsStore ).updateSettingsValue( element );
+    };
+
     const saveSettings = () => {
+        wp.hooks.doAction(
+            'dokan_admin_settings_before_save_settings',
+            allSettings
+        );
+
         setIsSaving( true );
         dispatch( settingsStore )
             .saveSettings( allSettings )
@@ -147,16 +192,65 @@ const SettingsPage = () => {
                 setIsSaving( false );
                 // TODO: Say Error.
             } );
+
+        wp.hooks.doAction(
+            'dokan_admin_settings_after_save_settings',
+            allSettings
+        );
     };
+
+    // Get current page/tab information for heading
+    const getCurrentPageInfo = () => {
+        let currentPage: SettingsElement | undefined;
+        let currentTab: SettingsElement | undefined;
+
+        if ( selectedPage && pages?.length > 0 ) {
+            currentPage = pages.find( ( page ) => page.id === selectedPage );
+        }
+
+        if ( ! currentPage?.display ) {
+            return {};
+        }
+
+        if ( selectedTab && tabs?.length > 0 ) {
+            currentTab = tabs.find( ( tab ) => tab.id === selectedTab );
+        }
+
+        // Priority: Tab > Page > Default Settings
+        if ( currentTab ) {
+            return {
+                title: currentTab.title || __( 'Settings', 'dokan-lite' ),
+                description: currentTab.description || '',
+            };
+        } else if ( currentPage ) {
+            return {
+                title: currentPage.title || __( 'Settings', 'dokan-lite' ),
+                description: currentPage.description || '',
+                documentationLink: currentPage?.doc_link || '',
+            };
+        }
+
+        return {
+            title: __( 'Settings', 'dokan-lite' ),
+            description: __( 'Configure your store settings', 'dokan-lite' ),
+        };
+    };
+
+    const pageInfo = getCurrentPageInfo();
+    const allElementsAreFields = elements.every(
+        ( element ) => element.type === 'field'
+    );
+
     return (
         <>
-            <h3 className="text-3xl font-bold">
-                { __( 'Settings', 'dokan-lite' ) }
-            </h3>
-
-            <div className="h-full">
-                <main className="max-w-7xl mx-auto pb-10 lg:py-5 lg:px-0">
-                    <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
+            <div className="min-h-screen h-full">
+                <h2
+                    className={ `text-2xl text-[#25252D] font-bold my-6 lg:mb-8 lg:mt-10` }
+                >
+                    { __( 'Settings', 'dokan-lite' ) }
+                </h2>
+                <main className="w-full lg:px-0 lg:bg-white h-full lg:shadow rounded-lg overflow-hidden">
+                    <div className="lg:grid lg:grid-cols-12 lg:divide-x h-full">
                         { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
                                 key="admin-settings-menu"
@@ -167,7 +261,7 @@ const SettingsPage = () => {
                             />
                         ) }
 
-                        <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+                        <div className="space-y-6 lg:p-7 lg:py-12 lg:col-span-9 pt-10">
                             { tabs && '' !== selectedTab && (
                                 <Tab
                                     key="admin-settings-tab"
@@ -177,39 +271,65 @@ const SettingsPage = () => {
                                     onTabClick={ onTabClick }
                                 />
                             ) }
+                            { pageInfo.title && (
+                                <PageHeading
+                                    title={ pageInfo.title }
+                                    description={ pageInfo.description }
+                                    documentationLink={
+                                        pageInfo.documentationLink
+                                    }
+                                />
+                            ) }
+                            <div
+                                className={ `flex flex-col bg-white rounded-lg ${ twMerge(
+                                    allElementsAreFields &&
+                                        ( pageInfo?.title ||
+                                            pageInfo?.description )
+                                        ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
+                                        : 'gap-6'
+                                ) }` }
+                            >
+                                { elements.map(
+                                    ( element: SettingsElement ) => {
+                                        return (
+                                            <SettingsParser
+                                                key={
+                                                    element.hook_key +
+                                                    '-settings-parser'
+                                                }
+                                                element={ element }
+                                                onValueChange={ onValueChange }
+                                            />
+                                        );
+                                    }
+                                ) }
+                            </div>
 
-                            { elements.map( ( element: SettingsElement ) => {
-                                return (
-                                    <SettingsParser
-                                        key={
-                                            element.hook_key +
-                                            '-settings-parser'
-                                        }
-                                        element={ element }
-                                    />
-                                );
-                            } ) }
+                            { needSaving && (
+                                <div className="sticky flex justify-end bottom-0 !mt-8 py-5">
+                                    <button
+                                        type="button"
+                                        disabled={ isSaving }
+                                        onClick={ saveSettings }
+                                        className="inline-flex shadow shadow-lg shadow-gray-800/30 items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    >
+                                        <SaveIcon
+                                            className="-ml-1 mr-3 h-5 w-5"
+                                            aria-hidden="true"
+                                        />
+                                        { isSaving
+                                            ? __( 'Saving..', 'dokan-lite' )
+                                            : __( 'Save', 'dokan-lite' ) }
+                                    </button>
+                                </div>
+                            ) }
                         </div>
                     </div>
-                    { needSaving && (
-                        <div className="sticky flex justify-end bottom-0 mt-5 p-5 pr-0">
-                            <button
-                                type="button"
-                                disabled={ isSaving }
-                                onClick={ saveSettings }
-                                className="inline-flex shadow shadow-lg shadow-gray-800/30 items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            >
-                                <SaveIcon
-                                    className="-ml-1 mr-3 h-5 w-5"
-                                    aria-hidden="true"
-                                />
-                                { isSaving
-                                    ? __( 'Saving..', 'dokan-driver' )
-                                    : __( 'Save', 'dokan-driver' ) }
-                            </button>
-                        </div>
-                    ) }
                 </main>
+
+                { dokanAdminDashboardSettings?.legacy_settings_url && (
+                    <DashboardSwitchLink />
+                ) }
             </div>
         </>
     );
