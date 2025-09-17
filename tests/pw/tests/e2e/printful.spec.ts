@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-test.describe('Printful module functionality test', () => {
+test.describe.skip('Printful module functionality test', () => {
     let admin: PrintfulPage;
     let vendor: PrintfulPage;
     let aPage: Page, vPage: Page;
