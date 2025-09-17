@@ -104,7 +104,7 @@ export default defineConfig({
         // viewport: { width: 1420, height: 900 }, // default 1280x720
         /* whether to slow down test execution by provided seconds */
         launchOptions: {
-            slowMo: (SLOWMO ?? 0) * 1000,
+            slowMo: Number(SLOWMO ?? 0) * 1000,
             // devtools: true,
         },
     },
