@@ -1,6 +1,5 @@
 import { Crown } from 'lucide-react';
-import scaleImg from '../assets/scale.png';
-import scaleMobileImg from '../assets/scale-mobile.png';
+import { scaleImg, scaleMobileImg } from '../Images';
 import { __ } from '@wordpress/i18n';
 function ScaleMarketplaceBanner() {
     return (

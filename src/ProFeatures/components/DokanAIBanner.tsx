@@ -1,6 +1,8 @@
-import dokanAiBanner from '../assets/DokanAi.png';
-import dokanAiBannerMobile from '../assets/DokanAiMobile.png';
-import dokanAiBannerTablet from '../assets/DokanAiTablet.png';
+import {
+    dokanAiBannerTablet,
+    dokanAiBanner,
+    dokanAiBannerMobile,
+} from '../Images';
 import { __ } from '@wordpress/i18n';
 
 function DokanAIBanner() {

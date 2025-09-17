@@ -1,5 +1,12 @@
 import { __ } from '@wordpress/i18n';
-import { ChartPie, CreditCard, Megaphone, Pen, Percent, TicketPercent } from "lucide-react";
+import {
+    ChartPie,
+    CreditCard,
+    Megaphone,
+    Pen,
+    Percent,
+    TicketPercent,
+} from 'lucide-react';
 
 function ExceptionalFeatures() {
     const exceptional = [

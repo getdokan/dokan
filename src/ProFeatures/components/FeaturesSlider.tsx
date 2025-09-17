@@ -1,12 +1,14 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRef, useState, useEffect } from '@wordpress/element';
 import FeatureCard from './FeatureCard';
-import shippingImg from '../assets/shipping.png';
-import paymentImg from '../assets/payment.png';
-import smartImg from '../assets/smart.png';
-import storeImg from '../assets/store.png';
-import brandingImg from '../assets/branding.png';
-import supportImg from '../assets/support.png';
+import {
+    shippingImg,
+    paymentImg,
+    smartImg,
+    storeImg,
+    brandingImg,
+    supportImg,
+} from '../Images';
 import { __ } from '@wordpress/i18n';
 
 function FeaturesSlider() {

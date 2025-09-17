@@ -1,25 +1,27 @@
 import { useEffect, useRef, useState } from '@wordpress/element';
-import iftsyImg from '../assets/iftsy.png';
-import bidCuriousImg from '../assets/bidCurious.png';
-import bootstrapImg from '../assets/bootstrap.png';
-import designAddictImg from '../assets/designAddict.png';
-import parsiankalaImg from '../assets/parsiankala.png';
-import zakartoImg from '../assets/zakarto.png';
-import avatar1 from '../assets/Avatar1.png';
-import avatar2 from '../assets/Avatar2.png';
-import avatar3 from '../assets/Avatar3.png';
-import avatar4 from '../assets/Avatar4.png';
-import avatar5 from '../assets/Avatar5.png';
-import avatar6 from '../assets/Avatar6.png';
-import avatar7 from '../assets/Avatar7.png';
-import avatar8 from '../assets/Avatar8.png';
-import avatar9 from '../assets/Avatar9.png';
-import avatar10 from '../assets/Avatar10.png';
-import avatar11 from '../assets/Avatar11.png';
-import g2Logo from '../assets/g2Logo.png';
-import trustpilotLogo from '../assets/trustpilotLogo.png';
-import capterraLogo from '../assets/capterraLogo.png';
-import wordpressLogo from '../assets/wordpressLogo.png';
+import {
+    iftsyImg,
+    bidCuriousImg,
+    bootstrapImg,
+    designAddictImg,
+    parsiankalaImg,
+    zakartoImg,
+    avatar1,
+    avatar2,
+    avatar3,
+    avatar4,
+    avatar5,
+    avatar6,
+    avatar7,
+    avatar8,
+    avatar9,
+    avatar10,
+    avatar11,
+    g2Logo,
+    trustpilotLogo,
+    capterraLogo,
+    wordpressLogo,
+} from '../Images';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MarketplaceCard from './MarketplaceCard';
 import { __ } from '@wordpress/i18n';

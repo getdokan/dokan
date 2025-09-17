@@ -1,7 +1,9 @@
 import { Crown } from 'lucide-react';
-import unlockBanner from '../assets/unlock-banner.png';
-import unlockBannerMobile from '../assets/unlock-banner-mobile.png';
-import unlockBannerTablet from '../assets/unlock-banner-tablet.png';
+import {
+    unlockBanner,
+    unlockBannerMobile,
+    unlockBannerTablet,
+} from '../Images';
 import { __, sprintf } from '@wordpress/i18n';
 import { RawHTML } from '@wordpress/element';
 

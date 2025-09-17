@@ -1,6 +1,8 @@
-import moduleBanner from '../assets/modules-banner.png';
-import moduleBannerMobile from '../assets/modules-banner-mobile.png';
-import moduleBannerTablet from '../assets/modules-banner-tablet.png';
+import {
+    moduleBanner,
+    moduleBannerMobile,
+    moduleBannerTablet,
+} from '../Images';
 import { Settings, PaintbrushVertical, File } from 'lucide-react';
 import { __, sprintf } from '@wordpress/i18n';
 import { RawHTML } from '@wordpress/element';
