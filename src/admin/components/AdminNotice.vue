@@ -43,9 +43,11 @@
 
 <script>
 import $ from 'jquery';
+import Mixin from '../../utils/Mixin';
 
 export default {
     name: "AdminNotice",
+    mixins: [ Mixin ],
 
     props: {
         endpoint: {
