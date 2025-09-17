@@ -1468,7 +1468,7 @@ export const selector = {
                     // module plan
                     modulePlan: {
                         planName: '.plan-name',
-                        upgradePlan: '.module-plan .upgrade-plan',
+                        //upgradePlan: '.module-plan .upgrade-plan',
                     },
 
                     // Nav Tabs
