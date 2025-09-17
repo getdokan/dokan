@@ -40,7 +40,6 @@ const CategorySelector = ( {
                 // @ts-ignore
                 ref={ setPopoverAnchor }
             >
-
                 <p className="text-sm text-gray-500 cursor-pointer flex items-center gap-x-1">
                     <RawHTML>
                         { sprintf(

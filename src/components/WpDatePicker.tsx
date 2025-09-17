@@ -53,9 +53,9 @@ const WpDatePicker = ( props: Props ) => {
                             props?.currentDate
                                 ? dateI18n(
                                     getSettings().formats.date,
-                                    props?.currentDate as string,
-                                    getSettings().timezone.string
-                                )
+                                      props?.currentDate as string,
+                                      getSettings().timezone.string
+                                  )
                                 : ''
                         }
                         input={ {

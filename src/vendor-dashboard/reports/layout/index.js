@@ -51,7 +51,11 @@ import Notices from './notices';
 // import { TransientNotices } from "./transient-notices";
 import { getAdminSetting } from 'reports/utils/admin-settings';
 import { usePageClasses } from './hooks/use-page-classes';
-import { mapToDashboardRoute, handleAnalyticsLinkPrevention, shouldBlockNavigation } from '../helper';
+import {
+    mapToDashboardRoute,
+    handleAnalyticsLinkPrevention,
+    shouldBlockNavigation,
+} from '../helper';
 // import "reports/activity-panel";
 // import "reports/mobile-banner";
 // import "./navigation";
@@ -75,7 +79,7 @@ export const PrimaryLayout = ( props ) => {
      * Since vendor dashboard URL should not contains the 'admin.php'
      */
     useEffect( () => {
-        let href = window.location.href || '';
+        const href = window.location.href || '';
         const mappedRoute = mapToDashboardRoute( href );
         if ( mappedRoute !== href ) {
             getHistory().push( mappedRoute );
@@ -265,7 +269,7 @@ const _PageLayout = () => {
 };
 
 export const PageLayout = compose(
-    window.wcSettings.admin
+    window.wcSettings?.admin
         ? withOptionsHydration( {
               ...getAdminSetting( 'preloadOptions', {} ),
           } )
