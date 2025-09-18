@@ -5,6 +5,13 @@ const proImages =
           dokanAdminDashboardSettings[ 'pro-features' ]
         : {};
 
+const proImagesCompresed =
+    //@ts-ignore
+    dokanAdminDashboardSettings && dokanAdminDashboardSettings[ 'profeatures' ]
+        ? //@ts-ignore
+          dokanAdminDashboardSettings[ 'profeatures' ]
+        : {};
+
 export const dokanAiBanner = proImages?.dokanAiBanner ?? '';
 export const dokanAiBannerMobile = proImages?.dokanAiBannerMobile ?? '';
 export const dokanAiBannerTablet = proImages?.dokanAiBannerTablet ?? '';
@@ -43,3 +50,7 @@ export const scaleMobileImg = proImages?.scaleMobileImg ?? '';
 export const moduleBanner = proImages?.moduleBanner ?? '';
 export const moduleBannerMobile = proImages?.moduleBannerMobile ?? '';
 export const moduleBannerTablet = proImages?.moduleBannerTablet ?? '';
+export const crownLock = proImages?.crownLock ?? '';
+export const aiStart = proImages?.aiStart ?? '';
+export const cross = proImages?.cross ?? '';
+export const products = proImages?.products ?? '';

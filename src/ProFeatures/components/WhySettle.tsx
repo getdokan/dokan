@@ -1,8 +1,8 @@
 import {
     moduleBanner,
     moduleBannerMobile,
-    moduleBannerTablet,
-} from '../Images';
+    moduleBannerTablet, products
+} from "../Images";
 import { Settings, PaintbrushVertical, File } from 'lucide-react';
 import { __, sprintf } from '@wordpress/i18n';
 import { RawHTML } from '@wordpress/element';
@@ -43,75 +43,35 @@ function WhySettle() {
 
             { /* Modules Banner with Responsive Images */ }
             <div className="relative rounded overflow-hidden mb-8">
-                { /* Mobile Image - visible on mobile only */ }
-                <img
-                    src={ moduleBannerMobile }
-                    alt="42+ Modules"
-                    className="w-full h-auto object-contain block md:hidden"
-                    draggable={ false }
-                />
 
-                { /* Tablet Image - visible on tablet only */ }
-                <img
-                    src={ moduleBannerTablet }
-                    alt="42+ Modules"
-                    className="w-full h-auto object-contain hidden md:block lg:hidden"
-                    draggable={ false }
-                />
+                <div>
+                    <div className="w-full h-[150px] md:h-[210px] lg:h-[276px] relative bg-[linear-gradient(90deg,rgba(38,1,138,1)_0%,rgba(0,0,0,1)_100%)]">
+                        <span className="w-[500px] h-[500px] left-[-32px] top-[-107px] rounded-full absolute overflow-hidden inline-block bg-white opacity-[.04]"></span>
+                        <span className="w-[500px] h-[500px] left-[270px] top-[-375px] rounded-full absolute overflow-hidden inline-block bg-white opacity-[.04]"></span>
 
-                { /* Desktop Image - visible on desktop only */ }
-                <img
-                    src={ moduleBanner }
-                    alt="42+ Modules"
-                    className="w-full h-auto object-contain hidden lg:block"
-                    draggable={ false }
-                />
-
-                { /* Mobile Text Overlay - positioned at top */ }
-                <div className="absolute top-0 left-0 right-0 px-4 py-4 md:hidden">
-                    <h3 className="text-white mb-2 font-bold text-[18px] leading-[130%] tracking-[0%]">
-                        { __( '42+ Modules', 'dokan-lite' ) }
-                    </h3>
-                    <p className="text-white max-w-xs text-[12px] leading-[140%] tracking-[0%] font-normal">
-                        { __(
-                            'Access an extensive range of modules designed to enhance both admin and vendor experiences.',
-                            'dokan-lite'
-                        ) }
-                    </p>
-                </div>
-
-                { /* Tablet and Desktop Text Overlay - centered */ }
-                <div className="absolute inset-0 hidden md:flex flex-col justify-center px-8 py-8">
-                    { /* Tablet Text Layout with Custom Line Breaks */ }
-                    <div className="block lg:hidden">
-                        <h3 className="text-3xl font-bold text-white mb-2">
-                            { __( '42+ Modules', 'dokan-lite' ) }
-                        </h3>
-                        <div className="text-white text-base max-w-xs">
-                            <RawHTML>
-                                { sprintf(
-                                    // eslint-disable-next-line @wordpress/i18n-translator-comments
-                                    __(
-                                        'Access an extensive range of modules %1$s designed to enhance both admin and %2$s vendor experiences.',
-                                        'dokan-lite'
-                                    ),
-                                    '<br />',
-                                    '<br />'
-                                ) }
-                            </RawHTML>
-                        </div>
-                    </div>
-
-                    { /* Desktop Text Layout - Original Styles */ }
-                    <div className="hidden lg:block">
-                        <h3 className="text-3xl font-bold text-white mb-2">
-                            { __( '42+ Modules', 'dokan-lite' ) }
-                        </h3>
-                        <div className="text-white text-base max-w-xs">
-                            { __(
-                                'Access an extensive range of modules designed to enhance both admin and vendor experiences.',
-                                'dokan-lite'
-                            ) }
+                        <div className="flex flex-col md:flex-row w-full h-full overflow-hidden">
+                            <div className="md:w-[65%] lg:w-[45%] h-full flex justify-center flex-col">
+                                <div className="px-4 pt-4 md:pt-0 md:px-8">
+                                    <h3 className="font-bold text-white mb-2 text-xl lg:text-3xl">
+                                        { __( '42+ Modules', 'dokan-lite' ) }
+                                    </h3>
+                                    <div className="text-white max-w-xs text-[12px] leading-[140%] md:text-base font-normal">
+                                        { __(
+                                            'Access an extensive range of modules designed to enhance both admin and vendor experiences.',
+                                            'dokan-lite'
+                                        ) }
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="md:w-[35%] lg:w-[55%] h-full relative">
+                                <span className="md:w-[200px] lg:w-[500px] h-full bg-[linear-gradient(270deg,black_0%,rgba(0,0,0,0)_100%)] absolute right-0 z-10"></span>
+                                <img
+                                    src={ products }
+                                    alt="products"
+                                    className="w-full h-auto absolute top-[-42px] md:top-[90px] lg:top-[32px] md:left-[40px] lg:left-0 scale-[.4] md:scale-[2] lg:scale-[1] rotate-[5deg]"
+                                    draggable={ false }
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
