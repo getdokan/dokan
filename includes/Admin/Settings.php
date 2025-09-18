@@ -7,6 +7,9 @@ use WeDevs\Dokan\Utilities\AdminSettings;
 use WP_Error;
 use WeDevs\Dokan\Exceptions\DokanException;
 use WeDevs\Dokan\Traits\AjaxResponseError;
+use WeDevs\Dokan\Admin\Settings\LegacyTransformer;
+use WeDevs\Dokan\Admin\Settings\Settings as NewAdminSettingsManager;
+use WeDevs\Dokan\Admin\Settings\SettingsMapper;
 
 /**
  * Admin Settings Class
@@ -123,8 +126,21 @@ class Settings {
 
         $settings = [];
 
+        // Ensure new settings are populated from legacy if currently blank
+        $this->ensure_new_settings_populated_from_legacy();
+
+        // Build legacy-style values from the new settings storage.
+        $legacy_from_new = $this->get_legacy_values_from_new();
+
         foreach ( $this->get_settings_sections() as $key => $section ) {
-            $settings[ $section['id'] ] = apply_filters( 'dokan_get_settings_values', $this->sanitize_options( get_option( $section['id'], [] ), 'read' ), $section['id'] );
+            $legacy_option_id = $section['id'];
+            $old_stored       = $this->sanitize_options( get_option( $legacy_option_id, [] ), 'read' );
+            $new_mapped       = isset( $legacy_from_new[ $legacy_option_id ] ) && is_array( $legacy_from_new[ $legacy_option_id ] ) ? $legacy_from_new[ $legacy_option_id ] : [];
+
+            // Prefer new mapped values and fall back to existing legacy options for unmapped fields.
+            $merged = array_merge( $old_stored, $new_mapped );
+
+            $settings[ $legacy_option_id ] = apply_filters( 'dokan_get_settings_values', $merged, $legacy_option_id );
         }
 
         $new_seller_enable_selling_statuses = ! empty( $settings['dokan_selling']['new_seller_enable_selling'] ) ? $settings['dokan_selling']['new_seller_enable_selling'] : 'automatically';
@@ -163,14 +179,28 @@ class Settings {
             $option_name  = sanitize_text_field( wp_unslash( $_POST['section'] ) );
             $option_value = $this->sanitize_options( wp_unslash( $_POST['settingsData'] ), 'edit' ); // phpcs:ignore
             $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
-            $old_options  = get_option( $option_name, [] );
+
+            // Build current legacy-style options from new storage for accurate before/after comparisons.
+            $legacy_from_new_all = $this->get_legacy_values_from_new();
+            $old_options  = isset( $legacy_from_new_all[ $option_name ] ) && is_array( $legacy_from_new_all[ $option_name ] ) ? $legacy_from_new_all[ $option_name ] : get_option( $option_name, [] );
 
             /**
              * @since 3.5.1 added $old_options parameter
              */
             do_action( 'dokan_before_saving_settings', $option_name, $option_value, $old_options );
 
-            update_option( $option_name, $option_value );
+            // Transform legacy section values to new settings storage and save
+            $transformer = new LegacyTransformer();
+            $new_data    = $transformer->transform( [ 'from' => 'old', 'data' => [ $option_name => $option_value ] ] );
+
+            if ( ! empty( $new_data ) ) {
+                /** @var NewAdminSettingsManager $settings_manager */
+                $settings_manager = dokan_get_container()->get( NewAdminSettingsManager::class );
+                $settings_manager->save( $new_data );
+            } else {
+                // Fallback to legacy option if nothing mapped
+                update_option( $option_name, $option_value );
+            }
 
             /**
              * @since 3.5.1 added $old_options parameter
@@ -1144,5 +1174,101 @@ class Settings {
         ];
 
         return $settings_fields;
+    }
+
+    /**
+     * Get values from the new settings storage across all pages.
+     *
+     * @since 4.0.0
+     *
+     * @return array
+     */
+    protected function get_new_pages_values(): array {
+        try {
+            /** @var NewAdminSettingsManager $manager */
+            $manager = dokan_get_container()->get( NewAdminSettingsManager::class );
+        } catch ( \Exception $e ) {
+            return [];
+        }
+
+        $values = [];
+        foreach ( $manager->get_pages() as $page ) {
+            try {
+                $values[ $page->get_id() ] = $page->hydrate_data()->get_value();
+            } catch ( \Exception $e ) {
+                $values[ $page->get_id() ] = [];
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * Get legacy-style values array (section => [field=>value]) from new storage.
+     *
+     * @since 4.0.0
+     *
+     * @return array
+     */
+    protected function get_legacy_values_from_new(): array {
+        $transformer = new LegacyTransformer();
+        return $transformer->transform(
+            [
+                'from' => 'new',
+                'data' => $this->get_new_pages_values(),
+            ]
+        );
+    }
+
+    /**
+     * Ensure the new settings storage is populated from legacy options for any missing/blank mapped keys.
+     *
+     * Once populated, subsequent reads will use the new settings only.
+     *
+     * @since 4.0.0
+     */
+    protected function ensure_new_settings_populated_from_legacy(): void {
+        try {
+            /** @var NewAdminSettingsManager $manager */
+            $manager = dokan_get_container()->get( NewAdminSettingsManager::class );
+        } catch ( \Exception $e ) {
+            return;
+        }
+
+        $current_pages_values = $this->get_new_pages_values();
+        $mapper               = new SettingsMapper();
+        $to_save              = [];
+
+        foreach ( $mapper->get_map() as $old_key => $new_key ) {
+            // Skip invalid mapping entries
+            if ( empty( $old_key ) || empty( $new_key ) || false === strpos( $old_key, '.' ) ) {
+                continue;
+            }
+
+            // If a new value already exists and is not blank, do not overwrite it
+            $existing = SettingsMapper::get_value_by_path( $current_pages_values, $new_key, null );
+            if ( null !== $existing && '' !== $existing ) {
+                continue;
+            }
+
+            list( $legacy_section, $legacy_field ) = explode( '.', $old_key, 2 );
+            $legacy_values = get_option( $legacy_section, [] );
+            if ( ! is_array( $legacy_values ) ) {
+                continue;
+            }
+
+            if ( array_key_exists( $legacy_field, $legacy_values ) ) {
+                $val = $legacy_values[ $legacy_field ];
+                // Only migrate non-null and non-empty-string values
+                if ( null !== $val && '' !== $val ) {
+                    SettingsMapper::set_value_by_path( $to_save, $new_key, $val );
+                }
+            }
+        }
+
+        if ( ! empty( $to_save ) ) {
+            // Save only the missing fields we discovered from legacy
+            $manager->save( $to_save );
+        }
     }
 }
