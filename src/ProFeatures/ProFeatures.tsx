@@ -9,6 +9,7 @@ import DokanMarketplaceUI from './components/DokanMarketplaceUI';
 import PricingSection from './components/PricingSection';
 import GuaranteeSection from './components/GuaranteeSection';
 import ScaleMarketplaceBanner from './components/ScaleMarketplaceBanner';
+import DokanAIBannerUpdate from "./components/DokanAIBannerUpdate";
 
 function ProFeatures() {
     return (
@@ -27,6 +28,7 @@ function ProFeatures() {
 
             { /* Dokan AI Banner */ }
             <DokanAIBanner />
+            <DokanAIBannerUpdate />
 
             { /* Dokan lite vs pro */ }
             <FeatureComparison />
