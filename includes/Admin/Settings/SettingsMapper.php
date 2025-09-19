@@ -296,6 +296,18 @@ class SettingsMapper {
     protected function build_reverse_map(): void {
         $this->reverse_map = [];
         foreach ( $this->map as $old => $new ) {
+            if ( isset( $this->reverse_map[ $new ] ) && $this->reverse_map[ $new ] !== $old ) {
+                $report = function_exists( 'apply_filters' ) ? (bool) apply_filters( 'dokan_settings_mapper_report_duplicate_new_keys', false, $new, $old, $this->reverse_map[ $new ] ) : false;
+                if ( $report && function_exists( '_doing_it_wrong' ) ) {
+                    $message = sprintf(
+                        'Duplicate new-key mapping detected for "%s" ("%s" vs "%s").',
+                        $new,
+                        $this->reverse_map[ $new ],
+                        $old
+                    );
+                    _doing_it_wrong( __METHOD__, $message, '3.13.0' );
+                }
+            }
             $this->reverse_map[ $new ] = $old;
         }
     }
@@ -342,5 +354,53 @@ class SettingsMapper {
             $ref = $ref[ $key ];
         }
         return $ref;
+    }
+
+    /**
+     * Helper: check if a dot-notated path exists in an array.
+     *
+     * @param array  $array
+     * @param string $path
+     *
+     * @return bool
+     */
+    public static function has_path( array $array, string $path ): bool {
+        if ( '' === $path ) {
+            return false;
+        }
+        $keys = explode( '.', $path );
+        $ref  = $array;
+        foreach ( $keys as $key ) {
+            if ( ! is_array( $ref ) || ! array_key_exists( $key, $ref ) ) {
+                return false;
+            }
+            $ref = $ref[ $key ];
+        }
+        return true;
+    }
+
+    /**
+     * Helper: unset a value in a nested array using dot notation.
+     * No-op if path does not exist.
+     *
+     * @param array  $array Array to modify (passed by reference).
+     * @param string $path  Dot-notated path.
+     */
+    public static function unset_by_path( array &$array, string $path ): void {
+        if ( '' === $path ) {
+            return;
+        }
+        $keys = explode( '.', $path );
+        $ref  = &$array;
+        $last = array_pop( $keys );
+        foreach ( $keys as $key ) {
+            if ( ! is_array( $ref ) || ! array_key_exists( $key, $ref ) ) {
+                return;
+            }
+            $ref = &$ref[ $key ];
+        }
+        if ( is_array( $ref ) && array_key_exists( $last, $ref ) ) {
+            unset( $ref[ $last ] );
+        }
     }
 }

@@ -30,7 +30,7 @@ class LegacyTransformer implements TransformerInterface {
     }
 
     public function get_target(): string {
-        return 'legacy';
+        return self::TARGET_LEGACY;
     }
 
     /**
