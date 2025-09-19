@@ -197,10 +197,20 @@ class Settings {
                 /** @var NewAdminSettingsManager $settings_manager */
                 $settings_manager = dokan_get_container()->get( NewAdminSettingsManager::class );
                 $settings_manager->save( $new_data );
-            } else {
-                // Fallback to legacy option if nothing mapped
-                update_option( $option_name, $option_value );
+
+                // Fallback: if pages are not registered/available, write directly to new storage options
+                $available_ids = [];
+                foreach ( $settings_manager->get_pages() as $p ) {
+                    $available_ids[] = $p->get_id();
+                }
+                foreach ( $new_data as $page_id => $page_values ) {
+                    if ( ! in_array( $page_id, $available_ids, true ) ) {
+                        update_option( 'dokan_settings_' . $page_id, $page_values );
+                    }
+                }
             }
+            // Always persist the legacy option as well for backward compatibility
+            update_option( $option_name, $option_value );
 
             /**
              * @since 3.5.1 added $old_options parameter

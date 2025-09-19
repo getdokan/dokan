@@ -36,7 +36,7 @@ class AdminSettingsBridgingTest extends DokanTestCase {
     }
 
     private function call_protected( $object, string $method, array $args = [] ) {
-        $ref = new ReflectionClass( $object );
+        $ref = new \ReflectionClass( $object );
         $m = $ref->getMethod( $method );
         $m->setAccessible( true );
         return $m->invokeArgs( $object, $args );
@@ -85,5 +85,23 @@ class AdminSettingsBridgingTest extends DokanTestCase {
 
         $this->assertArrayHasKey( 'dokan_general', $legacy );
         $this->assertSame( 'roundtrip-store', $legacy['dokan_general']['custom_store_url'] );
+    }
+
+    public function test_saving_new_settings_updates_legacy_options(): void {
+        // Ensure legacy option is empty
+        delete_option( 'dokan_general' );
+
+        // Save a value via new settings manager
+        $new_data = [];
+        $path = 'general.marketplace.marketplace_settings.vendor_store_url';
+        SettingsMapper::set_value_by_path( $new_data, $path, 'saved-by-new' );
+
+        /** @var NewAdminSettingsManager $manager */
+        $manager = dokan_get_container()->get( NewAdminSettingsManager::class );
+        $manager->save( $new_data );
+
+        $legacy = get_option( 'dokan_general', [] );
+        $this->assertIsArray( $legacy );
+        $this->assertSame( 'saved-by-new', $legacy['custom_store_url'] ?? null );
     }
 }
