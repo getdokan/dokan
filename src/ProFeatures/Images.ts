@@ -11,10 +11,6 @@ const proImagesCompresed =
         ? //@ts-ignore
           dokanAdminDashboardSettings[ 'profeatures' ]
         : {};
-
-export const dokanAiBanner = proImages?.dokanAiBanner ?? '';
-export const dokanAiBannerMobile = proImages?.dokanAiBannerMobile ?? '';
-export const dokanAiBannerTablet = proImages?.dokanAiBannerTablet ?? '';
 export const iftsyImg = proImages?.iftsyImg ?? '';
 export const bidCuriousImg = proImages?.bidCuriousImg ?? '';
 export const bootstrapImg = proImages?.bootstrapImg ?? '';
@@ -42,14 +38,6 @@ export const smartImg = proImages?.smartImg ?? '';
 export const storeImg = proImages?.storeImg ?? '';
 export const brandingImg = proImages?.brandingImg ?? '';
 export const supportImg = proImages?.supportImg ?? '';
-export const unlockBanner = proImages?.unlockBanner ?? '';
-export const unlockBannerMobile = proImages?.unlockBannerMobile ?? '';
-export const unlockBannerTablet = proImages?.unlockBannerTablet ?? '';
-export const scaleImg = proImages?.scaleImg ?? '';
-export const scaleMobileImg = proImages?.scaleMobileImg ?? '';
-export const moduleBanner = proImages?.moduleBanner ?? '';
-export const moduleBannerMobile = proImages?.moduleBannerMobile ?? '';
-export const moduleBannerTablet = proImages?.moduleBannerTablet ?? '';
 export const crownLock = proImages?.crownLock ?? '';
 export const aiStart = proImages?.aiStart ?? '';
 export const cross = proImages?.cross ?? '';
