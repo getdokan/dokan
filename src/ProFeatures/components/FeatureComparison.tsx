@@ -164,10 +164,10 @@ const FeatureComparison = () => {
             <div className="relative">
                 <div className="flex flex-col md:flex-row rounded overflow-hidden">
                     { /* Categories Section with Touch Sliding */ }
-                    <div className="w-full md:w-auto md:min-w-[300px]">
+                    <div className="w-full md:w-[300px_!important]">
                         <div
                             ref={ categoriesRef }
-                            className="flex md:block overflow-x-auto whitespace-nowrap scrollbar-hide touch-pan-x mb-8 md:mb-0 scroll-snap-x scroll-snap-mandatory"
+                            className="flex flex-row md:!flex-col md:block overflow-x-auto whitespace-nowrap scrollbar-hide touch-pan-x mb-8 md:mb-0 scroll-snap-x scroll-snap-mandatory"
                         >
                             { categories.map( ( category ) => (
                                 <button

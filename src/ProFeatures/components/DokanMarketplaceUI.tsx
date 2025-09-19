@@ -318,7 +318,7 @@ function DokanMarketplaceUI() {
             { /* Cards Container */ }
             <div className="relative">
                 { /* Scroll Buttons */ }
-                <div className="flex absolute md:relative z-10 justify-between md:justify-end w-full h-2/4 md:h-auto items-end md:items-center md:gap-2 mb-8 mt-5 md:-mt-12">
+                <div className="flex absolute md:!relative z-10 justify-between md:!justify-end w-full h-2/4 md:!h-auto items-end md:!items-center md:gap-2 mb-8 mt-5 md:!-mt-12">
                     <button
                         onClick={ () => handleScrollClick( 'left' ) }
                         disabled={ ! canScrollLeft || isScrolling }
@@ -356,12 +356,12 @@ function DokanMarketplaceUI() {
                     { data.map( ( item, index ) => (
                         <div
                             key={ `${ activeTab }-${ index }` }
-                            className="flex-shrink-0 w-full md:w-auto" // Changed from snap-start shrink-0
+                            className="flex-shrink-0 w-full md:!w-auto" // Changed from snap-start shrink-0
                         >
                             { activeTab === 'Marketplace' ? (
                                 <MarketplaceCard item={ item } />
                             ) : (
-                                <div className="bg-white rounded-xl border border-gray-100 p-4 flex flex-col justify-between w-full md:w-[220px] h-[214px] opacity-100">
+                                <div className="bg-white rounded-xl border border-gray-100 p-4 flex flex-col justify-between w-full md:!w-[220px] h-[214px] opacity-100">
                                     <div className="space-y-3">
                                         <div className="flex items-center gap-3">
                                             <img

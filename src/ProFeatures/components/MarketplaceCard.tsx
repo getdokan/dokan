@@ -9,7 +9,7 @@ interface Marketplace {
 
 function MarketplaceCard( { item }: { item: Marketplace } ) {
     return (
-        <div className="relative bg-white overflow-hidden w-full md:w-[274.51px] h-auto md:h-[251px] rounded border border-[#E5E7EB]">
+        <div className="relative bg-white overflow-hidden w-full md:!w-[274.51px] h-auto md:!h-[251px] rounded border border-[#E5E7EB]">
             { /* Image Container */ }
             <div className="overflow-hidden border-b">
                 <img
