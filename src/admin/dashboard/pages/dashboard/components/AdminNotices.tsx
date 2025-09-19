@@ -1,7 +1,9 @@
-import { RawHTML } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { useAdminNotices } from '../hooks/useAdminNotices';
 import DokanLogo from './DokanLogo';
+import { DokanModal } from '@src/components';
+import { ShieldAlert } from 'lucide-react';
 
 interface AdminNoticesProps {
     endpoint?: string;
@@ -14,6 +16,12 @@ const AdminNotices = ( {
     scope = 'local',
     interval = 5000,
 }: AdminNoticesProps ) => {
+    const [ modalOpen, setModalOpen ] = useState( false );
+    const [ pendingAction, setPendingAction ] = useState< {
+        action: any;
+        noticeIndex: number;
+    } | null >( null );
+
     const {
         notices,
         loading,
@@ -33,21 +41,28 @@ const AdminNotices = ( {
 
     const handleActionClick = async ( action: any, noticeIndex: number ) => {
         if ( action.confirm_message ) {
-            const result = await ( window as any ).Swal.fire( {
-                title: __( 'Are you sure?', 'dokan-lite' ),
-                icon: 'warning',
-                html: action.confirm_message,
-                showCancelButton: true,
-                confirmButtonText: action.text,
-                cancelButtonText: __( 'Cancel', 'dokan-lite' ),
-            } );
-
-            if ( ! result.value ) {
-                return;
-            }
+            setPendingAction( { action, noticeIndex } );
+            setModalOpen( true );
+            return;
         }
 
         await executeAction( action, noticeIndex );
+    };
+
+    const handleModalConfirm = async () => {
+        if ( pendingAction ) {
+            await executeAction(
+                pendingAction?.action,
+                pendingAction?.noticeIndex
+            );
+        }
+        setModalOpen( false );
+        setPendingAction( null );
+    };
+
+    const handleModalClose = () => {
+        setModalOpen( false );
+        setPendingAction( null );
     };
 
     return (
@@ -241,6 +256,30 @@ const AdminNotices = ( {
                     </div>
                 ) }
             </div>
+
+            <DokanModal
+                isOpen={ modalOpen }
+                onClose={ handleModalClose }
+                onConfirm={ handleModalConfirm }
+                namespace="admin-notice-confirmation"
+                dialogTitle={ __( 'Updater Alert!', 'dokan-lite' ) }
+                confirmationTitle={ __( 'Are you sure?', 'dokan-lite' ) }
+                confirmationDescription={
+                    pendingAction?.action?.confirm_message || ''
+                }
+                dialogIcon={
+                    <div
+                        className={ `flex items-center justify-center flex-shrink-0 w-14 h-14 bg-[#FBBF24] border border-[#FBBF24] rounded-full` }
+                    >
+                        <ShieldAlert color="#FFF" size={ 28 } />
+                    </div>
+                }
+                confirmButtonText={
+                    pendingAction?.action?.text || __( 'Confirm', 'dokan-lite' )
+                }
+                cancelButtonText={ __( 'Cancel', 'dokan-lite' ) }
+                confirmButtonVariant="primary"
+            />
         </div>
     );
 };

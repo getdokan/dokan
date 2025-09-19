@@ -35,7 +35,8 @@ class Dashboard implements Hookable {
         add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
         add_action( 'admin_menu', [ $this, 'clear_dokan_submenu_title' ], 20 );
-        add_action( 'admin_head', [ $this, 'cleanup_admin_notices' ], 1 );
+        add_action( 'admin_notices', [ $this, 'inject_before_notices' ], -9999 );
+        add_action( 'admin_notices', [ $this, 'inject_after_notices' ], PHP_INT_MAX );
         add_action( 'admin_init', [ $this, 'handle_dashboard_redirect' ] );
     }
 
@@ -211,8 +212,8 @@ class Dashboard implements Hookable {
             'header_info'   => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
             'dashboard_url' => add_query_arg(
                 [
-                    'dokan_legacy_nonce' => wp_create_nonce( 'dokan_legacy_dashboard' ),
-                    'dokan_action'       => 'switch_dashboard',
+                    'dokan_admin_dashboard_switching_nonce' => wp_create_nonce( 'dokan_switch_admin_dashboard' ),
+                    'dokan_action'                          => 'switch_dashboard',
                 ],
                 admin_url()
             ),
@@ -444,16 +445,43 @@ class Dashboard implements Hookable {
     }
 
     /**
-     * Cleans admin notice.
+     * Runs before admin notices action and hides them.
      *
      * @since DOKAN_SINCE
      *
      * @return void
      */
-    public function cleanup_admin_notices(  ): void {
-        if ( 'dokan_page_dokan-dashboard' === get_current_screen()->id ) {
-            remove_all_actions( 'admin_notices' );
+    public function inject_before_notices(): void {
+        $screen = get_current_screen();
+        if ( ! $screen || ( $screen->id !== 'dokan_page_dokan-dashboard' ) ) {
+            return;
         }
+
+        // Wrap the notices in a hidden div to prevent flickering before
+        // they are moved elsewhere in the page by WordPress Core.
+        echo '<div class="dokan-layout__notice-list-hide" id="dokan__notice-list">';
+
+        // Capture all notices and hide them. WordPress Core looks for
+        // `.wp-header-end` and appends notices after it if found.
+        echo '<div class="wp-header-end" id="dokan-layout__notice-catcher"></div>';
+    }
+
+    /**
+     * Runs after admin notices and closes div.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function inject_after_notices(): void {
+        $screen = get_current_screen();
+        if ( ! $screen || ( $screen->id !== 'dokan_page_dokan-dashboard' ) ) {
+            return;
+        }
+
+        // Close the hidden div used to prevent notices from flickering before
+        // they are inserted elsewhere in the page.
+        echo '</div>';
     }
 
     /**
@@ -473,7 +501,7 @@ class Dashboard implements Hookable {
         }
 
         // Early return if nonce verification fails.
-        if ( ! isset( $_GET['dokan_legacy_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['dokan_legacy_nonce'] ) ), 'dokan_legacy_dashboard' ) ) {
+        if ( ! isset( $_GET['dokan_admin_dashboard_switching_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['dokan_admin_dashboard_switching_nonce'] ) ), 'dokan_switch_admin_dashboard' ) ) {
             return;
         }
 

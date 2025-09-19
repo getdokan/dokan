@@ -25,14 +25,34 @@ const MonthlyOverviewSection = () => {
             fetchFunction: fetchMonthlyOverview,
         } );
 
-    const handleMonthChange = ( value: { month: number; year: number } ) => {
-        const newMonthData = {
-            month: value.month.toString(),
-            year: value.year.toString(),
-        };
-        setMonthData( newMonthData );
-
-        if ( value.month && value.year ) {
+    const handleMonthChange = ( value: {
+        month: number | null;
+        year: number | null;
+    } ) => {
+        // Handle null values when month picker is cleared
+        if ( value.month === null || value.year === null ) {
+            // Set to the current month /year when cleared
+            const currentDate = new Date();
+            const fallbackValue = {
+                month: currentDate.getMonth() + 1,
+                year: currentDate.getFullYear(),
+            };
+            const newMonthData = {
+                month: fallbackValue.month.toString(),
+                year: fallbackValue.year.toString(),
+            };
+            setMonthData( newMonthData );
+            const dateString = formatDateForApi(
+                fallbackValue.month,
+                fallbackValue.year
+            );
+            refetch( dateString );
+        } else {
+            const newMonthData = {
+                month: value.month.toString(),
+                year: value.year.toString(),
+            };
+            setMonthData( newMonthData );
             const dateString = formatDateForApi( value.month, value.year );
             refetch( dateString );
         }
@@ -124,7 +144,10 @@ const MonthlyOverviewSection = () => {
         }
 
         return {
-            percentage: percentageChange.toFixed( 2 ),
+            percentage: percentageChange.toFixed(
+                // @ts-ignore
+                wc.wcSettings.CURRENCY.precision || 2
+            ),
             direction,
         };
     };
@@ -140,7 +163,11 @@ const MonthlyOverviewSection = () => {
                           item.current.total_orders ) *
                       100
                     : 0;
-            return `${ rate.toFixed( 1 ) }%`;
+
+            return `${ rate.toFixed(
+                // @ts-ignore
+                wc.wcSettings.CURRENCY.precision || 1
+            ) }%`;
         }
 
         return item.current;

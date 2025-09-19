@@ -205,12 +205,16 @@ class SetupWizard {
                 'dokan-lite'
             );
 
+            // Get the admin dashboard url based on the legacy dashboard page option.
+            $is_legacy = get_option( 'dokan_legacy_dashboard_page', false );
+            $page_slug = $is_legacy ? 'dokan' : 'dokan-dashboard';
+
             wp_localize_script(
                 'dokan-admin-onboard-app',
                 'onboardingData',
                 [
                     'site_url'                  => esc_url( get_site_url() ),
-                    'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=dokan-dashboard' ) ),
+                    'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=' . $page_slug ) ),
                 ]
             );
         }

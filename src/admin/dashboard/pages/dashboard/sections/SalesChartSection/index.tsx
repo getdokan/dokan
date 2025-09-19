@@ -302,10 +302,23 @@ const SalesChartSection = () => {
         ),
     } );
 
-    const handleMonthChange = ( value: { month: number; year: number } ) => {
-        setSelectedMonth( value );
-        const dateParam = formatDateForApi( value.month, value.year );
-        refetch( dateParam );
+    const handleMonthChange = ( value: { month: number | null; year: number | null } ) => {
+        // Handle null values when month picker is cleared
+        if ( value.month === null || value.year === null ) {
+            // Set to current month/year or handle as needed
+            const currentDate = new Date();
+            const fallbackValue = {
+                month: currentDate.getMonth() + 1,
+                year: currentDate.getFullYear(),
+            };
+            setSelectedMonth( fallbackValue );
+            const dateParam = formatDateForApi( fallbackValue.month, fallbackValue.year );
+            refetch( dateParam );
+        } else {
+            setSelectedMonth( value );
+            const dateParam = formatDateForApi( value.month, value.year );
+            refetch( dateParam );
+        }
     };
 
     if ( salesLoading ) {

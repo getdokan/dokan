@@ -28,7 +28,7 @@ class AdminDashboardStats extends BaseModel {
      * @param int $id ID to load from the DB (optional) or an AdminDashboardStats object.
      */
     public function __construct( int $id = 0 ) {
-        $this->data_store = new AdminDashboardStatsStore();
+        $this->data_store = apply_filters( $this->get_hook_prefix() . 'data_store', dokan()->get_container()->get( AdminDashboardStatsStore::class ) );
         parent::__construct( $id );
     }
 

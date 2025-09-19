@@ -1,5 +1,4 @@
-import { Tooltip } from '@getdokan/dokan-ui';
-import { twMerge } from 'tailwind-merge';
+import { DokanTooltip as Tooltip } from '@src/components';
 import { Info } from 'lucide-react';
 
 interface SectionProps {

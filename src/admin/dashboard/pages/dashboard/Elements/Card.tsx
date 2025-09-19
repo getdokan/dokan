@@ -1,4 +1,5 @@
-import { Card as DokanCard, Tooltip } from '@getdokan/dokan-ui';
+import { Card as DokanCard } from '@getdokan/dokan-ui';
+import { DokanTooltip as Tooltip } from '@src/components';
 import { Info, MoveUp, MoveDown } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 

@@ -160,7 +160,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
                 'previous' => (int) ( $result['previous_count'] ?? 0 ),
                 'title'    => esc_html__( 'Recurring Customers', 'dokan-lite' ),
                 'tooltip'  => esc_html__( 'Customers who returned and purchased again in the time period', 'dokan-lite' ),
-                'position' => 5,
+                'position' => 50,
             ],
             $date_range
         );
@@ -212,7 +212,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
                 'previous' => (int) ( $result['previous_count'] ?? 0 ),
                 'title'    => esc_html__( 'New Customers', 'dokan-lite' ),
                 'tooltip'  => esc_html__( 'Total new customers registered in the time period', 'dokan-lite' ),
-                'position' => 4,
+                'position' => 40,
             ],
             $date_range
         );
@@ -287,7 +287,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
                 'icon'     => 'BanknoteX',
                 'title'    => esc_html__( 'Order Cancellation Rate', 'dokan-lite' ),
                 'tooltip'  => esc_html__( 'Rate of orders which got cancelled in the time period', 'dokan-lite' ),
-                'position' => 8,
+                'position' => 80,
             ],
             $date_range
         );
@@ -336,7 +336,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
                 'previous' => count( $previous_products ),
                 'title'    => esc_html__( 'New Products', 'dokan-lite' ),
                 'tooltip'  => esc_html__( 'New products published in the month', 'dokan-lite' ),
-                'position' => 1,
+                'position' => 10,
             ],
             $date_range
         );
@@ -371,7 +371,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
                 'previous' => (int) $previous_count,
                 'title'    => esc_html__( 'Active Vendors', 'dokan-lite' ),
                 'tooltip'  => esc_html__( 'Vendors sold minimum 1 product', 'dokan-lite' ),
-                'position' => 2,
+                'position' => 20,
             ],
             $date_range
         );
@@ -423,7 +423,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
                 'previous' => (int) ( $result['previous_count'] ?? 0 ),
                 'title'    => esc_html__( 'New Vendor Registration', 'dokan-lite' ),
                 'tooltip'  => esc_html__( 'Total vendors who got registered in the time period', 'dokan-lite' ),
-                'position' => 3,
+                'position' => 30,
             ],
             $date_range
         );
@@ -442,12 +442,12 @@ class AdminDashboardStatsStore extends BaseDataStore {
         return apply_filters(
             'dokan_admin_dashboard_monthly_overview',
             [
-                'new_products'               => $this->get_new_products_data( $date_range ),
-                'active_vendors'             => $this->get_active_vendors_data( $date_range ),
-                'new_vendor_registration'    => $this->get_new_vendor_registration_data( $date_range ),
-                'new_customers'              => $this->get_new_customers_data( $date_range ),
-                'order_cancellation_rate'    => $this->get_order_cancellation_rate_data( $date_range ),
-                'recurring_customers'        => $this->get_recurring_customers_data( $date_range ),
+                'new_products'            => $this->get_new_products_data( $date_range ),
+                'active_vendors'          => $this->get_active_vendors_data( $date_range ),
+                'new_vendor_registration' => $this->get_new_vendor_registration_data( $date_range ),
+                'new_customers'           => $this->get_new_customers_data( $date_range ),
+                'order_cancellation_rate' => $this->get_order_cancellation_rate_data( $date_range ),
+                'recurring_customers'     => $this->get_recurring_customers_data( $date_range ),
             ],
             $date_range
         );

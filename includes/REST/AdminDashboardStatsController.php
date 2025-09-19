@@ -38,6 +38,8 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_to_do' ],
                     'permission_callback' => [ $this, 'check_permission' ],
+                    'schema'              => [ $this, 'get_todo_schema' ],
+                    'args'                => [],
                 ],
             ]
         );
@@ -48,6 +50,8 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_analytics_data' ],
                     'permission_callback' => [ $this, 'check_permission' ],
+                    'schema'              => [ $this, 'get_analytics_schema' ],
+                    'args'                => [],
                 ],
             ]
         );
@@ -59,6 +63,18 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_monthly_overview_data' ],
                     'permission_callback' => [ $this, 'check_permission' ],
+                    'schema'              => [ $this, 'get_monthly_overview_schema' ],
+                    'args'                => [
+                        'date' => [
+                            'description'       => esc_html__( 'Date in Y-m format (e.g., 2024-01)', 'dokan-lite' ),
+                            'type'              => 'string',
+                            'required'          => false,
+                            'sanitize_callback' => 'sanitize_text_field',
+                            'validate_callback' => function ( $param ) {
+                                return empty( $param ) || preg_match( '/^\d{4}-\d{2}$/', $param );
+                            },
+                        ],
+                    ],
                 ],
             ]
         );
@@ -70,6 +86,18 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_sales_chart_data' ],
                     'permission_callback' => [ $this, 'check_permission' ],
+                    'schema'              => [ $this, 'get_sales_chart_schema' ],
+                    'args'                => [
+                        'date' => [
+                            'description'       => esc_html__( 'Date in Y-m format (e.g., 2024-01)', 'dokan-lite' ),
+                            'type'              => 'string',
+                            'required'          => false,
+                            'sanitize_callback' => 'sanitize_text_field',
+                            'validate_callback' => function ( $param ) {
+                                return empty( $param ) || preg_match( '/^\d{4}-\d{2}$/', $param );
+                            },
+                        ],
+                    ],
                 ],
             ]
         );
@@ -81,6 +109,8 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_all_time_stats_data' ],
                     'permission_callback' => [ $this, 'check_permission' ],
+                    'schema'              => [ $this, 'get_all_time_stats_schema' ],
+                    'args'                => [],
                 ],
             ]
         );
@@ -92,6 +122,18 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_top_performing_vendors_data' ],
                     'permission_callback' => [ $this, 'check_permission' ],
+                    'schema'              => [ $this, 'get_top_performing_vendors_schema' ],
+                    'args'                => [
+                        'date' => [
+                            'description'       => esc_html__( 'Date in Y-m format (e.g., 2024-01)', 'dokan-lite' ),
+                            'type'              => 'string',
+                            'required'          => false,
+                            'sanitize_callback' => 'sanitize_text_field',
+                            'validate_callback' => function ( $param ) {
+                                return empty( $param ) || preg_match( '/^\d{4}-\d{2}$/', $param );
+                            },
+                        ],
+                    ],
                 ],
             ]
         );
@@ -103,6 +145,8 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_most_reviewed_products_data' ],
                     'permission_callback' => [ $this, 'check_permission' ],
+                    'schema'              => [ $this, 'get_most_reviewed_products_schema' ],
+                    'args'                => [],
                 ],
             ]
         );
@@ -114,6 +158,18 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_vendor_metrics_data' ],
                     'permission_callback' => [ $this, 'check_permission' ],
+                    'schema'              => [ $this, 'get_vendor_metrics_schema' ],
+                    'args'                => [
+                        'date' => [
+                            'description'       => esc_html__( 'Date in Y-m format (e.g., 2024-01)', 'dokan-lite' ),
+                            'type'              => 'string',
+                            'required'          => false,
+                            'sanitize_callback' => 'sanitize_text_field',
+                            'validate_callback' => function ( $param ) {
+                                return empty( $param ) || preg_match( '/^\d{4}-\d{2}$/', $param );
+                            },
+                        ],
+                    ],
                 ],
             ]
         );
@@ -135,21 +191,21 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'count'        => $this->get_vendor_approvals_count(),
                     'title'        => esc_html__( 'Vendor Approvals', 'dokan-lite' ),
                     'redirect_url' => admin_url( 'admin.php?page=dokan#/vendors?status=pending' ),
-                    'position'     => 1,
+                    'position'     => 10,
                 ],
                 'product_approvals'   => [
                     'icon'         => 'Box',
                     'count'        => $this->get_product_approvals_count(),
                     'title'        => esc_html__( 'Product Approvals', 'dokan-lite' ),
                     'redirect_url' => admin_url( 'edit.php?post_status=pending&post_type=product' ),
-                    'position'     => 2,
+                    'position'     => 20,
                 ],
                 'pending_withdrawals' => [
                     'icon'         => 'PanelTop',
                     'count'        => $this->get_pending_withdrawals_count(),
                     'title'        => esc_html__( 'Pending Withdrawals', 'dokan-lite' ),
                     'redirect_url' => admin_url( 'admin.php?page=dokan#/withdraw?status=pending' ),
-                    'position'     => 3,
+                    'position'     => 30,
                 ],
             ],
             $this
@@ -467,8 +523,14 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
         $stats_query = new DataStore( $query_args );
         $stats_data  = $stats_query->get_data();
 
-        $total_sales       = $stats_data->totals->total_sales ?? 0;
-        $total_commissions = $stats_data->totals->total_admin_commission ?? 0;
+        // If there's an error, set the totals to 0.
+        if ( is_wp_error( $stats_data ) ) {
+            $total_sales       = 0;
+            $total_commissions = 0;
+        } else {
+            $total_sales       = $stats_data->totals->total_sales ?? 0;
+            $total_commissions = $stats_data->totals->total_admin_commission ?? 0;
+        }
 
         return apply_filters(
             'dokan_rest_admin_dashboard_all_time_stats_data',
@@ -663,5 +725,480 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                 return ! in_array( $type, $exclude_product_types, true );
             }
         );
+    }
+
+    /**
+     * Get schema for todo endpoint
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_todo_schema() {
+        return [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => esc_html__( 'Todo Dashboard Data', 'dokan-lite' ),
+            'type'       => 'object',
+            'properties' => [
+                'vendor_approvals'    => [
+                    'description' => esc_html__( 'Vendor approval task information', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'         => [
+                            'description' => esc_html__( 'Icon name for the task', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                        'count'        => [
+                            'description' => esc_html__( 'Number of pending vendor approvals', 'dokan-lite' ),
+                            'type'        => 'integer',
+                        ],
+                        'title'        => [
+                            'description' => esc_html__( 'Task title', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                        'redirect_url' => [
+                            'description' => esc_html__( 'URL to redirect for this task', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'format'      => 'uri',
+                        ],
+                        'position'     => [
+                            'description' => esc_html__( 'Display position order', 'dokan-lite' ),
+                            'type'        => 'integer',
+                        ],
+                    ],
+                ],
+                'product_approvals'   => [
+                    'description' => esc_html__( 'Product approval task information', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'         => [
+                            'description' => esc_html__( 'Icon name for the task', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                        'count'        => [
+                            'description' => esc_html__( 'Number of pending product approvals', 'dokan-lite' ),
+                            'type'        => 'integer',
+                        ],
+                        'title'        => [
+                            'description' => esc_html__( 'Task title', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                        'redirect_url' => [
+                            'description' => esc_html__( 'URL to redirect for this task', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'format'      => 'uri',
+                        ],
+                        'position'     => [
+                            'description' => esc_html__( 'Display position order', 'dokan-lite' ),
+                            'type'        => 'integer',
+                        ],
+                    ],
+                ],
+                'pending_withdrawals' => [
+                    'description' => esc_html__( 'Pending withdrawal task information', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'         => [
+                            'description' => esc_html__( 'Icon name for the task', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                        'count'        => [
+                            'description' => esc_html__( 'Number of pending withdrawals', 'dokan-lite' ),
+                            'type'        => 'integer',
+                        ],
+                        'title'        => [
+                            'description' => esc_html__( 'Task title', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                        'redirect_url' => [
+                            'description' => esc_html__( 'URL to redirect for this task', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'format'      => 'uri',
+                        ],
+                        'position'     => [
+                            'description' => esc_html__( 'Display position order', 'dokan-lite' ),
+                            'type'        => 'integer',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get schema for analytics endpoint
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_analytics_schema() {
+        return [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => esc_html__( 'Analytics Dashboard Data', 'dokan-lite' ),
+            'type'       => 'object',
+            'properties' => [
+                'sales_overview'  => [
+                    'description' => esc_html__( 'Sales overview analytics link', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'  => [
+                            'description' => esc_html__( 'Icon name for the analytics item', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                        'url'   => [
+                            'description' => esc_html__( 'URL to the analytics page', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'format'      => 'uri',
+                        ],
+                        'title' => [
+                            'description' => esc_html__( 'Analytics item title', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                    ],
+                ],
+                'revenue_insight' => [
+                    'description' => esc_html__( 'Revenue insight analytics link', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'  => [
+                            'description' => esc_html__( 'Icon name for the analytics item', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                        'url'   => [
+                            'description' => esc_html__( 'URL to the analytics page', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'format'      => 'uri',
+                        ],
+                        'title' => [
+                            'description' => esc_html__( 'Analytics item title', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get schema for monthly overview endpoint
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_monthly_overview_schema() {
+        return [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => esc_html__( 'Monthly Overview Dashboard Data', 'dokan-lite' ),
+            'type'       => 'object',
+            'properties' => [
+                'new_products' => [
+                    'description' => esc_html__( 'New products statistics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'     => [ 'type' => 'string' ],
+                        'current'  => [ 'type' => 'integer' ],
+                        'previous' => [ 'type' => 'integer' ],
+                        'title'    => [ 'type' => 'string' ],
+                        'tooltip'  => [ 'type' => 'string' ],
+                        'position' => [ 'type' => 'integer' ],
+                    ],
+                ],
+                'active_vendors' => [
+                    'description' => esc_html__( 'Active vendors statistics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'     => [ 'type' => 'string' ],
+                        'current'  => [ 'type' => 'integer' ],
+                        'previous' => [ 'type' => 'integer' ],
+                        'title'    => [ 'type' => 'string' ],
+                        'tooltip'  => [ 'type' => 'string' ],
+                        'position' => [ 'type' => 'integer' ],
+                    ],
+                ],
+                'new_vendor_registration' => [
+                    'description' => esc_html__( 'New vendor registration statistics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'     => [ 'type' => 'string' ],
+                        'current'  => [ 'type' => 'integer' ],
+                        'previous' => [ 'type' => 'integer' ],
+                        'title'    => [ 'type' => 'string' ],
+                        'tooltip'  => [ 'type' => 'string' ],
+                        'position' => [ 'type' => 'integer' ],
+                    ],
+                ],
+                'new_customers' => [
+                    'description' => esc_html__( 'New customers statistics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'     => [ 'type' => 'string' ],
+                        'current'  => [ 'type' => 'integer' ],
+                        'previous' => [ 'type' => 'integer' ],
+                        'title'    => [ 'type' => 'string' ],
+                        'tooltip'  => [ 'type' => 'string' ],
+                        'position' => [ 'type' => 'integer' ],
+                    ],
+                ],
+                'order_cancellation_rate' => [
+                    'description' => esc_html__( 'Order cancellation rate statistics', 'dokan-lite' ),
+                    'type'        => 'object',
+                ],
+                'recurring_customers' => [
+                    'description' => esc_html__( 'Recurring customers statistics', 'dokan-lite' ),
+                    'type'        => 'object',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get schema for sales chart endpoint
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_sales_chart_schema() {
+        return [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => esc_html__( 'Sales Chart Data', 'dokan-lite' ),
+            'type'       => 'object',
+            'properties' => [
+                'intervals' => [
+                    'description' => esc_html__( 'Daily sales intervals data', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'items'       => [
+                        'type'       => 'object',
+                        'properties' => [
+                            'date'         => [ 'type' => 'string' ],
+                            'total_sales'  => [ 'type' => 'number' ],
+                            'net_sales'    => [ 'type' => 'number' ],
+                            'order_count'  => [ 'type' => 'integer' ],
+                            'commissions'  => [ 'type' => 'number' ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get schema for all-time stats endpoint
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_all_time_stats_schema() {
+        return [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => esc_html__( 'All Time Stats Data', 'dokan-lite' ),
+            'type'       => 'object',
+            'properties' => [
+                'total_products' => [
+                    'description' => esc_html__( 'Total products statistics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'  => [ 'type' => 'string' ],
+                        'count' => [ 'type' => 'integer' ],
+                        'title' => [ 'type' => 'string' ],
+                    ],
+                ],
+                'total_vendors' => [
+                    'description' => esc_html__( 'Total vendors statistics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'  => [ 'type' => 'string' ],
+                        'count' => [ 'type' => 'integer' ],
+                        'title' => [ 'type' => 'string' ],
+                    ],
+                ],
+                'total_customers' => [
+                    'description' => esc_html__( 'Total customers statistics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'  => [ 'type' => 'string' ],
+                        'count' => [ 'type' => 'integer' ],
+                        'title' => [ 'type' => 'string' ],
+                    ],
+                ],
+                'total_orders' => [
+                    'description' => esc_html__( 'Total orders statistics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'  => [ 'type' => 'string' ],
+                        'count' => [ 'type' => 'integer' ],
+                        'title' => [ 'type' => 'string' ],
+                    ],
+                ],
+                'total_sales' => [
+                    'description' => esc_html__( 'Total sales statistics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'  => [ 'type' => 'string' ],
+                        'count' => [ 'type' => 'number' ],
+                        'title' => [ 'type' => 'string' ],
+                    ],
+                ],
+                'total_commissions' => [
+                    'description' => esc_html__( 'Total commissions statistics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'  => [ 'type' => 'string' ],
+                        'count' => [ 'type' => 'number' ],
+                        'title' => [ 'type' => 'string' ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get schema for top performing vendors endpoint
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_top_performing_vendors_schema() {
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'title'   => esc_html__( 'Top Performing Vendors Data', 'dokan-lite' ),
+            'type'    => 'array',
+            'items'   => [
+                'type'       => 'object',
+                'properties' => [
+                    'rank' => [
+                        'description' => esc_html__( 'Vendor ranking position', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                    'vendor_name' => [
+                        'description' => esc_html__( 'Vendor shop name', 'dokan-lite' ),
+                        'type'        => 'string',
+                    ],
+                    'total_earning' => [
+                        'description' => esc_html__( 'Total earnings amount', 'dokan-lite' ),
+                        'type'        => 'number',
+                    ],
+                    'total_orders' => [
+                        'description' => esc_html__( 'Total number of orders', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                    'total_commission' => [
+                        'description' => esc_html__( 'Total commission amount', 'dokan-lite' ),
+                        'type'        => 'number',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get schema for most reviewed products endpoint
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_most_reviewed_products_schema() {
+        return [
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'title'   => esc_html__( 'Most Reviewed Products Data', 'dokan-lite' ),
+            'type'    => 'array',
+            'items'   => [
+                'type'       => 'object',
+                'properties' => [
+                    'rank' => [
+                        'description' => esc_html__( 'Product ranking position', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                    'product_id' => [
+                        'description' => esc_html__( 'Product ID', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                    'product_title' => [
+                        'description' => esc_html__( 'Product title', 'dokan-lite' ),
+                        'type'        => 'string',
+                    ],
+                    'review_count' => [
+                        'description' => esc_html__( 'Number of reviews', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get schema for vendor metrics endpoint
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_vendor_metrics_schema() {
+        return [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => esc_html__( 'Vendor Metrics Data', 'dokan-lite' ),
+            'type'       => 'object',
+            'properties' => [
+                'subscribed_vendors' => [
+                    'description' => esc_html__( 'Subscribed vendors metrics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'  => [
+                            'description' => esc_html__( 'Icon name for the metric', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                        'count' => [
+                            'description' => esc_html__( 'Number of subscribed vendors', 'dokan-lite' ),
+                            'type'        => 'integer',
+                        ],
+                        'title' => [
+                            'description' => esc_html__( 'Metric title', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                    ],
+                ],
+                'vendors_on_vacation' => [
+                    'description' => esc_html__( 'Vendors on vacation metrics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'  => [
+                            'description' => esc_html__( 'Icon name for the metric', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                        'count' => [
+                            'description' => esc_html__( 'Number of vendors on vacation', 'dokan-lite' ),
+                            'type'        => 'integer',
+                        ],
+                        'title' => [
+                            'description' => esc_html__( 'Metric title', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                    ],
+                ],
+                'verified_vendors' => [
+                    'description' => esc_html__( 'Verified vendors metrics', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'properties'  => [
+                        'icon'  => [
+                            'description' => esc_html__( 'Icon name for the metric', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                        'count' => [
+                            'description' => esc_html__( 'Number of verified vendors', 'dokan-lite' ),
+                            'type'        => 'integer',
+                        ],
+                        'title' => [
+                            'description' => esc_html__( 'Metric title', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 }

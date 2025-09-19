@@ -1,12 +1,10 @@
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
 import Section from '../../Elements/Section';
 import Card from '../../Elements/Card';
-import MonthPicker from '../../Elements/MonthPicker';
 import DynamicIcon from '../../components/DynamicIcon';
 import { useDashboardApiData } from '../../hooks/useDashboardApiData';
-import { fetchAllTimeStats, formatDateForApi } from '../../utils/api';
-import { AllTimeStatsData, MonthPickerValue } from '../../types';
+import { fetchAllTimeStats } from '../../utils/api';
+import { AllTimeStatsData } from '../../types';
 import AllTimeStatsSkeleton from './Skeleton';
 
 const AllTimeStatsSection = () => {

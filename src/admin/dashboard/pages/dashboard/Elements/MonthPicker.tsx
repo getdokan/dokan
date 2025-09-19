@@ -6,7 +6,7 @@ import { __ } from '@wordpress/i18n';
 import { Popover } from '../../../../../components';
 
 interface MonthPickerProps {
-    onChange: ( value: { month: number; year: number } ) => void;
+    onChange: ( value: { month: number | null; year: number | null } ) => void;
     placeholder?: string;
     value?: { month: string; year: string };
     footerTitle?: string;
@@ -45,8 +45,7 @@ function MonthPicker( {
                 value?.year &&
                 Number( value?.year ) === Number( currentYear )
             ) {
-                // @ts-ignore
-                onChange( { month: '', year: '' } );
+                onChange( { month: null, year: null } );
                 setCurrentYear( '' );
                 setIsOpen( ! isOpen );
                 return;
@@ -193,10 +192,9 @@ function MonthPicker( {
     useEffect( () => {
         // If not currentYear is set, set it to the current year.
         if ( ! value?.year || isNaN( Number( String( value?.year ) ) ) ) {
-            // @ts-ignore
-            setCurrentYear( new Date().getFullYear() );
+            setCurrentYear( new Date().getFullYear().toString() );
         }
-    }, [] );
+    }, [ value?.year ] );
 
     // Render the MonthPicker with comparison date display
     const monthPickerElement = (

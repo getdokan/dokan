@@ -1,6 +1,11 @@
 @use '../../../../base-tailwind';
 @config './tailwind.config.js';
 
+// Hide the notice list.
+#dokan__notice-list {
+  display: none;
+}
+
 // DataViews styling for dashboard tables
 #dokan-top-performing-vendors,
 #dokan-most-reported-vendors,

@@ -1344,11 +1344,11 @@ class Assets {
                     'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
                     'dashboard_url'     => add_query_arg(
                         [
-                            'dokan_legacy_nonce' => wp_create_nonce( 'dokan_legacy_dashboard' ),
-                            'dokan_action'       => 'switch_dashboard',
+                            'dokan_admin_dashboard_switching_nonce' => wp_create_nonce( 'dokan_switch_admin_dashboard' ),
+                            'dokan_action'                          => 'switch_dashboard',
                         ],
                         admin_url()
-                    )
+                    ),
                 ],
                 'states'                            => WC()->countries->get_allowed_country_states(),
                 'countries'                         => WC()->countries->get_allowed_countries(),

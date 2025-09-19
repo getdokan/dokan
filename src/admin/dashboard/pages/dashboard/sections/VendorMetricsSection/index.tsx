@@ -14,12 +14,12 @@ const VendorMetricsSection = () => {
         fetchFunction: fetchVendorMetrics,
     } );
 
-    if ( ! data ) {
-        return null;
-    }
-
     if ( loading ) {
         return <VendorMetricsSkeleton />;
+    }
+
+    if ( ! data ) {
+        return null;
     }
 
     // Sort data by position on the frontend

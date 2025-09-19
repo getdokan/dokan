@@ -15,7 +15,9 @@ const MostReviewedProductsSection = () => {
         } );
 
     const padDefaultData = ( originalData ) => {
-        const paddedData = [ ...originalData.filter( data => data.review_count ) ];
+        const paddedData = [
+            ...originalData.filter( ( data ) => data.review_count ),
+        ];
 
         // If the data is empty, fill with default values.
         const emptyString = applyFilters(

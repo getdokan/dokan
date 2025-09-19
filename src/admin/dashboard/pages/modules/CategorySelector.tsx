@@ -1,7 +1,7 @@
 import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
 import { __, sprintf } from '@wordpress/i18n';
 import { RawHTML, useState } from '@wordpress/element';
-import { Popover } from '@wordpress/components';
+import { Popover } from '@dokan/components';
 
 interface CategorySelectorProps {
     categories: Record< string, number >;
