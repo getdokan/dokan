@@ -24,6 +24,13 @@ class BaseFieldLabel extends Text {
     protected $icon = '';
 
     /**
+     * Image url.
+     *
+     * @var string $url Image url.
+     */
+    protected $image_url = '';
+
+    /**
      * Description.
      *
      * @var string $description Description.
@@ -68,7 +75,8 @@ class BaseFieldLabel extends Text {
         $data['suffix']      = $this->get_suffix();
         $data['icon']        = $this->get_icon();
         $data['description'] = $this->get_description();
-        $data['doc_link'] = $this->get_doc_link();
+        $data['doc_link']    = $this->get_doc_link();
+        $data['image_url']   = $this->get_image_url();
 
         return $data;
     }
@@ -113,6 +121,28 @@ class BaseFieldLabel extends Text {
      */
     public function set_icon( string $icon ): BaseFieldLabel {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    /**
+     * Get image url.
+     *
+     * @return string
+     */
+    public function get_image_url(): string {
+        return $this->image_url;
+    }
+
+    /**
+     * Set image url.
+     *
+     * @param string $url Image url.
+     *
+     * @return BaseFieldLabel
+     */
+    public function set_image_url( string $url ): BaseFieldLabel {
+        $this->image_url = $url;
 
         return $this;
     }
