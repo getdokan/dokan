@@ -102,12 +102,12 @@ class GeneralPage extends AbstractPage {
 		}
 
         $this
-            ->set_title( __( 'General', 'dokan-lite' ) )
-            ->set_description( __( 'Configure the general settings for your marketplace.', 'dokan-lite' ) )
+            ->set_title( esc_html__( 'General', 'dokan-lite' ) )
+            ->set_description( esc_html__( 'Configure the general settings for your marketplace.', 'dokan-lite' ) )
             ->add(
                 ElementFactory::sub_page( 'marketplace' )
-                ->set_title( __( 'Marketplace', 'dokan-lite' ) )
-                ->set_description( __( 'Configure core marketplace functionalities and customer shopping experience.', 'dokan-lite' ) )
+                ->set_title( esc_html__( 'Marketplace', 'dokan-lite' ) )
+                ->set_description( esc_html__( 'Configure core marketplace functionalities and customer shopping experience.', 'dokan-lite' ) )
                     ->set_doc_link(
                         esc_url( 'https://wedevs.com/docs/dokan/developers/marketplace/' )
                     )
@@ -131,30 +131,30 @@ class GeneralPage extends AbstractPage {
             ->add( $dokan_page )
             ->add(
                 ElementFactory::sub_page( 'location' )
-                    ->set_title( __( 'Location', 'dokan-lite' ) )
-                    ->set_description( __( 'Configure how map locations are displayed throughout your marketplace.', 'dokan-lite' ) )
+                    ->set_title( esc_html__( 'Location', 'dokan-lite' ) )
+                    ->set_description( esc_html__( 'Configure how map locations are displayed throughout your marketplace.', 'dokan-lite' ) )
                     ->add(
                         ElementFactory::section( 'map_api_configuration' )
-                            ->set_title( __( 'Map API Configuration', 'dokan-lite' ) )
-                            ->set_description( __( 'Configure the map API settings for your marketplace.', 'dokan-lite' ) )
+                            ->set_title( esc_html__( 'Map API Configuration', 'dokan-lite' ) )
+                            ->set_description( esc_html__( 'Configure the map API settings for your marketplace.', 'dokan-lite' ) )
                             ->add(
                                 ElementFactory::field( 'map_api_source', 'radio_capsule' )
-                                    ->set_title( __( 'Map API Source', 'dokan-lite' ) )
-                                    ->set_description( __( 'Which map API source you want to use in your site?', 'dokan-lite' ) )
-                                    ->add_option( __( 'Google Maps', 'dokan-lite' ), 'google' )
-                                    ->add_option( __( 'Mapbox', 'dokan-lite' ), 'mapbox' )
+                                    ->set_title( esc_html__( 'Map API Source', 'dokan-lite' ) )
+                                    ->set_description( esc_html__( 'Which map API source you want to use in your site?', 'dokan-lite' ) )
+                                    ->add_option( esc_html__( 'Google Maps', 'dokan-lite' ), 'google' )
+                                    ->add_option( esc_html__( 'Mapbox', 'dokan-lite' ), 'mapbox' )
                                     ->set_default( 'google' )
                             )
                             ->add(
                                 ElementFactory::field_group( 'google_map_api_key' )
                                     ->add(
                                         ElementFactory::field( 'google_map_base', 'base_field_label' )
-                                            ->set_title( __( 'Google Map API Key', 'dokan-lite' ) )
-                                            ->set_description( __( 'Enter your Google Maps API key to enable map functionality.', 'dokan-lite' ) )
+                                            ->set_title( esc_html__( 'Google Map API Key', 'dokan-lite' ) )
+                                            ->set_description( esc_html__( 'Enter your Google Maps API key to enable map functionality.', 'dokan-lite' ) )
                                     )
                                     ->add(
                                         ElementFactory::field( 'google_map_api_key', 'show_hide' )
-                                            ->set_placeholder( __( 'Enter your Google Maps API key', 'dokan-lite' ) )
+                                            ->set_placeholder( esc_html__( 'Enter your Google Maps API key', 'dokan-lite' ) )
                                     )
                                     ->add_dependency( 'location.map_api_configuration.map_api_source', 'google', true, 'display', 'show', '==' )
                                     ->add_dependency( 'location.map_api_configuration.map_api_source', 'mapbox', true, 'display', 'hide', '==' )
@@ -163,12 +163,12 @@ class GeneralPage extends AbstractPage {
                                 ElementFactory::field_group( 'mapbox_api_key' )
                                     ->add(
                                         ElementFactory::field( 'mapbox_map_base', 'base_field_label' )
-                                            ->set_title( __( 'Mapbox API Key', 'dokan-lite' ) )
-                                            ->set_description( __( 'Enter your Mapbox API key to enable map functionality.', 'dokan-lite' ) )
+                                            ->set_title( esc_html__( 'Mapbox API Key', 'dokan-lite' ) )
+                                            ->set_description( esc_html__( 'Enter your Mapbox API key to enable map functionality.', 'dokan-lite' ) )
                                     )
                                     ->add(
                                         ElementFactory::field( 'mapbox_api_key', 'show_hide' )
-                                            ->set_placeholder( __( 'Enter your Mapbox API key', 'dokan-lite' ) )
+                                            ->set_placeholder( esc_html__( 'Enter your Mapbox API key', 'dokan-lite' ) )
                                     )
                                     ->add_dependency( 'location.map_api_configuration.map_api_source', 'mapbox', true, 'display', 'show', '==' )
                                     ->add_dependency( 'location.map_api_configuration.map_api_source', 'google', true, 'display', 'hide', '==' )

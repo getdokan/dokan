@@ -81,7 +81,7 @@ class ProductPage extends AbstractPage {
      */
     public function describe_settings(): void {
         $this->set_icon( 'Box' )
-            ->set_title( __( 'Product', 'dokan-lite' ) )
-            ->set_description( __( 'Configure product-related settings for your marketplace.', 'dokan-lite' ) );
+            ->set_title( esc_html__( 'Product', 'dokan-lite' ) )
+            ->set_description( esc_html__( 'Configure product-related settings for your marketplace.', 'dokan-lite' ) );
     }
 }

@@ -44,7 +44,6 @@ class BaseFieldLabel extends Text {
      */
     protected $suffix = '';
 
-   
     /**
      * Constructor.
      *

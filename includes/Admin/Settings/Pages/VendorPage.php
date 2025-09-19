@@ -101,8 +101,8 @@ class VendorPage extends AbstractPage {
 
         // Create vendor capabilities subpage with a single section
         $vendor_capabilities_page = ElementFactory::sub_page( 'vendor_capabilities' )
-            ->set_title( __( 'Vendor Capabilities', 'dokan-lite' ) )
-            ->set_description( __( 'Configure what vendors can do in your marketplace.', 'dokan-lite' ) );
+            ->set_title( esc_html__( 'Vendor Capabilities', 'dokan-lite' ) )
+            ->set_description( esc_html__( 'Configure what vendors can do in your marketplace.', 'dokan-lite' ) );
 
         // Create a single section for all vendor capabilities
         $vendor_capabilities_section = ElementFactory::section( 'vendor_capabilities' );
@@ -146,8 +146,8 @@ class VendorPage extends AbstractPage {
         $vendor_capabilities_page->add( $vendor_capabilities_section );
 
         $this
-            ->set_title( __( 'Vendor', 'dokan-lite' ) )
-            ->set_description( __( 'Configure vendor-related settings and capabilities.', 'dokan-lite' ) )
+            ->set_title( esc_html__( 'Vendor', 'dokan-lite' ) )
+            ->set_description( esc_html__( 'Configure vendor-related settings and capabilities.', 'dokan-lite' ) )
             ->set_icon( 'Users' )
             ->add( $vendor_onboarding )
             ->add( $vendor_capabilities_page );
