@@ -75,6 +75,8 @@ class ProFeatures extends AbstractPage {
             'aiStart'  => DOKAN_PLUGIN_ASSEST . '/images/profeatures/AiStart.png',
             'products'  => DOKAN_PLUGIN_ASSEST . '/images/profeatures/Products.png',
             'photo'  => DOKAN_PLUGIN_ASSEST . '/images/profeatures/photo.png',
+            'dokanSmall'  => DOKAN_PLUGIN_ASSEST . '/images/profeatures/DokanSmall.png',
+            'dokanLarge'  => DOKAN_PLUGIN_ASSEST . '/images/profeatures/DokanLarge.png',
         ];
 	}
 

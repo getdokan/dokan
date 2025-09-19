@@ -1,60 +1,34 @@
 import { Crown } from 'lucide-react';
-import { scaleImg, scaleMobileImg } from '../Images';
+import { dokanLarge, dokanSmall } from '../Images';
 import { __ } from '@wordpress/i18n';
 function ScaleMarketplaceBanner() {
     return (
-        <div className="w-[349px] md:w-full mx-auto">
-            { /* Mobile Banner */ }
+        <div className="w-full relative overflow-hidden rounded">
+            <span className="absolute w-full h-full bg-[rgba(8,21,39,1)]"></span>
+            <span className="w-[500px] h-[500px] left-[-190px] top-0 rounded-full absolute overflow-hidden inline-block bg-[radial-gradient(circle,rgba(118,75,227,.3)_0%,rgba(0,0,0,0)_70%)]"></span>
+            <span className="md:w-[200px] lg:w-[500px] h-full bg-[linear-gradient(270deg,rgba(219,100,190,.3)_0%,rgba(0,0,0,0)_100%)] absolute right-0 z-10"></span>
+            <img
+                src={ dokanSmall }
+                alt="dokan small"
+                className="absolute hidden md:inline-block md:left-[calc(100%-190px)] lg:left-[calc(100%-643px)] top-[calc(100%-114px)] scale-[1.6] opacity-[.10]"
+            />
+            <img
+                src={ dokanLarge }
+                alt="dokan large"
+                className="absolute hidden lg:inline-block left-[calc(100%-213px)] top-[-83px] scale-[1.5] opacity-[.5]"
+            />
+
             <div
-                className="md:hidden relative rounded overflow-hidden w-[349px] h-[218px] bg-cover bg-center bg-no-repeat"
-                style={ { backgroundImage: `url(${ scaleMobileImg })` } }
+                className="flex flex-col lg:!flex-row gap-4 lg:gap-0 justify-center lg:!justify-between p-4 lg:!p-8 relative min-h-[200px] rounded overflow-hidden items-center w-full"
             >
-                <div className="p-5">
-                    <div className="flex flex-col">
-                        <h2 className="flex text-white justify-center items-center text-center w-[298px] h-[62px] text-[24px] font-bold leading-[130%] tracking-[0%] opacity-100">
-                            { __(
-                                'Ready to Scale Your Marketplace?',
-                                'dokan-lite'
-                            ) }
-                        </h2>
-
-                        <p className="flex text-white/90 mt-3 justify-center items-center text-center w-[298px] h-[30px] text-[12px] font-normal leading-[130%] tracking-[0%] opacity-100">
-                            { __(
-                                "With all the advanced features you get it's hard to resist buying Dokan Pro.",
-                                'dokan-lite'
-                            ) }
-                        </p>
-                    </div>
-
-                    <a
-                        href="https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block mt-8"
-                    >
-                        <button className="bg-[#FFBC00] text-black font-semibold hover:bg-yellow-300 transition flex items-center justify-center w-[311px] h-[36px] rounded-[5px] px-[18px] py-[8px] gap-[6px] opacity-100">
-                            <span>
-                                { __( 'Upgrade to Pro', 'dokan-lite' ) }
-                            </span>
-                            <Crown className="w-5 h-5" />
-                        </button>
-                    </a>
-                </div>
-            </div>
-
-            { /* Desktop Banner */ }
-            <div
-                className="hidden md:flex md:flex-col lg:flex-row justify-between gap-0 md:gap-4 lg:gap-0 relative min-h-[200px] rounded overflow-hidden items-center px-8 py-10 bg-cover bg-center bg-no-repeat w-full"
-                style={ { backgroundImage: `url(${ scaleImg })` } }
-            >
-                <div className="flex flex-col justify-center z-10 max-w-2xl">
-                    <h2 className="text-3xl font-bold mb-4 leading-tight text-white drop-shadow-lg text-center lg:text-left">
+                <div className="flex flex-col justify-center z-10 text-center lg:!text-left">
+                    <h2 className="font-bold text-white mb-2 text-xl lg:text-3xl">
                         { __(
                             'Ready to Scale Your Marketplace?',
                             'dokan-lite'
                         ) }
                     </h2>
-                    <p className="text-lg text-white/90 drop-shadow">
+                    <p className="text-white text-[12px] leading-[140%] md:text-base font-normal">
                         { __(
                             "With all the advanced features you get it's hard to resist buying Dokan Pro.",
                             'dokan-lite'
@@ -62,16 +36,15 @@ function ScaleMarketplaceBanner() {
                     </p>
                 </div>
 
-                <div className="z-10">
+                <div className="z-10 w-full lg:!w-auto md:!w-[311px] text-center">
                     <a
                         href="https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite"
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="px-4 w-full py-2 bg-[#FFBC00] !text-black font-semibold rounded shadow hover:bg-yellow-300 transition items-center gap-2 text-base flex justify-center"
                     >
-                        <button className="px-4 py-2 bg-[#FFBC00] text-black font-semibold rounded shadow hover:bg-yellow-300 transition flex items-center gap-2 text-base">
-                            { __( 'Upgrade to Pro', 'dokan-lite' ) }
-                            <Crown className="inline-block w-5 h-5 ml-1" />
-                        </button>
+                        { __( 'Upgrade to Pro', 'dokan-lite' ) }
+                        <Crown className="inline-block w-5 h-5 ml-1" />
                     </a>
                 </div>
             </div>

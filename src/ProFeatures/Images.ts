@@ -55,3 +55,5 @@ export const aiStart = proImages?.aiStart ?? '';
 export const cross = proImages?.cross ?? '';
 export const products = proImages?.products ?? '';
 export const photo = proImages?.photo ?? '';
+export const dokanSmall = proImages?.dokanSmall ?? '';
+export const dokanLarge = proImages?.dokanLarge ?? '';

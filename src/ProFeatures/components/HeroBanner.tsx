@@ -71,7 +71,7 @@ function HeroBanner() {
                     <img
                         src={ aiStart }
                         alt="aiStart img"
-                        className="absolute md:left-[calc(100%-270px)] lg:left-[calc(100%-370px)] top-[210px] object-contain"
+                        className="absolute md:left-[calc(100%-285px)] lg:left-[calc(100%-370px)] md:top-[165px] lg:top-[210px] object-contain"
                     />
                 </div>
             </div>
