@@ -86,6 +86,7 @@ function DokanMarketplaceUI() {
                 'As a Webmaster in Argentina for 25+ years, I’ve tested all the multi-vendor WordPress plugins and this is by far the best.',
             img: avatar1,
             logo: g2Logo,
+            noScale: true,
         },
         {
             name: 'upcodestudios',
@@ -109,6 +110,7 @@ function DokanMarketplaceUI() {
             content: 'Perfect for adding services offerings to WooCommerce.',
             img: avatar4,
             logo: g2Logo,
+            noScale: true,
         },
         {
             name: 'asmaraldn',
@@ -383,16 +385,17 @@ function DokanMarketplaceUI() {
                                         </p>
                                     </div>
                                     <div className="flex justify-between items-center mt-auto pt-3">
-                                        <div className="w-12 h-6">
+                                        <div className="w-12 h-8">
                                             <img
                                                 src={ item.logo }
                                                 alt="Logo"
-                                                className="w-full h-full object-contain"
+                                                className={ `w-full h-full object-contain ${
+                                                    item.noScale
+                                                        ? 'ml-[-10px]'
+                                                        : 'scale-[1.3] ml-[15px]'
+                                                }` }
                                             />
                                         </div>
-                                        <span className="text-purple-500">
-                                            ★
-                                        </span>
                                     </div>
                                 </div>
                             ) }
