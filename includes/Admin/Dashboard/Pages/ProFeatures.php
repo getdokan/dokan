@@ -74,6 +74,7 @@ class ProFeatures extends AbstractPage {
             'crownLock'  => DOKAN_PLUGIN_ASSEST . '/images/profeatures/CrownLock.png',
             'aiStart'  => DOKAN_PLUGIN_ASSEST . '/images/profeatures/AiStart.png',
             'products'  => DOKAN_PLUGIN_ASSEST . '/images/profeatures/Products.png',
+            'photo'  => DOKAN_PLUGIN_ASSEST . '/images/profeatures/photo.png',
         ];
 	}
 
