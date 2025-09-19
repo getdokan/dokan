@@ -1267,8 +1267,19 @@ class Settings {
         }
 
         if ( ! empty( $to_save ) ) {
-            // Save only the missing fields we discovered from legacy
-            $manager->save( $to_save );
+            // Store with page wrapper for backward-compatibility so raw option reads can use `general.*` paths.
+            foreach ( $to_save as $page_id => $page_values ) {
+                // Derive storage key pattern: dokan_settings_<pageId>
+                $storage_key = 'dokan_settings_' . $page_id;
+                $existing    = get_option( $storage_key, [] );
+                if ( ! is_array( $existing ) ) {
+                    $existing = [];
+                }
+                $wrapped    = [ $page_id => $page_values ];
+                // Merge so we don't drop any pre-existing values.
+                $merged     = array_replace_recursive( $existing, $wrapped );
+                update_option( $storage_key, $merged );
+            }
         }
     }
 }

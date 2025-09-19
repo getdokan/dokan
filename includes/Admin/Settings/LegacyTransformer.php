@@ -2,8 +2,6 @@
 
 namespace WeDevs\Dokan\Admin\Settings;
 
-use WeDevs\Dokan\Admin\Settings\TransformerInterface;
-
 /**
  * Legacy Settings Value Transformer.
  *

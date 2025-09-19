@@ -495,9 +495,12 @@ abstract class SettingsElement {
 
 		if ( $validity && $this->is_support_children() ) {
 			foreach ( $this->get_children() as $child ) {
-				if ( ! isset( $data[ $child->get_id() ] ) || ! $child->validate( $data[ $child->get_id() ] ) ) {
-					$validity = false;
-					break;
+				// Allow partial updates: only validate child if it is present in the incoming data.
+				if ( isset( $data[ $child->get_id() ] ) ) {
+					if ( ! $child->validate( $data[ $child->get_id() ] ) ) {
+						$validity = false;
+						break;
+					}
 				}
 			}
 		}
@@ -558,9 +561,12 @@ abstract class SettingsElement {
 	public function sanitize( $data ) {
 		$data = $this->sanitize_element( $data );
 
-		if ( $this->is_support_children() ) {
+		if ( $this->is_support_children() && is_array( $data ) ) {
 			foreach ( $this->get_children() as $child ) {
-				$data[ $child->get_id() ] = $child->sanitize( $data[ $child->get_id() ] );
+				// Allow partial updates: only sanitize child if present in incoming data
+				if ( array_key_exists( $child->get_id(), $data ) ) {
+					$data[ $child->get_id() ] = $child->sanitize( $data[ $child->get_id() ] );
+				}
 			}
 		}
 		return $data;
