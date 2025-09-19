@@ -2284,7 +2284,7 @@ function dokan_get_social_profile_fields() {
         ],
         'twitter'   => [
             'icon'  => 'fa-brands fa-square-x-twitter',
-            'title' => __( 'Twitter', 'dokan-lite' ),
+            'title' => __( 'X', 'dokan-lite' ),
         ],
         'pinterest' => [
             'icon'  => 'pinterest-square',

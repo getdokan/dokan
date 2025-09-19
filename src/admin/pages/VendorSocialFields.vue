@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="column">
-                    <label for="twitter">{{ __( 'Twitter', 'dokan-lite' ) }}</label>
+                    <label for="twitter">{{ __( 'X', 'dokan-lite' ) }}</label>
                     <input id="twitter" type="text" class="dokan-form-input" v-model="vendorInfo.social.twitter" placeholder="https://example.com">
                 </div>
 
