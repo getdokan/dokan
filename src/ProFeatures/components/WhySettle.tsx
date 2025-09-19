@@ -1,11 +1,6 @@
-import {
-    moduleBanner,
-    moduleBannerMobile,
-    moduleBannerTablet, products
-} from "../Images";
+import { products } from '../Images';
 import { Settings, PaintbrushVertical, File } from 'lucide-react';
-import { __, sprintf } from '@wordpress/i18n';
-import { RawHTML } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 
 function WhySettle() {
     const features = [
@@ -43,7 +38,6 @@ function WhySettle() {
 
             { /* Modules Banner with Responsive Images */ }
             <div className="relative rounded overflow-hidden mb-8">
-
                 <div>
                     <div className="w-full h-[150px] md:h-[210px] lg:h-[276px] relative bg-[linear-gradient(90deg,rgba(38,1,138,1)_0%,rgba(0,0,0,1)_100%)]">
                         <span className="w-[500px] h-[500px] left-[-32px] top-[-107px] rounded-full absolute overflow-hidden inline-block bg-white opacity-[.04]"></span>
