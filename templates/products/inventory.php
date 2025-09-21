@@ -45,7 +45,7 @@
 
             <div class="content-half-part">
                 <label for="_stock" class="form-label"><?php esc_html_e( 'Stock quantity', 'dokan-lite' ); ?></label>
-                <input type="number" class="dokan-form-control" name="_stock" placeholder="<?php esc_attr__( '1', 'dokan-lite' ); ?>" value="<?php echo esc_attr( wc_stock_amount( $_stock ) ); ?>" min="0" step="1">
+                <input type="number" class="dokan-form-control" name="_stock" placeholder="<?php esc_attr_e( '1', 'dokan-lite' ); ?>" value="<?php echo esc_attr( wc_stock_amount( $_stock ) ); ?>" min="0" step="1">
                 <!-- Hidden field to store the original stock value at the time the page loads -->
                 <input type="hidden" name="_original_stock" value="<?php echo esc_attr( wc_stock_amount( $_stock ) ); ?>">
             </div>
@@ -53,7 +53,7 @@
             <?php if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) : ?>
             <div class="content-half-part">
                 <label for="_low_stock_amount" class="form-label"><?php esc_html_e( 'Low stock threshold', 'dokan-lite' ); ?></label>
-                <input type="number" class="dokan-form-control" name="_low_stock_amount" placeholder="<?php esc_attr__( '1', 'dokan-lite' ); ?>" value="<?php echo esc_attr( wc_stock_amount( $_low_stock_amount ) ); ?>" min="0" step="1">
+                <input type="number" class="dokan-form-control" name="_low_stock_amount" placeholder="<?php esc_attr_e( '1', 'dokan-lite' ); ?>" value="<?php echo esc_attr( wc_stock_amount( $_low_stock_amount ) ); ?>" min="0" step="1">
             </div>
             <?php endif; ?>
 
