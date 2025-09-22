@@ -226,336 +226,122 @@ class TransactionPage extends AbstractPage {
                     ->set_description( __( 'Select suitable withdraw methods and charges for vendors.', 'dokan-lite' ) )
                     ->add(
                         ElementFactory::field_group( 'withdraw_methods_group' )
-                                                ->add(
-                                                    ElementFactory::field( 'paypal_withdraw', 'switch' )
-                                                        ->set_title( __( 'PayPal', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Enable PayPal as a withdrawal method for vendors.', 'dokan-lite' ) )
-                                                        ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                        ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                        ->set_default( 'on' )
-                                                )
-                                                ->add(
-                                                    ElementFactory::field( 'paypal_withdraw_charges', 'combine_input' )
-                                                        ->set_title( __( 'Withdraw charges', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ) )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group.paypal_withdraw', 'on', true, 'display', 'show', '===' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group.paypal_withdraw', 'off', true, 'display', 'hide', '===' )
-                                                        ->set_value(
-                                                            [
-                                                                'additional_fee'   => '0.00',
-                                                                'admin_percentage' => '0.00',
-                                                            ]
-                                                        )
-                                                        ->set_admin_percentage( '0.00' )
-                                                        ->set_additional_fee( '0.00' )
-                                                )
+                            ->add(
+                                ElementFactory::field( 'paypal_withdraw', 'switch' )
+                                    ->set_title( __( 'PayPal', 'dokan-lite' ) )
+                                    ->set_description( __( 'Enable PayPal as a withdrawal method for vendors.', 'dokan-lite' ) )
+                                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                                    ->set_default( 'on' )
+                            )
+                            ->add(
+                                ElementFactory::field( 'paypal_withdraw_charges', 'combine_input' )
+                                    ->set_title( __( 'Withdraw charges', 'dokan-lite' ) )
+                                    ->set_description( __( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ) )
+                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group.paypal_withdraw', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group.paypal_withdraw', 'off', true, 'display', 'hide', '===' )
+                                    ->set_value(
+                                        [
+                                            'additional_fee'   => '0.00',
+                                            'admin_percentage' => '0.00',
+                                        ]
+                                    )
+                                    ->set_admin_percentage( '0.00' )
+                                    ->set_additional_fee( '0.00' )
+                            )
                     )
                     ->add(
                         ElementFactory::field_group( 'withdraw_methods_group_skrill' )
-                                                ->add(
-                                                    ElementFactory::field( 'skrill_withdraw', 'switch' )
-                                                        ->set_title( __( 'Skrill', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Enable Skrill as a withdrawal method for vendors.', 'dokan-lite' ) )
-                                                        ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                        ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                        ->set_default( 'off' )
-                                                )
-                                        ->add(
-                                            ElementFactory::field( 'skrill_withdraw_charges', 'combine_input' )
-                                                        ->set_title( __( 'Withdraw charges', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ) )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw', 'on', true, 'display', 'show', '===' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw', 'off', true, 'display', 'hide', '===' )
-                                                        ->set_value(
-                                                            [
-                                                                'additional_fee'   => '0.00',
-                                                                'admin_percentage' => '0.00',
-                                                            ]
-                                                        )
-                                                        ->set_admin_percentage( '0.00' )
-                                                        ->set_additional_fee( '0.00' )
-                                        )
+                            ->add(
+                                ElementFactory::field( 'skrill_withdraw', 'switch' )
+                                    ->set_title( __( 'Skrill', 'dokan-lite' ) )
+                                    ->set_description( __( 'Enable Skrill as a withdrawal method for vendors.', 'dokan-lite' ) )
+                                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                                    ->set_default( 'off' )
+                            )
+                            ->add(
+                                ElementFactory::field( 'skrill_withdraw_charges', 'combine_input' )
+                                    ->set_title( __( 'Withdraw charges', 'dokan-lite' ) )
+                                    ->set_description( __( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ) )
+                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw', 'off', true, 'display', 'hide', '===' )
+                                    ->set_value(
+                                        [
+                                            'additional_fee'   => '0.00',
+                                            'admin_percentage' => '0.00',
+                                        ]
+                                    )
+                                    ->set_admin_percentage( '0.00' )
+                                    ->set_additional_fee( '0.00' )
+                            )
                     )
                     ->add(
                         ElementFactory::field_group(
                             'withdraw_methods_group_razorpay'
                         )
-                                        ->add(
-                                            ElementFactory::field( 'razorpay_withdraw', 'switch' )
-                                                        ->set_title( __( 'Razorpay', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Enable Razorpay as a withdrawal method for vendors.', 'dokan-lite' ) )
-                                                        ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                        ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                        ->set_default( 'off' )
-                                        )
-                                        ->add(
-                                            ElementFactory::field( 'razorpay_withdraw_charges', 'combine_input' )
-                                                        ->set_title( __( 'Withdraw charges', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ) )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw', 'on', true, 'display', 'show', '===' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw', 'off', true, 'display', 'hide', '===' )
-                                                        ->set_value(
-                                                            [
-                                                                'additional_fee'   => '0.00',
-                                                                'admin_percentage' => '0.00',
-                                                            ]
-                                                        )
-                                                        ->set_admin_percentage( '0.00' )
-                                                        ->set_additional_fee( '0.00' )
-                                        )
+                            ->add(
+                                ElementFactory::field( 'razorpay_withdraw_charges', 'combine_input' )
+                                    ->set_title( __( 'Withdraw charges', 'dokan-lite' ) )
+                                    ->set_description( __( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ) )
+                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw', 'off', true, 'display', 'hide', '===' )
+                                    ->set_value(
+                                        [
+                                            'additional_fee'   => '0.00',
+                                            'admin_percentage' => '0.00',
+                                        ]
+                                    )
+                                    ->set_admin_percentage( '0.00' )
+                                    ->set_additional_fee( '0.00' )
+                            )
                     )
                     ->add(
                         ElementFactory::field_group( 'withdraw_methods_group_bank' )
-                                        ->add(
-                                            ElementFactory::field( 'bank_transfer_withdraw', 'switch' )
-                                                        ->set_title( __( 'Bank Transfer', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Enable Bank Transfer as a withdrawal method for vendors.', 'dokan-lite' ) )
-                                                        ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                        ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                        ->set_default( 'off' )
-                                        )
-                                        ->add(
-                                            ElementFactory::field( 'bank_transfer_withdraw_charges', 'combine_input' )
-                                                        ->set_title( __( 'Withdraw charges', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Set withdrawal charges for Bank Transfer method.', 'dokan-lite' ) )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw', 'on', true, 'display', 'show', '===' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw', 'off', true, 'display', 'hide', '===' )
-                                                        ->set_value(
-                                                            [
-                                                                'additional_fee'   => '0.00',
-                                                                'admin_percentage' => '0.00',
-                                                            ]
-                                                        )
-                                                        ->set_admin_percentage( '0.00' )
-                                                        ->set_additional_fee( '0.00' )
-                                        )
+                            ->add(
+                                ElementFactory::field( 'bank_transfer_withdraw', 'switch' )
+                                    ->set_title( __( 'Bank Transfer', 'dokan-lite' ) )
+                                    ->set_description( __( 'Enable Bank Transfer as a withdrawal method for vendors.', 'dokan-lite' ) )
+                                    ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
+                                    ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
+                                    ->set_default( 'off' )
+                            )
+                            ->add(
+                                ElementFactory::field( 'bank_transfer_withdraw_charges', 'combine_input' )
+                                    ->set_title( __( 'Withdraw charges', 'dokan-lite' ) )
+                                    ->set_description( __( 'Set withdrawal charges for Bank Transfer method.', 'dokan-lite' ) )
+                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw', 'off', true, 'display', 'hide', '===' )
+                                    ->set_value(
+                                        [
+                                            'additional_fee'   => '0.00',
+                                            'admin_percentage' => '0.00',
+                                        ]
+                                    )
+                                    ->set_admin_percentage( '0.00' )
+                                    ->set_additional_fee( '0.00' )
+                            )
                     )
-                    ->add(
-                        ElementFactory::field_group( 'withdraw_methods_group_custom' )
-                                        ->add(
-                                            ElementFactory::field( 'custom_withdraw', 'switch' )
-                                                        ->set_title( __( 'Custom', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Enable Custom withdrawal method for vendors.', 'dokan-lite' ) )
-                                                        ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                        ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                        ->set_default( 'on' )
-                                        )
-                                        ->add(
-                                            ElementFactory::field( 'bank_transfer_withdraw_charges', 'combine_input' )
-                                                        ->set_title( __( 'Withdraw charges', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Set withdrawal charges for Bank Transfer method.', 'dokan-lite' ) )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw', 'on', true, 'display', 'show', '===' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw', 'off', true, 'display', 'hide', '===' )
-                                                        ->set_value(
-                                                            [
-                                                                'additional_fee'   => '0.00',
-                                                                'admin_percentage' => '0.00',
-                                                            ]
-                                                        )
-                                                        ->set_admin_percentage( '0.00' )
-                                                        ->set_additional_fee( '0.00' )
-                                        )
-                    )
-                    ->add(
-                        ElementFactory::field( 'custom_method_name', 'text' )
-                                                ->set_title( __( 'Custom Method Name', 'dokan-lite' ) )
-                                                ->set_description( __( 'This will be the title of the custom withdraw method.', 'dokan-lite' ) )
-                                                ->set_placeholder( __( 'Type something', 'dokan-lite' ) )
-                    )
-                    ->add(
-                        ElementFactory::field( 'custom_method_type', 'text' )
-                                                ->set_title( __( 'Custom Method Type', 'dokan-lite' ) )
-                                                ->set_description( __( 'Custom Withdraw method type.', 'dokan-lite' ) )
-                                                ->set_placeholder( __( 'e.g. Email or Phone Number', 'dokan-lite' ) )
-                    )
-                    ->add(
-                        ElementFactory::field( 'custom_withdraw_charges', 'combine_input' )
-                                                ->set_title( __( 'Withdraw charges', 'dokan-lite' ) )
-                                                ->set_description( __( 'Set withdrawal charges for Custom method.', 'dokan-lite' ) )
-                                                ->set_value(
-                                                    [
-                                                        'additional_fee'   => '0.00',
-                                                        'admin_percentage' => '0.00',
-                                                    ]
-                                                )
-                                                ->set_admin_percentage( '0.00' )
-                                                ->set_additional_fee( '0.00' )
-                    )
+            )
+            ->add(
+                ElementFactory::section( 'minimum_withdraw_limit_section' )
                     ->add(
                         ElementFactory::field( 'minimum_withdraw_limit', 'number' )
-                                                ->set_title( __( 'Minimum Withdraw Limit', 'dokan-lite' ) )
-                                                ->set_description( __( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ) )
-                                                ->set_postfix( __( '$', 'dokan-lite' ) )
-                                                ->set_default( '50' )
+                            ->set_title( __( 'Minimum Withdraw Limit', 'dokan-lite' ) )
+                            ->set_description( __( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ) )
+                            ->set_postfix( __( '$', 'dokan-lite' ) )
+                            ->set_default( '50' )
                     )
+            )
+            ->add(
+                ElementFactory::section( 'cod_payments_section' )
                     ->add(
                         ElementFactory::field( 'cod_payments', 'radio_capsule' )
-                                                ->set_title( __( 'COD Payments', 'dokan-lite' ) )
-                                                ->set_description( __( 'If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.', 'dokan-lite' ) )
-                                                ->add_option( __( 'Include', 'dokan-lite' ), 'include' )
-                                                ->add_option( __( 'Exclude', 'dokan-lite' ), 'exclude' )
-                                                ->set_default( 'include' )
-                    )
-                    ->add(
-                        ElementFactory::field( 'withdraw_threshold', 'number' )
-                                                ->set_title( __( 'Withdraw Threshold', 'dokan-lite' ) )
-                                                ->set_description( __( 'Days to wait before users can withdraw from completed orders. Set to "0" to disable the waiting period.', 'dokan-lite' ) )
-                                                ->set_postfix( __( 'Days', 'dokan-lite' ) )
-                                                ->set_placeholder( __( 'e.g 2', 'dokan-lite' ) )
-                                                ->set_default( '0' )
-                    )
-                    ->add(
-                        ElementFactory::field( 'withdraw_option_visibility', 'switch' )
-                                                ->set_title( __( 'Withdraw Option Visibility', 'dokan-lite' ) )
-                                                ->set_description( __( 'withdraw option (when vendor is getting commission automatically)', 'dokan-lite' ) )
-                                                ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                ->set_default( 'off' )
-                    )
-                    ->add(
-                        ElementFactory::field( 'manual_withdraw', 'multicheck' )
-                                                ->set_title( __( 'Manual Withdraw', 'dokan-lite' ) )
-                                                ->set_description( __( 'Allow manual withdrawal process for vendors.', 'dokan-lite' ) )
-                                                ->add_option( __( 'Enable Manual Withdraw', 'dokan-lite' ), 'enable_manual_withdraw' )
-                                                ->add_option( __( 'Enable Manual Withdraw Request', 'dokan-lite' ), ' enable_manual_withdraw_request' )
-                    )
-                    ->add(
-                        ElementFactory::field( 'auto_withdraw', 'multicheck' )
-                                                ->set_title( __( 'Schedule Disbursement or Auto Withdraw Process for Vendors', 'dokan-lite' ) )
-                                                ->set_description( __( 'Admin can make multiple schedules but vendor can choose anyone.', 'dokan-lite' ) )
-                                                ->add_option( __( 'Enable Auto Withdraw', 'dokan-lite' ), 'enable_auto_withdraw' )
-                                                ->add_option( __( 'Enable Schedule Disbursement', 'dokan-lite' ), 'enable_schedule_disbursement' )
-                    )
-                    // weekly withdraw option
-                    ->add(
-                        ElementFactory::field_group( 'weekly_withdraw_group' )
-                                      ->add(
-                                          ElementFactory::field( 'weekly_withdraw', 'switch' )
-                                                        ->set_title( __( 'Weekly Withdraw', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Enable Weekly Withdraw as a withdrawal method for vendors.', 'dokan-lite' ) )
-                                                        ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                        ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                        ->set_default( 'off' )
-                                      )
-                                      ->add(
-                                          ElementFactory::field( 'weekly_withdraw_day', 'select' )
-                                                        ->set_title( '' )
-                                                        ->add_option( __( 'Saturday', 'dokan-lite' ), 'saturday' )
-                                                        ->add_option( __( 'Sunday', 'dokan-lite' ), 'sunday' )
-                                                        ->add_option( __( 'Monday', 'dokan-lite' ), 'monday' )
-                                                        ->add_option( __( 'Tuesday', 'dokan-lite' ), 'tuesday' )
-                                                        ->add_option( __( 'Wednesday', 'dokan-lite' ), 'wednesday' )
-                                                        ->add_option( __( 'Thursday', 'dokan-lite' ), 'thursday' )
-                                                        ->add_option( __( 'Friday', 'dokan-lite' ), 'friday' )
-                                                        ->set_default( 'saturday' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.weekly_withdraw_group.weekly_withdraw', 'on', true, 'display', 'show', '===' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.weekly_withdraw_group.weekly_withdraw', 'off', true, 'display', 'hide', '===' )
-                                      )
-                                      ->add(
-                                          ElementFactory::field( 'month_withdraw', 'select' )
-                                                        ->set_title( 'Month of the day' )
-                                                        ->set_default( 'may' )
-                                                        ->add_option( __( 'January', 'dokan-lite' ), 'january' )
-                                                        ->add_option( __( 'February', 'dokan-lite' ), 'february' )
-                                                        ->add_option( __( 'March', 'dokan-lite' ), 'march' )
-                                                        ->add_option( __( 'April', 'dokan-lite' ), 'april' )
-                                                        ->add_option( __( 'May', 'dokan-lite' ), 'may' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.weekly_withdraw_group.weekly_withdraw', 'on', true, 'display', 'show', '===' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.weekly_withdraw_group.weekly_withdraw', 'off', true, 'display', 'hide', '===' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.weekly_withdraw_group.weekly_withdraw_day', 'monday', true, 'value', 'march', '===' )
-                                                        ->set_disabled( true )
-                                      )
-                                      ->add(
-                                          ElementFactory::field( 'month_withdraw_day', 'select' )
-                                                        ->set_title( '3rd Day of the Week' )
-                                                        ->add_option( __( 'Saturday', 'dokan-lite' ), 'saturday' )
-                                                        ->add_option( __( 'Sunday', 'dokan-lite' ), 'sunday' )
-                                                        ->add_option( __( 'Monday', 'dokan-lite' ), 'monday' )
-                                                        ->add_option( __( 'Tuesday', 'dokan-lite' ), 'tuesday' )
-                                                        ->add_option( __( 'Wednesday', 'dokan-lite' ), 'wednesday' )
-                                                        ->add_option( __( 'Thursday', 'dokan-lite' ), 'thursday' )
-                                                        ->add_option( __( 'Friday', 'dokan-lite' ), 'friday' )
-                                                        ->set_default( 'saturday' )
-                                                        ->set_disabled( true )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.weekly_withdraw_group.weekly_withdraw', 'on', true, 'display', 'show', '===' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.weekly_withdraw_group.weekly_withdraw', 'off', true, 'display', 'hide', '===' )
-                                      )
-                    )
-                    // monthly withdraw option
-                    ->add(
-                        ElementFactory::field_group( 'monthly_withdraw_group' )
-                                      ->add(
-                                          ElementFactory::field( 'monthly_withdraw', 'switch' )
-                                                        ->set_title( __( 'Monthly Withdraw', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Enable Monthly Withdraw as a withdrawal method for vendors.', 'dokan-lite' ) )
-                                                        ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                        ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                        ->set_default( 'off' )
-                                      )
-                                      ->add(
-                                          ElementFactory::field( 'monthly_withdraw_day', 'select' )
-                                                        ->set_title( 'Day of the Month' )
-                                                        ->add_option( __( '1st Day', 'dokan-lite' ), '1' )
-                                                        ->add_option( __( '5th Day', 'dokan-lite' ), '5' )
-                                                        ->add_option( __( '10th Day', 'dokan-lite' ), '10' )
-                                                        ->add_option( __( '15th Day', 'dokan-lite' ), '15' )
-                                                        ->add_option( __( '20th Day', 'dokan-lite' ), '20' )
-                                                        ->add_option( __( '25th Day', 'dokan-lite' ), '25' )
-                                                        ->add_option( __( '30th Day', 'dokan-lite' ), '30' )
-                                                        ->set_default( '1' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.monthly_withdraw_group.monthly_withdraw', 'on', true, 'display', 'show', '===' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.monthly_withdraw_group.monthly_withdraw', 'off', true, 'display', 'hide', '===' )
-                                      )
-                    )
-                    // biweekly withdraw option
-                    ->add(
-                        ElementFactory::field_group( 'biweekly_withdraw_group' )
-                                      ->add(
-                                          ElementFactory::field( 'biweekly_withdraw', 'switch' )
-                                                        ->set_title( __( 'Biweekly Withdraw', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Enable Biweekly Withdraw as a withdrawal method for vendors.', 'dokan-lite' ) )
-                                                        ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                        ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                        ->set_default( 'off' )
-                                      )
-                                      ->add(
-                                          ElementFactory::field( 'biweekly_withdraw_day', 'select' )
-                                                        ->set_title( 'Day of the Month' )
-                                                        ->add_option( __( '1st Day', 'dokan-lite' ), '1' )
-                                                        ->add_option( __( '5th Day', 'dokan-lite' ), '5' )
-                                                        ->add_option( __( '10th Day', 'dokan-lite' ), '10' )
-                                                        ->add_option( __( '15th Day', 'dokan-lite' ), '15' )
-                                                        ->add_option( __( '20th Day', 'dokan-lite' ), '20' )
-                                                        ->add_option( __( '25th Day', 'dokan-lite' ), '25' )
-                                                        ->add_option( __( '30th Day', 'dokan-lite' ), '30' )
-                                                        ->set_default( '1' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.biweekly_withdraw_group.biweekly_withdraw', 'on', true, 'display', 'show', '===' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.biweekly_withdraw_group.biweekly_withdraw', 'off', true, 'display', 'hide', '===' )
-                                      )
-                    )
-                    ->add(
-                        ElementFactory::field_group( 'quarterly_withdraw_group' )
-                                      ->add(
-                                          ElementFactory::field( 'quarterly_withdraw', 'switch' )
-                                                        ->set_title( __( 'Quarterly Withdraw', 'dokan-lite' ) )
-                                                        ->set_description( __( 'Enable Quarterly Withdraw as a withdrawal method for vendors.', 'dokan-lite' ) )
-                                                        ->set_enable_state( __( 'Enabled', 'dokan-lite' ), 'on' )
-                                                        ->set_disable_state( __( 'Disabled', 'dokan-lite' ), 'off' )
-                                                        ->set_default( 'off' )
-                                      )
-                                      ->add(
-                                          ElementFactory::field( 'quarterly_withdraw_day', 'select' )
-                                                        ->add_option( __( '1st Day', 'dokan-lite' ), '1' )
-                                                        ->add_option( __( '5th Day', 'dokan-lite' ), '5' )
-                                                        ->add_option( __( '10th Day', 'dokan-lite' ), '10' )
-                                                        ->add_option( __( '15th Day', 'dokan-lite' ), '15' )
-                                                        ->add_option( __( '20th Day', 'dokan-lite' ), '20' )
-                                                        ->add_option( __( '25th Day', 'dokan-lite' ), '25' )
-                                                        ->add_option( __( '30th Day', 'dokan-lite' ), '30' )
-                                                        ->set_default( '1' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.quarterly_withdraw_group.quarterly_withdraw', 'on', true, 'display', 'show', '===' )
-                                                        ->add_dependency( 'withdraw_charge.section_withdraw_charge.quarterly_withdraw_group.quarterly_withdraw', 'off', true, 'display', 'hide', '===' )
-                                        )
+                            ->set_title( __( 'COD Payments', 'dokan-lite' ) )
+                            ->set_description( __( 'If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.', 'dokan-lite' ) )
+                            ->add_option( __( 'Include', 'dokan-lite' ), 'include' )
+                            ->add_option( __( 'Exclude', 'dokan-lite' ), 'exclude' )
+                            ->set_default( 'include' )
                     )
             );
 
