@@ -174,7 +174,8 @@ To preserve backward compatibility, Dokan ships with a settings key mapper and v
 - SettingsMapper (`includes/Admin/Settings/SettingsMapper.php`)
   - Purpose: Map legacy keys (`section.field`) to new keys (`Page.SubPage.Section.Field`) and vice versa.
   - Third‑party extension: Add your own mappings with the `dokan_settings_mapper_map` filter.
-  - Helpers: `set_value_by_path(&$array, 'a.b.c', $value)` and `get_value_by_path($array, 'a.b.c', $default)` to work with nested arrays.
+  - Helpers: `set_value_by_path(&$array, 'a.b.c', $value)`, `get_value_by_path($array, 'a.b.c', $default)`, `has_path($array, 'a.b.c')`, and `unset_by_path(&$array, 'a.b.c')` to work with nested arrays.
+  - Duplicate new-key detection: enable reporting via `dokan_settings_mapper_report_duplicate_new_keys` (default false) to log `_doing_it_wrong` if multiple legacy keys map to the same new path.
 
 - LegacyTransformer (`includes/Admin/Settings/LegacyTransformer.php`)
   - Transforms new → old and old → new values using the mapper.
@@ -185,6 +186,7 @@ $t = new \WeDevs\Dokan\Admin\Settings\LegacyTransformer();
 $legacy = $t->transform(['from' => 'new', 'data' => $pagesValues]);
 $new    = $t->transform(['from' => 'old', 'data' => $legacyArrays]);
 ```
+  - Null handling: When converting new → old, keys whose values resolve to null are skipped (not written to legacy arrays).
 
 - Legacy Admin endpoints bridging (`includes/Admin/Settings.php`)
   - `get_settings_value()`: sources values from the new storage, converts to legacy structure, and merges with existing legacy options for unmapped fields.
@@ -215,8 +217,10 @@ If you have your own legacy options that you want bridged to a new page you prov
 - `WeDevs\Dokan\Abstracts\Settings`: Storage, validation, sanitize, and lifecycle utilities.
 - `WeDevs\Dokan\Abstracts\SettingsElement`: Base element with children support and populate/sanitize/validate hooks.
 - `WeDevs\Dokan\Admin\Settings\Elements\ElementFactory`: Fluent builders for sub pages, sections, and fields.
+- `WeDevs\Dokan\Admin\Settings\ElementTransformer`: Transforms field configuration arrays into `SettingsElement` instances; exposes the `dokan_settings_element_type_map` filter for type overrides.
 - `WeDevs\Dokan\Admin\Settings\SettingsMapper`: Maps legacy↔new keys and provides dot‑path helpers.
 - `WeDevs\Dokan\Admin\Settings\LegacyTransformer`: Converts arrays between legacy and new structures.
+- `WeDevs\Dokan\Admin\Settings\TransformerInterface`: Contract for transformers; defines `TARGET_ELEMENT` and `TARGET_LEGACY` constants to avoid magic strings.
 - `WeDevs\Dokan\Admin\Settings` (legacy controller): Bridges old endpoints to the new storage and handles one‑time population from legacy options.
 
 ### Filters
@@ -224,6 +228,8 @@ If you have your own legacy options that you want bridged to a new page you prov
 - `dokan_admin_settings_pages`: Add/alter the array of page instances.
 - `dokan_admin_settings_pages_mapper`: Filter the pages mapper payload for frontend.
 - `dokan_settings_mapper_map`: Extend/override the legacy↔new key mapping array.
+- `dokan_settings_element_type_map`: Override the type mapping used by ElementTransformer when creating fields. Signature: ($map, $type, $field_config) and should return an associative array like ['switcher' => 'switch'].
+- `dokan_settings_mapper_report_duplicate_new_keys`: Enable duplicate new-key detection logs during reverse map build. Return true to log `_doing_it_wrong`. Signature: ($report, $new_key, $old_key, $existing_old_key).
 - `{hook_key}_populate`: Generic populate filter for a SettingsElement. For pages, `hook_key` usually equals its storage key (for example, `dokan_settings_general_populate`). Use with care to avoid breaking shape.
 
 ### Actions
