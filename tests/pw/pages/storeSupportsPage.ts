@@ -475,11 +475,20 @@ export class StoreSupportsPage extends AdminPage {
     }
 
     // customer cant send message to closed support ticket
-    async viewOrderReferenceNumberOnSupportTicket(supportTicketId: string, orderId: string): Promise<void> {
+    formatOrderId(orderId: number | string): string {
+        return Number(orderId).toLocaleString(); // adds commas automatically
+    }
+
+    async viewOrderReferenceNumberOnSupportTicket(supportTicketId: string, orderId: string | number): Promise<void> {
+        const formattedOrderId = this.formatOrderId(orderId);
+
         await this.goIfNotThere(data.subUrls.frontend.supportTicketDetails(supportTicketId));
-        await this.toBeVisible(supportsTicketsCustomer.supportTicketDetails.orderReference.orderReferenceSpan);
-        await this.toBeVisible(supportsTicketsCustomer.supportTicketDetails.orderReference.orderReferenceText(orderId));
-        await this.toBeVisible(supportsTicketsCustomer.supportTicketDetails.orderReference.orderReferenceLink(orderId));
+
+        const orderRef = supportsTicketsCustomer.supportTicketDetails.orderReference;
+
+        await this.toBeVisible(orderRef.orderReferenceSpan);
+        await this.toBeVisible(orderRef.orderReferenceText(formattedOrderId));
+        await this.toBeVisible(orderRef.orderReferenceLink(formattedOrderId));
     }
 
     // customer send message to support ticket

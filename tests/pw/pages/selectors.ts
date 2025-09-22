@@ -890,7 +890,7 @@ export const selector = {
                     result: 'li.select2-results__option.select2-results__option--highlighted',
                 },
 
-                searchTicket: '#post-search-input',
+                searchTicket: 'p.search-box >> input#post-search-input',
 
                 // Table
                 table: {
@@ -3072,11 +3072,11 @@ export const selector = {
                     metaBoxDiv: '#dokan_commission_box',
                     commissionsHeader: '#dokan_commission_box h2.hndle', // "Commissions" header
                     table: {
-                      itemColumn: '#dokan_commission_box th:has-text("Item")',
-                      typeColumn: '#dokan_commission_box th:has-text("Type")',
-                      rateColumn: '#dokan_commission_box th:has-text("Rate")',
-                      qtyColumn: '#dokan_commission_box th:has-text("Qty")',
-                      commissionColumn: '#dokan_commission_box th:has-text("Commission")',
+                        itemColumn: '#dokan_commission_box th:has-text("Item")',
+                        typeColumn: '#dokan_commission_box th:has-text("Type")',
+                        rateColumn: '#dokan_commission_box th:has-text("Rate")',
+                        qtyColumn: '#dokan_commission_box th:has-text("Qty")',
+                        commissionColumn: '#dokan_commission_box th:has-text("Commission")',
                     },
                     orderItemsTable: '#dokan_commission_box table.dokan_order_items',
                     orderLineItems: '#dokan_commission_box tbody#order_line_items tr.item',
@@ -3084,7 +3084,7 @@ export const selector = {
                     netTotal: '#dokan_commission_box td.label:has-text("Net total:") + td + td.total',
                     vendorEarning: '#dokan_commission_box td.label:has-text("Vendor earning:") + td + td.total',
                     totalCommission: '#dokan_commission_box td.label:has-text("Total commission:") + td + td.total',
-                },                  
+                },
 
                 subOrdersMetaBox: {
                     metaBoxDiv: 'div#dokan_sub_or_related_orders',
@@ -7158,8 +7158,10 @@ export const selector = {
 
                 orderReference: {
                     orderReferenceSpan: 'span.order-reference',
-                    orderReferenceText: (orderId: string) => `//strong[normalize-space()="Referenced Order #${orderId}"]`,
-                    orderReferenceLink: (orderId: string) => `//strong[normalize-space()="Referenced Order #${orderId}"]/..`,
+                    orderReferenceText: (orderId: string) =>
+                        `//strong[contains(normalize-space(), "Referenced Order #${orderId}")]`,
+                    orderReferenceLink: (orderId: string) =>
+                        `//strong[contains(normalize-space(), "Referenced Order #${orderId}")]/..`,
                 },
 
                 chatBox: {
