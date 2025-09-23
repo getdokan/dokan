@@ -14,6 +14,7 @@ import {
     requestEditVendor,
     validateForm,
 } from '@src/admin/dashboard/pages/vendor-create-edit/Utils';
+import { config } from './vendor-config';
 
 function Edit( props ) {
     const { params } = props;
@@ -111,7 +112,7 @@ function Edit( props ) {
                             variant="secondary"
                             onClick={ () =>
                                 // @ts-ignore
-                                ( window.location.href = `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors` )
+                                ( window.location.href = config.dokanVendorsListUrl )
                             }
                         >
                             { __( 'Cancel', 'dokan-lite' ) }

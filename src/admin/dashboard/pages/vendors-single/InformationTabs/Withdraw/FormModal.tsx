@@ -25,7 +25,9 @@ function FormModal( {
                 onClose={ () => setIsOpen( false ) }
                 dialogTitle={ title ?? '' }
                 dialogContent={
-                    <div className="flex flex-col gap-3">{ children }</div>
+                    <div className="flex flex-col gap-3">
+                        { children }
+                    </div>
                 }
                 dialogFooterContent={
                     <div className="flex justify-end gap-3">

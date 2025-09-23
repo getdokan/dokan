@@ -28,7 +28,10 @@ function MethodAction( {
     const [ loading, setLoading ] = useState( false );
     if (
         settings?.chargeable_methods &&
-        ! settings?.chargeable_methods.hasOwnProperty( method )
+        ! Object.prototype.hasOwnProperty.call(
+            settings.chargeable_methods,
+            method
+        )
     ) {
         return (
             <div className="flex justify-center items-center ml-3">
@@ -39,7 +42,7 @@ function MethodAction( {
         );
     }
 
-    const getPaymentData = ( currentMethod ) => {
+    const getPaymentData = ( currentMethod: string ) => {
         const data = vendor?.payment[ currentMethod ];
 
         if ( ! data ) {

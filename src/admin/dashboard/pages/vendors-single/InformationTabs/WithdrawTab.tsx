@@ -84,7 +84,7 @@ const WithdrawTab = ( { vendor }: WithdrawTabProps ) => {
                 setIsLoading( false );
                 setSettings( {} );
             } );
-    }, [] );
+    }, [ vendor?.id ] );
 
     if ( isLoading ) {
         return <WithdrawTabSkeleton />;

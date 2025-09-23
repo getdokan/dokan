@@ -12,6 +12,7 @@ import {
     requestCreateVendor,
     validateForm,
 } from '@src/admin/dashboard/pages/vendor-create-edit/Utils';
+import { config } from './vendor-config';
 
 function Create( props: any ) {
     const [ saving, setSaving ] = useState( false );
@@ -131,8 +132,7 @@ function Create( props: any ) {
                         <DokanButton
                             variant="secondary"
                             onClick={ () =>
-                                // @ts-ignore
-                                ( window.location.href = `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors` )
+                                ( window.location.href = config.dokanVendorsListUrl )
                             }
                         >
                             { __( 'Cancel', 'dokan-lite' ) }
