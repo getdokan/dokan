@@ -192,7 +192,6 @@ const TopPerformingVendorsSection = () => {
             sectionHeader={
                 <MonthPicker
                     value={ monthData }
-                    comparisonPosition="left"
                     onChange={ handleMonthChange }
                 />
             }
