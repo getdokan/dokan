@@ -28,9 +28,9 @@
     "brain/monkey": "^2.0",
     "league/container": "^4.0",
     "coenjacobs/mozart": "^0.7.1",
-    "phpstan/phpstan": "2.0.x-dev",
-    "php-stubs/woocommerce-stubs": "dev-master",
-    "php-stubs/wordpress-stubs": "^6.5"
+    "phpstan/phpstan": "^2.1",
+    "php-stubs/woocommerce-stubs": "^10.2",
+    "php-stubs/wordpress-stubs": "^6.8"
   },
   "config": {
     "platform": {
