@@ -289,7 +289,7 @@ function PricingSection() {
                                             plan.isPopular
                                                 ? 'border-2 border-[#7047EB] shadow-lg'
                                                 : 'border border-gray-200'
-                                        } rounded bg-white
+                                        } rounded-md bg-white
                                         ${
                                             index === 0
                                                 ? 'bg-[linear-gradient(214.33deg,rgba(239,241,255,0.7)_3.79%,#FFFFFF_60.72%)]'

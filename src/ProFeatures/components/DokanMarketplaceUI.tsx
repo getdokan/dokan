@@ -290,13 +290,13 @@ function DokanMarketplaceUI() {
                         onClick={ () => setActiveTab( tab ) }
                         className={ `text-base md:text-lg font-medium transition relative ${
                             activeTab === tab
-                                ? 'text-purple-700'
+                                ? 'text-dokan-primary'
                                 : 'text-gray-500'
                         }` }
                     >
                         { tab }
                         { activeTab === tab && (
-                            <span className="absolute left-0 -bottom-1 h-[2px] w-full bg-purple-700" />
+                            <span className="absolute left-0 -bottom-1 h-[2px] w-full bg-dokan-primary" />
                         ) }
                     </button>
                 ) ) }
@@ -385,15 +385,11 @@ function DokanMarketplaceUI() {
                                         </p>
                                     </div>
                                     <div className="flex justify-between items-center mt-auto pt-3">
-                                        <div className="w-12 h-8">
+                                        <div className="w-auto h-[1.5rem]">
                                             <img
                                                 src={ item.logo }
                                                 alt="Logo"
-                                                className={ `w-full h-full object-contain ${
-                                                    item.noScale
-                                                        ? 'ml-[-10px]'
-                                                        : 'scale-[1.3] ml-[15px]'
-                                                }` }
+                                                className={ `w-full h-full object-contain` }
                                             />
                                         </div>
                                     </div>

@@ -1,5 +1,5 @@
 import { useRef, useState } from '@wordpress/element';
-import { Check } from 'lucide-react';
+import { Check, CircleCheck } from "lucide-react";
 import { __ } from '@wordpress/i18n';
 
 interface FeatureData {
@@ -181,9 +181,9 @@ const FeatureComparison = () => {
                     items-center
                     justify-center md:justify-start
                     px-4 md:px-6
-                    py-2 md:py-4
+                    py-2 md:py-[1.75rem]
                     mr-2 md:mr-0
-                    md:mb-2
+                    md:mb-[1rem]
                     rounded-lg
                     whitespace-nowrap
                     scroll-snap-align-start
@@ -208,7 +208,7 @@ const FeatureComparison = () => {
                         <div className="min-w-full">
                             { /* Header */ }
                             <div className="flex flex-row">
-                                <div className="pl-0 md:pl-4 px-4 py-3 pt-0 text-gray-900 w-[70%] text-start font-bold text-[15px] leading-[130%] tracking-[0%]">
+                                <div className="pl-0 md:pl-[2.5rem] px-4 py-3 pt-0 text-gray-900 w-[70%] text-start font-bold text-[15px] leading-[130%] tracking-[0%]">
                                     <div className="w-20">
                                         { __( 'Features', 'dokan-lite' ) }
                                     </div>
@@ -229,7 +229,7 @@ const FeatureComparison = () => {
                                     key={ index }
                                     className="flex flex-row justify-between"
                                 >
-                                    <div className="pl-0 md:pl-4 px-4 py-3 text-gray-700 w-[70%] text-[12px] font-medium leading-4 tracking-[0%] md:text-[16px] md:font-normal md:leading-[140%]">
+                                    <div className="pl-0 md:pl-[2.5rem] px-4 py-3 text-gray-700 w-[70%] text-[12px] font-medium leading-4 tracking-[0%] md:text-[16px] md:font-normal md:leading-[140%]">
                                         { feature }
                                     </div>
                                     <div className="flex justify-end items-center w-[30%] gap-2">
@@ -246,9 +246,10 @@ const FeatureComparison = () => {
                                                         : 'rounded-b-none'
                                                 }` }
                                             >
-                                                <Check
-                                                    className="text-white bg-dokan-btn rounded-full"
+                                                <CircleCheck
+                                                    className="text-dokan-primary"
                                                     size={ 16 }
+                                                    strokeWidth="3"
                                                 />
                                             </div>
                                         ) : (
@@ -264,9 +265,10 @@ const FeatureComparison = () => {
                                                         : 'rounded-b-none'
                                                 }` }
                                             >
-                                                <Check
-                                                    className="text-gray-400 bg-gray-200 rounded-full"
+                                                <CircleCheck
+                                                    className="text-gray-400"
                                                     size={ 16 }
+                                                    strokeWidth="3"
                                                 />
                                             </div>
                                         ) }
@@ -283,9 +285,10 @@ const FeatureComparison = () => {
                                                         : 'rounded-b-none'
                                                 }` }
                                             >
-                                                <Check
-                                                    className="text-white bg-dokan-btn rounded-full"
+                                                <CircleCheck
+                                                    className="text-dokan-primary"
                                                     size={ 16 }
+                                                    strokeWidth="3"
                                                 />
                                             </div>
                                         ) : (
@@ -301,9 +304,10 @@ const FeatureComparison = () => {
                                                         : 'rounded-b-none'
                                                 }` }
                                             >
-                                                <Check
-                                                    className="text-gray-400 bg-gray-200 rounded-full"
+                                                <CircleCheck
+                                                    className="text-gray-400"
                                                     size={ 16 }
+                                                    strokeWidth="3"
                                                 />
                                             </div>
                                         ) }

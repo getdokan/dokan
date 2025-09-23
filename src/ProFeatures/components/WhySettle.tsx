@@ -62,7 +62,7 @@ function WhySettle() {
                                 <img
                                     src={ products }
                                     alt="products"
-                                    className="w-full h-auto absolute top-[-42px] md:top-[90px] lg:top-[32px] md:left-[40px] lg:left-0 scale-[.4] md:scale-[2] lg:scale-[1] rotate-[5deg]"
+                                    className="w-full h-auto absolute top-[-42px] md:top-[90px] lg:top-0 md:left-[40px] lg:left-0 scale-[.4] md:scale-[2] lg:scale-[1] rotate-[5deg]"
                                     draggable={ false }
                                 />
                             </div>
