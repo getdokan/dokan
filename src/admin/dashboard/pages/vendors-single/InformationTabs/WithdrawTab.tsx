@@ -42,21 +42,10 @@ const WithdrawTab = ( { vendor }: WithdrawTabProps ) => {
 
     const paymentMethodsHtml = ( connected = true ) => {
         const methods = getPrintableMethods( connected );
-        // const methods = [
-        //     'paypal',
-        //     'dokan-paypal-marketplace',
-        //     'dokan_stripe_express',
-        //     'dokan-stripe-connect',
-        //     'bank',
-        //     'skrill',
-        //     'dokan_razorpay',
-        //     'dokan_mangopay',
-        //     'dokan_custom',
-        // ];
         if ( methods.length === 0 ) {
             const message = connected
-                ? __( 'No connected payment methods found' )
-                : __( 'No disconnected payment methods found' );
+                ? __( 'No connected payment methods found', 'dokan-lite' )
+                : __( 'No disconnected payment methods found', 'dokan-lite' );
             return (
                 <div>
                     <DokanAlert label={ message } variant="info" />
