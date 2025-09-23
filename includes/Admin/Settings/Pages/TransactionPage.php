@@ -17,7 +17,7 @@ class TransactionPage extends AbstractPage {
      *
      * @var int
      */
-    protected int $priority = 150;
+    protected int $priority = 60;
 
     /**
      * Storage key for the page.

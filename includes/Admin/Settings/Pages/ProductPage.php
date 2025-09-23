@@ -19,7 +19,7 @@ class ProductPage extends AbstractPage {
      *
      * @var int
      */
-    protected int $priority = 110;
+    protected int $priority = 20;
     /**
      * Storage key for the page.
      *

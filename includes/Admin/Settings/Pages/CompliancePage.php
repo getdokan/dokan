@@ -18,7 +18,7 @@ class CompliancePage extends AbstractPage {
      *
      * @var int
      */
-    protected int $priority = 260;
+    protected int $priority = 100;
 
     /**
      * Storage key for the page.

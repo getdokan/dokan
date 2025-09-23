@@ -19,7 +19,7 @@ class GeneralPage extends AbstractPage {
      *
      * @var int
      */
-    protected int $priority = 100;
+    protected int $priority = 10;
 
     /**
      * Storage key for the page.

@@ -13,12 +13,14 @@ class AIAssistPage extends AbstractPage {
      * @var string
      */
     protected $id = 'ai_assist';
+
     /**
      * The page priority.
      *
      * @var int
      */
-    protected int $priority = 120;
+    protected int $priority = 30;
+
     /**
      * Storage key for the page.
      *

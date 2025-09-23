@@ -19,7 +19,7 @@ class VendorPage extends AbstractPage {
      *
      * @var int
      */
-    protected int $priority = 140;
+    protected int $priority = 40;
 
     /**
      * Storage key for the page.

@@ -19,7 +19,7 @@ class AppearancePage extends AbstractPage {
      *
      * @var int
      */
-    protected int $priority = 200;
+    protected int $priority = 70;
     /**
      * Storage key for the page.
      *
