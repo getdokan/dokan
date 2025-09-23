@@ -12,7 +12,7 @@ import ScaleMarketplaceBanner from './components/ScaleMarketplaceBanner';
 
 function ProFeatures() {
     return (
-        <div className="flex flex-col gap-16 touch-pan-x touch-pan-y select-none overflow-hidden">
+        <div className="flex flex-col gap-16 touch-pan-x touch-pan-y select-none overflow-hidden px-5">
             { /* Hero Banner */ }
             <HeroBanner />
 
