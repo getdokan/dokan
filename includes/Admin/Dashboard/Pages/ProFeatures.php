@@ -19,6 +19,9 @@ class ProFeatures extends AbstractPage {
 	 * @inheritDoc
 	 */
 	public function menu( string $capability, string $position ): array {
+        if ( dokan()->is_pro_exists() ) {
+            return [];
+        }
 		return [
             'page_title' => __( 'Dokan Pro Features', 'dokan-lite' ),
             'menu_title' => __( 'Pro Features', 'dokan-lite' ),
@@ -95,6 +98,9 @@ class ProFeatures extends AbstractPage {
      * @return void
      */
     public function register(): void {
+        if ( dokan()->is_pro_exists() ) {
+            return;
+        }
         $asset_file = include DOKAN_DIR . '/assets/js/dokan-pro-features.asset.php';
 
         wp_register_script(
