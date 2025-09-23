@@ -16,13 +16,15 @@ export default function DokanMultiCheck( { element } ) {
 
     return (
         <div className="flex flex-col gap-4 p-4 w-full">
-            <DokanFieldLabel
-                title={ element.title }
-                titleFontWeight="bold"
-                helperText={ element.description }
-                tooltip={ element.helper_text }
-                imageUrl={ element?.image_url }
-            />
+            { ( element?.title || element?.description ) && (
+                <DokanFieldLabel
+                    title={ element.title }
+                    titleFontWeight="bold"
+                    helperText={ element.description }
+                    tooltip={ element.helper_text }
+                    imageUrl={ element?.image_url }
+                />
+            ) }
             <DokanCheckboxGroup
                 options={
                     element.options?.map( ( option ) => ( {
