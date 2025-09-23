@@ -14,33 +14,109 @@ export class PaymentsPage extends AdminPage {
         super(page);
     }
 
-    // payment methods
+    // Go to specific offline payment method settings
+    async goToWcPaymentSettings(path: string) {
+        await this.goIfNotThere(`${data.subUrls.backend.wc.paymentSettings}&path=%2Foffline%2F${path}&from=WCADMIN_PAYMENT_SETTINGS`);
+    }
 
-    async goToWcPaymentSettings() {
-        await this.goIfNotThere(data.subUrls.backend.wc.paymentSettings);
+    // navigate to offline payment method and toggle enable/disable
+    async togglePaymentMethod(method: string) {
+        await this.goToWcPaymentSettings(method);
+        await this.page.waitForLoadState('networkidle');
+        await this.click('#inspector-checkbox-control-0');
+        await this.click("//button[normalize-space()='Save changes']");
     }
 
     // admin setup basic payment methods
     async setupBasicPaymentMethods(payment: payment) {
-        await this.goToWcPaymentSettings();
-
-        // bank transfer
-        await this.enablePaymentMethod(paymentSettingsAdmin.enableDirectBankTransfer);
-        // payments
-        await this.enablePaymentMethod(paymentSettingsAdmin.enableCheckPayments);
-        // cash on delivery
-        await this.enablePaymentMethod(paymentSettingsAdmin.enableCashOnDelivery);
-
-        await this.removeAttribute(paymentSettingsAdmin.paymentMethodsSaveChanges, 'disabled');
-        await this.clickAndWaitForResponse(data.subUrls.api.wc.paymentGateways, paymentSettingsAdmin.paymentMethodsSaveChanges);
-        await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
+        // enable cheque payment method
+        await this.togglePaymentMethod('cheque');
+        // enable cash on delivery payment method
+        await this.togglePaymentMethod('cod');
+        // enable bank transfer payment method
+        await this.togglePaymentMethod('bacs');
+        
     }
 
-    // admin setup stripe sonnect
-    async setupStripeConnect(payment: payment) {
-        await this.goToWcPaymentSettings();
+    // enable MangoPay module
+    async enableMangoPayModule() {
+        await this.goto(data.subUrls.backend.wc.paymentSettings);
+        await this.toBeVisible(paymentSettingsAdmin.setupDokanMangoPay);
+    }
 
-        await this.click(paymentSettingsAdmin.setupDokanStripeConnect);
+    // enable PayPal Marketplace module
+    async enablePayPalMarketplaceModule() {
+        await this.goto(data.subUrls.backend.wc.paymentSettings);
+        await this.toBeVisible(paymentSettingsAdmin.setupDokanPayPalMarketplace);
+    }
+
+    // enable Razorpay module
+    async enableRazorpayModule() {
+        await this.goto(data.subUrls.backend.wc.paymentSettings);
+        await this.toBeVisible(paymentSettingsAdmin.setupDokanRazorpay);
+    }
+
+    // enable Stripe Connect module
+    async enableStripeConnectModule() {
+        await this.goto(data.subUrls.backend.wc.paymentSettings);
+        await this.toBeVisible(paymentSettingsAdmin.setupDokanStripeConnect);
+    }
+
+    // enable Stripe Express module
+    async enableStripeExpressModule() {
+        await this.goto(data.subUrls.backend.wc.paymentSettings);
+        await this.toBeVisible(paymentSettingsAdmin.setupDokanStripeExpress);
+    }
+
+    // disable MangoPay module
+    async disableMangoPayModule() {
+        await this.goto(data.subUrls.backend.wc.paymentSettings, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(paymentSettingsAdmin.setupDokanMangoPay);
+
+        await this.goto(data.subUrls.backend.wc.mangoPaySettings);
+        await this.notToBeVisible(paymentSettingsAdmin.dokanMangoPay.mangoPayText);
+    }
+
+    // disable PayPal Marketplace module
+    async disablePayPalMarketplaceModule() {
+        await this.goto(data.subUrls.backend.wc.paymentSettings, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(paymentSettingsAdmin.setupDokanPayPalMarketplace);
+
+        await this.goto(data.subUrls.backend.wc.paypalMarketplaceSettings);
+        await this.notToBeVisible(paymentSettingsAdmin.paypalMarketPlace.paypalMarketPlaceText);
+    }
+
+    // disable Razorpay module
+    async disableRazorpayModule() {
+        await this.goto(data.subUrls.backend.wc.paymentSettings, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(paymentSettingsAdmin.setupDokanRazorpay);
+
+        await this.goto(data.subUrls.backend.wc.razorPaySettings);
+        await this.notToBeVisible(paymentSettingsAdmin.dokanRazorpay.razorpayText);
+    }
+
+    // disable Stripe Connect module
+    async disableStripeConnectModule() {
+        await this.goto(data.subUrls.backend.wc.paymentSettings, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(paymentSettingsAdmin.setupDokanStripeConnect);
+
+        await this.goto(data.subUrls.backend.wc.stripeConnectSettings);
+        await this.notToBeVisible(paymentSettingsAdmin.stripe.stripeConnectText);
+    }
+
+    // disable Stripe Express module
+    async disableStripeExpressModule() {
+        await this.goto(data.subUrls.backend.wc.paymentSettings, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(paymentSettingsAdmin.setupDokanStripeExpress);
+
+        await this.goto(data.subUrls.backend.wc.stripeExpressSettings);
+        await this.notToBeVisible(paymentSettingsAdmin.stripeExpress.stripeExpressText);
+    }
+
+    // admin setup stripe connect
+    async setupStripeConnect(payment: payment) {
+        await this.goto(data.subUrls.backend.wc.stripeConnectSettings);
+
         // setup strip connect
         await this.check(paymentSettingsAdmin.stripe.enableDisableStripe);
         await this.clearAndType(paymentSettingsAdmin.stripe.title, payment.stripeConnect.title);
@@ -56,16 +132,16 @@ export class PaymentsPage extends AdminPage {
         await this.clearAndType(paymentSettingsAdmin.stripe.testPublishableKey, payment.stripeConnect.testPublishableKey);
         await this.clearAndType(paymentSettingsAdmin.stripe.testSecretKey, payment.stripeConnect.testSecretKey);
         await this.clearAndType(paymentSettingsAdmin.stripe.testClientId, payment.stripeConnect.testClientId);
-        await this.click(paymentSettingsAdmin.stripe.stripeSaveChanges);
+        await this.removeAttribute(paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges, 'disabled');
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.stripeConnectSettings, paymentSettingsAdmin.stripe.stripeSaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
 
     // admin setup dokan paypal marketplace
     async setupPaypalMarketPlace(payment: payment) {
-        await this.goToWcPaymentSettings();
+        await this.goto(data.subUrls.backend.wc.paypalMarketplaceSettings);
 
-        await this.click(paymentSettingsAdmin.setupDokanPayPalMarketplace);
         // setup paypal marketplace
         await this.check(paymentSettingsAdmin.paypalMarketPlace.enableDisablePayPalMarketplace);
         await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.title, payment.paypalMarketPlace.title);
@@ -84,16 +160,16 @@ export class PaymentsPage extends AdminPage {
         await this.check(paymentSettingsAdmin.paypalMarketPlace.displayNoticeToConnectSeller);
         await this.check(paymentSettingsAdmin.paypalMarketPlace.sendAnnouncementToConnectSeller);
         await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.sendAnnouncementInterval, payment.paypalMarketPlace.announcementInterval);
-        await this.click(paymentSettingsAdmin.paypalMarketPlace.paypalMarketPlaceSaveChanges);
+        await this.removeAttribute(paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges, 'disabled');
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.paypalMarketplaceSettings, paymentSettingsAdmin.paypalMarketPlace.paypalMarketPlaceSaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
 
     // admin setup mangopay
     async setupMangoPay(payment: payment) {
-        await this.goToWcPaymentSettings();
+        await this.goto(data.subUrls.backend.wc.mangoPaySettings);
 
-        await this.click(paymentSettingsAdmin.setupDokanMangoPay);
         // setup mangopay
         await this.check(paymentSettingsAdmin.dokanMangoPay.enableDisableMangoPayPayment);
         await this.clearAndType(paymentSettingsAdmin.dokanMangoPay.title, payment.mangoPay.title);
@@ -131,16 +207,17 @@ export class PaymentsPage extends AdminPage {
         await this.check(paymentSettingsAdmin.dokanMangoPay.displayNoticeToNonConnectedSellers);
         await this.check(paymentSettingsAdmin.dokanMangoPay.sendAnnouncementToNonConnectedSellers);
         await this.clearAndType(paymentSettingsAdmin.dokanMangoPay.announcementInterval, payment.mangoPay.announcementInterval);
-        await this.click(paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges);
+
+        await this.removeAttribute(paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges, 'disabled');
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.mangoPaySettings, paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
 
     // admin setup razorpay
     async setupRazorpay(payment: payment) {
-        await this.goToWcPaymentSettings();
+        await this.goto(data.subUrls.backend.wc.razorPaySettings);
 
-        await this.click(paymentSettingsAdmin.setupDokanRazorpay);
         // setup razorpay
         await this.check(paymentSettingsAdmin.dokanRazorpay.enableDisableDokanRazorpay);
         await this.clearAndType(paymentSettingsAdmin.dokanRazorpay.title, payment.razorPay.title);
@@ -155,16 +232,15 @@ export class PaymentsPage extends AdminPage {
         await this.check(paymentSettingsAdmin.dokanRazorpay.displayNoticeToConnectSeller);
         await this.check(paymentSettingsAdmin.dokanRazorpay.sendAnnouncementToConnectSeller);
         await this.clearAndType(paymentSettingsAdmin.dokanRazorpay.sendAnnouncementInterval, payment.razorPay.announcementInterval);
-        await this.click(paymentSettingsAdmin.dokanRazorpay.dokanRazorpaySaveChanges);
+        await this.removeAttribute(paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges, 'disabled');
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.razorPaySettings, paymentSettingsAdmin.dokanRazorpay.dokanRazorpaySaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
 
     // admin setup stripe express
     async setupStripeExpress(payment: payment) {
-        await this.goToWcPaymentSettings();
-
-        await this.click(paymentSettingsAdmin.setupDokanStripeExpress);
+        await this.goto(data.subUrls.backend.wc.stripeExpressSettings);
 
         // stripe express
         await this.check(paymentSettingsAdmin.stripeExpress.enableOrDisableStripeExpress);
@@ -197,8 +273,10 @@ export class PaymentsPage extends AdminPage {
         // advanced settings
         await this.check(paymentSettingsAdmin.stripeExpress.displayNoticeToNonConnectedSellers);
         await this.check(paymentSettingsAdmin.stripeExpress.sendAnnouncementToNonConnectedSellers);
-        await this.clearAndType(paymentSettingsAdmin.stripeExpress.announcementInterval, payment.stripeExpress.announcementInterval);
-        await this.click(paymentSettingsAdmin.stripeExpress.stripeExpressSaveChanges);
+        await this.type(paymentSettingsAdmin.stripeExpress.announcementInterval, payment.stripeExpress.announcementInterval);
+        await this.check(paymentSettingsAdmin.stripeExpress.debugLog);
+        await this.removeAttribute(paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges, 'disabled');
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.stripeExpressSettings, paymentSettingsAdmin.stripeExpress.stripeExpressSaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }

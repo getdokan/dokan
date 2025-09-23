@@ -16,6 +16,9 @@ test.describe('Booking Product test', () => {
     let apiUtils: ApiUtils;
     let bookableProductName: string;
 
+    // Optimize test timeout - reduced from 120s to 45s for faster execution
+    test.setTimeout(45000); // 45 seconds per test
+
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
@@ -30,27 +33,79 @@ test.describe('Booking Product test', () => {
         customer = new BookingPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
+        
+        // Retry API product creation with exponential backoff
+        let attempts = 0;
+        const maxAttempts = 3;
+        while (attempts < maxAttempts) {
+            try {
+                [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
+                console.log(`Successfully created bookable product: ${bookableProductName}`);
+                break;
+            } catch (error: any) {
+                attempts++;
+                console.log(`Attempt ${attempts} failed to create bookable product:`, error.message);
+                if (attempts === maxAttempts) {
+                    throw new Error(`Failed to create bookable product after ${maxAttempts} attempts: ${error.message}`);
+                }
+                // Faster retry: 0.5s, 1s, 2s  
+                await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempts - 1) * 500));
+            }
+        }
 
-        // disable vendor global rma settings
-        await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
+        // disable vendor global rma settings with error handling
+        try {
+            await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
+        } catch (error: any) {
+            console.log('Warning: Failed to set vendor RMA settings:', error.message);
+            // Don't fail the test setup for this non-critical operation
+        }
     });
 
     test.afterAll(async () => {
-        await aPage.close();
-        await vPage.close();
-        await cPage.close();
-        await apiUtils.dispose();
+        // Cleanup operations with error handling
+        try {
+            await apiUtils.activateModules(payloads.moduleIds.booking, payloads.adminAuth);
+        } catch (error: any) {
+            console.log('Warning: Failed to activate booking modules:', error.message);
+        }
+        
+        // Close pages with error handling
+        try {
+            await aPage?.close();
+        } catch (error: any) {
+            console.log('Warning: Failed to close admin page:', error.message);
+        }
+        
+        try {
+            await vPage?.close();
+        } catch (error: any) {
+            console.log('Warning: Failed to close vendor page:', error.message);
+        }
+        
+        try {
+            await cPage?.close();
+        } catch (error: any) {
+            console.log('Warning: Failed to close customer page:', error.message);
+        }
+        
+        try {
+            await apiUtils?.dispose();
+        } catch (error: any) {
+            console.log('Warning: Failed to dispose API utils:', error.message);
+        }
     });
 
-    // admin
+    // Admin Setup Tests (Sequential - module dependencies)
+    test('admin can enable woocommerce booking integration module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableBookingModule();
+    });
 
     test('admin can add booking product', { tag: ['@pro', '@admin'] }, async () => {
         await admin.adminAddBookingProduct(data.product.booking);
     });
 
-    // vendor
-
+    // Vendor UI Validation Tests (can run in parallel)
     test('vendor can view booking menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorBookingRenderProperly();
     });
@@ -67,24 +122,13 @@ test.describe('Booking Product test', () => {
         await vendor.vendorManageResourcesRenderProperly();
     });
 
+    // Vendor Product Management Tests (can run in parallel)
     test('vendor can add booking product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addBookingProduct({ ...data.product.booking, name: data.product.booking.productName() });
     });
 
     test('vendor can edit booking product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.editBookingProduct({ ...data.product.booking, name: bookableProductName });
-    });
-
-    test('vendor can filter booking products by date', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.filterBookingProducts('by-date', '1');
-    });
-
-    test('vendor can filter booking products by category', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.filterBookingProducts('by-category', 'Uncategorized');
-    });
-
-    test('vendor can filter booking products by other', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.filterBookingProducts('by-other', 'featured');
     });
 
     test('vendor can view booking product', { tag: ['@pro', '@vendor'] }, async () => {
@@ -103,36 +147,82 @@ test.describe('Booking Product test', () => {
         await vendor.duplicateBookingProduct(bookableProductName);
     });
 
-    test('vendor can permanently delete booking product', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
-        await vendor.deleteBookingProduct(bookableProductName);
+    // Vendor Filter Tests (can run in parallel)
+    test('vendor can filter booking products by date', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.filterBookingProducts('by-date', '1');
     });
 
+    test('vendor can filter booking products by category', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.filterBookingProducts('by-category', 'Uncategorized');
+    });
+
+    test('vendor can filter booking products by other', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.filterBookingProducts('by-other', 'featured');
+    });
+
+    test('vendor can permanently delete booking product', { tag: ['@pro', '@vendor'] }, async () => {
+        // Create a dedicated product for deletion to avoid affecting other tests
+        let productToDelete: string = '';
+        let attempts = 0;
+        const maxAttempts = 3;
+        
+        while (attempts < maxAttempts) {
+            try {
+                [, , productToDelete] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
+                break;
+            } catch (error: any) {
+                attempts++;
+                console.log(`Attempt ${attempts} failed to create product for deletion:`, error.message);
+                if (attempts === maxAttempts) {
+                    throw new Error(`Failed to create product for deletion after ${maxAttempts} attempts: ${error.message}`);
+                }
+                await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempts - 1) * 500));
+            }
+        }
+        
+        if (!productToDelete) {
+            throw new Error('Failed to create product for deletion test');
+        }
+        
+        await vendor.deleteBookingProduct(productToDelete);
+    });
+
+    // Vendor Resource Management Tests (Sequential - resource dependencies)
     test('vendor can add booking resource', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.addBookingResource(data.product.booking.resource.resourceName());
+        const resourceName = data.product.booking.resource.resourceName();
+        await vendor.addBookingResource(resourceName);
+        // Store in test context for next test
+        test.info().annotations.push({ type: 'resourceName', description: resourceName });
     });
 
     test('vendor can edit booking resource', { tag: ['@pro', '@vendor'] }, async () => {
-        const bookingResourceName = data.product.booking.resource.resourceName();
-        await vendor.addBookingResource(bookingResourceName);
-        await vendor.editBookingResource({ ...data.product.booking.resource, name: bookingResourceName });
+        const resourceName = data.product.booking.resource.resourceName();
+        await vendor.addBookingResource(resourceName);
+        await vendor.editBookingResource({ ...data.product.booking.resource, name: resourceName });
     });
 
     test('vendor can delete booking resource', { tag: ['@pro', '@vendor'] }, async () => {
-        const bookingResourceName = data.product.booking.resource.resourceName();
-        await vendor.addBookingResource(bookingResourceName);
-        await vendor.deleteBookingResource(bookingResourceName);
+        const resourceName = data.product.booking.resource.resourceName();
+        await vendor.addBookingResource(resourceName);
+        await vendor.deleteBookingResource(resourceName);
     });
 
+    // Booking Flow Tests (can run in parallel)
     test('vendor can add booking for guest customer', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addBooking(bookableProductName, data.bookings);
+    });
+
+    test('customer can buy bookable product', { tag: ['@pro', '@customer'] }, async () => {
+        await customer.buyBookableProduct(bookableProductName, data.bookings); //todo: failed on git action if ran after 12 am local time
     });
 
     test('vendor can add booking for existing customer', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addBooking(bookableProductName, data.bookings, data.customer.username);
     });
 
-    test('customer can buy bookable product', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.buyBookableProduct(bookableProductName, data.bookings); //todo: failed on git action if ran after 12 am local time
+    // Admin Cleanup (Sequential - module dependencies)
+    test('admin can disable woocommerce booking integration module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.booking, payloads.adminAuth);
+        await admin.disableBookingModule();
     });
 });

@@ -720,7 +720,7 @@ class Manager {
     /**
      * Validate product id (if it's a variable product, return it's parent id)
      *
-     * Moved from \WeDevs\Dokan\Commission() ( commission.php file ) in version DOKAN_SINCE
+     * Moved from \WeDevs\Dokan\Commission() ( commission.php file ) in version 3.14.0
      *
      * @since  2.9.21
      *
@@ -742,7 +742,7 @@ class Manager {
     /**
      * Returns product commission settings data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -755,7 +755,7 @@ class Manager {
     /**
      * Saves and returns product commission settings data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
@@ -766,5 +766,52 @@ class Manager {
 
         $setting = new Product( $product_id );
         return $setting->save( $data );
+    }
+
+    /**
+     * Set product brands.
+     *
+     * @since 4.0.4
+     *
+     * @param int   $product_id Product ID.
+     * @param array $brands     Array of brand IDs.
+     */
+    public function save_brands( int $product_id, array $brands ) {
+        // Ensure valid brand IDs.
+        $brands = array_map( 'absint', $brands );
+
+        return wp_set_object_terms( $product_id, $brands, 'product_brand' );
+    }
+
+    /**
+     * Get product brands.
+     *
+     * @since 4.0.4
+     *
+     * @param int    $product_id Product ID.
+     * @param string $fields     Fields to return. Default is 'all'. Other options are 'ids', 'names', 'slugs', 'count', 'all_with_object_id'.
+     *
+     * @return array
+     */
+    public function get_brands( int $product_id, string $fields = 'all' ): array {
+        $brands = wp_get_post_terms( $product_id, 'product_brand', array( 'fields' => $fields ) );
+        if ( is_wp_error( $brands ) ) {
+            return [];
+        }
+
+        return $brands;
+    }
+
+    /**
+     * Get product brand IDs.
+     *
+     * @since 4.0.4
+     *
+     * @param int $product_id Product ID.
+     *
+     * @return array
+     */
+    public function get_brand_ids( int $product_id ): array {
+        return $this->get_brands( $product_id, 'ids' );
     }
 }

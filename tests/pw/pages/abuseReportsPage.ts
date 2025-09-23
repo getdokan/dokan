@@ -16,6 +16,40 @@ export class AbuseReportsPage extends AdminPage {
 
     // abuse reports
 
+    // enable report abuse module
+    async enableReportAbuseModule(productName: string) {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(selector.admin.dokan.menus.abuseReports);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.toBeVisible(selector.admin.dokan.settings.menus.productReportAbuse);
+
+        // single product page
+        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.toBeVisible(abuseReportCustomer.reportAbuse);
+    }
+
+    // disable report abuse module
+    async disableReportAbuseModule(productName: string) {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(selector.admin.dokan.menus.abuseReports);
+
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.notToBeVisible(selector.admin.dokan.settings.menus.productReportAbuse);
+
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.abuseReports);
+        await this.notToBeVisible(abuseReportAdmin.abuseReportsText);
+
+        // single product page
+        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.notToBeVisible(abuseReportCustomer.reportAbuse);
+    }
+
     // abuse report render properly
     async adminAbuseReportRenderProperly() {
         await this.goIfNotThere(data.subUrls.backend.dokan.abuseReports);

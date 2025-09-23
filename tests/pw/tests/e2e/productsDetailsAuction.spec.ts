@@ -59,7 +59,8 @@ test.describe('Auction Product details functionality test', () => {
     test('vendor can remove auction product category (multiple)', { tag: ['@pro', '@vendor'] }, async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { product_category_style: 'multiple' });
         const uncategorizedId = await apiUtils.getCategoryId('Uncategorized', payloads.adminAuth);
-        const [, productId] = await apiUtils.createProduct({ ...payloads.createAuctionProduct(), categories: [{ id: uncategorizedId }, { id: CATEGORY_ID }] }, payloads.vendorAuth); // need multiple categories
+        const clothingsId = await apiUtils.getCategoryId('clothings', payloads.adminAuth);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createAuctionProduct(), categories: [{ id: uncategorizedId }, { id: clothingsId }, { id: CATEGORY_ID }] }, payloads.vendorAuth); // need multiple categories
         await vendor.removeProductCategory(productId, [data.product.category.clothings]);
     });
 
@@ -182,6 +183,15 @@ test.describe('Auction Product details functionality test', () => {
 
     test('vendor can update product general options', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addProductGeneralOption(productIdBasic, { ...data.product.auction, itemCondition: 'used', auctionType: 'reverse' });
+    });
+
+    test('vendor can enable product relist options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductRelistingOption(productIdBasic, data.product.auction);
+    });
+
+    test('vendor can update product relist options', { tag: ['@pro', '@vendor'] }, async () => {
+        test.skip(true, 'not implemented yet');
+        await vendor.addProductRelistingOption(productIdFull, { ...data.product.auction, relistIfFailAfterNHours: '5', relistIfNotPaidAfterNHours: '6', relistAuctionDurationInH: '7' });
     });
 
     // product inventory options

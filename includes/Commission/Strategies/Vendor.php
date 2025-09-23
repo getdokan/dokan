@@ -2,15 +2,12 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Model\Setting;
-use WeDevs\Dokan\Commission\Settings\Builder;
-
 class Vendor extends AbstractStrategy {
 
     /**
      * Vendor data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int
      */
@@ -19,14 +16,14 @@ class Vendor extends AbstractStrategy {
     /**
      * Vendor strategy source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'vendor';
 
     /**
      * Category id.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var mixed
      */
@@ -35,7 +32,7 @@ class Vendor extends AbstractStrategy {
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param int $vendor_id
      * @param int $category_id
@@ -45,12 +42,25 @@ class Vendor extends AbstractStrategy {
     public function __construct( $vendor_id, $category_id ) {
         $this->vendor_id = $vendor_id;
         $this->category_id = $category_id;
+
+        parent::__construct();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function set_next(): AbstractStrategy {
+        if ( ! $this->next ) {
+			$this->next = new GlobalStrategy( $this->category_id );
+        }
+
+        return $this;
     }
 
     /**
      * Returns category id.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int
      */
@@ -61,7 +71,7 @@ class Vendor extends AbstractStrategy {
     /**
      * Returns vendor commission source.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -72,14 +82,13 @@ class Vendor extends AbstractStrategy {
     /**
      * Returns vendor commission settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
+     * @return void
      */
-    public function get_settings(): Setting {
-        $settings = Builder::build( Builder::TYPE_VENDOR, $this->vendor_id );
-        $settings = $settings->get();
-        $settings->set_category_id( $this->get_category_id() );
+    public function set_settings() {
+        $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->vendor_id, $this->category_id );
+        $this->settings = $settings->get();
 
         return $settings;
     }

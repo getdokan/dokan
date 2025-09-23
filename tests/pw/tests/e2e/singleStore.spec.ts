@@ -23,7 +23,6 @@ test.describe('Single store functionality test', () => {
     });
 
     test.skip('customer can view store open-close time on single store', { tag: ['@lite', '@customer'] }, async () => {
-        // todo: pre: need store open close time
         await customer.storeOpenCloseTime(data.predefined.vendorStores.vendor1);
     });
 

@@ -137,6 +137,19 @@ export class StoreListingPage extends CustomerPage {
 
         await this.clickAndWaitForResponse(data.subUrls.frontend.storeListing, storeList.filters.filterDetails.apply);
         await this.notToHaveCount(storeList.storeCard.storeCardDiv, 0);
+
+        switch (filterBy) {
+            case 'featured':
+                await this.toHaveEqualCount(storeList.storeCard.storeCardDiv, storeList.storeCard.featuredLabel);
+                break;
+
+            case 'open-now':
+                await this.toHaveEqualCount(storeList.storeCard.storeCardDiv, storeList.storeCard.openCloseStatus);
+                break;
+
+            default:
+                break;
+        }
     }
 
     // stores on map

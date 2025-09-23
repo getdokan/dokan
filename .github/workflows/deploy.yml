@@ -1,0 +1,44 @@
+name: Deploy and Release Plugin to WP.org
+
+on:
+    push:
+        tags:
+            - "*"
+jobs:
+    releaseToWPOrg:
+        name: Release to WordPress.org
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            - name: Setup PHP 7.4
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: '7.4'
+                coverage: none
+                tools: composer:v2
+            - name: Build
+              run: |
+                composer install
+                composer install --no-dev -o
+                npm install
+                npm run build
+            - name: Install SVN ( Subversion )
+              run: |
+                sudo apt-get update
+                sudo apt-get install subversion
+            - name: WordPress Plugin Deploy
+              id: deploy
+              uses: 10up/action-wordpress-plugin-deploy@stable
+              with:
+                generate-zip: true
+              env:
+                SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+                SLUG: dokan-lite
+            - name: Create GitHub release
+              uses: softprops/action-gh-release@v2
+              with:
+                files: ${{steps.deploy.outputs.zip-path}}
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

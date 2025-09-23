@@ -2,7 +2,7 @@ import fs from 'fs';
 import { execSync } from 'child_process';
 import { Browser, BrowserContextOptions, Page } from '@playwright/test';
 
-const { LOCAL, SITE_PATH } = process.env;
+const { CI, SITE_PATH } = process.env;
 
 export const helpers = {
     // replace '_' to space & capitalize first letter of string
@@ -453,7 +453,7 @@ export const helpers = {
     // execute wp cli command
     async exeCommandWpcli(command: string, directoryPath = process.cwd()) {
         process.chdir(directoryPath);
-        command = LOCAL ? `cd ${SITE_PATH} && ${command}` : `npm run wp-env run tests-cli  ${command}`;
+        command = CI ? `npm run wp-env run tests-cli  ${command}` : `cd ${SITE_PATH} && ${command}`;
         // console.log(`Executing command: ${command}`);
         await this.exeCommand(command);
     },
@@ -544,4 +544,13 @@ export const helpers = {
 
         return result;
     },
+
+    // Parse boolean value from string. Environment variables are always strings.
+    parseBoolean(value: string | undefined, defaultValue = false): boolean {
+        if (value === undefined) return defaultValue;
+        const normalized = value.trim().toLowerCase();
+        return normalized === "true" || normalized === "1" || normalized === "yes";
+      }
 };
+
+export const parseBoolean = helpers.parseBoolean;

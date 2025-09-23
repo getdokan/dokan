@@ -103,6 +103,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_transaction_types' ],
                     'permission_callback' => [ $this, 'get_transaction_types_permissions_check' ],
+                    'args'                => $this->get_collection_params(), // It returns a collection of items, can added pagination type support
                 ],
                 'schema' => [ $this, 'get_public_item_schema_for_transaction_types' ],
             ]
@@ -114,6 +115,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_stores' ],
                     'permission_callback' => [ $this, 'get_stores_permissions_check' ],
+                    'args'                => $this->get_collection_params(), // This is a collection endpoint
                 ],
                 'schema' => [ $this, 'get_public_schema_for_stores' ],
             ]

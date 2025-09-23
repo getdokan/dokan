@@ -1,17 +1,17 @@
-=== Dokan - Powerful WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
-Contributors: tareq1988, wedevs, nizamuddinbabu
-Donate Link: http://tareq.co/donate/
+=== Dokan: AI Powered WooCommerce Multivendor Marketplace Solution – Build Your Own Amazon, eBay, Etsy ===
+Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
+Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
-Requires at least: 6.4
-Tested up to: 6.6.2
-WC requires at least: 8.0.0
-WC tested up to: 9.3.3
+Requires at least: 6.6
+Tested up to: 6.8.2
+WC requires at least: 8.5.0
+WC tested up to: 10.1.2
 Requires PHP: 7.4
-Stable tag: 3.13.1
+Stable tag: 4.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Transform your WooCommerce site into a multivendor marketplace with Dokan - a powerful and advanced WooCommerce multivendor marketplace solution
+Transform your WooCommerce site into a multivendor marketplace with Dokan – an AI powered & advanced WooCommerce marketplace solution
 
 == Description ==
 
@@ -93,11 +93,14 @@ Dokan is also compatible with the [Otel theme](https://dokan.co/wordpress/otel-t
 
 With Dokan, experience a smooth, fast setup process in under an hour and have your WooCommerce multivendor marketplace running within a day. It perfectly matches your expectations and is designed with intuitive practices from eCommerce leaders like WooCommerce and others.
 
+= AI Assistant =
+Generate product titles, short & long descriptions using generative AI directly from the vendor dashboard.
+
 = A RELIABLE GROWING PLATFORM & COMMUNITY =
 
 We continuously update Dokan with reliable services for flawless operation, staying ahead of industry trends and introducing new features with each update.
 
-See Our Official GitHub page: [Official Dokan GitHub](https://github.com/weDevsOfficial/dokan/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
+See Our Official GitHub page: [Official Dokan GitHub](https://github.com/getdokan/dokan/)
 
 = A SCALABLE MARKET =
 
@@ -157,7 +160,7 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 **Frontend Dashboard For Each Seller**
 
 * Vendors can manage products, control orders from customers, and make payment withdrawals right from the site frontend.
-
+* Vendors can manually create or place orders on behalf of customers (Pro).
 * WordPress backend and administrative settings can only be accessed by the admin.
 
 **Earn From Each Sale**
@@ -179,7 +182,7 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 **Simple Product Management**
 
 * Create and manage your products from the frontend.
-* [Create variable or downloadable products](https://wedevs.com/87025/types-of-products-you-can-create-using-woocommerce/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro).
+* [Create variable or downloadable products](https://wedevs.com/blog/87025/types-of-products-you-can-create-using-woocommerce/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro).
 * Vendors have the option to [manage product attributes](https://dokan.co/docs/wordpress/vendor-dashboard/products/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro).
 * Vendors can manage downloadable [product permission, expiry date, and download limit](https://dokan.co/docs/wordpress/tutorials/how-to-create-a-digital-product/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro).
 
@@ -188,11 +191,13 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 * Admins can [overview orders](https://dokan.co/docs/wordpress/vendor-dashboard/orders/) and filter by sale, date, top vendors, or top earners.
 * Let Vendors easily migrate from other marketplaces to your Dokan marketplace using the [Export/Import feature](https://dokan.co/wordpress/modules/export-import/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro) without losing any product data, including stock value, SKU information, tags and other information.
 * Admin has access to all customer reviews on the marketplace. The customer can leave [reviews for a product/vendor](https://dokan.co/wordpress/modules/dokan-vendor-review/) they are satisfied with. The vendor cannot change a review, promoting transparency.
+* Vendors can track earnings, revenue by product, category, variation, and download statements (Pro).
 
 **Vendors Discounts Creation & Management**
 * Configure coupon expiration and restrictions.
 * All product reviews are managed by vendors (with admin override), and make decisions on whether to display the review on their site.
 * Vendors will be able to create diverse [coupons](https://dokan.co/docs/wordpress/vendor-dashboard/coupons-2/) by setting different rules based on usage limit, expiration date, excluding sale items while also specifying only certain products on which the coupons are valid on (Pro).
+* Admins can create coupons without affecting vendors’ earnings at the product or marketplace level (pro).
 
 **💪‍ ADMINS CONTROL EVERY ASPECT OF THE MARKETPLACE**
 * Admin can view and modify vendor store products.
@@ -225,9 +230,10 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 
 = 💥💥 EXTENDED FEATURES BY SIMPLY ENABLING A TOGGLE BUTTON 💥💥 =
 
-Dokan comes with a number of advanced features & modules that boost your WooCommerce marketplace position, always keeping you one step ahead of the competition. Continuous innovations and features are brought with regular and timely releases. Check out the changelog [here](https://wedevs.com/docs/dokan/changelog/)
+Dokan comes with a number of advanced features & modules that boost your WooCommerce marketplace position, always keeping you one step ahead of the competition. Continuous innovations and features are brought with regular and timely releases. Check out the changelog [here](https://dokan.co/wordpress/changelog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
 * [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
+* [Print on Demand Marketplace](https://dokan.co/wordpress/modules/printful-integration/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
 * [Minimum Maximum Order](https://dokan.co/wordpress/modules/minimum-maximum-order/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
 * [Product Advertising](https://dokan.co/wordpress/modules/product-advertising/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
 * [Product Subscription](https://dokan.co/wordpress/modules/product-subscription/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
@@ -273,7 +279,7 @@ Dokan comes with a number of advanced features & modules that boost your WooComm
 
 This could have bugs and lack some features. If you want to contribute to this project, you are more than welcome.
 
-👨‍💻 [Please fork the repository from Github](https://github.com/weDevsOfficial/dokan) 👨‍💻
+👨‍💻 [Please fork the repository from Github](https://github.com/getdokan/dokan) 👨‍💻
 
 
 = Privacy Policy =
@@ -284,10 +290,7 @@ Appsero SDK **does not gather any data by default.** The SDK only starts gatheri
 Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
 
 = Contribute =
-This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/weDevsOfficial/dokan).
-
-= Author =
-Brought to you by [Tareq Hasan](http://tareq.co) from [weDevs](http://wedevs.com)
+This may have bugs and lack of many features. If you want to contribute on this project, you are more than welcome. Please fork the repository from [Github](https://github.com/getdokan/dokan).
 
 == Installation ==
 
@@ -324,55 +327,63 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Screenshots ==
 
-1. Admin Dashboard
-2. Withdraw requests from sellers
-3. Settings &rarr; General
-4. Settings &rarr; Selling Options
-5. Settings &rarr; Withdraw Options
-6. Settings &rarr; Page Settings
-7. Settings &rarr; Appearance
-8. Seller Dashboard in site frontend
-9. Frontend &rarr; Products Listing
-10. Frontend &rarr; Create a new Product
-11. Frontend &rarr; Edit a product
-12. Frontend &rarr; Orders Listing
-13. Frontend &rarr; Orders &rarr; Details
-14. Frontend &rarr; Submit withdraw request
-15. Frontend &rarr; Store Settings
-16. Frontend &rarr; Store Payment Settings
-17. Frontend &rarr; Individual Seller Store-1
-18. Frontend &rarr; Individual Seller Store-2
-19. Frontend &rarr; Individual Seller Store-3
-
+1. Dokan Install
+2. Dokan Modules
+3. Admin &rarr; Report Logs
+4. Admin Settings &rarr; General
+5. Admin Settings &rarr; Selling Options
+6. Seller Badges
+7. Admin Settings &rarr; Appearance
+8. Admin Settings &rarr; Withdraw Options
+9. Frontend &rarr; Vendor Dashboard
+10. Frontend &rarr; Product Listing
+11. Frontend &rarr; Create a new Product
+12. Frontend &rarr; Orders Details
+13. Frontend &rarr; Vendor Reports
+14. Frontend &rarr; Vendor Badge View
+15. Frontend &rarr; Vendor Verification
+16. Frontend &rarr; Store Edit
+17. Frontend &rarr; Vendor Payment Setting
+18. Frontend &rarr; Vendor Withdraw Methods
+19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+= v4.0.8 ( Sep 12, 2025 ) =
+- **new:** Added "Chat with us" admin submenu for providing direct access to support chat functionality.
+- **enhance:** Modernize vendor selection with searchable dropdown for better performance.
+- **fix:** Prevent potential errors on additional product sections.
 
-= v3.13.1 ( Nov 11, 2024 ) =
+= v4.0.7 ( Sep 01, 2025 ) =
+- **fix:** Enhanced security controls for vendor account credentials management.
 
-- **update:** Compatibility with the Printful Integration Module added.
-- **fix:** Improved logic to ensure the `add new category` button only appears when appropriate conditions are met, enhancing user experience.
+= v4.0.6 ( Aug 29, 2025 ) =
+- **update:** Added translation support for dashboard analytics report scripts to improve internationalization (i18n).
+- **fix:** Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.
+- **fix:** Added async search in store category in vendor edit.
+- **fix:** Admin not receiving withdrawal request email notifications.
 
-= v3.13.0 ( Nov 06, 2024 ) =
+= v4.0.5 ( Jul 24, 2025 ) =
 
-- **feat:** Replaced the Dokan array container with the League Container, ensuring backward compatibility for seamless performance and enhanced flexibility.
-- **feat:** Updated Dokan to be fully compatible with WooCommerce Analytics Reports
+- **fix:** Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.
 
-= v3.12.6 ( Oct 24, 2024 ) =
+= v4.0.4 ( Jul 17, 2025 ) =
 
-- **fix:** Fixed js error on frontend pages.
+- **update:** Admin Notice UI with Modern Design and Improved User Experience.
+- **update:** Enhanced Product Brand Integration with Dedicated Template and Manager Methods.
+- **update:** Enhanced product featured image selection with cropping functionality in the product editor.
+- **fix:** Vendor/store names with special characters (e.g., apostrophes) now display correctly in the vendor dropdown on the admin product edit screen.
+- **fix:** Display correct earning in vendor dashboard product add/edit page for different category.
+- **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
+- **fix:** Improved how product inventory information is retrieved, ensuring more accurate and consistent display of stock values.
+- **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
+- **fix:** Resolve an issue for "sold individually" option does not save on create or update a product.
 
-= v3.12.5 ( Oct 16, 2024 ) =
-
-- **fix:** Implement order trash and untrash handling for Dokan
-- **fix:** Added wordpress native i18n support
-
-= v3.12.4 ( Oct 03, 2024 ) =
-
-- **update:** Added `$data` parameter to `dokan_update_vendor` hook.
-
-[CHECK THE FULL CHANGELOG](https://raw.githubusercontent.com/getdokan/dokan/develop/CHANGELOG.md).
+[CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
 
 == Upgrade Notice ==
 
 = 3.0.0 =
 **Important Update** This update changes code structures for improving performance. Make sure to take backup and read the changlogs first before upgrade process.
+
+= 4.0.0 =
+**Important Update** This update includes major changes that may impact your existing commission settings, email templates, or vendor panel UI updates. Please review the changelog and back up your site before updating to ensure smooth transition.

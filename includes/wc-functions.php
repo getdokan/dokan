@@ -226,18 +226,6 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
         $sale_price    = (string) isset( $data['_sale_price'] ) ? wc_clean( $data['_sale_price'] ) : '';
         $now           = dokan_current_datetime();
 
-        update_post_meta( $post_id, '_regular_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
-        update_post_meta( $post_id, '_sale_price', '' === $sale_price ? '' : wc_format_decimal( $sale_price ) );
-
-        // Dates
-        update_post_meta( $post_id, '_sale_price_dates_from', $date_from ? strtotime( $date_from ) : '' );
-        update_post_meta( $post_id, '_sale_price_dates_to', $date_to ? strtotime( '+ 23 hours', strtotime( $date_to ) ) : '' );
-
-        if ( $date_to && ! $date_from ) {
-            $date_from = $now->format( 'Y-m-d' );
-            update_post_meta( $post_id, '_sale_price_dates_from', $now->getTimestamp() );
-        }
-
         // Update price if on sale
         if ( '' !== $sale_price && '' === $date_to && '' === $date_from ) {
             update_post_meta( $post_id, '_price', wc_format_decimal( $sale_price ) );
@@ -269,11 +257,8 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
     );
 
     // Sold Individually
-    if ( ! empty( $data['_sold_individually'] ) ) {
-        update_post_meta( $post_id, '_sold_individually', 'yes' );
-    } else {
-        update_post_meta( $post_id, '_sold_individually', '' );
-    }
+    $sold_individually = ! empty( $data['_sold_individually'] ) && 'yes' === $data['_sold_individually'] ? 'yes' : 'no';
+    update_post_meta( $post_id, '_sold_individually', $sold_individually );
 
     // Stock Data
     $manage_stock      = ! empty( $data['_manage_stock'] ) && 'grouped' !== $product_type ? 'yes' : 'no';
@@ -302,7 +287,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
             $manage_stock = $data['_manage_stock'];
             $backorders   = wc_clean( $data['_backorders'] );
         }
-    
+
         update_post_meta( $post_id, '_manage_stock', $manage_stock );
         update_post_meta( $post_id, '_backorders', $backorders );
         if ( $stock_status ) {
@@ -312,7 +297,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
                 dokan_log( 'product stock update exception' );
             }
         }
-    
+
         // Retrieve original stock value from the hidden field
         $original_stock = isset( $data['_original_stock'] ) ? wc_stock_amount( wc_clean( $data['_original_stock'] ) ) : '';
         // Clean the current stock value
@@ -326,7 +311,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
                 wc_update_product_stock( $post_id, $stock_amount );
             }
         }
-    
+
         // Update low stock amount regardless of stock changes
         $_low_stock_amount = isset( $data['_low_stock_amount'] ) ? wc_clean( $data['_low_stock_amount'] ) : '';
         $_low_stock_amount = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $_low_stock_amount ) ) : '';
@@ -402,6 +387,47 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
         $woocommerce_errors[] = __( 'Product SKU must be unique', 'dokan-lite' );
     }
 
+    // Set Sales and prices
+    $product->set_regular_price( $regular_price );
+    $product->set_sale_price( $sale_price );
+
+    // Site timezone
+    $tz_string = wc_timezone_string();
+    $timezone  = $tz_string ? new DateTimeZone( $tz_string ) : new DateTimeZone( 'UTC' );
+
+    // Sale starting date
+    if ( ! empty( $date_from ) ) {
+        try {
+            $from_dt = new WC_DateTime( $date_from . ' 00:00:00', $timezone );
+            $product->set_date_on_sale_from( $from_dt );
+        } catch ( Exception $e ) {
+            error_log( 'Invalid date_from: ' . $date_from . ' | ' . $e->getMessage() );
+            $product->set_date_on_sale_from( null );
+        }
+    } else {
+        $product->set_date_on_sale_from( null );
+    }
+
+    // Sale ending date
+    if ( ! empty( $date_to ) ) {
+        try {
+            $to_dt = new WC_DateTime( $date_to . ' 23:59:59', $timezone );
+            $product->set_date_on_sale_to( $to_dt );
+
+            if ( empty( $date_from ) ) {
+                // Automatically add date of today if start date is empty
+                $from_obj = new WC_DateTime( 'now', $timezone );
+                $product->set_date_on_sale_from( $from_obj );
+            }
+        } catch ( Exception $e ) {
+            error_log( 'Invalid date_to: ' . $date_to . ' | ' . $e->getMessage() );
+            $product->set_date_on_sale_to( null );
+        }
+    } else {
+        $product->set_date_on_sale_to( null );
+    }
+
+    // save the product
     $product->save();
 
     // Do action for product type
@@ -939,7 +965,7 @@ add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
  * Show more products from current seller
  *
  * @since 2.5
- * @since DOKAN_LITE_SINCE added filter 'dokan_get_more_products_per_page'
+ * @since 3.2.2 added filter 'dokan_get_more_products_per_page'
  *
  * @param int|string $seller_id
  * @param int|string $posts_per_page

@@ -28,6 +28,8 @@ class Rewrites {
         add_filter( 'query_vars', [ $this, 'register_query_var' ] );
         add_filter( 'woocommerce_get_breadcrumb', [ $this, 'store_page_breadcrumb' ] );
         add_filter( 'tiny_mce_before_init', [ $this, 'remove_h1_from_heading_in_edit_product_page' ] );
+
+        add_action( 'wp', [ $this, 'maybe_flash_rewrite_rules' ], 99 );
     }
 
     /**
@@ -382,7 +384,7 @@ class Rewrites {
     /**
      * Returns an array of arguments for ordering products based on the selected values.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.7
      *
      * @param string $orderby Order by param
      * @param string $order Order param
@@ -458,7 +460,7 @@ class Rewrites {
     /**
      * Handle numeric price sorting
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.7
      *
      * @param array $args Query args
      *
@@ -473,7 +475,7 @@ class Rewrites {
     /**
      * Handle numeric price sorting
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.7
      *
      * @param array $args Query args
      *
@@ -490,7 +492,7 @@ class Rewrites {
      *
      * This lets us sort by meta value desc, and have a second orderby param
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.7
      *
      * @param array $args Query args
      *
@@ -505,7 +507,7 @@ class Rewrites {
     /**
      * Order by rating post clauses
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.7
      *
      * @param array $args Query args
      *
@@ -520,7 +522,7 @@ class Rewrites {
     /**
      * Join wc_product_meta_lookup to posts if not already joined.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.7
      *
      * @param string $sql SQL join
      *
@@ -533,5 +535,24 @@ class Rewrites {
             $sql .= " LEFT JOIN {$wpdb->wc_product_meta_lookup} wc_product_meta_lookup ON $wpdb->posts.ID = wc_product_meta_lookup.product_id ";
         }
         return $sql;
+    }
+
+    /**
+     * Flush rewrite rules if the version is 4.0 or above.
+     *
+     * @since 4.0.0
+     *
+     * @return void
+     */
+    public function maybe_flash_rewrite_rules() {
+        $flash = get_option( 'dokan_rewrite_rules_needs_flashing', 'yes' );
+
+        if ( 'yes' !== $flash ) {
+            return;
+        }
+
+        dokan()->flush_rewrite_rules();
+
+        update_option( 'dokan_rewrite_rules_needs_flashing', 'no', true );
     }
 }

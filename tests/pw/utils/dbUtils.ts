@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import { serialize, unserialize, isSerialized } from 'php-serialize';
+import { isSerialized, serialize, unserialize } from 'php-serialize';
 import { helpers } from '@utils/helpers';
 
 const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
@@ -58,11 +58,32 @@ export const dbUtils = {
 
     // set user meta
     async setUserMeta(userId: string, metaKey: string, metaValue: object | string, serializeData?: boolean): Promise<any> {
-        metaValue = serializeData && !isSerialized(metaValue as string) ? serialize(metaValue) : metaValue;
-        const metaExists = await dbUtils.dbQuery(`SELECT COUNT(*) AS count FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key = ?;`, [userId, metaKey]);
-        const query = metaExists[0].count > 0 ? `UPDATE ${dbPrefix}_usermeta SET meta_value = ? WHERE user_id = ? AND meta_key = ?;` : `INSERT INTO ${dbPrefix}_usermeta (user_id, meta_key, meta_value) VALUES (?, ?, ?);`;
-        const res = await dbUtils.dbQuery(query, metaExists[0].count > 0 ? [metaValue, userId, metaKey] : [userId, metaKey, metaValue]);
-        return res;
+        try {
+            // Validate required parameters
+            if (userId === undefined || userId === null) {
+                throw new Error('setUserMeta: userId is required and cannot be null or undefined.');
+            }
+            if (metaKey === undefined || metaKey === null) {
+                throw new Error('setUserMeta: metaKey is required and cannot be null or undefined.');
+            }
+            // Sanitize metaValue: replace undefined with null
+            metaValue = metaValue === undefined ? null : metaValue;
+            metaValue = serializeData && !isSerialized(metaValue as string) ? serialize(metaValue) : metaValue;
+            const metaExists = await dbUtils.dbQuery(`SELECT COUNT(*) AS count
+                                                      FROM ${dbPrefix}_usermeta
+                                                      WHERE user_id = ?
+                                                        AND meta_key = ?;`, [userId, metaKey]);
+            const query = metaExists[0].count > 0 ? `UPDATE ${dbPrefix}_usermeta
+                                                     SET meta_value = ?
+                                                     WHERE user_id = ?
+                                                       AND meta_key = ?;` : `INSERT INTO ${dbPrefix}_usermeta (user_id, meta_key, meta_value)
+                                                                             VALUES (?, ?, ?);`;
+            const res = await dbUtils.dbQuery(query, metaExists[0].count > 0 ? [metaValue, userId, metaKey] : [userId, metaKey, metaValue]);
+            return res;
+        } catch (error) {
+            console.error('Error in setUserMeta:', error);
+            throw error;
+        }
     },
 
     // update user meta
@@ -99,6 +120,13 @@ export const dbUtils = {
         const newSettings = typeof updatedSettings === 'object' ? helpers.deepMergeObjects(currentSettings, updatedSettings) : updatedSettings;
         await this.setOptionValue(optionName, newSettings, serializeData);
         return [currentSettings, newSettings];
+    },
+
+    // delete option row
+    async deleteOptionRow(optionNames: string[]): Promise<any> {
+        const query = `DELETE FROM ${dbPrefix}_options WHERE option_name IN (${optionNames.map(() => '?').join(',')})`;
+        const res = await dbUtils.dbQuery(query, optionNames);
+        return res;
     },
 
     // create abuse report
@@ -166,7 +194,7 @@ export const dbUtils = {
     async updateProductType(productId?: string): Promise<void> {
         // get term ids
         const termIdQuery = `SELECT t1.term_id AS simple_term_id, t2.term_id AS subscription_term_id
-                    FROM (SELECT term_id FROM ${dbPrefix}_terms WHERE name = ? ORDER BY term_id DESC LIMIT 1) t1, ${dbPrefix}_terms t2 
+                    FROM (SELECT term_id FROM ${dbPrefix}_terms WHERE name = ? ORDER BY term_id DESC LIMIT 1) t1, ${dbPrefix}_terms t2
                     WHERE t2.name = ?;
                 `;
         const [termIdQueryResult] = await dbUtils.dbQuery(termIdQuery, ['simple', 'product_pack']);
@@ -174,9 +202,9 @@ export const dbUtils = {
         const subscriptionTermId = termIdQueryResult.subscription_term_id;
         // console.log('simpleTermId:', simpleTermId, 'subscriptionTermId:', subscriptionTermId);
 
-        const termTaxonomyIdQuery = `SELECT  t1.term_taxonomy_id AS simple_term_taxonomy_id,  t2.term_taxonomy_id AS subscription_term_taxonomy_id 
-                    FROM ${dbPrefix}_term_taxonomy t1, ${dbPrefix}_term_taxonomy t2 
-                    WHERE  t1.term_id = ? AND t2.term_id = ?;    
+        const termTaxonomyIdQuery = `SELECT  t1.term_taxonomy_id AS simple_term_taxonomy_id,  t2.term_taxonomy_id AS subscription_term_taxonomy_id
+                    FROM ${dbPrefix}_term_taxonomy t1, ${dbPrefix}_term_taxonomy t2
+                    WHERE  t1.term_id = ? AND t2.term_id = ?;
                 `;
         const [termTaxonomyIdQueryResult] = await dbUtils.dbQuery(termTaxonomyIdQuery, [simpleTermId, subscriptionTermId]);
         const simpleTermTaxonomyId = termTaxonomyIdQueryResult.simple_term_taxonomy_id;
@@ -216,5 +244,13 @@ export const dbUtils = {
             WHERE NOT EXISTS (  SELECT 1 FROM ${dbPrefix}_dokan_follow_store_followers WHERE vendor_id = ? AND follower_id = ? );`;
         const res = await dbUtils.dbQuery(query, [vendorId, followerId, currentTime, vendorId, followerId]);
         return res;
+    },
+
+    async addStoreMapLocation(sellerId: string) {
+        await dbUtils.updateUserMeta(sellerId, 'dokan_profile_settings', { find_address: 'New York, NY, USA' });
+        await dbUtils.setUserMeta(sellerId, 'dokan_geo_latitude', '40.7127753', false);
+        await dbUtils.setUserMeta(sellerId, 'dokan_geo_longitude', '-74.0059728', false);
+        await dbUtils.setUserMeta(sellerId, 'dokan_geo_public', '1', false);
+        await dbUtils.setUserMeta(sellerId, 'dokan_geo_address', 'New York, NY, USA', false);
     },
 };

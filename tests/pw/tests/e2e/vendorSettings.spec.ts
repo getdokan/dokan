@@ -1,4 +1,4 @@
-import { test, request, Page } from '@playwright/test';
+import { Page, request, test } from '@playwright/test';
 import { VendorSettingsPage } from '@pages/vendorSettingsPage';
 import { dbData } from '@utils/dbData';
 import { ApiUtils } from '@utils/apiUtils';
@@ -34,8 +34,9 @@ test.describe('Vendor settings test', () => {
         await vendor.vendorStoreSettingsRenderProperly();
     });
 
-    test('vendor can view Shipstation settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorShipstationSettingsRenderProperly();
+    test('vendor can view ShipStation settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+        test.skip(true, 'pr not merged yet');
+        await vendor.vendorShipStationSettingsRenderProperly();
     });
 
     test('vendor can view social profile settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
@@ -108,16 +109,21 @@ test.describe('Vendor settings test', () => {
     });
 
     test('vendor can set live chat settings', { tag: ['@pro', '@vendor'] }, async () => {
+        if (!process.env.TALKJS_APP_ID || !process.env.TALKJS_APP_SECRET) {
+            test.skip(true, 'Live chat credentials not found');
+        }
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'liveChat');
     });
 
     test('vendor can set min-max settings', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'min-max');
+
         // disable min-max
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { enable_min_max_quantity: 'off', enable_min_max_amount: 'off' });
     });
 
-    test('vendor can set shipStation settings', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can set ShipStation settings', { tag: ['@pro', '@vendor'] }, async () => {
+        test.skip(true, 'pr not merged yet');
         await vendor.setShipStation(data.vendor.shipStation);
     });
 

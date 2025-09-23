@@ -1,10 +1,10 @@
-import { Page } from '@playwright/test';
-import { VendorPage } from '@pages/vendorPage';
 import { CustomerPage } from '@pages/customerPage';
 import { selector } from '@pages/selectors';
-import { data } from '@utils/testData';
+import { VendorPage } from '@pages/vendorPage';
+import { Page } from '@playwright/test';
 import { helpers } from '@utils/helpers';
-import { product, date } from '@utils/interfaces';
+import { date, product } from '@utils/interfaces';
+import { data } from '@utils/testData';
 
 const { DOKAN_PRO } = process.env;
 
@@ -21,6 +21,42 @@ export class AuctionsPage extends VendorPage {
     customerPage = new CustomerPage(this.page);
 
     // auctions
+
+    // enable auction integration module
+    async enableAuctionIntegrationModule() {
+        // dokan settings
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.click(selector.admin.dokan.settings.menus.sellingOptions);
+        await this.toBeVisible(selector.admin.dokan.settings.selling.newVendorEnableAuction);
+
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.auction);
+
+        // customer dashboard menu
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.auctions);
+    }
+
+    // disable auction integration module
+    async disableAuctionIntegrationModule() {
+        // admin dashboard
+        await this.goto(data.subUrls.backend.dokan.settings);
+        await this.click(selector.admin.dokan.settings.menus.sellingOptions);
+        await this.notToBeVisible(selector.admin.dokan.settings.selling.newVendorEnableAuction);
+
+        // vendor dashboard menu
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        await this.notToBeVisible(selector.vendor.vDashboard.menus.primary.auction);
+
+        // vendor dashboard menu page
+        await this.goto(data.subUrls.frontend.vDashboard.auction);
+        await this.notToBeVisible(selector.vendor.vDashboard.dashboardDiv);
+
+        // customer dashboard menu
+        await this.goto(data.subUrls.frontend.myAccount);
+        await this.toBeVisible(selector.customer.cMyAccount.menus.auctions);
+    }
 
     // Admin Add Auction Product
     async adminAddAuctionProduct(product: product['auction']) {
@@ -55,8 +91,8 @@ export class AuctionsPage extends VendorPage {
     async vendorAuctionRenderProperly() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.auction);
 
-        // auctions menu elements are visible
-        await this.multipleElementVisible(auctionProductsVendor.menus);
+        // auctions all menu is  visible
+        await this.toBeVisible(auctionProductsVendor.menus.all);
 
         // add new auction product button is visible
         await this.toBeVisible(auctionProductsVendor.addNewActionProduct);
@@ -149,6 +185,16 @@ export class AuctionsPage extends VendorPage {
         await this.toBeVisible(auctionProductsVendor.productCell(productName));
     }
 
+    // duplicate auction product
+    async duplicateAuctionProduct(productName: string) {
+        await this.searchAuctionProduct(productName);
+        await this.removeAttribute(auctionProductsVendor.rowActions(productName), 'class'); // forcing the row actions to be visible, to avoid flakiness
+        await this.hover(auctionProductsVendor.productCell(productName));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auction, auctionProductsVendor.duplicate(productName), 302);
+        await this.toBeVisible(auctionProductsVendor.duplicateSuccessMessage);
+        await this.toBeVisible(auctionProductsVendor.productCell(productName + ' (Copy)'));
+    }
+
     // delete auction product
     async deleteAuctionProduct(productName: string) {
         await this.searchAuctionProduct(productName);
@@ -235,10 +281,6 @@ export class AuctionsPage extends VendorPage {
         await this.removeAttribute(auctionProductsVendor.auction.auctionEndDate, 'readonly');
         await this.clearAndType(auctionProductsVendor.auction.auctionStartDate, generalOption.startDate);
         await this.clearAndType(auctionProductsVendor.auction.auctionEndDate, generalOption.endDate);
-        await this.check(auctionProductsVendor.auction.enableAutomaticRelisting);
-        await this.clearAndType(auctionProductsVendor.auction.relistIfFailAfterNHours, generalOption.relistIfFailAfterNHours);
-        await this.clearAndType(auctionProductsVendor.auction.relistIfNotPaidAfterNHours, generalOption.relistIfNotPaidAfterNHours);
-        await this.clearAndType(auctionProductsVendor.auction.relistAuctionDurationInH, generalOption.relistAuctionDurationInH);
 
         await this.saveProduct();
 
@@ -251,6 +293,18 @@ export class AuctionsPage extends VendorPage {
         await this.toHaveValue(auctionProductsVendor.auction.buyItNowPrice, buyItNowPrice);
         await this.toHaveValue(auctionProductsVendor.auction.auctionStartDate, generalOption.startDate);
         await this.toHaveValue(auctionProductsVendor.auction.auctionEndDate, generalOption.endDate);
+    }
+
+    // add product Relist option
+    async addProductRelistingOption(productName: string, generalOption: product['auction']) {
+        await this.goToAuctionProductEditById(productName);
+        await this.check(auctionProductsVendor.auction.enableAutomaticRelisting);
+        await this.clearAndType(auctionProductsVendor.auction.relistIfFailAfterNHours, generalOption.relistIfFailAfterNHours);
+        await this.clearAndType(auctionProductsVendor.auction.relistIfNotPaidAfterNHours, generalOption.relistIfNotPaidAfterNHours);
+        await this.clearAndType(auctionProductsVendor.auction.relistAuctionDurationInH, generalOption.relistAuctionDurationInH);
+
+        await this.saveProduct();
+
         await this.toBeChecked(auctionProductsVendor.auction.enableAutomaticRelisting);
         await this.toHaveValue(auctionProductsVendor.auction.relistIfFailAfterNHours, generalOption.relistIfFailAfterNHours);
         await this.toHaveValue(auctionProductsVendor.auction.relistIfNotPaidAfterNHours, generalOption.relistIfNotPaidAfterNHours);

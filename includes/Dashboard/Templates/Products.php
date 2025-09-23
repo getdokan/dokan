@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Dashboard\Templates;
 
 use WeDevs\Dokan\ProductCategory\Helper;
+use WeDevs\Dokan\Utilities\ReportUtil;
 
 /**
  *  Product Functionality for Product Handler
@@ -111,12 +112,21 @@ class Products {
      *
      * @since 2.9.2
      *
+     * @uses apply_filters() Calls 'dokan_hide_inventory_template' to allow plugins
+     *                       to conditionally hide the inventory template section.
+     *                       Return true to hide, false to display.
+     * /
      * @return void
      */
     public static function load_inventory_template( $post, $post_id ) {
-        $_sold_individually = get_post_meta( $post_id, '_sold_individually', true );
-        $_stock             = get_post_meta( $post_id, '_stock', true );
-        $_low_stock_amount  = get_post_meta( $post_id, '_low_stock_amount', true );
+        $hide_inventory = (bool) apply_filters( 'dokan_hide_inventory_template', false, $post_id );
+        if ( $hide_inventory ) {
+            return;
+        }
+        $product            = wc_get_product( $post_id );
+        $_sold_individually = $product ? $product->is_sold_individually() : '';
+        $_stock             = $product ? $product->get_stock_quantity() : '';
+        $_low_stock_amount  = $product ? $product->get_low_stock_amount() : '';
 
         dokan_get_template_part(
             'products/inventory', '', [
@@ -248,6 +258,11 @@ class Products {
      * @return void
      */
     public function render_product_listing_template( $action ) {
+        if ( ReportUtil::is_report_products_url() ) {
+            dokan_get_template_part( 'dashboard/dashboard' );
+            return;
+        }
+
         $bulk_statuses = apply_filters(
             'dokan_bulk_product_statuses', [
                 '-1'     => __( 'Bulk Actions', 'dokan-lite' ),
@@ -255,7 +270,13 @@ class Products {
             ]
         );
 
-        dokan_get_template_part( 'products/products-listing', '', [ 'bulk_statuses' => $bulk_statuses ] );
+        dokan_get_template_part(
+            'products/products-listing',
+            '',
+            [
+                'bulk_statuses' => $bulk_statuses,
+            ]
+        );
     }
 
     /**
@@ -297,10 +318,8 @@ class Products {
                     if ( absint( $postdata['product_cat'] ) < 0 ) {
                         $errors[] = __( 'Please select a category', 'dokan-lite' );
                     }
-                } else {
-                    if ( ! isset( $postdata['product_cat'] ) || empty( $postdata['product_cat'] ) ) {
+                } elseif ( ! isset( $postdata['product_cat'] ) || empty( $postdata['product_cat'] ) ) {
                         $errors[] = __( 'Please select at least one category', 'dokan-lite' );
-                    }
                 }
             } elseif ( empty( $postdata['chosen_product_cat'] ) ) {
                 $errors[] = __( 'Please select a category', 'dokan-lite' );
@@ -340,11 +359,9 @@ class Products {
                     if ( ! isset( $postdata['chosen_product_cat'] ) ) {
                         if ( Helper::product_category_selection_is_single() ) {
                             wp_set_object_terms( $product_id, (int) $postdata['product_cat'], 'product_cat' );
-                        } else {
-                            if ( isset( $postdata['product_cat'] ) && ! empty( $postdata['product_cat'] ) ) {
+                        } elseif ( isset( $postdata['product_cat'] ) && ! empty( $postdata['product_cat'] ) ) {
                                 $cat_ids = array_map( 'absint', (array) $postdata['product_cat'] );
                                 wp_set_object_terms( $product_id, $cat_ids, 'product_cat' );
-                            }
                         }
                     } else {
                         $chosen_cat = Helper::product_category_selection_is_single() ? [ reset( $postdata['chosen_product_cat'] ) ] : $postdata['chosen_product_cat'];
@@ -398,6 +415,10 @@ class Products {
                             update_post_meta( $product_id, '_price', wc_format_decimal( $postdata['_sale_price'] ) );
                         }
                     }
+
+                    // Sold Individually
+                    $sold_individually = ! empty( $data['_sold_individually'] ) && 'yes' === $data['_sold_individually'] ? 'yes' : 'no';
+                    update_post_meta( $product_id, '_sold_individually', $sold_individually );
 
                     update_post_meta( $product_id, '_visibility', 'visible' );
                     update_post_meta( $product_id, '_stock_status', 'instock' );
@@ -632,5 +653,4 @@ class Products {
         wp_safe_redirect( add_query_arg( [ 'message' => 'product_deleted' ], $redirect ) );
         exit;
     }
-
 }

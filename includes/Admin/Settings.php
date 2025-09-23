@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Admin;
 
 use Exception;
+use WeDevs\Dokan\Utilities\AdminSettings;
 use WP_Error;
 use WeDevs\Dokan\Exceptions\DokanException;
 use WeDevs\Dokan\Traits\AjaxResponseError;
@@ -32,6 +33,7 @@ class Settings {
         add_action( 'wp_ajax_dokan_refresh_admin_settings_field_options', [ $this, 'refresh_admin_settings_field_options' ] );
         add_filter( 'dokan_save_settings_value', [ $this, 'validate_fixed_price_values' ], 12, 2 );
         add_filter( 'dokan_get_settings_values', [ $this, 'set_withdraw_limit_gateways' ], 20, 2 );
+        add_filter( 'dokan_get_settings_values', [ $this, 'set_commission_type_if_not_set' ], 20, 2 );
         add_filter( 'dokan_settings_general_site_options', [ $this, 'add_dokan_data_clear_setting' ], 310 );
     }
 
@@ -61,9 +63,27 @@ class Settings {
     }
 
     /**
+     * Set commission type as fixed if no commission is set.
+     *
+     * @since 3.14.0
+     *
+     * @param mixed $option_name
+     * @param mixed $option_value
+     *
+     * @return void|mixed $option_value
+     */
+    public function set_commission_type_if_not_set( $option_value, $option_name ) {
+        if ( 'dokan_selling' === $option_name && empty( $option_value['commission_type'] ) ) {
+            $option_value['commission_type'] = 'fixed';
+        }
+
+        return $option_value;
+    }
+
+    /**
      * Validate price values for saving fixed price settings.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param string  $option_name
      * @param array $option_values
@@ -105,6 +125,15 @@ class Settings {
 
         foreach ( $this->get_settings_sections() as $key => $section ) {
             $settings[ $section['id'] ] = apply_filters( 'dokan_get_settings_values', $this->sanitize_options( get_option( $section['id'], [] ), 'read' ), $section['id'] );
+        }
+
+        $new_seller_enable_selling_statuses = ! empty( $settings['dokan_selling']['new_seller_enable_selling'] ) ? $settings['dokan_selling']['new_seller_enable_selling'] : 'automatically';
+
+        /**
+         * This is the mapper of enabled selling admin setting option for before and after of 4.0.2
+         */
+        if ( ! in_array( $new_seller_enable_selling_statuses, $settings, true ) ) {
+            $settings['dokan_selling']['new_seller_enable_selling'] = dokan_get_container()->get( AdminSettings::class )->get_new_seller_enable_selling_status( $settings['dokan_selling']['new_seller_enable_selling'] );
         }
 
         wp_send_json_success( $settings );
@@ -537,13 +566,27 @@ class Settings {
                         ],
                     ],
                 ],
-                'commission_category_based_values' => [
-                    'name'    => 'commission_category_based_values',
-                    'type'    => 'category_based_commission',
-                    'dokan_pro_commission' => 'yes',
-                    'label'   => __( 'Admin Commission', 'dokan-lite' ),
-                    'desc'    => __( 'Amount you will get from each sale', 'dokan-lite' ),
+                'reset_sub_category_when_edit_all_category' => [
+                    'name'    => 'reset_sub_category_when_edit_all_category',
+                    'label'   => __( 'Apply Parent Category Commission to All Subcategories', 'dokan-lite' ),
+                    'desc'    => __( 'Important: \'All Categories\' commission serves as your marketplace\'s default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'on',
+                    'tooltip' => __( 'When enabled, changing a parent category\'s commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories', 'dokan-lite' ),
                     'show_if' => [
+                        'commission_type' => [
+                            'equal' => 'category_based',
+                        ],
+                    ],
+                ],
+                'commission_category_based_values' => [
+                    'name'                 => 'commission_category_based_values',
+                    'type'                 => 'category_based_commission',
+                    'dokan_pro_commission' => 'yes',
+                    'label'                => __( 'Admin Commission', 'dokan-lite' ),
+                    'desc'                 => __( 'Amount you will get from each sale', 'dokan-lite' ),
+                    'required'             => 'yes',
+                    'show_if'              => [
                         'commission_type' => [
                             'equal' => 'category_based',
                         ],
@@ -610,8 +653,9 @@ class Settings {
                     'name'    => 'new_seller_enable_selling',
                     'label'   => __( 'Enable Selling', 'dokan-lite' ),
                     'desc'    => __( 'Immediately enable selling for newly registered vendors', 'dokan-lite' ),
-                    'type'    => 'switcher',
-                    'default' => 'on',
+                    'type'    => 'select',
+                    'options' => dokan_get_container()->get( AdminSettings::class )->new_seller_enable_selling_statuses(),
+                    'default' => 'automatically',
                     'tooltip' => __( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ),
                 ],
                 'one_step_product_create'     => [
@@ -650,6 +694,10 @@ class Settings {
                 ],
             ]
         );
+
+        // Collect store banner dimensions for croppable fields.
+        $store_banner_width  = dokan()->is_pro_exists() ? dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) : 625;
+        $store_banner_height = dokan()->is_pro_exists() ? dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) : 300;
 
         $settings_fields = [
             'dokan_general'    => array_merge(
@@ -815,7 +863,7 @@ class Settings {
                     'type'                 => 'social',
                     'desc'                 => sprintf(
                     /* translators: 1) Opening anchor tag, 2) Closing anchor tag, 3) Opening anchor tag, 4) Closing anchor tag */
-                        __( '%1$sreCAPTCHA%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s', 'dokan-lite' ),
+                        __( '%1$sreCAPTCHA_v3%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s', 'dokan-lite' ),
                         '<a href="https://developers.google.com/recaptcha/docs/v3" target="_blank" rel="noopener noreferrer">',
                         '</a>',
                         '<a href="https://wedevs.com/docs/dokan/settings/dokan-recaptacha-v3-integration" target="_blank" rel="noopener noreferrer">',
@@ -865,6 +913,26 @@ class Settings {
                         'layout3' => DOKAN_PLUGIN_ASSEST . '/images/store-header-templates/layout3.png',
                     ],
                     'default' => 'default',
+                ],
+                'default_store_banner'       => [
+                    'name'            => 'default_store_banner',
+                    'label'           => esc_html__( 'Default Store Banner', 'dokan-lite' ),
+                    'type'            => 'croppable_image',
+                    'default'         => DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png',
+                    'restore'         => true,
+                    'render_width'    => 625,
+                    'cropping_width'  => $store_banner_width,
+                    'cropping_height' => $store_banner_height,
+                ],
+                'default_store_profile'      => [
+                    'name'            => 'default_store_profile',
+                    'label'           => esc_html__( 'Default Store Profile Picture', 'dokan-lite' ),
+                    'type'            => 'croppable_image',
+                    'default'         => DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg',
+                    'restore'         => true,
+                    'render_width'    => 120,
+                    'cropping_width'  => 384,
+                    'cropping_height' => 384,
                 ],
                 'store_open_close'           => [
                     'name'    => 'store_open_close',
@@ -962,7 +1030,7 @@ class Settings {
     /**
      * Add settings nonce to localized vars
      *
-     * @since DOKNA_LITE_SINCE
+     * @since 3.0.6
      *
      * @param array $vars
      *
@@ -977,7 +1045,7 @@ class Settings {
     /**
      * Get refreshed options for a admin setting
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      *
      * @return void
      */

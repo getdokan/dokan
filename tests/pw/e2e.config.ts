@@ -1,11 +1,12 @@
 import { defineConfig, devices, expect } from '@playwright/test';
+import { parseBoolean } from '@utils/helpers';
 import { customExpect } from '@utils/pwMatchers';
 import 'dotenv/config';
-const { CI, NON_HEADLESS, BASE_URL, SLOWMO, NO_SETUP, DOKAN_PRO } = process.env;
+const { CI, HEADLESS, BASE_URL, SLOWMO, NO_SETUP, DOKAN_PRO } = process.env;
 
 export default defineConfig({
     /* test directory */
-    testDir: './tests/e2e',
+    testDir: 'tests/e2e',
     /* Include tests based on the pattern */
     grep: [/@lite/, /@liteOnly/, /@pro/],
     /* Exclude tests based on the pattern */
@@ -17,15 +18,15 @@ export default defineConfig({
     /* Path to the global teardown file. This file will be required and run after all the tests. */
     // globalTeardown: './global-teardown' ,
     /* Maximum time in milliseconds the whole test suite can run */
-    globalTimeout: CI ? 40 * (60 * 1000) : 40 * (60 * 1000),
+    globalTimeout: parseBoolean(CI) ? 40 * (60 * 1000) : 40 * (60 * 1000),
     /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
-    maxFailures: CI ? 50 : 50,
+    maxFailures: parseBoolean(CI) ? 50 : 50,
     /* Maximum time one test can run for. */
-    timeout: CI ? 35 * 1000 : 40 * 1000,
+    timeout: parseBoolean(CI) ? 35 * 1000 : 45 * 1000,
     /* Configuration for the expect assertion library */
     expect: {
         /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/
-        timeout: 10 * 1000,
+        timeout: 15 * 1000,
         toHaveScreenshot: {
             maxDiffPixelRatio: 0.2,
             maxDiffPixels: 500,
@@ -39,25 +40,25 @@ export default defineConfig({
     /* Fail the build on CI if you accidentally left test-only in the source code. */
     // forbidOnly     : !!CI,
     /* The number of times to repeat each test, useful for debugging flaky tests. */
-    repeatEach: CI ? 0 : 0,
+    repeatEach: parseBoolean(CI) ? 0 : 0,
     /* The maximum number of retry attempts given to failed tests.  */
-    retries: CI ? 1 : 0,
+    retries: parseBoolean(CI) ? 1 : 0,
     /* Opt out of parallel tests on CI. */
-    workers: CI ? 4 : 4,
+    workers: parseBoolean(CI) ? 4 : 4,
     /* Whether to report slow test files. Pass null to disable this feature. */
     reportSlowTests: { max: 2, threshold: 25 },
     /* Configure reporters */
-    reporter: CI
+    reporter: parseBoolean(CI)
         ? [
               //   ['github'],
-              ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
-              //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
+              //   ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
+              ['blob', { open: 'outputDir', outputDir: 'playwright-report/e2e/blob-report' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
           ]
         : [
+              //   ['blob', { open: 'outputDir', outputDir: 'playwright-report/e2e/blob-report' }],
               ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
-              //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
           ],
@@ -81,7 +82,7 @@ export default defineConfig({
         /* Emulates 'prefers-colors-scheme' media feature, supported values are 'light', 'dark', 'no-preference' */
         // colorScheme: 'dark' ,
         /* Whether to run tests on headless or non-headless mode */
-        headless: !NON_HEADLESS,
+        headless: parseBoolean(HEADLESS),
         /* Whether to ignore HTTPS errors during navigation. */
         ignoreHTTPSErrors: true,
         /* Record trace only when retrying a test for the first time. */
@@ -98,7 +99,7 @@ export default defineConfig({
             fullPage: true,
         },
         /* Record video only when retrying a test for the first time. */
-        video: DOKAN_PRO ? 'off' : 'on-first-retry', // to reduce artifacts size in CI for dokan-pro
+        video: parseBoolean(DOKAN_PRO) ? 'off' : 'on-first-retry', // to reduce artifacts size in CI for dokan-pro
         /* Size of viewport */
         // viewport: { width: 1420, height: 900 }, // default 1280x720
         /* whether to slow down test execution by provided seconds */
@@ -127,7 +128,7 @@ export default defineConfig({
         {
             name: 'auth_setup',
             testMatch: ['_auth.setup.ts'],
-            dependencies: NO_SETUP ? [] : ['site_setup'],
+            dependencies: parseBoolean(NO_SETUP) ? [] : ['site_setup'],
             // fullyParallel: true,
             retries: 1,
         },
@@ -136,7 +137,7 @@ export default defineConfig({
         {
             name: 'e2e_setup',
             testMatch: ['_env.setup.ts'],
-            dependencies: NO_SETUP ? [] : ['auth_setup'],
+            dependencies: parseBoolean(NO_SETUP) ? [] : ['auth_setup'],
             fullyParallel: true,
             retries: 1,
         },
@@ -146,7 +147,7 @@ export default defineConfig({
             name: 'e2e_tests',
             testMatch: /.*\.spec\.ts/,
             /* whether not to run setup tests before running actual tests */
-            dependencies: NO_SETUP ? [] : ['e2e_setup'],
+            dependencies: parseBoolean(NO_SETUP) ? [] : ['e2e_setup'],
             /* whether not to run teardown tests after running actual tests */
             // teardown: NO_SETUP ? undefined : 'coverage_report',
         },

@@ -9,7 +9,7 @@ class Combine extends AbstractFormula {
     /**
      * Per item admin commission value.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float
      */
@@ -18,7 +18,7 @@ class Combine extends AbstractFormula {
     /**
      * Admin commission value.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float
      */
@@ -27,7 +27,7 @@ class Combine extends AbstractFormula {
     /**
      * Vendor earning amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int|float
      */
@@ -36,7 +36,7 @@ class Combine extends AbstractFormula {
     /**
      * The quantity on which the commission will be calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @var int
      */
@@ -45,14 +45,14 @@ class Combine extends AbstractFormula {
     /**
      * Combine commission source text.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      */
     const SOURCE = 'combine';
 
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      */
@@ -63,15 +63,15 @@ class Combine extends AbstractFormula {
     /**
      * Calculation is doing here.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return void
      */
     public function calculate() {
-        $percent_commission = $this->get_amount() * ( dokan()->commission->validate_rate( $this->get_settings()->get_percentage() ) / 100 );
-        $commission         = (float) dokan()->commission->validate_rate( $this->get_settings()->get_flat() ) + $percent_commission;
+        $percent_commission = $this->get_amount() * ( $this->validate_rate( $this->get_settings()->get_percentage() ) / 100 );
+        $commission         = (float) $this->validate_rate( $this->get_settings()->get_flat() ) + $percent_commission;
 
-        $per_item_flat       = dokan()->commission->validate_rate( $this->get_settings()->get_flat() ) / $this->get_quantity();
+        $per_item_flat       = $this->validate_rate( $this->get_settings()->get_flat() ) / $this->get_quantity();
         $per_item_percentage = $percent_commission / $this->get_quantity();
 
         $this->admin_commission          = $commission;
@@ -92,7 +92,7 @@ class Combine extends AbstractFormula {
     /**
      * Commission calculation parameters.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return array
      */
@@ -107,7 +107,7 @@ class Combine extends AbstractFormula {
     /**
      * Returns the combine commission surce text.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return string
      */
@@ -118,7 +118,7 @@ class Combine extends AbstractFormula {
     /**
      * Returns if the combine commission is applicable or not based on data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -129,7 +129,7 @@ class Combine extends AbstractFormula {
     /**
      * Returns if the commission type data is valid.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -144,7 +144,7 @@ class Combine extends AbstractFormula {
     /**
      * Returns if commission is valid.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return bool
      */
@@ -155,40 +155,40 @@ class Combine extends AbstractFormula {
     /**
      * Returns the admin commission
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
     public function get_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->admin_commission );
+        return $this->validate_rate( $this->admin_commission );
     }
 
     /**
      * Returns the vendors earning.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
     public function get_vendor_earning(): float {
-        return dokan()->commission->validate_rate( $this->vendor_earning );
+        return $this->validate_rate( $this->vendor_earning );
     }
 
     /**
      * Returns per item admin commission.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return float
      */
     public function get_per_item_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->per_item_admin_commission );
+        return $this->validate_rate( $this->per_item_admin_commission );
     }
 
     /**
      * Returns the quantity on which the commission is calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 3.14.0
      *
      * @return int
      */

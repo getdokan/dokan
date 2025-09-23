@@ -246,7 +246,7 @@ class Manager {
         }
 
         // default wp based user data
-        if ( ! empty( $data['user_pass'] ) ) {
+        if ( ! empty( $data['user_pass'] ) && get_current_user_id() === $vendor->get_id() ) {
             wp_update_user(
                 [
                     'ID'        => $vendor->get_id(),
@@ -316,6 +316,12 @@ class Manager {
                 $vendor->update_meta( 'dokan_publishing', 'yes' );
             } else {
                 $vendor->update_meta( 'dokan_publishing', 'no' );
+            }
+
+            if ( isset( $data['reset_sub_category'] ) && dokan_validate_boolean( $data['reset_sub_category'] ) ) {
+                $vendor->update_meta( 'reset_sub_category', 'yes' );
+            } else {
+                $vendor->update_meta( 'reset_sub_category', 'no' );
             }
 
             if ( ! empty( $data['admin_commission_type'] ) ) {

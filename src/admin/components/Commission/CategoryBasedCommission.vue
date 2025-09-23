@@ -1,5 +1,6 @@
 <template>
-    <div class='relative'>
+    <div class="dokan-category-commission">
+        <div class='relative '>
         <div class='d-xs:hidden md:flex bg-gray-100 min-h-[3rem] text-gray-500 border-[0.957434px] border-b-0 items-center'>
             <div class='w-1/2 pl-3 flex h-[3rem] items-center border-r-[0.957434px]'>
                 <p class='text-xs'>{{ __( 'Category', 'dokan-lite' ) }}</p>
@@ -19,7 +20,7 @@
             <div class='flex flex-row'>
                 <div class='flex flex-row w-1/2 items-center min-h-[3rem] border-0 !border-r-[1px] !border-b-[1px] border-[#e9e9ea] border-solid pl-[5px]'>
                     <button type='button' class='p-1 d-xs:pl-1 md:pl-4 bg-transparent bg-co border-none cursor-pointer' @click='()=>allCategroyEnabled = !allCategroyEnabled'>
-                        <i class="far" :class='! allCategroyEnabled ? "fa-minus-square text-black" : "fa-plus-square text-[#F05025]"'></i>
+                        <i class="far" :class='! allCategroyEnabled ? "fa-minus-square text-black" : "fa-plus-square text-[#4C19E6]"'></i>
                     </button>
                     <p class='d-xs:text-[8px] sm:text-[14px] !m-0'>{{__( 'All Categories', 'dokan-lite' )}}</p>
                 </div>
@@ -32,7 +33,7 @@
                                 id="percentage_commission"
                                 name="percentage_commission"
                                 ref='percentage'
-                                :value="commission.all.percentage"
+                                :value="formatValue( commission.all.percentage )"
                                 v-on:input="e => handleAllCategoryInput(e.target.value, 'percentage', commission.all.percentage )"
                                 style="border: none !important;"
                             />
@@ -49,7 +50,7 @@
                                 id="fixed_commission"
                                 name="fixed_commission"
                                 ref='fixed'
-                                :value="commission.all.flat"
+                                :value="formatValue( commission.all.flat )"
                                 v-on:input="e => handleAllCategoryInput(e.target.value, 'flat', commission.all.flat )"
                                 style="border: none !important;"
                             />
@@ -62,11 +63,11 @@
                     <div class='d-xs:flex h-1/2'>
                         <span v-for='parent_id in item.parents' :key='parent_id' class='d-xs:bg-[#e5e7eb] md:bg-transparent block h-full w-[1px] d-xs:ml-1'></span>
                     </div>
-                    <button type='button' class='p-1 d-xs:pl-1 md:pl-6 bg-transparent border-none cursor-pointer' :disabled='!item.children.length' :class='!item.children.length ? "disabled:cursor-not-allowed text-gray-300" : "cursor-pointer text-[#F05025]"' @click='()=> catRowClick( item, index )'>
+                    <button type='button' class='p-1 d-xs:pl-1 md:pl-6 bg-transparent border-none cursor-pointer' :disabled='!item.children.length' :class='!item.children.length ? "disabled:cursor-not-allowed text-gray-300" : "cursor-pointer text-[#7047EB]"' @click='()=> catRowClick( item, index )'>
                         <i class="far" :class='openRows.includes( Number( item.term_id ) ) ? "fa-minus-square text-black" : "fa-plus-square"'></i>
                     </button>
                     <p class='d-xs:text-[8px] sm:text-[14px] text-black !m-0'>
-                        <span :title='item.name'>{{ item.name }}</span>
+                        <span :title='item.name' v-html="item.name"></span>
                         <span class='d-xs:text-[6px] sm:text-[12px] text-gray-500' :title='__( "Category ID", "dokan" )'>#{{ item.term_id }}</span>
                     </p>
                 </div>
@@ -79,7 +80,7 @@
                             id="percentage_commission"
                             name="percentage_commission"
                             ref='percentage'
-                            :value="getCommissionValue( 'percentage', item.term_id )"
+                            :value="formatValue( getCommissionValue( 'percentage', item.term_id ) )"
                             v-on:input="e => commissinItemHandler( e.target.value, 'percentage', item.term_id, getCommissionValue( 'percentage', item.term_id ) )"
                             style="border: none !important;"
                         />
@@ -96,8 +97,8 @@
                             id="fixed_commission"
                             name="fixed_commission"
                             ref='flat'
-                            :value="getCommissionValue( 'flat', item.term_id )"
-                            v-on:input="e => commissinItemHandler( e.target.value, 'flat', item.term_id, getCommissionValue( 'percentage', item.term_id ) )"
+                            :value="formatValue( getCommissionValue( 'flat', item.term_id ) )"
+                            v-on:input="e => commissinItemHandler( e.target.value, 'flat', item.term_id, getCommissionValue( 'flat', item.term_id ) )"
                             style="border: none !important;"
                         />
                     </div>
@@ -105,10 +106,13 @@
             </div>
         </div>
     </div>
+    </div>
 </template>
 
 <script>
-    export default {
+import Debounce from "debounce";
+
+export default {
         name: 'CategoryBasedCommission',
         props: {
             value: {
@@ -120,6 +124,10 @@
                     },
                     items:{}
                 }
+            },
+            resetSubCategory: {
+                type: Boolean,
+                default: true
             }
         },
         computed: {
@@ -159,8 +167,10 @@
                 this.commission.all = this.value.all;
             }
 
-            if ( typeof this.value === 'object' && this.value.hasOwnProperty( 'items' ) &&  typeof this.value.items === 'object') {
+            if ( typeof this.value === 'object' && this.value.hasOwnProperty( 'items' ) && ! Array.isArray( this.value.items ) ) {
                 this.commission.items = this.value.items;
+            } else {
+                this.commission.items = {};
             }
 
             dokan.api.get('/products/multistep-categories').then( data => {
@@ -253,13 +263,19 @@
                 return this.commission.all[comission_type];
             },
 
-            commissinItemHandler( value, commission_type, term_id, oldValue = '' ) {
-                if (isNaN( value )) {
-                    value = oldValue
+            commissinItemHandler: Debounce( function( value, commission_type, term_id, oldValue = '' ) {
+                if ( 'percentage' === commission_type ) {
+                    value = this.validatePercentage( this.unFormatValue( value ) );
+                } else {
+                    value = this.unFormatValue( value );
                 }
+
                 let commissions = JSON.parse( JSON.stringify( this.commission.items ) );
 
-                let data = JSON.parse( JSON.stringify( this.commission.all ) );
+                let data = this.resetSubCategory ? JSON.parse( JSON.stringify( this.commission.all ) ) : {
+                    flat: '',
+                    percentage: ''
+                };
 
                 if ( commissions.hasOwnProperty( term_id ) ) {
                     data = commissions[term_id];
@@ -277,17 +293,22 @@
                 }
 
                 this.emitComponentChange( JSON.parse( JSON.stringify( this.commission ) ) )
-            },
+            }, 700 ),
 
-            handleAllCategoryInput( value, commission_type, oldValue = '' ) {
-                if (isNaN( value )) {
-                    value = oldValue
+            handleAllCategoryInput: Debounce( function( value, commission_type, oldValue = '' ) {
+                if ( 'percentage' === commission_type ) {
+                    value = this.validatePercentage( this.unFormatValue( value ) );
+                } else {
+                    value = this.unFormatValue( value );
                 }
                 this.$set( this.commission.all, commission_type, value );
-                this.$set(this.commission, 'items', {});
+
+                let items = JSON.parse( JSON.stringify( this.commission.items ?? {} ) );
+                items = this.resetSubCategory ? {} : items;
+                this.$set(this.commission, 'items', items);
 
                 this.emitComponentChange( JSON.parse( JSON.stringify( this.commission ) ) )
-            },
+            }, 700 ),
 
             deleteDuplicateCategories( items ) {
                 let self = this;
@@ -347,6 +368,10 @@
             },
 
             updateChildCommissionValues(parent_cat_id, commission_data) {
+                if ( ! this.resetSubCategory ) {
+                    return;
+                }
+
                 let all_nested_children_ids = this.getChildren( parent_cat_id );
                 let children = JSON.parse( JSON.stringify( this.commission.items ) );
 
@@ -355,7 +380,35 @@
                 } );
 
                 this.$set( this.commission, 'items', children );
-            }
+            },
+
+            unFormatValue: ( value ) => {
+                if ( value === '' ) {
+                    return value;
+                }
+
+                return String( accounting.unformat(value, dokan.currency.decimal) );
+            },
+
+            formatValue: ( value ) => {
+                if ( value === '' ) {
+                    return value;
+                }
+
+                return accounting.formatNumber( value, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal );
+            },
+
+            validatePercentage( percentage ) {
+                if ( percentage === '' ) {
+                    return percentage;
+                }
+
+                if ( Number( percentage ) < 0 || Number( percentage ) > 100 ) {
+                    percentage = '';
+                }
+
+                return percentage;
+            },
         }
     }
 </script>

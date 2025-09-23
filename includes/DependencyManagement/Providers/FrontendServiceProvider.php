@@ -3,39 +3,45 @@
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
+use WeDevs\Dokan\ThemeSupport\Manager;
+use WeDevs\Dokan\Vendor\StoreListsFilter;
 
+/**
+ * Class FrontendServiceProvider
+ *
+ * Registers and provides frontend-related services to the dependency container.
+ *
+ * @package WeDevs\Dokan\DependencyManagement\Providers
+ */
 class FrontendServiceProvider extends BaseServiceProvider {
+    protected $tags = [ 'frontend-service' ];
+
     /**
-     * Tag for services added to the container.
-     */
-    public const TAG = 'frontend-service';
-
-	protected $services = [
-		self::TAG,
-	];
-
-	/**
-     * {@inheritDoc}
+     * List of service identifiers provided by this provider.
      *
-     * Check if the service provider can provide the given service alias.
+     * @var array
+     */
+    protected $services = [
+        StoreListsFilter::class,
+        Manager::class,
+    ];
+
+    /**
+     * Register the frontend services with the dependency container.
      *
-     * @param string $alias The service alias to check.
-     * @return bool True if the service provider can provide the service, false otherwise.
+     * @return void
      */
-	public function provides( string $alias ): bool {
-		return in_array( $alias, $this->services, true );
-	}
+    public function register(): void {
+        $container = $this->getContainer();
 
-	/**
-     * Register the classes.
-     */
-	public function register(): void {
-		$this->getContainer()
-            ->addShared( \WeDevs\Dokan\Vendor\StoreListsFilter::class, \WeDevs\Dokan\Vendor\StoreListsFilter::class )
-            ->addTag( self::TAG );
+        $this->add_tags(
+            $container->addShared( StoreListsFilter::class, StoreListsFilter::class ),
+            $this->tags
+        );
 
-		$this->getContainer()
-            ->addShared( \WeDevs\Dokan\ThemeSupport\Manager::class, \WeDevs\Dokan\ThemeSupport\Manager::class )
-            ->addTag( self::TAG );
+        $this->add_tags(
+            $container->addShared( Manager::class, Manager::class ),
+            $this->tags
+        );
     }
 }
