@@ -791,14 +791,10 @@
                     return;
                 }
 
-                // List of reserved WordPress keywords
+                // List of reserved WordPress keywords from backend
                 const reservedSlugs = dokan.hooks.applyFilters(
                     'dokan_reserved_url_slugs',
-                    [
-                        's', 'p', 'page', 'paged', 'author', 'feed', 'search', 'post',
-                        'tag', 'category', 'attachment', 'name', 'order', 'orderby',
-                        'rest', 'rest_route', 'wp-json', 'shop', 'cart', 'checkout'
-                    ]
+                    dokanAdmin.reserved_slugs || []
                 );
 
                 // Check if the value is in the reserved slugs list (case-sensitive)

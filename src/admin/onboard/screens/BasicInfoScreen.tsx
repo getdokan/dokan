@@ -38,15 +38,11 @@ const BasicInfoScreen = ( {
         } );
     };
 
-    // List of reserved WordPress keywords.
+    // List of reserved WordPress keywords from backend.
     // @ts-ignore
     const reservedSlugs = wp.hooks.applyFilters(
         'dokan_reserved_url_slugs',
-        [
-            's', 'p', 'page', 'paged', 'author', 'feed', 'search', 'post',
-            'tag', 'category', 'attachment', 'name', 'order', 'orderby',
-            'rest', 'rest_route', 'wp-json', 'shop', 'cart', 'checkout'
-        ]
+        onboardingData?.reserved_slugs || []
     );
 
     // Handle immediate UI updates
