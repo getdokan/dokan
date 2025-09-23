@@ -226,18 +226,6 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
         $sale_price    = (string) isset( $data['_sale_price'] ) ? wc_clean( $data['_sale_price'] ) : '';
         $now           = dokan_current_datetime();
 
-        update_post_meta( $post_id, '_regular_price', '' === $regular_price ? '' : wc_format_decimal( $regular_price ) );
-        update_post_meta( $post_id, '_sale_price', '' === $sale_price ? '' : wc_format_decimal( $sale_price ) );
-
-        // Dates
-        update_post_meta( $post_id, '_sale_price_dates_from', $date_from ? strtotime( $date_from ) : '' );
-        update_post_meta( $post_id, '_sale_price_dates_to', $date_to ? strtotime( '+ 23 hours', strtotime( $date_to ) ) : '' );
-
-        if ( $date_to && ! $date_from ) {
-            $date_from = $now->format( 'Y-m-d' );
-            update_post_meta( $post_id, '_sale_price_dates_from', $now->getTimestamp() );
-        }
-
         // Update price if on sale
         if ( '' !== $sale_price && '' === $date_to && '' === $date_from ) {
             update_post_meta( $post_id, '_price', wc_format_decimal( $sale_price ) );
@@ -269,11 +257,8 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
     );
 
     // Sold Individually
-    if ( ! empty( $data['_sold_individually'] ) ) {
-        update_post_meta( $post_id, '_sold_individually', 'yes' );
-    } else {
-        update_post_meta( $post_id, '_sold_individually', '' );
-    }
+    $sold_individually = ! empty( $data['_sold_individually'] ) && 'yes' === $data['_sold_individually'] ? 'yes' : 'no';
+    update_post_meta( $post_id, '_sold_individually', $sold_individually );
 
     // Stock Data
     $manage_stock      = ! empty( $data['_manage_stock'] ) && 'grouped' !== $product_type ? 'yes' : 'no';
@@ -288,16 +273,12 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
     if ( 'yes' === get_option( 'woocommerce_manage_stock' ) ) {
         $manage_stock = 'no';
         $backorders   = 'no';
-        $stock        = '';
         $stock_status = wc_clean( $data['_stock_status'] );
-
         if ( 'external' === $product_type ) {
             $stock_status = 'instock';
         } elseif ( 'variable' === $product_type ) {
-
             // Stock status is always determined by children so sync later
             $stock_status = '';
-
             if ( ! empty( $data['_manage_stock'] ) && $data['_manage_stock'] === 'yes' ) {
                 $manage_stock = 'yes';
                 $backorders   = wc_clean( $data['_backorders'] );
@@ -309,7 +290,6 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
 
         update_post_meta( $post_id, '_manage_stock', $manage_stock );
         update_post_meta( $post_id, '_backorders', $backorders );
-
         if ( $stock_status ) {
             try {
                 wc_update_product_stock_status( $post_id, $stock_status );
@@ -318,18 +298,24 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
             }
         }
 
-        if ( ! empty( $data['_manage_stock'] ) ) {
+        // Retrieve original stock value from the hidden field
+        $original_stock = isset( $data['_original_stock'] ) ? wc_stock_amount( wc_clean( $data['_original_stock'] ) ) : '';
+        // Clean the current stock value
+        $stock_amount = isset( $data['_stock'] ) ? wc_clean( $data['_stock'] ) : '';
+        $stock_amount = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $stock_amount ) ) : '';
+        // Only update the stock amount if it has changed
+        if ( $original_stock != $stock_amount ) {
             if ( 'variable' === $product_type ) {
                 update_post_meta( $post_id, '_stock', $stock_amount );
             } else {
                 wc_update_product_stock( $post_id, $stock_amount );
             }
-
-            update_post_meta( $post_id, '_low_stock_amount', $_low_stock_amount );
-        } else {
-            update_post_meta( $post_id, '_stock', '' );
-            update_post_meta( $post_id, '_low_stock_amount', '' );
         }
+
+        // Update low stock amount regardless of stock changes
+        $_low_stock_amount = isset( $data['_low_stock_amount'] ) ? wc_clean( $data['_low_stock_amount'] ) : '';
+        $_low_stock_amount = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $_low_stock_amount ) ) : '';
+        update_post_meta( $post_id, '_low_stock_amount', $_low_stock_amount );
     } else {
         wc_update_product_stock_status( $post_id, wc_clean( $data['_stock_status'] ) );
     }
@@ -401,6 +387,47 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
         $woocommerce_errors[] = __( 'Product SKU must be unique', 'dokan-lite' );
     }
 
+    // Set Sales and prices
+    $product->set_regular_price( $regular_price );
+    $product->set_sale_price( $sale_price );
+
+    // Site timezone
+    $tz_string = wc_timezone_string();
+    $timezone  = $tz_string ? new DateTimeZone( $tz_string ) : new DateTimeZone( 'UTC' );
+
+    // Sale starting date
+    if ( ! empty( $date_from ) ) {
+        try {
+            $from_dt = new WC_DateTime( $date_from . ' 00:00:00', $timezone );
+            $product->set_date_on_sale_from( $from_dt );
+        } catch ( Exception $e ) {
+            error_log( 'Invalid date_from: ' . $date_from . ' | ' . $e->getMessage() );
+            $product->set_date_on_sale_from( null );
+        }
+    } else {
+        $product->set_date_on_sale_from( null );
+    }
+
+    // Sale ending date
+    if ( ! empty( $date_to ) ) {
+        try {
+            $to_dt = new WC_DateTime( $date_to . ' 23:59:59', $timezone );
+            $product->set_date_on_sale_to( $to_dt );
+
+            if ( empty( $date_from ) ) {
+                // Automatically add date of today if start date is empty
+                $from_obj = new WC_DateTime( 'now', $timezone );
+                $product->set_date_on_sale_from( $from_obj );
+            }
+        } catch ( Exception $e ) {
+            error_log( 'Invalid date_to: ' . $date_to . ' | ' . $e->getMessage() );
+            $product->set_date_on_sale_to( null );
+        }
+    } else {
+        $product->set_date_on_sale_to( null );
+    }
+
+    // save the product
     $product->save();
 
     // Do action for product type
@@ -439,7 +466,8 @@ function dokan_process_product_file_download_paths( int $product_id, int $variat
 
     if ( ! empty( $new_download_ids ) || ! empty( $removed_download_ids ) ) {
         // determine whether downloadable file access has been granted via the typical order completion, or via the admin ajax method
-        $existing_permissions = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE product_id = %d GROUP BY order_id", $product_id ) );
+        $permission_query = $wpdb->prepare( "SELECT * from {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE product_id = %d GROUP BY order_id", $product_id );
+        $existing_permissions = $wpdb->get_results( $permission_query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
         foreach ( $existing_permissions as $existing_permission ) {
             $order = wc_get_order( $existing_permission->order_id );
@@ -449,6 +477,7 @@ function dokan_process_product_file_download_paths( int $product_id, int $variat
                 if ( ! empty( $removed_download_ids ) ) {
                     foreach ( $removed_download_ids as $download_id ) {
                         if ( apply_filters( 'woocommerce_process_product_file_download_paths_remove_access_to_old_file', true, $download_id, $product_id, $order ) ) {
+                            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                             $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE order_id = %d AND product_id = %d AND download_id = %s", dokan_get_prop( $order, 'id' ), $product_id, $download_id ) );
                         }
                     }
@@ -458,6 +487,7 @@ function dokan_process_product_file_download_paths( int $product_id, int $variat
                     foreach ( $new_download_ids as $download_id ) {
                         if ( apply_filters( 'woocommerce_process_product_file_download_paths_grant_access_to_new_file', true, $download_id, $product_id, $order ) ) {
                             // grant permission if it doesn't already exist
+                            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                             if ( ! $wpdb->get_var( $wpdb->prepare( "SELECT 1=1 FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE order_id = %d AND product_id = %d AND download_id = %s", dokan_get_prop( $order, 'id' ), $product_id, $download_id ) ) ) {
                                 wc_downloadable_file_permission( $download_id, $product_id, $order );
                             }
@@ -478,10 +508,11 @@ function dokan_process_product_file_download_paths( int $product_id, int $variat
  *
  * @return int
  */
-function dokan_sub_order_get_total_coupon( int $order_id ) : int {
+function dokan_sub_order_get_total_coupon( int $order_id ): int {
     wc_deprecated_function( 'dokan_sub_order_get_total_coupon', '3.8.0' );
     global $wpdb;
 
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     $result = $wpdb->get_var(
         $wpdb->prepare(
             "SELECT SUM(oim.meta_value) FROM {$wpdb->prefix}woocommerce_order_itemmeta oim
@@ -662,7 +693,7 @@ function dokan_get_top_rated_products( $per_page = 8, $seller_id = '', $page = 1
  *
  * @return WP_Query
  */
-function dokan_get_on_sale_products( int $per_page = 10, int $paged = 1, int $seller_id = 0 ) : WP_Query {
+function dokan_get_on_sale_products( int $per_page = 10, int $paged = 1, int $seller_id = 0 ): WP_Query {
     // Get products on sale
     $product_ids_on_sale = wc_get_product_ids_on_sale();
 
@@ -934,7 +965,7 @@ add_action( 'woocommerce_product_tabs', 'dokan_set_more_from_seller_tab', 10 );
  * Show more products from current seller
  *
  * @since 2.5
- * @since DOKAN_LITE_SINCE added filter 'dokan_get_more_products_per_page'
+ * @since 3.2.2 added filter 'dokan_get_more_products_per_page'
  *
  * @param int|string $seller_id
  * @param int|string $posts_per_page

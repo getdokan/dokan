@@ -63,6 +63,7 @@ ul.dokan_tabs {
   border-bottom: 1px solid @borderColor;
   margin-bottom: 20px;
   line-height: 24px;
+  margin-left: 0;
 
   > li {
     margin-bottom: -1px !important;
@@ -148,9 +149,9 @@ a.dokan-btn,
   &:focus,
   &.focus {
     color: #fff;
-    border-color: #f05025;
+    border-color: var(--dokan-button-background-color, #7047EB);
     text-decoration: none;
-    background-color: #f05025;
+    background-color: var(--dokan-button-background-color, #7047EB);
   }
 
   &:active,

@@ -24,7 +24,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                         } else {
                             ?>
                             <table class="dokan-table order-items">
-                                <thead>
+                                <thead class="dokan-show-thead">
                                 <tr>
                                     <th class="item" colspan="2"><?php esc_html_e( 'Item', 'dokan-lite' ); ?></th>
 

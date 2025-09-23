@@ -5,9 +5,8 @@ namespace WeDevs\Dokan\Vendor;
 use Automattic\WooCommerce\Utilities\NumberUtil;
 use WC_Order;
 use WeDevs\Dokan\Cache;
-use WeDevs\Dokan\Product\ProductCache;
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WP_Error;
-use WP_Query;
 use WP_User;
 
 /**
@@ -158,6 +157,7 @@ class Vendor {
             'registered'            => $this->get_register_date(),
             'payment'               => $this->get_payment_profiles(),
             'trusted'               => $this->is_trusted(),
+            'reset_sub_category'    => $this->get_reset_sub_category(),
             'store_open_close'      => [
                 'enabled'      => $this->is_store_time_enabled(),
                 'time'         => $this->get_store_time(),
@@ -214,6 +214,15 @@ class Vendor {
      */
     public function is_featured() {
         return 'yes' == get_user_meta( $this->id, 'dokan_feature_seller', true );
+    }
+
+    /**
+     * If reset sub category is enabled
+     *
+     * @return boolean
+     */
+    public function get_reset_sub_category() {
+        return 'no' !== get_user_meta( $this->id, 'reset_sub_category', true );
     }
 
     /**
@@ -436,14 +445,36 @@ class Vendor {
     }
 
     /**
-     * Get the shop banner
+     * Get the store banner URL.
+     *
+     * This method first checks if a specific banner ID is set for the store and retrieves it. If not set,
+     * it falls back to the default store banner defined in the Dokan settings.
+     *
+     * @since 4.0.6 Applied default banner image.
      *
      * @return string
      */
-    public function get_banner() {
-        $banner_id = $this->get_banner_id();
+    public function get_banner(): string {
+        // Check if a specific banner ID is set and return its URL.
+        if ( $this->get_banner_id() ) {
+            return wp_get_attachment_url( $this->get_banner_id() );
+        }
 
-        return $banner_id ? wp_get_attachment_url( $banner_id ) : '';
+        // Retrieve the default banner URL from settings, with fallback of the plugin's default banner.
+        $banner_url = VendorUtil::get_vendor_default_banner_url();
+
+        /**
+         * Filters for the store banner URL.
+         *
+         * Allows overriding of the store banner URL via external plugins or themes.
+         * This is particularly useful if there is a need to dynamically change the banner based on specific conditions or configurations.
+         *
+         * @since 4.0.6
+         *
+         * @param string $banner_url The URL of the default banner.
+         * @param Vendor $this       Instance of the current class.
+         */
+        return apply_filters( 'dokan_get_banner_url', $banner_url, $this );
     }
 
     /**
@@ -460,20 +491,36 @@ class Vendor {
     }
 
     /**
-     * Get the shop profile icon
+     * Get the shop profile icon.
      *
      * @since 2.8
+     * @since 4.0.6 Applied default vendor profile image.
      *
      * @return string
      */
     public function get_avatar() {
         $avatar_id = $this->get_avatar_id();
 
-        if ( ! $avatar_id && ! empty( $this->data->user_email ) ) {
-            return get_avatar_url( $this->data->user_email, 96 );
+        // Check if a specific avatar ID is set and return its URL.
+        if ( $avatar_id ) {
+            return wp_get_attachment_url( $avatar_id );
         }
 
-        return wp_get_attachment_url( $avatar_id );
+        // Retrieve the default avatar URL from settings, with fallback of the plugin's default avatar.
+        $avatar_url = VendorUtil::get_vendor_default_avatar_url();
+
+        /**
+         * Filters for the store avatar URL.
+         *
+         * Allows overriding of the store avatar URL via external plugins or themes.
+         * This is particularly useful if there is a need to dynamically change the avatar based on specific conditions or configurations.
+         *
+         * @since 4.0.6
+         *
+         * @param string $avatar_url The URL of the default avatar.
+         * @param Vendor $this       Instance of the current class.
+         */
+        return apply_filters( 'dokan_get_avatar_url', $avatar_url, $this );
     }
 
     /**
@@ -630,8 +677,6 @@ class Vendor {
                             // get extra information
                             $display_type            = get_term_meta( $term->term_id, 'display_type', true );
                             $thumbnail_id            = absint( get_term_meta( $term->term_id, 'thumbnail_id', true ) );
-                            $category_commision_type = get_term_meta( $term->term_id, 'per_category_admin_commission_type', true );
-                            $category_commision      = get_term_meta( $term->term_id, 'per_category_admin_commission', true );
                             $category_icon           = get_term_meta( $term->term_id, 'dokan_cat_icon', true );
                             $category_icon_color     = get_term_meta( $term->term_id, 'dokan_cat_icon_color', true );
 
@@ -645,9 +690,6 @@ class Vendor {
                                 $image = $thumbnail = wc_placeholder_img_src();
                             }
 
-                            // fix commission
-                            $category_commision = ! empty( $category_commision ) ? wc_format_decimal( $category_commision ) : 0.00;
-
                             // set extra fields to term object
                             $term->thumbnail = $thumbnail;
                             $term->image     = $image;
@@ -655,9 +697,6 @@ class Vendor {
                             $term->icon         = $category_icon;
                             $term->icon_color   = $category_icon_color;
                             $term->display_type = $display_type;
-                            // set commissions
-                            $term->admin_commission_type = $category_commision_type;
-                            $term->admin_commission      = $category_commision;
 
                             // finally store category data
                             $all_categories[] = $term;
@@ -944,17 +983,6 @@ class Vendor {
     }
 
     /**
-     * Get vendor percentage
-     *
-     * @param  integer $product_id
-     *
-     * @return integer
-     */
-    public function get_percentage( $product_id = 0 ) {
-        return dokan_get_seller_percentage( $this->id, $product_id );
-    }
-
-    /**
      * Make vendor active
      *
      * @since 2.8.0
@@ -1201,6 +1229,15 @@ class Vendor {
     }
 
     /**
+     * Set threads
+     *
+     * @param string
+     */
+    public function set_threads( $value ) {
+        $this->set_social_prop( 'threads', 'social', esc_url_raw( $value ) );
+    }
+
+    /**
      * Set flickr
      *
      * @param string
@@ -1375,7 +1412,7 @@ class Vendor {
      * @param string $key
      * @param bool $single  Whether to return a single value
      *
-     * @return Mix
+     * @return mixed|null|false
      */
     public function get_meta( $key, $single = false ) {
         return get_user_meta( $this->get_id(), $key, $single );
@@ -1565,6 +1602,32 @@ class Vendor {
      */
     public function save() {
         $this->apply_changes();
+    }
+
+    /**
+     * Returns vendor commission settings data.
+     *
+     * @since 3.14.0
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Setting
+     */
+    public function get_commission_settings() {
+        $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->get_id() );
+        return $settings->get();
+    }
+
+    /**
+     * Saves commission settings.
+     *
+     * @since 3.14.0
+     *
+     * @param array $commission
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Setting
+     */
+    public function save_commission_settings( $commission = [] ) {
+        $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->get_id() );
+        return  $settings->save( $commission );
     }
 
     /**

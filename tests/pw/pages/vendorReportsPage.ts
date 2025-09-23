@@ -64,6 +64,8 @@ export class VendorReportsPage extends VendorPage {
     async exportStatement(): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.statement);
         const isDisabled = await this.hasAttribute(vendorReports.statement.exportStatements, 'disabled');
-        !isDisabled && (await this.clickAndWaitForDownload(vendorReports.statement.exportStatements));
+        if (!isDisabled) {
+            await this.clickAndWaitForDownload(vendorReports.statement.exportStatements);
+        }
     }
 }

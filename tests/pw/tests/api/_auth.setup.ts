@@ -1,13 +1,14 @@
 import { test as setup, expect, request } from '@playwright/test';
+import { LoginPage } from '@pages/loginPage';
 import { ApiUtils } from '@utils/apiUtils';
-import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
-import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
+import { helpers } from '@utils/helpers';
 
-const { LOCAL, DOKAN_PRO, BASE_URL } = process.env;
+const { DOKAN_PRO } = process.env;
 
-setup.describe('setup test environment', () => {
+setup.describe('add users', () => {
     let apiUtils: ApiUtils;
 
     setup.beforeAll(async () => {
@@ -18,47 +19,51 @@ setup.describe('setup test environment', () => {
         await apiUtils.dispose();
     });
 
-    setup.skip('get server url', { tag: ['@lite'] }, async () => {
-        const headers = await apiUtils.getSiteHeaders(BASE_URL);
-        if (headers.link) {
-            const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
-            helpers.createEnvVar('SERVER_URL', serverUrl);
-        } else {
-            console.log("Headers link doesn't exists");
-        }
+    setup('authenticate admin', { tag: ['@lite'] }, async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
+    }); // todo: need to resolve why wc_orders table isn't created
+
+    setup('enable admin selling status', { tag: ['@lite'] }, async () => {
+        const responseBody = await apiUtils.setStoreSettings(payloads.setupStore, payloads.adminAuth);
+        expect(responseBody).toBeTruthy();
     });
 
-    setup('setup store settings', { tag: ['@lite'] }, async () => {
-        const [response] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
-        expect(response.ok()).toBeTruthy();
-    });
-
-    setup('create customer', { tag: ['@lite'] }, async () => {
+    setup('add customer1', { tag: ['@lite'] }, async () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
         helpers.createEnvVar('CUSTOMER_ID', customerId);
     });
 
-    setup('create vendor', { tag: ['@lite'] }, async () => {
-        const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
+    setup('add vendor1', { tag: ['@lite'] }, async () => {
+        const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth, true);
+        // add open-close time
+        await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
+        // add review
+        if (DOKAN_PRO) {
+            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
+        }
+        // add map location
+        await dbUtils.addStoreMapLocation(sellerId);
+
         helpers.createEnvVar('VENDOR_ID', sellerId);
     });
 
+    setup('add customer2', { tag: ['@lite'] }, async () => {
+        const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer2, payloads.adminAuth);
+        helpers.createEnvVar('CUSTOMER2_ID', customerId);
+    });
+
     setup('add vendor2', { tag: ['@lite'] }, async () => {
-        const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth);
-        helpers.createEnvVar('VENDOR2_ID', sellerId);
-    });
-
-    setup('dokan pro enabled or not', { tag: ['@lite'] }, async () => {
-        setup.skip(LOCAL, 'Skip on Local testing');
-        let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
-        if (res) {
-            res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
+        const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth, true);
+        // add open-close time
+        await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
+        // add review
+        if (DOKAN_PRO) {
+            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
         }
-        DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
-    });
+        // add map location
+        await dbUtils.addStoreMapLocation(sellerId);
 
-    setup('get test environment info', { tag: ['@lite'] }, async () => {
-        const [, systemInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
-        helpers.writeFile(data.systemInfo, JSON.stringify(systemInfo));
+        helpers.createEnvVar('VENDOR2_ID', sellerId);
     });
 });

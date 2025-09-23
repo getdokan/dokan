@@ -46,6 +46,7 @@ class Ajax {
         add_action( 'wp_ajax_custom-header-crop', [ $this, 'crop_store_banner' ] );
 
         add_action( 'wp_ajax_dokan_json_search_products_tags', [ $this, 'dokan_json_search_products_tags' ] );
+        add_action( 'wp_ajax_dokan_json_search_products_brands', [ $this, 'dokan_json_search_products_brands' ] );
 
         add_action( 'wp_ajax_dokan_json_search_products_and_variations', [ $this, 'json_search_product' ], 10 );
         add_action( 'wp_ajax_nopriv_dokan_json_search_products_and_variations', [ $this, 'json_search_product' ], 10 );
@@ -265,8 +266,8 @@ class Ajax {
 
                         include dirname( __DIR__ ) . '/templates/orders/order-download-permission-html.php';
 
-                        $loop ++;
-                        $file_count ++;
+                        ++$loop;
+                        ++$file_count;
                     }
                 }
             }
@@ -414,7 +415,7 @@ class Ajax {
                 echo 'customer-note';
             }
             echo '"><div class="note_content">';
-            echo wpautop( wptexturize( $note ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( wpautop( wptexturize( $note ) ) );
             echo '</div><p class="meta"><a href="#" class="delete_note">' . esc_html__( 'Delete note', 'dokan-lite' ) . '</a></p>';
             echo '</li>';
         }
@@ -484,7 +485,7 @@ class Ajax {
             echo '<li rel="' . esc_attr( $comment_id ) . '" class="note ';
             echo 'customer-note';
             echo '"><div class="note_content">';
-            echo wpautop( wptexturize( $ship_info ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( wpautop( wptexturize( $ship_info ) ) );
             echo '</div><p class="meta"><a href="#" class="delete_note">' . esc_html__( 'Delete', 'dokan-lite' ) . '</a></p>';
             echo '</li>';
 
@@ -692,6 +693,7 @@ class Ajax {
 
         $drop_down_tags = apply_filters(
             'dokan_search_product_tags_for_vendor_products', [
+                'taxonomy'   => 'product_tag',
                 'name__like' => $name,
                 'hide_empty' => 0,
                 'orderby'    => 'name',
@@ -701,7 +703,7 @@ class Ajax {
             ]
         );
 
-        $product_tags = get_terms( 'product_tag', $drop_down_tags );
+        $product_tags = get_terms( $drop_down_tags );
 
         if ( $product_tags ) {
             foreach ( $product_tags as $pro_term ) {
@@ -711,6 +713,80 @@ class Ajax {
 
         echo wp_json_encode( $return );
         die;
+    }
+
+    /**
+     * Get Child based on parent id
+     *
+     * @param $parent_id int
+     * @param $brands array
+     * @param $level int
+     *
+     * @return void
+     *
+     * @since 4.0.0
+     */
+    public function get_child_terms_recursive( int $parent_id, array &$brands, int $level ) {
+		$child_terms = get_terms(
+            [
+				'taxonomy'   => 'product_brand',
+				'hide_empty' => 0,
+				'parent'     => $parent_id,
+				'orderby'    => 'name',
+				'order'      => 'ASC',
+			]
+        );
+
+		if ( $child_terms && ! is_wp_error( $child_terms ) ) {
+			foreach ( $child_terms as $child ) {
+                $name = $child->name;
+                $name = str_repeat( '— ', $level ) . $name;
+				$brands[] = [ $child->term_id, $name ];
+				// Recursive call for deeper levels
+				$this->get_child_terms_recursive( $child->term_id, $brands, $level + 1 );
+			}
+		}
+	}
+
+    /**
+     * Search product brand
+     *
+     * @since 4.0.0
+     *
+     * @return void
+     */
+    public function dokan_json_search_products_brands() {
+        check_ajax_referer( 'search-products-brands', 'security' );
+
+        $brands_data = [];
+        $name   = ! empty( $_GET['q'] ) ? sanitize_text_field( wp_unslash( $_GET['q'] ) ) : '';
+        $page   = ! empty( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 1;
+        $offset = ( $page - 1 ) * 10;
+
+        $drop_down_tags = apply_filters(
+            'dokan_search_product_brands_for_vendor_products', [
+                'taxonomy'   => 'product_brand',
+                'name__like' => $name,
+                'hide_empty' => 0,
+                'orderby'    => 'name',
+                'order'      => 'ASC',
+                'number'     => 10,
+                'offset'     => $offset,
+                'parent'     => 0,
+            ]
+        );
+
+        $brands = get_terms( $drop_down_tags );
+
+        if ( $brands ) {
+            foreach ( $brands as $brand ) {
+                $brands_data[] = [ $brand->term_id, $brand->name ];
+                // Recursively get children
+                $this->get_child_terms_recursive( $brand->term_id, $brands_data, 1 );
+            }
+        }
+
+        wp_send_json( $brands_data );
     }
 
     /**

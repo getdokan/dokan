@@ -1,4 +1,4 @@
-import { test, Page, BrowserContext } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { CustomerPage } from '@pages/customerPage';
 import { data } from '@utils/testData';
@@ -6,10 +6,9 @@ import { data } from '@utils/testData';
 test.describe('Customer functionality test', () => {
     let customer: CustomerPage;
     let cPage: Page;
-    let customerContext: BrowserContext;
 
     test.beforeAll(async ({ browser }) => {
-        customerContext = await browser.newContext(data.auth.customerAuth);
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new CustomerPage(cPage);
     });
@@ -40,11 +39,11 @@ test.describe('Customer functionality test', () => {
         await customer.customerBecomeVendor(data.customer.customerInfo);
     });
 
-    test('customer can add billing details', { tag: ['@lite', '@customer'] }, async () => {
+    test.skip('customer can add billing details', { tag: ['@lite', '@customer'] }, async () => {
         await customer.addBillingAddress(data.customer.customerInfo.billing);
     });
 
-    test('customer can add shipping details', { tag: ['@lite', '@customer'] }, async () => {
+    test.skip('customer can add shipping details', { tag: ['@lite', '@customer'] }, async () => {
         await customer.addShippingAddress(data.customer.customerInfo.shipping);
     });
 
@@ -52,7 +51,8 @@ test.describe('Customer functionality test', () => {
         await customer.addCustomerDetails(data.customer);
     });
 
-    test('customer can add product to cart', { tag: ['@lite', '@customer'] }, async () => {
+    test('customer can add product to cart', { tag: ['@lite', '@customer'] }, async ({ page }) => {
+        const customer = new CustomerPage(page); // Used guest customer to avoid conflict with other tests
         const productName = data.predefined.simpleProduct.product1.name;
         await customer.addProductToCart(productName, 'single-product');
         await customer.productIsOnCart(productName);

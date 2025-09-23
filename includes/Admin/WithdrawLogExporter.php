@@ -107,7 +107,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     public function get_default_column_names() {
         return apply_filters(
             'dokan_withdraw_log_export_columns', [
-                'id'                  => __( 'ID', 'dokan' ),
+                'id'                  => __( 'ID', 'dokan-lite' ),
                 'vendor_id'           => __( 'Vendor ID', 'dokan-lite' ),
                 'store_name'          => __( 'Store Name', 'dokan-lite' ),
                 'amount'              => __( 'Withdraw Total', 'dokan-lite' ),

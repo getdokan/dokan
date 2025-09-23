@@ -39,8 +39,17 @@ class Menu {
             // translators: %s: withdraw count
             $withdraw_text = sprintf( __( 'Withdraw %s', 'dokan-lite' ), '<span class="awaiting-mod count-1"><span class="pending-count">' . $withdraw['pending'] . '</span></span>' );
         }
+        $menu_icon  = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxNSAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGQ9Ik0xMC41NDU4IDguNjA0NjVDMTAuNTMzMyAxMS42OTA5IDkuMjA4ODMgMTQuODc3MiA2LjQ3MjQyIDE2LjMyNjZDNC41NDgxOSAxNy4zNTEyIDAgMTguMTM4NCAwIDE0LjgwMjJDMCAxNC44MDIyIDAgMi4zOTQ2MiAwIDIuMzgyMTNDMCAwLjUzMjg2NSAxLjU2MTg4IC0wLjA3OTM5MiAzLjEyMzc2IDAuMDA4MDczMkM1LjQ0NzgzIDAuMTMzMDI0IDcuNjcxOTUgMS4yMjAwOSA5LjAyMTQxIDMuMjE5M0M5Ljg4MzU3IDQuNDkzNzkgMTAuMzU4NCA2LjAzMDY4IDEwLjUwODMgNy41ODAwNkMxMC41MjA4IDcuOTI5OTIgMTAuNTQ1OCA4LjI2NzI5IDEwLjU0NTggOC42MDQ2NVoiIGZpbGw9IiM5RUEzQTgiIGZpbGwtb3BhY2l0eT0iMC41Ii8+CiAgICA8cGF0aCBkPSJNMTQuODU2MiA3LjUxNzY2QzE0LjU5MzggNC45Njg2NyAxMy4wMzIgMi44MzIwMiAxMC44NzAzIDEuNTQ1MDNDOS40MzMzOSAwLjY4Mjg3NSA3LjYzNDExIDAuNDcwNDYxIDYuNjk2OTggMi4xOTQ3OEM2LjY5Njk4IDIuMjA3MjcgMC4zODY5OSAxMy44MDI3IDAuMzg2OTkgMTMuODAyN0MtMC4xNjI3OTEgMTQuODE0OCAtMC4wMzc4NDAyIDE1LjY1MTkgMC40NjE5NjEgMTYuMzM5MkMxLjIxMTY2IDE3LjM2MzcgMi42OTg1NyAxNy44MjYxIDMuOTEwNTkgMTcuOTUxQzUuMDM1MTQgMTguMDc2IDYuMTcyMTkgMTcuOTUxIDcuMjU5MjYgMTcuNzAxMUMxMC41NDU1IDE2Ljk1MTQgMTMuNDU2OCAxNC43MTQ4IDE0LjQ0MzkgMTEuNDY2MUMxNC44MzEyIDEwLjE5MTYgMTQuOTkzNyA4Ljg1NDYzIDE0Ljg1NjIgNy41MTc2NloiIGZpbGw9IiM5RUEzQTgiLz4KICAgIDxwYXRoIGQ9Ik02LjQ3MjM3IDE2LjMzOTNDOS4yMDg3OCAxNC44Nzc0IDEwLjUzMzMgMTEuNjkxMiAxMC41NDU3IDguNjE3NDFDMTAuNTQ1NyA4LjI4MDA1IDEwLjUzMzMgNy45NDI2OCAxMC40OTU4IDcuNjA1MzJDMTAuMzU4MyA2LjA1NTkzIDkuODcxMDIgNC41MTkwNCA5LjAwODg2IDMuMjQ0NTVDOC41MzQwNSAyLjUzMjMzIDcuOTQ2NzggMS45NDUwNyA3LjI4NDU0IDEuNDU3NzZDNy4wNzIxMyAxLjY0NTE5IDYuODcyMjEgMS44OTUwOSA2LjcwOTc3IDIuMjA3NDdDNi43MDk3NyAyLjIxOTk2IDAuMzk5Nzg0IDEzLjgxNTMgMC4zOTk3ODQgMTMuODE1M0MtMC4wMTI1NTI1IDE0LjU2NSAtMC4wMzc1NDQ4IDE1LjIyNzMgMC4xNzQ4NzEgMTUuODAyMUMwLjE3NDg3MSAxNS44MTQ2IDAuMTg3MzY2IDE1LjgyNyAwLjE4NzM2NiAxNS44Mzk1QzAuMTk5ODYyIDE1Ljg2NDUgMC4yMTIzNTUgMTUuOTAyIDAuMjI0ODUgMTUuOTI3QzAuMjM3MzQ1IDE1Ljk1MiAwLjIzNzM0NyAxNS45NjQ1IDAuMjQ5ODQyIDE1Ljk4OTVDMC4yNDk4NDIgMTYuMDAyIDAuMjYyMzM3IDE2LjAxNDUgMC4yNjIzMzcgMTYuMDE0NUMxLjI0OTQ0IDE3LjkxMzcgNC44MjMwMiAxNy4yMTQgNi40NzIzNyAxNi4zMzkzWiIgZmlsbD0iIzlFQTNBOCIvPgogICAgPC9zdmc+';
 
-        $dashboard = add_menu_page( __( 'Dokan', 'dokan-lite' ), __( 'Dokan', 'dokan-lite' ), $capability, $slug, [ $this, 'dashboard' ], 'data:image/svg+xml;base64,' . base64_encode( '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><g fill="#9EA3A8" fill-rule="nonzero"><path d="M2.565 1.909s10.352-.665 10.352 7.231-2.735 9.481-5.134 9.994c0 0 9.974 2.125 9.974-8.995S5.035.624 2.565 1.91z"/><path d="M10.982 15.353s-.999 3.07-4.018 3.461c-3.02.39-3.582-1.062-5.688-.962 0 0-.171-1.441 1.529-1.644 1.7-.202 4.885.193 7.004-.991 0 0 1.253-.582 1.499-.862l-.326.998z"/><path d="M2.407 2.465V15.74a3.29 3.29 0 01.32-.056 18.803 18.803 0 011.794-.083c.624 0 1.306-.022 1.987-.078v-4.465c0-1.485-.107-3.001 0-4.484.116-.895.782-1.66 1.73-1.988.759-.25 1.602-.2 2.316.135-3.414-2.24-7.25-2.284-8.147-2.255z"/></g></svg>' ), $menu_position );
+        $dashboard = add_menu_page(
+            __( 'Dokan', 'dokan-lite' ),
+            __( 'Dokan', 'dokan-lite' ),
+            $capability,
+            $slug,
+            [ $this, 'dashboard' ],
+            $menu_icon,
+            $menu_position
+        );
 
         if ( current_user_can( $capability ) ) {
             $submenu[ $slug ][] = [ __( 'Dashboard', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/' ];
@@ -53,10 +62,6 @@ class Menu {
             }
 
             if ( ! dokan()->is_pro_exists() ) {
-                $submenu[ $slug ][] = [ __( 'Modules', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/pro-modules' ];
-            }
-
-            if ( ! dokan()->is_pro_exists() ) {
                 $submenu[ $slug ][] = [ __( 'PRO Features', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/premium' ];
             }
         }
@@ -66,6 +71,21 @@ class Menu {
         if ( current_user_can( $capability ) ) {
             $submenu[ $slug ][] = [ __( '<span style="color:#f18500">Help</span>', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/help' ];
             $submenu[ $slug ][] = [ __( 'Settings', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/settings' ];
+        }
+
+        // Add a chat with us link if Dokan Pro is not installed.
+        if ( ! dokan()->is_pro_exists() ) {
+            $chat_svg_icon = '<svg xmlns="http://www.w3.org/2000/svg" class="dokan-chat-with-us-icon" viewBox="0 0 24 24">
+                <path d="M15 3h6v6"/>
+                <path d="M10 14 21 3"/>
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            </svg>';
+
+            $submenu[ $slug ][] = [
+                esc_html__( 'Chat with us', 'dokan-lite' ) . $chat_svg_icon,
+                $capability,
+                'https://dokan.co/wordpress/?utm_campaign=Chat-With-Us&utm_medium=Dokan-Lite&utm_source=Chat_Button&chat=open'
+            ];
         }
 
         // phpcs:enable
@@ -103,7 +123,6 @@ class Menu {
      */
     public function dashboard() {
         $has_new_version = Helper::dokan_has_new_version();
-
         include DOKAN_DIR . '/templates/admin-header.php';
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
     }

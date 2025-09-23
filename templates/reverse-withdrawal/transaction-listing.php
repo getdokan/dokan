@@ -37,16 +37,16 @@ use WeDevs\Dokan\ReverseWithdrawal\Helper as ReverseWithdrawalHelper;
                 <td>
                     <?php
                     // translators: 1) transaction url 2) transaction id
-                    echo sprintf( '<a href="%1$s" target="_blank">%2$s</a>', $transaction['trn_url'], $transaction['trn_id'] )
+                    printf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( $transaction['trn_url'] ), esc_html( $transaction['trn_id'] ) )
                     ?>
                 </td>
                 <td><?php echo esc_html( $transaction['trn_date'] ); ?></td>
                 <td><?php echo esc_html( $transaction['trn_type'] ); ?></td>
                 <td><?php echo esc_html( $transaction['note'] ); ?></td>
-                <td><?php echo $transaction['debit'] === '' ? '--' : wc_price( $transaction['debit'] ); ?></td>
-                <td><?php echo $transaction['credit'] === '' ? '--' : wc_price( $transaction['credit'] ); ?></td>
+                <td><?php echo $transaction['debit'] === '' ? '--' : wp_kses_post( wc_price( $transaction['debit'] ) ); ?></td>
+                <td><?php echo $transaction['credit'] === '' ? '--' : wp_kses_post( wc_price( $transaction['credit'] ) ); ?></td>
                 <td>
-                    <?php echo $transaction['balance'] < 0 ? sprintf( '(%1$s)', wc_price( abs( $transaction['balance'] ) ) ) : wc_price( $transaction['balance'] ); ?>
+                    <?php echo $transaction['balance'] < 0 ? sprintf( '(%1$s)', wp_kses_post( wc_price( abs( $transaction['balance'] ) ) ) ) : wp_kses_post( wc_price( $transaction['balance'] ) ); ?>
                 </td>
             </tr>
             <?php
@@ -60,7 +60,7 @@ use WeDevs\Dokan\ReverseWithdrawal\Helper as ReverseWithdrawalHelper;
                 <td></td>
                 <td></td>
                 <td><b><?php esc_html_e( 'Balance:', 'dokan-lite' ); ?></b></td>
-                <td><b><?php echo wc_price( $current_balance ); ?></b></td>
+                <td><b><?php echo wp_kses_post( wc_price( $current_balance ) ); ?></b></td>
             </tr>
             <?php
         } else {

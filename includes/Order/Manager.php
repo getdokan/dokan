@@ -8,6 +8,7 @@ use WC_Order_Item_Coupon;
 use WC_Order_Refund;
 use WeDevs\Dokan\Cache;
 use WeDevs\Dokan\Utilities\OrderUtil;
+use WeDevs\Dokan\Vendor\Coupon;
 use WP_Error;
 
 /**
@@ -369,6 +370,7 @@ class Manager {
             return false;
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $order_id = $wpdb->get_var( $wpdb->prepare( "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE order_id=%d LIMIT 1", $order_id ) );
 
         return wc_string_to_bool( $order_id );
@@ -387,12 +389,12 @@ class Manager {
     public function is_seller_has_order( $seller_id, $order_id ) {
         global $wpdb;
 
-        return 1 === (int) $wpdb->get_var(
-                $wpdb->prepare(
-                    "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_id = %d LIMIT 1",
-                    [ $seller_id, $order_id ]
-                )
-            );
+        return 1 === (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $wpdb->prepare(
+                "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_id = %d LIMIT 1",
+                [ $seller_id, $order_id ]
+            )
+        );
     }
 
     /**
@@ -447,20 +449,28 @@ class Manager {
     }
 
     /**
+     * Get all child orders of a parent order
+     *
      * @param int|WC_Order $parent_order
+     * @param array $args
      *
      * @return WC_Order[]
      */
-    public function get_child_orders( $parent_order ) {
+    public function get_child_orders( $parent_order, array $args = [] ) {
         $parent_order_id = is_numeric( $parent_order ) ? $parent_order : $parent_order->get_id();
+        $default_args = [
+			'type'   => 'shop_order',
+			'parent' => $parent_order_id,
+			'limit'  => -1,
+		];
 
-        return wc_get_orders(
-            [
-                'type'   => 'shop_order',
-                'parent' => $parent_order_id,
-                'limit'  => -1,
-            ]
+        $args = apply_filters(
+            'dokan_get_child_orders_args',
+            wp_parse_args( $args, $default_args ),
+            $parent_order_id
         );
+
+        return wc_get_orders( $args );
     }
 
     /**
@@ -487,6 +497,7 @@ class Manager {
             $where_format[]     = '%d';
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $deleted = $wpdb->delete( $wpdb->prefix . 'dokan_orders', $where, $where_format );
         if ( false === $deleted ) {
             dokan_log( sprintf( '[DeleteSellerOrder] Error while deleting dokan order table data, order_id: %d, Database Error: %s  ', $order_id, $wpdb->last_error ) );
@@ -495,7 +506,7 @@ class Manager {
         }
 
         // delete from dokan refund table -> order_id
-        $deleted = $wpdb->query(
+        $deleted = $wpdb->query(  // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "DELETE FROM `{$wpdb->prefix}dokan_refund` WHERE order_id = %d",
                 [ $order_id ]
@@ -508,7 +519,7 @@ class Manager {
         do_action( 'dokan_after_deleting_seller_order', $order_id );
 
         // delete data from vendor balance table -> trn_id, trn_type: dokan_orders, dokan_refund, dokan_withdraw
-        $deleted = $wpdb->query(
+        $deleted = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "DELETE FROM `{$wpdb->prefix}dokan_vendor_balance`
                 WHERE trn_id = %d AND trn_type in ( %s, %s, %s )",
@@ -520,7 +531,7 @@ class Manager {
         }
 
         // delete data from reverse withdrawal table -> order_id, trn_type: order_commission, manual_order_commission, order_refund
-        $deleted = $wpdb->query(
+        $deleted = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "DELETE FROM `{$wpdb->prefix}dokan_reverse_withdrawal`
                 WHERE trn_id = %d AND trn_type in ( %s, %s, %s )",
@@ -626,7 +637,7 @@ class Manager {
             $this->create_taxes( $order, $parent_order, $seller_products );
 
             // add coupons if any
-            $this->create_coupons( $order, $parent_order, $seller_products );
+            $this->create_coupons( $order, $parent_order );
 
             $order->save(); // need to save order data before passing it to a hook
 
@@ -644,7 +655,10 @@ class Manager {
             dokan_log( 'Created sub order : #' . $order->get_id() );
 
             do_action( 'dokan_checkout_update_order_meta', $order->get_id(), $seller_id );
-        } catch ( Exception $e ) {
+        } catch ( \Throwable $e ) {
+            dokan_log( 'Error in create_sub_order: ' . $e->getMessage() );
+            dokan_log( 'Stack trace: ' . $e->getTraceAsString() );
+            dokan_log( 'Backtrace at error: ' . wp_debug_backtrace_summary() );
             return new WP_Error( 'dokan-suborder-error', $e->getMessage() );
         }
     }
@@ -678,6 +692,8 @@ class Manager {
                     $product_item->add_meta_data( $meta->key, $meta->value );
                 }
             }
+
+            $product_item->add_meta_data( '_dokan_parent_order_item_id', $item->get_id() );
 
             $order->add_item( $product_item );
         }
@@ -781,23 +797,9 @@ class Manager {
             }
             dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
 
-            $item = new \WC_Order_Item_Shipping();
-            $item->set_props(
-                [
-                    'method_title' => $shipping_method->get_name(),
-                    'method_id'    => $shipping_method->get_method_id(),
-                    'total'        => $shipping_method->get_total(),
-                    'taxes'        => $shipping_method->get_taxes(),
-                ]
-            );
+            $item = clone $shipping_method;
+            $item->set_id( 0 );
             $shipping_totals += $shipping_method->get_total();
-            $metadata        = $shipping_method->get_meta_data();
-
-            if ( $metadata ) {
-                foreach ( $metadata as $meta ) {
-                    $item->add_meta_data( $meta->key, $meta->value );
-                }
-            }
             $order->add_item( $item );
         }
         $order->set_shipping_total( $shipping_totals );
@@ -809,24 +811,18 @@ class Manager {
      *
      * @param WC_Order $order
      * @param WC_Order $parent_order
-     * @param array    $products
      *
      * @return void
      */
-    private function create_coupons( $order, $parent_order, $products ) {
+    private function create_coupons( $order, $parent_order ) {
         if ( dokan()->is_pro_exists() && property_exists( dokan_pro(), 'vendor_discount' ) ) {
             // remove vendor discount coupon code changes
             remove_filter( 'woocommerce_order_get_items', [ dokan_pro()->vendor_discount->woocommerce_hooks, 'replace_coupon_name' ], 10 );
         }
 
-        $used_coupons = $parent_order->get_items( 'coupon' );
-        $product_ids  = array_map(
-            function ( $item ) {
-                return $item->get_product_id();
-            }, $products
-        );
+        $parent_coupons = $parent_order->get_items( 'coupon' );
 
-        if ( ! $used_coupons ) {
+        if ( ! $parent_coupons ) {
             return;
         }
 
@@ -836,32 +832,45 @@ class Manager {
             return;
         }
 
-        foreach ( $used_coupons as $item ) {
-            /**
-             * @var WC_Order_Item_Coupon $item
-             */
-            $coupon = new \WC_Coupon( $item->get_code() );
+        $parent_coupons = array_map(
+            function ( $coupon ) {
+                /** @var WC_Order_Item_Coupon $coupon */
+                return $coupon->get_code();
+            },
+            $parent_coupons
+        );
 
-            if (
-                apply_filters( 'dokan_should_copy_coupon_to_sub_order', true, $coupon, $item, $order ) &&
-                (
-                    array_intersect( $product_ids, $coupon->get_product_ids() ) ||
-                    apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
-                )
-            ) {
-                $new_item = new WC_Order_Item_Coupon();
-                $new_item->set_props(
-                    [
-                        'code'         => $item->get_code(),
-                        'discount'     => $item->get_discount(),
-                        'discount_tax' => $item->get_discount_tax(),
-                    ]
-                );
-
-                $new_item->add_meta_data( 'coupon_data', $coupon->get_data() );
-
-                $order->add_item( $new_item );
+        $order_items = $order->get_items();
+        $used_coupons_data = [];
+        foreach ( $order_items as $order_item ) {
+            $item_coupons = $order_item->get_meta( Coupon::DOKAN_COUPON_META_KEY, true );
+            if ( ! is_array( $item_coupons ) ) {
+                continue;
             }
+            foreach ( $item_coupons as $code => $item ) {
+                if ( ! isset( $used_coupons_data[ $code ] ) ) {
+                    $used_coupons_data[ $code ] = 0;
+                }
+                if ( in_array( $code, $parent_coupons, true ) ) {
+                    $used_coupons_data[ $code ] += $item['discount'];
+                }
+            }
+        }
+
+        foreach ( $used_coupons_data as $code => $total_discount ) {
+            $coupon = new \WC_Coupon( $code );
+            $coupon_item = new WC_Order_Item_Coupon();
+            $coupon_item->set_props(
+                [
+                    'code'         => $code,
+                    'discount'     => $total_discount,
+                    'discount_tax' => 0,
+                ]
+            );
+            $coupon_info = $coupon->get_short_info();
+            $coupon_item->add_meta_data( 'coupon_info', $coupon_info );
+            $coupon_item->add_meta_data( 'coupon_data', $coupon->get_data() );
+            $order->add_item( $coupon_item );
         }
     }
 
@@ -927,10 +936,7 @@ class Manager {
             $parent_order->update_meta_data( '_dokan_vendor_id', $seller_id );
             $parent_order->save();
 
-            // if the request is made from rest api then insert the order data to the sync table
-            if ( defined( 'REST_REQUEST' ) ) {
-                do_action( 'dokan_checkout_update_order_meta', $parent_order_id, $seller_id );
-            }
+            do_action( 'dokan_checkout_update_order_meta', $parent_order_id, $seller_id );
 
             return;
         }

@@ -5,16 +5,17 @@
   "license": "GPL2",
   "authors": [
     {
-      "name": "weDevs",
-      "email": "info@wedevs.com"
+      "name": "Dokan Inc.",
+      "email": "info@dokan.co"
     }
   ],
   "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "php": ">=7.4",
-    "appsero/client": "^v2.0.2",
+    "appsero/client": "^v2.0.4",
     "jakeasmith/http_build_url": "^1",
-    "appsero/updater": "^v1.0.0"
+    "appsero/updater": "^v2.3.1"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "dev-develop",
@@ -24,6 +25,9 @@
     "phpunit/phpunit": "^9.6",
     "wp-phpunit/wp-phpunit": "dev-master",
     "yoast/phpunit-polyfills": "^1.0@dev",
+    "brain/monkey": "^2.0",
+    "league/container": "^4.0",
+    "coenjacobs/mozart": "^0.7.1",
     "phpstan/phpstan": "2.0.x-dev",
     "php-stubs/woocommerce-stubs": "dev-master",
     "php-stubs/wordpress-stubs": "^6.5"
@@ -38,14 +42,28 @@
   },
   "autoload": {
     "psr-4": {
-      "WeDevs\\Dokan\\": "includes/"
+      "WeDevs\\Dokan\\": "includes/",
+			"WeDevs\\Dokan\\ThirdParty\\Packages\\": "lib/packages/"
     },
     "files": [
       "includes/functions-rest-api.php",
       "includes/functions-dashboard-navigation.php"
     ]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "WeDevs\\Dokan\\Test\\": "tests/php/src"
+    }
+  },
   "scripts": {
+      "post-install-cmd": [
+          "[ $COMPOSER_DEV_MODE -eq 0 ] || \"vendor/bin/mozart\" compose",
+          "composer dump-autoload"
+      ],
+      "post-update-cmd": [
+          "[ $COMPOSER_DEV_MODE -eq 0 ] || \"vendor/bin/mozart\" compose",
+          "composer dump-autoload"
+      ],
     "phpcs": [
       "vendor/bin/phpcs -p -s"
     ],
@@ -55,8 +73,36 @@
     "phpcbf": [
       "vendor/bin/phpcbf -p"
     ],
+    "test": [
+      "phpunit"
+    ],
+    "test-f": [
+      "phpunit --filter"
+    ],
     "phpstan": [
         "vendor/bin/phpstan analyse"
     ]
-  }
+  },"extra": {
+    "mozart": {
+        "dep_namespace": "WeDevs\\Dokan\\ThirdParty\\Packages\\",
+        "dep_directory": "/lib/packages/",
+        "classmap_directory": "/lib/classes/",
+        "classmap_prefix": "WeDevs_Dokan_",
+        "packages": [
+            "league/container"
+        ],
+        "excluded_packages": [
+            "psr/http-client",
+            "psr/http-message"
+        ],
+        "override_autoload": {
+            "google/apiclient": {
+                "classmap": [
+                    "src/"
+                ]
+            }
+        },
+        "delete_vendor_directories": true
+    }
+}
 }

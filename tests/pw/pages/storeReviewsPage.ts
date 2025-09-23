@@ -6,8 +6,9 @@ import { data } from '@utils/testData';
 import { storeReview } from '@utils/interfaces';
 
 // selectors
+const dokanAdmin = selector.admin.dokan;
 const storeReviewsAdmin = selector.admin.dokan.storeReviews;
-const storeReviewsCustomer = selector.customer.cSingleStore.review;
+const storeReviewsCustomer = selector.customer.cSingleStore.reviews;
 
 export class StoreReviewsPage extends AdminPage {
     constructor(page: Page) {
@@ -15,6 +16,32 @@ export class StoreReviewsPage extends AdminPage {
     }
 
     // store reviews
+
+    // enable store reviews
+    async enableStoreReviewsModule(storeName: string) {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        await this.toBeVisible(dokanAdmin.menus.storeReviews);
+
+        // single store page
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
+        await this.toBeVisible(selector.customer.cSingleStore.storeTabs.reviews);
+    }
+
+    // disable store reviews
+    async disableStoreReviewsModule(storeName: string) {
+        // dokan menu
+        await this.goto(data.subUrls.backend.dokan.dokan, { waitUntil: 'domcontentloaded' }, true);
+        await this.notToBeVisible(dokanAdmin.menus.storeReviews);
+
+        // dokan menu page
+        await this.goto(data.subUrls.backend.dokan.storeReviews);
+        await this.notToBeVisible(dokanAdmin.storeReviews.storeReviewsDiv);
+
+        // single store page
+        await this.goIfNotThere(data.subUrls.frontend.storeReviews(helpers.slugify(storeName)));
+        await this.toBeVisible(selector.customer.cSingleStore.storeTabs.reviews);
+    }
 
     // store reviews render properly
     async adminStoreReviewsRenderProperly() {
@@ -30,7 +57,7 @@ export class StoreReviewsPage extends AdminPage {
         await this.multipleElementVisible(storeReviewsAdmin.bulkActions);
 
         // filter elements are visible
-        const { filterInput, filterClear, ...filters } = storeReviewsAdmin.filters;
+        const { filterInput, filterClear, filteredResult, ...filters } = storeReviewsAdmin.filters;
         await this.multipleElementVisible(filters);
 
         // store reviews table elements are visible
@@ -44,7 +71,7 @@ export class StoreReviewsPage extends AdminPage {
         // filter by vendor
         await this.click(storeReviewsAdmin.filters.filterByVendor);
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, storeReviewsAdmin.filters.filterInput, vendorName);
-        await this.pressAndWaitForResponse(data.subUrls.api.dokan.storeReviews, data.key.enter);
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, storeReviewsAdmin.filters.filteredResult(vendorName));
     }
 
     // view  store review
@@ -103,7 +130,13 @@ export class StoreReviewsPage extends AdminPage {
         // ensure row exists
         await this.notToBeVisible(storeReviewsAdmin.noRowsFound);
 
-        await this.click(storeReviewsAdmin.bulkActions.selectAll);
+        await this.toPass(async () => {
+            await this.check(storeReviewsAdmin.bulkActions.selectAll);
+            const isChecked = await this.isChecked(storeReviewsAdmin.bulkActions.firstRowCheckbox);
+            if (!isChecked) await this.check(storeReviewsAdmin.bulkActions.selectAll);
+            await this.toBeEnabled(storeReviewsAdmin.bulkActions.applyAction);
+        });
+
         await this.selectByValue(storeReviewsAdmin.bulkActions.selectAction, action);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, storeReviewsAdmin.bulkActions.applyAction);
     }

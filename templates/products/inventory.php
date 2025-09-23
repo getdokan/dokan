@@ -46,6 +46,8 @@
             <div class="content-half-part">
                 <label for="_stock" class="form-label"><?php esc_html_e( 'Stock quantity', 'dokan-lite' ); ?></label>
                 <input type="number" class="dokan-form-control" name="_stock" placeholder="<?php esc_attr__( '1', 'dokan-lite' ); ?>" value="<?php echo esc_attr( wc_stock_amount( $_stock ) ); ?>" min="0" step="1">
+                <!-- Hidden field to store the original stock value at the time the page loads -->
+                <input type="hidden" name="_original_stock" value="<?php echo esc_attr( wc_stock_amount( $_stock ) ); ?>">
             </div>
 
             <?php if ( version_compare( WC_VERSION, '3.4.7', '>' ) ) : ?>
@@ -78,10 +80,7 @@
         <?php endif; ?>
 
         <div class="dokan-form-group hide_if_grouped hide_if_external">
-            <label class="" for="_sold_individually">
-                <input name="_sold_individually" id="_sold_individually" value="yes" type="checkbox" <?php checked( $_sold_individually, 'yes' ); ?>>
-                <?php esc_html_e( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ); ?>
-            </label>
+            <?php dokan_post_input_box( $post_id, '_sold_individually', array( 'label' => __( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ) ), 'checkbox' ); ?>
         </div>
 
         <?php if ( $post_id ) : ?>

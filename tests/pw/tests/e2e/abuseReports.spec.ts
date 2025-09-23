@@ -6,7 +6,7 @@ import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { payloads } from '@utils/payloads';
 
-const { VENDOR_ID, CUSTOMER_ID } = process.env;
+const { PRODUCT_ID, VENDOR_ID, CUSTOMER_ID } = process.env;
 
 test.describe('Abuse report test', () => {
     let admin: AbuseReportsPage;
@@ -24,17 +24,22 @@ test.describe('Abuse report test', () => {
         customer = new AbuseReportsPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
-        await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
+        await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, PRODUCT_ID, VENDOR_ID, CUSTOMER_ID);
     });
 
     test.afterAll(async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.reportAbuse, dbData.dokan.geolocationSettings);
+        await apiUtils.activateModules(payloads.moduleIds.reportAbuse, payloads.adminAuth);
         await aPage.close();
         await cPage.close();
         await apiUtils.dispose();
     });
 
     // admin
+
+    test('admin can enable report abuse module', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.enableReportAbuseModule(data.predefined.simpleProduct.product1.name);
+    });
 
     test('admin can view abuse reports menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminAbuseReportRenderProperly();
@@ -56,8 +61,7 @@ test.describe('Abuse report test', () => {
         await admin.filterAbuseReports(data.predefined.vendorStores.vendor1, 'by-vendor');
     });
 
-    test.skip('admin can perform bulk action on abuse reports', { tag: ['@pro', '@admin'] }, async () => {
-        // todo: might cause other tests to fail in parallel
+    test('admin can perform bulk action on abuse reports', { tag: ['@pro', '@admin', '@serial'] }, async () => {
         await admin.abuseReportBulkAction('delete');
     });
 
@@ -74,8 +78,15 @@ test.describe('Abuse report test', () => {
 
     test('guest customer need to log-in to report product', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         const guest = new AbuseReportsPage(page);
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, { ...dbData.dokan.productReportAbuseSettings, reported_by_logged_in_users_only: 'on' });
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.reportAbuse, { reported_by_logged_in_users_only: 'on' });
         await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report, true);
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.reportAbuse, { reported_by_logged_in_users_only: 'off' });
+    });
+
+    // admin
+
+    test('admin can disable report abuse module', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.deactivateModules(payloads.moduleIds.reportAbuse, payloads.adminAuth);
+        await admin.disableReportAbuseModule(data.predefined.simpleProduct.product1.name);
     });
 });

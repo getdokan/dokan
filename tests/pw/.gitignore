@@ -174,6 +174,7 @@ Temporary Items
 playwright/
 test-results/
 playwright-report/
+blob-report/
 playwright/.cache/
 visual.spec.ts-snapshots/
 
@@ -190,8 +191,9 @@ jest-stare/
 allure-results/
 allure-report/
 plugins/
+dokan-pro/
 ../../plugins/
 _test.spec.ts
 _test.js
 _auth.spec.ts
-
+undefined

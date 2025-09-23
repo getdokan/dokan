@@ -1,310 +1,185 @@
-import { Page } from '@playwright/test';
-import { VendorPage } from '@pages/vendorPage';
-import { CustomerPage } from '@pages/customerPage';
-import { selector } from '@pages/selectors';
-import { data } from '@utils/testData';
-import { helpers } from '@utils/helpers';
-import { product, bookings, bookingResource } from '@utils/interfaces';
+import { Page, expect } from '@playwright/test';
 
-// selectors
-const bookingProductsAdmin = selector.admin.products;
-const bookingProductsVendor = selector.vendor.vBooking;
+const { BASE_URL } = process.env;
 
-export class BookingPage extends VendorPage {
-    constructor(page: Page) {
-        super(page);
+export class VendorBookingPage {
+    constructor(private page: Page) {}
+
+    // Navigation methods
+    async navigateToDashboard() {
+        await this.page.goto(`${BASE_URL}/dashboard/`);
     }
 
-    customerPage = new CustomerPage(this.page);
-
-    // booking
-
-    // Admin Add Booking Product
-    async adminAddBookingProduct(product: product['booking']) {
-        await this.goIfNotThere(data.subUrls.backend.wc.addNewProducts);
-
-        // Name
-        await this.clearAndType(bookingProductsAdmin.product.productName, product.productName());
-        await this.selectByValue(bookingProductsAdmin.product.productType, product.productType);
-        await this.click(bookingProductsAdmin.product.general);
-        await this.selectByValue(bookingProductsAdmin.product.bookingDurationType, product.bookingDurationType);
-        await this.clearAndType(bookingProductsAdmin.product.bookingDurationMax, product.bookingDurationMax);
-        await this.selectByValue(bookingProductsAdmin.product.calendarDisplayMode, product.calendarDisplayMode);
-
-        // Costs
-        await this.click(bookingProductsAdmin.product.bookingCosts);
-        await this.clearAndType(bookingProductsAdmin.product.baseCost, product.baseCost);
-        await this.clearAndType(bookingProductsAdmin.product.blockCost, product.blockCost);
-
-        // Category
-        await this.click(bookingProductsAdmin.product.category(product.category));
-
-        // Vendor Store Name
-        await this.select2ByText(bookingProductsAdmin.product.storeName, bookingProductsAdmin.product.storeNameInput, product.storeName);
-        await this.scrollToTop();
-
-        // Publish
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, bookingProductsAdmin.product.publish, 302);
-        await this.toContainText(bookingProductsAdmin.product.updatedSuccessMessage, data.product.publishSuccessMessage);
+    async navigateToBookingProducts() {
+        await this.page.getByRole('link', { name: ' Booking' }).click();
     }
 
-    // vendor
-
-    // vendor booking render properly
-    async vendorBookingRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.booking);
-
-        // add booking product text is visible
-        await this.toBeVisible(bookingProductsVendor.allBookingProductText);
-
-        // booking menu elements are visible
-        await this.multipleElementVisible(bookingProductsVendor.menus);
-
-        // add new booking product button is visible
-        await this.toBeVisible(bookingProductsVendor.addNewBookingProduct);
-
-        // add booking  button is visible
-        await this.toBeVisible(bookingProductsVendor.addBookingBtn);
-
-        // filter elements are visible
-        await this.multipleElementVisible(bookingProductsVendor.filters);
-
-        // search elements are visible
-        await this.multipleElementVisible(bookingProductsVendor.search);
-
-        // booking product table elements are visible
-        await this.multipleElementVisible(bookingProductsVendor.table);
+    async navigateToAddNewBookingProduct() {
+        await this.page.getByRole('link', { name: '  Add New Booking Product' }).click();
     }
 
-    // vendor manage booking render properly
-    async vendorManageBookingRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.manageBooking);
-
-        // manage booking text is visible
-        await this.toBeVisible(bookingProductsVendor.manageBookings.manageBookingsText);
-
-        // manage booking menu elements are visible
-        await this.toBeVisible(bookingProductsVendor.manageBookings.menus.all);
-
-        const noBookingsFound = await this.isVisible(bookingProductsVendor.manageBookings.noBookingsFound);
-        if (noBookingsFound) {
-            return;
+    // Product creation methods
+    async fillBasicProductInformation(title: string, isVirtual: boolean = true) {
+        await this.page.getByRole('textbox', { name: 'Title' }).fill(title);
+        if (isVirtual) {
+            await this.page.getByRole('checkbox', { name: 'Virtual' }).check();
         }
-        // todo: add more fields
     }
 
-    // vendor manage booking render properly
-    async vendorBookingCalendarRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.bookingCalendar);
-
-        // manage booking text is visible
-        await this.toBeVisible(bookingProductsVendor.calendar.calendarText);
-
-        // calendar is visible
-        await this.toBeVisible(bookingProductsVendor.calendar.calendar);
-
-        // calendar filterBookings is visible
-        await this.toBeVisible(bookingProductsVendor.calendar.filterBookings);
-
-        // calendar month view elements are visible
-        await this.multipleElementVisible(bookingProductsVendor.calendar.month);
-
-        await this.clickAndWaitForLoadState(bookingProductsVendor.calendar.month.dayView);
-
-        // calendar day view elements are visible
-        await this.multipleElementVisible(bookingProductsVendor.calendar.day);
+    async setBookingDuration(duration: string) {
+        await this.page.locator('[id="_wc_booking_duration"]').fill(duration);
     }
 
-    // vendor manage booking render properly
-    async vendorManageResourcesRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.manageResources);
+    async enableBookingOptions() {
+        await this.page.getByRole('checkbox', { name: 'Enable Calendar Range Picker' }).check();
+        await this.page.getByRole('checkbox', { name: 'Requires Confirmation ' }).check();
+        await this.page.getByRole('checkbox', { name: 'Can Be Cancelled ? ' }).check();
+    }
 
-        // manage resource text is visible
-        await this.toBeVisible(bookingProductsVendor.manageResources.manageResourcesText);
+    async setCancellationSettings(days: string, unit: string = 'day') {
+        await this.page.getByRole('spinbutton', { name: 'Booking can be cancelled' }).fill(days);
+        await this.page.locator('[id="_wc_booking_cancel_limit_unit"]').selectOption(unit);
+    }
 
-        // add new resource is visible
-        await this.toBeVisible(bookingProductsVendor.manageResources.addNewResource);
+    async configureAvailabilitySettings(maxBookings: string, minWindow: string, maxWindow: string) {
+        await this.page.getByRole('spinbutton', { name: 'Max bookings per block' }).fill(maxBookings);
+        await this.page.getByRole('spinbutton', { name: 'Minimum booking window ( into' }).fill(minWindow);
+        await this.page.getByRole('spinbutton', { name: 'Maximum booking window ( into' }).fill(maxWindow);
+    }
 
-        // booking product table elements are visible
-        await this.multipleElementVisible(bookingProductsVendor.manageResources.table);
+    async setPricing(baseCost: string, blockCost: string) {
+        await this.page.getByRole('spinbutton', { name: 'Base cost' }).fill(baseCost);
+        await this.page.getByRole('spinbutton', { name: 'Block cost' }).fill(blockCost);
+    }
 
-        const noBookingsFound = await this.isVisible(bookingProductsVendor.manageResources.noResourceFound);
-        if (noBookingsFound) {
-            return;
+    async enablePersonsAndResources() {
+        await this.page.getByRole('checkbox', { name: 'Has persons' }).check();
+        await this.page.getByRole('checkbox', { name: 'Has resources' }).check();
+    }
+
+    async setPersonLimits(minPersons: string, maxPersons: string) {
+        await this.page.getByRole('spinbutton', { name: 'Min persons ' }).fill(minPersons);
+        await this.page.getByRole('spinbutton', { name: 'Max persons ' }).fill(maxPersons);
+    }
+
+    async enablePersonCalculationOptions() {
+        await this.page.getByRole('checkbox', { name: 'Multiply all costs by person' }).check();
+        await this.page.getByRole('checkbox', { name: 'Count persons as bookings' }).check();
+        await this.page.getByRole('checkbox', { name: 'Enable person types' }).check();
+    }
+
+    async addPersonType(name: string, baseCost: string, blockCost: string, minPersons: string, maxPersons: string, isFirst: boolean = false) {
+        await this.page.getByRole('button', { name: 'Add Person Type' }).click();
+        
+        if (isFirst) {
+            await this.page.getByRole('textbox', { name: 'Name' }).fill(name);
+            await this.page.getByRole('cell', { name: 'Base Cost:' }).getByPlaceholder('0.00').fill(baseCost);
+            await this.page.getByRole('cell', { name: 'Block Cost:' }).getByPlaceholder('0.00').fill(blockCost);
+            await this.page.locator('input[name="person_min\\[0\\]"]').fill(minPersons);
+            await this.page.locator('input[name="person_max\\[0\\]"]').fill(maxPersons);
+        } else {
+            await this.page.getByRole('cell', { name: 'Person Type Name: Person Type #' }).getByPlaceholder('Name').fill(name);
+            await this.page.locator('input[name="person_cost\\[1\\]"]').fill(baseCost);
+            await this.page.locator('input[name="person_block_cost\\[1\\]"]').fill(blockCost);
+            await this.page.locator('input[name="person_min\\[1\\]"]').fill(minPersons);
+            await this.page.locator('input[name="person_max\\[1\\]"]').fill(maxPersons);
         }
-        // todo: add more fields
     }
 
-    // update booking product fields
-    async updateBookingProductFields(product: product['booking']) {
-        await this.clearAndType(bookingProductsVendor.booking.productName, product.name);
-        // await this.addProductCategory(product.category);
-        // general booking options
-        await this.selectByValue(bookingProductsVendor.booking.bookingDurationType, product.bookingDurationType);
-        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMin, product.bookingDurationMin);
-        await this.clearAndType(bookingProductsVendor.booking.bookingDurationMax, product.bookingDurationMax);
-        await this.selectByValue(bookingProductsVendor.booking.bookingDurationUnit, product.bookingDurationUnit);
-        // calendar display mode
-        await this.selectByValue(bookingProductsVendor.booking.calendarDisplayMode, product.calendarDisplayMode);
-        await this.check(bookingProductsVendor.booking.enableCalendarRangePicker);
-        // availability
-        await this.clearAndType(bookingProductsVendor.booking.maxBookingsPerBlock, product.maxBookingsPerBlock);
-        await this.clearAndType(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDate, product.minimumBookingWindowIntoTheFutureDate);
-        await this.selectByValue(bookingProductsVendor.booking.minimumBookingWindowIntoTheFutureDateUnit, product.minimumBookingWindowIntoTheFutureDateUnit);
-        await this.clearAndType(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDate, product.maximumBookingWindowIntoTheFutureDate);
-        await this.selectByValue(bookingProductsVendor.booking.maximumBookingWindowIntoTheFutureDateUnit, product.maximumBookingWindowIntoTheFutureDateUnit);
-        // costs
-        await this.clearAndType(bookingProductsVendor.booking.baseCost, product.baseCost);
-        await this.clearAndType(bookingProductsVendor.booking.blockCost, product.blockCost);
-        // todo: add more fields
+    async saveProduct() {
+        await this.page.getByRole('button', { name: 'Save Product' }).click();
     }
 
-    // vendor add booking product
-    async addBookingProduct(product: product['booking']): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.booking);
-        await this.clickAndWaitForLoadState(bookingProductsVendor.addNewBookingProduct);
-        await this.updateBookingProductFields(product);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.addBookingProduct, bookingProductsVendor.booking.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
+    async verifyProductCreationSuccess() {
+        await expect(this.page.getByText('Success! The product has')).toBeVisible();
     }
 
-    // edit booking product
-    async editBookingProduct(product: product['booking']) {
-        await this.searchBookingProduct(product.name);
-        await this.hover(bookingProductsVendor.productCell(product.name));
-        await this.clickAndWaitForLoadState(bookingProductsVendor.edit(product.name));
-        await this.updateBookingProductFields(product);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, bookingProductsVendor.booking.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
+    // Product management methods
+    async searchProduct(productName: string) {
+        await this.page.getByRole('textbox', { name: 'Search Products' }).click();
+        await this.page.getByRole('textbox', { name: 'Search Products' }).fill(productName);
+        await this.page.locator('button[name="product_listing_search"]').click();
     }
 
-    // view booking product
-    async viewBookingProduct(productName: string) {
-        await this.searchBookingProduct(productName);
-        await this.hover(bookingProductsVendor.productCell(productName));
-        await this.clickAndWaitForLoadState(bookingProductsVendor.view(productName));
-
-        // booking product elements are visible
-        const { bookingCalendar, bookNow, getSupport, price, ...viewBooking } = bookingProductsVendor.viewBooking;
-        await this.multipleElementVisible(viewBooking);
+    async deleteProduct(productName: string) {
+        await this.page.getByText(productName).hover();
+        await this.page.getByRole('link', { name: 'Delete Permanently' }).click();
+        await this.page.getByRole('button', { name: 'OK' }).click();
     }
 
-    // vendor can't buy own booking product
-    async cantBuyOwnBookingProduct(productName: string) {
-        await this.goToProductDetails(productName);
-        await this.notToBeVisible(bookingProductsVendor.viewBooking.bookingCalendar);
-        await this.notToBeVisible(bookingProductsVendor.viewBooking.bookNow);
+    async verifyProductDeleted() {
+        await expect(this.page.locator("//td[normalize-space()='No product found']")).toBeVisible();
     }
 
-    // filter products
-    async filterBookingProducts(filterBy: string, value: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.booking);
-
-        switch (filterBy) {
-            case 'by-date':
-                await this.selectByNumber(bookingProductsVendor.filters.filterByDate, value);
-                break;
-
-            case 'by-category':
-                await this.selectByLabel(bookingProductsVendor.filters.filterByCategory, value);
-                break;
-
-            case 'by-other':
-                await this.selectByValue(bookingProductsVendor.filters.filterByOther, value);
-                break;
-
-            default:
-                break;
-        }
-
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, bookingProductsVendor.filters.filter);
-        await this.notToHaveCount(bookingProductsVendor.numberOfRowsFound, 0);
+    // Complete workflow methods
+    async createVirtualBookingProduct(productData: {
+        title: string;
+        duration: string;
+        cancellationDays: string;
+        maxBookings: string;
+        minWindow: string;
+        maxWindow: string;
+        baseCost: string;
+        blockCost: string;
+        minPersons: string;
+        maxPersons: string;
+        adultPersonType: {
+            name: string;
+            baseCost: string;
+            blockCost: string;
+            min: string;
+            max: string;
+        };
+        childPersonType: {
+            name: string;
+            baseCost: string;
+            blockCost: string;
+            min: string;
+            max: string;
+        };
+    }) {
+        await this.navigateToDashboard();
+        await this.navigateToBookingProducts();
+        await this.navigateToAddNewBookingProduct();
+        
+        await this.fillBasicProductInformation(productData.title, true);
+        await this.setBookingDuration(productData.duration);
+        await this.enableBookingOptions();
+        await this.setCancellationSettings(productData.cancellationDays);
+        await this.configureAvailabilitySettings(productData.maxBookings, productData.minWindow, productData.maxWindow);
+        await this.setPricing(productData.baseCost, productData.blockCost);
+        await this.enablePersonsAndResources();
+        await this.setPersonLimits(productData.minPersons, productData.maxPersons);
+        await this.enablePersonCalculationOptions();
+        
+        await this.addPersonType(
+            productData.adultPersonType.name,
+            productData.adultPersonType.baseCost,
+            productData.adultPersonType.blockCost,
+            productData.adultPersonType.min,
+            productData.adultPersonType.max,
+            true
+        );
+        
+        await this.addPersonType(
+            productData.childPersonType.name,
+            productData.childPersonType.baseCost,
+            productData.childPersonType.blockCost,
+            productData.childPersonType.min,
+            productData.childPersonType.max,
+            false
+        );
+        
+        await this.saveProduct();
+        await this.verifyProductCreationSuccess();
     }
 
-    // search booking product
-    async searchBookingProduct(productName: string) {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.booking);
-        await this.clearAndType(bookingProductsVendor.search.searchInput, productName);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, bookingProductsVendor.search.search);
-        await this.toBeVisible(bookingProductsVendor.productCell(productName));
-    }
-
-    // delete booking product
-    async duplicateBookingProduct(productName: string) {
-        await this.searchBookingProduct(productName);
-        await this.hover(bookingProductsVendor.productCell(productName));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, bookingProductsVendor.duplicate(productName));
-        await this.toContainText(bookingProductsVendor.dokanSuccessMessage, 'Product successfully duplicated');
-    }
-
-    // delete booking product
     async deleteBookingProduct(productName: string) {
-        await this.searchBookingProduct(productName);
-        await this.hover(bookingProductsVendor.productCell(productName));
-        await this.click(bookingProductsVendor.permanentlyDelete(productName));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, bookingProductsVendor.confirmDelete);
-        await this.toContainText(bookingProductsVendor.dokanSuccessMessage, 'Product successfully deleted');
-    }
-
-    // add booking resource
-    async addBookingResource(resourceName: string) {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.manageResources);
-
-        await this.clickAndWaitForLoadState(bookingProductsVendor.manageResources.addNewResource);
-        await this.clearAndType(bookingProductsVendor.manageResources.resource.resourceName, resourceName);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, bookingProductsVendor.manageResources.resource.confirmAddNewResource);
-        await this.toBeVisible(bookingProductsVendor.manageResources.resource.resourceCell(resourceName));
-    }
-
-    // add booking resource
-    async editBookingResource(resource: bookingResource) {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.manageResources);
-        await this.clickAndWaitForLoadState(bookingProductsVendor.manageResources.resource.editResource(resource.name));
-
-        await this.clearAndType(bookingProductsVendor.manageResources.resource.resourceTitle, resource.name);
-        await this.clearAndType(bookingProductsVendor.manageResources.resource.availableQuantity, resource.quantity);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.manageResources, bookingProductsVendor.manageResources.resource.saveResource);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, 'Success! The Resource has been updated successfully.');
-    }
-
-    // delete booking resource
-    async deleteBookingResource(resourceName: string) {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.manageResources);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, bookingProductsVendor.manageResources.resource.deleteResource(resourceName));
-        await this.notToBeVisible(bookingProductsVendor.manageResources.resource.resourceCell(resourceName));
-    }
-
-    // add booking
-    async addBooking(productName: string, bookings: bookings, customerName?: string) {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.addBooking);
-
-        if (customerName) {
-            await this.click(bookingProductsVendor.addBooking.selectCustomerDropdown);
-            await this.typeAndWaitForResponse(data.subUrls.ajax, bookingProductsVendor.addBooking.selectCustomerInput, customerName);
-            await this.toContainText(bookingProductsVendor.addBooking.searchedResult, customerName);
-            await this.press(data.key.arrowDown);
-            await this.press(data.key.enter);
-        }
-
-        await this.click(bookingProductsVendor.addBooking.selectABookableProductDropdown);
-        await this.click(bookingProductsVendor.addBooking.selectABookableProduct(productName));
-
-        await this.click(bookingProductsVendor.addBooking.createANewCorrespondingOrderForThisNewBooking);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.addBooking, bookingProductsVendor.addBooking.next);
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.startDate.getMonth(), bookings.startDate.getDate()));
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.endDate.getMonth(), bookings.endDate.getDate()));
-        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.addBooking, bookingProductsVendor.addBooking.addBooking);
-        await this.toContainText(bookingProductsVendor.addBooking.successMessage, 'The booking has been added successfully.');
-    }
-
-    // customer
-
-    async buyBookableProduct(productName: string, bookings: bookings) {
-        await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
-
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.startDate.getMonth(), bookings.startDate.getDate()));
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.endDate.getMonth(), bookings.endDate.getDate()));
-        await this.clickAndWaitForResponse(data.subUrls.frontend.productDetails(helpers.slugify(productName)), selector.customer.cBookings.bookNow);
-        await this.customerPage.placeOrder();
+        await this.navigateToDashboard();
+        await this.navigateToBookingProducts();
+        await this.searchProduct(productName);
+        await this.deleteProduct(productName);
+        await this.searchProduct(productName);
+        await this.verifyProductDeleted();
     }
 }

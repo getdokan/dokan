@@ -10,11 +10,11 @@ const pluginFiles = [
     'languages/',
     'templates/',
     'lib/',
-    'deprecated/',
     'vendor/',
     'CHANGELOG.md',
     'readme.txt',
     'dokan.php',
+    'dokan-class.php',
     'uninstall.php',
     'composer.json',
 ];

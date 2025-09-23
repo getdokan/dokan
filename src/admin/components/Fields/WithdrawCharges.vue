@@ -83,12 +83,20 @@ export default {
                 : '';
         },
         chargeChangeHandler( data, field ) {
-            let positiveValue = this.unFormatValue(data);
-            let formatedData = this.formatPositiveValue( positiveValue );
+            let fixedCommission = this.fieldValue[ this.fieldData.name ][ field ];
+            if (isNaN( data.fixed )) {
+                data.fixed = fixedCommission.fixed ?? '';
+            }
+            if (isNaN( data.percentage )) {
+                data.percentage = fixedCommission.percentage ?? '';
+            }
+
+            // let positiveValue = this.unFormatValue(data);
+            // let formatedData = this.formatPositiveValue( positiveValue );
 
             this.fieldValue[ this.fieldData.name ][ field ] = dokan.hooks.applyFilters(
               'dokanFieldComponentInputValue',
-              formatedData,
+              this.unFormatValue(data),
               this.fieldValue[ this.fieldData.name ][ field ],
               this.fieldData.name,
               this.fieldData.is_lite ?? false

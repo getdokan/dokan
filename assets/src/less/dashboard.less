@@ -36,7 +36,6 @@ div.media-sidebar a.edit-attachment{
         flex-wrap: wrap;
         -webkit-flex-wrap: wrap;
         -ms-flex-wrap: wrap;
-        overflow: hidden;
         width: 100%;
 
         * {
@@ -44,7 +43,13 @@ div.media-sidebar a.edit-attachment{
         }
 
         a:focus {
-            outline-color: #ff5a40;
+            outline-color: var(--dokan-button-background-color, #7047EB);
+        }
+
+        input[type=checkbox]:not(.dokan-layout input[type=checkbox]){
+            -webkit-appearance: revert;
+            -moz-appearance: revert;
+            appearance: revert;
         }
     }
 
@@ -55,6 +60,7 @@ div.media-sidebar a.edit-attachment{
             margin: 0 0 10px 0;
             border-bottom: 1px solid @borderColor;
             padding: 0 0 10px 0;
+            line-height: 1.25;
         }
         .dokan-add-product-link{
             .dokan-btn{
@@ -64,7 +70,7 @@ div.media-sidebar a.edit-attachment{
     }
 
     .dokan-dashboard-content {
-        padding: 0 0 0 25px;
+        padding: 4px 4px 4px 25px;
         overflow: hidden;
         margin-top: 0px;
         width: 83%;
