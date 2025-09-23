@@ -50,28 +50,37 @@ function Edit( props ) {
             return;
         }
 
+        if ( ! vendor?.id ) {
+            toast( {
+                type: 'error',
+                title: __(
+                    'Vendor not loaded yet. Please wait and try again.',
+                    'dokan-lite'
+                ),
+            } );
+            return;
+        }
+
         setSaving( true );
 
-        requestEditVendor( vendor )
-            .then( async ( response: Vendor ) => {
-                await setCreateOrEditVendor( response );
-                await setCreateOrEditVendorErrors( [] );
-                toast( {
-                    type: 'success',
-                    title: __( 'Vendor Updated Successfully.', 'dokan-lite' ),
-                } );
-
-                setSaving( false );
-            } )
-            .catch( async ( err ) => {
-                if ( err.message ) {
-                    toast( {
-                        type: 'error',
-                        title: err.message,
-                    } );
-                }
-                setSaving( false );
+        try {
+            const response: Vendor = await requestEditVendor( vendor );
+            await setCreateOrEditVendor( response );
+            await setCreateOrEditVendorErrors( [] );
+            toast( {
+                type: 'success',
+                title: __( 'Vendor Updated Successfully.', 'dokan-lite' ),
             } );
+        } catch ( err: any ) {
+            toast( {
+                type: 'error',
+                title:
+                    err?.message ||
+                    __( 'Failed to update vendor.', 'dokan-lite' ),
+            } );
+        } finally {
+            setSaving( false );
+        }
     };
 
     useEffect( () => {
@@ -112,7 +121,8 @@ function Edit( props ) {
                             variant="secondary"
                             onClick={ () =>
                                 // @ts-ignore
-                                ( window.location.href = config.dokanVendorsListUrl )
+                                ( window.location.href =
+                                    config.dokanVendorsListUrl )
                             }
                         >
                             { __( 'Cancel', 'dokan-lite' ) }
