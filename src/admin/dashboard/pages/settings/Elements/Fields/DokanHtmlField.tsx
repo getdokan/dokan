@@ -61,7 +61,7 @@ const DokanHtmlField = ( { element }: DokanHtmlFieldProps ) => {
         >
             { /* Title and Description */ }
             { ( element.title || element.description ) && (
-                <div className="mb-4">
+                <div>
                     { element.title && (
                         <h3 className="text-sm font-semibold text-[#25252D] mb-2">
                             { element.title }

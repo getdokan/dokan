@@ -15,7 +15,7 @@ export default function DokanRadioCapsule( { element } ) {
     };
 
     return (
-        <div className="flex flex-wrap gap-4 justify-between w-full p-5 ">
+        <div className="flex flex-wrap gap-4 justify-between items-center w-full p-5 ">
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"

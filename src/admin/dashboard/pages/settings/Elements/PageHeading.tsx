@@ -29,8 +29,8 @@ const PageHeading = ( {
 }: PageHeadingProps ): JSX.Element => {
     const sizeClasses = {
         small: 'text-xl',
-        medium: 'text-2xl',
-        large: 'text-3xl',
+        medium: 'text-xl',
+        large: 'text-2xl',
     };
 
     const headingClass = `${ sizeClasses[ size ] } font-bold text-gray-900 leading-5 ${ titleClassName }`;
