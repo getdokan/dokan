@@ -1,6 +1,6 @@
 import {
     DokanButton,
-    CategoryBasedCommissionPure,
+    CategoryBasedCommission,
     FixedCommissionInput,
     DokanModal,
 } from '@dokan/components';
@@ -1499,7 +1499,7 @@ export default function Form( {
                                                 'dokan-lite'
                                             ) }
                                         </label>
-                                        <CategoryBasedCommissionPure
+                                        <CategoryBasedCommission
                                             // @ts-ignore
                                             categories={ categories }
                                             // @ts-ignore
