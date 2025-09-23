@@ -36,6 +36,7 @@ import { Slot } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
 import { useEffect, useState } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
+import { kebabCase } from "@dokan/utilities";
 
 interface Props {
     vendor: Vendor;
@@ -148,13 +149,7 @@ export default function Form( {
         '/';
 
     const formatStoreUrl = ( storeName ) => {
-        return storeName
-            .trim()
-            .split( ' ' )
-            .join( '-' )
-            .toLowerCase()
-            .replace( /[^\w\s/-]/g, '' )
-            .replace( /-+/g, '-' );
+        return kebabCase( storeName );
     };
     const onChangeStoreName = ( value ) => {
         const storeUrl = formatStoreUrl( value );
@@ -246,11 +241,7 @@ export default function Form( {
         } );
 
         // @ts-ignore
-        if ( response.available ) {
-            await setData( 'userEmailText', 'available', upatedVendor );
-        } else {
-            await setData( 'userEmailText', 'not-available', upatedVendor );
-        }
+        await setData( 'userEmailText', response.available  ? 'available' : 'not-available', upatedVendor );
     };
 
     const getCountries = () => {

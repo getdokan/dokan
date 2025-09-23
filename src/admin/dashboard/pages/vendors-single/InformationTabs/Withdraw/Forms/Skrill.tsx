@@ -44,7 +44,7 @@ function Skrill( { isOpen, setIsOpen, connected, data, loading, saveData } ) {
                         input={ {
                             type: 'text',
                             placeholder: __(
-                                'ex- abc@gmail.com',
+                                'e.g. abc@gmail.com',
                                 'dokan-lite'
                             ),
                         } }

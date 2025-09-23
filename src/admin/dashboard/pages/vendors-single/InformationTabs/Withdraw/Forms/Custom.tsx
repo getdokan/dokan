@@ -52,7 +52,7 @@ function Custom( {
                               // translators: %s: name
                               __(
                                   'Manage Custom Payment Details ( %s )',
-                                  'dokan'
+                                  'dokan-lite'
                               ),
                               name
                           )
@@ -60,7 +60,7 @@ function Custom( {
                               // translators: %s: name
                               __(
                                   'Add Custom Payment Details ( %s )',
-                                  'dokan'
+                                  'dokan-lite'
                               ),
                               name
                           )

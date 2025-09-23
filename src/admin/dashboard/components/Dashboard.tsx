@@ -28,7 +28,7 @@ const getAdminRoutes = () => {
             path: '/pro-modules',
         },
         {
-            id: 'vendors-single',
+            id: 'vendor-single',
             element: <VendorsSingle />,
             path: '/vendors/:id',
         },

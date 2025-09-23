@@ -7,7 +7,7 @@ function StoreImage( { image = '' } ) {
                 <img
                     className="w-full h-full object-cover"
                     src={ image }
-                    alt={ __( 'No Image', 'dokan-lite' ) }
+                    alt={ __( 'Store Image', 'dokan-lite' ) }
                 />
             ) : (
                 <svg
