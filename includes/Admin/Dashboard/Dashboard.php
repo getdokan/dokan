@@ -299,11 +299,11 @@ class Dashboard implements Hookable {
             $dependencies     = array_merge( $dashboard_script['dependencies'] ?? [], [ 'dokan-react-components', 'jquery', 'media-upload', 'media-views' ] );
             $version          = $dashboard_script['version'] ?? '';
 
-            $general_settings = get_option( 'dokan_general', [] );
             $banner_width    = dokan_get_vendor_store_banner_width();
             $banner_height   = dokan_get_vendor_store_banner_height();
-            $has_flex_width  = ! empty( $general_settings['store_banner_flex_width'] ) ? $general_settings['store_banner_flex_width'] : true;
-            $has_flex_height = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
+
+            $has_flex_width  = dokan_get_option( 'store_banner_flex_width', 'dokan_general', true );
+            $has_flex_height = dokan_get_option( 'store_banner_flex_height', 'dokan_general', true );
 
             $data = apply_filters(
                 'dokan_admin_dashboard_localize_scripts',
@@ -368,6 +368,7 @@ class Dashboard implements Hookable {
                 'dokanFrontend',
                 apply_filters( 'dokan_react_frontend_localized_args', $dokan_frontend ),
             );
+//            wp_add_inline_script( $this->script_key, '' );
         }
     }
 

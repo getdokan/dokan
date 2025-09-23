@@ -150,7 +150,7 @@ class StoreSettingController extends WP_REST_Controller {
      * @return WP_Error|Vendor
      */
     protected function get_vendor( $request = null ) {
-        $vendor_id = ! empty( $request ) && is_a( $request, \WP_REST_Request::class ) && $request->get_param( 'vendor_id' ) ? $request->get_param( 'vendor_id' ) : '';
+        $vendor_id = is_a( $request, \WP_REST_Request::class ) && $request->get_param( 'vendor_id' ) ? $request->get_param( 'vendor_id' ) : '';
         if ( $vendor_id ) {
             $vendor = dokan()->vendor->get( (int) $vendor_id );
         } else {
