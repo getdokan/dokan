@@ -30,8 +30,8 @@ function Skrill( { isOpen, setIsOpen, connected, data, loading, saveData } ) {
             <FormModal
                 title={
                     connected
-                        ? __( 'Manage Skrill Details', 'dokan' )
-                        : __( 'Add Skrill Details', 'dokan' )
+                        ? __( 'Manage Skrill Details', 'dokan-lite' )
+                        : __( 'Add Skrill Details', 'dokan-lite' )
                 }
                 isOpen={ isOpen }
                 setIsOpen={ setIsOpen }

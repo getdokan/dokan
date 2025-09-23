@@ -1185,13 +1185,13 @@ export default function Form( {
                     <Card className="bg-white">
                         <div className="border-b p-6">
                             <h2 className="text-lg font-bold">
-                                { __( 'Social Information', 'dokan' ) }
+                                { __( 'Social Information', 'dokan-lite' ) }
                             </h2>
                         </div>
                         <div className="p-6 flex flex-col gap-3">
                             <div>
                                 <SimpleInput
-                                    label={ __( 'Facebook', 'dokan' ) }
+                                    label={ __( 'Facebook', 'dokan-lite' ) }
                                     value={ vendor?.social?.fb || '' }
                                     onChange={ ( e ) => {
                                         setData( 'social', {
@@ -1202,7 +1202,7 @@ export default function Form( {
                                     input={ {
                                         placeholder: __(
                                             'https://example.com',
-                                            'dokan'
+                                            'dokan-lite'
                                         ),
                                         id: 'fb',
                                         type: 'text',
@@ -1214,7 +1214,7 @@ export default function Form( {
 
                             <div>
                                 <SimpleInput
-                                    label={ __( 'X', 'dokan' ) }
+                                    label={ __( 'X', 'dokan-lite' ) }
                                     value={ vendor?.social?.twitter || '' }
                                     onChange={ ( e ) => {
                                         setData( 'social', {
@@ -1225,7 +1225,7 @@ export default function Form( {
                                     input={ {
                                         placeholder: __(
                                             'https://example.com',
-                                            'dokan'
+                                            'dokan-lite'
                                         ),
                                         id: 'twitter',
                                         type: 'text',
@@ -1237,7 +1237,7 @@ export default function Form( {
 
                             <div>
                                 <SimpleInput
-                                    label={ __( 'Pinterest', 'dokan' ) }
+                                    label={ __( 'Pinterest', 'dokan-lite' ) }
                                     value={ vendor?.social?.pinterest || '' }
                                     onChange={ ( e ) => {
                                         setData( 'social', {
@@ -1248,7 +1248,7 @@ export default function Form( {
                                     input={ {
                                         placeholder: __(
                                             'https://example.com',
-                                            'dokan'
+                                            'dokan-lite'
                                         ),
                                         id: 'pinterest',
                                         type: 'text',
@@ -1260,7 +1260,7 @@ export default function Form( {
 
                             <div>
                                 <SimpleInput
-                                    label={ __( 'Linkedin', 'dokan' ) }
+                                    label={ __( 'Linkedin', 'dokan-lite' ) }
                                     value={ vendor?.social?.linkedin || '' }
                                     onChange={ ( e ) => {
                                         setData( 'social', {
@@ -1271,7 +1271,7 @@ export default function Form( {
                                     input={ {
                                         placeholder: __(
                                             'https://example.com',
-                                            'dokan'
+                                            'dokan-lite'
                                         ),
                                         id: 'linkedin',
                                         type: 'text',
@@ -1283,7 +1283,7 @@ export default function Form( {
 
                             <div>
                                 <SimpleInput
-                                    label={ __( 'Youtube', 'dokan' ) }
+                                    label={ __( 'Youtube', 'dokan-lite' ) }
                                     value={ vendor?.social?.youtube || '' }
                                     onChange={ ( e ) => {
                                         setData( 'social', {
@@ -1294,7 +1294,7 @@ export default function Form( {
                                     input={ {
                                         placeholder: __(
                                             'https://example.com',
-                                            'dokan'
+                                            'dokan-lite'
                                         ),
                                         id: 'youtube',
                                         type: 'text',
@@ -1306,7 +1306,7 @@ export default function Form( {
 
                             <div>
                                 <SimpleInput
-                                    label={ __( 'Instagram', 'dokan' ) }
+                                    label={ __( 'Instagram', 'dokan-lite' ) }
                                     value={ vendor?.social?.instagram || '' }
                                     onChange={ ( e ) => {
                                         setData( 'social', {
@@ -1317,7 +1317,7 @@ export default function Form( {
                                     input={ {
                                         placeholder: __(
                                             'https://example.com',
-                                            'dokan'
+                                            'dokan-lite'
                                         ),
                                         id: 'instagram',
                                         type: 'text',
@@ -1328,7 +1328,7 @@ export default function Form( {
                             <Slot name="dokan-vendor-edit-after-instagram-social-information" />
                             <div>
                                 <SimpleInput
-                                    label={ __( 'Flickr', 'dokan' ) }
+                                    label={ __( 'Flickr', 'dokan-lite' ) }
                                     value={ vendor?.social?.flickr || '' }
                                     onChange={ ( e ) => {
                                         setData( 'social', {
@@ -1339,7 +1339,7 @@ export default function Form( {
                                     input={ {
                                         placeholder: __(
                                             'https://example.com',
-                                            'dokan'
+                                            'dokan-lite'
                                         ),
                                         id: 'flickr',
                                         type: 'text',
@@ -1350,7 +1350,7 @@ export default function Form( {
                             <Slot name="dokan-vendor-edit-after-flickr-social-information" />
                             <div>
                                 <SimpleInput
-                                    label={ __( 'Threads', 'dokan' ) }
+                                    label={ __( 'Threads', 'dokan-lite' ) }
                                     value={ vendor?.social?.threads || '' }
                                     onChange={ ( e ) => {
                                         setData( 'social', {
@@ -1361,7 +1361,7 @@ export default function Form( {
                                     input={ {
                                         placeholder: __(
                                             'https://example.com',
-                                            'dokan'
+                                            'dokan-lite'
                                         ),
                                         id: 'threads',
                                         type: 'text',
@@ -1379,7 +1379,7 @@ export default function Form( {
                     <Card className="bg-white">
                         <div className="border-b p-6">
                             <h2 className="text-lg font-bold">
-                                { __( 'Commission Information', 'dokan' ) }
+                                { __( 'Commission Information', 'dokan-lite' ) }
                             </h2>
                         </div>
                         <div className="p-6 flex flex-col gap-3">

@@ -80,8 +80,8 @@ function Bank( {
             <FormModal
                 title={
                     connected
-                        ? __( 'Manage Bank Details', 'dokan' )
-                        : __( 'Add Bank Details', 'dokan' )
+                        ? __( 'Manage Bank Details', 'dokan-lite' )
+                        : __( 'Add Bank Details', 'dokan-lite' )
                 }
                 isOpen={ isOpen }
                 setIsOpen={ setIsOpen }

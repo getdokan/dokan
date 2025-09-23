@@ -1,4 +1,4 @@
-import { truncate } from '../../../../../utilities/Truncate';
+import { truncate } from '@dokan/utilities';
 import { __ } from '@wordpress/i18n';
 
 interface Product {

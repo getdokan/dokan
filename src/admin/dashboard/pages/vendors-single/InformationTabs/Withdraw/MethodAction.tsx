@@ -161,7 +161,7 @@ function MethodAction( {
                 { connected ? (
                     <DokanButton
                         variant="secondary"
-                        label={ __( 'Manege', 'dokan-lite' ) }
+                        label={ __( 'Manage', 'dokan-lite' ) }
                         icon={ () => <Settings size={ 15 } /> }
                         size="sm"
                         className="px-2 py-1 w-[80px] h-[26px]"

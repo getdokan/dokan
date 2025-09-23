@@ -1,11 +1,31 @@
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import FormModal from '../FormModal';
-import { useEffect, useState } from "@wordpress/element";
+import { useEffect, useState } from '@wordpress/element';
 
-function PayPal({ isOpen, setIsOpen, connected, data, loading, saveData } ) {
-    const [ value, setValue ] = useState( '' );
-    const [ errors, setErrors ] = useState( [] );
+interface PayPalData {
+    email?: string;
+}
+
+interface PayPalProps {
+    isOpen: boolean;
+    setIsOpen: ( openStatus: boolean ) => void;
+    connected: boolean;
+    data: PayPalData | null;
+    loading: boolean;
+    saveData: ( value: Record< string, unknown > ) => void;
+}
+
+function PayPal( {
+    isOpen,
+    setIsOpen,
+    connected,
+    data,
+    loading,
+    saveData,
+}: PayPalProps ) {
+    const [ value, setValue ] = useState< string >( '' );
+    const [ errors, setErrors ] = useState< string[] >( [] );
 
     const handleConfirm = () => {
         const newErrors: string[] = [];
@@ -14,13 +34,12 @@ function PayPal({ isOpen, setIsOpen, connected, data, loading, saveData } ) {
             setErrors( [ __( 'Email is required', 'dokan-lite' ) ] );
         } else {
             setErrors( newErrors );
-            saveData( { ...data, email: value } );
+            saveData( { ...( data ?? {} ), email: value } );
         }
     };
 
     useEffect( () => {
         if ( data && typeof data === 'object' ) {
-            // @ts-ignore
             setValue( data?.email ?? '' );
         }
     }, [ data ] );
@@ -30,8 +49,8 @@ function PayPal({ isOpen, setIsOpen, connected, data, loading, saveData } ) {
             <FormModal
                 title={
                     connected
-                        ? __( 'Manage PayPal Details', 'dokan' )
-                        : __( 'Add PayPal Details', 'dokan' )
+                        ? __( 'Manage PayPal Details', 'dokan-lite' )
+                        : __( 'Add PayPal Details', 'dokan-lite' )
                 }
                 isOpen={ isOpen }
                 setIsOpen={ setIsOpen }
@@ -49,7 +68,9 @@ function PayPal({ isOpen, setIsOpen, connected, data, loading, saveData } ) {
                             ),
                         } }
                         value={ value }
-                        onChange={ ( e ) => setValue( e.target.value ) }
+                        onChange={ ( e ) =>
+                            setValue( ( e?.target?.value ?? '' ) as string )
+                        }
                         errors={ errors }
                     />
                 </div>
