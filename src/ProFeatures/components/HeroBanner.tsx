@@ -5,7 +5,7 @@ import { Crown } from 'lucide-react';
 
 function HeroBanner() {
     return (
-        <div className="relative min-h-[150px] md:min-h-[304px] lg:h-[300px] rounded overflow-hidden flex items-center bg-black">
+        <div className="relative min-h-[150px] md:min-h-[304px] lg:h-[300px] rounded-md overflow-hidden flex items-center bg-black">
             <div className="flex flex-row relative w-full">
                 <span
                     style={ {

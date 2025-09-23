@@ -3,7 +3,7 @@ import { dokanLarge, dokanSmall } from '../Images';
 import { __ } from '@wordpress/i18n';
 function ScaleMarketplaceBanner() {
     return (
-        <div className="w-full relative overflow-hidden rounded">
+        <div className="w-full relative overflow-hidden rounded-md">
             <span className="absolute w-full h-full bg-[rgba(8,21,39,1)]"></span>
             <span className="w-[500px] h-[500px] left-[-190px] top-0 rounded-full absolute overflow-hidden inline-block bg-[radial-gradient(circle,rgba(118,75,227,.3)_0%,rgba(0,0,0,0)_70%)]"></span>
             <span className="md:w-[200px] lg:w-[500px] h-full bg-[linear-gradient(270deg,rgba(219,100,190,.3)_0%,rgba(0,0,0,0)_100%)] absolute right-0 z-10"></span>

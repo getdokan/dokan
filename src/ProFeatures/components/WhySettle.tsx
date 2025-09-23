@@ -37,7 +37,7 @@ function WhySettle() {
             </h2>
 
             { /* Modules Banner with Responsive Images */ }
-            <div className="relative rounded overflow-hidden mb-8">
+            <div className="relative rounded-md overflow-hidden mb-10">
                 <div>
                     <div className="w-full h-[150px] md:h-[210px] lg:h-[276px] relative bg-[linear-gradient(90deg,rgba(38,1,138,1)_0%,rgba(0,0,0,1)_100%)]">
                         <span className="w-[500px] h-[500px] left-[-32px] top-[-107px] rounded-full absolute overflow-hidden inline-block bg-white opacity-[.04]"></span>
@@ -74,17 +74,19 @@ function WhySettle() {
             { /* Feature Cards */ }
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                 { features.map( ( feature, idx ) => (
-                    <div key={ idx } className="flex items-start space-x-4">
-                        <div className="w-12 h-12 flex items-center justify-center bg-[#F7F5FF] rounded border-neutral-200 text-dokan-primary flex-shrink-0">
-                            <feature.icon size={ 16 } />
-                        </div>
-                        <div>
-                            <h4 className="mb-2 font-bold text-[18px] leading-[130%] tracking-[0%]">
-                                { feature.title }
-                            </h4>
-                            <p className="text-gray-600 text-sm">
-                                { feature.description }
-                            </p>
+                    <div key={ idx }>
+                        <div className="max-w-[380px] flex items-start space-x-4">
+                            <div className="w-12 h-12 flex items-center justify-center bg-[#F7F5FF] rounded border-neutral-200 text-dokan-primary flex-shrink-0">
+                                <feature.icon size={ 16 } />
+                            </div>
+                            <div>
+                                <h4 className="mb-2 font-bold text-[18px] leading-[130%] tracking-[0%]">
+                                    { feature.title }
+                                </h4>
+                                <p className="text-gray-600 text-sm">
+                                    { feature.description }
+                                </p>
+                            </div>
                         </div>
                     </div>
                 ) ) }

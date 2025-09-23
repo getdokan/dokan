@@ -26,12 +26,12 @@ function MarketplaceCard( { item }: { item: Marketplace } ) {
                     href={ item.siteLink }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[14px] font-medium text-gray-900 hover:text-dokan-primary transition-colors line-clamp-2"
+                    className="text-[14px] font-medium !text-black hover:text-dokan-primary transition-colors line-clamp-2 underline"
                 >
                     { item.name }
                 </a>
 
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-[rgba(124,58,237,0.1)] text-[#7047EB]">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-[rgba(124,58,237,0.1)] text-black">
                     { item.country } { item.flag }
                 </span>
             </div>

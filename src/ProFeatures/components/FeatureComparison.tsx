@@ -148,7 +148,7 @@ const FeatureComparison = () => {
     return (
         <div>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-8">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                <h2 className="text-xl md:text-2xl font-bold">
                     { __( 'Dokan Lite vs Dokan Pro', 'dokan-lite' ) }
                 </h2>
                 <a

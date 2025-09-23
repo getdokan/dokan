@@ -67,17 +67,19 @@ function ExceptionalFeatures() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 { exceptional.map( ( item, idx ) => (
-                    <div key={ idx } className="flex items-start space-x-4">
-                        <div className="w-12 h-12 flex items-center justify-center bg-[#F7F5FF] text-dokan-primary rounded border border-neutral-200 flex-shrink-0">
-                            <item.icon size={ 16 } />
-                        </div>
-                        <div>
-                            <h4 className="text-[18px] font-bold text-gray-700 mb-2">
-                                { item.title }
-                            </h4>
-                            <p className="text-gray-600 font-regular text-[14px]">
-                                { item.description }
-                            </p>
+                    <div key={ idx }>
+                        <div className="max-w-[380px] flex items-start space-x-4">
+                            <div className="w-12 h-12 flex items-center justify-center bg-[#F7F5FF] text-dokan-primary rounded border border-neutral-200 flex-shrink-0">
+                                <item.icon size={ 16 } />
+                            </div>
+                            <div>
+                                <h4 className="text-[18px] font-bold text-gray-700 mb-2 leading-6">
+                                    { item.title }
+                                </h4>
+                                <p className="text-gray-600 font-regular text-[14px]">
+                                    { item.description }
+                                </p>
+                            </div>
                         </div>
                     </div>
                 ) ) }

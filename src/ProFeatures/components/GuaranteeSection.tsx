@@ -3,11 +3,11 @@ import { __ } from '@wordpress/i18n';
 
 function GuaranteeSection() {
     return (
-        <div className="w-full max-w-7xl mx-auto">
+        <div className="w-full">
             { /* What Makes Dokan Stand Out */ }
             <div>
                 <h3 className="text-[24px] font-bold mb-8 text-gray-900">
-                    What Makes Dokan Stand Out
+                    { __( 'What Makes Dokan Stand Out', 'dokan-lite' ) }
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
