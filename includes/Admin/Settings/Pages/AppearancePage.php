@@ -113,7 +113,7 @@ vendor store page.', 'dokan-lite'
                                             ->set_title( esc_html__( 'Google reCaptcha Validation', 'dokan-lite' ) )
                                             ->set_description(
                                                 sprintf(
-                                                /* translators: 1. Link to Google reCaptcha */
+                                                    /* translators: 1. Link to Google reCaptcha */
                                                     esc_html__( 'Connect to enable spam protection that works automatically in the background. %1$sGet Help%2$s', 'dokan-lite' ),
                                                     '<a href="https://www.google.com/recaptcha/about/" target="_blank" rel="noopener noreferrer">',
                                                     '</a>'
@@ -128,7 +128,7 @@ vendor store page.', 'dokan-lite'
                                             ->set_title( esc_html__( 'Need Help?', 'dokan-lite' ) )
                                             ->set_description(
                                                 sprintf(
-                                                /* translators: 1. Link to Google reCaptcha setup */
+                                                    /* translators: 1. Link to Google reCaptcha setup */
                                                     esc_html__( 'If you don\'t have a Google reCaptcha account, %1$s+ Create Google reCaptcha%2$s', 'dokan-lite' ),
                                                     '<a href="https://www.google.com/recaptcha/admin/create" target="_blank" rel="noopener noreferrer">',
                                                     '</a>'

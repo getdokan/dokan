@@ -74,8 +74,8 @@ class AIAssistPage extends AbstractPage {
         $product_generation = ElementFactory::sub_page(
             'product_generation'
         )
-            ->set_title( __( 'Content Generation', 'dokan-lite' ) )
-            ->set_description( __( 'Set up AI to elevate your platform with enhanced capabilities.', 'dokan-lite' ) )
+            ->set_title( esc_html__( 'Content Generation', 'dokan-lite' ) )
+            ->set_description( esc_html__( 'Set up AI to elevate your platform with enhanced capabilities.', 'dokan-lite' ) )
             ->set_doc_link( 'https://wedevs.com/docs/dokan-lite/ai-assist/' )
             ->add(
                 ElementFactory::section( 'product_image_section' )
