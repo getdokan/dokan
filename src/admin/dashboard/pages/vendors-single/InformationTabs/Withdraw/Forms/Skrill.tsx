@@ -1,11 +1,31 @@
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import FormModal from '../FormModal';
-import { useEffect, useState } from "@wordpress/element";
+import { useEffect, useState } from '@wordpress/element';
 
-function Skrill( { isOpen, setIsOpen, connected, data, loading, saveData } ) {
-    const [ value, setValue ] = useState( '' );
-    const [ errors, setErrors ] = useState( [] );
+interface SkrillData {
+    email?: string;
+}
+
+interface SkrillProps {
+    isOpen: boolean;
+    setIsOpen: ( openStatus: boolean ) => void;
+    connected: boolean;
+    data: SkrillData | null;
+    loading: boolean;
+    saveData: ( value: Record< string, unknown > ) => void;
+}
+
+function Skrill( {
+    isOpen,
+    setIsOpen,
+    connected,
+    data,
+    loading,
+    saveData,
+}: SkrillProps ) {
+    const [ value, setValue ] = useState< string >( '' );
+    const [ errors, setErrors ] = useState< string[] >( [] );
 
     const handleConfirm = () => {
         const newErrors: string[] = [];
@@ -14,13 +34,12 @@ function Skrill( { isOpen, setIsOpen, connected, data, loading, saveData } ) {
             setErrors( [ __( 'Email is required', 'dokan-lite' ) ] );
         } else {
             setErrors( newErrors );
-            saveData( { ...data, email: value } );
+            saveData( { ...( data ?? {} ), email: value } );
         }
     };
 
     useEffect( () => {
         if ( data && typeof data === 'object' ) {
-            // @ts-ignore
             setValue( data?.email ?? '' );
         }
     }, [ data ] );
@@ -49,7 +68,9 @@ function Skrill( { isOpen, setIsOpen, connected, data, loading, saveData } ) {
                             ),
                         } }
                         value={ value }
-                        onChange={ ( e ) => setValue( e.target.value ) }
+                        onChange={ ( e ) =>
+                            setValue( ( e?.target?.value ?? '' ) as string )
+                        }
                         errors={ errors }
                     />
                 </div>
