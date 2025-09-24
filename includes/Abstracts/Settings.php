@@ -80,6 +80,11 @@ abstract class Settings extends SettingsElement {
 			$data = get_user_meta( get_current_user_id(), $this->storage_key, true );
 		}
 
+		// Backward/compatibility: if data is wrapped under the element/page ID, unwrap it.
+		if ( is_array( $data ) && isset( $data[ $this->id ] ) && is_array( $data[ $this->id ] ) ) {
+			$data = $data[ $this->id ];
+		}
+
 		return $data;
 	}
 
