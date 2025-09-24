@@ -13,12 +13,14 @@ class AIAssistPage extends AbstractPage {
      * @var string
      */
     protected $id = 'ai_assist';
+
     /**
      * The page priority.
      *
      * @var int
      */
-    protected int $priority = 120;
+    protected int $priority = 300;
+
     /**
      * Storage key for the page.
      *
@@ -75,6 +77,7 @@ class AIAssistPage extends AbstractPage {
             'product_generation'
         )
             ->set_title( esc_html__( 'Content Generation', 'dokan-lite' ) )
+            ->set_priority( 100 )
             ->set_description( esc_html__( 'Set up AI to elevate your platform with enhanced capabilities.', 'dokan-lite' ) )
             ->set_doc_link( 'https://wedevs.com/docs/dokan-lite/ai-assist/' )
             ->add(

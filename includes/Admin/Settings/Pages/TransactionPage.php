@@ -17,7 +17,7 @@ class TransactionPage extends AbstractPage {
      *
      * @var int
      */
-    protected int $priority = 150;
+    protected int $priority = 600;
 
     /**
      * Storage key for the page.
@@ -122,7 +122,8 @@ class TransactionPage extends AbstractPage {
 
         // Create commission subpage
         $commission_page = ElementFactory::sub_page( 'commission' )
-            ->set_title( esc_html__( 'Commission', 'dokan-lite' ) );
+            ->set_title( esc_html__( 'Commissions', 'dokan-lite' ) )
+            ->set_priority( 200 );
 
         // Create commission section
         $commission_section = ElementFactory::section( 'commission' );
@@ -180,6 +181,7 @@ class TransactionPage extends AbstractPage {
 
         // Create fees subpage
         $fees_page = ElementFactory::sub_page( 'fees' )
+            ->set_priority( 100 )
             ->set_icon( 'FileSpreadsheet' )
             ->set_title( esc_html__( 'Fees', 'dokan-lite' ) )
             ->set_description( esc_html__( 'Configure how different types of fees are distributed between vendors and admin', 'dokan-lite' ) );
@@ -216,6 +218,7 @@ class TransactionPage extends AbstractPage {
 
         // Create withdraw subpage
         $withdraw_page = ElementFactory::sub_page( 'withdraw_charge' )
+            ->set_priority( 300 )
             ->set_icon( 'FileSpreadsheet' )
             ->set_title( esc_html__( 'Withdraw', 'dokan-lite' ) )
             ->set_description( esc_html__( 'Set up available withdrawal methods and transaction conditions for vendors.', 'dokan-lite' ) )
