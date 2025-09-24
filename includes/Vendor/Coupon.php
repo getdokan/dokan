@@ -116,8 +116,12 @@ class Coupon {
     public function intercept_wc_coupon( int $apply_quantity, $item, WC_Coupon $coupon, WC_Discounts $discounts ): int {
         remove_filter( 'woocommerce_coupon_get_apply_quantity', [ $this, 'intercept_wc_coupon' ], 15 );
 
-        $discounts_clone = clone $discounts;
-        $discounts_clone->apply_coupon( $coupon );
+        // Clone the discount object to avoid side effects.
+        $discounts_clone        = clone $discounts;
+        $should_validate_coupon = apply_filters( 'dokan_coupon_should_validate', true, $coupon, $item, $discounts );
+
+        // Reapply the coupon to the order or cart.
+        $discounts_clone->apply_coupon( $coupon, $should_validate_coupon );
 
         do_action( 'dokan_wc_coupon_applied', $coupon, $discounts_clone, $item, $apply_quantity, $this );
 
