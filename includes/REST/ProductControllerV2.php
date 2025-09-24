@@ -25,6 +25,19 @@ class ProductControllerV2 extends ProductController {
     protected $namespace = 'dokan/v2';
 
     /**
+     * Class Constructor.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function __construct() {
+        parent::__construct();
+
+        add_filter( 'dokan_rest_product_listing_exclude_type', [ $this, 'reset_exclude_product_type' ], 99, 2 );
+    }
+
+    /**
      * Register all routes related with stores
      *
      * @since 3.7.10
@@ -155,7 +168,7 @@ class ProductControllerV2 extends ProductController {
         );
 
         $params['product_type'] = array(
-            'description'       => __( 'Products type simple, variable, grouped product etc.', 'dokan-lite' ),
+            'description'       => __( 'Products type all, simple, variable, grouped product etc.', 'dokan-lite' ),
             'type'              => 'string',
             'sanitize_callback' => 'sanitize_text_field',
             'validate_callback' => 'rest_validate_request_arg',
@@ -245,7 +258,7 @@ class ProductControllerV2 extends ProductController {
                     array(
                         'taxonomy' => 'product_type',
                         'field'    => 'slug',
-                        'terms'    => apply_filters( 'dokan_product_listing_exclude_type', array() ),
+                        'terms'    => apply_filters( 'dokan_rest_product_listing_exclude_type', array(), $request ),
                         'operator' => 'NOT IN',
                     ),
                 ),
@@ -342,5 +355,26 @@ class ProductControllerV2 extends ProductController {
                 ),
             ),
         );
+    }
+
+    /**
+     * Reset exclude product type.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array           $exclude_product_type Exclude product type.
+     * @param WP_REST_Request $request              Request object.
+     *
+     * @return array
+     */
+    public function reset_exclude_product_type( $exclude_product_type, $request ) {
+        $exclude_product_type = apply_filters( 'dokan_product_listing_exclude_type', $exclude_product_type );
+        $product_type         = $request->get_param( 'product_type' );
+
+        if ( 'all' === $product_type ) {
+            $exclude_product_type = [];
+        }
+
+        return $exclude_product_type;
     }
 }
