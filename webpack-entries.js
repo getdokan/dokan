@@ -75,6 +75,13 @@ const entryPoints = {
             type: 'window',
         },
     },
+    'admin-settings-store': {
+        import: '/src/stores/adminSettings/store.ts',
+        library: {
+            name: [ 'dokan', 'adminSettingsStore' ],
+            type: 'window',
+        },
+    },
 };
 
 module.exports = entryPoints;

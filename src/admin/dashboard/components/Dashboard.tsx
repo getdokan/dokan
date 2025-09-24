@@ -4,6 +4,7 @@ import Layout from './Layout';
 import ModulePage from '../pages/modules';
 import SetupGuide from '../pages/setup-guide';
 import NotFound from '../../../layout/404';
+import SettingsPage from '../pages/settings';
 
 export type DokanAdminRoute = {
     id: string;
@@ -23,6 +24,11 @@ const getAdminRoutes = () => {
             id: 'pro-modules',
             element: <ModulePage />,
             path: '/pro-modules',
+        },
+        {
+            id: 'settings',
+            element: <SettingsPage />,
+            path: '/settings',
         },
     ];
 
