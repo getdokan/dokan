@@ -100,6 +100,8 @@ use WeDevs\Dokan\ProductCategory\Helper;
                         dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
                     ?>
 
+                    <?php dokan_get_template_part( 'products/product-brand', '', [ 'product_brands' => [] ] ); ?>
+
                     <div class="dokan-form-group">
                         <label for="product_tag_search" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
                         <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags" data-placeholder="<?php echo esc_attr( $tags_placeholder ); ?>" style="width: 100%;"></select>
