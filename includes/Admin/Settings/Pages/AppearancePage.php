@@ -19,7 +19,7 @@ class AppearancePage extends AbstractPage {
      *
      * @var int
      */
-    protected int $priority = 70;
+    protected int $priority = 700;
     /**
      * Storage key for the page.
      *
@@ -84,6 +84,7 @@ class AppearancePage extends AbstractPage {
             ->set_description( esc_html__( 'Configure dashboard menu settings, visibility, and customization options.', 'dokan-lite' ) )
             ->add(
                 ElementFactory::sub_page( 'store' )
+                    ->set_priority( 100 )
                     ->set_title( esc_html__( 'Store Page', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'dokan-lite' ) )
                     ->add(

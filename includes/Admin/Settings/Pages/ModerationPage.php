@@ -18,7 +18,7 @@ class ModerationPage extends AbstractPage {
      *
      * @var int
      */
-    protected int $priority = 90;
+    protected int $priority = 900;
 
     /**
      * Storage key for the page.

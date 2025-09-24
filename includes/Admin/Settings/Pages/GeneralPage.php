@@ -14,12 +14,13 @@ class GeneralPage extends AbstractPage {
      * @var string
      */
     protected $id = 'general';
+
     /**
      * The page priority.
      *
      * @var int
      */
-    protected int $priority = 10;
+    protected int $priority = 100;
 
     /**
      * Storage key for the page.
@@ -91,6 +92,7 @@ class GeneralPage extends AbstractPage {
 
 		$dokan_page = ElementFactory::sub_page( 'dokan_pages' )
             ->set_title( esc_html__( 'Page Setup', 'dokan-lite' ) )
+            ->set_priority( 200 )
             ->set_description( esc_html__( 'Link your WordPress pages to essential Dokan marketplace functions and features.', 'dokan-lite' ) );
 
 		foreach ( $pages as $page_id => $page ) {
@@ -107,6 +109,7 @@ class GeneralPage extends AbstractPage {
             ->add(
                 ElementFactory::sub_page( 'marketplace' )
                 ->set_title( esc_html__( 'Marketplace', 'dokan-lite' ) )
+                ->set_priority( 100 )
                 ->set_description( esc_html__( 'Configure core marketplace functionalities and customer shopping experience.', 'dokan-lite' ) )
                     ->set_doc_link(
                         esc_url( 'https://wedevs.com/docs/dokan/developers/marketplace/' )
@@ -132,6 +135,7 @@ class GeneralPage extends AbstractPage {
             ->add(
                 ElementFactory::sub_page( 'location' )
                     ->set_title( esc_html__( 'Location', 'dokan-lite' ) )
+                    ->set_priority( 300 )
                     ->set_description( esc_html__( 'Configure how map locations are displayed throughout your marketplace.', 'dokan-lite' ) )
                     ->add(
                         ElementFactory::section( 'map_api_configuration' )

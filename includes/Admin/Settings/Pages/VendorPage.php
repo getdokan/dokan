@@ -19,7 +19,7 @@ class VendorPage extends AbstractPage {
      *
      * @var int
      */
-    protected int $priority = 40;
+    protected int $priority = 400;
 
     /**
      * Storage key for the page.
@@ -80,6 +80,7 @@ class VendorPage extends AbstractPage {
     public function describe_settings(): void {
         $vendor_onboarding = ElementFactory::sub_page( 'vendor_onboarding' )
             ->set_title( esc_html__( 'Vendor Onboarding', 'dokan-lite' ) )
+            ->set_priority( 100 )
             ->set_description( esc_html__( 'Control the onboarding experience for vendors joining your marketplace.', 'dokan-lite' ) )
             ->set_doc_link( 'https://wedevs.com/docs/dokan-lite/vendor-onboarding/' )
             ->add(
@@ -102,6 +103,7 @@ class VendorPage extends AbstractPage {
         // Create vendor capabilities subpage with a single section
         $vendor_capabilities_page = ElementFactory::sub_page( 'vendor_capabilities' )
             ->set_title( esc_html__( 'Vendor Capabilities', 'dokan-lite' ) )
+            ->set_priority( 300 )
             ->set_description( esc_html__( 'Configure what vendors can do in your marketplace.', 'dokan-lite' ) );
 
         // Create a single section for all vendor capabilities
