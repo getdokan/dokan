@@ -18,7 +18,7 @@ class CompliancePage extends AbstractPage {
      *
      * @var int
      */
-    protected int $priority = 260;
+    protected int $priority = 1000;
 
     /**
      * Storage key for the page.
@@ -80,6 +80,7 @@ class CompliancePage extends AbstractPage {
     public function describe_settings(): void {
         // Create Privacy subpage
         $privacy_page = ElementFactory::sub_page( 'privacy' )
+            ->set_priority( 100 )
             ->set_title( esc_html__( 'Privacy', 'dokan-lite' ) )
             ->set_description( esc_html__( 'Configure privacy policy settings and content for vendor stores.', 'dokan-lite' ) )
             ->set_doc_link( 'https://wedevs.com/docs/dokan-lite/compliance/privacy/' );

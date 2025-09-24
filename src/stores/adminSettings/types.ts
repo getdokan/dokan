@@ -32,6 +32,7 @@ export interface SettingsElement {
     options?: SettingsElementOption[];
     variant?: string;
     image_url?: string;
+    priority?: number;
     value?:
         | string
         | number
