@@ -5,6 +5,12 @@ namespace WeDevs\Dokan\Admin\Settings;
 interface TransformerInterface {
 
     /**
+     * Target identifiers to avoid magic strings.
+     */
+    public const TARGET_ELEMENT = 'element';
+    public const TARGET_LEGACY  = 'legacy';
+
+    /**
      * Get the target type for the transformation.
      *
      * This method should return a string that represents the type of transformation
@@ -13,7 +19,6 @@ interface TransformerInterface {
      * @return string
      */
     public function get_target(): string;
-
 
     /**
      * Transform the data.

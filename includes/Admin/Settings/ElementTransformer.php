@@ -14,12 +14,11 @@ class ElementTransformer implements TransformerInterface {
      * @var array<string, array> $fields
      */
     protected array $fields = [];
-    protected $settings;
     /**
      * @inheritDoc
      */
     public function get_target(): string {
-        return 'element';
+        return self::TARGET_ELEMENT;
     }
 
     /**
@@ -102,14 +101,7 @@ class ElementTransformer implements TransformerInterface {
                 $element = ElementFactory::sub_page( $field_id );
                 break;
             default:
-                // Map some field types to their correct names
-                $type_mapping = [
-                    'switcher' => 'switch',
-                    'wpeditor' => 'text', // Fallback for unsupported types
-                    'file' => 'text', // Fallback for unsupported types
-                ];
-
-                $mapped_type = $type_mapping[ $type ] ?? $type;
+                $mapped_type = $this->map_field_type( $type, $field_config );
                 $element = ElementFactory::field( $field_id, $mapped_type );
                 break;
         }
@@ -122,6 +114,31 @@ class ElementTransformer implements TransformerInterface {
         $this->configure_element( $element, $field_config );
 
         return $element;
+    }
+
+    /**
+     * Map legacy or UI field types to ElementFactory-supported types.
+     * Allows 3rd parties to filter the type map.
+     *
+     * @param string $type
+     * @param array  $field_config
+     *
+     * @return string
+     */
+    private function map_field_type( string $type, array $field_config ): string {
+        $default_map = [
+            'switcher' => 'switch',
+            // Fallback for some unsupported complex inputs in current UI
+            'wpeditor' => 'text',
+            'file'     => 'text',
+        ];
+
+        $map = apply_filters( 'dokan_settings_element_type_map', $default_map, $type, $field_config );
+        if ( is_array( $map ) && isset( $map[ $type ] ) ) {
+            return $map[ $type ];
+        }
+
+        return $type;
     }
 
     /**

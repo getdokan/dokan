@@ -106,9 +106,37 @@ class Settings {
      * @throws \Exception
      */
     public function save( array $data ): void {
+        // Mirror new settings saves back to legacy options as well.
+        $transformer = new LegacyTransformer();
+
         foreach ( $this->get_pages() as $page ) {
-            if ( isset( $data[ $page->get_id() ] ) ) {
-                $page->save( $data[ $page->get_id() ] );
+            $page_id = $page->get_id();
+
+            if ( isset( $data[ $page_id ] ) ) {
+                // Save into the new storage for this page
+                $page->save( $data[ $page_id ] );
+
+                // Also update corresponding legacy options using the mapper/transformer
+                $legacy = $transformer->transform(
+                    [
+                        'from' => 'new',
+                        'data' => [ $page_id => $data[ $page_id ] ],
+                    ]
+                );
+
+                if ( is_array( $legacy ) ) {
+                    foreach ( $legacy as $legacy_section => $fields ) {
+                        if ( ! is_array( $fields ) ) {
+                            continue;
+                        }
+                        $existing = get_option( $legacy_section, [] );
+                        if ( ! is_array( $existing ) ) {
+                            $existing = [];
+                        }
+                        $merged = array_replace_recursive( $existing, $fields );
+                        update_option( $legacy_section, $merged );
+                    }
+                }
             }
         }
     }
