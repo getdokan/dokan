@@ -1,3 +1,8 @@
+### v4.0.8 ( Sep 12, 2025 ) ###
+- **new:** Added "Chat with us" admin submenu for providing direct access to support chat functionality.
+- **enhance:** Modernize vendor selection with searchable dropdown for better performance.
+- **fix:** Prevent potential errors on additional product sections.
+
 ### v4.0.7 ( Sep 01, 2025 ) ###
 - **fix:** Enhanced security controls for vendor account credentials management.
 
