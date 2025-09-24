@@ -1,4 +1,4 @@
-import { test, request, Page } from '@playwright/test';
+import { Page, request, test } from '@playwright/test';
 import { VendorSettingsPage } from '@pages/vendorSettingsPage';
 import { dbData } from '@utils/dbData';
 import { ApiUtils } from '@utils/apiUtils';
@@ -109,6 +109,9 @@ test.describe('Vendor settings test', () => {
     });
 
     test('vendor can set live chat settings', { tag: ['@pro', '@vendor'] }, async () => {
+        if (!process.env.TALKJS_APP_ID || !process.env.TALKJS_APP_SECRET) {
+            test.skip(true, 'Live chat credentials not found');
+        }
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'liveChat');
     });
 

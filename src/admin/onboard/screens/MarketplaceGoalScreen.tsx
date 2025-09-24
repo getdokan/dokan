@@ -2,8 +2,8 @@ import { useEffect, useState } from '@wordpress/element';
 import DokanLogo from '../DokanLogo';
 import RadioCard from '../components/RadioCard';
 import { __ } from '@wordpress/i18n';
-import NextButton from '@dokan/admin/onboard/components/NextButton';
-import BackButton from '@dokan/admin/onboard/components/BackButton';
+import NextButton from '@src/admin/onboard/components/NextButton';
+import BackButton from '@src/admin/onboard/components/BackButton';
 
 interface MarketplaceGoalScreenProps {
     onNext: () => void;
