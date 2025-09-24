@@ -8,7 +8,7 @@ export interface SocialLinksProps {
 }
 
 const SocialLinks = ( { social }: SocialLinksProps ) => {
-    const socialPlatforms = [
+    let socialPlatforms = [
         {
             key: 'fb',
             label: __( 'Facebook', 'dokan-lite' ),
@@ -94,6 +94,11 @@ const SocialLinks = ( { social }: SocialLinksProps ) => {
         },
     ];
 
+    // @ts-ignore
+    socialPlatforms = wp.hooks.applyFilters(
+        'dokan_admin_dashboard_social_platforms_map',
+        socialPlatforms
+    );
     const availablePlatforms = socialPlatforms.filter(
         ( platform ) => platform.url
     );

@@ -48,7 +48,7 @@ const TopSellingSkeleton = () => (
     <div className="h-28 rounded-lg bg-gray-200 animate-pulse" />
 );
 
-const VendorProfileSkeleton: React.FC = () => (
+const SkeletonLoader = () => (
     <div className="bg-[#f7f8fa] min-h-screen p-8 flex flex-col gap-8">
         { /* Header */ }
         <div className="bg-white rounded-xl overflow-hidden shadow-sm">
@@ -86,4 +86,4 @@ const VendorProfileSkeleton: React.FC = () => (
     </div>
 );
 
-export default VendorProfileSkeleton;
+export default SkeletonLoader;

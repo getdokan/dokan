@@ -15,7 +15,7 @@ export const paymentMethods = ( methods: PaymentDetails ) => {
         return [];
     }
 
-    const methodNames = [
+    let methodNames = [
         { key: 'paypal', name: __( 'PayPal', 'dokan-lite' ) },
         { key: 'bank', name: __( 'Bank Transfer', 'dokan-lite' ) },
         { key: 'skrill', name: __( 'Skrill', 'dokan-lite' ) },
@@ -27,6 +27,12 @@ export const paymentMethods = ( methods: PaymentDetails ) => {
             name: __( 'Dokan Moip Connect', 'dokan-lite' ),
         },
     ];
+
+    // @ts-ignore
+    methodNames = wp.hooks.applyFilters(
+        'dokan_admin_dashboard_payment_gateways_names',
+        methodNames
+    ) as { key: string; name: string }[];
 
     return methodNames.map( ( method ) => {
         const value = methods[ method.key ];
@@ -56,11 +62,19 @@ export const paymentMethods = ( methods: PaymentDetails ) => {
                 break;
         }
 
-        return {
+        let mappedMethod = {
             key: method.key,
             name,
             isActive,
         };
+        // @ts-ignore
+        mappedMethod = wp.hooks.applyFilters(
+            'dokan_admin_dashboard_payment_gateways_value_map',
+            mappedMethod,
+            method
+        ) as { key: string; name: string; isActive: boolean };
+
+        return mappedMethod;
     } );
 };
 
