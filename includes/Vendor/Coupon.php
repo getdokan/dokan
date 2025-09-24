@@ -118,7 +118,7 @@ class Coupon {
 
         // Clone the discount object to avoid side effects.
         $discounts_clone        = clone $discounts;
-        $should_validate_coupon = apply_filters( 'dokan_coupon_should_validate', true, $coupon, $item, $discounts );
+        $should_validate_coupon = apply_filters( 'dokan_coupon_should_validate', true, $coupon, $item, $discounts_clone );
 
         // Reapply the coupon to the order or cart.
         $discounts_clone->apply_coupon( $coupon, $should_validate_coupon );
