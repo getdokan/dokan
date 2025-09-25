@@ -4,6 +4,30 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.0.8',
+        'released' => '2025-09-12',
+        'changes'  => [
+            'New Feature'  => [
+                [
+                    'title'       => 'Added "Chat with us" admin submenu for providing direct access to support chat functionality.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Modernize vendor selection with searchable dropdown for better performance.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Prevent potential errors on additional product sections.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.7',
         'released' => '2025-09-01',
         'changes'  => [
