@@ -84,7 +84,7 @@ class GeneralPage extends AbstractPage {
         $transformer->set_settings(
             [
 				'sections' => $legacy_settings->get_settings_sections(),
-				'fields'    => $legacy_settings->get_settings_fields(),
+				'fields'   => $legacy_settings->get_settings_fields(),
 			]
         );
 
