@@ -58,7 +58,9 @@ const DokanBaseFieldLabel = ( {
                     </label>
                     { tooltip && (
                         <span className="flex items-center">
-                            <DokanTooltip message={ tooltip } />
+                            <DokanTooltip
+                                message={ <RawHTML>{ tooltip }</RawHTML> }
+                            />
                         </span>
                     ) }
                     { suffix && <span>{ suffix }</span> }

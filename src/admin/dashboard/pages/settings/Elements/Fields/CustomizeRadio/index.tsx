@@ -39,7 +39,7 @@ const CustomizeRadio = ( { element }: SettingsProps ) => {
     return (
         <div
             className={ twMerge(
-                'p-4 space-y-4',
+                'p-4',
                 element?.wrapper_class || ''
             ) }
         >
