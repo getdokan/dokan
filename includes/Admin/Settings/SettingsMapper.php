@@ -143,15 +143,25 @@ class SettingsMapper {
         'dokan_withdraw.withdraw_date_limit'    => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_threshold',
         'dokan_withdraw.hide_withdraw_option'   => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_option_visibility',
 
+        // Transaction > Reverse Withdrawal
+        'dokan_reverse_withdrawal.enabled'                   => 'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled',
+        'dokan_reverse_withdrawal.billing_type'              => 'transaction.reverse_withdrawal.reverse_withdrawal_section.billing_type',
+        'dokan_reverse_withdrawal.reverse_balance_threshold' => 'transaction.reverse_withdrawal.reverse_withdrawal_section.reverse_balance_threshold',
+        'dokan_reverse_withdrawal.monthly_billing_day'       => 'transaction.reverse_withdrawal.reverse_withdrawal_section.monthly_billing_day',
+        'dokan_reverse_withdrawal.due_period'                => 'transaction.reverse_withdrawal.reverse_withdrawal_section.due_period',
+        'dokan_reverse_withdrawal.failed_actions'            => 'transaction.reverse_withdrawal.reverse_withdrawal_section.failed_actions',
+        'dokan_reverse_withdrawal.display_notice'            => 'transaction.reverse_withdrawal.reverse_withdrawal_section.display_notice',
+        'dokan_reverse_withdrawal.send_announcement'         => 'transaction.reverse_withdrawal.reverse_withdrawal_section.send_announcement',
+
         // =========================
         // Vendor > Onboarding
         // =========================
         'dokan_selling.new_seller_enable_selling' => 'vendor.vendor_onboarding.enable_selling',
-        'dokan_general.enabled_address_on_reg'     => 'vendor.vendor_onboarding.address_fields',
-        'dokan_general.enable_tc_on_reg'           => 'vendor.vendor_onboarding.terms_conditions',
-        'dokan_general.disable_welcome_wizard'     => 'vendor.vendor_onboarding.welcome_wizard',
-        'dokan_general.setup_wizard_logo_url'      => 'vendor.vendor_onboarding.vendor_setup_wizard_logo',
-        'dokan_general.setup_wizard_message'       => 'vendor.vendor_onboarding.vendor_setup_wizard_message',
+        'dokan_general.enabled_address_on_reg'    => 'vendor.vendor_onboarding.address_fields',
+        'dokan_general.enable_tc_on_reg'          => 'vendor.vendor_onboarding.terms_conditions',
+        'dokan_general.disable_welcome_wizard'    => 'vendor.vendor_onboarding.welcome_wizard',
+        'dokan_general.setup_wizard_logo_url'     => 'vendor.vendor_onboarding.vendor_setup_wizard_logo',
+        'dokan_general.setup_wizard_message'      => 'vendor.vendor_onboarding.vendor_setup_wizard_message',
 
         // Vendor > Capabilities
         'dokan_selling.product_status'             => 'vendor.vendor_capabilities.vendor_capabilities.product_status',
