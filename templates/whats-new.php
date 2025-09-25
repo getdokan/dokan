@@ -4,6 +4,32 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.0.9',
+        'released' => '2025-09-25',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Dokan Plugin Top Bar & Notice Left Bar UI',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update order fee now distribute based on order creation',
+                    'description' => 'Order fee now distribute based on order creation if the order is manual order then the added fee of that order will go to seller otherwise it will go to admin. The fee tax will be distributed based on product tax receipt.',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Fix Dashboard and Report page header title and apply filters.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Conflict with ACF plugin: prevented empty admin notices when Dokan is active.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.8',
         'released' => '2025-09-12',
         'changes'  => [
