@@ -74,6 +74,36 @@ class GeneralPage extends AbstractPage {
     }
 
     /**
+     * Get Post Type array
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $post_type
+     *
+     * @return array
+     */
+    public function get_post_type( $post_type ) {
+        $pages_array = [];
+        $pages       = get_posts(
+            [
+                'post_type'   => $post_type,
+                'numberposts' => - 1,
+            ]
+        );
+
+        if ( $pages ) {
+            foreach ( $pages as $page ) {
+                $pages_array[] = [
+                    'value' => $page->ID,
+                    'title' => $page->post_title,
+                ];
+            }
+        }
+
+        return $pages_array;
+    }
+
+    /**
      * Describe the settings options
      *
      * @return void
@@ -88,20 +118,55 @@ class GeneralPage extends AbstractPage {
 			]
         );
 
-        $pages = $transformer->transform( 'dokan_pages' );
+        // Get pages for dropdown options
+        $pages_array = $this->get_post_type( 'page' );
 
 		$dokan_page = ElementFactory::sub_page( 'dokan_pages' )
             ->set_title( esc_html__( 'Page Setup', 'dokan-lite' ) )
             ->set_priority( 200 )
-            ->set_description( esc_html__( 'Link your WordPress pages to essential Dokan marketplace functions and features.', 'dokan-lite' ) );
-
-		foreach ( $pages as $page_id => $page ) {
-            // Create a section for each page
-            $page_section = ElementFactory::section( $page_id . '_section' )
-                                            ->add( $page );
-
-            $dokan_page->add( $page_section );
-		}
+            ->set_doc_link( esc_url( 'https://wedevs.com/docs/dokan/settings/page-settings-2/' ) )
+            ->set_description( esc_html__( 'Link your WordPress pages to essential Dokan marketplace functions and features.', 'dokan-lite' ) )
+            ->add(
+                ElementFactory::section( 'dashboard_section' )
+                    ->add(
+                        ElementFactory::field( 'dashboard', 'select' )
+                            ->set_title( esc_html__( 'Dashboard', 'dokan-lite' ) )
+                            ->set_description( esc_html__( 'Select a page to show vendor dashboard.', 'dokan-lite' ) )
+                            ->set_placeholder( esc_html__( 'Select page', 'dokan-lite' ) )
+                            ->set_options( $pages_array )
+                    )
+            )
+            ->add(
+                ElementFactory::section( 'my_orders_section' )
+                    ->add(
+                        ElementFactory::field( 'my_orders', 'select' )
+                            ->set_title( esc_html__( 'My Orders', 'dokan-lite' ) )
+                            ->set_description( esc_html__( 'Select a page to show my orders', 'dokan-lite' ) )
+                            ->set_placeholder( esc_html__( 'Select page', 'dokan-lite' ) )
+                            ->set_options( $pages_array )
+                    )
+            )
+            ->add(
+                ElementFactory::section( 'store_listing_section' )
+                    ->add(
+                        ElementFactory::field( 'store_listing', 'select' )
+                            ->set_title( esc_html__( 'Store Listing', 'dokan-lite' ) )
+                            ->set_description( esc_html__( 'Select a page to show all stores', 'dokan-lite' ) )
+                            ->set_placeholder( esc_html__( 'Select page', 'dokan-lite' ) )
+                            ->set_options( $pages_array )
+                    )
+            )
+            ->add(
+                ElementFactory::section( 'reg_tc_page_section' )
+                    ->add(
+                        ElementFactory::field( 'reg_tc_page', 'select' )
+                            ->set_title( esc_html__( 'Terms and Conditions Page', 'dokan-lite' ) )
+                            ->set_description( esc_html__( 'Select where you want to add Dokan pages.', 'dokan-lite' ) )
+                            ->set_placeholder( esc_html__( 'Select page', 'dokan-lite' ) )
+                            ->set_options( $pages_array )
+                            ->set_tooltip( esc_html__( 'Select a page to display the Terms and Conditions of your store for Vendors.', 'dokan-lite' ) )
+                    )
+            );
 
         $this
             ->set_title( esc_html__( 'General', 'dokan-lite' ) )
@@ -136,18 +201,17 @@ class GeneralPage extends AbstractPage {
                 ElementFactory::sub_page( 'location' )
                     ->set_title( esc_html__( 'Location', 'dokan-lite' ) )
                     ->set_priority( 300 )
+                    ->set_doc_link( esc_url( 'https://wedevs.com/docs/dokan/settings/page-settings-2/' ) )
                     ->set_description( esc_html__( 'Configure how map locations are displayed throughout your marketplace.', 'dokan-lite' ) )
                     ->add(
                         ElementFactory::section( 'map_api_configuration' )
-                            ->set_title( esc_html__( 'Map API Configuration', 'dokan-lite' ) )
-                            ->set_description( esc_html__( 'Configure the map API settings for your marketplace.', 'dokan-lite' ) )
                             ->add(
                                 ElementFactory::field( 'map_api_source', 'radio_capsule' )
                                     ->set_title( esc_html__( 'Map API Source', 'dokan-lite' ) )
                                     ->set_description( esc_html__( 'Which map API source you want to use in your site?', 'dokan-lite' ) )
-                                    ->add_option( esc_html__( 'Google Maps', 'dokan-lite' ), 'google' )
+                                    ->add_option( esc_html__( 'Google Maps', 'dokan-lite' ), 'google_maps' )
                                     ->add_option( esc_html__( 'Mapbox', 'dokan-lite' ), 'mapbox' )
-                                    ->set_default( 'google' )
+                                    ->set_default( 'google_maps' )
                             )
                             ->add(
                                 ElementFactory::field_group( 'google_map_api_key' )
@@ -160,7 +224,7 @@ class GeneralPage extends AbstractPage {
                                         ElementFactory::field( 'google_map_api_key', 'show_hide' )
                                             ->set_placeholder( esc_html__( 'Enter your Google Maps API key', 'dokan-lite' ) )
                                     )
-                                    ->add_dependency( 'location.map_api_configuration.map_api_source', 'google', true, 'display', 'show', '==' )
+                                    ->add_dependency( 'location.map_api_configuration.map_api_source', 'google_maps', true, 'display', 'show', '==' )
                                     ->add_dependency( 'location.map_api_configuration.map_api_source', 'mapbox', true, 'display', 'hide', '==' )
                             )
                             ->add(
@@ -175,7 +239,7 @@ class GeneralPage extends AbstractPage {
                                             ->set_placeholder( esc_html__( 'Enter your Mapbox API key', 'dokan-lite' ) )
                                     )
                                     ->add_dependency( 'location.map_api_configuration.map_api_source', 'mapbox', true, 'display', 'show', '==' )
-                                    ->add_dependency( 'location.map_api_configuration.map_api_source', 'google', true, 'display', 'hide', '==' )
+                                    ->add_dependency( 'location.map_api_configuration.map_api_source', 'google_maps', true, 'display', 'hide', '==' )
                             )
                     )
             );

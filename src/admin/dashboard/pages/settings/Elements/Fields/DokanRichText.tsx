@@ -6,13 +6,13 @@ import { dispatch } from '@wordpress/data';
 import settingsStore from '../../../../../../stores/adminSettings';
 
 const DokanRichText = ( { element } ) => {
-    if ( ! element.display ) {
-        return <></>;
-    }
-
     const [ value, setValue ] = useState< string >(
         element?.value || element?.default || ''
     );
+
+    if ( ! element.display ) {
+        return <></>;
+    }
     const onValueChange = ( updatedElement ) => {
         // Dispatch the updated value to the settings store
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
@@ -26,7 +26,7 @@ const DokanRichText = ( { element } ) => {
     };
 
     return (
-        <div className="space-y-3 p-5 w-full">
+        <div className="space-y-3 p-5 w-full" id={ element.hook_key }>
             <div className="gap-4 flex items-center">
                 <DokanFieldLabel
                     titleFontWeight="bold"

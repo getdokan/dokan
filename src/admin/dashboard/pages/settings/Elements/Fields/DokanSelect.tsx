@@ -15,7 +15,10 @@ export default function DokanSelect( { element } ) {
     };
     const hasTitle = Boolean( element.title && element.title.length > 0 );
     return (
-        <div className="grid-cols-12 grid gap-2 justify-between w-full p-4">
+        <div
+            className="grid-cols-12 grid gap-2 justify-between w-full p-4"
+            id={ element.hook_key }
+        >
             { hasTitle && (
                 <div className={ 'sm:col-span-8 col-span-12' }>
                     <DokanFieldLabel
@@ -46,6 +49,7 @@ export default function DokanSelect( { element } ) {
                         } ) ) || []
                     }
                     disabled={ element.disabled }
+                    placeholder={ element.placeholder || '' }
                     containerClassName={
                         'max-w-full sm:!w-[14rem] sm:justify-self-end '
                     }

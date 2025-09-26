@@ -1309,6 +1309,41 @@ export const data = {
         password: ADMIN_PASSWORD,
     },
 
+    // Admin Settings Migration
+    adminSettingsMigration: {
+        urls: {
+            oldAdminSettings: 'wp-admin/admin.php?page=dokan#/settings',
+            newAdminSettings: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
+        },
+
+        selectors: {
+            oldUI: {
+                generalMenu: '//div[@class="nav-title" and contains(text(),"General")]',
+                vendorStoreUrlField: '#dokan_general\\[custom_store_url\\]',
+                singleSellerModeField: '.enable_single_seller_mode .switch',
+                saveChanges: '//input[@id="submit" and @value="Save Changes"]',
+                successMessage: 'Setting has been saved successfully.',
+            },
+
+            newUI: {
+                generalButton: '#dokan_settings_general button',
+                marketplaceLink: '#dokan_settings_general_marketplace',
+                vendorStoreUrlField: '#dokan_settings_general_marketplace_marketplace_settings_vendor_store_url input',
+                singleSellerModeField: '#dokan_settings_general_marketplace_marketplace_settings_enable_single_seller_mode',
+                saveButton: '#dokan-admin-settings-save-btn button',
+                successMessage: '.notice-success, .updated',
+                clickHereLink: 'a[contains(text(),"Click Here")]',
+            },
+        },
+
+        testData: {
+            initialStoreUrl: 'store-initial',
+            updatedStoreUrlFromNew: 'new-store-updated',
+            updatedStoreUrlFromOld: 'old-store-updated',
+            finalStoreUrl: 'store-final',
+        },
+    },
+
     // vendor
     vendor: {
         username: VENDOR,

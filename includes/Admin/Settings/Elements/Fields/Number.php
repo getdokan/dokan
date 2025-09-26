@@ -35,6 +35,13 @@ class Number extends Text {
 	 */
 	protected $step = 0.1;
 
+	/**
+	 * Whether to treat prefix/postfix as Lucide icons.
+	 *
+	 * @var bool $addon_icon Whether to render prefix/postfix as Lucide icons.
+	 */
+	protected $addon_icon = false;
+
     /**
 	 * Get minimum value.
 	 *
@@ -102,6 +109,28 @@ class Number extends Text {
 	}
 
 	/**
+	 * Get addon icon flag.
+	 *
+	 * @return bool
+	 */
+	public function get_addon_icon(): bool {
+		return $this->addon_icon;
+	}
+
+	/**
+	 * Set addon icon flag.
+	 *
+	 * @param bool $addon_icon Whether to treat prefix/postfix as Lucide icons.
+	 *
+	 * @return Number
+	 */
+	public function set_addon_icon( bool $addon_icon ): Number {
+		$this->addon_icon = $addon_icon;
+
+		return $this;
+	}
+
+	/**
 	 * Data validation.
 	 *
 	 * @param mixed $data Data for validation.
@@ -150,6 +179,7 @@ class Number extends Text {
 		$data['minimum']     = $this->get_minimum();
 		$data['maximum']     = $this->get_maximum();
 		$data['step']        = $this->get_step();
+		$data['addon_icon']  = $this->get_addon_icon();
 
 		return $data;
 	}

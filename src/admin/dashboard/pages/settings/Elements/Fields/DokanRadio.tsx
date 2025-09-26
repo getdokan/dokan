@@ -14,7 +14,7 @@ export default function DokanRadio( { element } ) {
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
     return (
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-2 w-full" id={ element.hook_key }>
             <DokanFieldLabel
                 title={ element.title }
                 titleFontWeight="bold"

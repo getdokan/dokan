@@ -193,7 +193,7 @@ const Menu = ( {
                         item.children.some( ( child ) => child.display );
 
                     return (
-                        <div key={ item.id }>
+                        <div key={ item.id } id={ item.hook_key }>
                             { ! item.children ? (
                                 <a
                                     href={ item.id }
@@ -270,6 +270,9 @@ const Menu = ( {
                                                                     item.id
                                                                 );
                                                             } }
+                                                            id={
+                                                                subItem.hook_key
+                                                            }
                                                             className={ classNames(
                                                                 isSubActive
                                                                     ? 'bg-[#efeaff] text-[#7047eb] font-semibold'
