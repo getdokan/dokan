@@ -28,41 +28,41 @@ class SettingsMapper {
         // =========================
         // General > Marketplace
         // =========================
-        'dokan_general.custom_store_url' => 'general.marketplace.marketplace_settings.vendor_store_url',
-        'dokan_general.enable_single_seller_mode' => 'general.marketplace.marketplace_settings.enable_single_seller_mode',
+        'dokan_general.custom_store_url'                     => 'general.marketplace.marketplace_settings.vendor_store_url',
+        'dokan_general.enable_single_seller_mode'            => 'general.marketplace.marketplace_settings.enable_single_seller_mode',
         // Legacy "store_category_type" renamed in new UI
-        'dokan_general.store_category_type' => 'general.marketplace.marketplace_settings.store_category_mode',
+        'dokan_general.store_category_type'                  => 'general.marketplace.marketplace_settings.store_category_mode',
         // Inverted meaning: hide -> show
-        'dokan_selling.hide_customer_info' => 'general.marketplace.marketplace_settings.show_customer_details_to_vendors',
-        'dokan_selling.enable_guest_user_enquiry' => 'general.marketplace.marketplace_settings.guest_product_enquiry',
+        'dokan_selling.hide_customer_info'                   => 'general.marketplace.marketplace_settings.show_customer_details_to_vendors',
+        'dokan_selling.enable_guest_user_enquiry'            => 'general.marketplace.marketplace_settings.guest_product_enquiry',
         // Inverted meaning: hide add to cart -> visibility toggle
         'dokan_selling.catalog_mode_hide_add_to_cart_button' => 'general.marketplace.marketplace_settings.add_to_cart_button_visibility',
         // Live Search
-        'dokan_live_search_setting.live_search_option' => 'general.marketplace.live_search.search_box_radio',
+        'dokan_live_search_setting.live_search_option'       => 'general.marketplace.live_search.search_box_radio',
 
         // =========================
         // General > Page Setup (dokan_pages)
         // =========================
-        'dokan_pages.dashboard'    => 'general.dokan_pages.dashboard_section.dashboard',
-        'dokan_pages.my_orders'    => 'general.dokan_pages.my_orders_section.my_orders',
-        'dokan_pages.store_listing'=> 'general.dokan_pages.store_listing_section.store_listing',
-        'dokan_pages.reg_tc_page'  => 'general.dokan_pages.reg_tc_page_section.reg_tc_page',
+        'dokan_pages.dashboard'     => 'general.dokan_pages.dashboard_section.dashboard',
+        'dokan_pages.my_orders'     => 'general.dokan_pages.my_orders_section.my_orders',
+        'dokan_pages.store_listing' => 'general.dokan_pages.store_listing_section.store_listing',
+        'dokan_pages.reg_tc_page'   => 'general.dokan_pages.reg_tc_page_section.reg_tc_page',
 
         // =========================
         // General > Location (Geolocation & Map settings)
         // =========================
-        'dokan_appearance.map_api_source'     => 'general.location.map_api_configuration.map_api_source',
-        'dokan_appearance.gmap_api_key'       => 'general.location.map_api_configuration.google_map_api_key.google_map_api_key',
-        'dokan_appearance.mapbox_access_token'=> 'general.location.map_api_configuration.mapbox_api_key.mapbox_api_key',
-        'dokan_geolocation.show_locations_map'=> 'general.location.map_display_settings.location_map_position',
+        'dokan_appearance.map_api_source'                     => 'general.location.map_api_configuration.map_api_source',
+        'dokan_appearance.gmap_api_key'                       => 'general.location.map_api_configuration.google_map_api_key.google_map_api_key',
+        'dokan_appearance.mapbox_access_token'                => 'general.location.map_api_configuration.mapbox_api_key.mapbox_api_key',
+        'dokan_geolocation.show_locations_map'                => 'general.location.map_display_settings.location_map_position',
         'dokan_geolocation.show_filters_before_locations_map' => 'general.location.map_display_settings.show_filters_before_map',
-        'dokan_geolocation.distance_unit'     => 'general.location.map_display_settings.radius_search_unit',
-        'dokan_geolocation.distance_min'      => 'general.location.map_display_settings.radius_search_min_distance',
-        'dokan_geolocation.distance_max'      => 'general.location.map_display_settings.radius_search_max_distance',
-        'dokan_geolocation.map_zoom'          => 'general.location.map_display_settings.map_zoom_level',
+        'dokan_geolocation.distance_unit'                     => 'general.location.map_display_settings.radius_search_unit',
+        'dokan_geolocation.distance_min'                      => 'general.location.map_display_settings.radius_search_min_distance',
+        'dokan_geolocation.distance_max'                      => 'general.location.map_display_settings.radius_search_max_distance',
+        'dokan_geolocation.map_zoom'                          => 'general.location.map_display_settings.map_zoom_level',
         // Note: Old had two separate controls for placement; new consolidates to a single multi-select
-        'dokan_geolocation.show_location_map_pages'   => 'general.location.map_placement.map_placement_locations',
-        'dokan_geolocation.show_product_location_in_wc_tab' => 'general.location.map_placement.map_placement_locations',
+        'dokan_geolocation.show_location_map_pages'           => 'general.location.map_placement.map_placement_locations',
+        'dokan_geolocation.show_product_location_in_wc_tab'   => 'general.location.map_placement.map_placement_locations',
 
         // =========================
         // Appearance > Store Page
@@ -95,7 +95,7 @@ class SettingsMapper {
         'dokan_germanized.vendor_fields'         => 'compliance.eu_compliance.vendor_extra_fields.vendor_extra_fields',
         'dokan_germanized.customer_fields'       => 'compliance.eu_compliance.customer_extra_fields.customer_extra_fields',
         'dokan_germanized.enabled_germanized'    => 'compliance.eu_compliance.eu_compliance_settings.germanized_support_vendors',
-        'dokan_germanized.override_invoice_number'=> 'compliance.eu_compliance.eu_compliance_settings.vendor_invoice_number_override',
+        'dokan_germanized.override_invoice_number' => 'compliance.eu_compliance.eu_compliance_settings.vendor_invoice_number_override',
 
         // =========================
         // Moderation > RMA
@@ -168,7 +168,7 @@ class SettingsMapper {
         'dokan_selling.one_step_product_create'     => 'vendor.vendor_capabilities.vendor_capabilities.one_page_creation',
         'dokan_selling.disable_product_popup'       => 'vendor.vendor_capabilities.vendor_capabilities.product_popup',
         'dokan_selling.order_status_change'         => 'vendor.vendor_capabilities.vendor_capabilities.order_status_change',
-        'dokan_selling.dokan_any_category_selection'=> 'vendor.vendor_capabilities.vendor_capabilities.select_any_category',
+        'dokan_selling.dokan_any_category_selection' => 'vendor.vendor_capabilities.vendor_capabilities.select_any_category',
         'dokan_selling.vendor_duplicate_product'    => 'vendor.vendor_capabilities.vendor_capabilities.duplicate_product',
         'dokan_selling.product_category_style'      => 'vendor.vendor_capabilities.vendor_capabilities.category_selection',
         'dokan_selling.product_vendors_can_create_tags' => 'vendor.vendor_capabilities.vendor_capabilities.vendors_create_tags',
@@ -183,9 +183,9 @@ class SettingsMapper {
         'dokan_product_subscription.subscription_pack'           => 'vendor.vendor_subscription.vendor_subscription.subscription_view_page',
         'dokan_product_subscription.enable_subscription_pack_in_reg' => 'vendor.vendor_subscription.vendor_subscription.subscription_in_registration',
         'dokan_product_subscription.notify_by_email'             => 'vendor.vendor_subscription.vendor_subscription.email_notification_expiry',
-        'dokan_product_subscription.no_of_days_before_mail'      => 'vendor.vendor_subscription.vendor_subscription.alert_days_before_expiry',
-        'dokan_product_subscription.product_status_after_end'     => 'vendor.vendor_subscription.vendor_subscription.products_status_on_expiry',
-        'dokan_product_subscription.cancelling_email_subject'     => 'vendor.vendor_subscription.vendor_subscription.cancelling_email_subject',
+        'dokan_product_subscription.no_of_days_before_mail' => 'vendor.vendor_subscription.vendor_subscription.alert_days_before_expiry',
+        'dokan_product_subscription.product_status_after_end' => 'vendor.vendor_subscription.vendor_subscription.products_status_on_expiry',
+        'dokan_product_subscription.cancelling_email_subject' => 'vendor.vendor_subscription.vendor_subscription.cancelling_email_subject',
         'dokan_product_subscription.cancelling_email_body'        => 'vendor.vendor_subscription.vendor_subscription.cancelling_email_body',
         'dokan_product_subscription.alert_email_subject'          => 'vendor.vendor_subscription.vendor_subscription.alert_email_subject',
         'dokan_product_subscription.alert_email_body'             => 'vendor.vendor_subscription.vendor_subscription.alert_email_body',

@@ -306,7 +306,10 @@ const SettingsPage = () => {
                             </div>
 
                             { needSaving && (
-                                <div className="sticky flex justify-end bottom-0 !mt-8 py-5">
+                                <div
+                                    id="dokan-admin-settings-save-btn"
+                                    className="sticky flex justify-end bottom-0 !mt-8 py-5"
+                                >
                                     <button
                                         type="button"
                                         disabled={ isSaving }
