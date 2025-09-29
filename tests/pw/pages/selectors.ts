@@ -890,7 +890,7 @@ export const selector = {
                     result: 'li.select2-results__option.select2-results__option--highlighted',
                 },
 
-                searchTicket: 'p.search-box >> input#post-search-input',
+                searchTicket: '(//p[contains(@class, "search-box")]/input[@id="post-search-input"])[1]',
 
                 // Table
                 table: {
@@ -927,8 +927,8 @@ export const selector = {
                         summaryHeading: 'span.dokan-chat-summary',
                         summaryArrow: 'span.dokan-summary-arrow',
 
-                        ticketId: 'div.dokan-summary-info.ticket-id',
-                        vendorInfo: 'div.dokan-summary-info.dokan-vendor-info',
+                        ticketId: '(//div[contains(@class, "dokan-summary-info") and contains(@class, "ticket-id")])[1]',
+                        vendorInfo: '(//div[contains(@class, "dokan-summary-info") and contains(@class, "dokan-vendor-info")])[1]',
                         customerInfo: 'div.dokan-summary-info.dokan-customer-info',
                         messageCount: 'div.dokan-summary-info.conversation',
                         createdAt: '//div[normalize-space()="Created At:"]/..//div[@class="dokan-summary-info created-at"]',

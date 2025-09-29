@@ -36,7 +36,7 @@ test.describe('Store Support test (admin)', () => {
         });
     });
 
-    test('admin can store support module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can enable store support module', { tag: ['@pro', '@admin'] }, async () => {
         await test.step('Enable store support module for vendor', async () => {
             await admin.enableStoreSupportModule(data.predefined.vendorStores.vendor1);
         });
