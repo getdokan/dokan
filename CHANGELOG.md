@@ -1,3 +1,14 @@
+### v4.0.9 ( Sep 25, 2025 ) ###
+- **update**: Dokan Plugin Top Bar & Notice Left Bar UI.
+- **update**: Order fee now distribute based on order creation if the order is manual order then the added fee of that order will go to seller otherwise it will go to admin. The fee tax will be distributed based on product tax receipt.
+- **fix:** Fix Dashboard and Report page header title and apply filters.
+- **fix:** Conflict with ACF plugin: prevented empty admin notices when Dokan is active.
+
+### v4.0.8 ( Sep 12, 2025 ) ###
+- **new:** Added "Chat with us" admin submenu for providing direct access to support chat functionality.
+- **enhance:** Modernize vendor selection with searchable dropdown for better performance.
+- **fix:** Prevent potential errors on additional product sections.
+
 ### v4.0.7 ( Sep 01, 2025 ) ###
 - **fix:** Enhanced security controls for vendor account credentials management.
 
