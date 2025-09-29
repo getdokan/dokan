@@ -57,7 +57,7 @@ class Rewrites {
 
         $crumbs[1] = [ ucwords( $this->custom_store_url ), get_permalink( dokan_get_option( 'store_listing', 'dokan_pages' ) ) ];
         if ( ! $seller_info ) {
-            $crumbs[2] = [ __( 'Error 404', 'dokan-lite' ), dokan_get_store_url( $seller_info->data->ID ) ];
+            $crumbs[2] = [ __( 'Error 404', 'dokan-lite' ), '' ];
             return $crumbs;
         }
 
