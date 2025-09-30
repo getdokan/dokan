@@ -12,6 +12,7 @@ import {
 import MonthPicker from '../../Elements/MonthPicker';
 import Section from '../../Elements/Section';
 import SalesChartSkeleton from './Skeleton';
+import { formatPrice } from '../../../../../../utilities';
 
 // Chart configuration constants
 const CHART_CONFIG = {
@@ -234,8 +235,7 @@ const D3Chart = ( { data }: { data: SalesChartDataPoint[] } ) => {
                         .duration( CHART_CONFIG.animation.tooltipShow )
                         .style( 'opacity', 0.9 );
 
-                    const formatValue = ( val: number ) =>
-                        `$${ val.toFixed( 2 ) }`;
+                    const formatValue = ( val: number ) => formatPrice( val );
 
                     tooltip
                         .html(
@@ -327,6 +327,8 @@ const SalesChartSection = () => {
 
     // Only use current month data
     const currentMonthData = salesData?.intervals || [];
+
+    console.log( salesData, ':::::::::::::::::::::::::salesData' );
 
     return (
         <Section>
