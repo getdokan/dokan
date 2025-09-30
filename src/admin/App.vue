@@ -1,5 +1,5 @@
 <template>
-    <div id="vue-backend-app">
+    <div id="vue-backend-app" class="dokan-admin-page-body">
         <router-view />
 
         <template v-if="customComponents">
