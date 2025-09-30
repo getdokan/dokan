@@ -130,7 +130,7 @@ const TopPerformingVendorsSection = () => {
                                 </RawHTML>
                             }
                         >
-                            <div className="w-fit text-right px-2 text-gray-900 max-w-[300px] break-words">
+                            <div className="w-fit text-right px-2 text-gray-900 max-w-[275px] break-words">
                                 <RawHTML>
                                     { item.total_earning !== emptyString
                                         ? formatPrice( item.total_earning )
@@ -168,7 +168,7 @@ const TopPerformingVendorsSection = () => {
                                 </RawHTML>
                             }
                         >
-                            <div className="w-fit text-right px-2 text-gray-900 max-w-[300px] break-words">
+                            <div className="w-fit text-right px-2 text-gray-900 max-w-[275px] break-words">
                                 <RawHTML>
                                     { item.total_commission !== emptyString
                                         ? formatPrice( item.total_commission )
