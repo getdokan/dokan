@@ -55,7 +55,8 @@
     "vue2-daterange-picker": "^0.6.8",
     "vuedraggable": "^2.24.3",
     "wp-readme-to-markdown": "^1.0.1",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^2.6.0",
+    "tailwind-scrollbar-hide": "^4.0.0"
   },
   "dependencies": {
     "@automattic/components": "^2.1.1",
