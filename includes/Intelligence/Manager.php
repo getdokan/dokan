@@ -13,7 +13,7 @@ class Manager {
         /**
          * Filters the active AI engine.
          *
-         * @since DOKAN_SINCE
+         * @since 4.1.0
          *
          * @param string $engine The ID of the active AI engine.
          */
@@ -26,7 +26,7 @@ class Manager {
     /**
      * Get available AI engines.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $type The type of generation to filter engines by (default is Model::SUPPORTS_TEXT).
      *
@@ -40,7 +40,7 @@ class Manager {
     /**
      * Get activated AI engine
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $type The type of generation to filter engines by (default is Model::SUPPORTS_TEXT).
      *
@@ -69,7 +69,7 @@ class Manager {
     /**
      * Get available AI providers
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array< string, AIProviderInterface >
      */
@@ -91,7 +91,7 @@ class Manager {
     /**
      * Get provider by ID
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $provider_id
      *

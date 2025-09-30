@@ -7,14 +7,14 @@ use WeDevs\Dokan\Models\DataStore\AdminDashboardStatsStore;
 /**
  * Admin Dashboard Stats Model Class
  *
- * @since DOKAN_SINCE
+ * @since 4.1.0
  */
 class AdminDashboardStats extends BaseModel {
 
     /**
      * This is the name of this object type.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @var string
      */
@@ -23,7 +23,7 @@ class AdminDashboardStats extends BaseModel {
     /**
      * Constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param int $id ID to load from the DB (optional) or an AdminDashboardStats object.
      */
@@ -35,7 +35,7 @@ class AdminDashboardStats extends BaseModel {
     /**
      * Get new customers' data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $date_range Array containing date range information.
      *
@@ -48,7 +48,7 @@ class AdminDashboardStats extends BaseModel {
     /**
      * Get order cancellation rate data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $date_range Array containing date range information.
      *
@@ -61,7 +61,7 @@ class AdminDashboardStats extends BaseModel {
     /**
      * Get new products data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $date_range Array containing date range information.
      *
@@ -74,7 +74,7 @@ class AdminDashboardStats extends BaseModel {
     /**
      * Get active vendors data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $date_range Array containing date range information.
      *
@@ -87,7 +87,7 @@ class AdminDashboardStats extends BaseModel {
     /**
      * Get monthly overview data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $date_range Array containing date range information.
      *
@@ -100,7 +100,7 @@ class AdminDashboardStats extends BaseModel {
     /**
      * Get top-performing vendors.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $start_date Start date in Y-m-d format. Optional.
      * @param string $end_date   End date in Y-m-d format. Optional.
@@ -115,7 +115,7 @@ class AdminDashboardStats extends BaseModel {
     /**
      * Get vendor metrics data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $start_date Start date in Y-m-d format.
      * @param string $end_date   End date in Y-m-d format.

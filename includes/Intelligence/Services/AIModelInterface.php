@@ -9,7 +9,7 @@ namespace WeDevs\Dokan\Intelligence\Services;
  * It includes methods to retrieve model details and check capabilities for text and image generation.
  *
  * @package WeDevs\Dokan\Intelligence\Services
- * @since DOKAN_SINCE
+ * @since 4.1.0
  */
 interface AIModelInterface {
     /**

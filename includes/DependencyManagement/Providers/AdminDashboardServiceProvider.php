@@ -13,7 +13,7 @@ use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 /**
  * Admin Dashboard API Service Provider
  *
- * @since DOKAN_SINCE
+ * @since 4.1.0
  */
 class AdminDashboardServiceProvider extends BaseServiceProvider {
     /**

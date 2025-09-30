@@ -7,7 +7,7 @@ use WeDevs\Dokan\Utilities\ReportUtil;
 /**
  * Admin Dashboard Stats Store Class
  *
- * @since DOKAN_SINCE
+ * @since 4.1.0
  */
 class AdminDashboardStatsStore extends BaseDataStore {
 
@@ -21,7 +21,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      */
     public function __construct() {
         $this->vendor_order_stats_store = new VendorOrderStatsStore();
@@ -31,7 +31,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get the fields with format as an array where key is the db field name and value is the format.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */
@@ -66,7 +66,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get the table name.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return string
      */
@@ -77,7 +77,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get the ID field name.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return string
      */
@@ -89,7 +89,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get recurring customers data for current and previous periods using wc_order_stats.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $date_range Array containing date range information.
      *
@@ -169,7 +169,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get new customers data for current and previous periods.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $date_range Array containing date range information.
      *
@@ -221,7 +221,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get order cancellation rate data for current and previous periods.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $date_range Array containing date range information.
      *
@@ -296,7 +296,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get new products data for current and previous periods.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $date_range Array containing date range information.
      *
@@ -345,7 +345,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get active vendors data for current and previous periods using VendorOrderStatsStore.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $date_range Array containing date range information.
      *
@@ -380,7 +380,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get new vendor registration data for current and previous periods.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $date_range Array containing date range information.
      *
@@ -432,7 +432,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get monthly overview data including new customers and order stats.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $date_range Array containing date range information.
      *
@@ -456,7 +456,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get top performing vendors using VendorOrderStatsStore.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $start_date Start date in Y-m-d format. Optional.
      * @param string $end_date   End date in Y-m-d format. Optional.
@@ -472,7 +472,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get vendor metrics data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $start_date Start date in Y-m-d format.
      * @param string $end_date   End date in Y-m-d format.
@@ -491,7 +491,7 @@ class AdminDashboardStatsStore extends BaseDataStore {
     /**
      * Get filtered product types.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array Filtered product types.
      */

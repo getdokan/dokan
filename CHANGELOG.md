@@ -1,3 +1,7 @@
+### v4.1.0 ( Oct 01, 2025 ) ###
+- **feat:** Implement a new React-based admin dashboard with enhanced metrics and legacy dashboard support.
+- **update:** Migrate Pro Features page from Vue to React with enhanced UI.
+
 ### v4.0.9 ( Sep 25, 2025 ) ###
 - **update**: Dokan Plugin Top Bar & Notice Left Bar UI.
 - **update**: Order fee now distribute based on order creation if the order is manual order then the added fee of that order will go to seller otherwise it will go to admin. The fee tax will be distributed based on product tax receipt.

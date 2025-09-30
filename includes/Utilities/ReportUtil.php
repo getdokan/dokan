@@ -59,7 +59,7 @@ class ReportUtil {
     /**
      * Get the excluded order statuses for analytics.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array List of excluded order statuses.
      */

@@ -9,7 +9,7 @@ namespace WeDevs\Dokan\Intelligence\Services;
  * It includes methods to retrieve provider details, models, and check model types.
  *
  * @package WeDevs\Dokan\Intelligence\Services
- * @since DOKAN_SINCE
+ * @since 4.1.0
  */
 interface AIProviderInterface {
 

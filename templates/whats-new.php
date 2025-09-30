@@ -4,6 +4,24 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.1.0',
+        'released' => '2025-10-01',
+        'changes'  => [
+            'New Feature'  => [
+                [
+                    'title'       => 'Implement a new React-based admin dashboard with enhanced metrics and legacy dashboard support',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Migrate Pro Features page from Vue to React with enhanced UI',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.9',
         'released' => '2025-09-25',
         'changes'  => [
