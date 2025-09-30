@@ -1,5 +1,5 @@
 ### v4.1.0 ( Oct 01, 2025 ) ###
-- **feat:** New React-based Admin Dashboard with enhanced metrics and rank boards
+- **feat:** New React-based Admin Dashboard with enhanced metrics and rank boards.
 - **update:** Migrated Pro Features page from Vue to React with enhanced UI.
 
 ### v4.0.9 ( Sep 25, 2025 ) ###
