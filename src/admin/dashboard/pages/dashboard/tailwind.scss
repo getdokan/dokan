@@ -59,6 +59,8 @@
   }
 
   table.dataviews-view-table {
+    z-index: 0;
+
     th {
       background-color: #f9fafb;
     }
@@ -90,5 +92,15 @@
     th:last-child {
       text-align: right;
     }
+  }
+}
+
+.dokan-layout {
+  .components-popover__content {
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px #ccc, 0 2px 3px #0000000d, 0 4px 5px #0000000a, 0 12px 12px #00000008, 0 16px 16px #00000005;
+    box-sizing: border-box;
+    width: min-content;
   }
 }
