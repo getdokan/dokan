@@ -7,7 +7,7 @@ use WeDevs\Dokan\Models\DataStore\VendorOrderStatsStore;
 /**
  * Vendor Order Stats Model Class
  *
- * @since DOKAN_SINCE
+ * @since 4.1.0
  */
 class VendorOrderStats extends BaseModel {
 
@@ -41,7 +41,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Initializes the vendor order stats model.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param int $id The ID of the vendor order stats to initialize. Default is 0.
 	 */
@@ -58,7 +58,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Gets the order ID.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -71,7 +71,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Sets the order ID.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param int $id The order ID.
 	 *
@@ -84,7 +84,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Gets the vendor ID.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -97,7 +97,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Sets the vendor ID.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param int $id The vendor ID.
 	 *
@@ -110,7 +110,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Gets the order type.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -123,7 +123,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Sets the order type.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param int $type The order type.
 	 *
@@ -136,7 +136,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Gets the vendor earning.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -149,7 +149,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Sets the vendor earning.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param float $amount The vendor earning.
 	 *
@@ -162,7 +162,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Gets the vendor gateway fee.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -175,7 +175,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Sets the vendor gateway fee.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param float $amount The vendor gateway fee.
 	 *
@@ -188,7 +188,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Gets the vendor shipping fee.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -201,7 +201,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Sets the vendor shipping fee.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param float $amount The vendor shipping fee.
 	 *
@@ -214,7 +214,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Gets the vendor discount.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -227,7 +227,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Sets the vendor discount.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param float $amount The vendor discount.
 	 *
@@ -240,7 +240,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Gets the admin commission.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -253,7 +253,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Sets the admin commission.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param float $amount The admin commission.
 	 *
@@ -266,7 +266,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Gets the admin gateway fee.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -279,7 +279,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Sets the admin gateway fee.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param float $amount The admin gateway fee.
 	 *
@@ -292,7 +292,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Gets the admin shipping fee.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -305,7 +305,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Sets the admin shipping fee.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param float $amount The admin shipping fee.
 	 *
@@ -318,7 +318,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Gets the admin discount.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -331,7 +331,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Sets the admin discount.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param float $amount The admin discount.
 	 *
@@ -344,7 +344,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Gets the admin subsidy.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -357,7 +357,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Sets the admin subsidy.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param float $amount The admin subsidy.
 	 *
@@ -370,7 +370,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Get total sales (vendor earning + admin commission)
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
@@ -383,7 +383,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Get count of active vendors within a date range.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param string $start_date Start date in Y-m-d format.
 	 * @param string $end_date   End date in Y-m-d format.
@@ -397,7 +397,7 @@ class VendorOrderStats extends BaseModel {
 	/**
 	 * Get top performing vendors.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.1.0
 	 *
 	 * @param int $limit Number of vendors to retrieve. Default 5.
 	 *
@@ -410,7 +410,7 @@ class VendorOrderStats extends BaseModel {
     /**
      * Get sales chart data for a date range.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $start_date Start date in Y-m-d format.
      * @param string $end_date   End date in Y-m-d format.

@@ -10,14 +10,14 @@ use WeDevs\Dokan\Utilities\ReportUtil;
 /**
  * Vendor Order Stats Store Class
  *
- * @since DOKAN_SINCE
+ * @since 4.1.0
  */
 class VendorOrderStatsStore extends BaseDataStore {
 
     /**
      * Get the fields with format as an array where key is the db field name and value is the format.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */
@@ -41,7 +41,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Get the table name.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return string
      */
@@ -52,7 +52,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Get the ID field name.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return string
      */
@@ -63,7 +63,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Get count of active vendors within a date range.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $start_date Start date in Y-m-d format.
      * @param string $end_date   End date in Y-m-d format.
@@ -98,7 +98,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Get top performing vendors.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $start_date Start date in Y-m-d format. Optional.
      * @param string $end_date   End date in Y-m-d format. Optional.
@@ -130,7 +130,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Get sales chart data for a date range.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $start_date   Start date in Y-m-d format.
      * @param string $end_date     End date in Y-m-d format.
@@ -205,7 +205,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Fill missing dates in the data array for a given date range.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array  $data       The data array containing date and sales information.
      * @param string $start_date Start date in Y-m-d format.
