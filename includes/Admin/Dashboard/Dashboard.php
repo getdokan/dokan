@@ -34,6 +34,10 @@ class Dashboard implements Hookable {
         add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
         add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+        add_action( 'admin_menu', [ $this, 'clear_dokan_submenu_title' ], 20 );
+        add_action( 'admin_notices', [ $this, 'inject_before_notices' ], -9999 );
+        add_action( 'admin_notices', [ $this, 'inject_after_notices' ], PHP_INT_MAX );
+        add_action( 'admin_init', [ $this, 'handle_dashboard_redirect' ] );
     }
 
     /**
@@ -81,8 +85,8 @@ class Dashboard implements Hookable {
         $menu_slug = 'dokan-dashboard';
         add_submenu_page(
             'dokan',
-            '',
-            '',
+            esc_html__( 'Dokan Admin Dashboard', 'dokan-lite' ),
+            esc_html__( 'Dashboard', 'dokan-lite' ),
             $capability,
             $menu_slug,
             [ $this, 'render_dashboard_page' ],
@@ -129,7 +133,7 @@ class Dashboard implements Hookable {
      * @return array<string, mixed>
      */
     public function settings(): array {
-        $dashboard_url = admin_url( 'admin.php?page=dokan' );
+        $dashboard_url = admin_url( 'admin.php?page=dokan-dashboard' );
         $header_info   = [
             'lite_version'    => DOKAN_PLUGIN_VERSION,
             'is_pro_exists'   => dokan()->is_pro_exists(),
@@ -204,8 +208,15 @@ class Dashboard implements Hookable {
         }
 
         $settings = [
-            'nonce'       => wp_create_nonce( 'dokan_admin_dashboard' ),
-            'header_info' => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
+            'nonce'         => wp_create_nonce( 'dokan_admin_dashboard' ),
+            'header_info'   => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
+            'dashboard_url' => add_query_arg(
+                [
+                    'dokan_admin_dashboard_switching_nonce' => wp_create_nonce( 'dokan_switch_admin_dashboard' ),
+                    'dokan_action'                          => 'switch_dashboard',
+                ],
+                admin_url()
+            ),
         ];
 
         foreach ( $this->get_pages() as $page ) {
@@ -296,6 +307,10 @@ class Dashboard implements Hookable {
         if ( file_exists( $admin_dashboard_file ) ) {
             $dashboard_script = require $admin_dashboard_file;
             $dependencies     = $dashboard_script['dependencies'] ?? [];
+
+            $dependencies[]   = 'dokan-react-components';
+            $dependencies[]   = 'dokan-react-frontend';
+
             $version          = $dashboard_script['version'] ?? '';
             $data             = [ 'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price() ];
 
@@ -401,5 +416,107 @@ class Dashboard implements Hookable {
                 $this->settings()
             ), 'before'
         );
+    }
+
+    /**
+     * Clear the Dokan submenu title.
+     *
+     * This method clears the title of the Dokan submenu to prevent it from displaying
+     * in the admin menu. It is useful for cases where you want to hide the submenu title
+     * but still keep the submenu item accessible.
+     *
+     * @since 4.1.0
+     *
+     * @return void
+     */
+    public function clear_dokan_submenu_title(): void {
+        global $submenu;
+
+        $legacy   = get_option( 'dokan_legacy_dashboard_page', false );
+        $position = (int) $legacy;
+
+        if ( isset( $submenu['dokan'][ $position ][0] ) ) {
+            $submenu['dokan'][ $position ][0] = '';
+        }
+
+        if ( ! $legacy ) {
+            $submenu['dokan'][0][2] = 'admin.php?page=dokan-dashboard';
+        }
+    }
+
+    /**
+     * Runs before admin notices action and hides them.
+     *
+     * @since 4.1.0
+     *
+     * @return void
+     */
+    public function inject_before_notices(): void {
+        $screen = get_current_screen();
+        if ( ! $screen || ( $screen->id !== 'dokan_page_dokan-dashboard' ) ) {
+            return;
+        }
+
+        // Wrap the notices in a hidden div to prevent flickering before
+        // they are moved elsewhere in the page by WordPress Core.
+        echo '<div class="dokan-layout__notice-list-hide" id="dokan__notice-list">';
+
+        // Capture all notices and hide them. WordPress Core looks for
+        // `.wp-header-end` and appends notices after it if found.
+        echo '<div class="wp-header-end" id="dokan-layout__notice-catcher"></div>';
+    }
+
+    /**
+     * Runs after admin notices and closes div.
+     *
+     * @since 4.1.0
+     *
+     * @return void
+     */
+    public function inject_after_notices(): void {
+        $screen = get_current_screen();
+        if ( ! $screen || ( $screen->id !== 'dokan_page_dokan-dashboard' ) ) {
+            return;
+        }
+
+        // Close the hidden div used to prevent notices from flickering before
+        // they are inserted elsewhere in the page.
+        echo '</div>';
+    }
+
+    /**
+     * Handle dashboard redirect based on legacy dashboard preference.
+     *
+     * This method checks if the user has requested to switch the dashboard and updates
+     * the option accordingly. It then redirects the user to the appropriate dashboard page.
+     *
+     * @since 4.1.0
+     *
+     * @return void
+     */
+    public function handle_dashboard_redirect(): void {
+        // Early return if not a dashboard switch request.
+        if ( ! isset( $_GET['dokan_action'] ) || 'switch_dashboard' !== sanitize_key( wp_unslash( $_GET['dokan_action'] ) ) ) {
+            return;
+        }
+
+        // Early return if nonce verification fails.
+        if ( ! isset( $_GET['dokan_admin_dashboard_switching_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['dokan_admin_dashboard_switching_nonce'] ) ), 'dokan_switch_admin_dashboard' ) ) {
+            return;
+        }
+
+        // Get the current state and toggle it.
+        $current_is_legacy = get_option( 'dokan_legacy_dashboard_page', false );
+        $new_legacy_state  = apply_filters( 'dokan_is_legacy_dashboard_page', ! $current_is_legacy );
+
+        // Update the option
+        update_option( 'dokan_legacy_dashboard_page', $new_legacy_state );
+
+        // Build redirect URL and redirect.
+        $page_slug    = $new_legacy_state ? 'dokan' : 'dokan-dashboard';
+        $redirect_url = add_query_arg( [ 'page' => $page_slug ], admin_url( 'admin.php' ) );
+
+        wp_safe_redirect( $redirect_url );
+        exit;
     }
 }
