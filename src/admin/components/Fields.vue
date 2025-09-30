@@ -783,8 +783,37 @@
                 this.fieldValue[ this.id ] = this.validateInputData( this.id, image.src, this.fieldValue[ this.id ], this.fieldData );
             },
 
+            validateCustomStoreUrl( value ) {
+                // Emit event to remove any existing validation error for this field first
+                this.$emit('removeValidationError', 'custom_store_url');
+
+                if ( ! value ) {
+                    return;
+                }
+
+                // List of reserved WordPress keywords from backend
+                const reservedSlugs = dokan.hooks.applyFilters(
+                    'dokan_reserved_url_slugs',
+                    dokanAdmin.reserved_slugs || []
+                );
+
+                // Check if the value is in the reserved slugs list (case-sensitive)
+                if ( reservedSlugs.includes( value ) ) {
+                    // Emit event to add validation error
+                    this.$emit( 'addValidationError', {
+                        name: 'custom_store_url',
+                        error: this.__( 'The store URL "%s" is reserved by WordPress and cannot be used. Please choose a different value like "store".', 'dokan-lite' ).replace( '%s', value )
+                    } );
+                }
+            },
+
             inputValueHandler( name, newValue, oldValue ) {
-              this.fieldValue[ name ] = this.validateInputData( name, newValue, oldValue, this.fieldData );
+                // Add validation for the custom_store_url field
+                if ( name === 'custom_store_url' ) {
+                    this.validateCustomStoreUrl( newValue );
+                }
+
+                this.fieldValue[ name ] = this.validateInputData( name, newValue, oldValue, this.fieldData );
             },
 
             containCommonFields( type ) {
