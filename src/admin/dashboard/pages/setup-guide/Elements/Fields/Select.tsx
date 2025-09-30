@@ -38,6 +38,7 @@ const Select = ( { element, onValueChange }: SettingsProps ) => {
                             value: option?.value,
                         } ) ) || []
                     }
+                    portalTarget={ document.querySelector( '.dokan-layout' ) }
                     multiple={ false }
                     value={ selectedOption as string }
                     onChange={ onHandleChange }

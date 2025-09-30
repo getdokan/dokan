@@ -91,7 +91,7 @@ class VendorNavMenuChecker {
     /**
      * Rewrite URL to React route if applicable.
      *
-     * @since DOKAN_SINCE
+     * @since 4.0.8
      *
      * @param string $url URL.
      * @param string $name Name.
