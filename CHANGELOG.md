@@ -1,3 +1,26 @@
+### v4.0.9 ( Sep 25, 2025 ) ###
+- **update**: Dokan Plugin Top Bar & Notice Left Bar UI.
+- **update**: Order fee now distribute based on order creation if the order is manual order then the added fee of that order will go to seller otherwise it will go to admin. The fee tax will be distributed based on product tax receipt.
+- **fix:** Fix Dashboard and Report page header title and apply filters.
+- **fix:** Conflict with ACF plugin: prevented empty admin notices when Dokan is active.
+
+### v4.0.8 ( Sep 12, 2025 ) ###
+- **new:** Added "Chat with us" admin submenu for providing direct access to support chat functionality.
+- **enhance:** Modernize vendor selection with searchable dropdown for better performance.
+- **fix:** Prevent potential errors on additional product sections.
+
+### v4.0.7 ( Sep 01, 2025 ) ###
+- **fix:** Enhanced security controls for vendor account credentials management.
+
+### v4.0.6 ( Aug 29, 2025 ) ###
+- **update:** Added translation support for dashboard analytics report scripts to improve internationalization (i18n).
+- **fix:** Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.
+- **fix:** Added async search in store category in vendor edit.
+- **fix:** Admin not receiving withdrawal request email notifications.
+
+### v4.0.5 ( Jul 24, 2025 ) ###
+- **fix:** Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.
+
 ### v4.0.4 ( Jul 17, 2025 ) ###
 
 - **update:** Admin Notice UI with Modern Design and Improved User Experience.

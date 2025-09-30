@@ -81,6 +81,67 @@
         // When changing this value, make sure to check if toast is still on top of the modal
         z-index: 999 !important;
     }
+
+    .dokan-react-time-picker {
+        .components-base-control__field:has(.components-toggle-group-control) {
+            border: 1px solid var(--dokan-button-border-color, #7047EB) !important;
+            border-radius: 2px;
+
+            &:focus-within {
+                border-color: var(--dokan-button-background-color, #7047EB) !important;
+            }
+        }
+
+        .components-toggle-group-control {
+            border: none;
+
+            .components-toggle-group-control-option-base[aria-checked="false"] {
+                color: var(--wp-components-color-foreground, #1e1e1e);
+            }
+
+            &::before {
+                left: .75px;
+                background-color: var(--dokan-button-background-color, #7047EB) !important;
+            }
+
+            &:focus-within {
+                border: none;
+                box-shadow: none;
+            }
+        }
+
+        .components-datetime__time-field {
+            border-radius: 2px;
+            border: 1px solid var(--dokan-button-border-color, #7047EB) !important;
+
+            .components-datetime__time-separator,
+            .components-input-control__backdrop {
+                border: none !important;
+            }
+
+            .components-input-control__input {
+                &:focus {
+                    & ~ .components-input-control__backdrop {
+                        box-shadow: none !important;
+                    }
+                }
+            }
+
+            &:focus-within {
+                border-color: var(--dokan-button-background-color, #7047EB) !important;
+            }
+        }
+
+        .delivery-field-error {
+            .components-base-control__field:has(.components-toggle-group-control) {
+                border-color: red !important;
+            }
+
+            .components-datetime__time-field {
+                border-color: red !important;
+            }
+        }
+    }
 }
 
 
@@ -268,5 +329,22 @@
 
     .dokan-alert-danger {
         @apply relative ring-1 ring-inset bg-dokan-danger text-dokan-danger-secondary ring-dokan-danger #{!important};
+    }
+
+    .react-select input:focus {
+        box-shadow: none !important;
+        outline: none !important;
+    }
+
+    // class with dokan-react-search-input tag input all sibling span background tranparent.
+    .dokan-react-search-input {
+        border-radius: 0 !important;
+        background: white !important;
+        box-shadow: none !important;
+    }
+    /* Target both addon spans around the input (before and after) */
+    .dokan-react-search-input ~ span,
+    span:has(+ .dokan-react-search-input) {
+        background: white !important;
     }
 }

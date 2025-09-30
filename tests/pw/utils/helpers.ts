@@ -544,4 +544,13 @@ export const helpers = {
 
         return result;
     },
+
+    // Parse boolean value from string. Environment variables are always strings.
+    parseBoolean(value: string | undefined, defaultValue = false): boolean {
+        if (value === undefined) return defaultValue;
+        const normalized = value.trim().toLowerCase();
+        return normalized === "true" || normalized === "1" || normalized === "yes";
+      }
 };
+
+export const parseBoolean = helpers.parseBoolean;

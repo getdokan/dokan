@@ -1,5 +1,5 @@
 <template>
-    <div class="notice dokan-admin-notices-wrap">
+    <div class="notice dokan-admin-notices-wrap" v-show="notices && notices.length">
         <div class="dokan-admin-notices" v-if="notices && notices.length">
             <transition-group name="fade" tag="div" class="dokan-notice-slides leading-[1.5em] box-content">
                 <template v-for="(notice, index) in notices">
@@ -43,9 +43,11 @@
 
 <script>
 import $ from 'jquery';
+import Mixin from '../../utils/Mixin';
 
 export default {
     name: "AdminNotice",
+    mixins: [ Mixin ],
 
     props: {
         endpoint: {

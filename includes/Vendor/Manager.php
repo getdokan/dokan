@@ -246,7 +246,7 @@ class Manager {
         }
 
         // default wp based user data
-        if ( ! empty( $data['user_pass'] ) ) {
+        if ( ! empty( $data['user_pass'] ) && get_current_user_id() === $vendor->get_id() ) {
             wp_update_user(
                 [
                     'ID'        => $vendor->get_id(),
