@@ -1,5 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
 import Section from '../../Elements/Section';
 import MonthPicker from '../../Elements/MonthPicker';
 import { DataViews } from '../../../../../../components';
@@ -7,8 +7,9 @@ import { useDashboardApiData } from '../../hooks/useDashboardApiData';
 import { fetchTopPerformingVendors, formatDateForApi } from '../../utils/api';
 import { TopPerformingVendorsData, MonthPickerValue } from '../../types';
 import TopPerformingVendorsSkeleton from './Skeleton';
-import PriceHtml from '../../../../../../components/PriceHtml';
 import { applyFilters } from '@wordpress/hooks';
+import { formatPrice, truncate } from '../../../../../../utilities';
+import { DokanTooltip as Tooltip } from '@dokan/components';
 
 const TopPerformingVendorsSection = () => {
     const [ monthData, setMonthData ] = useState< MonthPickerValue >( {
@@ -119,13 +120,25 @@ const TopPerformingVendorsSection = () => {
             enableSorting: false,
             render: ( { item } ) => {
                 return (
-                    <div className={ `w-full text-right px-2 text-gray-900` }>
-                        { item.total_earning !== emptyString ? (
-                            <PriceHtml price={ `${ item.total_earning }` } />
-                        ) : (
-                            emptyString
-                        ) }
-                    </div>
+                    <Tooltip
+                        content={
+                            <RawHTML>
+                                { item.total_earning !== emptyString ? (
+                                    formatPrice( item.total_earning )
+                                ) : emptyString }
+                            </RawHTML>
+                        }
+                    >
+                        <div className="w-fit text-right px-2 text-gray-900">
+                            <RawHTML>
+                                { item.total_earning !== emptyString ? (
+                                    truncate( formatPrice( item.total_earning ), 16 )
+                                ) : (
+                                    emptyString
+                                ) }
+                            </RawHTML>
+                        </div>
+                    </Tooltip>
                 );
             },
         },
@@ -143,15 +156,29 @@ const TopPerformingVendorsSection = () => {
             id: 'total_commission',
             label: __( 'Total Commission', 'dokan-lite' ),
             enableSorting: false,
-            render: ( { item } ) => (
-                <div className={ `w-full text-right px-2 text-gray-900` }>
-                    { item.total_commission !== emptyString ? (
-                        <PriceHtml price={ `${ item.total_commission }` } />
-                    ) : (
-                        emptyString
-                    ) }
-                </div>
-            ),
+            render: ( { item } ) => {
+                return (
+                    <Tooltip
+                        content={
+                            <RawHTML>
+                                { item.total_commission !== emptyString ? (
+                                    formatPrice( item.total_commission )
+                                ) : emptyString }
+                            </RawHTML>
+                        }
+                    >
+                        <div className="w-fit text-right px-2 text-gray-900">
+                            <RawHTML>
+                                { item.total_commission !== emptyString ? (
+                                    truncate( formatPrice( item.total_commission ), 16 )
+                                ) : (
+                                    emptyString
+                                ) }
+                            </RawHTML>
+                        </div>
+                    </Tooltip>
+                );
+            },
         },
     ];
 

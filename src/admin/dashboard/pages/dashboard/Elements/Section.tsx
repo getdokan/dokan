@@ -1,4 +1,4 @@
-import { DokanTooltip as Tooltip } from '@src/components';
+import { DokanTooltip as Tooltip } from '@dokan/components';
 import { Info } from 'lucide-react';
 
 interface SectionProps {

@@ -1,7 +1,9 @@
 import { Card as DokanCard } from '@getdokan/dokan-ui';
-import { DokanTooltip as Tooltip } from '@src/components';
+import { DokanTooltip as Tooltip } from '@dokan/components';
 import { Info, MoveUp, MoveDown } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
+import { RawHTML } from '@wordpress/element';
+import { formatPrice, truncate } from '../../../../../utilities';
 
 interface CardProps {
     icon: JSX.Element;
@@ -61,9 +63,11 @@ function Card( {
                     </Tooltip>
                 ) }
             </div>
-            <div className="text-3xl font-bold text-black -mt-1 -mb-1">
-                { content }
-            </div>
+            <Tooltip content={ <RawHTML>{ String( content ) }</RawHTML> }>
+                <div className="text-3xl font-bold text-black -mt-1 -mb-1 w-fit">
+                    <RawHTML>{ truncate( String( content ), 12 ) }</RawHTML>
+                </div>
+            </Tooltip>
         </DokanCard>
     );
 }
