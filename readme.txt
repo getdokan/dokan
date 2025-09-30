@@ -7,7 +7,7 @@ Tested up to: 6.8.2
 WC requires at least: 8.5.0
 WC tested up to: 10.2.1
 Requires PHP: 7.4
-Stable tag: 4.0.9
+Stable tag: 4.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -348,6 +348,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+
+= v4.1.0 ( Sep 30, 2025 ) =
+- **feat:** New React-based Admin Dashboard with enhanced metrics and rank boards.
+- **update:** Migrated Pro Features page from Vue to React with enhanced UI.
 
 = v4.0.9 ( Sep 25, 2025 ) =
 - **update**: Dokan Plugin Top Bar & Notice Left Bar UI.

@@ -1,23 +1,70 @@
 <?php
 
-namespace WeDevs\Dokan\Intelligence\Services;
+namespace WeDevs\Dokan\Intelligence\Services\Models;
 
-use Exception;
+use WeDevs\Dokan\Intelligence\Services\AITextGenerationInterface;
+use WeDevs\Dokan\Intelligence\Services\Model;
 
-class GeminiResponseService extends BaseAIService {
-    private const BASE_URL = 'https://generativelanguage.googleapis.com/v1/';
+class GeminiTwoDotFiveFlashLite extends Model implements AITextGenerationInterface {
 
+    protected const BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/';
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_id(): string {
+		return 'gemini-2.5-flash-lite-preview-06-17';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_title(): string {
+		return __( 'Gemini 2.5 Flash Lite', 'dokan-lite' );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_description(): string {
+		return __( 'Gemini 2.5 Flash Lite is a lightweight version of the Gemini 2.5 Flash model, designed for efficient text generation with reduced resource requirements.', 'dokan-lite' );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_provider_id(): string {
+		return 'gemini';
+	}
+
+    /**
+     * Retrieves the API url required.
+     *
+     * @return string The API key.
+     */
     protected function get_url(): string {
-        $model = dokan_get_option( 'dokan_ai_gemini_model', 'dokan_ai', 'gemini-1.5-flash' );
-        return self::BASE_URL . 'models/' . $model . ':generateContent?key=' . $this->get_api_key();
+        return self::BASE_URL . 'models/' . $this->get_id() . ':generateContent?key=' . $this->get_api_key();
     }
 
+    /**
+     * Retrieves the headers required for the API request.
+     *
+     * @return array
+     */
     protected function get_headers(): array {
         return [
             'Content-Type' => 'application/json',
         ];
     }
 
+    /**
+     * Retrieves the payload required for the API request.
+     *
+     * @param  string  $prompt
+     * @param  array  $args
+     *
+     * @return array
+     */
     protected function get_payload( string $prompt, array $args = [] ): array {
         if ( isset( $args['json_format'] ) ) {
             $pre_prompt = 'You are an AI assistant specializing in WooCommerce and e-commerce product.
@@ -61,23 +108,21 @@ class GeminiResponseService extends BaseAIService {
             'generationConfig' => [
                 'stopSequences' => [ 'Title' ],
                 'temperature' => 0.7,
-                // 'maxOutputTokens' => (int) dokan_get_option( 'dokan_ai_max_tokens_for_marketplace', 'dokan_ai', '1000' ),
                 'topP' => 0.8,
                 'topK' => 10,
+                'thinkingConfig' => [
+					'thinkingBudget' => 0,
+				],
             ],
         ];
     }
 
     /**
-     * Process the request
-     *
-     * @param string $prompt
-     * @param array $args
-     *
-     * @return array|Exception|mixed|null
-     * @throws Exception
+     * @inheritDoc
      */
-    public function process( string $prompt, array $args = [] ) {
+    public function process_text( string $prompt, array $args = [] ) {
+        $this->generation_type = self::SUPPORTS_TEXT;
+
         $response = $this->request( $prompt, $args );
 
         if ( is_wp_error( $response ) ) {
@@ -101,20 +146,9 @@ class GeminiResponseService extends BaseAIService {
         }
 
         return apply_filters(
-            'dokan_ai_gemini_response_json', [
-				'response' => $response,
-				'prompt' => $prompt,
-			]
-        );
-    }
-
-    public static function get_models(): array {
-        // Todo: Model list should be fetched from the API
-        return apply_filters(
-            'dokan_ai_supported_gemini_models', [
-                'gemini-1.5-flash' => __( 'Gemini 1.5 Flash', 'dokan-lite' ),
-                'gemini-2.0-flash' => __( 'Gemini 2.0 Flash', 'dokan-lite' ),
-                'gemini-2.0-flash-lite' => __( 'Gemini 2.0 Flash-Lite', 'dokan-lite' ),
+            'dokan_ai_' . $this->get_type_prefix_for_generation() . $this->get_provider_id() . '_response_json', [
+                'response' => $response,
+                'prompt' => $prompt,
             ]
         );
     }

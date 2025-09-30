@@ -516,7 +516,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get the order fee for admin.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return float
      */
@@ -531,7 +531,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get the order fee for vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return float
      */
@@ -546,7 +546,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Get order fee recipient.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return string
      */
