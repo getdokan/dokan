@@ -26,7 +26,7 @@ const AdminSetupBanner = () => {
     return (
         <div
             data-test-id="admin-setup-guide-button"
-            className="bg-white rounded-lg p-5 my-4 mr-[20px]"
+            className="bg-white rounded-lg p-5 my-4 mr-[10px] md:mr-[20px]"
         >
             <div className="flex items-center flex-wrap gap-y-4 justify-between">
                 <div className="flex items-center flex-wrap gap-6">

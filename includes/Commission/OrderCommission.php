@@ -19,7 +19,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     private ?WC_Order $order;
 
     const SELLER = 'seller';
-    const ADMIN  = 'admin';
+    const ADMIN = 'admin';
 
     protected $is_calculated = false;
 
@@ -39,20 +39,20 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         return $this->order;
     }
 
-	/**
-	 * Set order.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param \WC_Order $order
-	 *
-	 * @return void
-	 */
-	public function set_order( WC_Order $order ): self {
-		$this->order = $order;
+    /**
+     * Set order.
+     *
+     * @since 4.0.0
+     *
+     * @param  \WC_Order  $order
+     *
+     * @return void
+     */
+    public function set_order( WC_Order $order ): self {
+        $this->order = $order;
 
         return $this;
-	}
+    }
 
     /**
      * Calculate order commission.
@@ -69,9 +69,9 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         $this->reset_order_commission_data();
 
         $admin_net_commission = 0;
-        $admin_discount = 0;
-        $vendor_net_earning = 0;
-        $vendor_discount = 0;
+        $admin_discount       = 0;
+        $vendor_net_earning   = 0;
+        $vendor_discount      = 0;
 
         foreach ( $this->order->get_items() as $item_id => $item ) {
             try {
@@ -116,18 +116,18 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      *
      * @since 4.0.0
      *
-     * @param \WC_Order_Refund $refund
+     * @param  \WC_Order_Refund  $refund
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
     public function calculate_for_refund( WC_Order_Refund $refund ): Commission {
         $should_reset_adjust_refund = false;
 
-		if ( $this->get_should_adjust_refund() ) {
-			$this->set_should_adjust_refund( false );
-			$this->calculate();
-			$should_reset_adjust_refund = true;
-		}
+        if ( $this->get_should_adjust_refund() ) {
+            $this->set_should_adjust_refund( false );
+            $this->calculate();
+            $should_reset_adjust_refund = true;
+        }
 
         $this->ensure_commissions_are_calculated();
 
@@ -135,8 +135,8 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
 
         foreach ( $refund->get_items() as $item_id => $refund_item ) {
             try {
-                $order_item_id = $refund_item->get_meta( '_refunded_item_id', true );
-                $order_item_commission = $this->get_commission_for_line_item( $order_item_id );
+                $order_item_id          = $refund_item->get_meta( '_refunded_item_id', true );
+                $order_item_commission  = $this->get_commission_for_line_item( $order_item_id );
                 $item_refund_commission = $order_item_commission->calculate_for_refund_item( $refund_item );
 
                 $refund_commission->set_admin_net_commission(
@@ -147,13 +147,19 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
                 );
             } catch ( \Exception $exception ) {
                 // translators: 1: Refund item ID, 2: Error message
-                dokan_log( sprintf( __( 'Refund item ID %1$s error: %2$s', 'dokan-lite' ), $order_item_id, $exception->getMessage() ), 'error' );
+                dokan_log(
+                    sprintf(
+                        // translators: 1: Refund item ID, 2: Error message
+                        __( 'Refund item ID %1$s error: %2$s', 'dokan-lite' ), $order_item_id,
+                        $exception->getMessage()
+                    ), 'error'
+                );
             }
         }
 
         if ( $should_reset_adjust_refund ) {
             $this->set_should_adjust_refund( true );
-			$this->calculate();
+            $this->calculate();
         }
 
         return $refund_commission;
@@ -163,9 +169,8 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * Retrieve order commission.
      *
      * @since 4.0.0
-     * @throws \Exception If the order is not set.
-     *
      * @return OrderCommission
+     * @throws \Exception If the order is not set.
      */
     public function get(): OrderCommission {
         $this->ensure_commissions_are_calculated();
@@ -299,7 +304,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float|int
      */
     public function get_total_admin_fees(): float {
-        return $this->get_admin_shipping_fee() + $this->get_admin_tax_fee() + $this->get_admin_shipping_tax_fee() - $this->get_admin_gateway_fee();
+        return $this->get_admin_shipping_fee() + $this->get_admin_tax_fee() + $this->get_admin_shipping_tax_fee() - $this->get_admin_gateway_fee() + $this->get_admin_order_fees();
     }
 
     /**
@@ -310,7 +315,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float|int
      */
     public function get_total_vendor_fees(): float {
-        return $this->get_vendor_shipping_fee() + $this->get_vendor_tax_fee() + $this->get_vendor_shipping_tax_fee() - $this->get_vendor_gateway_fee();
+        return $this->get_vendor_shipping_fee() + $this->get_vendor_tax_fee() + $this->get_vendor_shipping_tax_fee() - $this->get_vendor_gateway_fee() + $this->get_vendor_order_fees();
     }
 
 
@@ -371,6 +376,9 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
             'vendor_discount'      => $this->get_vendor_discount(),
             'vendor_earning'       => $this->get_vendor_earning(),
             'vendor_net_earning'   => $this->get_vendor_net_earning(),
+            'admin_order_fees'     => $this->get_admin_order_fees(),
+            'vendor_order_fees'    => $this->get_vendor_order_fees(),
+            'order_fees_recipient' => $this->get_order_fee_recipient(),
         ];
     }
 
@@ -379,7 +387,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      *
      * @since 4.0.0
      *
-     * @param \WeDevs\Dokan\Commission\Model\Commission $commission_data
+     * @param  \WeDevs\Dokan\Commission\Model\Commission  $commission_data
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
@@ -404,7 +412,8 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     /**
      * Retrieve the commission object for a specific line item.
      *
-     * @param int $item_id Line item ID.
+     * @param  int  $item_id  Line item ID.
+     *
      * @return OrderLineItemCommission|null The commission object or null if not found.
      */
     public function get_commission_for_line_item( int $item_id ): ?OrderLineItemCommission {
@@ -437,7 +446,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         }
     }
 
-	/**
+    /**
      * Get the total admin commission.
      *
      * This includes the net commission plus any additional admin fees.
@@ -446,33 +455,31 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      *
      * @return float
      */
-	public function get_admin_commission(): float {
-		return $this->get_admin_net_commission() + $this->get_total_admin_fees();
-	}
+    public function get_admin_commission(): float {
+        return $this->get_admin_net_commission() + $this->get_total_admin_fees();
+    }
 
-	/**
-	 * Get the total earning for the admin.
-	 *
-	 * @since 4.0.0
-	 * @deprecated 4.0.0 Use get_admin_commission() instead.
-	 *
-	 * @return float
-	 */
-	public function get_admin_total_earning(): float {
-		return $this->get_admin_commission();
-	}
+    /**
+     * Get the total earning for the admin.
+     *
+     * @since 4.0.0
+     * @return float
+     * @deprecated 4.0.0 Use get_admin_commission() instead.
+     */
+    public function get_admin_total_earning(): float {
+        return $this->get_admin_commission();
+    }
 
-	/**
-	 * Get the total earning for the vendor.
-	 *
-	 * @since 4.0.0
-	 * @deprecated 4.0.0 Use get_vendor_earning() instead.
-	 *
-	 * @return float
-	 */
-	public function get_vendor_total_earning(): float {
-		return $this->get_vendor_earning();
-	}
+    /**
+     * Get the total earning for the vendor.
+     *
+     * @since 4.0.0
+     * @return float
+     * @deprecated 4.0.0 Use get_vendor_earning() instead.
+     */
+    public function get_vendor_total_earning(): float {
+        return $this->get_vendor_earning();
+    }
 
     /**
      * Get the total shipping refunded.
@@ -504,5 +511,75 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      */
     protected function get_total_shipping_tax_refunded(): float {
         return $this->get_should_adjust_refund() ? dokan()->fees->get_total_shipping_tax_refunded( $this->order ) : 0.0;
+    }
+
+    /**
+     * Get the order fee for admin.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return float
+     */
+    protected function get_admin_order_fees(): float {
+        if ( self::ADMIN === $this->get_order_fee_recipient() ) {
+            return $this->order->get_total_fees() - $this->get_order_fee_refunded();
+        }
+
+        return 0.0;
+    }
+
+    /**
+     * Get the order fee for vendor.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return float
+     */
+    protected function get_vendor_order_fees(): float {
+        if ( self::SELLER === $this->get_order_fee_recipient() ) {
+            return $this->order->get_total_fees() - $this->get_order_fee_refunded();
+        }
+
+        return 0.0;
+    }
+
+    /**
+     * Get order fee recipient.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    protected function get_order_fee_recipient(): string {
+        $recipient = self::ADMIN;
+        // check order is a manual order then fee recipient is seller.
+        if ( 'vendor' === $this->order->get_meta( '_wc_order_attribution_source_type', true ) ) {
+            $recipient = self::SELLER;
+        }
+
+        return apply_filters( 'dokan_order_commission_order_fee_recipient', $recipient, $this->order, $this );
+    }
+
+    /**
+     * Get the refunded order fee.
+     *
+     * @return float
+     */
+    protected function get_order_fee_refunded(): float {
+        $total_refunded_fees = 0.0;
+        if ( ! $this->get_should_adjust_refund() ) {
+            return $total_refunded_fees;
+        }
+
+        $fee_items = $this->order->get_items( 'fee' );
+
+        if ( ! empty( $fee_items ) ) {
+            foreach ( $fee_items as $item_id => $item ) {
+                $refunded_amount      = $this->order->get_total_refunded_for_item( $item_id, 'fee' );
+                $total_refunded_fees += (float) $refunded_amount;
+            }
+        }
+
+        return $total_refunded_fees;
     }
 }
