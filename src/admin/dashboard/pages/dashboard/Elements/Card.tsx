@@ -64,8 +64,8 @@ function Card( {
                 ) }
             </div>
             <Tooltip content={ <RawHTML>{ String( content ) }</RawHTML> }>
-                <div className="text-3xl font-bold text-black -mt-1 -mb-1 w-fit">
-                    <RawHTML>{ truncate( String( content ), 12 ) }</RawHTML>
+                <div className="text-3xl font-bold text-black -mt-1 -mb-1 w-fit break-words max-w-[350px]">
+                    <RawHTML>{ String( content ) }</RawHTML>
                 </div>
             </Tooltip>
         </DokanCard>

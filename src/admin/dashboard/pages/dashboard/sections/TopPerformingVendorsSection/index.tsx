@@ -130,13 +130,11 @@ const TopPerformingVendorsSection = () => {
                                 </RawHTML>
                             }
                         >
-                            <div className="w-fit text-right px-2 text-gray-900">
+                            <div className="w-fit text-right px-2 text-gray-900 max-w-[350px] break-words">
                                 <RawHTML>
-                                    { item.total_earning !== emptyString ? (
-                                        truncate( formatPrice( item.total_earning ), 16 )
-                                    ) : (
-                                        emptyString
-                                    ) }
+                                    { item.total_earning !== emptyString
+                                        ? formatPrice( item.total_earning )
+                                        : emptyString }
                                 </RawHTML>
                             </div>
                         </Tooltip>
@@ -170,13 +168,11 @@ const TopPerformingVendorsSection = () => {
                                 </RawHTML>
                             }
                         >
-                            <div className="w-fit text-right px-2 text-gray-900">
+                            <div className="w-fit text-right px-2 text-gray-900 max-w-[350px] break-words">
                                 <RawHTML>
-                                    { item.total_commission !== emptyString ? (
-                                        truncate( formatPrice( item.total_commission ), 16 )
-                                    ) : (
-                                        emptyString
-                                    ) }
+                                    { item.total_commission !== emptyString
+                                        ? formatPrice( item.total_commission )
+                                        : emptyString }
                                 </RawHTML>
                             </div>
                         </Tooltip>
