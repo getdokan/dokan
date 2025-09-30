@@ -120,25 +120,27 @@ const TopPerformingVendorsSection = () => {
             enableSorting: false,
             render: ( { item } ) => {
                 return (
-                    <Tooltip
-                        content={
-                            <RawHTML>
-                                { item.total_earning !== emptyString ? (
-                                    formatPrice( item.total_earning )
-                                ) : emptyString }
-                            </RawHTML>
-                        }
-                    >
-                        <div className="w-fit text-right px-2 text-gray-900">
-                            <RawHTML>
-                                { item.total_earning !== emptyString ? (
-                                    truncate( formatPrice( item.total_earning ), 16 )
-                                ) : (
-                                    emptyString
-                                ) }
-                            </RawHTML>
-                        </div>
-                    </Tooltip>
+                    <div className={ 'w-full flex justify-end items-center' }>
+                        <Tooltip
+                            content={
+                                <RawHTML>
+                                    { item.total_earning !== emptyString ? (
+                                        formatPrice( item.total_earning )
+                                    ) : emptyString }
+                                </RawHTML>
+                            }
+                        >
+                            <div className="w-fit text-right px-2 text-gray-900">
+                                <RawHTML>
+                                    { item.total_earning !== emptyString ? (
+                                        truncate( formatPrice( item.total_earning ), 16 )
+                                    ) : (
+                                        emptyString
+                                    ) }
+                                </RawHTML>
+                            </div>
+                        </Tooltip>
+                    </div>
                 );
             },
         },
@@ -158,25 +160,27 @@ const TopPerformingVendorsSection = () => {
             enableSorting: false,
             render: ( { item } ) => {
                 return (
-                    <Tooltip
-                        content={
-                            <RawHTML>
-                                { item.total_commission !== emptyString ? (
-                                    formatPrice( item.total_commission )
-                                ) : emptyString }
-                            </RawHTML>
-                        }
-                    >
-                        <div className="w-fit text-right px-2 text-gray-900">
-                            <RawHTML>
-                                { item.total_commission !== emptyString ? (
-                                    truncate( formatPrice( item.total_commission ), 16 )
-                                ) : (
-                                    emptyString
-                                ) }
-                            </RawHTML>
-                        </div>
-                    </Tooltip>
+                    <div className={ 'w-full flex justify-end items-center' }>
+                        <Tooltip
+                            content={
+                                <RawHTML>
+                                    { item.total_commission !== emptyString ? (
+                                        formatPrice( item.total_commission )
+                                    ) : emptyString }
+                                </RawHTML>
+                            }
+                        >
+                            <div className="w-fit text-right px-2 text-gray-900">
+                                <RawHTML>
+                                    { item.total_commission !== emptyString ? (
+                                        truncate( formatPrice( item.total_commission ), 16 )
+                                    ) : (
+                                        emptyString
+                                    ) }
+                                </RawHTML>
+                            </div>
+                        </Tooltip>
+                    </div>
                 );
             },
         },
