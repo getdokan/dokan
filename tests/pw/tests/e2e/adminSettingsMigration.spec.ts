@@ -15,44 +15,6 @@ test.describe('Admin Settings Migration', () => {
         await loginPage.adminLogin(data.admin);
     });
 
-    // test('should migrate data from new settings to old settings', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
-    //     // Test scenario: Update value in new settings -> verify in old settings
-    //     const testData = data.adminSettingsMigration.testData;
-    //
-    //     // Step 1: Set initial value in new settings
-    //     await adminSettingsPage.updateVendorStoreUrlInNewSettings(testData.initialStoreUrl);
-    //
-    //     // Step 2: Verify initial value appears in old settings
-    //     const initialOldValue = await adminSettingsPage.getVendorStoreUrlFromOldSettings();
-    //     expect(initialOldValue).toBe(testData.initialStoreUrl);
-    //
-    //     // Step 3: Update value in new settings
-    //     await adminSettingsPage.updateVendorStoreUrlInNewSettings(testData.updatedStoreUrlFromNew);
-    //
-    //     // Step 4: Verify updated value appears in old settings
-    //     const updatedOldValue = await adminSettingsPage.getVendorStoreUrlFromOldSettings();
-    //     expect(updatedOldValue).toBe(testData.updatedStoreUrlFromNew);
-    // });
-    //
-    // test('should migrate data from old settings to new settings', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
-    //     // Test scenario: Update value in old settings -> verify in new settings
-    //     const testData = data.adminSettingsMigration.testData;
-    //
-    //     // Step 1: Set initial value in old settings
-    //     await adminSettingsPage.updateVendorStoreUrlInOldSettings(testData.initialStoreUrl);
-    //
-    //     // Step 2: Verify initial value appears in new settings
-    //     const initialNewValue = await adminSettingsPage.getVendorStoreUrlFromNewSettings();
-    //     expect(initialNewValue).toBe(testData.initialStoreUrl);
-    //
-    //     // Step 3: Update value in old settings
-    //     await adminSettingsPage.updateVendorStoreUrlInOldSettings(testData.updatedStoreUrlFromOld);
-    //
-    //     // Step 4: Verify updated value appears in new settings
-    //     const updatedNewValue = await adminSettingsPage.getVendorStoreUrlFromNewSettings();
-    //     expect(updatedNewValue).toBe(testData.updatedStoreUrlFromOld);
-    // });
-
     // Test for `General -> Marketplace -> Vendor Store URL` settings synchronization.
     test('should maintain bi-directional data synchronization for vendor store url settings', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
         // Test scenario following the exact steps from issue description
