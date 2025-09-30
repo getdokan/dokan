@@ -7,6 +7,11 @@ import { responseBody } from '@utils/interfaces';
 
 const { VENDOR_ID, CUSTOMER_ID, PRODUCT_ID } = process.env;
 
+
+// DEPENDENCY:
+// Make sure remove add to cart button are not enabled under Admin Settings.
+// Make Sure Get Support Button are enabled for customer
+
 test.describe('Store Support test (admin)', () => {
     let admin: StoreSupportsPage;
     let aPage: Page;
