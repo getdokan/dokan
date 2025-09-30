@@ -425,7 +425,7 @@ class Dashboard implements Hookable {
      * in the admin menu. It is useful for cases where you want to hide the submenu title
      * but still keep the submenu item accessible.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return void
      */
@@ -447,7 +447,7 @@ class Dashboard implements Hookable {
     /**
      * Runs before admin notices action and hides them.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return void
      */
@@ -469,7 +469,7 @@ class Dashboard implements Hookable {
     /**
      * Runs after admin notices and closes div.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return void
      */
@@ -490,7 +490,7 @@ class Dashboard implements Hookable {
      * This method checks if the user has requested to switch the dashboard and updates
      * the option accordingly. It then redirects the user to the appropriate dashboard page.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return void
      */

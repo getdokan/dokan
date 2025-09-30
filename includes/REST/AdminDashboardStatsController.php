@@ -14,7 +14,7 @@ use Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query as DataStore;
  *
  * Handles todo endpoint requests
  *
- * @since DOKAN_SINCE
+ * @since 4.1.0
  */
 class AdminDashboardStatsController extends DokanBaseAdminController {
 
@@ -178,7 +178,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get to_do data
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return WP_REST_Response
      */
@@ -217,7 +217,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get analytics data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return WP_REST_Response
      */
@@ -245,7 +245,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get monthly_overview data
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param WP_REST_Request $request
      *
@@ -261,7 +261,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get sales_chart data
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param WP_REST_Request $request
      *
@@ -280,7 +280,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get all_time_stats data
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return WP_REST_Response
      */
@@ -291,7 +291,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get top_performing_vendors data
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param WP_REST_Request $request
      *
@@ -309,7 +309,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get most_reviewed_products data
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return WP_REST_Response
      */
@@ -320,7 +320,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get vendor_metrics data
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param WP_REST_Request $request
      *
@@ -338,7 +338,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get vendor approvals count
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return int
      */
@@ -350,7 +350,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get product approvals count
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return int
      */
@@ -369,7 +369,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get pending withdrawals count
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return int
      */
@@ -386,7 +386,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get top-performing vendors
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $date The date for which to get the vendor data (optional).
      *
@@ -426,7 +426,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get most reviewed products
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */
@@ -471,7 +471,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get all time marketplace stats
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */
@@ -572,7 +572,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get sales chart data for the current month
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $date The date for which to get the sales data (optional).
      *
@@ -601,7 +601,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get vendor metrics data
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $date
      *
@@ -625,7 +625,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get monthly overview data
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $date
      *
@@ -646,7 +646,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Parse date and return formatted date ranges
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param string $date The date string in Y-m format (optional)
      *
@@ -709,7 +709,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get filtered product types
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */
@@ -730,7 +730,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get schema for todo endpoint
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */
@@ -828,7 +828,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get schema for analytics endpoint
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */
@@ -883,7 +883,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get schema for monthly overview endpoint
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */
@@ -956,7 +956,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get schema for sales chart endpoint
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */
@@ -987,7 +987,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get schema for all-time stats endpoint
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */
@@ -1058,7 +1058,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get schema for top performing vendors endpoint
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */
@@ -1098,7 +1098,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get schema for most reviewed products endpoint
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */
@@ -1134,7 +1134,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
     /**
      * Get schema for vendor metrics endpoint
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array
      */

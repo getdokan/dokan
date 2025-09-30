@@ -7,7 +7,7 @@ class ProFeatures extends AbstractPage {
     /**
      * Get the ID of the page.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return string
      */
@@ -82,7 +82,7 @@ class ProFeatures extends AbstractPage {
     /**
      * Get the styles.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return array<string> An array of style handles.
      */
@@ -93,7 +93,7 @@ class ProFeatures extends AbstractPage {
     /**
      * Register the page scripts and styles.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @return void
      */
