@@ -1,5 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
 import Section from '../../Elements/Section';
 import { DataViews } from '../../../../../../components';
 import { useDashboardApiData } from '../../hooks/useDashboardApiData';
@@ -7,6 +7,8 @@ import { fetchMostReviewedProducts } from '../../utils/api';
 import { MostReviewedProductsData } from '../../types';
 import MostReviewedProductsSkeleton from './Skeleton';
 import { applyFilters } from '@wordpress/hooks';
+import { truncate } from '../../../../../../utilities';
+import { DokanTooltip as Tooltip } from '@dokan/components';
 
 const MostReviewedProductsSection = () => {
     const { data, loading, error } =
@@ -63,7 +65,15 @@ const MostReviewedProductsSection = () => {
             enableSorting: false,
             render: ( { item } ) => (
                 <div className="font-medium text-gray-900">
-                    { item.product_title }
+                    <Tooltip
+                        content={ <RawHTML>{ item.product_title }</RawHTML> }
+                    >
+                        <div className="w-fit">
+                            <RawHTML>
+                                { truncate( item.product_title, 50 ) }
+                            </RawHTML>
+                        </div>
+                    </Tooltip>
                 </div>
             ),
         },

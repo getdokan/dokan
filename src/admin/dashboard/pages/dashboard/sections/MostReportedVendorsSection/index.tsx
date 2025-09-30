@@ -1,5 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
 import Section from '../../Elements/Section';
 import { DataViews } from '../../../../../../components';
 import { useDashboardApiData } from '../../hooks/useDashboardApiData';
@@ -7,6 +7,8 @@ import { fetchMostReportedVendors } from '../../utils/api';
 import { MostReportedVendorsData } from '../../types';
 import MostReportedVendorsSkeleton from './Skeleton';
 import { applyFilters } from '@wordpress/hooks';
+import { truncate } from '../../../../../../utilities';
+import { DokanTooltip as Tooltip } from '@dokan/components';
 
 const MostReportedVendorsSection = () => {
     const { data, loading, error } =
@@ -61,7 +63,15 @@ const MostReportedVendorsSection = () => {
             enableSorting: false,
             render: ( { item } ) => (
                 <div className="font-medium text-gray-900">
-                    { item.vendor_name }
+                    <Tooltip
+                        content={ <RawHTML>{ item.vendor_name }</RawHTML> }
+                    >
+                        <div className="w-fit">
+                            <RawHTML>
+                                { truncate( item.vendor_name, 50 ) }
+                            </RawHTML>
+                        </div>
+                    </Tooltip>
                 </div>
             ),
         },
