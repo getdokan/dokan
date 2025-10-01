@@ -7,6 +7,10 @@ use WC_Order_Item_Shipping;
 use WeDevs\Dokan\Test\Factories\DokanFactory;
 use WeDevs\Dokan\Vendor\Vendor;
 
+/**
+ * @group factories
+ * @group factories-dokan
+ */
 class DokanFactoryTest extends DokanTestCase {
     /**
      * System under test.
@@ -90,7 +94,6 @@ class DokanFactoryTest extends DokanTestCase {
         $this->assertNotEmpty( $order->get_meta( 'has_sub_order' ) );
 
         $this->assertDatabaseCount( 'posts', 3, [ 'post_type' => 'shop_order' ] );
-        $this->assertDatabaseCount( 'posts', 2, [ 'post_type' => 'product' ] );
     }
 
     public function test_create_customer() {

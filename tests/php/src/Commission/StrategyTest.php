@@ -12,7 +12,7 @@ use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
  * @group commission
- * @group commission-order
+ * @group commission-strategy
  */
 class StrategyTest extends DokanTestCase {
     protected $product;

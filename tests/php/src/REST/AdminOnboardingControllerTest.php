@@ -8,6 +8,10 @@ use WeDevs\Dokan\Test\DokanTestCase;
 use WP_REST_Request;
 use WP_REST_Server;
 
+/**
+ * @group rest-api
+ * @group rest-api-admin-onboarding
+ */
 class AdminOnboardingControllerTest extends DokanTestCase {
 	/**
 	 * @var WP_REST_Server

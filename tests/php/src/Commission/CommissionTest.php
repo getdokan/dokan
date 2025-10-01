@@ -20,6 +20,10 @@ use WeDevs\Dokan\Test\Helpers\WC_Helper_Order;
 use WeDevs\Dokan\Test\Helpers\WC_Helper_Product;
 use WP_UnitTestCase;
 
+
+/**
+ * @group commission
+ */
 class CommissionTest extends WP_UnitTestCase {
     private array $category_ids;
 

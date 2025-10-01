@@ -2,11 +2,6 @@
 
 namespace WeDevs\Dokan\Test\CustomAssertion;
 
-/**
- * Trait DBAssertionTrait
- *
- * Provides database assertion methods for unit testing.
- */
 trait DBAssertionTrait {
     /**
      * Get the count of rows in a given table matching the specified criteria.
