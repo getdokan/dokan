@@ -1,7 +1,7 @@
 import { MaskedInput } from '@getdokan/dokan-ui';
 import { CommissionInputsProps } from './types';
 import { Plus } from 'lucide-react';
-import DebouncedInput from '../../admin/dashboard/pages/vendor-create-edit/DebouncedInput';
+import DebouncedInput from '@src/components/DebouncedInput';
 
 const CommissionInputs: React.FC< CommissionInputsProps > = ( {
     categoryId,

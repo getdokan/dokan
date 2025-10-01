@@ -29,7 +29,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import store from '@dokan/stores/vendors';
 import apiFetch from '@wordpress/api-fetch';
 import { twMerge } from 'tailwind-merge';
-import DebouncedInput from './DebouncedInput';
+import DebouncedInput from '@src/components/DebouncedInput';
 import { addQueryArgs } from '@wordpress/url';
 import wpMedia from './WpMedia';
 import { Slot } from '@wordpress/components';
