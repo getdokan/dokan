@@ -1,12 +1,20 @@
 import { Button } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
+import { useNavigate } from "react-router-dom";
 
 export interface HeaderNavigationProps {
     vendor: Vendor;
 }
 const HeaderNavigation = ( { vendor }: HeaderNavigationProps ) => {
-    const handleBackToList = () => {};
+    let navigate = useNavigate();
+    const handleBackToList = () => {
+        window.open(
+            // @ts-ignore
+            `${ window.dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors`,
+            '_self'
+        );
+    };
 
     const visitStore = () => {
         if ( vendor ) {
@@ -82,7 +90,9 @@ const HeaderNavigation = ( { vendor }: HeaderNavigationProps ) => {
                     <Button
                         className="dokan-btn-secondary"
                         color="primary"
-                        onClick={ () => window.history.back() }
+                        onClick={ () =>
+                            navigate( `/vendors/edit/${ vendor.id }` )
+                        }
                     >
                         <svg
                             width="17"
