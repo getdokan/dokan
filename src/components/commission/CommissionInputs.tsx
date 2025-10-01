@@ -1,6 +1,7 @@
 import { MaskedInput } from '@getdokan/dokan-ui';
 import { CommissionInputsProps } from './types';
 import { Plus } from 'lucide-react';
+import DebouncedInput from '../../admin/dashboard/pages/vendor-create-edit/DebouncedInput';
 
 const CommissionInputs: React.FC< CommissionInputsProps > = ( {
     categoryId,
@@ -33,7 +34,8 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
     return (
         <div className="flex items-center">
             <div className="w-[142px]">
-                <MaskedInput
+                <DebouncedInput
+                    component={ MaskedInput }
                     input={ {
                         type: 'number',
                     } }
@@ -67,7 +69,8 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                 <Plus />
             </div>
             <div className="w-[120px]">
-                <MaskedInput
+                <DebouncedInput
+                    component={ MaskedInput }
                     addOnLeft={
                         <span className="text-[#575757] text-sm">
                             { currency.symbol }

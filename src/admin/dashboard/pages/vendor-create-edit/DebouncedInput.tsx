@@ -6,6 +6,7 @@ const DebouncedInput = ( {
     value: externalValue = '',
     onChange,
     delay = 300,
+    component = '',
     ...props
 } ) => {
     const [ internalValue, setInternalValue ] = useState( externalValue );
@@ -28,6 +29,18 @@ const DebouncedInput = ( {
             debouncedOnChange( newValue );
         }
     };
+
+    const Component = component ?? '';
+    if ( Component ) {
+        return (
+            <Component
+                { ...props }
+                // @ts-ignore
+                value={ internalValue }
+                onChange={ handleChange }
+            />
+        );
+    }
 
     return (
         <SimpleInput
