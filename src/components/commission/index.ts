@@ -1,5 +1,5 @@
 // Pure Components
-export { default as CategoryBasedCommissionPure } from './CategoryBasedCommissionPure';
+export { default as CategoryBasedCommission } from './CategoryBasedCommission';
 export { default as FixedCommissionInput } from './FixedCommissionInput';
 
 // Sub-components

@@ -1,4 +1,4 @@
-import { Product } from './types';
+import { Product } from '../../definitions/dokan-product';
 
 export const SET_ITEMS = 'SET_ITEMS';
 export const SET_QUERY = 'SET_QUERY';

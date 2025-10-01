@@ -20,7 +20,7 @@ import {
     validatePercentage,
 } from './utils';
 
-const CategoryBasedCommissionPure: React.FC<
+const CategoryBasedCommission: React.FC<
     CategoryBasedCommissionProps
 > = ( {
     categories,
@@ -316,4 +316,4 @@ const CategoryBasedCommissionPure: React.FC<
     );
 };
 
-export default CategoryBasedCommissionPure;
+export default CategoryBasedCommission;

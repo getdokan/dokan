@@ -26,6 +26,7 @@ export { default as DokanPriceInput } from './PriceInput';
 export { default as WpDatePicker } from './WpDatePicker';
 export { default as DateTimePicker } from './DateTimePicker';
 export { default as DokanTab } from './Tab';
+export { default as NoInformation } from './NoInformation';
 export { default as Popover } from './Popover';
 export { default as RichText } from './richtext/RichText';
 export { default as AsyncSelect } from './AsyncSelect';
