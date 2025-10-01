@@ -104,7 +104,9 @@ const DateRangePicker = ( props: Props ) => {
                             props?.popoverBodyClassName ?? ''
                         ) }
                     >
-                        <DateRange { ...props } />
+                        <div className="dokan-date-range-picker">
+                            <DateRange { ...props } />
+                        </div>
                         <div className="mt-2 flex flex-row gap-2">
                             <DokanButton
                                 size="sm"
