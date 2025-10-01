@@ -37,6 +37,7 @@ export { default as CouponAsyncSelect } from './CouponAsyncSelect';
 export { default as SearchInput } from './SearchInput';
 export { default as Select } from './Select';
 export { default as DateRangePicker } from './DateRangePicker';
+export { default as TimePicker } from './TimePicker';
 export { default as DokanTooltip } from './DokanTooltip';
 
 // Commission Components
