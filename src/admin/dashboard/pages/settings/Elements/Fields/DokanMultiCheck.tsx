@@ -32,7 +32,7 @@ export default function DokanMultiCheck( { element } ) {
                         value: option.value,
                     } ) ) || []
                 }
-                defaultValue={ element?.default || [] }
+                defaultValue={ element?.value || element?.default || [] }
                 onChange={ ( values ) => {
                     onValueChange( { ...element, value: values } );
                 } }
