@@ -179,6 +179,10 @@ const Menu = ( {
                         return null;
                     }
 
+                    if ( item.children && item.children.length === 0 ) {
+                        return null;
+                    }
+
                     const isActive =
                         item.id === activePage ||
                         item.children?.some(
