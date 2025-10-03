@@ -73,6 +73,7 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
     const [ showFilters, setShowFilters ] = useState( false );
     const [ openSelectorSignal, setOpenSelectorSignal ] = useState( 0 );
     const [ buttonRef, setButtonRef ] = useState< HTMLButtonElement | null >();
+    const [ hasActiveFilters, setHasActiveFilters ] = useState( false );
     const {
         responsive = true,
         onChangeView,
@@ -114,6 +115,13 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
         );
     }
 
+    // Auto-hide filter area when there are no active filters
+    useEffect( () => {
+        if ( ! hasActiveFilters ) {
+            setShowFilters( false );
+        }
+    }, [ hasActiveFilters ] );
+
     const tabsWithFilterButton =
         filteredProps.filter?.fields &&
         filteredProps.tabs &&
@@ -143,7 +151,11 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
                               showFilters ? 'text-[#7047EB]' : 'text-[#828282]'
                           ) }
                           onClick={ () => {
-                              setOpenSelectorSignal( ( s ) => s + 1 );
+                              if ( hasActiveFilters ) {
+                                  setShowFilters( ( prev ) => ! prev );
+                              } else {
+                                  setOpenSelectorSignal( ( s ) => s + 1 );
+                              }
                           } }
                       >
                           <Funnel size={ 20 } />
@@ -200,6 +212,7 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
                                         }
                                         setShowFilters( false );
                                     } }
+                                    onActiveFiltersChange={ ( count ) => setHasActiveFilters( count > 0 ) }
                                     buttonPopOverAnchor={ buttonRef }
                                 />
                             </div>

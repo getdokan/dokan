@@ -30,6 +30,8 @@ export interface AdminFilterProps {
     openSelectorSignal?: number;
     /** Notify parent when the first filter is added */
     onFirstFilterAdded?: () => void;
+    /** Notify parent when active filter count changes */
+    onActiveFiltersChange?: ( count: number ) => void;
     buttonPopOverAnchor?: HTMLElement | null;
     /** Additional class names for the filter container */
     className?: string;
@@ -45,6 +47,7 @@ const AdminFilter = ( {
     openOnMount = false,
     openSelectorSignal = 0,
     onFirstFilterAdded = () => {},
+    onActiveFiltersChange = () => {},
     buttonPopOverAnchor = null,
 }: AdminFilterProps ) => {
     const snakeCaseNamespace = snakeCase( namespace );
@@ -90,6 +93,11 @@ const AdminFilter = ( {
         }
     }, [ activeFilters.length, addButtonAnchor ] );
 
+    // Notify parent about active filter count changes
+    useEffect( () => {
+        onActiveFiltersChange?.( activeFilters.length );
+    }, [ activeFilters.length ] );
+
     // Compute available filters (not already active)
     const availableFilters = filteredFields.filter(
         ( f ) => ! activeFilters.includes( f.id )
@@ -125,15 +133,15 @@ const AdminFilter = ( {
                 data-filter-id={ filterId }
             >
                 <div className="flex flex-row flex-wrap gap-4 items-center">
-                    { filteredFields.map( ( field: Field, index ) => {
-                        const isActive = activeFilters.includes( field.id );
-                        if ( ! isActive ) {
+                    { activeFilters.map( ( id ) => {
+                        const field = filteredFields.find( ( f ) => f.id === id );
+                        if ( ! field ) {
                             return null;
                         }
                         return (
                             <div
                                 className="dokan-dashboard-filter-item"
-                                key={ field.id }
+                                key={ id }
                             >
                                 { field.field }
                             </div>
