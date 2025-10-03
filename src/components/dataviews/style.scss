@@ -23,4 +23,27 @@
       }
     }
   }
+    .dokan-admin-dashboard-datatable {
+        .dataviews-wrapper {
+            height: auto;
+            border-radius: 10px;
+            table.dataviews-view-table {
+                    border-left: none;
+                    border-right: none;
+
+            };
+            .components-button.is-compact.has-icon:not(.has-text) {
+                width: auto;
+                padding: 6px;
+
+                &:hover,
+                &:focus {
+                    background-color: transparent;
+                    box-shadow: none;
+                    border: none;
+
+                }
+            }
+        }
+    }
 }

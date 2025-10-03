@@ -13,38 +13,22 @@ import * as LucideIcons from 'lucide-react';
 import { dateI18n, getSettings } from '@wordpress/date';
 // Import Dokan components
 import {
-    DokanButton,
-    DataViews,
+    AdminDataViews as DataViews,
     DateTimeHtml,
-    DokanModal,
-    DokanTab,
-    Filter,
     VendorAsyncSelect,
     DateRangePicker,
     AsyncSelect,
+    DokanModal,
 } from '@dokan/components';
 
-import {
-    Trash,
-    MessageSquare,
-    Funnel,
-    ArrowDown,
-    Eye,
-    Check,
-    XCircle,
-    Download,
-    Home,
-    Calendar,
-    CreditCard,
-} from 'lucide-react';
-import { twMerge } from 'tailwind-merge';
+import { Trash, ArrowDown, Home, Calendar, CreditCard } from 'lucide-react';
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
+    { value: 'all', label: __( 'All', 'dokan-lite' ) },
     { value: 'pending', label: __( 'Pending', 'dokan-lite' ) },
     { value: 'approved', label: __( 'Approved', 'dokan-lite' ) },
     { value: 'cancelled', label: __( 'Cancelled', 'dokan-lite' ) },
-    { value: 'all', label: __( 'All', 'dokan-lite' ) },
 ];
 
 // Define payment methods for filtering
@@ -169,10 +153,6 @@ const WithdrawPage = () => {
             label: __( 'Status', 'dokan-lite' ),
             enableGlobalSearch: true,
             getValue: ( { item } ) => item.status,
-            elements: WITHDRAW_STATUSES.slice( 1 ), // Exclude 'all' option
-            filterBy: {
-                operators: [ 'isAny', 'isNone' ],
-            },
             render: ( { item } ) => {
                 const statusColors = {
                     pending: 'bg-yellow-100 text-yellow-800',
@@ -520,6 +500,33 @@ const WithdrawPage = () => {
         }`,
     } ) );
 
+    const tabsAdditionalContents = [
+        <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white"
+            onClick={ async () => {
+                try {
+                    // Minimal placeholder; backend export flow may vary.
+                    // Attempt to hit export endpoint via same query params.
+                    const path = addQueryArgs( 'dokan/v2/withdraw', {
+                        ...view,
+                        is_export: true,
+                    } );
+                    const res = await apiFetch( { path } );
+                    if ( res && res.url ) {
+                        window.location.assign( res.url as string );
+                    }
+                } catch ( e ) {
+                    // eslint-disable-next-line no-console
+                    console.error( 'Export failed or not supported yet', e );
+                }
+            } }
+        >
+            <ArrowDown size={ 16 } />
+            { __( 'Export', 'dokan-lite' ) }
+        </button>,
+    ];
+
     // Handle data fetching from the server
     const fetchWithdraws = async () => {
         setIsLoading( true );
@@ -762,6 +769,10 @@ const WithdrawPage = () => {
         } ) );
     };
 
+    const clearSingleFilter = ( filterId: string ) => {
+        console.log( filterId, 'Filter removed' );
+    };
+
     const loadPaymentMethods = async ( inputValue ) => {
         // return array of { value, label }
         const data = await apiFetch( {
@@ -781,203 +792,150 @@ const WithdrawPage = () => {
         fetchWithdraws();
     }, [ view ] );
 
+    const filterFields = [
+        {
+            id: 'vendor',
+            label: __( 'Vendor', 'dokan-lite' ),
+            field: (
+                <VendorAsyncSelect
+                    icon={ <Home size={ 16 } /> }
+                    key="vendor-select"
+                    value={ vendorFilter }
+                    onChange={ (
+                        selectedVendorObj: null | {
+                            value: string;
+                            label: string;
+                        }
+                    ) => {
+                        const args = { ...filterArgs };
+
+                        delete args.user_id;
+
+                        if ( selectedVendorObj ) {
+                            args.user_id = selectedVendorObj.value;
+                        }
+                        setFilterArgs( args );
+                        setVendorFilter( selectedVendorObj );
+                    } }
+                    placeholder={ __( 'Select Vendor', 'dokan-lite' ) }
+                    isClearable
+                    prefetch
+                    defaultOptions
+                    cacheOptions
+                />
+            ),
+        },
+        {
+            id: 'payment_method',
+            label: __( 'Payment Method', 'dokan-lite' ),
+            field: (
+                <AsyncSelect
+                    key="payment-method-select"
+                    icon={ <CreditCard size={ 16 } /> }
+                    loadOptions={ loadPaymentMethods }
+                    cacheOptions
+                    defaultOptions
+                    isClearable
+                    value={ paymentMethod }
+                    onChange={ ( method ) => {
+                        const args = { ...filterArgs };
+                        delete args.payment_method;
+
+                        if ( method ) {
+                            args.payment_method = method.value;
+                        }
+                        setPaymentMethod( method );
+                        setFilterArgs( args );
+                    } }
+                    placeholder="Payment Method"
+                />
+            ),
+        },
+        {
+            id: 'date-range',
+            label: __( 'Date Range', 'dokan-lite' ),
+            field: (
+                <DateRangePicker
+                    key="date-range-select"
+                    after={ after }
+                    afterText={ afterText }
+                    before={ before }
+                    beforeText={ beforeText }
+                    onUpdate={ ( update ) => {
+                        if ( update.after ) {
+                            setAfter( update.after );
+                        }
+
+                        if ( update.afterText ) {
+                            setAfterText( update.afterText );
+                        }
+
+                        if ( update.before ) {
+                            setBefore( update.before );
+                        }
+
+                        if ( update.beforeText ) {
+                            setBeforeText( update.beforeText );
+                        }
+
+                        if ( update.focusedInput ) {
+                            setFocusInput( update.focusedInput );
+
+                            if ( update.focusedInput === 'endDate' && after ) {
+                                setBefore( '' );
+                                setBeforeText( '' );
+                            }
+                        }
+                    } }
+                    shortDateFormat="MM/DD/YYYY"
+                    focusedInput={ focusInput }
+                    isInvalidDate={ () => false }
+                    wrapperClassName="w-full"
+                    pickerToggleClassName="block"
+                    wpPopoverClassName="dokan-layout"
+                    popoverBodyClassName="p-4 w-auto text-sm/6"
+                    onClear={ () => {
+                        setAfter( '' );
+                        setAfterText( '' );
+                        setBefore( '' );
+                        setBeforeText( '' );
+                        const args = { ...filterArgs };
+                        delete args.start_date;
+                        delete args.end_date;
+                        setFilterArgs( args );
+                    } }
+                    onOk={ () => {
+                        setFilterArgs( {
+                            ...filterArgs,
+                            start_date: after,
+                            end_date: before,
+                        } );
+                    } }
+                >
+                    <SimpleInput
+                        addOnLeft={ <Calendar size="16" /> }
+                        className="border rounded px-3 py-1.5 w-full bg-white"
+                        onChange={ () => {} }
+                        input={ {
+                            type: 'text',
+                            value:
+                                ! after || ! before
+                                    ? ''
+                                    : displayDateRange( after, before ),
+                            placeholder: 'Date',
+                            readOnly: true,
+                        } }
+                    />
+                </DateRangePicker>
+            ),
+        },
+    ];
+
     return (
         <div className="withdraw-admin-page">
             <h2 className="text-2xl leading-3 text-gray-900 font-bold mb-6">
                 { __( 'Withdraw', 'dokan-lite' ) }
             </h2>
-            { /* Status Tabs + Actions Row */ }
-            <div className="mb-6 flex items-center justify-between gap-3">
-                <DokanTab
-                    namespace="withdraw_status_tabs"
-                    tabs={ tabs }
-                    variant="primary"
-                    onSelect={ handleTabSelect }
-                    initialTabName={ activeStatus }
-                />
-                <div className="flex items-center gap-2">
-                    <button
-                        type="button"
-                        className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white"
-                        onClick={ async () => {
-                            try {
-                                // Minimal placeholder; backend export flow may vary.
-                                // Attempt to hit export endpoint via same query params.
-                                const path = addQueryArgs(
-                                    'dokan/v2/withdraw',
-                                    { ...view, is_export: true }
-                                );
-                                const res = await apiFetch( { path } );
-                                if ( res && res.url ) {
-                                    window.location.assign( res.url as string );
-                                }
-                            } catch ( e ) {
-                                // eslint-disable-next-line no-console
-                                console.error(
-                                    'Export failed or not supported yet',
-                                    e
-                                );
-                            }
-                        } }
-                    >
-                        <ArrowDown size={ 16 } />
-                        { __( 'Export', 'dokan-lite' ) }
-                    </button>
-                    <button
-                        type="button"
-                        className={ twMerge(
-                            'inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm hover:bg-[#7047EB] hover:text-white',
-                            showFilters
-                                ? 'bg-[#7047EB] text-white'
-                                : 'text-[#575757] bg-white'
-                        ) }
-                        onClick={ () => setShowFilters( ( v ) => ! v ) }
-                    >
-                        <Funnel size={ 16 } />
-                        { __( 'Filter', 'dokan-lite' ) }
-                    </button>
-                </div>
-            </div>
-
-            { /* Filters */ }
-            <div
-                className={ `mb-6 dokan-dashboard-filters ${
-                    showFilters ? '' : 'hidden'
-                }` }
-            >
-                <Filter
-                    fields={ [
-                        <VendorAsyncSelect
-                            icon={ <Home size={ 16 } /> }
-                            key="vendor-select"
-                            value={ vendorFilter }
-                            onChange={ (
-                                selectedVendorObj: null | {
-                                    value: string;
-                                    label: string;
-                                }
-                            ) => {
-                                const args = { ...filterArgs };
-
-                                delete args.user_id;
-
-                                if ( selectedVendorObj ) {
-                                    args.user_id = selectedVendorObj.value;
-                                }
-                                setFilterArgs( args );
-                                setVendorFilter( selectedVendorObj );
-                            } }
-                            placeholder={ __( 'Select Vendor', 'dokan-lite' ) }
-                            isClearable
-                            prefetch
-                            defaultOptions
-                            cacheOptions
-                        />,
-                        <AsyncSelect
-                            key="payment-method-select"
-                            icon={ <CreditCard size={ 16 } /> }
-                            loadOptions={ loadPaymentMethods }
-                            cacheOptions
-                            defaultOptions
-                            isClearable
-                            value={ paymentMethod }
-                            onChange={ ( method ) => {
-                                const args = { ...filterArgs };
-                                delete args.payment_method;
-
-                                if ( method ) {
-                                    args.payment_method = method.value;
-                                }
-                                setPaymentMethod( method );
-                                setFilterArgs( args );
-                            } }
-                            placeholder="Payment Method"
-                        />,
-                        <DateRangePicker
-                            key="date-range-select"
-                            after={ after }
-                            afterText={ afterText }
-                            before={ before }
-                            beforeText={ beforeText }
-                            onUpdate={ ( update ) => {
-                                if ( update.after ) {
-                                    setAfter( update.after );
-                                }
-
-                                if ( update.afterText ) {
-                                    setAfterText( update.afterText );
-                                }
-
-                                if ( update.before ) {
-                                    setBefore( update.before );
-                                }
-
-                                if ( update.beforeText ) {
-                                    setBeforeText( update.beforeText );
-                                }
-
-                                if ( update.focusedInput ) {
-                                    setFocusInput( update.focusedInput );
-
-                                    if (
-                                        update.focusedInput === 'endDate' &&
-                                        after
-                                    ) {
-                                        setBefore( '' );
-                                        setBeforeText( '' );
-                                    }
-                                }
-                            } }
-                            shortDateFormat="MM/DD/YYYY"
-                            focusedInput={ focusInput }
-                            isInvalidDate={ () => false }
-                            wrapperClassName="w-full"
-                            pickerToggleClassName="block"
-                            wpPopoverClassName="dokan-layout"
-                            popoverBodyClassName="p-4 w-auto text-sm/6"
-                            onClear={ () => {
-                                setAfter( '' );
-                                setAfterText( '' );
-                                setBefore( '' );
-                                setBeforeText( '' );
-                                const args = { ...filterArgs };
-                                delete args.start_date;
-                                delete args.end_date;
-                                setFilterArgs( args );
-                            } }
-                            onOk={ () => {
-                                setFilterArgs( {
-                                    ...filterArgs,
-                                    start_date: after,
-                                    end_date: before,
-                                } );
-                            } }
-                        >
-                            <SimpleInput
-                                addOnLeft={ <Calendar size="16" /> }
-                                className="border rounded px-3 py-1.5 w-full bg-white"
-                                onChange={ () => {} }
-                                input={ {
-                                    type: 'text',
-                                    value:
-                                        ! after || ! before
-                                            ? ''
-                                            : displayDateRange( after, before ),
-                                    placeholder: 'Date',
-                                    readOnly: true,
-                                } }
-                            />
-                        </DateRangePicker>,
-                    ] }
-                    onFilter={ () => handleFilter() }
-                    onReset={ () => clearFilter() }
-                    showFilter={ true }
-                    showReset={ true }
-                    resetBtnClassName="dokan-btn-tertiary"
-                    filterBtnClassName="dokan-btn-secondary"
-                    namespace="withdraw_filters"
-                />
-            </div>
 
             { /* Data Table */ }
             <DataViews
@@ -996,6 +954,18 @@ const WithdrawPage = () => {
                 onChangeSelection={ setSelection }
                 actions={ actions }
                 isLoading={ isLoading }
+                tabs={ {
+                    tabs,
+                    onSelect: handleTabSelect,
+                    initialTabName: activeStatus,
+                    additionalComponents: tabsAdditionalContents,
+                } }
+                filter={ {
+                    fields: filterFields,
+                    onFilterRemove: ( filterId ) =>
+                        clearSingleFilter( filterId ),
+                    onReset: () => clearFilter(),
+                } }
             />
 
             { /* DokanModal for approve, cancel, delete actions */ }
