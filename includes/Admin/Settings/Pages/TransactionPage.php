@@ -228,7 +228,7 @@ class TransactionPage extends AbstractPage {
                     ->set_title( esc_html__( 'Withdraw Methods and Charges', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Select suitable withdraw methods and charges for vendors.', 'dokan-lite' ) )
                     ->add(
-                        ElementFactory::field_group( 'withdraw_methods_group' )
+                        ElementFactory::field_group( 'withdraw_methods_group_paypal' )
                             ->add(
                                 ElementFactory::field( 'paypal_withdraw', 'switch' )
                                     ->set_title( esc_html__( 'PayPal', 'dokan-lite' ) )
@@ -269,26 +269,6 @@ class TransactionPage extends AbstractPage {
                                     ->set_description( esc_html__( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ) )
                                     ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw', 'on', true, 'display', 'show', '===' )
                                     ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw', 'off', true, 'display', 'hide', '===' )
-                                    ->set_value(
-                                        [
-                                            'additional_fee'   => '0.00',
-                                            'admin_percentage' => '0.00',
-                                        ]
-                                    )
-                                    ->set_admin_percentage( '0.00' )
-                                    ->set_additional_fee( '0.00' )
-                            )
-                    )
-                    ->add(
-                        ElementFactory::field_group(
-                            'withdraw_methods_group_razorpay'
-                        )
-                            ->add(
-                                ElementFactory::field( 'razorpay_withdraw_charges', 'combine_input' )
-                                    ->set_title( esc_html__( 'Withdraw charges', 'dokan-lite' ) )
-                                    ->set_description( esc_html__( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ) )
-                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw', 'on', true, 'display', 'show', '===' )
-                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw', 'off', true, 'display', 'hide', '===' )
                                     ->set_value(
                                         [
                                             'additional_fee'   => '0.00',

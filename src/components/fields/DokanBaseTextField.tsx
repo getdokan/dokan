@@ -1,4 +1,4 @@
-import { useEffect, useState } from '@wordpress/element';
+import { RawHTML, useEffect, useState } from '@wordpress/element';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { twMerge } from 'tailwind-merge';
 
@@ -113,8 +113,10 @@ const DokanBaseTextField = ( {
                         placeholder,
                         ...inputProps,
                     } }
-                    addOnLeft={ prefix || null }
-                    addOnRight={ postfix || null }
+                    addOnLeft={ prefix ? <RawHTML>{ prefix }</RawHTML> : null }
+                    addOnRight={
+                        postfix ? <RawHTML>{ postfix }</RawHTML> : null
+                    }
                     { ...otherProps }
                 />
             </div>
