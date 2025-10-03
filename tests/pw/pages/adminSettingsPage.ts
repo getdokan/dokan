@@ -186,4 +186,169 @@ export class AdminSettingsPage extends BasePage {
         return await switchButton.getAttribute('aria-checked') === 'true' || 
             await switchButton.getAttribute('data-state') === 'checked';
     }
+
+    // New Settings UI methods for Store Category
+    async updateStoreCategoryInNewSettings(categoryType: 'none' | 'single' | 'multiple') {
+        await this.navigateToNewMarketplaceSettings();
+
+        // Find the category button
+        const categoryRadio = this.page
+            .locator(data.adminSettingsMigration.selectors.newUI.storeCategoryField)
+            .locator(`button[name="${categoryType}"]`);
+
+        await categoryRadio.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Only click if not already selected
+        const isSelected = await categoryRadio.getAttribute('aria-checked');
+        if (isSelected !== 'true') {
+            await categoryRadio.click();
+
+            // Save only if there was a change
+            const saveButton = this.page.locator(data.adminSettingsMigration.selectors.newUI.saveButton);
+            try {
+                await saveButton.waitFor({ state: 'visible', timeout: 8000 });
+                await saveButton.click();
+            } catch (error) {
+                console.log('Save button not visible - may not be needed');
+            }
+
+            // Wait for save completion
+            await this.page.waitForTimeout(2000);
+            await this.waitForLoadState();
+        } else {
+            console.log(`Category "${categoryType}" is already selected, skipping update.`);
+        }
+    }
+
+    async getStoreCategoryFromNewSettings(): Promise<'none' | 'single' | 'multiple'> {
+        await this.navigateToNewMarketplaceSettings();
+
+        // Locate the radio group container
+        const categoryField = this.page.locator(data.adminSettingsMigration.selectors.newUI.storeCategoryField);
+        await categoryField.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Find the checked "radio" (button with role="radio" and aria-checked="true")
+        const checkedRadio = categoryField.locator('[role="radio"][aria-checked="true"]').first();
+
+        await checkedRadio.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Get the name attribute ("none" | "single" | "multiple")
+        const value = await checkedRadio.getAttribute('name');
+
+        return value as 'none' | 'single' | 'multiple';
+    }
+
+    // Old Settings UI methods for Store Category
+    async updateStoreCategoryInOldSettings(categoryType: 'none' | 'single' | 'multiple') {
+        await this.navigateToOldGeneralSettings();
+
+        // Convert the first letter to uppercase for matching label text
+        const labelText = categoryType.charAt(0).toUpperCase() + categoryType.slice(1);
+
+        await this.page.getByText(labelText).click();
+
+        // Click save changes button
+        const saveButton = this.page.locator(data.adminSettingsMigration.selectors.oldUI.saveChanges);
+        await saveButton.waitFor({ state: 'visible', timeout: 5000 });
+        await saveButton.click();
+
+        // Wait for save completion
+        await this.page.waitForTimeout(2000);
+        await this.waitForLoadState();
+    }
+
+
+    async getStoreCategoryFromOldSettings(): Promise<'none' | 'single' | 'multiple'> {
+        await this.navigateToOldGeneralSettings();
+
+        // Locate the fieldset by heading text "Store Category"
+        const storeCategoryFieldset = this.page.locator('fieldset', { has: this.page.locator('h3', { hasText: 'Store Category' }) });
+
+        // Locate the checked label/input inside that fieldset
+        const checkedInput = storeCategoryFieldset.locator('label.checked input[type="radio"]');
+
+        await checkedInput.waitFor({ state: 'attached', timeout: 5000 });
+
+        // Return the value attribute
+        return await checkedInput.getAttribute('value') as 'none' | 'single' | 'multiple';
+    }
+
+    // New Settings UI methods for Show Customer Details to Vendors
+    async updateShowCustomerDetailsToVendorsInNewSettings(enabled: boolean) {
+        await this.navigateToNewMarketplaceSettings();
+
+        // Find the switch element for show customer details to vendors
+        const switchElement = this.page.locator('#dokan_settings_general_marketplace_marketplace_settings_show_customer_details_to_vendors').getByRole('switch');
+        await switchElement.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Toggle if current state doesn't match desired state
+        const isChecked = await switchElement.getAttribute('aria-checked') === 'true';
+        if (isChecked !== enabled) {
+            await switchElement.click();
+        }
+
+        // Click save button if visible
+        const saveButton = this.page.locator(data.adminSettingsMigration.selectors.newUI.saveButton);
+        try {
+            await saveButton.waitFor({ state: 'visible', timeout: 8000 });
+            await saveButton.click();
+        } catch (error) {
+            // Save button may not appear if no changes were made
+            console.log('Save button not visible - may not be needed');
+        }
+
+        // Wait for save completion
+        await this.page.waitForTimeout(2000);
+        await this.waitForLoadState();
+    }
+
+    async getShowCustomerDetailsToVendorsFromNewSettings(): Promise<boolean> {
+        await this.navigateToNewMarketplaceSettings();
+
+        const switchElement = this.page.locator('#dokan_settings_general_marketplace_marketplace_settings_show_customer_details_to_vendors').getByRole('switch');
+        await switchElement.waitFor({ state: 'visible', timeout: 10000 });
+
+        return await switchElement.getAttribute('aria-checked') === 'true';
+    }
+
+    // Old Settings UI methods for Show Customer Details to Vendors (mapped as Hide Customer Info)
+    async updateShowCustomerDetailsInOldSettings(enabled: boolean) {
+        await this.navigateToOldGeneralSettings();
+
+        // Navigate to Selling Options
+        await this.page.locator('div').filter({ hasText: /^Selling Options$/ }).click();
+
+        // Find the switch element for hide customer info using the visible slider
+        const switchField = this.page.getByRole('group').filter({ hasText: 'Hide Customer Info Hide' }).locator('span').nth(1);
+        await switchField.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Check current state via hidden checkbox and toggle if needed (inverted logic)
+        const hiddenCheckbox = this.page.locator('.hide_customer_info input[type="checkbox"]');
+        await hiddenCheckbox.waitFor({ state: 'attached', timeout: 5000 }); // Ensure it's in DOM, not necessarily visible
+        const isCurrentlyChecked = await hiddenCheckbox.isChecked();
+        if (isCurrentlyChecked == !enabled) { // Invert the logic
+            await switchField.click();
+        }
+
+        // Click save changes button
+        const saveButton = this.page.locator(data.adminSettingsMigration.selectors.oldUI.saveChanges);
+        await saveButton.waitFor({ state: 'visible', timeout: 5000 });
+        await saveButton.click();
+
+        // Wait for save completion
+        await this.page.waitForTimeout(2000);
+        await this.waitForLoadState();
+    }
+
+    async getShowCustomerDetailsFromOldSettings(): Promise<boolean> {
+        await this.navigateToOldGeneralSettings();
+
+        // Navigate to Selling Options
+        await this.page.locator('div').filter({ hasText: /^Selling Options$/ }).click();
+
+        // Check the hidden checkbox state for hide customer info (inverted logic)
+        const hiddenCheckbox = this.page.locator('.hide_customer_info input[type="checkbox"]');
+        //await hiddenCheckbox.waitFor({ state: 'visible', timeout: 5000 });
+        return (await hiddenCheckbox.isChecked()); // Invert the logic
+    }
 }
