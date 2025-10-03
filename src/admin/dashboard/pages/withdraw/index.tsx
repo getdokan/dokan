@@ -774,7 +774,29 @@ const WithdrawPage = () => {
     };
 
     const clearSingleFilter = ( filterId: string ) => {
-        console.log( filterId, 'Filter removed' );
+        const args = { ...filterArgs };
+        switch ( filterId ) {
+            case 'vendor':
+                setVendorFilter( null );
+                delete args.user_id;
+                break;
+            case 'payment_method':
+                setPaymentMethod( null );
+                delete args.payment_method;
+                break;
+            case 'date-range':
+                setAfter( '' );
+                setAfterText( '' );
+                setBefore( '' );
+                setBeforeText( '' );
+                delete args.start_date;
+                delete args.end_date;
+                break;
+            default:
+                break;
+        }
+        setFilterArgs( args );
+        setView( ( prevView ) => ( { ...prevView, page: 1 } ) );
     };
 
     const loadPaymentMethods = async ( inputValue ) => {

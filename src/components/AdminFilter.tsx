@@ -5,7 +5,7 @@ import { twMerge } from 'tailwind-merge';
 import { snakeCase, kebabCase } from '../utilities';
 import { DokanButton } from '@src/components';
 
-import { Plus } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { useEffect, useState } from '@wordpress/element';
 import { Popover } from '@wordpress/components';
 
@@ -42,7 +42,7 @@ const AdminFilter = ( {
     namespace = '',
     fields,
     onReset = () => {},
-    onFilterRemove = ( filterId: string ) => {},
+    onFilterRemove = () => {},
     className = '',
     openOnMount = false,
     openSelectorSignal = 0,
@@ -73,7 +73,8 @@ const AdminFilter = ( {
         }
     }, [ openSelectorSignal ] );
     const [ popoverAnchor, setPopoverAnchor ] = useState( buttonPopOverAnchor );
-    const [ addButtonAnchor, setAddButtonAnchor ] = useState< HTMLElement | null >( null );
+    const [ addButtonAnchor, setAddButtonAnchor ] =
+        useState< HTMLElement | null >( null );
     // Keep the popover anchored to the external trigger (funnel button) when provided
     useEffect( () => {
         setPopoverAnchor( buttonPopOverAnchor );
@@ -122,6 +123,11 @@ const AdminFilter = ( {
         onReset();
     };
 
+    const handleRemoveFilter = ( id: string ) => {
+        setActiveFilters( ( prev ) => prev.filter( ( f ) => f !== id ) );
+        onFilterRemove?.( id );
+    };
+
     return (
         <>
             <div
@@ -134,16 +140,33 @@ const AdminFilter = ( {
             >
                 <div className="flex flex-row flex-wrap gap-4 items-center">
                     { activeFilters.map( ( id ) => {
-                        const field = filteredFields.find( ( f ) => f.id === id );
+                        const field = filteredFields.find(
+                            ( f ) => f.id === id
+                        );
                         if ( ! field ) {
                             return null;
                         }
                         return (
                             <div
-                                className="dokan-dashboard-filter-item"
+                                className="dokan-dashboard-filter-item relative inline-block"
                                 key={ id }
                             >
-                                { field.field }
+                                <div className="relative inline-block">
+                                    { field.field }
+                                    <button
+                                        type="button"
+                                        aria-label={ __(
+                                            'Remove filter',
+                                            'dokan-lite'
+                                        ) }
+                                        className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-white text-[#828282] hover:text-[#7047EB] z-10"
+                                        onClick={ () =>
+                                            handleRemoveFilter( id )
+                                        }
+                                    >
+                                        <X size="14" />
+                                    </button>
+                                </div>
                             </div>
                         );
                     } ) }
