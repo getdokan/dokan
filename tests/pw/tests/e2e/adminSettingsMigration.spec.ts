@@ -75,4 +75,65 @@ test.describe('Admin Settings Migration', () => {
         const newValueAfterRefresh = await adminSettingsPage.getSingleSellerModeFromNewSettings();
         expect(newValueAfterRefresh).toBe(false);
     });
+
+    // Test for `General -> Marketplace -> Store Category` settings synchronization.
+    test.skip('should maintain bi-directional data synchronization for store category settings', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+        // Test scenario following the exact steps from issue description
+        const testData = data.adminSettingsMigration.testData;
+        
+        // Step 1: Update new settings to 'none'
+        await adminSettingsPage.updateStoreCategoryInNewSettings('none');
+        
+        // Step 2: Navigate old settings and verify the value is 'none'
+        const oldValueAfterNewUpdate = await adminSettingsPage.getStoreCategoryFromOldSettings();
+        expect(oldValueAfterNewUpdate).toBe('none');
+        
+        // Step 3: Update old settings to 'multiple' and refresh and check the current page value is 'multiple'
+        await adminSettingsPage.updateStoreCategoryInOldSettings('multiple');
+        await page.waitForTimeout(1000); // Allow page to fully load
+        const oldValueAfterRefresh = await adminSettingsPage.getStoreCategoryFromOldSettings();
+        expect(oldValueAfterRefresh).toBe('multiple');
+        
+        // Step 4: Navigate to new settings and check the current page value is 'multiple'
+        const newValueAfterOldUpdate = await adminSettingsPage.getStoreCategoryFromNewSettings();
+        expect(newValueAfterOldUpdate).toBe('multiple');
+        
+        // Step 5: Update to 'none' and refresh the page and check the current page value is 'single'
+        await adminSettingsPage.updateStoreCategoryInNewSettings('single');
+        await page.waitForTimeout(1000); // Allow page to fully load
+        const newValueAfterRefresh = await adminSettingsPage.getStoreCategoryFromNewSettings();
+        expect(newValueAfterRefresh).toBe('single');
+    });
+
+
+    test.skip('should maintain bi-directional data synchronization for show customer details to vendors settings', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+        // Test scenario for verifying synchronization of "Show customer details to vendors" setting between new and old UIs
+        const testData = data.adminSettingsMigration.testData;
+
+        // Step 1: Update value in new settings to true
+        await adminSettingsPage.updateShowCustomerDetailsToVendorsInNewSettings(true);
+        
+        // Step 2: Verify in old settings (mapping is inverted from hide_customer_info)
+        const oldValueAfterNewUpdate = await adminSettingsPage.getShowCustomerDetailsFromOldSettings();
+        expect(oldValueAfterNewUpdate).toBe(true); // true in new → hide_customer_info = false in old (inverted)
+        
+        // Step 3: Update value in old settings to false and verify persistence
+        await adminSettingsPage.updateShowCustomerDetailsInOldSettings(false);
+        await adminSettingsPage.navigateToOldGeneralSettings();
+        await page.waitForTimeout(1000); // wait for page load
+        const oldValueAfterRefresh = await adminSettingsPage.getShowCustomerDetailsFromOldSettings();
+        expect(oldValueAfterRefresh).toBe(false);
+        
+        //Step 4: Verify synchronization in new settings (inverted mapping)
+        const newValueAfterOldUpdate = await adminSettingsPage.getShowCustomerDetailsToVendorsFromNewSettings();
+        expect(newValueAfterOldUpdate).toBe(false); // false in old → true in new (inverted)
+        
+        //Step 5: Update value in new settings to false and verify persistence
+        await adminSettingsPage.updateShowCustomerDetailsToVendorsInNewSettings(false);
+        await adminSettingsPage.navigateToNewMarketplaceSettings();
+        await page.waitForTimeout(1000); // wait for page load
+        const newValueAfterRefresh = await adminSettingsPage.getShowCustomerDetailsToVendorsFromNewSettings();
+        expect(newValueAfterRefresh).toBe(false);
+    });
+
 });

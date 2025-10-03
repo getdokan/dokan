@@ -42,6 +42,7 @@ const CustomizeRadio = ( { element }: SettingsProps ) => {
                 'p-4',
                 element?.wrapper_class || ''
             ) }
+            id={ element.hook_key }
         >
             <DokanFieldLabel
                 title={ element.title || '' }

@@ -1323,6 +1323,7 @@ export const data = {
                 singleSellerModeField: '.enable_single_seller_mode .switch',
                 saveChanges: '//input[@id="submit" and @value="Save Changes"]',
                 successMessage: 'Setting has been saved successfully.',
+                hideCustomerInfo: '.hide_customer_info .switch',
             },
 
             newUI: {
@@ -1333,6 +1334,7 @@ export const data = {
                 saveButton: '#dokan-admin-settings-save-btn button',
                 successMessage: '.notice-success, .updated',
                 clickHereLink: 'a[contains(text(),"Click Here")]',
+                storeCategoryField: '#dokan_settings_general_marketplace_marketplace_settings_store_category_mode',
             },
         },
 
