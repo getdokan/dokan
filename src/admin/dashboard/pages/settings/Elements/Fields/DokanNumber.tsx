@@ -74,6 +74,7 @@ export default function DokanNumber( { element } ) {
                     }
                     placeholder={ element.placeholder }
                     disabled={ element.disabled }
+                    inputProps={ { type: 'number' } }
                     min={ element.min }
                     max={ element.max }
                     step={ element.step }

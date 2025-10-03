@@ -1,7 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import DokanTooltip from './DokanTooltip';
 import { RawHTML } from '@wordpress/element';
-import parse from 'html-react-parser';
 
 interface InputLabelProps {
     title: string;
@@ -42,7 +41,7 @@ const DokanBaseFieldLabel = ( {
                     <label
                         htmlFor={ htmlFor }
                         className={ twMerge(
-                            ` text-sm ${
+                            `text-sm ${
                                 titleFontWeight === 'bold'
                                     ? 'font-bold'
                                     : 'font-light'
@@ -51,7 +50,7 @@ const DokanBaseFieldLabel = ( {
                         ) }
                     >
                         { typeof title === 'string' ? (
-                            <RawHTML>{ parse( title ) }</RawHTML>
+                            <RawHTML>{ title }</RawHTML>
                         ) : (
                             title
                         ) }
@@ -69,7 +68,7 @@ const DokanBaseFieldLabel = ( {
                     <div>
                         { typeof helperText === 'string' ? (
                             <p className="text-sm font-light">
-                                <RawHTML>{ parse( helperText ) }</RawHTML>
+                                <RawHTML>{ helperText }</RawHTML>
                             </p>
                         ) : null }
                     </div>
