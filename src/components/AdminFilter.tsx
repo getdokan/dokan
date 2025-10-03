@@ -6,7 +6,7 @@ import { snakeCase, kebabCase } from '../utilities';
 import { DokanButton } from '@src/components';
 
 import { Plus } from 'lucide-react';
-import { useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import { Popover } from '@wordpress/components';
 
 export interface Field {
@@ -24,6 +24,13 @@ export interface AdminFilterProps {
     onFilterRemove?: ( filterId: string ) => void;
     /** Callback function to handle reset action */
     onReset?: () => void;
+    /** Open the filter selection popover on initial render or when toggled true */
+    openOnMount?: boolean;
+    /** External trigger to open the filter selection list popover; change the value to open */
+    openSelectorSignal?: number;
+    /** Notify parent when the first filter is added */
+    onFirstFilterAdded?: () => void;
+    buttonPopOverAnchor?: HTMLElement | null;
     /** Additional class names for the filter container */
     className?: string;
     /** Additional class names for the filter button */
@@ -35,6 +42,10 @@ const AdminFilter = ( {
     onReset = () => {},
     onFilterRemove = ( filterId: string ) => {},
     className = '',
+    openOnMount = false,
+    openSelectorSignal = 0,
+    onFirstFilterAdded = () => {},
+    buttonPopOverAnchor = null,
 }: AdminFilterProps ) => {
     const snakeCaseNamespace = snakeCase( namespace );
     const filterId = `dokan_admin_${ snakeCaseNamespace }_filters`;
@@ -45,7 +56,39 @@ const AdminFilter = ( {
     // Track active filter IDs only
     const [ activeFilters, setActiveFilters ] = useState< string[] >( [] );
     const [ isPopoverOpen, setIsPopoverOpen ] = useState( false );
-    const [ popoverAnchor, setPopoverAnchor ] = useState();
+
+    // Auto-open the filter selection popover when requested
+    useEffect( () => {
+        if ( openOnMount ) {
+            setIsPopoverOpen( true );
+        }
+    }, [ openOnMount ] );
+    // Open the selection list when an external signal is emitted
+    useEffect( () => {
+        if ( openSelectorSignal !== 0 ) {
+            setIsPopoverOpen( true );
+        }
+    }, [ openSelectorSignal ] );
+    const [ popoverAnchor, setPopoverAnchor ] = useState( buttonPopOverAnchor );
+    const [ addButtonAnchor, setAddButtonAnchor ] = useState< HTMLElement | null >( null );
+    // Keep the popover anchored to the external trigger (funnel button) when provided
+    useEffect( () => {
+        setPopoverAnchor( buttonPopOverAnchor );
+    }, [ buttonPopOverAnchor ] );
+
+    // When there are no active filters (initial load or after reset), anchor the popover to the funnel button
+    useEffect( () => {
+        if ( activeFilters.length === 0 ) {
+            setPopoverAnchor( buttonPopOverAnchor );
+        }
+    }, [ activeFilters.length, buttonPopOverAnchor ] );
+
+    // When filters exist, anchor the popover to the Add Filter button wrapper
+    useEffect( () => {
+        if ( activeFilters.length > 0 && addButtonAnchor ) {
+            setPopoverAnchor( addButtonAnchor );
+        }
+    }, [ activeFilters.length, addButtonAnchor ] );
 
     // Compute available filters (not already active)
     const availableFilters = filteredFields.filter(
@@ -53,9 +96,15 @@ const AdminFilter = ( {
     );
 
     const handleAddFilter = ( id: string ) => {
-        setActiveFilters( ( prev ) =>
-            prev.includes( id ) ? prev : [ ...prev, id ]
-        );
+        setActiveFilters( ( prev ) => {
+            if ( prev.includes( id ) ) {
+                return prev;
+            }
+            if ( prev.length === 0 ) {
+                onFirstFilterAdded?.();
+            }
+            return [ ...prev, id ];
+        } );
 
         setIsPopoverOpen( false );
     };
@@ -91,17 +140,19 @@ const AdminFilter = ( {
                         );
                     } ) }
                     { availableFilters.length > 0 && (
-                        <DokanButton
-                            className="flex gap-2 items-center justify-center dokan-btn-tertiary"
-                            onClick={ () =>
-                                setIsPopoverOpen(
-                                    ( currentState ) => ! currentState
-                                )
-                            }
-                        >
-                            <Plus size="16" ref={ setPopoverAnchor } />
-                            { __( 'Add Filter', 'dokan-lite' ) }
-                        </DokanButton>
+                        <span ref={ setAddButtonAnchor }>
+                            <DokanButton
+                                className="flex gap-2 items-center justify-center dokan-btn-tertiary"
+                                onClick={ () =>
+                                    setIsPopoverOpen(
+                                        ( currentState ) => ! currentState
+                                    )
+                                }
+                            >
+                                <Plus size="16" />
+                                { __( 'Add Filter', 'dokan-lite' ) }
+                            </DokanButton>
+                        </span>
                     ) }
                 </div>
 

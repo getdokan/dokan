@@ -493,11 +493,15 @@ const WithdrawPage = () => {
     // Create tabs with status counts
     const tabs = WITHDRAW_STATUSES.map( ( status ) => ( {
         name: status.value,
-        title: `${ status.label } ${
-            statusCounts[ status.value ]
-                ? `(${ statusCounts[ status.value ] })`
-                : ''
-        }`,
+        icon: (
+            <div className="flex items-center gap-2.5 px-2">
+                { status.label }
+                <span className="text-xs text-[#A5A5AA]">
+                    ({ statusCounts[ status.value ] })
+                </span>
+            </div>
+        ),
+        title: status.label,
     } ) );
 
     const tabsAdditionalContents = [

@@ -71,6 +71,8 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
 
     const { width: windowWidth } = useWindowDimensions();
     const [ showFilters, setShowFilters ] = useState( false );
+    const [ openSelectorSignal, setOpenSelectorSignal ] = useState( 0 );
+    const [ buttonRef, setButtonRef ] = useState< HTMLButtonElement | null >();
     const {
         responsive = true,
         onChangeView,
@@ -133,13 +135,16 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
                   const newButton = (
                       <button
                           type="button"
+                          ref={ setButtonRef }
                           key="dokan_admin_dashboard_filter_button"
                           title={ __( 'Filter', 'dokan-lite' ) }
                           className={ twMerge(
                               'inline-flex items-center gap-2 rounded-md bg-white px-3 py-1.5 text-sm hover:text-[#7047EB]',
                               showFilters ? 'text-[#7047EB]' : 'text-[#828282]'
                           ) }
-                          onClick={ () => setShowFilters( ( v ) => ! v ) }
+                          onClick={ () => {
+                              setOpenSelectorSignal( ( s ) => s + 1 );
+                          } }
                       >
                           <Funnel size={ 20 } />
                       </button>
@@ -180,13 +185,22 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
                         filteredProps.filter.fields &&
                         filteredProps.filter.fields.length > 0 && (
                             <div
-                                className={ `dokan-admin-dashboard-filters border-t flex w-full justify-between border-gray-200 p-4 bg-white ${
+                                className={ `dokan-admin-dashboard-filters transition-all border-t flex w-full justify-between border-gray-200 p-4 bg-white ${
                                     showFilters ? '' : 'hidden'
                                 }` }
                             >
                                 <AdminFilter
                                     { ...filteredProps.filter }
                                     namespace={ tableNameSpace }
+                                    openSelectorSignal={ openSelectorSignal }
+                                    onFirstFilterAdded={ () => setShowFilters( true ) }
+                                    onReset={ () => {
+                                        if ( filteredProps.filter?.onReset ) {
+                                            filteredProps.filter.onReset();
+                                        }
+                                        setShowFilters( false );
+                                    } }
+                                    buttonPopOverAnchor={ buttonRef }
                                 />
                             </div>
                         ) }
