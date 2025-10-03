@@ -1,0 +1,70 @@
+{
+    "compilerOptions": {
+        // Project options
+        "lib": ["ESNext", "DOM"],
+        "target": "ESNext",
+        "module": "ESNext",
+        "allowJs": true,
+        "checkJs": false,
+        "jsx": "react-jsx",
+
+        // Module resolution
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "paths": {
+            // Webpack aliases from webpack.config.js
+            "@src/*": ["./src/*"],
+            "frontend/*": ["./src/frontend/*"],
+            "admin/*": ["./src/admin/*"],
+            "reports/*": ["./src/vendor-dashboard/reports/*"]
+        },
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+
+        // Type checking
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": false,
+
+        // Linter checks
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+
+        // Build options
+        "declaration": false,
+        "sourceMap": true,
+        "removeComments": true,
+        "skipLibCheck": true,
+
+        // Extensions
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
+    },
+    "include": [
+        "src/**/*",
+        "types/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "assets",
+        "vendor",
+        "tests",
+        "lib",
+        "**/*.min.js"
+    ],
+    "typeRoots": [
+        "node_modules/@types",
+        "types"
+    ],
+    "types": [
+        "node"
+    ]
+}

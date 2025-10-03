@@ -1,5 +1,6 @@
 export { default as DokanModal } from './modals/DokanModal';
 export { default as DataViews } from './dataviews/DataViewTable';
+export { default as AdminDataViews } from './dataviews/AdminDataViewTable';
 export { default as SortableList } from './sortable-list';
 export {
     DataForm,
@@ -12,6 +13,7 @@ export {
 export { default as PriceHtml } from './PriceHtml';
 export { default as DateTimeHtml } from './DateTimeHtml';
 export { default as Filter } from './Filter';
+export { default as AdminFilter } from './AdminFilter';
 export { default as CustomerFilter } from './CustomerFilter';
 export { default as DokanAlert } from './Alert';
 export { default as DokanBadge } from './Badge';
@@ -26,6 +28,7 @@ export { default as DokanPriceInput } from './PriceInput';
 export { default as WpDatePicker } from './WpDatePicker';
 export { default as DateTimePicker } from './DateTimePicker';
 export { default as DokanTab } from './Tab';
+export { default as AdminTab } from './AdminTab';
 export { default as Popover } from './Popover';
 export { default as RichText } from './richtext/RichText';
 export { default as AsyncSelect } from './AsyncSelect';

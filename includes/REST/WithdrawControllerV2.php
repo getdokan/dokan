@@ -24,6 +24,7 @@ class WithdrawControllerV2 extends WithdrawController {
      * @return void
      */
     public function register_routes() {
+        parent::register_routes();
         // Get withdraw settings for vendor.
         register_rest_route(
             $this->namespace, '/' . $this->rest_base . '/settings', [
