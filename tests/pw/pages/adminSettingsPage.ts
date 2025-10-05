@@ -28,6 +28,17 @@ export class AdminSettingsPage extends BasePage {
         await this.waitForLoadState();
     }
 
+    async navigateToOldSellingOptions() {
+        await this.goToOldSettings();
+        await this.waitForLoadState();
+
+        // Click on selling options menu
+        const sellingOptionsMenu = this.page.locator(data.adminSettingsMigration.selectors.oldUI.sellingOptionsMenu);
+        await sellingOptionsMenu.waitFor({ state: 'visible', timeout: 10000 });
+        await sellingOptionsMenu.click();
+        await this.waitForLoadState();
+    }
+
     async updateVendorStoreUrlInOldSettings(storeUrl: string) {
         await this.navigateToOldGeneralSettings();
 
@@ -307,26 +318,21 @@ export class AdminSettingsPage extends BasePage {
 
         const switchElement = this.page.locator('#dokan_settings_general_marketplace_marketplace_settings_show_customer_details_to_vendors').getByRole('switch');
         await switchElement.waitFor({ state: 'visible', timeout: 10000 });
-
         return await switchElement.getAttribute('aria-checked') === 'true';
     }
 
     // Old Settings UI methods for Show Customer Details to Vendors (mapped as Hide Customer Info)
     async updateShowCustomerDetailsInOldSettings(enabled: boolean) {
-        await this.navigateToOldGeneralSettings();
+        await this.navigateToOldSellingOptions();
 
-        // Navigate to Selling Options
-        await this.page.locator('div').filter({ hasText: /^Selling Options$/ }).click();
-
-        // Find the switch element for hide customer info using the visible slider
-        const switchField = this.page.getByRole('group').filter({ hasText: 'Hide Customer Info Hide' }).locator('span').nth(1);
+        // Find the switch element
+        const switchField = this.page.locator(data.adminSettingsMigration.selectors.oldUI.hideCustomerInfo);
         await switchField.waitFor({ state: 'visible', timeout: 5000 });
 
-        // Check current state via hidden checkbox and toggle if needed (inverted logic)
+        // Check current state via hidden checkbox and toggle if needed
         const hiddenCheckbox = this.page.locator('.hide_customer_info input[type="checkbox"]');
-        await hiddenCheckbox.waitFor({ state: 'attached', timeout: 5000 }); // Ensure it's in DOM, not necessarily visible
         const isCurrentlyChecked = await hiddenCheckbox.isChecked();
-        if (isCurrentlyChecked == !enabled) { // Invert the logic
+        if (isCurrentlyChecked !== enabled) {
             await switchField.click();
         }
 
@@ -341,14 +347,257 @@ export class AdminSettingsPage extends BasePage {
     }
 
     async getShowCustomerDetailsFromOldSettings(): Promise<boolean> {
-        await this.navigateToOldGeneralSettings();
+        await this.navigateToOldSellingOptions();
 
-        // Navigate to Selling Options
-        await this.page.locator('div').filter({ hasText: /^Selling Options$/ }).click();
+        // Check the hidden checkbox state for current value
+        //const hiddenCheckbox = this.page.locator('.enable_single_seller_mode input[type="checkbox"]');
+        const hiddenCheckbox = this.page.locator(".hide_customer_info input[type='checkbox']");
+        return await hiddenCheckbox.isChecked();
+    }
 
-        // Check the hidden checkbox state for hide customer info (inverted logic)
-        const hiddenCheckbox = this.page.locator('.hide_customer_info input[type="checkbox"]');
-        //await hiddenCheckbox.waitFor({ state: 'visible', timeout: 5000 });
-        return (await hiddenCheckbox.isChecked()); // Invert the logic
+
+    // New Settings UI methods for Guest Product Enquiry
+    async updateGuestProductEnquiryInNewSettings(enabled: boolean) {
+        await this.navigateToNewMarketplaceSettings();
+
+        // Locate the switch element for Guest Product Enquiry
+        const switchElement = this.page
+            .locator('#dokan_settings_general_marketplace_marketplace_settings_guest_product_enquiry')
+            .getByRole('switch');
+
+        await switchElement.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Toggle switch only if current state differs
+        const isChecked = await switchElement.getAttribute('aria-checked') === 'true';
+        if (isChecked !== enabled) {
+            await switchElement.click();
+        }
+
+        // Click save button if visible
+        const saveButton = this.page.locator(data.adminSettingsMigration.selectors.newUI.saveButton);
+        try {
+            await saveButton.waitFor({ state: 'visible', timeout: 8000 });
+            await saveButton.click();
+        } catch (error) {
+            console.log('Save button not visible - may not be needed');
+        }
+
+        // Wait for save completion
+        await this.page.waitForTimeout(2000);
+        await this.waitForLoadState();
+    }
+
+    async getGuestProductEnquiryFromNewSettings(): Promise<boolean> {
+        await this.navigateToNewMarketplaceSettings();
+
+        const switchElement = this.page
+            .locator('#dokan_settings_general_marketplace_marketplace_settings_guest_product_enquiry')
+            .getByRole('switch');
+
+        await switchElement.waitFor({ state: 'visible', timeout: 10000 });
+
+        return await switchElement.getAttribute('aria-checked') === 'true';
+    }
+
+    // Old Settings UI methods for Guest Product Enquiry
+    async updateGuestProductEnquiryInOldSettings(enabled: boolean) {
+        await this.navigateToOldSellingOptions();
+
+        // Locate the switch field
+        const switchField = this.page.locator(data.adminSettingsMigration.selectors.oldUI.enableGuestUserEnquiry);
+        await switchField.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Locate the hidden checkbox
+        const hiddenCheckbox = this.page.locator('.enable_guest_user_enquiry input[type="checkbox"]');
+        const isCurrentlyChecked = await hiddenCheckbox.isChecked();
+
+        // Toggle if needed
+        if (isCurrentlyChecked !== enabled) {
+            await switchField.click();
+        }
+
+        // Click save changes button
+        const saveButton = this.page.locator(data.adminSettingsMigration.selectors.oldUI.saveChanges);
+        await saveButton.waitFor({ state: 'visible', timeout: 5000 });
+        await saveButton.click();
+
+        // Wait for save completion
+        await this.page.waitForTimeout(2000);
+        await this.waitForLoadState();
+    }
+
+    async getGuestProductEnquiryFromOldSettings(): Promise<boolean> {
+        await this.navigateToOldSellingOptions();
+
+        // Check the hidden checkbox state for current value
+        const hiddenCheckbox = this.page.locator('.enable_guest_user_enquiry input[type="checkbox"]');
+        return await hiddenCheckbox.isChecked();
+    }
+
+    // New Settings UI methods for Add to Cart Button Visibility
+    async updateAddToCartButtonVisibilityInNewSettings(enabled: boolean) {
+        await this.navigateToNewMarketplaceSettings();
+
+        // Locate the switch element for Add to Cart Button Visibility
+        const switchElement = this.page
+            .locator('#dokan_settings_general_marketplace_marketplace_settings_add_to_cart_button_visibility')
+            .getByRole('switch');
+
+        await switchElement.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Toggle if current state differs
+        const isChecked = await switchElement.getAttribute('aria-checked') === 'true';
+        if (isChecked !== enabled) {
+            await switchElement.click();
+        }
+
+        // Click save button if visible
+        const saveButton = this.page.locator(data.adminSettingsMigration.selectors.newUI.saveButton);
+        try {
+            await saveButton.waitFor({ state: 'visible', timeout: 8000 });
+            await saveButton.click();
+        } catch (error) {
+            console.log('Save button not visible - may not be needed');
+        }
+
+        // Wait for save completion
+        await this.page.waitForTimeout(2000);
+        await this.waitForLoadState();
+    }
+
+    async getAddToCartButtonVisibilityFromNewSettings(): Promise<boolean> {
+        await this.navigateToNewMarketplaceSettings();
+
+        const switchElement = this.page
+            .locator('#dokan_settings_general_marketplace_marketplace_settings_add_to_cart_button_visibility')
+            .getByRole('switch');
+
+        await switchElement.waitFor({ state: 'visible', timeout: 10000 });
+
+        return await switchElement.getAttribute('aria-checked') === 'true';
+    }
+
+    // Old Settings UI methods for Add to Cart Button Visibility (mapped as Remove Add to Cart Button)
+    async updateAddToCartButtonVisibilityInOldSettings(enabled: boolean) {
+        await this.navigateToOldSellingOptions();
+
+        // Locate the switch field for Remove Add to Cart Button
+        const switchField = this.page.locator(data.adminSettingsMigration.selectors.oldUI.catalogModeHideAddToCartButton);
+        await switchField.waitFor({ state: 'visible', timeout: 5000 });
+
+        // Locate the hidden checkbox
+        const hiddenCheckbox = this.page.locator('.catalog_mode_hide_add_to_cart_button input[type="checkbox"]');
+        const isCurrentlyChecked = await hiddenCheckbox.isChecked();
+
+        // Toggle if needed
+        if (isCurrentlyChecked !== enabled) {
+            await switchField.click();
+        }
+
+        // Click save changes button
+        const saveButton = this.page.locator(data.adminSettingsMigration.selectors.oldUI.saveChanges);
+        await saveButton.waitFor({ state: 'visible', timeout: 5000 });
+        await saveButton.click();
+
+        // Wait for save completion
+        await this.page.waitForTimeout(2000);
+        await this.waitForLoadState();
+    }
+
+    async getAddToCartButtonVisibilityFromOldSettings(): Promise<boolean> {
+        await this.navigateToOldSellingOptions();
+
+        // Check hidden checkbox state for current value
+        const hiddenCheckbox = this.page.locator('.catalog_mode_hide_add_to_cart_button input[type="checkbox"]');
+        return await hiddenCheckbox.isChecked();
+    }
+
+    // New Settings UI methods for Live Search Option
+    async updateLiveSearchOptionInNewSettings(option: string) {
+        await this.navigateToNewMarketplaceSettings();
+
+        // Correct radio group container based on actual HTML
+        const radioGroup = this.page.locator('#dokan_settings_general_marketplace_live_search_search_box_radio');
+        await radioGroup.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Select the desired radio option
+        const radioOption = radioGroup.locator(`input[type="radio"][value="${option}"]`);
+        await radioOption.waitFor({ state: 'attached', timeout: 5000 });
+        await radioOption.check({ force: true }); // force click helps when input is hidden (sr-only)
+
+        // Try clicking save button if visible
+        const saveButton = this.page.locator(data.adminSettingsMigration.selectors.newUI.saveButton);
+        try {
+            if (await saveButton.isVisible()) {
+                await saveButton.click();
+                await this.page.waitForTimeout(2000);
+                await this.waitForLoadState();
+            } else {
+                console.log('Save button not visible — skipping save step');
+            }
+        } catch (error) {
+            console.log('Save button interaction failed or not needed:', error);
+        }
+    }
+
+    async getLiveSearchOptionFromNewSettings(): Promise<string> {
+        await this.navigateToNewMarketplaceSettings();
+
+        const baseLocator = this.page.locator('#dokan_settings_general_marketplace_live_search_search_box_radio');
+        await baseLocator.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Select the element that has aria-checked="true"
+        const selectedOption = baseLocator.locator('[role="radio"][aria-checked="true"]');
+        await selectedOption.waitFor({ state: 'attached', timeout: 10000 });
+
+        // Find the associated input and get its value
+        const inputElement = selectedOption.locator('input[type="radio"]');
+        const value = await inputElement.getAttribute('value');
+
+        if (!value) {
+            throw new Error('No selected Live Search Option found in new settings');
+        }
+        return value;
+    }
+
+    async navigateToOldLiveSearchOptions() {
+        await this.goToOldSettings();
+        await this.waitForLoadState();
+
+        // Click on Live Search menu
+        const liveSearchMenu = this.page.locator(data.adminSettingsMigration.selectors.oldUI.liveSearchMenu);
+        await liveSearchMenu.waitFor({ state: 'visible', timeout: 10000 });
+        await liveSearchMenu.click();
+        await this.waitForLoadState();
+    }
+
+    async updateLiveSearchOptionInOldSettings(option: string) {
+        await this.navigateToOldLiveSearchOptions();
+
+        // Locate the select dropdown for Live Search Options
+        const selectDropdown = this.page.locator('select[id="dokan_live_search_setting[live_search_option]"]');
+        await selectDropdown.waitFor({ state: 'visible', timeout: 10000 });
+
+        // Select the desired option
+        await selectDropdown.selectOption(option);
+
+        // Click save changes button
+        const saveButton = this.page.locator(data.adminSettingsMigration.selectors.oldUI.saveChanges);
+        await saveButton.waitFor({ state: 'visible', timeout: 5000 });
+        await saveButton.click();
+
+        // Wait for save completion
+        await this.page.waitForTimeout(2000);
+        await this.waitForLoadState();
+    }
+
+    async getLiveSearchOptionFromOldSettings(): Promise<string> {
+        await this.navigateToOldLiveSearchOptions();
+
+        // Locate the select dropdown and get current value
+        const selectDropdown = this.page.locator('select[id="dokan_live_search_setting[live_search_option]"]');
+        await selectDropdown.waitFor({ state: 'visible', timeout: 10000 });
+
+        return await selectDropdown.inputValue();
     }
 }
