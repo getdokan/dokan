@@ -1618,7 +1618,7 @@ export default function Form( {
                     initialTabName={ tabQueryParam }
                     onSelect={ onTabChange }
                 >
-                    { ( tab ) => <div className="mt-5"><tab.component/></div> }
+                    { ( tab ) => <div className="mt-5">{ typeof tab.component === 'function' ? tab.component() : null }</div> }
                 </TabPanel>
 
                 { createForm && (
