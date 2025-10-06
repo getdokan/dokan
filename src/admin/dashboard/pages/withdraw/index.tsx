@@ -25,18 +25,10 @@ import { Trash, ArrowDown, Home, Calendar, CreditCard } from 'lucide-react';
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
-    { value: 'all', label: __( 'All', 'dokan-lite' ) },
     { value: 'pending', label: __( 'Pending', 'dokan-lite' ) },
     { value: 'approved', label: __( 'Approved', 'dokan-lite' ) },
     { value: 'cancelled', label: __( 'Cancelled', 'dokan-lite' ) },
-];
-
-// Define payment methods for filtering
-const PAYMENT_METHODS = [
-    { value: '', label: __( 'All Methods', 'dokan-lite' ) },
-    { value: 'paypal', label: __( 'PayPal', 'dokan-lite' ) },
-    { value: 'bank', label: __( 'Bank Transfer', 'dokan-lite' ) },
-    { value: 'skrill', label: __( 'Skrill', 'dokan-lite' ) },
+    { value: 'all', label: __( 'All', 'dokan-lite' ) },
 ];
 
 const price = ( amount ) => <RawHTML>{ formatPrice( amount ) }</RawHTML>;
@@ -97,8 +89,7 @@ const WithdrawPage = () => {
         cancelled: 0,
     } );
     const [ filterArgs, setFilterArgs ] = useState( {} );
-    const [ activeStatus, setActiveStatus ] = useState( 'all' );
-    const [ showFilters, setShowFilters ] = useState( false );
+    const [ activeStatus, setActiveStatus ] = useState( 'pending' );
     const [ vendorFilter, setVendorFilter ] = useState< VendorSelect | null >(
         null
     );
@@ -126,11 +117,11 @@ const WithdrawPage = () => {
                         <img
                             src={ item.user.gravatar }
                             alt={ item.user?.store_name || '' }
-                            className="w-8 h-8 rounded-sm"
+                            className="w-8 h-8 rounded-md"
                         />
                     ) }
                     <div>
-                        <div className="font-medium text-gray-600">
+                        <div className="font-medium text-[#7047EB]">
                             { item.user?.store_name ||
                                 __( 'N/A', 'dokan-lite' ) }
                         </div>
@@ -155,14 +146,14 @@ const WithdrawPage = () => {
             getValue: ( { item } ) => item.status,
             render: ( { item } ) => {
                 const statusColors = {
-                    pending: 'bg-yellow-100 text-yellow-800',
-                    approved: 'bg-green-100 text-green-800',
+                    pending: 'bg-[#FDF2F8] text-[#9D174D]',
+                    approved: 'bg-[#D4FBEF] text-[#00563F]',
                 };
                 return (
                     <span
-                        className={ `inline-flex items-center px-3.5 py-1.5 rounded-md text-xs font-medium ${
+                        className={ `inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-medium ${
                             statusColors[ item.status ] ||
-                            'bg-gray-100 text-gray-800'
+                            'bg-[#F1F1F4] text-[#393939]'
                         }` }
                     >
                         {
@@ -473,7 +464,7 @@ const WithdrawPage = () => {
         search: '',
         type: 'table',
         titleField: 'vendor',
-        status: 'all',
+        status: 'pending',
         layout: { ...defaultLayouts },
         fields: fields.map( ( field ) =>
             field.id !== 'vendor' ? field.id : ''
@@ -494,9 +485,9 @@ const WithdrawPage = () => {
     const tabs = WITHDRAW_STATUSES.map( ( status ) => ( {
         name: status.value,
         icon: (
-            <div className="flex items-center gap-2.5 px-2">
+            <div className="flex items-center gap-1.5 px-2">
                 { status.label }
-                <span className="text-xs text-[#A5A5AA]">
+                <span className="text-xs font-light text-[#A5A5AA]">
                     ({ statusCounts[ status.value ] })
                 </span>
             </div>
@@ -750,12 +741,12 @@ const WithdrawPage = () => {
     };
 
     // Handle filter
-    const handleFilter = () => {
+    useEffect( () => {
         setView( ( prevView ) => ( {
             ...prevView,
             page: 1, // Reset to first page when applying filters
         } ) );
-    };
+    }, [ filterArgs ] );
 
     // Clear filters
     const clearFilter = () => {
@@ -840,8 +831,8 @@ const WithdrawPage = () => {
                         if ( selectedVendorObj ) {
                             args.user_id = selectedVendorObj.value;
                         }
-                        setFilterArgs( args );
                         setVendorFilter( selectedVendorObj );
+                        setFilterArgs( args );
                     } }
                     placeholder={ __( 'Select Vendor', 'dokan-lite' ) }
                     isClearable
@@ -1201,10 +1192,10 @@ const WithdrawPage = () => {
                                 { ( () => {
                                     const item = modalState.items[ 0 ];
                                     const statusColors = {
-                                        pending:
-                                            'bg-yellow-100 text-yellow-800',
-                                        approved: 'bg-green-100 text-green-800',
-                                        cancelled: 'bg-gray-100 text-gray-800',
+                                        pending: 'bg-[#FDF2F8] text-[#9D174D]',
+                                        approved: 'bg-[#D4FBEF] text-[#00563F]',
+                                        cancelled:
+                                            'bg-[#F1F1F4] text-[#393939]',
                                     };
 
                                     return (

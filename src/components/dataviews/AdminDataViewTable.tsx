@@ -17,6 +17,7 @@ import { __ } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 import { Funnel } from 'lucide-react';
 import { Item } from '@wordpress/components/build-types/navigation/types';
+import ListEmpty from '@src/components/dataviews/ListEmpty';
 
 type ItemWithId = { id: string };
 
@@ -41,6 +42,10 @@ type DataViewsProps< Item > = {
     onChangeSelection?: ( items: string[] ) => void;
     onClickItem?: ( item: Item ) => void;
     isItemClickable?: ( item: Item ) => boolean;
+    empty?: JSX.Element;
+    emptyIcon?: JSX.Element;
+    emptyTitle?: string;
+    emptyDescription?: string;
     header?: JSX.Element;
     filter?: Omit< AdminFilterProps, 'namespace' >;
     tabs?: Omit< AdminTabProps, 'variant' | 'namespace' | 'orientation' >;
@@ -82,6 +87,10 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
         fields,
         view,
         data,
+        empty,
+        emptyIcon,
+        emptyTitle,
+        emptyDescription,
     } = props;
 
     const filteredProps = {
@@ -99,6 +108,14 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
             'actions',
             actions,
             props
+        ),
+
+        empty: empty || (
+            <ListEmpty
+                icon={ emptyIcon }
+                title={ emptyTitle }
+                description={ emptyDescription }
+            />
         ),
     };
 
@@ -205,14 +222,18 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
                                     { ...filteredProps.filter }
                                     namespace={ tableNameSpace }
                                     openSelectorSignal={ openSelectorSignal }
-                                    onFirstFilterAdded={ () => setShowFilters( true ) }
+                                    onFirstFilterAdded={ () =>
+                                        setShowFilters( true )
+                                    }
                                     onReset={ () => {
                                         if ( filteredProps.filter?.onReset ) {
                                             filteredProps.filter.onReset();
                                         }
                                         setShowFilters( false );
                                     } }
-                                    onActiveFiltersChange={ ( count ) => setHasActiveFilters( count > 0 ) }
+                                    onActiveFiltersChange={ ( count ) =>
+                                        setHasActiveFilters( count > 0 )
+                                    }
                                     buttonPopOverAnchor={ buttonRef }
                                 />
                             </div>
