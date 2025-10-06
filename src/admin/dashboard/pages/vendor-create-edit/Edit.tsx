@@ -10,11 +10,11 @@ import { applyFilters } from '@wordpress/hooks';
 import { ChevronLeft } from 'lucide-react';
 import { addQueryArgs } from '@wordpress/url';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
+import { isEqual } from 'lodash';
 import {
     requestEditVendor,
     validateForm,
 } from '@src/admin/dashboard/pages/vendor-create-edit/Utils';
-import { config } from './vendor-config';
 
 function Edit( props ) {
     const { params } = props;
@@ -23,10 +23,13 @@ function Edit( props ) {
         useDispatch( store );
     const toast = useToast();
     const [ saving, setSaving ] = useState( false );
+    const [ originalVendor, setOriginalVendor ] = useState< Vendor | null >( null );
 
     const vendor = useSelect( ( select ) => {
         return select( store ).getCreateOrEditVendor();
     }, [] );
+
+    const isDirty = !! ( originalVendor && vendor && ! isEqual( vendor, originalVendor ) );
 
     const requiredFields: Record< string, string > = applyFilters(
         'dokan-edit-vendor-required-fields',
@@ -35,6 +38,14 @@ function Edit( props ) {
             store_name: __( 'Store Name is required', 'dokan-lite' ),
         }
     ) as Record< string, string >;
+
+    const onDiscard = async () => {
+        if ( ! isDirty || ! originalVendor ) {
+            return;
+        }
+
+        await setCreateOrEditVendor( originalVendor );
+    };
 
     const updateVendor = async () => {
         const validatedErrors = await validateForm( vendor, requiredFields );
@@ -66,6 +77,7 @@ function Edit( props ) {
         try {
             const response: Vendor = await requestEditVendor( vendor );
             await setCreateOrEditVendor( response );
+            setOriginalVendor( response );
             await setCreateOrEditVendorErrors( [] );
             toast( {
                 type: 'success',
@@ -91,6 +103,7 @@ function Edit( props ) {
             path: addQueryArgs( `dokan/v1/stores/${ id }`, {} ),
         } ).then( async ( response: Vendor ) => {
             await setCreateOrEditVendor( response );
+            setOriginalVendor( response );
         } );
     }, [ id ] );
 
@@ -119,19 +132,16 @@ function Edit( props ) {
                     <div className="flex flex-col md:!flex-row gap-3">
                         <DokanButton
                             variant="secondary"
-                            onClick={ () =>
-                                // @ts-ignore
-                                ( window.location.href =
-                                    config.dokanVendorsListUrl )
-                            }
+                            onClick={ onDiscard }
+                            disabled={ ! isDirty || saving }
                         >
-                            { __( 'Cancel', 'dokan-lite' ) }
+                            { __( 'Discard', 'dokan-lite' ) }
                         </DokanButton>
                         <DokanButton
                             onClick={ updateVendor }
                             loading={ saving }
                             disabled={ saving }
-                            label={ __( 'Update', 'dokan-lite' ) }
+                            label={ __( 'Save Changes', 'dokan-lite' ) }
                         />
                     </div>
                 </div>
