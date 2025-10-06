@@ -611,6 +611,7 @@ const WithdrawPage = () => {
                 method: 'POST',
                 data: {
                     report_args: {
+                        per_page: 50,
                         ids, // Filter to only export selected withdraws
                     },
                     email: false, // Don't send email, just download directly

@@ -130,8 +130,8 @@ class WithdrawExportController extends GenericController implements ExportableIn
         $response = rest_ensure_response( $data );
 
         // Add pagination headers
-        $response->header( 'X-WP-Total', $total_withdraws );
-        $response->header( 'X-WP-TotalPages', $withdraws_obj->max_num_pages );
+        $response->header( 'X-WP-Total', absint( $total_withdraws ) );
+        $response->header( 'X-WP-TotalPages', absint( $withdraws_obj->max_num_pages ) );
 
         return $response;
     }
