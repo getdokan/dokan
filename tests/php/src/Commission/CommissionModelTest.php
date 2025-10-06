@@ -9,6 +9,11 @@ use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
 use WeDevs\Dokan\Commission\Model\Commission;
 use WP_UnitTestCase;
 
+
+/**
+ * @group commission
+ * @group commission-model
+ */
 class CommissionModelTest extends WP_UnitTestCase {
 
     /**

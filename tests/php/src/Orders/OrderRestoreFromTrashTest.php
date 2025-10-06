@@ -4,6 +4,10 @@ namespace WeDevs\Dokan\Test\Orders;
 
 use WeDevs\Dokan\Test\DokanTestCase;
 
+/**
+ * @group orders
+ * @group order-restore-from-trash
+ */
 class OrderRestoreFromTrashTest extends DokanTestCase {
 
     public function test_dokan_order_restore_from_trash() {

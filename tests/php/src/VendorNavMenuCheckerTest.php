@@ -3,10 +3,8 @@
 namespace WeDevs\Dokan\Test;
 
 use WeDevs\Dokan\VendorNavMenuChecker;
-
 /**
- * @group core-extension
- * @group core-extension-vendor-nav-menu-checker
+ * @group core-feature
  */
 class VendorNavMenuCheckerTest extends DokanTestCase {
     /**

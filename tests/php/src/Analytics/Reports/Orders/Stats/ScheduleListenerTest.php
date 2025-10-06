@@ -39,7 +39,7 @@ class ScheduleListenerTest extends DokanTestCase {
 			->once()
             ->andReturn( 1 );
 
-        $this->run_all_pending();
+        $this->run_all_pending_queue();
 	}
 
     /**
@@ -53,7 +53,7 @@ class ScheduleListenerTest extends DokanTestCase {
     public function test_data_is_inserted_in_dokan_order_stats_table() {
 		$order_id = $this->create_multi_vendor_order();
 
-        $this->run_all_pending();
+        $this->run_all_pending_queue();
 
         $wc_order_stats_table = \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore::get_db_table_name();
 

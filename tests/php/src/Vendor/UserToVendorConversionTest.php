@@ -4,10 +4,12 @@ namespace WeDevs\Dokan\Test\Vendor;
 
 use WeDevs\Dokan\Vendor\Vendor;
 
-class UserToVendorTest extends \WP_UnitTestCase {
+class UserToVendorConversionTest extends \WP_UnitTestCase {
 
     /**
-     * Check vendor class persists `shop_data` on save.
+     * Test that when a user is converted to a vendor, their shop data is properly
+     * persisted and saved in the database. This verifies that the vendor's store name,
+     * phone number and other shop information is correctly stored and retrievable.
      *
      * @test
      */

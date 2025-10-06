@@ -4,7 +4,11 @@ namespace WeDevs\Dokan\Test\Orders;
 
 use WeDevs\Dokan\Test\DokanTestCase;
 
-class OrderTest extends DokanTestCase {
+/**
+ * @group orders
+ * @group order-log
+ */
+class OrderLogTest extends DokanTestCase {
 
     public function test_dokan_order_creation_log_on_exception() {
         $error_message = '';

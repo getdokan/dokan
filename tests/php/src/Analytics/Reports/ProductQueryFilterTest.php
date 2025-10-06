@@ -55,7 +55,7 @@ class ProductQueryFilterTest extends ReportTestCase {
 	public function test_filter_hooks_are_applied_for_products_query() {
 		$order_id = $this->create_multi_vendor_order();
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         $mocking_methods = [
             'add_join_subquery',
@@ -88,7 +88,7 @@ class ProductQueryFilterTest extends ReportTestCase {
     public function test_dokan_products_fields_are_selected_for_seller() {
 		$order_id = $this->create_multi_vendor_order();
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         $mocking_methods = [
             'should_filter_by_vendor_id',
@@ -134,7 +134,7 @@ class ProductQueryFilterTest extends ReportTestCase {
     public function test_dokan_products_fields_are_selected_for_admin() {
 		$order_id = $this->create_multi_vendor_order();
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         $mocking_methods = [
             'should_filter_by_vendor_id',
