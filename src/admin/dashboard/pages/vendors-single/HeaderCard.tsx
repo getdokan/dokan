@@ -6,12 +6,30 @@ import StoreCategories from './StoreCategories';
 import { DokanBadge } from '@dokan/components';
 import Banner from './Banner';
 import StoreAvatar from './StoreAvatar';
+import { applyFilters } from "@wordpress/hooks";
 
 export interface HeaderCardProps {
     vendor: Vendor;
 }
 
 const HeaderCard = ( { vendor }: HeaderCardProps ) => {
+    const StoreName = () => {
+        return (
+            <div className="font-bold text-lg text-black mb-1">
+                { vendor.store_name
+                    ? vendor.store_name
+                    : __( 'No Name', 'dokan-lite' ) }
+            </div>
+        );
+    };
+
+    // @ts-ignore
+    const StoreNameComponent: JSX.Element = applyFilters(
+        'dokan.dashboard.vendor.header.storeName',
+        StoreName,
+        vendor
+    );
+
     return (
         <Card className="w-full overflow-visible">
             { /* Banner */ }
@@ -22,11 +40,8 @@ const HeaderCard = ( { vendor }: HeaderCardProps ) => {
                 <StoreAvatar gravatar={ vendor?.gravatar } />
                 { /* Store Details */ }
                 <div className="ml-6 flex-1">
-                    <div className="font-bold text-lg text-black mb-1">
-                        { vendor.store_name
-                            ? vendor.store_name
-                            : __( 'No Name', 'dokan-lite' ) }
-                    </div>
+                    { /* @ts-ignore */ }
+                    <StoreNameComponent />
                     { vendor?.rating && (
                         <div className="flex items-center space-x-1 text-gray-400 text-sm mb-1">
                             <Rating
