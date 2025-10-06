@@ -397,7 +397,10 @@ const WithdrawPage = () => {
             supportsBulk: true,
             isEligible: ( item ) => 'paypal' === item?.method,
             callback: async ( items: any[] ) => {
-                await handleBulkAction( 'paypal', items );
+                await handleBulkAction(
+                    'paypal',
+                    items.map( ( item ) => item.id )
+                );
             },
         },
     ];
