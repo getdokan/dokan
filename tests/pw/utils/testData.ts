@@ -1328,6 +1328,11 @@ export const data = {
                 enableGuestUserEnquiry: '.enable_guest_user_enquiry .switch',
                 catalogModeHideAddToCartButton: '.catalog_mode_hide_add_to_cart_button .switch',
                 liveSearchMenu: '//div[@class="nav-title" and contains(text(),"Live Search")]',
+                sellingMenu: '//div[@class="nav-title" and contains(text(),"Selling")]',
+                addressFieldsOptionField: '.enabled_address_on_reg .switch',
+                enableTermsAndConditions: '.enable_tc_on_reg .switch',
+                disableWelcomeWizard: '.disable_welcome_wizard .switch',
+                vendorSetupWizardMessageField: '.setup_wizard_message textarea',
             },
 
             newUI: {
@@ -1339,6 +1344,13 @@ export const data = {
                 successMessage: '.notice-success, .updated',
                 clickHereLink: 'a[contains(text(),"Click Here")]',
                 storeCategoryField: '#dokan_settings_general_marketplace_marketplace_settings_store_category_mode',
+                vendorButton: '#dokan_settings_vendor button',
+                vendorOnboardingLink: '#dokan_settings_vendor_vendor_onboarding',
+                socialOnboardingLink: '#dokan_settings_vendor_social_onboarding',
+                vendorCapabilitiesLink: '#dokan_settings_vendor_vendor_capabilities',
+                vendorSubscriptionLink: '#dokan_settings_vendor_vendor_subscription',
+                soteStatsLink: '#dokan_settings_vendor_store_state',
+                singleProductMultiVendorLink: '#dokan_settings_vendor_single_product_multi_vendor',
             },
         },
 
@@ -1347,6 +1359,9 @@ export const data = {
             updatedStoreUrlFromNew: 'new-store-updated',
             updatedStoreUrlFromOld: 'old-store-updated',
             finalStoreUrl: 'store-final',
+            initialWizardMessage: 'Congratulations! Your marketplace is ready.',
+            updatedWizardMessageFromOld: 'Welcome to the new Dokan dashboard!',
+            finalWizardMessage: 'Get started with your marketplace',
         },
     },
 
