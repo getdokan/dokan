@@ -5,6 +5,7 @@ import { Tooltip } from '@getdokan/dokan-ui';
 import { humanTimeDiff } from '@wordpress/date';
 import SocialLinks from './SocialLinks';
 import { Slot } from '@wordpress/components';
+import { PluginArea } from '@wordpress/plugins';
 
 export interface InfoCardProps {
     vendor: Vendor;
@@ -81,6 +82,7 @@ export const paymentMethods = ( methods: PaymentDetails ) => {
 const InfoCard = ( { vendor }: InfoCardProps ) => {
     return (
         <div className="md:w-1/3 lg:w-1/4 flex flex-col gap-2 p-4 bg-white rounded shadow-md">
+            <PluginArea scope="dokan-admin-dashboard-vendors-single" />
             <Slot
                 name={ `dokan-admin-vendor-before-info-contents` }
                 fillProps={ { vendor } }
