@@ -36,9 +36,11 @@ export default function DokanTextArea( { element } ) {
             <div className={ 'col-span-12' }>
                 <BaseDokanTextArea
                     value={ element.value || element?.defaultValue || '' }
-                    onChange={ ( val ) =>
-                        onValueChange( { ...element, value: val } )
-                    }
+                    onChange={ ( val ) => {
+                        // Extract the actual value from the event object if needed
+                        const newValue = val?.target?.value ?? val;
+                        onValueChange( { ...element, value: newValue } );
+                    } }
                     disabled={ element.disabled }
                     input={ { placeholder: element.placeholder } }
                 />

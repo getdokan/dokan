@@ -163,6 +163,37 @@ class SettingsMapper {
         'dokan_general.setup_wizard_logo_url'     => 'vendor.vendor_onboarding.vendor_setup_wizard_logo',
         'dokan_general.setup_wizard_message'      => 'vendor.vendor_onboarding.vendor_setup_wizard_message',
 
+        // =========================
+        // social onboarding
+        'dokan_social_api.enabled'          => 'vendor.social_onboarding.social_onboarding.social_login',
+
+        // Facebook
+        'dokan_social_api.fb_enable_status' => 'vendor.social_onboarding.social_onboarding.facebook_api_group.facebook_enabled',
+        'dokan_social_api.fb_app_id'        => 'vendor.social_onboarding.social_onboarding.facebook_api_group.facebook_app_id',
+        'dokan_social_api.fb_app_secret'    => 'vendor.social_onboarding.social_onboarding.facebook_api_group.facebook_app_secret',
+
+        // Twitter/X
+        'dokan_social_api.twitter_enable_status' => 'vendor.social_onboarding.social_onboarding.x_api_group.x_enabled',
+        'dokan_social_api.twitter_app_id'        => 'vendor.social_onboarding.social_onboarding.x_api_group.x_api_key',
+        'dokan_social_api.twitter_app_secret'    => 'vendor.social_onboarding.social_onboarding.x_api_group.x_api_secret',
+
+        // Google
+        'dokan_social_api.google_enable_status' => 'vendor.social_onboarding.social_onboarding.google_api_group.google_enabled',
+        'dokan_social_api.google_app_id'        => 'vendor.social_onboarding.social_onboarding.google_api_group.google_client_id',
+        'dokan_social_api.google_app_secret'    => 'vendor.social_onboarding.social_onboarding.google_api_group.google_client_secret',
+
+        // LinkedIn
+        'dokan_social_api.linkedin_enable_status' => 'vendor.social_onboarding.social_onboarding.linkedin_api_group.linkedin_enabled',
+        'dokan_social_api.linkedin_app_id'        => 'vendor.social_onboarding.social_onboarding.linkedin_api_group.linkedin_client_id',
+        'dokan_social_api.linkedin_app_secret'    => 'vendor.social_onboarding.social_onboarding.linkedin_api_group.linkedin_client_secret',
+
+        // Apple
+        'dokan_social_api.apple_enable_status' => 'vendor.social_onboarding.social_onboarding.apple_api_group.apple_enabled',
+        'dokan_social_api.apple_service_id'    => 'vendor.social_onboarding.social_onboarding.apple_api_group.apple_service_id',
+        'dokan_social_api.apple_team_id'       => 'vendor.social_onboarding.social_onboarding.apple_api_group.apple_team_id',
+        'dokan_social_api.apple_key_id'        => 'vendor.social_onboarding.social_onboarding.apple_api_group.apple_key_id',
+        'dokan_social_api.apple_key_content'   => 'vendor.social_onboarding.social_onboarding.apple_api_group.apple_key_content',
+
         // Vendor > Capabilities
         'dokan_selling.product_status'             => 'vendor.vendor_capabilities.vendor_capabilities.product_status',
         'dokan_selling.one_step_product_create'     => 'vendor.vendor_capabilities.vendor_capabilities.one_page_creation',
