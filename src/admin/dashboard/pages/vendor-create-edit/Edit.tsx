@@ -1,7 +1,7 @@
 import Form from './Form';
 import { useDispatch, useSelect } from '@wordpress/data';
 import store from '../../../../stores/vendors';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useState, useRef } from '@wordpress/element';
 import { useToast, Card } from '@getdokan/dokan-ui';
 import { DokanButton, DokanLink } from '@dokan/components';
 import { __ } from '@wordpress/i18n';
@@ -23,13 +23,19 @@ function Edit( props ) {
         useDispatch( store );
     const toast = useToast();
     const [ saving, setSaving ] = useState( false );
-    const [ originalVendor, setOriginalVendor ] = useState< Vendor | null >( null );
+    const [ originalVendor, setOriginalVendor ] = useState< Vendor | null >(
+        null
+    );
 
     const vendor = useSelect( ( select ) => {
         return select( store ).getCreateOrEditVendor();
     }, [] );
 
-    const isDirty = !! ( originalVendor && vendor && ! isEqual( vendor, originalVendor ) );
+    const isDirty = !! (
+        originalVendor &&
+        vendor &&
+        ! isEqual( vendor, originalVendor )
+    );
 
     const requiredFields: Record< string, string > = applyFilters(
         'dokan-edit-vendor-required-fields',
@@ -106,6 +112,64 @@ function Edit( props ) {
             setOriginalVendor( response );
         } );
     }, [ id ] );
+
+    // Warn user about unsaved changes when navigating away or closing the tab
+    useEffect( () => {
+        if ( ! isDirty ) {
+            return;
+        }
+
+        const beforeUnload = ( e: BeforeUnloadEvent ) => {
+            // don't block if saving is in progress
+            if ( ! isDirty || saving ) {
+                return;
+            }
+            e.preventDefault();
+            // Setting returnValue is required for Chrome to show the dialog
+            e.returnValue = '';
+        };
+
+        window.addEventListener( 'beforeunload', beforeUnload );
+
+        let revertInProgress = false;
+        const onHashChange = ( e: HashChangeEvent ) => {
+            if ( ! isDirty || saving ) {
+                return;
+            }
+            if ( revertInProgress ) {
+                // this is our own revert, don't prompt again
+                revertInProgress = false;
+                return;
+            }
+
+            const confirmLeave = window.confirm(
+                __(
+                    'You have unsaved changes. Are you sure you want to leave this page?',
+                    'dokan-lite'
+                )
+            );
+
+            if ( ! confirmLeave ) {
+                // revert the hash back to the old value to stay on the page
+                try {
+                    const oldHash = new URL( ( e as any ).oldURL ).hash;
+                    revertInProgress = true;
+                    window.location.hash = oldHash || '';
+                } catch ( err ) {
+                    // fallback
+                    revertInProgress = true;
+                    history.back();
+                }
+            }
+        };
+
+        window.addEventListener( 'hashchange', onHashChange );
+
+        return () => {
+            window.removeEventListener( 'beforeunload', beforeUnload );
+            window.removeEventListener( 'hashchange', onHashChange );
+        };
+    }, [ isDirty, saving ] );
 
     return (
         <Card className="p-6 border-none">
