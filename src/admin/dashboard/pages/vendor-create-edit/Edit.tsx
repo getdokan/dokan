@@ -3,11 +3,11 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import store from '../../../../stores/vendors';
 import { useEffect, useState, useRef } from '@wordpress/element';
 import { useToast, Card } from '@getdokan/dokan-ui';
-import { DokanButton, DokanLink } from '@dokan/components';
+import { DokanButton, DokanLink, DokanModal } from '@dokan/components';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { applyFilters } from '@wordpress/hooks';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Hand } from 'lucide-react';
 import { addQueryArgs } from '@wordpress/url';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
 import { isEqual } from 'lodash';
@@ -44,6 +44,11 @@ function Edit( props ) {
             store_name: __( 'Store Name is required', 'dokan-lite' ),
         }
     ) as Record< string, string >;
+
+    // Modal state for confirming navigation with unsaved changes
+    const [ isLeaveModalOpen, setIsLeaveModalOpen ] = useState( false );
+    const [ pendingHash, setPendingHash ] = useState< string | null >( null );
+    const revertInProgressRef = useRef( false );
 
     const onDiscard = async () => {
         if ( ! isDirty || ! originalVendor ) {
@@ -131,35 +136,35 @@ function Edit( props ) {
 
         window.addEventListener( 'beforeunload', beforeUnload );
 
-        let revertInProgress = false;
         const onHashChange = ( e: HashChangeEvent ) => {
             if ( ! isDirty || saving ) {
                 return;
             }
-            if ( revertInProgress ) {
+            if ( revertInProgressRef.current ) {
                 // this is our own revert, don't prompt again
-                revertInProgress = false;
+                revertInProgressRef.current = false;
                 return;
             }
 
-            const confirmLeave = window.confirm(
-                __(
-                    'You have unsaved changes. Are you sure you want to leave this page?',
-                    'dokan-lite'
-                )
-            );
-
-            if ( ! confirmLeave ) {
+            try {
+                const oldHash = new URL( ( e as any ).oldURL ).hash;
+                const newHash = new URL( ( e as any ).newURL ).hash;
+                setPendingHash( newHash || '' );
+                setIsLeaveModalOpen( true );
                 // revert the hash back to the old value to stay on the page
+                revertInProgressRef.current = true;
+                window.location.hash = oldHash || '';
+            } catch ( err ) {
+                // fallback: open modal and try to go back
                 try {
-                    const oldHash = new URL( ( e as any ).oldURL ).hash;
-                    revertInProgress = true;
-                    window.location.hash = oldHash || '';
-                } catch ( err ) {
-                    // fallback
-                    revertInProgress = true;
-                    history.back();
+                    const newHash = new URL( ( e as any ).newURL ).hash;
+                    setPendingHash( newHash || '' );
+                } catch ( _err ) {
+                    setPendingHash( window.location.hash || '' );
                 }
+                setIsLeaveModalOpen( true );
+                revertInProgressRef.current = true;
+                history.back();
             }
         };
 
@@ -216,6 +221,40 @@ function Edit( props ) {
                 requiredFields={ requiredFields }
                 formKey="dokan-edit-vendor"
                 createForm={ false }
+            />
+
+            <DokanModal
+                isOpen={ isLeaveModalOpen }
+                namespace="dokan-edit-vendor-unsaved-changes"
+                onConfirm={ () => {
+                    if ( pendingHash ) {
+                        revertInProgressRef.current = true;
+                        window.location.hash = pendingHash;
+                    }
+                    setIsLeaveModalOpen( false );
+                    setPendingHash( null );
+                } }
+                onClose={ () => {
+                    setIsLeaveModalOpen( false );
+                    setPendingHash( null );
+                } }
+                confirmationTitle={ __(
+                    'Are you sure you want to leave?',
+                    'dokan-lite'
+                ) }
+                confirmationDescription={ __(
+                    'You have unsaved changes.',
+                    'dokan-lite'
+                ) }
+                confirmButtonText={ __( 'Leave Page', 'dokan-lite' ) }
+                cancelButtonText={ __( 'Stay', 'dokan-lite' ) }
+                dialogIcon={
+                    <div
+                        className={ `flex items-center justify-center flex-shrink-0 w-14 h-14 bg-primary-50 text-dokan-primary rounded-full` }
+                    >
+                        <Hand />
+                    </div>
+                }
             />
         </Card>
     );
