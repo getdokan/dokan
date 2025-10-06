@@ -107,7 +107,7 @@ function Create( props: any ) {
     }, [] );
 
     return (
-        <Card className="bg-white p-6">
+        <Card className="p-6 border-none">
             <div>
                 { /*Back to vendors list*/ }
                 <div>

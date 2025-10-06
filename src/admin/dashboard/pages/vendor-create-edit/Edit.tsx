@@ -95,7 +95,7 @@ function Edit( props ) {
     }, [ id ] );
 
     return (
-        <Card className="bg-white p-6">
+        <Card className="p-6 border-none">
             <div>
                 { /*Back to vendors list*/ }
                 <div className="flex flex-row justify-start">

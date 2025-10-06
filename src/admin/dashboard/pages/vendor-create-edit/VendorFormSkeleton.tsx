@@ -2,7 +2,7 @@ import { Card } from '@getdokan/dokan-ui';
 
 const VendorFormSkeleton = () => {
     return (
-        <Card className="bg-white p-6 mt-6">
+        <Card className="p-6 mt-6 border-none">
             <div>
                 {/* Back to vendors list skeleton */}
                 <div className="mb-4">
