@@ -238,6 +238,18 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
                                 />
                             </div>
                         ) }
+
+                    <div
+                        className={ twMerge(
+                            'dokan-admin-dashboard-datatable-bulkaction transition-opacity -mb-[65px] flex items-center bg-white z-[1] border-t px-5 py-4 justify-between border-gray-200 w-full',
+                            filteredProps.selection &&
+                                filteredProps.selection.length > 0
+                                ? 'opacity-100 visible'
+                                : 'opacity-0 invisible '
+                        ) }
+                    >
+                        <DataViews.BulkActionToolbar />
+                    </div>
                 </div>
                 { /*<DataViews.BulkActionToolbar />*/ }
                 <DataViews.Layout />
