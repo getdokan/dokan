@@ -1010,7 +1010,11 @@ export class AdminSettingsPage extends BasePage {
     async updateVendorSetupWizardMessageInOldSettings(message: string) {
         await this.navigateToOldGeneralSettings();
 
-        const frameHandle = await this.page.frameLocator('#dokan-tinymce-46_ifr');
+        // Wait for the editor field container to be visible
+        await this.page.locator('.setup_wizard_message .editor_field').waitFor({ state: 'visible', timeout: 5000 });
+
+        // Find the iframe by its class and attributes (more stable than ID)
+        const frameHandle = await this.page.frameLocator('iframe[id*="dokan-tinymce"][id$="_ifr"]');
         await frameHandle.locator('body').fill(message);
 
         const saveButton = this.page.locator(data.adminSettingsMigration.selectors.oldUI.saveChanges);
@@ -1020,13 +1024,84 @@ export class AdminSettingsPage extends BasePage {
         await this.page.waitForTimeout(2000);
         await this.waitForLoadState();
     }
+
     async getVendorSetupWizardMessageFromOldSettings(): Promise<string> {
         await this.navigateToOldGeneralSettings();
 
-        const frameHandle = await this.page.frameLocator('#dokan-tinymce-46_ifr');
+        // Wait for the editor field container to be visible
+        await this.page.locator('.setup_wizard_message .editor_field').waitFor({ state: 'visible', timeout: 5000 });
+
+        // Find the iframe by its class and attributes (more stable than ID)
+        const frameHandle = this.page.frameLocator('iframe[id*="dokan-tinymce"][id$="_ifr"]');
         const message = await frameHandle.locator('body').innerText();
 
         return message.trim();
     }
 
+
+    // --------- //
+    // ******** //
+    //----------///
+
+    
+    // Generic methods to update and get old settings based on parameters
+    async updateOldSetting(enabled: boolean, navigationFunction: string, fieldKey: string, checkboxClass: string) {
+        await (this as any)[navigationFunction]();
+
+        const switchField = this.page.locator(data.adminSettingsMigration.selectors.oldUI[fieldKey as keyof typeof data.adminSettingsMigration.selectors.oldUI]);
+        await switchField.waitFor({ state: 'visible', timeout: 5000 });
+
+        const hiddenCheckbox = this.page.locator(`.${checkboxClass} input[type="checkbox"]`);
+        const isCurrentlyChecked = await hiddenCheckbox.isChecked();
+
+        if (isCurrentlyChecked !== enabled) {
+            await switchField.click();
+        }
+
+        const saveButton = this.page.locator(data.adminSettingsMigration.selectors.oldUI.saveChanges);
+        await saveButton.waitFor({ state: 'visible', timeout: 5000 });
+        await saveButton.click();
+
+        await this.page.waitForTimeout(2000);
+        await this.waitForLoadState();
+    }
+
+    async getOldSetting(navigationFunction: string, checkboxClass: string): Promise<boolean> {
+        await (this as any)[navigationFunction]();
+
+        const hiddenCheckbox = this.page.locator(`.${checkboxClass} input[type="checkbox"]`);
+        return await hiddenCheckbox.isChecked();
+    }
+
+    async updateNewSettings(navigationFunction: string, fieldSelectorId: string, enabled: boolean) {
+        await (this as any)[navigationFunction]();
+
+        const switchElement = this.page.locator(`#${fieldSelectorId}`).getByRole('switch');
+        await switchElement.waitFor({ state: 'visible', timeout: 10000 });
+
+        const isChecked = await switchElement.getAttribute('aria-checked') === 'true';
+        if (isChecked !== enabled) {
+            await switchElement.click();
+        }
+
+        const saveButton = this.page.locator(data.adminSettingsMigration.selectors.newUI.saveButton);
+        try {
+            await saveButton.waitFor({ state: 'visible', timeout: 8000 });
+            await saveButton.click();
+        } catch (error) {
+            console.log('Save button not visible - may not be needed');
+        }
+
+        await this.page.waitForTimeout(2000);
+        await this.waitForLoadState();
+    }
+
+    async getNewSettings(navigationFunction: string, fieldSelectorId: string): Promise<boolean> {
+        await (this as any)[navigationFunction]();
+
+        const switchElement = this.page.locator(`#${fieldSelectorId}`).getByRole('switch');
+        await switchElement.waitFor({ state: 'visible', timeout: 10000 });
+        return await switchElement.getAttribute('aria-checked') === 'true';
+    }
+    
 }

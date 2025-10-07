@@ -1322,6 +1322,7 @@ export const data = {
                 sellingOptionsMenu: '//div[@class="nav-title" and contains(text(),"Selling Options")]',
                 vendorStoreUrlField: '#dokan_general\\[custom_store_url\\]',
                 singleSellerModeField: '.enable_single_seller_mode .switch',
+                dublicateProductField: '.vendor_duplicate_product .switch',
                 saveChanges: '//input[@id="submit" and @value="Save Changes"]',
                 successMessage: 'Setting has been saved successfully.',
                 hideCustomerInfo: '.hide_customer_info .switch',

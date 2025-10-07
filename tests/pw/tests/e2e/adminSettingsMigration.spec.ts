@@ -384,4 +384,43 @@ test.describe('Admin Settings Migration', () => {
     });
 
 
+
+    // Vendor Capabilities //
+    //---------------------//
+    // ******************* //
+
+    // Test for `Vendor Capabilities -> Duplicate Product` settings synchronization.
+    test('should maintain bi-directional data synchronization for Duplicate Product', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+
+        const oldNavigationFunction = 'navigateToOldSellingOptions'; 
+        const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
+        const checkboxClass = 'vendor_duplicate_product'; 
+        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_duplicate_product'; 
+        const fieldKey = 'dublicateProductField'; 
+
+        // Step 1: Get current status from new settings and toggle it
+        let status = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
+        await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
+
+        // Step 2: Verify in old settings (mapping: dokan_selling.show_vendor_info)
+        const oldValueAfterNewUpdate1 = await adminSettingsPage.getOldSetting(oldNavigationFunction, checkboxClass);
+        expect(oldValueAfterNewUpdate1).toBe(!status); // New toggle should reflect correctly in old settings
+
+        // Step 3: Update old settings back to original status
+        await adminSettingsPage.updateOldSetting(status, oldNavigationFunction, fieldKey, checkboxClass);
+        const oldValueAfterNewUpdate2 = await adminSettingsPage.getOldSetting(oldNavigationFunction, checkboxClass);
+        expect(oldValueAfterNewUpdate2).toBe(status); // Old settings should match updated value
+
+        // Step 4: Verify new settings reflect updated value from old settings
+        const newValueAfterOldUpdate2 = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
+        expect(newValueAfterOldUpdate2).toBe(status);
+
+        // Step 5: Toggle again in new settings and verify the updated value
+        await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
+        const newValueAfterOldUpdate1 = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
+        expect(newValueAfterOldUpdate1).toBe(!status); // Final value should be inverted correctly
+    });
+
+    // Test for `Vendor Capabilities -> Allow vendors to create orders settings syncronization
+
 });

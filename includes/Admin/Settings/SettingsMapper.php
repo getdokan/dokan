@@ -205,9 +205,12 @@ class SettingsMapper {
         'dokan_selling.product_vendors_can_create_tags' => 'vendor.vendor_capabilities.vendor_capabilities.vendors_create_tags',
         'dokan_selling.add_new_attribute'           => 'vendor.vendor_capabilities.vendor_capabilities.add_new_attribute_values',
         'dokan_selling.seller_review_manage'        => 'vendor.vendor_capabilities.vendor_capabilities.product_review_management',
+        'dokan_general.global_digital_mode'         => 'vendor.vendor_capabilities.vendor_capabilities.global_digital_mode',
+        'dokan_selling.allow_vendor_create_manual_order' => 'vendor.vendor_capabilities.vendor_capabilities.allow_vendor_create_manual_order',
+        'dokan_selling.new_seller_enable_auction'   => 'vendor.vendor_capabilities.vendor_capabilities.auction_functions',
 
         // Vendor > Discount Settings
-        'dokan_selling.discount_edit'              => 'vendor.vendor_capabilities.discount_settings.product_quantity_discount',
+        'dokan_selling.discount_edit'              => 'vendor.vendor_capabilities.vendor_capabilities.discount_settings',
 
         // Vendor > Subscription
         'dokan_product_subscription.enable_pricing'              => 'vendor.vendor_subscription.vendor_subscription.vendor_subscription',
